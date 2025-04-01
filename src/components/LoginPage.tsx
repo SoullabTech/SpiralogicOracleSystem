@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 
 export function LoginPage() {
   const navigate = useNavigate();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +13,7 @@ export function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       setError('Please enter both email and password');
       return;
@@ -22,16 +22,22 @@ export function LoginPage() {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Sign in with Supabase
-      const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        console.error('Login error:', signInError);
+        setError(signInError.message || 'Invalid email or password');
+        return;
+      }
 
-      if (user) {
+      if (data?.user) {
+        console.log('User signed in:', data.user);
+
         // Get user's role
         const { data: roleData, error: roleError } = await supabase
           .from('user_roles')
@@ -40,20 +46,21 @@ export function LoginPage() {
               name
             )
           `)
-          .eq('user_id', user.id)
+          .eq('user_id', data.user.id)
           .single();
 
         if (roleError && roleError.code !== 'PGRST116') {
+          console.error('Role fetch error:', roleError);
           throw roleError;
         }
 
         // Default to client if no explicit role is found
         const role = roleData?.role_types?.name || 'client';
-        
+
         // Redirect based on role
         navigate(`/${role}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Login error:', err);
       setError('Invalid email or password');
     } finally {
