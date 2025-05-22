@@ -1,0 +1,47 @@
+{
+  "folders": [
+    {
+      "name": "frontend",
+      "path": "oracle-frontend"
+    },
+    {
+      "name": "backend",
+      "path": "oracle-backend"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "**/.vscode": false
+    },
+    "terminal.integrated.defaultProfile.osx": "zsh"
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "dev:frontend",
+        "type": "shell",
+        "command": "npm run dev",
+        "options": {
+          "cwd": "oracle-frontend"
+        },
+        "problemMatcher": [],
+        "group": "build"
+      },
+      {
+        "label": "dev:backend",
+        "type": "shell",
+        "command": "npm run dev",
+        "options": {
+          "cwd": "oracle-backend"
+        },
+        "problemMatcher": [],
+        "group": "build"
+      }
+    ]
+  }
+}
