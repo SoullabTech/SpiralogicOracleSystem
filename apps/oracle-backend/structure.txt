@@ -1,0 +1,37 @@
+oracle-backend/
+├── index.ts                      # Express app entry (or src/server.ts)
+├── package.json
+├── tsconfig.json
+├── supabase/                     # Edge functions + migrations
+│   ├── README.md
+│   └── functions/
+│       └── send-welcome-email.tsx
+├── scripts/                      # Utility scripts (check health, seed, etc.)
+│   ├── ingestKnowledge.ts
+│   ├── supabaseAdmin.ts
+│   └── utils/
+├── server/                       # Express API server
+│   ├── routes/                   # Route handlers
+│   ├── middleware/              # Auth, error, etc.
+│   ├── data/
+│   ├── tasks/
+│   └── types/
+├── src/
+│   ├── main.tsx / index.ts      # Possibly for hybrid build?
+│   ├── core/                    # Spiralogic logic, agents, SOUL model
+│   ├── controllers/             # API logic
+│   ├── services/                # Business logic
+│   ├── modules/                 # Spiralogic modules (elemental, shadow)
+│   ├── agents/                  # Dynamic AI agents
+│   ├── config/                  # Shared config
+│   ├── constants/               # Archetype mappings, etc.
+│   ├── integration/             # Integration tests
+│   ├── types/                   # Type declarations
+│   ├── utils/                   # Utility libraries
+│   └── hooks/                   # Optional backend hooks
+├── docs/
+│   └── oracle.openapi.yaml      # API docs
+├── test/
+│   ├── test.ts
+│   ├── testServer.ts
+│   └── vitest.config.ts

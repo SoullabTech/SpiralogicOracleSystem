@@ -1,3 +1,5 @@
 packages:
   - 'frontend'
   - 'oracle-backend'
+  - 'apps/*'
+  - 'packages/*'

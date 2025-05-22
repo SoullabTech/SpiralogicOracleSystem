@@ -1,0 +1,646 @@
+.
+├── ORACLE-FRONTEND
+│   ├── components
+│   │   ├── AgentCard.tsx
+│   │   ├── JournalEntryForm.tsx
+│   │   └── Navigation.tsx
+│   ├── lib
+│   │   └── supabaseClient.ts
+│   └── pages
+│       ├── admin
+│       └── agents
+├── WildPetalMessage.tsx
+├── __tests__
+│   └── components
+├── all-files.txt
+├── apps
+│   ├── backend
+│   └── frontend
+├── backend-files.txt
+├── docs
+│   └── index.tsx
+├── eslint.config.js
+├── frontend-files.txt
+├── index.html
+├── instructor.txt
+├── lib
+│   └── generateIntsight.ts
+├── logs
+├── next.config.js
+├── oracle-backend
+├── oracle-prefect
+│   └── flows
+├── oracle-test
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.tsx
+│   │   ├── assets
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── package.json
+├── packages
+│   └── agents
+│       └── src
+├── playwright.config.ts
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── public
+│   ├── index.html
+│   ├── investor-assets
+│   ├── sounds
+│   │   └── soft-chime.aiff
+│   ├── spiral-loader.png
+│   ├── swisseph.js
+│   └── swisseph.wasm
+├── readme.md
+├── scripts
+│   └── utils
+├── seed_reflections.sql
+├── server
+├── server.js
+├── spirallogic_kb
+├── src
+│   ├── App.test.tsx
+│   ├── App.tsx
+│   ├── app
+│   │   └── reflection-compare
+│   ├── assets
+│   ├── components
+│   │   ├── AdjusterAgentDashboard.tsx
+│   │   ├── AdminRoute.tsx
+│   │   ├── AetherOracleChat.tsx
+│   │   ├── AetherPulse.tsx
+│   │   ├── AirOracleChat.tsx
+│   │   ├── BlessingsList.tsx
+│   │   ├── CeremonyCountdownWidget.tsx
+│   │   ├── ChartProfileCard.tsx
+│   │   ├── ChatInterface.tsx
+│   │   ├── ChatWindow.tsx
+│   │   ├── CollectiveBreath
+│   │   ├── DreamOracleForm
+│   │   ├── DreamSpiralDashboard.tsx
+│   │   ├── DreamSpiralJournal.tsx
+│   │   ├── EarthOracleChat.tsx
+│   │   ├── ElementProgress.tsx
+│   │   ├── EndSession.tsx
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── FacilitatorTools.tsx
+│   │   ├── FaviconSetter.tsx
+│   │   ├── FieldPulseDashboard.tsx
+│   │   ├── FireOracleChat.tsx
+│   │   ├── FirstLandingGuide.tsx
+│   │   ├── FrequencyResonanceModal.tsx
+│   │   ├── GuidanceDisplay.tsx
+│   │   ├── Header.tsx
+│   │   ├── Holoflower.tsx
+│   │   ├── HoloflowerSvg.tsx
+│   │   ├── InsightGeneration.tsx
+│   │   ├── InsightModal.tsx
+│   │   ├── JournalEntryForm.tsx
+│   │   ├── JournalForm.tsx
+│   │   ├── Journaling.tsx
+│   │   ├── JulianDayDisplay.tsx
+│   │   ├── Layout.tsx
+│   │   ├── MemoryInsights.tsx
+│   │   ├── MemoryUpload.tsx
+│   │   ├── MessageBubble.tsx
+│   │   ├── NavBar.tsx
+│   │   ├── Navigation.tsx
+│   │   ├── OnboardingPrompt.tsx
+│   │   ├── OracleCeremonyModal.tsx
+│   │   ├── OracleChat.tsx
+│   │   ├── OracleJournalForm.tsx
+│   │   ├── OracleOfTheDay.tsx
+│   │   ├── OracleResponseCard.tsx
+│   │   ├── PageTransition.tsx
+│   │   ├── PageWrapper.tsx
+│   │   ├── PetalCheckIn
+│   │   ├── PetalModal.tsx
+│   │   ├── PlanetChart.tsx
+│   │   ├── PlanetPositions.tsx
+│   │   ├── PolarChart.tsx
+│   │   ├── PortalBlessing.tsx
+│   │   ├── PortalTransition.tsx
+│   │   ├── ProtectedRoute.tsx
+│   │   ├── QuestEngine.tsx
+│   │   ├── ReflectionTimeline.tsx
+│   │   ├── RequireAuth.tsx
+│   │   ├── SacredFooter.tsx
+│   │   ├── SacredKeyGate.tsx
+│   │   ├── Sanctum
+│   │   ├── Settings.tsx
+│   │   ├── SoulStarAchievements.tsx
+│   │   ├── SoulSyncPanel.tsx
+│   │   ├── SpiralAchievements.tsx
+│   │   ├── SpiralBreathConstellation
+│   │   ├── SpiralBreathPortal
+│   │   ├── SpiralMemory
+│   │   ├── SpiralMemoryMap.tsx
+│   │   ├── SpiralParticles.tsx
+│   │   ├── SpiralPetalCheckin
+│   │   ├── SpiralReflectionComparison.tsx
+│   │   ├── SpiralSpinner.tsx
+│   │   ├── StartSession.tsx
+│   │   ├── SunPosition.tsx
+│   │   ├── ThemeInjector.tsx
+│   │   ├── ThresholdMessage.tsx
+│   │   ├── ThresholdUnlock.tsx
+│   │   ├── TranscriptCard.tsx
+│   │   ├── TranscriptForm.tsx
+│   │   ├── VoiceProfileSelector.tsx
+│   │   ├── VoiceRecorder.tsx
+│   │   ├── WhisperAgent.tsx
+│   │   ├── WhisperPlayer.tsx
+│   │   ├── WhisperingBlessing.tsx
+│   │   ├── WildPortal
+│   │   ├── WisdomTransmission.tsx
+│   │   ├── __tests__
+│   │   ├── agents
+│   │   ├── astro
+│   │   ├── astrowheel.tsx
+│   │   ├── auth
+│   │   ├── feedback
+│   │   ├── forms
+│   │   ├── layouts
+│   │   ├── login.tsx
+│   │   ├── memory
+│   │   ├── oracle
+│   │   ├── page.tsx
+│   │   ├── queryPanel.tsx
+│   │   ├── shared
+│   │   └── ui
+│   ├── config
+│   │   ├── orgConfig.ts
+│   │   ├── voiceProfile.ts
+│   │   └── voiceProfiles
+│   ├── context
+│   │   └── AuthContext.tsx
+│   ├── contexts
+│   │   └── SwissEphContext.tsx
+│   ├── env.d
+│   ├── env.d.ts
+│   ├── hooks
+│   │   ├── useAuthInit.ts
+│   │   ├── useChatInput.ts
+│   │   ├── useDate.ts
+│   │   ├── useDreamOracle.ts
+│   │   ├── useOracleCheck.ts
+│   │   ├── useOracleVoice.ts
+│   │   ├── useSession.ts
+│   │   ├── useSoundEffect.ts
+│   │   └── useSwissEph.ts
+│   ├── index.css
+│   ├── index.tsx
+│   ├── input.css
+│   ├── layouts
+│   │   └── AdminDashboardLayout.tsx
+│   ├── lib
+│   │   ├── __tests__
+│   │   ├── agentPrompts.ts
+│   │   ├── agents.ts
+│   │   ├── apiService.ts
+│   │   ├── archetypes.ts
+│   │   ├── astroUtils.ts
+│   │   ├── authHelpers.ts
+│   │   ├── brandingConfig.ts
+│   │   ├── exportRituals.ts
+│   │   ├── facets.ts
+│   │   ├── generateInsight.ts
+│   │   ├── getBranding.ts
+│   │   ├── getPlanetPosition.ts
+│   │   ├── getVoiceProfile.ts
+│   │   ├── hooks
+│   │   ├── insights.ts
+│   │   ├── journals.ts
+│   │   ├── loadSwisseph.ts
+│   │   ├── mapToSpiralogic.ts
+│   │   ├── rituals.ts
+│   │   ├── seedJournal.ts
+│   │   ├── spiralogicMap.ts
+│   │   ├── supabaseClient.test.ts
+│   │   ├── supabaseClient.ts
+│   │   ├── swisseph.ts
+│   │   ├── updateVoiceProfile.ts
+│   │   ├── useSupabaseAdmin.ts
+│   │   ├── utils.ts
+│   │   └── voiceProfiles.ts
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── 404.tsx
+│   │   ├── AboutPage.tsx
+│   │   ├── AuthPage.tsx
+│   │   ├── BlessingArrival.tsx
+│   │   ├── BlessingPage.tsx
+│   │   ├── ChatPage.tsx
+│   │   ├── CreateMemory.tsx
+│   │   ├── DashboardPage.tsx
+│   │   ├── DebugJwt.tsx
+│   │   ├── DreamOraclePage.tsx
+│   │   ├── GetTokenDebug.tsx
+│   │   ├── HomePage.tsx
+│   │   ├── JournalForm.tsx
+│   │   ├── LaunchCelebration.tsx
+│   │   ├── LoginPage.tsx
+│   │   ├── LoginSuccessPage.tsx
+│   │   ├── MagicLinkSentPage.tsx
+│   │   ├── MemoryBlossom.tsx
+│   │   ├── MemoryCreatePage.tsx
+│   │   ├── MemoryInsightsPage.tsx
+│   │   ├── MemoryListPage.tsx
+│   │   ├── MemoryUpdatePage.tsx
+│   │   ├── NotFoundPage.tsx
+│   │   ├── OracleCeremonyPage.tsx
+│   │   ├── OraclePage.tsx
+│   │   ├── QA.md
+│   │   ├── Sanctum
+│   │   ├── SpiralBreathConstellation.tsx
+│   │   ├── SpiralBreathMap.tsx
+│   │   ├── SpiralogicPath.tsx
+│   │   ├── SpiralogicPathPage.tsx
+│   │   ├── TranscriptsPage.test.tsx
+│   │   ├── TranscriptsPage.tsx
+│   │   ├── WelcomePage.tsx
+│   │   ├── __tests__
+│   │   ├── admin
+│   │   ├── agents
+│   │   ├── api
+│   │   ├── astro
+│   │   ├── auth.tsx
+│   │   ├── beta-portal.tsx
+│   │   ├── beta-welcome.tsx
+│   │   ├── changelog.md
+│   │   ├── chat.tsx
+│   │   ├── collective-breath.tsx
+│   │   ├── collective-rooms.tsx
+│   │   ├── convenant.tsx
+│   │   ├── covenant
+│   │   ├── dashboard.tsx
+│   │   ├── debug.tsx
+│   │   ├── docs
+│   │   ├── dream-journal.tsx
+│   │   ├── dream-portal.tsx
+│   │   ├── dream-symbols
+│   │   ├── dream-symbols.tsx
+│   │   ├── elemental
+│   │   ├── facilitator
+│   │   ├── facilitator.tsx
+│   │   ├── feedback.tsx
+│   │   ├── fieldpulse
+│   │   ├── guild
+│   │   ├── index.tsx
+│   │   ├── journal
+│   │   ├── journal-timeline.tsx
+│   │   ├── journal.tsx
+│   │   ├── landing.tsx
+│   │   ├── launch-sprint.ts
+│   │   ├── launch.md
+│   │   ├── memories
+│   │   ├── memories.tsx
+│   │   ├── memory.tsx
+│   │   ├── onboarding.tsx
+│   │   ├── oracle
+│   │   ├── oracle-journal.tsx
+│   │   ├── portal
+│   │   ├── select-oracle.tsx
+│   │   ├── settings.tsx
+│   │   ├── spiral-calendar.tsx
+│   │   ├── spiral-checkin.tsx
+│   │   ├── spiral-portal.tsx
+│   │   ├── spiralogic-map.tsx
+│   │   ├── timeline.tsx
+│   │   ├── whitelabel-preview.tsx
+│   │   ├── wild-petal-quests.tsx
+│   │   └── wild-portal.tsx
+│   ├── routes
+│   │   ├── auth.routes.ts
+│   │   └── index.tsx
+│   ├── routes.tsx
+│   ├── seeds
+│   │   ├── oracleKnowledgeSeeds.ts
+│   │   └── wildPetalMessages.ts
+│   ├── services
+│   │   ├── spiralBreathAffirmationService.ts
+│   │   ├── spiralBreathDetectionService.ts
+│   │   ├── spiralBreathEvolutionTrackerService.ts
+│   │   ├── spiralReflectionExporterService.ts
+│   │   ├── spiralReflectionPromptService.ts
+│   │   ├── spiralThresholdTrackerService.ts
+│   │   ├── spiralogicPromptsService.ts
+│   │   └── symbolicTagService.ts
+│   ├── setupTests.ts
+│   ├── styles
+│   │   ├── brandThemes.ts
+│   │   ├── fonts.css
+│   │   ├── index.css
+│   │   └── tailwind.css
+│   ├── test
+│   │   └── setup.ts
+│   ├── test-utils.tsx
+│   ├── tests
+│   │   └── setup.ts
+│   ├── types
+│   └── utils
+│       └── autoSave.ts
+├── structure-frontend.txt
+├── structure.txt
+├── supabase
+│   ├── README.md
+│   └── functions
+│       └── send-welcome-email.tsx
+├── swisseph
+│   ├── LICENSE
+│   ├── LICENSE.TXT -> LICENSE
+│   ├── Makefile
+│   ├── agpl-3.0.txt
+│   ├── contrib
+│   │   ├── Sweph32_For_Excel_VBA_and_VB.zip
+│   │   ├── android
+│   │   ├── projectPF_VS2017.zip
+│   │   ├── readme.md
+│   │   ├── rp_source_0_9.zip
+│   │   ├── swedll64_2.02.01.zip
+│   │   ├── swissdelphi_2.07.01.zip
+│   │   └── swisseph-2.01.00-java-src-01.zip
+│   ├── doc
+│   │   ├── README.md
+│   │   ├── makefile
+│   │   ├── media
+│   │   ├── secont_e.pdf
+│   │   ├── swephprg.pdf
+│   │   ├── swisseph.htm
+│   │   ├── swisseph.pdf
+│   │   └── template.htm
+│   ├── ephe
+│   │   ├── astlistn.md
+│   │   ├── ep4
+│   │   ├── list.zip
+│   │   ├── sat
+│   │   ├── seas_00.se1
+│   │   ├── seas_06.se1
+│   │   ├── seas_102.se1
+│   │   ├── seas_108.se1
+│   │   ├── seas_114.se1
+│   │   ├── seas_12.se1
+│   │   ├── seas_120.se1
+│   │   ├── seas_126.se1
+│   │   ├── seas_132.se1
+│   │   ├── seas_138.se1
+│   │   ├── seas_144.se1
+│   │   ├── seas_150.se1
+│   │   ├── seas_156.se1
+│   │   ├── seas_162.se1
+│   │   ├── seas_18.se1
+│   │   ├── seas_24.se1
+│   │   ├── seas_30.se1
+│   │   ├── seas_36.se1
+│   │   ├── seas_42.se1
+│   │   ├── seas_48.se1
+│   │   ├── seas_54.se1
+│   │   ├── seas_60.se1
+│   │   ├── seas_66.se1
+│   │   ├── seas_72.se1
+│   │   ├── seas_78.se1
+│   │   ├── seas_84.se1
+│   │   ├── seas_90.se1
+│   │   ├── seas_96.se1
+│   │   ├── seasm06.se1
+│   │   ├── seasm102.se1
+│   │   ├── seasm108.se1
+│   │   ├── seasm114.se1
+│   │   ├── seasm12.se1
+│   │   ├── seasm120.se1
+│   │   ├── seasm126.se1
+│   │   ├── seasm132.se1
+│   │   ├── seasm18.se1
+│   │   ├── seasm24.se1
+│   │   ├── seasm30.se1
+│   │   ├── seasm36.se1
+│   │   ├── seasm42.se1
+│   │   ├── seasm48.se1
+│   │   ├── seasm54.se1
+│   │   ├── seasm60.se1
+│   │   ├── seasm66.se1
+│   │   ├── seasm72.se1
+│   │   ├── seasm78.se1
+│   │   ├── seasm84.se1
+│   │   ├── seasm90.se1
+│   │   ├── seasm96.se1
+│   │   ├── seasnam.txt
+│   │   ├── sefstars.txt
+│   │   ├── semo_00.se1
+│   │   ├── semo_06.se1
+│   │   ├── semo_102.se1
+│   │   ├── semo_108.se1
+│   │   ├── semo_114.se1
+│   │   ├── semo_12.se1
+│   │   ├── semo_120.se1
+│   │   ├── semo_126.se1
+│   │   ├── semo_132.se1
+│   │   ├── semo_138.se1
+│   │   ├── semo_144.se1
+│   │   ├── semo_150.se1
+│   │   ├── semo_156.se1
+│   │   ├── semo_162.se1
+│   │   ├── semo_18.se1
+│   │   ├── semo_24.se1
+│   │   ├── semo_30.se1
+│   │   ├── semo_36.se1
+│   │   ├── semo_42.se1
+│   │   ├── semo_48.se1
+│   │   ├── semo_54.se1
+│   │   ├── semo_60.se1
+│   │   ├── semo_66.se1
+│   │   ├── semo_72.se1
+│   │   ├── semo_78.se1
+│   │   ├── semo_84.se1
+│   │   ├── semo_90.se1
+│   │   ├── semo_96.se1
+│   │   ├── semom06.se1
+│   │   ├── semom102.se1
+│   │   ├── semom108.se1
+│   │   ├── semom114.se1
+│   │   ├── semom12.se1
+│   │   ├── semom120.se1
+│   │   ├── semom126.se1
+│   │   ├── semom132.se1
+│   │   ├── semom18.se1
+│   │   ├── semom24.se1
+│   │   ├── semom30.se1
+│   │   ├── semom36.se1
+│   │   ├── semom42.se1
+│   │   ├── semom48.se1
+│   │   ├── semom54.se1
+│   │   ├── semom60.se1
+│   │   ├── semom66.se1
+│   │   ├── semom72.se1
+│   │   ├── semom78.se1
+│   │   ├── semom84.se1
+│   │   ├── semom90.se1
+│   │   ├── semom96.se1
+│   │   ├── seorbel.txt
+│   │   ├── sepl_00.se1
+│   │   ├── sepl_06.se1
+│   │   ├── sepl_102.se1
+│   │   ├── sepl_108.se1
+│   │   ├── sepl_114.se1
+│   │   ├── sepl_12.se1
+│   │   ├── sepl_120.se1
+│   │   ├── sepl_126.se1
+│   │   ├── sepl_132.se1
+│   │   ├── sepl_138.se1
+│   │   ├── sepl_144.se1
+│   │   ├── sepl_150.se1
+│   │   ├── sepl_156.se1
+│   │   ├── sepl_162.se1
+│   │   ├── sepl_18.se1
+│   │   ├── sepl_24.se1
+│   │   ├── sepl_30.se1
+│   │   ├── sepl_36.se1
+│   │   ├── sepl_42.se1
+│   │   ├── sepl_48.se1
+│   │   ├── sepl_54.se1
+│   │   ├── sepl_60.se1
+│   │   ├── sepl_66.se1
+│   │   ├── sepl_72.se1
+│   │   ├── sepl_78.se1
+│   │   ├── sepl_84.se1
+│   │   ├── sepl_90.se1
+│   │   ├── sepl_96.se1
+│   │   ├── seplm06.se1
+│   │   ├── seplm102.se1
+│   │   ├── seplm108.se1
+│   │   ├── seplm114.se1
+│   │   ├── seplm12.se1
+│   │   ├── seplm120.se1
+│   │   ├── seplm126.se1
+│   │   ├── seplm132.se1
+│   │   ├── seplm18.se1
+│   │   ├── seplm24.se1
+│   │   ├── seplm30.se1
+│   │   ├── seplm36.se1
+│   │   ├── seplm42.se1
+│   │   ├── seplm48.se1
+│   │   ├── seplm54.se1
+│   │   ├── seplm60.se1
+│   │   ├── seplm66.se1
+│   │   ├── seplm72.se1
+│   │   ├── seplm78.se1
+│   │   ├── seplm84.se1
+│   │   ├── seplm90.se1
+│   │   └── seplm96.se1
+│   ├── readme.md
+│   ├── seleapsec.txt
+│   ├── setest
+│   │   ├── Makefile
+│   │   ├── checkpoints.c
+│   │   ├── checkpoints.h
+│   │   ├── cmd.gdb
+│   │   ├── constants.c
+│   │   ├── gen_fix_templ.m4
+│   │   ├── generate_prepare_fix_m4.pl
+│   │   ├── generate_prepare_fix_m4a.pl
+│   │   ├── globals.c
+│   │   ├── globals.h
+│   │   ├── globals_suite.c
+│   │   ├── multivalues.c
+│   │   ├── multivalues.h
+│   │   ├── mytest.fix
+│   │   ├── prepare_fix.m4
+│   │   ├── reader.c
+│   │   ├── reader.h
+│   │   ├── setest.c
+│   │   ├── setest.h
+│   │   ├── setest.help
+│   │   ├── setest.md
+│   │   ├── suite_01_calc.c
+│   │   ├── suite_02_fixstar.c
+│   │   ├── suite_03_misc.c
+│   │   ├── suite_04_ayanamsa.c
+│   │   ├── suite_05_date_time.c
+│   │   ├── suite_06_houses.c
+│   │   ├── suite_07_apsides.c
+│   │   ├── suite_08_eclipses.c
+│   │   ├── suite_09_rise.c
+│   │   ├── suite_10_solcross.c
+│   │   ├── t
+│   │   ├── t.exp
+│   │   ├── t.fix
+│   │   ├── test_one_per_process.pl
+│   │   ├── testdata.c
+│   │   ├── testdata.h
+│   │   ├── testdata.s
+│   │   ├── testsuite.m4
+│   │   ├── testsuite_end.m4
+│   │   ├── testsuite_facade.h
+│   │   └── testsuite_final.h
+│   ├── sweasp.c
+│   ├── swecl.c
+│   ├── swedate.c
+│   ├── swedate.h
+│   ├── swedll.h
+│   ├── sweephe4.c
+│   ├── sweephe4.h
+│   ├── swehel.c
+│   ├── swehouse.c
+│   ├── swehouse.h
+│   ├── swein600.jpg
+│   ├── swejpl.c
+│   ├── swejpl.h
+│   ├── swemini.c
+│   ├── swemmoon.c
+│   ├── swemplan.c
+│   ├── swemptab.h
+│   ├── swenut2000a.h
+│   ├── sweodef.h
+│   ├── sweph.c
+│   ├── sweph.h
+│   ├── swephexp.h
+│   ├── swephgen4.c
+│   ├── swephlib.c
+│   ├── swephlib.h
+│   ├── swetest.c
+│   ├── swevents.c
+│   ├── swevents.h
+│   └── windows
+│       ├── programs
+│       ├── readme.md
+│       ├── sweph.zip
+│       ├── swephzip.txt
+│       ├── swewin
+│       └── vb
+├── tailwind.config.cjs
+├── tailwind.config.js
+├── tailwind.config.ts
+├── test-results
+│   ├── oracle-visual-Oracle-Chat-visual-snapshot
+│   │   ├── error-context.md
+│   │   ├── test-failed-1.png
+│   │   └── video.webm
+│   └── oracleChat-oracle-chat-loads
+│       ├── error-context.md
+│       ├── test-failed-1.png
+│       └── video.webm
+├── tests
+│   └── playwright
+│       ├── oracle-visual.spec.ts
+│       └── oracleChat.spec.ts
+├── tsconfig.json
+├── tsconfig.node.json
+├── vercel.json
+├── vite.config.base.ts
+├── vite.config.prod.ts
+├── vite.config.ssr.ts
+├── vite.config.ts
+└── vitest.config.ts
+
+113 directories, 531 files
