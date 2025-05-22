@@ -1,5 +1,7 @@
 packages:
-  - 'frontend'
-  - 'oracle-backend'
-  - 'apps/*'
-  - 'packages/*'
+  - apps/*
+  - packages/*
+  - oracle-backend
+  - frontend
+ignoredBuiltDependencies:
+  - esbuild
