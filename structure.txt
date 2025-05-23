@@ -1,0 +1,872 @@
+.
+├── oracle-backend
+│   ├── App.css
+│   ├── README.md
+│   ├── api
+│   │   ├── memory.ts
+│   │   ├── oracle
+│   │   └── user
+│   ├── clean-import-extensions.ts
+│   ├── eslint.config.js
+│   ├── eslint.config.mjs
+│   ├── example.ts
+│   ├── flows
+│   │   └── daily_journal_processing.py
+│   ├── index.css
+│   ├── index.html
+│   ├── index.ts
+│   ├── ingest_kb.py
+│   ├── jest.config.js
+│   ├── kb_schema.json
+│   ├── logs
+│   ├── oracle-backend
+│   │   ├── __tests__
+│   │   ├── apps
+│   │   ├── lib
+│   │   ├── scripts
+│   │   ├── server
+│   │   ├── slack-chat-agent
+│   │   ├── spiralogic_kb
+│   │   └── your-project-root
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── packages
+│   │   └── agents
+│   ├── postcss.config.js
+│   ├── public
+│   ├── scripts
+│   │   ├── add-js-extensions.js
+│   │   ├── ingestKnowledge.ts
+│   │   ├── seedMemoryItems.js
+│   │   └── seedMemoryItems.ts
+│   ├── server
+│   │   ├── data
+│   │   ├── index.ts
+│   │   ├── middleware
+│   │   ├── routes
+│   │   ├── services
+│   │   ├── tasks
+│   │   └── types
+│   ├── spiralogic_kb
+│   │   └── shadow_evolution.json
+│   ├── src
+│   │   ├── App.css
+│   │   ├── app.ts
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── config
+│   │   ├── constants
+│   │   ├── context
+│   │   ├── controllers
+│   │   ├── core
+│   │   ├── docs
+│   │   ├── flows
+│   │   ├── hooks
+│   │   ├── index.css
+│   │   ├── index.ts
+│   │   ├── integration
+│   │   ├── lib
+│   │   ├── main
+│   │   ├── main.tsx
+│   │   ├── middleware
+│   │   ├── modules
+│   │   ├── pages
+│   │   ├── routes
+│   │   ├── schemas
+│   │   ├── server.ts
+│   │   ├── services
+│   │   ├── setupTests.ts
+│   │   ├── types
+│   │   ├── utils
+│   │   ├── vite-env.d.ts
+│   │   └── vitest.config.ts
+│   ├── structure-backend.txt
+│   ├── structure.txt
+│   ├── supabase
+│   │   ├── functions
+│   │   ├── migrations
+│   │   └── schema.sql
+│   ├── tailwind.config.js
+│   ├── test-env.ts
+│   ├── test.ts
+│   ├── testServer.ts
+│   ├── tsconfig-paths-loader.mjs
+│   ├── tsconfig.app.json
+│   ├── tsconfig.app.json 
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── tsconfig.server.json
+│   ├── tsconfig.tsbuildinfo
+│   ├── vite.config.ts
+│   ├── vitest.config.d.ts
+│   ├── vitest.config.js
+│   ├── vitest.config.js.map
+│   └── yarn.lock
+├── oracle-frontend
+│   ├── ORACLE-FRONTEND
+│   │   ├── components
+│   │   ├── lib
+│   │   └── pages
+│   ├── WildPetalMessage.tsx
+│   ├── __tests__
+│   │   └── components
+│   ├── all-files.txt
+│   ├── apps
+│   │   ├── backend
+│   │   └── frontend
+│   ├── backend-files.txt
+│   ├── docs
+│   │   └── index.tsx
+│   ├── eslint.config.js
+│   ├── frontend-files.txt
+│   ├── index.html
+│   ├── instructor.txt
+│   ├── lib
+│   │   └── generateIntsight.ts
+│   ├── logs
+│   ├── next.config.js
+│   ├── oracle-backend
+│   ├── oracle-prefect
+│   │   └── flows
+│   ├── oracle-test
+│   │   ├── README.md
+│   │   ├── eslint.config.js
+│   │   ├── index.html
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── postcss.config.js
+│   │   ├── public
+│   │   ├── src
+│   │   ├── tailwind.config.js
+│   │   └── vite.config.js
+│   ├── package.json
+│   ├── packages
+│   │   └── agents
+│   ├── playwright.config.ts
+│   ├── pnpm-lock.yaml
+│   ├── postcss.config.js
+│   ├── public
+│   │   ├── index.html
+│   │   ├── investor-assets
+│   │   ├── sounds
+│   │   └── swisseph.js
+│   ├── readme.md
+│   ├── scripts
+│   │   └── utils
+│   ├── seed_reflections.sql
+│   ├── server
+│   ├── server.js
+│   ├── server.ts
+│   ├── spirallogic_kb
+│   ├── src
+│   │   ├── App.test.tsx
+│   │   ├── App.tsx
+│   │   ├── app
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── config
+│   │   ├── contexts
+│   │   ├── entry-client.tsx
+│   │   ├── entry-server.tsx
+│   │   ├── env.d
+│   │   ├── env.d.ts
+│   │   ├── hooks
+│   │   ├── index.css
+│   │   ├── index.tsx
+│   │   ├── input.css
+│   │   ├── layouts
+│   │   ├── lib
+│   │   ├── main.tsx
+│   │   ├── pages
+│   │   ├── routes
+│   │   ├── routes.tsx
+│   │   ├── seeds
+│   │   ├── services
+│   │   ├── setupTests.ts
+│   │   ├── styles
+│   │   ├── test
+│   │   ├── test-utils.tsx
+│   │   ├── tests
+│   │   ├── types
+│   │   └── utils
+│   ├── src-backup-before-link-change
+│   │   ├── app
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── config
+│   │   ├── context
+│   │   ├── contexts
+│   │   ├── env.d
+│   │   ├── env.d.ts
+│   │   ├── hooks
+│   │   ├── index.css
+│   │   ├── input.css
+│   │   ├── layouts
+│   │   ├── lib
+│   │   ├── pages
+│   │   ├── routes
+│   │   ├── routes.tsx
+│   │   ├── seeds
+│   │   ├── services
+│   │   ├── styles
+│   │   ├── test
+│   │   ├── tests
+│   │   ├── types
+│   │   └── utils
+│   ├── structure-frontend.txt
+│   ├── structure.txt
+│   ├── supabase
+│   │   ├── README.md
+│   │   └── functions
+│   ├── swisseph
+│   │   ├── LICENSE
+│   │   ├── LICENSE.TXT -> LICENSE
+│   │   ├── Makefile
+│   │   ├── agpl-3.0.txt
+│   │   ├── contrib
+│   │   ├── doc
+│   │   ├── ephe
+│   │   ├── readme.md
+│   │   ├── seleapsec.txt
+│   │   ├── setest
+│   │   ├── sweasp.c
+│   │   ├── swecl.c
+│   │   ├── swedate.c
+│   │   ├── swedate.h
+│   │   ├── swedll.h
+│   │   ├── sweephe4.c
+│   │   ├── sweephe4.h
+│   │   ├── swehel.c
+│   │   ├── swehouse.c
+│   │   ├── swehouse.h
+│   │   ├── swein600.jpg
+│   │   ├── swejpl.c
+│   │   ├── swejpl.h
+│   │   ├── swemini.c
+│   │   ├── swemmoon.c
+│   │   ├── swemplan.c
+│   │   ├── swemptab.h
+│   │   ├── swenut2000a.h
+│   │   ├── sweodef.h
+│   │   ├── sweph.c
+│   │   ├── sweph.h
+│   │   ├── swephexp.h
+│   │   ├── swephgen4.c
+│   │   ├── swephlib.c
+│   │   ├── swephlib.h
+│   │   ├── swetest.c
+│   │   ├── swevents.c
+│   │   ├── swevents.h
+│   │   └── windows
+│   ├── tailwind.config.cjs
+│   ├── tailwind.config.js
+│   ├── tailwind.config.ts
+│   ├── test-results
+│   │   ├── oracle-visual-Oracle-Chat-visual-snapshot
+│   │   └── oracleChat-oracle-chat-loads
+│   ├── tests
+│   │   └── playwright
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── vercel.json
+│   ├── vite.config.base.ts
+│   ├── vite.config.prod.ts
+│   ├── vite.config.ssr.ts
+│   ├── vite.config.ts
+│   ├── vitest.config.ts
+│   ├── vitest.workspace.js
+│   └── yarn.lock
+├── oracle-fullstack
+│   ├── 0
+│   │   ├── @adobe
+│   │   ├── @alloc
+│   │   ├── @ampproject
+│   │   ├── @babel
+│   │   ├── @bcoe
+│   │   ├── @commitlint
+│   │   ├── @cspotcode
+│   │   ├── @emnapi
+│   │   ├── @emotion
+│   │   ├── @envelop
+│   │   ├── @esbuild
+│   │   ├── @eslint
+│   │   ├── @eslint-community
+│   │   ├── @fastify
+│   │   ├── @hookform
+│   │   ├── @humanwhocodes
+│   │   ├── @img
+│   │   ├── @isaacs
+│   │   ├── @istanbuljs
+│   │   ├── @jest
+│   │   ├── @jridgewell
+│   │   ├── @next
+│   │   ├── @noble
+│   │   ├── @nodelib
+│   │   ├── @paralleldrive
+│   │   ├── @pkgjs
+│   │   ├── @rollup
+│   │   ├── @sinclair
+│   │   ├── @sinonjs
+│   │   ├── @standard-schema
+│   │   ├── @supabase
+│   │   ├── @swc
+│   │   ├── @testing-library
+│   │   ├── @tootallnate
+│   │   ├── @tsconfig
+│   │   ├── @types
+│   │   ├── @ungap
+│   │   ├── @vitest
+│   │   ├── @whatwg-node
+│   │   ├── JSONStream
+│   │   ├── abab
+│   │   ├── accepts
+│   │   ├── acorn
+│   │   ├── acorn-globals
+│   │   ├── acorn-jsx
+│   │   ├── acorn-walk
+│   │   ├── agent-base
+│   │   ├── ajv
+│   │   ├── ansi-escapes
+│   │   ├── ansi-regex
+│   │   ├── ansi-styles
+│   │   ├── any-promise
+│   │   ├── anymatch
+│   │   ├── arg
+│   │   ├── argparse
+│   │   ├── aria-query
+│   │   ├── array-ify
+│   │   ├── arrify
+│   │   ├── asap
+│   │   ├── assertion-error
+│   │   ├── async
+│   │   ├── asynckit
+│   │   ├── babel-jest
+│   │   ├── babel-plugin-istanbul
+│   │   ├── babel-plugin-jest-hoist
+│   │   ├── babel-preset-current-node-syntax
+│   │   ├── babel-preset-jest
+│   │   ├── balanced-match
+│   │   ├── binary-extensions
+│   │   ├── brace-expansion
+│   │   ├── braces
+│   │   ├── browserslist
+│   │   ├── bs-logger
+│   │   ├── bser
+│   │   ├── buffer-from
+│   │   ├── busboy
+│   │   ├── cac
+│   │   ├── call-bind-apply-helpers
+│   │   ├── call-bound
+│   │   ├── callsites
+│   │   ├── camelcase
+│   │   ├── camelcase-css
+│   │   ├── camelcase-keys
+│   │   ├── caniuse-lite
+│   │   ├── chai
+│   │   ├── chalk
+│   │   ├── char-regex
+│   │   ├── check-error
+│   │   ├── chokidar
+│   │   ├── ci-info
+│   │   ├── cjs-module-lexer
+│   │   ├── client-only
+│   │   ├── cliui
+│   │   ├── co
+│   │   ├── collect-v8-coverage
+│   │   ├── color
+│   │   ├── color-convert
+│   │   ├── color-name
+│   │   ├── color-string
+│   │   ├── combined-stream
+│   │   ├── commander
+│   │   ├── compare-func
+│   │   ├── component-emitter
+│   │   ├── concat-map
+│   │   ├── content-disposition
+│   │   ├── conventional-changelog-angular
+│   │   ├── conventional-changelog-conventionalcommits
+│   │   ├── conventional-commits-parser
+│   │   ├── convert-source-map
+│   │   ├── cookie
+│   │   ├── cookiejar
+│   │   ├── core-js
+│   │   ├── cosmiconfig
+│   │   ├── cosmiconfig-typescript-loader
+│   │   ├── create-jest
+│   │   ├── create-require
+│   │   ├── cross-spawn
+│   │   ├── css.escape
+│   │   ├── cssesc
+│   │   ├── cssom
+│   │   ├── cssstyle
+│   │   ├── csstype
+│   │   ├── dargs
+│   │   ├── data-urls
+│   │   ├── debug
+│   │   ├── decamelize
+│   │   ├── decamelize-keys
+│   │   ├── decimal.js
+│   │   ├── dedent
+│   │   ├── deep-eql
+│   │   ├── deep-is
+│   │   ├── deepmerge
+│   │   ├── delayed-stream
+│   │   ├── depd
+│   │   ├── dequal
+│   │   ├── detect-libc
+│   │   ├── detect-newline
+│   │   ├── dezalgo
+│   │   ├── didyoumean
+│   │   ├── diff
+│   │   ├── diff-sequences
+│   │   ├── dlv
+│   │   ├── doctrine
+│   │   ├── dom-accessibility-api
+│   │   ├── domexception
+│   │   ├── dot-prop
+│   │   ├── dunder-proto
+│   │   ├── eastasianwidth
+│   │   ├── ejs
+│   │   ├── electron-to-chromium
+│   │   ├── emittery
+│   │   ├── emoji-regex
+│   │   ├── entities
+│   │   ├── error-ex
+│   │   ├── es-define-property
+│   │   ├── es-errors
+│   │   ├── es-module-lexer
+│   │   ├── es-object-atoms
+│   │   ├── es-set-tostringtag
+│   │   ├── esbuild
+│   │   ├── escalade
+│   │   ├── escape-string-regexp
+│   │   ├── escodegen
+│   │   ├── eslint
+│   │   ├── eslint-scope
+│   │   ├── eslint-visitor-keys
+│   │   ├── espree
+│   │   ├── esprima
+│   │   ├── esquery
+│   │   ├── esrecurse
+│   │   ├── estraverse
+│   │   ├── estree-walker
+│   │   ├── esutils
+│   │   ├── execa
+│   │   ├── exit
+│   │   ├── expect
+│   │   ├── expect-type
+│   │   ├── fast-deep-equal
+│   │   ├── fast-glob
+│   │   ├── fast-json-stable-stringify
+│   │   ├── fast-levenshtein
+│   │   ├── fast-safe-stringify
+│   │   ├── fast-uri
+│   │   ├── fastq
+│   │   ├── fb-watchman
+│   │   ├── file-entry-cache
+│   │   ├── filelist
+│   │   ├── fill-range
+│   │   ├── find-up
+│   │   ├── flat-cache
+│   │   ├── flatted
+│   │   ├── foreground-child
+│   │   ├── form-data
+│   │   ├── formidable
+│   │   ├── framer-motion
+│   │   ├── fresh
+│   │   ├── fs-extra
+│   │   ├── fs.realpath
+│   │   ├── fsevents
+│   │   ├── function-bind
+│   │   ├── gensync
+│   │   ├── get-caller-file
+│   │   ├── get-intrinsic
+│   │   ├── get-package-type
+│   │   ├── get-proto
+│   │   ├── get-stream
+│   │   ├── git-raw-commits
+│   │   ├── glob
+│   │   ├── glob-parent
+│   │   ├── global-dirs
+│   │   ├── globals
+│   │   ├── gopd
+│   │   ├── graceful-fs
+│   │   ├── graphemer
+│   │   ├── hard-rejection
+│   │   ├── has-flag
+│   │   ├── has-symbols
+│   │   ├── has-tostringtag
+│   │   ├── hasown
+│   │   ├── hosted-git-info
+│   │   ├── html-encoding-sniffer
+│   │   ├── html-escaper
+│   │   ├── http-proxy-agent
+│   │   ├── https-proxy-agent
+│   │   ├── human-signals
+│   │   ├── husky
+│   │   ├── iconv-lite
+│   │   ├── ignore
+│   │   ├── import-fresh
+│   │   ├── import-local
+│   │   ├── imurmurhash
+│   │   ├── indent-string
+│   │   ├── inflight
+│   │   ├── inherits
+│   │   ├── ini
+│   │   ├── is-arrayish
+│   │   ├── is-binary-path
+│   │   ├── is-core-module
+│   │   ├── is-extglob
+│   │   ├── is-fullwidth-code-point
+│   │   ├── is-generator-fn
+│   │   ├── is-glob
+│   │   ├── is-number
+│   │   ├── is-obj
+│   │   ├── is-path-inside
+│   │   ├── is-plain-obj
+│   │   ├── is-potential-custom-element-name
+│   │   ├── is-stream
+│   │   ├── is-text-path
+│   │   ├── isexe
+│   │   ├── istanbul-lib-coverage
+│   │   ├── istanbul-lib-instrument
+│   │   ├── istanbul-lib-report
+│   │   ├── istanbul-lib-source-maps
+│   │   ├── istanbul-reports
+│   │   ├── jackspeak
+│   │   ├── jake
+│   │   ├── jest
+│   │   ├── jest-changed-files
+│   │   ├── jest-circus
+│   │   ├── jest-cli
+│   │   ├── jest-config
+│   │   ├── jest-diff
+│   │   ├── jest-docblock
+│   │   ├── jest-each
+│   │   ├── jest-environment-jsdom
+│   │   ├── jest-environment-node
+│   │   ├── jest-get-type
+│   │   ├── jest-haste-map
+│   │   ├── jest-leak-detector
+│   │   ├── jest-matcher-utils
+│   │   ├── jest-message-util
+│   │   ├── jest-mock
+│   │   ├── jest-pnp-resolver
+│   │   ├── jest-regex-util
+│   │   ├── jest-resolve
+│   │   ├── jest-resolve-dependencies
+│   │   ├── jest-runner
+│   │   ├── jest-runtime
+│   │   ├── jest-snapshot
+│   │   ├── jest-util
+│   │   ├── jest-validate
+│   │   ├── jest-watcher
+│   │   ├── jest-worker
+│   │   ├── jiti
+│   │   ├── jose
+│   │   ├── js-tokens
+│   │   ├── js-yaml
+│   │   ├── jsdom
+│   │   ├── jsesc
+│   │   ├── json-buffer
+│   │   ├── json-parse-even-better-errors
+│   │   ├── json-schema-traverse
+│   │   ├── json-stable-stringify-without-jsonify
+│   │   ├── json5
+│   │   ├── jsonfile
+│   │   ├── jsonparse
+│   │   ├── keyv
+│   │   ├── kind-of
+│   │   ├── kleur
+│   │   ├── leven
+│   │   ├── levn
+│   │   ├── lilconfig
+│   │   ├── lines-and-columns
+│   │   ├── locate-path
+│   │   ├── lodash
+│   │   ├── lodash.camelcase
+│   │   ├── lodash.isfunction
+│   │   ├── lodash.isplainobject
+│   │   ├── lodash.kebabcase
+│   │   ├── lodash.memoize
+│   │   ├── lodash.merge
+│   │   ├── lodash.mergewith
+│   │   ├── lodash.snakecase
+│   │   ├── lodash.startcase
+│   │   ├── lodash.uniq
+│   │   ├── lodash.upperfirst
+│   │   ├── loose-envify
+│   │   ├── loupe
+│   │   ├── lru-cache
+│   │   ├── lucide-react
+│   │   ├── lz-string
+│   │   ├── magic-string
+│   │   ├── make-dir
+│   │   ├── make-error
+│   │   ├── makeerror
+│   │   ├── map-obj
+│   │   ├── math-intrinsics
+│   │   ├── media-typer
+│   │   ├── meow
+│   │   ├── merge-descriptors
+│   │   ├── merge-stream
+│   │   ├── merge2
+│   │   ├── methods
+│   │   ├── micromatch
+│   │   ├── mime
+│   │   ├── mime-db
+│   │   ├── mime-types
+│   │   ├── mimic-fn
+│   │   ├── min-indent
+│   │   ├── minimatch
+│   │   ├── minimist
+│   │   ├── minimist-options
+│   │   ├── minipass
+│   │   ├── ms
+│   │   ├── mz
+│   │   ├── nanoid
+│   │   ├── natural-compare
+│   │   ├── negotiator
+│   │   ├── next
+│   │   ├── next-test-api-route-handler
+│   │   ├── node-int64
+│   │   ├── node-mocks-http
+│   │   ├── node-releases
+│   │   ├── normalize-package-data
+│   │   ├── normalize-path
+│   │   ├── npm-run-path
+│   │   ├── nwsapi
+│   │   ├── object-assign
+│   │   ├── object-hash
+│   │   ├── object-inspect
+│   │   ├── once
+│   │   ├── onetime
+│   │   ├── optionator
+│   │   ├── p-limit
+│   │   ├── p-locate
+│   │   ├── p-try
+│   │   ├── package-json-from-dist
+│   │   ├── parent-module
+│   │   ├── parse-json
+│   │   ├── parse5
+│   │   ├── parseurl
+│   │   ├── path-exists
+│   │   ├── path-is-absolute
+│   │   ├── path-key
+│   │   ├── path-parse
+│   │   ├── path-scurry
+│   │   ├── path-type
+│   │   ├── pathe
+│   │   ├── pathval
+│   │   ├── picocolors
+│   │   ├── picomatch
+│   │   ├── pify
+│   │   ├── pirates
+│   │   ├── pkg-dir
+│   │   ├── postcss
+│   │   ├── postcss-import
+│   │   ├── postcss-load-config
+│   │   ├── postcss-nested
+│   │   ├── postcss-selector-parser
+│   │   ├── postcss-value-parser
+│   │   ├── prelude-ls
+│   │   ├── pretty-format
+│   │   ├── prompts
+│   │   ├── psl
+│   │   ├── punycode
+│   │   ├── pure-rand
+│   │   ├── qs
+│   │   ├── querystringify
+│   │   ├── queue-microtask
+│   │   ├── quick-lru
+│   │   ├── range-parser
+│   │   ├── react
+│   │   ├── react-dom
+│   │   ├── react-hook-form
+│   │   ├── react-is
+│   │   ├── read-cache
+│   │   ├── read-pkg
+│   │   ├── read-pkg-up
+│   │   ├── readable-stream
+│   │   ├── readdirp
+│   │   ├── redent
+│   │   ├── require-directory
+│   │   ├── require-from-string
+│   │   ├── requires-port
+│   │   ├── resolve
+│   │   ├── resolve-cwd
+│   │   ├── resolve-from
+│   │   ├── resolve-global
+│   │   ├── resolve.exports
+│   │   ├── reusify
+│   │   ├── rimraf
+│   │   ├── rollup
+│   │   ├── run-parallel
+│   │   ├── safe-buffer
+│   │   ├── safer-buffer
+│   │   ├── saxes
+│   │   ├── scheduler
+│   │   ├── semver
+│   │   ├── set-cookie-parser
+│   │   ├── sharp
+│   │   ├── shebang-command
+│   │   ├── shebang-regex
+│   │   ├── side-channel
+│   │   ├── side-channel-list
+│   │   ├── side-channel-map
+│   │   ├── side-channel-weakmap
+│   │   ├── siginfo
+│   │   ├── signal-exit
+│   │   ├── simple-swizzle
+│   │   ├── sisteransi
+│   │   ├── slash
+│   │   ├── source-map
+│   │   ├── source-map-js
+│   │   ├── source-map-support
+│   │   ├── spdx-correct
+│   │   ├── spdx-exceptions
+│   │   ├── spdx-expression-parse
+│   │   ├── spdx-license-ids
+│   │   ├── split2
+│   │   ├── sprintf-js
+│   │   ├── stack-utils
+│   │   ├── stackback
+│   │   ├── std-env
+│   │   ├── streamsearch
+│   │   ├── string-length
+│   │   ├── string-width
+│   │   ├── string-width-cjs
+│   │   ├── string_decoder
+│   │   ├── strip-ansi
+│   │   ├── strip-ansi-cjs
+│   │   ├── strip-bom
+│   │   ├── strip-final-newline
+│   │   ├── strip-indent
+│   │   ├── strip-json-comments
+│   │   ├── styled-jsx
+│   │   ├── sucrase
+│   │   ├── superagent
+│   │   ├── supertest
+│   │   ├── supports-color
+│   │   ├── supports-preserve-symlinks-flag
+│   │   ├── symbol-tree
+│   │   ├── tailwindcss
+│   │   ├── test-exclude
+│   │   ├── text-extensions
+│   │   ├── text-table
+│   │   ├── thenify
+│   │   ├── thenify-all
+│   │   ├── through
+│   │   ├── through2
+│   │   ├── tinybench
+│   │   ├── tinyexec
+│   │   ├── tinyglobby
+│   │   ├── tinypool
+│   │   ├── tinyrainbow
+│   │   ├── tinyspy
+│   │   ├── tmpl
+│   │   ├── to-regex-range
+│   │   ├── tough-cookie
+│   │   ├── tr46
+│   │   ├── trim-newlines
+│   │   ├── ts-interface-checker
+│   │   ├── ts-jest
+│   │   ├── ts-node
+│   │   ├── tslib
+│   │   ├── type-check
+│   │   ├── type-fest
+│   │   ├── type-is
+│   │   ├── typescript
+│   │   ├── universalify
+│   │   ├── update-browserslist-db
+│   │   ├── uri-js
+│   │   ├── url-parse
+│   │   ├── urlpattern-polyfill
+│   │   ├── util-deprecate
+│   │   ├── uuid
+│   │   ├── v8-compile-cache-lib
+│   │   ├── v8-to-istanbul
+│   │   ├── validate-npm-package-license
+│   │   ├── vite
+│   │   ├── vite-node
+│   │   ├── vitest
+│   │   ├── w3c-xmlserializer
+│   │   ├── walker
+│   │   ├── webidl-conversions
+│   │   ├── whatwg-encoding
+│   │   ├── whatwg-mimetype
+│   │   ├── whatwg-url
+│   │   ├── which
+│   │   ├── why-is-node-running
+│   │   ├── word-wrap
+│   │   ├── wrap-ansi
+│   │   ├── wrap-ansi-cjs
+│   │   ├── wrappy
+│   │   ├── write-file-atomic
+│   │   ├── ws
+│   │   ├── xml-name-validator
+│   │   ├── xmlchars
+│   │   ├── y18n
+│   │   ├── yallist
+│   │   ├── yaml
+│   │   ├── yargs
+│   │   ├── yargs-parser
+│   │   ├── yn
+│   │   ├── yocto-queue
+│   │   └── zod
+│   ├── README.RITUALS.md
+│   ├── README.md
+│   ├── _tests_
+│   │   ├── api
+│   │   └── test-utils.ts
+│   ├── badfile.txt
+│   ├── checklists
+│   │   ├── MVP-qa.md
+│   │   └── oracle-fullstack.code-workspace
+│   ├── commitlint.config.js
+│   ├── components
+│   │   ├── AgentCard.tsx
+│   │   ├── CreateAgentForm.tsx
+│   │   ├── SkeletonLoader.tsx
+│   │   ├── VoiceSelector.tsx
+│   │   ├── agents
+│   │   └── forms
+│   ├── final.ts
+│   ├── global.d.ts
+│   ├── jest.config.js
+│   ├── jest.setup.ts
+│   ├── lib
+│   │   ├── agents.ts
+│   │   ├── db
+│   │   ├── oracleAgents.ts
+│   │   ├── supabase
+│   │   ├── supabaseClient.ts
+│   │   └── voices.ts
+│   ├── next-env.d.ts
+│   ├── oracle_agents.sql
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── pages
+│   │   ├── _app.tsx
+│   │   ├── agents
+│   │   └── api
+│   ├── pnpm-workspace.yaml
+│   ├── ritual.test.ts
+│   ├── ritual.test.ts.bak
+│   ├── ritual.ts
+│   ├── scripts
+│   │   ├── commitlint.config.js
+│   │   ├── create-feature-branch.sh
+│   │   └── setup-ritual-commit-hooks.sh
+│   ├── setup-ritual-commit-hooks.sh
+│   ├── trigger.ts
+│   ├── tsconfig.json
+│   ├── utils
+│   │   └── supabase
+│   └── vercel.json
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+└── structure.txt
+
+684 directories, 186 files

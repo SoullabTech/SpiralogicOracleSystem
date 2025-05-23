@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["components/*"],
+      "@lib/*": ["lib/*"],
+      "@services/*": ["services/*"],
+      "@test-utils/*": ["test-utils/*"],
+      "@contexts/*": ["contexts/*"],
+      "@hooks/*": ["hooks/*"],
+      "@pages/*": ["pages/*"],
+      "@routes/*": ["routes/*"],
+      "@styles/*": ["styles/*"]
+    }
+  },
+  "include": ["src"]
+}

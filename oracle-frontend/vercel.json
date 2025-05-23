@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "oracle-frontend/vite.config.ts",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "oracle-frontend/dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ],
+  "ignore": [
+    "node_modules",
+    ".vscode",
+    ".git",
+    ".gitignore",
+    "README.md",
+    "readme.md",
+    "tests",
+    "test",
+    "coverage",
+    "*.log",
+    "*.tsbuildinfo",
+    "public/sounds/",
+    "src/components/_tests_/",
+    "src/tests/",
+    "supabase/functions/",
+    ".env",
+    ".env.local"
+  ]
+}
