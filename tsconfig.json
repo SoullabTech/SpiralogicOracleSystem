@@ -1,21 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["DOM", "DOM.Iterable", "ES2023"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "resolveJsonModule": true,
+    "target": "es5",
+    "lib": ["dom", "es2015"],
+    "allowJs": true,
+    "jsx": "react",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "noEmit": true,
+    "module": "esnext",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@styles/*": ["styles/*"]
+    }
   },
-  "exclude": ["node_modules", "dist", ".next"]
+  "include": ["src"]
 }

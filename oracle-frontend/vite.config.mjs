@@ -1,27 +1,28 @@
-// oracle-frontend/vite.config.mjs
+// frontend/vite.config.mjs
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import { defineConfig, loadEnv } from 'vite';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';  // Plugin to handle tsconfig path aliases
+import { defineConfig, loadEnv } from 'vite'; // Vite helpers
+import { fileURLToPath } from 'url'; // URL utilities
+import { dirname, resolve } from 'path'; // Path utilities
 
+// Calculate the file and directory name for ESM usage
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, process.cwd(), ''); // Load environment variables based on mode (development, production)
 
   return {
-    root: '.', // now inside oracle-frontend folder
+    root: '.', // Ensure this points to the root of your project (oracle-frontend folder)
     plugins: [
-      react(),
+      react(),  // React plugin for Vite
       tsconfigPaths({
-        projects: [resolve(__dirname, 'tsconfig.json')],
+        projects: [resolve(__dirname, 'tsconfig.json')], // Points to your tsconfig.json file for alias resolution
       }),
     ],
     resolve: {
       alias: {
-        '@': resolve(__dirname, 'src'),
+        '@': resolve(__dirname, 'src'), // Resolves '@' to 'src' directory
         '@components': resolve(__dirname, 'src/components'),
         '@lib': resolve(__dirname, 'src/lib'),
         '@services': resolve(__dirname, 'src/services'),
@@ -34,14 +35,14 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      port: 3000,
+      port: 3000, // Port for your development server
     },
     build: {
-      outDir: 'dist',
-      sourcemap: false,
+      outDir: 'dist', // Output directory for the build
+      sourcemap: false, // Disable sourcemaps for production
     },
     define: {
-      __APP_ENV__: JSON.stringify(env.VITE_APP_ENV ?? 'development'),
+      __APP_ENV__: JSON.stringify(env.VITE_APP_ENV ?? 'development'), // Define environment variable for the app
     },
   };
 });

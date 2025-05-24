@@ -1,30 +1,38 @@
-// src/routes/index.tsx
+// oracle-frontend/src/pages/index.tsx
+
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import LoginPage from '@/pages/login';
-import SignupPage from '@/pages/signup';
-import ChatPage from '@/pages/chat';
+export default function HomePage() {
+  return (
+    <div className="p-10 text-center text-gray-800">
+      <h1 className="text-4xl font-bold mb-4">🌌 Spiralogic Oracle System</h1>
+      <p className="mb-6 text-lg">
+        Welcome to the Spiralogic Oracle. Begin your journey by choosing a path below.
+      </p>
 
-// …other imports for your oracle pages…
-import FireOracleChat from '@/pages/oracle/fire';
-import WaterOracleChat from '@/pages/oracle/water';
-// etc.
-
-export const publicRoutes = [
-  { path: '/login',  element: <LoginPage /> },
-  { path: '/signup', element: <SignupPage /> },
-  { path: '/chat',   element: <ChatPage /> },    // ← your new chat route
-  // …any other public routes…
-];
-
-export const protectedRoutes = [
-  { path: '/oracle/fire',  element: <FireOracleChat /> },
-  { path: '/oracle/water', element: <WaterOracleChat /> },
-  // …etc.
-];
-
-export const fallbackRoute = {
-  path: '*',
-  element: <Navigate to="/login" replace />,
-};
+      <div className="space-y-4">
+        <div>
+          <Link to="/login" className="text-blue-600 hover:underline">
+            🔐 Login
+          </Link>
+        </div>
+        <div>
+          <Link to="/oracle/fire" className="text-red-600 hover:underline">
+            🔥 Fire Oracle
+          </Link>
+        </div>
+        <div>
+          <Link to="/oracle/water" className="text-blue-500 hover:underline">
+            💧 Water Oracle
+          </Link>
+        </div>
+        <div>
+          <Link to="/guild" className="text-green-600 hover:underline">
+            🛡 Guild Portal
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
