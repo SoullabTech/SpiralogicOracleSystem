@@ -1,0 +1,7 @@
+node_modules/
+.pnpm-store/
+.DS_Store
+.env*
+/oracle-frontend/.next/
+/oracle-frontend/dist/
+SpiralogicOracleSystem_backup.zip

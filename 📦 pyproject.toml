@@ -1,0 +1,25 @@
+[project]
+name = "spiralogic-oracle"
+version = "0.1.0"
+description = "An elemental AI mentorship system for personal growth and transformation"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name="Andre Nezat", email="your-email@example.com" }
+]
+
+dependencies = [
+    "prefect==2.13.4",
+    "aiosqlite",
+    "sqlalchemy",
+    "pendulum<3.0.0",
+    "click<8.2",
+    "pydantic<2.0.0",
+    "fastapi",
+    "uvicorn",
+    "httpx",
+    "rich"
+]
+
+[tool.setuptools]
+packages = ["soul_memory", "elemental_agents"]

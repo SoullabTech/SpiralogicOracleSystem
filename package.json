@@ -1,0 +1,24 @@
+{
+  "name": "spiralogic-oracle-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.2.29",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.x",
+    "@types/react": "18.x",
+    "eslint": "8.x",
+    "eslint-config-next": "14.x",
+    "typescript": "^5.2.2",
+    "vitest": "^3.1.4"
+  }
+}

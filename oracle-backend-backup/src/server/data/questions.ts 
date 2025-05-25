@@ -1,0 +1,16 @@
+export const questions = [
+  {
+    id: '1',
+    text: 'What lights your inner fire?',
+    element: 'fire',
+    weight: 3,
+    created_at: null // ✅ required by Supabase types
+  },
+  {
+    id: '2',
+    text: 'Where are you feeling emotionally fluid or stuck?',
+    element: 'water',
+    weight: 3,
+    created_at: null
+  }
+];

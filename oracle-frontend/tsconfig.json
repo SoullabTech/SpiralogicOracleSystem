@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "jsx": "react-jsx",                   // → enables the new JSX runtime
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",                       // for path-mapping
+    "paths": {
+      "@/*": ["src/*"]                    // ← adjust to match your alias
+    },
+    "typeRoots": ["node_modules/@types"]  // ensures @types/* get picked up
+  },
+  "include": ["src", "global.d.ts"]       // include your source + any globals file
+}
