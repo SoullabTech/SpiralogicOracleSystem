@@ -1,49 +1,79 @@
-// src/services/profileService.ts
+import { supabase } from "../lib/supabaseClient";
 
-export interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  bio?: string;
-  avatarUrl?: string;
+export interface ProfileData {
+  user_id: string;
   fire: number;
   water: number;
   earth: number;
   air: number;
   aether: number;
   crystal_focus?: string;
-  updated_at: string;
+  voice_profile?: string;
+  guide_voice?: string;
+  guide_name?: string;
+  updated_at?: string;
 }
 
-const mockDatabase: Record<string, UserProfile> = {
-  'user-123': {
-    id: 'user-123',
-    name: 'Kelly Nezat',
-    email: 'kelly@example.com',
-    bio: 'Author of Elemental Alchemy',
-    avatarUrl: 'https://example.com/avatar.png',
-    fire: 70,
-    water: 60,
-    earth: 50,
-    air: 65,
-    aether: 80,
-    crystal_focus: 'Quartz',
-    updated_at: '2025-05-17T00:00:00Z',
-  },
-};
+/**
+ * Get the full user profile, including elemental, voice, and guide info.
+ */
+export async function getUserProfile(userId: string): Promise<ProfileData> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "user_id, fire, water, earth, air, aether, crystal_focus, voice_profile, guide_voice, guide_name, updated_at"
+    )
+    .eq("user_id", userId)
+    .single();
 
-// The updateProfile method for updating the user profile
-export const profileService = {
-  getProfile: (userId: string): UserProfile | null => {
-    return mockDatabase[userId] || null;
-  },
+  if (error) {
+    console.error("Error fetching profile:", error.message);
+    throw new Error("Failed to retrieve profile");
+  }
 
-  updateProfile: (userId: string, updates: Partial<UserProfile>): UserProfile | null => {
-    const existing = mockDatabase[userId];
-    if (!existing) return null;
+  return data;
+}
 
-    const updated = { ...existing, ...updates };
-    mockDatabase[userId] = updated;
-    return updated;
-  },
-};
+/**
+ * Update or insert a user profile.
+ */
+export async function updateUserProfile(userId: string, profile: Partial<ProfileData>) {
+  const payload = { ...profile, user_id: userId };
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .upsert(payload, { onConflict: "user_id" })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating profile:", error.message);
+    throw new Error("Failed to update profile");
+  }
+
+  return data;
+}
+
+/**
+ * Get elemental profile stats for visualization.
+ */
+export async function getProfileStats(userId: string) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("fire, water, earth, air, aether")
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching profile stats:", error.message);
+    throw new Error("Failed to fetch stats");
+  }
+
+  return {
+    fire: data.fire,
+    water: data.water,
+    earth: data.earth,
+    air: data.air,
+    aether: data.aether,
+  };
+}

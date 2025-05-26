@@ -1,122 +1,100 @@
-// src/services/memoryService.ts
+// 📄 oracle-backend/src/routes/memory.routes.ts
 
-import { supabase } from '../lib/supabaseClient';
-import type { MemoryItem } from '../types';
+import express from 'express';
+import { z } from 'zod';
+import { memoryService } from '../services/memoryService';
+import { asyncHandler } from '../middleware/errorHandler';
+import { AuthenticatedRequest } from '../types';
 
-export const memoryService = {
-  store: async (
-    userId: string,
-    content: string,
-    element?: string,
-    sourceAgent?: string,
-    confidence?: number,
-    metadata?: any
-  ): Promise<MemoryItem | null> => {
-    const { data, error } = await supabase
-      .from('memories')
-      .insert([
-        {
-          user_id: userId,
-          content,
-          element,
-          source_agent: sourceAgent,
-          confidence,
-          metadata,
-          timestamp: new Date().toISOString(),
-        },
-      ])
-      .single();
+const router = express.Router();
 
-    if (error) {
-      console.error('Error storing memory:', error.message);
-      return null;
-    }
-    return data as MemoryItem;
-  },
+// ─────────────────────────────────────────
+// 📑 Zod Schemas
+const MemorySchema = z.object({
+  content: z.string().min(1),
+  element: z.string().optional(),
+  sourceAgent: z.string().optional(),
+  confidence: z.number().optional(),
+  metadata: z.record(z.any()).optional(),
+});
 
-  recall: async (userId: string): Promise<MemoryItem[]> => {
-    const { data, error } = await supabase
-      .from('memories')
-      .select('*')
-      .eq('user_id', userId)
-      .order('timestamp', { ascending: false });
+const UpdateSchema = z.object({
+  id: z.string(),
+  content: z.string().min(1),
+});
 
-    if (error) {
-      console.error('Error recalling memories:', error.message);
-      return [];
-    }
-    return data as MemoryItem[];
-  },
+const DeleteSchema = z.object({
+  id: z.string(),
+});
 
-  update: async (id: string, content: string, userId: string): Promise<MemoryItem | null> => {
-    // Verify ownership
-    const { data: existing, error: fetchErr } = await supabase
-      .from('memories')
-      .select('*')
-      .eq('id', id)
-      .eq('user_id', userId)
-      .single();
+// ─────────────────────────────────────────
+// 📥 POST /api/oracle/memory → Store a memory
+router.post(
+  '/',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const parse = MemorySchema.safeParse(req.body);
+    if (!parse.success) return res.status(400).json({ error: parse.error.format() });
 
-    if (fetchErr || !existing) {
-      console.error('Memory not found or unauthorized');
-      return null;
-    }
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
 
-    const { data, error } = await supabase
-      .from('memories')
-      .update({ content })
-      .eq('id', id)
-      .single();
+    const memory = await memoryService.store(userId, parse.data.content, parse.data.element, parse.data.sourceAgent, parse.data.confidence, parse.data.metadata);
+    res.status(200).json({ memory });
+  })
+);
 
-    if (error) {
-      console.error('Error updating memory:', error.message);
-      return null;
-    }
+// 📤 GET /api/oracle/memory → Get all user memories
+router.get(
+  '/',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
 
-    return data as MemoryItem;
-  },
+    const memories = await memoryService.recall(userId);
+    res.status(200).json({ memories });
+  })
+);
 
-  delete: async (id: string, userId: string): Promise<boolean> => {
-    // Verify ownership
-    const { data: existing, error: fetchErr } = await supabase
-      .from('memories')
-      .select('*')
-      .eq('id', id)
-      .eq('user_id', userId)
-      .single();
+// 📝 PUT /api/oracle/memory → Update memory
+router.put(
+  '/',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const parse = UpdateSchema.safeParse(req.body);
+    if (!parse.success) return res.status(400).json({ error: parse.error.format() });
 
-    if (fetchErr || !existing) {
-      console.error('Memory not found or unauthorized');
-      return false;
-    }
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
 
-    const { error } = await supabase
-      .from('memories')
-      .delete()
-      .eq('id', id);
+    const updated = await memoryService.update(parse.data.id, parse.data.content, userId);
+    res.status(200).json({ updated });
+  })
+);
 
-    if (error) {
-      console.error('Error deleting memory:', error.message);
-      return false;
-    }
-    return true;
-  },
+// ❌ DELETE /api/oracle/memory → Delete memory
+router.delete(
+  '/',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const parse = DeleteSchema.safeParse(req.body);
+    if (!parse.success) return res.status(400).json({ error: parse.error.format() });
 
-  getMemoryInsights: async (userId?: string) => {
-    if (!userId) return null;
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
 
-    // Example aggregation: count memories by element
-    const { data, error } = await supabase
-      .from('memories')
-      .select('element, count:id')
-      .eq('user_id', userId)
-      .group('element');
+    const success = await memoryService.delete(parse.data.id, userId);
+    res.status(success ? 200 : 404).json({ success });
+  })
+);
 
-    if (error) {
-      console.error('Error fetching memory insights:', error.message);
-      return null;
-    }
+// 📊 GET /api/oracle/memory/insights → Get memory usage insights
+router.get(
+  '/insights',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
 
-    return data;
-  },
-};
+    const insights = await memoryService.getMemoryInsights(userId);
+    res.status(200).json({ insights });
+  })
+);
+
+export default router;

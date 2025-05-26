@@ -1,5 +1,7 @@
-import { supabase } from '../../lib/supabaseClient';
-import type { MemoryItem } from '../../types';
+// src/services/memoryService.ts
+
+import { supabase } from '../lib/supabaseClient';
+import { MemoryItem } from '../types';
 
 export const memoryService = {
   store: async (
@@ -26,9 +28,10 @@ export const memoryService = {
       .single();
 
     if (error) {
-      console.error('Error storing memory:', error.message);
+      console.error('❌ Error storing memory:', error.message);
       return null;
     }
+
     return data as MemoryItem;
   },
 
@@ -40,14 +43,14 @@ export const memoryService = {
       .order('timestamp', { ascending: false });
 
     if (error) {
-      console.error('Error recalling memories:', error.message);
+      console.error('❌ Error recalling memories:', error.message);
       return [];
     }
+
     return data as MemoryItem[];
   },
 
   update: async (id: string, content: string, userId: string): Promise<MemoryItem | null> => {
-    // Verify ownership before update
     const { data: existing, error: fetchErr } = await supabase
       .from('memories')
       .select('*')
@@ -55,10 +58,7 @@ export const memoryService = {
       .eq('user_id', userId)
       .single();
 
-    if (fetchErr || !existing) {
-      console.error('Memory not found or unauthorized');
-      return null;
-    }
+    if (fetchErr || !existing) return null;
 
     const { data, error } = await supabase
       .from('memories')
@@ -67,7 +67,7 @@ export const memoryService = {
       .single();
 
     if (error) {
-      console.error('Error updating memory:', error.message);
+      console.error('❌ Error updating memory:', error.message);
       return null;
     }
 
@@ -75,7 +75,6 @@ export const memoryService = {
   },
 
   delete: async (id: string, userId: string): Promise<boolean> => {
-    // Verify ownership before delete
     const { data: existing, error: fetchErr } = await supabase
       .from('memories')
       .select('*')
@@ -83,20 +82,28 @@ export const memoryService = {
       .eq('user_id', userId)
       .single();
 
-    if (fetchErr || !existing) {
-      console.error('Memory not found or unauthorized');
-      return false;
-    }
+    if (fetchErr || !existing) return false;
 
     const { error } = await supabase
       .from('memories')
       .delete()
       .eq('id', id);
 
+    return !error;
+  },
+
+  getMemoryInsights: async (userId: string) => {
+    const { data, error } = await supabase
+      .from('memories')
+      .select('element, count:id')
+      .eq('user_id', userId)
+      .group('element');
+
     if (error) {
-      console.error('Error deleting memory:', error.message);
-      return false;
+      console.error('❌ Error fetching memory insights:', error.message);
+      return null;
     }
-    return true;
+
+    return data;
   },
 };

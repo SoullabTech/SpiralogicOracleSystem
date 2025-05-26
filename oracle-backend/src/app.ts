@@ -1,55 +1,115 @@
-// src/app.ts
-
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
-import path from 'path';
-
-import { authenticate } from './middleware/authenticate';
-import userProfileRouter from './routes/userProfile.routes';
-import oracleRouter from './routes/oracle.routes';
-import facetRouter from './routes/facet.routes';
-import facetMapRouter from './routes/facetMap.routes';
-import insightHistoryRouter from './routes/insightHistory.routes';
-import storyGeneratorRouter from './routes/storyGenerator.routes';
-import surveyRouter from './routes/survey.routes';
+import { User as SupabaseUser } from '@supabase/supabase-js'; // Avoid naming conflicts
+import { Request } from 'express';
+import type { Metadata } from './metadata';
 import memoryRouter from './routes/memory.routes';
-import feedbackRouter from './routes/feedback.routes';
-import notionIngestRoutes from './routes/notionIngest.routes';
+import { authenticate } from './middleware/authenticate';
+import facetMapRouter from './routes/facetMap.routes';
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Public routes
-app.use('/', userProfileRouter);
-app.use('/api/oracle', oracleRouter);
-app.use('/api/oracle/facet-lookup', facetRouter);
 app.use('/api/oracle/facet-map', facetMapRouter);
-app.use('/api/oracle/story-generator', storyGeneratorRouter);
-app.use('/api/feedback', feedbackRouter);
-
-// Ingestion
-app.use('/api/notion/ingest', notionIngestRoutes);
-
-// Protected routes
-app.use('/api/oracle/insight-history', authenticate, insightHistoryRouter);
-app.use('/api/survey', authenticate, surveyRouter);
 app.use('/api/oracle/memory', authenticate, memoryRouter);
 
-// Health check
-app.get('/', (_req, res) => {
-  res.send('🧠 Spiralogic Oracle API is running');
-});
-
-// Swagger docs (optional)
-try {
-  const swaggerDocument = YAML.load(path.join(__dirname, 'docs', 'oracle.openapi.yaml'));
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-} catch (err) {
-  console.warn('⚠️ Swagger load failed:', err);
+/**
+ * Represents the authentication request payload
+ */
+export interface AuthRequest {
+  email: string;
+  password: string;
 }
 
-export { app };
+/**
+ * Represents the authentication response including tokens and user information
+ */
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    email: string;
+  };
+}
+
+/**
+ * Represents a stored memory item, either user query or agent response
+ */
+export interface MemoryItem {
+  /** Unique identifier for the memory entry */
+  id: string;
+  /** The main content of the memory (query or response) */
+  content: string;
+  /** Timestamp in milliseconds since epoch */
+  timestamp: number;
+  /** Optional client/user identifier */
+  clientId?: string;
+  /** Optional metadata for additional context */
+  metadata?: Metadata;
+}
+
+/**
+ * Represents a symbolic tag emitted during processing
+ */
+export interface SymbolicTag {
+  /** The symbol or archetype tag */
+  symbol: string;
+  /** The agent that emitted the symbol */
+  agent: string;
+  /** Optional elemental context (e.g., 'fire', 'water') */
+  element?: string;
+  /** Optional facet context within an element */
+  facet?: string;
+  /** Optional phase or state context */
+  phase?: string;
+  /** ISO timestamp of when the tag was created */
+  timestamp?: string;
+  /** Confidence score (0-1) for the tagging */
+  confidence?: number;
+}
+
+/**
+ * Represents a session of a user interacting with the system
+ */
+export interface Session {
+  id: string;
+  clientId: string;
+  startTime: string;
+  meta: Metadata;
+  status: 'active' | 'completed';
+}
+
+/**
+ * Represents the statistics for user sessions
+ */
+export interface SessionStats {
+  totalSessions: number;
+  activeSessions: number;
+  completedSessions: number;
+  lastSessionTime: string;
+  clientId: string;
+}
+
+/**
+ * User interface for interaction with authentication systems and memory tracking
+ */
+export interface User {
+  id: string;
+  email: string;
+  created_at: string;
+  last_login?: string;
+}
+
+/**
+ * Represents the structure of the authenticated request
+ */
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+    role?: string;
+  };
+}
+
+/**
+ * Re-exporting from other modules, assuming you've defined these in their respective files
+ */
+export * from './auth';   // If you have an 'auth' module
+export * from './memory';  // If you have a 'memory' module
+export * from './session'; // If you have a 'session' module

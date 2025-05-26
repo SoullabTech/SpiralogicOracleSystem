@@ -1,9 +1,11 @@
+// 📄 FILE: oracle-backend/src/middleware/authenticate.ts
+
 import { Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { config } from '../config/index';
 import { AuthenticationError } from '../utils/errors';
 import type { AuthenticatedRequest } from '../types/index';
-import logger from '../utils/logger';
+import { logger } from '../utils/logger';
 
 const supabase = createClient(config.supabase.url, config.supabase.anonKey);
 
@@ -50,3 +52,5 @@ export async function authenticateToken(
     res.status(401).json({ error: message });
   }
 }
+
+export const authenticate = authenticateToken;

@@ -1,4 +1,4 @@
-// src/core/agents/fireAgent.ts
+// oracle-backend/src/core/agents/fireAgent.ts
 
 "use strict";
 
@@ -55,8 +55,8 @@ export class FireAgent extends OracleAgent {
         element: "fire",
         archetype: "Fire",
         phase: "ignition",
-        symbols: [], // Optional: add symbol extraction here
-        reflections: [], // Optional
+        symbols: [],
+        reflections: [],
       },
     };
 

@@ -1,7 +1,43 @@
-// src/types/session.ts
+// oracle-backend/src/types/session.ts
 
-import { Session, SessionStats, Metadata } from './index'; // Importing from the main types file
-import { supabase } from '../services/supabaseClient'; // Assuming you have Supabase client
+import type { Metadata } from './metadata';
+import { supabase } from '../services/supabaseClient';
+
+/**
+ * Represents a symbolic tag emitted during processing
+ */
+export interface SymbolicTag {
+  symbol: string;
+  agent: string;
+  element?: string;
+  facet?: string;
+  phase?: string;
+  timestamp?: string;
+  confidence?: number;
+}
+
+/**
+ * Represents a session of a user interacting with the system
+ */
+export interface Session {
+  id: string;
+  clientId: string;
+  startTime: string;
+  meta: Metadata;
+  status: 'active' | 'completed';
+  endTime?: string;
+}
+
+/**
+ * Represents the statistics for user sessions
+ */
+export interface SessionStats {
+  totalSessions: number;
+  activeSessions: number;
+  completedSessions: number;
+  lastSessionTime: string;
+  clientId: string;
+}
 
 /**
  * Starts a new session for a user and stores session details.
@@ -16,18 +52,20 @@ export async function startSession(clientId: string, metadata: Metadata): Promis
         meta: metadata,
         status: 'active',
       },
-    ]);
+    ])
+    .select()
+    .single();
 
   if (error || !data) {
     throw new Error(error?.message || 'Failed to start session');
   }
 
   return {
-    id: data[0].id,
+    id: data.id,
     clientId,
-    startTime: data[0].startTime,
-    meta: metadata,
-    status: 'active',
+    startTime: data.startTime,
+    meta: data.meta,
+    status: data.status,
   };
 }
 
@@ -38,16 +76,21 @@ export async function endSession(sessionId: string): Promise<Session> {
   const { data, error } = await supabase
     .from('sessions')
     .update({ status: 'completed', endTime: new Date().toISOString() })
-    .eq('id', sessionId);
+    .eq('id', sessionId)
+    .select()
+    .single();
 
   if (error || !data) {
     throw new Error(error?.message || 'Failed to end session');
   }
 
   return {
-    ...data[0],
-    status: 'completed',
-    endTime: data[0].endTime,
+    id: data.id,
+    clientId: data.clientId,
+    startTime: data.startTime,
+    meta: data.meta,
+    status: data.status,
+    endTime: data.endTime,
   };
 }
 

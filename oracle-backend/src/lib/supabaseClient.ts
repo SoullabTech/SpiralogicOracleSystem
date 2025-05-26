@@ -1,33 +1,56 @@
-// src/lib/supabaseClient.ts
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { env } from './config';
+// oracle-backend/src/services/memoryService.ts
 
-const { SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY } = env;
-// … rest as before …
-// ─────────────────────────────────────────────────────────────────────────────
-// 🌱 Validation
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error('❌ Missing required Supabase public environment variables.');
+import { supabase } from '@/lib/supabaseClient';
+import { logger } from '@/utils/logger';
+import { createError } from '@/middleware/errorHandler';
+
+interface JournalEntry {
+  userId: string;
+  content: string;
+  type: 'dream' | 'insight' | 'ritual' | 'journal';
+  symbols: string[];
+  timestamp: string;
 }
 
-if (!SUPABASE_SERVICE_ROLE_KEY) {
-  console.warn('⚠️ Missing SUPABASE_SERVICE_ROLE_KEY — admin client disabled.');
-}
+export async function saveJournalEntry(entry: JournalEntry) {
+  const { data, error } = await supabase
+    .from('oracle_memories')
+    .insert([entry]);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 🧠 Clients
-export const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-export const supabaseAdmin: SupabaseClient | null = SUPABASE_SERVICE_ROLE_KEY
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
-  : null;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 🧪 Safe Admin Access
-export function useSupabaseAdmin(): SupabaseClient {
-  if (!supabaseAdmin) {
-    console.warn('⚠️ Falling back to public Supabase client — admin actions may fail.');
-    return supabase;
+  if (error) {
+    logger.error(`Failed to save journal entry: ${error.message}`);
+    throw createError('Failed to save journal entry', 500);
   }
-  return supabaseAdmin;
+
+  return data;
+}
+
+export async function getSymbolThreads(userId: string) {
+  const { data, error } = await supabase
+    .from('oracle_memories')
+    .select('*')
+    .eq('userId', userId)
+    .order('timestamp', { ascending: false });
+
+  if (error) {
+    logger.error(`Failed to fetch memory threads: ${error.message}`);
+    throw createError('Failed to fetch memory threads', 500);
+  }
+
+  return data;
+}
+
+export async function semanticSearch(userId: string, query: string) {
+  const { data, error } = await supabase
+    .rpc('semantic_memory_search', {
+      user_id: userId,
+      query_text: query
+    });
+
+  if (error) {
+    logger.error(`Semantic search failed: ${error.message}`);
+    throw createError('Semantic search failed', 500);
+  }
+
+  return data;
 }

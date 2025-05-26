@@ -1,10 +1,8 @@
-// src/routes/facetMap.routes.ts
+// oracle-backend/src/routes/facetMap.routes.ts
 
 import { Router } from 'express';
 import { detectFacetFromInput } from '../services/facetService';
-// after
-import { elementalFacetMap } from '../constants/elementalFacetMap'
-
+import { elementalFacetMap } from '../constants/elementalFacetMap';
 
 const router = Router();
 
@@ -13,19 +11,27 @@ const router = Router();
  * Returns the entire static facet map
  */
 router.get('/', (_req, res) => {
-  res.json({ success: true, data: { facets: elementalFacetMap } });
+  res.json({
+    success: true,
+    data: {
+      facets: elementalFacetMap,
+    },
+  });
 });
 
 /**
  * POST /api/oracle/facet-map/detect
- * Body: { input: string }
- * Detects and returns the best matching element + facet
+ * Request body should include: { input: string }
+ * Returns detected element and matching facet info
  */
 router.post('/detect', (req, res) => {
   const { input } = req.body;
 
   if (typeof input !== 'string' || !input.trim()) {
-    return res.status(400).json({ success: false, error: 'Invalid or missing `input`.' });
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid or missing `input`.',
+    });
   }
 
   try {
@@ -33,13 +39,25 @@ router.post('/detect', (req, res) => {
     const facetInfo = elementalFacetMap[element as keyof typeof elementalFacetMap];
 
     if (!facetInfo) {
-      return res.status(404).json({ success: false, error: `No facets for element "${element}".` });
+      return res.status(404).json({
+        success: false,
+        error: `No facets for element "${element}".`,
+      });
     }
 
-    return res.json({ success: true, data: { element, facet: facetInfo } });
+    return res.json({
+      success: true,
+      data: {
+        element,
+        facet: facetInfo,
+      },
+    });
   } catch (err) {
     console.error('❌ Error in facet-map detection:', err);
-    return res.status(500).json({ success: false, error: 'Internal server error' });
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+    });
   }
 });
 

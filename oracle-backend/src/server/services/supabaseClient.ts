@@ -1,46 +1,26 @@
-// 📁 File: src/services/summarizeCollectiveField.ts
+// oracle-backend/src/services/supabaseClient.ts
 
-import { supabase } from '../../lib/supabaseClient';
-import { parseEmotions } from '../lib/emotionParser';
-import { matchSymbols } from '../../lib/symbolMatcher';
-import { DateTime } from 'luxon';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { config } from '../config';
 
-export default async function summarizeCollectiveField() {
-  const since = DateTime.now().minus({ days: 2 }).toISO();
+const { url, anonKey, serviceRoleKey } = config.supabase;
 
-  const { data: entries, error } = await supabase
-    .from('memory_items')
-    .select('content, metadata, created_at, user_id')
-    .gte('created_at', since);
+if (!url || !anonKey) {
+  throw new Error('❌ Missing Supabase configuration in environment variables.');
+}
 
-  if (error) throw new Error(`Failed to load memory items: ${error.message}`);
+// Public client (used by frontend-safe operations)
+export const supabase: SupabaseClient = createClient(url, anonKey);
 
-  const allText = entries.map(e => e.content).join(' ');
-  const emotionScore = parseEmotions(allText);
-  const symbols = matchSymbols(allText);
+// Admin client (used for backend server-side operations)
+export const supabaseAdmin: SupabaseClient | null = serviceRoleKey
+  ? createClient(url, serviceRoleKey)
+  : null;
 
-  const elementIndex = {
-    fire: Math.random(),
-    water: Math.random(),
-    air: Math.random(),
-    earth: Math.random(),
-    aether: Math.random(),
-  };
-
-  const recalibrationInsights = entries.slice(0, 5).map(e => ({
-    timestamp: e.created_at,
-    insight: `Recalibration insight from ${e.content.slice(0, 40)}...`,
-    user: e.user_id,
-    phase: e.metadata?.phase || null,
-  }));
-
-  return {
-    date: DateTime.now().toISODate(),
-    topSymbols: symbols.slice(0, 5),
-    elementalIndex: elementIndex,
-    emotionalPulse: emotionScore,
-    oracleEcho:
-      'Many are at the threshold. Aether speaks: Do not rush to name what is being born.',
-    recalibrationInsights,
-  };
+export function getSupabaseAdmin(): SupabaseClient {
+  if (!supabaseAdmin) {
+    console.warn('⚠️ Falling back to public Supabase client. Admin operations may be restricted.');
+    return supabase;
+  }
+  return supabaseAdmin;
 }

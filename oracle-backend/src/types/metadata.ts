@@ -1,12 +1,16 @@
+// oracle-backend/src/types/metadata.ts
+
+/**
+ * Optional metadata block used in memory records and symbolic tags.
+ * You can extend this as needed to capture more structured data.
+ */
 export interface Metadata {
-  timestamp: string | number;
-  clientId?: string;
-  element?: string;
-  processedAt?: string;
-  prefect?: any;
-  guide?: boolean;
-  mentor?: boolean;
-  category?: string;
-  adviceType?: string;
-  [key: string]: any;
+  topic?: string;
+  source?: string;
+  notes?: string;
+  tags?: string[];
+  language?: string;
+  sentiment?: 'positive' | 'neutral' | 'negative';
+  symbols?: string[];
+  [key: string]: any; // Allows for additional dynamic keys
 }

@@ -1,3 +1,5 @@
+// oracle-backend/src/config/index.ts
+
 import 'dotenv/config';
 
 interface Config {
@@ -37,7 +39,7 @@ export const config: Config = {
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'default_refresh_secret',
   },
   rateLimit: {
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10),
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes
     maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
   },
   logging: {

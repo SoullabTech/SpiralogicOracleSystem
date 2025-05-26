@@ -13,7 +13,10 @@ import apiRouter from './routes/routes';
 import extractSymbolsRouter from './routes/oracle/extractSymbols';
 import dreamQueryRouter from './routes/oracle/dreamQuery';
 import symbolThreadsRouter from './routes/oracle/symbolThreads';
+import memoryRouter from './routes/memory';
+import ainRoutes from "./routes/ain.routes";
 
+app.use("/api/ain", ainRoutes);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = Number(process.env.PORT) || 5001;
@@ -59,6 +62,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/oracle', extractSymbolsRouter);
 app.use('/api/oracle', dreamQueryRouter);
 app.use('/api/oracle', symbolThreadsRouter);
+
+// Memory system endpoints
+app.use('/api/memory', memoryRouter);
 
 // Main API
 app.use('/api', apiRouter);

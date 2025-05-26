@@ -18,7 +18,7 @@ node_modules/
 # Never commit compiled JS or maps from src
 src/**/*.js
 src/**/*.js.map
-
+# macOS junk
 .DS_Store
 ._*
 # Ignore deeply nested node_modules in pnpm
@@ -26,3 +26,4 @@ src/**/*.js.map
 **/.pnpm/
 **/.next/
 **/dist/
+.vercel

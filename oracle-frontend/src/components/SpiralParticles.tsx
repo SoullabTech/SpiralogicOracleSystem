@@ -1,8 +1,4 @@
-// src/components/SpiralParticles.tsx
-import React, { useMemo } from 'react';
-import Particles from 'react-tsparticles';
-import { loadFull } from 'tsparticles';
-import type { Engine } from 'tsparticles-engine';
+import React from 'react';
 
 interface SpiralParticlesProps {
   element: string;
@@ -10,72 +6,132 @@ interface SpiralParticlesProps {
 }
 
 export function SpiralParticles({ element, small = false }: SpiralParticlesProps) {
-  const options = useMemo(() => {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     let color = '#ffffff';
     let speed = 1;
-    let shape = 'circle';
-    const count = small ? 15 : 50;
-    const sizeVal = small ? { min: 0.5, max: 1.5 } : { min: 1, max: 3 };
+    const particleCount = small ? 15 : 50;
 
     switch (element) {
       case 'Fire':
         color = '#ff6b6b';
         speed = 2;
-        shape = 'triangle';
         break;
       case 'Water':
         color = '#60a5fa';
         speed = 0.5;
-        shape = 'circle';
         break;
       case 'Earth':
         color = '#a3e635';
         speed = 0.8;
-        shape = 'square';
         break;
       case 'Air':
         color = '#c084fc';
         speed = 1.5;
-        shape = 'star';
         break;
       case 'Aether':
         color = '#facc15';
         speed = 1;
-        shape = 'polygon';
         break;
     }
 
-    return {
-      fullScreen: small ? { enable: false } : { enable: true, zIndex: -1 },
-      detectRetina: true,
-      fpsLimit: 60,
-      particles: {
-        number: { value: count },
-        color: { value: color },
-        shape: { type: shape },
-        opacity: { value: 0.6, random: { enable: true, minimumValue: 0.3 } },
-        size: { value: sizeVal },
-        move: { enable: true, speed },
-        links: { enable: false },
-      },
-      interactivity: {
-        events: {
-          onHover: { enable: true, mode: 'grab' },
-          onClick: { enable: true, mode: 'push' },
-          resize: true,
-        },
-        modes: {
-          grab: { distance: small ? 80 : 120, links: { opacity: 0.5 } },
-          push: { quantity: small ? 2 : 4 },
-        },
-      },
-      background: { color: { value: 'transparent' } },
+    const resizeCanvas = () => {
+      if (!canvas) return;
+      canvas.width = small ? 300 : window.innerWidth;
+      canvas.height = small ? 200 : window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      opacity: number;
+
+      constructor() {
+        if (!canvas) {
+          this.x = 0;
+          this.y = 0;
+        } else {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+        }
+        this.vx = (Math.random() - 0.5) * speed;
+        this.vy = (Math.random() - 0.5) * speed;
+        this.size = Math.random() * 3 + 1;
+        this.opacity = Math.random() * 0.6 + 0.3;
+      }
+
+      update() {
+        if (!canvas) return;
+        
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        if (!ctx) return;
+        
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    const particles: Particle[] = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    let animationId: number;
+    const animate = () => {
+      if (!canvas || !ctx) return;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
     };
   }, [element, small]);
 
-  const particlesInit = async (engine: Engine) => {
-    await loadFull(engine);
-  };
-
-  return <Particles init={particlesInit} options={options} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className={small ? 'w-full h-full' : 'fixed inset-0 pointer-events-none z-0'}
+      style={{ background: 'transparent' }}
+    />
+  );
 }
+
+export default SpiralParticles;

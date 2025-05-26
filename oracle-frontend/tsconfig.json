@@ -2,17 +2,45 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "jsx": "react-jsx",                   // → enables the new JSX runtime
+    "jsx": "preserve", // → enables the new JSX runtime
     "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": ".",                       // for path-mapping
+    "baseUrl": ".", // for path-mapping
     "paths": {
-      "@/*": ["src/*"]                    // ← adjust to match your alias
+      "@/*": [
+        "src/*"
+      ] // ← adjust to match your alias
     },
-    "typeRoots": ["node_modules/@types"]  // ensures @types/* get picked up
+    "typeRoots": [
+      "node_modules/@types"
+    ] // ensures @types/* get picked up
+    ,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["src", "global.d.ts"]       // include your source + any globals file
+  "include": [
+    "src",
+    "global.d.ts",
+    ".next/types/**/*.ts"
+  ] // include your source + any globals file
+  ,
+  "exclude": [
+    "node_modules"
+  ]
 }

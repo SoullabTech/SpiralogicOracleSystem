@@ -1,50 +1,36 @@
-'use client';
+import type { Metadata } from 'next'
+import { Inter, Cinzel } from 'next/font/google'
+import '../styles/globals.css'
 
-import { useState, useEffect } from 'react';
-import { RecorderOverlay } from '@/components/RecorderOverlay';
-import { usePathname } from 'next/navigation';
-import { useElevenLabs } from '@/lib/hooks/useElevenLabs';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [showRecorder, setShowRecorder] = useState(false);
-  const [showOralia, setShowOralia] = useState(true);
-  const { speak } = useElevenLabs('y2TOWGCXSYEgBanvKsYJ'); // Aunt Annie voice
-  const pathname = usePathname();
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter'
+})
 
-  useEffect(() => {
-    if (pathname === '/oralia') {
-      speak("Welcome back, dreamer. Oralia is with you.");
-    }
-  }, [pathname, speak]);
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-cinzel'
+})
 
+export const metadata: Metadata = {
+  title: 'Oracle System - Spiralogic',
+  description: 'Your spiritual guidance platform with AI-powered oracle readings, journaling, and insights.',
+  keywords: ['oracle', 'spiritual', 'guidance', 'tarot', 'astrology', 'meditation'],
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body className="relative">
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${cinzel.variable} font-sans`}>
         {children}
-
-        {/* Floating Mic Button */}
-        <button
-          onClick={() => setShowRecorder(true)}
-          className="fixed bottom-6 right-6 bg-indigo-600 p-4 rounded-full shadow-xl z-50"
-          aria-label="Voice Check-In"
-        >
-          🎙️
-        </button>
-
-        {showRecorder && (
-          <RecorderOverlay onClose={() => setShowRecorder(false)} />
-        )}
-
-        {/* Floating Oralia Companion */}
-        {showOralia && (
-          <div
-            onClick={() => speak("I am Oralia. I remember your essence.")}
-            className="fixed bottom-6 left-6 bg-soullab-aether text-white px-4 py-2 rounded-full shadow cursor-pointer z-50"
-          >
-            🌕 Oralia
-          </div>
-        )}
       </body>
     </html>
-  );
+  )
 }
