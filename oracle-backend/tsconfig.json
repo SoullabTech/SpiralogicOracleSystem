@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "es2022",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -10,9 +10,9 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "types": ["node"],
-    "rootDir": ".",              
+    "rootDir": ".",                 // ✅ allows imports from both src and server
     "outDir": "dist"
   },
-  "include": ["src/**/*", "server/**/*"],
+  "include": ["server/**/*", "src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
