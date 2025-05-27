@@ -6,3 +6,4 @@ node_modules/
 /oracle-frontend/dist/
 SpiralogicOracleSystem_backup.zip
 .vercel
+legacy-backups.zip
