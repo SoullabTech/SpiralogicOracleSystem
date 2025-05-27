@@ -2,18 +2,22 @@
   "name": "oracle-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "Oracle Backend API Server",
+  "description": "Oracle Backend API Server - Sacred Techno-Interface",
   "type": "commonjs",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc && npm run copy-assets",
     "start": "node dist/server.js",
-    "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
+    "dev": "nodemon --watch src --ext ts --exec ts-node -r tsconfig-paths/register src/server.ts",
     "copy-assets": "cp -r src/assets dist/ 2>/dev/null || true",
     "clean": "rm -rf dist",
+    "clean:mac": "find . -name '._*' -delete && find . -name '.DS_Store' -delete",
     "test": "jest",
-    "lint": "eslint src --ext .ts,.js",
-    "type-check": "tsc --noEmit"
+    "lint": "eslint src --ext .ts,.js --fix",
+    "type-check": "tsc --noEmit",
+    "postbuild": "echo 'Build completed - Sacred Technology ready for deployment'",
+    "render-build": "npm install && npm run build",
+    "render-start": "npm start"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8",
@@ -29,7 +33,9 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -48,9 +54,7 @@
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "ts-jest": "^29.1.1",
-    "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.2.2"
+    "tsconfig-paths": "^4.2.0"
   },
   "engines": {
     "node": ">=18.0.0",
