@@ -15,6 +15,7 @@ import symbolicMemoryRoutes from './symbolicMemory.routes';
 import personalOracleRoutes from './oracle/personalOracle.routes';
 import personalGuideRoutes from './oracle/personalGuide.routes';
 import dreamRoutes from './oracle/dream.routes';
+import founderRoutes from './founder.routes';
 
 const router = Router();
 
@@ -41,5 +42,6 @@ router.use('/oracle/story-generator', storyRoutes);
 router.use('/symbolic-trends', symbolicTrendsRoutes);
 router.use('/learning', learningRoutes);
 router.use('/facilitator', facilitatorRoutes);
+router.use('/founder', founderRoutes);
 
 export default router;

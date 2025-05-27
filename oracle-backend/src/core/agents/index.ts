@@ -17,6 +17,7 @@ export { ClientAgent } from './clientAgent';
 export { JournalingAgent } from './journalingAgent';
 export { AdjusterAgent } from './AdjusterAgent';
 export { MemoryModule } from './memoryModule';
+export { SoullabFounderAgent } from './soullabFounderAgent';
 export { elementalOracle } from '../services/elementalOracleService';
 export { getOracleResponse } from '../services/oracleService';
 export * from './mainOracleAgent';

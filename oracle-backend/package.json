@@ -17,7 +17,9 @@
     "type-check": "tsc --noEmit",
     "postbuild": "echo 'Build completed - Sacred Technology ready for deployment'",
     "render-build": "npm install && npm run build",
-    "render-start": "npm start"
+    "render-start": "npm start",
+    "scripts:ingest-manifesto": "ts-node -r tsconfig-paths/register scripts/ingestSpiralogicManifesto.ts",
+    "scripts:ingest-book": "ts-node -r tsconfig-paths/register scripts/ingestElementalAlchemyBook.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8",
