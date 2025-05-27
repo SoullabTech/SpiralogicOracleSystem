@@ -12,3 +12,15 @@ export class ShadowWorkClass {
     console.log(`Performing shadow work for ${this.name}`);
   }
 }
+
+// Export runShadowWork function for compatibility
+export const runShadowWork = async (userId: string, data: any) => {
+  // Placeholder implementation
+  const shadowWork = new ShadowWorkClass(userId);
+  shadowWork.performWork();
+  return {
+    status: 'completed',
+    insights: [],
+    transformations: []
+  };
+};

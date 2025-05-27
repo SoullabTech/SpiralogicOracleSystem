@@ -26,7 +26,7 @@ export async function retrieveMemory(): Promise<MemoryItem[]> {
 export async function updateMemory(id: string, newContent: string): Promise<boolean> {
   const index = memoryStore.findIndex(item => item.id === id);
   if (index !== -1) {
-    memoryStore[index].content = newContent;
+    memoryStore[index]!.content = newContent;
     console.log(`✏️ Memory updated: ${id}`);
     return true;
   }
@@ -71,7 +71,10 @@ export async function getClientMemories(clientId: string): Promise<MemoryItem[]>
 export async function cleanupOldMemories(): Promise<void> {
   const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
   const initialLength = memoryStore.length;
-  memoryStore = memoryStore.filter(item => item.timestamp >= thirtyDaysAgo);
+  memoryStore = memoryStore.filter(item => {
+    const timestamp = typeof item.timestamp === 'number' ? item.timestamp : Date.parse(item.timestamp);
+    return timestamp >= thirtyDaysAgo;
+  });
   const removedCount = initialLength - memoryStore.length;
   if (removedCount > 0) {
     console.log(`🧹 Cleaned up ${removedCount} old memories`);

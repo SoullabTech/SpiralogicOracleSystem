@@ -63,5 +63,9 @@ export function getFacetsByPhase(phase: string) {
 }
 
 export function getAllFacets() {
-  return Object.values(elementalFacetMap).flatMap(e => e.facets);
+  const allFacets: any[] = [];
+  Object.values(elementalFacetMap).forEach(e => {
+    allFacets.push(...e.facets);
+  });
+  return allFacets;
 }

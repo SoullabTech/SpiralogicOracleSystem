@@ -385,3 +385,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     return elementalWisdom.filter("What does this situation look like from here?", context);
   }
 }
+
+// Export the PersonalOracle class and create a singleton instance
+export { PersonalOracle };
+export const personalOracle = new PersonalOracle();

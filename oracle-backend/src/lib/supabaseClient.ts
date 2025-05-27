@@ -1,6 +1,9 @@
-// oracle-backend/src/services/memoryService.ts
+// oracle-backend/src/lib/supabaseClient.ts
 
-import { supabase } from '@/lib/supabaseClient';
+export { supabase } from './supabase';
+
+// Re-export for backwards compatibility
+import { supabase } from './supabase';
 import { logger } from '@/utils/logger';
 import { createError } from '@/middleware/errorHandler';
 

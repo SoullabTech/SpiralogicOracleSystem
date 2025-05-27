@@ -623,6 +623,26 @@ export class MemoryService {
   async recallMemories(userId: string, query?: MemoryQuery): Promise<MemoryItem[]> {
     return memoryService.recall(userId, query);
   }
+
+  async retrieveMemories(userId: string, query?: MemoryQuery): Promise<MemoryItem[]> {
+    return memoryService.recall(userId, query);
+  }
+
+  async createSharedSpace(userId: string, name: string, participants?: string[]): Promise<any> {
+    // Placeholder implementation for shared spaces
+    return {
+      id: Date.now().toString(),
+      userId,
+      name,
+      participants: participants || [],
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  async listSharedSpaces(userId: string): Promise<any[]> {
+    // Placeholder implementation
+    return [];
+  }
 }
 
 // Additional helper functions for spiritual pattern detection

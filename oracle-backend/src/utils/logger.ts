@@ -59,3 +59,10 @@ export const logger = winston.createLogger({
     new winston.transports.File({ filename: path.join(logsDir, 'rejections.log') }),
   ],
 });
+
+// Export specific logging functions for backwards compatibility
+export const logAdjusterInsight = (data: any) => logger.info('Adjuster Insight', data);
+export const logJournalEntry = (data: any) => logger.info('Journal Entry', data);
+
+// Export default logger
+export default logger;

@@ -48,21 +48,21 @@ export async function handleSurveySubmission(
     };
 
     for (const r of responses) {
-      const q = questions.find((q) => q.id === r.questionId);
-      if (q && totals[q.element]) {
-        totals[q.element].total += r.answer * q.weight;
-        totals[q.element].count += q.weight;
+      const q = questions.find((q: any) => q.id === r.questionId);
+      if (q && q.element && totals[q.element]) {
+        totals[q.element]!.total += r.answer * q.weight;
+        totals[q.element]!.count += q.weight;
       }
     }
 
     // 4️⃣ Normalize scores to 0–100 scale
     const profile = {
       user_id: userId,
-      fire: Math.round((totals.fire.total / Math.max(totals.fire.count, 1)) * 20),
-      water: Math.round((totals.water.total / Math.max(totals.water.count, 1)) * 20),
-      earth: Math.round((totals.earth.total / Math.max(totals.earth.count, 1)) * 20),
-      air: Math.round((totals.air.total / Math.max(totals.air.count, 1)) * 20),
-      aether: Math.round((totals.aether.total / Math.max(totals.aether.count, 1)) * 20),
+      fire: Math.round((totals.fire!.total / Math.max(totals.fire!.count, 1)) * 20),
+      water: Math.round((totals.water!.total / Math.max(totals.water!.count, 1)) * 20),
+      earth: Math.round((totals.earth!.total / Math.max(totals.earth!.count, 1)) * 20),
+      air: Math.round((totals.air!.total / Math.max(totals.air!.count, 1)) * 20),
+      aether: Math.round((totals.aether!.total / Math.max(totals.aether!.count, 1)) * 20),
       updated_at: new Date().toISOString(),
       crystal_focus: crystalFocus,
     };
