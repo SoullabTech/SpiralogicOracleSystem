@@ -1,8 +1,7 @@
-// oracle-backend/src/utils/logger.ts
-
 import winston from 'winston';
 import fs from 'fs';
 import path from 'path';
+import { config } from '@/config';
 
 // Define log levels
 const levels = {
@@ -22,7 +21,7 @@ const colors = {
   debug: 'white',
 };
 
-// Tell winston about the colors
+// Register color scheme with winston
 winston.addColors(colors);
 
 // Define log format
@@ -30,8 +29,8 @@ const format = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
   winston.format.colorize({ all: true }),
   winston.format.printf(
-    (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-  ),
+    (info) => `${info.timestamp} ${info.level}: ${info.message}`
+  )
 );
 
 // Ensure logs directory exists
@@ -40,23 +39,23 @@ if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
 
-// Define transports
+// Define log transports
 const transports = [
   new winston.transports.Console(),
-  new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-  new winston.transports.File({ filename: 'logs/all.log' }),
+  new winston.transports.File({ filename: path.join(logsDir, 'error.log'), level: 'error' }),
+  new winston.transports.File({ filename: path.join(logsDir, 'all.log') }),
 ];
 
-// Create logger
+// Create the logger
 export const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
+  level: config.logging.level,
   levels,
   format,
   transports,
   exceptionHandlers: [
-    new winston.transports.File({ filename: 'logs/exceptions.log' }),
+    new winston.transports.File({ filename: path.join(logsDir, 'exceptions.log') }),
   ],
   rejectionHandlers: [
-    new winston.transports.File({ filename: 'logs/rejections.log' }),
+    new winston.transports.File({ filename: path.join(logsDir, 'rejections.log') }),
   ],
 });

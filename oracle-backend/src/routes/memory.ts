@@ -1,78 +1,97 @@
-// 📄 FILE: oracle-backend/src/routes/memory.ts
+// oracle-backend/src/routes/memory.ts
 
-import express from 'express'
-import { z } from 'zod'
+import express from 'express';
+import { supabase } from '../server';
+import { logger } from '../utils/logger';
+import { asyncHandler, createError } from '../middleware/errorHandler';
+import { authMiddleware } from '../middleware/auth';
+import { AuthenticatedRequest, MemoryItem } from '../types';
 
-const router = express.Router()
+const router = express.Router();
 
-// 🧾 SCHEMA DEFINITIONS
-const journalEntrySchema = z.object({
-  userId: z.string(),
-  content: z.string(),
-  tags: z.array(z.string()).optional()
-})
+// Save a new memory
+router.post('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, res) => {
+  const userId = req.user?.id;
+  const { content, timestamp, metadata } = req.body;
 
-const semanticSearchSchema = z.object({
-  query: z.string(),
-  userId: z.string()
-})
+  if (!userId || !content) throw createError('Missing user ID or content', 400);
 
-const memoryThreadSchema = z.object({
-  userId: z.string(),
-  symbol: z.string(),
-  notes: z.string().optional()
-})
+  const { data, error } = await supabase
+    .from('oracle_memories')
+    .insert([
+      {
+        client_id: userId,
+        content,
+        timestamp,
+        metadata,
+      },
+    ])
+    .select()
+    .single();
 
-// 🧠 TEMPORARY MEMORY STORES (REPLACE WITH DB LATER)
-const journalStore: any[] = []
-const memoryThreads: any[] = []
-
-// 📥 POST /api/memory/journal → Save a journal entry
-router.post('/journal', (req, res) => {
-  const parsed = journalEntrySchema.safeParse(req.body)
-  if (!parsed.success) return res.status(400).json({ error: parsed.error.format() })
-
-  const entry = {
-    ...parsed.data,
-    id: Date.now().toString(),
-    timestamp: new Date().toISOString()
+  if (error) {
+    logger.error('Failed to save memory:', error);
+    throw createError('Error saving memory', 500);
   }
-  journalStore.push(entry)
-  return res.status(200).json({ message: 'Journal saved', entry })
-})
 
-// 📤 GET /api/memory/threads?userId=123 → Retrieve memory threads
-router.get('/threads', (req, res) => {
-  const userId = req.query.userId as string
-  if (!userId) return res.status(400).json({ error: 'Missing userId' })
+  res.status(201).json({ message: 'Memory saved', memory: data });
+}));
 
-  const threads = memoryThreads.filter(t => t.userId === userId)
-  return res.status(200).json({ threads })
-})
+// Get all memories for the user
+router.get('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, res) => {
+  const userId = req.user?.id;
 
-// 📥 POST /api/memory/threads → Save a symbolic memory thread
-router.post('/threads', (req, res) => {
-  const parsed = memoryThreadSchema.safeParse(req.body)
-  if (!parsed.success) return res.status(400).json({ error: parsed.error.format() })
+  const { data, error } = await supabase
+    .from('oracle_memories')
+    .select('*')
+    .eq('client_id', userId)
+    .order('timestamp', { ascending: false });
 
-  const thread = {
-    ...parsed.data,
-    id: Date.now().toString(),
-    timestamp: new Date().toISOString()
+  if (error) {
+    logger.error('Error fetching memories:', error);
+    throw createError('Failed to fetch memories', 500);
   }
-  memoryThreads.push(thread)
-  return res.status(200).json({ message: 'Thread saved', thread })
-})
 
-// 🔍 POST /api/memory/semantic-search → Perform a simple content search
-router.post('/semantic-search', (req, res) => {
-  const parsed = semanticSearchSchema.safeParse(req.body)
-  if (!parsed.success) return res.status(400).json({ error: parsed.error.format() })
+  res.json({ memories: data });
+}));
 
-  const { query, userId } = parsed.data
-  const results = journalStore.filter(entry => entry.userId === userId && entry.content.includes(query))
+// Get a specific memory by ID
+router.get('/:id', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, res) => {
+  const memoryId = req.params.id;
+  const userId = req.user?.id;
 
-  return res.status(200).json({ results })
-})
+  const { data, error } = await supabase
+    .from('oracle_memories')
+    .select('*')
+    .eq('id', memoryId)
+    .eq('client_id', userId)
+    .single();
 
-export default router
+  if (error) {
+    logger.error('Error fetching memory:', error);
+    throw createError('Memory not found', 404);
+  }
+
+  res.json({ memory: data });
+}));
+
+// Delete a memory
+router.delete('/:id', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, res) => {
+  const memoryId = req.params.id;
+  const userId = req.user?.id;
+
+  const { error } = await supabase
+    .from('oracle_memories')
+    .delete()
+    .eq('id', memoryId)
+    .eq('client_id', userId);
+
+  if (error) {
+    logger.error('Error deleting memory:', error);
+    throw createError('Failed to delete memory', 500);
+  }
+
+  res.json({ message: 'Memory deleted' });
+}));
+
+export default router;

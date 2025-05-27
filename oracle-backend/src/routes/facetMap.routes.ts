@@ -1,64 +1,44 @@
 // oracle-backend/src/routes/facetMap.routes.ts
 
-import { Router } from 'express';
-import { detectFacetFromInput } from '../services/facetService';
-import { elementalFacetMap } from '../constants/elementalFacetMap';
+import express from 'express';
+import { supabase } from '../server';
+import { asyncHandler, createError } from '../middleware/errorHandler';
+import { logger } from '../utils/logger';
 
-const router = Router();
+const router = express.Router();
 
-/**
- * GET /api/oracle/facet-map
- * Returns the entire static facet map
- */
-router.get('/', (_req, res) => {
-  res.json({
-    success: true,
-    data: {
-      facets: elementalFacetMap,
-    },
-  });
-});
+// Get the full elemental facet map
+router.get('/', asyncHandler(async (_req, res) => {
+  const { data, error } = await supabase
+    .from('facet_map')
+    .select('*')
+    .order('element')
+    .order('facet');
 
-/**
- * POST /api/oracle/facet-map/detect
- * Request body should include: { input: string }
- * Returns detected element and matching facet info
- */
-router.post('/detect', (req, res) => {
-  const { input } = req.body;
-
-  if (typeof input !== 'string' || !input.trim()) {
-    return res.status(400).json({
-      success: false,
-      error: 'Invalid or missing `input`.',
-    });
+  if (error) {
+    logger.error('Error fetching facet map:', error);
+    throw createError('Unable to retrieve facet map', 500);
   }
 
-  try {
-    const element = detectFacetFromInput(input);
-    const facetInfo = elementalFacetMap[element as keyof typeof elementalFacetMap];
+  res.json({ facets: data });
+}));
 
-    if (!facetInfo) {
-      return res.status(404).json({
-        success: false,
-        error: `No facets for element "${element}".`,
-      });
-    }
+// Get a specific facet by ID or name
+router.get('/:id', asyncHandler(async (req, res) => {
+  const facetId = req.params.id;
 
-    return res.json({
-      success: true,
-      data: {
-        element,
-        facet: facetInfo,
-      },
-    });
-  } catch (err) {
-    console.error('❌ Error in facet-map detection:', err);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal server error',
-    });
+  const { data, error } = await supabase
+    .from('facet_map')
+    .select('*')
+    .or(`id.eq.${facetId},facet.eq.${facetId}`)
+    .single();
+
+  if (error) {
+    logger.error('Error fetching specific facet:', error);
+    throw createError('Facet not found', 404);
   }
-});
+
+  res.json({ facet: data });
+}));
 
 export default router;

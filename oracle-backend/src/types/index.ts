@@ -1,6 +1,3 @@
-// oracle-backend/src/types/index.ts
-
-import { User as SupabaseUser } from '@supabase/supabase-js';
 import { Request } from 'express';
 import type { Metadata } from './metadata';
 
@@ -93,7 +90,7 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-// Optional re-exports if additional modules are defined
+// Optional re-exports
 export * from './auth';
 export * from './memory';
 export * from './session';

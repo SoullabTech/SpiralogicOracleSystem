@@ -1,9 +1,12 @@
 // oracle-backend/src/server.ts
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import app from './app';
 
-const PORT = process.env.PORT || 5001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 app.listen(PORT, () => {
-  console.log(`🚀 Oracle Backend Server running on http://localhost:${PORT}`);
+  console.log(`🔮 Oracle backend running at http://localhost:${PORT}`);
 });

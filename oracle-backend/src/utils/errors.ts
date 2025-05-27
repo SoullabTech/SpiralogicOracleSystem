@@ -1,39 +1,35 @@
+// oracle-backend/src/utils/errors.ts
+
 export class AppError extends Error {
-  constructor(
-    public message: string,
-    public statusCode: number = 500,
-    public code?: string
-  ) {
+  statusCode: number;
+  constructor(message: string, statusCode = 500) {
     super(message);
-    this.name = 'AppError';
+    this.name = this.constructor.name;
+    this.statusCode = statusCode;
     Error.captureStackTrace(this, this.constructor);
   }
 }
 
 export class ValidationError extends AppError {
-  constructor(message: string) {
-    super(message, 400, 'VALIDATION_ERROR');
-    this.name = 'ValidationError';
+  constructor(message = 'Invalid request') {
+    super(message, 400);
   }
 }
 
 export class AuthenticationError extends AppError {
-  constructor(message: string = 'Authentication required') {
-    super(message, 401, 'AUTHENTICATION_ERROR');
-    this.name = 'AuthenticationError';
+  constructor(message = 'Authentication failed') {
+    super(message, 401);
   }
 }
 
 export class AuthorizationError extends AppError {
-  constructor(message: string = 'Access denied') {
-    super(message, 403, 'AUTHORIZATION_ERROR');
-    this.name = 'AuthorizationError';
+  constructor(message = 'Not authorized') {
+    super(message, 403);
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(message: string = 'Resource not found') {
-    super(message, 404, 'NOT_FOUND');
-    this.name = 'NotFoundError';
+  constructor(message = 'Resource not found') {
+    super(message, 404);
   }
 }

@@ -151,4 +151,12 @@ router.get('/decks', asyncHandler(async (req, res) => {
 
   if (error) {
     logger.error('Error fetching oracle decks:', error);
-    throw createError('Failed to fetch oracle decks',
+    throw createError('Failed to fetch oracle decks', 500);
+  }
+
+  res.json({
+    decks: data || [],
+  });
+}));
+
+export default router;

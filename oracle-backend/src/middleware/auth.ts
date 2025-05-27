@@ -1,62 +1,49 @@
+// oracle-backend/src/middleware/auth.ts
+
 import { Request, Response, NextFunction } from 'express';
+import { supabase } from '../server';
 import { logger } from '../utils/logger';
+import { createError } from './errorHandler';
 
-export interface AppError extends Error {
-  statusCode?: number;
-  isOperational?: boolean;
+/**
+ * Middleware to check if the request is authenticated via Supabase JWT
+ */
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next(createError('Missing or invalid authorization header', 401));
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser(token);
+
+  if (error || !user) {
+    logger.warn('Unauthorized access attempt', error);
+    return next(createError('Invalid or expired token', 401));
+  }
+
+  // Attach user to request for downstream access
+  (req as any).user = {
+    id: user.id,
+    email: user.email,
+    role: user.role || 'user',
+  };
+
+  next();
+};
+
+/**
+ * Extends Express request to include authenticated user
+ */
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+    role?: string;
+  };
 }
-
-export const errorHandler = (
-  err: AppError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  
-  // Log error details
-  logger.error('Error occurred:', {
-    error: err.message,
-    stack: err.stack,
-    url: req.url,
-    method: req.method,
-    ip: req.ip,
-    userAgent: req.get('User-Agent'),
-    statusCode,
-  });
-
-  // Don't leak error details in production
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  
-  const errorResponse = {
-    error: message,
-    ...(isDevelopment && {
-      stack: err.stack,
-      details: err,
-    }),
-    timestamp: new Date().toISOString(),
-    path: req.url,
-    method: req.method,
-  };
-
-  res.status(statusCode).json(errorResponse);
-};
-
-export const asyncHandler = (fn: Function) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };
-};
-
-export const createError = (message: string, statusCode: number = 500): AppError => {
-  const error = new Error(message) as AppError;
-  error.statusCode = statusCode;
-  error.isOperational = true;
-  return error;
-};
-
-export const notFound = (req: Request, res: Response, next: NextFunction): void => {
-  const error = createError(`Route ${req.originalUrl} not found`, 404);
-  next(error);
-};
