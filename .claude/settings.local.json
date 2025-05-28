@@ -24,7 +24,8 @@
       "Bash(npm run dev:*)",
       "Bash(cat:*)",
       "Bash(cp:*)",
-      "Bash(true)"
+      "Bash(true)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": []
   },
