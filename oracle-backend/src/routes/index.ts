@@ -16,6 +16,14 @@ import personalOracleRoutes from './oracle/personalOracle.routes';
 import personalGuideRoutes from './oracle/personalGuide.routes';
 import dreamRoutes from './oracle/dream.routes';
 import founderRoutes from './founder.routes';
+import retreatRoutes from './retreat.routes';
+import retreatOnboardingRoutes from './retreatOnboarding.routes';
+import retreatSupportRoutes from './retreatSupport.routes';
+import postRetreatRoutes from './postRetreat.routes';
+import { holoflowerRouter } from './holoflower.routes';
+import { elementalAlchemyRouter } from './elementalAlchemy.routes';
+import { astrologyRouter } from './astrology.routes';
+import { facilitatorDashboardRouter } from './facilitatorDashboard.routes';
 
 const router = Router();
 
@@ -43,5 +51,13 @@ router.use('/symbolic-trends', symbolicTrendsRoutes);
 router.use('/learning', learningRoutes);
 router.use('/facilitator', facilitatorRoutes);
 router.use('/founder', founderRoutes);
+router.use('/retreat', retreatRoutes);
+router.use('/retreat/onboarding', retreatOnboardingRoutes);
+router.use('/retreat/support', retreatSupportRoutes);
+router.use('/post-retreat', postRetreatRoutes);
+router.use('/holoflower', holoflowerRouter);
+router.use('/elemental-alchemy', elementalAlchemyRouter);
+router.use('/astrology', astrologyRouter);
+router.use('/facilitator', facilitatorDashboardRouter);
 
 export default router;

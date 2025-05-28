@@ -8,9 +8,9 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run build:render",
-    "build:minimal": "npm run clean && tsc -p tsconfig.minimal.json && npm run postbuild:debug",
-    "build:render": "npm run clean && echo 'Starting TypeScript compilation...' && npx tsc -p tsconfig.render.json --diagnostics && npm run postbuild:debug",
-    "build:render-simple": "npm run clean && echo 'Compiling server...' && npx tsc src/server-simple.ts --outDir dist --esModuleInterop --skipLibCheck --target ES2020 --module commonjs && echo 'Build complete!' && ls -la dist/",
+    "build:minimal": "npm run clean && ./node_modules/.bin/tsc -p tsconfig.minimal.json && npm run postbuild:debug",
+    "build:render": "npm run clean && echo 'Starting TypeScript compilation...' && ./node_modules/.bin/tsc -p tsconfig.render.json --diagnostics && npm run postbuild:debug",
+    "build:render-simple": "npm run clean && echo 'Compiling server...' && ./node_modules/.bin/tsc src/server-simple.ts --outDir dist --esModuleInterop --skipLibCheck --target ES2020 --module commonjs && echo 'Build complete!' && ls -la dist/",
     "postbuild:debug": "echo '=== Build Output ===' && ls -la dist/ || echo 'No dist directory found'",
     "start": "node dist/server-simple.js",
     "start:minimal": "node dist/index-minimal.js",
