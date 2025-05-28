@@ -1,6 +1,7 @@
 {
   "buildCommand": "cd oracle-backend/soullab-frontend && npm install && npm run build",
   "outputDirectory": "oracle-backend/soullab-frontend/.next",
-  "installCommand": "echo 'Skip root install'",
-  "framework": null
+  "installCommand": "cd oracle-backend/soullab-frontend && npm install",
+  "framework": "nextjs",
+  "nodeVersion": "18.x"
 }
