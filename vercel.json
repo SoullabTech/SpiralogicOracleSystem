@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd oracle-backend/soullab-frontend && npm install && npm run build",
-  "outputDirectory": "oracle-backend/soullab-frontend/.next",
   "installCommand": "cd oracle-backend/soullab-frontend && npm install",
+  "buildCommand": "cd oracle-backend/soullab-frontend && npm run build",
+  "outputDirectory": "oracle-backend/soullab-frontend/.next",
   "framework": "nextjs",
   "nodeVersion": "18.x"
 }
