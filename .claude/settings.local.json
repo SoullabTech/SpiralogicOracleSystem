@@ -21,7 +21,10 @@
       "Bash(ls:*)",
       "Bash(timeout:*)",
       "Bash(node:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(cat:*)",
+      "Bash(cp:*)",
+      "Bash(true)"
     ],
     "deny": []
   },

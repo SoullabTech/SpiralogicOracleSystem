@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ['images.unsplash.com'],
-  },
   env: {
-    SUPABASE_URL: process.env.SUPABASE_URL,
-    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://oracle-backend-1.onrender.com',
+  },
+  images: {
+    domains: ['oracle-backend-1.onrender.com'],
   },
 }
 
-module.exports = nextConfig;
+module.exports = nextConfig
