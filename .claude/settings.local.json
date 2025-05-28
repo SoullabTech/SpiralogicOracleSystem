@@ -15,7 +15,11 @@
       "Bash(git remote add:*)",
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
-      "Bash(timeout 5 npm run start:minimal)"
+      "Bash(timeout 5 npm run start:minimal)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "Bash(ls:*)",
+      "Bash(timeout:*)"
     ],
     "deny": []
   }

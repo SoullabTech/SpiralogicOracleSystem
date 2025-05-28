@@ -1,4 +1,3 @@
-// oracle-backend/tsconfig.minimal.json
 {
   "compilerOptions": {
     "target": "ES2020",
@@ -13,15 +12,10 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "allowJs": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noImplicitAny": false
   },
-  "include": [
-    "src/index-minimal.ts",
-    "src/server-minimal.ts",
-    "src/routes/minimal.routes.ts"
+  "files": [
+    "src/server-simple.ts"
   ],
   "exclude": [
     "node_modules",

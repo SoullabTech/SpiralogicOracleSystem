@@ -1,4 +1,23 @@
 services:
+  # Backend Service
+  - type: web
+    name: oracle-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd oracle-backend && npm ci && npm run build:render-simple
+    startCommand: cd oracle-backend && node dist/server-simple.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - fromGroup: oracle-backend-env
+
+  # Frontend Service
   - type: web
     name: oracle-frontend
     env: static
