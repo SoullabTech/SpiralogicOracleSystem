@@ -41,4 +41,4 @@ services:
       - key: NODE_VERSION
         value: 18
       - key: NPM_VERSION
-        value: 8
+        value: 82w23
