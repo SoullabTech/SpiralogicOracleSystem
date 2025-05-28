@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd oracle-backend/soullab-frontend && npm install && npm run build",
+  "outputDirectory": "oracle-backend/soullab-frontend/.next",
+  "installCommand": "echo 'Skip root install'",
+  "framework": null
+}
