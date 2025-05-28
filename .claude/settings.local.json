@@ -25,7 +25,8 @@
       "Bash(cat:*)",
       "Bash(cp:*)",
       "Bash(true)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   },
