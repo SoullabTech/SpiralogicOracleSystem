@@ -5,9 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface SacredCardProps {
   children: React.ReactNode;
-  variant?: 'default' | 'premium' | 'glass' | 'sacred' | 'minimal';
+  variant?: 'default' | 'premium' | 'minimal' | 'fire' | 'earth' | 'water' | 'air';
   hover?: boolean;
-  glow?: boolean;
   interactive?: boolean;
   onClick?: () => void;
   className?: string;
@@ -17,7 +16,6 @@ export const SacredCard: React.FC<SacredCardProps> = ({
   children,
   variant = 'default',
   hover = true,
-  glow = false,
   interactive = false,
   onClick,
   className = ''
@@ -27,34 +25,39 @@ export const SacredCard: React.FC<SacredCardProps> = ({
   const getVariantClasses = () => {
     switch (variant) {
       case 'premium':
-        return `
-          bg-gradient-to-br from-sacred-navy/40 via-sacred-mystic-blue/20 to-sacred-navy/40
-          backdrop-blur-xl border border-sacred-divine-gold/20
-          shadow-sacred-deep
-        `;
-      case 'glass':
-        return `
-          bg-sacred-mystic-blue/10 backdrop-blur-2xl
-          border border-sacred-silver/10
-          shadow-lg
-        `;
-      case 'sacred':
-        return `
-          bg-gradient-to-br from-sacred-cosmic-depth via-sacred-navy/50 to-sacred-cosmic-depth
-          border border-sacred-divine-gold/30
-          shadow-sacred-gold
-        `;
+        return 'soullab-card-premium';
       case 'minimal':
         return `
-          bg-sacred-navy/20 backdrop-blur-sm
-          border border-sacred-mystic-blue/10
+          bg-soullab-white/95 backdrop-blur-sm
+          border border-soullab-gray/10
+          shadow-soullab-subtle
+        `;
+      case 'fire':
+        return `
+          bg-soullab-white border border-soullab-fire/20
+          shadow-soullab-subtle hover:shadow-soullab-glow
+          hover:border-soullab-fire/40
+        `;
+      case 'earth':
+        return `
+          bg-soullab-white border border-soullab-earth/20
+          shadow-soullab-subtle
+          hover:border-soullab-earth/40
+        `;
+      case 'water':
+        return `
+          bg-soullab-white border border-soullab-water/20
+          shadow-soullab-subtle
+          hover:border-soullab-water/40
+        `;
+      case 'air':
+        return `
+          bg-soullab-white border border-soullab-air/20
+          shadow-soullab-subtle
+          hover:border-soullab-air/40
         `;
       default:
-        return `
-          bg-sacred-navy/30 backdrop-blur-xl
-          border border-sacred-mystic-blue/20
-          shadow-sacred-deep
-        `;
+        return 'soullab-card';
     }
   };
 
@@ -64,9 +67,8 @@ export const SacredCard: React.FC<SacredCardProps> = ({
         relative rounded-sacred-lg p-sacred-lg
         ${getVariantClasses()}
         ${hover && 'transition-all duration-300'}
-        ${hover && !interactive && 'hover:shadow-sacred-gold hover:border-sacred-divine-gold/30'}
+        ${hover && !interactive && 'hover:shadow-soullab-glow hover:border-soullab-fire/30'}
         ${interactive && 'cursor-pointer'}
-        ${glow && 'sacred-glow'}
         overflow-hidden
         ${className}
       `}
@@ -77,7 +79,7 @@ export const SacredCard: React.FC<SacredCardProps> = ({
       whileTap={interactive ? { scale: 0.98 } : {}}
     >
       {/* Sacred pattern overlay */}
-      {(variant === 'premium' || variant === 'sacred') && (
+      {variant === 'premium' && (
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <div 
             className="absolute inset-0"
@@ -94,7 +96,7 @@ export const SacredCard: React.FC<SacredCardProps> = ({
 
       {/* Hover glow effect */}
       <AnimatePresence>
-        {isHovered && glow && (
+        {isHovered && hover && (
           <motion.div
             className="absolute inset-0 pointer-events-none"
             initial={{ opacity: 0 }}
@@ -226,7 +228,7 @@ export const SacredStatCard: React.FC<SacredStatCardProps> = ({
 }) => {
   return (
     <SacredCard 
-      variant={variant === 'gradient' ? 'sacred' : 'default'}
+      variant={variant === 'gradient' ? 'premium' : 'default'}
       className={className}
     >
       <div className="flex items-start justify-between">
@@ -280,7 +282,6 @@ export const SacredFeatureCard: React.FC<SacredFeatureCardProps> = ({
     <SacredCard
       variant={highlighted ? 'premium' : 'default'}
       hover={true}
-      glow={highlighted}
       className={className}
     >
       <div className="text-center">

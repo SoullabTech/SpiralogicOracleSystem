@@ -28,7 +28,11 @@
       "Bash(git ls-tree:*)",
       "Bash(mv:*)",
       "Bash(npx vercel:*)",
-      "WebFetch(domain:frontend-asklr7br2-spiralogic-oracle-system.vercel.app)"
+      "WebFetch(domain:frontend-asklr7br2-spiralogic-oracle-system.vercel.app)",
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(npm run lint)"
     ],
     "deny": []
   },

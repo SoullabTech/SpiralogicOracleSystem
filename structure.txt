@@ -1,10 +1,204 @@
 .
 ├── 📦 pyproject.toml
 ├── -rf
+├── backend
+│   ├── __tests__
+│   │   └── personal
+│   ├── api
+│   │   ├── adjuster
+│   │   ├── oracle
+│   │   ├── oracle-agent
+│   │   ├── ritual.ts
+│   │   ├── rituals
+│   │   ├── transform.ts
+│   │   ├── user
+│   │   ├── user.ts
+│   │   └── whisper
+│   ├── App.css
+│   ├── clean-import-extensions.ts
+│   ├── crash.log
+│   ├── db
+│   │   ├── 0001_create_journal_entries.sql
+│   │   └── migrations
+│   ├── docs
+│   │   ├── knowledge-extraction-summary.md
+│   │   └── knowledge-integration-plan.md
+│   ├── eslint.config.js
+│   ├── eslint.config.mjs
+│   ├── example.ts
+│   ├── flows
+│   │   └── daily_journal_processing.py
+│   ├── FRONTEND_IMPLEMENTATION_PLAN.md
+│   ├── index.css
+│   ├── index.html
+│   ├── index.ts
+│   ├── ingest_kb.py
+│   ├── jest.config.js
+│   ├── kb_schema.json
+│   ├── logs
+│   │   ├── exceptions.log
+│   │   └── rejections.log
+│   ├── memory
+│   │   ├── journalMemory.ts
+│   │   ├── memgpt.config.ts
+│   │   ├── memoryRouter.ts
+│   │   ├── semanticIndex.ts
+│   │   └── voiceToText.ts
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── packages
+│   │   └── agents
+│   ├── postcss.config.js
+│   ├── public
+│   ├── README-MINIMAL.md
+│   ├── README.md
+│   ├── render.yaml
+│   ├── requirements.txt
+│   ├── routes
+│   ├── run_soul_reflection.py
+│   ├── scripts
+│   │   ├── add-js-extensions.js
+│   │   ├── ingestAdvancedSpiralogicDocs.ts
+│   │   ├── ingestElementalAlchemyBook.ts
+│   │   ├── ingestKnowledge.ts
+│   │   ├── ingestSpiralogicManifesto.ts
+│   │   ├── seedMemoryItems.js
+│   │   ├── seedMemoryItems.ts
+│   │   └── seedRituals
+│   ├── server
+│   │   ├── data
+│   │   ├── index.ts
+│   │   ├── middleware
+│   │   ├── prefect.ts
+│   │   ├── routes
+│   │   ├── server.ts
+│   │   ├── services
+│   │   ├── tasks
+│   │   └── types
+│   ├── Shield
+│   │   └── Projects
+│   ├── soul_memory
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   ├── config.py
+│   │   ├── db
+│   │   ├── flows
+│   │   ├── schema.py
+│   │   ├── utils
+│   │   └── vector
+│   ├── soul_memory.db
+│   ├── spiralogic_kb
+│   │   └── shadow_evolution.json
+│   ├── src
+│   │   ├── __tests__
+│   │   ├── app-minimal.ts
+│   │   ├── App.css
+│   │   ├── app.ts
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── config
+│   │   ├── constants
+│   │   ├── controllers
+│   │   ├── core
+│   │   ├── docs
+│   │   ├── flows
+│   │   ├── index-minimal.ts
+│   │   ├── index.css
+│   │   ├── index.ts
+│   │   ├── integration
+│   │   ├── lib
+│   │   ├── main
+│   │   ├── main.tsx
+│   │   ├── middleware
+│   │   ├── modules
+│   │   ├── routes
+│   │   ├── schemas
+│   │   ├── server
+│   │   ├── server-minimal.ts
+│   │   ├── server-simple.ts
+│   │   ├── server.ts
+│   │   ├── services
+│   │   ├── setupTests.ts
+│   │   ├── types
+│   │   ├── utils
+│   │   ├── vite-env.d.ts
+│   │   └── vitest.config.ts
+│   ├── structure-backend.txt
+│   ├── structure.txt
+│   ├── supabase
+│   │   ├── functions
+│   │   ├── migrations
+│   │   └── schema.sql
+│   ├── test-env.ts
+│   ├── test.ts
+│   ├── testServer.ts
+│   ├── tsconfig-paths-loader.mjs
+│   ├── tsconfig.app.json
+│   ├── tsconfig.app.json 
+│   ├── tsconfig.json
+│   ├── tsconfig.minimal.json
+│   ├── tsconfig.node.json
+│   ├── tsconfig.render.json
+│   ├── tsconfig.server.json
+│   ├── tsconfig.tsbuildinfo
+│   ├── vite.config.ts
+│   ├── vitest.config.d.ts
+│   ├── vitest.config.js
+│   └── vitest.config.js.map
+├── claude-env
+│   ├── bin
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── Activate.ps1
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.13
+│   │   ├── python -> python3.13
+│   │   ├── python3 -> python3.13
+│   │   └── python3.13 -> /opt/homebrew/Cellar/python@3.13/3.13.3/Frameworks/Python.framework/Versions/3.13/bin/python3.13
+│   ├── include
+│   │   └── python3.13
+│   ├── lib
+│   │   └── python3.13
+│   └── pyvenv.cfg
+├── DEPLOY_NOW.txt
+├── deploy.log
 ├── deploy.sh
 ├── docs
 │   ├── oracle-system.md
 │   └── README.md
+├── frontend
+│   ├── app
+│   │   ├── api
+│   │   ├── dashboard
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── onboarding
+│   │   ├── oracle
+│   │   └── page.tsx
+│   ├── components
+│   │   ├── layout
+│   │   ├── oracle
+│   │   ├── Providers.tsx
+│   │   ├── sacred
+│   │   └── ui
+│   ├── lib
+│   │   ├── api.ts
+│   │   └── oracle.ts
+│   ├── next-env.d.ts
+│   ├── next.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   ├── README.md
+│   ├── soullab-frontend
+│   │   ├── app
+│   │   └── components
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   └── vercel.json
 ├── htmlcov
 │   ├── class_index.html
 │   ├── coverage_html_cb_6fb7b396.js
@@ -26,1201 +220,18 @@
 │   ├── z_bb1d213abc3aef89_schema_py.html
 │   ├── z_e50ee3392c562885___init___py.html
 │   └── z_e50ee3392c562885_semantic_index_py.html
+├── legacy-backups.zip
+├── legacy-oracle-frontend
 ├── Make
 ├── Makefile
 ├── next-env.d.ts
 ├── next.config.js
-├── oracle-backend
-│   ├── __tests__
-│   │   └── personal
-│   │       ├── insight.test.ts
-│   │       └── personal-oracle.test.tsx  tsx Copy code
-│   ├── api
-│   │   ├── adjuster
-│   │   │   └── log.ts
-│   │   ├── memory.ts
-│   │   ├── oracle
-│   │   │   └── personal
-│   │   │       ├── extractSymbols.ts
-│   │   │       ├── insight.ts
-│   │   │       └── query.ts
-│   │   ├── oracle-agent
-│   │   │   └── insight.ts
-│   │   ├── ritual.ts
-│   │   ├── rituals
-│   │   │   └── progress.ts
-│   │   ├── transform.ts
-│   │   ├── user
-│   │   │   └── profile
-│   │   ├── user.ts
-│   │   └── whisper
-│   │       └── transcribe.ts
-│   ├── App.css
-│   ├── clean-import-extensions.ts
-│   ├── crash.log
-│   ├── eslint.config.js
-│   ├── eslint.config.mjs
-│   ├── example.ts
-│   ├── flows
-│   │   └── daily_journal_processing.py
-│   ├── index.css
-│   ├── index.html
-│   ├── index.ts
-│   ├── ingest_kb.py
-│   ├── jest.config.js
-│   ├── kb_schema.json
-│   ├── logs
-│   │   ├── exceptions.log
-│   │   └── rejections.log
-│   ├── oracle-backend
-│   │   ├── __tests__
-│   │   ├── api
-│   │   │   └── adjuster
-│   │   │       └── log.ts
-│   │   ├── apps
-│   │   │   └── backend
-│   │   │       └── spiralogic
-│   │   ├── lib
-│   │   │   ├── agentPrompts.ts
-│   │   │   └── setupTests.ts
-│   │   ├── scripts
-│   │   │   ├── checkPromptHealth.ts
-│   │   │   ├── cleanOldCheckins.ts
-│   │   │   ├── fixAgentImports.ts
-│   │   │   ├── fixImports.ts
-│   │   │   ├── ingestKnowledge.ts
-│   │   │   ├── seedprompts.ts
-│   │   │   ├── supabaseAdmin.ts
-│   │   │   ├── supabaseClient.test.ts
-│   │   │   └── utils
-│   │   ├── server
-│   │   │   ├── data
-│   │   │   ├── middleware
-│   │   │   ├── routes
-│   │   │   ├── tasks
-│   │   │   │   ├── loadShadowData.ts
-│   │   │   │   └── prefect.ts
-│   │   │   └── types
-│   │   ├── slack-chat-agent
-│   │   ├── spiralogic_kb
-│   │   │   └── shadow_evolution.json
-│   │   └── your-project-root
-│   │       └── _
-│   │           ├── h
-│   │           └── husky.sh
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── packages
-│   │   └── agents
-│   ├── postcss.config.js
-│   ├── public
-│   ├── README.md
-│   ├── render.yaml
-│   ├── requirements.txt
-│   ├── run_soul_reflection.py
-│   ├── scripts
-│   │   ├── add-js-extensions.js
-│   │   ├── ingestKnowledge.ts
-│   │   ├── seedMemoryItems.js
-│   │   ├── seedMemoryItems.ts
-│   │   └── seedRituals
-│   │       ├── aether-initiation-001.json
-│   │       ├── air-initiation-001.json
-│   │       ├── earth-initiation-001.json
-│   │       ├── fire-initiation-001.json
-│   │       └── first-contact-ritual.json
-│   ├── server
-│   │   ├── data
-│   │   │   └── questions.ts
-│   │   ├── index.ts
-│   │   ├── middleware
-│   │   │   └── auth.ts
-│   │   ├── prefect.ts
-│   │   ├── routes
-│   │   │   ├── adminRoutes.ts
-│   │   │   ├── index.ts
-│   │   │   ├── oracle
-│   │   │   │   ├── dreamQuery.ts
-│   │   │   │   ├── extractSymbols.ts
-│   │   │   │   └── symbolThreads.ts
-│   │   │   ├── oracleRoutes.ts
-│   │   │   ├── profileRoutes.ts
-│   │   │   └── surveyRoutes.ts
-│   │   ├── server.ts
-│   │   ├── services
-│   │   │   └── oracleService.ts
-│   │   ├── tasks
-│   │   │   ├── scheduledAnalysis.ts
-│   │   │   ├── scheduledTasks.ts
-│   │   │   └── someTaskFunction.ts
-│   │   └── types
-│   │       └── express.d.ts
-│   ├── soul_memory
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   │   └── __init__.cpython-311.pyc
-│   │   ├── config.py
-│   │   ├── db
-│   │   │   └── __init__.py
-│   │   ├── flows
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-311.pyc
-│   │   │   │   └── soul_reflection.cpython-311.pyc
-│   │   │   └── soul_reflection.py
-│   │   ├── schema.py
-│   │   ├── utils
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-311.pyc
-│   │   │   │   └── text_cleaning.cpython-311.pyc
-│   │   │   └── text_cleaning.py
-│   │   └── vector
-│   │       ├── __init__.py
-│   │       └── semantic_index.py
-│   ├── soul_memory.db
-│   ├── spiralogic_kb
-│   │   └── shadow_evolution.json
-│   ├── src
-│   │   ├── App.css
-│   │   ├── app.ts
-│   │   ├── assets
-│   │   ├── config
-│   │   │   ├── index.ts
-│   │   │   └── voices.ts
-│   │   ├── constants
-│   │   │   ├── elementalFacetMap.ts
-│   │   │   └── feedbackPrompts.ts
-│   │   ├── controllers
-│   │   │   ├── journal.controller.ts
-│   │   │   ├── memory.controller.ts
-│   │   │   ├── personalGuide.controller.ts
-│   │   │   └── survey.controller.ts
-│   │   ├── core
-│   │   │   ├── agent
-│   │   │   │   └── memoryManager.ts
-│   │   │   ├── agents
-│   │   │   │   ├── adjusterAgent.ts
-│   │   │   │   ├── aetherAgent.ts
-│   │   │   │   ├── aetherReflectionComposer.ts
-│   │   │   │   ├── AgentCollaboration.ts
-│   │   │   │   ├── airAgent.ts
-│   │   │   │   ├── baseAgent.ts
-│   │   │   │   ├── clean-import-extensions.ts
-│   │   │   │   ├── clientAgent.ts
-│   │   │   │   ├── DreamAgent.ts
-│   │   │   │   ├── dreamOracleAgent.ts
-│   │   │   │   ├── dualLLMRouting.ts
-│   │   │   │   ├── earthAgent.ts
-│   │   │   │   ├── elementalAgent.ts
-│   │   │   │   ├── elementalFramework.ts
-│   │   │   │   ├── elementalOracleAgent.ts
-│   │   │   │   ├── facilitatorAgent.ts
-│   │   │   │   ├── fireAgent.ts
-│   │   │   │   ├── guideAgent.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── innerGuideAgent.ts
-│   │   │   │   ├── journalingAgent.ts
-│   │   │   │   ├── mainOracleAgent.ts
-│   │   │   │   ├── mentorAgent.ts
-│   │   │   │   ├── oracleAgent.ts
-│   │   │   │   ├── oracleArchetypes.ts
-│   │   │   │   ├── orchestrator.ts
-│   │   │   │   ├── persistentMemory.ts
-│   │   │   │   ├── PersonalOracleAgent.ts
-│   │   │   │   ├── ShadowAgent.ts
-│   │   │   │   ├── shadowAgents.ts
-│   │   │   │   ├── spiralogic_kb
-│   │   │   │   │   └── shadow_evolution.json
-│   │   │   │   ├── SpiralogicAgent.ts
-│   │   │   │   ├── types.ts
-│   │   │   │   ├── unifiedMemory.ts
-│   │   │   │   └── waterAgent.ts
-│   │   │   ├── ArchetypeFramework.ts
-│   │   │   ├── HumanPacedLearning.ts
-│   │   │   ├── oracle.openai.ts
-│   │   │   ├── SOUL.ts
-│   │   │   ├── SpiralogicJourney.ts
-│   │   │   └── types.ts
-│   │   ├── docs
-│   │   │   ├── oracle.openapi.yaml
-│   │   │   └── swagger.ts
-│   │   ├── flows
-│   │   │   ├── index.ts
-│   │   │   ├── learningFlow.ts
-│   │   │   └── types.ts
-│   │   ├── index.css
-│   │   ├── index.ts
-│   │   ├── integration
-│   │   │   └── _tests_
-│   │   │       ├── mainOracleAgent.integration.test.ts
-│   │   │       └── oracleService.integration.test.ts
-│   │   ├── lib
-│   │   │   ├── analytics
-│   │   │   │   └── getUserArchetypeStats.ts
-│   │   │   ├── apiClient.ts
-│   │   │   ├── config.ts
-│   │   │   ├── database.types.ts
-│   │   │   ├── fieldParsers.ts
-│   │   │   ├── langchain.ts
-│   │   │   ├── logger.ts
-│   │   │   ├── logOracleMemory.ts
-│   │   │   ├── mem0.ts
-│   │   │   ├── openaiClient.ts
-│   │   │   ├── oracleEchoGenerator.ts
-│   │   │   ├── ritualEngine.ts
-│   │   │   ├── schemas
-│   │   │   │   └── elemental.ts
-│   │   │   ├── spiralLogic.ts
-│   │   │   ├── supabase.ts
-│   │   │   ├── supabase.types.ts
-│   │   │   ├── supabaseClient.ts
-│   │   │   ├── symbolMatcher.ts
-│   │   │   └── utils
-│   │   │       ├── faceUtil.ts
-│   │   │       └── validateProfile.ts
-│   │   ├── main
-│   │   │   └── CollaborationSession.ts
-│   │   ├── main.tsx
-│   │   ├── middleware
-│   │   │   ├── auth.ts
-│   │   │   ├── authenticate.ts
-│   │   │   ├── authenticateToken.ts
-│   │   │   ├── errorHandler.ts
-│   │   │   ├── index.ts
-│   │   │   ├── isAdmin.ts
-│   │   │   └── validate.ts
-│   │   ├── modules
-│   │   │   ├── elementalOracleService.ts
-│   │   │   ├── SacredMirroProtocol.ts
-│   │   │   ├── shadow
-│   │   │   │   └── index.ts
-│   │   │   └── shadowWorkModule.ts
-│   │   ├── routes
-│   │   │   ├── auth.ts
-│   │   │   ├── authRoutes.ts
-│   │   │   ├── chatRoutes.ts
-│   │   │   ├── dream.routes.ts
-│   │   │   ├── facet.routes.ts
-│   │   │   ├── facetMap.routes.ts
-│   │   │   ├── facilitatorRoutes.ts
-│   │   │   ├── feedback.routes.ts
-│   │   │   ├── fieldpulse.routes.ts
-│   │   │   ├── flow.routes.ts
-│   │   │   ├── index.ts
-│   │   │   ├── insightHistory.routes.ts
-│   │   │   ├── journal.routes.ts
-│   │   │   ├── memory.routes.ts
-│   │   │   ├── meta.routes.ts
-│   │   │   ├── notionIngest.routes.ts
-│   │   │   ├── oracle
-│   │   │   │   ├── extractSymbols.ts
-│   │   │   │   ├── memory.ts
-│   │   │   │   ├── personal.routes.ts
-│   │   │   │   ├── personalGuide.routes.ts
-│   │   │   │   ├── personalOracle.routes.ts
-│   │   │   │   ├── reflection.ts
-│   │   │   │   ├── session.ts
-│   │   │   │   └── symbolThreads.ts
-│   │   │   ├── oracle.ts
-│   │   │   ├── profileSettings.routes.ts
-│   │   │   ├── routes.ts
-│   │   │   ├── session.routes.ts
-│   │   │   ├── storyGenerator.routes.ts
-│   │   │   ├── survey.routes.ts
-│   │   │   ├── symbolicMemory.routes.ts
-│   │   │   ├── symbolicTrends.routes.ts
-│   │   │   ├── tasks
-│   │   │   │   └── scheduledTasks.ts
-│   │   │   ├── tests
-│   │   │   │   └── memoryRoutes.test.ts
-│   │   │   ├── user.routes.ts
-│   │   │   └── userProfile.routes.ts
-│   │   ├── schemas
-│   │   │   └── memory.schema.ts
-│   │   ├── server
-│   │   │   ├── data
-│   │   │   │   └── questions.ts 
-│   │   │   └── services
-│   │   │       ├── authService.ts
-│   │   │       ├── dreamService.ts
-│   │   │       ├── elementalOracleService.ts
-│   │   │       ├── facetService.ts
-│   │   │       ├── guideService.ts
-│   │   │       ├── ingestionService.ts
-│   │   │       ├── memoryService.ts
-│   │   │       ├── monitoringService.ts
-│   │   │       ├── notionIngestService.ts
-│   │   │       ├── notionLogger.ts
-│   │   │       ├── oracleService.ts
-│   │   │       ├── personalOracleService.ts
-│   │   │       ├── prefectService.ts
-│   │   │       ├── profileService.ts
-│   │   │       ├── sessionService.ts
-│   │   │       ├── summarizeCollectiveField.ts
-│   │   │       ├── supabaseClient.ts
-│   │   │       ├── surveyService.ts
-│   │   │       ├── symbolicIntel.ts
-│   │   │       ├── userService.ts
-│   │   │       └── voiceService.ts
-│   │   ├── services
-│   │   │   └── tests
-│   │   │       └── memoryService.test.ts
-│   │   ├── setupTests.ts
-│   │   ├── types
-│   │   │   ├── agent.ts
-│   │   │   ├── ai.ts
-│   │   │   ├── auth.ts
-│   │   │   ├── feedback.ts
-│   │   │   ├── index.d.ts
-│   │   │   ├── index.ts
-│   │   │   ├── knowledge.ts
-│   │   │   ├── memory.ts
-│   │   │   ├── metadata.ts
-│   │   │   ├── middleware.ts
-│   │   │   ├── oracle.ts
-│   │   │   ├── session.ts
-│   │   │   └── survey.ts
-│   │   ├── utils
-│   │   │   ├── __tests__
-│   │   │   │   ├── memoryModule.test.ts
-│   │   │   │   └── personalityMapping.test.ts
-│   │   │   ├── agentScoreUtil.ts
-│   │   │   ├── auth.ts
-│   │   │   ├── cringeFilterService.ts
-│   │   │   ├── errors.ts
-│   │   │   ├── facetMapping.ts
-│   │   │   ├── facetUtil.ts
-│   │   │   ├── index.ts
-│   │   │   ├── localizationService.ts
-│   │   │   ├── logger.ts
-│   │   │   ├── memoryModule.ts
-│   │   │   ├── memoryStore.ts
-│   │   │   ├── mockSupabase.ts
-│   │   │   ├── modelService.ts
-│   │   │   ├── oracleLogger.ts
-│   │   │   ├── persistentMemory.ts
-│   │   │   ├── personalityMapping.ts
-│   │   │   ├── prefectClient.ts
-│   │   │   ├── prefectIntegration.ts
-│   │   │   ├── supabase.ts
-│   │   │   ├── symbolParser.ts
-│   │   │   ├── toneService.ts
-│   │   │   ├── validateProfile.ts
-│   │   │   └── voiceService.ts
-│   │   ├── vite-env.d.ts
-│   │   └── vitest.config.ts
-│   ├── structure-backend.txt
-│   ├── structure.txt
-│   ├── supabase
-│   │   ├── functions
-│   │   │   └── oracle-ritual-response.ts
-│   │   ├── migrations
-│   │   │   └── 20250418_create_insight_history.sql
-│   │   └── schema.sql
-│   ├── test-env.ts
-│   ├── test.ts
-│   ├── testServer.ts
-│   ├── tsconfig-paths-loader.mjs
-│   ├── tsconfig.app.json
-│   ├── tsconfig.app.json 
-│   ├── tsconfig.json
-│   ├── tsconfig.node.json
-│   ├── tsconfig.server.json
-│   ├── tsconfig.tsbuildinfo
-│   ├── vite.config.ts
-│   ├── vitest.config.d.ts
-│   ├── vitest.config.js
-│   └── vitest.config.js.map
-├── oracle-backend-backup
-│   ├── __tests__
-│   │   └── personal
-│   │       ├── insight.test.ts
-│   │       └── personal-oracle.test.tsx  tsx Copy code
-│   ├── api
-│   │   ├── adjuster
-│   │   │   └── log.ts
-│   │   ├── memory.ts
-│   │   ├── oracle
-│   │   │   └── personal
-│   │   │       ├── extractSymbols.ts
-│   │   │       ├── insight.ts
-│   │   │       └── query.ts
-│   │   ├── oracle-agent
-│   │   │   └── insight.ts
-│   │   ├── ritual.ts
-│   │   ├── rituals
-│   │   │   └── progress.ts
-│   │   ├── transform.ts
-│   │   ├── user
-│   │   │   └── profile
-│   │   ├── user.ts
-│   │   └── whisper
-│   │       └── transcribe.ts
-│   ├── App.css
-│   ├── clean-import-extensions.ts
-│   ├── crash.log
-│   ├── eslint.config.js
-│   ├── eslint.config.mjs
-│   ├── example.ts
-│   ├── flows
-│   │   └── daily_journal_processing.py
-│   ├── index.css
-│   ├── index.html
-│   ├── index.ts
-│   ├── ingest_kb.py
-│   ├── jest.config.js
-│   ├── kb_schema.json
-│   ├── logs
-│   │   ├── exceptions.log
-│   │   └── rejections.log
-│   ├── oracle-backend
-│   │   ├── __tests__
-│   │   │   └── personal
-│   │   │       ├── insight.test.ts
-│   │   │       └── personal-oracle.test.tsx  tsx Copy code
-│   │   ├── api
-│   │   │   ├── adjuster
-│   │   │   │   └── log.ts
-│   │   │   ├── memory.ts
-│   │   │   ├── oracle
-│   │   │   │   └── personal
-│   │   │   │       ├── extractSymbols.ts
-│   │   │   │       ├── insight.ts
-│   │   │   │       └── query.ts
-│   │   │   ├── oracle-agent
-│   │   │   │   └── insight.ts
-│   │   │   ├── ritual.ts
-│   │   │   ├── rituals
-│   │   │   │   └── progress.ts
-│   │   │   ├── transform.ts
-│   │   │   ├── user
-│   │   │   │   └── profile
-│   │   │   ├── user.ts
-│   │   │   └── whisper
-│   │   │       └── transcribe.ts
-│   │   ├── App.css
-│   │   ├── apps
-│   │   │   └── backend
-│   │   │       └── spiralogic
-│   │   ├── clean-import-extensions.ts
-│   │   ├── crash.log
-│   │   ├── eslint.config.js
-│   │   ├── eslint.config.mjs
-│   │   ├── example.ts
-│   │   ├── flows
-│   │   │   └── daily_journal_processing.py
-│   │   ├── index.css
-│   │   ├── index.html
-│   │   ├── index.ts
-│   │   ├── ingest_kb.py
-│   │   ├── jest.config.js
-│   │   ├── kb_schema.json
-│   │   ├── lib
-│   │   │   ├── agentPrompts.ts
-│   │   │   └── setupTests.ts
-│   │   ├── logs
-│   │   │   ├── exceptions.log
-│   │   │   └── rejections.log
-│   │   ├── oracle-backend
-│   │   │   ├── __tests__
-│   │   │   ├── api
-│   │   │   │   └── adjuster
-│   │   │   │       └── log.ts
-│   │   │   ├── apps
-│   │   │   │   └── backend
-│   │   │   │       └── spiralogic
-│   │   │   ├── lib
-│   │   │   │   ├── agentPrompts.ts
-│   │   │   │   └── setupTests.ts
-│   │   │   ├── scripts
-│   │   │   │   ├── checkPromptHealth.ts
-│   │   │   │   ├── cleanOldCheckins.ts
-│   │   │   │   ├── fixAgentImports.ts
-│   │   │   │   ├── fixImports.ts
-│   │   │   │   ├── ingestKnowledge.ts
-│   │   │   │   ├── seedprompts.ts
-│   │   │   │   ├── supabaseAdmin.ts
-│   │   │   │   ├── supabaseClient.test.ts
-│   │   │   │   └── utils
-│   │   │   ├── server
-│   │   │   │   ├── data
-│   │   │   │   ├── middleware
-│   │   │   │   ├── routes
-│   │   │   │   ├── tasks
-│   │   │   │   │   ├── loadShadowData.ts
-│   │   │   │   │   └── prefect.ts
-│   │   │   │   └── types
-│   │   │   ├── slack-chat-agent
-│   │   │   ├── spiralogic_kb
-│   │   │   │   └── shadow_evolution.json
-│   │   │   └── your-project-root
-│   │   │       └── _
-│   │   │           ├── h
-│   │   │           └── husky.sh
-│   │   ├── package.json
-│   │   ├── packages
-│   │   │   └── agents
-│   │   ├── postcss.config.js
-│   │   ├── public
-│   │   ├── README.md
-│   │   ├── render.yaml
-│   │   ├── requirements.txt
-│   │   ├── run_soul_reflection.py
-│   │   ├── scripts
-│   │   │   ├── add-js-extensions.js
-│   │   │   ├── checkPromptHealth.ts
-│   │   │   ├── cleanOldCheckins.ts
-│   │   │   ├── fixAgentImports.ts
-│   │   │   ├── fixImports.ts
-│   │   │   ├── ingestKnowledge.ts
-│   │   │   ├── seedMemoryItems.js
-│   │   │   ├── seedMemoryItems.ts
-│   │   │   ├── seedprompts.ts
-│   │   │   ├── seedRituals
-│   │   │   │   ├── aether-initiation-001.json
-│   │   │   │   ├── air-initiation-001.json
-│   │   │   │   ├── earth-initiation-001.json
-│   │   │   │   ├── fire-initiation-001.json
-│   │   │   │   └── first-contact-ritual.json
-│   │   │   ├── supabaseAdmin.ts
-│   │   │   ├── supabaseClient.test.ts
-│   │   │   └── utils
-│   │   ├── server
-│   │   │   ├── data
-│   │   │   │   └── questions.ts
-│   │   │   ├── index.ts
-│   │   │   ├── middleware
-│   │   │   │   └── auth.ts
-│   │   │   ├── prefect.ts
-│   │   │   ├── routes
-│   │   │   │   ├── adminRoutes.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── oracle
-│   │   │   │   │   ├── dreamQuery.ts
-│   │   │   │   │   ├── extractSymbols.ts
-│   │   │   │   │   └── symbolThreads.ts
-│   │   │   │   ├── oracleRoutes.ts
-│   │   │   │   ├── profileRoutes.ts
-│   │   │   │   └── surveyRoutes.ts
-│   │   │   ├── server.ts
-│   │   │   ├── services
-│   │   │   │   └── oracleService.ts
-│   │   │   ├── tasks
-│   │   │   │   ├── loadShadowData.ts
-│   │   │   │   ├── prefect.ts
-│   │   │   │   ├── scheduledAnalysis.ts
-│   │   │   │   ├── scheduledTasks.ts
-│   │   │   │   └── someTaskFunction.ts
-│   │   │   └── types
-│   │   │       └── express.d.ts
-│   │   ├── slack-chat-agent
-│   │   ├── soul_memory
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   └── __init__.cpython-311.pyc
-│   │   │   ├── config.py
-│   │   │   ├── db
-│   │   │   │   └── __init__.py
-│   │   │   ├── flows
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── __pycache__
-│   │   │   │   │   ├── __init__.cpython-311.pyc
-│   │   │   │   │   └── soul_reflection.cpython-311.pyc
-│   │   │   │   └── soul_reflection.py
-│   │   │   ├── schema.py
-│   │   │   ├── utils
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── __pycache__
-│   │   │   │   │   ├── __init__.cpython-311.pyc
-│   │   │   │   │   └── text_cleaning.cpython-311.pyc
-│   │   │   │   └── text_cleaning.py
-│   │   │   └── vector
-│   │   │       ├── __init__.py
-│   │   │       └── semantic_index.py
-│   │   ├── soul_memory.db
-│   │   ├── spiralogic_kb
-│   │   │   └── shadow_evolution.json
-│   │   ├── src
-│   │   │   ├── App.css
-│   │   │   ├── app.ts
-│   │   │   ├── assets
-│   │   │   ├── config
-│   │   │   │   ├── index.ts
-│   │   │   │   └── voices.ts
-│   │   │   ├── constants
-│   │   │   │   ├── elementalFacetMap.ts
-│   │   │   │   └── feedbackPrompts.ts
-│   │   │   ├── controllers
-│   │   │   │   ├── journal.controller.ts
-│   │   │   │   ├── memory.controller.ts
-│   │   │   │   ├── personalGuide.controller.ts
-│   │   │   │   └── survey.controller.ts
-│   │   │   ├── core
-│   │   │   │   ├── agent
-│   │   │   │   │   └── memoryManager.ts
-│   │   │   │   ├── agents
-│   │   │   │   │   ├── adjusterAgent.ts
-│   │   │   │   │   ├── aetherAgent.ts
-│   │   │   │   │   ├── aetherReflectionComposer.ts
-│   │   │   │   │   ├── AgentCollaboration.ts
-│   │   │   │   │   ├── airAgent.ts
-│   │   │   │   │   ├── baseAgent.ts
-│   │   │   │   │   ├── clean-import-extensions.ts
-│   │   │   │   │   ├── clientAgent.ts
-│   │   │   │   │   ├── DreamAgent.ts
-│   │   │   │   │   ├── dreamOracleAgent.ts
-│   │   │   │   │   ├── dualLLMRouting.ts
-│   │   │   │   │   ├── earthAgent.ts
-│   │   │   │   │   ├── elementalAgent.ts
-│   │   │   │   │   ├── elementalFramework.ts
-│   │   │   │   │   ├── elementalOracleAgent.ts
-│   │   │   │   │   ├── facilitatorAgent.ts
-│   │   │   │   │   ├── fireAgent.ts
-│   │   │   │   │   ├── guideAgent.ts
-│   │   │   │   │   ├── index.ts
-│   │   │   │   │   ├── innerGuideAgent.ts
-│   │   │   │   │   ├── journalingAgent.ts
-│   │   │   │   │   ├── mainOracleAgent.ts
-│   │   │   │   │   ├── mentorAgent.ts
-│   │   │   │   │   ├── oracleAgent.ts
-│   │   │   │   │   ├── oracleArchetypes.ts
-│   │   │   │   │   ├── orchestrator.ts
-│   │   │   │   │   ├── persistentMemory.ts
-│   │   │   │   │   ├── PersonalOracleAgent.ts
-│   │   │   │   │   ├── ShadowAgent.ts
-│   │   │   │   │   ├── shadowAgents.ts
-│   │   │   │   │   ├── spiralogic_kb
-│   │   │   │   │   │   └── shadow_evolution.json
-│   │   │   │   │   ├── SpiralogicAgent.ts
-│   │   │   │   │   ├── types.ts
-│   │   │   │   │   ├── unifiedMemory.ts
-│   │   │   │   │   └── waterAgent.ts
-│   │   │   │   ├── ArchetypeFramework.ts
-│   │   │   │   ├── HumanPacedLearning.ts
-│   │   │   │   ├── oracle.openai.ts
-│   │   │   │   ├── SOUL.ts
-│   │   │   │   ├── SpiralogicJourney.ts
-│   │   │   │   └── types.ts
-│   │   │   ├── docs
-│   │   │   │   ├── oracle.openapi.yaml
-│   │   │   │   └── swagger.ts
-│   │   │   ├── flows
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── learningFlow.ts
-│   │   │   │   └── types.ts
-│   │   │   ├── index.css
-│   │   │   ├── index.ts
-│   │   │   ├── integration
-│   │   │   │   └── _tests_
-│   │   │   │       ├── mainOracleAgent.integration.test.ts
-│   │   │   │       └── oracleService.integration.test.ts
-│   │   │   ├── lib
-│   │   │   │   ├── analytics
-│   │   │   │   │   └── getUserArchetypeStats.ts
-│   │   │   │   ├── apiClient.ts
-│   │   │   │   ├── config.ts
-│   │   │   │   ├── database.types.ts
-│   │   │   │   ├── fieldParsers.ts
-│   │   │   │   ├── langchain.ts
-│   │   │   │   ├── logger.ts
-│   │   │   │   ├── logOracleMemory.ts
-│   │   │   │   ├── mem0.ts
-│   │   │   │   ├── openaiClient.ts
-│   │   │   │   ├── oracleEchoGenerator.ts
-│   │   │   │   ├── ritualEngine.ts
-│   │   │   │   ├── schemas
-│   │   │   │   │   └── elemental.ts
-│   │   │   │   ├── spiralLogic.ts
-│   │   │   │   ├── supabase.ts
-│   │   │   │   ├── supabase.types.ts
-│   │   │   │   ├── supabaseClient.ts
-│   │   │   │   ├── symbolMatcher.ts
-│   │   │   │   └── utils
-│   │   │   │       ├── faceUtil.ts
-│   │   │   │       └── validateProfile.ts
-│   │   │   ├── main
-│   │   │   │   └── CollaborationSession.ts
-│   │   │   ├── main.tsx
-│   │   │   ├── middleware
-│   │   │   │   ├── auth.ts
-│   │   │   │   ├── authenticate.ts
-│   │   │   │   ├── authenticateToken.ts
-│   │   │   │   ├── errorHandler.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── isAdmin.ts
-│   │   │   │   └── validate.ts
-│   │   │   ├── modules
-│   │   │   │   ├── elementalOracleService.ts
-│   │   │   │   ├── SacredMirroProtocol.ts
-│   │   │   │   ├── shadow
-│   │   │   │   │   └── index.ts
-│   │   │   │   └── shadowWorkModule.ts
-│   │   │   ├── routes
-│   │   │   │   ├── authRoutes.ts
-│   │   │   │   ├── chatRoutes.ts
-│   │   │   │   ├── dream.routes.ts
-│   │   │   │   ├── facet.routes.ts
-│   │   │   │   ├── facetMap.routes.ts
-│   │   │   │   ├── facilitatorRoutes.ts
-│   │   │   │   ├── feedback.routes.ts
-│   │   │   │   ├── fieldpulse.routes.ts
-│   │   │   │   ├── flow.routes.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── insightHistory.routes.ts
-│   │   │   │   ├── journal.routes.ts
-│   │   │   │   ├── memory.routes.ts
-│   │   │   │   ├── meta.routes.ts
-│   │   │   │   ├── notionIngest.routes.ts
-│   │   │   │   ├── oracle
-│   │   │   │   │   ├── extractSymbols.ts
-│   │   │   │   │   ├── memory.ts
-│   │   │   │   │   ├── personal.routes.ts
-│   │   │   │   │   ├── personalGuide.routes.ts
-│   │   │   │   │   ├── personalOracle.routes.ts
-│   │   │   │   │   ├── reflection.ts
-│   │   │   │   │   ├── session.ts
-│   │   │   │   │   └── symbolThreads.ts
-│   │   │   │   ├── profileSettings.routes.ts
-│   │   │   │   ├── routes.ts
-│   │   │   │   ├── session.routes.ts
-│   │   │   │   ├── storyGenerator.routes.ts
-│   │   │   │   ├── survey.routes.ts
-│   │   │   │   ├── symbolicMemory.routes.ts
-│   │   │   │   ├── symbolicTrends.routes.ts
-│   │   │   │   ├── tasks
-│   │   │   │   │   └── scheduledTasks.ts
-│   │   │   │   ├── tests
-│   │   │   │   │   └── memoryRoutes.test.ts
-│   │   │   │   ├── user.routes.ts
-│   │   │   │   └── userProfile.routes.ts
-│   │   │   ├── schemas
-│   │   │   │   └── memory.schema.ts
-│   │   │   ├── server
-│   │   │   │   ├── data
-│   │   │   │   │   └── questions.ts 
-│   │   │   │   └── services
-│   │   │   │       ├── authService.ts
-│   │   │   │       ├── dreamService.ts
-│   │   │   │       ├── elementalOracleService.ts
-│   │   │   │       ├── facetService.ts
-│   │   │   │       ├── guideService.ts
-│   │   │   │       ├── ingestionService.ts
-│   │   │   │       ├── memoryService.ts
-│   │   │   │       ├── monitoringService.ts
-│   │   │   │       ├── notionIngestService.ts
-│   │   │   │       ├── notionLogger.ts
-│   │   │   │       ├── oracleService.ts
-│   │   │   │       ├── personalOracleService.ts
-│   │   │   │       ├── prefectService.ts
-│   │   │   │       ├── profileService.ts
-│   │   │   │       ├── sessionService.ts
-│   │   │   │       ├── summarizeCollectiveField.ts
-│   │   │   │       ├── supabaseClient.ts
-│   │   │   │       ├── surveyService.ts
-│   │   │   │       ├── symbolicIntel.ts
-│   │   │   │       ├── userService.ts
-│   │   │   │       └── voiceService.ts
-│   │   │   ├── server.ts
-│   │   │   ├── services
-│   │   │   │   └── tests
-│   │   │   │       └── memoryService.test.ts
-│   │   │   ├── setupTests.ts
-│   │   │   ├── types
-│   │   │   │   ├── agent.ts
-│   │   │   │   ├── ai.ts
-│   │   │   │   ├── auth.ts
-│   │   │   │   ├── feedback.ts
-│   │   │   │   ├── index.d.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── knowledge.ts
-│   │   │   │   ├── memory.ts
-│   │   │   │   ├── metadata.ts
-│   │   │   │   ├── middleware.ts
-│   │   │   │   ├── oracle.ts
-│   │   │   │   ├── session.ts
-│   │   │   │   └── survey.ts
-│   │   │   ├── utils
-│   │   │   │   ├── __tests__
-│   │   │   │   │   ├── memoryModule.test.ts
-│   │   │   │   │   └── personalityMapping.test.ts
-│   │   │   │   ├── agentScoreUtil.ts
-│   │   │   │   ├── auth.ts
-│   │   │   │   ├── cringeFilterService.ts
-│   │   │   │   ├── errors.ts
-│   │   │   │   ├── facetMapping.ts
-│   │   │   │   ├── facetUtil.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── localizationService.ts
-│   │   │   │   ├── logger.ts
-│   │   │   │   ├── memoryModule.ts
-│   │   │   │   ├── memoryStore.ts
-│   │   │   │   ├── mockSupabase.ts
-│   │   │   │   ├── modelService.ts
-│   │   │   │   ├── oracleLogger.ts
-│   │   │   │   ├── persistentMemory.ts
-│   │   │   │   ├── personalityMapping.ts
-│   │   │   │   ├── prefectClient.ts
-│   │   │   │   ├── prefectIntegration.ts
-│   │   │   │   ├── supabase.ts
-│   │   │   │   ├── symbolParser.ts
-│   │   │   │   ├── toneService.ts
-│   │   │   │   ├── validateProfile.ts
-│   │   │   │   └── voiceService.ts
-│   │   │   ├── vite-env.d.ts
-│   │   │   └── vitest.config.ts
-│   │   ├── structure-backend.txt
-│   │   ├── structure.txt
-│   │   ├── supabase
-│   │   │   ├── functions
-│   │   │   │   └── oracle-ritual-response.ts
-│   │   │   ├── migrations
-│   │   │   │   └── 20250418_create_insight_history.sql
-│   │   │   └── schema.sql
-│   │   ├── test-env.ts
-│   │   ├── test.ts
-│   │   ├── testServer.ts
-│   │   ├── tsconfig-paths-loader.mjs
-│   │   ├── tsconfig.app.json
-│   │   ├── tsconfig.app.json 
-│   │   ├── tsconfig.json
-│   │   ├── tsconfig.node.json
-│   │   ├── tsconfig.server.json
-│   │   ├── tsconfig.tsbuildinfo
-│   │   ├── vite.config.ts
-│   │   ├── vitest.config.d.ts
-│   │   ├── vitest.config.js
-│   │   ├── vitest.config.js.map
-│   │   └── your-project-root
-│   │       └── _
-│   │           ├── h
-│   │           └── husky.sh
-│   ├── package.json
-│   ├── packages
-│   │   └── agents
-│   ├── postcss.config.js
-│   ├── public
-│   ├── README.md
-│   ├── render.yaml
-│   ├── requirements.txt
-│   ├── run_soul_reflection.py
-│   ├── scripts
-│   │   ├── add-js-extensions.js
-│   │   ├── ingestKnowledge.ts
-│   │   ├── seedMemoryItems.js
-│   │   ├── seedMemoryItems.ts
-│   │   └── seedRituals
-│   │       ├── aether-initiation-001.json
-│   │       ├── air-initiation-001.json
-│   │       ├── earth-initiation-001.json
-│   │       ├── fire-initiation-001.json
-│   │       └── first-contact-ritual.json
-│   ├── server
-│   │   ├── data
-│   │   │   └── questions.ts
-│   │   ├── index.ts
-│   │   ├── middleware
-│   │   │   └── auth.ts
-│   │   ├── prefect.ts
-│   │   ├── routes
-│   │   │   ├── adminRoutes.ts
-│   │   │   ├── index.ts
-│   │   │   ├── oracle
-│   │   │   │   ├── dreamQuery.ts
-│   │   │   │   ├── extractSymbols.ts
-│   │   │   │   └── symbolThreads.ts
-│   │   │   ├── oracleRoutes.ts
-│   │   │   ├── profileRoutes.ts
-│   │   │   └── surveyRoutes.ts
-│   │   ├── server.ts
-│   │   ├── services
-│   │   │   └── oracleService.ts
-│   │   ├── tasks
-│   │   │   ├── scheduledAnalysis.ts
-│   │   │   ├── scheduledTasks.ts
-│   │   │   └── someTaskFunction.ts
-│   │   └── types
-│   │       └── express.d.ts
-│   ├── soul_memory
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   │   └── __init__.cpython-311.pyc
-│   │   ├── config.py
-│   │   ├── db
-│   │   │   └── __init__.py
-│   │   ├── flows
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-311.pyc
-│   │   │   │   └── soul_reflection.cpython-311.pyc
-│   │   │   └── soul_reflection.py
-│   │   ├── schema.py
-│   │   ├── utils
-│   │   │   ├── __init__.py
-│   │   │   ├── __pycache__
-│   │   │   │   ├── __init__.cpython-311.pyc
-│   │   │   │   └── text_cleaning.cpython-311.pyc
-│   │   │   └── text_cleaning.py
-│   │   └── vector
-│   │       ├── __init__.py
-│   │       └── semantic_index.py
-│   ├── soul_memory.db
-│   ├── spiralogic_kb
-│   │   └── shadow_evolution.json
-│   ├── src
-│   │   ├── App.css
-│   │   ├── app.ts
-│   │   ├── assets
-│   │   ├── config
-│   │   │   ├── index.ts
-│   │   │   └── voices.ts
-│   │   ├── constants
-│   │   │   ├── elementalFacetMap.ts
-│   │   │   └── feedbackPrompts.ts
-│   │   ├── controllers
-│   │   │   ├── journal.controller.ts
-│   │   │   ├── memory.controller.ts
-│   │   │   ├── personalGuide.controller.ts
-│   │   │   └── survey.controller.ts
-│   │   ├── core
-│   │   │   ├── agent
-│   │   │   │   └── memoryManager.ts
-│   │   │   ├── agents
-│   │   │   │   ├── adjusterAgent.ts
-│   │   │   │   ├── aetherAgent.ts
-│   │   │   │   ├── aetherReflectionComposer.ts
-│   │   │   │   ├── AgentCollaboration.ts
-│   │   │   │   ├── airAgent.ts
-│   │   │   │   ├── baseAgent.ts
-│   │   │   │   ├── clean-import-extensions.ts
-│   │   │   │   ├── clientAgent.ts
-│   │   │   │   ├── DreamAgent.ts
-│   │   │   │   ├── dreamOracleAgent.ts
-│   │   │   │   ├── dualLLMRouting.ts
-│   │   │   │   ├── earthAgent.ts
-│   │   │   │   ├── elementalAgent.ts
-│   │   │   │   ├── elementalFramework.ts
-│   │   │   │   ├── elementalOracleAgent.ts
-│   │   │   │   ├── facilitatorAgent.ts
-│   │   │   │   ├── fireAgent.ts
-│   │   │   │   ├── guideAgent.ts
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── innerGuideAgent.ts
-│   │   │   │   ├── journalingAgent.ts
-│   │   │   │   ├── mainOracleAgent.ts
-│   │   │   │   ├── mentorAgent.ts
-│   │   │   │   ├── oracleAgent.ts
-│   │   │   │   ├── oracleArchetypes.ts
-│   │   │   │   ├── orchestrator.ts
-│   │   │   │   ├── persistentMemory.ts
-│   │   │   │   ├── PersonalOracleAgent.ts
-│   │   │   │   ├── ShadowAgent.ts
-│   │   │   │   ├── shadowAgents.ts
-│   │   │   │   ├── spiralogic_kb
-│   │   │   │   │   └── shadow_evolution.json
-│   │   │   │   ├── SpiralogicAgent.ts
-│   │   │   │   ├── types.ts
-│   │   │   │   ├── unifiedMemory.ts
-│   │   │   │   └── waterAgent.ts
-│   │   │   ├── ArchetypeFramework.ts
-│   │   │   ├── HumanPacedLearning.ts
-│   │   │   ├── oracle.openai.ts
-│   │   │   ├── SOUL.ts
-│   │   │   ├── SpiralogicJourney.ts
-│   │   │   └── types.ts
-│   │   ├── docs
-│   │   │   ├── oracle.openapi.yaml
-│   │   │   └── swagger.ts
-│   │   ├── flows
-│   │   │   ├── index.ts
-│   │   │   ├── learningFlow.ts
-│   │   │   └── types.ts
-│   │   ├── index.css
-│   │   ├── index.ts
-│   │   ├── integration
-│   │   │   └── _tests_
-│   │   │       ├── mainOracleAgent.integration.test.ts
-│   │   │       └── oracleService.integration.test.ts
-│   │   ├── lib
-│   │   │   ├── analytics
-│   │   │   │   └── getUserArchetypeStats.ts
-│   │   │   ├── apiClient.ts
-│   │   │   ├── config.ts
-│   │   │   ├── database.types.ts
-│   │   │   ├── fieldParsers.ts
-│   │   │   ├── langchain.ts
-│   │   │   ├── logger.ts
-│   │   │   ├── logOracleMemory.ts
-│   │   │   ├── mem0.ts
-│   │   │   ├── openaiClient.ts
-│   │   │   ├── oracleEchoGenerator.ts
-│   │   │   ├── ritualEngine.ts
-│   │   │   ├── schemas
-│   │   │   │   └── elemental.ts
-│   │   │   ├── spiralLogic.ts
-│   │   │   ├── supabase.ts
-│   │   │   ├── supabase.types.ts
-│   │   │   ├── supabaseClient.ts
-│   │   │   ├── symbolMatcher.ts
-│   │   │   └── utils
-│   │   │       ├── faceUtil.ts
-│   │   │       └── validateProfile.ts
-│   │   ├── main
-│   │   │   └── CollaborationSession.ts
-│   │   ├── main.tsx
-│   │   ├── middleware
-│   │   │   ├── auth.ts
-│   │   │   ├── authenticate.ts
-│   │   │   ├── authenticateToken.ts
-│   │   │   ├── errorHandler.ts
-│   │   │   ├── index.ts
-│   │   │   ├── isAdmin.ts
-│   │   │   └── validate.ts
-│   │   ├── modules
-│   │   │   ├── elementalOracleService.ts
-│   │   │   ├── SacredMirroProtocol.ts
-│   │   │   ├── shadow
-│   │   │   │   └── index.ts
-│   │   │   └── shadowWorkModule.ts
-│   │   ├── routes
-│   │   │   ├── authRoutes.ts
-│   │   │   ├── chatRoutes.ts
-│   │   │   ├── dream.routes.ts
-│   │   │   ├── facet.routes.ts
-│   │   │   ├── facetMap.routes.ts
-│   │   │   ├── facilitatorRoutes.ts
-│   │   │   ├── feedback.routes.ts
-│   │   │   ├── fieldpulse.routes.ts
-│   │   │   ├── flow.routes.ts
-│   │   │   ├── index.ts
-│   │   │   ├── insightHistory.routes.ts
-│   │   │   ├── journal.routes.ts
-│   │   │   ├── memory.routes.ts
-│   │   │   ├── meta.routes.ts
-│   │   │   ├── notionIngest.routes.ts
-│   │   │   ├── oracle
-│   │   │   │   ├── extractSymbols.ts
-│   │   │   │   ├── memory.ts
-│   │   │   │   ├── personal.routes.ts
-│   │   │   │   ├── personalGuide.routes.ts
-│   │   │   │   ├── personalOracle.routes.ts
-│   │   │   │   ├── reflection.ts
-│   │   │   │   ├── session.ts
-│   │   │   │   └── symbolThreads.ts
-│   │   │   ├── profileSettings.routes.ts
-│   │   │   ├── routes.ts
-│   │   │   ├── session.routes.ts
-│   │   │   ├── storyGenerator.routes.ts
-│   │   │   ├── survey.routes.ts
-│   │   │   ├── symbolicMemory.routes.ts
-│   │   │   ├── symbolicTrends.routes.ts
-│   │   │   ├── tasks
-│   │   │   │   └── scheduledTasks.ts
-│   │   │   ├── tests
-│   │   │   │   └── memoryRoutes.test.ts
-│   │   │   ├── user.routes.ts
-│   │   │   └── userProfile.routes.ts
-│   │   ├── schemas
-│   │   │   └── memory.schema.ts
-│   │   ├── server
-│   │   │   ├── data
-│   │   │   │   └── questions.ts 
-│   │   │   └── services
-│   │   │       ├── authService.ts
-│   │   │       ├── dreamService.ts
-│   │   │       ├── elementalOracleService.ts
-│   │   │       ├── facetService.ts
-│   │   │       ├── guideService.ts
-│   │   │       ├── ingestionService.ts
-│   │   │       ├── memoryService.ts
-│   │   │       ├── monitoringService.ts
-│   │   │       ├── notionIngestService.ts
-│   │   │       ├── notionLogger.ts
-│   │   │       ├── oracleService.ts
-│   │   │       ├── personalOracleService.ts
-│   │   │       ├── prefectService.ts
-│   │   │       ├── profileService.ts
-│   │   │       ├── sessionService.ts
-│   │   │       ├── summarizeCollectiveField.ts
-│   │   │       ├── supabaseClient.ts
-│   │   │       ├── surveyService.ts
-│   │   │       ├── symbolicIntel.ts
-│   │   │       ├── userService.ts
-│   │   │       └── voiceService.ts
-│   │   ├── server.ts
-│   │   ├── services
-│   │   │   └── tests
-│   │   │       └── memoryService.test.ts
-│   │   ├── setupTests.ts
-│   │   ├── types
-│   │   │   ├── agent.ts
-│   │   │   ├── ai.ts
-│   │   │   ├── auth.ts
-│   │   │   ├── feedback.ts
-│   │   │   ├── index.d.ts
-│   │   │   ├── index.ts
-│   │   │   ├── knowledge.ts
-│   │   │   ├── memory.ts
-│   │   │   ├── metadata.ts
-│   │   │   ├── middleware.ts
-│   │   │   ├── oracle.ts
-│   │   │   ├── session.ts
-│   │   │   └── survey.ts
-│   │   ├── utils
-│   │   │   ├── __tests__
-│   │   │   │   ├── memoryModule.test.ts
-│   │   │   │   └── personalityMapping.test.ts
-│   │   │   ├── agentScoreUtil.ts
-│   │   │   ├── auth.ts
-│   │   │   ├── cringeFilterService.ts
-│   │   │   ├── errors.ts
-│   │   │   ├── facetMapping.ts
-│   │   │   ├── facetUtil.ts
-│   │   │   ├── index.ts
-│   │   │   ├── localizationService.ts
-│   │   │   ├── logger.ts
-│   │   │   ├── memoryModule.ts
-│   │   │   ├── memoryStore.ts
-│   │   │   ├── mockSupabase.ts
-│   │   │   ├── modelService.ts
-│   │   │   ├── oracleLogger.ts
-│   │   │   ├── persistentMemory.ts
-│   │   │   ├── personalityMapping.ts
-│   │   │   ├── prefectClient.ts
-│   │   │   ├── prefectIntegration.ts
-│   │   │   ├── supabase.ts
-│   │   │   ├── symbolParser.ts
-│   │   │   ├── toneService.ts
-│   │   │   ├── validateProfile.ts
-│   │   │   └── voiceService.ts
-│   │   ├── vite-env.d.ts
-│   │   └── vitest.config.ts
-│   ├── structure-backend.txt
-│   ├── structure.txt
-│   ├── supabase
-│   │   ├── functions
-│   │   │   └── oracle-ritual-response.ts
-│   │   ├── migrations
-│   │   │   └── 20250418_create_insight_history.sql
-│   │   └── schema.sql
-│   ├── test-env.ts
-│   ├── test.ts
-│   ├── testServer.ts
-│   ├── tsconfig-paths-loader.mjs
-│   ├── tsconfig.app.json
-│   ├── tsconfig.app.json 
-│   ├── tsconfig.json
-│   ├── tsconfig.node.json
-│   ├── tsconfig.server.json
-│   ├── tsconfig.tsbuildinfo
-│   ├── vite.config.ts
-│   ├── vitest.config.d.ts
-│   ├── vitest.config.js
-│   └── vitest.config.js.map
 ├── oracle-frontend
 │   ├── __tests__
 │   │   └── components
 │   ├── all-files.txt
+│   ├── app
+│   │   └── page.tsx
 │   ├── apps
 │   │   ├── backend
 │   │   └── frontend
@@ -1237,13 +248,14 @@
 │   ├── logs
 │   ├── next-env.d.ts
 │   ├── next.config.js
+│   ├── oracle-backend
+│   │   └── src
 │   ├── oracle-prefect
 │   │   └── flows
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── packages
 │   │   └── agents
-│   │       └── src
 │   ├── playwright.config.ts
 │   ├── playwright.global-setup.ts
 │   ├── postcss.config.js
@@ -1251,7 +263,6 @@
 │   │   ├── index.html
 │   │   ├── investor-assets
 │   │   ├── sounds
-│   │   │   └── soft-chime.aiff
 │   │   ├── spiral-loader.png
 │   │   ├── swisseph.js
 │   │   └── swisseph.wasm
@@ -1265,55 +276,26 @@
 │   ├── spirallogic_kb
 │   ├── src
 │   │   ├── app
-│   │   │   ├── auth
-│   │   │   │   └── page.tsx
-│   │   │   ├── globals.css
-│   │   │   ├── layout.tsx
-│   │   │   ├── oracle
-│   │   │   │   └── page.tsx
-│   │   │   └── page.tsx
 │   │   ├── assets
-│   │   ├── config
-│   │   │   ├── orgConfig.ts
-│   │   │   ├── voiceProfile.ts
-│   │   │   └── voiceProfiles
-│   │   │       └── mindfulTech.ts
+│   │   ├── components
 │   │   ├── context-backup
-│   │   │   └── AuthContext.tsx
 │   │   ├── env.d.ts
-│   │   ├── index.css
-│   │   ├── index.html
 │   │   ├── input.css
 │   │   ├── lib
-│   │   │   └── supabaseClient.ts
 │   │   ├── styles
-│   │   │   ├── brandThemes.ts
-│   │   │   ├── fonts.css
-│   │   │   ├── index.css
-│   │   │   └── tailwind.css
-│   │   ├── theme.ts
+│   │   ├── types
 │   │   └── utils
-│   │       └── autoSave.ts
 │   ├── structure-frontend.txt
 │   ├── structure.txt
 │   ├── supabase
 │   │   ├── functions
-│   │   │   └── send-welcome-email.tsx
 │   │   └── README.md
 │   ├── tailwind.config.js
 │   ├── test-results
 │   │   ├── oracle-visual-Oracle-Chat-visual-snapshot-webkit
-│   │   │   ├── error-context.md
-│   │   │   ├── test-failed-1.png
-│   │   │   └── video.webm
 │   │   └── oracleChat-oracle-chat-loads-webkit
-│   │       ├── error-context.md
-│   │       ├── test-failed-1.png
-│   │       └── video.webm
 │   ├── tests
 │   │   └── playwright
-│   │       ├── oracle-visual.spec.ts
-│   │       └── oracleChat.spec.ts
 │   ├── tsconfig.base.json
 │   ├── tsconfig.json
 │   ├── tsconfig.node.json
@@ -1321,651 +303,34 @@
 │   ├── vitest.config.ts
 │   ├── vitest.workspace.js
 │   └── WildPetalMessage.tsx
-├── oracle-frontend-clean
-│   ├── next.config.js
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── postcss.config.js
-│   ├── src
-│   │   ├── app
-│   │   │   ├── auth
-│   │   │   │   └── page.tsx
-│   │   │   ├── globals.css
-│   │   │   ├── layout.tsx
-│   │   │   ├── oracle
-│   │   │   │   └── page.tsx
-│   │   │   └── page.tsx
-│   │   ├── assets
-│   │   ├── config
-│   │   │   ├── orgConfig.ts
-│   │   │   ├── voiceProfile.ts
-│   │   │   └── voiceProfiles
-│   │   │       └── mindfulTech.ts
-│   │   ├── context-backup
-│   │   │   └── AuthContext.tsx
-│   │   ├── env.d.ts
-│   │   ├── index.css
-│   │   ├── index.html
-│   │   ├── input.css
-│   │   ├── lib
-│   │   │   └── supabaseClient.ts
-│   │   ├── styles
-│   │   │   ├── brandThemes.ts
-│   │   │   ├── fonts.css
-│   │   │   ├── index.css
-│   │   │   └── tailwind.css
-│   │   ├── theme.ts
-│   │   └── utils
-│   │       └── autoSave.ts
-│   ├── tailwind.config.js
-│   └── tsconfig.json
-├── oracle-frontend@0.1.0
-├── oracle-test-bak
-├── package-lock.json
-├── package.json
-├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml
 ├── postcss.config.js
-├── public
-│   └── index.html
+├── README.md
 ├── render.yaml
 ├── requirements.txt
-├── shared
-│   └── types
-│       └── UserProfile.ts
 ├── soul_memory
 │   ├── db
 │   │   └── memory_store.py
 │   └── flows
 ├── soul_memory.db
-├── SpiralogicOracleSystem
-│   ├── docs
-│   │   ├── oracle-system.md
-│   │   └── README.md
-│   ├── Open...
-│   ├── oracle-backend
-│   ├── oracle-frontend
-│   │   ├── all-files.txt
-│   │   ├── backend-files.txt
-│   │   ├── docs
-│   │   │   └── index.tsx
-│   │   ├── eslint.config.js
-│   │   ├── frontend-files.txt
-│   │   ├── index.css
-│   │   ├── instructor.txt
-│   │   ├── lib
-│   │   │   └── generateIntsight.ts
-│   │   ├── next.config.js
-│   │   ├── oracle-test
-│   │   │   ├── eslint.config.js
-│   │   │   ├── index.html
-│   │   │   ├── package-lock.json
-│   │   │   ├── package.json
-│   │   │   ├── postcss.config.js
-│   │   │   ├── public
-│   │   │   │   └── vite.svg
-│   │   │   ├── README.md
-│   │   │   ├── src
-│   │   │   │   ├── App.css
-│   │   │   │   ├── App.tsx
-│   │   │   │   ├── assets
-│   │   │   │   │   └── react.svg
-│   │   │   │   ├── index.css
-│   │   │   │   └── main.jsx
-│   │   │   ├── tailwind.config.js
-│   │   │   └── vite.config.js
-│   │   ├── package-lock.json
-│   │   ├── package.json
-│   │   ├── playwright.config.ts
-│   │   ├── playwright.global-setup.ts
-│   │   ├── pnpm-lock.yaml
-│   │   ├── postcss.config.cjs
-│   │   ├── public
-│   │   │   ├── index.html
-│   │   │   ├── sounds
-│   │   │   │   └── soft-chime.aiff
-│   │   │   ├── spiral-loader.png
-│   │   │   ├── swisseph.js
-│   │   │   └── swisseph.wasm
-│   │   ├── readme.md
-│   │   ├── scripts
-│   │   │   └── seedRituals.mts
-│   │   ├── seed_reflections.sql
-│   │   ├── server.js
-│   │   ├── server.ts
-│   │   ├── src
-│   │   │   ├── api
-│   │   │   │   └── transform.ts
-│   │   │   ├── app
-│   │   │   │   ├── journal
-│   │   │   │   │   └── page.tsx
-│   │   │   │   ├── layout.tsx
-│   │   │   │   └── reflection-compare
-│   │   │   │       ├── layout.tsx
-│   │   │   │       └── page.tsx
-│   │   │   ├── App.test.tsx
-│   │   │   ├── App.tsx
-│   │   │   ├── components
-│   │   │   │   ├── __tests__
-│   │   │   │   │   ├── ChatInterface.test.tsx
-│   │   │   │   │   ├── Header.test.tsx
-│   │   │   │   │   ├── MemoryInsights.test.tsx
-│   │   │   │   │   ├── OracleChat.test.tsx
-│   │   │   │   │   └── SessionManagement.test.tx
-│   │   │   │   ├── AdjusterAgentDashboard.tsx
-│   │   │   │   ├── AdminRoute.tsx
-│   │   │   │   ├── AetherOracleChat.tsx
-│   │   │   │   ├── AetherPulse.tsx
-│   │   │   │   ├── agents
-│   │   │   │   │   └── elemental
-│   │   │   │   │       ├── AgentCard.tsx
-│   │   │   │   │       └── FireAgentCard.tsx
-│   │   │   │   ├── AirOracleChat.tsx
-│   │   │   │   ├── astro
-│   │   │   │   │   └── AstroForm.tsx
-│   │   │   │   ├── astrowheel.tsx
-│   │   │   │   ├── auth
-│   │   │   │   │   ├── Login.tsx
-│   │   │   │   │   └── SignUp.tsx
-│   │   │   │   ├── BlessingsList.tsx
-│   │   │   │   ├── CeremonyCountdownWidget.tsx
-│   │   │   │   ├── ChartProfileCard.tsx
-│   │   │   │   ├── ChatInterface.tsx
-│   │   │   │   ├── ChatWindow.tsx
-│   │   │   │   ├── CollectiveBreath
-│   │   │   │   │   └── CollectiveBreathRoom.tsx
-│   │   │   │   ├── DreamOracleForm
-│   │   │   │   │   └── tsx
-│   │   │   │   ├── DreamOracleForm.tsx
-│   │   │   │   ├── DreamSpiralDashboard.tsx
-│   │   │   │   ├── DreamSpiralJournal.tsx
-│   │   │   │   ├── EarthOracleChat.tsx
-│   │   │   │   ├── ElementProgress.tsx
-│   │   │   │   ├── EndSession.tsx
-│   │   │   │   ├── ErrorBoundary.tsx
-│   │   │   │   ├── FacilitatorTools.tsx
-│   │   │   │   ├── FaviconSetter.tsx
-│   │   │   │   ├── feedback
-│   │   │   │   │   └── FeedbackForm.tsx
-│   │   │   │   ├── FieldPulseDashboard.tsx
-│   │   │   │   ├── FireOracleChat.tsx
-│   │   │   │   ├── FirstLandingGuide.tsx
-│   │   │   │   ├── forms
-│   │   │   │   │   ├── FeedbackForm.tsx
-│   │   │   │   │   ├── JournalEntryForm.tsx
-│   │   │   │   │   └── MemoryForm.tsx
-│   │   │   │   ├── FrequencyResonanceModal.tsx
-│   │   │   │   ├── GuidanceDisplay.tsx
-│   │   │   │   ├── Header.tsx
-│   │   │   │   ├── Holoflower.tsx
-│   │   │   │   ├── HoloflowerSvg.tsx
-│   │   │   │   ├── InsightGeneration.tsx
-│   │   │   │   ├── InsightModal.tsx
-│   │   │   │   ├── JournalEntryForm.tsx
-│   │   │   │   ├── JournalForm.tsx
-│   │   │   │   ├── Journaling.tsx
-│   │   │   │   ├── JournalList.tsx
-│   │   │   │   ├── JulianDayDisplay.tsx
-│   │   │   │   ├── Layout.tsx
-│   │   │   │   ├── layouts
-│   │   │   │   │   └── AppLayout.tsx
-│   │   │   │   ├── login.tsx
-│   │   │   │   ├── memory
-│   │   │   │   │   └── MemoryList.tsx
-│   │   │   │   ├── MemoryInsights.tsx
-│   │   │   │   ├── MemoryUpload.tsx
-│   │   │   │   ├── MessageBubble.tsx
-│   │   │   │   ├── NavBar.tsx
-│   │   │   │   ├── Navigation.tsx
-│   │   │   │   ├── onboarding
-│   │   │   │   │   ├── AuraPickStep.tsx
-│   │   │   │   │   ├── ColorPickStep.tsx
-│   │   │   │   │   ├── DashboardRedirect.tsx
-│   │   │   │   │   ├── NameStep.tsx
-│   │   │   │   │   ├── PhaseRevealStep.tsx
-│   │   │   │   │   ├── TotemPickStep.tsx
-│   │   │   │   │   └── WelcomeSplash.tsx
-│   │   │   │   ├── OnboardingPrompt.tsx
-│   │   │   │   ├── oracle
-│   │   │   │   │   └── MobileOracleChat.tsx
-│   │   │   │   ├── OracleCardDraw.tsx
-│   │   │   │   ├── OracleCeremonyModal.tsx
-│   │   │   │   ├── OracleChat.tsx
-│   │   │   │   ├── OracleInitModal.tsx
-│   │   │   │   ├── OracleJournalForm.tsx
-│   │   │   │   ├── OracleOfTheDay.tsx
-│   │   │   │   ├── OracleResponseCard.tsx
-│   │   │   │   ├── page.tsx
-│   │   │   │   ├── PageTransition.tsx
-│   │   │   │   ├── PageWrapper.tsx
-│   │   │   │   ├── PetalCheckIn
-│   │   │   │   │   └── index.ts
-│   │   │   │   ├── PetalModal.tsx
-│   │   │   │   ├── PlanetChart.tsx
-│   │   │   │   ├── PlanetPositions.tsx
-│   │   │   │   ├── PolarChart.tsx
-│   │   │   │   ├── PortalBlessing.tsx
-│   │   │   │   ├── PortalTransition.tsx
-│   │   │   │   ├── ProtectedRoute.tsx
-│   │   │   │   ├── queryPanel.tsx
-│   │   │   │   ├── QuestEngine.tsx
-│   │   │   │   ├── RecorderOverlay.tsx
-│   │   │   │   ├── ReflectionTimeline.tsx
-│   │   │   │   ├── RequireAuth.tsx
-│   │   │   │   ├── SacredFooter.tsx
-│   │   │   │   ├── SacredKeyGate.tsx
-│   │   │   │   ├── Settings.tsx
-│   │   │   │   ├── shared
-│   │   │   │   │   └── SaveBreathButton.tsx
-│   │   │   │   ├── SoulStarAchievements.tsx
-│   │   │   │   ├── SoulSyncPanel.tsx
-│   │   │   │   ├── SpiralAchievements.tsx
-│   │   │   │   ├── SpiralBreathConstellation
-│   │   │   │   │   ├── index.ts
-│   │   │   │   │   └── SpiralBreathLoader.tsx
-│   │   │   │   ├── SpiralBreathPortal
-│   │   │   │   │   └── SpiralBreathPortal.tsx
-│   │   │   │   ├── SpiralMemory
-│   │   │   │   │   ├── CeremonyCountdown.tsx
-│   │   │   │   │   ├── DreamPetalGallery.tsx
-│   │   │   │   │   ├── LightnessTrendGraph.tsx
-│   │   │   │   │   └── SpiralCalendar.tsx
-│   │   │   │   ├── SpiralMemoryMap.tsx
-│   │   │   │   ├── SpiralParticles.tsx
-│   │   │   │   ├── SpiralPetalCheckin
-│   │   │   │   │   ├── BreathSummary.tsx
-│   │   │   │   │   ├── LightnessSelector.tsx
-│   │   │   │   │   ├── Petal.tsx
-│   │   │   │   │   ├── PetalRing.tsx
-│   │   │   │   │   ├── SaveBreathButton.tsx
-│   │   │   │   │   └── SpiralPetalCheckinPage.tsx
-│   │   │   │   ├── SpiralReflectionComparison.tsx
-│   │   │   │   ├── SpiralSpinner.tsx
-│   │   │   │   ├── StartSession.tsx
-│   │   │   │   ├── SunPosition.tsx
-│   │   │   │   ├── SymbolMapper.tsx
-│   │   │   │   ├── TarotCard.tsx
-│   │   │   │   ├── ThemeInjector.tsx
-│   │   │   │   ├── ThresholdMessage.tsx
-│   │   │   │   ├── ThresholdUnlock.tsx
-│   │   │   │   ├── TranscriptCard.tsx
-│   │   │   │   ├── TranscriptForm.tsx
-│   │   │   │   ├── TransformControls.tsx
-│   │   │   │   ├── ui
-│   │   │   │   │   ├── button.tsx
-│   │   │   │   │   └── Card.tsx
-│   │   │   │   ├── VoiceProfileSelector.tsx
-│   │   │   │   ├── VoiceRecorder.tsx
-│   │   │   │   ├── WelcomeSplash.tsx
-│   │   │   │   ├── WhisperAgent.tsx
-│   │   │   │   ├── WhisperingBlessing.tsx
-│   │   │   │   ├── WhisperPlayer.tsx
-│   │   │   │   ├── WildPortal
-│   │   │   │   │   ├── PortalAnimation.tsx
-│   │   │   │   │   ├── WildPetalButton.tsx
-│   │   │   │   │   ├── WildPetalGallery.tsx
-│   │   │   │   │   ├── WildPetalMessage.tsx
-│   │   │   │   │   ├── WildPetalQuests.tsx
-│   │   │   │   │   └── WildPortalPage.tsx
-│   │   │   │   └── WisdomTransmission.tsx
-│   │   │   ├── config
-│   │   │   │   ├── orgConfig.ts
-│   │   │   │   ├── voiceProfile.ts
-│   │   │   │   └── voiceProfiles
-│   │   │   │       └── mindfulTech.ts
-│   │   │   ├── context
-│   │   │   │   └── AuthContext.tsx
-│   │   │   ├── contexts
-│   │   │   │   └── SwissEphContext.tsx
-│   │   │   ├── entry-client.tsx
-│   │   │   ├── entry-server.tsx
-│   │   │   ├── env.d.ts
-│   │   │   ├── hooks
-│   │   │   │   ├── useAuthInit.ts
-│   │   │   │   ├── useChatInput.ts
-│   │   │   │   ├── useDate.ts
-│   │   │   │   ├── useDreamOracle.ts
-│   │   │   │   ├── useOracleCheck.ts
-│   │   │   │   ├── useOracleVoice.ts
-│   │   │   │   ├── usePersonalOracle.ts
-│   │   │   │   ├── useSession.ts
-│   │   │   │   ├── useSoundEffect.ts
-│   │   │   │   └── useSwissEph.ts
-│   │   │   ├── index.css
-│   │   │   ├── index.html
-│   │   │   ├── index.tsx
-│   │   │   ├── input.css
-│   │   │   ├── layout
-│   │   │   │   ├── AdminDashboardLayout.tsx
-│   │   │   │   └── Shell.tsx
-│   │   │   ├── lib
-│   │   │   │   ├── __tests__
-│   │   │   │   │   ├── getVoiceProfile.test.ts
-│   │   │   │   │   └── oracleResponse.test.tsx
-│   │   │   │   ├── agentPrompts.ts
-│   │   │   │   ├── agents.ts
-│   │   │   │   ├── apiService.ts
-│   │   │   │   ├── archetypes.ts
-│   │   │   │   ├── astroUtils.ts
-│   │   │   │   ├── authHelpers.ts
-│   │   │   │   ├── brandingConfig.ts
-│   │   │   │   ├── elevenlabs.ts
-│   │   │   │   ├── exportRituals.ts
-│   │   │   │   ├── facets.ts
-│   │   │   │   ├── generateInsight.ts
-│   │   │   │   ├── getBranding.ts
-│   │   │   │   ├── getPlanetPosition.ts
-│   │   │   │   ├── getVoiceProfile.ts
-│   │   │   │   ├── hooks
-│   │   │   │   │   ├── useAuth.ts
-│   │   │   │   │   ├── useOracleCheck.ts
-│   │   │   │   │   ├── useSessionLogger.ts
-│   │   │   │   │   └── useVoiceProfile.ts
-│   │   │   │   ├── insights.ts
-│   │   │   │   ├── journals.ts
-│   │   │   │   ├── loadSwisseph.ts
-│   │   │   │   ├── mapToSpiralogic.ts
-│   │   │   │   ├── ritualEngine.ts
-│   │   │   │   ├── rituals.ts
-│   │   │   │   ├── seedJournal.ts
-│   │   │   │   ├── seedOracles.ts
-│   │   │   │   ├── seedTestOracle.ts
-│   │   │   │   ├── soulProfile.ts
-│   │   │   │   ├── spiralLogic.ts
-│   │   │   │   ├── spiralogicMap.ts
-│   │   │   │   ├── supabaseClient.test.ts
-│   │   │   │   ├── supabaseClient.ts
-│   │   │   │   ├── swisseph.ts
-│   │   │   │   ├── tts
-│   │   │   │   │   └── elementalVoices.ts
-│   │   │   │   ├── updateVoiceProfile.ts
-│   │   │   │   ├── useSupabaseAdmin.ts
-│   │   │   │   ├── utils.ts
-│   │   │   │   └── voiceProfiles.ts
-│   │   │   ├── main.tsx
-│   │   │   ├── pages
-│   │   │   │   ├── __tests__
-│   │   │   │   │   ├── __snapshots__
-│   │   │   │   │   │   └── HomePage.snapshot.test.tsx.snap
-│   │   │   │   │   ├── AboutPage.tsx
-│   │   │   │   │   ├── HomePage.a11y.test.tsx tsx Copy code
-│   │   │   │   │   ├── HomePage.snapshot.test.tsx
-│   │   │   │   │   ├── HomePage.tsx
-│   │   │   │   │   └── OraclePage.test.tsx
-│   │   │   │   ├── 404.tsx
-│   │   │   │   ├── AboutPage.tsx
-│   │   │   │   ├── admin
-│   │   │   │   │   ├── checkins.tsx
-│   │   │   │   │   ├── feedback.tsx
-│   │   │   │   │   ├── journal.tsx
-│   │   │   │   │   ├── memories.tsx
-│   │   │   │   │   ├── prompts.tsx
-│   │   │   │   │   └── sacred-key-generator
-│   │   │   │   ├── agents
-│   │   │   │   │   ├── [element].tsx
-│   │   │   │   │   ├── aether.tsx
-│   │   │   │   │   ├── air.tsx
-│   │   │   │   │   ├── earth.tsx
-│   │   │   │   │   ├── fire.tsx
-│   │   │   │   │   ├── first-contact.tsx
-│   │   │   │   │   └── water.tsx
-│   │   │   │   ├── api
-│   │   │   │   │   ├── astro-profile.ts
-│   │   │   │   │   ├── beta-invite.ts
-│   │   │   │   │   ├── chat.ts
-│   │   │   │   │   ├── elevenlabs
-│   │   │   │   │   │   └── whisper.ts
-│   │   │   │   │   ├── res
-│   │   │   │   │   │   └── Soleil.woff2
-│   │   │   │   │   ├── save-profile.ts
-│   │   │   │   │   └── seed-reflections.ts
-│   │   │   │   ├── astro
-│   │   │   │   │   ├── index.tsx
-│   │   │   │   │   └── wheel-test.tsx
-│   │   │   │   ├── auth.tsx
-│   │   │   │   ├── AuthPage.tsx
-│   │   │   │   ├── beta-invite.tsx
-│   │   │   │   ├── beta-portal.tsx
-│   │   │   │   ├── beta-welcome.tsx
-│   │   │   │   ├── BlessingArrival.tsx
-│   │   │   │   ├── BlessingPage.tsx
-│   │   │   │   ├── changelog.md
-│   │   │   │   ├── chat.tsx
-│   │   │   │   ├── ChatPage.tsx
-│   │   │   │   ├── collective-breath.tsx
-│   │   │   │   ├── collective-rooms.tsx
-│   │   │   │   ├── convenant.tsx
-│   │   │   │   ├── covenant
-│   │   │   │   │   └── index.ts
-│   │   │   │   ├── CreateMemory.tsx
-│   │   │   │   ├── dashboard.tsx
-│   │   │   │   ├── DashboardPage.tsx
-│   │   │   │   ├── debug.tsx
-│   │   │   │   ├── DebugJwt.tsx
-│   │   │   │   ├── docs
-│   │   │   │   │   ├── archetypes.tsx
-│   │   │   │   │   ├── changelog.tsx
-│   │   │   │   │   ├── index.tsx
-│   │   │   │   │   ├── manifesto.tsx
-│   │   │   │   │   ├── roles.tsx
-│   │   │   │   │   └── system.tsx
-│   │   │   │   ├── dream-journal.tsx
-│   │   │   │   ├── dream-portal.tsx
-│   │   │   │   ├── dream-symbols
-│   │   │   │   │   └── thread.tsx
-│   │   │   │   ├── dream-symbols.tsx
-│   │   │   │   ├── DreamOraclePage.tsx
-│   │   │   │   ├── EphemerisDashboard.tsx
-│   │   │   │   ├── facilitator
-│   │   │   │   │   └── index.jsx
-│   │   │   │   ├── facilitator.tsx
-│   │   │   │   ├── feedback.tsx
-│   │   │   │   ├── fieldpulse
-│   │   │   │   │   └── index.tsx
-│   │   │   │   ├── flow-space.tsx
-│   │   │   │   ├── GetTokenDebug.tsx
-│   │   │   │   ├── guild
-│   │   │   │   │   ├── dao.tsx
-│   │   │   │   │   ├── index.tsx
-│   │   │   │   │   ├── initiate.tsx
-│   │   │   │   │   ├── proposals.tsx
-│   │   │   │   │   ├── propose.tsx
-│   │   │   │   │   └── README.md
-│   │   │   │   ├── HomePage.tsx
-│   │   │   │   ├── index.tsx
-│   │   │   │   ├── journal
-│   │   │   │   │   └── index.tsx
-│   │   │   │   ├── journal.tsx
-│   │   │   │   ├── JournalForm.tsx
-│   │   │   │   ├── journalTimeline.tsx
-│   │   │   │   ├── landing.tsx
-│   │   │   │   ├── launch-sprint.ts
-│   │   │   │   ├── launch.md
-│   │   │   │   ├── LaunchCelebration.tsx
-│   │   │   │   ├── LoginPage.tsx
-│   │   │   │   ├── LoginSuccessPage.tsx
-│   │   │   │   ├── logs.tsx
-│   │   │   │   ├── MagicLinkSentPage.tsx
-│   │   │   │   ├── memories
-│   │   │   │   │   ├── InsightGeneration.tsx
-│   │   │   │   │   ├── MemoryForm.tsx
-│   │   │   │   │   └── MemoryList.tsx
-│   │   │   │   ├── memories.tsx
-│   │   │   │   ├── memory.tsx
-│   │   │   │   ├── MemoryBlossom.tsx
-│   │   │   │   ├── MemoryCreatePage.tsx
-│   │   │   │   ├── MemoryInsightsPage.tsx
-│   │   │   │   ├── MemoryListPage.tsx
-│   │   │   │   ├── MemoryUpdatePage.tsx
-│   │   │   │   ├── NotFoundPage.tsx
-│   │   │   │   ├── onboarding.tsx
-│   │   │   │   ├── OnboardingFlow.tsx
-│   │   │   │   ├── oracle
-│   │   │   │   │   ├── [element].tsx
-│   │   │   │   │   ├── index.tsx
-│   │   │   │   │   └── personal
-│   │   │   │   │       └── initiate.ts
-│   │   │   │   ├── oracle-journal.tsx
-│   │   │   │   ├── OracleCeremonyPage.tsx
-│   │   │   │   ├── OraclePage.tsx
-│   │   │   │   ├── orientation
-│   │   │   │   │   └── elemental-orientation.tsx
-│   │   │   │   ├── personal-oracle.tsx
-│   │   │   │   ├── portal
-│   │   │   │   │   ├── meet-oracle.tsx
-│   │   │   │   │   ├── memo
-│   │   │   │   │   │   └── MemoPage.tsx
-│   │   │   │   │   └── welcome.tsx
-│   │   │   │   ├── QA.md
-│   │   │   │   ├── rituals
-│   │   │   │   │   ├── aether-initiation.tsx
-│   │   │   │   │   ├── air-initiation.tsx
-│   │   │   │   │   ├── earth-initiation.tsx
-│   │   │   │   │   ├── fire-initiation.tsx
-│   │   │   │   │   ├── ritual-router.tsx
-│   │   │   │   │   └── water-initiation.tsx
-│   │   │   │   ├── SanctumDashboard.tsx
-│   │   │   │   ├── select-oracle.tsx
-│   │   │   │   ├── settings.tsx
-│   │   │   │   ├── SoulProfileSummary.tsx
-│   │   │   │   ├── spiral-calendar.tsx
-│   │   │   │   ├── spiral-checkin.tsx
-│   │   │   │   ├── spiral-dashboard.tsx
-│   │   │   │   ├── spiral-portal.tsx
-│   │   │   │   ├── SpiralBreathConstellation.tsx
-│   │   │   │   ├── SpiralBreathMap.tsx
-│   │   │   │   ├── spiralogic-map.tsx
-│   │   │   │   ├── SpiralogicPath.tsx
-│   │   │   │   ├── SpiralogicPathPage.tsx
-│   │   │   │   ├── timeline.tsx
-│   │   │   │   ├── TranscriptsPage.test.tsx
-│   │   │   │   ├── TranscriptsPage.tsx
-│   │   │   │   ├── VoiceIntro.tsx
-│   │   │   │   ├── WelcomePage.tsx
-│   │   │   │   ├── whitelabel-preview.tsx
-│   │   │   │   ├── wild-petal-quests.tsx
-│   │   │   │   └── wild-portal.tsx
-│   │   │   ├── routes
-│   │   │   │   ├── auth.routes.ts
-│   │   │   │   └── index.ts
-│   │   │   ├── routes.tsx
-│   │   │   ├── seeds
-│   │   │   │   ├── oracleKnowledgeSeeds.ts
-│   │   │   │   └── wildPetalMessages.ts
-│   │   │   ├── services
-│   │   │   │   ├── spiralBreathAffirmationService.ts
-│   │   │   │   ├── spiralBreathDetectionService.ts
-│   │   │   │   ├── spiralBreathEvolutionTrackerService.ts
-│   │   │   │   ├── spiralogicPromptsService.ts
-│   │   │   │   ├── spiralReflectionExporterService.ts
-│   │   │   │   ├── spiralReflectionPromptService.ts
-│   │   │   │   ├── spiralThresholdTrackerService.ts
-│   │   │   │   └── symbolicTagService.ts
-│   │   │   ├── setupTests.ts
-│   │   │   ├── styles
-│   │   │   │   ├── brandThemes.ts
-│   │   │   │   ├── fonts.css
-│   │   │   │   ├── index.css
-│   │   │   │   └── tailwind.css
-│   │   │   ├── test
-│   │   │   │   └── setup.ts
-│   │   │   ├── test-utils
-│   │   │   │   └── customRender.tsx
-│   │   │   ├── test-utils.tsx
-│   │   │   ├── theme.ts
-│   │   │   └── utils
-│   │   │       └── autoSave.ts
-│   │   ├── structure-frontend.txt
-│   │   ├── structure.txt
-│   │   ├── supabase
-│   │   │   ├── functions
-│   │   │   │   └── send-welcome-email.tsx
-│   │   │   └── README.md
-│   │   ├── swisseph -> /Volumes/T7 Shield/oracle-frontend-swisseph
-│   │   ├── tailwind.config.ts
-│   │   ├── test-results
-│   │   │   ├── oracle-visual-Oracle-Chat-visual-snapshot-webkit
-│   │   │   │   ├── error-context.md
-│   │   │   │   ├── test-failed-1.png
-│   │   │   │   └── video.webm
-│   │   │   └── oracleChat-oracle-chat-loads-webkit
-│   │   │       ├── error-context.md
-│   │   │       ├── test-failed-1.png
-│   │   │       └── video.webm
-│   │   ├── tests
-│   │   │   └── playwright
-│   │   │       ├── oracle-visual.spec.ts
-│   │   │       └── oracleChat.spec.ts
-│   │   ├── tsconfig.base.json
-│   │   ├── tsconfig.json
-│   │   ├── tsconfig.node.json
-│   │   ├── vercel.json
-│   │   ├── vite.config.base.ts
-│   │   ├── vite.config.mjs
-│   │   ├── vite.config.prod.ts
-│   │   ├── vite.config.ssr.ts
-│   │   ├── vitest.config.ts
-│   │   ├── vitest.workspace.js
-│   │   ├── webpack.config.js
-│   │   └── WildPetalMessage.tsx
-│   ├── oracle-frontend@0.1.0
-│   ├── oracle-fullstack
-│   ├── package-lock.json
+├── soullab-frontend
+│   ├── next.config.js
 │   ├── package.json
-│   ├── pnpm-workspace.yaml
-│   ├── README.md
-│   ├── shared
-│   │   └── types
-│   │       └── UserProfile.ts
-│   ├── structure.txt
-│   ├── tests
-│   │   ├── __pycache__
-│   │   │   ├── test_reflection.cpython-311-pytest-8.3.5.pyc
-│   │   │   └── test_utils.cpython-311-pytest-8.3.5.pyc
-│   │   ├── clean_text.py
-│   │   ├── test_reflection.py
-│   │   └── test_utils.py
-│   ├── tsconfig.json
-│   ├── vite
-│   └── yarn.lock
+│   ├── tailwind.config.js
+│   └── tsconfig.json
 ├── SpiralogicOracleSystem_backup.zip
-├── src
-│   ├── app
-│   │   ├── api
-│   │   ├── auth
-│   │   │   └── page.tsx
-│   │   ├── chat
-│   │   ├── dashboard
-│   │   │   └── page.tsx
-│   │   ├── globals.css
-│   │   ├── journal
-│   │   ├── layout.tsx
-│   │   ├── oracle
-│   │   │   └── page.tsx
-│   │   ├── page.tsx
-│   │   └── providers.tsx
-│   ├── App.tsx
-│   ├── components
-│   │   └── ui
-│   ├── contextrm
-│   ├── lib
-│   │   └── supabaseClient.ts
-│   ├── main.tsx
-│   ├── pages
-│   ├── styles
-│   │   └── index.css
-│   ├── types
-│   └── utils
+├── structure_detailed.txt
 ├── structure.txt
-├── tailwind.config.js
 ├── tailwind.config.ts
+├── test_claude.py
 ├── tests
 │   ├── __init__.py
 │   ├── __pycache__
 │   │   ├── __init__.cpython-311.pyc
 │   │   └── test_utils.cpython-311-pytest-8.3.5.pyc
 │   └── test_utils.py
-├── tsconfig.json
+├── trigger.txt
+├── vercel.json
 └── vitest.workspace.js
 
-440 directories, 1529 files
+133 directories, 201 files

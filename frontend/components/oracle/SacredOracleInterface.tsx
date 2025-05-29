@@ -330,7 +330,6 @@ export function SacredOracleInterface({ userName }: SacredOracleInterfaceProps) 
               size="lg"
               icon={<Send className="w-5 h-5" />}
               iconPosition="right"
-              sacredAnimation={true}
             >
               Channel
             </SacredButton>

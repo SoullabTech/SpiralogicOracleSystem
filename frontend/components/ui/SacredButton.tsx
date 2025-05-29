@@ -1,17 +1,15 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SacredButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'sacred';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'fire' | 'earth' | 'water' | 'air';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   loading?: boolean;
   disabled?: boolean;
-  glowEffect?: boolean;
-  sacredAnimation?: boolean;
   children: React.ReactNode;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -25,8 +23,6 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
   iconPosition = 'left',
   loading = false,
   disabled = false,
-  glowEffect = true,
-  sacredAnimation = true,
   children,
   className = '',
   onClick,
@@ -39,8 +35,8 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled || loading) return;
 
-    // Create ripple effect
-    if (buttonRef.current && sacredAnimation) {
+    // Create natural ripple effect
+    if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -49,11 +45,11 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
       setRipples(prev => [...prev, { x, y, id }]);
       setTimeout(() => {
         setRipples(prev => prev.filter(ripple => ripple.id !== id));
-      }, 1000);
+      }, 600);
     }
 
     setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 300);
+    setTimeout(() => setIsClicked(false), 200);
 
     if (onClick) onClick(e);
   };
@@ -61,30 +57,36 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
   const getSizeClasses = () => {
     switch (size) {
       case 'sm':
-        return 'px-sacred-sm py-1 text-sm';
+        return 'px-soullab-sm py-soullab-xs text-sm';
       case 'md':
-        return 'px-sacred-md py-sacred-sm text-base';
+        return 'px-soullab-md py-soullab-sm text-base';
       case 'lg':
-        return 'px-sacred-lg py-sacred-md text-lg';
+        return 'px-soullab-lg py-soullab-md text-lg';
       case 'xl':
-        return 'px-sacred-xl py-sacred-md text-xl';
+        return 'px-soullab-xl py-soullab-md text-xl';
       default:
-        return 'px-sacred-md py-sacred-sm text-base';
+        return 'px-soullab-md py-soullab-sm text-base';
     }
   };
 
   const getVariantClasses = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-gradient-to-r from-sacred-divine-gold to-sacred-amber text-sacred-cosmic-depth hover:from-sacred-amber hover:to-sacred-ethereal-gold';
+        return 'soullab-button';
       case 'secondary':
-        return 'bg-transparent border-2 border-sacred-divine-gold text-sacred-divine-gold hover:bg-sacred-divine-gold/10';
+        return 'soullab-button-secondary';
       case 'ghost':
-        return 'bg-transparent text-sacred-silver hover:text-sacred-divine-gold hover:bg-sacred-divine-gold/5';
-      case 'sacred':
-        return 'bg-gradient-to-r from-element-unity-field via-sacred-divine-gold to-element-unity-field text-sacred-cosmic-depth';
+        return 'bg-transparent text-soullab-gray hover:text-soullab-fire hover:bg-soullab-fire/5';
+      case 'fire':
+        return 'bg-soullab-fire text-soullab-white hover:bg-soullab-fire/90';
+      case 'earth':
+        return 'soullab-button-earth';
+      case 'water':
+        return 'soullab-button-water';
+      case 'air':
+        return 'soullab-button-air';
       default:
-        return '';
+        return 'soullab-button';
     }
   };
 
@@ -97,46 +99,34 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
         relative inline-flex items-center justify-center
         ${getSizeClasses()}
         ${getVariantClasses()}
-        font-semibold rounded-sacred
-        transition-all duration-300
-        ${!isDisabled && 'hover:scale-[1.03] active:scale-[0.98]'}
+        font-semibold
+        transition-all duration-normal
+        ${!isDisabled && 'hover:scale-[1.02] active:scale-[0.98]'}
         ${isDisabled && 'opacity-50 cursor-not-allowed'}
-        ${glowEffect && !isDisabled && 'hover:shadow-sacred-gold'}
-        overflow-hidden
+        overflow-hidden group
         ${className}
       `}
       onClick={handleClick}
       disabled={isDisabled}
       type={type}
-      whileHover={!isDisabled ? { y: -2 } : {}}
+      whileHover={!isDisabled ? { y: -1 } : {}}
       whileTap={!isDisabled ? { scale: 0.98 } : {}}
     >
-      {/* Sacred glow background effect */}
-      {glowEffect && !isDisabled && (
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-sacred-divine-gold/20 to-sacred-amber/20 blur-xl"
-          animate={{
-            opacity: isClicked ? [0, 1, 0] : 0
-          }}
-          transition={{ duration: 0.5 }}
-        />
-      )}
-
-      {/* Ripple effects */}
+      {/* Natural ripple effects */}
       <AnimatePresence>
         {ripples.map(ripple => (
           <motion.span
             key={ripple.id}
-            className="absolute rounded-full bg-sacred-divine-gold/30"
+            className="absolute rounded-full bg-white/20"
             style={{
               left: ripple.x,
               top: ripple.y,
               transform: 'translate(-50%, -50%)',
             }}
             initial={{ width: 0, height: 0, opacity: 1 }}
-            animate={{ width: 200, height: 200, opacity: 0 }}
+            animate={{ width: 120, height: 120, opacity: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           />
         ))}
       </AnimatePresence>
@@ -144,40 +134,24 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
       {/* Loading spinner */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-inherit">
-          <div className="sacred-spinner w-5 h-5" />
+          <div className="soullab-spinner" />
         </div>
       )}
 
       {/* Button content */}
       <span className={`relative z-10 flex items-center gap-2 ${loading && 'invisible'}`}>
         {icon && iconPosition === 'left' && (
-          <motion.span
-            animate={isClicked ? { rotate: 360 } : {}}
-            transition={{ duration: 0.5 }}
-          >
+          <span className="transition-transform group-hover:scale-110">
             {icon}
-          </motion.span>
+          </span>
         )}
         {children}
         {icon && iconPosition === 'right' && (
-          <motion.span
-            animate={isClicked ? { rotate: 360 } : {}}
-            transition={{ duration: 0.5 }}
-          >
+          <span className="transition-transform group-hover:scale-110">
             {icon}
-          </motion.span>
+          </span>
         )}
       </span>
-
-      {/* Sacred shimmer effect */}
-      {sacredAnimation && !isDisabled && (
-        <motion.div
-          className="absolute inset-0 -top-2 h-[200%] w-[200%] rotate-45 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-          initial={{ x: '-200%' }}
-          animate={isClicked ? { x: '200%' } : {}}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-        />
-      )}
     </motion.button>
   );
 };
