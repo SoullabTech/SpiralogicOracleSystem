@@ -26,7 +26,9 @@
       "Bash(cp:*)",
       "Bash(true)",
       "Bash(git ls-tree:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(npx vercel:*)",
+      "WebFetch(domain:frontend-asklr7br2-spiralogic-oracle-system.vercel.app)"
     ],
     "deny": []
   },

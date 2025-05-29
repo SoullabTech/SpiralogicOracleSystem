@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface SacredButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface SacredButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'sacred';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   icon?: React.ReactNode;
@@ -13,6 +13,9 @@ interface SacredButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   glowEffect?: boolean;
   sacredAnimation?: boolean;
   children: React.ReactNode;
+  className?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export const SacredButton: React.FC<SacredButtonProps> = ({
@@ -27,7 +30,7 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
   children,
   className = '',
   onClick,
-  ...props
+  type = 'button'
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
@@ -104,9 +107,9 @@ export const SacredButton: React.FC<SacredButtonProps> = ({
       `}
       onClick={handleClick}
       disabled={isDisabled}
+      type={type}
       whileHover={!isDisabled ? { y: -2 } : {}}
       whileTap={!isDisabled ? { scale: 0.98 } : {}}
-      {...props}
     >
       {/* Sacred glow background effect */}
       {glowEffect && !isDisabled && (

@@ -1,4 +1,9 @@
 {
-  "rootDirectory": "frontend",
-  "framework": "nextjs"
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://frontend-asklr7br2-spiralogic-oracle-system.vercel.app/$1",
+      "permanent": false
+    }
+  ]
 }

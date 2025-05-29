@@ -98,7 +98,7 @@ export function SacredHoloflower({
       ctx.fillRect(0, 0, width, height)
 
       // Draw houses
-      houses.forEach((house, index) => {
+      houses.forEach((house: HoloflowerHouse, index: number) => {
         const angle = (index * 30 - 90) * Math.PI / 180 + rotation
         const nextAngle = ((index + 1) * 30 - 90) * Math.PI / 180 + rotation
 
@@ -214,7 +214,7 @@ export function SacredHoloflower({
     }
   }, [houses, hoveredHouse, selectedHouse, interactive])
 
-  const selectedHouseData = houses.find(h => h.id === selectedHouse)
+  const selectedHouseData = houses.find((h: HoloflowerHouse) => h.id === selectedHouse)
 
   return (
     <div className="relative w-full h-full min-h-[400px]">
