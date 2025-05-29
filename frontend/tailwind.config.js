@@ -8,69 +8,56 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Sacred Technology Color System - Premium Dark Interface
-        'cosmic-depth': 'rgb(var(--cosmic-depth) / <alpha-value>)',
-        'sacred-navy': 'rgb(var(--sacred-navy) / <alpha-value>)',
-        'mystic-blue': 'rgb(var(--mystic-blue) / <alpha-value>)',
-        'ethereal-blue': 'rgb(var(--ethereal-blue) / <alpha-value>)',
+        // Soullab Brand Identity - Professional Sacred Technology
+        'soullab-fire': 'rgb(var(--soullab-fire) / <alpha-value>)',
+        'soullab-air': 'rgb(var(--soullab-air) / <alpha-value>)',
+        'soullab-earth': 'rgb(var(--soullab-earth) / <alpha-value>)',
+        'soullab-water': 'rgb(var(--soullab-water) / <alpha-value>)',
+        'soullab-black': 'rgb(var(--soullab-black) / <alpha-value>)',
+        'soullab-gray': 'rgb(var(--soullab-gray) / <alpha-value>)',
+        'soullab-earth-brown': 'rgb(var(--soullab-earth-brown) / <alpha-value>)',
+        'soullab-white': 'rgb(var(--soullab-white) / <alpha-value>)',
         
-        'divine-gold': 'rgb(var(--divine-gold) / <alpha-value>)',
-        'sacred-amber': 'rgb(var(--sacred-amber) / <alpha-value>)',
-        'ethereal-gold': 'rgb(var(--ethereal-gold) / <alpha-value>)',
-        'whisper-gold': 'rgb(var(--whisper-gold) / <alpha-value>)',
-        
-        'pure-light': 'rgb(var(--pure-light) / <alpha-value>)',
-        'sacred-silver': 'rgb(var(--sacred-silver) / <alpha-value>)',
-        'mystic-gray': 'rgb(var(--mystic-gray) / <alpha-value>)',
-        'shadow-gray': 'rgb(var(--shadow-gray) / <alpha-value>)',
-        
-        // Elemental Sacred Palette (Sophisticated)
-        'sacred-flame': 'rgb(var(--sacred-flame) / <alpha-value>)',
-        'ember-glow': 'rgb(var(--ember-glow) / <alpha-value>)',
-        'deep-flow': 'rgb(var(--deep-flow) / <alpha-value>)',
-        'sacred-pool': 'rgb(var(--sacred-pool) / <alpha-value>)',
-        'sacred-earth': 'rgb(var(--sacred-earth) / <alpha-value>)',
-        'living-ground': 'rgb(var(--living-ground) / <alpha-value>)',
-        'clear-sky': 'rgb(var(--clear-sky) / <alpha-value>)',
-        'sacred-breath': 'rgb(var(--sacred-breath) / <alpha-value>)',
-        'unity-field': 'rgb(var(--unity-field) / <alpha-value>)',
-        'sacred-synthesis': 'rgb(var(--sacred-synthesis) / <alpha-value>)',
+        // Enhanced Sacred Technology Palette
+        'soullab-fire-light': 'rgb(var(--soullab-fire-light) / <alpha-value>)',
+        'soullab-air-light': 'rgb(var(--soullab-air-light) / <alpha-value>)',
+        'soullab-earth-light': 'rgb(var(--soullab-earth-light) / <alpha-value>)',
+        'soullab-water-light': 'rgb(var(--soullab-water-light) / <alpha-value>)',
       },
       spacing: {
         // Sacred Spacing System (Golden Ratio φ = 1.618)
-        'sacred-xs': 'var(--space-xs)',    // 0.618rem
-        'sacred-sm': 'var(--space-sm)',    // 1rem
-        'sacred-md': 'var(--space-md)',    // 1.618rem
-        'sacred-lg': 'var(--space-lg)',    // 2.618rem
-        'sacred-xl': 'var(--space-xl)',    // 4.236rem
-        'sacred-2xl': 'var(--space-2xl)',  // 6.854rem
-        'sacred-3xl': 'var(--space-3xl)',  // 11.09rem
+        'soullab-xs': 'var(--space-xs)',    // 0.618rem
+        'soullab-sm': 'var(--space-sm)',    // 1rem
+        'soullab-md': 'var(--space-md)',    // 1.618rem
+        'soullab-lg': 'var(--space-lg)',    // 2.618rem
+        'soullab-xl': 'var(--space-xl)',    // 4.236rem
+        'soullab-2xl': 'var(--space-2xl)',  // 6.854rem
+        'soullab-3xl': 'var(--space-3xl)',  // 11.09rem
       },
       borderRadius: {
-        // Sacred Border Radius System
-        'sacred-sm': 'var(--radius-sm)',
-        'sacred-md': 'var(--radius-md)',
-        'sacred-lg': 'var(--radius-lg)',
-        'sacred': 'var(--radius-sacred)',
-        'sacred-xl': 'var(--radius-xl)',
-        'sacred-full': 'var(--radius-full)',
+        // Sacred Border Radius System (Spiral-inspired)
+        'soullab-sm': 'var(--radius-sm)',
+        'soullab-md': 'var(--radius-md)',
+        'soullab-lg': 'var(--radius-lg)',
+        'soullab-spiral': 'var(--radius-spiral)',
+        'soullab-xl': 'var(--radius-xl)',
+        'soullab-full': 'var(--radius-full)',
       },
       boxShadow: {
         // Sacred Shadow System
-        'sacred-subtle': 'var(--shadow-subtle)',
-        'sacred-glow': 'var(--shadow-glow)',
-        'sacred-deep': 'var(--shadow-deep)',
-        'sacred-gold': 'var(--shadow-gold)',
-        'sacred-blue': 'var(--shadow-blue)',
-        'sacred-float': 'var(--shadow-float)',
+        'soullab-subtle': 'var(--shadow-subtle)',
+        'soullab-glow': 'var(--shadow-glow)',
+        'soullab-deep': 'var(--shadow-deep)',
+        'soullab-fire': 'var(--shadow-fire)',
+        'soullab-water': 'var(--shadow-water)',
+        'soullab-float': 'var(--shadow-float)',
       },
       animation: {
         // Sacred Animations
-        'sacred-emergence': 'emergence var(--duration-ceremonial) var(--ease-sacred-out)',
-        'sacred-float': 'float 6s var(--ease-organic) infinite',
-        'sacred-spiral': 'spiral 20s linear infinite',
-        'sacred-glow': 'pulse-glow var(--duration-ceremonial) var(--ease-sacred) infinite',
-        'rotate-slow': 'rotate-slow 60s linear infinite',
+        'soullab-emergence': 'emergence var(--duration-ceremonial) var(--ease-sacred-out)',
+        'soullab-float': 'float 6s var(--ease-organic) infinite',
+        'soullab-spiral': 'spiral 20s linear infinite',
+        'rotate-slow': 'rotate-slow 120s linear infinite',
         'spin': 'spin var(--duration-slower) linear infinite',
         'pulse': 'pulse var(--duration-slower) var(--ease-sacred) infinite',
       },
@@ -78,7 +65,7 @@ module.exports = {
         emergence: {
           '0%': {
             opacity: '0',
-            transform: 'scale(0.8) translateY(20px)',
+            transform: 'scale(0.9) translateY(20px)',
           },
           '100%': {
             opacity: '1',
@@ -90,12 +77,9 @@ module.exports = {
           '50%': { transform: 'translateY(-20px)' },
         },
         spiral: {
-          '0%': { transform: 'rotate(0deg) translateX(0) translateY(0)' },
-          '100%': { transform: 'rotate(360deg) translateX(100px) translateY(100px)' },
-        },
-        'pulse-glow': {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.8' },
+          '0%': { transform: 'rotate(0deg) scale(1)' },
+          '50%': { transform: 'rotate(180deg) scale(1.05)' },
+          '100%': { transform: 'rotate(360deg) scale(1)' },
         },
         'rotate-slow': {
           from: { transform: 'rotate(0deg)' },
@@ -111,32 +95,28 @@ module.exports = {
         },
       },
       backgroundImage: {
-        // Premium Sacred Gradients
-        'sacred-gradient': 'linear-gradient(135deg, rgb(var(--cosmic-depth)) 0%, rgb(var(--ethereal-blue)) 100%)',
-        'sacred-tech': 'linear-gradient(135deg, rgb(var(--cosmic-depth)) 0%, rgb(var(--sacred-navy)) 50%, rgb(var(--mystic-blue)) 100%)',
-        'sacred-gold-glow': 'radial-gradient(ellipse at center, rgba(var(--divine-gold), 0.1) 0%, transparent 70%)',
-        'sacred-blue-glow': 'radial-gradient(ellipse at center, rgba(var(--mystic-blue), 0.1) 0%, transparent 70%)',
-        'elemental-fire': 'linear-gradient(135deg, rgb(var(--sacred-flame)) 0%, rgb(var(--ember-glow)) 100%)',
-        'elemental-water': 'linear-gradient(135deg, rgb(var(--deep-flow)) 0%, rgb(var(--sacred-pool)) 100%)',
-        'elemental-earth': 'linear-gradient(135deg, rgb(var(--sacred-earth)) 0%, rgb(var(--living-ground)) 100%)',
-        'elemental-air': 'linear-gradient(135deg, rgb(var(--clear-sky)) 0%, rgb(var(--sacred-breath)) 100%)',
-        'elemental-aether': 'linear-gradient(135deg, rgb(var(--unity-field)) 0%, rgb(var(--sacred-synthesis)) 100%)',
+        // Soullab Sacred Gradients
+        'soullab-elemental': 'conic-gradient(from 0deg, rgb(var(--soullab-fire)), rgb(var(--soullab-air)), rgb(var(--soullab-earth)), rgb(var(--soullab-water)), rgb(var(--soullab-fire)))',
+        'soullab-fire-gradient': 'linear-gradient(135deg, rgb(var(--soullab-fire)) 0%, rgb(var(--soullab-fire-light)) 100%)',
+        'soullab-water-gradient': 'linear-gradient(135deg, rgb(var(--soullab-water)) 0%, rgb(var(--soullab-water-light)) 100%)',
+        'soullab-earth-gradient': 'linear-gradient(135deg, rgb(var(--soullab-earth)) 0%, rgb(var(--soullab-earth-light)) 100%)',
+        'soullab-air-gradient': 'linear-gradient(135deg, rgb(var(--soullab-air)) 0%, rgb(var(--soullab-air-light)) 100%)',
       },
       fontFamily: {
-        // Premium Typography Stack
-        'sans': ['Inter', 'SF Pro Display', '-apple-system', 'system-ui', 'sans-serif'],
-        'sacred': ['Crimson Pro', 'Georgia', 'serif'],
-        'mono': ['JetBrains Mono', 'SF Mono', 'Consolas', 'monospace'],
+        // Soullab Typography Stack
+        'soullab': ['Blair ITC', 'Lato', 'sans-serif'],
+        'lato': ['Lato', 'sans-serif'],
+        'sans': ['Lato', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       fontSize: {
         // Sacred Typography Scale (Golden Ratio)
-        'sacred-xs': ['var(--space-xs)', { lineHeight: 'var(--space-sm)' }],
-        'sacred-sm': ['0.875rem', { lineHeight: '1.25rem' }],
-        'sacred-base': ['var(--space-sm)', { lineHeight: 'var(--space-md)' }],
-        'sacred-lg': ['1.125rem', { lineHeight: '1.75rem' }],
-        'sacred-xl': ['var(--space-md)', { lineHeight: '2.25rem' }],
-        'sacred-2xl': ['var(--space-lg)', { lineHeight: '3rem' }],
-        'sacred-3xl': ['var(--space-xl)', { lineHeight: '4.5rem' }],
+        'soullab-xs': ['var(--space-xs)', { lineHeight: 'var(--space-sm)' }],
+        'soullab-sm': ['0.875rem', { lineHeight: '1.25rem' }],
+        'soullab-base': ['var(--space-sm)', { lineHeight: 'var(--space-md)' }],
+        'soullab-lg': ['1.125rem', { lineHeight: '1.75rem' }],
+        'soullab-xl': ['var(--space-md)', { lineHeight: '2.25rem' }],
+        'soullab-2xl': ['var(--space-lg)', { lineHeight: '3rem' }],
+        'soullab-3xl': ['var(--space-xl)', { lineHeight: '4.5rem' }],
       },
       transitionDuration: {
         // Sacred Timing System
