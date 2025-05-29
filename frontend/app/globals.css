@@ -2,30 +2,537 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Sacred Dark Palette - NO PURPLE */
-  --sacred-black: #0A0A0A;
-  --sacred-deep: #111827;
-  --sacred-dark: #1F2937;
-  --sacred-gold: #FFD700;
-  --sacred-gold-dim: #B8860B;
-  --sacred-white: #F9FAFB;
+/* Import premium fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Pro:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Sacred Technology Color System - Premium Dark Interface */
+    --cosmic-depth: 10, 14, 39;        /* #0A0E27 - Primary dark */
+    --sacred-navy: 26, 31, 58;         /* #1A1F3A - Secondary dark */
+    --mystic-blue: 45, 53, 97;         /* #2D3561 - Accent dark */
+    --ethereal-blue: 74, 85, 104;      /* #4A5568 - Medium */
+    
+    --divine-gold: 255, 215, 0;        /* #FFD700 - Primary accent */
+    --sacred-amber: 246, 173, 85;      /* #F6AD55 - Secondary accent */
+    --ethereal-gold: 254, 185, 90;     /* #FEB95A - Tertiary accent */
+    --whisper-gold: 254, 245, 231;     /* #FEF5E7 - Background accent */
+    
+    --pure-light: 255, 255, 255;       /* #FFFFFF - Text/contrast */
+    --sacred-silver: 226, 232, 240;    /* #E2E8F0 - Secondary text */
+    --mystic-gray: 160, 174, 192;      /* #A0AEC0 - Tertiary text */
+    --shadow-gray: 74, 85, 104;        /* #4A5568 - Subdued elements */
+    
+    /* Elemental Sacred Palette (Sophisticated) */
+    --sacred-flame: 255, 107, 53;      /* #FF6B35 - Vision/Leadership */
+    --ember-glow: 255, 142, 83;        /* #FF8E53 - Soft fire */
+    --deep-flow: 56, 178, 172;         /* #38B2AC - Transformation */
+    --sacred-pool: 79, 209, 199;       /* #4FD1C7 - Healing */
+    --sacred-earth: 104, 211, 145;     /* #68D391 - Grounding */
+    --living-ground: 154, 230, 180;    /* #9AE6B4 - Manifestation */
+    --clear-sky: 99, 179, 237;         /* #63B3ED - Communication */
+    --sacred-breath: 144, 205, 244;    /* #90CDF4 - Clarity */
+    --unity-field: 183, 148, 246;      /* #B794F6 - Integration (refined purple) */
+    --sacred-synthesis: 214, 188, 250; /* #D6BCFA - Transcendence */
+    
+    /* Sacred Spacing System (Golden Ratio φ = 1.618) */
+    --space-xs: 0.618rem;              /* φ⁻¹ */
+    --space-sm: 1rem;                  /* Base unit */
+    --space-md: 1.618rem;              /* φ */
+    --space-lg: 2.618rem;              /* φ + 1 */
+    --space-xl: 4.236rem;              /* φ² */
+    --space-2xl: 6.854rem;             /* φ² + φ + 1 */
+    --space-3xl: 11.09rem;             /* φ³ */
+    
+    /* Sacred Timing (Harmonic Ratios) */
+    --duration-instant: 0.146s;        /* φ⁻² */
+    --duration-fast: 0.236s;           /* φ⁻¹ */
+    --duration-normal: 0.382s;         /* φ⁻¹ + φ⁻² */
+    --duration-slow: 0.618s;           /* φ⁻¹ */
+    --duration-slower: 1s;             /* Base */
+    --duration-ceremonial: 1.618s;     /* φ */
+    
+    /* Premium Easing Functions */
+    --ease-sacred: cubic-bezier(0.4, 0.0, 0.2, 1);      /* Material Design inspired */
+    --ease-sacred-out: cubic-bezier(0.0, 0.0, 0.2, 1);  /* Deceleration */
+    --ease-sacred-in: cubic-bezier(0.4, 0.0, 1, 1);     /* Acceleration */
+    --ease-organic: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Natural motion */
+    
+    /* Sacred Border Radius (Golden Ratio Derived) */
+    --radius-sm: 4px;                  /* Subtle Sacred curves */
+    --radius-md: 8px;                  /* Standard Sacred radius */
+    --radius-lg: 16px;                 /* Prominent Sacred curves */
+    --radius-sacred: 13px;             /* φ * 8 rounded */
+    --radius-xl: 21px;                 /* Fibonacci sequence */
+    --radius-full: 9999px;             /* Perfect circles */
+    
+    /* Sacred Shadow System */
+    --shadow-subtle: 0 1px 3px rgba(10, 14, 39, 0.1);
+    --shadow-glow: 0 4px 20px rgba(255, 215, 0, 0.1);
+    --shadow-deep: 0 10px 40px rgba(10, 14, 39, 0.3);
+    --shadow-gold: 0 0 30px rgba(255, 215, 0, 0.2);
+    --shadow-blue: 0 0 30px rgba(45, 53, 97, 0.2);
+    --shadow-float: 0 20px 40px rgba(10, 14, 39, 0.2);
+  }
+
+  * {
+    @apply border-mystic-blue/20;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply bg-cosmic-depth text-pure-light font-sans;
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Premium focus states */
+  *:focus {
+    @apply outline-none;
+  }
+
+  *:focus-visible {
+    @apply ring-2 ring-divine-gold/30 ring-offset-2 ring-offset-cosmic-depth;
+  }
 }
 
-body {
-  background: var(--sacred-black);
-  color: var(--sacred-white);
+@layer components {
+  /* Sacred Container System */
+  .sacred-container {
+    @apply max-w-7xl mx-auto;
+    padding: var(--space-md) var(--space-lg) var(--space-xl);
+  }
+
+  /* Premium Card Components */
+  .sacred-card {
+    background: linear-gradient(135deg, 
+      rgba(var(--sacred-navy), 0.4) 0%, 
+      rgba(var(--mystic-blue), 0.2) 100%);
+    @apply backdrop-blur-xl border border-mystic-blue/20 rounded-[var(--radius-sacred)];
+    box-shadow: var(--shadow-deep);
+    transition: all var(--duration-normal) var(--ease-sacred);
+  }
+
+  .sacred-card:hover {
+    box-shadow: var(--shadow-gold);
+    @apply border-divine-gold/20;
+  }
+
+  .sacred-card-premium {
+    @apply sacred-card p-[var(--space-lg)];
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sacred-card-premium::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, 
+      rgba(var(--divine-gold), 0.05) 0%, 
+      transparent 70%);
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
+  }
+
+  /* Executive-Grade Button System */
+  .sacred-button {
+    @apply relative inline-flex items-center justify-center;
+    padding: var(--space-md) var(--space-lg);
+    @apply bg-gradient-to-r from-divine-gold to-sacred-amber;
+    @apply text-cosmic-depth font-semibold;
+    border-radius: var(--radius-sacred);
+    transition: all var(--duration-normal) var(--ease-sacred);
+    overflow: hidden;
+  }
+
+  .sacred-button:hover {
+    box-shadow: var(--shadow-gold);
+    transform: scale(1.03);
+  }
+
+  .sacred-button:active {
+    transform: scale(0.98);
+  }
+
+  .sacred-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(var(--pure-light), 0.2);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    transition: width 0.6s var(--ease-sacred-out), height 0.6s var(--ease-sacred-out);
+  }
+
+  .sacred-button:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .sacred-button-secondary {
+    @apply sacred-button;
+    @apply bg-transparent border-2 border-divine-gold;
+    @apply text-divine-gold;
+  }
+
+  .sacred-button-secondary:hover {
+    background: rgba(var(--divine-gold), 0.1);
+  }
+
+  .sacred-button-ghost {
+    @apply sacred-button;
+    @apply bg-transparent border-0;
+    @apply text-sacred-silver;
+  }
+
+  .sacred-button-ghost:hover {
+    @apply text-divine-gold;
+    background: rgba(var(--divine-gold), 0.05);
+  }
+
+  /* Premium Input System */
+  .sacred-input {
+    @apply w-full;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(var(--mystic-blue), 0.2);
+    @apply backdrop-blur-sm border border-mystic-blue/40;
+    border-radius: var(--radius-sacred);
+    @apply text-pure-light placeholder:text-mystic-gray/60;
+    transition: all var(--duration-normal) var(--ease-sacred);
+  }
+
+  .sacred-input:focus {
+    background: rgba(var(--mystic-blue), 0.3);
+    @apply border-divine-gold/50;
+    box-shadow: var(--shadow-glow);
+  }
+
+  .sacred-textarea {
+    @apply sacred-input resize-none;
+    min-height: 120px;
+  }
+
+  /* Sacred Typography System */
+  .sacred-heading-1 {
+    font-size: var(--space-3xl);
+    @apply font-sacred font-light tracking-tight;
+    @apply bg-gradient-to-r from-divine-gold via-sacred-amber to-divine-gold bg-clip-text text-transparent;
+    text-shadow: 0 0 40px rgba(var(--divine-gold), 0.2);
+    line-height: 1.2;
+  }
+
+  .sacred-heading-2 {
+    font-size: var(--space-2xl);
+    @apply font-sacred font-light tracking-tight;
+    @apply text-pure-light;
+    line-height: 1.3;
+  }
+
+  .sacred-heading-3 {
+    font-size: var(--space-xl);
+    @apply font-sans font-medium;
+    @apply text-sacred-silver;
+    line-height: 1.4;
+  }
+
+  .sacred-text {
+    font-size: var(--space-sm);
+    @apply text-sacred-silver leading-relaxed;
+  }
+
+  .sacred-text-small {
+    font-size: var(--space-xs);
+    @apply text-mystic-gray leading-normal;
+  }
+
+  /* Sacred Badge System */
+  .sacred-badge {
+    @apply inline-flex items-center;
+    padding: var(--space-xs) var(--space-sm);
+    background: rgba(var(--mystic-blue), 0.3);
+    @apply border border-mystic-blue/40;
+    border-radius: var(--radius-full);
+    font-size: var(--space-xs);
+    @apply font-medium text-sacred-silver;
+  }
+
+  .sacred-badge-gold {
+    @apply sacred-badge;
+    background: rgba(var(--divine-gold), 0.1);
+    @apply border-divine-gold/30 text-divine-gold;
+  }
+
+  /* Sacred Loading States */
+  .sacred-spinner {
+    @apply w-8 h-8;
+    border: 2px solid rgba(var(--mystic-blue), 1);
+    border-top-color: rgba(var(--divine-gold), 1);
+    @apply rounded-full;
+    animation: spin var(--duration-slower) linear infinite;
+  }
+
+  .sacred-skeleton {
+    background: rgba(var(--mystic-blue), 0.2);
+    border-radius: var(--radius-sacred);
+    animation: pulse var(--duration-slower) var(--ease-sacred) infinite;
+  }
+
+  /* Sacred Divider */
+  .sacred-divider {
+    height: 1px;
+    @apply bg-gradient-to-r from-transparent via-mystic-blue/40 to-transparent;
+    margin: var(--space-lg) 0;
+  }
+
+  /* Sacred Glow Effects */
+  .sacred-glow {
+    @apply relative;
+  }
+
+  .sacred-glow::before {
+    content: '';
+    @apply absolute inset-0;
+    border-radius: inherit;
+    background: rgba(var(--divine-gold), 0.2);
+    @apply blur-xl pointer-events-none;
+    animation: pulse-glow var(--duration-ceremonial) var(--ease-sacred) infinite;
+  }
+
+  .sacred-glow-subtle {
+    filter: drop-shadow(0 0 20px rgba(var(--divine-gold), 0.15));
+  }
+
+  /* Sacred Geometry Patterns */
+  .sacred-pattern {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sacred-pattern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(var(--divine-gold), 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(var(--unity-field), 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(var(--clear-sky), 0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
 }
 
-/* Remove ALL purple classes */
-.bg-purple-100, .bg-purple-200, .bg-purple-300,
-.bg-purple-400, .bg-purple-500, .bg-purple-600,
-.bg-purple-700, .bg-purple-800, .bg-purple-900 {
-  background: var(--sacred-deep) !important;
+@layer utilities {
+  /* Sacred Color Utilities */
+  .bg-cosmic-depth { background-color: rgb(var(--cosmic-depth)); }
+  .bg-sacred-navy { background-color: rgb(var(--sacred-navy)); }
+  .bg-mystic-blue { background-color: rgb(var(--mystic-blue)); }
+  .bg-ethereal-blue { background-color: rgb(var(--ethereal-blue)); }
+  .bg-divine-gold { background-color: rgb(var(--divine-gold)); }
+  .bg-sacred-amber { background-color: rgb(var(--sacred-amber)); }
+  .bg-pure-light { background-color: rgb(var(--pure-light)); }
+  .bg-sacred-silver { background-color: rgb(var(--sacred-silver)); }
+  .bg-mystic-gray { background-color: rgb(var(--mystic-gray)); }
+
+  .text-cosmic-depth { color: rgb(var(--cosmic-depth)); }
+  .text-sacred-navy { color: rgb(var(--sacred-navy)); }
+  .text-mystic-blue { color: rgb(var(--mystic-blue)); }
+  .text-divine-gold { color: rgb(var(--divine-gold)); }
+  .text-sacred-amber { color: rgb(var(--sacred-amber)); }
+  .text-pure-light { color: rgb(var(--pure-light)); }
+  .text-sacred-silver { color: rgb(var(--sacred-silver)); }
+  .text-mystic-gray { color: rgb(var(--mystic-gray)); }
+
+  .border-cosmic-depth { border-color: rgb(var(--cosmic-depth)); }
+  .border-sacred-navy { border-color: rgb(var(--sacred-navy)); }
+  .border-mystic-blue { border-color: rgb(var(--mystic-blue)); }
+  .border-divine-gold { border-color: rgb(var(--divine-gold)); }
+
+  /* Sacred Animations */
+  .animate-sacred-emergence {
+    animation: emergence var(--duration-ceremonial) var(--ease-sacred-out);
+  }
+
+  .animate-sacred-float {
+    animation: float 6s var(--ease-organic) infinite;
+  }
+
+  .animate-sacred-spiral {
+    animation: spiral 20s linear infinite;
+  }
+
+  /* Sacred Text Effects */
+  .text-sacred-gradient {
+    @apply bg-gradient-to-r from-divine-gold via-sacred-amber to-ethereal-gold;
+    @apply bg-clip-text text-transparent;
+  }
+
+  .text-sacred-elemental {
+    @apply bg-gradient-to-r from-sacred-flame via-deep-flow to-unity-field;
+    @apply bg-clip-text text-transparent;
+  }
+
+  /* Sacred Shadows */
+  .shadow-sacred {
+    box-shadow: 
+      0 0 50px rgba(var(--divine-gold), 0.1),
+      0 10px 40px rgba(var(--cosmic-depth), 0.3);
+  }
+
+  /* Sacred Transforms */
+  .sacred-perspective {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  /* Sacred Backdrop Effects */
+  .backdrop-sacred {
+    @apply backdrop-blur-xl backdrop-saturate-150;
+  }
+
+  /* Sacred Hover States */
+  .hover-sacred-lift {
+    transition: transform var(--duration-normal) var(--ease-sacred-out);
+  }
+
+  .hover-sacred-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-float);
+  }
+
+  .hover-sacred-glow {
+    transition: all var(--duration-normal) var(--ease-sacred);
+  }
+
+  .hover-sacred-glow:hover {
+    box-shadow: var(--shadow-gold);
+  }
+
+  /* Sacred States */
+  .state-loading {
+    @apply pointer-events-none opacity-60;
+  }
+
+  .state-disabled {
+    @apply pointer-events-none opacity-40 grayscale;
+  }
+
+  .state-error {
+    @apply border-red-500/50 bg-red-500/5;
+  }
+
+  .state-success {
+    @apply border-sacred-earth/50 bg-sacred-earth/5;
+  }
+
+  /* Sacred Font Families */
+  .font-sacred {
+    font-family: 'Crimson Pro', 'Georgia', serif;
+  }
+
+  .font-sans {
+    font-family: 'Inter', 'SF Pro Display', -apple-system, sans-serif;
+  }
 }
 
-.text-purple-100, .text-purple-200, .text-purple-300,
-.text-purple-400, .text-purple-500, .text-purple-600,
-.text-purple-700, .text-purple-800, .text-purple-900 {
-  color: var(--sacred-gold) !important;
+/* Sacred Geometry CSS Art */
+.sacred-geometry-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.03;
+  background-image: 
+    conic-gradient(from 0deg at 50% 50%, 
+      rgba(var(--divine-gold), 0.1) 0deg,
+      transparent 60deg,
+      rgba(var(--unity-field), 0.1) 120deg,
+      transparent 180deg,
+      rgba(var(--clear-sky), 0.1) 240deg,
+      transparent 300deg,
+      rgba(var(--divine-gold), 0.1) 360deg
+    );
+  animation: rotate-slow 60s linear infinite;
+}
+
+/* Sacred Selection */
+::selection {
+  background: rgba(var(--divine-gold), 0.3);
+  color: rgb(var(--pure-light));
+}
+
+/* Sacred Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--cosmic-depth));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--mystic-blue), 0.5);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--mystic-blue), 0.7);
+}
+
+/* Sacred Keyframes */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes emergence {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes spiral {
+  0% { transform: rotate(0deg) translateX(0) translateY(0); }
+  100% { transform: rotate(360deg) translateX(100px) translateY(100px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
