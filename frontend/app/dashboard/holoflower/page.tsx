@@ -49,7 +49,7 @@ export default function HoloflowerPage() {
           })));
         }
       } catch (error) {
-        console.log('Using demo holoflower data for executive demonstration');
+        console.log('Using demo holoflower data for consciousness demonstration');
       } finally {
         setLoading(false);
       }

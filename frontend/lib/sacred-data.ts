@@ -61,7 +61,7 @@ class SacredDataService {
       console.log('Demo mode: using simulated user data');
       return {
         id: 'demo-user',
-        name: 'Executive Demo',
+        name: 'Consciousness Demo',
         email: 'demo@soullab.com',
         elementalBalance: {
           fire: 0.8,

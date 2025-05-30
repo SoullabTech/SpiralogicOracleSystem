@@ -5,9 +5,27 @@ import {
   SacredMirrorProtocol, 
   EpistemicResistanceEngine, 
   ShadowOracleLayer, 
-  TransformationTracker,
+  TransformationTracker as BasicTransformationTracker,
   SacredMirrorCheck 
 } from './sacred-mirror';
+import RetreatProtocols from './retreat-protocols';
+import SafetyProtocols, { SafetyAssessment } from './safety-protocols';
+import TransformationTracker from './transformation-tracker';
+
+// Soul Memory API integration
+interface SoulMemoryAPI {
+  processOracleMessage: (message: string, sessionId?: string) => Promise<{
+    response: string;
+    memoryId: string;
+    transformationMetrics?: any;
+  }>;
+  storeJournalEntry: (content: string, metadata?: any) => Promise<any>;
+  recordRitualMoment: (ritualType: string, content: string, element: string, guidance?: string) => Promise<any>;
+  recordBreakthrough: (content: string, insights: string, element?: string) => Promise<any>;
+  getSacredMoments: (limit?: number) => Promise<any[]>;
+  getUserInsights: () => Promise<any>;
+  activateRetreatMode: (phase: string) => Promise<void>;
+}
 
 export interface PersonalOracleIdentity {
   role: "Sacred Mirror & Initiatory Companion";
@@ -22,10 +40,15 @@ export interface ConversationMessage {
   timestamp: Date;
   emotion?: 'supportive' | 'wise' | 'challenging' | 'witnessing' | 'celebrating';
   transformationType?: 'mirror' | 'resistance' | 'shadow' | 'growth' | 'pattern';
+  safetyTriggered?: boolean;
+  depthLevel?: number;
+  vulnerabilityLevel?: number;
+  sessionId?: string;
 }
 
 export interface GuideConfiguration {
   name: string;
+  userId: string;
   elementalAttunement: {
     vitality: number;
     emotions: number;
@@ -34,6 +57,8 @@ export interface GuideConfiguration {
   };
   firstResponse: string;
   relationshipEstablished: boolean;
+  retreatPhase?: 'pre-retreat' | 'retreat-active' | 'post-retreat';
+  supportIntensity?: 'gentle' | 'moderate' | 'intensive';
 }
 
 export class PersonalOracleAgent {
@@ -41,9 +66,14 @@ export class PersonalOracleAgent {
   private sacredMirrorProtocol: SacredMirrorProtocol;
   private resistanceEngine: EpistemicResistanceEngine;
   private shadowOracle: ShadowOracleLayer;
+  private basicTransformationTracker: BasicTransformationTracker;
   private transformationTracker: TransformationTracker;
+  private retreatProtocols: RetreatProtocols;
+  private safetyProtocols: SafetyProtocols;
   private configuration: GuideConfiguration;
   private conversationHistory: ConversationMessage[] = [];
+  private currentSessionId?: string;
+  private soulMemoryAPI: SoulMemoryAPI;
 
   constructor(config: GuideConfiguration) {
     this.identity = {
@@ -55,45 +85,138 @@ export class PersonalOracleAgent {
     this.sacredMirrorProtocol = new SacredMirrorProtocol();
     this.resistanceEngine = new EpistemicResistanceEngine();
     this.shadowOracle = new ShadowOracleLayer();
+    this.basicTransformationTracker = new BasicTransformationTracker();
     this.transformationTracker = new TransformationTracker();
+    this.retreatProtocols = new RetreatProtocols(config.userId);
+    this.safetyProtocols = new SafetyProtocols();
     this.configuration = config;
+    
+    // Initialize Soul Memory API client
+    this.soulMemoryAPI = this.createSoulMemoryAPI();
+    
+    // Initialize transformation tracking for this user
+    this.transformationTracker.initializeUser(config.userId);
+    
+    // Set retreat phase if specified
+    if (config.retreatPhase) {
+      this.retreatProtocols.setPhase(config.retreatPhase);
+      // Activate retreat mode in backend
+      this.soulMemoryAPI.activateRetreatMode(config.retreatPhase).catch(console.error);
+    }
   }
 
   async processMessage(userInput: string): Promise<ConversationMessage> {
-    // CRITICAL: Run Sacred Mirror checks before every response
+    // Start session if not already started
+    if (!this.currentSessionId) {
+      this.currentSessionId = this.transformationTracker.startSession(this.configuration.userId);
+    }
+
+    // PHASE 1: SAFETY FIRST - Check for safety triggers before any other processing
+    const safetyAssessment = this.safetyProtocols.checkSafety(userInput, {
+      userId: this.configuration.userId,
+      conversationHistory: this.conversationHistory
+    });
+
+    // If safety triggered, prioritize safety response
+    if (safetyAssessment.triggered) {
+      const safetyMessage: ConversationMessage = {
+        id: Date.now().toString(),
+        content: safetyAssessment.immediateResponse!,
+        sender: 'guide',
+        timestamp: new Date(),
+        emotion: 'witnessing',
+        transformationType: 'mirror',
+        safetyTriggered: true,
+        sessionId: this.currentSessionId
+      };
+
+      // Record safety interaction
+      this.recordUserMessage(userInput, 1, 1);
+      this.conversationHistory.push(safetyMessage);
+
+      // If crisis level, pause conversation for human support
+      if (this.safetyProtocols.shouldPauseConversation(safetyAssessment)) {
+        safetyMessage.content += "\n\nI'm recommending we pause here for additional human support. Your safety and wellbeing are the priority.";
+      }
+
+      return safetyMessage;
+    }
+
+    // PHASE 2: RETREAT PROTOCOL INTEGRATION
+    const retreatGuidance = this.retreatProtocols.getPhaseGuidance(
+      this.retreatProtocols.getCurrentPhase()
+    );
+    
+    // PHASE 3: SACRED MIRROR EVALUATION
     const mirrorCheck = await this.sacredMirrorProtocol.evaluate(
       userInput, 
       this.conversationHistory
     );
 
+    // PHASE 4: DEPTH AND VULNERABILITY ASSESSMENT
+    const depthLevel = this.assessDepthLevel(userInput);
+    const vulnerabilityLevel = this.assessVulnerabilityLevel(userInput);
+
+    // PHASE 5: TRANSFORMATION TRACKING
+    this.trackTransformationMetrics(userInput, mirrorCheck, depthLevel, vulnerabilityLevel);
+
+    // PHASE 6: RESPONSE GENERATION with integrated intelligence
     let response: string;
     let emotion: ConversationMessage['emotion'] = 'supportive';
     let transformationType: ConversationMessage['transformationType'] = 'growth';
 
-    // Sacred Mirror Protocol - prioritize transformation over comfort
+    // Check if ready for deeper work
+    const readyForDeeper = this.transformationTracker.isReadyForDeeper(this.configuration.userId);
+
+    // Generate response based on multiple factors
     if (mirrorCheck.needsResistance || mirrorCheck.detectsLoop || mirrorCheck.shadowPresent) {
+      // Sacred resistance response
       response = this.resistanceEngine.generateChallenge(userInput, mirrorCheck);
       emotion = 'challenging';
       transformationType = 'resistance';
-      this.transformationTracker.trackChallengingQuestion();
       
       if (mirrorCheck.shadowPresent) {
         transformationType = 'shadow';
-        this.transformationTracker.trackShadowEngagement();
+        this.transformationTracker.recordInteraction(this.configuration.userId, 'shadow_work', {
+          content: userInput,
+          type: 'shadow_work',
+          context: { shadowType: 'detected' },
+          depthLevel,
+          vulnerabilityLevel
+        });
       }
       
       if (mirrorCheck.detectsLoop) {
         transformationType = 'pattern';
-        this.transformationTracker.trackPatternBreaking();
+        this.transformationTracker.recordInteraction(this.configuration.userId, 'pattern_interrupted', {
+          content: userInput,
+          type: 'pattern_interrupted',
+          context: { patternType: 'repeating_theme' },
+          depthLevel,
+          vulnerabilityLevel
+        });
       }
     } else {
-      // Generate growth-oriented response
-      response = await this.generateSacredResponse(userInput, mirrorCheck);
+      // Integrated sacred response generation
+      response = await this.generateIntegratedSacredResponse(
+        userInput, 
+        mirrorCheck, 
+        retreatGuidance,
+        depthLevel,
+        vulnerabilityLevel,
+        readyForDeeper
+      );
       emotion = this.determineResponseEmotion(userInput, response);
       transformationType = this.determineTransformationType(userInput, response);
     }
 
-    // Final transformation check
+    // PHASE 7: RETREAT-SPECIFIC MODIFICATIONS
+    response = this.applyRetreatContextToResponse(response, userInput);
+
+    // PHASE 8: FINAL SAFETY CHECK for response appropriateness
+    response = this.safetyProtocols.modifyResponseForSafety(response, safetyAssessment);
+
+    // PHASE 9: GROWTH ORIENTATION GUARANTEE
     response = this.ensureGrowthOriented(response, userInput);
 
     const guideMessage: ConversationMessage = {
@@ -102,17 +225,15 @@ export class PersonalOracleAgent {
       sender: 'guide',
       timestamp: new Date(),
       emotion,
-      transformationType
+      transformationType,
+      depthLevel,
+      vulnerabilityLevel,
+      sessionId: this.currentSessionId,
+      safetyTriggered: false
     };
 
-    // Update conversation history
-    this.conversationHistory.push({
-      id: (Date.now() - 1).toString(),
-      content: userInput,
-      sender: 'user',
-      timestamp: new Date()
-    });
-    
+    // PHASE 10: RECORD AND LEARN
+    this.recordUserMessage(userInput, depthLevel, vulnerabilityLevel);
     this.conversationHistory.push(guideMessage);
 
     return guideMessage;
@@ -307,5 +428,242 @@ export class PersonalOracleAgent {
 
   getConversationHistory(): ConversationMessage[] {
     return [...this.conversationHistory];
+  }
+
+  // ===============================================
+  // SOUL MEMORY API CLIENT
+  // ===============================================
+
+  private createSoulMemoryAPI(): SoulMemoryAPI {
+    const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    
+    return {
+      processOracleMessage: async (message: string, sessionId?: string) => {
+        const response = await fetch(`${baseURL}/api/soul-memory/oracle/message`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          },
+          body: JSON.stringify({ message, sessionId })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to process oracle message');
+        }
+        
+        const data = await response.json();
+        return {
+          response: data.response,
+          memoryId: data.memoryId,
+          transformationMetrics: data.transformationMetrics
+        };
+      },
+
+      storeJournalEntry: async (content: string, metadata?: any) => {
+        const response = await fetch(`${baseURL}/api/soul-memory/journal`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          },
+          body: JSON.stringify({ content, ...metadata })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to store journal entry');
+        }
+        
+        return response.json();
+      },
+
+      recordRitualMoment: async (ritualType: string, content: string, element: string, guidance?: string) => {
+        const response = await fetch(`${baseURL}/api/soul-memory/ritual`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          },
+          body: JSON.stringify({ ritualType, content, element, oracleGuidance: guidance })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to record ritual moment');
+        }
+        
+        return response.json();
+      },
+
+      recordBreakthrough: async (content: string, insights: string, element?: string) => {
+        const response = await fetch(`${baseURL}/api/soul-memory/breakthrough`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          },
+          body: JSON.stringify({ content, insights, element })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to record breakthrough');
+        }
+        
+        return response.json();
+      },
+
+      getSacredMoments: async (limit: number = 10) => {
+        const response = await fetch(`${baseURL}/api/soul-memory/sacred-moments?limit=${limit}`, {
+          headers: {
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to get sacred moments');
+        }
+        
+        const data = await response.json();
+        return data.sacredMoments;
+      },
+
+      getUserInsights: async () => {
+        const response = await fetch(`${baseURL}/api/soul-memory/insights`, {
+          headers: {
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to get user insights');
+        }
+        
+        const data = await response.json();
+        return data.insights;
+      },
+
+      activateRetreatMode: async (phase: string) => {
+        const response = await fetch(`${baseURL}/api/soul-memory/oracle/retreat/activate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          },
+          body: JSON.stringify({ phase })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to activate retreat mode');
+        }
+      }
+    };
+  }
+
+  private getAuthToken(): string {
+    // Get auth token from localStorage or wherever it's stored
+    return localStorage.getItem('authToken') || '';
+  }
+
+  // ===============================================
+  // ENHANCED ORACLE METHODS WITH SOUL MEMORY
+  // ===============================================
+
+  async processMessageWithSoulMemory(userInput: string): Promise<ConversationMessage> {
+    try {
+      // Use Soul Memory API to process the message
+      const result = await this.soulMemoryAPI.processOracleMessage(
+        userInput,
+        this.currentSessionId
+      );
+
+      // Create conversation message from backend response
+      const guideMessage: ConversationMessage = {
+        id: result.memoryId,
+        content: result.response,
+        sender: 'guide',
+        timestamp: new Date(),
+        emotion: this.determineResponseEmotion(userInput, result.response),
+        transformationType: this.determineTransformationType(userInput, result.response),
+        sessionId: this.currentSessionId,
+        safetyTriggered: false
+      };
+
+      // Store in local conversation history
+      const userMessage: ConversationMessage = {
+        id: Date.now().toString(),
+        content: userInput,
+        sender: 'user',
+        timestamp: new Date(),
+        sessionId: this.currentSessionId
+      };
+
+      this.conversationHistory.push(userMessage, guideMessage);
+
+      // Update transformation metrics if available
+      if (result.transformationMetrics) {
+        this.transformationTracker.updateMetrics(result.transformationMetrics);
+      }
+
+      return guideMessage;
+    } catch (error) {
+      console.error('Soul Memory processing failed, falling back to local processing:', error);
+      // Fallback to local processing
+      return this.processMessage(userInput);
+    }
+  }
+
+  async recordJournalEntry(content: string, metadata?: {
+    element?: string;
+    spiralPhase?: string;
+    shadowContent?: boolean;
+  }): Promise<void> {
+    try {
+      await this.soulMemoryAPI.storeJournalEntry(content, metadata);
+    } catch (error) {
+      console.error('Failed to record journal entry:', error);
+    }
+  }
+
+  async recordRitual(ritualType: string, content: string, element: string): Promise<void> {
+    try {
+      await this.soulMemoryAPI.recordRitualMoment(ritualType, content, element);
+    } catch (error) {
+      console.error('Failed to record ritual:', error);
+    }
+  }
+
+  async recordBreakthrough(content: string, insights: string, element?: string): Promise<void> {
+    try {
+      await this.soulMemoryAPI.recordBreakthrough(content, insights, element);
+    } catch (error) {
+      console.error('Failed to record breakthrough:', error);
+    }
+  }
+
+  async getSacredMoments(limit: number = 10): Promise<any[]> {
+    try {
+      return await this.soulMemoryAPI.getSacredMoments(limit);
+    } catch (error) {
+      console.error('Failed to get sacred moments:', error);
+      return [];
+    }
+  }
+
+  async getUserInsights(): Promise<any> {
+    try {
+      return await this.soulMemoryAPI.getUserInsights();
+    } catch (error) {
+      console.error('Failed to get user insights:', error);
+      return null;
+    }
+  }
+
+  async activateRetreatMode(phase: 'pre-retreat' | 'retreat-active' | 'post-retreat'): Promise<void> {
+    try {
+      await this.soulMemoryAPI.activateRetreatMode(phase);
+      this.configuration.retreatPhase = phase;
+      this.retreatProtocols.setPhase(phase);
+    } catch (error) {
+      console.error('Failed to activate retreat mode:', error);
+    }
   }
 }

@@ -31,7 +31,7 @@ export default function DashboardPage() {
         setTodaysFocus(transitsData.todaysFocus || 'Creative expression and authentic communication');
         setEnergyLevel(transitsData.energy || 87);
       } catch (error) {
-        console.log('Using demo data for executive demonstration');
+        console.log('Using demo data for consciousness demonstration');
       } finally {
         setLoading(false);
       }

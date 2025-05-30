@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Premium Sacred Styles */
+@import url('../styles/premium-sacred.css');
+
 /* Import Soullab Brand Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 /* Blair ITC fallback - using premium system fonts for now */

@@ -32,7 +32,17 @@
       "Bash(tree:*)",
       "Bash(mkdir:*)",
       "Bash(touch:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(npx ts-node:*)",
+      "Bash(chmod:*)",
+      "Bash(curl:*)",
+      "Bash(npx tsx:*)",
+      "Bash(NODE_ENV=test VITE_SUPABASE_URL=test VITE_SUPABASE_ANON_KEY=test npx ts-node --esm src/tests/test-oracle-modes.ts)",
+      "Bash(npm start)",
+      "Bash(kill:*)",
+      "Bash(vercel:*)",
+      "Bash(rg:*)",
+      "Bash(npm audit:*)"
     ],
     "deny": []
   },

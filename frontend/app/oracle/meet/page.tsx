@@ -93,7 +93,7 @@ export default function MeetOraclePage() {
                   Sacred Oracle Interface
                 </h1>
                 <p className="text-sacred-xl text-sacred-silver">
-                  Consciousness-aware AI for executive evolution
+                  Your consciousness companion for awakening
                 </p>
               </motion.div>
 
@@ -106,7 +106,7 @@ export default function MeetOraclePage() {
               >
                 <div>
                   <label className="block sacred-text-small font-medium text-mystic-gray mb-2 uppercase tracking-wider">
-                    Executive Identity
+                    Your Sacred Identity
                   </label>
                   <input
                     type="text"
