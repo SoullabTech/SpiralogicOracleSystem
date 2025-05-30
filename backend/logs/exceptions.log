@@ -409,3 +409,15 @@ undefined
 undefined
 undefined
 undefined
+2025-05-29 07:01:15:115 [31merror[39m: [31muncaughtException: Invalid environment variables[39m
+[31mError: Invalid environment variables[39m
+[31m    at validateEnv (/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/backend/src/lib/config.ts:37:11)[39m
+[31m    at <anonymous> (/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/backend/src/lib/config.ts:42:20)[39m
+[31m    at Object.<anonymous> (/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/backend/src/lib/config.ts:42:32)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1529:14)[39m
+[31m    at Object.transformer (/Users/andreanezat/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D2KMMyKp.cjs:2:1186)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1275:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1096:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1298:19)[39m
+[31m    at require (node:internal/modules/helpers:182:18)[39m
+[31m    at <anonymous> (/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/backend/src/lib/supabase.ts:4:21)[39m

@@ -15,6 +15,7 @@ import symbolicMemoryRoutes from './symbolicMemory.routes';
 import personalOracleRoutes from './oracle/personalOracle.routes';
 import personalGuideRoutes from './oracle/personalGuide.routes';
 import dreamRoutes from './oracle/dream.routes';
+import modeSelectorRoutes from './oracle/modeSelector.routes';
 import founderRoutes from './founder.routes';
 import retreatRoutes from './retreat.routes';
 import retreatOnboardingRoutes from './retreatOnboarding.routes';
@@ -24,6 +25,7 @@ import { holoflowerRouter } from './holoflower.routes';
 import { elementalAlchemyRouter } from './elementalAlchemy.routes';
 import { astrologyRouter } from './astrology.routes';
 import { facilitatorDashboardRouter } from './facilitatorDashboard.routes';
+import automationRoutes from './automation.routes';
 
 const router = Router();
 
@@ -42,6 +44,7 @@ router.use('/memory', memoryRoutes);
 router.use('/personal-guide', personalGuideRoutes);
 router.use('/api/oracle/dream', dreamRoutes);
 router.use('/oracle/personal', personalOracleRoutes);
+router.use('/api/oracle', modeSelectorRoutes);
 router.use('/symbolic-tags', symbolicMemoryRoutes);
 router.use('/journal', journalRoutes);
 router.use('/survey', surveyRoutes);
@@ -59,5 +62,6 @@ router.use('/holoflower', holoflowerRouter);
 router.use('/elemental-alchemy', elementalAlchemyRouter);
 router.use('/astrology', astrologyRouter);
 router.use('/facilitator', facilitatorDashboardRouter);
+router.use('/automation', automationRoutes);
 
 export default router;
