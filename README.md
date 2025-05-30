@@ -71,4 +71,4 @@ NEXT_PUBLIC_API_BASE=http://localhost:3001
 ---
 
 ## 📜 License
-MIT — Build wisely, share freely, honor the path ✨
+MIT — Build wisely, share freely, honor the path ✨# Deploy trigger
