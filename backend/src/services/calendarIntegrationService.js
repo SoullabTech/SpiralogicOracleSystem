@@ -1,11 +1,17 @@
+"use strict";
 /**
  * Calendar Integration Service
  * Handles Calendly, Microsoft Teams, Google Calendar integrations
  * with ADHD-friendly reminders and prep automation
  */
-import axios from 'axios';
-import { supabase } from '../lib/supabaseClient';
-export class CalendarIntegrationService {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.calendarIntegrationService = exports.CalendarIntegrationService = void 0;
+const axios_1 = __importDefault(require("axios"));
+const supabaseClient_1 = require("../lib/supabaseClient");
+class CalendarIntegrationService {
     constructor() {
         this.calendlyApiKey = process.env.CALENDLY_API_KEY || '';
         this.msGraphToken = process.env.MS_GRAPH_TOKEN || '';
@@ -14,7 +20,7 @@ export class CalendarIntegrationService {
     // Calendly Integration
     async setupCalendlyWebhook(facilitatorId, webhookUrl) {
         try {
-            const response = await axios.post('https://api.calendly.com/webhook_subscriptions', {
+            const response = await axios_1.default.post('https://api.calendly.com/webhook_subscriptions', {
                 url: webhookUrl,
                 events: ['invitee.created', 'invitee.canceled'],
                 organization: process.env.CALENDLY_ORGANIZATION_URI,
@@ -26,7 +32,7 @@ export class CalendarIntegrationService {
                 }
             });
             // Save webhook config
-            await supabase
+            await supabaseClient_1.supabase
                 .from('calendar_integrations')
                 .update({
                 calendly_webhook_id: response.data.resource.uri,
@@ -81,7 +87,7 @@ export class CalendarIntegrationService {
     async setupMSTeamsIntegration(facilitatorId) {
         try {
             // Exchange auth code for token (simplified)
-            const tokenResponse = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
+            const tokenResponse = await axios_1.default.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
                 client_id: process.env.MS_CLIENT_ID,
                 scope: 'Calendars.ReadWrite OnlineMeetings.ReadWrite',
                 grant_type: 'authorization_code',
@@ -98,7 +104,7 @@ export class CalendarIntegrationService {
         }
     }
     async subscribeMSCalendarNotifications(facilitatorId) {
-        const subscription = await axios.post('https://graph.microsoft.com/v1.0/subscriptions', {
+        const subscription = await axios_1.default.post('https://graph.microsoft.com/v1.0/subscriptions', {
             changeType: 'created,updated,deleted',
             notificationUrl: `${process.env.API_URL}/webhooks/ms-calendar/${facilitatorId}`,
             resource: 'me/events',
@@ -110,7 +116,7 @@ export class CalendarIntegrationService {
                 'Content-Type': 'application/json'
             }
         });
-        await supabase
+        await supabaseClient_1.supabase
             .from('calendar_integrations')
             .update({
             ms_subscription_id: subscription.data.id,
@@ -121,7 +127,7 @@ export class CalendarIntegrationService {
     async syncMSTeamsCalendar(facilitatorId) {
         try {
             // Get upcoming events
-            const response = await axios.get('https://graph.microsoft.com/v1.0/me/events', {
+            const response = await axios_1.default.get('https://graph.microsoft.com/v1.0/me/events', {
                 headers: {
                     'Authorization': `Bearer ${this.msGraphToken}`
                 },
@@ -199,7 +205,7 @@ export class CalendarIntegrationService {
         // Check for recent breakthroughs
         prep.recentBreakthroughs = recentActivity.breakthroughs;
         // Save prep notes
-        await supabase
+        await supabaseClient_1.supabase
             .from('session_prep')
             .insert({
             session_id: event.id,
@@ -215,7 +221,7 @@ export class CalendarIntegrationService {
         const facilitatorSettings = await this.getFacilitatorSettings(facilitatorId);
         const reminderTimes = this.calculateReminderTimes(event, facilitatorSettings);
         for (const reminderTime of reminderTimes) {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('smart_reminders')
                 .insert({
                 facilitator_id: facilitatorId,
@@ -286,7 +292,7 @@ export class CalendarIntegrationService {
         if (event.participants.length === 0)
             return null;
         const participantEmail = event.participants[0].email;
-        const { data: participant } = await supabase
+        const { data: participant } = await supabaseClient_1.supabase
             .from('sacred_participants')
             .select('*')
             .eq('email', participantEmail)
@@ -295,7 +301,7 @@ export class CalendarIntegrationService {
     }
     // Helper methods
     async matchOrCreateParticipant(email, name, facilitatorId) {
-        let { data: participant } = await supabase
+        let { data: participant } = await supabaseClient_1.supabase
             .from('sacred_participants')
             .select('*')
             .eq('email', email)
@@ -303,7 +309,7 @@ export class CalendarIntegrationService {
             .single();
         if (!participant) {
             // Create new participant
-            const { data: newParticipant } = await supabase
+            const { data: newParticipant } = await supabaseClient_1.supabase
                 .from('sacred_participants')
                 .insert({
                 facilitator_id: facilitatorId,
@@ -321,7 +327,7 @@ export class CalendarIntegrationService {
         return participant;
     }
     async createSessionRecord(event, participantId, facilitatorId) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('session_records')
             .insert({
             id: event.id,
@@ -393,7 +399,7 @@ export class CalendarIntegrationService {
     }
     // Stub methods for full implementation
     async getFacilitatorSettings(facilitatorId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('facilitator_settings')
             .select('*')
             .eq('facilitator_id', facilitatorId)
@@ -434,4 +440,5 @@ export class CalendarIntegrationService {
         // Would send email via service
     }
 }
-export const calendarIntegrationService = new CalendarIntegrationService();
+exports.CalendarIntegrationService = CalendarIntegrationService;
+exports.calendarIntegrationService = new CalendarIntegrationService();

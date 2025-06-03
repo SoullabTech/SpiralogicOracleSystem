@@ -1,5 +1,8 @@
-import { logger } from '../utils/logger';
-export class ElementalAssessmentService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.elementalAssessmentService = exports.ElementalAssessmentService = void 0;
+const logger_1 = require("../utils/logger");
+class ElementalAssessmentService {
     // Core assessment method combining multiple data sources
     async assessParticipant(participant, additionalData) {
         try {
@@ -30,7 +33,7 @@ export class ElementalAssessmentService {
             };
         }
         catch (error) {
-            logger.error('Elemental assessment failed', error);
+            logger_1.logger.error('Elemental assessment failed', error);
             throw error;
         }
     }
@@ -428,4 +431,5 @@ export class ElementalAssessmentService {
         return styles[dominant] || 'experiential';
     }
 }
-export const elementalAssessmentService = new ElementalAssessmentService();
+exports.ElementalAssessmentService = ElementalAssessmentService;
+exports.elementalAssessmentService = new ElementalAssessmentService();

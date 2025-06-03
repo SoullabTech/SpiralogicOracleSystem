@@ -1,4 +1,7 @@
-export function scoreQuery(input) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.scoreQuery = scoreQuery;
+function scoreQuery(input) {
     const lowered = input.toLowerCase();
     const scores = { fire: 0, water: 0, earth: 0, air: 0, aether: 0 };
     if (lowered.includes("fire") || lowered.includes("ignite") || lowered.includes("spark")) {

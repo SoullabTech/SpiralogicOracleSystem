@@ -1,10 +1,15 @@
+"use strict";
 // oracle-backend/src/types/session.ts
-import { supabase } from '../services/supabaseClient';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.startSession = startSession;
+exports.endSession = endSession;
+exports.getSessionStats = getSessionStats;
+const supabaseClient_1 = require("../services/supabaseClient");
 /**
  * Starts a new session for a user and stores session details.
  */
-export async function startSession(clientId, metadata) {
-    const { data, error } = await supabase
+async function startSession(clientId, metadata) {
+    const { data, error } = await supabaseClient_1.supabase
         .from('sessions')
         .insert([
         {
@@ -30,8 +35,8 @@ export async function startSession(clientId, metadata) {
 /**
  * Ends an active session for a user and updates session status.
  */
-export async function endSession(sessionId) {
-    const { data, error } = await supabase
+async function endSession(sessionId) {
+    const { data, error } = await supabaseClient_1.supabase
         .from('sessions')
         .update({ status: 'completed', endTime: new Date().toISOString() })
         .eq('id', sessionId)
@@ -52,8 +57,8 @@ export async function endSession(sessionId) {
 /**
  * Retrieves session statistics, such as total active/completed sessions.
  */
-export async function getSessionStats(clientId) {
-    const { data, error } = await supabase
+async function getSessionStats(clientId) {
+    const { data, error } = await supabaseClient_1.supabase
         .from('sessions')
         .select('*')
         .eq('clientId', clientId);

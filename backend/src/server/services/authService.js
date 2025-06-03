@@ -1,29 +1,32 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dreamService = exports.memoryService = exports.sessionService = exports.userService = exports.oracleService = exports.symbolicTrendsService = exports.surveyService = exports.notionIngestService = exports.insightHistoryService = exports.flowService = exports.feedbackService = exports.facilitatorService = exports.facetMapService = exports.chatService = exports.authService = void 0;
 // src/services/authService.ts
-export const authService = {
+exports.authService = {
     validateToken: (token) => {
         return token === 'valid-token';
     },
 };
 // src/services/chatService.ts
-export const chatService = {
+exports.chatService = {
     processMessage: (message) => {
         return `Echo: ${message}`;
     },
 };
 // src/services/facetMapService.ts
-export const facetMapService = {
+exports.facetMapService = {
     getMap: () => {
         return { 'Fire 1': 'Visionary', 'Water 2': 'Alchemist' };
     },
 };
 // src/services/facilitatorService.ts
-export const facilitatorService = {
+exports.facilitatorService = {
     getFacilitatorTools: () => {
         return ['Circle Process', 'Check-in Protocol', 'Conflict Resolution'];
     },
 };
 const feedbackList = [];
-export const feedbackService = {
+exports.feedbackService = {
     submitFeedback: (feedback) => {
         feedbackList.push(feedback);
     },
@@ -32,13 +35,13 @@ export const feedbackService = {
     },
 };
 // src/services/flowService.ts
-export const flowService = {
+exports.flowService = {
     startFlow: (userId) => {
         return `Flow started for ${userId}`;
     },
 };
 const insightLog = [];
-export const insightHistoryService = {
+exports.insightHistoryService = {
     recordInsight: (insight) => {
         insightLog.push(insight);
     },
@@ -47,13 +50,13 @@ export const insightHistoryService = {
     },
 };
 // src/services/notionIngestService.ts
-export const notionIngestService = {
+exports.notionIngestService = {
     ingest: (content) => {
         return `Content ingested to Notion: ${content.substring(0, 50)}...`;
     },
 };
 const responses = [];
-export const surveyService = {
+exports.surveyService = {
     submitResponse: (response) => {
         responses.push(response);
     },
@@ -62,13 +65,13 @@ export const surveyService = {
     },
 };
 // src/services/symbolicTrendsService.ts
-export const symbolicTrendsService = {
+exports.symbolicTrendsService = {
     analyzeSymbols: (symbols) => {
         return `Trends show increased presence of: ${symbols.join(', ')}`;
     },
 };
 // src/services/oracleService.ts
-export const oracleService = {
+exports.oracleService = {
     ask: (question) => {
         return `The Oracle hears your question: "${question}"... and responds in silence.`;
     },
@@ -79,7 +82,7 @@ export const oracleService = {
 const users = {
     'u1': { id: 'u1', name: 'Aria Spiral', role: 'oracle' },
 };
-export const userService = {
+exports.userService = {
     getUser: (id) => {
         return users[id] || null;
     },
@@ -88,7 +91,7 @@ export const userService = {
     },
 };
 const mockSessions = [];
-export const sessionService = {
+exports.sessionService = {
     startSession: (userId, context) => {
         const session = { id: `${Date.now()}`, userId, startedAt: new Date(), context };
         mockSessions.push(session);
@@ -99,7 +102,7 @@ export const sessionService = {
     },
 };
 const memories = [];
-export const memoryService = {
+exports.memoryService = {
     store: (userId, content) => {
         const item = { userId, content, timestamp: new Date() };
         memories.push(item);
@@ -110,7 +113,7 @@ export const memoryService = {
     },
 };
 const dreams = [];
-export const dreamService = {
+exports.dreamService = {
     record: (dream) => {
         dreams.push(dream);
         return dream;

@@ -1,6 +1,10 @@
+"use strict";
 // vectorEquilibrium.ts
 // Foundational geometric structure for Aether center using Fuller's Vector Equilibrium
 // Models phase transitions through jitterbug transformation
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Water2Process = exports.VectorEquilibrium = exports.Vertex = exports.JitterbugPhase = void 0;
+exports.calculateVEMetrics = calculateVEMetrics;
 // Sacred geometric constants
 const PHI = 1.618033988749895;
 const SQRT_2 = 1.41421356237;
@@ -10,7 +14,7 @@ const VE_VERTICES = 12;
 const VE_EDGES = 24;
 const VE_FACES = 14; // 8 triangles + 6 squares
 // Jitterbug transformation phases (Fuller's discovery)
-export var JitterbugPhase;
+var JitterbugPhase;
 (function (JitterbugPhase) {
     JitterbugPhase["VECTOR_EQUILIBRIUM"] = "vector_equilibrium";
     JitterbugPhase["ICOSAHEDRON"] = "icosahedron";
@@ -20,7 +24,7 @@ export var JitterbugPhase;
     JitterbugPhase["EXPANDING_OCTAHEDRON"] = "expanding_octahedron";
     JitterbugPhase["EXPANDING_ICOSAHEDRON"] = "expanding_icosahedron";
     JitterbugPhase["RETURN_TO_VE"] = "return_to_ve"; // Complete cycle
-})(JitterbugPhase || (JitterbugPhase = {}));
+})(JitterbugPhase || (exports.JitterbugPhase = JitterbugPhase = {}));
 // Elemental correspondences to jitterbug phases
 const PHASE_ELEMENTS = {
     [JitterbugPhase.VECTOR_EQUILIBRIUM]: 'aether',
@@ -44,7 +48,7 @@ const PHASE_RATIOS = {
     [JitterbugPhase.RETURN_TO_VE]: 1.0
 };
 // Vertex class for VE points
-export class Vertex {
+class Vertex {
     constructor(x, y, z, element) {
         this.x = x;
         this.y = y;
@@ -82,8 +86,9 @@ export class Vertex {
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 }
+exports.Vertex = Vertex;
 // Main Vector Equilibrium class
-export class VectorEquilibrium {
+class VectorEquilibrium {
     constructor(centerX = 0, centerY = 0, centerZ = 0, radius = 100) {
         this.vertices = [];
         this.currentPhase = JitterbugPhase.VECTOR_EQUILIBRIUM;
@@ -309,8 +314,9 @@ export class VectorEquilibrium {
         return colors[element || 'aether'] || '#ffffff';
     }
 }
+exports.VectorEquilibrium = VectorEquilibrium;
 // Water 2 Death/Rebirth Process Manager
-export class Water2Process {
+class Water2Process {
     constructor(ve) {
         this.stage = 'descent';
         this.progress = 0;
@@ -410,8 +416,9 @@ export class Water2Process {
         }
     }
 }
+exports.Water2Process = Water2Process;
 // Utility functions for VE calculations
-export function calculateVEMetrics(ve) {
+function calculateVEMetrics(ve) {
     return {
         coherence: ve.getCoherence(),
         symmetry: calculateSymmetry(ve),
@@ -439,4 +446,4 @@ function calculateSymmetry(ve) {
     return Math.max(0, 100 - (avgDeviation / maxDeviation * 100));
 }
 // Export for use in oracle system
-export default VectorEquilibrium;
+exports.default = VectorEquilibrium;

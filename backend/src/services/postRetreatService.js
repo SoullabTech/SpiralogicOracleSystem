@@ -1,15 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.postRetreatService = exports.PostRetreatService = void 0;
 // Post-Retreat Service - Long-term transformation support
-import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '../lib/supabaseClient';
-import { logger } from '../utils/logger';
-import { soullabFounderAgent } from '../core/agents/soullabFounderAgent';
-export class PostRetreatService {
+const uuid_1 = require("uuid");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const logger_1 = require("../utils/logger");
+const soullabFounderAgent_1 = require("../core/agents/soullabFounderAgent");
+class PostRetreatService {
     // Record transformation update
     async recordTransformationUpdate(update) {
         try {
-            const updateId = uuidv4();
+            const updateId = (0, uuid_1.v4)();
             // Store transformation update
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient_1.supabase
                 .from('transformation_updates')
                 .insert({
                 id: updateId,
@@ -29,7 +32,7 @@ export class PostRetreatService {
             await this.updateIntegrationStatus(update.participantId, update);
             // Calculate next check-in date
             const nextCheckInDate = this.calculateNextCheckIn(update);
-            logger.info('Transformation update recorded', {
+            logger_1.logger.info('Transformation update recorded', {
                 participantId: update.participantId,
                 updateId
             });
@@ -40,7 +43,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to record transformation update', error);
+            logger_1.logger.error('Failed to record transformation update', error);
             throw error;
         }
     }
@@ -48,7 +51,7 @@ export class PostRetreatService {
     async analyzeTransformationJourney(participantId) {
         try {
             // Get all transformation updates
-            const { data: updates } = await supabase
+            const { data: updates } = await supabaseClient_1.supabase
                 .from('transformation_updates')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -73,7 +76,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to analyze transformation journey', error);
+            logger_1.logger.error('Failed to analyze transformation journey', error);
             throw error;
         }
     }
@@ -98,14 +101,14 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to generate integration guidance', error);
+            logger_1.logger.error('Failed to generate integration guidance', error);
             throw error;
         }
     }
     // Get transformation timeline
     async getTransformationTimeline(participantId, retreatId) {
         try {
-            let query = supabase
+            let query = supabaseClient_1.supabase
                 .from('transformation_updates')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -140,7 +143,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to get transformation timeline', error);
+            logger_1.logger.error('Failed to get transformation timeline', error);
             throw error;
         }
     }
@@ -148,18 +151,18 @@ export class PostRetreatService {
     async getParticipantRetreatContext(participantId) {
         try {
             // Get participant data
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
                 .single();
             // Get retreat insights
-            const { data: insights } = await supabase
+            const { data: insights } = await supabaseClient_1.supabase
                 .from('retreat_insights')
                 .select('*')
                 .eq('participant_id', participantId);
             // Get latest transformation
-            const { data: latestUpdate } = await supabase
+            const { data: latestUpdate } = await supabaseClient_1.supabase
                 .from('transformation_updates')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -176,7 +179,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to get retreat context', error);
+            logger_1.logger.error('Failed to get retreat context', error);
             throw error;
         }
     }
@@ -200,14 +203,14 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to generate sacred guidance', error);
+            logger_1.logger.error('Failed to generate sacred guidance', error);
             throw error;
         }
     }
     // Record guidance session
     async recordGuidanceSession(participantId, guidance) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('guidance_sessions')
                 .insert({
                 participant_id: participantId,
@@ -216,7 +219,7 @@ export class PostRetreatService {
             });
         }
         catch (error) {
-            logger.error('Failed to record guidance session', error);
+            logger_1.logger.error('Failed to record guidance session', error);
         }
     }
     // Schedule Oracle check-ins
@@ -231,7 +234,7 @@ export class PostRetreatService {
                 reminders: this.generateReminderSchedule(params.frequency)
             };
             // Store schedule
-            await supabase
+            await supabaseClient_1.supabase
                 .from('oracle_checkin_schedules')
                 .upsert({
                 participant_id: params.participantId,
@@ -241,7 +244,7 @@ export class PostRetreatService {
             return schedule;
         }
         catch (error) {
-            logger.error('Failed to schedule check-ins', error);
+            logger_1.logger.error('Failed to schedule check-ins', error);
             throw error;
         }
     }
@@ -249,7 +252,7 @@ export class PostRetreatService {
     async recordMilestone(milestoneData) {
         try {
             const milestone = {
-                id: uuidv4(),
+                id: (0, uuid_1.v4)(),
                 participantId: milestoneData.participantId,
                 type: milestoneData.type,
                 title: milestoneData.title,
@@ -260,19 +263,19 @@ export class PostRetreatService {
                 shareWithCommunity: milestoneData.shareWithCommunity
             };
             // Store milestone
-            await supabase
+            await supabaseClient_1.supabase
                 .from('milestones')
                 .insert(milestone);
             // Update participant stats
             await this.updateMilestoneStats(milestone.participantId, milestone.type);
-            logger.info('Milestone recorded', {
+            logger_1.logger.info('Milestone recorded', {
                 milestoneId: milestone.id,
                 type: milestone.type
             });
             return milestone;
         }
         catch (error) {
-            logger.error('Failed to record milestone', error);
+            logger_1.logger.error('Failed to record milestone', error);
             throw error;
         }
     }
@@ -280,13 +283,13 @@ export class PostRetreatService {
     async generateCelebration(participantId, milestone) {
         try {
             // Get participant info
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
                 .single();
             // Generate personalized celebration message
-            const message = await soullabFounderAgent.generateCelebrationMessage(participant, milestone);
+            const message = await soullabFounderAgent_1.soullabFounderAgent.generateCelebrationMessage(participant, milestone);
             // Create celebration ritual
             const ritual = this.createCelebrationRitual(participant?.oracleElement, milestone.type);
             // Get community celebration if shared
@@ -302,14 +305,14 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to generate celebration', error);
+            logger_1.logger.error('Failed to generate celebration', error);
             throw error;
         }
     }
     // Share with alumni community
     async shareWithAlumniCommunity(milestone) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('community_shares')
                 .insert({
                 type: 'milestone',
@@ -322,13 +325,13 @@ export class PostRetreatService {
             await this.notifyAlumniOfShare(milestone);
         }
         catch (error) {
-            logger.error('Failed to share with community', error);
+            logger_1.logger.error('Failed to share with community', error);
         }
     }
     // Get milestones
     async getMilestones(participantId, filters) {
         try {
-            let query = supabase
+            let query = supabaseClient_1.supabase
                 .from('milestones')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -350,7 +353,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to get milestones', error);
+            logger_1.logger.error('Failed to get milestones', error);
             throw error;
         }
     }
@@ -378,7 +381,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to generate challenge support', error);
+            logger_1.logger.error('Failed to generate challenge support', error);
             throw error;
         }
     }
@@ -386,7 +389,7 @@ export class PostRetreatService {
     async findSimilarJourneys(participantId, challengeType) {
         try {
             // Get participants with similar challenges
-            const { data: similarParticipants } = await supabase
+            const { data: similarParticipants } = await supabaseClient_1.supabase
                 .from('transformation_updates')
                 .select('participant_id')
                 .contains('challenges', [{ type: challengeType }])
@@ -397,12 +400,12 @@ export class PostRetreatService {
             }
             // Get their successful transformations
             const connections = await Promise.all(similarParticipants.map(async (p) => {
-                const { data: participant } = await supabase
+                const { data: participant } = await supabaseClient_1.supabase
                     .from('retreat_participants')
                     .select('firstName, oracleElement')
                     .eq('id', p.participant_id)
                     .single();
-                const { data: successes } = await supabase
+                const { data: successes } = await supabaseClient_1.supabase
                     .from('transformation_updates')
                     .select('transformations')
                     .eq('participant_id', p.participant_id)
@@ -420,7 +423,7 @@ export class PostRetreatService {
             return connections;
         }
         catch (error) {
-            logger.error('Failed to find similar journeys', error);
+            logger_1.logger.error('Failed to find similar journeys', error);
             return [];
         }
     }
@@ -428,7 +431,7 @@ export class PostRetreatService {
     async getIntegrationReminders(participantId) {
         try {
             // Get scheduled check-ins
-            const { data: schedule } = await supabase
+            const { data: schedule } = await supabaseClient_1.supabase
                 .from('oracle_checkin_schedules')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -447,7 +450,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to get integration reminders', error);
+            logger_1.logger.error('Failed to get integration reminders', error);
             throw error;
         }
     }
@@ -455,7 +458,7 @@ export class PostRetreatService {
     async getAlumniCommunity(retreatId, filters) {
         try {
             // Get alumni members
-            let query = supabase
+            let query = supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('retreat_id', retreatId);
@@ -464,14 +467,14 @@ export class PostRetreatService {
             }
             const { data: members } = await query;
             // Get recent shared wisdom
-            const { data: recentWisdom } = await supabase
+            const { data: recentWisdom } = await supabaseClient_1.supabase
                 .from('community_shares')
                 .select('*')
                 .eq('visibility', 'alumni')
                 .order('created_at', { ascending: false })
                 .limit(10);
             // Get upcoming gatherings
-            const { data: gatherings } = await supabase
+            const { data: gatherings } = await supabaseClient_1.supabase
                 .from('community_gatherings')
                 .select('*')
                 .gte('date', new Date().toISOString())
@@ -483,7 +486,7 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to get alumni community', error);
+            logger_1.logger.error('Failed to get alumni community', error);
             throw error;
         }
     }
@@ -493,7 +496,7 @@ export class PostRetreatService {
             // Get year's transformation updates
             const startDate = new Date(year, 0, 1);
             const endDate = new Date(year, 11, 31);
-            const { data: updates } = await supabase
+            const { data: updates } = await supabaseClient_1.supabase
                 .from('transformation_updates')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -522,7 +525,7 @@ export class PostRetreatService {
             return review;
         }
         catch (error) {
-            logger.error('Failed to generate annual review', error);
+            logger_1.logger.error('Failed to generate annual review', error);
             throw error;
         }
     }
@@ -530,7 +533,7 @@ export class PostRetreatService {
     async checkRetreatAnniversary(participantId) {
         try {
             // Get participant's retreat date
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('created_at, retreatId')
                 .eq('id', participantId)
@@ -570,22 +573,22 @@ export class PostRetreatService {
             };
         }
         catch (error) {
-            logger.error('Failed to check anniversary', error);
+            logger_1.logger.error('Failed to check anniversary', error);
             throw error;
         }
     }
     // Generate anniversary message
     async generateAnniversaryMessage(participantId, anniversary) {
         try {
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
                 .single();
-            return await soullabFounderAgent.generateAnniversaryMessage(participant, anniversary.years, anniversary.transformation);
+            return await soullabFounderAgent_1.soullabFounderAgent.generateAnniversaryMessage(participant, anniversary.years, anniversary.transformation);
         }
         catch (error) {
-            logger.error('Failed to generate anniversary message', error);
+            logger_1.logger.error('Failed to generate anniversary message', error);
             throw error;
         }
     }
@@ -598,7 +601,7 @@ export class PostRetreatService {
     }
     async updateIntegrationStatus(participantId, update) {
         const integrationScore = this.calculateIntegrationScore(update);
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             integration_status: {
@@ -983,14 +986,14 @@ export class PostRetreatService {
     }
     async updateMilestoneStats(participantId, type) {
         // Update participant statistics
-        const { data: stats } = await supabase
+        const { data: stats } = await supabaseClient_1.supabase
             .from('participant_stats')
             .select('*')
             .eq('participant_id', participantId)
             .single();
         const milestoneCount = stats?.milestone_count || {};
         milestoneCount[type] = (milestoneCount[type] || 0) + 1;
-        await supabase
+        await supabaseClient_1.supabase
             .from('participant_stats')
             .upsert({
             participant_id: participantId,
@@ -1037,10 +1040,10 @@ export class PostRetreatService {
     }
     async notifyAlumniOfShare(milestone) {
         // In production, send notifications
-        logger.info('Alumni notified of milestone share', { milestoneId: milestone.id });
+        logger_1.logger.info('Alumni notified of milestone share', { milestoneId: milestone.id });
     }
     async getMilestoneStatistics(participantId) {
-        const { data: stats } = await supabase
+        const { data: stats } = await supabaseClient_1.supabase
             .from('participant_stats')
             .select('milestone_count')
             .eq('participant_id', participantId)
@@ -1230,7 +1233,7 @@ export class PostRetreatService {
     async getYearCommunityContributions(participantId, year) {
         const startDate = new Date(year, 0, 1);
         const endDate = new Date(year, 11, 31);
-        const { data: contributions } = await supabase
+        const { data: contributions } = await supabaseClient_1.supabase
             .from('community_shares')
             .select('*')
             .eq('shared_by', participantId)
@@ -1269,7 +1272,7 @@ export class PostRetreatService {
         return `This year has been a profound journey of ${review.transformationMap.totalAreas} transformation areas...`;
     }
     async getTransformationSummary(participantId) {
-        const { data: updates } = await supabase
+        const { data: updates } = await supabaseClient_1.supabase
             .from('transformation_updates')
             .select('*')
             .eq('participant_id', participantId)
@@ -1284,5 +1287,6 @@ export class PostRetreatService {
         return `Consider joining us for an anniversary integration session or returning for an advanced retreat.`;
     }
 }
+exports.PostRetreatService = PostRetreatService;
 // Export singleton instance
-export const postRetreatService = new PostRetreatService();
+exports.postRetreatService = new PostRetreatService();

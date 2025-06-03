@@ -1,14 +1,16 @@
+"use strict";
 // ===============================================
 // SOUL MEMORY ROUTES - API ENDPOINTS
 // RESTful API for Soul Memory System
 // ===============================================
-import { Router } from 'express';
-import { soulMemoryService } from '../services/soulMemoryService.js';
-import { logger } from '../utils/logger.js';
-import { authenticate } from '../middleware/authenticate.js';
-const router = Router();
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const soulMemoryService_js_1 = require("../services/soulMemoryService.js");
+const logger_js_1 = require("../utils/logger.js");
+const authenticate_js_1 = require("../middleware/authenticate.js");
+const router = (0, express_1.Router)();
 // Apply authentication to all routes
-router.use(authenticate);
+router.use(authenticate_js_1.authenticate);
 // ===============================================
 // ORACLE INTERACTION ENDPOINTS
 // ===============================================
@@ -26,7 +28,7 @@ router.post('/oracle/message', async (req, res) => {
         if (!message) {
             return res.status(400).json({ error: 'Message is required' });
         }
-        const result = await soulMemoryService.processOracleMessage(userId, message, sessionId);
+        const result = await soulMemoryService_js_1.soulMemoryService.processOracleMessage(userId, message, sessionId);
         res.json({
             success: true,
             response: result.response,
@@ -35,7 +37,7 @@ router.post('/oracle/message', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error processing oracle message:', error);
+        logger_js_1.logger.error('Error processing oracle message:', error);
         res.status(500).json({ error: 'Failed to process oracle message' });
     }
 });
@@ -57,7 +59,7 @@ router.post('/oracle/retreat/activate', async (req, res) => {
                 validPhases
             });
         }
-        await soulMemoryService.activateRetreatMode(userId, phase);
+        await soulMemoryService_js_1.soulMemoryService.activateRetreatMode(userId, phase);
         res.json({
             success: true,
             message: `Retreat mode activated: ${phase}`,
@@ -65,7 +67,7 @@ router.post('/oracle/retreat/activate', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error activating retreat mode:', error);
+        logger_js_1.logger.error('Error activating retreat mode:', error);
         res.status(500).json({ error: 'Failed to activate retreat mode' });
     }
 });
@@ -86,7 +88,7 @@ router.post('/journal', async (req, res) => {
         if (!content) {
             return res.status(400).json({ error: 'Content is required' });
         }
-        const memory = await soulMemoryService.storeJournalEntry(userId, content, {
+        const memory = await soulMemoryService_js_1.soulMemoryService.storeJournalEntry(userId, content, {
             element,
             spiralPhase,
             shadowContent
@@ -102,7 +104,7 @@ router.post('/journal', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error storing journal entry:', error);
+        logger_js_1.logger.error('Error storing journal entry:', error);
         res.status(500).json({ error: 'Failed to store journal entry' });
     }
 });
@@ -122,7 +124,7 @@ router.post('/ritual', async (req, res) => {
                 error: 'Ritual type, content, and element are required'
             });
         }
-        const memory = await soulMemoryService.recordRitualMoment(userId, ritualType, content, element, oracleGuidance);
+        const memory = await soulMemoryService_js_1.soulMemoryService.recordRitualMoment(userId, ritualType, content, element, oracleGuidance);
         res.json({
             success: true,
             memory: {
@@ -135,7 +137,7 @@ router.post('/ritual', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error recording ritual moment:', error);
+        logger_js_1.logger.error('Error recording ritual moment:', error);
         res.status(500).json({ error: 'Failed to record ritual moment' });
     }
 });
@@ -155,7 +157,7 @@ router.post('/breakthrough', async (req, res) => {
                 error: 'Content and insights are required'
             });
         }
-        const memory = await soulMemoryService.recordBreakthrough(userId, content, insights, element);
+        const memory = await soulMemoryService_js_1.soulMemoryService.recordBreakthrough(userId, content, insights, element);
         res.json({
             success: true,
             memory: {
@@ -168,7 +170,7 @@ router.post('/breakthrough', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error recording breakthrough:', error);
+        logger_js_1.logger.error('Error recording breakthrough:', error);
         res.status(500).json({ error: 'Failed to record breakthrough' });
     }
 });
@@ -203,7 +205,7 @@ router.get('/memories', async (req, res) => {
                 end: new Date(endDate)
             };
         }
-        const memories = await soulMemoryService.getUserMemories(userId, options);
+        const memories = await soulMemoryService_js_1.soulMemoryService.getUserMemories(userId, options);
         // Filter by retreat context if requested
         let filteredMemories = memories;
         if (retreatMode === 'true') {
@@ -238,7 +240,7 @@ router.get('/memories', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error retrieving memories:', error);
+        logger_js_1.logger.error('Error retrieving memories:', error);
         res.status(500).json({ error: 'Failed to retrieve memories' });
     }
 });
@@ -253,7 +255,7 @@ router.get('/sacred-moments', async (req, res) => {
             return res.status(401).json({ error: 'User not authenticated' });
         }
         const { limit = '10' } = req.query;
-        const sacredMoments = await soulMemoryService.getSacredMoments(userId, parseInt(limit));
+        const sacredMoments = await soulMemoryService_js_1.soulMemoryService.getSacredMoments(userId, parseInt(limit));
         res.json({
             success: true,
             sacredMoments: sacredMoments.map(moment => ({
@@ -269,7 +271,7 @@ router.get('/sacred-moments', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error retrieving sacred moments:', error);
+        logger_js_1.logger.error('Error retrieving sacred moments:', error);
         res.status(500).json({ error: 'Failed to retrieve sacred moments' });
     }
 });
@@ -283,14 +285,14 @@ router.get('/transformation-journey', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const journey = await soulMemoryService.getTransformationJourney(userId);
+        const journey = await soulMemoryService_js_1.soulMemoryService.getTransformationJourney(userId);
         res.json({
             success: true,
             journey
         });
     }
     catch (error) {
-        logger.error('Error retrieving transformation journey:', error);
+        logger_js_1.logger.error('Error retrieving transformation journey:', error);
         res.status(500).json({ error: 'Failed to retrieve transformation journey' });
     }
 });
@@ -304,7 +306,7 @@ router.get('/archetypal-patterns', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const patterns = await soulMemoryService.getActiveArchetypes(userId);
+        const patterns = await soulMemoryService_js_1.soulMemoryService.getActiveArchetypes(userId);
         res.json({
             success: true,
             patterns: patterns.map(p => ({
@@ -318,7 +320,7 @@ router.get('/archetypal-patterns', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error retrieving archetypal patterns:', error);
+        logger_js_1.logger.error('Error retrieving archetypal patterns:', error);
         res.status(500).json({ error: 'Failed to retrieve archetypal patterns' });
     }
 });
@@ -336,7 +338,7 @@ router.post('/search', async (req, res) => {
         if (!query) {
             return res.status(400).json({ error: 'Search query is required' });
         }
-        const results = await soulMemoryService.searchMemories(userId, query, {
+        const results = await soulMemoryService_js_1.soulMemoryService.searchMemories(userId, query, {
             topK,
             memoryTypes,
             includeArchetypal
@@ -356,7 +358,7 @@ router.post('/search', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error searching memories:', error);
+        logger_js_1.logger.error('Error searching memories:', error);
         res.status(500).json({ error: 'Failed to search memories' });
     }
 });
@@ -373,7 +375,7 @@ router.get('/archetypes', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const archetypes = await soulMemoryService.getActiveArchetypes(userId);
+        const archetypes = await soulMemoryService_js_1.soulMemoryService.getActiveArchetypes(userId);
         res.json({
             success: true,
             archetypes: archetypes.map(pattern => ({
@@ -388,7 +390,7 @@ router.get('/archetypes', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error retrieving archetypes:', error);
+        logger_js_1.logger.error('Error retrieving archetypes:', error);
         res.status(500).json({ error: 'Failed to retrieve archetypes' });
     }
 });
@@ -413,7 +415,7 @@ router.post('/threads', async (req, res) => {
                 validTypes
             });
         }
-        const thread = await soulMemoryService.createMemoryThread(userId, threadName, threadType);
+        const thread = await soulMemoryService_js_1.soulMemoryService.createMemoryThread(userId, threadName, threadType);
         res.json({
             success: true,
             thread: {
@@ -426,7 +428,7 @@ router.post('/threads', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error creating memory thread:', error);
+        logger_js_1.logger.error('Error creating memory thread:', error);
         res.status(500).json({ error: 'Failed to create memory thread' });
     }
 });
@@ -440,7 +442,7 @@ router.get('/threads', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const threads = await soulMemoryService.getUserThreads(userId);
+        const threads = await soulMemoryService_js_1.soulMemoryService.getUserThreads(userId);
         res.json({
             success: true,
             threads: threads.map(thread => ({
@@ -456,7 +458,7 @@ router.get('/threads', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error retrieving memory threads:', error);
+        logger_js_1.logger.error('Error retrieving memory threads:', error);
         res.status(500).json({ error: 'Failed to retrieve memory threads' });
     }
 });
@@ -471,7 +473,7 @@ router.get('/threads/:threadId', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const thread = await soulMemoryService.getMemoryThread(threadId);
+        const thread = await soulMemoryService_js_1.soulMemoryService.getMemoryThread(threadId);
         if (!thread) {
             return res.status(404).json({ error: 'Memory thread not found' });
         }
@@ -485,7 +487,7 @@ router.get('/threads/:threadId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error retrieving memory thread:', error);
+        logger_js_1.logger.error('Error retrieving memory thread:', error);
         res.status(500).json({ error: 'Failed to retrieve memory thread' });
     }
 });
@@ -502,14 +504,14 @@ router.get('/insights', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const insights = await soulMemoryService.getUserInsights(userId);
+        const insights = await soulMemoryService_js_1.soulMemoryService.getUserInsights(userId);
         res.json({
             success: true,
             insights
         });
     }
     catch (error) {
-        logger.error('Error retrieving user insights:', error);
+        logger_js_1.logger.error('Error retrieving user insights:', error);
         res.status(500).json({ error: 'Failed to retrieve user insights' });
     }
 });
@@ -534,7 +536,7 @@ router.post('/oracle/sacred-mirror/mode', async (req, res) => {
                 validModes
             });
         }
-        const result = await soulMemoryService.setSacredMirrorMode(userId, mode);
+        const result = await soulMemoryService_js_1.soulMemoryService.setSacredMirrorMode(userId, mode);
         res.json({
             success: true,
             message: result,
@@ -542,7 +544,7 @@ router.post('/oracle/sacred-mirror/mode', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error setting sacred mirror mode:', error);
+        logger_js_1.logger.error('Error setting sacred mirror mode:', error);
         res.status(500).json({ error: 'Failed to set sacred mirror mode' });
     }
 });
@@ -556,14 +558,14 @@ router.get('/oracle/sacred-mirror/status', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const status = await soulMemoryService.getSacredMirrorStatus(userId);
+        const status = await soulMemoryService_js_1.soulMemoryService.getSacredMirrorStatus(userId);
         res.json({
             success: true,
             status
         });
     }
     catch (error) {
-        logger.error('Error retrieving sacred mirror status:', error);
+        logger_js_1.logger.error('Error retrieving sacred mirror status:', error);
         res.status(500).json({ error: 'Failed to retrieve sacred mirror status' });
     }
 });
@@ -585,7 +587,7 @@ router.post('/oracle/sacred-mirror/balance', async (req, res) => {
                 validDirections
             });
         }
-        const result = await soulMemoryService.adjustIntegrationLiberationBalance(userId, direction);
+        const result = await soulMemoryService_js_1.soulMemoryService.adjustIntegrationLiberationBalance(userId, direction);
         res.json({
             success: true,
             message: result,
@@ -593,7 +595,7 @@ router.post('/oracle/sacred-mirror/balance', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error adjusting integration-liberation balance:', error);
+        logger_js_1.logger.error('Error adjusting integration-liberation balance:', error);
         res.status(500).json({ error: 'Failed to adjust balance' });
     }
 });
@@ -607,14 +609,14 @@ router.get('/oracle/jung-patterns', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const patterns = await soulMemoryService.getJungArchetypalPatterns(userId);
+        const patterns = await soulMemoryService_js_1.soulMemoryService.getJungArchetypalPatterns(userId);
         res.json({
             success: true,
             patterns
         });
     }
     catch (error) {
-        logger.error('Error retrieving Jung patterns:', error);
+        logger_js_1.logger.error('Error retrieving Jung patterns:', error);
         res.status(500).json({ error: 'Failed to retrieve Jung patterns' });
     }
 });
@@ -628,14 +630,14 @@ router.get('/oracle/buddha-attachments', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ error: 'User not authenticated' });
         }
-        const attachments = await soulMemoryService.getBuddhaAttachmentPatterns(userId);
+        const attachments = await soulMemoryService_js_1.soulMemoryService.getBuddhaAttachmentPatterns(userId);
         res.json({
             success: true,
             attachments
         });
     }
     catch (error) {
-        logger.error('Error retrieving Buddha attachment patterns:', error);
+        logger_js_1.logger.error('Error retrieving Buddha attachment patterns:', error);
         res.status(500).json({ error: 'Failed to retrieve attachment patterns' });
     }
 });
@@ -655,8 +657,8 @@ router.get('/health', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Health check failed:', error);
+        logger_js_1.logger.error('Health check failed:', error);
         res.status(500).json({ error: 'Health check failed' });
     }
 });
-export default router;
+exports.default = router;

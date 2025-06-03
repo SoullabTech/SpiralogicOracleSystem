@@ -1,24 +1,29 @@
+"use strict";
 // ===============================================
 // TEST ROUTES FOR SOUL MEMORY INTEGRATION
 // Development only - remove in production
 // ===============================================
-import express from 'express';
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
-import { asyncHandler } from '../middleware/errorHandler';
-const router = express.Router();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const PersonalOracleAgent_1 = require("../core/agents/PersonalOracleAgent");
+const SoulMemorySystem_1 = require("../../memory/SoulMemorySystem");
+const errorHandler_1 = require("../middleware/errorHandler");
+const router = express_1.default.Router();
 // Test endpoint for Soul Memory integration
-router.post('/test-integration', asyncHandler(async (req, res) => {
+router.post('/test-integration', (0, errorHandler_1.asyncHandler)(async (req, res) => {
     const { message = "I'm feeling overwhelmed by all these changes in my life" } = req.body;
     // Create test instances
     const userId = 'test_user_' + Date.now();
-    const soulMemory = new SoulMemorySystem({
+    const soulMemory = new SoulMemorySystem_1.SoulMemorySystem({
         userId,
         storageType: 'sqlite',
         databasePath: './test_soul_memory.db',
         memoryDepth: 100
     });
-    const oracle = new PersonalOracleAgent({
+    const oracle = new PersonalOracleAgent_1.PersonalOracleAgent({
         userId,
         oracleName: 'Aria',
         elementalResonance: 'water'
@@ -45,9 +50,9 @@ router.post('/test-integration', asyncHandler(async (req, res) => {
     });
 }));
 // Test semantic search
-router.post('/test-search', asyncHandler(async (req, res) => {
+router.post('/test-search', (0, errorHandler_1.asyncHandler)(async (req, res) => {
     const { userId = 'test_user_123', query } = req.body;
-    const soulMemory = new SoulMemorySystem({
+    const soulMemory = new SoulMemorySystem_1.SoulMemorySystem({
         userId,
         storageType: 'sqlite',
         databasePath: './test_soul_memory.db',
@@ -62,4 +67,4 @@ router.post('/test-search', asyncHandler(async (req, res) => {
         memories: results
     });
 }));
-export default router;
+exports.default = router;

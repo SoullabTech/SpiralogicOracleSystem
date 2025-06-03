@@ -1,9 +1,11 @@
 "use strict";
-import { OracleAgent } from "./oracleAgent";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FacilitatorAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
 /**
  * FacilitatorAgent: Proposes practical rituals, interventions, or next steps.
  */
-export class FacilitatorAgent extends OracleAgent {
+class FacilitatorAgent extends oracleAgent_1.OracleAgent {
     constructor(agentId) {
         super({ debug: false });
         this.agentId = agentId;
@@ -41,3 +43,4 @@ export class FacilitatorAgent extends OracleAgent {
         return rituals[element] || "Take a moment in stillness. Let intuition rise.";
     }
 }
+exports.FacilitatorAgent = FacilitatorAgent;

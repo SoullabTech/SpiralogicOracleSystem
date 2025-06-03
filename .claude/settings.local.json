@@ -51,7 +51,8 @@
       "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"sacred-gold|#c9b037\")",
       "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"yellow-[3-5]00|amber-[3-5]00|gold\" --include=\"*.tsx\" --include=\"*.jsx\" --include=\"*.ts\" --include=\"*.js\")",
       "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"yellow-[3-5]00|amber-[3-5]00\" -g \"*.tsx\" -g \"*.jsx\" -g \"*.ts\" -g \"*.js\")",
-      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"#d4af37|divine-gold|sacred-amber\" -g \"*.tsx\" -g \"*.jsx\" -g \"*.ts\" -g \"*.js\" -g \"*.css\")"
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"#d4af37|divine-gold|sacred-amber\" -g \"*.tsx\" -g \"*.jsx\" -g \"*.ts\" -g \"*.js\" -g \"*.css\")",
+      "Bash(tsc --build)"
     ],
     "deny": []
   },

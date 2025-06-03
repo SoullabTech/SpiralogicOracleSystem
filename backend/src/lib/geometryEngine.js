@@ -1,7 +1,12 @@
+"use strict";
 // 📁 BACKEND/src/lib/geometryEngine.ts
 // Sacred Geometry Engine based on Fuller's Vector Equilibrium
 // Generates dynamic mandalas reflecting elemental consciousness states
-import { PetalTransitions } from './harmonicPetalMap';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GeometryEngine = void 0;
+exports.calculateElementalBalance = calculateElementalBalance;
+exports.generateMandalaPattern = generateMandalaPattern;
+const harmonicPetalMap_1 = require("./harmonicPetalMap");
 // Sacred Constants
 const PHI = 1.618033988749895; // Golden Ratio
 const PHI_INVERSE = 0.618033988749895; // 1/PHI
@@ -221,7 +226,7 @@ class MandalaPatterns {
     }
 }
 // Main Geometry Engine
-export class GeometryEngine {
+class GeometryEngine {
     constructor(width = 800, height = 800) {
         this.width = width;
         this.height = height;
@@ -511,8 +516,9 @@ export class GeometryEngine {
         return pattern;
     }
 }
+exports.GeometryEngine = GeometryEngine;
 // Utility function to extract elemental balance from user memories
-export function calculateElementalBalance(memories) {
+function calculateElementalBalance(memories) {
     const balance = {
         fire: 0,
         water: 0,
@@ -537,8 +543,8 @@ export function calculateElementalBalance(memories) {
     return balance;
 }
 // Legacy function for compatibility
-export function generateMandalaPattern(element, phase) {
-    const transition = PetalTransitions.find(p => p.from === element);
+function generateMandalaPattern(element, phase) {
+    const transition = harmonicPetalMap_1.PetalTransitions.find(p => p.from === element);
     const size = transition ? 100 * transition.multiplier : 100;
     return `M 0 0 L ${size} 0 A ${size} ${size} 0 1 1 0 ${size} Z`;
 }

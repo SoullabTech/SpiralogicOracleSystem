@@ -1,19 +1,22 @@
+"use strict";
 // ===============================================
 // MASTER DIVINATION AGENT
 // Sacred Synchronicity Through Ancient Wisdom Systems
 // ===============================================
-import { BaseAgent } from './baseAgent.js';
-import { logger } from '../../utils/logger.js';
-import { IChing } from '../divination/IChing.js';
-import { Tarot } from '../divination/Tarot.js';
-import { Runes } from '../divination/Runes.js';
-import { Astrology } from '../divination/Astrology.js';
-import { Numerology } from '../divination/Numerology.js';
-import { SacredGeometry } from '../divination/SacredGeometry.js';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MasterDivinationAgent = void 0;
+const baseAgent_js_1 = require("./baseAgent.js");
+const logger_js_1 = require("../../utils/logger.js");
+const IChing_js_1 = require("../divination/IChing.js");
+const Tarot_js_1 = require("../divination/Tarot.js");
+const Runes_js_1 = require("../divination/Runes.js");
+const Astrology_js_1 = require("../divination/Astrology.js");
+const Numerology_js_1 = require("../divination/Numerology.js");
+const SacredGeometry_js_1 = require("../divination/SacredGeometry.js");
 // ===============================================
 // MASTER DIVINATION AGENT CLASS
 // ===============================================
-export class MasterDivinationAgent extends BaseAgent {
+class MasterDivinationAgent extends baseAgent_js_1.BaseAgent {
     constructor() {
         super({
             name: 'Master of Oracles',
@@ -39,16 +42,16 @@ export class MasterDivinationAgent extends BaseAgent {
         });
         this.divinationHistory = new Map();
         this.initializeSystems();
-        logger.info('Master Divination Agent initialized');
+        logger_js_1.logger.info('Master Divination Agent initialized');
     }
     initializeSystems() {
         this.systems = {
-            iching: new IChing(),
-            tarot: new Tarot(),
-            runes: new Runes(),
-            astrology: new Astrology(),
-            numerology: new Numerology(),
-            sacredGeometry: new SacredGeometry()
+            iching: new IChing_js_1.IChing(),
+            tarot: new Tarot_js_1.Tarot(),
+            runes: new Runes_js_1.Runes(),
+            astrology: new Astrology_js_1.Astrology(),
+            numerology: new Numerology_js_1.Numerology(),
+            sacredGeometry: new SacredGeometry_js_1.SacredGeometry()
         };
     }
     // ===============================================
@@ -56,7 +59,7 @@ export class MasterDivinationAgent extends BaseAgent {
     // ===============================================
     async setSoulMemorySystem(soulMemory) {
         this.soulMemory = soulMemory;
-        logger.info('Soul Memory System connected to Master Divination Agent');
+        logger_js_1.logger.info('Soul Memory System connected to Master Divination Agent');
     }
     async storeDivinationMemory(request, result) {
         if (!this.soulMemory)
@@ -95,7 +98,7 @@ export class MasterDivinationAgent extends BaseAgent {
     // MAIN DIVINATION METHOD
     // ===============================================
     async divine(request) {
-        logger.info(`Divination requested: ${request.system} for user ${request.userId}`);
+        logger_js_1.logger.info(`Divination requested: ${request.system} for user ${request.userId}`);
         // Check for relevant past readings
         const history = await this.retrieveRelevantHistory(request.userId, request.system);
         let result;
@@ -271,7 +274,7 @@ export class MasterDivinationAgent extends BaseAgent {
     // UNIFIED DIVINATION
     // ===============================================
     async divineUnified(request, history) {
-        logger.info('Performing unified divination across multiple systems');
+        logger_js_1.logger.info('Performing unified divination across multiple systems');
         // Consult multiple systems
         const [iching, tarot, numerology] = await Promise.all([
             this.systems.iching.castHexagram(request.question),
@@ -606,4 +609,5 @@ export class MasterDivinationAgent extends BaseAgent {
         };
     }
 }
-export default MasterDivinationAgent;
+exports.MasterDivinationAgent = MasterDivinationAgent;
+exports.default = MasterDivinationAgent;

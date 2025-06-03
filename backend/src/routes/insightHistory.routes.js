@@ -1,9 +1,11 @@
-import { Router } from 'express';
-import { oracleLogger } from '../utils/oracleLogger';
-import { authenticate } from '../middleware/authenticate';
-const router = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const oracleLogger_1 = require("../utils/oracleLogger");
+const authenticate_1 = require("../middleware/authenticate");
+const router = (0, express_1.Router)();
 // 🔒 All insight-history routes require authentication
-router.use(authenticate);
+router.use(authenticate_1.authenticate);
 /**
  * GET /api/oracle/insight-history
  * Optional query params: type, limit, offset
@@ -12,7 +14,7 @@ router.get('/', async (req, res) => {
     try {
         const userId = req.user.id;
         const { type, limit = '50', offset = '0' } = req.query;
-        const insights = await oracleLogger.getInsightHistory(userId, {
+        const insights = await oracleLogger_1.oracleLogger.getInsightHistory(userId, {
             type: type,
             limit: Number(limit),
             offset: Number(offset),
@@ -30,7 +32,7 @@ router.get('/', async (req, res) => {
  */
 router.get('/stats', async (req, res) => {
     try {
-        const stats = await oracleLogger.getInsightStats(req.user.id);
+        const stats = await oracleLogger_1.oracleLogger.getInsightStats(req.user.id);
         return res.status(200).json({ success: true, stats });
     }
     catch (err) {
@@ -38,4 +40,4 @@ router.get('/stats', async (req, res) => {
         return res.status(500).json({ success: false, error: 'Failed to retrieve insight statistics' });
     }
 });
-export default router;
+exports.default = router;

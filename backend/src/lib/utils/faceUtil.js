@@ -1,5 +1,8 @@
+"use strict";
 // src/utils/facetUtil.ts
-import { elementalFacetMap } from './elementalFacetMap';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.detectFacetFromInput = detectFacetFromInput;
+const elementalFacetMap_1 = require("./elementalFacetMap");
 const facetKeywords = {
     Experience: ['vision', 'ignite', 'drive', 'initiate', 'desire'],
     Expression: ['speak', 'perform', 'articulate', 'display', 'share'],
@@ -14,11 +17,11 @@ const facetKeywords = {
     Community: ['group', 'team', 'network', 'collaborate', 'tribe'],
     Consciousness: ['thought', 'clarity', 'perception', 'awareness', 'mind'],
 };
-export function detectFacetFromInput(input) {
+function detectFacetFromInput(input) {
     const lowerInput = input.toLowerCase();
     for (const [facet, keywords] of Object.entries(facetKeywords)) {
         if (keywords.some(word => lowerInput.includes(word))) {
-            return elementalFacetMap[facet];
+            return elementalFacetMap_1.elementalFacetMap[facet];
         }
     }
     return undefined;

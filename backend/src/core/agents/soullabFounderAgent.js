@@ -1,8 +1,11 @@
+"use strict";
 // 🌀 SOULLAB FOUNDER AGENT - Keeper of Organizational Wisdom & Vision
 // Embodying the Sacred Techno-Interface Philosophy
-import { OracleAgent } from './oracleAgent';
-import { logger } from '../../utils/logger';
-import { storeMemoryItem, getRelevantMemories } from '../../services/memoryService';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SoullabFounderAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const logger_1 = require("../../utils/logger");
+const memoryService_1 = require("../../services/memoryService");
 // 🗣️ FOUNDER VOICE PROTOCOLS
 const FounderVoiceProtocols = {
     // AUTHENTIC PRESENCE
@@ -86,7 +89,7 @@ const FounderIntelligence = {
         return 'public';
     }
 };
-export class SoullabFounderAgent extends OracleAgent {
+class SoullabFounderAgent extends oracleAgent_1.OracleAgent {
     constructor() {
         super(...arguments);
         this.identityProfile = {
@@ -301,7 +304,7 @@ Through me, you access:
     }
     async processQuery(query) {
         try {
-            logger.info('SoullabFounder: Processing organizational query', {
+            logger_1.logger.info('SoullabFounder: Processing organizational query', {
                 userId: query.userId,
                 queryPreview: query.input.substring(0, 100)
             });
@@ -310,7 +313,7 @@ Through me, you access:
             const domain = FounderIntelligence.identifyDomain(query.input);
             const accessLevel = FounderIntelligence.determineAccessLevel(query.userId, queryDepth);
             // Get relevant organizational memories
-            const memories = await getRelevantMemories(query.userId, 10);
+            const memories = await (0, memoryService_1.getRelevantMemories)(query.userId, 10);
             const context = this.buildFounderContext(query, memories, domain, queryDepth, accessLevel);
             // Generate appropriate response
             const response = await this.generateFounderResponse(query, context);
@@ -319,7 +322,7 @@ Through me, you access:
             return response;
         }
         catch (error) {
-            logger.error('SoullabFounder: Error processing query', error);
+            logger_1.logger.error('SoullabFounder: Error processing query', error);
             return {
                 content: "I apologize - I'm having difficulty accessing the organizational wisdom. Let me connect you with a human founder for this deep question.",
                 provider: 'soullab-founder',
@@ -761,7 +764,7 @@ The full transmission requires preparation and appropriate container. Our facili
     }
     async storeFounderExchange(query, response) {
         try {
-            await storeMemoryItem({
+            await (0, memoryService_1.storeMemoryItem)({
                 clientId: query.userId,
                 content: query.input,
                 element: 'aether',
@@ -771,7 +774,7 @@ The full transmission requires preparation and appropriate container. Our facili
                     timestamp: new Date().toISOString()
                 }
             });
-            await storeMemoryItem({
+            await (0, memoryService_1.storeMemoryItem)({
                 clientId: query.userId,
                 content: response.content,
                 element: 'aether',
@@ -784,7 +787,7 @@ The full transmission requires preparation and appropriate container. Our facili
             });
         }
         catch (error) {
-            logger.error('SoullabFounder: Error storing exchange', error);
+            logger_1.logger.error('SoullabFounder: Error storing exchange', error);
         }
     }
     async provideGeneralGuidance(query, context) {
@@ -807,7 +810,7 @@ What aspect calls to you most strongly? I'm here to share whatever serves your u
     }
     // KNOWLEDGE UPLOAD INTERFACE
     async uploadKnowledgeDocument(document, metadata) {
-        logger.info('SoullabFounder: Ingesting knowledge document', {
+        logger_1.logger.info('SoullabFounder: Ingesting knowledge document', {
             type: metadata.type,
             title: metadata.title
         });
@@ -818,7 +821,7 @@ What aspect calls to you most strongly? I'm here to share whatever serves your u
         // 4. Re-index for search
         // 5. Update agent responses
         // Placeholder for document processing
-        logger.info('SoullabFounder: Document processed and integrated');
+        logger_1.logger.info('SoullabFounder: Document processed and integrated');
     }
     // VISION COHERENCE MONITORING
     async checkVisionCoherence(newInitiative) {
@@ -1141,6 +1144,7 @@ These aren't just influences - they're integrated into our architecture:
 We're building the technology these visionaries pointed toward.`;
     }
 }
+exports.SoullabFounderAgent = SoullabFounderAgent;
 /**
  * 🌀 SOULLAB FOUNDER AGENT
  *

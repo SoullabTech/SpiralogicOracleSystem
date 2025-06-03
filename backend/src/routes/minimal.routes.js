@@ -1,6 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // Minimal routes for Sacred Techno-Interface
-import { Router } from 'express';
-const router = Router();
+const express_1 = require("express");
+const router = (0, express_1.Router)();
 // Health check
 router.get('/health', (_req, res) => {
     res.json({
@@ -63,4 +65,4 @@ router.get('/wisdom/daily', (_req, res) => {
         date: new Date().toISOString()
     });
 });
-export default router;
+exports.default = router;

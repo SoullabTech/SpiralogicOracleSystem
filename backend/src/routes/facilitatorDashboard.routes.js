@@ -1,14 +1,18 @@
-import { Router } from 'express';
-import { authenticate } from '../middleware/authenticate';
-import { facilitatorDashboardService } from '../services/facilitatorDashboardService';
-import { calendarIntegrationService } from '../services/calendarIntegrationService';
-import { WebSocketServer } from 'ws';
-export const facilitatorDashboardRouter = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.facilitatorDashboardRouter = void 0;
+exports.setupFacilitatorDashboardWebSocket = setupFacilitatorDashboardWebSocket;
+const express_1 = require("express");
+const authenticate_1 = require("../middleware/authenticate");
+const facilitatorDashboardService_1 = require("../services/facilitatorDashboardService");
+const calendarIntegrationService_1 = require("../services/calendarIntegrationService");
+const ws_1 = require("ws");
+exports.facilitatorDashboardRouter = (0, express_1.Router)();
 // Facilitator authentication middleware
 const facilitatorAuth = async (req, res, next) => {
     try {
         // Check if user is a facilitator
-        const { data: facilitator } = await supabase
+        const { data: facilitator } = await supabaseClient_1.supabase
             .from('sacred_facilitators')
             .select('id')
             .eq('user_id', req.user.id)
@@ -30,13 +34,13 @@ const facilitatorAuth = async (req, res, next) => {
     }
 };
 // Dashboard Overview
-facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.get('/overview', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
         // Get today's priorities
-        const priorities = await facilitatorDashboardService.generateDailyPriorities(facilitatorId);
+        const priorities = await facilitatorDashboardService_1.facilitatorDashboardService.generateDailyPriorities(facilitatorId);
         // Get upcoming sessions
-        const { data: upcomingSessions } = await supabase
+        const { data: upcomingSessions } = await supabaseClient_1.supabase
             .from('session_records')
             .select('*, participant:sacred_participants(*)')
             .eq('facilitator_id', facilitatorId)
@@ -44,7 +48,7 @@ facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async
             .order('scheduled_time', { ascending: true })
             .limit(5);
         // Get pending communications
-        const { data: pendingEmails } = await supabase
+        const { data: pendingEmails } = await supabaseClient_1.supabase
             .from('facilitator_inbox')
             .select('*')
             .eq('facilitator_id', facilitatorId)
@@ -52,7 +56,7 @@ facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async
             .order('received_at', { ascending: false })
             .limit(5);
         // Get active events
-        const { data: activeEvents } = await supabase
+        const { data: activeEvents } = await supabaseClient_1.supabase
             .from('sacred_events')
             .select('*')
             .eq('facilitator_id', facilitatorId)
@@ -83,11 +87,11 @@ facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async
     }
 });
 // Create Sacred Event
-facilitatorDashboardRouter.post('/events', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.post('/events', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
         const eventData = req.body;
-        const event = await facilitatorDashboardService.createSacredEvent(facilitatorId, eventData);
+        const event = await facilitatorDashboardService_1.facilitatorDashboardService.createSacredEvent(facilitatorId, eventData);
         res.json({
             success: true,
             data: event
@@ -102,10 +106,10 @@ facilitatorDashboardRouter.post('/events', authenticate, facilitatorAuth, async 
     }
 });
 // Get Event Details
-facilitatorDashboardRouter.get('/events/:eventId', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.get('/events/:eventId', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const { eventId } = req.params;
-        const { data: event } = await supabase
+        const { data: event } = await supabaseClient_1.supabase
             .from('sacred_events')
             .select(`
         *,
@@ -136,11 +140,11 @@ facilitatorDashboardRouter.get('/events/:eventId', authenticate, facilitatorAuth
     }
 });
 // Participant Management
-facilitatorDashboardRouter.get('/participants', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.get('/participants', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
         const { filter, sort = 'name', order = 'asc' } = req.query;
-        let query = supabase
+        let query = supabaseClient_1.supabase
             .from('sacred_participants')
             .select(`
         *,
@@ -172,10 +176,10 @@ facilitatorDashboardRouter.get('/participants', authenticate, facilitatorAuth, a
     }
 });
 // Get Participant Profile
-facilitatorDashboardRouter.get('/participants/:participantId', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.get('/participants/:participantId', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const { participantId } = req.params;
-        const { data: participant } = await supabase
+        const { data: participant } = await supabaseClient_1.supabase
             .from('sacred_participants')
             .select(`
         *,
@@ -216,12 +220,12 @@ facilitatorDashboardRouter.get('/participants/:participantId', authenticate, fac
     }
 });
 // Session Management
-facilitatorDashboardRouter.post('/sessions/:sessionId/complete', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.post('/sessions/:sessionId/complete', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const { sessionId } = req.params;
         const { notes, recording, breakthroughs, followUpActions } = req.body;
         // Update session record
-        await supabase
+        await supabaseClient_1.supabase
             .from('session_records')
             .update({
             status: 'completed',
@@ -235,7 +239,7 @@ facilitatorDashboardRouter.post('/sessions/:sessionId/complete', authenticate, f
             .eq('facilitator_id', req.facilitator.id);
         // Process recording if provided
         if (recording) {
-            await facilitatorDashboardService.processSessionRecording({
+            await facilitatorDashboardService_1.facilitatorDashboardService.processSessionRecording({
                 sessionId,
                 recordingUrl: recording,
                 participantId: req.body.participantId
@@ -259,11 +263,11 @@ facilitatorDashboardRouter.post('/sessions/:sessionId/complete', authenticate, f
     }
 });
 // Communication Hub
-facilitatorDashboardRouter.get('/inbox', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.get('/inbox', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
         const { category, status } = req.query;
-        let query = supabase
+        let query = supabaseClient_1.supabase
             .from('facilitator_inbox')
             .select('*, participant:sacred_participants(*)')
             .eq('facilitator_id', facilitatorId);
@@ -290,12 +294,12 @@ facilitatorDashboardRouter.get('/inbox', authenticate, facilitatorAuth, async (r
     }
 });
 // Send Communication
-facilitatorDashboardRouter.post('/communications/send', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.post('/communications/send', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
         const { recipientId, subject, content, template, category } = req.body;
         // Send communication
-        const result = await facilitatorDashboardService.sendCommunication(facilitatorId, {
+        const result = await facilitatorDashboardService_1.facilitatorDashboardService.sendCommunication(facilitatorId, {
             recipientId,
             subject,
             content,
@@ -316,13 +320,13 @@ facilitatorDashboardRouter.post('/communications/send', authenticate, facilitato
     }
 });
 // Calendar Integration
-facilitatorDashboardRouter.post('/calendar/calendly/setup', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.post('/calendar/calendly/setup', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
         const { apiKey } = req.body;
         // Setup Calendly integration
         const webhookUrl = `${process.env.API_URL}/webhooks/calendly/${facilitatorId}`;
-        const result = await calendarIntegrationService.setupCalendlyWebhook(facilitatorId, webhookUrl);
+        const result = await calendarIntegrationService_1.calendarIntegrationService.setupCalendlyWebhook(facilitatorId, webhookUrl);
         res.json({
             success: true,
             data: result
@@ -337,10 +341,10 @@ facilitatorDashboardRouter.post('/calendar/calendly/setup', authenticate, facili
     }
 });
 // MS Teams Integration
-facilitatorDashboardRouter.post('/calendar/teams/setup', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.post('/calendar/teams/setup', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
-        const result = await calendarIntegrationService.setupMSTeamsIntegration(facilitatorId);
+        const result = await calendarIntegrationService_1.calendarIntegrationService.setupMSTeamsIntegration(facilitatorId);
         res.json({
             success: true,
             data: result
@@ -355,10 +359,10 @@ facilitatorDashboardRouter.post('/calendar/teams/setup', authenticate, facilitat
     }
 });
 // ADHD Support Features
-facilitatorDashboardRouter.get('/priorities', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.get('/priorities', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const facilitatorId = req.facilitator.id;
-        const priorities = await facilitatorDashboardService.generateDailyPriorities(facilitatorId);
+        const priorities = await facilitatorDashboardService_1.facilitatorDashboardService.generateDailyPriorities(facilitatorId);
         res.json({
             success: true,
             data: priorities
@@ -373,11 +377,11 @@ facilitatorDashboardRouter.get('/priorities', authenticate, facilitatorAuth, asy
     }
 });
 // Update Priority Status
-facilitatorDashboardRouter.patch('/priorities/:priorityId', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.patch('/priorities/:priorityId', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const { priorityId } = req.params;
         const { completed, snoozedUntil } = req.body;
-        await supabase
+        await supabaseClient_1.supabase
             .from('daily_priorities')
             .update({
             completed,
@@ -399,10 +403,10 @@ facilitatorDashboardRouter.patch('/priorities/:priorityId', authenticate, facili
     }
 });
 // Get Templates
-facilitatorDashboardRouter.get('/templates', authenticate, facilitatorAuth, async (req, res) => {
+exports.facilitatorDashboardRouter.get('/templates', authenticate_1.authenticate, facilitatorAuth, async (req, res) => {
     try {
         const { type, element } = req.query;
-        let query = supabase
+        let query = supabaseClient_1.supabase
             .from('message_templates')
             .select('*')
             .eq('facilitator_id', req.facilitator.id);
@@ -429,10 +433,10 @@ facilitatorDashboardRouter.get('/templates', authenticate, facilitatorAuth, asyn
     }
 });
 // Webhook handlers
-facilitatorDashboardRouter.post('/webhooks/calendly/:facilitatorId', async (req, res) => {
+exports.facilitatorDashboardRouter.post('/webhooks/calendly/:facilitatorId', async (req, res) => {
     try {
         const { facilitatorId } = req.params;
-        await calendarIntegrationService.handleCalendlyWebhook(req.body, facilitatorId);
+        await calendarIntegrationService_1.calendarIntegrationService.handleCalendlyWebhook(req.body, facilitatorId);
         res.json({ success: true });
     }
     catch (error) {
@@ -442,7 +446,7 @@ facilitatorDashboardRouter.post('/webhooks/calendly/:facilitatorId', async (req,
 });
 // Helper functions
 async function getParticipantCount(facilitatorId) {
-    const { count } = await supabase
+    const { count } = await supabaseClient_1.supabase
         .from('sacred_participants')
         .select('*', { count: 'exact', head: true })
         .eq('facilitator_id', facilitatorId);
@@ -450,7 +454,7 @@ async function getParticipantCount(facilitatorId) {
 }
 async function getWeeklySessionCount(facilitatorId) {
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const { count } = await supabase
+    const { count } = await supabaseClient_1.supabase
         .from('session_records')
         .select('*', { count: 'exact', head: true })
         .eq('facilitator_id', facilitatorId)
@@ -459,7 +463,7 @@ async function getWeeklySessionCount(facilitatorId) {
 }
 async function getMonthlyBreakthroughs(facilitatorId) {
     const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const { count } = await supabase
+    const { count } = await supabaseClient_1.supabase
         .from('breakthrough_moments')
         .select('*', { count: 'exact', head: true })
         .eq('facilitator_id', facilitatorId)
@@ -467,7 +471,7 @@ async function getMonthlyBreakthroughs(facilitatorId) {
     return count || 0;
 }
 async function getParticipantBreakthroughs(participantId) {
-    const { data } = await supabase
+    const { data } = await supabaseClient_1.supabase
         .from('breakthrough_moments')
         .select('*')
         .eq('participant_id', participantId)
@@ -483,8 +487,8 @@ async function scheduleFollowUpActions(sessionId, actions, facilitatorId) {
     // Would schedule follow-up tasks
 }
 // WebSocket setup for real-time dashboard updates
-export function setupFacilitatorDashboardWebSocket(server) {
-    const wss = new WebSocketServer({
+function setupFacilitatorDashboardWebSocket(server) {
+    const wss = new ws_1.WebSocketServer({
         server,
         path: '/ws/facilitator-dashboard'
     });
@@ -522,4 +526,4 @@ export function setupFacilitatorDashboardWebSocket(server) {
     return wss;
 }
 // Import supabase
-import { supabase } from '../lib/supabaseClient';
+const supabaseClient_1 = require("../lib/supabaseClient");

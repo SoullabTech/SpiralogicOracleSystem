@@ -1,5 +1,8 @@
+"use strict";
 // 📁 src/lib/langchain.ts
-export function promptTemplate(templateId, context) {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.promptTemplate = promptTemplate;
+function promptTemplate(templateId, context) {
     if (templateId === 'personal_oracle_reflection') {
         return `
 🌌 Oracle Name: ${context.oracleName}

@@ -1,7 +1,12 @@
-import { Router } from 'express';
-import memoryModule from '../utils/memoryModule';
-import logger from '../utils/logger';
-const router = Router();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const memoryModule_1 = __importDefault(require("../utils/memoryModule"));
+const logger_1 = __importDefault(require("../utils/logger"));
+const router = (0, express_1.Router)();
 /**
  * GET /api/symbolic-trends
  * Optional Query Params:
@@ -12,7 +17,7 @@ const router = Router();
 router.get('/', (req, res) => {
     try {
         const { symbol, agent, since } = req.query;
-        let tags = memoryModule.getAllSymbolicTags();
+        let tags = memoryModule_1.default.getAllSymbolicTags();
         if (symbol) {
             tags = tags.filter(t => t.symbol === symbol);
         }
@@ -39,8 +44,8 @@ router.get('/', (req, res) => {
         });
     }
     catch (err) {
-        logger.error('❌ Failed to fetch symbolic trends', { error: err });
+        logger_1.default.error('❌ Failed to fetch symbolic trends', { error: err });
         res.status(500).json({ error: 'Failed to fetch symbolic trends' });
     }
 });
-export default router;
+exports.default = router;

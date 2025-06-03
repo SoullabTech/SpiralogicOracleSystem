@@ -1,12 +1,15 @@
+"use strict";
 // ===============================================
 // ADAPTIVE WISDOM ENGINE
 // Dynamic routing between Jung and Buddha approaches
 // ===============================================
-import { logger } from '../../utils/logger.js';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AdaptiveWisdomEngine = void 0;
+const logger_js_1 = require("../../utils/logger.js");
 // ===============================================
 // ADAPTIVE WISDOM ENGINE CLASS
 // ===============================================
-export class AdaptiveWisdomEngine {
+class AdaptiveWisdomEngine {
     constructor() {
         this.grasping_indicators = [
             'need to',
@@ -95,7 +98,7 @@ export class AdaptiveWisdomEngine {
         const spiritualBypass = this.detectSpiritualBypass(recentPatterns);
         const identityCrisis = this.isIdentityCrisis(recentPatterns);
         // Log pattern detection for debugging
-        logger.info('AdaptiveWisdomEngine pattern detection:', {
+        logger_js_1.logger.info('AdaptiveWisdomEngine pattern detection:', {
             graspingLevel,
             avoidanceLevel,
             shadowEmergence,
@@ -180,7 +183,7 @@ export class AdaptiveWisdomEngine {
         }
         // Apply contextual adjustments
         routing = this.applyContextualAdjustments(routing, context);
-        logger.info('AdaptiveWisdomEngine routing decision:', routing);
+        logger_js_1.logger.info('AdaptiveWisdomEngine routing decision:', routing);
         return routing;
     }
     // ===============================================
@@ -521,4 +524,5 @@ export class AdaptiveWisdomEngine {
         return recommendations;
     }
 }
-export default AdaptiveWisdomEngine;
+exports.AdaptiveWisdomEngine = AdaptiveWisdomEngine;
+exports.default = AdaptiveWisdomEngine;

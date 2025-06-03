@@ -1,2 +1,3 @@
+"use strict";
 // Personal Oracle Matching and Personality System
-export {};
+Object.defineProperty(exports, "__esModule", { value: true });

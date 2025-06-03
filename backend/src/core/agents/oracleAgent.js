@@ -1,5 +1,8 @@
-import { getRitualForPhase } from "../../lib/ritualEngine";
-export class OracleAgent {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OracleAgent = void 0;
+const ritualEngine_1 = require("../../lib/ritualEngine");
+class OracleAgent {
     constructor(options = {}) {
         this.debug = options.debug ?? false;
     }
@@ -8,7 +11,7 @@ export class OracleAgent {
             console.log("[OracleAgent] Processing query:", query);
         }
         const detectedElement = this.detectElement(query);
-        const ritual = getRitualForPhase(detectedElement);
+        const ritual = (0, ritualEngine_1.getRitualForPhase)(detectedElement);
         const simulatedResponse = `Processed query: ${query}`;
         const metadata = {
             timestamp: new Date().toISOString(),
@@ -31,3 +34,4 @@ export class OracleAgent {
         return getElementalPhase(text); // using spiralLogic.ts
     }
 }
+exports.OracleAgent = OracleAgent;

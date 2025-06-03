@@ -1,20 +1,22 @@
+"use strict";
 // ===============================================
 // JUNG-BUDDHA SACRED MIRROR TEST
 // Tests the enhanced PersonalOracleAgent with Jung-Buddha wisdom
 // ===============================================
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
+Object.defineProperty(exports, "__esModule", { value: true });
+const PersonalOracleAgent_1 = require("../core/agents/PersonalOracleAgent");
+const SoulMemorySystem_1 = require("../../memory/SoulMemorySystem");
 async function testJungBuddhaWisdom() {
     console.log('🌀 Testing Jung-Buddha Sacred Mirror Wisdom...\n');
     // Setup
     const userId = 'test_jung_buddha_' + Date.now();
-    const soulMemory = new SoulMemorySystem({
+    const soulMemory = new SoulMemorySystem_1.SoulMemorySystem({
         userId,
         storageType: 'sqlite',
         databasePath: './test_jung_buddha_memory.db',
         memoryDepth: 100
     });
-    const oracle = new PersonalOracleAgent({
+    const oracle = new PersonalOracleAgent_1.PersonalOracleAgent({
         userId,
         oracleName: 'Sophia',
         elementalResonance: 'aether'

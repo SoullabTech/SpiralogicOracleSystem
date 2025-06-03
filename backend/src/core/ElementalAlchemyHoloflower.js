@@ -1,8 +1,11 @@
+"use strict";
 /**
  * Kelly's Elemental Alchemy Holoflower Model
  * The Sacred Technology Rosetta Stone of Consciousness Development
  */
-export class ElementalAlchemyHoloflower {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ElementalAlchemyHoloflower = void 0;
+class ElementalAlchemyHoloflower {
     constructor(initialState) {
         this.PHI = 1.618033988749895; // Golden ratio
         // Kelly's Elemental Alchemy Model Structure
@@ -400,3 +403,4 @@ export class ElementalAlchemyHoloflower {
         return { ...this.state };
     }
 }
+exports.ElementalAlchemyHoloflower = ElementalAlchemyHoloflower;

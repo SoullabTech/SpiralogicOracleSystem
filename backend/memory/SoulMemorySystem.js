@@ -1,14 +1,20 @@
+"use strict";
 // ===============================================
 // SOUL MEMORY SYSTEM - MYTHIC SENTIENT ARCHITECTURE
 // MemGPT + SQLite + LlamaIndex Integration
 // ===============================================
-import Database from 'better-sqlite3';
-import { VectorStoreIndex, Document } from 'llamaindex';
-import { logger } from '../src/utils/logger';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SoulMemorySystem = void 0;
+const better_sqlite3_1 = __importDefault(require("better-sqlite3"));
+const llamaindex_1 = require("llamaindex");
+const logger_1 = require("../src/utils/logger");
 // SqliteDB wrapper for MemGPT-like API
 class SqliteDB {
     constructor(path) {
-        this.db = new Database(path);
+        this.db = new better_sqlite3_1.default(path);
     }
     async exec(sql) {
         this.db.exec(sql);
@@ -32,7 +38,7 @@ class SqliteDB {
 // ===============================================
 // SOUL MEMORY SYSTEM CLASS
 // ===============================================
-export class SoulMemorySystem {
+class SoulMemorySystem {
     constructor(config) {
         this.activeMemories = new Map();
         this.memoryThreads = new Map();
@@ -97,7 +103,7 @@ export class SoulMemorySystem {
         related_memories TEXT
       );
     `);
-        logger.info('Soul Memory Database initialized');
+        logger_1.logger.info('Soul Memory Database initialized');
     }
     // ===============================================
     // SEMANTIC INDEX INITIALIZATION
@@ -107,13 +113,13 @@ export class SoulMemorySystem {
         const indexPath = this.config.semanticIndexPath || './soul_semantic_index';
         try {
             // Load existing index or create new
-            this.semanticIndex = await VectorStoreIndex.fromPersistDir(indexPath);
+            this.semanticIndex = await llamaindex_1.VectorStoreIndex.fromPersistDir(indexPath);
         }
         catch (error) {
             // Create new index if doesn't exist
-            this.semanticIndex = await VectorStoreIndex.fromDocuments([]);
+            this.semanticIndex = await llamaindex_1.VectorStoreIndex.fromDocuments([]);
         }
-        logger.info('Semantic Index initialized');
+        logger_1.logger.info('Semantic Index initialized');
     }
     // ===============================================
     // MEMORY STORAGE & RETRIEVAL
@@ -159,7 +165,7 @@ export class SoulMemorySystem {
         await this.detectArchetypalPatterns(fullMemory);
         // Update memory threads
         await this.updateMemoryThreads(fullMemory);
-        logger.info(`Memory stored: ${fullMemory.type} for user ${fullMemory.userId}`);
+        logger_1.logger.info(`Memory stored: ${fullMemory.type} for user ${fullMemory.userId}`);
         return fullMemory;
     }
     async retrieveMemories(userId, options) {
@@ -204,7 +210,7 @@ export class SoulMemorySystem {
     // ===============================================
     async semanticSearch(userId, query, options) {
         // Convert query to embedding
-        const queryDoc = new Document({ text: query, metadata: { userId } });
+        const queryDoc = new llamaindex_1.Document({ text: query, metadata: { userId } });
         // Search semantic index
         const results = await this.semanticIndex.query(queryDoc, { topK: options?.topK || 5 });
         // Filter by user and memory types if specified
@@ -218,7 +224,7 @@ export class SoulMemorySystem {
     }
     async indexMemory(memory) {
         // Create document for semantic indexing
-        const doc = new Document({
+        const doc = new llamaindex_1.Document({
             text: `${memory.type}: ${memory.content}`,
             metadata: {
                 memoryId: memory.id,
@@ -522,4 +528,5 @@ export class SoulMemorySystem {
         this.db.close();
     }
 }
-export default SoulMemorySystem;
+exports.SoulMemorySystem = SoulMemorySystem;
+exports.default = SoulMemorySystem;

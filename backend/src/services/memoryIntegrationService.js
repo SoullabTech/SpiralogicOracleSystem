@@ -1,14 +1,17 @@
+"use strict";
 // ===============================================
 // MEMORY INTEGRATION SERVICE
 // Bridges existing memory modules with Soul Memory System
 // ===============================================
-import { storeJournalEntry, retrieveJournalEntries } from '../../memory/journalMemory.js';
-import { oracleMemoryRouter } from '../../memory/memoryRouter.js';
-import { soulMemoryService } from './soulMemoryService.js';
-import { logger } from '../utils/logger.js';
-export class MemoryIntegrationService {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.memoryIntegrationService = exports.MemoryIntegrationService = void 0;
+const journalMemory_js_1 = require("../../memory/journalMemory.js");
+const memoryRouter_js_1 = require("../../memory/memoryRouter.js");
+const soulMemoryService_js_1 = require("./soulMemoryService.js");
+const logger_js_1 = require("../utils/logger.js");
+class MemoryIntegrationService {
     constructor() {
-        logger.info('Memory Integration Service initialized');
+        logger_js_1.logger.info('Memory Integration Service initialized');
     }
     // ===============================================
     // JOURNAL INTEGRATION
@@ -17,15 +20,15 @@ export class MemoryIntegrationService {
         try {
             // Store in both traditional Supabase journal and Soul Memory
             const [supabaseResult, soulMemoryResult] = await Promise.all([
-                storeJournalEntry(userId, content, symbols),
-                soulMemoryService.storeJournalEntry(userId, content, {
+                (0, journalMemory_js_1.storeJournalEntry)(userId, content, symbols),
+                soulMemoryService_js_1.soulMemoryService.storeJournalEntry(userId, content, {
                     element: metadata?.element || 'water',
                     spiralPhase: metadata?.spiralPhase,
                     shadowContent: metadata?.shadowContent || this.detectShadowContent(content),
                     symbols: symbols.join(', ')
                 })
             ]);
-            logger.info(`Journal entry stored in both systems for user: ${userId}`);
+            logger_js_1.logger.info(`Journal entry stored in both systems for user: ${userId}`);
             return {
                 supabaseEntry: supabaseResult,
                 soulMemory: soulMemoryResult,
@@ -33,7 +36,7 @@ export class MemoryIntegrationService {
             };
         }
         catch (error) {
-            logger.error('Error storing integrated journal entry:', error);
+            logger_js_1.logger.error('Error storing integrated journal entry:', error);
             throw error;
         }
     }
@@ -41,8 +44,8 @@ export class MemoryIntegrationService {
         try {
             // Get from both systems and merge
             const [supabaseEntries, soulMemoryEntries] = await Promise.all([
-                retrieveJournalEntries(userId),
-                soulMemoryService.getUserMemories(userId, {
+                (0, journalMemory_js_1.retrieveJournalEntries)(userId),
+                soulMemoryService_js_1.soulMemoryService.getUserMemories(userId, {
                     type: 'journal_entry',
                     limit: 50
                 })
@@ -57,7 +60,7 @@ export class MemoryIntegrationService {
             };
         }
         catch (error) {
-            logger.error('Error retrieving integrated journal entries:', error);
+            logger_js_1.logger.error('Error retrieving integrated journal entries:', error);
             throw error;
         }
     }
@@ -67,9 +70,9 @@ export class MemoryIntegrationService {
     async processOracleMemoryQuery(input, userId) {
         try {
             // Use traditional memory router for symbolic interpretation
-            const traditionalResult = await oracleMemoryRouter(input, userId);
+            const traditionalResult = await (0, memoryRouter_js_1.oracleMemoryRouter)(input, userId);
             // Use Soul Memory for semantic search
-            const soulMemoryResults = await soulMemoryService.searchMemories(userId, input, {
+            const soulMemoryResults = await soulMemoryService_js_1.soulMemoryService.searchMemories(userId, input, {
                 topK: 5,
                 includeArchetypal: true
             });
@@ -83,7 +86,7 @@ export class MemoryIntegrationService {
             };
         }
         catch (error) {
-            logger.error('Error processing oracle memory query:', error);
+            logger_js_1.logger.error('Error processing oracle memory query:', error);
             throw error;
         }
     }
@@ -92,18 +95,18 @@ export class MemoryIntegrationService {
     // ===============================================
     async migrateExistingJournalsToSoulMemory(userId) {
         try {
-            logger.info(`Starting journal migration for user: ${userId}`);
+            logger_js_1.logger.info(`Starting journal migration for user: ${userId}`);
             // Get all existing journal entries from Supabase
-            const existingEntries = await retrieveJournalEntries(userId);
+            const existingEntries = await (0, journalMemory_js_1.retrieveJournalEntries)(userId);
             if (!existingEntries || existingEntries.length === 0) {
-                logger.info('No existing journal entries to migrate');
+                logger_js_1.logger.info('No existing journal entries to migrate');
                 return { migrated: 0 };
             }
             let migratedCount = 0;
             // Migrate each entry to Soul Memory
             for (const entry of existingEntries) {
                 try {
-                    await soulMemoryService.storeJournalEntry(userId, entry.content, {
+                    await soulMemoryService_js_1.soulMemoryService.storeJournalEntry(userId, entry.content, {
                         element: this.detectElementFromContent(entry.content),
                         shadowContent: this.detectShadowContent(entry.content),
                         symbols: entry.symbols?.join(', '),
@@ -113,10 +116,10 @@ export class MemoryIntegrationService {
                     migratedCount++;
                 }
                 catch (entryError) {
-                    logger.error(`Error migrating journal entry ${entry.id}:`, entryError);
+                    logger_js_1.logger.error(`Error migrating journal entry ${entry.id}:`, entryError);
                 }
             }
-            logger.info(`Successfully migrated ${migratedCount} journal entries for user: ${userId}`);
+            logger_js_1.logger.info(`Successfully migrated ${migratedCount} journal entries for user: ${userId}`);
             return {
                 migrated: migratedCount,
                 total: existingEntries.length,
@@ -124,7 +127,7 @@ export class MemoryIntegrationService {
             };
         }
         catch (error) {
-            logger.error('Error during journal migration:', error);
+            logger_js_1.logger.error('Error during journal migration:', error);
             throw error;
         }
     }
@@ -135,7 +138,7 @@ export class MemoryIntegrationService {
         try {
             const searchPromises = [];
             // Search Soul Memory System
-            searchPromises.push(soulMemoryService.searchMemories(userId, query, {
+            searchPromises.push(soulMemoryService_js_1.soulMemoryService.searchMemories(userId, query, {
                 topK: options?.limit || 10,
                 memoryTypes: this.getMemoryTypesFromOptions(options)
             }));
@@ -158,7 +161,7 @@ export class MemoryIntegrationService {
             };
         }
         catch (error) {
-            logger.error('Error in unified memory search:', error);
+            logger_js_1.logger.error('Error in unified memory search:', error);
             throw error;
         }
     }
@@ -263,23 +266,24 @@ export class MemoryIntegrationService {
     async initialize(userId) {
         try {
             // Check if user needs migration
-            const existingEntries = await retrieveJournalEntries(userId);
-            const soulMemoryEntries = await soulMemoryService.getUserMemories(userId, {
+            const existingEntries = await (0, journalMemory_js_1.retrieveJournalEntries)(userId);
+            const soulMemoryEntries = await soulMemoryService_js_1.soulMemoryService.getUserMemories(userId, {
                 type: 'journal_entry'
             });
             // If user has Supabase entries but no Soul Memory entries, migrate
             if (existingEntries?.length > 0 && soulMemoryEntries.length === 0) {
-                logger.info(`Auto-migrating journals for user: ${userId}`);
+                logger_js_1.logger.info(`Auto-migrating journals for user: ${userId}`);
                 await this.migrateExistingJournalsToSoulMemory(userId);
             }
             return { initialized: true, migrationPerformed: existingEntries?.length > 0 && soulMemoryEntries.length === 0 };
         }
         catch (error) {
-            logger.error('Error initializing memory integration:', error);
+            logger_js_1.logger.error('Error initializing memory integration:', error);
             throw error;
         }
     }
 }
+exports.MemoryIntegrationService = MemoryIntegrationService;
 // Export singleton instance
-export const memoryIntegrationService = new MemoryIntegrationService();
-export default memoryIntegrationService;
+exports.memoryIntegrationService = new MemoryIntegrationService();
+exports.default = exports.memoryIntegrationService;

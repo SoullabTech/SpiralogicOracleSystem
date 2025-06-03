@@ -1,11 +1,15 @@
+"use strict";
 // ===============================================
 // ORACLE MODES CONFIGURATION
 // Wisdom Personalities for Sacred Agency
 // ===============================================
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MODE_CAPABILITIES = exports.MODE_RESPONSES = exports.ORACLE_MODES = void 0;
+exports.getContextualModeRecommendation = getContextualModeRecommendation;
 // ===============================================
 // ORACLE MODE CONFIGURATIONS
 // ===============================================
-export const ORACLE_MODES = {
+exports.ORACLE_MODES = {
     alchemist: {
         id: 'alchemist',
         name: 'Alchemist',
@@ -462,7 +466,7 @@ AVOID:
 // ===============================================
 // MODE RESPONSE TEMPLATES
 // ===============================================
-export const MODE_RESPONSES = {
+exports.MODE_RESPONSES = {
     alchemist: {
         greeting: "🧪 Welcome to the alchemical laboratory of your soul. What raw material is ready to be transmuted into gold today?",
         challenge: "This pattern you're exploring - it's like prima materia, the raw stuff of transformation. What golden essence might be hidden within its darkness?",
@@ -521,7 +525,7 @@ export const MODE_RESPONSES = {
 // ===============================================
 // MODE CAPABILITIES DEFINITIONS
 // ===============================================
-export const MODE_CAPABILITIES = {
+exports.MODE_CAPABILITIES = {
     alchemist: [
         {
             name: 'shadow_dialogue',
@@ -637,7 +641,7 @@ export const MODE_CAPABILITIES = {
 // ===============================================
 // CONTEXTUAL MODE RECOMMENDATIONS
 // ===============================================
-export function getContextualModeRecommendation(context) {
+function getContextualModeRecommendation(context) {
     // Crisis situations -> Guardian
     if (context.crisisMarkers?.length > 0 || context.traumaActivated) {
         return {
@@ -696,9 +700,9 @@ export function getContextualModeRecommendation(context) {
     }
     return null;
 }
-export default {
-    ORACLE_MODES,
-    MODE_RESPONSES,
-    MODE_CAPABILITIES,
+exports.default = {
+    ORACLE_MODES: exports.ORACLE_MODES,
+    MODE_RESPONSES: exports.MODE_RESPONSES,
+    MODE_CAPABILITIES: exports.MODE_CAPABILITIES,
     getContextualModeRecommendation
 };

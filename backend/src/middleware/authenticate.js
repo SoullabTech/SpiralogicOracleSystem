@@ -1,24 +1,28 @@
+"use strict";
 // 📄 FILE: oracle-backend/src/middleware/authenticate.ts
-import { createClient } from '@supabase/supabase-js';
-import { config } from '../config/index';
-import { AuthenticationError } from '../utils/errors';
-import { logger } from '../utils/logger';
-const supabase = createClient(config.supabase.url, config.supabase.anonKey);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authenticate = void 0;
+exports.authenticateToken = authenticateToken;
+const supabase_js_1 = require("@supabase/supabase-js");
+const index_1 = require("../config/index");
+const errors_1 = require("../utils/errors");
+const logger_1 = require("../utils/logger");
+const supabase = (0, supabase_js_1.createClient)(index_1.config.supabase.url, index_1.config.supabase.anonKey);
 /**
  * Middleware to authenticate the Bearer token from the Authorization header.
  */
-export async function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
     try {
         const authHeader = req.headers.authorization;
         const token = authHeader?.startsWith('Bearer ')
             ? authHeader.slice(7)
             : undefined;
         if (!token) {
-            throw new AuthenticationError('No authorization token provided');
+            throw new errors_1.AuthenticationError('No authorization token provided');
         }
         const { data: { user }, error, } = await supabase.auth.getUser(token);
         if (error || !user) {
-            throw new AuthenticationError('Invalid or expired token');
+            throw new errors_1.AuthenticationError('Invalid or expired token');
         }
         req.user = {
             id: user.id,
@@ -28,11 +32,11 @@ export async function authenticateToken(req, res, next) {
         next();
     }
     catch (err) {
-        logger.error('🔐 Authentication failed', { error: err });
-        const message = err instanceof AuthenticationError
+        logger_1.logger.error('🔐 Authentication failed', { error: err });
+        const message = err instanceof errors_1.AuthenticationError
             ? err.message
             : 'Authentication error';
         res.status(401).json({ error: message });
     }
 }
-export const authenticate = authenticateToken;
+exports.authenticate = authenticateToken;

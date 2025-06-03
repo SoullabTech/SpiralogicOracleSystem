@@ -1,14 +1,18 @@
+"use strict";
 // ===============================================
 // JUNG-BUDDHA ADAPTIVE RESPONSES DEMONSTRATION
 // Sophisticated emotion and pattern detection
 // ===============================================
-import { PersonalOracleAgent } from '../PersonalOracleAgent.js';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.JungBuddhaResponseExamples = exports.JungBuddhaDemo = void 0;
+exports.testJungBuddhaRouting = testJungBuddhaRouting;
+const PersonalOracleAgent_js_1 = require("../PersonalOracleAgent.js");
 // ===============================================
 // DEMONSTRATION OF JUNG-BUDDHA ROUTING
 // ===============================================
-export class JungBuddhaDemo {
+class JungBuddhaDemo {
     constructor() {
-        this.oracle = new PersonalOracleAgent({
+        this.oracle = new PersonalOracleAgent_js_1.PersonalOracleAgent({
             userId: 'demo-user',
             oracleName: 'Sacred Mirror Demo',
             mode: 'daily',
@@ -143,10 +147,11 @@ export class JungBuddhaDemo {
         };
     }
 }
+exports.JungBuddhaDemo = JungBuddhaDemo;
 // ===============================================
 // SPECIFIC RESPONSE EXAMPLES
 // ===============================================
-export const JungBuddhaResponseExamples = {
+exports.JungBuddhaResponseExamples = {
     anger: {
         rejection: {
             input: "I hate how angry I get",
@@ -226,11 +231,11 @@ export const JungBuddhaResponseExamples = {
 // ===============================================
 // TESTING FUNCTIONS
 // ===============================================
-export async function testJungBuddhaRouting() {
+async function testJungBuddhaRouting() {
     console.log('🧪 TESTING JUNG-BUDDHA ROUTING\n');
     const demo = new JungBuddhaDemo();
     // Test each category
-    for (const [emotion, patterns] of Object.entries(JungBuddhaResponseExamples)) {
+    for (const [emotion, patterns] of Object.entries(exports.JungBuddhaResponseExamples)) {
         console.log(`\n🔍 Testing ${emotion.toUpperCase()} patterns:`);
         for (const [patternType, example] of Object.entries(patterns)) {
             console.log(`\n  ${patternType}:`);
@@ -246,8 +251,8 @@ export async function testJungBuddhaRouting() {
         }
     }
 }
-export default {
+exports.default = {
     JungBuddhaDemo,
-    JungBuddhaResponseExamples,
+    JungBuddhaResponseExamples: exports.JungBuddhaResponseExamples,
     testJungBuddhaRouting
 };

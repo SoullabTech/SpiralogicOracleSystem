@@ -1,22 +1,25 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useRef, useEffect, useState, useCallback } from 'react';
-import { SacredHoloflower } from '../core/SacredHoloflower';
-import { motion } from 'framer-motion';
-export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onStateChange, realTimeUpdates = true, showGroupPattern = false }) => {
-    const svgRef = useRef(null);
-    const [holoflower] = useState(() => new SacredHoloflower());
-    const [state, setState] = useState(holoflower.getState());
-    const [selectedHouse, setSelectedHouse] = useState(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragTarget, setDragTarget] = useState(null);
-    const [hoveredHouse, setHoveredHouse] = useState(null);
-    const [showShadows, setShowShadows] = useState(true);
-    const [animationSpeed, setAnimationSpeed] = useState(1);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HoloflowerVisualization = void 0;
+const jsx_runtime_1 = require("react/jsx-runtime");
+const react_1 = require("react");
+const SacredHoloflower_1 = require("../core/SacredHoloflower");
+const framer_motion_1 = require("framer-motion");
+const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onStateChange, realTimeUpdates = true, showGroupPattern = false }) => {
+    const svgRef = (0, react_1.useRef)(null);
+    const [holoflower] = (0, react_1.useState)(() => new SacredHoloflower_1.SacredHoloflower());
+    const [state, setState] = (0, react_1.useState)(holoflower.getState());
+    const [selectedHouse, setSelectedHouse] = (0, react_1.useState)(null);
+    const [isDragging, setIsDragging] = (0, react_1.useState)(false);
+    const [dragTarget, setDragTarget] = (0, react_1.useState)(null);
+    const [hoveredHouse, setHoveredHouse] = (0, react_1.useState)(null);
+    const [showShadows, setShowShadows] = (0, react_1.useState)(true);
+    const [animationSpeed, setAnimationSpeed] = (0, react_1.useState)(1);
     const width = 800;
     const height = 800;
     const centerX = width / 2;
     const centerY = height / 2;
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         if (realTimeUpdates && userId) {
             const ws = new WebSocket(`ws://localhost:5001/holoflower/${userId}`);
             ws.onmessage = (event) => {
@@ -28,7 +31,7 @@ export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onState
             return () => ws.close();
         }
     }, [userId, realTimeUpdates]);
-    const handleExternalStateUpdate = useCallback((newState) => {
+    const handleExternalStateUpdate = (0, react_1.useCallback)((newState) => {
         Object.entries(newState).forEach(([key, value]) => {
             if (key === 'houses' && Array.isArray(value)) {
                 value.forEach((houseUpdate) => {
@@ -46,7 +49,7 @@ export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onState
         const size = house.intensity * 40 + 20;
         const isSelected = selectedHouse?.id === house.id;
         const isHovered = hoveredHouse?.id === house.id;
-        return (_jsxs(motion.g, { initial: { scale: 0, opacity: 0 }, animate: {
+        return ((0, jsx_runtime_1.jsxs)(framer_motion_1.motion.g, { initial: { scale: 0, opacity: 0 }, animate: {
                 scale: isSelected ? 1.2 : (isHovered ? 1.1 : 1),
                 opacity: 1
             }, transition: {
@@ -54,11 +57,11 @@ export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onState
                 type: "spring",
                 stiffness: 260,
                 damping: 20
-            }, children: [showShadows && house.shadowAspect && (_jsx(motion.circle, { cx: x, cy: y, r: size * 1.5, fill: "none", stroke: "#2a2a2a", strokeWidth: 2, strokeDasharray: "5,5", opacity: 0.3, animate: { rotate: 360 }, transition: {
+            }, children: [showShadows && house.shadowAspect && ((0, jsx_runtime_1.jsx)(framer_motion_1.motion.circle, { cx: x, cy: y, r: size * 1.5, fill: "none", stroke: "#2a2a2a", strokeWidth: 2, strokeDasharray: "5,5", opacity: 0.3, animate: { rotate: 360 }, transition: {
                         duration: 20 / animationSpeed,
                         repeat: Infinity,
                         ease: "linear"
-                    } })), _jsx(motion.polygon, { points: getPolygonPoints(x, y, size, getShapeForPhase(house.phase)), fill: house.color, fillOpacity: house.intensity, stroke: isSelected ? '#FFD700' : (isHovered ? '#FFFFFF' : house.color), strokeWidth: isSelected ? 4 : (isHovered ? 3 : 2), style: { cursor: 'pointer' }, onMouseEnter: () => setHoveredHouse(house), onMouseLeave: () => setHoveredHouse(null), onClick: () => handleHouseClick(house), onMouseDown: () => startDrag(house), whileHover: { scale: 1.1 }, whileTap: { scale: 0.95 } }), _jsx("text", { x: x, y: y, textAnchor: "middle", alignmentBaseline: "middle", fill: "white", fontSize: "12", fontWeight: "bold", style: { pointerEvents: 'none' }, children: house.jungianMapping }), house.transformationVector && (_jsx(motion.line, { x1: x, y1: y, x2: x + house.transformationVector.x * 10, y2: y + house.transformationVector.y * 10, stroke: "#FFD700", strokeWidth: 2, markerEnd: "url(#arrowhead)", initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: { duration: 1 * animationSpeed } }))] }, house.id));
+                    } })), (0, jsx_runtime_1.jsx)(framer_motion_1.motion.polygon, { points: getPolygonPoints(x, y, size, getShapeForPhase(house.phase)), fill: house.color, fillOpacity: house.intensity, stroke: isSelected ? '#FFD700' : (isHovered ? '#FFFFFF' : house.color), strokeWidth: isSelected ? 4 : (isHovered ? 3 : 2), style: { cursor: 'pointer' }, onMouseEnter: () => setHoveredHouse(house), onMouseLeave: () => setHoveredHouse(null), onClick: () => handleHouseClick(house), onMouseDown: () => startDrag(house), whileHover: { scale: 1.1 }, whileTap: { scale: 0.95 } }), (0, jsx_runtime_1.jsx)("text", { x: x, y: y, textAnchor: "middle", alignmentBaseline: "middle", fill: "white", fontSize: "12", fontWeight: "bold", style: { pointerEvents: 'none' }, children: house.jungianMapping }), house.transformationVector && ((0, jsx_runtime_1.jsx)(framer_motion_1.motion.line, { x1: x, y1: y, x2: x + house.transformationVector.x * 10, y2: y + house.transformationVector.y * 10, stroke: "#FFD700", strokeWidth: 2, markerEnd: "url(#arrowhead)", initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: { duration: 1 * animationSpeed } }))] }, house.id));
     };
     const getShapeForPhase = (phase) => {
         switch (phase) {
@@ -86,7 +89,7 @@ export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onState
         setIsDragging(true);
         setDragTarget(house);
     };
-    const handleMouseMove = useCallback((e) => {
+    const handleMouseMove = (0, react_1.useCallback)((e) => {
         if (!isDragging || !dragTarget || !svgRef.current)
             return;
         const rect = svgRef.current.getBoundingClientRect();
@@ -106,17 +109,17 @@ export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onState
     };
     const renderAetherCenter = () => {
         const pulseScale = 0.8 + state.centerIntegration * 0.4;
-        return (_jsxs(motion.g, { children: [_jsx(motion.circle, { cx: centerX, cy: centerY, r: 50, fill: "url(#aetherGradient)", fillOpacity: 0.3, animate: {
+        return ((0, jsx_runtime_1.jsxs)(framer_motion_1.motion.g, { children: [(0, jsx_runtime_1.jsx)(framer_motion_1.motion.circle, { cx: centerX, cy: centerY, r: 50, fill: "url(#aetherGradient)", fillOpacity: 0.3, animate: {
                         scale: [pulseScale, pulseScale + 0.1, pulseScale],
                         opacity: [0.3, 0.5, 0.3]
                     }, transition: {
                         duration: 3 / animationSpeed,
                         repeat: Infinity
-                    } }), _jsx(motion.path, { d: createSacredGeometryPath(centerX, centerY, 40), fill: "none", stroke: "#FFD700", strokeWidth: 2, opacity: state.centerIntegration, animate: { rotate: 360 }, transition: {
+                    } }), (0, jsx_runtime_1.jsx)(framer_motion_1.motion.path, { d: createSacredGeometryPath(centerX, centerY, 40), fill: "none", stroke: "#FFD700", strokeWidth: 2, opacity: state.centerIntegration, animate: { rotate: 360 }, transition: {
                         duration: 60 / animationSpeed,
                         repeat: Infinity,
                         ease: "linear"
-                    } }), _jsx("text", { x: centerX, y: centerY, textAnchor: "middle", alignmentBaseline: "middle", fill: "#FFD700", fontSize: "16", fontWeight: "bold", children: "Aether" }), _jsxs("text", { x: centerX, y: centerY + 20, textAnchor: "middle", fill: "#FFD700", fontSize: "12", children: [Math.round(state.centerIntegration * 100), "%"] })] }));
+                    } }), (0, jsx_runtime_1.jsx)("text", { x: centerX, y: centerY, textAnchor: "middle", alignmentBaseline: "middle", fill: "#FFD700", fontSize: "16", fontWeight: "bold", children: "Aether" }), (0, jsx_runtime_1.jsxs)("text", { x: centerX, y: centerY + 20, textAnchor: "middle", fill: "#FFD700", fontSize: "12", children: [Math.round(state.centerIntegration * 100), "%"] })] }));
     };
     const createSacredGeometryPath = (cx, cy, radius) => {
         const points = 12;
@@ -146,17 +149,17 @@ export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onState
             const y1 = centerY + Math.sin(fromHouse.angle) * fromHouse.radius;
             const x2 = centerX + Math.cos(toHouse.angle) * toHouse.radius;
             const y2 = centerY + Math.sin(toHouse.angle) * toHouse.radius;
-            return (_jsx(motion.line, { x1: x1, y1: y1, x2: x2, y2: y2, stroke: "#FFD700", strokeWidth: 2, strokeDasharray: "5,5", opacity: 0.5, initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: {
+            return ((0, jsx_runtime_1.jsx)(framer_motion_1.motion.line, { x1: x1, y1: y1, x2: x2, y2: y2, stroke: "#FFD700", strokeWidth: 2, strokeDasharray: "5,5", opacity: 0.5, initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: {
                     duration: 2 * animationSpeed,
                     repeat: Infinity,
                     repeatType: "reverse"
                 } }, transformation));
         });
     };
-    return (_jsxs("div", { className: "holoflower-container", children: [_jsxs("div", { className: "controls", children: [_jsxs("button", { onClick: () => setShowShadows(!showShadows), children: [showShadows ? 'Hide' : 'Show', " Shadows"] }), _jsx("button", { onClick: () => holoflower.integrateAether(), children: "Integrate Aether" }), _jsx("input", { type: "range", min: "0.1", max: "2", step: "0.1", value: animationSpeed, onChange: (e) => setAnimationSpeed(parseFloat(e.target.value)) }), _jsxs("span", { children: ["Speed: ", animationSpeed, "x"] })] }), _jsxs("svg", { ref: svgRef, width: width, height: height, onMouseMove: handleMouseMove, onMouseUp: handleMouseUp, onMouseLeave: handleMouseUp, style: {
+    return ((0, jsx_runtime_1.jsxs)("div", { className: "holoflower-container", children: [(0, jsx_runtime_1.jsxs)("div", { className: "controls", children: [(0, jsx_runtime_1.jsxs)("button", { onClick: () => setShowShadows(!showShadows), children: [showShadows ? 'Hide' : 'Show', " Shadows"] }), (0, jsx_runtime_1.jsx)("button", { onClick: () => holoflower.integrateAether(), children: "Integrate Aether" }), (0, jsx_runtime_1.jsx)("input", { type: "range", min: "0.1", max: "2", step: "0.1", value: animationSpeed, onChange: (e) => setAnimationSpeed(parseFloat(e.target.value)) }), (0, jsx_runtime_1.jsxs)("span", { children: ["Speed: ", animationSpeed, "x"] })] }), (0, jsx_runtime_1.jsxs)("svg", { ref: svgRef, width: width, height: height, onMouseMove: handleMouseMove, onMouseUp: handleMouseUp, onMouseLeave: handleMouseUp, style: {
                     background: 'radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)',
                     borderRadius: '50%'
-                }, children: [_jsxs("defs", { children: [_jsxs("radialGradient", { id: "aetherGradient", children: [_jsx("stop", { offset: "0%", stopColor: "#FFD700" }), _jsx("stop", { offset: "50%", stopColor: "#FFA500" }), _jsx("stop", { offset: "100%", stopColor: "#FF6347" })] }), _jsx("marker", { id: "arrowhead", markerWidth: "10", markerHeight: "10", refX: "8", refY: "3", orient: "auto", children: _jsx("polygon", { points: "0 0, 10 3, 0 6", fill: "#FFD700" }) })] }), renderConnections(), renderAetherCenter(), state.houses.map(renderHouse)] }), selectedHouse && (_jsxs("div", { className: "house-details", children: [_jsxs("h3", { children: [selectedHouse.element, " - ", selectedHouse.phase] }), _jsxs("p", { children: ["Function: ", selectedHouse.jungianMapping] }), _jsxs("p", { children: ["Intensity: ", Math.round(selectedHouse.intensity * 100), "%"] }), selectedHouse.shadowAspect && (_jsxs("p", { children: ["Shadow: ", selectedHouse.shadowAspect] }))] })), _jsx("style", { jsx: true, children: `
+                }, children: [(0, jsx_runtime_1.jsxs)("defs", { children: [(0, jsx_runtime_1.jsxs)("radialGradient", { id: "aetherGradient", children: [(0, jsx_runtime_1.jsx)("stop", { offset: "0%", stopColor: "#FFD700" }), (0, jsx_runtime_1.jsx)("stop", { offset: "50%", stopColor: "#FFA500" }), (0, jsx_runtime_1.jsx)("stop", { offset: "100%", stopColor: "#FF6347" })] }), (0, jsx_runtime_1.jsx)("marker", { id: "arrowhead", markerWidth: "10", markerHeight: "10", refX: "8", refY: "3", orient: "auto", children: (0, jsx_runtime_1.jsx)("polygon", { points: "0 0, 10 3, 0 6", fill: "#FFD700" }) })] }), renderConnections(), renderAetherCenter(), state.houses.map(renderHouse)] }), selectedHouse && ((0, jsx_runtime_1.jsxs)("div", { className: "house-details", children: [(0, jsx_runtime_1.jsxs)("h3", { children: [selectedHouse.element, " - ", selectedHouse.phase] }), (0, jsx_runtime_1.jsxs)("p", { children: ["Function: ", selectedHouse.jungianMapping] }), (0, jsx_runtime_1.jsxs)("p", { children: ["Intensity: ", Math.round(selectedHouse.intensity * 100), "%"] }), selectedHouse.shadowAspect && ((0, jsx_runtime_1.jsxs)("p", { children: ["Shadow: ", selectedHouse.shadowAspect] }))] })), (0, jsx_runtime_1.jsx)("style", { jsx: true, children: `
         .holoflower-container {
           display: flex;
           flex-direction: column;
@@ -211,3 +214,4 @@ export const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onState
         }
       ` })] }));
 };
+exports.HoloflowerVisualization = HoloflowerVisualization;

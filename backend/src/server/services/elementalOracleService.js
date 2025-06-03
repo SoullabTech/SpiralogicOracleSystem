@@ -1,5 +1,8 @@
+"use strict";
 // src/services/elementalOracleService.ts
-export const elementalOracleService = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.elementalOracleService = void 0;
+exports.elementalOracleService = {
     generateStory: ({ theme, prompt }) => {
         const intro = `Invoking the wisdom of the ${theme} element...`;
         const message = `${intro} You asked: "${prompt}". Here is a symbolic response.`;

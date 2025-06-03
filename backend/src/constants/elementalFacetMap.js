@@ -1,5 +1,11 @@
+"use strict";
 // src/constants/elementalFacetMap.ts
-export const elementalFacetMap = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.elementalFacetMap = void 0;
+exports.getFacetById = getFacetById;
+exports.getFacetsByPhase = getFacetsByPhase;
+exports.getAllFacets = getAllFacets;
+exports.elementalFacetMap = {
     fire: {
         name: 'Fire',
         facets: [
@@ -41,25 +47,25 @@ export const elementalFacetMap = {
         ],
     },
 };
-export function getFacetById(id) {
-    for (const elementKey in elementalFacetMap) {
-        const element = elementalFacetMap[elementKey];
+function getFacetById(id) {
+    for (const elementKey in exports.elementalFacetMap) {
+        const element = exports.elementalFacetMap[elementKey];
         const match = element.facets.find(f => f.id === id);
         if (match)
             return match;
     }
     return null;
 }
-export function getFacetsByPhase(phase) {
+function getFacetsByPhase(phase) {
     const matches = [];
-    for (const element of Object.values(elementalFacetMap)) {
+    for (const element of Object.values(exports.elementalFacetMap)) {
         matches.push(...element.facets.filter(f => f.phase === phase));
     }
     return matches;
 }
-export function getAllFacets() {
+function getAllFacets() {
     const allFacets = [];
-    Object.values(elementalFacetMap).forEach(e => {
+    Object.values(exports.elementalFacetMap).forEach(e => {
         allFacets.push(...e.facets);
     });
     return allFacets;

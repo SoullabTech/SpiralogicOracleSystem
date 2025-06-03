@@ -1,13 +1,17 @@
+"use strict";
 // ===============================================
 // ADAPTIVE WISDOM ENGINE USAGE EXAMPLE
 // Demonstrating Jung-Buddha routing based on patterns
 // ===============================================
-import { AdaptiveWisdomEngine } from '../AdaptiveWisdomEngine.js';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExampleOracle = void 0;
+exports.demonstrateAdaptiveWisdom = demonstrateAdaptiveWisdom;
+const AdaptiveWisdomEngine_js_1 = require("../AdaptiveWisdomEngine.js");
 // ===============================================
 // EXAMPLE USAGE
 // ===============================================
-export function demonstrateAdaptiveWisdom() {
-    const wisdomEngine = new AdaptiveWisdomEngine();
+function demonstrateAdaptiveWisdom() {
+    const wisdomEngine = new AdaptiveWisdomEngine_js_1.AdaptiveWisdomEngine();
     // Example 1: User with strong grasping patterns
     console.log('\n🧪 Example 1: Strong Grasping Patterns');
     console.log('=====================================');
@@ -165,9 +169,9 @@ export function demonstrateAdaptiveWisdom() {
 // ===============================================
 // INTEGRATION EXAMPLES
 // ===============================================
-export class ExampleOracle {
+class ExampleOracle {
     constructor() {
-        this.wisdomEngine = new AdaptiveWisdomEngine();
+        this.wisdomEngine = new AdaptiveWisdomEngine_js_1.AdaptiveWisdomEngine();
     }
     async respondToUser(userInput, userHistory) {
         // Build context from user input and history
@@ -240,8 +244,9 @@ export class ExampleOracle {
         return `I'm here with you in this. ${response} Take your time - there's no rush.`;
     }
 }
+exports.ExampleOracle = ExampleOracle;
 // Export for use in other parts of the system
-export default {
+exports.default = {
     demonstrateAdaptiveWisdom,
     ExampleOracle
 };

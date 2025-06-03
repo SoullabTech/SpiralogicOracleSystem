@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import { createClient } from '@supabase/supabase-js';
-import { config } from '../config/index'; // Corrected import path
-import { validate } from '../middleware/validate'; // Correct import path
-import { loginSchema, refreshTokenSchema } from '../schemas/auth'; // Correct import path
-import logger from '../utils/logger'; // Correct import path
-const router = Router();
-const supabase = createClient(config.supabase.url, config.supabase.anonKey);
-router.post('/login', validate(loginSchema), async (req, res) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const supabase_js_1 = require("@supabase/supabase-js");
+const index_1 = require("../config/index"); // Corrected import path
+const validate_1 = require("../middleware/validate"); // Correct import path
+const auth_1 = require("../schemas/auth"); // Correct import path
+const logger_1 = __importDefault(require("../utils/logger")); // Correct import path
+const router = (0, express_1.Router)();
+const supabase = (0, supabase_js_1.createClient)(index_1.config.supabase.url, index_1.config.supabase.anonKey);
+router.post('/login', (0, validate_1.validate)(auth_1.loginSchema), async (req, res) => {
     try {
         const { email, password } = req.body;
         const { data: { user, session }, error } = await supabase.auth.signInWithPassword({
@@ -28,13 +33,13 @@ router.post('/login', validate(loginSchema), async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Login failed', { error });
+        logger_1.default.error('Login failed', { error });
         res.status(500).json({
             error: error instanceof Error ? error.message : 'Login failed'
         });
     }
 });
-router.post('/refresh', validate(refreshTokenSchema), async (req, res) => {
+router.post('/refresh', (0, validate_1.validate)(auth_1.refreshTokenSchema), async (req, res) => {
     try {
         const { refreshToken } = req.body;
         const { data: { session }, error } = await supabase.auth.refreshSession({
@@ -51,7 +56,7 @@ router.post('/refresh', validate(refreshTokenSchema), async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Token refresh failed', { error });
+        logger_1.default.error('Token refresh failed', { error });
         res.status(500).json({
             error: error instanceof Error ? error.message : 'Token refresh failed'
         });
@@ -66,10 +71,10 @@ router.post('/logout', async (req, res) => {
         res.json({ message: 'Logged out successfully' });
     }
     catch (error) {
-        logger.error('Logout failed', { error });
+        logger_1.default.error('Logout failed', { error });
         res.status(500).json({
             error: error instanceof Error ? error.message : 'Logout failed'
         });
     }
 });
-export default router;
+exports.default = router;

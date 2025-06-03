@@ -1,4 +1,7 @@
-export class SacredHoloflower {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SacredHoloflower = void 0;
+class SacredHoloflower {
     constructor(initialState) {
         this.geometricRatios = {
             phi: 1.618033988749895,
@@ -197,3 +200,4 @@ export class SacredHoloflower {
         };
     }
 }
+exports.SacredHoloflower = SacredHoloflower;

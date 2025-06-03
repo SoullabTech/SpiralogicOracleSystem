@@ -1,4 +1,7 @@
-export class BaseAgent {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseAgent = void 0;
+class BaseAgent {
     async processQuery(query) {
         console.log("[BaseAgent] Processing query:", query);
         return {
@@ -10,3 +13,4 @@ export class BaseAgent {
         };
     }
 }
+exports.BaseAgent = BaseAgent;

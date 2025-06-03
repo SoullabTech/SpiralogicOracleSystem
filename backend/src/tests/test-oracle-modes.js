@@ -1,4 +1,7 @@
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.testOracleModes = testOracleModes;
+const PersonalOracleAgent_1 = require("../core/agents/PersonalOracleAgent");
 // Test themes that will be used across all modes
 const testThemes = [
     "I'm struggling with anger at my mother",
@@ -33,7 +36,7 @@ async function testOracleModes() {
     console.log(`Testing ${oracleModes.length} oracle modes with ${testThemes.length} different themes\n`);
     console.log('═'.repeat(80) + '\n');
     // Initialize the oracle agent
-    const oracle = new PersonalOracleAgent({
+    const oracle = new PersonalOracleAgent_1.PersonalOracleAgent({
         userId: 'test-user',
         oracleName: 'Test Oracle',
         mode: 'daily'
@@ -175,4 +178,3 @@ if (require.main === module) {
         process.exit(1);
     });
 }
-export { testOracleModes };

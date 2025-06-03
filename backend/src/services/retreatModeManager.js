@@ -1,7 +1,10 @@
-import { PersonalizedOracleAgent } from '../core/agents/personalizedOracleAgent.js';
-import { logger } from '../utils/logger.js';
-import { supabase } from '../lib/supabaseClient.js';
-export class RetreatModeManager {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RetreatModeManager = void 0;
+const personalizedOracleAgent_js_1 = require("../core/agents/personalizedOracleAgent.js");
+const logger_js_1 = require("../utils/logger.js");
+const supabaseClient_js_1 = require("../lib/supabaseClient.js");
+class RetreatModeManager {
     constructor() {
         this.activeOracles = new Map();
         this.modeStatuses = new Map();
@@ -11,7 +14,7 @@ export class RetreatModeManager {
             // Create or retrieve Oracle agent
             let oracleAgent = this.activeOracles.get(participant.id);
             if (!oracleAgent) {
-                oracleAgent = new PersonalizedOracleAgent({
+                oracleAgent = new personalizedOracleAgent_js_1.PersonalizedOracleAgent({
                     match: oracleMatch,
                     participant,
                     retreatMode: mode,
@@ -34,7 +37,7 @@ export class RetreatModeManager {
             // Update status tracking
             await this.updateModeStatus(participant.id, mode, oracleAgent, activation);
             // Log successful activation
-            logger.info(`Retreat mode ${mode} activated for ${participant.firstName}`, {
+            logger_js_1.logger.info(`Retreat mode ${mode} activated for ${participant.firstName}`, {
                 participantId: participant.id,
                 oracleName: oracleMatch.oraclePersonality.name,
                 activatedBy,
@@ -43,7 +46,7 @@ export class RetreatModeManager {
             return oracleAgent;
         }
         catch (error) {
-            logger.error('Failed to activate retreat mode', {
+            logger_js_1.logger.error('Failed to activate retreat mode', {
                 participantId: participant.id,
                 mode,
                 error: error instanceof Error ? error.message : 'Unknown error'
@@ -64,7 +67,7 @@ export class RetreatModeManager {
                 status.currentMode = 'inactive';
                 status.oracleAgent = undefined;
             }
-            logger.info(`Retreat mode deactivated for participant ${participantId}`);
+            logger_js_1.logger.info(`Retreat mode deactivated for participant ${participantId}`);
         }
     }
     async transitionMode(participantId, newMode, transitionedBy) {
@@ -86,7 +89,7 @@ export class RetreatModeManager {
         };
         await this.recordModeActivation(activation);
         await this.updateModeStatus(participantId, newMode, oracleAgent, activation);
-        logger.info(`Mode transition completed`, {
+        logger_js_1.logger.info(`Mode transition completed`, {
             participantId,
             previousMode,
             newMode,
@@ -120,7 +123,7 @@ export class RetreatModeManager {
         const oracleAgent = this.activeOracles.get(participantId);
         if (oracleAgent) {
             await oracleAgent.updateParticipantContext(contextUpdates);
-            logger.info(`Participant context updated`, {
+            logger_js_1.logger.info(`Participant context updated`, {
                 participantId,
                 updates: Object.keys(contextUpdates)
             });
@@ -139,7 +142,7 @@ export class RetreatModeManager {
             }
             // Log emergency deactivation
             await this.logEmergencyDeactivation(participantId, reason, deactivatedBy);
-            logger.warn(`Emergency deactivation completed`, {
+            logger_js_1.logger.warn(`Emergency deactivation completed`, {
                 participantId,
                 reason,
                 deactivatedBy
@@ -157,7 +160,7 @@ export class RetreatModeManager {
     }
     async recordModeActivation(activation) {
         try {
-            const { error } = await supabase
+            const { error } = await supabaseClient_js_1.supabase
                 .from('retreat_mode_activations')
                 .insert({
                 participant_id: activation.participantId,
@@ -168,11 +171,11 @@ export class RetreatModeManager {
                 session_context: activation.sessionContext || {}
             });
             if (error) {
-                logger.error('Failed to record mode activation', error);
+                logger_js_1.logger.error('Failed to record mode activation', error);
             }
         }
         catch (error) {
-            logger.error('Database error recording mode activation', error);
+            logger_js_1.logger.error('Database error recording mode activation', error);
         }
     }
     async updateModeStatus(participantId, mode, oracleAgent, activation) {
@@ -193,18 +196,18 @@ export class RetreatModeManager {
         try {
             // Allow final interaction or closing message
             const insights = await oracleAgent.getPersonalizationInsights();
-            logger.info(`Graceful shutdown completed for Oracle ${insights.primaryElement}`, {
+            logger_js_1.logger.info(`Graceful shutdown completed for Oracle ${insights.primaryElement}`, {
                 participantId,
                 finalPhase: insights.currentPhase
             });
         }
         catch (error) {
-            logger.error('Error during graceful shutdown', error);
+            logger_js_1.logger.error('Error during graceful shutdown', error);
         }
     }
     async logEmergencyDeactivation(participantId, reason, deactivatedBy) {
         try {
-            const { error } = await supabase
+            const { error } = await supabaseClient_js_1.supabase
                 .from('retreat_emergency_deactivations')
                 .insert({
                 participant_id: participantId,
@@ -213,11 +216,11 @@ export class RetreatModeManager {
                 deactivated_at: new Date().toISOString()
             });
             if (error) {
-                logger.error('Failed to log emergency deactivation', error);
+                logger_js_1.logger.error('Failed to log emergency deactivation', error);
             }
         }
         catch (error) {
-            logger.error('Database error logging emergency deactivation', error);
+            logger_js_1.logger.error('Database error logging emergency deactivation', error);
         }
     }
     async checkAndPerformScheduledTransitions(status) {
@@ -255,3 +258,4 @@ export class RetreatModeManager {
         };
     }
 }
+exports.RetreatModeManager = RetreatModeManager;

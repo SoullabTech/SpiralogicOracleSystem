@@ -1,72 +1,107 @@
-// Enhanced Switzerland Retreat Onboarding Routes
-import { Router } from 'express';
-import { retreatOnboardingService } from '../services/retreatOnboardingService';
-import { z } from 'zod';
-import { logger } from '../utils/logger';
-import { supabase } from '../lib/supabaseClient';
-const router = Router();
-// Validation schemas
-const welcomeParticipantSchema = z.object({
-    email: z.string().email(),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-    preferredName: z.string().optional(),
-    phone: z.string().optional(),
-    country: z.string().optional(),
-    eventType: z.enum(['ypo', 'retreat', 'both']).default('retreat'),
-    ypoChapter: z.string().optional(),
-    arrivalDate: z.string().datetime(),
-    departureDate: z.string().datetime(),
-    dietaryRestrictions: z.array(z.string()).optional(),
-    specialNeeds: z.array(z.string()).optional(),
-    hearAboutUs: z.string().optional(),
-    previousExperience: z.string().optional()
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
 });
-const retreatQuestionnaireSchema = z.object({
-    participantId: z.string().uuid(),
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+// Enhanced Switzerland Retreat Onboarding Routes
+const express_1 = require("express");
+const retreatOnboardingService_1 = require("../services/retreatOnboardingService");
+const zod_1 = require("zod");
+const logger_1 = require("../utils/logger");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const router = (0, express_1.Router)();
+// Validation schemas
+const welcomeParticipantSchema = zod_1.z.object({
+    email: zod_1.z.string().email(),
+    firstName: zod_1.z.string().min(1),
+    lastName: zod_1.z.string().min(1),
+    preferredName: zod_1.z.string().optional(),
+    phone: zod_1.z.string().optional(),
+    country: zod_1.z.string().optional(),
+    eventType: zod_1.z.enum(['ypo', 'retreat', 'both']).default('retreat'),
+    ypoChapter: zod_1.z.string().optional(),
+    arrivalDate: zod_1.z.string().datetime(),
+    departureDate: zod_1.z.string().datetime(),
+    dietaryRestrictions: zod_1.z.array(zod_1.z.string()).optional(),
+    specialNeeds: zod_1.z.array(zod_1.z.string()).optional(),
+    hearAboutUs: zod_1.z.string().optional(),
+    previousExperience: zod_1.z.string().optional()
+});
+const retreatQuestionnaireSchema = zod_1.z.object({
+    participantId: zod_1.z.string().uuid(),
     // Life Context
-    lifeContext: z.object({
-        currentLifePhase: z.string(),
-        majorTransitions: z.array(z.string()).optional(),
-        primaryRelationships: z.string(),
-        professionalContext: z.string()
+    lifeContext: zod_1.z.object({
+        currentLifePhase: zod_1.z.string(),
+        majorTransitions: zod_1.z.array(zod_1.z.string()).optional(),
+        primaryRelationships: zod_1.z.string(),
+        professionalContext: zod_1.z.string()
     }),
     // Emotional Landscape
-    emotionalLandscape: z.object({
-        dominantEmotions: z.array(z.string()),
-        emotionalChallenges: z.array(z.string()),
-        emotionalStrengths: z.array(z.string()),
-        stressResponses: z.array(z.string())
+    emotionalLandscape: zod_1.z.object({
+        dominantEmotions: zod_1.z.array(zod_1.z.string()),
+        emotionalChallenges: zod_1.z.array(zod_1.z.string()),
+        emotionalStrengths: zod_1.z.array(zod_1.z.string()),
+        stressResponses: zod_1.z.array(zod_1.z.string())
     }),
     // Spiritual Journey
-    spiritualJourney: z.object({
-        practicesEngaged: z.array(z.string()),
-        spiritualBeliefs: z.string(),
-        connectionToNature: z.number().min(1).max(10),
-        mysticalExperiences: z.string().optional()
+    spiritualJourney: zod_1.z.object({
+        practicesEngaged: zod_1.z.array(zod_1.z.string()),
+        spiritualBeliefs: zod_1.z.string(),
+        connectionToNature: zod_1.z.number().min(1).max(10),
+        mysticalExperiences: zod_1.z.string().optional()
     }),
     // Shadow Work
-    shadowWork: z.object({
-        shadowAwareness: z.number().min(1).max(10),
-        patternsToTransform: z.array(z.string()),
-        fears: z.array(z.string()),
-        hiddenGifts: z.string().optional()
+    shadowWork: zod_1.z.object({
+        shadowAwareness: zod_1.z.number().min(1).max(10),
+        patternsToTransform: zod_1.z.array(zod_1.z.string()),
+        fears: zod_1.z.array(zod_1.z.string()),
+        hiddenGifts: zod_1.z.string().optional()
     }),
     // Intentions
-    intentions: z.object({
-        primaryIntention: z.string().min(20),
-        secondaryIntentions: z.array(z.string()).optional(),
-        desiredBreakthroughs: z.array(z.string()),
-        willingToRelease: z.array(z.string()),
-        newToEmbody: z.array(z.string())
+    intentions: zod_1.z.object({
+        primaryIntention: zod_1.z.string().min(20),
+        secondaryIntentions: zod_1.z.array(zod_1.z.string()).optional(),
+        desiredBreakthroughs: zod_1.z.array(zod_1.z.string()),
+        willingToRelease: zod_1.z.array(zod_1.z.string()),
+        newToEmbody: zod_1.z.array(zod_1.z.string())
     }),
     // Retreat Readiness
-    readiness: z.object({
-        physicalHealth: z.number().min(1).max(10),
-        mentalClarity: z.number().min(1).max(10),
-        emotionalOpenness: z.number().min(1).max(10),
-        timeCommitment: z.boolean(),
-        groupReadiness: z.number().min(1).max(10)
+    readiness: zod_1.z.object({
+        physicalHealth: zod_1.z.number().min(1).max(10),
+        mentalClarity: zod_1.z.number().min(1).max(10),
+        emotionalOpenness: zod_1.z.number().min(1).max(10),
+        timeCommitment: zod_1.z.boolean(),
+        groupReadiness: zod_1.z.number().min(1).max(10)
     })
 });
 // Welcome endpoint for new participants
@@ -93,9 +128,9 @@ router.post('/welcome', async (req, res) => {
             retreatId = await ensureSwissRetreatExists();
         }
         // Initialize participant
-        const participant = await retreatOnboardingService.initializeOnboarding(data.email, data.firstName, data.lastName, retreatId, new Date(data.arrivalDate), new Date(data.departureDate));
+        const participant = await retreatOnboardingService_1.retreatOnboardingService.initializeOnboarding(data.email, data.firstName, data.lastName, retreatId, new Date(data.arrivalDate), new Date(data.departureDate));
         // Store additional data
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             preferredName: data.preferredName,
@@ -129,7 +164,7 @@ router.post('/welcome', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Welcome initialization failed', error);
+        logger_1.logger.error('Welcome initialization failed', error);
         res.status(500).json({
             error: 'Welcome process failed',
             message: 'Please try again or contact support@soullab.com'
@@ -148,7 +183,7 @@ router.post('/questionnaire', async (req, res) => {
         }
         const data = validation.data;
         // Store questionnaire data
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             questionnaire_data: data,
@@ -165,7 +200,7 @@ router.post('/questionnaire', async (req, res) => {
         // Generate elemental profile based on questionnaire
         const elementalProfile = await generateElementalProfile(data);
         // Store elemental profile
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             elementalProfile
@@ -182,7 +217,7 @@ router.post('/questionnaire', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Questionnaire submission failed', error);
+        logger_1.logger.error('Questionnaire submission failed', error);
         res.status(500).json({
             error: 'Failed to process questionnaire',
             message: 'Your responses are important. Please try again.'
@@ -194,7 +229,7 @@ router.post('/oracle-assignment/:participantId', async (req, res) => {
     try {
         const { participantId } = req.params;
         // Get participant with questionnaire data
-        const { data: participant } = await supabase
+        const { data: participant } = await supabaseClient_1.supabase
             .from('retreat_participants')
             .select('*')
             .eq('id', participantId)
@@ -216,7 +251,7 @@ router.post('/oracle-assignment/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Oracle assignment failed', error);
+        logger_1.logger.error('Oracle assignment failed', error);
         res.status(500).json({
             error: 'Failed to assign Personal Oracle',
             message: 'Your sacred guide awaits. Please try again.'
@@ -248,7 +283,7 @@ Kelly & The Soullab Team`,
         });
     }
     catch (error) {
-        logger.error('Failed to get YPO overview', error);
+        logger_1.logger.error('Failed to get YPO overview', error);
         res.status(500).json({ error: 'Failed to load YPO event details' });
     }
 });
@@ -269,20 +304,20 @@ router.get('/preparation/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Failed to get preparation details', error);
+        logger_1.logger.error('Failed to get preparation details', error);
         res.status(500).json({ error: 'Failed to load preparation resources' });
     }
 });
 // Helper functions
 async function ensureYPOEventExists() {
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseClient_1.supabase
         .from('retreat_sessions')
         .select('id')
         .eq('name', 'YPO Switzerland Chapter - Spiralogic Evening')
         .single();
     if (existing)
         return existing.id;
-    const { data: newEvent } = await supabase
+    const { data: newEvent } = await supabaseClient_1.supabase
         .from('retreat_sessions')
         .insert({
         name: 'YPO Switzerland Chapter - Spiralogic Evening',
@@ -298,14 +333,14 @@ async function ensureYPOEventExists() {
     return newEvent.id;
 }
 async function ensureSwissRetreatExists() {
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseClient_1.supabase
         .from('retreat_sessions')
         .select('id')
         .eq('name', 'Switzerland Sacred Journey - June 2024')
         .single();
     if (existing)
         return existing.id;
-    const { data: newRetreat } = await supabase
+    const { data: newRetreat } = await supabaseClient_1.supabase
         .from('retreat_sessions')
         .insert({
         name: 'Switzerland Sacred Journey - June 2024',
@@ -321,7 +356,7 @@ async function ensureSwissRetreatExists() {
     return newRetreat.id;
 }
 async function generatePersonalizedWelcome(participant, eventType) {
-    const { soullabFounderAgent } = await import('../core/agents/soullabFounderAgent');
+    const { soullabFounderAgent } = await Promise.resolve().then(() => __importStar(require('../core/agents/soullabFounderAgent')));
     const welcomeMessage = await soullabFounderAgent.generatePersonalWelcome({
         ...participant,
         metadata: { eventType }
@@ -387,7 +422,7 @@ async function generateElementalProfile(questionnaire) {
     };
 }
 async function getFounderQuestionnaireReflection(participantId, questionnaire) {
-    const { soullabFounderAgent } = await import('../core/agents/soullabFounderAgent');
+    const { soullabFounderAgent } = await Promise.resolve().then(() => __importStar(require('../core/agents/soullabFounderAgent')));
     const reflection = await soullabFounderAgent.reflectOnQuestionnaire({
         participantId,
         intentions: questionnaire.intentions,
@@ -401,7 +436,7 @@ async function assignEnhancedPersonalOracle(participant) {
     const archetype = getArchetypeForProfile(participant);
     const oracleId = participant.personalOracleId || require('uuid').v4();
     // Update participant
-    await supabase
+    await supabaseClient_1.supabase
         .from('retreat_participants')
         .update({
         personalOracleId: oracleId,
@@ -460,7 +495,7 @@ function getArchetypeForProfile(participant) {
     return elementArchetypes.default;
 }
 async function createOracleIntroduction(participant, assignment) {
-    const { soullabFounderAgent } = await import('../core/agents/soullabFounderAgent');
+    const { soullabFounderAgent } = await Promise.resolve().then(() => __importStar(require('../core/agents/soullabFounderAgent')));
     const intro = await soullabFounderAgent.introducePersonalOracle(participant, assignment.element, assignment.archetype);
     return {
         founderIntroduction: intro.content,
@@ -479,7 +514,7 @@ function getOraclePromise(element) {
     return promises[element] || 'discover your unique medicine for the world';
 }
 async function generateRetreatPreparation(participantId) {
-    const { data: participant } = await supabase
+    const { data: participant } = await supabaseClient_1.supabase
         .from('retreat_participants')
         .select('*')
         .eq('id', participantId)
@@ -541,7 +576,7 @@ function getPreparatoryWork(intentions) {
     return work;
 }
 async function getYPOEventDetails() {
-    const { data: event } = await supabase
+    const { data: event } = await supabaseClient_1.supabase
         .from('retreat_sessions')
         .select('*')
         .eq('name', 'YPO Switzerland Chapter - Spiralogic Evening')
@@ -567,4 +602,4 @@ async function getYPOEventDetails() {
         ]
     };
 }
-export default router;
+exports.default = router;

@@ -1,35 +1,41 @@
+"use strict";
 // 🌀 FOUNDER KNOWLEDGE INGESTION SERVICE
 // Processes and integrates organizational wisdom documents
-import { logger } from '../utils/logger';
-import { SoullabFounderAgent } from '../core/agents/soullabFounderAgent';
-import fs from 'fs/promises';
-import path from 'path';
-export class FounderKnowledgeService {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.founderKnowledgeService = exports.FounderKnowledgeService = void 0;
+const logger_1 = require("../utils/logger");
+const soullabFounderAgent_1 = require("../core/agents/soullabFounderAgent");
+const promises_1 = __importDefault(require("fs/promises"));
+const path_1 = __importDefault(require("path"));
+class FounderKnowledgeService {
     constructor() {
-        this.founderAgent = new SoullabFounderAgent();
+        this.founderAgent = new soullabFounderAgent_1.SoullabFounderAgent();
     }
     /**
      * Process the Spiralogic Process Manifesto
      */
     async ingestSpiralogicManifesto(filePath) {
         try {
-            logger.info('FounderKnowledge: Ingesting Spiralogic Process Manifesto', { filePath });
+            logger_1.logger.info('FounderKnowledge: Ingesting Spiralogic Process Manifesto', { filePath });
             // Read the manifesto file
-            const content = await fs.readFile(filePath, 'utf-8');
+            const content = await promises_1.default.readFile(filePath, 'utf-8');
             // Parse the manifesto structure
             const manifesto = this.parseManifesto(content, 'Spiralogic Process Manifesto');
             // Extract core insights
             const coreInsights = this.extractSpiralogicInsights(manifesto);
             // Update founder agent knowledge base
             await this.updateFounderKnowledge(manifesto, coreInsights);
-            logger.info('FounderKnowledge: Spiralogic Manifesto successfully integrated', {
+            logger_1.logger.info('FounderKnowledge: Spiralogic Manifesto successfully integrated', {
                 sections: manifesto.sections.length,
                 principles: manifesto.corePrinciples.length
             });
             return manifesto;
         }
         catch (error) {
-            logger.error('FounderKnowledge: Error ingesting Spiralogic Manifesto', error);
+            logger_1.logger.error('FounderKnowledge: Error ingesting Spiralogic Manifesto', error);
             throw error;
         }
     }
@@ -223,7 +229,7 @@ export class FounderKnowledgeService {
             }
         };
         // In a real implementation, this would update the agent's knowledge repository
-        logger.info('FounderKnowledge: Knowledge base updated with Spiralogic insights', {
+        logger_1.logger.info('FounderKnowledge: Knowledge base updated with Spiralogic insights', {
             elements: Object.keys(insights.elements),
             principles: insights.integrationPrinciples.length
         });
@@ -236,19 +242,20 @@ export class FounderKnowledgeService {
     async storeManifestoKnowledge(knowledge) {
         // In production, this would store to a vector database or similar
         // For now, we'll create a JSON file the agent can reference
-        const knowledgePath = path.join(__dirname, '../../data/founder-knowledge/spiralogic-manifesto.json');
+        const knowledgePath = path_1.default.join(__dirname, '../../data/founder-knowledge/spiralogic-manifesto.json');
         try {
-            await fs.mkdir(path.dirname(knowledgePath), { recursive: true });
-            await fs.writeFile(knowledgePath, JSON.stringify(knowledge, null, 2));
-            logger.info('FounderKnowledge: Manifesto knowledge stored', { path: knowledgePath });
+            await promises_1.default.mkdir(path_1.default.dirname(knowledgePath), { recursive: true });
+            await promises_1.default.writeFile(knowledgePath, JSON.stringify(knowledge, null, 2));
+            logger_1.logger.info('FounderKnowledge: Manifesto knowledge stored', { path: knowledgePath });
         }
         catch (error) {
-            logger.error('FounderKnowledge: Error storing manifesto', error);
+            logger_1.logger.error('FounderKnowledge: Error storing manifesto', error);
         }
     }
 }
+exports.FounderKnowledgeService = FounderKnowledgeService;
 // Export singleton instance
-export const founderKnowledgeService = new FounderKnowledgeService();
+exports.founderKnowledgeService = new FounderKnowledgeService();
 /**
  * 🌀 FOUNDER KNOWLEDGE SERVICE
  *

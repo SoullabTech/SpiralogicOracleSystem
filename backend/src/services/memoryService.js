@@ -1,10 +1,13 @@
-import { extractSymbolicTags } from './symbolService';
-import { supabase } from '../lib/supabaseClient';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MemoryService = exports.getSpiritualPatternInsights = exports.getAggregatedWisdom = exports.getRelevantMemories = exports.storeMemoryItem = exports.memoryService = void 0;
+const symbolService_1 = require("./symbolService");
+const supabaseClient_1 = require("../lib/supabaseClient");
 // Core Memory Service Object
-export const memoryService = {
+exports.memoryService = {
     // Store a new memory item
     store: async (userId, content, element, sourceAgent, confidence, metadata) => {
-        const symbols = extractSymbolicTags(content, sourceAgent || 'oracle');
+        const symbols = (0, symbolService_1.extractSymbolicTags)(content, sourceAgent || 'oracle');
         // Extract themes from content
         const themes = extractThemesFromContent(content.toLowerCase());
         // Check for spiritual keywords
@@ -19,7 +22,7 @@ export const memoryService = {
             moonPhase: calculateMoonPhase(), // Track lunar influence
             seasonalEnergy: getCurrentSeasonalEnergy() // Track seasonal patterns
         };
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('memories')
             .insert([
             {
@@ -38,11 +41,11 @@ export const memoryService = {
             return null;
         }
         // After storing, check for emerging patterns
-        const recentMemories = await memoryService.recall(userId, { userId, limit: 50 });
+        const recentMemories = await exports.memoryService.recall(userId, { userId, limit: 50 });
         const patterns = await checkForEmergingPatterns(recentMemories, data);
         if (patterns.length > 0) {
             // Store pattern alerts for the oracle agents to use
-            await supabase
+            await supabaseClient_1.supabase
                 .from('pattern_alerts')
                 .insert(patterns.map(p => ({
                 user_id: userId,
@@ -55,7 +58,7 @@ export const memoryService = {
     },
     // Recall memories for a user
     recall: async (userId, query) => {
-        let queryBuilder = supabase
+        let queryBuilder = supabaseClient_1.supabase
             .from('memories')
             .select('*')
             .eq('user_id', userId)
@@ -81,8 +84,8 @@ export const memoryService = {
     },
     // Update a memory item
     update: async (memoryId, content, userId, metadata) => {
-        const symbols = extractSymbolicTags(content);
-        const { error } = await supabase
+        const symbols = (0, symbolService_1.extractSymbolicTags)(content);
+        const { error } = await supabaseClient_1.supabase
             .from('memories')
             .update({
             content,
@@ -102,7 +105,7 @@ export const memoryService = {
     },
     // Delete a memory item
     delete: async (memoryId, userId) => {
-        const { error } = await supabase
+        const { error } = await supabaseClient_1.supabase
             .from('memories')
             .delete()
             .eq('id', memoryId)
@@ -115,7 +118,7 @@ export const memoryService = {
     },
     // Get memory insights for a user
     getMemoryInsights: async (userId) => {
-        const memories = await memoryService.recall(userId);
+        const memories = await exports.memoryService.recall(userId);
         const elementCounts = memories.reduce((acc, memory) => {
             const element = memory.element || 'unknown';
             acc[element] = (acc[element] || 0) + 1;
@@ -127,9 +130,9 @@ export const memoryService = {
             return acc;
         }, {});
         // Extract spiritual themes and patterns
-        const spiritualThemes = await memoryService.recognizeSpiritualThemes(memories);
-        const synchronicities = await memoryService.detectSynchronicities(memories);
-        const mysticalInsights = await memoryService.extractMysticalInsights(memories);
+        const spiritualThemes = await exports.memoryService.recognizeSpiritualThemes(memories);
+        const synchronicities = await exports.memoryService.detectSynchronicities(memories);
+        const mysticalInsights = await exports.memoryService.extractMysticalInsights(memories);
         return {
             totalMemories: memories.length,
             elementBreakdown: elementCounts,
@@ -385,11 +388,12 @@ function detectAdvancedMysticalPatterns(memories) {
     return insights;
 }
 // Alternative function exports for compatibility
-export const storeMemoryItem = async (userId, content, metadata) => {
-    return memoryService.store(userId, content, undefined, undefined, undefined, metadata);
+const storeMemoryItem = async (userId, content, metadata) => {
+    return exports.memoryService.store(userId, content, undefined, undefined, undefined, metadata);
 };
-export const getRelevantMemories = async (userId, query, limit = 10) => {
-    const memories = await memoryService.recall(userId, { userId, limit });
+exports.storeMemoryItem = storeMemoryItem;
+const getRelevantMemories = async (userId, query, limit = 10) => {
+    const memories = await exports.memoryService.recall(userId, { userId, limit });
     // Simple relevance filtering if query provided
     if (query) {
         const queryLower = query.toLowerCase();
@@ -398,8 +402,9 @@ export const getRelevantMemories = async (userId, query, limit = 10) => {
     }
     return memories;
 };
-export const getAggregatedWisdom = async (userId) => {
-    const memories = await memoryService.recall(userId);
+exports.getRelevantMemories = getRelevantMemories;
+const getAggregatedWisdom = async (userId) => {
+    const memories = await exports.memoryService.recall(userId);
     // Extract key insights from memories
     const wisdom = memories
         .filter(memory => memory.confidence && memory.confidence > 0.7)
@@ -407,9 +412,10 @@ export const getAggregatedWisdom = async (userId) => {
         .slice(0, 20); // Top 20 high-confidence memories
     return wisdom;
 };
+exports.getAggregatedWisdom = getAggregatedWisdom;
 // Get spiritual pattern insights for oracle responses
-export const getSpiritualPatternInsights = async (userId) => {
-    const insights = await memoryService.getMemoryInsights(userId);
+const getSpiritualPatternInsights = async (userId) => {
+    const insights = await exports.memoryService.getMemoryInsights(userId);
     // Extract active themes
     const activeThemes = insights.spiritualThemes
         ?.filter((theme) => theme.frequency >= 3)
@@ -429,19 +435,20 @@ export const getSpiritualPatternInsights = async (userId) => {
         elementalBalance: insights.elementBreakdown || {}
     };
 };
+exports.getSpiritualPatternInsights = getSpiritualPatternInsights;
 // Class-based MemoryService for compatibility
-export class MemoryService {
+class MemoryService {
     async storeMemory(params) {
-        return memoryService.store(params.userId, params.content, params.element, params.sourceAgent, params.confidence, params.metadata);
+        return exports.memoryService.store(params.userId, params.content, params.element, params.sourceAgent, params.confidence, params.metadata);
     }
     async getMemoryInsights(userId) {
-        return memoryService.getMemoryInsights(userId);
+        return exports.memoryService.getMemoryInsights(userId);
     }
     async recallMemories(userId, query) {
-        return memoryService.recall(userId, query);
+        return exports.memoryService.recall(userId, query);
     }
     async retrieveMemories(userId, query) {
-        return memoryService.recall(userId, query);
+        return exports.memoryService.recall(userId, query);
     }
     async createSharedSpace(userId, name, participants) {
         // Placeholder implementation for shared spaces
@@ -458,6 +465,7 @@ export class MemoryService {
         return [];
     }
 }
+exports.MemoryService = MemoryService;
 // Additional helper functions for spiritual pattern detection
 function detectSpiritualKeywords(content) {
     const keywords = [];
@@ -572,4 +580,4 @@ async function checkForEmergingPatterns(memories, newMemory) {
     return patterns;
 }
 // Default export
-export default memoryService;
+exports.default = exports.memoryService;

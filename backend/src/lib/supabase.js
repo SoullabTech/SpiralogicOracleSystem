@@ -1,10 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.supabase = void 0;
 // src/lib/supabase.ts
-import { createClient } from '@supabase/supabase-js';
-import { env } from './config';
-if (!env.VITE_SUPABASE_URL || !env.VITE_SUPABASE_ANON_KEY) {
-    throw new Error('Missing Supabase environment variables');
+const supabase_js_1 = require("@supabase/supabase-js");
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Missing Supabase environment variables");
 }
-export const supabase = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY, {
+exports.supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey, {
     auth: {
         autoRefreshToken: true,
         persistSession: true,

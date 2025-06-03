@@ -1,5 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRestorationPath = getRestorationPath;
 // 📁 BACKEND/src/services/restorationPathfinder.ts
-export function getRestorationPath(phase) {
+function getRestorationPath(phase) {
     switch (phase) {
         case 'Water 2':
             return ['Dream journaling', 'Ritual bath', 'Shadow invocation'];

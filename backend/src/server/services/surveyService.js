@@ -1,6 +1,9 @@
+"use strict";
 // src/services/surveyService.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.surveyService = void 0;
 const responses = [];
-export const surveyService = {
+exports.surveyService = {
     submitResponse: (response) => {
         responses.push(response);
     },

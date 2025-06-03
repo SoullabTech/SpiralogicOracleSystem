@@ -1,4 +1,7 @@
+"use strict";
 // src/services/facetService.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.facetService = void 0;
 const mockFacets = {
     'fire-1': {
         id: 'fire-1',
@@ -19,7 +22,7 @@ const mockFacets = {
         element: 'Earth',
     },
 };
-export const facetService = {
+exports.facetService = {
     getFacet: (id) => {
         return mockFacets[id] || null;
     },

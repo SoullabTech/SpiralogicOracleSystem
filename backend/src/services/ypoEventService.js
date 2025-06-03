@@ -1,8 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ypoEventService = exports.YPOEventService = void 0;
 // YPO Event Service for Stephanie's June 10th Event
-import { supabase } from '../lib/supabaseClient';
-import { soullabFounderAgent } from '../core/agents/soullabFounderAgent';
-import { logger } from '../utils/logger';
-export class YPOEventService {
+const supabaseClient_1 = require("../lib/supabaseClient");
+const soullabFounderAgent_1 = require("../core/agents/soullabFounderAgent");
+const logger_1 = require("../utils/logger");
+class YPOEventService {
     // Create special welcome for YPO members
     async createYPOWelcome(participant) {
         const ypoWelcome = `Dear ${participant.preferredName || participant.firstName},
@@ -23,7 +26,7 @@ With anticipation for our shared journey,
 Kelly Flanagan
 Founder, Soullab`;
         // Store the welcome message
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_messages')
             .insert({
             participant_id: participant.id,
@@ -90,7 +93,7 @@ Founder, Soullab`;
         const dominantElement = Object.entries(scores)
             .sort(([, a], [, b]) => b - a)[0][0];
         // Update participant
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             elementalProfile: {
@@ -120,7 +123,7 @@ Founder, Soullab`;
     // Create YPO group experience
     async createGroupExperience(participantIds) {
         // Get all participants
-        const { data: participants } = await supabase
+        const { data: participants } = await supabaseClient_1.supabase
             .from('retreat_participants')
             .select('*')
             .in('id', participantIds);
@@ -205,16 +208,16 @@ Founder, Soullab`;
     }
     // Post-event follow-up
     async createPostEventFollowUp(participantId) {
-        const { data: participant } = await supabase
+        const { data: participant } = await supabaseClient_1.supabase
             .from('retreat_participants')
             .select('*')
             .eq('id', participantId)
             .single();
         if (!participant)
             return null;
-        const followUp = await soullabFounderAgent.generateYPOFollowUp(participant);
+        const followUp = await soullabFounderAgent_1.soullabFounderAgent.generateYPOFollowUp(participant);
         // Store follow-up message
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_messages')
             .insert({
             participant_id: participantId,
@@ -273,7 +276,7 @@ Founder, Soullab`;
     }
     // Track YPO conversion to retreat
     async trackYPOToRetreatConversion(participantId) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             metadata: {
@@ -283,8 +286,9 @@ Founder, Soullab`;
             }
         })
             .eq('id', participantId);
-        logger.info('YPO to retreat conversion', { participantId });
+        logger_1.logger.info('YPO to retreat conversion', { participantId });
     }
 }
+exports.YPOEventService = YPOEventService;
 // Export singleton
-export const ypoEventService = new YPOEventService();
+exports.ypoEventService = new YPOEventService();

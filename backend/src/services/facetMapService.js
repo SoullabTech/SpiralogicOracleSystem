@@ -1,7 +1,10 @@
-import { supabase } from '../lib/supabaseClient';
-export const facetMapService = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.facetMapService = void 0;
+const supabaseClient_1 = require("../lib/supabaseClient");
+exports.facetMapService = {
     async getUserFacetMap(userId) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('facet_map')
             .select('*')
             .eq('user_id', userId)
@@ -11,7 +14,7 @@ export const facetMapService = {
         return data;
     },
     async upsertFacet(userId, facetData) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('facet_map')
             .upsert([
             {
@@ -25,7 +28,7 @@ export const facetMapService = {
         return data;
     },
     async deleteFacet(userId, facet) {
-        const { error } = await supabase
+        const { error } = await supabaseClient_1.supabase
             .from('facet_map')
             .delete()
             .eq('user_id', userId)

@@ -1,8 +1,11 @@
+"use strict";
 // src/services/sessionService.ts
-import { createClient } from '@supabase/supabase-js';
-import { config } from '../../config/index';
-const supabase = createClient(config.supabase.url, config.supabase.anonKey);
-export class SessionService {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SessionService = void 0;
+const supabase_js_1 = require("@supabase/supabase-js");
+const index_1 = require("../../config/index");
+const supabase = (0, supabase_js_1.createClient)(index_1.config.supabase.url, index_1.config.supabase.anonKey);
+class SessionService {
     // Create a new session
     async createSession(userId, metadata) {
         const { data, error } = await supabase
@@ -63,3 +66,4 @@ export class SessionService {
         };
     }
 }
+exports.SessionService = SessionService;

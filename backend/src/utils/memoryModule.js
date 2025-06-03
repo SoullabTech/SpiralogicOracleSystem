@@ -1,11 +1,13 @@
+"use strict";
 // src/utils/memoryModule.ts
-import { supabase } from '../lib/supabaseClient';
+Object.defineProperty(exports, "__esModule", { value: true });
+const supabaseClient_1 = require("../lib/supabaseClient");
 class MemoryModule {
     /**
      * Stores a symbolic tag in Supabase.
      */
     async storeTag(tag) {
-        const { error } = await supabase.from('symbolic_tags').insert({
+        const { error } = await supabaseClient_1.supabase.from('symbolic_tags').insert({
             user_id: tag.userId,
             symbol: tag.symbol,
             agent: tag.agent,
@@ -22,7 +24,7 @@ class MemoryModule {
      * Retrieves all symbolic tags for a user.
      */
     async getAllSymbolicTags(userId) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('symbolic_tags')
             .select('*')
             .eq('user_id', userId)
@@ -37,7 +39,7 @@ class MemoryModule {
      * Filters tags by symbol name.
      */
     async getEntriesBySymbol(userId, symbol) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('symbolic_tags')
             .select('*')
             .eq('user_id', userId)
@@ -52,7 +54,7 @@ class MemoryModule {
      * Filters tags by agent name.
      */
     async getEntriesByAgent(userId, agent) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('symbolic_tags')
             .select('*')
             .eq('user_id', userId)
@@ -67,7 +69,7 @@ class MemoryModule {
      * Filters tags after a specific timestamp.
      */
     async getEntriesSince(userId, dateISO) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('symbolic_tags')
             .select('*')
             .eq('user_id', userId)
@@ -80,4 +82,4 @@ class MemoryModule {
     }
 }
 const memoryModule = new MemoryModule();
-export default memoryModule;
+exports.default = memoryModule;

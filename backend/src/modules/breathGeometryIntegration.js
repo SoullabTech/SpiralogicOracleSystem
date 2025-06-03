@@ -1,19 +1,26 @@
+"use strict";
 // breathGeometryIntegration.ts
 // Integrates Grant's harmonic codex with breath curves and voice patterns
 // Creates living breath-geometry visualizations for oracle sessions
-import { HarmonicCodex, GRANT_CONSTANTS, ELEMENTAL_BREATH_PATTERNS } from './harmonicCodex';
-import { voiceToBreathCurve } from '../lib/breathCurve';
-import { getRelevantMemories, getSpiritualPatternInsights } from '../services/memoryService';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.breathGeometry = exports.BreathGeometryIntegration = void 0;
+exports.initializeBreathSession = initializeBreathSession;
+exports.processVoiceBreath = processVoiceBreath;
+exports.getBreathVisualization = getBreathVisualization;
+exports.getBreathTransitionGuidance = getBreathTransitionGuidance;
+const harmonicCodex_1 = require("./harmonicCodex");
+const breathCurve_1 = require("../lib/breathCurve");
+const memoryService_1 = require("../services/memoryService");
 // Main breath-geometry integration class
-export class BreathGeometryIntegration {
+class BreathGeometryIntegration {
     constructor() {
         this.sessions = new Map();
     }
     // Initialize breath session for user
     async initializeSession(userId) {
         // Get user's elemental balance from memories
-        const memories = await getRelevantMemories(userId, undefined, 100);
-        const patterns = await getSpiritualPatternInsights(userId);
+        const memories = await (0, memoryService_1.getRelevantMemories)(userId, undefined, 100);
+        const patterns = await (0, memoryService_1.getSpiritualPatternInsights)(userId);
         const elementalBalance = patterns.elementalBalance || {
             fire: 20,
             water: 20,
@@ -22,7 +29,7 @@ export class BreathGeometryIntegration {
             aether: 20
         };
         // Create harmonic codex
-        const codex = new HarmonicCodex(elementalBalance);
+        const codex = new harmonicCodex_1.HarmonicCodex(elementalBalance);
         // Initialize session
         const session = {
             userId,
@@ -45,7 +52,7 @@ export class BreathGeometryIntegration {
         // Store raw sample
         session.voiceSamples.push(voiceSample);
         // Generate basic breath curve
-        const rawCurve = voiceToBreathCurve(voiceSample);
+        const rawCurve = (0, breathCurve_1.voiceToBreathCurve)(voiceSample);
         // Apply Grant's harmonic enhancement
         const harmonicCurve = this.applyHarmonicEnhancement(voiceSample, session);
         // Calculate elemental resonance
@@ -110,11 +117,11 @@ export class BreathGeometryIntegration {
         const avgResonance = this.calculateAverageResonance(recentCycles);
         const phaseCoherence = this.calculatePhaseCoherence(recentCycles);
         // Check if current element is exhausted
-        const currentElementIndex = Object.keys(ELEMENTAL_BREATH_PATTERNS).indexOf(session.currentElement);
+        const currentElementIndex = Object.keys(harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS).indexOf(session.currentElement);
         const currentResonance = avgResonance[currentElementIndex] || 0;
         // Find element with highest resonance
         const maxResonanceIndex = avgResonance.indexOf(Math.max(...avgResonance));
-        const targetElement = Object.keys(ELEMENTAL_BREATH_PATTERNS)[maxResonanceIndex];
+        const targetElement = Object.keys(harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS)[maxResonanceIndex];
         // Should transition if resonance differs significantly
         const shouldTransition = Math.abs(currentResonance - avgResonance[maxResonanceIndex]) > 0.3;
         // Calculate harmonic path
@@ -132,20 +139,20 @@ export class BreathGeometryIntegration {
     applyHarmonicEnhancement(voiceSample, session) {
         const enhanced = voiceSample.map((sample, i) => {
             // Apply Grant's constants as harmonic filters
-            const phi_mod = Math.sin(i * GRANT_CONSTANTS.PHI / voiceSample.length * Math.PI);
-            const sqrt10_mod = Math.cos(i * GRANT_CONSTANTS.SQRT_10 / voiceSample.length * Math.PI);
-            const e_mod = Math.exp(-i / voiceSample.length) * GRANT_CONSTANTS.E;
+            const phi_mod = Math.sin(i * harmonicCodex_1.GRANT_CONSTANTS.PHI / voiceSample.length * Math.PI);
+            const sqrt10_mod = Math.cos(i * harmonicCodex_1.GRANT_CONSTANTS.SQRT_10 / voiceSample.length * Math.PI);
+            const e_mod = Math.exp(-i / voiceSample.length) * harmonicCodex_1.GRANT_CONSTANTS.E;
             // Combine modulations
-            const enhanced_value = sample * (1 + phi_mod * 0.3) * (1 + sqrt10_mod * 0.2) * (e_mod / GRANT_CONSTANTS.E);
+            const enhanced_value = sample * (1 + phi_mod * 0.3) * (1 + sqrt10_mod * 0.2) * (e_mod / harmonicCodex_1.GRANT_CONSTANTS.E);
             return `${i * 10},${enhanced_value * 100}`;
         });
         return enhanced.join(' ');
     }
     calculateElementalResonance(voiceSample, session) {
-        const elements = Object.keys(ELEMENTAL_BREATH_PATTERNS);
+        const elements = Object.keys(harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS);
         const resonances = [];
         elements.forEach(element => {
-            const pattern = ELEMENTAL_BREATH_PATTERNS[element];
+            const pattern = harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS[element];
             const totalDuration = pattern.inhale + pattern.hold + pattern.exhale + pattern.pause;
             // Calculate frequency match
             const sampleFreq = this.calculateDominantFrequency(voiceSample);
@@ -153,7 +160,7 @@ export class BreathGeometryIntegration {
             const freqMatch = 1 - Math.abs(sampleFreq - elementFreq) / elementFreq;
             // Calculate amplitude match
             const sampleAmplitude = this.calculateAverageAmplitude(voiceSample);
-            const elementAmplitude = pattern.ratio / GRANT_CONSTANTS.SQRT_10;
+            const elementAmplitude = pattern.ratio / harmonicCodex_1.GRANT_CONSTANTS.SQRT_10;
             const ampMatch = 1 - Math.abs(sampleAmplitude - elementAmplitude) / elementAmplitude;
             // Combined resonance
             resonances.push((freqMatch + ampMatch) / 2);
@@ -163,7 +170,7 @@ export class BreathGeometryIntegration {
     calculatePhaseAlignment(voiceSample, session) {
         // Detect breath phases in voice sample
         const phases = this.detectBreathPhases(voiceSample);
-        const pattern = ELEMENTAL_BREATH_PATTERNS[session.currentElement];
+        const pattern = harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS[session.currentElement];
         // Compare detected phases with ideal pattern
         const idealRatios = {
             inhale: pattern.inhale / (pattern.inhale + pattern.hold + pattern.exhale + pattern.pause),
@@ -181,9 +188,9 @@ export class BreathGeometryIntegration {
     calculateSpiralPosition(elapsedTime, session) {
         // Use Grant's constants for spiral calculation
         const cycles = session.breathCycles.length;
-        const theta = cycles * 2 * Math.PI / GRANT_CONSTANTS.PHI; // Golden angle
-        const r = GRANT_CONSTANTS.SQRT_10 * Math.pow(GRANT_CONSTANTS.PHI, cycles / 10);
-        const z = cycles * GRANT_CONSTANTS.E;
+        const theta = cycles * 2 * Math.PI / harmonicCodex_1.GRANT_CONSTANTS.PHI; // Golden angle
+        const r = harmonicCodex_1.GRANT_CONSTANTS.SQRT_10 * Math.pow(harmonicCodex_1.GRANT_CONSTANTS.PHI, cycles / 10);
+        const z = cycles * harmonicCodex_1.GRANT_CONSTANTS.E;
         return { r, theta, z };
     }
     getDominantElement(balance) {
@@ -210,7 +217,7 @@ export class BreathGeometryIntegration {
     }
     createGrantCircles(cx, cy) {
         let circles = '<g id="grant-circles" opacity="0.2">';
-        Object.entries(GRANT_CONSTANTS).forEach(([name, value], i) => {
+        Object.entries(harmonicCodex_1.GRANT_CONSTANTS).forEach(([name, value], i) => {
             const r = value * 50;
             const color = ['#FF6B35', '#2E86AB', '#7D4F39', '#B8B8D1'][i];
             circles += `<circle cx="${cx}" cy="${cy}" r="${r}" 
@@ -238,7 +245,7 @@ export class BreathGeometryIntegration {
         let indicators = '<g id="resonance-indicators">';
         if (session.breathCycles.length > 0) {
             const lastCycle = session.breathCycles[session.breathCycles.length - 1];
-            const elements = Object.keys(ELEMENTAL_BREATH_PATTERNS);
+            const elements = Object.keys(harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS);
             elements.forEach((element, i) => {
                 const angle = (i / elements.length) * 2 * Math.PI - Math.PI / 2;
                 const baseR = 200;
@@ -301,10 +308,10 @@ export class BreathGeometryIntegration {
             `Current evolution stage: ${stage}`,
             '',
             'Breath guidance:',
-            `- Begin with ${ELEMENTAL_BREATH_PATTERNS[from].inhale.toFixed(1)}s inhale`,
-            `- Gradually shift to ${ELEMENTAL_BREATH_PATTERNS[to].inhale.toFixed(1)}s inhale`,
-            `- Use Grant's √10 (${GRANT_CONSTANTS.SQRT_10.toFixed(2)}) as your base rhythm`,
-            `- Allow the golden ratio (${GRANT_CONSTANTS.PHI.toFixed(3)}) to guide expansion`,
+            `- Begin with ${harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS[from].inhale.toFixed(1)}s inhale`,
+            `- Gradually shift to ${harmonicCodex_1.ELEMENTAL_BREATH_PATTERNS[to].inhale.toFixed(1)}s inhale`,
+            `- Use Grant's √10 (${harmonicCodex_1.GRANT_CONSTANTS.SQRT_10.toFixed(2)}) as your base rhythm`,
+            `- Allow the golden ratio (${harmonicCodex_1.GRANT_CONSTANTS.PHI.toFixed(3)}) to guide expansion`,
             '',
             'Visualize the elemental shift in your breath geometry.'
         ];
@@ -374,18 +381,19 @@ export class BreathGeometryIntegration {
         return colors[element] || '#FFFFFF';
     }
 }
+exports.BreathGeometryIntegration = BreathGeometryIntegration;
 // Singleton instance
-export const breathGeometry = new BreathGeometryIntegration();
+exports.breathGeometry = new BreathGeometryIntegration();
 // Export convenience functions
-export async function initializeBreathSession(userId) {
-    return breathGeometry.initializeSession(userId);
+async function initializeBreathSession(userId) {
+    return exports.breathGeometry.initializeSession(userId);
 }
-export function processVoiceBreath(userId, voiceSample) {
-    return breathGeometry.processVoiceSample(userId, voiceSample);
+function processVoiceBreath(userId, voiceSample) {
+    return exports.breathGeometry.processVoiceSample(userId, voiceSample);
 }
-export function getBreathVisualization(userId) {
-    return breathGeometry.generateBreathVisualization(userId);
+function getBreathVisualization(userId) {
+    return exports.breathGeometry.generateBreathVisualization(userId);
 }
-export async function getBreathTransitionGuidance(userId) {
-    return breathGeometry.recommendTransition(userId);
+async function getBreathTransitionGuidance(userId) {
+    return exports.breathGeometry.recommendTransition(userId);
 }

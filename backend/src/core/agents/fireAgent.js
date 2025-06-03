@@ -1,10 +1,15 @@
 // oracle-backend/src/core/agents/fireAgent.ts
 // Sacred Catalyst of Becoming - Fire Agent with Living Consciousness
 "use strict";
-import { OracleAgent } from "./oracleAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
-import ModelService from "../../utils/modelService";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FireAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const oracleLogger_1 = require("../../utils/oracleLogger");
+const memoryService_1 = require("../../services/memoryService");
+const modelService_1 = __importDefault(require("../../utils/modelService"));
 // Sacred Fire Voice Protocols - Embodying Catalytic Intelligence
 const FireVoiceProtocols = {
     // PRESENCE - How Fire enters each conversation
@@ -120,11 +125,11 @@ What's alive in you right now that hasn't found its voice yet? What wants to eme
         return `${response}\n\n${signatures[fireType] || signatures.general_ignition}`;
     }
 };
-export class FireAgent extends OracleAgent {
+class FireAgent extends oracleAgent_1.OracleAgent {
     async processQuery(query) {
         const { input, userId } = query;
         // Gather sacred context - not just recent memories but fire-specific insights
-        const contextMemory = await getRelevantMemories(userId, 3);
+        const contextMemory = await (0, memoryService_1.getRelevantMemories)(userId, 3);
         const fireType = FireIntelligence.detectFireType(input, contextMemory);
         // Create context that preserves fire wisdom from past conversations
         const fireContext = contextMemory.length
@@ -142,7 +147,7 @@ Current sharing: ${input}
 Fire type needed: ${fireType}
 
 Respond with the wisdom of fire that serves becoming, not comfort. Be present, be real, be the spark that ignites authentic transformation.`;
-        const modelResponse = await ModelService.getResponse({
+        const modelResponse = await modelService_1.default.getResponse({
             input: firePrompt,
             userId
         });
@@ -153,7 +158,7 @@ ${modelResponse.response}`;
         // Add fire signature that matches the energy needed
         const content = FireIntelligence.addFireSignature(weavedWisdom, fireType);
         // Store memory with fire-specific metadata
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: userId,
             content,
             element: "fire",
@@ -169,7 +174,7 @@ ${modelResponse.response}`;
             },
         });
         // Log with fire-specific insights
-        await logOracleInsight({
+        await (0, oracleLogger_1.logOracleInsight)({
             anon_id: userId,
             archetype: "Fire",
             element: "fire",
@@ -243,3 +248,4 @@ ${modelResponse.response}`;
         return reflections;
     }
 }
+exports.FireAgent = FireAgent;

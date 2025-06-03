@@ -1,6 +1,9 @@
-import { supabase } from '../lib/supabaseClient.js';
-import { logger } from '../utils/logger.js';
-export class ParticipantContextService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ParticipantContextService = void 0;
+const supabaseClient_js_1 = require("../lib/supabaseClient.js");
+const logger_js_1 = require("../utils/logger.js");
+class ParticipantContextService {
     constructor() {
         this.contextCache = new Map();
         this.CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
@@ -18,7 +21,7 @@ export class ParticipantContextService {
                 stored_at: new Date().toISOString(),
                 source
             };
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient_js_1.supabase
                 .from('participant_contexts')
                 .upsert(contextData, {
                 onConflict: 'participant_id',
@@ -27,14 +30,14 @@ export class ParticipantContextService {
                 .select('id')
                 .single();
             if (error) {
-                logger.error('Failed to store participant context', { participantId, error });
+                logger_js_1.logger.error('Failed to store participant context', { participantId, error });
                 return { success: false, error: error.message };
             }
             // Update cache
             this.updateCache(participantId, context);
             // Log context storage
             await this.logContextUpdate(participantId, 'full_context_stored', null, context, source);
-            logger.info(`Participant context stored successfully`, {
+            logger_js_1.logger.info(`Participant context stored successfully`, {
                 participantId,
                 contextId: data.id,
                 source
@@ -43,7 +46,7 @@ export class ParticipantContextService {
         }
         catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            logger.error('Error storing participant context', { participantId, error: errorMessage });
+            logger_js_1.logger.error('Error storing participant context', { participantId, error: errorMessage });
             return { success: false, error: errorMessage };
         }
     }
@@ -59,7 +62,7 @@ export class ParticipantContextService {
                 };
             }
             // Fetch from database
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient_js_1.supabase
                 .from('participant_contexts')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -71,7 +74,7 @@ export class ParticipantContextService {
                     // No context found
                     return { success: false, error: 'No context found for participant' };
                 }
-                logger.error('Failed to retrieve participant context', { participantId, error });
+                logger_js_1.logger.error('Failed to retrieve participant context', { participantId, error });
                 return { success: false, error: error.message };
             }
             const context = {
@@ -92,7 +95,7 @@ export class ParticipantContextService {
         }
         catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            logger.error('Error retrieving participant context', { participantId, error: errorMessage });
+            logger_js_1.logger.error('Error retrieving participant context', { participantId, error: errorMessage });
             return { success: false, error: errorMessage };
         }
     }
@@ -126,7 +129,7 @@ export class ParticipantContextService {
         }
         catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            logger.error('Error updating participant context', { participantId, error: errorMessage });
+            logger_js_1.logger.error('Error updating participant context', { participantId, error: errorMessage });
             return { success: false, error: errorMessage };
         }
     }
@@ -182,14 +185,14 @@ export class ParticipantContextService {
             const insights = this.extractInsightsFromInteractions(oracleInteractions);
             if (Object.keys(insights).length > 0) {
                 await this.updateParticipantContext(participantId, insights, 'system', 'oracle_interaction');
-                logger.info(`Context enriched from ${oracleInteractions.length} interactions`, {
+                logger_js_1.logger.info(`Context enriched from ${oracleInteractions.length} interactions`, {
                     participantId,
                     insights: Object.keys(insights)
                 });
             }
         }
         catch (error) {
-            logger.error('Error enriching context from interactions', { participantId, error });
+            logger_js_1.logger.error('Error enriching context from interactions', { participantId, error });
         }
     }
     async generateContextSummary(participantId) {
@@ -202,7 +205,7 @@ export class ParticipantContextService {
         const keyInsights = this.extractKeyInsights(context);
         const missingFields = this.identifyMissingFields(context);
         // Get update history count
-        const { count } = await supabase
+        const { count } = await supabaseClient_js_1.supabase
             .from('context_update_tracking')
             .select('*', { count: 'exact', head: true })
             .eq('participant_id', participantId);
@@ -216,13 +219,13 @@ export class ParticipantContextService {
         };
     }
     async getContextUpdateHistory(participantId) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_js_1.supabase
             .from('context_update_tracking')
             .select('*')
             .eq('participant_id', participantId)
             .order('updated_at', { ascending: false });
         if (error) {
-            logger.error('Failed to retrieve context update history', { participantId, error });
+            logger_js_1.logger.error('Failed to retrieve context update history', { participantId, error });
             return [];
         }
         return data.map(record => ({
@@ -239,11 +242,11 @@ export class ParticipantContextService {
         // Remove from cache
         this.contextCache.delete(participantId);
         // Archive in database (don't delete, for audit trail)
-        await supabase
+        await supabaseClient_js_1.supabase
             .from('participant_contexts')
             .update({ archived: true, archived_at: new Date().toISOString() })
             .eq('participant_id', participantId);
-        logger.info(`Participant context cleared`, { participantId });
+        logger_js_1.logger.info(`Participant context cleared`, { participantId });
     }
     getCachedContext(participantId) {
         const cached = this.contextCache.get(participantId);
@@ -329,7 +332,7 @@ export class ParticipantContextService {
         this.compareAndTrack(updates, participantId, 'intentions', previous.intentions, updated.intentions, updatedBy, source);
         // Store updates
         if (updates.length > 0) {
-            const { error } = await supabase
+            const { error } = await supabaseClient_js_1.supabase
                 .from('context_update_tracking')
                 .insert(updates.map(update => ({
                 participant_id: update.participantId,
@@ -341,7 +344,7 @@ export class ParticipantContextService {
                 source: update.source
             })));
             if (error) {
-                logger.error('Failed to track context updates', { participantId, error });
+                logger_js_1.logger.error('Failed to track context updates', { participantId, error });
             }
         }
     }
@@ -361,7 +364,7 @@ export class ParticipantContextService {
         });
     }
     async logContextUpdate(participantId, updateType, previousValue, newValue, source) {
-        logger.info('Context update logged', {
+        logger_js_1.logger.info('Context update logged', {
             participantId,
             updateType,
             source,
@@ -369,3 +372,4 @@ export class ParticipantContextService {
         });
     }
 }
+exports.ParticipantContextService = ParticipantContextService;

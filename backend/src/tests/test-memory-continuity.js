@@ -1,20 +1,22 @@
+"use strict";
 // ===============================================
 // MEMORY CONTINUITY TEST
 // Tests the Oracle's ability to remember and reference previous conversations
 // ===============================================
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
+Object.defineProperty(exports, "__esModule", { value: true });
+const PersonalOracleAgent_1 = require("../core/agents/PersonalOracleAgent");
+const SoulMemorySystem_1 = require("../../memory/SoulMemorySystem");
 async function testMemoryContinuity() {
     console.log('🧠 Testing Memory Continuity...\n');
     // Setup
     const userId = 'test_continuity_' + Date.now();
-    const soulMemory = new SoulMemorySystem({
+    const soulMemory = new SoulMemorySystem_1.SoulMemorySystem({
         userId,
         storageType: 'sqlite',
         databasePath: './test_continuity_memory.db',
         memoryDepth: 100
     });
-    const oracle = new PersonalOracleAgent({
+    const oracle = new PersonalOracleAgent_1.PersonalOracleAgent({
         userId,
         oracleName: 'Aria',
         elementalResonance: 'water'

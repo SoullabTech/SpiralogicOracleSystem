@@ -1,5 +1,8 @@
-import { supabase } from '../lib/supabaseClient';
-export class AstrologicalService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.astrologicalService = exports.AstrologicalService = void 0;
+const supabaseClient_1 = require("../lib/supabaseClient");
+class AstrologicalService {
     constructor() {
         this.userAstroData = new Map();
         this.currentEphemeris = null;
@@ -144,7 +147,7 @@ export class AstrologicalService {
     async setUserBirthData(userId, birthData) {
         try {
             // Save birth data
-            await supabase
+            await supabaseClient_1.supabase
                 .from('user_birth_data')
                 .upsert({
                 user_id: userId,
@@ -252,7 +255,7 @@ export class AstrologicalService {
         let userData = this.userAstroData.get(userId);
         if (!userData) {
             // Load from database
-            const { data: birthData } = await supabase
+            const { data: birthData } = await supabaseClient_1.supabase
                 .from('user_birth_data')
                 .select('*')
                 .eq('user_id', userId)
@@ -305,7 +308,7 @@ export class AstrologicalService {
         userData.currentTransits = transits;
         userData.lastUpdate = new Date();
         // Save to database
-        await supabase
+        await supabaseClient_1.supabase
             .from('user_transits')
             .upsert({
             user_id: userId,
@@ -456,4 +459,5 @@ export class AstrologicalService {
         }
     }
 }
-export const astrologicalService = new AstrologicalService();
+exports.AstrologicalService = AstrologicalService;
+exports.astrologicalService = new AstrologicalService();

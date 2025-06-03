@@ -1,4 +1,7 @@
-export const oracleArchetypes = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.oracleArchetypes = void 0;
+exports.oracleArchetypes = {
     'Fire 1': {
         archetype: 'Visionary Hero',
         tone: 'Mythic and catalytic',

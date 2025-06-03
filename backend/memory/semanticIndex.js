@@ -1,11 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.syncWithLlamaIndex = syncWithLlamaIndex;
+exports.searchSemanticMemory = searchSemanticMemory;
 // /oracle-backend/memory/semanticIndex.ts
-import { VectorStoreIndex, Document } from 'llamaindex';
+const llamaindex_1 = require("llamaindex");
 let index = null;
-export async function syncWithLlamaIndex(journalEntries) {
-    const docs = journalEntries.map((entry) => new Document({ text: entry.content }));
-    index = await VectorStoreIndex.fromDocuments(docs);
+async function syncWithLlamaIndex(journalEntries) {
+    const docs = journalEntries.map((entry) => new llamaindex_1.Document({ text: entry.content }));
+    index = await llamaindex_1.VectorStoreIndex.fromDocuments(docs);
 }
-export async function searchSemanticMemory(query) {
+async function searchSemanticMemory(query) {
     if (!index)
         return [];
     const results = await index.search(query);

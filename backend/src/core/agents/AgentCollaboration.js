@@ -1,4 +1,6 @@
+"use strict";
 // /src/agents/AgentCollaboration.ts
+Object.defineProperty(exports, "__esModule", { value: true });
 class AgentCollaboration {
     constructor(agents) {
         this.agents = agents;
@@ -10,4 +12,3 @@ class AgentCollaboration {
         return collectiveResponse;
     }
 }
-export {};

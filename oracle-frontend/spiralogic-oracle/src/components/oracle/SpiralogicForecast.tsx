@@ -96,7 +96,7 @@ export default function SpiralogicForecast() {
           {timeframes.map((tf) => (
             <button
               key={tf.value}
-              onClick={() => setSelectedTimeframe(tf.value as any)}
+              onClick={() => setSelectedTimeframe(tf.value as '7d' | '30d' | '3m')}
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                 selectedTimeframe === tf.value
                   ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/25'

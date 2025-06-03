@@ -1,13 +1,18 @@
+"use strict";
 // Minimal entry point for Sacred Techno-Interface
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import minimalRoutes from './routes/minimal.routes';
-const app = express();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const minimal_routes_1 = __importDefault(require("./routes/minimal.routes"));
+const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 // Core middleware
-app.use(cors());
-app.use(express.json());
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
 // Root endpoint
 app.get('/', (_req, res) => {
     res.json({
@@ -23,7 +28,7 @@ app.get('/', (_req, res) => {
     });
 });
 // Mount minimal routes
-app.use('/api', minimalRoutes);
+app.use('/api', minimal_routes_1.default);
 // 404 handler
 app.use((_req, res) => {
     res.status(404).json({
@@ -68,4 +73,4 @@ process.on('SIGTERM', () => {
         process.exit(0);
     });
 });
-export default app;
+exports.default = app;

@@ -1,4 +1,7 @@
+"use strict";
 // 📁 src/lib/journalStore.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getJournalEntries = getJournalEntries;
 const mockJournal = [
     {
         date: '2025-05-20',
@@ -15,7 +18,7 @@ const mockJournal = [
         message: 'Face what has been hidden, and you will find clarity.',
     },
 ];
-export function getJournalEntries(userId) {
+function getJournalEntries(userId) {
     // Eventually replace with database or Supabase fetch
     return mockJournal;
 }

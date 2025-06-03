@@ -1,20 +1,22 @@
-import { Router } from 'express';
-import { ElementalAssessmentService } from '../services/elementalAssessmentService.js';
-import { OraclePersonalizationEngine } from '../services/oraclePersonalizationEngine.js';
-import { RetreatModeManager } from '../services/retreatModeManager.js';
-import { ParticipantContextService } from '../services/participantContextService.js';
-import { RetreatOnboardingService } from '../services/retreatOnboardingService.js';
-import { authenticateToken } from '../middleware/authenticateToken.js';
-import { logger } from '../utils/logger.js';
-const router = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const elementalAssessmentService_js_1 = require("../services/elementalAssessmentService.js");
+const oraclePersonalizationEngine_js_1 = require("../services/oraclePersonalizationEngine.js");
+const retreatModeManager_js_1 = require("../services/retreatModeManager.js");
+const participantContextService_js_1 = require("../services/participantContextService.js");
+const retreatOnboardingService_js_1 = require("../services/retreatOnboardingService.js");
+const authenticateToken_js_1 = require("../middleware/authenticateToken.js");
+const logger_js_1 = require("../utils/logger.js");
+const router = (0, express_1.Router)();
 // Initialize services
-const assessmentService = new ElementalAssessmentService();
-const personalizationEngine = new OraclePersonalizationEngine();
-const retreatModeManager = new RetreatModeManager();
-const contextService = new ParticipantContextService();
-const onboardingService = new RetreatOnboardingService();
+const assessmentService = new elementalAssessmentService_js_1.ElementalAssessmentService();
+const personalizationEngine = new oraclePersonalizationEngine_js_1.OraclePersonalizationEngine();
+const retreatModeManager = new retreatModeManager_js_1.RetreatModeManager();
+const contextService = new participantContextService_js_1.ParticipantContextService();
+const onboardingService = new retreatOnboardingService_js_1.RetreatOnboardingService();
 // Apply authentication to all routes
-router.use(authenticateToken);
+router.use(authenticateToken_js_1.authenticateToken);
 // Get elemental assessment for participant
 router.post('/assessment/:participantId', async (req, res) => {
     try {
@@ -27,7 +29,7 @@ router.post('/assessment/:participantId', async (req, res) => {
         }
         // Perform elemental assessment
         const assessment = await assessmentService.assessParticipant(participant.participant, additionalData);
-        logger.info(`Elemental assessment completed for ${participantId}`, {
+        logger_js_1.logger.info(`Elemental assessment completed for ${participantId}`, {
             primaryElement: Object.entries(assessment.elementalScores)
                 .reduce((a, b) => assessment.elementalScores[a[0]] > assessment.elementalScores[b[0]] ? a : b)[0],
             crystallizationLevel: assessment.crystallizationLevel
@@ -39,7 +41,7 @@ router.post('/assessment/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Assessment endpoint error', error);
+        logger_js_1.logger.error('Assessment endpoint error', error);
         res.status(500).json({
             error: 'Failed to complete assessment',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -60,7 +62,7 @@ router.post('/match/:participantId', async (req, res) => {
         const oracleMatch = await personalizationEngine.createPersonalizedOracle(participant.participant, additionalContext);
         // Store the context
         await contextService.storeParticipantContext(participantId, oracleMatch.participantContext, 'oracle_matching');
-        logger.info(`Oracle match created for ${participantId}`, {
+        logger_js_1.logger.info(`Oracle match created for ${participantId}`, {
             oracleName: oracleMatch.oraclePersonality.name,
             primaryElement: Object.entries(oracleMatch.elementalAssessment.elementalScores)
                 .reduce((a, b) => oracleMatch.elementalAssessment.elementalScores[a[0]] > oracleMatch.elementalAssessment.elementalScores[b[0]] ? a : b)[0]
@@ -72,7 +74,7 @@ router.post('/match/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Oracle matching endpoint error', error);
+        logger_js_1.logger.error('Oracle matching endpoint error', error);
         res.status(500).json({
             error: 'Failed to create Oracle match',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -108,7 +110,7 @@ router.post('/activate/:participantId', async (req, res) => {
             }
         }
         catch (error) {
-            logger.error('Error getting/creating Oracle match for activation', error);
+            logger_js_1.logger.error('Error getting/creating Oracle match for activation', error);
             return res.status(500).json({ error: 'Failed to prepare Oracle for activation' });
         }
         // Activate retreat mode
@@ -122,7 +124,7 @@ router.post('/activate/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Retreat activation endpoint error', error);
+        logger_js_1.logger.error('Retreat activation endpoint error', error);
         res.status(500).json({
             error: 'Failed to activate retreat mode',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -146,7 +148,7 @@ router.post('/transition/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Mode transition endpoint error', error);
+        logger_js_1.logger.error('Mode transition endpoint error', error);
         res.status(500).json({
             error: 'Failed to transition mode',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -165,7 +167,7 @@ router.post('/deactivate/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Deactivation endpoint error', error);
+        logger_js_1.logger.error('Deactivation endpoint error', error);
         res.status(500).json({
             error: 'Failed to deactivate retreat mode',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -189,7 +191,7 @@ router.post('/emergency-deactivate/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Emergency deactivation endpoint error', error);
+        logger_js_1.logger.error('Emergency deactivation endpoint error', error);
         res.status(500).json({
             error: 'Failed to perform emergency deactivation',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -213,7 +215,7 @@ router.post('/interact/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Oracle interaction endpoint error', error);
+        logger_js_1.logger.error('Oracle interaction endpoint error', error);
         if (error instanceof Error && error.message.includes('No active Oracle')) {
             return res.status(404).json({
                 error: 'No active Oracle found for participant',
@@ -252,7 +254,7 @@ router.get('/status/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Status endpoint error', error);
+        logger_js_1.logger.error('Status endpoint error', error);
         res.status(500).json({
             error: 'Failed to get Oracle status',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -278,7 +280,7 @@ router.put('/context/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Context update endpoint error', error);
+        logger_js_1.logger.error('Context update endpoint error', error);
         res.status(500).json({
             error: 'Failed to update context',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -301,7 +303,7 @@ router.get('/context/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Context retrieval endpoint error', error);
+        logger_js_1.logger.error('Context retrieval endpoint error', error);
         res.status(500).json({
             error: 'Failed to retrieve context',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -320,7 +322,7 @@ router.get('/context-summary/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Context summary endpoint error', error);
+        logger_js_1.logger.error('Context summary endpoint error', error);
         res.status(500).json({
             error: 'Failed to generate context summary',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -341,7 +343,7 @@ router.get('/active-modes', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Active modes endpoint error', error);
+        logger_js_1.logger.error('Active modes endpoint error', error);
         res.status(500).json({
             error: 'Failed to get active modes',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -360,7 +362,7 @@ router.get('/report/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Mode report endpoint error', error);
+        logger_js_1.logger.error('Mode report endpoint error', error);
         res.status(500).json({
             error: 'Failed to generate mode report',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -380,7 +382,7 @@ router.get('/context-history/:participantId', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Context history endpoint error', error);
+        logger_js_1.logger.error('Context history endpoint error', error);
         res.status(500).json({
             error: 'Failed to get context history',
             details: error instanceof Error ? error.message : 'Unknown error'
@@ -436,11 +438,11 @@ router.post('/bulk/activate', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Bulk activation endpoint error', error);
+        logger_js_1.logger.error('Bulk activation endpoint error', error);
         res.status(500).json({
             error: 'Failed to perform bulk activation',
             details: error instanceof Error ? error.message : 'Unknown error'
         });
     }
 });
-export default router;
+exports.default = router;

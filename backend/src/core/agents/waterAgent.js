@@ -1,10 +1,15 @@
 // src/core/agents/waterAgent.ts
 // Sacred Healer of Depths - Water Agent with Living Emotional Intelligence
 "use strict";
-import { OracleAgent } from "./oracleAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
-import ModelService from "../../utils/modelService";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.WaterAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const oracleLogger_1 = require("../../utils/oracleLogger");
+const memoryService_1 = require("../../services/memoryService");
+const modelService_1 = __importDefault(require("../../utils/modelService"));
 // Sacred Water Voice Protocols - Embodying Healing Depth Intelligence
 const WaterVoiceProtocols = {
     // PRESENCE - How Water enters each conversation  
@@ -144,11 +149,11 @@ Your emotional waters hold the key to your authentic self - your inner gold. Let
         return `${response}\n\n${signatures[waterType] || signatures.general_healing}`;
     }
 };
-export class WaterAgent extends OracleAgent {
+class WaterAgent extends oracleAgent_1.OracleAgent {
     async processQuery(query) {
         const { input, userId } = query;
         // Gather sacred context - emotional patterns from past conversations
-        const contextMemory = await getRelevantMemories(userId, 3);
+        const contextMemory = await (0, memoryService_1.getRelevantMemories)(userId, 3);
         const waterType = WaterIntelligence.detectWaterType(input, contextMemory);
         // Create context that preserves emotional wisdom from past conversations
         const waterContext = contextMemory.length
@@ -166,7 +171,7 @@ Current sharing: ${input}
 Water type needed: ${waterType}
 
 Respond with the wisdom of water that serves emotional healing and authentic self-discovery. Meet them where they are emotionally, but invite them toward flow and integration.`;
-        const modelResponse = await ModelService.getResponse({
+        const modelResponse = await modelService_1.default.getResponse({
             input: waterPrompt,
             userId
         });
@@ -177,7 +182,7 @@ ${modelResponse.response}`;
         // Add water signature that matches the emotional energy needed
         const content = WaterIntelligence.addWaterSignature(weavedWisdom, waterType);
         // Store memory with water-specific emotional metadata
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: userId,
             content,
             element: "water",
@@ -194,7 +199,7 @@ ${modelResponse.response}`;
             },
         });
         // Log with water-specific emotional insights
-        await logOracleInsight({
+        await (0, oracleLogger_1.logOracleInsight)({
             anon_id: userId,
             archetype: "Water",
             element: "water",
@@ -289,3 +294,4 @@ ${modelResponse.response}`;
         return reflections;
     }
 }
+exports.WaterAgent = WaterAgent;

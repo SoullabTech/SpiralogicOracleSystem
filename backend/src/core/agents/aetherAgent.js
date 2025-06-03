@@ -1,10 +1,15 @@
 // src/core/agents/aetherAgent.ts
 // Sacred Unity Weaver - Aether Agent with Living Integration Intelligence
 "use strict";
-import { OracleAgent } from "./oracleAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
-import ModelService from "../../utils/modelService";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AetherAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const oracleLogger_1 = require("../../utils/oracleLogger");
+const memoryService_1 = require("../../services/memoryService");
+const modelService_1 = __importDefault(require("../../utils/modelService"));
 // Sacred Aether Voice Protocols - Embodying Unity & Transcendence Intelligence
 const AetherVoiceProtocols = {
     // PRESENCE - How Aether enters each conversation
@@ -175,11 +180,11 @@ What wants to emerge from this place of connection? What is your unique note in 
         };
     }
 };
-export class AetherAgent extends OracleAgent {
+class AetherAgent extends oracleAgent_1.OracleAgent {
     async processQuery(query) {
         const { input, userId } = query;
         // Gather sacred context - ALL elemental wisdom from the journey
-        const contextMemory = await getRelevantMemories(userId, 5); // More context for integration
+        const contextMemory = await (0, memoryService_1.getRelevantMemories)(userId, 5); // More context for integration
         const aetherType = AetherIntelligence.detectAetherType(input, contextMemory);
         const elementalHistory = AetherIntelligence.assessElementalHistory(contextMemory);
         // Create context that weaves together all elemental wisdom
@@ -203,7 +208,7 @@ Integration type needed: ${aetherType}
 Elemental history: Most active - ${elementalHistory.mostActive}, Needs integration: ${elementalHistory.needsIntegration}
 
 Respond with the wisdom of aether that serves integration and transcendence. Help them see the unity underlying diversity, the pattern connecting all experiences, and their unique place in the cosmic dance.`;
-        const modelResponse = await ModelService.getResponse({
+        const modelResponse = await modelService_1.default.getResponse({
             input: aetherPrompt,
             userId
         });
@@ -214,7 +219,7 @@ ${modelResponse.response}`;
         // Add aether signature that matches the transcendent energy needed
         const content = AetherIntelligence.addAetherSignature(weavedWisdom, aetherType);
         // Store memory with aether-specific integration metadata
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: userId,
             content,
             element: "aether",
@@ -234,7 +239,7 @@ ${modelResponse.response}`;
             },
         });
         // Log with aether-specific integration insights
-        await logOracleInsight({
+        await (0, oracleLogger_1.logOracleInsight)({
             anon_id: userId,
             archetype: "Aether",
             element: "aether",
@@ -357,3 +362,4 @@ ${modelResponse.response}`;
         return reflections;
     }
 }
+exports.AetherAgent = AetherAgent;

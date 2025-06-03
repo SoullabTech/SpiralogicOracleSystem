@@ -1,14 +1,19 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // Minimal server setup for Sacred Techno-Interface
-import express from 'express';
-import cors from 'cors';
-import { config } from 'dotenv';
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = require("dotenv");
 // Load environment variables
-config();
-const app = express();
+(0, dotenv_1.config)();
+const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 // Essential middleware only
-app.use(cors());
-app.use(express.json());
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
 // Health check endpoint
 app.get('/health', (_req, res) => {
     res.json({
@@ -85,4 +90,4 @@ app.listen(PORT, () => {
 ╚══════════════════════════════════════════════╝
   `);
 });
-export default app;
+exports.default = app;

@@ -1,35 +1,38 @@
+"use strict";
 // ===============================================
 // SOUL MEMORY SERVICE - API INTEGRATION
 // Connects SoulMemorySystem to Express endpoints
 // ===============================================
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem.js';
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent.js';
-import { logger } from '../utils/logger.js';
-export class SoulMemoryService {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.soulMemoryService = exports.SoulMemoryService = void 0;
+const SoulMemorySystem_js_1 = require("../../memory/SoulMemorySystem.js");
+const PersonalOracleAgent_js_1 = require("../core/agents/PersonalOracleAgent.js");
+const logger_js_1 = require("../utils/logger.js");
+class SoulMemoryService {
     constructor() {
         this.memorySystems = new Map();
         this.oracles = new Map();
-        logger.info('Soul Memory Service initialized');
+        logger_js_1.logger.info('Soul Memory Service initialized');
     }
     // ===============================================
     // MEMORY SYSTEM MANAGEMENT
     // ===============================================
     async getOrCreateMemorySystem(userId) {
         if (!this.memorySystems.has(userId)) {
-            const memorySystem = new SoulMemorySystem({
+            const memorySystem = new SoulMemorySystem_js_1.SoulMemorySystem({
                 userId,
                 storageType: 'sqlite',
                 databasePath: `./soul_memory_${userId}.db`,
                 memoryDepth: 100
             });
             this.memorySystems.set(userId, memorySystem);
-            logger.info(`Created new Soul Memory System for user: ${userId}`);
+            logger_js_1.logger.info(`Created new Soul Memory System for user: ${userId}`);
         }
         return this.memorySystems.get(userId);
     }
     async getOrCreateOracle(userId, oracleName) {
         if (!this.oracles.has(userId)) {
-            const oracle = new PersonalOracleAgent({
+            const oracle = new PersonalOracleAgent_js_1.PersonalOracleAgent({
                 userId,
                 oracleName: oracleName || 'Sacred Mirror',
                 elementalResonance: 'aether'
@@ -38,7 +41,7 @@ export class SoulMemoryService {
             const memorySystem = await this.getOrCreateMemorySystem(userId);
             await memorySystem.integrateWithOracle(oracle, userId);
             this.oracles.set(userId, oracle);
-            logger.info(`Created new Oracle for user: ${userId}`);
+            logger_js_1.logger.info(`Created new Oracle for user: ${userId}`);
         }
         return this.oracles.get(userId);
     }
@@ -172,7 +175,7 @@ export class SoulMemoryService {
         }
         catch (error) {
             // Oracle might not have this method yet
-            logger.debug('Transformation metrics not available');
+            logger_js_1.logger.debug('Transformation metrics not available');
         }
         return {
             response: oracleMessage.content,
@@ -203,7 +206,7 @@ export class SoulMemoryService {
                 activated_at: new Date().toISOString()
             }
         });
-        logger.info(`Retreat mode activated for user ${userId}: ${phase}`);
+        logger_js_1.logger.info(`Retreat mode activated for user ${userId}: ${phase}`);
     }
     // ===============================================
     // ANALYTICS & INSIGHTS
@@ -229,7 +232,7 @@ export class SoulMemoryService {
             }
         }
         catch (error) {
-            logger.debug('Weekly reflection not available');
+            logger_js_1.logger.debug('Weekly reflection not available');
         }
         return {
             memorySummary: {
@@ -288,9 +291,10 @@ export class SoulMemoryService {
         }
         this.memorySystems.clear();
         this.oracles.clear();
-        logger.info('Soul Memory Service cleaned up');
+        logger_js_1.logger.info('Soul Memory Service cleaned up');
     }
 }
+exports.SoulMemoryService = SoulMemoryService;
 // Export singleton instance
-export const soulMemoryService = new SoulMemoryService();
-export default soulMemoryService;
+exports.soulMemoryService = new SoulMemoryService();
+exports.default = exports.soulMemoryService;

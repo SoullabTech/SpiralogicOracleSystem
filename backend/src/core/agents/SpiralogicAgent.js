@@ -1,14 +1,16 @@
+"use strict";
 // /src/agents/SpiralogicAgent.ts
-import { Agent } from '@singularitynet/sdk';
-import { SOUL } from '../core/SOUL';
-import { HumanPacedLearning } from '../core/HumanPacedLearning';
-import { ArchetypeFramework } from '../core/ArchetypeFramework';
+Object.defineProperty(exports, "__esModule", { value: true });
+const sdk_1 = require("@singularitynet/sdk");
+const SOUL_1 = require("../core/SOUL");
+const HumanPacedLearning_1 = require("../core/HumanPacedLearning");
+const ArchetypeFramework_1 = require("../core/ArchetypeFramework");
 class SpiralogicAgent {
     constructor(agentContext, userProfile) {
-        this.soul = new SOUL();
-        this.hpp = new HumanPacedLearning();
-        this.archetypes = new ArchetypeFramework(userProfile);
-        this.agent = new Agent(agentContext);
+        this.soul = new SOUL_1.SOUL();
+        this.hpp = new HumanPacedLearning_1.HumanPacedLearning();
+        this.archetypes = new ArchetypeFramework_1.ArchetypeFramework(userProfile);
+        this.agent = new sdk_1.Agent(agentContext);
     }
     async engage(query) {
         // Ensure the agent follows the HPP (Human-Paced Protocol)

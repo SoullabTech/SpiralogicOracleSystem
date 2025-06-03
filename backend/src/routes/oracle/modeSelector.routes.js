@@ -1,12 +1,14 @@
+"use strict";
 // ===============================================
 // ORACLE MODE SELECTOR API ROUTES
 // Frontend integration for mode switching and wisdom routing
 // ===============================================
-import { Router } from 'express';
-import { logger } from '../../utils/logger.js';
-import { PersonalOracleAgent } from '../../core/agents/PersonalOracleAgent.js';
-import { authenticateToken } from '../../middleware/authenticateToken.js';
-const router = Router();
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const logger_js_1 = require("../../utils/logger.js");
+const PersonalOracleAgent_js_1 = require("../../core/agents/PersonalOracleAgent.js");
+const authenticateToken_js_1 = require("../../middleware/authenticateToken.js");
+const router = (0, express_1.Router)();
 // Store oracle instances per user (in production, use proper session management)
 const oracleInstances = new Map();
 // ===============================================
@@ -14,14 +16,14 @@ const oracleInstances = new Map();
 // ===============================================
 function getOrCreateOracle(userId) {
     if (!oracleInstances.has(userId)) {
-        const oracle = new PersonalOracleAgent({
+        const oracle = new PersonalOracleAgent_js_1.PersonalOracleAgent({
             userId,
             oracleName: 'Sacred Mirror',
             mode: 'daily',
             elementalResonance: 'aether'
         });
         oracleInstances.set(userId, oracle);
-        logger.info(`Created new oracle instance for user: ${userId}`);
+        logger_js_1.logger.info(`Created new oracle instance for user: ${userId}`);
     }
     return oracleInstances.get(userId);
 }
@@ -29,7 +31,7 @@ function getOrCreateOracle(userId) {
 // ROUTES
 // ===============================================
 // Switch Oracle Mode
-router.post('/switch-mode', authenticateToken, async (req, res) => {
+router.post('/switch-mode', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const { modeId } = req.body;
         const userId = req.user?.id || 'demo-user';
@@ -44,7 +46,7 @@ router.post('/switch-mode', authenticateToken, async (req, res) => {
         const result = await oracle.switchMode(modeId);
         // Get updated status
         const status = oracle.getCurrentModeStatus();
-        logger.info('Oracle mode switched via API:', {
+        logger_js_1.logger.info('Oracle mode switched via API:', {
             userId,
             newMode: modeId,
             success: result.success
@@ -58,7 +60,7 @@ router.post('/switch-mode', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in switch-mode route:', error);
+        logger_js_1.logger.error('Error in switch-mode route:', error);
         res.status(500).json({
             success: false,
             message: 'Internal server error'
@@ -66,7 +68,7 @@ router.post('/switch-mode', authenticateToken, async (req, res) => {
     }
 });
 // Get all available modes
-router.get('/available-modes', authenticateToken, async (req, res) => {
+router.get('/available-modes', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id || 'demo-user';
         const oracle = getOrCreateOracle(userId);
@@ -79,7 +81,7 @@ router.get('/available-modes', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in available-modes route:', error);
+        logger_js_1.logger.error('Error in available-modes route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to fetch available modes'
@@ -87,7 +89,7 @@ router.get('/available-modes', authenticateToken, async (req, res) => {
     }
 });
 // Suggest mode based on user input
-router.post('/suggest-mode', authenticateToken, async (req, res) => {
+router.post('/suggest-mode', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const { userInput } = req.body;
         const userId = req.user?.id || 'demo-user';
@@ -100,7 +102,7 @@ router.post('/suggest-mode', authenticateToken, async (req, res) => {
         const oracle = getOrCreateOracle(userId);
         // Get mode suggestion
         const suggestion = await oracle.suggestModeForInput(userInput);
-        logger.info('Mode suggestion generated:', {
+        logger_js_1.logger.info('Mode suggestion generated:', {
             userId,
             userInput: userInput.substring(0, 100),
             suggestion: suggestion.suggestedMode,
@@ -112,7 +114,7 @@ router.post('/suggest-mode', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in suggest-mode route:', error);
+        logger_js_1.logger.error('Error in suggest-mode route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to generate mode suggestion'
@@ -120,7 +122,7 @@ router.post('/suggest-mode', authenticateToken, async (req, res) => {
     }
 });
 // Get current wisdom routing status
-router.get('/wisdom-status', authenticateToken, async (req, res) => {
+router.get('/wisdom-status', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id || 'demo-user';
         const oracle = getOrCreateOracle(userId);
@@ -139,7 +141,7 @@ router.get('/wisdom-status', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in wisdom-status route:', error);
+        logger_js_1.logger.error('Error in wisdom-status route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to fetch wisdom status'
@@ -147,7 +149,7 @@ router.get('/wisdom-status', authenticateToken, async (req, res) => {
     }
 });
 // Manually set wisdom mode
-router.post('/set-wisdom-mode', authenticateToken, async (req, res) => {
+router.post('/set-wisdom-mode', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const { wisdomMode } = req.body;
         const userId = req.user?.id || 'demo-user';
@@ -160,7 +162,7 @@ router.post('/set-wisdom-mode', authenticateToken, async (req, res) => {
         const oracle = getOrCreateOracle(userId);
         oracle.setWisdomMode(wisdomMode);
         const updatedStatus = oracle.getCurrentModeStatus();
-        logger.info('Wisdom mode manually set:', {
+        logger_js_1.logger.info('Wisdom mode manually set:', {
             userId,
             wisdomMode,
             oracleMode: updatedStatus.currentOracleMode
@@ -172,7 +174,7 @@ router.post('/set-wisdom-mode', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in set-wisdom-mode route:', error);
+        logger_js_1.logger.error('Error in set-wisdom-mode route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to set wisdom mode'
@@ -180,7 +182,7 @@ router.post('/set-wisdom-mode', authenticateToken, async (req, res) => {
     }
 });
 // Set sacred mirror mode
-router.post('/set-sacred-mirror-mode', authenticateToken, async (req, res) => {
+router.post('/set-sacred-mirror-mode', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const { sacredMirrorMode } = req.body;
         const userId = req.user?.id || 'demo-user';
@@ -193,7 +195,7 @@ router.post('/set-sacred-mirror-mode', authenticateToken, async (req, res) => {
         const oracle = getOrCreateOracle(userId);
         const result = await oracle.setSacredMirrorMode(sacredMirrorMode);
         const updatedStatus = oracle.getCurrentModeStatus();
-        logger.info('Sacred mirror mode set:', {
+        logger_js_1.logger.info('Sacred mirror mode set:', {
             userId,
             sacredMirrorMode,
             result
@@ -205,7 +207,7 @@ router.post('/set-sacred-mirror-mode', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in set-sacred-mirror-mode route:', error);
+        logger_js_1.logger.error('Error in set-sacred-mirror-mode route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to set sacred mirror mode'
@@ -213,7 +215,7 @@ router.post('/set-sacred-mirror-mode', authenticateToken, async (req, res) => {
     }
 });
 // Analyze user patterns
-router.get('/analyze-patterns', authenticateToken, async (req, res) => {
+router.get('/analyze-patterns', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id || 'demo-user';
         const oracle = getOrCreateOracle(userId);
@@ -227,7 +229,7 @@ router.get('/analyze-patterns', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in analyze-patterns route:', error);
+        logger_js_1.logger.error('Error in analyze-patterns route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to analyze patterns'
@@ -235,7 +237,7 @@ router.get('/analyze-patterns', authenticateToken, async (req, res) => {
     }
 });
 // Get today's sacred practice
-router.get('/todays-sacred-practice', authenticateToken, async (req, res) => {
+router.get('/todays-sacred-practice', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id || 'demo-user';
         const oracle = getOrCreateOracle(userId);
@@ -249,7 +251,7 @@ router.get('/todays-sacred-practice', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in todays-sacred-practice route:', error);
+        logger_js_1.logger.error('Error in todays-sacred-practice route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to get today\'s sacred practice'
@@ -257,7 +259,7 @@ router.get('/todays-sacred-practice', authenticateToken, async (req, res) => {
     }
 });
 // Get weekly sacred overview
-router.get('/weekly-sacred-overview', authenticateToken, async (req, res) => {
+router.get('/weekly-sacred-overview', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id || 'demo-user';
         const oracle = getOrCreateOracle(userId);
@@ -269,7 +271,7 @@ router.get('/weekly-sacred-overview', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in weekly-sacred-overview route:', error);
+        logger_js_1.logger.error('Error in weekly-sacred-overview route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to get weekly sacred overview'
@@ -277,7 +279,7 @@ router.get('/weekly-sacred-overview', authenticateToken, async (req, res) => {
     }
 });
 // Weekly reflection
-router.get('/weekly-reflection', authenticateToken, async (req, res) => {
+router.get('/weekly-reflection', authenticateToken_js_1.authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id || 'demo-user';
         const oracle = getOrCreateOracle(userId);
@@ -289,11 +291,11 @@ router.get('/weekly-reflection', authenticateToken, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Error in weekly-reflection route:', error);
+        logger_js_1.logger.error('Error in weekly-reflection route:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to generate weekly reflection'
         });
     }
 });
-export default router;
+exports.default = router;

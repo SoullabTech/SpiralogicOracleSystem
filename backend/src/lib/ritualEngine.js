@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRitualForPhase = getRitualForPhase;
 const ritualPrompts = [
     {
         title: "Ignite the Vision",
@@ -25,7 +28,7 @@ const ritualPrompts = [
         phase: "Aether",
     },
 ];
-export function getRitualForPhase(phase) {
+function getRitualForPhase(phase) {
     return ritualPrompts.find((ritual) => ritual.phase === phase) ?? {
         title: "Center in Mystery",
         description: "Pause. Listen inwardly. Let the unknown reveal a step.",

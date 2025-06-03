@@ -1,13 +1,18 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // oracle-backend/routes/oracle/reflection.ts
-import express from 'express';
-import { supabase } from '@/lib/supabaseClient';
-const router = express.Router();
+const express_1 = __importDefault(require("express"));
+const supabaseClient_1 = require("@/lib/supabaseClient");
+const router = express_1.default.Router();
 router.post('/reflection', async (req, res) => {
     const { userId, content, element = 'aether', source = 'Oralia', tags = [] } = req.body;
     if (!userId || !content) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
-    const { error } = await supabase.from('oracle_memories').insert([
+    const { error } = await supabaseClient_1.supabase.from('oracle_memories').insert([
         {
             user_id: userId,
             type: 'reflection',
@@ -26,7 +31,7 @@ router.post('/ritual', async (req, res) => {
     if (!userId || !content) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
-    const { error } = await supabase.from('oracle_memories').insert([
+    const { error } = await supabaseClient_1.supabase.from('oracle_memories').insert([
         {
             user_id: userId,
             type: 'ritual',
@@ -45,7 +50,7 @@ router.post('/recommendation', async (req, res) => {
     if (!userId || !content) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
-    const { error } = await supabase.from('oracle_memories').insert([
+    const { error } = await supabaseClient_1.supabase.from('oracle_memories').insert([
         {
             user_id: userId,
             type: 'recommendation',
@@ -72,7 +77,7 @@ router.post('/memory-import', async (req, res) => {
         source: m.source || 'Oralia',
         tags: m.tags || [],
     }));
-    const { error } = await supabase.from('oracle_memories').insert(payload);
+    const { error } = await supabaseClient_1.supabase.from('oracle_memories').insert(payload);
     if (error)
         return res.status(500).json({ error: error.message });
     return res.status(200).json({ status: 'memories imported', count: payload.length });
@@ -82,7 +87,7 @@ router.get('/timeline/:userId', async (req, res) => {
     if (!userId) {
         return res.status(400).json({ error: 'Missing userId parameter' });
     }
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient_1.supabase
         .from('oracle_memories')
         .select('id, user_id, type, content, element, source, tags, timestamp')
         .eq('user_id', userId)
@@ -96,7 +101,7 @@ router.get('/timeline-tags/:userId', async (req, res) => {
     if (!userId) {
         return res.status(400).json({ error: 'Missing userId parameter' });
     }
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient_1.supabase
         .from('oracle_memories')
         .select('tags')
         .eq('user_id', userId);
@@ -109,4 +114,4 @@ router.get('/timeline-tags/:userId', async (req, res) => {
     }, {});
     return res.status(200).json({ tags: tagCounts });
 });
-export default router;
+exports.default = router;

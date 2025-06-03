@@ -1,2 +1,3 @@
+"use strict";
 // oracle-backend/src/types/memory.ts
-export {};
+Object.defineProperty(exports, "__esModule", { value: true });

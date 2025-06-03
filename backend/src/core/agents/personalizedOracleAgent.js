@@ -1,6 +1,9 @@
-import { BaseAgent } from './baseAgent.js';
-import { logger } from '../../utils/logger.js';
-export class PersonalizedOracleAgent extends BaseAgent {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PersonalizedOracleAgent = void 0;
+const baseAgent_js_1 = require("./baseAgent.js");
+const logger_js_1 = require("../../utils/logger.js");
+class PersonalizedOracleAgent extends baseAgent_js_1.BaseAgent {
     constructor(config) {
         super({
             name: config.match.oraclePersonality.name,
@@ -26,7 +29,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
                 await this.activatePostRetreatMode();
                 break;
         }
-        logger.info(`Oracle ${this.personality.name} activated in ${mode} mode for participant ${this.config.participant.firstName}`);
+        logger_js_1.logger.info(`Oracle ${this.personality.name} activated in ${mode} mode for participant ${this.config.participant.firstName}`);
     }
     async initializePreRetreatMode() {
         // Pre-retreat preparation mode
@@ -34,7 +37,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
         // Schedule preparation sessions
         const preRetreatPlan = this.config.match.lifecyclePlanning.preRetreat;
         // Log preparation initiation
-        logger.info(`Pre-retreat preparation initiated for ${this.config.participant.firstName}`, {
+        logger_js_1.logger.info(`Pre-retreat preparation initiated for ${this.config.participant.firstName}`, {
             preparationAreas: preRetreatPlan.preparationAreas,
             expectedChallenges: preRetreatPlan.expectedChallenges,
             supportNeeds: preRetreatPlan.supportNeeds
@@ -46,7 +49,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
         const retreatConfig = this.config.match.lifecyclePlanning.retreatMode;
         // Enhanced sensitivity for retreat environment
         this.enableRetreatSensitivity();
-        logger.info(`Retreat mode activated for ${this.config.participant.firstName}`, {
+        logger_js_1.logger.info(`Retreat mode activated for ${this.config.participant.firstName}`, {
             focusAreas: retreatConfig.focusAreas,
             intensityLevel: retreatConfig.intensityLevel,
             supportStyle: retreatConfig.supportStyle
@@ -56,7 +59,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
         // Post-retreat integration mode
         this.systemPrompt = this.buildSystemPrompt('post-retreat');
         const postRetreatPlan = this.config.match.lifecyclePlanning.postRetreat;
-        logger.info(`Post-retreat integration mode activated for ${this.config.participant.firstName}`, {
+        logger_js_1.logger.info(`Post-retreat integration mode activated for ${this.config.participant.firstName}`, {
             integrationSupport: postRetreatPlan.integrationSupport,
             followUpSchedule: postRetreatPlan.followUpSchedule
         });
@@ -71,7 +74,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
         this.config.match.personalizationRules.safetyProtocols.forEach(protocol => {
             if (protocol.triggerConditions.includes('heightened_sensitivity') ||
                 protocol.triggerConditions.includes('ceremony_state')) {
-                logger.debug(`Safety protocol activated: ${protocol.protocolName}`);
+                logger_js_1.logger.debug(`Safety protocol activated: ${protocol.protocolName}`);
             }
         });
     }
@@ -96,7 +99,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
         const safetyChecks = this.config.match.personalizationRules.safetyProtocols;
         for (const protocol of safetyChecks) {
             if (this.checkTriggerConditions(query, protocol.triggerConditions)) {
-                logger.info(`Safety protocol triggered: ${protocol.protocolName}`);
+                logger_js_1.logger.info(`Safety protocol triggered: ${protocol.protocolName}`);
                 // Apply appropriate response modifications
             }
         }
@@ -252,7 +255,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
         return `${this.context.personalInfo.firstName}, I see you deeply. ${response}`;
     }
     async logInteraction(query, response) {
-        logger.info('Personalized Oracle Interaction', {
+        logger_js_1.logger.info('Personalized Oracle Interaction', {
             participantId: this.config.participant.id,
             oracleName: this.personality.name,
             retreatMode: this.config.retreatMode,
@@ -266,7 +269,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
         this.context = { ...this.context, ...updates };
         // Rebuild system prompt with updated context
         this.systemPrompt = this.buildSystemPrompt(this.config.retreatMode);
-        logger.info(`Context updated for participant ${this.config.participant.firstName}`, updates);
+        logger_js_1.logger.info(`Context updated for participant ${this.config.participant.firstName}`, updates);
     }
     async getPersonalizationInsights() {
         return {
@@ -278,3 +281,4 @@ export class PersonalizedOracleAgent extends BaseAgent {
         };
     }
 }
+exports.PersonalizedOracleAgent = PersonalizedOracleAgent;

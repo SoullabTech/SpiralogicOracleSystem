@@ -1,7 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.logMemory = logMemory;
+exports.getMemorySpiral = getMemorySpiral;
 const memorySpiral = [];
-export function logMemory(entry) {
+function logMemory(entry) {
     memorySpiral.push(entry);
 }
-export function getMemorySpiral() {
+function getMemorySpiral() {
     return memorySpiral;
 }

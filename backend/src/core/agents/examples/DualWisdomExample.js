@@ -1,11 +1,15 @@
+"use strict";
 // ===============================================
 // DUAL WISDOM SYSTEM DEMONSTRATION
 // Simple + Sophisticated Jung-Buddha Detection
 // ===============================================
-import { PersonalOracleAgent } from '../PersonalOracleAgent.js';
-export class DualWisdomDemo {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DualWisdomTestCases = exports.DualWisdomDemo = void 0;
+exports.runDualWisdomTests = runDualWisdomTests;
+const PersonalOracleAgent_js_1 = require("../PersonalOracleAgent.js");
+class DualWisdomDemo {
     constructor() {
-        this.oracle = new PersonalOracleAgent({
+        this.oracle = new PersonalOracleAgent_js_1.PersonalOracleAgent({
             userId: 'dual-wisdom-demo',
             oracleName: 'Dual Wisdom Mirror',
             mode: 'daily',
@@ -163,10 +167,11 @@ export class DualWisdomDemo {
         console.log('  • Best of both worlds: speed + sophistication');
     }
 }
+exports.DualWisdomDemo = DualWisdomDemo;
 // ===============================================
 // SPECIFIC COMPARISON TESTS
 // ===============================================
-export const DualWisdomTestCases = [
+exports.DualWisdomTestCases = [
     {
         name: "Clear Grasping Pattern",
         input: "I am always like this",
@@ -217,7 +222,7 @@ export const DualWisdomTestCases = [
         agreement: "fallback_to_simple"
     }
 ];
-export async function runDualWisdomTests() {
+async function runDualWisdomTests() {
     const demo = new DualWisdomDemo();
     console.log('🚀 Running comprehensive dual wisdom system tests...\n');
     await demo.demonstrateDualDetection();
@@ -226,8 +231,8 @@ export async function runDualWisdomTests() {
     await demo.showSystemComparison();
     console.log('\n✅ Dual wisdom system testing complete!');
 }
-export default {
+exports.default = {
     DualWisdomDemo,
-    DualWisdomTestCases,
+    DualWisdomTestCases: exports.DualWisdomTestCases,
     runDualWisdomTests
 };

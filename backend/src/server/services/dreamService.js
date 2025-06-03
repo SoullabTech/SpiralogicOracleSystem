@@ -1,6 +1,9 @@
+"use strict";
 // 📁 src/services/dreamService.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dreamService = void 0;
 const dreams = [];
-export const dreamService = {
+exports.dreamService = {
     record: async (dream) => {
         dream.createdAt = new Date().toISOString();
         dreams.push(dream);

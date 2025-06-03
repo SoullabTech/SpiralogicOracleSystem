@@ -1,8 +1,10 @@
+"use strict";
 // ===============================================
 // ORACLE MODE TYPE DEFINITIONS
 // Sacred Agency Through Wisdom Choice
 // ===============================================
-export default {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
     OracleModeType,
     OracleMode,
     ModeSwitchMemory,

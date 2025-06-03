@@ -1,10 +1,13 @@
-import { SessionService } from '../services/sessionService';
-import { MemoryService } from '../services/memoryService';
-import { MetaService } from '../services/metaService';
-export class FlowManager {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FlowManager = void 0;
+const sessionService_1 = require("../services/sessionService");
+const memoryService_1 = require("../services/memoryService");
+const metaService_1 = require("../services/metaService");
+class FlowManager {
     constructor() {
-        this.sessionService = new SessionService();
-        this.memoryService = new MemoryService();
+        this.sessionService = new sessionService_1.SessionService();
+        this.memoryService = new memoryService_1.MemoryService();
     }
     async startLearningFlow(clientId) {
         try {
@@ -15,7 +18,7 @@ export class FlowManager {
                 id: Math.random().toString(36).substring(7),
                 content: 'Learning flow initiated',
                 clientId,
-                metadata: MetaService.createMeta()
+                metadata: metaService_1.MetaService.createMeta()
             });
             return {
                 session,
@@ -34,7 +37,7 @@ export class FlowManager {
                 id: Math.random().toString(36).substring(7),
                 content,
                 clientId,
-                metadata: MetaService.createMeta()
+                metadata: metaService_1.MetaService.createMeta()
             });
             // Generate insights based on stored memories
             const insights = await this.memoryService.getMemoryInsights(clientId);
@@ -68,3 +71,4 @@ export class FlowManager {
         }
     }
 }
+exports.FlowManager = FlowManager;

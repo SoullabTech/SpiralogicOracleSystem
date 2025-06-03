@@ -1,7 +1,10 @@
-import { SacredHoloflower } from '../core/SacredHoloflower';
-import { supabase } from '../lib/supabaseClient';
-import { WebSocketServer } from 'ws';
-export class HoloflowerService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.holoflowerService = exports.HoloflowerService = void 0;
+const SacredHoloflower_1 = require("../core/SacredHoloflower");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const ws_1 = require("ws");
+class HoloflowerService {
     constructor() {
         this.userStates = new Map();
         this.groupPatterns = new Map();
@@ -11,7 +14,7 @@ export class HoloflowerService {
         this.startPeriodicUpdates();
     }
     initializeWebSocketServer() {
-        this.wsServer = new WebSocketServer({ port: 5002 });
+        this.wsServer = new ws_1.WebSocketServer({ port: 5002 });
         this.wsServer.on('connection', (ws, req) => {
             const userId = req.url?.split('/').pop();
             if (!userId)
@@ -49,7 +52,7 @@ export class HoloflowerService {
             return this.userStates.get(userId);
         }
         const savedState = await this.loadUserState(userId);
-        const holoflower = new SacredHoloflower(savedState);
+        const holoflower = new SacredHoloflower_1.SacredHoloflower(savedState);
         const userState = {
             userId,
             holoflower,
@@ -60,7 +63,7 @@ export class HoloflowerService {
         return userState;
     }
     async loadUserState(userId) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('holoflower_states')
             .select('state')
             .eq('user_id', userId)
@@ -70,7 +73,7 @@ export class HoloflowerService {
     async saveUserState(userId) {
         const userState = await this.getUserState(userId);
         const state = userState.holoflower.getState();
-        await supabase
+        await supabaseClient_1.supabase
             .from('holoflower_states')
             .upsert({
             user_id: userId,
@@ -158,7 +161,7 @@ export class HoloflowerService {
         }
     }
     async recordEmergentPattern(userId, patterns) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('holoflower_patterns')
             .insert({
             user_id: userId,
@@ -168,7 +171,7 @@ export class HoloflowerService {
     }
     async logTransformationInsight(userId, fromHouseId, toHouseId) {
         const insights = this.generateTransformationInsight(fromHouseId, toHouseId);
-        await supabase
+        await supabaseClient_1.supabase
             .from('transformation_insights')
             .insert({
             user_id: userId,
@@ -218,7 +221,7 @@ export class HoloflowerService {
                 intensity: totalIntensity / participantIds.length
             };
         });
-        const collectiveHoloflower = new SacredHoloflower();
+        const collectiveHoloflower = new SacredHoloflower_1.SacredHoloflower();
         averagedHouses.forEach(house => {
             collectiveHoloflower.updateHouseIntensity(house.id, house.intensity);
         });
@@ -319,4 +322,5 @@ export class HoloflowerService {
         }
     }
 }
-export const holoflowerService = new HoloflowerService();
+exports.HoloflowerService = HoloflowerService;
+exports.holoflowerService = new HoloflowerService();

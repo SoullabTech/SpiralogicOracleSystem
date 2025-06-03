@@ -1,7 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.groupDynamicsService = exports.GroupDynamicsService = void 0;
 // Group Dynamics Service - Real-time group field tracking
-import { supabase } from '../lib/supabaseClient';
-import { logger } from '../utils/logger';
-export class GroupDynamicsService {
+const supabaseClient_1 = require("../lib/supabaseClient");
+const logger_1 = require("../utils/logger");
+class GroupDynamicsService {
     // Update participant state from check-in
     async updateParticipantState(retreatId, participantId, checkIn) {
         try {
@@ -21,13 +24,13 @@ export class GroupDynamicsService {
             await this.storeParticipantState(retreatId, participantState);
             // Recalculate group dynamics
             await this.recalculateGroupDynamics(retreatId);
-            logger.info('Participant state updated in group dynamics', {
+            logger_1.logger.info('Participant state updated in group dynamics', {
                 participantId,
                 retreatId
             });
         }
         catch (error) {
-            logger.error('Failed to update participant state', error);
+            logger_1.logger.error('Failed to update participant state', error);
             throw error;
         }
     }
@@ -59,7 +62,7 @@ export class GroupDynamicsService {
             return dynamics;
         }
         catch (error) {
-            logger.error('Failed to get current dynamics', error);
+            logger_1.logger.error('Failed to get current dynamics', error);
             throw error;
         }
     }
@@ -67,7 +70,7 @@ export class GroupDynamicsService {
     async updateSessionDynamics(sessionId, participation) {
         try {
             // Get session info
-            const { data: session } = await supabase
+            const { data: session } = await supabaseClient_1.supabase
                 .from('live_sessions')
                 .select('retreat_id')
                 .eq('id', sessionId)
@@ -79,24 +82,24 @@ export class GroupDynamicsService {
             // Add participant contribution
             const updatedField = this.integrateParticipantContribution(currentField, participation);
             // Store updated field
-            await supabase
+            await supabaseClient_1.supabase
                 .from('session_dynamics')
                 .upsert({
                 session_id: sessionId,
                 field_data: updatedField,
                 updated_at: new Date()
             });
-            logger.info('Session dynamics updated', { sessionId });
+            logger_1.logger.info('Session dynamics updated', { sessionId });
         }
         catch (error) {
-            logger.error('Failed to update session dynamics', error);
+            logger_1.logger.error('Failed to update session dynamics', error);
             throw error;
         }
     }
     // Get session field
     async getSessionField(sessionId) {
         try {
-            const { data } = await supabase
+            const { data } = await supabaseClient_1.supabase
                 .from('session_dynamics')
                 .select('field_data')
                 .eq('session_id', sessionId)
@@ -104,7 +107,7 @@ export class GroupDynamicsService {
             return data?.field_data || this.initializeSessionField();
         }
         catch (error) {
-            logger.error('Failed to get session field', error);
+            logger_1.logger.error('Failed to get session field', error);
             throw error;
         }
     }
@@ -115,7 +118,7 @@ export class GroupDynamicsService {
             return this.calculateElementalBalance(participantStates);
         }
         catch (error) {
-            logger.error('Failed to get elemental field', error);
+            logger_1.logger.error('Failed to get elemental field', error);
             throw error;
         }
     }
@@ -142,7 +145,7 @@ export class GroupDynamicsService {
         return energyLevel >= 6 ? 'flowing' : 'holding';
     }
     async getParticipantName(participantId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('retreat_participants')
             .select('preferredName, firstName')
             .eq('id', participantId)
@@ -150,7 +153,7 @@ export class GroupDynamicsService {
         return data?.preferredName || data?.firstName || 'Participant';
     }
     async getParticipantElement(participantId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('retreat_participants')
             .select('oracleElement')
             .eq('id', participantId)
@@ -158,7 +161,7 @@ export class GroupDynamicsService {
         return data?.oracleElement || 'aether';
     }
     async storeParticipantState(retreatId, state) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('participant_states')
             .upsert({
             retreat_id: retreatId,
@@ -169,7 +172,7 @@ export class GroupDynamicsService {
     }
     async recalculateGroupDynamics(retreatId) {
         const dynamics = await this.getCurrentDynamics(retreatId, false);
-        await supabase
+        await supabaseClient_1.supabase
             .from('group_dynamics')
             .upsert({
             retreat_id: retreatId,
@@ -178,7 +181,7 @@ export class GroupDynamicsService {
         });
     }
     async getAllParticipantStates(retreatId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('participant_states')
             .select('state_data')
             .eq('retreat_id', retreatId);
@@ -253,7 +256,7 @@ export class GroupDynamicsService {
     }
     async generateCoherenceMap(retreatId, states) {
         // Get interaction data
-        const { data: interactions } = await supabase
+        const { data: interactions } = await supabaseClient_1.supabase
             .from('participant_interactions')
             .select('*')
             .eq('retreat_id', retreatId);
@@ -561,5 +564,6 @@ export class GroupDynamicsService {
         };
     }
 }
+exports.GroupDynamicsService = GroupDynamicsService;
 // Export singleton instance
-export const groupDynamicsService = new GroupDynamicsService();
+exports.groupDynamicsService = new GroupDynamicsService();

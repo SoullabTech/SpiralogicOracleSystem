@@ -1,4 +1,7 @@
-export async function fetchWithAuth(url, options = {}) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fetchWithAuth = fetchWithAuth;
+async function fetchWithAuth(url, options = {}) {
     const token = localStorage.getItem('token'); // or use your auth context/state
     const headers = {
         ...options.headers,

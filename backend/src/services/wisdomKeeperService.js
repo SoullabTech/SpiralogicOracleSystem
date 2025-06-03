@@ -1,13 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.wisdomKeeperService = exports.WisdomKeeperService = void 0;
 // Wisdom Keeper Service - Permanent sacred knowledge repository
-import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '../lib/supabaseClient';
-import { logger } from '../utils/logger';
-export class WisdomKeeperService {
+const uuid_1 = require("uuid");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const logger_1 = require("../utils/logger");
+class WisdomKeeperService {
     // Add wisdom to the keeper
     async addWisdom(wisdomData) {
         try {
             const wisdom = {
-                id: uuidv4(),
+                id: (0, uuid_1.v4)(),
                 participantId: wisdomData.participantId,
                 retreatId: wisdomData.retreatId,
                 type: wisdomData.type,
@@ -27,7 +30,7 @@ export class WisdomKeeperService {
                 }
             };
             // Store wisdom
-            const { error } = await supabase
+            const { error } = await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .insert(wisdom);
             if (error)
@@ -36,14 +39,14 @@ export class WisdomKeeperService {
             await this.updateWisdomScore(wisdom.participantId);
             // Find and link related wisdom
             await this.linkRelatedWisdom(wisdom);
-            logger.info('Wisdom added to keeper', {
+            logger_1.logger.info('Wisdom added to keeper', {
                 wisdomId: wisdom.id,
                 type: wisdom.type
             });
             return wisdom;
         }
         catch (error) {
-            logger.error('Failed to add wisdom', error);
+            logger_1.logger.error('Failed to add wisdom', error);
             throw error;
         }
     }
@@ -61,22 +64,22 @@ export class WisdomKeeperService {
                 accessibility: wisdom.accessibility,
                 created_at: wisdom.metadata.createdAt
             };
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_search_index')
                 .insert(searchIndex);
             // Update tag cloud
             await this.updateTagCloud(wisdom.content.tags);
-            logger.info('Wisdom indexed', { wisdomId: wisdom.id });
+            logger_1.logger.info('Wisdom indexed', { wisdomId: wisdom.id });
         }
         catch (error) {
-            logger.error('Failed to index wisdom', error);
+            logger_1.logger.error('Failed to index wisdom', error);
         }
     }
     // Notify relevant community members
     async notifyRelevantMembers(wisdom) {
         try {
             // Find members interested in this type/element
-            const { data: interestedMembers } = await supabase
+            const { data: interestedMembers } = await supabaseClient_1.supabase
                 .from('member_interests')
                 .select('participant_id')
                 .or(`elements.cs.{${wisdom.content.element}},types.cs.{${wisdom.type}}`);
@@ -94,22 +97,22 @@ export class WisdomKeeperService {
                 },
                 created_at: new Date()
             }));
-            await supabase
+            await supabaseClient_1.supabase
                 .from('participant_notifications')
                 .insert(notifications);
-            logger.info('Members notified of new wisdom', {
+            logger_1.logger.info('Members notified of new wisdom', {
                 wisdomId: wisdom.id,
                 notifiedCount: notifications.length
             });
         }
         catch (error) {
-            logger.error('Failed to notify members', error);
+            logger_1.logger.error('Failed to notify members', error);
         }
     }
     // Search wisdom archive
     async searchWisdom(params) {
         try {
-            let query = supabase
+            let query = supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select('*');
             // Access control
@@ -142,14 +145,14 @@ export class WisdomKeeperService {
             return data || [];
         }
         catch (error) {
-            logger.error('Failed to search wisdom', error);
+            logger_1.logger.error('Failed to search wisdom', error);
             throw error;
         }
     }
     // Get wisdom facets for filtering
     async getWisdomFacets(facetType) {
         try {
-            const { data } = await supabase
+            const { data } = await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select(facetType === 'element' ? 'content->element' : 'type');
             const facets = {};
@@ -162,14 +165,14 @@ export class WisdomKeeperService {
                 .sort((a, b) => b.count - a.count);
         }
         catch (error) {
-            logger.error('Failed to get wisdom facets', error);
+            logger_1.logger.error('Failed to get wisdom facets', error);
             throw error;
         }
     }
     // Get popular tags
     async getPopularTags(limit = 20) {
         try {
-            const { data } = await supabase
+            const { data } = await supabaseClient_1.supabase
                 .from('tag_cloud')
                 .select('*')
                 .order('usage_count', { ascending: false })
@@ -177,7 +180,7 @@ export class WisdomKeeperService {
             return data || [];
         }
         catch (error) {
-            logger.error('Failed to get popular tags', error);
+            logger_1.logger.error('Failed to get popular tags', error);
             throw error;
         }
     }
@@ -185,34 +188,34 @@ export class WisdomKeeperService {
     async getPersonalCollection(participantId) {
         try {
             // Get contributed wisdom
-            const { data: contributed } = await supabase
+            const { data: contributed } = await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select('*')
                 .eq('participant_id', participantId)
                 .order('metadata->createdAt', { ascending: false });
             // Get bookmarked wisdom
-            const { data: bookmarks } = await supabase
+            const { data: bookmarks } = await supabaseClient_1.supabase
                 .from('wisdom_bookmarks')
                 .select('wisdom_id')
                 .eq('participant_id', participantId);
             let bookmarked = [];
             if (bookmarks && bookmarks.length > 0) {
                 const wisdomIds = bookmarks.map(b => b.wisdom_id);
-                const { data } = await supabase
+                const { data } = await supabaseClient_1.supabase
                     .from('wisdom_keeper')
                     .select('*')
                     .in('id', wisdomIds);
                 bookmarked = data || [];
             }
             // Get wisdom received (shared directly with participant)
-            const { data: received } = await supabase
+            const { data: received } = await supabaseClient_1.supabase
                 .from('wisdom_shares')
                 .select('wisdom_id')
                 .eq('shared_with', participantId);
             let receivedWisdom = [];
             if (received && received.length > 0) {
                 const wisdomIds = received.map(r => r.wisdom_id);
-                const { data } = await supabase
+                const { data } = await supabaseClient_1.supabase
                     .from('wisdom_keeper')
                     .select('*')
                     .in('id', wisdomIds);
@@ -225,14 +228,14 @@ export class WisdomKeeperService {
             };
         }
         catch (error) {
-            logger.error('Failed to get personal collection', error);
+            logger_1.logger.error('Failed to get personal collection', error);
             throw error;
         }
     }
     // Bookmark wisdom
     async bookmarkWisdom(participantId, wisdomId) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_bookmarks')
                 .insert({
                 participant_id: participantId,
@@ -241,17 +244,17 @@ export class WisdomKeeperService {
             });
             // Update bookmark count
             await this.incrementMetric(wisdomId, 'bookmarks');
-            logger.info('Wisdom bookmarked', { participantId, wisdomId });
+            logger_1.logger.info('Wisdom bookmarked', { participantId, wisdomId });
         }
         catch (error) {
-            logger.error('Failed to bookmark wisdom', error);
+            logger_1.logger.error('Failed to bookmark wisdom', error);
             throw error;
         }
     }
     // Share wisdom with another participant
     async shareWisdom(wisdomId, sharedBy, sharedWith, message) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_shares')
                 .insert({
                 wisdom_id: wisdomId,
@@ -263,7 +266,7 @@ export class WisdomKeeperService {
             // Update share count
             await this.incrementMetric(wisdomId, 'shares');
             // Notify recipient
-            await supabase
+            await supabaseClient_1.supabase
                 .from('participant_notifications')
                 .insert({
                 participant_id: sharedWith,
@@ -275,17 +278,17 @@ export class WisdomKeeperService {
                 },
                 created_at: new Date()
             });
-            logger.info('Wisdom shared', { wisdomId, sharedBy, sharedWith });
+            logger_1.logger.info('Wisdom shared', { wisdomId, sharedBy, sharedWith });
         }
         catch (error) {
-            logger.error('Failed to share wisdom', error);
+            logger_1.logger.error('Failed to share wisdom', error);
             throw error;
         }
     }
     // Record wisdom resonance
     async recordResonance(wisdomId, participantId, resonanceLevel) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_resonance')
                 .insert({
                 wisdom_id: wisdomId,
@@ -295,10 +298,10 @@ export class WisdomKeeperService {
             });
             // Update average resonance
             await this.updateAverageResonance(wisdomId);
-            logger.info('Resonance recorded', { wisdomId, resonanceLevel });
+            logger_1.logger.info('Resonance recorded', { wisdomId, resonanceLevel });
         }
         catch (error) {
-            logger.error('Failed to record resonance', error);
+            logger_1.logger.error('Failed to record resonance', error);
             throw error;
         }
     }
@@ -306,18 +309,18 @@ export class WisdomKeeperService {
     async getRecommendations(participantId, limit = 10) {
         try {
             // Get participant's interests and element
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('oracleElement, retreatIntentions')
                 .eq('id', participantId)
                 .single();
             // Get participant's interaction history
-            const { data: interactions } = await supabase
+            const { data: interactions } = await supabaseClient_1.supabase
                 .from('wisdom_interactions')
                 .select('wisdom_id, interaction_type')
                 .eq('participant_id', participantId);
             // Build recommendation query
-            let query = supabase
+            let query = supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select('*')
                 .neq('participant_id', participantId); // Exclude own wisdom
@@ -339,14 +342,14 @@ export class WisdomKeeperService {
             return data || [];
         }
         catch (error) {
-            logger.error('Failed to get recommendations', error);
+            logger_1.logger.error('Failed to get recommendations', error);
             throw error;
         }
     }
     // Create wisdom threads (connected wisdom)
     async createWisdomThread(sourceWisdomId, targetWisdomId, connectionType) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_threads')
                 .insert({
                 source_wisdom_id: sourceWisdomId,
@@ -356,21 +359,21 @@ export class WisdomKeeperService {
             });
             // Update connections in both wisdom entries
             await this.updateWisdomConnections(sourceWisdomId, targetWisdomId);
-            logger.info('Wisdom thread created', {
+            logger_1.logger.info('Wisdom thread created', {
                 sourceWisdomId,
                 targetWisdomId,
                 connectionType
             });
         }
         catch (error) {
-            logger.error('Failed to create wisdom thread', error);
+            logger_1.logger.error('Failed to create wisdom thread', error);
             throw error;
         }
     }
     // Get wisdom threads
     async getWisdomThreads(wisdomId) {
         try {
-            const { data: threads } = await supabase
+            const { data: threads } = await supabaseClient_1.supabase
                 .from('wisdom_threads')
                 .select(`
           *,
@@ -382,7 +385,7 @@ export class WisdomKeeperService {
             return threads || [];
         }
         catch (error) {
-            logger.error('Failed to get wisdom threads', error);
+            logger_1.logger.error('Failed to get wisdom threads', error);
             throw error;
         }
     }
@@ -400,7 +403,7 @@ export class WisdomKeeperService {
                 'Abundance Activation'
             ];
             const archives = await Promise.all(themes.map(async (theme) => {
-                const { data, count } = await supabase
+                const { data, count } = await supabaseClient_1.supabase
                     .from('wisdom_keeper')
                     .select('*', { count: 'exact' })
                     .textSearch('searchable_text', theme)
@@ -414,7 +417,7 @@ export class WisdomKeeperService {
             return archives.filter(a => a.count > 0);
         }
         catch (error) {
-            logger.error('Failed to get thematic archives', error);
+            logger_1.logger.error('Failed to get thematic archives', error);
             throw error;
         }
     }
@@ -423,7 +426,7 @@ export class WisdomKeeperService {
         try {
             const collection = await this.getPersonalCollection(participantId);
             // Get participant info
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('firstName, lastName, oracleElement, retreatDate')
                 .eq('id', participantId)
@@ -458,7 +461,7 @@ export class WisdomKeeperService {
             return journal;
         }
         catch (error) {
-            logger.error('Failed to export wisdom journal', error);
+            logger_1.logger.error('Failed to export wisdom journal', error);
             throw error;
         }
     }
@@ -475,12 +478,12 @@ export class WisdomKeeperService {
     }
     async updateTagCloud(tags) {
         for (const tag of tags) {
-            await supabase.rpc('increment_tag_usage', { tag_name: tag });
+            await supabaseClient_1.supabase.rpc('increment_tag_usage', { tag_name: tag });
         }
     }
     async linkRelatedWisdom(wisdom) {
         // Find wisdom with similar tags or element
-        const { data: related } = await supabase
+        const { data: related } = await supabaseClient_1.supabase
             .from('wisdom_keeper')
             .select('id')
             .neq('id', wisdom.id)
@@ -492,17 +495,17 @@ export class WisdomKeeperService {
                 related_wisdom_id: r.id,
                 created_at: new Date()
             }));
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_connections')
                 .insert(connections);
         }
     }
     async updateWisdomScore(participantId) {
-        const { count } = await supabase
+        const { count } = await supabaseClient_1.supabase
             .from('wisdom_keeper')
             .select('*', { count: 'exact' })
             .eq('participant_id', participantId);
-        await supabase
+        await supabaseClient_1.supabase
             .from('participant_stats')
             .upsert({
             participant_id: participantId,
@@ -511,7 +514,7 @@ export class WisdomKeeperService {
         });
     }
     async trackSearch(params) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('wisdom_searches')
             .insert({
             participant_id: params.requesterId,
@@ -525,16 +528,16 @@ export class WisdomKeeperService {
         });
     }
     async incrementMetric(wisdomId, metric) {
-        await supabase.rpc(`increment_wisdom_${metric}`, { wisdom_id: wisdomId });
+        await supabaseClient_1.supabase.rpc(`increment_wisdom_${metric}`, { wisdom_id: wisdomId });
     }
     async updateAverageResonance(wisdomId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('wisdom_resonance')
             .select('resonance_level')
             .eq('wisdom_id', wisdomId);
         if (data && data.length > 0) {
             const average = data.reduce((sum, r) => sum + r.resonance_level, 0) / data.length;
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .update({ 'metadata.resonance': average })
                 .eq('id', wisdomId);
@@ -542,27 +545,27 @@ export class WisdomKeeperService {
     }
     async updateWisdomConnections(sourceId, targetId) {
         // Update source wisdom
-        const { data: source } = await supabase
+        const { data: source } = await supabaseClient_1.supabase
             .from('wisdom_keeper')
             .select('connections')
             .eq('id', sourceId)
             .single();
         if (source) {
             source.connections.inspires.push(targetId);
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .update({ connections: source.connections })
                 .eq('id', sourceId);
         }
         // Update target wisdom
-        const { data: target } = await supabase
+        const { data: target } = await supabaseClient_1.supabase
             .from('wisdom_keeper')
             .select('connections')
             .eq('id', targetId)
             .single();
         if (target) {
             target.connections.inspiredBy.push(sourceId);
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .update({ connections: target.connections })
                 .eq('id', targetId);
@@ -572,32 +575,32 @@ export class WisdomKeeperService {
     async getWisdomDailyDigest(participantId) {
         try {
             // Get participant preferences
-            const { data: preferences } = await supabase
+            const { data: preferences } = await supabaseClient_1.supabase
                 .from('participant_preferences')
                 .select('wisdom_digest_preferences')
                 .eq('participant_id', participantId)
                 .single();
             // Get recent high-resonance wisdom
-            const { data: recentWisdom } = await supabase
+            const { data: recentWisdom } = await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select('*')
                 .gte('metadata->createdAt', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
                 .order('metadata->resonance', { ascending: false })
                 .limit(3);
             // Get wisdom from participant's element
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('oracleElement')
                 .eq('id', participantId)
                 .single();
-            const { data: elementalWisdom } = await supabase
+            const { data: elementalWisdom } = await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select('*')
                 .eq('content->element', participant?.oracleElement)
                 .order('metadata->createdAt', { ascending: false })
                 .limit(2);
             // Get a random blessing
-            const { data: blessings } = await supabase
+            const { data: blessings } = await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select('*')
                 .eq('type', 'blessing')
@@ -612,7 +615,7 @@ export class WisdomKeeperService {
             };
         }
         catch (error) {
-            logger.error('Failed to get wisdom daily digest', error);
+            logger_1.logger.error('Failed to get wisdom daily digest', error);
             throw error;
         }
     }
@@ -620,7 +623,7 @@ export class WisdomKeeperService {
     async createWisdomRitual(participantId, theme) {
         try {
             // Get wisdom related to theme
-            const { data: themeWisdom } = await supabase
+            const { data: themeWisdom } = await supabaseClient_1.supabase
                 .from('wisdom_keeper')
                 .select('*')
                 .textSearch('searchable_text', theme)
@@ -648,7 +651,7 @@ export class WisdomKeeperService {
                 endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             };
             // Store ritual
-            await supabase
+            await supabaseClient_1.supabase
                 .from('wisdom_rituals')
                 .insert({
                 participant_id: participantId,
@@ -658,7 +661,7 @@ export class WisdomKeeperService {
             return ritual;
         }
         catch (error) {
-            logger.error('Failed to create wisdom ritual', error);
+            logger_1.logger.error('Failed to create wisdom ritual', error);
             throw error;
         }
     }
@@ -673,5 +676,6 @@ export class WisdomKeeperService {
         return practices[element] || practices.aether;
     }
 }
+exports.WisdomKeeperService = WisdomKeeperService;
 // Export singleton instance
-export const wisdomKeeperService = new WisdomKeeperService();
+exports.wisdomKeeperService = new WisdomKeeperService();

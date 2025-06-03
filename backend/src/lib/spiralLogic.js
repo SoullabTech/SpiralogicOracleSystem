@@ -1,4 +1,7 @@
-export const getElementalPhase = (input) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.spiralPhaseDescription = exports.getElementalPhase = void 0;
+const getElementalPhase = (input) => {
     const lower = input.toLowerCase();
     if (lower.includes('vision') || lower.includes('ignite'))
         return 'Fire';
@@ -10,7 +13,8 @@ export const getElementalPhase = (input) => {
         return 'Air';
     return 'Aether'; // fallback
 };
-export const spiralPhaseDescription = {
+exports.getElementalPhase = getElementalPhase;
+exports.spiralPhaseDescription = {
     Fire: 'Initiation & Purpose',
     Water: 'Transformation & Emotion',
     Earth: 'Stability & Practice',

@@ -1,14 +1,19 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // 🌀 SOULLAB FOUNDER ROUTES - Organizational Wisdom Access
-import { Router } from 'express';
-import { SoullabFounderAgent } from '../core/agents/soullabFounderAgent';
-import { authenticate } from '../middleware/authenticate';
-import { logger } from '../utils/logger';
-import multer from 'multer';
-const router = Router();
-const founderAgent = new SoullabFounderAgent();
+const express_1 = require("express");
+const soullabFounderAgent_1 = require("../core/agents/soullabFounderAgent");
+const authenticate_1 = require("../middleware/authenticate");
+const logger_1 = require("../utils/logger");
+const multer_1 = __importDefault(require("multer"));
+const router = (0, express_1.Router)();
+const founderAgent = new soullabFounderAgent_1.SoullabFounderAgent();
 // Configure file upload for knowledge documents
-const upload = multer({
-    storage: multer.memoryStorage(),
+const upload = (0, multer_1.default)({
+    storage: multer_1.default.memoryStorage(),
     limits: {
         fileSize: 10 * 1024 * 1024 // 10MB limit
     },
@@ -23,14 +28,14 @@ const upload = multer({
     }
 });
 // Query founder wisdom
-router.post('/query', authenticate, async (req, res) => {
+router.post('/query', authenticate_1.authenticate, async (req, res) => {
     try {
         const { query, context } = req.body;
         const userId = req.user?.id || 'anonymous';
         if (!query) {
             return res.status(400).json({ error: 'Query is required' });
         }
-        logger.info('Founder query received', { userId, query: query.substring(0, 100) });
+        logger_1.logger.info('Founder query received', { userId, query: query.substring(0, 100) });
         const response = await founderAgent.processQuery({
             input: query,
             userId,
@@ -42,7 +47,7 @@ router.post('/query', authenticate, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Founder query error:', error);
+        logger_1.logger.error('Founder query error:', error);
         res.status(500).json({
             error: 'Failed to process founder query',
             message: error.message
@@ -50,7 +55,7 @@ router.post('/query', authenticate, async (req, res) => {
     }
 });
 // Check vision coherence for new initiatives
-router.post('/vision-check', authenticate, async (req, res) => {
+router.post('/vision-check', authenticate_1.authenticate, async (req, res) => {
     try {
         const { name, description, alignment } = req.body;
         const userId = req.user?.id;
@@ -71,7 +76,7 @@ router.post('/vision-check', authenticate, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Vision coherence check error:', error);
+        logger_1.logger.error('Vision coherence check error:', error);
         res.status(500).json({
             error: 'Failed to check vision coherence',
             message: error.message
@@ -79,7 +84,7 @@ router.post('/vision-check', authenticate, async (req, res) => {
     }
 });
 // Upload knowledge document (restricted to founders/admins)
-router.post('/knowledge/upload', authenticate, upload.single('document'), async (req, res) => {
+router.post('/knowledge/upload', authenticate_1.authenticate, upload.single('document'), async (req, res) => {
     try {
         const userId = req.user?.id;
         const { type, title, accessibility, author } = req.body;
@@ -110,7 +115,7 @@ router.post('/knowledge/upload', authenticate, upload.single('document'), async 
         });
     }
     catch (error) {
-        logger.error('Knowledge upload error:', error);
+        logger_1.logger.error('Knowledge upload error:', error);
         res.status(500).json({
             error: 'Failed to upload knowledge document',
             message: error.message
@@ -118,7 +123,7 @@ router.post('/knowledge/upload', authenticate, upload.single('document'), async 
     }
 });
 // Get onboarding guidance
-router.get('/onboarding/:role', authenticate, async (req, res) => {
+router.get('/onboarding/:role', authenticate_1.authenticate, async (req, res) => {
     try {
         const { role } = req.params;
         const userId = req.user?.id || 'anonymous';
@@ -141,7 +146,7 @@ router.get('/onboarding/:role', authenticate, async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Onboarding guidance error:', error);
+        logger_1.logger.error('Onboarding guidance error:', error);
         res.status(500).json({
             error: 'Failed to get onboarding guidance',
             message: error.message
@@ -174,14 +179,14 @@ router.get('/philosophy/:topic', async (req, res) => {
         });
     }
     catch (error) {
-        logger.error('Philosophy query error:', error);
+        logger_1.logger.error('Philosophy query error:', error);
         res.status(500).json({
             error: 'Failed to get philosophical foundations',
             message: error.message
         });
     }
 });
-export default router;
+exports.default = router;
 /**
  * 🌀 FOUNDER ROUTES API
  *

@@ -1,15 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SymbolThreadResponseSchema = exports.SymbolThreadRequestSchema = void 0;
 // 📁 BACKEND: /routes/oracle/symbolThreads.ts Zod validation
-import { z } from "zod";
-export const SymbolThreadRequestSchema = z.object({
-    symbol: z.string().min(1)
+const zod_1 = require("zod");
+exports.SymbolThreadRequestSchema = zod_1.z.object({
+    symbol: zod_1.z.string().min(1)
 });
-export const SymbolThreadResponseSchema = z.object({
-    dreams: z.array(z.object({
-        id: z.string(),
-        title: z.string(),
-        description: z.string(),
-        symbols: z.array(z.string()),
-        phase: z.string(),
-        archetype: z.string()
+exports.SymbolThreadResponseSchema = zod_1.z.object({
+    dreams: zod_1.z.array(zod_1.z.object({
+        id: zod_1.z.string(),
+        title: zod_1.z.string(),
+        description: zod_1.z.string(),
+        symbols: zod_1.z.array(zod_1.z.string()),
+        phase: zod_1.z.string(),
+        archetype: zod_1.z.string()
     }))
 });

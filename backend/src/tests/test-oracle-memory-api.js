@@ -1,8 +1,14 @@
+"use strict";
 // ===============================================
 // API TEST FOR ORACLE + SOUL MEMORY
 // Quick test to verify the integration via API endpoints
 // ===============================================
-import axios from 'axios';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.testOracleMemoryAPI = testOracleMemoryAPI;
+const axios_1 = __importDefault(require("axios"));
 const API_BASE = 'http://localhost:3000/api';
 const TEST_USER_ID = 'test_user_123';
 const AUTH_TOKEN = 'your_auth_token_here'; // Replace with actual token
@@ -11,13 +17,13 @@ async function testOracleMemoryAPI() {
     try {
         // 1. Initialize Soul Memory for user
         console.log('1️⃣ Initializing Soul Memory...');
-        const initResponse = await axios.post(`${API_BASE}/soul-memory/initialize`, { userId: TEST_USER_ID }, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
+        const initResponse = await axios_1.default.post(`${API_BASE}/soul-memory/initialize`, { userId: TEST_USER_ID }, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
         console.log('Response:', initResponse.data);
         console.log('');
         // 2. Send message to Oracle
         console.log('2️⃣ Sending message to Oracle...');
         const testMessage = "I'm feeling overwhelmed by all these changes in my life";
-        const oracleResponse = await axios.post(`${API_BASE}/oracle/message`, {
+        const oracleResponse = await axios_1.default.post(`${API_BASE}/oracle/message`, {
             userId: TEST_USER_ID,
             message: testMessage
         }, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
@@ -26,7 +32,7 @@ async function testOracleMemoryAPI() {
         console.log('');
         // 3. Check if memory was stored
         console.log('3️⃣ Checking stored memories...');
-        const memoriesResponse = await axios.get(`${API_BASE}/soul-memory/memories/${TEST_USER_ID}?limit=1`, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
+        const memoriesResponse = await axios_1.default.get(`${API_BASE}/soul-memory/memories/${TEST_USER_ID}?limit=1`, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
         const latestMemory = memoriesResponse.data[0];
         if (latestMemory) {
             console.log('✅ Latest memory found:');
@@ -45,7 +51,7 @@ async function testOracleMemoryAPI() {
         console.log('');
         // 4. Test semantic search
         console.log('4️⃣ Testing semantic search...');
-        const searchResponse = await axios.post(`${API_BASE}/soul-memory/search`, {
+        const searchResponse = await axios_1.default.post(`${API_BASE}/soul-memory/search`, {
             userId: TEST_USER_ID,
             query: 'overwhelmed changes'
         }, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
@@ -53,7 +59,7 @@ async function testOracleMemoryAPI() {
         console.log('');
         // 5. Record a ritual moment
         console.log('5️⃣ Recording ritual moment...');
-        const ritualResponse = await axios.post(`${API_BASE}/ritual/record`, {
+        const ritualResponse = await axios_1.default.post(`${API_BASE}/ritual/record`, {
             userId: TEST_USER_ID,
             ritualType: 'morning_intention',
             content: 'Setting intention to embrace change with grace',
@@ -64,12 +70,12 @@ async function testOracleMemoryAPI() {
         console.log('');
         // 6. Get sacred moments
         console.log('6️⃣ Retrieving sacred moments...');
-        const sacredResponse = await axios.get(`${API_BASE}/memories/sacred/${TEST_USER_ID}`, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
+        const sacredResponse = await axios_1.default.get(`${API_BASE}/memories/sacred/${TEST_USER_ID}`, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
         console.log(`Found ${sacredResponse.data.length} sacred moments`);
         console.log('');
         // 7. Get transformation journey
         console.log('7️⃣ Getting transformation journey...');
-        const journeyResponse = await axios.get(`${API_BASE}/memories/transformation/${TEST_USER_ID}`, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
+        const journeyResponse = await axios_1.default.get(`${API_BASE}/memories/transformation/${TEST_USER_ID}`, { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } });
         console.log('Transformation journey:', {
             currentPhase: journeyResponse.data.currentPhase,
             milestones: journeyResponse.data.milestones.length,
@@ -122,4 +128,3 @@ const testOracleMemory = async () => {
 if (require.main === module) {
     testOracleMemoryAPI();
 }
-export { testOracleMemoryAPI };

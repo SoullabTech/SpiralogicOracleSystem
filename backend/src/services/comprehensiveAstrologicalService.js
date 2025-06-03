@@ -1,5 +1,8 @@
-import { WebSocketServer } from 'ws';
-export class ComprehensiveAstrologicalService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.comprehensiveAstrologicalService = exports.ComprehensiveAstrologicalService = void 0;
+const ws_1 = require("ws");
+class ComprehensiveAstrologicalService {
     constructor() {
         this.birthCharts = new Map();
         this.activeTransits = new Map();
@@ -11,7 +14,7 @@ export class ComprehensiveAstrologicalService {
         this.startContinuousTracking();
     }
     initializeWebSocketServer() {
-        this.wsServer = new WebSocketServer({ port: 5004 });
+        this.wsServer = new ws_1.WebSocketServer({ port: 5004 });
         this.wsServer.on('connection', (ws, req) => {
             const userId = req.url?.split('/').pop();
             if (!userId)
@@ -609,4 +612,5 @@ export class ComprehensiveAstrologicalService {
         }
     }
 }
-export const comprehensiveAstrologicalService = new ComprehensiveAstrologicalService();
+exports.ComprehensiveAstrologicalService = ComprehensiveAstrologicalService;
+exports.comprehensiveAstrologicalService = new ComprehensiveAstrologicalService();

@@ -1,6 +1,9 @@
+"use strict";
 // oracle-backend/src/config/index.ts
-import 'dotenv/config';
-export const config = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = void 0;
+require("dotenv/config");
+exports.config = {
     server: {
         port: parseInt(process.env.PORT || '5001', 10),
         env: process.env.NODE_ENV || 'development',

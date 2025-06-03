@@ -1,3 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.detectElement = detectElement;
+exports.adjustGuidance = adjustGuidance;
 const elementKeywords = {
     fire: ['fire', 'ignite', 'flame', 'burn', 'spark'],
     water: ['water', 'flow', 'ocean', 'river', 'tide'],
@@ -5,7 +9,7 @@ const elementKeywords = {
     air: ['air', 'breeze', 'wind', 'sky', 'clarity'],
     aether: ['aether', 'spirit', 'soul', 'mystic', 'cosmos']
 };
-export function detectElement(query) {
+function detectElement(query) {
     const lowerQuery = query.toLowerCase();
     let bestElement = 'aether';
     let bestCount = 0;
@@ -20,7 +24,7 @@ export function detectElement(query) {
     }
     return bestElement;
 }
-export function adjustGuidance(query, baseGuidance) {
+function adjustGuidance(query, baseGuidance) {
     const element = detectElement(query);
     let adjustment = '';
     switch (element) {

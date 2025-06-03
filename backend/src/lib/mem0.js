@@ -1,5 +1,8 @@
+"use strict";
 // 📁 File: src/lib/mem0.ts
-export class MemoryManager {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MemoryManager = void 0;
+class MemoryManager {
     constructor(userId) {
         this.userId = userId;
     }
@@ -8,3 +11,4 @@ export class MemoryManager {
         return `✨ [Mock Oracle Reflection for user ${this.userId}]: ${prompt.slice(0, 100)}...`;
     }
 }
+exports.MemoryManager = MemoryManager;

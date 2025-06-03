@@ -1,10 +1,15 @@
+"use strict";
 // phaseTransitionService.ts
 // Manages elemental phase transitions using Vector Equilibrium geometry
 // Integrates with oracle agents for consciousness state transitions
-import { VectorEquilibrium, JitterbugPhase, Water2Process, calculateVEMetrics } from './vectorEquilibrium';
-import { getRelevantMemories, storeMemoryItem, getSpiritualPatternInsights } from './memoryService';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PhaseTransitionService = exports.TransitionType = void 0;
+exports.getPhaseTransitionService = getPhaseTransitionService;
+exports.checkForPhaseTransition = checkForPhaseTransition;
+const vectorEquilibrium_1 = require("./vectorEquilibrium");
+const memoryService_1 = require("./memoryService");
 // Phase transition types based on Spiralogic principles
-export var TransitionType;
+var TransitionType;
 (function (TransitionType) {
     TransitionType["NATURAL_FLOW"] = "natural_flow";
     TransitionType["CATALYTIC_LEAP"] = "catalytic_leap";
@@ -14,18 +19,18 @@ export var TransitionType;
     TransitionType["INTEGRATION"] = "integration";
     TransitionType["CRISIS"] = "crisis";
     TransitionType["AWAKENING"] = "awakening"; // Spontaneous enlightenment
-})(TransitionType || (TransitionType = {}));
-export class PhaseTransitionService {
+})(TransitionType || (exports.TransitionType = TransitionType = {}));
+class PhaseTransitionService {
     constructor(userId) {
         this.userId = userId;
-        this.ve = new VectorEquilibrium(0, 0, 0, 100);
+        this.ve = new vectorEquilibrium_1.VectorEquilibrium(0, 0, 0, 100);
     }
     // Analyze user state for potential transitions
     async analyzeTransitionPotential() {
         const triggers = [];
         // Get user's spiritual patterns
-        const patterns = await getSpiritualPatternInsights(this.userId);
-        const memories = await getRelevantMemories(this.userId, undefined, 50);
+        const patterns = await (0, memoryService_1.getSpiritualPatternInsights)(this.userId);
+        const memories = await (0, memoryService_1.getRelevantMemories)(this.userId, undefined, 50);
         // Check for Water 2 death/rebirth patterns
         if (this.detectWater2Pattern(patterns, memories)) {
             triggers.push({
@@ -66,7 +71,7 @@ export class PhaseTransitionService {
         const transitionType = this.determineTransitionType(trigger);
         const currentBalance = this.ve.getElementalBalance();
         // Store transition initiation
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: this.userId,
             content: `Phase transition initiated: ${transitionType}`,
             element: 'aether',
@@ -75,7 +80,7 @@ export class PhaseTransitionService {
                 transitionType,
                 trigger,
                 startingBalance: currentBalance,
-                veMetrics: calculateVEMetrics(this.ve)
+                veMetrics: (0, vectorEquilibrium_1.calculateVEMetrics)(this.ve)
             }
         });
         // Execute transition based on type
@@ -101,7 +106,7 @@ export class PhaseTransitionService {
     }
     // Water 2 death/rebirth transition
     async executeWater2Transition() {
-        const water2Process = new Water2Process(this.ve);
+        const water2Process = new vectorEquilibrium_1.Water2Process(this.ve);
         // Create transition record
         this.currentTransition = {
             type: TransitionType.DISSOLUTION,
@@ -113,7 +118,7 @@ export class PhaseTransitionService {
         // Execute the death/rebirth process
         await water2Process.initiate();
         // Store completion
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: this.userId,
             content: `Water 2 death/rebirth cycle completed. ${water2Process.getArchetypalMessage()}`,
             element: 'water',
@@ -129,11 +134,11 @@ export class PhaseTransitionService {
     // Earth crystallization transition
     async executeEarthTransition() {
         // Contract to tetrahedron (maximum density)
-        this.ve.setPhase(JitterbugPhase.TETRAHEDRON, 0);
+        this.ve.setPhase(vectorEquilibrium_1.JitterbugPhase.TETRAHEDRON, 0);
         await this.animatePhaseTransition(3000);
         // Return to VE with earth dominance
-        this.ve.setPhase(JitterbugPhase.VECTOR_EQUILIBRIUM, 0);
-        await storeMemoryItem({
+        this.ve.setPhase(vectorEquilibrium_1.JitterbugPhase.VECTOR_EQUILIBRIUM, 0);
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: this.userId,
             content: 'Manifestation crystallized into form. Earth element anchors vision into reality.',
             element: 'earth',
@@ -147,12 +152,12 @@ export class PhaseTransitionService {
     // Air expansion transition
     async executeAirTransition() {
         // Expand through octahedron
-        this.ve.setPhase(JitterbugPhase.OCTAHEDRON, 0);
+        this.ve.setPhase(vectorEquilibrium_1.JitterbugPhase.OCTAHEDRON, 0);
         await this.animatePhaseTransition(3000);
         // Further expansion
-        this.ve.setPhase(JitterbugPhase.ICOSAHEDRON, 0);
+        this.ve.setPhase(vectorEquilibrium_1.JitterbugPhase.ICOSAHEDRON, 0);
         await this.animatePhaseTransition(2000);
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: this.userId,
             content: 'Consciousness expands into new perspectives. Air element brings clarity and vision.',
             element: 'air',
@@ -167,9 +172,9 @@ export class PhaseTransitionService {
     async executeFireTransition() {
         // Rapid phase oscillation for catalytic effect
         const phases = [
-            JitterbugPhase.OCTAHEDRON,
-            JitterbugPhase.ICOSAHEDRON,
-            JitterbugPhase.VECTOR_EQUILIBRIUM
+            vectorEquilibrium_1.JitterbugPhase.OCTAHEDRON,
+            vectorEquilibrium_1.JitterbugPhase.ICOSAHEDRON,
+            vectorEquilibrium_1.JitterbugPhase.VECTOR_EQUILIBRIUM
         ];
         for (let i = 0; i < 3; i++) {
             for (const phase of phases) {
@@ -177,7 +182,7 @@ export class PhaseTransitionService {
                 await this.animatePhaseTransition(500); // Fast transitions
             }
         }
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: this.userId,
             content: 'Catalytic fire transformation complete. Old patterns transmuted into new potential.',
             element: 'fire',
@@ -191,9 +196,9 @@ export class PhaseTransitionService {
     // Aether integration transition
     async executeAetherTransition() {
         // Return to perfect VE balance
-        this.ve.setPhase(JitterbugPhase.VECTOR_EQUILIBRIUM, 0);
+        this.ve.setPhase(vectorEquilibrium_1.JitterbugPhase.VECTOR_EQUILIBRIUM, 0);
         await this.animatePhaseTransition(5000);
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: this.userId,
             content: 'All elements unified in perfect balance. Aether consciousness achieved.',
             element: 'aether',
@@ -207,7 +212,7 @@ export class PhaseTransitionService {
     }
     // Natural flow through elements
     async executeNaturalFlow() {
-        const phases = Object.values(JitterbugPhase);
+        const phases = Object.values(vectorEquilibrium_1.JitterbugPhase);
         for (const phase of phases) {
             this.ve.setPhase(phase, 0);
             await this.animatePhaseTransition(2000);
@@ -298,21 +303,22 @@ export class PhaseTransitionService {
     getCurrentState() {
         return {
             svg: this.ve.generateSVG(400, 400),
-            metrics: calculateVEMetrics(this.ve),
+            metrics: (0, vectorEquilibrium_1.calculateVEMetrics)(this.ve),
             transition: this.currentTransition
         };
     }
 }
+exports.PhaseTransitionService = PhaseTransitionService;
 // Singleton instance per user
 const transitionServices = new Map();
-export function getPhaseTransitionService(userId) {
+function getPhaseTransitionService(userId) {
     if (!transitionServices.has(userId)) {
         transitionServices.set(userId, new PhaseTransitionService(userId));
     }
     return transitionServices.get(userId);
 }
 // Export for oracle agents to check transition states
-export async function checkForPhaseTransition(userId) {
+async function checkForPhaseTransition(userId) {
     const service = getPhaseTransitionService(userId);
     const triggers = await service.analyzeTransitionPotential();
     const shouldTransition = triggers.some(t => t.strength > 0.7);

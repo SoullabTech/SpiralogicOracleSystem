@@ -1,7 +1,12 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // vitest.config.ts
-import { defineConfig } from 'vitest/config';
-import path from 'path';
-export default defineConfig({
+const config_1 = require("vitest/config");
+const path_1 = __importDefault(require("path"));
+exports.default = (0, config_1.defineConfig)({
     test: {
         globals: true,
         environment: 'node', // ✅ Ensures compatibility with SDKs like OpenAI
@@ -27,11 +32,11 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'src'),
-            '@services': path.resolve(__dirname, 'src/services'),
-            '@utils': path.resolve(__dirname, 'src/utils'),
-            '@lib': path.resolve(__dirname, 'src/lib'),
-            '@types': path.resolve(__dirname, 'src/types'),
+            '@': path_1.default.resolve(__dirname, 'src'),
+            '@services': path_1.default.resolve(__dirname, 'src/services'),
+            '@utils': path_1.default.resolve(__dirname, 'src/utils'),
+            '@lib': path_1.default.resolve(__dirname, 'src/lib'),
+            '@types': path_1.default.resolve(__dirname, 'src/types'),
         },
     },
 });

@@ -1,4 +1,7 @@
-export function extractSymbolsFromJournal(entry) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.extractSymbolsFromJournal = extractSymbolsFromJournal;
+function extractSymbolsFromJournal(entry) {
     const lowerEntry = entry.toLowerCase();
     const symbolKeywords = {
         transformation: ['fire', 'phoenix', 'rebirth', 'change', 'ignite'],

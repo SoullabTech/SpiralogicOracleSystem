@@ -1,12 +1,14 @@
+"use strict";
 // src/routes/survey.routes.ts
-import { Router } from 'express';
-import { handleSurveySubmission } from '../controllers/survey.controller';
-import { z } from 'zod';
-const router = Router();
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const survey_controller_1 = require("../controllers/survey.controller");
+const zod_1 = require("zod");
+const router = (0, express_1.Router)();
 // Define the expected shape of the survey submission
-const SurveySubmissionSchema = z.object({
-    crystalFocus: z.object({
-        type: z.enum([
+const SurveySubmissionSchema = zod_1.z.object({
+    crystalFocus: zod_1.z.object({
+        type: zod_1.z.enum([
             'career',
             'spiritual',
             'relational',
@@ -14,13 +16,13 @@ const SurveySubmissionSchema = z.object({
             'creative',
             'other',
         ]),
-        customDescription: z.string().optional(),
-        challenges: z.string(),
-        aspirations: z.string(),
+        customDescription: zod_1.z.string().optional(),
+        challenges: zod_1.z.string(),
+        aspirations: zod_1.z.string(),
     }),
-    responses: z.array(z.object({
-        questionId: z.string(),
-        answer: z.number().min(1).max(5),
+    responses: zod_1.z.array(zod_1.z.object({
+        questionId: zod_1.z.string(),
+        answer: zod_1.z.number().min(1).max(5),
     })),
 });
 // POST /api/oracle/survey
@@ -36,7 +38,7 @@ router.post('/', async (req, res) => {
         }
         // Attach to request object for controller
         req.body = { ...result.data };
-        return handleSurveySubmission(req, res);
+        return (0, survey_controller_1.handleSurveySubmission)(req, res);
     }
     catch (err) {
         console.error('❌ Survey processing error:', err);
@@ -46,4 +48,4 @@ router.post('/', async (req, res) => {
         });
     }
 });
-export default router;
+exports.default = router;

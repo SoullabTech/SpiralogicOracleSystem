@@ -1,2 +1,3 @@
+"use strict";
 // Switzerland Retreat Types and Interfaces
-export {};
+Object.defineProperty(exports, "__esModule", { value: true });

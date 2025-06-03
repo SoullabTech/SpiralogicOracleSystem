@@ -1,4 +1,7 @@
+"use strict";
 // 📁 File: src/lib/emotionParser.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseEmotions = parseEmotions;
 const emotionKeywords = {
     grief: ['loss', 'mourning', 'absence', 'longing', 'tears'],
     inspiration: ['vision', 'light', 'awakening', 'breakthrough', 'spark'],
@@ -6,7 +9,7 @@ const emotionKeywords = {
     awe: ['mystery', 'cosmos', 'vast', 'grand', 'beauty'],
     clarity: ['focus', 'insight', 'resolve', 'truth', 'understanding'],
 };
-export function parseEmotions(text) {
+function parseEmotions(text) {
     const scores = {};
     for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
         scores[emotion] = keywords.reduce((acc, word) => {

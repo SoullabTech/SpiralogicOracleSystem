@@ -1,6 +1,9 @@
-import { z } from 'zod';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.surveySubmissionSchema = exports.surveyResponseSchema = exports.crystalFocusSchema = exports.CRYSTAL_FOCUS_OPTIONS = void 0;
+const zod_1 = require("zod");
 // 🎯 Crystal Focus Options
-export const CRYSTAL_FOCUS_OPTIONS = [
+exports.CRYSTAL_FOCUS_OPTIONS = [
     {
         type: 'career',
         title: 'Career Crystal',
@@ -39,8 +42,8 @@ export const CRYSTAL_FOCUS_OPTIONS = [
     },
 ];
 // ✅ Zod Schemas
-export const crystalFocusSchema = z.object({
-    type: z.enum([
+exports.crystalFocusSchema = zod_1.z.object({
+    type: zod_1.z.enum([
         'career',
         'spiritual',
         'relational',
@@ -48,16 +51,16 @@ export const crystalFocusSchema = z.object({
         'creative',
         'other',
     ]),
-    customDescription: z.string().optional(),
-    challenges: z.string().min(1, 'Please describe a challenge.'),
-    aspirations: z.string().min(1, 'Please describe an aspiration.'),
+    customDescription: zod_1.z.string().optional(),
+    challenges: zod_1.z.string().min(1, 'Please describe a challenge.'),
+    aspirations: zod_1.z.string().min(1, 'Please describe an aspiration.'),
 });
-export const surveyResponseSchema = z.object({
-    questionId: z.string(),
-    answer: z.number().int().min(1).max(5),
+exports.surveyResponseSchema = zod_1.z.object({
+    questionId: zod_1.z.string(),
+    answer: zod_1.z.number().int().min(1).max(5),
 });
-export const surveySubmissionSchema = z.object({
-    userId: z.string().min(3),
-    responses: z.array(surveyResponseSchema).min(1),
-    crystalFocus: crystalFocusSchema,
+exports.surveySubmissionSchema = zod_1.z.object({
+    userId: zod_1.z.string().min(3),
+    responses: zod_1.z.array(exports.surveyResponseSchema).min(1),
+    crystalFocus: exports.crystalFocusSchema,
 });

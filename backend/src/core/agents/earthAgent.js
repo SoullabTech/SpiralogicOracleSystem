@@ -1,10 +1,15 @@
 // src/core/agents/earthAgent.ts
 // Sacred Keeper of Manifestation - Earth Agent with Living Grounding Wisdom
 "use strict";
-import { OracleAgent } from "./oracleAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
-import ModelService from "../../utils/modelService";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EarthAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const oracleLogger_1 = require("../../utils/oracleLogger");
+const memoryService_1 = require("../../services/memoryService");
+const modelService_1 = __importDefault(require("../../utils/modelService"));
 // Sacred Earth Voice Protocols - Embodying Grounding & Manifestation Intelligence
 const EarthVoiceProtocols = {
     // PRESENCE - How Earth enters each conversation
@@ -153,14 +158,14 @@ What in your life feels most solid and trustworthy right now? Let's start there 
         return `${response}\n\n${signatures[earthType] || signatures.general_grounding}`;
     }
 };
-export class EarthAgent extends OracleAgent {
+class EarthAgent extends oracleAgent_1.OracleAgent {
     constructor() {
         super({ debug: false });
     }
     async processQuery(query) {
         const { input, userId } = query;
         // Gather sacred context - grounding patterns from past conversations
-        const contextMemory = await getRelevantMemories(userId, 3);
+        const contextMemory = await (0, memoryService_1.getRelevantMemories)(userId, 3);
         const earthType = EarthIntelligence.detectEarthType(input, contextMemory);
         // Create context that preserves grounding wisdom from past conversations
         const earthContext = contextMemory.length
@@ -178,7 +183,7 @@ Current sharing: ${input}
 Earth type needed: ${earthType}
 
 Respond with the wisdom of earth that serves practical manifestation and embodied living. Help them find solid ground while honoring their human rhythms and natural cycles.`;
-        const modelResponse = await ModelService.getResponse({
+        const modelResponse = await modelService_1.default.getResponse({
             input: earthPrompt,
             userId
         });
@@ -189,7 +194,7 @@ ${modelResponse.response}`;
         // Add earth signature that matches the grounding energy needed
         const content = EarthIntelligence.addEarthSignature(weavedWisdom, earthType);
         // Store memory with earth-specific manifestation metadata
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: userId,
             content,
             element: "earth",
@@ -206,7 +211,7 @@ ${modelResponse.response}`;
             },
         });
         // Log with earth-specific manifestation insights
-        await logOracleInsight({
+        await (0, oracleLogger_1.logOracleInsight)({
             anon_id: userId,
             archetype: "Earth",
             element: "earth",
@@ -320,3 +325,4 @@ ${modelResponse.response}`;
         return reflections;
     }
 }
+exports.EarthAgent = EarthAgent;

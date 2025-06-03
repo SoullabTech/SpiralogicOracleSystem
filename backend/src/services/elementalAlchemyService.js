@@ -1,7 +1,10 @@
-import { ElementalAlchemyHoloflower } from '../core/ElementalAlchemyHoloflower';
-import { supabase } from '../lib/supabaseClient';
-import { WebSocketServer } from 'ws';
-export class ElementalAlchemyService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.elementalAlchemyService = exports.ElementalAlchemyService = void 0;
+const ElementalAlchemyHoloflower_1 = require("../core/ElementalAlchemyHoloflower");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const ws_1 = require("ws");
+class ElementalAlchemyService {
     constructor() {
         this.userStates = new Map();
         this.groupPatterns = new Map();
@@ -11,7 +14,7 @@ export class ElementalAlchemyService {
         this.startSacredTimingUpdates();
     }
     initializeWebSocketServer() {
-        this.wsServer = new WebSocketServer({ port: 5003 });
+        this.wsServer = new ws_1.WebSocketServer({ port: 5003 });
         this.wsServer.on('connection', (ws, req) => {
             const userId = req.url?.split('/').pop();
             if (!userId)
@@ -56,7 +59,7 @@ export class ElementalAlchemyService {
         }
         // Load saved state from database
         const savedState = await this.loadUserState(userId);
-        const holoflower = new ElementalAlchemyHoloflower(savedState);
+        const holoflower = new ElementalAlchemyHoloflower_1.ElementalAlchemyHoloflower(savedState);
         const userState = {
             userId,
             holoflower,
@@ -68,7 +71,7 @@ export class ElementalAlchemyService {
         return userState;
     }
     async loadUserState(userId) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('elemental_alchemy_states')
             .select('state')
             .eq('user_id', userId)
@@ -76,7 +79,7 @@ export class ElementalAlchemyService {
         return data?.state;
     }
     async loadTransformationHistory(userId) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('alchemical_transformations')
             .select('*')
             .eq('user_id', userId)
@@ -85,7 +88,7 @@ export class ElementalAlchemyService {
         return data || [];
     }
     async loadInsightHistory(userId) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('transformation_insights')
             .select('*')
             .eq('user_id', userId)
@@ -123,7 +126,7 @@ export class ElementalAlchemyService {
         };
         userState.transformationHistory.push(transformation);
         // Save transformation to database
-        await supabase
+        await supabaseClient_1.supabase
             .from('alchemical_transformations')
             .insert({
             ...transformation,
@@ -151,7 +154,7 @@ export class ElementalAlchemyService {
             }
         };
         userState.insightHistory.push(insight);
-        await supabase
+        await supabaseClient_1.supabase
             .from('transformation_insights')
             .insert({
             ...insight,
@@ -233,7 +236,7 @@ export class ElementalAlchemyService {
         await this.saveInsight(userId, insight);
     }
     async saveInsight(userId, insight) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('transformation_insights')
             .insert({
             ...insight,
@@ -243,7 +246,7 @@ export class ElementalAlchemyService {
     async saveUserState(userId) {
         const userState = await this.getUserState(userId);
         const state = userState.holoflower.getState();
-        await supabase
+        await supabaseClient_1.supabase
             .from('elemental_alchemy_states')
             .upsert({
             user_id: userId,
@@ -268,12 +271,12 @@ export class ElementalAlchemyService {
     }
     determineAlchemicalProcess(fromHouse, toHouse) {
         // Logic to determine the dominant alchemical process
-        const state = new ElementalAlchemyHoloflower().getState();
+        const state = new ElementalAlchemyHoloflower_1.ElementalAlchemyHoloflower().getState();
         const toHouseData = state.houses.find(h => h.number === toHouse);
         return toHouseData?.alchemicalProcess || 'unknown';
     }
     analyzeConsciousnessShift(fromHouse, toHouse) {
-        const state = new ElementalAlchemyHoloflower().getState();
+        const state = new ElementalAlchemyHoloflower_1.ElementalAlchemyHoloflower().getState();
         const fromHouseData = state.houses.find(h => h.number === fromHouse);
         const toHouseData = state.houses.find(h => h.number === toHouse);
         if (!fromHouseData || !toHouseData)
@@ -281,7 +284,7 @@ export class ElementalAlchemyService {
         return `${fromHouseData.consciousnessLevel} → ${toHouseData.consciousnessLevel}`;
     }
     analyzeElementalShift(fromHouse, toHouse) {
-        const state = new ElementalAlchemyHoloflower().getState();
+        const state = new ElementalAlchemyHoloflower_1.ElementalAlchemyHoloflower().getState();
         const fromHouseData = state.houses.find(h => h.number === fromHouse);
         const toHouseData = state.houses.find(h => h.number === toHouse);
         if (!fromHouseData || !toHouseData)
@@ -430,14 +433,14 @@ export class ElementalAlchemyService {
         return groupPattern;
     }
     async getGroupParticipants(groupId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('group_participants')
             .select('user_id')
             .eq('group_id', groupId);
         return data?.map(p => p.user_id) || [];
     }
     async calculateCollectiveState(participants) {
-        const collectiveHoloflower = new ElementalAlchemyHoloflower();
+        const collectiveHoloflower = new ElementalAlchemyHoloflower_1.ElementalAlchemyHoloflower();
         const houseIntensities = new Map();
         // Aggregate all participant states
         for (const userId of participants) {
@@ -548,4 +551,5 @@ export class ElementalAlchemyService {
         }
     }
 }
-export const elementalAlchemyService = new ElementalAlchemyService();
+exports.ElementalAlchemyService = ElementalAlchemyService;
+exports.elementalAlchemyService = new ElementalAlchemyService();

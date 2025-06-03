@@ -1,10 +1,14 @@
+"use strict";
 // src/services/guideService.ts
-import { getUserProfile } from './profileService';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getPersonalGuideSettings = getPersonalGuideSettings;
+exports.getVoiceSynthesisConfig = getVoiceSynthesisConfig;
+const profileService_1 = require("./profileService");
 /**
  * Retrieves the guide settings for the user's personal guide.
  */
-export async function getPersonalGuideSettings(userId) {
-    const profile = await getUserProfile(userId);
+async function getPersonalGuideSettings(userId) {
+    const profile = await (0, profileService_1.getUserProfile)(userId);
     return {
         name: profile.personal_guide_name || 'Your Inner Guide',
         voiceId: profile.guide_voice_id || 'LcfcDJNUP1GQjkzn1xUU', // Default to Emily
@@ -15,7 +19,7 @@ export async function getPersonalGuideSettings(userId) {
 /**
  * Returns the text-to-speech personalization block for ElevenLabs or other integrations.
  */
-export function getVoiceSynthesisConfig(guide) {
+function getVoiceSynthesisConfig(guide) {
     return {
         voice_id: guide.voiceId,
         language: guide.language,

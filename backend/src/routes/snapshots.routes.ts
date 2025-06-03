@@ -1,96 +1,65 @@
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import SoulCompass from './SoulCompass';
-import ElementalCompass from './ElementalCompass';
-import SpiralogicForecast from '@/components/oracle/SpiralogicForecast';
-import { analyzeElementalTrend } from '@/lib/elemental-tracker';
-import { saveElementalSnapshot } from '@/lib/elemental-history';
+import { Router } from 'express';
+import { supabase } from '../lib/supabase.js';
 
-interface AINChatBoxProps {
-  onSubmit?: (q: string) => void;
-}
+const router = Router();
 
-export default function AINChatBox({ onSubmit }: AINChatBoxProps) {
-  const [input, setInput] = useState('');
-  const [response, setResponse] = useState('');
-  const [metadata, setMetadata] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+// POST /api/snapshots - Save user state snapshot
+router.post('/', async (req, res) => {
+  try {
+    const { userId, timestamp, elemental, holoflowerState } = req.body;
 
-  const sendToOracle = async () => {
-    if (!input.trim()) return;
-    setLoading(true);
-    onSubmit?.(input);
-
-    const journalSummary = localStorage.getItem('lastJournalSummary') || '';
-    const holoflower = localStorage.getItem('lastHoloflower') || '{}';
-    const timestamp = new Date().toISOString();
-    const userId = 'demo-user-001';
-
-    try {
-      const res = await fetch('/api/oracle/respond', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          input,
-          userId,
-          context: {
-            journalSummary,
-            holoflowerState: JSON.parse(holoflower)
-          }
-        })
-      });
-
-      const data = await res.json();
-      setResponse(data.content);
-      setMetadata(data.metadata);
-
-      // 🌀 Save snapshot to local log
-      const trend = analyzeElementalTrend(journalSummary);
-      saveElementalSnapshot({ timestamp, userId, elemental: trend });
-
-      // 🔗 Save snapshot to Supabase
-      await fetch('/api/snapshots', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          timestamp,
-          elemental: trend,
-          holoflowerState: JSON.parse(holoflower)
-        })
-      });
-    } catch (err) {
-      setResponse('🌀 Oracle connection unstable. Try again.');
-      setMetadata(null);
-    } finally {
-      setLoading(false);
+    if (!userId || !timestamp) {
+      return res.status(400).json({ error: 'Missing required fields: userId, timestamp' });
     }
-  };
 
-  return (
-    <div className="space-y-8 max-w-xl mx-auto">
-      <div className="flex gap-2 items-center">
-        <Input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder="Ask the Oracle anything..."
-          onKeyDown={e => e.key === 'Enter' && sendToOracle()}
-        />
-        <Button onClick={sendToOracle} disabled={loading}>
-          {loading ? 'Listening...' : 'Ask'}
-        </Button>
-      </div>
+    const { data, error } = await supabase
+      .from('user_snapshots')
+      .insert([
+        {
+          user_id: userId,
+          timestamp,
+          elemental_state: elemental,
+          holoflower_state: holoflowerState,
+          created_at: new Date().toISOString()
+        }
+      ])
+      .select();
 
-      <section className="max-w-4xl mx-auto mt-10">
-        <SpiralogicForecast />
-      </section>
+    if (error) {
+      console.error('Error saving snapshot:', error);
+      return res.status(500).json({ error: 'Failed to save snapshot' });
+    }
 
-      {response && (
-        <SoulCompass response={response} metadata={metadata} />
-      )}
+    res.json({ message: 'Snapshot saved successfully', data });
+  } catch (error) {
+    console.error('Snapshot route error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-      <ElementalCompass />
-    </div>
-  );
-}
+// GET /api/snapshots/:userId - Get user snapshots
+router.get('/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { limit = 10 } = req.query;
+
+    const { data, error } = await supabase
+      .from('user_snapshots')
+      .select('*')
+      .eq('user_id', userId)
+      .order('timestamp', { ascending: false })
+      .limit(Number(limit));
+
+    if (error) {
+      console.error('Error fetching snapshots:', error);
+      return res.status(500).json({ error: 'Failed to fetch snapshots' });
+    }
+
+    res.json({ snapshots: data });
+  } catch (error) {
+    console.error('Snapshot fetch error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;

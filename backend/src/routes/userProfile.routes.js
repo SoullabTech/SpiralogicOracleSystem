@@ -1,7 +1,9 @@
-import { Router } from 'express';
-import { authenticate } from '../middleware/authenticate';
-import { getUserProfile, updateUserProfile, getProfileStats, } from '../services/profileService';
-const router = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authenticate_1 = require("../middleware/authenticate");
+const profileService_1 = require("../services/profileService");
+const router = (0, express_1.Router)();
 // Public route for basic health check
 router.get('/health', (_req, res) => {
     res.status(200).json({
@@ -11,7 +13,7 @@ router.get('/health', (_req, res) => {
     });
 });
 // All routes below this require authentication
-router.use(authenticate);
+router.use(authenticate_1.authenticate);
 /**
  * POST /update-profile
  * Body: { fire, water, earth, air, aether, crystal_focus }
@@ -26,7 +28,7 @@ router.post('/update-profile', async (req, res) => {
         if ([fire, water, earth, air, aether].some((n) => typeof n !== 'number' || n < 0 || n > 100)) {
             return res.status(400).json({ message: 'Profile validation failed' });
         }
-        const updatedProfile = await updateUserProfile(userId, {
+        const updatedProfile = await (0, profileService_1.updateUserProfile)(userId, {
             user_id: userId,
             fire,
             water,
@@ -52,7 +54,7 @@ router.get('/profile', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ message: 'Unauthenticated' });
         }
-        const profile = await getUserProfile(userId);
+        const profile = await (0, profileService_1.getUserProfile)(userId);
         res.status(200).json(profile);
     }
     catch (err) {
@@ -69,7 +71,7 @@ router.get('/profile/stats', async (req, res) => {
         if (!userId) {
             return res.status(401).json({ message: 'Unauthenticated' });
         }
-        const stats = await getProfileStats(userId);
+        const stats = await (0, profileService_1.getProfileStats)(userId);
         res.status(200).json(stats);
     }
     catch (err) {
@@ -77,4 +79,4 @@ router.get('/profile/stats', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-export default router;
+exports.default = router;

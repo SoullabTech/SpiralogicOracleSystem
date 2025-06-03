@@ -1,14 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.retreatSupportService = exports.RetreatSupportService = void 0;
 // Retreat Support Service - Real-time participant management
-import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '../lib/supabaseClient';
-import { logger } from '../utils/logger';
-export class RetreatSupportService {
+const uuid_1 = require("uuid");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const logger_1 = require("../utils/logger");
+class RetreatSupportService {
     // Record daily check-in
     async recordDailyCheckIn(checkIn) {
         try {
-            const checkInId = uuidv4();
+            const checkInId = (0, uuid_1.v4)();
             // Store check-in data
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient_1.supabase
                 .from('daily_checkins')
                 .insert({
                 id: checkInId,
@@ -31,14 +34,14 @@ export class RetreatSupportService {
             if (checkIn.supportNeeded) {
                 await this.flagSupportNeeded(checkIn.participantId, checkIn.supportNeeded);
             }
-            logger.info('Daily check-in recorded', {
+            logger_1.logger.info('Daily check-in recorded', {
                 participantId: checkIn.participantId,
                 day: checkIn.dayNumber
             });
             return { id: checkInId, ...checkIn };
         }
         catch (error) {
-            logger.error('Failed to record daily check-in', error);
+            logger_1.logger.error('Failed to record daily check-in', error);
             throw error;
         }
     }
@@ -46,7 +49,7 @@ export class RetreatSupportService {
     async generateDailyGuidance(participantId, checkIn) {
         try {
             // Get participant info
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
@@ -72,7 +75,7 @@ export class RetreatSupportService {
             };
         }
         catch (error) {
-            logger.error('Failed to generate daily guidance', error);
+            logger_1.logger.error('Failed to generate daily guidance', error);
             throw error;
         }
     }
@@ -115,7 +118,7 @@ Trust your journey today.
     async startLiveSession(sessionData) {
         try {
             const session = {
-                id: uuidv4(),
+                id: (0, uuid_1.v4)(),
                 retreatId: sessionData.retreatId,
                 sessionType: sessionData.sessionType,
                 facilitatorId: sessionData.facilitatorId,
@@ -130,26 +133,26 @@ Trust your journey today.
                 wisdomCaptured: []
             };
             // Store session
-            await supabase
+            await supabaseClient_1.supabase
                 .from('live_sessions')
                 .insert(session);
             // Initialize tracking
             await this.initializeSessionTracking(session.id);
-            logger.info('Live session started', {
+            logger_1.logger.info('Live session started', {
                 sessionId: session.id,
                 type: session.sessionType
             });
             return session;
         }
         catch (error) {
-            logger.error('Failed to start live session', error);
+            logger_1.logger.error('Failed to start live session', error);
             throw error;
         }
     }
     // Initialize session tracking
     async initializeSessionTracking(sessionId) {
         // In production, this would set up real-time tracking
-        await supabase
+        await supabaseClient_1.supabase
             .from('session_tracking')
             .insert({
             session_id: sessionId,
@@ -165,8 +168,8 @@ Trust your journey today.
     // Record participation
     async recordParticipation(participation) {
         try {
-            const participationId = uuidv4();
-            await supabase
+            const participationId = (0, uuid_1.v4)();
+            await supabaseClient_1.supabase
                 .from('session_participations')
                 .insert({
                 id: participationId,
@@ -181,7 +184,7 @@ Trust your journey today.
             return { id: participationId, ...participation };
         }
         catch (error) {
-            logger.error('Failed to record participation', error);
+            logger_1.logger.error('Failed to record participation', error);
             throw error;
         }
     }
@@ -189,7 +192,7 @@ Trust your journey today.
     async endLiveSession(sessionId, closingData) {
         try {
             // Get session data
-            const { data: session } = await supabase
+            const { data: session } = await supabaseClient_1.supabase
                 .from('live_sessions')
                 .select('*')
                 .eq('id', sessionId)
@@ -199,7 +202,7 @@ Trust your journey today.
             // Calculate session summary
             const summary = await this.generateSessionSummary(sessionId);
             // Update session
-            await supabase
+            await supabaseClient_1.supabase
                 .from('live_sessions')
                 .update({
                 end_time: new Date(),
@@ -218,7 +221,7 @@ Trust your journey today.
             };
         }
         catch (error) {
-            logger.error('Failed to end live session', error);
+            logger_1.logger.error('Failed to end live session', error);
             throw error;
         }
     }
@@ -226,7 +229,7 @@ Trust your journey today.
     async captureCollectiveWisdom(wisdomData) {
         try {
             const wisdom = {
-                id: uuidv4(),
+                id: (0, uuid_1.v4)(),
                 retreatId: wisdomData.retreatId,
                 sessionId: wisdomData.sessionId,
                 type: wisdomData.type,
@@ -235,19 +238,19 @@ Trust your journey today.
                 timestamp: new Date()
             };
             // Store wisdom
-            await supabase
+            await supabaseClient_1.supabase
                 .from('collective_wisdom')
                 .insert(wisdom);
             // Update wisdom index
             await this.updateWisdomIndex(wisdom);
-            logger.info('Collective wisdom captured', {
+            logger_1.logger.info('Collective wisdom captured', {
                 wisdomId: wisdom.id,
                 type: wisdom.type
             });
             return wisdom;
         }
         catch (error) {
-            logger.error('Failed to capture collective wisdom', error);
+            logger_1.logger.error('Failed to capture collective wisdom', error);
             throw error;
         }
     }
@@ -255,7 +258,7 @@ Trust your journey today.
     async broadcastWisdom(retreatId, wisdom) {
         try {
             // Get all participants
-            const { data: participants } = await supabase
+            const { data: participants } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('id, email, preferredName')
                 .eq('retreat_id', retreatId);
@@ -272,19 +275,19 @@ Trust your journey today.
                 },
                 created_at: new Date()
             }));
-            await supabase
+            await supabaseClient_1.supabase
                 .from('participant_notifications')
                 .insert(notifications);
             // In production, this would also send real-time notifications
         }
         catch (error) {
-            logger.error('Failed to broadcast wisdom', error);
+            logger_1.logger.error('Failed to broadcast wisdom', error);
         }
     }
     // Get collective wisdom
     async getCollectiveWisdom(retreatId, filters) {
         try {
-            let query = supabase
+            let query = supabaseClient_1.supabase
                 .from('collective_wisdom')
                 .select('*')
                 .eq('retreat_id', retreatId)
@@ -302,14 +305,14 @@ Trust your journey today.
             return data || [];
         }
         catch (error) {
-            logger.error('Failed to get collective wisdom', error);
+            logger_1.logger.error('Failed to get collective wisdom', error);
             throw error;
         }
     }
     // Get wisdom by element
     async getWisdomByElement(retreatId) {
         try {
-            const { data } = await supabase
+            const { data } = await supabaseClient_1.supabase
                 .from('collective_wisdom')
                 .select('content')
                 .eq('retreat_id', retreatId);
@@ -328,7 +331,7 @@ Trust your journey today.
             return elementCounts;
         }
         catch (error) {
-            logger.error('Failed to get wisdom by element', error);
+            logger_1.logger.error('Failed to get wisdom by element', error);
             throw error;
         }
     }
@@ -336,20 +339,20 @@ Trust your journey today.
     async getParticipantInsights(participantId, retreatId) {
         try {
             // Get participant data
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
                 .single();
             // Get check-ins
-            const { data: checkIns } = await supabase
+            const { data: checkIns } = await supabaseClient_1.supabase
                 .from('daily_checkins')
                 .select('*')
                 .eq('participant_id', participantId)
                 .eq('retreat_id', retreatId)
                 .order('day_number', { ascending: true });
             // Get participations
-            const { data: participations } = await supabase
+            const { data: participations } = await supabaseClient_1.supabase
                 .from('session_participations')
                 .select('*')
                 .eq('participant_id', participantId);
@@ -378,7 +381,7 @@ Trust your journey today.
             };
         }
         catch (error) {
-            logger.error('Failed to get participant insights', error);
+            logger_1.logger.error('Failed to get participant insights', error);
             throw error;
         }
     }
@@ -386,18 +389,18 @@ Trust your journey today.
     async getFacilitatorDashboard(retreatId) {
         try {
             // Get all participants
-            const { data: participants } = await supabase
+            const { data: participants } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('retreat_id', retreatId);
             // Get today's check-ins
-            const { data: todayCheckIns } = await supabase
+            const { data: todayCheckIns } = await supabaseClient_1.supabase
                 .from('daily_checkins')
                 .select('*')
                 .eq('retreat_id', retreatId)
                 .gte('created_at', new Date(new Date().setHours(0, 0, 0, 0)).toISOString());
             // Get active support requests
-            const { data: supportRequests } = await supabase
+            const { data: supportRequests } = await supabaseClient_1.supabase
                 .from('support_requests')
                 .select('*')
                 .eq('retreat_id', retreatId)
@@ -423,14 +426,14 @@ Trust your journey today.
             };
         }
         catch (error) {
-            logger.error('Failed to get facilitator dashboard', error);
+            logger_1.logger.error('Failed to get facilitator dashboard', error);
             throw error;
         }
     }
     // Request urgent support
     async requestUrgentSupport(supportData) {
         try {
-            const supportId = uuidv4();
+            const supportId = (0, uuid_1.v4)();
             const support = {
                 id: supportId,
                 participant_id: supportData.participantId,
@@ -440,13 +443,13 @@ Trust your journey today.
                 status: 'open',
                 created_at: supportData.timestamp
             };
-            await supabase
+            await supabaseClient_1.supabase
                 .from('support_requests')
                 .insert(support);
             return support;
         }
         catch (error) {
-            logger.error('Failed to request urgent support', error);
+            logger_1.logger.error('Failed to request urgent support', error);
             throw error;
         }
     }
@@ -454,7 +457,7 @@ Trust your journey today.
     async alertFacilitators(retreatId, support) {
         try {
             // Get facilitators
-            const { data: facilitators } = await supabase
+            const { data: facilitators } = await supabaseClient_1.supabase
                 .from('retreat_facilitators')
                 .select('*')
                 .eq('retreat_id', retreatId);
@@ -465,19 +468,19 @@ Trust your journey today.
                 content: support,
                 created_at: new Date()
             })) || [];
-            await supabase
+            await supabaseClient_1.supabase
                 .from('facilitator_alerts')
                 .insert(alerts);
             // In production, send real-time notifications
         }
         catch (error) {
-            logger.error('Failed to alert facilitators', error);
+            logger_1.logger.error('Failed to alert facilitators', error);
         }
     }
     // Track integration
     async trackIntegration(integrationData) {
         try {
-            const integrationId = uuidv4();
+            const integrationId = (0, uuid_1.v4)();
             const integration = {
                 id: integrationId,
                 participant_id: integrationData.participantId,
@@ -488,7 +491,7 @@ Trust your journey today.
                 recorded_at: integrationData.recordedAt,
                 follow_up_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
             };
-            await supabase
+            await supabaseClient_1.supabase
                 .from('integration_tracking')
                 .insert(integration);
             // Schedule follow-up
@@ -499,13 +502,13 @@ Trust your journey today.
             };
         }
         catch (error) {
-            logger.error('Failed to track integration', error);
+            logger_1.logger.error('Failed to track integration', error);
             throw error;
         }
     }
     // Helper methods
     async updateParticipantCurrentState(participantId, checkIn) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             current_state: {
@@ -518,7 +521,7 @@ Trust your journey today.
             .eq('id', participantId);
     }
     async flagSupportNeeded(participantId, supportNeeded) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('support_flags')
             .insert({
             participant_id: participantId,
@@ -601,21 +604,21 @@ Trust your journey today.
         return activities[(dayNumber - 1) % activities.length];
     }
     async updateSessionParticipantCount(sessionId) {
-        const { count } = await supabase
+        const { count } = await supabaseClient_1.supabase
             .from('session_participations')
             .select('*', { count: 'exact' })
             .eq('session_id', sessionId);
-        await supabase
+        await supabaseClient_1.supabase
             .from('live_sessions')
             .update({ participant_count: count || 0 })
             .eq('id', sessionId);
     }
     async generateSessionSummary(sessionId) {
-        const { data: participations } = await supabase
+        const { data: participations } = await supabaseClient_1.supabase
             .from('session_participations')
             .select('*')
             .eq('session_id', sessionId);
-        const { data: wisdom } = await supabase
+        const { data: wisdom } = await supabaseClient_1.supabase
             .from('collective_wisdom')
             .select('*')
             .eq('session_id', sessionId);
@@ -641,7 +644,7 @@ Trust your journey today.
     }
     async updateWisdomIndex(wisdom) {
         // In production, this would update a searchable wisdom index
-        logger.info('Wisdom indexed', { wisdomId: wisdom.id });
+        logger_1.logger.info('Wisdom indexed', { wisdomId: wisdom.id });
     }
     analyzeParticipantPatterns(checkIns) {
         if (checkIns.length === 0)
@@ -765,7 +768,7 @@ Trust your journey today.
         return recommendations;
     }
     async getUpcomingSessions(retreatId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('retreat_sessions')
             .select('*')
             .eq('retreat_id', retreatId)
@@ -776,7 +779,7 @@ Trust your journey today.
     }
     async scheduleFollowUp(integration) {
         // In production, this would schedule actual follow-up communications
-        logger.info('Follow-up scheduled', {
+        logger_1.logger.info('Follow-up scheduled', {
             participantId: integration.participant_id,
             date: integration.follow_up_date
         });
@@ -891,5 +894,6 @@ Trust your journey today.
         return highlights;
     }
 }
+exports.RetreatSupportService = RetreatSupportService;
 // Export singleton instance
-export const retreatSupportService = new RetreatSupportService();
+exports.retreatSupportService = new RetreatSupportService();

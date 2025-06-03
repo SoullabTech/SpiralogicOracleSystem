@@ -1,8 +1,11 @@
-import { FlowManager } from './index';
-export class LearningFlow {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LearningFlow = void 0;
+const index_1 = require("./index");
+class LearningFlow {
     constructor(clientId) {
         this.session = null;
-        this.flowManager = new FlowManager();
+        this.flowManager = new index_1.FlowManager();
         this.clientId = clientId;
     }
     async start() {
@@ -23,3 +26,4 @@ export class LearningFlow {
         return this.flowManager.completeLearningFlow(this.clientId, this.session.id);
     }
 }
+exports.LearningFlow = LearningFlow;

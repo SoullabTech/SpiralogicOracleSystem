@@ -1,5 +1,8 @@
+"use strict";
 // oracle-backend/src/utils/errors.ts
-export class AppError extends Error {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NotFoundError = exports.AuthorizationError = exports.AuthenticationError = exports.ValidationError = exports.AppError = void 0;
+class AppError extends Error {
     constructor(message, statusCode = 500) {
         super(message);
         this.name = this.constructor.name;
@@ -7,23 +10,28 @@ export class AppError extends Error {
         Error.captureStackTrace(this, this.constructor);
     }
 }
-export class ValidationError extends AppError {
+exports.AppError = AppError;
+class ValidationError extends AppError {
     constructor(message = 'Invalid request') {
         super(message, 400);
     }
 }
-export class AuthenticationError extends AppError {
+exports.ValidationError = ValidationError;
+class AuthenticationError extends AppError {
     constructor(message = 'Authentication failed') {
         super(message, 401);
     }
 }
-export class AuthorizationError extends AppError {
+exports.AuthenticationError = AuthenticationError;
+class AuthorizationError extends AppError {
     constructor(message = 'Not authorized') {
         super(message, 403);
     }
 }
-export class NotFoundError extends AppError {
+exports.AuthorizationError = AuthorizationError;
+class NotFoundError extends AppError {
     constructor(message = 'Resource not found') {
         super(message, 404);
     }
 }
+exports.NotFoundError = NotFoundError;

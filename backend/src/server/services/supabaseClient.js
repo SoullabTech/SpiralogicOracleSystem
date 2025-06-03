@@ -1,20 +1,24 @@
+"use strict";
 // oracle-backend/src/services/supabaseClient.ts
-import { createClient } from '@supabase/supabase-js';
-import { config } from '../config';
-const { url, anonKey, serviceRoleKey } = config.supabase;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.supabaseAdmin = exports.supabase = void 0;
+exports.getSupabaseAdmin = getSupabaseAdmin;
+const supabase_js_1 = require("@supabase/supabase-js");
+const config_1 = require("../config");
+const { url, anonKey, serviceRoleKey } = config_1.config.supabase;
 if (!url || !anonKey) {
     throw new Error('❌ Missing Supabase configuration in environment variables.');
 }
 // Public client (used by frontend-safe operations)
-export const supabase = createClient(url, anonKey);
+exports.supabase = (0, supabase_js_1.createClient)(url, anonKey);
 // Admin client (used for backend server-side operations)
-export const supabaseAdmin = serviceRoleKey
-    ? createClient(url, serviceRoleKey)
+exports.supabaseAdmin = serviceRoleKey
+    ? (0, supabase_js_1.createClient)(url, serviceRoleKey)
     : null;
-export function getSupabaseAdmin() {
-    if (!supabaseAdmin) {
+function getSupabaseAdmin() {
+    if (!exports.supabaseAdmin) {
         console.warn('⚠️ Falling back to public Supabase client. Admin operations may be restricted.');
-        return supabase;
+        return exports.supabase;
     }
-    return supabaseAdmin;
+    return exports.supabaseAdmin;
 }

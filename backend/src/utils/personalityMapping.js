@@ -1,4 +1,8 @@
-export function computePersonalityAdjustment(profile) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.computePersonalityAdjustment = computePersonalityAdjustment;
+exports.getElementalGuidance = getElementalGuidance;
+function computePersonalityAdjustment(profile) {
     // Find dominant element
     const elements = ['fire', 'water', 'earth', 'air', 'aether'];
     const dominantElement = elements.reduce((prev, curr) => profile[curr] > profile[prev] ? curr : prev);
@@ -54,7 +58,7 @@ export function computePersonalityAdjustment(profile) {
     }
     return baseAdjustment;
 }
-export function getElementalGuidance(profile) {
+function getElementalGuidance(profile) {
     // Find weakest element
     const elements = ['fire', 'water', 'earth', 'air', 'aether'];
     const weakestElement = elements.reduce((prev, curr) => profile[curr] < profile[prev] ? curr : prev);

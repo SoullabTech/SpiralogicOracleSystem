@@ -1,9 +1,13 @@
+"use strict";
 // src/modules/shadowWorkModule.ts
-export const shadowWorkFunction = () => {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.runShadowWork = exports.ShadowWorkClass = exports.shadowWorkFunction = void 0;
+const shadowWorkFunction = () => {
     console.log("This is part of the shadow work module.");
     // Add more logic relevant to your shadow work module
 };
-export class ShadowWorkClass {
+exports.shadowWorkFunction = shadowWorkFunction;
+class ShadowWorkClass {
     constructor(name) {
         this.name = name;
     }
@@ -11,8 +15,9 @@ export class ShadowWorkClass {
         console.log(`Performing shadow work for ${this.name}`);
     }
 }
+exports.ShadowWorkClass = ShadowWorkClass;
 // Export runShadowWork function for compatibility
-export const runShadowWork = async (userId, data) => {
+const runShadowWork = async (userId, data) => {
     // Placeholder implementation
     const shadowWork = new ShadowWorkClass(userId);
     shadowWork.performWork();
@@ -22,3 +27,4 @@ export const runShadowWork = async (userId, data) => {
         transformations: []
     };
 };
+exports.runShadowWork = runShadowWork;

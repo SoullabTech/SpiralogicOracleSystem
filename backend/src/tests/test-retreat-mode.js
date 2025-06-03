@@ -1,20 +1,22 @@
+"use strict";
 // ===============================================
 // RETREAT MODE TEST
 // Tests the retreat mode functionality and memory tagging
 // ===============================================
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
+Object.defineProperty(exports, "__esModule", { value: true });
+const PersonalOracleAgent_1 = require("../core/agents/PersonalOracleAgent");
+const SoulMemorySystem_1 = require("../../memory/SoulMemorySystem");
 async function testRetreatMode() {
     console.log('🏔️ Testing Retreat Mode Functionality...\n');
     // Setup
     const userId = 'test_retreat_' + Date.now();
-    const soulMemory = new SoulMemorySystem({
+    const soulMemory = new SoulMemorySystem_1.SoulMemorySystem({
         userId,
         storageType: 'sqlite',
         databasePath: './test_retreat_memory.db',
         memoryDepth: 100
     });
-    const oracle = new PersonalOracleAgent({
+    const oracle = new PersonalOracleAgent_1.PersonalOracleAgent({
         userId,
         oracleName: 'Aria',
         elementalResonance: 'water'

@@ -1,10 +1,15 @@
 // src/core/agents/airAgent.ts
 // Sacred Clarifier of Truth - Air Agent with Living Clarity Intelligence
 "use strict";
-import { OracleAgent } from "./oracleAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
-import ModelService from "../../utils/modelService";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AirAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const oracleLogger_1 = require("../../utils/oracleLogger");
+const memoryService_1 = require("../../services/memoryService");
+const modelService_1 = __importDefault(require("../../utils/modelService"));
 // Sacred Air Voice Protocols - Embodying Clarity & Truth Intelligence
 const AirVoiceProtocols = {
     // PRESENCE - How Air enters each conversation
@@ -153,14 +158,14 @@ What wants to become clear that's been cloudy? What understanding is trying to d
         return `${response}\n\n${signatures[airType] || signatures.general_clarity}`;
     }
 };
-export class AirAgent extends OracleAgent {
+class AirAgent extends oracleAgent_1.OracleAgent {
     constructor() {
         super({ debug: false });
     }
     async processQuery(query) {
         const { input, userId } = query;
         // Gather sacred context - clarity patterns from past conversations
-        const contextMemory = await getRelevantMemories(userId, 3);
+        const contextMemory = await (0, memoryService_1.getRelevantMemories)(userId, 3);
         const airType = AirIntelligence.detectAirType(input, contextMemory);
         // Create context that preserves clarity wisdom from past conversations
         const airContext = contextMemory.length
@@ -178,7 +183,7 @@ Current sharing: ${input}
 Air type needed: ${airType}
 
 Respond with the wisdom of air that serves mental clarity and authentic communication. Help them find truth, perspective, and their authentic voice.`;
-        const modelResponse = await ModelService.getResponse({
+        const modelResponse = await modelService_1.default.getResponse({
             input: airPrompt,
             userId
         });
@@ -189,7 +194,7 @@ ${modelResponse.response}`;
         // Add air signature that matches the clarity energy needed
         const content = AirIntelligence.addAirSignature(weavedWisdom, airType);
         // Store memory with air-specific clarity metadata
-        await storeMemoryItem({
+        await (0, memoryService_1.storeMemoryItem)({
             clientId: userId,
             content,
             element: "air",
@@ -206,7 +211,7 @@ ${modelResponse.response}`;
             },
         });
         // Log with air-specific clarity insights
-        await logOracleInsight({
+        await (0, oracleLogger_1.logOracleInsight)({
             anon_id: userId,
             archetype: "Air",
             element: "air",
@@ -325,3 +330,4 @@ ${modelResponse.response}`;
         return reflections;
     }
 }
+exports.AirAgent = AirAgent;

@@ -1,4 +1,7 @@
+"use strict";
 // src/core/modules/SacredMirrorProtocol.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.runSacredMirrorCheck = runSacredMirrorCheck;
 const dissonancePrompts = [
     "Where do you crave affirmation more than truth?",
     "What part of you needs to be disrupted to evolve?",
@@ -46,7 +49,7 @@ const shadowChallengers = [
     "What are you ready to unlearn to be real?",
     "What wound became a mask you now mistake for your face?"
 ];
-export function runSacredMirrorCheck({ userInput, context, phase = "Unknown" }) {
+function runSacredMirrorCheck({ userInput, context, phase = "Unknown" }) {
     const prompt = dissonancePrompts[Math.floor(Math.random() * dissonancePrompts.length)];
     const invocation = mirrorInvocations[Math.floor(Math.random() * mirrorInvocations.length)];
     const disruptor = coherenceDisruptors[Math.floor(Math.random() * coherenceDisruptors.length)];

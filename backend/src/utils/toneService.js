@@ -1,5 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.toneService = void 0;
 // src/utils/toneService.ts
-export const toneService = {
+exports.toneService = {
     /**
      * Adjusts the tone of a piece of text.
      * @param text  The original text

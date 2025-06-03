@@ -1,7 +1,9 @@
 "use strict";
-import { OracleAgent } from "./oracleAgent";
-import { oracle } from "../core/agents/MainOracleAgent";
-export class ClientAgent extends OracleAgent {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ClientAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const MainOracleAgent_1 = require("../core/agents/MainOracleAgent");
+class ClientAgent extends oracleAgent_1.OracleAgent {
     constructor(clientId) {
         super();
         this.clientId = clientId;
@@ -25,7 +27,8 @@ export class ClientAgent extends OracleAgent {
             routingPath: [...(baseResponse.routingPath ?? []), 'client-agent'],
         };
         // Send wisdom to MainOracleAgent (afferent)
-        await oracle.storeExchange(this.clientId, query, finalResponse);
+        await MainOracleAgent_1.oracle.storeExchange(this.clientId, query, finalResponse);
         return finalResponse;
     }
 }
+exports.ClientAgent = ClientAgent;

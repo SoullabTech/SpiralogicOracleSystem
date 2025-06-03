@@ -1,10 +1,13 @@
-import { BaseAgent } from './baseAgent.js';
-import { logger } from '../../utils/logger.js';
-import { logOracleMemory } from '@/lib/logOracleMemory';
-import { fetchSpiralStage } from './userModel';
-import { analyzeSentiment, detectShadowThemes } from './emotionEngine';
-import { getContextualModeRecommendation, ORACLE_MODES as ENHANCED_ORACLE_MODES, MODE_RESPONSES } from './modules/oracleModes.js';
-import { AdaptiveWisdomEngine } from './AdaptiveWisdomEngine.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PersonalOracleAgent = void 0;
+const baseAgent_js_1 = require("./baseAgent.js");
+const logger_js_1 = require("../../utils/logger.js");
+const logOracleMemory_1 = require("@/lib/logOracleMemory");
+const userModel_1 = require("./userModel");
+const emotionEngine_1 = require("./emotionEngine");
+const oracleModes_js_1 = require("./modules/oracleModes.js");
+const AdaptiveWisdomEngine_js_1 = require("./AdaptiveWisdomEngine.js");
 const JungBuddhaProtocol = {
     jungMode: {
         prompt: "What part of yourself are you not seeing?",
@@ -269,7 +272,7 @@ const retreatProtocols = {
 // ===============================================
 // UNIFIED PERSONAL ORACLE AGENT CLASS
 // ===============================================
-export class PersonalOracleAgent extends BaseAgent {
+class PersonalOracleAgent extends baseAgent_js_1.BaseAgent {
     constructor(config) {
         // Store base system prompt before mode modifications
         const baseSystemPrompt = 'You are a Sacred Mirror - reflecting truth with love, offering sacred resistance when needed, facilitating genuine transformation.';
@@ -303,7 +306,7 @@ export class PersonalOracleAgent extends BaseAgent {
         this.currentOracleMode = config.oracleMode || 'sage';
         this.applyOracleModeToSystemPrompt();
         // Initialize Adaptive Wisdom Engine
-        this.adaptiveWisdomEngine = new AdaptiveWisdomEngine();
+        this.adaptiveWisdomEngine = new AdaptiveWisdomEngine_js_1.AdaptiveWisdomEngine();
         this.sacredRelationship = {
             trustLevel: 0,
             depthReached: [],
@@ -313,20 +316,20 @@ export class PersonalOracleAgent extends BaseAgent {
         if (config.mode === 'retreat' && config.retreatPhase) {
             this.activateRetreatMode(config.retreatPhase);
         }
-        logger.info(`PersonalOracleAgent initialized in ${this.currentOracleMode} mode for user: ${this.userId}`);
+        logger_js_1.logger.info(`PersonalOracleAgent initialized in ${this.currentOracleMode} mode for user: ${this.userId}`);
     }
     // ===============================================
     // SOUL MEMORY INTEGRATION
     // ===============================================
     setSoulMemory(soulMemory) {
         this.soulMemory = soulMemory;
-        logger.info(`Soul Memory System connected to Oracle: ${this.oracleName}`);
+        logger_js_1.logger.info(`Soul Memory System connected to Oracle: ${this.oracleName}`);
     }
     async connectToSoulMemory(soulMemory) {
         this.soulMemory = soulMemory;
         // Load memory context on connection
         await soulMemory.integrateWithOracle(this, this.userId);
-        logger.info(`Oracle ${this.oracleName} fully integrated with Soul Memory System`);
+        logger_js_1.logger.info(`Oracle ${this.oracleName} fully integrated with Soul Memory System`);
     }
     // ===============================================
     // CORE SACRED MIRROR FUNCTIONALITY
@@ -597,7 +600,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         this.mode = 'retreat';
         this.retreatPhase = phase;
         this.safetyProtocolsActive = true;
-        logger.info(`Retreat mode activated: ${phase} for ${this.userId}`);
+        logger_js_1.logger.info(`Retreat mode activated: ${phase} for ${this.userId}`);
         // Store retreat activation in Soul Memory
         if (this.soulMemory) {
             await this.soulMemory.storeMemory({
@@ -656,9 +659,9 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     // ===============================================
     async gatherContext(prompt) {
         const [spiralPhase, sentiment, shadowThemes, recentMemories, semanticMemories] = await Promise.all([
-            fetchSpiralStage(this.userId),
-            analyzeSentiment(prompt),
-            detectShadowThemes(prompt),
+            (0, userModel_1.fetchSpiralStage)(this.userId),
+            (0, emotionEngine_1.analyzeSentiment)(prompt),
+            (0, emotionEngine_1.detectShadowThemes)(prompt),
             this.getRecentMemories(5),
             this.searchSemanticMemories(prompt)
         ]);
@@ -698,7 +701,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         });
     }
     async storeMemory(type, content) {
-        await logOracleMemory({
+        await (0, logOracleMemory_1.logOracleMemory)({
             userId: this.userId,
             type,
             content,
@@ -784,7 +787,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     // ===============================================
     async setSoulMemorySystem(soulMemory) {
         this.soulMemory = soulMemory;
-        logger.info(`Soul Memory System connected to Oracle: ${this.oracleName}`);
+        logger_js_1.logger.info(`Soul Memory System connected to Oracle: ${this.oracleName}`);
     }
     async updateMemoryContext(memoryContext) {
         this.memoryContext = memoryContext;
@@ -798,7 +801,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         if (memoryContext.transformationPhase) {
             this.systemPrompt += `\n\nCurrent transformation phase: ${memoryContext.transformationPhase}`;
         }
-        logger.info(`Memory context updated for Oracle: ${this.oracleName}`);
+        logger_js_1.logger.info(`Memory context updated for Oracle: ${this.oracleName}`);
     }
     async searchSemanticMemories(prompt) {
         if (!this.soulMemory)
@@ -812,7 +815,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
             return memories;
         }
         catch (error) {
-            logger.error('Error searching semantic memories:', error);
+            logger_js_1.logger.error('Error searching semantic memories:', error);
             return [];
         }
     }
@@ -922,7 +925,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     // ORACLE MODE SYSTEM METHODS
     // ===============================================
     applyOracleModeToSystemPrompt() {
-        const modeConfig = ENHANCED_ORACLE_MODES[this.currentOracleMode];
+        const modeConfig = oracleModes_js_1.ORACLE_MODES[this.currentOracleMode];
         this.systemPrompt = `${this.baseSystemPrompt}\n\n${modeConfig.systemPromptAddition}`;
         // Add retreat context if in retreat mode
         if (this.mode === 'retreat' && this.retreatPhase) {
@@ -960,13 +963,13 @@ What brought you here today? Not just the immediate reason, but the deeper curre
             });
         }
         // Get mode-specific greeting
-        const modeConfig = ENHANCED_ORACLE_MODES[newMode];
-        const greeting = MODE_RESPONSES[newMode].greeting;
-        logger.info(`Oracle mode switched to ${newMode} for user ${this.userId}`);
+        const modeConfig = oracleModes_js_1.ORACLE_MODES[newMode];
+        const greeting = oracleModes_js_1.MODE_RESPONSES[newMode].greeting;
+        logger_js_1.logger.info(`Oracle mode switched to ${newMode} for user ${this.userId}`);
         return greeting;
     }
     getCurrentOracleMode() {
-        return ENHANCED_ORACLE_MODES[this.currentOracleMode];
+        return oracleModes_js_1.ORACLE_MODES[this.currentOracleMode];
     }
     getCurrentOracleModeType() {
         return this.currentOracleMode;
@@ -979,7 +982,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         if (this.modeSuggestionCooldown && new Date().getTime() - this.modeSuggestionCooldown.getTime() < 300000) { // 5 minutes
             return null;
         }
-        const recommendation = getContextualModeRecommendation(context);
+        const recommendation = (0, oracleModes_js_1.getContextualModeRecommendation)(context);
         if (recommendation && recommendation.mode !== this.currentOracleMode) {
             this.modeSuggestionCooldown = new Date();
             return {
@@ -995,8 +998,8 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         return null;
     }
     applyModeSpecificFilters(response, context) {
-        const modeConfig = ENHANCED_ORACLE_MODES[this.currentOracleMode];
-        const modeResponses = MODE_RESPONSES[this.currentOracleMode];
+        const modeConfig = oracleModes_js_1.ORACLE_MODES[this.currentOracleMode];
+        const modeResponses = oracleModes_js_1.MODE_RESPONSES[this.currentOracleMode];
         // Apply mode-specific response modifications
         switch (this.currentOracleMode) {
             case 'alchemist':
@@ -1227,8 +1230,8 @@ Feel the warmth of appreciation spreading through your being.`
         // Search for related memories
         const relatedMemories = await this.soulMemory.semanticSearch(this.userId, journalEntry, { topK: 3 });
         // Detect themes and patterns
-        const themes = await detectShadowThemes(journalEntry);
-        const sentiment = await analyzeSentiment(journalEntry);
+        const themes = await (0, emotionEngine_1.detectShadowThemes)(journalEntry);
+        const sentiment = await (0, emotionEngine_1.analyzeSentiment)(journalEntry);
         let reflection = `Thank you for sharing this with me. `;
         if (relatedMemories.length > 0) {
             reflection += `I notice this connects to themes we've explored before. `;
@@ -1499,12 +1502,12 @@ Feel the warmth of appreciation spreading through your being.`
             // Add shadow work awareness to system prompt
             this.systemPrompt += `\n\nThis person is actively engaged in shadow work. Be especially gentle and supportive while maintaining sacred resistance when needed.`;
             // Log the adaptation
-            logger.info(`Oracle adapting to strong Shadow archetype pattern for user ${this.userId}`);
+            logger_js_1.logger.info(`Oracle adapting to strong Shadow archetype pattern for user ${this.userId}`);
         }
         // Check for other strong patterns
         const strongPatterns = activeArchetypes.filter(a => a.patternStrength > 0.7);
         if (strongPatterns.length > 0) {
-            logger.info(`Strong archetypal patterns detected: ${strongPatterns.map(p => p.archetype).join(', ')}`);
+            logger_js_1.logger.info(`Strong archetypal patterns detected: ${strongPatterns.map(p => p.archetype).join(', ')}`);
         }
     }
     // ===============================================
@@ -1551,7 +1554,7 @@ Feel the warmth of appreciation spreading through your being.`
         this.mode = 'daily';
         this.retreatPhase = undefined;
         this.safetyProtocolsActive = false;
-        logger.info(`Retreat mode deactivated (was: ${previousPhase}) for ${this.userId}`);
+        logger_js_1.logger.info(`Retreat mode deactivated (was: ${previousPhase}) for ${this.userId}`);
         // Store retreat deactivation in Soul Memory
         if (this.soulMemory) {
             await this.soulMemory.storeMemory({
@@ -1591,7 +1594,7 @@ Feel the warmth of appreciation spreading through your being.`
         const simpleApproach = this.wisdomMode;
         const sophisticatedApproach = wisdomRouting.approach;
         // Log both approaches for comparison
-        logger.info('Wisdom approach comparison:', {
+        logger_js_1.logger.info('Wisdom approach comparison:', {
             simple: simpleApproach,
             sophisticated: sophisticatedApproach,
             confidence: wisdomRouting.confidence,
@@ -1602,7 +1605,7 @@ Feel the warmth of appreciation spreading through your being.`
         // If confidence is low, defer to simple approach
         if (wisdomRouting.confidence < 0.6 && simpleApproach !== 'hybrid') {
             finalApproach = simpleApproach;
-            logger.info('Using simple approach due to low confidence:', {
+            logger_js_1.logger.info('Using simple approach due to low confidence:', {
                 finalApproach,
                 reason: 'Low confidence in sophisticated detection'
             });
@@ -1617,20 +1620,20 @@ Feel the warmth of appreciation spreading through your being.`
         // Check if user is grasping/attached (Buddha indicators)
         if (this.detectGraspingLanguageSimple(lowerPrompt)) {
             this.wisdomMode = 'buddha'; // Offer spaciousness
-            logger.info('Simple wisdom detection: Buddha mode (grasping detected)');
+            logger_js_1.logger.info('Simple wisdom detection: Buddha mode (grasping detected)');
             return;
         }
         // Check if user is avoiding/denying (Jung indicators)
         if (this.detectAvoidanceLanguageSimple(lowerPrompt)) {
             this.wisdomMode = 'jung'; // Offer integration
-            logger.info('Simple wisdom detection: Jung mode (avoidance detected)');
+            logger_js_1.logger.info('Simple wisdom detection: Jung mode (avoidance detected)');
             return;
         }
         // Check recent patterns for balance
         if (context.recentMemories && this.needsWisdomBalance(context.recentMemories)) {
             const predominantMode = this.getPredominantWisdomMode(context.recentMemories);
             this.wisdomMode = predominantMode === 'jung' ? 'buddha' : 'jung'; // Balance with opposite
-            logger.info('Simple wisdom detection: Balancing mode', {
+            logger_js_1.logger.info('Simple wisdom detection: Balancing mode', {
                 predominantMode,
                 switchedTo: this.wisdomMode
             });
@@ -1638,7 +1641,7 @@ Feel the warmth of appreciation spreading through your being.`
         }
         // Default to hybrid - hold both
         this.wisdomMode = 'hybrid';
-        logger.info('Simple wisdom detection: Hybrid mode (default)');
+        logger_js_1.logger.info('Simple wisdom detection: Hybrid mode (default)');
     }
     detectGraspingLanguageSimple(prompt) {
         const graspingIndicators = [
@@ -1686,7 +1689,7 @@ Feel the warmth of appreciation spreading through your being.`
     // Public method to manually set wisdom mode
     setWisdomMode(mode) {
         this.wisdomMode = mode;
-        logger.info('Wisdom mode manually set to:', mode);
+        logger_js_1.logger.info('Wisdom mode manually set to:', mode);
     }
     // ===============================================
     // FRONTEND INTEGRATION METHODS
@@ -1696,7 +1699,7 @@ Feel the warmth of appreciation spreading through your being.`
             const previousMode = this.currentOracleMode;
             this.currentOracleMode = newMode;
             // Get mode configuration
-            const mode = ENHANCED_ORACLE_MODES[newMode];
+            const mode = oracleModes_js_1.ORACLE_MODES[newMode];
             // Update system prompt for new mode
             this.updateSystemPromptForMode(mode);
             // Determine wisdom approach adjustment based on mode
@@ -1757,7 +1760,7 @@ Feel the warmth of appreciation spreading through your being.`
             this.modeHistory.push(modeSwitchMemory);
             // Get mode introduction
             const modeIntroduction = this.getModeIntroduction(newMode);
-            logger.info('Oracle mode switched:', {
+            logger_js_1.logger.info('Oracle mode switched:', {
                 userId: this.userId,
                 previousMode,
                 newMode,
@@ -1778,7 +1781,7 @@ Feel the warmth of appreciation spreading through your being.`
             };
         }
         catch (error) {
-            logger.error('Error switching oracle mode:', error);
+            logger_js_1.logger.error('Error switching oracle mode:', error);
             return {
                 success: false,
                 message: 'Failed to switch oracle mode. Please try again.',
@@ -1793,16 +1796,16 @@ Feel the warmth of appreciation spreading through your being.`
         if (this.mode === 'retreat' && this.retreatPhase) {
             this.systemPrompt += `\n\nAdditionally, you are supporting this person in ${this.retreatPhase} phase.`;
         }
-        logger.info('System prompt updated for mode:', {
+        logger_js_1.logger.info('System prompt updated for mode:', {
             mode: mode.type,
             promptLength: this.systemPrompt.length
         });
     }
     getModeIntroduction(mode) {
-        return MODE_RESPONSES[mode]?.greeting || `${ENHANCED_ORACLE_MODES[mode]?.icon || '🌟'} ${ENHANCED_ORACLE_MODES[mode]?.name || mode} mode activated. How may I serve your journey today?`;
+        return oracleModes_js_1.MODE_RESPONSES[mode]?.greeting || `${oracleModes_js_1.ORACLE_MODES[mode]?.icon || '🌟'} ${oracleModes_js_1.ORACLE_MODES[mode]?.name || mode} mode activated. How may I serve your journey today?`;
     }
     getAllAvailableModes() {
-        return Object.values(ENHANCED_ORACLE_MODES).map(mode => ({
+        return Object.values(oracleModes_js_1.ORACLE_MODES).map(mode => ({
             id: mode.id,
             icon: this.getModeIcon(mode.id),
             name: mode.name,
@@ -2765,5 +2768,6 @@ Feel the warmth of appreciation spreading through your being.`
         return `Integration-Liberation balance adjusted to ${this.integrationLiberationBalance.toFixed(1)}: ${balanceDescription}`;
     }
 }
+exports.PersonalOracleAgent = PersonalOracleAgent;
 // Export for use
-export default PersonalOracleAgent;
+exports.default = PersonalOracleAgent;

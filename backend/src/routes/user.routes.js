@@ -1,11 +1,13 @@
-import { Router } from 'express';
-import { supabase } from '@/lib/supabaseClient';
-const router = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const supabaseClient_1 = require("@/lib/supabaseClient");
+const router = (0, express_1.Router)();
 router.get('/profile', async (req, res) => {
     const userId = req.headers['x-user-id']; // you’ll adapt this per auth
     if (!userId)
         return res.status(400).json({ error: 'Missing userId' });
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient_1.supabase
         .from('profiles')
         .select('assignedGuide, spiralPhase, name')
         .eq('id', userId)
@@ -14,4 +16,4 @@ router.get('/profile', async (req, res) => {
         return res.status(500).json({ error: error.message });
     res.json(data);
 });
-export default router;
+exports.default = router;

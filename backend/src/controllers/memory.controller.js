@@ -1,10 +1,16 @@
+"use strict";
 // src/controllers/memory.controller.ts
-import { MemoryService } from '../services/memoryService';
-import { memoryCreateSchema, sharedSpaceSchema } from '../schemas/memory';
-const service = new MemoryService();
-export async function storeMemory(req, res) {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.storeMemory = storeMemory;
+exports.getMemories = getMemories;
+exports.createSharedSpace = createSharedSpace;
+exports.listSharedSpaces = listSharedSpaces;
+const memoryService_1 = require("../services/memoryService");
+const memory_1 = require("../schemas/memory");
+const service = new memoryService_1.MemoryService();
+async function storeMemory(req, res) {
     try {
-        const parse = memoryCreateSchema.safeParse(req.body);
+        const parse = memory_1.memoryCreateSchema.safeParse(req.body);
         if (!parse.success) {
             return res.status(400).json({ error: 'Invalid memory data', details: parse.error.format() });
         }
@@ -16,7 +22,7 @@ export async function storeMemory(req, res) {
         return res.status(500).json({ error: 'Failed to store memory', details: error });
     }
 }
-export async function getMemories(req, res) {
+async function getMemories(req, res) {
     try {
         const userId = req.params.userId;
         if (!userId) {
@@ -29,9 +35,9 @@ export async function getMemories(req, res) {
         return res.status(500).json({ error: 'Failed to retrieve memories', details: error });
     }
 }
-export async function createSharedSpace(req, res) {
+async function createSharedSpace(req, res) {
     try {
-        const parse = sharedSpaceSchema.safeParse(req.body);
+        const parse = memory_1.sharedSpaceSchema.safeParse(req.body);
         if (!parse.success) {
             return res.status(400).json({ error: 'Invalid shared space data', details: parse.error.format() });
         }
@@ -43,7 +49,7 @@ export async function createSharedSpace(req, res) {
         return res.status(500).json({ error: 'Failed to create shared space', details: error });
     }
 }
-export async function listSharedSpaces(req, res) {
+async function listSharedSpaces(req, res) {
     try {
         const userId = req.params.userId;
         if (!userId) {

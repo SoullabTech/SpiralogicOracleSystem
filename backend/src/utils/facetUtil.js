@@ -1,4 +1,8 @@
+"use strict";
 // src/utils/facetUtil.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.detectFacetFromInput = detectFacetFromInput;
+exports.getFacetDescription = getFacetDescription;
 // Keyword mapping to Spiralogic facets
 const keywordFacetMap = {
     purpose: 'fire1',
@@ -50,7 +54,7 @@ const facetDescriptions = {
 /**
  * Detects the likely Spiralogic facet based on input text.
  */
-export function detectFacetFromInput(input) {
+function detectFacetFromInput(input) {
     const lower = input.toLowerCase();
     for (const keyword in keywordFacetMap) {
         if (lower.includes(keyword)) {
@@ -62,6 +66,6 @@ export function detectFacetFromInput(input) {
 /**
  * Retrieves a description for a given Spiralogic facet.
  */
-export function getFacetDescription(facet) {
+function getFacetDescription(facet) {
     return facetDescriptions[facet] || 'Elemental phase of transformation';
 }

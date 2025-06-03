@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Enhanced Sacred Holoflower integrating:
  * - Astrological house meanings
@@ -5,8 +6,10 @@
  * - Planetary transits
  * - Natal chart positions
  */
-import { ElementalAlchemyHoloflower } from './ElementalAlchemyHoloflower';
-export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AstrologicalHoloflower = void 0;
+const ElementalAlchemyHoloflower_1 = require("./ElementalAlchemyHoloflower");
+class AstrologicalHoloflower extends ElementalAlchemyHoloflower_1.ElementalAlchemyHoloflower {
     constructor(initialState) {
         super(initialState);
         // Enhanced house definitions with astrological meanings
@@ -413,3 +416,4 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
         return { ...this.astroState };
     }
 }
+exports.AstrologicalHoloflower = AstrologicalHoloflower;

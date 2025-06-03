@@ -1,11 +1,15 @@
+"use strict";
 // ===============================================
 // STREAMLINED ORACLE MODES DEMONSTRATION
 // Clean, focused approach with Jung-Buddha integration
 // ===============================================
-import { PersonalOracleAgent } from '../PersonalOracleAgent.js';
-export class StreamlinedOracleDemo {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModeComparison = exports.StreamlinedOracleDemo = void 0;
+exports.runStreamlinedDemo = runStreamlinedDemo;
+const PersonalOracleAgent_js_1 = require("../PersonalOracleAgent.js");
+class StreamlinedOracleDemo {
     constructor() {
-        this.oracle = new PersonalOracleAgent({
+        this.oracle = new PersonalOracleAgent_js_1.PersonalOracleAgent({
             userId: 'streamlined-demo',
             oracleName: 'Streamlined Sacred Mirror',
             mode: 'daily',
@@ -175,10 +179,11 @@ export class StreamlinedOracleDemo {
         console.log(JSON.stringify(patternAnalysis, null, 2));
     }
 }
+exports.StreamlinedOracleDemo = StreamlinedOracleDemo;
 // ===============================================
 // SIMPLE MODE COMPARISON
 // ===============================================
-export const ModeComparison = {
+exports.ModeComparison = {
     alchemist: {
         focus: 'Shadow Integration',
         wisdom: 'Jung (Integration)',
@@ -215,7 +220,7 @@ export const ModeComparison = {
         suitable_for: ['trauma', 'overwhelm', 'safety needs', 'gentle support']
     }
 };
-export async function runStreamlinedDemo() {
+async function runStreamlinedDemo() {
     const demo = new StreamlinedOracleDemo();
     console.log('🚀 Running streamlined oracle demonstration...\n');
     await demo.demonstrateAllModes();
@@ -224,10 +229,10 @@ export async function runStreamlinedDemo() {
     await demo.demonstrateSacredWeeklyRhythm();
     console.log('\n✅ Streamlined oracle demonstration complete!');
     console.log('\n📊 Mode Summary:');
-    console.table(ModeComparison);
+    console.table(exports.ModeComparison);
 }
-export default {
+exports.default = {
     StreamlinedOracleDemo,
-    ModeComparison,
+    ModeComparison: exports.ModeComparison,
     runStreamlinedDemo
 };

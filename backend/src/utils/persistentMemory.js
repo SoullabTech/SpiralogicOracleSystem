@@ -1,12 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.storeMemory = storeMemory;
+exports.retrieveMemory = retrieveMemory;
+exports.updateMemory = updateMemory;
+exports.deleteMemory = deleteMemory;
 let memoryStore = [];
-export async function storeMemory(item) {
+async function storeMemory(item) {
     memoryStore.push(item);
     console.log(`Memory stored: ${item.id}`);
 }
-export async function retrieveMemory() {
+async function retrieveMemory() {
     return memoryStore;
 }
-export async function updateMemory(id, newContent) {
+async function updateMemory(id, newContent) {
     const index = memoryStore.findIndex(item => item.id === id);
     if (index !== -1) {
         memoryStore[index].content = newContent;
@@ -15,7 +21,7 @@ export async function updateMemory(id, newContent) {
     }
     return false;
 }
-export async function deleteMemory(id) {
+async function deleteMemory(id) {
     const initialLength = memoryStore.length;
     memoryStore = memoryStore.filter(item => item.id !== id);
     if (memoryStore.length < initialLength) {

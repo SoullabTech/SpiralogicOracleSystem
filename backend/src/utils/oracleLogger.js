@@ -1,9 +1,18 @@
-import { supabase } from '../lib/supabaseClient';
-import logger from './logger';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.oracleLogger = void 0;
+exports.logOracleInsight = logOracleInsight;
+exports.getInsightHistory = getInsightHistory;
+exports.getInsightStats = getInsightStats;
+const supabaseClient_1 = require("../lib/supabaseClient");
+const logger_1 = __importDefault(require("./logger"));
 // 🧠 1. Log an insight
-export async function logOracleInsight(entry) {
+async function logOracleInsight(entry) {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('insight_history')
             .insert({
             anon_id: entry.anon_id,
@@ -21,18 +30,18 @@ export async function logOracleInsight(entry) {
             .single();
         if (error || !data)
             throw error || new Error('No data returned');
-        logger.info('[OracleLog] Insight logged', { id: data.id, ...entry });
+        logger_1.default.info('[OracleLog] Insight logged', { id: data.id, ...entry });
         return { id: data.id };
     }
     catch (err) {
-        logger.error('Failed to log Oracle insight:', { error: err.message || err });
+        logger_1.default.error('Failed to log Oracle insight:', { error: err.message || err });
         throw err;
     }
 }
 // 📜 2. Retrieve insight history for user
-export async function getInsightHistory(userId, { type, limit = 50, offset = 0, }) {
+async function getInsightHistory(userId, { type, limit = 50, offset = 0, }) {
     try {
-        const query = supabase
+        const query = supabaseClient_1.supabase
             .from('insight_history')
             .select('*')
             .eq('anon_id', userId)
@@ -47,14 +56,14 @@ export async function getInsightHistory(userId, { type, limit = 50, offset = 0, 
         return data || [];
     }
     catch (err) {
-        logger.error('Failed to retrieve insight history', { error: err.message || err });
+        logger_1.default.error('Failed to retrieve insight history', { error: err.message || err });
         throw err;
     }
 }
 // 📊 3. Aggregate stats (insights per element or phase)
-export async function getInsightStats(userId) {
+async function getInsightStats(userId) {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('insight_history')
             .select('element, metadata->>phase')
             .eq('anon_id', userId);
@@ -74,12 +83,12 @@ export async function getInsightStats(userId) {
         return stats;
     }
     catch (err) {
-        logger.error('Failed to get insight stats', { error: err.message || err });
+        logger_1.default.error('Failed to get insight stats', { error: err.message || err });
         throw err;
     }
 }
 // 📦 Export all in a grouped object if preferred
-export const oracleLogger = {
+exports.oracleLogger = {
     logInsight: logOracleInsight,
     getInsightHistory,
     getInsightStats,

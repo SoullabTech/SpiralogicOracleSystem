@@ -1,6 +1,11 @@
+"use strict";
 // src/utils/modelService.ts
-import { openai } from "../lib/openaiClient"; // adjust if using other clients
-import logger from "./logger";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const openaiClient_1 = require("../lib/openaiClient"); // adjust if using other clients
+const logger_1 = __importDefault(require("./logger"));
 class ModelService {
     /**
      * Get a response from the configured LLM model.
@@ -9,8 +14,8 @@ class ModelService {
     async getResponse(query) {
         const { input, userId, context = {} } = query;
         try {
-            logger.info("🔮 Sending query to model", { userId, input });
-            const completion = await openai.chat.completions.create({
+            logger_1.default.info("🔮 Sending query to model", { userId, input });
+            const completion = await openaiClient_1.openai.chat.completions.create({
                 model: "gpt-4", // or 'gpt-3.5-turbo' / 'claude' depending on your setup
                 messages: [
                     {
@@ -36,14 +41,14 @@ class ModelService {
                     context,
                 },
             };
-            logger.info("✅ Model response received", {
+            logger_1.default.info("✅ Model response received", {
                 userId,
                 model: "gpt-4",
             });
             return response;
         }
         catch (error) {
-            logger.error("❌ ModelService failed to get a response", {
+            logger_1.default.error("❌ ModelService failed to get a response", {
                 error,
                 userId,
                 input,
@@ -52,4 +57,4 @@ class ModelService {
         }
     }
 }
-export default new ModelService();
+exports.default = new ModelService();

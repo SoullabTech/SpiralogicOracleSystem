@@ -1,5 +1,8 @@
+"use strict";
 // src/services/notionIngestService.ts
-export const notionIngestService = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.notionIngestService = void 0;
+exports.notionIngestService = {
     ingestFromNotion: async () => {
         const pages = ['page-1', 'page-2'];
         const results = pages.map(p => ({ status: 'fulfilled', page: p }));

@@ -1,36 +1,42 @@
-// File: oracle-frontend/src/components/oracle/ElementalTrendChart.tsx
-
 import { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getElementalHistory } from '@/lib/elemental-history';
+
+// Example local fallback data
+const fallbackData = [
+  { date: '2025-06-01', fire: 4, water: 2, earth: 3, air: 5 },
+  { date: '2025-06-02', fire: 3, water: 3, earth: 4, air: 4 },
+  { date: '2025-06-03', fire: 5, water: 1, earth: 3, air: 2 },
+];
 
 export default function ElementalTrendChart() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState(fallbackData);
 
   useEffect(() => {
-    const history = getElementalHistory();
-    const formatted = history.map(entry => ({
-      timestamp: new Date(entry.timestamp).toLocaleDateString(),
-      ...entry.elemental
-    })).reverse();
-    setData(formatted);
+    const stored = localStorage.getItem('elementalTrend');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) setData(parsed);
+      } catch (e) {
+        console.warn('Error parsing elementalTrend from localStorage:', e);
+      }
+    }
   }, []);
 
   return (
-    <div className="w-full h-96 bg-muted/5 border rounded-xl p-4">
-      <h3 className="text-xl font-semibold text-center mb-4">📈 Elemental Trend Over Time</h3>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
+    <div className="mt-10 bg-white rounded-lg shadow-md p-4">
+      <h3 className="text-xl font-semibold mb-4 text-center">🧬 Elemental Trend History</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" />
-          <YAxis domain={[0, 'dataMax + 1']} />
+          <XAxis dataKey="date" />
+          <YAxis domain={[0, 5]} />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="Fire" stroke="#f97316" />
-          <Line type="monotone" dataKey="Water" stroke="#3b82f6" />
-          <Line type="monotone" dataKey="Earth" stroke="#22c55e" />
-          <Line type="monotone" dataKey="Air" stroke="#a855f7" />
-          <Line type="monotone" dataKey="Aether" stroke="#ec4899" />
+          <Line type="monotone" dataKey="fire" stroke="#f87171" strokeWidth={2} />
+          <Line type="monotone" dataKey="water" stroke="#60a5fa" strokeWidth={2} />
+          <Line type="monotone" dataKey="earth" stroke="#34d399" strokeWidth={2} />
+          <Line type="monotone" dataKey="air" stroke="#a78bfa" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     </div>

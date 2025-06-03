@@ -1,8 +1,11 @@
-import { supabase } from '../lib/supabase';
-export async function isAdmin(userId) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isAdmin = isAdmin;
+const supabase_1 = require("../lib/supabase");
+async function isAdmin(userId) {
     try {
         // Check if user has admin role
-        const { data: roles, error: rolesError } = await supabase
+        const { data: roles, error: rolesError } = await supabase_1.supabase
             .from('user_roles')
             .select('role_id')
             .eq('user_id', userId)
@@ -11,7 +14,7 @@ export async function isAdmin(userId) {
             return false;
         }
         // Verify the role is admin
-        const { data: roleType, error: roleTypeError } = await supabase
+        const { data: roleType, error: roleTypeError } = await supabase_1.supabase
             .from('role_types')
             .select('name')
             .eq('id', roles.role_id)

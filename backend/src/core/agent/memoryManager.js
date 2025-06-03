@@ -1,8 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.storeMemory = storeMemory;
+exports.retrieveMemory = retrieveMemory;
+exports.updateMemory = updateMemory;
+exports.deleteMemory = deleteMemory;
+exports.enhanceResponseWithMemory = enhanceResponseWithMemory;
+exports.getClientMemories = getClientMemories;
+exports.cleanupOldMemories = cleanupOldMemories;
 let memoryStore = [];
 /**
  * Stores a memory item.
  */
-export async function storeMemory(item) {
+async function storeMemory(item) {
     memoryStore.push({
         ...item,
         timestamp: item.timestamp || Date.now()
@@ -12,13 +21,13 @@ export async function storeMemory(item) {
 /**
  * Retrieves all memory items.
  */
-export async function retrieveMemory() {
+async function retrieveMemory() {
     return memoryStore;
 }
 /**
  * Updates a memory item by ID.
  */
-export async function updateMemory(id, newContent) {
+async function updateMemory(id, newContent) {
     const index = memoryStore.findIndex(item => item.id === id);
     if (index !== -1) {
         memoryStore[index].content = newContent;
@@ -30,7 +39,7 @@ export async function updateMemory(id, newContent) {
 /**
  * Deletes a memory item by ID.
  */
-export async function deleteMemory(id) {
+async function deleteMemory(id) {
     const initialLength = memoryStore.length;
     memoryStore = memoryStore.filter(item => item.id !== id);
     if (memoryStore.length < initialLength) {
@@ -42,7 +51,7 @@ export async function deleteMemory(id) {
 /**
  * Enhances a response by appending related memory (naively for now).
  */
-export async function enhanceResponseWithMemory(response) {
+async function enhanceResponseWithMemory(response) {
     const memories = await retrieveMemory();
     const recentMemory = memories[memories.length - 1];
     if (recentMemory) {
@@ -53,13 +62,13 @@ export async function enhanceResponseWithMemory(response) {
 /**
  * Retrieves memories for a specific client.
  */
-export async function getClientMemories(clientId) {
+async function getClientMemories(clientId) {
     return memoryStore.filter(item => item.clientId === clientId);
 }
 /**
  * Cleans up old memories (older than 30 days).
  */
-export async function cleanupOldMemories() {
+async function cleanupOldMemories() {
     const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
     const initialLength = memoryStore.length;
     memoryStore = memoryStore.filter(item => {

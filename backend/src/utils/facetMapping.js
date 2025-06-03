@@ -1,11 +1,15 @@
+"use strict";
 // utils/facetMapping.ts
-export const ElementalFacetMap = {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ElementalFacetMap = void 0;
+exports.determineFacet = determineFacet;
+exports.ElementalFacetMap = {
     Fire: ['Experience', 'Expression', 'Expansion'],
     Water: ['Heart', 'Healing', 'Holiness'],
     Earth: ['Mission', 'Means', 'Medicine'],
     Air: ['Connection', 'Community', 'Consciousness'],
 };
-export function determineFacet(input) {
+function determineFacet(input) {
     const lower = input.toLowerCase();
     const keywordFacetMap = {
         Experience: ['begin', 'start', 'ignite', 'inspire'],

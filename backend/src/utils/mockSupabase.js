@@ -1,4 +1,7 @@
-export const supabase = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.supabase = void 0;
+exports.supabase = {
     auth: {
         signInWithPassword: async ({ email, password }) => {
             console.log(`[Mock Supabase] signIn called with: ${email}, ${password}`);

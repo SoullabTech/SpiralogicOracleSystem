@@ -1,21 +1,27 @@
-import { supabase } from '../lib/supabase';
-import { AuthenticationError } from '../utils/errors';
-import logger from '../utils/logger';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authenticateToken = authenticateToken;
+const supabase_1 = require("../lib/supabase");
+const errors_1 = require("../utils/errors");
+const logger_1 = __importDefault(require("../utils/logger"));
 /**
  * Middleware to authenticate the Bearer token from the Authorization header.
  */
-export async function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
     try {
         const authHeader = req.headers.authorization;
         const token = authHeader?.startsWith('Bearer ')
             ? authHeader.slice(7)
             : undefined;
         if (!token) {
-            throw new AuthenticationError('No authorization token provided');
+            throw new errors_1.AuthenticationError('No authorization token provided');
         }
-        const { data: { user }, error, } = await supabase.auth.getUser(token);
+        const { data: { user }, error, } = await supabase_1.supabase.auth.getUser(token);
         if (error || !user) {
-            throw new AuthenticationError('Invalid or expired token');
+            throw new errors_1.AuthenticationError('Invalid or expired token');
         }
         req.user = {
             id: user.id,
@@ -25,8 +31,8 @@ export async function authenticateToken(req, res, next) {
         next();
     }
     catch (err) {
-        logger.error('🔐 Authentication failed', { error: err });
-        const message = err instanceof AuthenticationError
+        logger_1.default.error('🔐 Authentication failed', { error: err });
+        const message = err instanceof errors_1.AuthenticationError
             ? err.message
             : 'Authentication error';
         res.status(401).json({ error: message });

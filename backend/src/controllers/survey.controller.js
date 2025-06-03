@@ -1,11 +1,14 @@
+"use strict";
 // src/controllers/survey.controller.ts
-import { supabase } from '../lib/supabaseClient';
-import { elementalProfileSchema } from '../lib/schemas/elemental';
-import { surveySubmissionSchema } from '../types/survey';
-export async function handleSurveySubmission(req, res) {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.handleSurveySubmission = handleSurveySubmission;
+const supabaseClient_1 = require("../lib/supabaseClient");
+const elemental_1 = require("../lib/schemas/elemental");
+const survey_1 = require("../types/survey");
+async function handleSurveySubmission(req, res) {
     try {
         // 1️⃣ Full schema validation using Zod
-        const parsed = surveySubmissionSchema.safeParse({
+        const parsed = survey_1.surveySubmissionSchema.safeParse({
             ...req.body,
             userId: req.user.id,
         });
@@ -17,7 +20,7 @@ export async function handleSurveySubmission(req, res) {
         }
         const { responses, crystalFocus, userId } = parsed.data;
         // 2️⃣ Load questions from Supabase
-        const { data: questions, error: qError } = await supabase
+        const { data: questions, error: qError } = await supabaseClient_1.supabase
             .from('survey_questions')
             .select('*');
         if (qError || !questions) {
@@ -50,7 +53,7 @@ export async function handleSurveySubmission(req, res) {
             crystal_focus: crystalFocus,
         };
         // 5️⃣ Validate the resulting profile
-        const profileParsed = elementalProfileSchema.safeParse(profile);
+        const profileParsed = elemental_1.elementalProfileSchema.safeParse(profile);
         if (!profileParsed.success) {
             return res.status(400).json({
                 error: 'Profile validation failed',
@@ -58,7 +61,7 @@ export async function handleSurveySubmission(req, res) {
             });
         }
         // 6️⃣ Save profile to database
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('elemental_profiles')
             .upsert(profileParsed.data)
             .select()

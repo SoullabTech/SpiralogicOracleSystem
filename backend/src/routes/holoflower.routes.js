@@ -1,13 +1,17 @@
-import { Router } from 'express';
-import { authenticate } from '../middleware/authenticate';
-import { holoflowerService } from '../services/holoflowerService';
-import { WebSocketServer } from 'ws';
-export const holoflowerRouter = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.holoflowerRouter = void 0;
+exports.setupHoloflowerWebSocket = setupHoloflowerWebSocket;
+const express_1 = require("express");
+const authenticate_1 = require("../middleware/authenticate");
+const holoflowerService_1 = require("../services/holoflowerService");
+const ws_1 = require("ws");
+exports.holoflowerRouter = (0, express_1.Router)();
 // Get user's holoflower state
-holoflowerRouter.get('/state', authenticate, async (req, res) => {
+exports.holoflowerRouter.get('/state', authenticate_1.authenticate, async (req, res) => {
     try {
         const userId = req.user.id;
-        const userState = await holoflowerService.getUserState(userId);
+        const userState = await holoflowerService_1.holoflowerService.getUserState(userId);
         const state = userState.holoflower.getState();
         res.json({
             success: true,
@@ -26,12 +30,12 @@ holoflowerRouter.get('/state', authenticate, async (req, res) => {
     }
 });
 // Update house intensity
-holoflowerRouter.post('/house/:houseId/intensity', authenticate, async (req, res) => {
+exports.holoflowerRouter.post('/house/:houseId/intensity', authenticate_1.authenticate, async (req, res) => {
     try {
         const userId = req.user.id;
         const { houseId } = req.params;
         const { intensity } = req.body;
-        await holoflowerService.updateHouseIntensity(userId, houseId, intensity);
+        await holoflowerService_1.holoflowerService.updateHouseIntensity(userId, houseId, intensity);
         res.json({
             success: true,
             message: 'House intensity updated'
@@ -46,11 +50,11 @@ holoflowerRouter.post('/house/:houseId/intensity', authenticate, async (req, res
     }
 });
 // Activate transformation between houses
-holoflowerRouter.post('/transformation', authenticate, async (req, res) => {
+exports.holoflowerRouter.post('/transformation', authenticate_1.authenticate, async (req, res) => {
     try {
         const userId = req.user.id;
         const { fromHouseId, toHouseId } = req.body;
-        await holoflowerService.activateTransformation(userId, fromHouseId, toHouseId);
+        await holoflowerService_1.holoflowerService.activateTransformation(userId, fromHouseId, toHouseId);
         res.json({
             success: true,
             message: 'Transformation activated'
@@ -65,10 +69,10 @@ holoflowerRouter.post('/transformation', authenticate, async (req, res) => {
     }
 });
 // Integrate Aether
-holoflowerRouter.post('/integrate-aether', authenticate, async (req, res) => {
+exports.holoflowerRouter.post('/integrate-aether', authenticate_1.authenticate, async (req, res) => {
     try {
         const userId = req.user.id;
-        await holoflowerService.integrateAether(userId);
+        await holoflowerService_1.holoflowerService.integrateAether(userId);
         res.json({
             success: true,
             message: 'Aether integration complete'
@@ -83,10 +87,10 @@ holoflowerRouter.post('/integrate-aether', authenticate, async (req, res) => {
     }
 });
 // Get transformation history
-holoflowerRouter.get('/transformations', authenticate, async (req, res) => {
+exports.holoflowerRouter.get('/transformations', authenticate_1.authenticate, async (req, res) => {
     try {
         const userId = req.user.id;
-        const history = await holoflowerService.getTransformationHistory(userId);
+        const history = await holoflowerService_1.holoflowerService.getTransformationHistory(userId);
         res.json({
             success: true,
             data: history
@@ -101,11 +105,11 @@ holoflowerRouter.get('/transformations', authenticate, async (req, res) => {
     }
 });
 // Create group pattern
-holoflowerRouter.post('/group/:groupId', authenticate, async (req, res) => {
+exports.holoflowerRouter.post('/group/:groupId', authenticate_1.authenticate, async (req, res) => {
     try {
         const { groupId } = req.params;
         const { participantIds } = req.body;
-        const pattern = await holoflowerService.createGroupPattern(groupId, participantIds);
+        const pattern = await holoflowerService_1.holoflowerService.createGroupPattern(groupId, participantIds);
         res.json({
             success: true,
             data: pattern
@@ -120,9 +124,9 @@ holoflowerRouter.post('/group/:groupId', authenticate, async (req, res) => {
     }
 });
 // Get collective field
-holoflowerRouter.get('/collective-field', async (req, res) => {
+exports.holoflowerRouter.get('/collective-field', async (req, res) => {
     try {
-        const field = await holoflowerService.getCollectiveField();
+        const field = await holoflowerService_1.holoflowerService.getCollectiveField();
         res.json({
             success: true,
             data: field
@@ -137,8 +141,8 @@ holoflowerRouter.get('/collective-field', async (req, res) => {
     }
 });
 // WebSocket endpoint for real-time updates
-export function setupHoloflowerWebSocket(server) {
-    const wss = new WebSocketServer({
+function setupHoloflowerWebSocket(server) {
+    const wss = new ws_1.WebSocketServer({
         server,
         path: '/ws/holoflower'
     });
@@ -153,13 +157,13 @@ export function setupHoloflowerWebSocket(server) {
                 const data = JSON.parse(message.toString());
                 switch (data.type) {
                     case 'update-intensity':
-                        await holoflowerService.updateHouseIntensity(userId, data.houseId, data.intensity);
+                        await holoflowerService_1.holoflowerService.updateHouseIntensity(userId, data.houseId, data.intensity);
                         break;
                     case 'activate-transformation':
-                        await holoflowerService.activateTransformation(userId, data.fromHouseId, data.toHouseId);
+                        await holoflowerService_1.holoflowerService.activateTransformation(userId, data.fromHouseId, data.toHouseId);
                         break;
                     case 'integrate-aether':
-                        await holoflowerService.integrateAether(userId);
+                        await holoflowerService_1.holoflowerService.integrateAether(userId);
                         break;
                     case 'request-group-pattern':
                         // Group pattern will be broadcast to all connected clients

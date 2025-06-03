@@ -1,11 +1,14 @@
+"use strict";
 /**
  * Sacred Facilitator Command Center Service
  * The ADHD-Friendly Consciousness Facilitator's Dream Dashboard Backend
  */
-import { supabase } from '../lib/supabaseClient';
-import { WebSocketServer } from 'ws';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.facilitatorDashboardService = exports.FacilitatorDashboardService = void 0;
+const supabaseClient_1 = require("../lib/supabaseClient");
+const ws_1 = require("ws");
 // Service Implementation
-export class FacilitatorDashboardService {
+class FacilitatorDashboardService {
     constructor() {
         this.wsServer = null;
         this.facilitators = new Map();
@@ -14,7 +17,7 @@ export class FacilitatorDashboardService {
         this.startAutomationEngine();
     }
     initializeWebSocketServer() {
-        this.wsServer = new WebSocketServer({ port: 5005 });
+        this.wsServer = new ws_1.WebSocketServer({ port: 5005 });
         this.wsServer.on('connection', (ws, req) => {
             const facilitatorId = req.url?.split('/').pop();
             if (!facilitatorId)
@@ -63,7 +66,7 @@ export class FacilitatorDashboardService {
             materials: []
         };
         // Save to database
-        await supabase.from('sacred_events').insert(event);
+        await supabaseClient_1.supabase.from('sacred_events').insert(event);
         // Create group holoflower
         if (eventData.createGroupHoloflower) {
             event.groupHoloflowerId = await this.createGroupHoloflower(event);
@@ -126,13 +129,13 @@ export class FacilitatorDashboardService {
             status: 'queued',
             service: 'assembly-ai'
         };
-        await supabase.from('transcription_jobs').insert(job);
+        await supabaseClient_1.supabase.from('transcription_jobs').insert(job);
         // Start transcription (would integrate with Assembly AI)
         const transcript = await this.transcribeRecording(recordingData.recordingUrl);
         // Generate sacred summary
         const summary = await this.generateSacredSummary(transcript, recordingData.participantId);
         // Update session record
-        await supabase
+        await supabaseClient_1.supabase
             .from('session_records')
             .update({
             transcript,
@@ -189,7 +192,7 @@ export class FacilitatorDashboardService {
             inboxItem.suggestedResponse = await this.generateSuggestedResponse(email, participantId, sentiment);
         }
         // Save to inbox
-        await supabase.from('facilitator_inbox').insert(inboxItem);
+        await supabaseClient_1.supabase.from('facilitator_inbox').insert(inboxItem);
         // Alert facilitator if urgent
         if (category === 'urgent') {
             await this.sendUrgentAlert(inboxItem);
@@ -319,4 +322,5 @@ export class FacilitatorDashboardService {
         this.activeReminders.clear();
     }
 }
-export const facilitatorDashboardService = new FacilitatorDashboardService();
+exports.FacilitatorDashboardService = FacilitatorDashboardService;
+exports.facilitatorDashboardService = new FacilitatorDashboardService();

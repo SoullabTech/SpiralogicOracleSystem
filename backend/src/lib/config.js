@@ -1,18 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.env = void 0;
 // src/lib/config.ts
-import { z } from 'zod';
+const zod_1 = require("zod");
 // 🧠 Define all env vars you use anywhere in your stack
-const envSchema = z.object({
-    NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+const envSchema = zod_1.z.object({
+    NODE_ENV: zod_1.z.enum(['development', 'production', 'test']).default('development'),
     // backend Supabase (no VITE_ prefix)
-    SUPABASE_URL: z.string().url(),
-    SUPABASE_ANON_KEY: z.string(),
-    SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+    SUPABASE_URL: zod_1.z.string().url(),
+    SUPABASE_ANON_KEY: zod_1.z.string(),
+    SUPABASE_SERVICE_ROLE_KEY: zod_1.z.string().optional(),
     // frontend‐only (Vite will expose these to client code)
-    VITE_SUPABASE_URL: z.string().url(),
-    VITE_SUPABASE_ANON_KEY: z.string(),
+    VITE_SUPABASE_URL: zod_1.z.string().url(),
+    VITE_SUPABASE_ANON_KEY: zod_1.z.string(),
     // your ChatGPT Oracle endpoints (only needed server-side)
-    VITE_CHATGPT_ORACLE_URL: z.string().url().optional(),
-    VITE_CHATGPT_ORACLE_API_KEY: z.string().optional(),
+    VITE_CHATGPT_ORACLE_URL: zod_1.z.string().url().optional(),
+    VITE_CHATGPT_ORACLE_API_KEY: zod_1.z.string().optional(),
 });
 function validateEnv() {
     const raw = {
@@ -32,4 +35,4 @@ function validateEnv() {
     }
     return parsed.data;
 }
-export const env = validateEnv();
+exports.env = validateEnv();

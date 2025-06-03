@@ -1,9 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.retreatOnboardingService = exports.RetreatOnboardingService = void 0;
 // Switzerland Retreat Onboarding Service
-import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '../lib/supabaseClient';
-import { soullabFounderAgent } from '../core/agents/soullabFounderAgent';
-import { logger } from '../utils/logger';
-export class RetreatOnboardingService {
+const uuid_1 = require("uuid");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const soullabFounderAgent_1 = require("../core/agents/soullabFounderAgent");
+const logger_1 = require("../utils/logger");
+class RetreatOnboardingService {
     constructor() {
         // Element assignment based on participant energy
         this.elementalAssignment = {
@@ -30,7 +33,7 @@ export class RetreatOnboardingService {
     async initializeOnboarding(email, firstName, lastName, retreatId, arrivalDate, departureDate) {
         try {
             const participant = {
-                id: uuidv4(),
+                id: (0, uuid_1.v4)(),
                 email,
                 firstName,
                 lastName,
@@ -42,7 +45,7 @@ export class RetreatOnboardingService {
                 updatedAt: new Date()
             };
             // Store in database
-            const { error } = await supabase
+            const { error } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .insert(participant);
             if (error) {
@@ -55,7 +58,7 @@ export class RetreatOnboardingService {
             return participant;
         }
         catch (error) {
-            logger.error('Failed to initialize onboarding', error);
+            logger_1.logger.error('Failed to initialize onboarding', error);
             throw error;
         }
     }
@@ -68,16 +71,16 @@ export class RetreatOnboardingService {
             startedAt: new Date(),
             lastUpdatedAt: new Date()
         };
-        await supabase
+        await supabaseClient_1.supabase
             .from('onboarding_flows')
             .insert(flow);
     }
     // Send personalized welcome from Kelly
     async sendFounderWelcome(participant) {
         try {
-            const welcomeMessage = await soullabFounderAgent.generatePersonalWelcome(participant);
+            const welcomeMessage = await soullabFounderAgent_1.soullabFounderAgent.generatePersonalWelcome(participant);
             // Store the welcome message
-            await supabase
+            await supabaseClient_1.supabase
                 .from('retreat_messages')
                 .insert({
                 participant_id: participant.id,
@@ -89,20 +92,20 @@ export class RetreatOnboardingService {
             // Update participant status
             await this.updateParticipantStatus(participant.id, 'welcomed');
             // Log the welcome
-            logger.info('Founder welcome sent', {
+            logger_1.logger.info('Founder welcome sent', {
                 participantId: participant.id,
                 name: `${participant.firstName} ${participant.lastName}`
             });
         }
         catch (error) {
-            logger.error('Failed to send founder welcome', error);
+            logger_1.logger.error('Failed to send founder welcome', error);
             throw error;
         }
     }
     // Capture participant's current state
     async captureCurrentState(participantId, state) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .update({
                 currentState: state,
@@ -111,10 +114,10 @@ export class RetreatOnboardingService {
                 .eq('id', participantId);
             // Update onboarding flow
             await this.updateOnboardingStep(participantId, 'current_state');
-            logger.info('Current state captured', { participantId });
+            logger_1.logger.info('Current state captured', { participantId });
         }
         catch (error) {
-            logger.error('Failed to capture current state', error);
+            logger_1.logger.error('Failed to capture current state', error);
             throw error;
         }
     }
@@ -122,7 +125,7 @@ export class RetreatOnboardingService {
     async captureIntentions(participantId, intentions) {
         try {
             // Get participant
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
@@ -131,7 +134,7 @@ export class RetreatOnboardingService {
                 throw new Error('Participant not found');
             }
             // Update participant with intentions
-            await supabase
+            await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .update({
                 retreatIntentions: intentions,
@@ -139,12 +142,12 @@ export class RetreatOnboardingService {
             })
                 .eq('id', participantId);
             // Get founder reflection on intentions
-            const reflection = await soullabFounderAgent.reflectOnIntentions(participant, [
+            const reflection = await soullabFounderAgent_1.soullabFounderAgent.reflectOnIntentions(participant, [
                 intentions.primaryIntention,
                 ...(intentions.secondaryIntentions || [])
             ]);
             // Store the reflection
-            await supabase
+            await supabaseClient_1.supabase
                 .from('retreat_messages')
                 .insert({
                 participant_id: participantId,
@@ -154,10 +157,10 @@ export class RetreatOnboardingService {
             });
             // Update onboarding step
             await this.updateOnboardingStep(participantId, 'intentions');
-            logger.info('Intentions captured and reflected', { participantId });
+            logger_1.logger.info('Intentions captured and reflected', { participantId });
         }
         catch (error) {
-            logger.error('Failed to capture intentions', error);
+            logger_1.logger.error('Failed to capture intentions', error);
             throw error;
         }
     }
@@ -165,7 +168,7 @@ export class RetreatOnboardingService {
     async assignPersonalOracle(participantId) {
         try {
             // Get participant
-            const { data: participant } = await supabase
+            const { data: participant } = await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
@@ -176,9 +179,9 @@ export class RetreatOnboardingService {
             // Determine elemental assignment
             const element = this.elementalAssignment.assessDominantElement(participant);
             const archetype = this.elementalAssignment.getArchetypeForElement(element);
-            const oracleId = uuidv4();
+            const oracleId = (0, uuid_1.v4)();
             // Update participant with Oracle assignment
-            await supabase
+            await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .update({
                 personalOracleId: oracleId,
@@ -190,9 +193,9 @@ export class RetreatOnboardingService {
             })
                 .eq('id', participantId);
             // Get introduction from founder
-            const introduction = await soullabFounderAgent.introducePersonalOracle(participant, element, archetype);
+            const introduction = await soullabFounderAgent_1.soullabFounderAgent.introducePersonalOracle(participant, element, archetype);
             // Store the introduction
-            await supabase
+            await supabaseClient_1.supabase
                 .from('retreat_messages')
                 .insert({
                 participant_id: participantId,
@@ -205,7 +208,7 @@ export class RetreatOnboardingService {
             await this.createPersonalOracleInstance(oracleId, participantId, element, archetype);
             // Update onboarding step
             await this.updateOnboardingStep(participantId, 'oracle_assignment');
-            logger.info('Personal Oracle assigned', {
+            logger_1.logger.info('Personal Oracle assigned', {
                 participantId,
                 element,
                 archetype,
@@ -214,14 +217,14 @@ export class RetreatOnboardingService {
             return { element, archetype, oracleId };
         }
         catch (error) {
-            logger.error('Failed to assign Personal Oracle', error);
+            logger_1.logger.error('Failed to assign Personal Oracle', error);
             throw error;
         }
     }
     // Create Personal Oracle instance
     async createPersonalOracleInstance(oracleId, participantId, element, archetype) {
         // In production, this would create a personalized Oracle configuration
-        await supabase
+        await supabaseClient_1.supabase
             .from('personal_oracles')
             .insert({
             id: oracleId,
@@ -261,7 +264,7 @@ export class RetreatOnboardingService {
     // Complete onboarding
     async completeOnboarding(participantId) {
         try {
-            await supabase
+            await supabaseClient_1.supabase
                 .from('retreat_participants')
                 .update({
                 onboardingStatus: 'completed',
@@ -272,16 +275,16 @@ export class RetreatOnboardingService {
             await this.updateOnboardingStep(participantId, 'confirmation');
             // Send completion message
             await this.sendOnboardingComplete(participantId);
-            logger.info('Onboarding completed', { participantId });
+            logger_1.logger.info('Onboarding completed', { participantId });
         }
         catch (error) {
-            logger.error('Failed to complete onboarding', error);
+            logger_1.logger.error('Failed to complete onboarding', error);
             throw error;
         }
     }
     // Send onboarding completion message
     async sendOnboardingComplete(participantId) {
-        const { data: participant } = await supabase
+        const { data: participant } = await supabaseClient_1.supabase
             .from('retreat_participants')
             .select('*')
             .eq('id', participantId)
@@ -303,7 +306,7 @@ Until we meet in person, your Oracle is available for guidance and support.
 
 With love and anticipation,
 The Soullab Team 🌀`;
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_messages')
             .insert({
             participant_id: participantId,
@@ -314,7 +317,7 @@ The Soullab Team 🌀`;
     }
     // Update participant status
     async updateParticipantStatus(participantId, status) {
-        await supabase
+        await supabaseClient_1.supabase
             .from('retreat_participants')
             .update({
             onboardingStatus: status,
@@ -324,7 +327,7 @@ The Soullab Team 🌀`;
     }
     // Update onboarding step
     async updateOnboardingStep(participantId, step) {
-        const { data: flow } = await supabase
+        const { data: flow } = await supabaseClient_1.supabase
             .from('onboarding_flows')
             .select('*')
             .eq('participant_id', participantId)
@@ -335,7 +338,7 @@ The Soullab Team 🌀`;
         if (!completedSteps.includes(step)) {
             completedSteps.push(step);
         }
-        await supabase
+        await supabaseClient_1.supabase
             .from('onboarding_flows')
             .update({
             currentStep: step,
@@ -346,7 +349,7 @@ The Soullab Team 🌀`;
     }
     // Get retreat overview
     async getRetreatOverview(retreatId) {
-        const { data } = await supabase
+        const { data } = await supabaseClient_1.supabase
             .from('retreat_sessions')
             .select('*')
             .eq('id', retreatId)
@@ -356,17 +359,17 @@ The Soullab Team 🌀`;
     // Get participant progress
     async getParticipantProgress(participantId) {
         const [participantResult, flowResult, messagesResult] = await Promise.all([
-            supabase
+            supabaseClient_1.supabase
                 .from('retreat_participants')
                 .select('*')
                 .eq('id', participantId)
                 .single(),
-            supabase
+            supabaseClient_1.supabase
                 .from('onboarding_flows')
                 .select('*')
                 .eq('participant_id', participantId)
                 .single(),
-            supabase
+            supabaseClient_1.supabase
                 .from('retreat_messages')
                 .select('*')
                 .eq('participant_id', participantId)
@@ -379,5 +382,6 @@ The Soullab Team 🌀`;
         };
     }
 }
+exports.RetreatOnboardingService = RetreatOnboardingService;
 // Export singleton instance
-export const retreatOnboardingService = new RetreatOnboardingService();
+exports.retreatOnboardingService = new RetreatOnboardingService();

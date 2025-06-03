@@ -1,5 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.analyzeCoherence = analyzeCoherence;
 // 📁 BACKEND/src/services/coherenceAnalyzer.ts
-export function analyzeCoherence(input) {
+function analyzeCoherence(input) {
     if (input.includes('death') || input.includes('collapse')) {
         return { score: 40, suggestedPhase: 'Water 2' };
     }

@@ -1,20 +1,22 @@
+"use strict";
 // ===============================================
 // QUICK SOUL MEMORY TEST
 // Run with: npx ts-node src/tests/quick-memory-test.ts
 // ===============================================
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
+Object.defineProperty(exports, "__esModule", { value: true });
+const PersonalOracleAgent_1 = require("../core/agents/PersonalOracleAgent");
+const SoulMemorySystem_1 = require("../../memory/SoulMemorySystem");
 async function quickTest() {
     console.log('🧪 Quick Soul Memory Test\n');
     // Setup
     const userId = 'test_user_' + Date.now();
-    const soulMemory = new SoulMemorySystem({
+    const soulMemory = new SoulMemorySystem_1.SoulMemorySystem({
         userId,
         storageType: 'sqlite',
         databasePath: './quick_test_soul_memory.db',
         memoryDepth: 100
     });
-    const oracle = new PersonalOracleAgent({
+    const oracle = new PersonalOracleAgent_1.PersonalOracleAgent({
         userId,
         oracleName: 'Aria',
         elementalResonance: 'water'

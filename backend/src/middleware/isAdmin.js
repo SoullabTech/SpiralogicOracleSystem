@@ -1,19 +1,22 @@
-import { supabase } from '../lib/supabase';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isAdmin = isAdmin;
+const supabase_1 = require("../lib/supabase");
 /**
  * Middleware to check if the authenticated user has an 'admin' role.
  */
-export async function isAdmin(req, res, next) {
+async function isAdmin(req, res, next) {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
             return res.status(401).json({ error: 'No authorization header' });
         }
         const token = authHeader.replace(/^Bearer\s+/, '');
-        const { data: { user }, error: getUserError, } = await supabase.auth.getUser(token);
+        const { data: { user }, error: getUserError, } = await supabase_1.supabase.auth.getUser(token);
         if (getUserError || !user) {
             return res.status(401).json({ error: 'Invalid token' });
         }
-        const { data: userRole, error: roleErr } = await supabase
+        const { data: userRole, error: roleErr } = await supabase_1.supabase
             .from('user_roles')
             .select('role_id')
             .eq('user_id', user.id)
@@ -21,7 +24,7 @@ export async function isAdmin(req, res, next) {
         if (roleErr || !userRole) {
             return res.status(403).json({ error: 'Unauthorized - No role' });
         }
-        const { data: roleType, error: typeErr } = await supabase
+        const { data: roleType, error: typeErr } = await supabase_1.supabase
             .from('role_types')
             .select('name')
             .eq('id', userRole.role_id)

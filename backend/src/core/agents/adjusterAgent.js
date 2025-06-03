@@ -1,18 +1,21 @@
-import { OracleAgent } from "./oracleAgent";
-import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import { detectFacetFromInput } from "../../utils/facetUtil";
-import { FireAgent } from "./fireAgent";
-import { WaterAgent } from "./waterAgent";
-import { EarthAgent } from "./earthAgent";
-import { AirAgent } from "./airAgent";
-import { AetherAgent } from "./aetherAgent";
-import { GuideAgent } from "./guideAgent";
-import { MentorAgent } from "./mentorAgent";
-import { DreamAgent } from "./DreamAgent";
-import { feedbackPrompts } from "../../constants/feedbackPrompts";
-import { logger } from "../../utils/logger";
-import { runShadowWork } from "../../modules/shadowWorkModule";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.personalOracle = exports.PersonalOracleAgent = void 0;
+const oracleAgent_1 = require("./oracleAgent");
+const memoryService_1 = require("../../services/memoryService");
+const oracleLogger_1 = require("../../utils/oracleLogger");
+const facetUtil_1 = require("../../utils/facetUtil");
+const fireAgent_1 = require("./fireAgent");
+const waterAgent_1 = require("./waterAgent");
+const earthAgent_1 = require("./earthAgent");
+const airAgent_1 = require("./airAgent");
+const aetherAgent_1 = require("./aetherAgent");
+const guideAgent_1 = require("./guideAgent");
+const mentorAgent_1 = require("./mentorAgent");
+const DreamAgent_1 = require("./DreamAgent");
+const feedbackPrompts_1 = require("../../constants/feedbackPrompts");
+const logger_1 = require("../../utils/logger");
+const shadowWorkModule_1 = require("../../modules/shadowWorkModule");
 // Simple query scoring function
 function scoreQuery(input) {
     const lower = input.toLowerCase();
@@ -24,23 +27,23 @@ function scoreQuery(input) {
         aether: 0.5 // default baseline
     };
 }
-export class PersonalOracleAgent extends OracleAgent {
+class PersonalOracleAgent extends oracleAgent_1.OracleAgent {
     constructor() {
         super({ debug: false });
-        this.fire = new FireAgent();
-        this.water = new WaterAgent();
-        this.earth = new EarthAgent();
-        this.air = new AirAgent();
-        this.aether = new AetherAgent();
-        this.guide = new GuideAgent();
-        this.mentor = new MentorAgent();
-        this.dream = new DreamAgent();
+        this.fire = new fireAgent_1.FireAgent();
+        this.water = new waterAgent_1.WaterAgent();
+        this.earth = new earthAgent_1.EarthAgent();
+        this.air = new airAgent_1.AirAgent();
+        this.aether = new aetherAgent_1.AetherAgent();
+        this.guide = new guideAgent_1.GuideAgent();
+        this.mentor = new mentorAgent_1.MentorAgent();
+        this.dream = new DreamAgent_1.DreamAgent();
     }
     async processQuery(query) {
         const input = typeof query === 'string' ? query : query.input;
         const userId = typeof query === 'string' ? 'anonymous' : query.userId;
-        logger.info("🔮 PersonalOracleAgent activated", { userId });
-        const memories = await getRelevantMemories(userId, input, 5);
+        logger_1.logger.info("🔮 PersonalOracleAgent activated", { userId });
+        const memories = await (0, memoryService_1.getRelevantMemories)(userId, input, 5);
         const lower = input.toLowerCase();
         // 1️⃣ Symbolic cue routing
         if (lower.includes("dream")) {
@@ -61,9 +64,9 @@ export class PersonalOracleAgent extends OracleAgent {
         //   return await this.wrapAgent(this.adjuster, query, memories);
         // }
         // 2️⃣ Shadow work
-        const shadow = await runShadowWork(input, userId);
+        const shadow = await (0, shadowWorkModule_1.runShadowWork)(input, userId);
         if (shadow)
-            return { ...shadow, feedbackPrompt: feedbackPrompts.shadow };
+            return { ...shadow, feedbackPrompt: feedbackPrompts_1.feedbackPrompts.shadow };
         // 3️⃣ Elemental routing fallback
         const scores = scoreQuery(input);
         let best = "aether";
@@ -87,15 +90,15 @@ export class PersonalOracleAgent extends OracleAgent {
         const input = typeof query === 'string' ? query : query.input;
         const userId = typeof query === 'string' ? 'anonymous' : query.userId;
         const response = await agent.processQuery(input);
-        const facet = await detectFacetFromInput(input);
+        const facet = await (0, facetUtil_1.detectFacetFromInput)(input);
         response.metadata = {
             ...response.metadata,
             facet,
             provider: agent.constructor.name,
         };
-        response.feedbackPrompt ?? (response.feedbackPrompt = feedbackPrompts.elemental);
-        await storeMemoryItem(userId, response.content);
-        await logOracleInsight({
+        response.feedbackPrompt ?? (response.feedbackPrompt = feedbackPrompts_1.feedbackPrompts.elemental);
+        await (0, memoryService_1.storeMemoryItem)(userId, response.content);
+        await (0, oracleLogger_1.logOracleInsight)({
             anon_id: userId,
             archetype: response.metadata?.archetype || "Oracle",
             element: response.metadata?.element || "aether",
@@ -110,4 +113,5 @@ export class PersonalOracleAgent extends OracleAgent {
         return response;
     }
 }
-export const personalOracle = new PersonalOracleAgent();
+exports.PersonalOracleAgent = PersonalOracleAgent;
+exports.personalOracle = new PersonalOracleAgent();

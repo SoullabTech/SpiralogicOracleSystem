@@ -1,18 +1,20 @@
+"use strict";
 // src/routes/profileSettings.routes.ts
-import { Router } from 'express';
-import { z } from 'zod';
-import { authenticateToken } from '../middleware/authenticateToken';
-import { supabase } from '../lib/supabaseClient';
-const router = Router();
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const zod_1 = require("zod");
+const authenticateToken_1 = require("../middleware/authenticateToken");
+const supabaseClient_1 = require("../lib/supabaseClient");
+const router = (0, express_1.Router)();
 // Zod schema for settings
-const settingsSchema = z.object({
-    personal_guide_name: z.string().min(2).max(100),
-    voice_id: z.string().min(10),
-    guide_gender: z.enum(['male', 'female', 'nonbinary']),
-    guide_language: z.string().min(2).max(10),
+const settingsSchema = zod_1.z.object({
+    personal_guide_name: zod_1.z.string().min(2).max(100),
+    voice_id: zod_1.z.string().min(10),
+    guide_gender: zod_1.z.enum(['male', 'female', 'nonbinary']),
+    guide_language: zod_1.z.string().min(2).max(10),
 });
 // PUT /api/profile/settings
-router.put('/', authenticateToken, async (req, res) => {
+router.put('/', authenticateToken_1.authenticateToken, async (req, res) => {
     const userId = req.user?.id;
     if (!userId) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -26,7 +28,7 @@ router.put('/', authenticateToken, async (req, res) => {
     }
     const { personal_guide_name, voice_id, guide_gender, guide_language } = parseResult.data;
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient_1.supabase
             .from('profiles')
             .update({
             personal_guide_name,
@@ -48,4 +50,4 @@ router.put('/', authenticateToken, async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 });
-export default router;
+exports.default = router;

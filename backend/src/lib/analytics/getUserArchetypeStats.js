@@ -1,6 +1,9 @@
-import { supabase } from '@/lib/supabaseClient';
-export const getUserArchetypeStats = async (userId) => {
-    const { data, error } = await supabase
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getUserArchetypeStats = void 0;
+const supabaseClient_1 = require("@/lib/supabaseClient");
+const getUserArchetypeStats = async (userId) => {
+    const { data, error } = await supabaseClient_1.supabase
         .from('user_phases')
         .select('archetype, element')
         .eq('user_id', userId);
@@ -23,3 +26,4 @@ export const getUserArchetypeStats = async (userId) => {
         element,
     }));
 };
+exports.getUserArchetypeStats = getUserArchetypeStats;
