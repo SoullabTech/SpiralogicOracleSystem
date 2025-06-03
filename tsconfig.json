@@ -1,0 +1,16 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./oracle-frontend/spiralogic-oracle" }
+    // Temporarily disabled to unblock frontend deployment
+    // { "path": "./backend" }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["oracle-frontend/spiralogic-oracle/src/*"],
+      "@lib/*": ["oracle-frontend/spiralogic-oracle/src/lib/*"],
+      "@utils/*": ["oracle-frontend/spiralogic-oracle/src/utils/*"]
+    }
+  }
+}
