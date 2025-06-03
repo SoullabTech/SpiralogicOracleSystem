@@ -1,6 +1,6 @@
 node_modules/
 backend/
-oracle-frontend/
+# oracle-frontend/  ← commented out to allow build
 soullab-frontend/
 oracle-backend/
 legacy-oracle-frontend/
