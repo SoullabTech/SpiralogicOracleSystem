@@ -1,8 +1,5 @@
-// oracle-backend/src/lib/supabaseClient.ts
-
 export { supabase } from './supabase';
 
-// Re-export for backwards compatibility
 import { supabase } from './supabase';
 import { logger } from '@/utils/logger';
 import { createError } from '@/middleware/errorHandler';
@@ -13,16 +10,45 @@ interface JournalEntry {
   type: 'dream' | 'insight' | 'ritual' | 'journal';
   symbols: string[];
   timestamp: string;
+  elementalTag?: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  archetypeTag?: string;
+  petalSnapshot?: Record<string, number>;
 }
 
 export async function saveJournalEntry(entry: JournalEntry) {
+  const payload = {
+    user_id: entry.userId,
+    content: entry.content,
+    type: entry.type,
+    symbols: entry.symbols,
+    timestamp: entry.timestamp,
+    elemental_tag: entry.elementalTag,
+    archetype_tag: entry.archetypeTag,
+    metadata: entry.petalSnapshot ? { petalSnapshot: entry.petalSnapshot } : null
+  };
+
   const { data, error } = await supabase
-    .from('oracle_memories')
-    .insert([entry]);
+    .from('journal_entries')
+    .insert([payload]);
 
   if (error) {
     logger.error(`Failed to save journal entry: ${error.message}`);
     throw createError('Failed to save journal entry', 500);
+  }
+
+  return data;
+}
+
+export async function getJournalEntries(userId: string) {
+  const { data, error } = await supabase
+    .from('journal_entries')
+    .select('*')
+    .eq('user_id', userId)
+    .order('timestamp', { ascending: false });
+
+  if (error) {
+    logger.error(`Failed to fetch journal entries: ${error.message}`);
+    throw createError('Failed to fetch journal entries', 500);
   }
 
   return data;

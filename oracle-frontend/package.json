@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@rive-app/react-canvas": "^4.21.1",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/supabase-js": "^2.49.8",
     "@tailwindcss/postcss": "^4.1.7",

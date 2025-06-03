@@ -42,7 +42,16 @@
       "Bash(kill:*)",
       "Bash(vercel:*)",
       "Bash(rg:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"Sacred Technology Interface|Sacred Technology Platform|Sacred Tech\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n -B2 -A2 \"Sacred Technology Platform\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n -B3 -A3 \"Soullab Sacred Technology\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"#FFD700|#FFC107|#FFB300|#FFCA28|#FFEB3B|#FDD835\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"rgb\\(255,\\s*215,\\s*0\\)|rgba\\(255,\\s*215,\\s*0\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"sacred-gold|#c9b037\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"yellow-[3-5]00|amber-[3-5]00|gold\" --include=\"*.tsx\" --include=\"*.jsx\" --include=\"*.ts\" --include=\"*.js\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"yellow-[3-5]00|amber-[3-5]00\" -g \"*.tsx\" -g \"*.jsx\" -g \"*.ts\" -g \"*.js\")",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"#d4af37|divine-gold|sacred-amber\" -g \"*.tsx\" -g \"*.jsx\" -g \"*.ts\" -g \"*.js\" -g \"*.css\")"
     ],
     "deny": []
   },

@@ -1,18 +1,18 @@
+// src/app/page.tsx
 'use client'
-
 import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0d0218] via-[#1a0c2b] to-[#0d0218] text-gold flex items-center justify-center p-8">
+    <div className="min-h-screen bg-gradient-to-br from-deep-purple via-deep-violet to-deep-purple text-gold flex items-center justify-center p-8">
       <div className="text-center max-w-xl">
         <div className="mb-6">
-          <div className="w-24 h-24 rounded-full bg-glass flex items-center justify-center mx-auto shadow-glyph animate-pulse">
+          <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mx-auto shadow-glyph animate-pulse">
             <span className="text-4xl">🔮</span>
           </div>
         </div>
 
-        <h1 className="text-5xl font-bold mb-4">AÍÑ Oracle System</h1>
+        <h1 className="text-5xl font-bold mb-4 font-oracle">AÍÑ Oracle System</h1>
         <p className="text-lg opacity-80 mb-8">
           Your sacred mirror for evolutionary guidance, memory, and soulful clarity.
         </p>
@@ -26,8 +26,8 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <p className="text-xs mt-6 opacity-40">AÍÑ ∙ Spiralogic ∙ Soullab</p>
+        <p className="text-xs mt-6 opacity-40 font-oracle">AÍÑ ∙ Spiralogic ∙ Soullab</p>
       </div>
     </div>
-  )
+  );
 }
