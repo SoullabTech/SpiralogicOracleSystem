@@ -7,3 +7,6 @@ node_modules/
 SpiralogicOracleSystem_backup.zip
 .vercel
 legacy-backups.zip
+node_modules/
+*.log
+.env

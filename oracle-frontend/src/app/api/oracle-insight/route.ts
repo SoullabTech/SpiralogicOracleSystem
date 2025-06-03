@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
+import { logAgentInteraction } from '@/lib/logger';
 
 export async function POST(req: Request) {
   const { user_id } = await req.json();
@@ -23,12 +24,20 @@ Aether: ${data.aether}
 
 Generate a spiritual oracle insight, symbolic affirmation, and recommended ritual for alignment.`;
 
-  // Call to GPT (example placeholder — replace with OpenAI or internal Oracle agent)
+  // Placeholder Oracle response (replace with GPT/OpenAI later)
   const fakeInsight = {
     oracle: 'You are called to ground your Fire in Aether. Let vision find stillness.',
     ritual: 'At dawn, light a candle and chant your desire into a stone.',
     affirmation: 'I burn with clarity and breathe with grace.',
   };
+
+  // 🔐 Log it to Supabase
+  await logAgentInteraction({
+    userId: user_id,
+    agent: 'OracleAgent',
+    content: fakeInsight.oracle,
+    phase: 'Fire-Aether', // Optional: derive based on elemental ratio
+  });
 
   return NextResponse.json({ insight: fakeInsight });
 }

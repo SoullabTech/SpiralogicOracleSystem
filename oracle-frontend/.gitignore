@@ -1,6 +1,6 @@
-.env
-.env
-.env
-.env
-.vercel
+.next/
+node_modules/
+.cache/
+dist/
+*.log
 .env.local

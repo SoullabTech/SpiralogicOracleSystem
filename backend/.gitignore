@@ -45,3 +45,7 @@ Desktop.ini
 *.swo
 legacy-backups.zip
 *.zip
+node_modules/
+dist/
+.env
+*.log

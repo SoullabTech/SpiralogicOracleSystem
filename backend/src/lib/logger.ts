@@ -1,14 +1,14 @@
-// src/lib/logger.ts
 import { createClient } from '@supabase/supabase-js';
 import winston from 'winston';
 import path from 'path';
 
+// -- Supabase Client (Server Role) --
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Define log levels
+// -- Winston Logger Config --
 const levels = {
   error: 0,
   warn: 1,
@@ -17,7 +17,6 @@ const levels = {
   debug: 4,
 };
 
-// Define log colors
 const colors = {
   error: 'red',
   warn: 'yellow',
@@ -26,64 +25,38 @@ const colors = {
   debug: 'white',
 };
 
-// Tell winston that you want to link the colors
 winston.addColors(colors);
 
-// Define log format
 const format = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
   winston.format.colorize({ all: true }),
-  winston.format.printf(
-    (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-  ),
+  winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
 );
 
-// Define which transports the logger must use to print out messages
 const transports = [
-  // Allow the use the console to print the messages
   new winston.transports.Console(),
-  // Allow to print all the error level messages inside the error.log file
   new winston.transports.File({
     filename: path.join(process.cwd(), 'logs', 'error.log'),
     level: 'error',
   }),
-  // Allow to print all the error message inside the all.log file
   new winston.transports.File({
     filename: path.join(process.cwd(), 'logs', 'all.log'),
   }),
 ];
 
-// Create the logger instance
+// -- Exported Logger --
 const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
+  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
   levels,
   format,
   transports,
 });
 
-// Export logger instance
 export default logger;
 
-// Export specific log methods for convenience
-export const logError = (message: string, meta?: any) => {
-  logger.error(message, meta);
-};
-
-export const logWarn = (message: string, meta?: any) => {
-  logger.warn(message, meta);
-};
-
-export const logInfo = (message: string, meta?: any) => {
-  logger.info(message, meta);
-};
-
-export const logHttp = (message: string, meta?: any) => {
-  logger.http(message, meta);
-};
-
-export const logDebug = (message: string, meta?: any) => {
-  logger.debug(message, meta);
-};
+//
+// 🧠 SUPABASE LOGGING HELPERS
+//
 
 /**
  * Logs a message from any intelligent agent (e.g., GuideAgent, ShadowAgent).
@@ -106,9 +79,7 @@ export async function logAgentInteraction({
     spiral_phase: phase || null,
   });
 
-  if (error) {
-    console.error('❌ Logger (agent) error:', error);
-  }
+  if (error) logger.error(`Supabase Agent log failed: ${error.message}`);
 }
 
 /**
@@ -132,9 +103,7 @@ export async function logJournalEntry({
     symbols: symbols || [],
   });
 
-  if (error) {
-    console.error('❌ Journal logging error:', error);
-  }
+  if (error) logger.error(`Supabase Journal log failed: ${error.message}`);
 }
 
 /**
@@ -156,7 +125,5 @@ export async function logAdjusterInsight({
     spiral_phase: phase || null,
   });
 
-  if (error) {
-    console.error('❌ Adjuster insight logging error:', error);
-  }
+  if (error) logger.error(`Supabase Insight log failed: ${error.message}`);
 }

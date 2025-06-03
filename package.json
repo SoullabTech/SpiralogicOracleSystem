@@ -4,12 +4,16 @@
   "scripts": {
     "install": "cd backend && npm install",
     "build": "cd backend && npm run build",
+    "dev": "next dev",
     "start": "cd backend && npm start"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/supabase-js": "^2.49.9",
+    "chart.js": "^4.4.9",
+    "jspdf": "^3.0.1",
+    "react-chartjs-2": "^5.3.0",
     "rive-react": "^4.21.1"
   }
 }
