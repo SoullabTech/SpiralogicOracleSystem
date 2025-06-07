@@ -1,9 +1,21 @@
+// --- File: oracle-frontend/vercel.json ---
 {
   "version": 2,
+  "name": "spiralogic-oracle",
   "builds": [
-    { "src": "index.html", "use": "@vercel/static-build", "config": { "distDir": "dist" } }
+    {
+      "src": "src/app/page.tsx",
+      "use": "@vercel/next"
+    }
   ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  "rewrites": [
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard/page.tsx"
+    }
+  ],
+  "framework": "nextjs",
+  "outputDirectory": "out",
+  "cleanUrls": true,
+  "trailingSlash": false
 }
