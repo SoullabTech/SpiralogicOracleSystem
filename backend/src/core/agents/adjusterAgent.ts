@@ -1,6 +1,6 @@
 import { OracleAgent } from "./oracleAgent";
 import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
-import { logOracleInsight } from "../../utils/oracleLogger";
+import { logOracleInsight } from "../utils/oracleLogger";
 import { detectFacetFromInput } from "../../utils/facetUtil";
 import { FireAgent } from "./fireAgent";
 import { WaterAgent } from "./waterAgent";

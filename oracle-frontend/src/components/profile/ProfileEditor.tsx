@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { UserProfile, ElementType } from "@/types/shared";
 
-const defaultProfile = {
+const defaultProfile: UserProfile = {
   fire: 0,
   water: 0,
   earth: 0,
@@ -27,7 +28,7 @@ const playVoiceSample = (voiceId: string, text: string) => {
 };
 
 export default function ProfileEditor({ userId }: { userId: string }) {
-  const [profile, setProfile] = useState(defaultProfile);
+  const [profile, setProfile] = useState<UserProfile>(defaultProfile);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
 
@@ -46,7 +47,7 @@ export default function ProfileEditor({ userId }: { userId: string }) {
     fetchProfile();
   }, [userId]);
 
-  const updateField = (field: string, value: any) => {
+  const updateField = <K extends keyof UserProfile>(field: K, value: UserProfile[K]) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -66,7 +67,7 @@ export default function ProfileEditor({ userId }: { userId: string }) {
     <div className="bg-white shadow-lg rounded-xl p-6 max-w-xl mx-auto space-y-4">
       <h2 className="text-xl font-bold text-gray-800">🌿 Edit Your Oracle Profile</h2>
 
-      {["fire", "water", "earth", "air", "aether"].map((el) => (
+      {(["fire", "water", "earth", "air", "aether"] as const).map((el) => (
         <div key={el} className="flex items-center justify-between">
           <label className="capitalize">{el}</label>
           <input
@@ -74,7 +75,7 @@ export default function ProfileEditor({ userId }: { userId: string }) {
             min={0}
             max={100}
             value={profile[el]}
-            onChange={(e) => updateField(el, Number(e.target.value))}
+            onChange={(e) => updateField(el as ElementType, Number(e.target.value))}
             className="w-20 border px-2 py-1 rounded"
           />
         </div>

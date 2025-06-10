@@ -22,11 +22,105 @@ interface ManifestoSection {
   keyInsights: string[];
 }
 
+interface ElementalAlchemyBook {
+  title: string;
+  author: string;
+  chapters: ElementalChapter[];
+  elementalWisdom: ElementalWisdom;
+  coreTeachings: string[];
+  practicalApplications: string[];
+  metadata: BookMetadata;
+}
+
+interface ElementalChapter {
+  number: number;
+  title: string;
+  element?: string;
+  keyTeachings: string[];
+  content_excerpt: string;
+}
+
+interface ElementalWisdom {
+  fire: ElementTeaching;
+  water: ElementTeaching;
+  earth: ElementTeaching;
+  air: ElementTeaching;
+  aether: ElementTeaching;
+}
+
+interface ElementTeaching {
+  essence: string;
+  practices: string[];
+  qualities: string[];
+  healingApplications: string[];
+  shadowAspects: string[];
+}
+
+interface BookMetadata {
+  author: string;
+  publisher: string;
+  year: number;
+  dedication: string;
+  corePhilosophy: string;
+  keywords: string[];
+  integrationDate: string;
+}
+
 export class FounderKnowledgeService {
   private founderAgent: SoullabFounderAgent;
 
   constructor() {
     this.founderAgent = new SoullabFounderAgent();
+  }
+
+  /**
+   * Process the Elemental Alchemy Book
+   */
+  async ingestElementalAlchemyBook(): Promise<ElementalAlchemyBook> {
+    try {
+      logger.info('FounderKnowledge: Loading Elemental Alchemy Book knowledge');
+
+      const knowledgePath = path.join(__dirname, '../../data/founder-knowledge/elemental-alchemy-book.json');
+      
+      // Check if the book has been processed
+      try {
+        const content = await fs.readFile(knowledgePath, 'utf-8');
+        const bookData = JSON.parse(content);
+        
+        // Transform the data structure for founder agent
+        const elementalBook: ElementalAlchemyBook = {
+          title: bookData.title,
+          author: bookData.author,
+          chapters: bookData.content.chapters,
+          elementalWisdom: bookData.content.elementalWisdom,
+          coreTeachings: bookData.content.coreTeachings,
+          practicalApplications: bookData.content.practicalApplications,
+          metadata: {
+            ...bookData.metadata,
+            keywords: bookData.metadata.keywords || ['elemental alchemy', 'transformation', 'consciousness'],
+            integrationDate: bookData.processed_at
+          }
+        };
+
+        // Update founder agent with elemental wisdom
+        await this.updateFounderWithElementalWisdom(elementalBook);
+
+        logger.info('FounderKnowledge: Elemental Alchemy Book successfully integrated', {
+          chapters: elementalBook.chapters.length,
+          teachings: elementalBook.coreTeachings.length
+        });
+
+        return elementalBook;
+
+      } catch (fileError) {
+        logger.error('FounderKnowledge: Elemental Alchemy Book not found - run ingestion script first', { fileError });
+        throw new Error('Elemental Alchemy Book not processed yet. Please run the ingestion script first.');
+      }
+
+    } catch (error) {
+      logger.error('FounderKnowledge: Error loading Elemental Alchemy Book', error);
+      throw error;
+    }
   }
 
   /**
@@ -251,6 +345,139 @@ export class FounderKnowledgeService {
     insights.integrationPrinciples = manifesto.corePrinciples;
 
     return insights;
+  }
+
+  /**
+   * Update founder agent with Elemental Alchemy wisdom
+   */
+  private async updateFounderWithElementalWisdom(book: ElementalAlchemyBook): Promise<void> {
+    try {
+      // Create structured knowledge update for elemental wisdom
+      const elementalKnowledgeUpdate = {
+        type: 'elemental_alchemy_book' as const,
+        title: book.title,
+        author: book.author,
+        content: {
+          chapters: book.chapters,
+          elementalWisdom: book.elementalWisdom,
+          coreTeachings: book.coreTeachings.slice(0, 100), // Limit for performance
+          practicalApplications: book.practicalApplications,
+          dedication: book.metadata.dedication
+        },
+        metadata: {
+          ...book.metadata,
+          accessibility: 'public' as const,
+          ingestionDate: new Date().toISOString(),
+          sourceType: 'book',
+          elementCount: Object.keys(book.elementalWisdom).length,
+          chapterCount: book.chapters.length,
+          teachingCount: book.coreTeachings.length
+        }
+      };
+
+      // Store in a format the agent can reference
+      await this.storeElementalKnowledge(elementalKnowledgeUpdate);
+
+      // Create elemental wisdom summary for quick agent reference
+      const elementalSummary = this.createElementalWisdomSummary(book.elementalWisdom);
+      await this.storeElementalSummary(elementalSummary);
+
+      logger.info('FounderKnowledge: Elemental Alchemy wisdom integrated into founder agent', {
+        elements: Object.keys(book.elementalWisdom),
+        chapters: book.chapters.length,
+        teachings: book.coreTeachings.length
+      });
+
+    } catch (error) {
+      logger.error('FounderKnowledge: Error updating founder with elemental wisdom', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create a summary of elemental wisdom for quick agent access
+   */
+  private createElementalWisdomSummary(wisdom: ElementalWisdom): any {
+    return {
+      type: 'elemental_wisdom_summary',
+      created_at: new Date().toISOString(),
+      elements: {
+        fire: {
+          essence: wisdom.fire.essence,
+          key_qualities: wisdom.fire.qualities.slice(0, 3),
+          primary_practice: wisdom.fire.practices[0] || 'Vision meditation and creative expression',
+          shadow_aspect: wisdom.fire.shadowAspects[0] || 'Burnout and scattered energy'
+        },
+        water: {
+          essence: wisdom.water.essence,
+          key_qualities: wisdom.water.qualities.slice(0, 3),
+          primary_practice: wisdom.water.practices[0] || 'Emotional flow and feeling integration',
+          shadow_aspect: wisdom.water.shadowAspects[0] || 'Emotional overwhelm and stagnation'
+        },
+        earth: {
+          essence: wisdom.earth.essence,
+          key_qualities: wisdom.earth.qualities.slice(0, 3),
+          primary_practice: wisdom.earth.practices[0] || 'Grounding and embodiment practices',
+          shadow_aspect: wisdom.earth.shadowAspects[0] || 'Rigidity and resistance to change'
+        },
+        air: {
+          essence: wisdom.air.essence,
+          key_qualities: wisdom.air.qualities.slice(0, 3),
+          primary_practice: wisdom.air.practices[0] || 'Clarity meditation and communication',
+          shadow_aspect: wisdom.air.shadowAspects[0] || 'Overthinking and disconnection'
+        },
+        aether: {
+          essence: wisdom.aether.essence,
+          key_qualities: wisdom.aether.qualities.slice(0, 3),
+          primary_practice: wisdom.aether.practices[0] || 'Integration and unity meditation',
+          shadow_aspect: wisdom.aether.shadowAspects[0] || 'Spiritual bypassing and dissociation'
+        }
+      },
+      integration_principles: [
+        'Each element offers unique gifts and challenges for personal transformation',
+        'Balance among elements creates wholeness and authentic power',
+        'Shadow work with elements reveals hidden potential and wisdom',
+        'Practical application brings elemental wisdom into daily life',
+        'The Spiralogic Process guides elemental integration journey'
+      ]
+    };
+  }
+
+  /**
+   * Store elemental knowledge for agent retrieval
+   */
+  private async storeElementalKnowledge(knowledge: any): Promise<void> {
+    const knowledgePath = path.join(
+      __dirname, 
+      '../../data/founder-knowledge/elemental-alchemy-processed.json'
+    );
+
+    try {
+      await fs.mkdir(path.dirname(knowledgePath), { recursive: true });
+      await fs.writeFile(knowledgePath, JSON.stringify(knowledge, null, 2));
+      logger.info('FounderKnowledge: Elemental knowledge stored for agent access', { path: knowledgePath });
+    } catch (error) {
+      logger.error('FounderKnowledge: Error storing elemental knowledge', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Store elemental wisdom summary for quick agent reference
+   */
+  private async storeElementalSummary(summary: any): Promise<void> {
+    const summaryPath = path.join(
+      __dirname, 
+      '../../data/founder-knowledge/elemental-wisdom-summary.json'
+    );
+
+    try {
+      await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2));
+      logger.info('FounderKnowledge: Elemental wisdom summary stored', { path: summaryPath });
+    } catch (error) {
+      logger.error('FounderKnowledge: Error storing elemental summary', error);
+      throw error;
+    }
   }
 
   /**

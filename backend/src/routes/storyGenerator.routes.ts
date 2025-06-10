@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { elementalOracle } from '../services/elementalOracleService';
-import { logOracleInsight } from '../utils/oracleLogger';
+import { logOracleInsight } from '../core/utils/oracleLogger';
 import { authenticate } from '../middleware/authenticate';
 import { getUserProfile } from '../services/profileService';
 import { getRelevantMemories, storeMemoryItem } from '../services/memoryService';

@@ -3,6 +3,8 @@ import { authenticate } from '../middleware/authenticate';
 import { elementalAlchemyService } from '../services/elementalAlchemyService';
 import { WebSocketServer } from 'ws';
 import { Server } from 'http';
+import fs from 'fs/promises';
+import path from 'path';
 
 export const elementalAlchemyRouter = Router();
 
@@ -238,6 +240,161 @@ elementalAlchemyRouter.get('/houses', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to fetch houses overview'
+    });
+  }
+});
+
+// ========== ELEMENTAL ALCHEMY BOOK KNOWLEDGE ENDPOINTS ==========
+
+/**
+ * GET /elemental-alchemy/book/wisdom
+ * Returns the elemental wisdom summary from Kelly's book
+ */
+elementalAlchemyRouter.get('/book/wisdom', authenticate, async (req, res) => {
+  try {
+    const summaryPath = path.join(__dirname, '../../data/founder-knowledge/elemental-wisdom-summary.json');
+    const content = await fs.readFile(summaryPath, 'utf-8');
+    const wisdom = JSON.parse(content);
+
+    res.json({
+      success: true,
+      data: wisdom,
+      message: 'Elemental Alchemy book wisdom successfully retrieved'
+    });
+
+  } catch (error) {
+    console.error('Error fetching elemental book wisdom:', error);
+    res.status(404).json({
+      success: false,
+      error: 'Elemental Alchemy book wisdom not found. Please run ingestion script first.',
+      message: 'Book knowledge not yet processed'
+    });
+  }
+});
+
+/**
+ * GET /elemental-alchemy/book/element/:elementName
+ * Returns specific element teachings from Kelly's book
+ */
+elementalAlchemyRouter.get('/book/element/:elementName', authenticate, async (req, res) => {
+  try {
+    const { elementName } = req.params;
+    const validElements = ['fire', 'water', 'earth', 'air', 'aether'];
+    
+    if (!validElements.includes(elementName.toLowerCase())) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid element name',
+        validElements
+      });
+    }
+
+    const summaryPath = path.join(__dirname, '../../data/founder-knowledge/elemental-wisdom-summary.json');
+    const content = await fs.readFile(summaryPath, 'utf-8');
+    const wisdom = JSON.parse(content);
+
+    const elementWisdom = wisdom.elements[elementName.toLowerCase()];
+    
+    if (!elementWisdom) {
+      return res.status(404).json({
+        success: false,
+        error: `${elementName} wisdom not found in book`
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        element: elementName.toLowerCase(),
+        source: 'Elemental Alchemy: The Ancient Art of Living a Phenomenal Life',
+        author: 'Kelly Nezat',
+        ...elementWisdom,
+        integration_principles: wisdom.integration_principles
+      }
+    });
+
+  } catch (error) {
+    console.error('Error fetching element wisdom from book:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch element wisdom from book'
+    });
+  }
+});
+
+/**
+ * GET /elemental-alchemy/book/info
+ * Returns general information about Kelly's integrated book
+ */
+elementalAlchemyRouter.get('/book/info', authenticate, async (req, res) => {
+  try {
+    const bookPath = path.join(__dirname, '../../data/founder-knowledge/elemental-alchemy-book.json');
+    const content = await fs.readFile(bookPath, 'utf-8');
+    const bookData = JSON.parse(content);
+
+    const bookInfo = {
+      title: bookData.title,
+      author: bookData.author,
+      publisher: 'Soullab Media',
+      processed_at: bookData.processed_at,
+      chapters: bookData.content.chapters.map((ch: any) => ({
+        number: ch.number,
+        title: ch.title,
+        element: ch.element
+      })),
+      core_teachings_count: bookData.content.coreTeachings.length,
+      book_length_chars: bookData.metadata.book_length,
+      integration_status: 'complete',
+      available_elements: Object.keys(bookData.content.elementalWisdom),
+      dedication: bookData.content.dedication?.substring(0, 200) + '...'
+    };
+
+    res.json({
+      success: true,
+      data: bookInfo
+    });
+
+  } catch (error) {
+    console.error('Error fetching book info:', error);
+    res.status(404).json({
+      success: false,
+      error: 'Book information not found'
+    });
+  }
+});
+
+/**
+ * GET /elemental-alchemy/book/teachings/:limit?
+ * Returns core teachings from Kelly's book
+ */
+elementalAlchemyRouter.get('/book/teachings/:limit?', authenticate, async (req, res) => {
+  try {
+    const limit = parseInt(req.params.limit || '10');
+    
+    const bookPath = path.join(__dirname, '../../data/founder-knowledge/elemental-alchemy-book.json');
+    const content = await fs.readFile(bookPath, 'utf-8');
+    const bookData = JSON.parse(content);
+
+    const teachings = bookData.content.coreTeachings
+      .filter((teaching: string) => teaching.length > 30 && teaching.length < 300)
+      .slice(0, limit);
+
+    res.json({
+      success: true,
+      data: {
+        source: 'Elemental Alchemy: The Ancient Art of Living a Phenomenal Life',
+        author: 'Kelly Nezat',
+        teachings,
+        total_available: bookData.content.coreTeachings.length,
+        returned: teachings.length
+      }
+    });
+
+  } catch (error) {
+    console.error('Error fetching teachings from book:', error);
+    res.status(404).json({
+      success: false,
+      error: 'Book teachings not found'
     });
   }
 });

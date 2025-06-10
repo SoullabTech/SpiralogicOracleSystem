@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import memoryModule from '../utils/memoryModule';
+import memoryModule from '../core/utils/memoryModule';
 import logger from '../utils/logger';
 
 const router = Router();

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { oracleLogger } from '../utils/oracleLogger';
+import { oracleLogger } from '../core/utils/oracleLogger';
 import { authenticate } from '../middleware/authenticate';
 import type { AuthenticatedRequest } from '../types';
 

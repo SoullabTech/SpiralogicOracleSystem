@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import memoryModule from '../utils/memoryModule';
+import memoryModule from '../core/utils/memoryModule';
 import { authenticateToken } from '../middleware/authenticateToken';
 import type { AuthenticatedRequest } from '../types';
 

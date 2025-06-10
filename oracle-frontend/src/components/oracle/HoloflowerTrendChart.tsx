@@ -1,3 +1,8 @@
+/**
+ * AINChatBox - Alternative interface for Oracle interactions
+ * Provides a chat-like experience with elemental tracking
+ */
+
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -6,17 +11,26 @@ import ElementalCompass from './ElementalCompass';
 import SpiralogicForecast from '@/components/oracle/SpiralogicForecast';
 import { analyzeElementalTrend } from '@/lib/elemental-tracker';
 import { saveElementalSnapshot } from '@/lib/elemental-history';
+import { OracleMetadata } from '@/types/shared';
 
 interface AINChatBoxProps {
   onSubmit?: (q: string) => void;
 }
 
+/**
+ * Chat-based Oracle interface with elemental tracking
+ * @param props - Component props including submit callback
+ * @returns Interactive chat interface component
+ */
 export default function AINChatBox({ onSubmit }: AINChatBoxProps) {
   const [input, setInput] = useState('');
   const [response, setResponse] = useState('');
-  const [metadata, setMetadata] = useState<any>(null);
+  const [metadata, setMetadata] = useState<OracleMetadata | null>(null);
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Sends user query to Oracle API and processes response
+   */
   const sendToOracle = async () => {
     if (!input.trim()) return;
     setLoading(true);
@@ -50,7 +64,7 @@ export default function AINChatBox({ onSubmit }: AINChatBoxProps) {
         userId: 'demo-user-001',
         elemental: trend
       });
-    } catch (err) {
+    } catch {
       setResponse('🌀 Oracle connection unstable. Try again.');
       setMetadata(null);
     } finally {

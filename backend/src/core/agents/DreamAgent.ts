@@ -1,8 +1,9 @@
 "use strict";
 
 import { OracleAgent } from "./oracleAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import * as MemoryModule from "../../utils/memoryModule";import ModelService from "../../utils/modelService";
+import { logOracleInsight } from "../utils/oracleLogger";
+import * as MemoryModule from "../utils/memoryModule";
+import ModelService from "../../utils/modelService";
 import type { AgentResponse } from "../../types/ai";
 
 /**

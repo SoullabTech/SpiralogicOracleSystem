@@ -1,7 +1,7 @@
 // src/routes/feedback.routes.ts
 
 import { Router } from 'express';
-import * as memoryModule from '../utils/memoryModule';
+import * as memoryModule from '../core/utils/memoryModule';
 import { storeMemoryItem } from '../services/memoryService';
 
 const router = Router();

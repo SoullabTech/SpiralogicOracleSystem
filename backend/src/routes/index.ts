@@ -26,6 +26,10 @@ import { elementalAlchemyRouter } from './elementalAlchemy.routes';
 import { astrologyRouter } from './astrology.routes';
 import { facilitatorDashboardRouter } from './facilitatorDashboard.routes';
 import automationRoutes from './automation.routes';
+import sacredMirrorRoutes from './sacredMirror.routes';
+import { spiralogicReportRouter } from './spiralogicReport.routes';
+import { practitionerPortalRouter } from './practitionerPortal.routes';
+import { retreatModeRouter } from './retreatMode.routes';
 
 const router = Router();
 
@@ -63,5 +67,9 @@ router.use('/elemental-alchemy', elementalAlchemyRouter);
 router.use('/astrology', astrologyRouter);
 router.use('/facilitator', facilitatorDashboardRouter);
 router.use('/automation', automationRoutes);
+router.use('/sacred-mirror', sacredMirrorRoutes);
+router.use('/spiralogic-report', spiralogicReportRouter);
+router.use('/practitioner', practitionerPortalRouter);
+router.use('/retreat', retreatModeRouter);
 
 export default router;

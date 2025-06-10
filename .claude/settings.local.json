@@ -52,7 +52,16 @@
       "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"yellow-[3-5]00|amber-[3-5]00|gold\" --include=\"*.tsx\" --include=\"*.jsx\" --include=\"*.ts\" --include=\"*.js\")",
       "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"yellow-[3-5]00|amber-[3-5]00\" -g \"*.tsx\" -g \"*.jsx\" -g \"*.ts\" -g \"*.js\")",
       "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"#d4af37|divine-gold|sacred-amber\" -g \"*.tsx\" -g \"*.jsx\" -g \"*.ts\" -g \"*.js\" -g \"*.css\")",
-      "Bash(tsc --build)"
+      "Bash(tsc --build)",
+      "Bash(npm run start:prod:*)",
+      "Bash(brew list:*)",
+      "Bash(brew install:*)",
+      "Bash(python3.11:*)",
+      "Bash(source:*)",
+      "Bash(pip install:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(export:*)",
+      "Bash(gtimeout:*)"
     ],
     "deny": []
   },

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(rm:*)",
+      "Bash(vercel link:*)",
+      "Bash(vercel:*)",
+      "Bash(npm run build:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm install)",
+      "Bash(/Users/andreanezat/.nvm/versions/node/v20.19.2/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -n \"ritual\" \"/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/oracle-frontend/supabase/migrations/20250606_oracle_agent_system.sql\")"
+    ],
+    "deny": []
+  }
+}

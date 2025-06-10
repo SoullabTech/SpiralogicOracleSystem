@@ -1,8 +1,19 @@
-// EmotionMeter.tsx – Display real-time emotional tone detected
+/**
+ * EmotionMeter displays the elemental emotional state of the user
+ * based on recent interactions with the Oracle interface.
+ */
 import { useState } from 'react';
-import { Flame, Droplet, Wind, Mountain, Sparkles } from 'lucide-react';
+import { Droplet } from 'lucide-react';
 
-const mockEmotion = {
+interface EmotionState {
+  tone: string;
+  element: string;
+  color: string;
+  icon: React.ReactNode;
+  message: string;
+}
+
+const mockEmotion: EmotionState = {
   tone: 'reflective',
   element: 'Water',
   color: 'text-blue-500',
@@ -10,8 +21,12 @@ const mockEmotion = {
   message: 'Emotions are flowing inward. You’re in a receptive state of inner listening.',
 };
 
+/**
+ * Displays the current emotional tone detected from user interactions
+ * @returns EmotionMeter component showing elemental emotional state
+ */
 export default function EmotionMeter() {
-  const [emotion] = useState(mockEmotion);
+  const [emotion] = useState<EmotionState>(mockEmotion);
 
   return (
     <div className="p-4 border rounded-xl bg-muted shadow-md">

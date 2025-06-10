@@ -4,7 +4,7 @@
 "use strict";
 
 import { OracleAgent } from "./oracleAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
+import { logOracleInsight } from "../utils/oracleLogger";
 import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
 import ModelService from "../../utils/modelService";
 import type { AIResponse } from "../../types/ai";
