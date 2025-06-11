@@ -2,11 +2,10 @@ node_modules/
 .pnpm-store/
 .DS_Store
 .env*
-/oracle-frontend/.next/
-/oracle-frontend/dist/
+.next/
+.venv/
+dist/
 SpiralogicOracleSystem_backup.zip
 .vercel
 legacy-backups.zip
-node_modules/
 *.log
-.env

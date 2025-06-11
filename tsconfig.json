@@ -1,16 +1,45 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./oracle-frontend/spiralogic-oracle" }
-    // Temporarily disabled to unblock frontend deployment
-    // { "path": "./backend" }
-  ],
   "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["oracle-frontend/spiralogic-oracle/src/*"],
-      "@lib/*": ["oracle-frontend/spiralogic-oracle/src/lib/*"],
-      "@utils/*": ["oracle-frontend/spiralogic-oracle/src/utils/*"]
+      "@/*": ["./app/*"]
     }
-  }
+  },
+  "include": [
+    "next-env.d.ts", 
+    "**/*.ts", 
+    "**/*.tsx", 
+    ".next/types/**/*.ts",
+    "app/**/*"
+  ],
+  "exclude": [
+    "node_modules", 
+    "backend", 
+    "oracle-backend",
+    "oracle-frontend",
+    "frontend",
+    "src",
+    "tests",
+    "soul_memory",
+    "htmlcov"
+  ]
 }

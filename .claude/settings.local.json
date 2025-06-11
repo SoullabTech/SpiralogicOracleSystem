@@ -61,7 +61,9 @@
       "Bash(pip install:*)",
       "Bash(npm cache clean:*)",
       "Bash(export:*)",
-      "Bash(gtimeout:*)"
+      "Bash(gtimeout:*)",
+      "Bash(npm view:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   },

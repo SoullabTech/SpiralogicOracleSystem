@@ -5,7 +5,7 @@ const nextConfig = {
   },
   images: {
     domains: ['oracle-backend-1.onrender.com'],
-  },
+  }
 }
 
 module.exports = nextConfig
