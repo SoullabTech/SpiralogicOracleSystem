@@ -63,7 +63,9 @@
       "Bash(export:*)",
       "Bash(gtimeout:*)",
       "Bash(npm view:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(npm update)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": []
   },
