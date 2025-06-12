@@ -28,6 +28,7 @@ import { facilitatorDashboardRouter } from './facilitatorDashboard.routes';
 import automationRoutes from './automation.routes';
 import sacredMirrorRoutes from './sacredMirror.routes';
 import spiralogicReportRouter from './spiralogicReport.routes';
+import fourPillarsRouter from './astrology/fourPillars.routes';
 import { practitionerPortalRouter } from './practitionerPortal.routes';
 import { retreatModeRouter } from './retreatMode.routes';
 
@@ -65,6 +66,7 @@ router.use('/post-retreat', postRetreatRoutes);
 router.use('/holoflower', holoflowerRouter);
 router.use('/elemental-alchemy', elementalAlchemyRouter);
 router.use('/astrology', astrologyRouter);
+router.use('/astrology/four-pillars', fourPillarsRouter);
 router.use('/facilitator', facilitatorDashboardRouter);
 router.use('/automation', automationRoutes);
 router.use('/sacred-mirror', sacredMirrorRoutes);
