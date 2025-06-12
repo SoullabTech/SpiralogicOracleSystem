@@ -45,6 +45,46 @@ export interface ChartData {
 
 export type ArchetypalElement = 'fire' | 'water' | 'earth' | 'air' | 'aether';
 
+// I Ching Astrology Types
+export type IChingElement = 'Wood' | 'Fire' | 'Earth' | 'Metal' | 'Water';
+
+export interface TrigramArchetype {
+  name: string;
+  symbol: string;
+  element: IChingElement;
+  direction: string;
+  attribute: string;
+  archetype: string;
+  description: string;
+  keywords: string[];
+}
+
+export interface IChingAstroProfile {
+  baseNumber: number;
+  birthTrigram: string;
+  birthElement: IChingElement;
+  currentTrigramCycle: string;
+  hexagramMapping: string[];
+  currentYearNumber: number;
+  cyclePosition: string;
+  fractalPhase: string;
+  yearlyGuidance: string;
+}
+
+export interface IChingCompatibility {
+  compatibility: number;
+  description: string;
+}
+
+export interface IChingInsight {
+  profile: IChingAstroProfile;
+  birthArchetype: TrigramArchetype;
+  currentArchetype: TrigramArchetype;
+  compatibility?: IChingCompatibility;
+  dailyGuidance?: string;
+  ritualSuggestion?: string;
+}
+
 export interface SpiralogicReportInput {
   userId: string;
   name: string;

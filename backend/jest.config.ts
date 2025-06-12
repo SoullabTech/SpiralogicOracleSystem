@@ -6,12 +6,13 @@ const config: Config.InitialOptions = {
   
   // Test file patterns
   testMatch: [
+    '**/__tests__/**/*.test.ts',
     '**/tests/**/*.test.ts',
     '**/tests/**/*.spec.ts'
   ],
   
   // Module resolution
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1'
   },
@@ -82,28 +83,6 @@ const config: Config.InitialOptions = {
   // Parallel execution
   maxWorkers: '50%',
   
-  // Test suites configuration
-  projects: [
-    {
-      displayName: 'Unit Tests',
-      testMatch: ['**/tests/**/*.test.ts'],
-      testPathIgnorePatterns: [
-        'integration.test.ts',
-        'performance.test.ts'
-      ]
-    },
-    {
-      displayName: 'Integration Tests',
-      testMatch: ['**/tests/integration.test.ts'],
-      testTimeout: 60000 // Longer timeout for integration
-    },
-    {
-      displayName: 'Performance Tests',
-      testMatch: ['**/tests/performance.test.ts'],
-      testTimeout: 120000, // Even longer for performance tests
-      maxWorkers: 1 // Run performance tests sequentially
-    }
-  ],
   
   // Mock configuration
   clearMocks: true,

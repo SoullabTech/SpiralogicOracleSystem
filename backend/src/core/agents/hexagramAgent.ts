@@ -1,4 +1,5 @@
 import { getHexagramByPillars } from '../../services/fourPillarsService';
+import { generateIChingAstroProfile, getTrigramArchetype } from '../../services/ichingService';
 
 /**
  * Hexagram Agent - I Ching Integration for Spiralogic Oracle System
@@ -194,6 +195,127 @@ export function divinationResponse(question: string, yearBranch: string, monthBr
     response,
     guidance
   };
+}
+
+/**
+ * I Ching Astrology Integration Functions
+ * Connects traditional hexagram wisdom with personal astrology profiles
+ */
+
+export interface IChingOracleInsight {
+  trigram: string;
+  element: string;
+  archetype: string;
+  yearlyTheme: string;
+  dailyGuidance: string;
+  hexagramWisdom: string;
+  ritualSuggestion: string;
+}
+
+/**
+ * Generate comprehensive I Ching insight for oracle responses
+ */
+export function generateIChingOracleInsight(birthDate: Date, question?: string): IChingOracleInsight {
+  const profile = generateIChingAstroProfile(birthDate);
+  const birthArchetype = getTrigramArchetype(profile.birthTrigram);
+  const currentArchetype = getTrigramArchetype(profile.currentTrigramCycle);
+  
+  if (!birthArchetype || !currentArchetype) {
+    throw new Error('Unable to generate I Ching profile');
+  }
+
+  // Get hexagram for current energy
+  const hexagram = getHexagramByNumber(profile.currentYearNumber) || HEXAGRAM_DATABASE['䷀'];
+  
+  const insight: IChingOracleInsight = {
+    trigram: profile.birthTrigram,
+    element: profile.birthElement,
+    archetype: birthArchetype.archetype,
+    yearlyTheme: profile.fractalPhase,
+    dailyGuidance: generateTrigramDailyGuidance(currentArchetype, birthArchetype),
+    hexagramWisdom: adaptHexagramToQuestion(hexagram, question),
+    ritualSuggestion: generateTrigramRitual(currentArchetype)
+  };
+  
+  return insight;
+}
+
+/**
+ * Generate daily guidance based on current trigram energy
+ */
+function generateTrigramDailyGuidance(current: any, birth: any): string {
+  const guidanceMap: Record<string, string> = {
+    'Thunder': `Channel your ${birth.archetype} nature through bold action. Thunder energy calls for decisive movement.`,
+    'Wind': `Let your ${birth.archetype} essence flow gently today. Wind teaches patience and gradual influence.`,
+    'Fire': `Illuminate your ${birth.archetype} gifts brightly. Fire energy brings clarity and recognition.`,
+    'Earth': `Ground your ${birth.archetype} wisdom in service. Earth energy supports and nurtures.`,
+    'Lake': `Express your ${birth.archetype} truth with joy. Lake energy celebrates communication and pleasure.`,
+    'Heaven': `Lead with your ${birth.archetype} vision. Heaven energy calls forth creative authority.`,
+    'Water': `Dive deep into your ${birth.archetype} mysteries. Water energy reveals hidden wisdom.`,
+    'Mountain': `Contemplate your ${birth.archetype} path in stillness. Mountain energy brings inner knowing.`
+  };
+  
+  return guidanceMap[current.name] || `Align with your ${birth.archetype} nature and trust the flow.`;
+}
+
+/**
+ * Adapt hexagram wisdom to specific questions
+ */
+function adaptHexagramToQuestion(hexagram: HexagramReading, question?: string): string {
+  if (!question) {
+    return `${hexagram.name} (${hexagram.keyword}): ${hexagram.interpretation}`;
+  }
+  
+  return `Regarding "${question}", ${hexagram.name} suggests: ${hexagram.guidance} ${hexagram.interpretation}`;
+}
+
+/**
+ * Generate ritual suggestions based on trigram energy
+ */
+function generateTrigramRitual(trigram: any): string {
+  const ritualMap: Record<string, string> = {
+    'Thunder': 'Practice energizing movement - yoga, qigong, or dance to channel Thunder\'s dynamic force.',
+    'Wind': 'Engage in breathwork or gentle flow meditation to align with Wind\'s subtle influence.',
+    'Fire': 'Light a candle and practice visualization to amplify Fire\'s illuminating consciousness.',
+    'Earth': 'Spend time in nature, gardening, or grounding practices to connect with Earth\'s stability.',
+    'Lake': 'Journal, sing, or share your truth with others to honor Lake\'s communicative joy.',
+    'Heaven': 'Create or lead something meaningful to express Heaven\'s creative authority.',
+    'Water': 'Practice deep meditation, dream work, or water gazing to access Water\'s wisdom.',
+    'Mountain': 'Sit in silent contemplation or practice mindfulness to embody Mountain\'s stillness.'
+  };
+  
+  return ritualMap[trigram.name] || 'Practice mindful awareness and trust your inner guidance.';
+}
+
+/**
+ * Integration function for oracle agents to include I Ching wisdom
+ */
+export function enhanceOracleInsightWithIChingAstrology(
+  baseInsight: string,
+  birthDate: Date,
+  currentFocus?: string
+): string {
+  try {
+    const ichingInsight = generateIChingOracleInsight(birthDate, currentFocus);
+    
+    const enhancement = `
+
+🌀 **I Ching Astrology Overlay:**
+Your birth trigram ${ichingInsight.trigram} (${ichingInsight.archetype}) guides this insight. 
+Current phase: ${ichingInsight.yearlyTheme}
+
+${ichingInsight.dailyGuidance}
+
+**Hexagram Wisdom:** ${ichingInsight.hexagramWisdom}
+
+**Suggested Practice:** ${ichingInsight.ritualSuggestion}`;
+    
+    return baseInsight + enhancement;
+    
+  } catch (error) {
+    console.error('I Ching enhancement error:', error);
+    return baseInsight; // Return original insight if enhancement fails
+  }
 }
 
 /**
