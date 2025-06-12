@@ -1,451 +1,237 @@
-import { Router } from 'express';
-import { authenticate } from '../middleware/authenticate';
-import { spiralogicAstrologyService } from '../services/spiralogicAstrologyService';
-import { spiralogicReportPdfService } from '../services/spiralogicReportPdfService';
-import { supabase } from '../lib/supabaseClient';
+import { Router, Request, Response } from 'express';
+import { astrologicalService } from '../services/astrologicalService';
+import { authenticateToken } from '../middleware/authenticateToken';
+import { logger } from '../lib/logger';
 import { z } from 'zod';
 
-export const spiralogicReportRouter = Router();
+const router = Router();
 
-// Validation schema for birth data
-const birthDataSchema = z.object({
-  date: z.string().transform(str => new Date(str)),
-  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
-  location: z.object({
-    lat: z.number().min(-90).max(90),
-    lng: z.number().min(-180).max(180),
-    timezone: z.string(),
-    placeName: z.string().optional()
-  })
+// Validation schema for report generation
+const generateReportSchema = z.object({
+  lifeStage: z.string().optional(),
+  personalityNotes: z.array(z.string()).optional()
 });
 
-// Generate Spiralogic Report
-spiralogicReportRouter.post('/generate', authenticate, async (req, res) => {
+/**
+ * @route POST /api/spiralogic-report/generate
+ * @desc Generate a personalized Spiralogic Astrology Report
+ * @access Private
+ */
+router.post('/generate', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.userId;
     
-    // Validate birth data
-    const validationResult = birthDataSchema.safeParse(req.body);
-    if (!validationResult.success) {
+    // Validate request body
+    const validation = generateReportSchema.safeParse(req.body);
+    if (!validation.success) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid birth data',
-        details: validationResult.error.errors
+        error: 'Invalid request data',
+        details: validation.error.errors
       });
     }
-    
-    const birthData = validationResult.data;
-    
-    // Step 1: Calculate precise birth chart
-    const birthChart = await spiralogicAstrologyService.calculatePreciseBirthChart(birthData);
-    birthChart.userId = userId;
-    
-    // Step 2: Save birth chart to database
-    const savedChart = await spiralogicAstrologyService.saveBirthChart(
-      userId,
-      birthData,
-      birthChart
-    );
-    
-    // Step 3: Map to Spiralogic phases
-    const phaseMapping = spiralogicAstrologyService.mapToSpiralogicPhases(birthChart);
-    
-    // Step 4: Generate comprehensive report
-    const report = await spiralogicAstrologyService.generateSpiralogicReport(
-      userId,
-      savedChart.id,
-      birthChart,
-      phaseMapping
-    );
-    
-    // Step 5: Generate PDF
-    const pdfBlob = await spiralogicReportPdfService.generateReport(report, birthData);
-    
-    // Step 6: Upload PDF to Supabase Storage
-    const fileName = `spiralogic-report-${userId}-${Date.now()}.pdf`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('reports')
-      .upload(fileName, pdfBlob, {
-        contentType: 'application/pdf',
-        upsert: false
-      });
-      
-    if (uploadError) {
-      throw new Error(`Failed to upload PDF: ${uploadError.message}`);
-    }
-    
-    // Step 7: Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('reports')
-      .getPublicUrl(fileName);
-    
-    // Step 8: Save report to database
-    const savedReport = await spiralogicAstrologyService.saveReport(report, publicUrl);
-    
+
+    const { lifeStage, personalityNotes } = validation.data;
+
+    logger.info(`Generating Spiralogic report for user ${userId}`);
+
+    // Generate the report
+    const reportOutput = await astrologicalService.generateSpiralogicReport(userId, {
+      lifeStage,
+      personalityNotes
+    });
+
+    // Return the report
     res.json({
       success: true,
-      data: {
-        reportId: savedReport.id,
-        birthChartId: savedChart.id,
-        pdfUrl: publicUrl,
-        report: {
-          personalOverview: report.personalOverview,
-          beingArchetype: report.beingArchetype,
-          becomingArchetype: report.becomingArchetype,
-          elementalStrengths: Object.entries(report.elementalInsights).map(([element, insight]) => ({
-            element,
-            strength: insight.strength
-          }))
-        }
-      }
+      report: reportOutput.report,
+      message: 'Spiralogic report generated successfully'
     });
+
+  } catch (error: any) {
+    logger.error('Error generating Spiralogic report:', error);
     
-  } catch (error) {
-    console.error('Error generating Spiralogic report:', error);
+    if (error.message.includes('birth data not found')) {
+      return res.status(400).json({
+        success: false,
+        error: 'Birth data not set',
+        message: 'Please set your birth information before generating a report'
+      });
+    }
+
     res.status(500).json({
       success: false,
       error: 'Failed to generate report',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      message: error.message || 'An unexpected error occurred'
     });
   }
 });
 
-// Get user's reports
-spiralogicReportRouter.get('/my-reports', authenticate, async (req, res) => {
+/**
+ * @route GET /api/spiralogic-report/history
+ * @desc Get user's previous Spiralogic reports
+ * @access Private
+ */
+router.get('/history', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.id;
-    
-    const { data: reports, error } = await supabase
-      .from('spiralogic_reports')
-      .select('*, birth_charts(*)')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-      
-    if (error) throw error;
-    
+    const userId = req.user.userId;
+
+    logger.info(`Fetching report history for user ${userId}`);
+
+    // Get user's reports
+    const reports = await astrologicalService.getUserReports(userId);
+
     res.json({
       success: true,
-      data: {
-        reports,
-        count: reports?.length || 0
-      }
+      reports,
+      count: reports.length
     });
+
+  } catch (error: any) {
+    logger.error('Error fetching report history:', error);
     
-  } catch (error) {
-    console.error('Error fetching reports:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch reports'
+      error: 'Failed to fetch report history',
+      message: error.message || 'An unexpected error occurred'
     });
   }
 });
 
-// Get specific report
-spiralogicReportRouter.get('/:reportId', authenticate, async (req, res) => {
+/**
+ * @route GET /api/spiralogic-report/:reportId
+ * @desc Get a specific Spiralogic report by ID
+ * @access Private
+ */
+router.get('/:reportId', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.userId;
     const { reportId } = req.params;
-    
-    const { data: report, error } = await supabase
-      .from('spiralogic_reports')
-      .select('*, birth_charts(*)')
-      .eq('id', reportId)
-      .single();
-      
-    if (error) throw error;
-    
-    // Check authorization
-    if (report.user_id !== userId && report.created_by !== userId) {
-      // Check if user is a client of the practitioner
-      const { data: clientRelation } = await supabase
-        .from('practitioner_clients')
-        .select('id')
-        .eq('practitioner_id', userId)
-        .eq('client_id', report.user_id)
-        .single();
-        
-      if (!clientRelation) {
-        return res.status(403).json({
-          success: false,
-          error: 'Unauthorized to view this report'
-        });
-      }
+
+    logger.info(`Fetching report ${reportId} for user ${userId}`);
+
+    // Get the specific report (with user validation)
+    const reports = await astrologicalService.getUserReports(userId);
+    const report = reports.find(r => r.id === reportId);
+
+    if (!report) {
+      return res.status(404).json({
+        success: false,
+        error: 'Report not found'
+      });
     }
-    
+
     res.json({
       success: true,
-      data: report
+      report
     });
+
+  } catch (error: any) {
+    logger.error('Error fetching report:', error);
     
-  } catch (error) {
-    console.error('Error fetching report:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch report'
+      error: 'Failed to fetch report',
+      message: error.message || 'An unexpected error occurred'
     });
   }
 });
 
-// Regenerate report PDF
-spiralogicReportRouter.post('/:reportId/regenerate-pdf', authenticate, async (req, res) => {
+/**
+ * @route POST /api/spiralogic-report/:reportId/download
+ * @desc Download a Spiralogic report as PDF
+ * @access Private
+ */
+router.post('/:reportId/download', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.id;
+    const userId = req.user.userId;
     const { reportId } = req.params;
-    
-    // Fetch report data
-    const { data: report, error } = await supabase
-      .from('spiralogic_reports')
-      .select('*, birth_charts(*)')
-      .eq('id', reportId)
-      .single();
-      
-    if (error) throw error;
-    
-    // Check authorization
-    if (report.user_id !== userId && report.created_by !== userId) {
-      return res.status(403).json({
+
+    logger.info(`Downloading report ${reportId} for user ${userId}`);
+
+    // Get the report
+    const reports = await astrologicalService.getUserReports(userId);
+    const report = reports.find(r => r.id === reportId);
+
+    if (!report) {
+      return res.status(404).json({
         success: false,
-        error: 'Unauthorized to regenerate this report'
+        error: 'Report not found'
       });
     }
-    
-    // Check for custom branding (if practitioner)
-    let customStyle = undefined;
-    if (req.body.applyBranding) {
-      const { data: branding } = await supabase
-        .from('practitioner_branding')
-        .select('*')
-        .eq('practitioner_id', userId)
-        .single();
-        
-      if (branding) {
-        customStyle = {
-          practitionerBranding: {
-            businessName: branding.business_name,
-            logoUrl: branding.logo_url,
-            primaryColor: branding.primary_color,
-            secondaryColor: branding.secondary_color
-          }
-        };
-      }
-    }
-    
-    // Generate new PDF with potential custom branding
-    const pdfService = customStyle 
-      ? new (await import('../services/spiralogicReportPdfService')).SpiralogicReportPdfService(customStyle)
-      : spiralogicReportPdfService;
-      
-    const pdfBlob = await pdfService.generateReport(
-      report.report_data,
-      report.birth_charts.birth_location
-    );
-    
-    // Upload new PDF
-    const fileName = `spiralogic-report-${report.user_id}-${Date.now()}.pdf`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('reports')
-      .upload(fileName, pdfBlob, {
-        contentType: 'application/pdf',
-        upsert: false
-      });
-      
-    if (uploadError) throw uploadError;
-    
-    // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('reports')
-      .getPublicUrl(fileName);
-    
-    // Update report with new PDF URL
-    const { error: updateError } = await supabase
-      .from('spiralogic_reports')
-      .update({ pdf_url: publicUrl })
-      .eq('id', reportId);
-      
-    if (updateError) throw updateError;
-    
+
+    // TODO: Generate PDF using existing spiralogicReportPdfService
+    // For now, return a message
     res.json({
       success: true,
-      data: {
-        reportId,
-        pdfUrl: publicUrl
+      message: 'PDF generation coming soon',
+      report: {
+        id: reportId,
+        title: `Spiralogic Report - ${report.metadata?.name || 'Sacred Journey'}`
       }
     });
+
+  } catch (error: any) {
+    logger.error('Error downloading report:', error);
     
-  } catch (error) {
-    console.error('Error regenerating PDF:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to regenerate PDF'
+      error: 'Failed to download report',
+      message: error.message || 'An unexpected error occurred'
     });
   }
 });
 
-// Download report as HTML (for advanced customization)
-spiralogicReportRouter.get('/:reportId/html', authenticate, async (req, res) => {
+/**
+ * @route POST /api/spiralogic-report/sample
+ * @desc Generate a sample Spiralogic report with example data
+ * @access Public
+ */
+router.post('/sample', async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.id;
-    const { reportId } = req.params;
+    logger.info('Generating sample Spiralogic report');
+
+    // Create sample input for Noemi
+    const sampleInput = {
+      userId: 'sample-user',
+      name: 'Noemi',
+      birthDate: '2006-08-27',
+      birthTime: '22:15',
+      birthLocation: 'Basel, Switzerland',
+      chartData: {
+        sun: { sign: 'virgo', house: 5 },
+        moon: { sign: 'libra', house: 6 },
+        rising: 'taurus',
+        northNode: { sign: 'pisces', house: 12 },
+        southNode: { sign: 'virgo', house: 6 }
+      },
+      dominantElement: 'earth' as const,
+      underactiveElement: 'fire' as const,
+      archetypes: ['Mystic Guide', 'Earth Priestess', 'Visionary Alchemist'],
+      lifeStage: 'Rite of Passage – Post A-Levels, preparing for college',
+      personalityNotes: ['ADD', 'Aspergers', 'Creative', 'Entrepreneurial']
+    };
+
+    // Use the GenerateReportFlow directly for the sample
+    const { GenerateReportFlow } = await import('../flows/generateReportFlow');
+    const reportFlow = new GenerateReportFlow();
+    const reportOutput = await reportFlow.generateReport(sampleInput);
+
+    res.json({
+      success: true,
+      report: reportOutput.report,
+      message: 'Sample report generated successfully'
+    });
+
+  } catch (error: any) {
+    logger.error('Error generating sample report:', error);
     
-    // Fetch report
-    const { data: report, error } = await supabase
-      .from('spiralogic_reports')
-      .select('*, birth_charts(*)')
-      .eq('id', reportId)
-      .single();
-      
-    if (error) throw error;
-    
-    // Check authorization
-    if (report.user_id !== userId && report.created_by !== userId) {
-      return res.status(403).json({
-        success: false,
-        error: 'Unauthorized'
-      });
-    }
-    
-    // Generate HTML
-    const html = spiralogicReportPdfService.generateHtmlTemplate(
-      report.report_data,
-      report.birth_charts.birth_location
-    );
-    
-    res.setHeader('Content-Type', 'text/html');
-    res.send(html);
-    
-  } catch (error) {
-    console.error('Error generating HTML:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to generate HTML'
+      error: 'Failed to generate sample report',
+      message: error.message || 'An unexpected error occurred'
     });
   }
 });
 
-// Practitioner: Generate report for client
-spiralogicReportRouter.post('/client/:clientId/generate', authenticate, async (req, res) => {
-  try {
-    const practitionerId = req.user!.id;
-    const { clientId } = req.params;
-    
-    // Verify practitioner-client relationship
-    const { data: relation, error: relError } = await supabase
-      .from('practitioner_clients')
-      .select('*')
-      .eq('practitioner_id', practitionerId)
-      .eq('client_id', clientId)
-      .single();
-      
-    if (relError || !relation) {
-      return res.status(403).json({
-        success: false,
-        error: 'Client not found or unauthorized'
-      });
-    }
-    
-    // Validate birth data
-    const validationResult = birthDataSchema.safeParse(req.body);
-    if (!validationResult.success) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid birth data',
-        details: validationResult.error.errors
-      });
-    }
-    
-    const birthData = validationResult.data;
-    
-    // Generate report for client
-    const birthChart = await spiralogicAstrologyService.calculatePreciseBirthChart(birthData);
-    birthChart.userId = clientId;
-    
-    const savedChart = await spiralogicAstrologyService.saveBirthChart(
-      clientId,
-      birthData,
-      birthChart
-    );
-    
-    const phaseMapping = spiralogicAstrologyService.mapToSpiralogicPhases(birthChart);
-    
-    const report = await spiralogicAstrologyService.generateSpiralogicReport(
-      clientId,
-      savedChart.id,
-      birthChart,
-      phaseMapping
-    );
-    
-    // Apply practitioner branding
-    const { data: branding } = await supabase
-      .from('practitioner_branding')
-      .select('*')
-      .eq('practitioner_id', practitionerId)
-      .single();
-      
-    const customStyle = branding ? {
-      practitionerBranding: {
-        businessName: branding.business_name,
-        logoUrl: branding.logo_url,
-        primaryColor: branding.primary_color,
-        secondaryColor: branding.secondary_color
-      }
-    } : undefined;
-    
-    const pdfService = customStyle 
-      ? new (await import('../services/spiralogicReportPdfService')).SpiralogicReportPdfService(customStyle)
-      : spiralogicReportPdfService;
-      
-    const pdfBlob = await pdfService.generateReport(report, birthData);
-    
-    // Upload PDF
-    const fileName = `spiralogic-report-${clientId}-${Date.now()}.pdf`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('reports')
-      .upload(fileName, pdfBlob, {
-        contentType: 'application/pdf',
-        upsert: false
-      });
-      
-    if (uploadError) throw uploadError;
-    
-    const { data: { publicUrl } } = supabase.storage
-      .from('reports')
-      .getPublicUrl(fileName);
-    
-    // Save report with created_by field
-    const { data: savedReport, error: saveError } = await supabase
-      .from('spiralogic_reports')
-      .insert({
-        user_id: clientId,
-        birth_chart_id: savedChart.id,
-        report_type: 'natal',
-        report_data: report,
-        pdf_url: publicUrl,
-        created_by: practitionerId
-      })
-      .select()
-      .single();
-      
-    if (saveError) throw saveError;
-    
-    res.json({
-      success: true,
-      data: {
-        reportId: savedReport.id,
-        clientId,
-        pdfUrl: publicUrl,
-        report: {
-          personalOverview: report.personalOverview,
-          beingArchetype: report.beingArchetype,
-          becomingArchetype: report.becomingArchetype
-        }
-      }
-    });
-    
-  } catch (error) {
-    console.error('Error generating client report:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to generate client report'
-    });
-  }
-});
+export default router;

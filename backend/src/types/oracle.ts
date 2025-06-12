@@ -33,3 +33,67 @@ export interface OracleContext {
   };
   currentPhase?: string;
 }
+
+// Spiralogic Report Types
+export interface ChartData {
+  sun: { sign: string; house: number };
+  moon: { sign: string; house: number };
+  rising: string;
+  northNode: { sign: string; house: number };
+  southNode: { sign: string; house: number };
+}
+
+export type ArchetypalElement = 'fire' | 'water' | 'earth' | 'air' | 'aether';
+
+export interface SpiralogicReportInput {
+  userId: string;
+  name: string;
+  birthDate: string; // YYYY-MM-DD
+  birthTime: string; // HH:MM
+  birthLocation: string; // City, Country
+  timezone?: string;
+  chartData: ChartData;
+  dominantElement: ArchetypalElement;
+  underactiveElement: ArchetypalElement;
+  archetypes: string[];
+  lifeStage?: string;
+  personalityNotes?: string[];
+}
+
+export interface SpiralogicReportOutput {
+  success: boolean;
+  report: {
+    content: string;
+    sections: Record<string, string>;
+    metadata: {
+      userId: string;
+      reportType: string;
+      birthChart: {
+        date: string;
+        time: string;
+        location: string;
+        timezone?: string;
+      };
+      elements: {
+        dominant: ArchetypalElement;
+        underactive: ArchetypalElement;
+      };
+      archetypes: string[];
+      lifeStage?: string;
+      sectionCount: number;
+      wordCount: number;
+      generationModel: string;
+      timestamp: string;
+    };
+    generatedAt: string;
+    version: string;
+  };
+}
+
+export interface SpiralogicReportSection {
+  title: string;
+  content: string;
+  symbols?: string[];
+  rituals?: string[];
+  affirmations?: string[];
+}

@@ -27,7 +27,7 @@ import { astrologyRouter } from './astrology.routes';
 import { facilitatorDashboardRouter } from './facilitatorDashboard.routes';
 import automationRoutes from './automation.routes';
 import sacredMirrorRoutes from './sacredMirror.routes';
-import { spiralogicReportRouter } from './spiralogicReport.routes';
+import spiralogicReportRouter from './spiralogicReport.routes';
 import { practitionerPortalRouter } from './practitionerPortal.routes';
 import { retreatModeRouter } from './retreatMode.routes';
 

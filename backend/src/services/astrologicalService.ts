@@ -1,6 +1,9 @@
 import { AstrologicalHoloflower, Planet, ZodiacSign, PlanetaryTransit, NatalPlacement } from '../core/AstrologicalHoloflower';
 import { supabase } from '../lib/supabaseClient';
 import axios from 'axios';
+import { GenerateReportFlow } from '../flows/generateReportFlow';
+import { SpiralogicReportInput, SpiralogicReportOutput, ArchetypalElement } from '../types/oracle';
+import { logger } from '../lib/logger';
 
 interface EphemerisData {
   date: Date;
@@ -542,6 +545,196 @@ export class AstrologicalService {
     if (this.ephemerisUpdateInterval) {
       clearInterval(this.ephemerisUpdateInterval);
     }
+  }
+
+  // Generate Spiralogic Astrology Report
+  public async generateSpiralogicReport(userId: string, options?: {
+    lifeStage?: string;
+    personalityNotes?: string[];
+  }): Promise<SpiralogicReportOutput> {
+    try {
+      logger.info(`Generating Spiralogic report for user ${userId}`);
+
+      // Get user's birth data and natal chart
+      const userData = await this.getUserAstrologicalData(userId);
+      if (!userData || !userData.birthData || !userData.natalChart) {
+        throw new Error('User birth data not found. Please set birth information first.');
+      }
+
+      // Get user's elemental profile from the database
+      const { data: profileData, error } = await supabase
+        .from('user_profiles')
+        .select('name, elemental_profile, archetypes')
+        .eq('user_id', userId)
+        .single();
+
+      if (error || !profileData) {
+        throw new Error('User profile not found');
+      }
+
+      // Calculate dominant and underactive elements
+      const elementalProfile = profileData.elemental_profile || {};
+      const elements = this.analyzeElementalBalance(userData.natalChart);
+
+      // Prepare report input
+      const reportInput: SpiralogicReportInput = {
+        userId,
+        name: profileData.name || 'Soul Seeker',
+        birthDate: userData.birthData.date.toISOString().split('T')[0],
+        birthTime: userData.birthData.time,
+        birthLocation: `${userData.birthData.location.lat}, ${userData.birthData.location.lng}`, // Would convert to city name
+        chartData: {
+          sun: this.getPlanetInfo(userData.natalChart.planets.get('sun')),
+          moon: this.getPlanetInfo(userData.natalChart.planets.get('moon')),
+          rising: userData.natalChart.ascendant,
+          northNode: { sign: 'pisces', house: 12 }, // Would calculate actual nodes
+          southNode: { sign: 'virgo', house: 6 }    // Would calculate actual nodes
+        },
+        dominantElement: elements.dominant,
+        underactiveElement: elements.underactive,
+        archetypes: profileData.archetypes || ['Mystic', 'Creator', 'Sage'],
+        lifeStage: options?.lifeStage,
+        personalityNotes: options?.personalityNotes
+      };
+
+      // Generate the report
+      const reportFlow = new GenerateReportFlow();
+      const reportOutput = await reportFlow.generateReport(reportInput);
+
+      // Enhance with rituals
+      const enhancedReport = await reportFlow.enhanceWithRituals(
+        reportOutput.report,
+        { dominant: elements.dominant, underactive: elements.underactive }
+      );
+
+      // Save report to database
+      const reportId = await this.saveReport(userId, enhancedReport);
+
+      return {
+        ...reportOutput,
+        report: enhancedReport
+      };
+
+    } catch (error) {
+      logger.error('Error generating Spiralogic report:', error);
+      throw error;
+    }
+  }
+
+  // Analyze elemental balance from natal chart
+  private analyzeElementalBalance(natalChart: any): {
+    dominant: ArchetypalElement;
+    underactive: ArchetypalElement;
+  } {
+    const elementCounts: Record<ArchetypalElement, number> = {
+      fire: 0,
+      water: 0,
+      earth: 0,
+      air: 0,
+      aether: 0
+    };
+
+    // Count planets in each element
+    natalChart.planets.forEach((placement: NatalPlacement) => {
+      const element = this.getElementForSign(placement.sign);
+      if (element) {
+        elementCounts[element]++;
+      }
+    });
+
+    // Find dominant and underactive
+    let dominant: ArchetypalElement = 'fire';
+    let underactive: ArchetypalElement = 'water';
+    let maxCount = 0;
+    let minCount = 10;
+
+    Object.entries(elementCounts).forEach(([element, count]) => {
+      if (count > maxCount && element !== 'aether') {
+        maxCount = count;
+        dominant = element as ArchetypalElement;
+      }
+      if (count < minCount && element !== 'aether') {
+        minCount = count;
+        underactive = element as ArchetypalElement;
+      }
+    });
+
+    return { dominant, underactive };
+  }
+
+  // Get element for zodiac sign
+  private getElementForSign(sign: ZodiacSign): ArchetypalElement | null {
+    const elementMap: Record<ZodiacSign, ArchetypalElement> = {
+      aries: 'fire',
+      leo: 'fire',
+      sagittarius: 'fire',
+      taurus: 'earth',
+      virgo: 'earth',
+      capricorn: 'earth',
+      gemini: 'air',
+      libra: 'air',
+      aquarius: 'air',
+      cancer: 'water',
+      scorpio: 'water',
+      pisces: 'water'
+    };
+
+    return elementMap[sign] || null;
+  }
+
+  // Convert planetary placement to report format
+  private getPlanetInfo(placement?: NatalPlacement): { sign: string; house: number } {
+    if (!placement) {
+      return { sign: 'unknown', house: 1 };
+    }
+    
+    // Calculate house (simplified - would use actual house calculation)
+    const house = Math.floor(placement.degree / 30) + 1;
+    
+    return {
+      sign: placement.sign,
+      house: house
+    };
+  }
+
+  // Save report to database
+  private async saveReport(userId: string, report: any): Promise<string> {
+    const { data, error } = await supabase
+      .from('spiralogic_reports')
+      .insert({
+        user_id: userId,
+        report_type: 'astrology',
+        content: report.content,
+        sections: report.sections,
+        metadata: report.metadata,
+        generated_at: report.generatedAt,
+        version: report.version
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      logger.error('Error saving report:', error);
+      throw error;
+    }
+
+    return data.id;
+  }
+
+  // Get user's previous reports
+  public async getUserReports(userId: string): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('spiralogic_reports')
+      .select('*')
+      .eq('user_id', userId)
+      .order('generated_at', { ascending: false });
+
+    if (error) {
+      logger.error('Error fetching user reports:', error);
+      throw error;
+    }
+
+    return data || [];
   }
 }
 

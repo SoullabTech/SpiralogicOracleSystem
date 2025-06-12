@@ -65,7 +65,8 @@
       "Bash(npm view:*)",
       "mcp__ide__getDiagnostics",
       "Bash(npm update)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(git tag:*)"
     ],
     "deny": []
   },
