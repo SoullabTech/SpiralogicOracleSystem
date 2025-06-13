@@ -1,28 +1,51 @@
-# Ignore backend and development files
-backend/
-oracle-backend/
-oracle-frontend/
-soul_memory/
-claude-env/
-.pytest_cache/
-.venv/
-htmlcov/
-tests/
-coverage/
-dist/
-*.log
-*.db
-*.zip
-requirements.txt*
-*.py
-Makefile
-Make
+# Development and test files
 .git/
 .github/
+.vscode/
+.idea/
+*.log
+*.test.*
+*.spec.*
+__tests__/
+coverage/
+.pytest_cache/
+
+# Python/Backend files (if not needed for build)
+*.py
+*.pyc
+__pycache__/
+.venv/
+venv/
+backend/
+oracle-backend/
+soul_memory/
+claude-env/
+htmlcov/
+requirements.txt*
+
+# Documentation
 docs/
-scripts/
+*.md
+!README.md
+
+# Build artifacts that Vercel will generate
 node_modules/
-.next/
-.cache/
-.env*
+.env.local
+.env*.local
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Archives
+*.zip
+*.tar.gz
+
+# Database files
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/
+_vercelignore
