@@ -1,16 +1,14 @@
-# Development and test files
+# Development files
 .git/
 .github/
 .vscode/
 .idea/
 *.log
-*.test.*
-*.spec.*
 __tests__/
 coverage/
 .pytest_cache/
 
-# Python/Backend files (if not needed for build)
+# Python/Backend files
 *.py
 *.pyc
 __pycache__/
@@ -25,11 +23,11 @@ requirements.txt*
 
 # Documentation
 docs/
-*.md
-!README.md
+DEPLOYMENT_CHECKLIST.md
+DEPLOYMENT_GUIDE.md
+TROUBLESHOOTING_GUIDE.md
 
-# Build artifacts that Vercel will generate
-node_modules/
+# Local environment files
 .env.local
 .env*.local
 
@@ -48,4 +46,20 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
-_vercelignore
+
+# Test files
+*.test.*
+*.spec.*
+
+# IMPORTANT: Don't ignore build-related files
+# The following should NOT be ignored:
+# - app/
+# - components/
+# - public/
+# - styles/
+# - *.css
+# - *.js
+# - *.ts
+# - *.tsx
+# - *.json (except package-lock.json)
+# - .next/ (Vercel builds this)
