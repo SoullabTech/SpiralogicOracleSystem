@@ -68,7 +68,13 @@
       "Bash(npm uninstall:*)",
       "Bash(git tag:*)",
       "Bash(npm test:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(./setup-domains.sh:*)",
+      "Bash(sudo killall:*)",
+      "Bash(dig:*)",
+      "Bash(./check-deployment.sh)",
+      "Bash(npx next-auth:*)",
+      "Bash(openssl rand:*)"
     ],
     "deny": []
   },
