@@ -35,7 +35,15 @@
     "lint": "eslint src --ext .ts,.js --fix",
     "lint:check": "eslint src --ext .ts,.js",
     "type-check": "tsc --noEmit",
-    "postbuild": "echo 'Build completed - Sacred Technology ready for deployment'"
+    "postbuild": "echo 'Build completed - Sacred Technology ready for deployment'",
+    "voice:setup": "./setup-sesame-csm.sh",
+    "voice:test": "node testElementalVoices.js --all",
+    "voice:test:basic": "node testElementalVoices.js --basic",
+    "voice:test:matrix": "node testElementalVoices.js --matrix",
+    "voice:test:extended": "node testElementalVoices.js --extended",
+    "voice:play": "node testElementalVoices.js --play",
+    "maya:activate": "node activateMaya.js",
+    "maya:status": "node -e \"const {oracle} = require('./dist/core/agents/mainOracleAgent'); oracle.getMayaStatus().then(console.log)\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8",

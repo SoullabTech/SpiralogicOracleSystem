@@ -8,7 +8,8 @@ const config: Config.InitialOptions = {
   testMatch: [
     '**/__tests__/**/*.test.ts',
     '**/tests/**/*.test.ts',
-    '**/tests/**/*.spec.ts'
+    '**/tests/**/*.spec.ts',
+    '**/*.test.js'
   ],
   
   // Module resolution

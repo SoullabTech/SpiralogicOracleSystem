@@ -33,6 +33,10 @@ import ichingRouter from './iching.routes';
 import divinationRouter from './divination.routes';
 import { practitionerPortalRouter } from './practitionerPortal.routes';
 import { retreatModeRouter } from './retreatMode.routes';
+import narrationRoutes from './narration.routes';
+import oraclePreferencesRoutes from './oracle/preferences.routes';
+import voicePreviewRoutes from './voice/preview.routes';
+import voiceListRoutes from './voice/list.routes';
 
 const router = Router();
 
@@ -77,5 +81,9 @@ router.use('/sacred-mirror', sacredMirrorRoutes);
 router.use('/spiralogic-report', spiralogicReportRouter);
 router.use('/practitioner', practitionerPortalRouter);
 router.use('/retreat', retreatModeRouter);
+router.use('/narration', narrationRoutes);
+router.use('/oracle/preferences', oraclePreferencesRoutes);
+router.use('/voice/preview', voicePreviewRoutes);
+router.use('/voice/list', voiceListRoutes);
 
 export default router;

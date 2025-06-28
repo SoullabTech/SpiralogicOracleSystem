@@ -3,7 +3,7 @@ import { authenticateToken } from '../../middleware/authenticateToken';
 import type { AuthenticatedRequest } from '../../types';
 import { personalOracle } from '../../core/agents/personalOracleAgent';
 import logger from '../../utils/logger';
-import { synthesizeVoice } from '../../utils/voiceService';
+import { speak } from '../../utils/voiceRouter';
 import axios from 'axios';
 
 const router = Router();
@@ -26,7 +26,12 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res) => {
     if (voice === 'aunt-annie') voiceId = 'y2TOWGCXSYEgBanvKsYJ';
     else if (voice !== 'default') voiceId = voice;
 
-    const audioUrl = await synthesizeVoice({ text: response.content, voiceId });
+    // Use universal speak function with Oracle agent type
+    const audioUrl = await speak(
+      response.content, 
+      'oracle',
+      'PersonalOracleAgent'
+    );
 
     // Trigger Prefect flow to process the journal entry (or any other task you want to automate)
     try {
