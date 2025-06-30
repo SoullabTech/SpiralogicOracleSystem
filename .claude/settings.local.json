@@ -74,7 +74,19 @@
       "Bash(dig:*)",
       "Bash(./check-deployment.sh)",
       "Bash(npx next-auth:*)",
-      "Bash(openssl rand:*)"
+      "Bash(openssl rand:*)",
+      "Bash(npm run voice:test:matrix:*)",
+      "Bash(npm run voice:setup:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(TEST_FALLBACK=true npm run voice:test:matrix)",
+      "Bash(pip uninstall:*)",
+      "Bash(npm run voice:play:*)",
+      "Bash(afplay:*)",
+      "Bash(npm run:*)",
+      "Bash(TEST_FALLBACK=true node testMayaActivation.js)",
+      "Bash(npx jest:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   },
