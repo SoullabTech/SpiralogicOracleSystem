@@ -1,0 +1,5 @@
+# Vercel deployment trigger
+# This file forces a fresh deployment with latest code
+Timestamp: 2025-07-07T18:00:00Z
+Commit: 9ab79891 - Git directory detection Husky fix
+Purpose: Force fresh deployment to bypass any caching issues
