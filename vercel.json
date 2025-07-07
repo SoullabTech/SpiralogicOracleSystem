@@ -1,21 +1,13 @@
 {
-  "version": 2,
   "framework": "nextjs",
   "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "regions": ["iad1", "dub1", "sfo1"],
   "functions": {
     "app/api/**/*.ts": {
-      "runtime": "nodejs18.x",
       "maxDuration": 30
     }
   },
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://oracle-backend-1.onrender.com/api/:path*"
-    }
-  ],
   "redirects": [
     {
       "source": "/oracle",
@@ -63,6 +55,5 @@
         }
       ]
     }
-  ],
-  "crons": []
+  ]
 }
