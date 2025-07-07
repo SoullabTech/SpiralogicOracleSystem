@@ -11,7 +11,7 @@
     "start": "next start",
     "export": "next export",
     "lint": "next lint",
-    "prepare": "husky install"
+    "prepare": "husky install || exit 0"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
