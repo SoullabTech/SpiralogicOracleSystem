@@ -2,15 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { AnalyticsService } from '../../../../backend/src/core/analytics/AnalyticsService';
+import { getSupabaseConfig } from '../../../../lib/config/supabase';
 
 const analyticsService = new AnalyticsService();
 
 export async function GET(request: NextRequest) {
   try {
+    const supabaseConfig = getSupabaseConfig();
+    
+    if (!supabaseConfig.isConfigured) {
+      return NextResponse.json(
+        { error: 'Analytics service not available in demo mode' },
+        { status: 503 }
+      );
+    }
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseConfig.url,
+      supabaseConfig.anonKey,
       {
         cookies: {
           get(name: string) {
@@ -103,10 +113,19 @@ export async function GET(request: NextRequest) {
 // Update user analytics preferences
 export async function PUT(request: NextRequest) {
   try {
+    const supabaseConfig = getSupabaseConfig();
+    
+    if (!supabaseConfig.isConfigured) {
+      return NextResponse.json(
+        { error: 'Analytics service not available in demo mode' },
+        { status: 503 }
+      );
+    }
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseConfig.url,
+      supabaseConfig.anonKey,
       {
         cookies: {
           get(name: string) {

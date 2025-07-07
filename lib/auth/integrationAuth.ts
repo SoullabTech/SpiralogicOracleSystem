@@ -3,6 +3,7 @@
 import { createBrowserClient } from '@supabase/ssr';
 import { User } from '@supabase/supabase-js';
 import { HolisticDomain, DevelopmentStage, UserState } from '../types/holistic';
+import { getSupabaseConfig } from '../config/supabase';
 
 export interface IntegrationUserMetadata {
   developmentStage: DevelopmentStage;
@@ -42,13 +43,20 @@ export interface OnboardingData {
 }
 
 export class IntegrationAuthService {
-  private _supabase = typeof window !== 'undefined' && 
-    process.env.NEXT_PUBLIC_SUPABASE_URL && 
-    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'your_supabase_url_here' ? 
-    createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-    ) : null;
+  private _supabase: any = null;
+  private _config: any = null;
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      this._config = getSupabaseConfig();
+      if (this._config.isConfigured) {
+        this._supabase = createBrowserClient(
+          this._config.url,
+          this._config.anonKey
+        );
+      }
+    }
+  }
 
   private get supabase() {
     if (!this._supabase) {
@@ -59,7 +67,7 @@ export class IntegrationAuthService {
 
   // Check if Supabase is properly configured
   private isSupabaseAvailable(): boolean {
-    return !!this._supabase;
+    return !!(this._supabase && this._config && this._config.isConfigured);
   }
 
   async signUp(email: string, password: string, onboardingData: OnboardingData) {
@@ -455,7 +463,7 @@ export class IntegrationAuthService {
 
     if (!embodiedWisdom || embodiedWisdom.length === 0) return 5;
 
-    const avgQuality = embodiedWisdom.reduce((sum, item) => sum + (item.embodiment_quality || 5), 0) / embodiedWisdom.length;
+    const avgQuality = embodiedWisdom.reduce((sum: number, item: any) => sum + (item.embodiment_quality || 5), 0) / embodiedWisdom.length;
     return avgQuality;
   }
 

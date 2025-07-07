@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { SpiritualBypassingDetectionService } from '../backend/src/core/integration/SpiritualBypassingDetectionService';
 import { IntegrationGateService } from '../backend/src/core/integration/IntegrationGateService';
 import { AntiCommodificationService } from '../backend/src/core/integration/AntiCommodificationService';
+import { getSupabaseConfig } from '../lib/config/supabase';
 
 interface BypassingPreventionConfig {
   enableRealTimeDetection: boolean;
@@ -28,10 +29,17 @@ export class BypassingPreventionMiddleware {
 
   async processRequest(request: NextRequest): Promise<NextResponse> {
     try {
+      const supabaseConfig = getSupabaseConfig();
+      
+      // Skip bypassing prevention if Supabase is not configured (demo mode)
+      if (!supabaseConfig.isConfigured) {
+        return NextResponse.next();
+      }
+
       const cookieStore = await cookies();
       const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        supabaseConfig.url,
+        supabaseConfig.anonKey,
         {
           cookies: {
             get(name: string) {

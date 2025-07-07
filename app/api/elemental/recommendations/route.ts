@@ -3,15 +3,25 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { ElementalContentService } from '../../../../backend/src/core/elemental/ElementalContentService';
 import { ContentDeliveryContext, ContentAdaptationSettings } from '../../../../backend/src/core/elemental/types';
+import { getSupabaseConfig } from '../../../../lib/config/supabase';
 
 const elementalService = new ElementalContentService();
 
 export async function GET(request: NextRequest) {
   try {
+    const supabaseConfig = getSupabaseConfig();
+    
+    if (!supabaseConfig.isConfigured) {
+      return NextResponse.json(
+        { error: 'Elemental content service not available in demo mode' },
+        { status: 503 }
+      );
+    }
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseConfig.url,
+      supabaseConfig.anonKey,
       {
         cookies: {
           get(name: string) {
@@ -120,10 +130,19 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabaseConfig = getSupabaseConfig();
+    
+    if (!supabaseConfig.isConfigured) {
+      return NextResponse.json(
+        { error: 'Elemental content service not available in demo mode' },
+        { status: 503 }
+      );
+    }
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseConfig.url,
+      supabaseConfig.anonKey,
       {
         cookies: {
           get(name: string) {

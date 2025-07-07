@@ -105,7 +105,8 @@
       "Bash(npm --version)",
       "Bash(cd:*)",
       "Bash(cd:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(NODE_ENV=production npm run build)"
     ],
     "deny": []
   },
