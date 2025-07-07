@@ -42,16 +42,24 @@ export interface OnboardingData {
 }
 
 export class IntegrationAuthService {
-  private _supabase = typeof window !== 'undefined' ? createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
-  ) : null;
+  private _supabase = typeof window !== 'undefined' && 
+    process.env.NEXT_PUBLIC_SUPABASE_URL && 
+    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'your_supabase_url_here' ? 
+    createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+    ) : null;
 
   private get supabase() {
     if (!this._supabase) {
-      throw new Error('Supabase client not available during SSR');
+      throw new Error('Supabase client not available - check environment variables or use demo mode');
     }
     return this._supabase;
+  }
+
+  // Check if Supabase is properly configured
+  private isSupabaseAvailable(): boolean {
+    return !!this._supabase;
   }
 
   async signUp(email: string, password: string, onboardingData: OnboardingData) {
@@ -291,11 +299,18 @@ export class IntegrationAuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
+    if (!this.isSupabaseAvailable()) {
+      // Return null for demo mode - user appears logged out
+      return null;
+    }
     const { data: { user } } = await this.supabase.auth.getUser();
     return user;
   }
 
   async getSession() {
+    if (!this.isSupabaseAvailable()) {
+      return null;
+    }
     const { data: { session } } = await this.supabase.auth.getSession();
     return session;
   }
