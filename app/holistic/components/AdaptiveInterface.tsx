@@ -5,10 +5,28 @@ import {
   UserHolisticProfile, 
   UserState, 
   HolisticDomain, 
-  DevelopmentStage,
-  StateResponsiveGuidance,
-  HolisticRecommendation
-} from '../../../backend/src/core/holistic/types';
+  DevelopmentStage
+} from '../../../lib/types/holistic';
+
+// Define missing types locally for now
+interface StateResponsiveGuidance {
+  userState: UserState;
+  recommendations: HolisticRecommendation[];
+  priorityOrder: string[];
+  adaptiveMessage: string;
+}
+
+interface HolisticRecommendation {
+  id: string;
+  domains: HolisticDomain[];
+  type: 'practice' | 'insight' | 'integration' | 'resource';
+  title: string;
+  description: string;
+  complexity: DevelopmentStage;
+  estimatedTime: number;
+  benefits: string[];
+  prerequisites?: string[];
+}
 
 interface AdaptiveInterfaceProps {
   userProfile: UserHolisticProfile;

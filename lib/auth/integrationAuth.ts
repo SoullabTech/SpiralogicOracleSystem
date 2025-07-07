@@ -2,7 +2,7 @@
 
 import { createBrowserClient } from '@supabase/ssr';
 import { User } from '@supabase/supabase-js';
-import { HolisticDomain, DevelopmentStage, UserState } from '../../backend/src/core/holistic/types';
+import { HolisticDomain, DevelopmentStage, UserState } from '../types/holistic';
 
 export interface IntegrationUserMetadata {
   developmentStage: DevelopmentStage;

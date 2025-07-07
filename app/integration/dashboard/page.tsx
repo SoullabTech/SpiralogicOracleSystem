@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { IntegrationArchitecture, IntegrationStage, SpiralProgressPoint } from '../../../backend/src/core/integration/types';
+import { IntegrationArchitecture, IntegrationStage, SpiralProgressPoint } from '../../../lib/types/integration';
 import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
 
 export default function IntegrationDashboard() {

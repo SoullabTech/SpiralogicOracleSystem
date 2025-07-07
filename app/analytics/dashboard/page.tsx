@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
 import { UserDevelopmentMetrics, PlatformAnalytics, ResearchInsights } from '../../../backend/src/core/analytics/AnalyticsService';
-import { ElementalArchetype } from '../../../backend/src/core/elemental/types';
+import { ElementalArchetype } from '../../../lib/types/elemental';
 
 interface AnalyticsData {
   userMetrics?: UserDevelopmentMetrics;

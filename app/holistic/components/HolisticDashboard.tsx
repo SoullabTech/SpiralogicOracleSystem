@@ -3,12 +3,49 @@
 import React, { useState, useEffect } from 'react';
 import { 
   UserHolisticProfile, 
-  PersonalizedPathway,
   HolisticDomain,
   DevelopmentStage,
-  PathwayStep,
-  ProgressMetric
-} from '../../../backend/src/core/holistic/types';
+  DevelopmentGoal,
+  Milestone
+} from '../../../lib/types/holistic';
+
+// Define missing types locally for now
+interface PersonalizedPathway {
+  userId: string;
+  currentPhase: string;
+  pathwaySteps: PathwayStep[];
+  progressMetrics: ProgressMetric[];
+}
+
+interface PathwayStep {
+  id: string;
+  order: number;
+  title: string;
+  description: string;
+  domains: HolisticDomain[];
+  practices: Practice[];
+  expectedDuration: number;
+  completionCriteria: string[];
+  completed: boolean;
+}
+
+interface Practice {
+  id: string;
+  title: string;
+  instructions: string;
+  duration: number;
+  domains: HolisticDomain[];
+  difficulty: DevelopmentStage;
+}
+
+interface ProgressMetric {
+  domain: HolisticDomain;
+  metricType: 'quantitative' | 'qualitative';
+  currentValue: number | string;
+  targetValue: number | string;
+  trend: 'improving' | 'stable' | 'declining';
+  lastMeasured: Date;
+}
 import { AdaptiveInterface } from './AdaptiveInterface';
 
 interface HolisticDashboardProps {

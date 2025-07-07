@@ -11,7 +11,7 @@ import {
   ContentType, 
   ContentComplexity,
   ContentAdaptationSettings 
-} from '../../../backend/src/core/elemental/types';
+} from '../../../lib/types/elemental';
 
 export default function ElementalContentPage() {
   const router = useRouter();
