@@ -5,13 +5,19 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:ipfs": "DEPLOY_TARGET=ipfs npm run build",
+    "build:fleek": "npm run build:ipfs && fleek deploy",
+    "deploy:ipfs": "npm run build:ipfs && npx ipfs-deploy dist",
     "start": "next start",
+    "export": "next export",
     "lint": "next lint",
     "prepare": "husky install"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
-    "@supabase/supabase-js": "^2.49.9",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.50.3",
     "@tailwindcss/forms": "^0.5.6",
     "@types/node": "20.8.10",
     "@types/react": "18.2.43",

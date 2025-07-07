@@ -37,6 +37,11 @@ import narrationRoutes from './narration.routes';
 import oraclePreferencesRoutes from './oracle/preferences.routes';
 import voicePreviewRoutes from './voice/preview.routes';
 import voiceListRoutes from './voice/list.routes';
+import fireAgentRoutes from './fire-agent.routes';
+import waterAgentRoutes from './water-agent.routes';
+import orchestratorRoutes from './orchestrator.routes';
+import holisticRoutes from './holistic.routes';
+import integrationRoutes from './integration.routes';
 
 const router = Router();
 
@@ -85,5 +90,10 @@ router.use('/narration', narrationRoutes);
 router.use('/oracle/preferences', oraclePreferencesRoutes);
 router.use('/voice/preview', voicePreviewRoutes);
 router.use('/voice/list', voiceListRoutes);
+router.use('/fire-agent', fireAgentRoutes);
+router.use('/water-agent', waterAgentRoutes);
+router.use('/orchestrator', orchestratorRoutes);
+router.use('/holistic', holisticRoutes);
+router.use('/integration', integrationRoutes);
 
 export default router;

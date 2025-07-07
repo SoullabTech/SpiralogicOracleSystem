@@ -2,6 +2,12 @@ import Link from 'next/link';
 
 const dashboards = [
   {
+    title: '🔥 Oracle Beta Testing',
+    description: 'Test real Fire/Water/Earth/Air agents with consciousness technology.',
+    href: '/dashboard/oracle-beta',
+    badge: 'BETA'
+  },
+  {
     title: '🌀 Personal Oracle Agent',
     description: 'Track insights, messages, and actions from your dynamic guide.',
     href: '/dashboard/agent',
@@ -53,12 +59,19 @@ export default function DashboardPage() {
             <Link
               key={index}
               href={dashboard.href}
-              className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
+              className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden relative"
             >
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
-                  {dashboard.title}
-                </h3>
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                    {dashboard.title}
+                  </h3>
+                  {'badge' in dashboard && (
+                    <span className="bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">
+                      {dashboard.badge}
+                    </span>
+                  )}
+                </div>
                 <p className="text-gray-600 leading-relaxed">
                   {dashboard.description}
                 </p>

@@ -17,14 +17,21 @@ export default function HomePage() {
           Your sacred mirror for evolutionary guidance, memory, and soulful clarity.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="/oracle" passHref legacyBehavior>
-            <a className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition">
-              🌌 Enter Oracle
+          <Link href="/beta" passHref legacyBehavior>
+            <a className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition text-lg">
+              🚀 Join Beta - $29/month
             </a>
           </Link>
+          <Link href="/oracle-demo" passHref legacyBehavior>
+            <a className="bg-white/10 text-yellow-400 px-8 py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition text-lg">
+              🔮 Try Demo
+            </a>
+          </Link>
+        </div>
+        <div className="mt-4">
           <Link href="/auth" passHref legacyBehavior>
-            <a className="bg-white/10 text-yellow-400 px-6 py-3 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition">
-              🔐 Sign In
+            <a className="text-yellow-400/60 hover:text-yellow-400 underline text-sm">
+              Existing users sign in
             </a>
           </Link>
         </div>

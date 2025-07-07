@@ -1,0 +1,433 @@
+# Spiralogic Oracle System - Secure Docker Ignore
+# Level 5 DevSecOps - Prevent sensitive data leakage
+
+# =====================================
+# CRITICAL SECURITY FILES
+# =====================================
+
+# Environment files (NEVER include in images)
+.env*
+!.env.template
+!.env.vault.template
+*.env
+environment.*
+config.json
+config.yaml
+config.yml
+secrets.*
+
+# Credential files
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+known_hosts
+authorized_keys
+
+# Vault and secret management
+vault-keys.txt
+vault-config.hcl
+vault-unseal-keys
+*.vault
+.vault-token
+vault_*
+
+# Kubernetes secrets and configs
+kubeconfig*
+*.kubeconfig
+k8s-secrets/
+kubernetes-secrets/
+secret-*.yaml
+*-secret.yaml
+
+# =====================================
+# APPLICATION SECRETS
+# =====================================
+
+# Database credentials
+database.conf
+db-config.*
+mysql.conf
+postgres.conf
+redis.conf
+mongodb.conf
+
+# API keys and tokens
+api-keys.*
+tokens.*
+*.token
+access-token*
+refresh-token*
+oauth-config.*
+jwt-secret*
+
+# Third-party service credentials
+openai-key*
+elevenlabs-*
+snet-key*
+akash-key*
+aws-credentials*
+gcp-credentials*
+azure-credentials*
+
+# =====================================
+# DEVELOPMENT & DEBUG FILES
+# =====================================
+
+# Development environment
+.env.local
+.env.development
+.env.staging
+.env.test
+development.json
+staging.json
+
+# Debug and profiling data
+*.log
+logs/
+debug/
+trace/
+profiling/
+core.*
+*.dump
+*.prof
+
+# IDE and editor files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =====================================
+# SOURCE CONTROL & CI/CD
+# =====================================
+
+# Git and version control
+.git/
+.gitignore
+.gitattributes
+.gitlab-ci.yml
+.github/workflows/secrets/
+
+# CI/CD sensitive files
+ci-secrets/
+deployment-keys/
+pipeline-secrets/
+*.ci.env
+.circleci/config.yml
+jenkins/secrets/
+
+# Build artifacts
+dist/
+build/
+target/
+out/
+*.tar.gz
+*.zip
+*.tgz
+
+# =====================================
+# BACKUP & TEMPORARY FILES
+# =====================================
+
+# Backup files
+*.backup
+*.bak
+*.old
+*-backup*
+backup/
+backups/
+dump/
+dumps/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+cache/
+
+# Lock files
+*.lock
+package-lock.json
+yarn.lock
+Pipfile.lock
+
+# =====================================
+# TESTING & COVERAGE
+# =====================================
+
+# Test files and data
+test/
+tests/
+spec/
+__tests__/
+*.test.js
+*.spec.js
+test-data/
+test-results/
+coverage/
+.nyc_output/
+.coverage
+junit.xml
+
+# Mock and fixture data
+mocks/
+fixtures/
+__mocks__/
+test-fixtures/
+
+# =====================================
+# DOCUMENTATION & METADATA
+# =====================================
+
+# Documentation files
+docs/
+documentation/
+README*
+CHANGELOG*
+LICENSE*
+*.md
+!SECURITY.md
+!DEPLOYMENT.md
+
+# Project metadata
+.project
+.settings/
+*.sublime-*
+.editorconfig
+
+# =====================================
+# NODE.JS SPECIFIC
+# =====================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.yarn/
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock
+.node_repl_history
+
+# =====================================
+# PYTHON SPECIFIC
+# =====================================
+
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# =====================================
+# MONITORING & OBSERVABILITY
+# =====================================
+
+# Metrics and monitoring
+metrics/
+prometheus.yml
+grafana/
+alertmanager.yml
+jaeger-config.yaml
+loki-config.yaml
+
+# Log files
+*.log
+logs/
+audit.log
+security.log
+access.log
+error.log
+
+# =====================================
+# SECURITY SCANNING RESULTS
+# =====================================
+
+# Security scan reports
+trivy-report.*
+snyk-report.*
+clair-report.*
+anchore-report.*
+security-scan-*
+vulnerability-report.*
+compliance-report.*
+
+# SAST/DAST results
+sonar-report.*
+checkmarx-report.*
+veracode-report.*
+codeql-results.*
+
+# =====================================
+# CONTAINER & KUBERNETES
+# =====================================
+
+# Container files
+Dockerfile.local
+docker-compose.override.yml
+docker-compose.local.yml
+.dockerignore.local
+
+# Kubernetes local configs
+kustomization.local.yaml
+local-*.yaml
+dev-*.yaml
+*-local.yaml
+
+# Helm secrets
+values-secret.yaml
+secret-values.yaml
+secrets/
+.helm/secrets/
+
+# =====================================
+# CLOUD & INFRASTRUCTURE
+# =====================================
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+*.auto.tfvars
+
+# Ansible
+hosts.ini
+group_vars/vault.yml
+host_vars/*/vault.yml
+ansible-vault-*
+
+# Cloud provider configs
+.aws/credentials
+.gcp/credentials.json
+.azure/credentials
+
+# =====================================
+# COMPLIANCE & AUDIT
+# =====================================
+
+# Compliance reports
+compliance/
+audit-reports/
+pen-test-results/
+security-assessments/
+risk-assessments/
+
+# Legal and contractual
+contracts/
+agreements/
+legal/
+confidential/
+
+# =====================================
+# SPIRALOGIC-SPECIFIC EXCLUSIONS
+# =====================================
+
+# Consciousness models (encrypted separately)
+models/
+*.h5
+*.ckpt
+*.pt
+*.model
+consciousness-*.bin
+sacred-mirror-*.dat
+
+# Voice synthesis data
+voice-models/
+voice-samples/
+*.wav
+*.mp3
+voice-cache/
+elevenlabs-cache/
+
+# Elemental agent data
+fire-agent/data/
+water-agent/data/
+earth-agent/data/
+air-agent/data/
+aether-agent/data/
+agent-cache/
+
+# Oracle-specific configurations
+oracle-config/
+sacred-*.json
+maya-*.yaml
+archetypal-*.conf
+
+# User data and sessions
+user-data/
+sessions/
+profiles/
+journal-entries/
+holoflower-data/
+
+# =====================================
+# AKASH & DECENTRALIZED DEPLOYMENT
+# =====================================
+
+# Akash deployment files
+akash-keys/
+akash-certs/
+deployment.yaml.local
+provider-configs/
+lease-*.json
+
+# IPFS data
+ipfs-keys/
+ipfs-config.json
+ipfs-data/
+.ipfs/
+
+# SingularityNET
+snet-configs/
+daemon-config.json.local
+agent-*.json
+
+# =====================================
+# EMERGENCY EXCLUSIONS
+# =====================================
+
+# In case of security incident
+INCIDENT-*
+incident-response/
+forensic-data/
+quarantine/
+isolated-data/
+
+# Temporary security exclusions
+security-temp/
+emergency-backup/
+incident-*.tar.gz
+
+# =====================================
+# ALLOWLIST (Include despite patterns)
+# =====================================
+
+# Include these specific files even if they match exclusion patterns
+!scripts/security-baseline.sh
+!k8s/security-policies/
+!configs/security-defaults/
+!docs/SECURITY.md
+!.github/workflows/security.yml

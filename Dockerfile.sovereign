@@ -1,0 +1,85 @@
+# AIN Sovereign Agent Dockerfile - Enhanced Security
+# Multi-stage build for minimal attack surface and optimal performance
+
+# Build stage
+FROM node:20-alpine AS builder
+
+# Security: Install security updates and required packages
+RUN apk update && apk upgrade && \
+    apk add --no-cache python3 make g++ dumb-init curl && \
+    rm -rf /var/cache/apk/*
+
+# Create non-root user early
+RUN addgroup -g 1001 -S ain && \
+    adduser -S ain -u 1001
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files first for better layer caching
+COPY package*.json ./
+COPY backend/package*.json ./backend/
+
+# Install dependencies with security flags
+RUN npm ci --only=production --no-audit --no-fund && \
+    cd backend && npm ci --only=production --no-audit --no-fund && \
+    npm cache clean --force
+
+# Copy application code
+COPY . .
+
+# Build the application with proper ownership
+RUN chown -R ain:ain /app
+
+# Production stage
+FROM node:20-alpine AS production
+
+# Security hardening
+RUN apk update && apk upgrade && \
+    apk add --no-cache dumb-init curl gnupg && \
+    rm -rf /var/cache/apk/* && \
+    rm -rf /tmp/*
+
+# Create non-root user
+RUN addgroup -g 1001 -S ain && \
+    adduser -S ain -u 1001
+
+# Set working directory
+WORKDIR /app
+
+# Copy built application from builder stage
+COPY --from=builder --chown=ain:ain /app/package*.json ./
+COPY --from=builder --chown=ain:ain /app/node_modules ./node_modules
+COPY --from=builder --chown=ain:ain /app/backend ./backend
+COPY --from=builder --chown=ain:ain /app/.next ./.next 2>/dev/null || echo "No .next directory"
+COPY --from=builder --chown=ain:ain /app/public ./public 2>/dev/null || echo "No public directory"
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/logs /app/data /app/uploads /app/temp && \
+    chown -R ain:ain /app && \
+    chmod 755 /app/logs /app/data /app/uploads /app/temp
+
+# Security: Remove unnecessary packages and create read-only filesystem markers
+RUN rm -rf /var/cache/apk/* /tmp/* /root/.npm /usr/lib/node_modules/npm
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
+
+# Switch to non-root user
+USER ain
+
+# Expose port (configurable via environment)
+EXPOSE ${PORT:-8080}
+EXPOSE ${GRPC_PORT:-7000}
+
+# Environment variables
+ENV NODE_ENV=production
+ENV SOVEREIGN_MODE=true
+ENV SECURITY_HARDENING=true
+
+# Use dumb-init for proper signal handling
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the application
+CMD ["node", "backend/src/server.js"]

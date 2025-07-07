@@ -1,0 +1,13 @@
+{
+  "site": {
+    "id": "your-site-id",
+    "team": "your-team-id",
+    "source": "dist",
+    "build": {
+      "command": "npm run build:ipfs",
+      "environment": {
+        "NODE_VERSION": "18"
+      }
+    }
+  }
+}
