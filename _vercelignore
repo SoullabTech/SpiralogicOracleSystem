@@ -1,0 +1,28 @@
+# Ignore backend and other non-frontend directories
+backend/
+oracle-backend/
+oracle-frontend/
+soul_memory/
+claude-env/
+.pytest_cache/
+.venv/
+htmlcov/
+tests/
+*.log
+*.db
+*.zip
+requirements.txt*
+*.py
+Makefile
+Make
+
+# Keep only frontend essentials
+!app/
+!src/
+!components/
+!public/
+!next.config.js
+!package.json
+!tsconfig.json
+!tailwind.config.ts
+!postcss.config.js

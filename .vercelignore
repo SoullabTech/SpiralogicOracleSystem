@@ -1,0 +1,65 @@
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+*.log
+__tests__/
+coverage/
+.pytest_cache/
+
+# Python/Backend files
+*.py
+*.pyc
+__pycache__/
+.venv/
+venv/
+backend/
+oracle-backend/
+soul_memory/
+claude-env/
+htmlcov/
+requirements.txt*
+
+# Documentation
+docs/
+DEPLOYMENT_CHECKLIST.md
+DEPLOYMENT_GUIDE.md
+TROUBLESHOOTING_GUIDE.md
+
+# Local environment files
+.env.local
+.env*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Archives
+*.zip
+*.tar.gz
+
+# Database files
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/
+
+# Test files
+*.test.*
+*.spec.*
+
+# IMPORTANT: Don't ignore build-related files
+# The following should NOT be ignored:
+# - app/
+# - components/
+# - public/
+# - styles/
+# - *.css
+# - *.js
+# - *.ts
+# - *.tsx
+# - *.json (except package-lock.json)
+# - .next/ (Vercel builds this)

@@ -1,0 +1,51 @@
+{
+  "name": "spiralogic-oracle",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:ipfs": "DEPLOY_TARGET=ipfs npm run build",
+    "build:fleek": "npm run build:ipfs && fleek deploy",
+    "deploy:ipfs": "npm run build:ipfs && npx ipfs-deploy dist",
+    "start": "next start",
+    "export": "next export",
+    "lint": "next lint",
+    "prepare": "[ -d .git ] && husky install || true"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.50.3",
+    "@tailwindcss/forms": "^0.5.6",
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.43",
+    "@types/react-dom": "18.2.17",
+    "brace-expansion": "^4.0.1",
+    "chart.js": "^4.4.0",
+    "classnames": "^2.3.2",
+    "lucide-react": "^0.306.0",
+    "minimatch": "^9.0.4",
+    "next": "15.3.3",
+    "react": "18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "^3.4.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.41",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "autoprefixer": "^10.4.15",
+    "critters": "^0.0.23",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^15.3.3",
+    "husky": "^8.0.3",
+    "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
+    "tailwind-variants": "^0.2.0",
+    "typescript": "^5.4.4"
+  }
+}

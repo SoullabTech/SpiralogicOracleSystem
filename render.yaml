@@ -1,0 +1,44 @@
+services:
+  # Backend Service
+  - type: web
+    name: oracle-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd oracle-backend && npm ci && npm run build:render-simple
+    startCommand: cd oracle-backend && node dist/server-simple.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - fromGroup: oracle-backend-env
+
+  # Frontend Service
+  - type: web
+    name: oracle-frontend
+    env: static
+    buildCommand: cd oracle-frontend && npm ci && npm run build
+    staticPublishPath: oracle-frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: NPM_VERSION
+        value: 82w23

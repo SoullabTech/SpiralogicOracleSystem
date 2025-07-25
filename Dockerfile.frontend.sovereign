@@ -1,0 +1,49 @@
+# Sovereign Frontend Build (IPFS-Ready)
+FROM node:20-alpine AS builder
+
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY next.config.js ./
+COPY tsconfig.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY components ./components
+COPY pages ./pages
+COPY public ./public
+COPY styles ./styles
+COPY lib ./lib
+COPY hooks ./hooks
+
+# Build for IPFS deployment
+ENV NEXT_PUBLIC_IPFS_BUILD=true
+ENV NEXT_PUBLIC_SOVEREIGN_MODE=true
+
+RUN npm run build
+
+# Export static files for IPFS
+RUN npm run export
+
+# Production stage
+FROM nginx:alpine
+
+# Copy static export
+COPY --from=builder /app/out /usr/share/nginx/html
+
+# Copy IPFS-ready nginx config
+COPY nginx/ipfs-frontend.conf /etc/nginx/nginx.conf
+
+# Add IPFS hash generation script
+COPY scripts/generate-ipfs-hash.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/generate-ipfs-hash.sh
+
+EXPOSE 80
+
+# Generate IPFS hash on start
+CMD ["/bin/sh", "-c", "generate-ipfs-hash.sh && nginx -g 'daemon off;'"]

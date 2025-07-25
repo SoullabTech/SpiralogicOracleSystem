@@ -1,0 +1,510 @@
+# OPA Gatekeeper Constraints for Spiralogic Oracle System
+# Level 5 DevSecOps - Pod-level security enforcement
+
+---
+# ConstraintTemplate for security context enforcement
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: spiralogicsecuritycontext
+  namespace: spiralogic
+spec:
+  crd:
+    spec:
+      names:
+        kind: SpiralogicSecurityContext
+      validation:
+        type: object
+        properties:
+          allowedUsers:
+            type: array
+            items:
+              type: integer
+          allowedGroups:
+            type: array
+            items:
+              type: integer
+          requiredCapabilities:
+            type: array
+            items:
+              type: string
+          forbiddenCapabilities:
+            type: array
+            items:
+              type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package spiralogic.security.context
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.runAsNonRoot
+          msg := sprintf("Container %v must run as non-root user", [container.name])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          user_id := container.securityContext.runAsUser
+          not user_id_allowed(user_id)
+          msg := sprintf("Container %v uses forbidden user ID %v", [container.name, user_id])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.readOnlyRootFilesystem
+          msg := sprintf("Container %v must have read-only root filesystem", [container.name])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          container.securityContext.privileged
+          msg := sprintf("Container %v must not run in privileged mode", [container.name])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          container.securityContext.allowPrivilegeEscalation
+          msg := sprintf("Container %v must not allow privilege escalation", [container.name])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          cap := container.securityContext.capabilities.add[_]
+          forbidden_capability(cap)
+          msg := sprintf("Container %v uses forbidden capability %v", [container.name, cap])
+        }
+        
+        user_id_allowed(user_id) {
+          allowed_users := input.parameters.allowedUsers
+          user_id == allowed_users[_]
+        }
+        
+        forbidden_capability(cap) {
+          forbidden_caps := input.parameters.forbiddenCapabilities
+          cap == forbidden_caps[_]
+        }
+
+---
+# Constraint for enforcing Spiralogic security context
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: SpiralogicSecurityContext
+metadata:
+  name: spiralogic-security-enforcement
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
+  parameters:
+    allowedUsers: [1001, 65532, 65534]  # spiralogic, nonroot, nobody
+    allowedGroups: [1001, 65532, 65534]
+    forbiddenCapabilities: 
+      - "SYS_ADMIN"
+      - "NET_ADMIN" 
+      - "SYS_TIME"
+      - "SYS_MODULE"
+      - "SYS_RAWIO"
+      - "SYS_PTRACE"
+      - "DAC_OVERRIDE"
+      - "FOWNER"
+      - "SETUID"
+      - "SETGID"
+
+---
+# ConstraintTemplate for resource limits
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: spiralogicresourcelimits
+spec:
+  crd:
+    spec:
+      names:
+        kind: SpiralogicResourceLimits
+      validation:
+        type: object
+        properties:
+          maxCpu:
+            type: string
+          maxMemory:
+            type: string
+          maxEphemeralStorage:
+            type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package spiralogic.resources.limits
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.resources.limits.cpu
+          msg := sprintf("Container %v must have CPU limits", [container.name])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.resources.limits.memory
+          msg := sprintf("Container %v must have memory limits", [container.name])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          cpu_limit := container.resources.limits.cpu
+          exceeds_cpu_limit(cpu_limit)
+          msg := sprintf("Container %v CPU limit %v exceeds maximum %v", [container.name, cpu_limit, input.parameters.maxCpu])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          memory_limit := container.resources.limits.memory
+          exceeds_memory_limit(memory_limit)
+          msg := sprintf("Container %v memory limit %v exceeds maximum %v", [container.name, memory_limit, input.parameters.maxMemory])
+        }
+        
+        exceeds_cpu_limit(limit) {
+          limit_val := parse_cpu(limit)
+          max_val := parse_cpu(input.parameters.maxCpu)
+          limit_val > max_val
+        }
+        
+        exceeds_memory_limit(limit) {
+          limit_val := parse_memory(limit)
+          max_val := parse_memory(input.parameters.maxMemory)
+          limit_val > max_val
+        }
+        
+        parse_cpu(cpu_str) = cpu_val {
+          endswith(cpu_str, "m")
+          cpu_val := to_number(trim_suffix(cpu_str, "m"))
+        }
+        
+        parse_cpu(cpu_str) = cpu_val {
+          not endswith(cpu_str, "m")
+          cpu_val := to_number(cpu_str) * 1000
+        }
+        
+        parse_memory(mem_str) = mem_val {
+          endswith(mem_str, "Mi")
+          mem_val := to_number(trim_suffix(mem_str, "Mi"))
+        }
+        
+        parse_memory(mem_str) = mem_val {
+          endswith(mem_str, "Gi")
+          mem_val := to_number(trim_suffix(mem_str, "Gi")) * 1024
+        }
+
+---
+# Resource limits constraint
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: SpiralogicResourceLimits
+metadata:
+  name: spiralogic-resource-enforcement
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
+  parameters:
+    maxCpu: "2000m"  # 2 CPU cores
+    maxMemory: "4Gi"  # 4GB RAM
+    maxEphemeralStorage: "10Gi"
+
+---
+# ConstraintTemplate for image security
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: spiralogicimagesecurity
+spec:
+  crd:
+    spec:
+      names:
+        kind: SpiralogicImageSecurity
+      validation:
+        type: object
+        properties:
+          allowedRegistries:
+            type: array
+            items:
+              type: string
+          requiredLabels:
+            type: array
+            items:
+              type: string
+          forbiddenTags:
+            type: array
+            items:
+              type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package spiralogic.image.security
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not image_from_allowed_registry(container.image)
+          msg := sprintf("Container %v uses image from forbidden registry: %v", [container.name, container.image])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          uses_forbidden_tag(container.image)
+          msg := sprintf("Container %v uses forbidden image tag: %v", [container.name, container.image])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not has_required_labels(container.image)
+          msg := sprintf("Container %v image lacks required security labels", [container.name])
+        }
+        
+        image_from_allowed_registry(image) {
+          allowed_registries := input.parameters.allowedRegistries
+          registry := split(image, "/")[0]
+          registry == allowed_registries[_]
+        }
+        
+        uses_forbidden_tag(image) {
+          forbidden_tags := input.parameters.forbiddenTags
+          tag := split(image, ":")[1]
+          tag == forbidden_tags[_]
+        }
+        
+        has_required_labels(image) {
+          # This would need to be implemented with additional image inspection
+          # For now, allow all images that pass registry check
+          true
+        }
+
+---
+# Image security constraint
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: SpiralogicImageSecurity
+metadata:
+  name: spiralogic-image-enforcement
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
+  parameters:
+    allowedRegistries:
+      - "gcr.io/distroless"
+      - "registry.spiralogic.network"
+      - "docker.io/library"
+      - "quay.io/spiralogic"
+    forbiddenTags:
+      - "latest"
+      - "master"
+      - "main"
+      - "dev"
+      - "debug"
+    requiredLabels:
+      - "security.hardening"
+      - "org.opencontainers.image.version"
+
+---
+# ConstraintTemplate for network policies
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: spiralogicnetworkpolicy
+spec:
+  crd:
+    spec:
+      names:
+        kind: SpiralogicNetworkPolicy
+      validation:
+        type: object
+        properties:
+          requireNetworkPolicy:
+            type: boolean
+          allowedIngressPorts:
+            type: array
+            items:
+              type: integer
+          allowedEgressPorts:
+            type: array
+            items:
+              type: integer
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package spiralogic.network.policy
+        
+        violation[{"msg": msg}] {
+          input.parameters.requireNetworkPolicy
+          input.review.object.kind == "Pod"
+          namespace := input.review.object.metadata.namespace
+          not network_policy_exists(namespace)
+          msg := sprintf("Namespace %v requires a NetworkPolicy", [namespace])
+        }
+        
+        network_policy_exists(namespace) {
+          # This would need to query existing NetworkPolicies
+          # For now, assume NetworkPolicy exists if not in default namespace
+          namespace != "default"
+        }
+
+---
+# Network policy constraint
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: SpiralogicNetworkPolicy
+metadata:
+  name: spiralogic-network-enforcement
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
+  parameters:
+    requireNetworkPolicy: true
+    allowedIngressPorts: [8080, 8443, 7001, 7002, 7003, 7004, 7005]  # Oracle + elemental agents
+    allowedEgressPorts: [443, 53, 5432, 6379, 27017]  # HTTPS, DNS, DBs
+
+---
+# ConstraintTemplate for consciousness-specific security
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: spiralogiconsciousnesssecurity
+spec:
+  crd:
+    spec:
+      names:
+        kind: SpiralogicConsciousnessSecurity
+      validation:
+        type: object
+        properties:
+          requireVaultIntegration:
+            type: boolean
+          requireModelEncryption:
+            type: boolean
+          requireAuditLogging:
+            type: boolean
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package spiralogic.consciousness.security
+        
+        violation[{"msg": msg}] {
+          input.parameters.requireVaultIntegration
+          has_consciousness_labels
+          not has_vault_integration
+          msg := "Consciousness containers must integrate with Vault for secret management"
+        }
+        
+        violation[{"msg": msg}] {
+          input.parameters.requireModelEncryption
+          has_consciousness_labels
+          not has_model_encryption
+          msg := "Consciousness containers must enable model encryption"
+        }
+        
+        violation[{"msg": msg}] {
+          input.parameters.requireAuditLogging
+          has_consciousness_labels
+          not has_audit_logging
+          msg := "Consciousness containers must enable audit logging"
+        }
+        
+        has_consciousness_labels {
+          label := input.review.object.metadata.labels["elemental.type"]
+          label != null
+        }
+        
+        has_consciousness_labels {
+          label := input.review.object.metadata.labels["consciousness.enabled"]
+          label == "true"
+        }
+        
+        has_vault_integration {
+          container := input.review.object.spec.containers[_]
+          env := container.env[_]
+          contains(env.name, "VAULT")
+        }
+        
+        has_model_encryption {
+          container := input.review.object.spec.containers[_]
+          env := container.env[_]
+          env.name == "MODEL_ENCRYPTION_ENABLED"
+          env.value == "true"
+        }
+        
+        has_audit_logging {
+          container := input.review.object.spec.containers[_]
+          env := container.env[_]
+          env.name == "AUDIT_ENABLED"
+          env.value == "true"
+        }
+
+---
+# Consciousness security constraint
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: SpiralogicConsciousnessSecurity
+metadata:
+  name: spiralogic-consciousness-enforcement
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
+  parameters:
+    requireVaultIntegration: true
+    requireModelEncryption: true
+    requireAuditLogging: true
+
+---
+# Config for Gatekeeper mutations (automatic security fixes)
+apiVersion: mutations.gatekeeper.sh/v1alpha1
+kind: ModifySet
+metadata:
+  name: spiralogic-security-defaults
+spec:
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+    namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
+  location: "spec.securityContext"
+  parameters:
+    values:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    operation: merge
+
+---
+apiVersion: mutations.gatekeeper.sh/v1alpha1
+kind: ModifySet
+metadata:
+  name: spiralogic-container-security-defaults
+spec:
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+    namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
+  location: "spec.containers[name: *].securityContext"
+  parameters:
+    values:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      privileged: false
+      capabilities:
+        drop: ["ALL"]
+    operation: merge

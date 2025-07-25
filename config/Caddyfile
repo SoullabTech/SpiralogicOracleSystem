@@ -1,0 +1,204 @@
+# AIN Sovereign Caddyfile - Automatic HTTPS & Security
+{$DOMAIN:localhost} {
+    # Automatic HTTPS with Let's Encrypt
+    tls {$TLS_EMAIL:internal}
+    
+    # Security headers
+    header {
+        # HSTS
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        
+        # Content Security Policy
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss: https:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';"
+        
+        # XSS Protection
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        
+        # Referrer Policy
+        Referrer-Policy "strict-origin-when-cross-origin"
+        
+        # Permissions Policy
+        Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()"
+        
+        # Remove server information
+        -Server
+        -X-Powered-By
+    }
+    
+    # Rate limiting
+    rate_limit {
+        zone dynamic {
+            key {remote_host}
+            events 100
+            window 1m
+        }
+        zone api {
+            key {remote_host}
+            events 30
+            window 1m
+        }
+        zone login {
+            key {remote_host}
+            events 5
+            window 5m
+        }
+    }
+    
+    # Main frontend application
+    handle / {
+        reverse_proxy ain-orchestrator:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            
+            # Health check
+            health_uri /health
+            health_interval 30s
+            health_timeout 5s
+        }
+    }
+    
+    # API routes
+    handle /api/* {
+        rate_limit api
+        reverse_proxy ain-orchestrator:8080 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+    
+    # Authentication routes (stricter rate limiting)
+    handle /auth/* {
+        rate_limit login
+        reverse_proxy ain-orchestrator:8080 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+    
+    # Elemental agents (gRPC-Web)
+    handle /grpc/fire/* {
+        reverse_proxy h2c://fire-agent:7001 {
+            transport http {
+                versions h2c
+            }
+        }
+    }
+    
+    handle /grpc/water/* {
+        reverse_proxy h2c://water-agent:7002 {
+            transport http {
+                versions h2c
+            }
+        }
+    }
+    
+    handle /grpc/earth/* {
+        reverse_proxy h2c://earth-agent:7003 {
+            transport http {
+                versions h2c
+            }
+        }
+    }
+    
+    handle /grpc/air/* {
+        reverse_proxy h2c://air-agent:7004 {
+            transport http {
+                versions h2c
+            }
+        }
+    }
+    
+    handle /grpc/aether/* {
+        reverse_proxy h2c://aether-agent:7005 {
+            transport http {
+                versions h2c
+            }
+        }
+    }
+    
+    # Monitoring (admin only)
+    handle /monitoring/* {
+        @admin remote_ip 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+        redir @admin /monitoring/prometheus/ /prometheus/
+        redir @admin /monitoring/grafana/ /grafana/
+        respond "Access Denied" 403
+    }
+    
+    handle /prometheus/* {
+        @admin remote_ip 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+        reverse_proxy @admin monitoring:9090 {
+            header_up Host {host}
+        }
+        respond "Access Denied" 403
+    }
+    
+    # WebSocket support for real-time features
+    handle /ws/* {
+        reverse_proxy ain-orchestrator:8080 {
+            header_up Connection {>Connection}
+            header_up Upgrade {>Upgrade}
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+    
+    # Static files with caching
+    handle /static/* {
+        file_server {
+            root /app/public
+        }
+        header Cache-Control "public, max-age=31536000, immutable"
+    }
+    
+    # IPFS gateway (for sovereign data)
+    handle /ipfs/* {
+        reverse_proxy ipfs:8080 {
+            header_up Host {host}
+        }
+    }
+    
+    # Health check endpoint
+    handle /health {
+        respond "AIN Sovereign System Online" 200
+    }
+    
+    # Logging
+    log {
+        output file /data/access.log {
+            roll_size 100mb
+            roll_keep 10
+            roll_keep_for 720h
+        }
+        format console
+        level INFO
+    }
+    
+    # Error handling
+    handle_errors {
+        @4xx expression {http.error.status_code} >= 400 && {http.error.status_code} < 500
+        @5xx expression {http.error.status_code} >= 500
+        
+        handle @4xx {
+            respond "Client Error: {http.error.status_text}" {http.error.status_code}
+        }
+        
+        handle @5xx {
+            respond "Server Error: Please try again later" {http.error.status_code}
+        }
+    }
+}
+
+# Redirect HTTP to HTTPS
+http://{$DOMAIN:localhost} {
+    redir https://{host}{uri} permanent
+}
