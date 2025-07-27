@@ -21,6 +21,9 @@ claude-env/
 htmlcov/
 requirements.txt*
 
+# Keep frontend directory - DO NOT IGNORE
+# frontend/ should be built by Vercel
+
 # Documentation
 docs/
 DEPLOYMENT_CHECKLIST.md
