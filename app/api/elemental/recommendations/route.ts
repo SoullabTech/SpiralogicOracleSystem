@@ -1,11 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { ElementalContentService } from '../../../../backend/src/core/elemental/ElementalContentService';
-import { ContentDeliveryContext, ContentAdaptationSettings } from '../../../../backend/src/core/elemental/types';
+import { apiClient, API_ENDPOINTS } from '../../../../frontend/lib/config';
 import { getSupabaseConfig } from '../../../../lib/config/supabase';
 
-const elementalService = new ElementalContentService();
+// Type definitions for elemental content
+interface ContentDeliveryContext {
+  userId: string;
+  currentStage: string;
+  recentBypassingPatterns: string[];
+  integrationCapacity: number;
+  stressLevel: number;
+  energyLevel: number;
+  lastContentAccess: Date;
+  unintegratedContent: string[];
+}
+
+interface ContentAdaptationSettings {
+  emphasizeMetaphorical: boolean;
+  includeDisclaimers: boolean;
+  requireCommunityValidation: boolean;
+  enableCrossDomainIntegration: boolean;
+  preventConsumptionBehavior: boolean;
+  minimumIntegrationGaps: number;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -94,30 +112,44 @@ export async function GET(request: NextRequest) {
       minimumIntegrationGaps: parseInt(url.searchParams.get('integrationGaps') || '3')
     };
 
-    // Get content recommendations
-    const recommendations = await elementalService.getContentRecommendations(context, settings);
+    // Proxy request to backend API
+    try {
+      const endpoint = `${API_ENDPOINTS.elemental.recommendations}?userId=${user.id}`;
+      const requestData = {
+        context,
+        settings
+      };
+      
+      const recommendations = await apiClient.post(endpoint, requestData);
 
-    // Track the recommendation request
-    await supabase
-      .from('user_content_requests')
-      .insert({
-        user_id: user.id,
-        request_type: 'elemental_recommendations',
-        context: JSON.stringify(context),
-        recommendations_count: recommendations.length,
-        created_at: new Date().toISOString()
+      // Track the recommendation request locally
+      await supabase
+        .from('user_content_requests')
+        .insert({
+          user_id: user.id,
+          request_type: 'elemental_recommendations',
+          context: JSON.stringify(context),
+          recommendations_count: recommendations.length || 0,
+          created_at: new Date().toISOString()
+        });
+
+      return NextResponse.json({
+        recommendations,
+        context: {
+          integrationCapacity: context.integrationCapacity,
+          currentStage: context.currentStage,
+          recentPatterns: context.recentBypassingPatterns.length,
+          unintegratedCount: context.unintegratedContent.length
+        },
+        adaptationSettings: settings
       });
-
-    return NextResponse.json({
-      recommendations,
-      context: {
-        integrationCapacity: context.integrationCapacity,
-        currentStage: context.currentStage,
-        recentPatterns: context.recentBypassingPatterns.length,
-        unintegratedCount: context.unintegratedContent.length
-      },
-      adaptationSettings: settings
-    });
+    } catch (error) {
+      console.error('Backend API error:', error);
+      return NextResponse.json(
+        { error: 'Elemental content service temporarily unavailable' },
+        { status: 503 }
+      );
+    }
 
   } catch (error) {
     console.error('Elemental recommendations error:', error);
@@ -168,8 +200,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Track content engagement
-    await elementalService.trackContentEngagement(user.id, contentId, engagement);
+    // Track content engagement via backend API
+    try {
+      await apiClient.post(`${API_ENDPOINTS.elemental.recommendations}/engagement`, {
+        userId: user.id,
+        contentId,
+        engagement
+      });
+    } catch (error) {
+      console.error('Failed to track engagement via backend:', error);
+      // Continue with local tracking
+    }
 
     // Log access in database
     await supabase

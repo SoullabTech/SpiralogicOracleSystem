@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { AnalyticsService } from '../../../../backend/src/core/analytics/AnalyticsService';
+import { apiClient, API_ENDPOINTS } from '../../../../frontend/lib/config';
 import { getSupabaseConfig } from '../../../../lib/config/supabase';
-
-const analyticsService = new AnalyticsService();
 
 export async function GET(request: NextRequest) {
   try {
@@ -51,37 +49,50 @@ export async function GET(request: NextRequest) {
     const analyticsType = url.searchParams.get('type') || 'user';
 
     if (analyticsType === 'user') {
-      // Generate user-specific analytics
-      const userMetrics = await analyticsService.generateUserMetrics(user.id, timeframe);
-      
-      // Generate privacy report
-      const privacyReport = await analyticsService.generatePrivacyReport(user.id);
-
-      return NextResponse.json({
-        userMetrics,
-        privacyReport,
-        generatedAt: new Date().toISOString()
-      });
+      // Proxy request to backend API
+      try {
+        const endpoint = `${API_ENDPOINTS.analytics.dashboard}?userId=${user.id}&timeframe=${timeframe}&type=${analyticsType}`;
+        const data = await apiClient.get(endpoint);
+        return NextResponse.json(data);
+      } catch (error) {
+        console.error('Backend API error:', error);
+        return NextResponse.json(
+          { error: 'Analytics service temporarily unavailable' },
+          { status: 503 }
+        );
+      }
 
     } else if (analyticsType === 'platform' && profile.account_type === 'admin') {
       // Platform analytics only for admins
-      const platformTimeframe = timeframe === 'week' ? 'month' : timeframe as 'month' | 'quarter' | 'year';
-      const platformAnalytics = await analyticsService.generatePlatformAnalytics(platformTimeframe);
-
-      return NextResponse.json({
-        platformAnalytics,
-        generatedAt: new Date().toISOString()
-      });
+      try {
+        const platformTimeframe = timeframe === 'week' ? 'month' : timeframe as 'month' | 'quarter' | 'year';
+        const endpoint = `${API_ENDPOINTS.analytics.dashboard}?timeframe=${platformTimeframe}&type=${analyticsType}`;
+        const data = await apiClient.get(endpoint);
+        return NextResponse.json(data);
+      } catch (error) {
+        console.error('Backend API error:', error);
+        return NextResponse.json(
+          { error: 'Platform analytics temporarily unavailable' },
+          { status: 503 }
+        );
+      }
 
     } else if (analyticsType === 'research' && profile.account_type === 'researcher') {
       // Research insights only for researchers
-      const researchInsights = await analyticsService.generateResearchInsights();
-
-      return NextResponse.json({
-        researchInsights,
-        generatedAt: new Date().toISOString(),
-        disclaimer: 'All data has been anonymized and aggregated to protect user privacy'
-      });
+      try {
+        const endpoint = `${API_ENDPOINTS.analytics.dashboard}?type=${analyticsType}`;
+        const data = await apiClient.get(endpoint);
+        return NextResponse.json({
+          ...data,
+          disclaimer: 'All data has been anonymized and aggregated to protect user privacy'
+        });
+      } catch (error) {
+        console.error('Backend API error:', error);
+        return NextResponse.json(
+          { error: 'Research insights temporarily unavailable' },
+          { status: 503 }
+        );
+      }
 
     } else {
       return NextResponse.json(

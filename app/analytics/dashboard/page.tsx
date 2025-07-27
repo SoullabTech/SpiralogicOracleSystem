@@ -5,16 +5,9 @@ export const dynamic = 'force-dynamic';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
-import { UserDevelopmentMetrics, PlatformAnalytics, ResearchInsights } from '../../../backend/src/core/analytics/AnalyticsService';
-import { ElementalArchetype } from '../../../lib/types/elemental';
+import { UserDevelopmentMetrics, PlatformAnalytics, ResearchInsights, ElementalArchetype, AnalyticsData } from '../../../frontend/lib/types';
 
-interface AnalyticsData {
-  userMetrics?: UserDevelopmentMetrics;
-  platformAnalytics?: PlatformAnalytics;
-  researchInsights?: ResearchInsights;
-  privacyReport?: any;
-  generatedAt: string;
-}
+// AnalyticsData interface is now imported from types
 
 export default function AnalyticsDashboardPage() {
   const router = useRouter();
