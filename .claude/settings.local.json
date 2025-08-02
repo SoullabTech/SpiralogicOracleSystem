@@ -113,7 +113,15 @@
       "Bash(git subtree split:*)",
       "Bash(claude doctor)",
       "Bash(git config:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(docker system prune:*)",
+      "Bash(docker volume prune:*)",
+      "Bash(sudo du:*)",
+      "Bash(~/cleanup_mac.sh)",
+      "Bash(sudo pkill:*)",
+      "Bash(open:*)",
+      "Bash(docker:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   },
