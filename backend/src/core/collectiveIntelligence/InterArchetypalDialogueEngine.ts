@@ -44,7 +44,7 @@ export interface ArchetypalCouncilSession {
   sessionDate: string;
   councilChallenge: string;
   culturalContext: CulturalProfile;
-  convened Archetypes: ConvenedArchetype[];
+  convenedArchetypes: ConvenedArchetype[];
   shadowLightDialogue: ShadowLightDialogue;
   wisdomSynthesis: MultiPerspectiveWisdomSynthesis;
   integrationPathway: ArchetypalIntegrationPathway;
@@ -154,7 +154,7 @@ export interface PolarityIntegration {
   balancePoint: string;
   culturalBalancing: string;
   integrationPractices: string[];
-  wholeness Potential: string;
+  wholenessPotential: string;
 }
 
 export interface HealingOpportunity {
