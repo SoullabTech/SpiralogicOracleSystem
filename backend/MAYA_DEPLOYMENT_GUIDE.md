@@ -139,18 +139,18 @@ const ARCHETYPAL_MODES = {
 ### Dashboard Queries
 ```sql
 -- Average authenticity score
-SELECT AVG(metadata->>'authenticity_level') 
-FROM oracle_responses 
+SELECT AVG(metadata->>'authenticity_level')
+FROM oracle_responses
 WHERE metadata->>'maya_framework_applied' = 'true';
 
 -- Projection handling frequency
-SELECT COUNT(*) 
-FROM oracle_responses 
+SELECT COUNT(*)
+FROM oracle_responses
 WHERE metadata->>'projection_handling' = 'true';
 
 -- Shadow work activations
-SELECT COUNT(*) 
-FROM oracle_responses 
+SELECT COUNT(*)
+FROM oracle_responses
 WHERE metadata->>'shadow_work_indicated' = 'true';
 ```
 
@@ -174,7 +174,7 @@ WHERE metadata->>'shadow_work_indicated' = 'true';
 #### Maya Framework Not Applying
 ```typescript
 // Check integration in Oracle agent
-console.log('Maya method exists:', 
+console.log('Maya method exists:',
   typeof oracle.applyMayaWisdomFramework === 'function');
 ```
 

@@ -11,10 +11,10 @@ interface ProtectedRouteProps {
   requireAuth?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
   fallback,
-  requireAuth = true 
+  requireAuth = true
 }) => {
   const { user, loading } = useAuth();
 

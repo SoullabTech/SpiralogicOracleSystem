@@ -5,11 +5,11 @@ export interface AgentScore {
     air: number;
     aether: number;
   }
-  
+
   export function scoreQuery(input: string): AgentScore {
     const lowered = input.toLowerCase();
     const scores: AgentScore = { fire: 0, water: 0, earth: 0, air: 0, aether: 0 };
-  
+
     if (lowered.includes("fire") || lowered.includes("ignite") || lowered.includes("spark")) {
       scores.fire += 10;
     }
@@ -24,7 +24,6 @@ export interface AgentScore {
     }
     // Default catch-all adjustment for Aether.
     scores.aether += 5;
-  
+
     return scores;
   }
-  

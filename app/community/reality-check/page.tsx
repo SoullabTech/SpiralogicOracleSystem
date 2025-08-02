@@ -35,7 +35,7 @@ interface CommunityPost {
 
 export default function CommunityRealityCheckPage() {
   const authService = new IntegrationAuthService();
-  
+
   const [interactions, setInteractions] = useState<CommunityInteraction[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -166,7 +166,7 @@ export default function CommunityRealityCheckPage() {
                 Support each other's integration through grounded feedback
               </p>
             </div>
-            
+
             <button
               onClick={() => setShowPostForm(true)}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -269,23 +269,23 @@ const PostCreationForm: React.FC<{
   onCancel: () => void;
 }> = ({ post, onChange, onSubmit, onCancel }) => {
   const postTypes = [
-    { 
-      value: 'reality_check_request', 
+    {
+      value: 'reality_check_request',
       label: 'Reality Check Request',
       description: 'Ask for grounding perspective on an insight or experience'
     },
-    { 
-      value: 'integration_share', 
+    {
+      value: 'integration_share',
       label: 'Integration Share',
       description: 'Share how you\'re applying insights in daily life'
     },
-    { 
-      value: 'struggle_support', 
+    {
+      value: 'struggle_support',
       label: 'Struggle Support',
       description: 'Share challenges and seek supportive feedback'
     },
-    { 
-      value: 'ordinary_moment', 
+    {
+      value: 'ordinary_moment',
       label: 'Ordinary Moment',
       description: 'Celebrate awareness in mundane daily experiences'
     }
@@ -294,7 +294,7 @@ const PostCreationForm: React.FC<{
   return (
     <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
       <h3 className="text-lg font-semibold mb-4">Share with Community</h3>
-      
+
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -459,7 +459,7 @@ const InteractionCard: React.FC<{
             </div>
           </div>
         </div>
-        
+
         <button
           onClick={() => onFlag(interaction.id, 'inappropriate')}
           className="text-gray-400 hover:text-gray-600 text-sm"
@@ -501,7 +501,7 @@ const InteractionCard: React.FC<{
                 <option value="bypassing_concern">Bypassing Concern</option>
               </select>
             </div>
-            
+
             <textarea
               value={responseContent}
               onChange={(e) => setResponseContent(e.target.value)}
@@ -509,7 +509,7 @@ const InteractionCard: React.FC<{
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Share your perspective, experience, or gentle reality-check..."
             />
-            
+
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setShowResponseForm(false)}

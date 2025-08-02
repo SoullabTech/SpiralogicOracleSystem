@@ -78,18 +78,18 @@ export interface DivinationInsight {
   ritual?: string;
   symbols?: string[];
   keywords?: string[];
-  
+
   // Method-specific data
   hexagram?: HexagramReading;
   tarot?: TarotReading;
   astrology?: AstrologyReading;
-  
+
   // Unified insights
   synthesis?: string;
   archetypalTheme?: string;
   sacredTiming?: string;
   energeticSignature?: string;
-  
+
   // Metadata
   timestamp: string;
   confidence: number;

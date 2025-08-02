@@ -109,13 +109,13 @@ const GroupHoloflowerVisualization = ({ groupId, participantIds, showIndividuals
           color: white;
           min-height: 100vh;
         }
-        
+
         .view-controls {
           display: flex;
           gap: 10px;
           margin-bottom: 20px;
         }
-        
+
         .view-controls button {
           padding: 10px 20px;
           background: #2a2a3e;
@@ -125,38 +125,38 @@ const GroupHoloflowerVisualization = ({ groupId, participantIds, showIndividuals
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .view-controls button.active,
         .view-controls button:hover {
           background: #3a3a4e;
           transform: translateY(-2px);
         }
-        
+
         .visualization-area {
           position: relative;
           width: 800px;
           height: 800px;
           margin-bottom: 40px;
         }
-        
+
         .participant-grid {
           position: relative;
           width: 100%;
           height: 100%;
         }
-        
+
         .participant-cell {
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .participant-label {
           text-align: center;
           margin-top: 5px;
           font-size: 12px;
           color: #FFD700;
         }
-        
+
         .collective-center {
           display: flex;
           flex-direction: column;
@@ -169,18 +169,18 @@ const GroupHoloflowerVisualization = ({ groupId, participantIds, showIndividuals
           border: 2px solid #FFD700;
           text-align: center;
         }
-        
+
         .collective-center h3 {
           margin: 0 0 10px 0;
           color: #FFD700;
           font-size: 16px;
         }
-        
+
         .field-metrics {
           font-size: 14px;
           line-height: 1.5;
         }
-        
+
         .resonance-metrics {
           width: 100%;
           max-width: 600px;
@@ -189,31 +189,31 @@ const GroupHoloflowerVisualization = ({ groupId, participantIds, showIndividuals
           border-radius: 8px;
           border: 1px solid #FFD700;
         }
-        
+
         .resonance-metrics h3 {
           margin: 0 0 20px 0;
           color: #FFD700;
           text-align: center;
         }
-        
+
         .metrics-grid {
           display: flex;
           flex-direction: column;
           gap: 15px;
           margin-bottom: 30px;
         }
-        
+
         .metric {
           display: flex;
           align-items: center;
           gap: 10px;
         }
-        
+
         .metric-label {
           width: 100px;
           text-transform: capitalize;
         }
-        
+
         .metric-bar {
           flex: 1;
           height: 20px;
@@ -221,28 +221,28 @@ const GroupHoloflowerVisualization = ({ groupId, participantIds, showIndividuals
           border-radius: 10px;
           overflow: hidden;
         }
-        
+
         .metric-fill {
           height: 100%;
           border-radius: 10px;
         }
-        
+
         .metric-value {
           width: 50px;
           text-align: right;
         }
-        
+
         .emergent-qualities h4 {
           margin: 0 0 10px 0;
           color: #FFD700;
         }
-        
+
         .qualities-list {
           display: flex;
           flex-wrap: wrap;
           gap: 10px;
         }
-        
+
         .quality-badge {
           padding: 5px 15px;
           background: #3a3a4e;

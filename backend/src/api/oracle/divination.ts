@@ -31,7 +31,7 @@ const DailyDivinationSchema = z.object({
 export async function performDivinationReading(req: Request, res: Response) {
   try {
     const validation = DivinationQuerySchema.safeParse(req.body);
-    
+
     if (!validation.success) {
       return res.status(400).json({
         success: false,
@@ -41,7 +41,7 @@ export async function performDivinationReading(req: Request, res: Response) {
     }
 
     const query: DivinationQuery = validation.data;
-    
+
     // Validate birth data if provided
     if (query.birthData?.date && isNaN(new Date(query.birthData.date).getTime())) {
       return res.status(400).json({
@@ -49,10 +49,10 @@ export async function performDivinationReading(req: Request, res: Response) {
         error: 'Invalid birth date format'
       });
     }
-    
+
     // Perform divination
     const insight = await divinationAgent.performDivination(query);
-    
+
     res.json({
       success: true,
       insight,
@@ -83,7 +83,7 @@ export async function performDivinationReading(req: Request, res: Response) {
 export async function getDailyDivination(req: Request, res: Response) {
   try {
     const { method } = req.query;
-    
+
     const validation = DailyDivinationSchema.safeParse({ method });
     if (!validation.success) {
       return res.status(400).json({
@@ -93,7 +93,7 @@ export async function getDailyDivination(req: Request, res: Response) {
     }
 
     const insight = await divinationAgent.getDailyDivination();
-    
+
     res.json({
       success: true,
       insight,
@@ -118,16 +118,16 @@ export async function getDailyDivination(req: Request, res: Response) {
 export async function getQuickDivination(req: Request, res: Response) {
   try {
     const { method = 'tarot', question = 'What do I need to know right now?' } = req.body;
-    
+
     const quickQuery: DivinationQuery = {
       method: method as DivinationMethod,
       query: question,
       depth: 'basic',
       spread: method === 'tarot' ? 'single-card' : undefined
     };
-    
+
     const insight = await divinationAgent.performDivination(quickQuery);
-    
+
     res.json({
       success: true,
       insight,
@@ -216,7 +216,7 @@ export async function getDivinationMethods(req: Request, res: Response) {
 export async function validateDivinationQuery(req: Request, res: Response) {
   try {
     const validation = DivinationQuerySchema.safeParse(req.body);
-    
+
     if (!validation.success) {
       return res.status(400).json({
         success: false,
@@ -227,10 +227,10 @@ export async function validateDivinationQuery(req: Request, res: Response) {
     }
 
     const query = validation.data;
-    
+
     // Additional business logic validation
     const businessValidation = validateBusinessRules(query);
-    
+
     res.json({
       success: true,
       valid: businessValidation.valid,
@@ -250,7 +250,7 @@ export async function validateDivinationQuery(req: Request, res: Response) {
 
 function generateValidationSuggestions(issues: any[]): string[] {
   const suggestions: string[] = [];
-  
+
   issues.forEach(issue => {
     switch (issue.path[0]) {
       case 'method':
@@ -266,7 +266,7 @@ function generateValidationSuggestions(issues: any[]): string[] {
         suggestions.push('Check the field format and try again');
     }
   });
-  
+
   return [...new Set(suggestions)]; // Remove duplicates
 }
 
@@ -277,34 +277,34 @@ function validateBusinessRules(query: DivinationQuery): {
 } {
   const warnings: string[] = [];
   const suggestions: string[] = [];
-  
+
   // Method-specific validations
   if (query.method === 'astro' && !query.birthData) {
     warnings.push('Astrological readings are more accurate with birth data');
     suggestions.push('Consider providing your birth date for personalized cosmic guidance');
   }
-  
+
   if (query.method === 'unified' && query.depth === 'basic') {
     warnings.push('Unified readings work best with detailed or comprehensive depth');
     suggestions.push('Consider using detailed or comprehensive depth for richer unified insights');
   }
-  
+
   if (query.method === 'tarot' && query.spread === 'celtic-cross' && query.depth === 'basic') {
     warnings.push('Celtic Cross spreads work better with detailed analysis');
     suggestions.push('Consider using detailed depth for this complex spread');
   }
-  
+
   // Query quality checks
   if (query.query.length < 10) {
     warnings.push('Very short questions may result in general guidance');
     suggestions.push('Consider providing more context for more specific insights');
   }
-  
+
   if (query.query.includes('yes or no')) {
     warnings.push('Oracle readings provide nuanced guidance rather than yes/no answers');
     suggestions.push('Rephrase as "What should I know about..." or "How can I approach..."');
   }
-  
+
   return {
     valid: true,
     warnings,

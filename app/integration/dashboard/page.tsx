@@ -8,7 +8,7 @@ import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
 export default function IntegrationDashboard() {
   const router = useRouter();
   const authService = new IntegrationAuthService();
-  
+
   const [architecture, setArchitecture] = useState<IntegrationArchitecture | null>(null);
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -35,7 +35,7 @@ export default function IntegrationDashboard() {
       if (architectureResponse.ok && dashboardResponse.ok) {
         const architectureData = await architectureResponse.json();
         const dashboardData = await dashboardResponse.json();
-        
+
         setArchitecture(architectureData);
         setDashboardData(dashboardData);
       }
@@ -83,7 +83,7 @@ export default function IntegrationDashboard() {
                 Phase: {dashboardData.integrationProgress.currentPhase}
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <IntegrationStatusIndicator stage={architecture.currentStage} />
               <button
@@ -126,29 +126,29 @@ export default function IntegrationDashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === 'overview' && (
-          <OverviewTab 
-            architecture={architecture} 
+          <OverviewTab
+            architecture={architecture}
             dashboardData={dashboardData}
             onRefresh={loadDashboardData}
           />
         )}
-        
+
         {activeTab === 'journey' && (
-          <JourneyTab 
+          <JourneyTab
             architecture={architecture}
             onUpdate={loadDashboardData}
           />
         )}
-        
+
         {activeTab === 'community' && (
-          <CommunityTab 
+          <CommunityTab
             architecture={architecture}
             onUpdate={loadDashboardData}
           />
         )}
-        
+
         {activeTab === 'insights' && (
-          <InsightsTab 
+          <InsightsTab
             spiralProgress={architecture.spiralProgress}
             spiralInsights={dashboardData.spiralInsights}
           />
@@ -212,14 +212,14 @@ const OverviewTab: React.FC<{
     {/* Integration Progress */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
-        <IntegrationProgressCard 
+        <IntegrationProgressCard
           progress={dashboardData.integrationProgress}
           consistencyMetrics={dashboardData.consistencyMetrics}
         />
       </div>
-      
+
       <div>
-        <NextActionsCard 
+        <NextActionsCard
           actions={dashboardData.nextActions}
           onRefresh={onRefresh}
         />
@@ -228,11 +228,11 @@ const OverviewTab: React.FC<{
 
     {/* Recent Activity */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <RecentSpiralProgress 
+      <RecentSpiralProgress
         spiralProgress={architecture.spiralProgress.slice(0, 3)}
       />
-      
-      <EmbodiedWisdomSummary 
+
+      <EmbodiedWisdomSummary
         embodiedWisdom={architecture.embodiedWisdom}
       />
     </div>
@@ -245,7 +245,7 @@ const IntegrationProgressCard: React.FC<{
 }> = ({ progress, consistencyMetrics }) => (
   <div className="bg-white rounded-lg shadow-sm border p-6">
     <h3 className="text-lg font-semibold mb-4">Integration Progress</h3>
-    
+
     <div className="space-y-4">
       <div>
         <div className="flex justify-between text-sm text-gray-600 mb-1">
@@ -253,7 +253,7 @@ const IntegrationProgressCard: React.FC<{
           <span>{progress.gatesUnlocked} / {progress.totalGates}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
+          <div
             className="bg-blue-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress.percentComplete}%` }}
           />
@@ -267,7 +267,7 @@ const IntegrationProgressCard: React.FC<{
           </div>
           <div className="text-xs text-gray-600">Consistency Celebrations</div>
         </div>
-        
+
         <div className="text-center p-3 bg-gray-50 rounded-lg">
           <div className="text-2xl font-semibold text-gray-900">
             {progress.currentPhase}
@@ -309,7 +309,7 @@ const NextActionsCard: React.FC<{
 }> = ({ actions, onRefresh }) => (
   <div className="bg-white rounded-lg shadow-sm border p-6">
     <h3 className="text-lg font-semibold mb-4">Next Steps</h3>
-    
+
     <div className="space-y-3">
       {actions.map((action, index) => (
         <div key={index} className="flex items-start space-x-3">
@@ -335,7 +335,7 @@ const RecentSpiralProgress: React.FC<{
 }> = ({ spiralProgress }) => (
   <div className="bg-white rounded-lg shadow-sm border p-6">
     <h3 className="text-lg font-semibold mb-4">Recent Spiral Progress</h3>
-    
+
     {spiralProgress.length > 0 ? (
       <div className="space-y-4">
         {spiralProgress.map((progress, index) => (
@@ -367,7 +367,7 @@ const EmbodiedWisdomSummary: React.FC<{
 }> = ({ embodiedWisdom }) => (
   <div className="bg-white rounded-lg shadow-sm border p-6">
     <h3 className="text-lg font-semibold mb-4">Embodied Wisdom</h3>
-    
+
     <div className="grid grid-cols-2 gap-4">
       <div className="text-center p-3 bg-gray-50 rounded-lg">
         <div className="text-xl font-semibold text-gray-900">
@@ -375,21 +375,21 @@ const EmbodiedWisdomSummary: React.FC<{
         </div>
         <div className="text-xs text-gray-600">Lived Experiences</div>
       </div>
-      
+
       <div className="text-center p-3 bg-gray-50 rounded-lg">
         <div className="text-xl font-semibold text-gray-900">
           {embodiedWisdom.mistakesAndStruggles.length}
         </div>
         <div className="text-xs text-gray-600">Wisdom from Struggles</div>
       </div>
-      
+
       <div className="text-center p-3 bg-gray-50 rounded-lg">
         <div className="text-xl font-semibold text-gray-900">
           {embodiedWisdom.ordinaryMomentAwareness.length}
         </div>
         <div className="text-xs text-gray-600">Ordinary Moments</div>
       </div>
-      
+
       <div className="text-center p-3 bg-gray-50 rounded-lg">
         <div className="text-xl font-semibold text-gray-900">
           {embodiedWisdom.consistencyMetrics.length}

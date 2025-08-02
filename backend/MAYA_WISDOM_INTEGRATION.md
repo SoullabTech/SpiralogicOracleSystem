@@ -132,7 +132,7 @@ Enhanced Response
 // Before Maya Framework
 "I feel your struggle and want to help you find peace."
 
-// After Maya Framework  
+// After Maya Framework
 "I notice a pattern of struggle in your words. What part of you might already know the path to peace? I'm operating in a Reflector stance to mirror what's emotionally arising."
 ```
 

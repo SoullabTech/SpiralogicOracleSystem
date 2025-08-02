@@ -212,7 +212,7 @@ ELEVENLABS_API_KEY=your-key       # Fallback and narration
 - Unhurried, grounded delivery
 - Perfect for profound guidance
 
-### **Fire Agent Characteristics**  
+### **Fire Agent Characteristics**
 - Energetic, catalyzing presence
 - Passionate encouragement
 - Dynamic, action-inspiring tone
@@ -236,7 +236,7 @@ ELEVENLABS_API_KEY=your-key       # Fallback and narration
    ```bash
    # macOS
    afplay test_outputs/oracle_matrix_basic.wav
-   
+
    # Linux
    aplay test_outputs/oracle_matrix_basic.wav
    ```

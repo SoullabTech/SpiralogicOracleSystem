@@ -15,9 +15,9 @@ export async function buildSpiralogicResponse(context: ContextSnapshot): Promise
 
   // Choose a prompt randomly for now
   const prompt = promptSet[Math.floor(Math.random() * promptSet.length)];
-  
+
   const baseResponse = `${opening}${prompt}`;
-  
+
   // Apply Sacred Mirror Integrity Protocol if context allows
   if (context.userId && context.userQuery) {
     try {
@@ -49,7 +49,7 @@ export async function buildSpiralogicResponse(context: ContextSnapshot): Promise
 
       const mirrorResponse = await sacredMirrorProtocol.applySacredMirror(mirrorContext);
       return mirrorResponse.content;
-      
+
     } catch (error) {
       console.error('Sacred Mirror Protocol error in conversational flow:', error);
       return baseResponse; // Fallback to original
@@ -64,18 +64,18 @@ export async function buildSpiralogicResponse(context: ContextSnapshot): Promise
  */
 function determineMirrorIntensity(context: ContextSnapshot): 'gentle' | 'moderate' | 'intense' {
   // Check for shadow themes or repeated patterns
-  if (context.userQuery?.toLowerCase().includes('pattern') || 
+  if (context.userQuery?.toLowerCase().includes('pattern') ||
       context.userQuery?.toLowerCase().includes('always') ||
       context.userQuery?.toLowerCase().includes('never')) {
     return 'intense';
   }
-  
+
   // Check for emotional sensitivity indicators
-  if (context.emotion?.includes('vulnerable') || 
+  if (context.emotion?.includes('vulnerable') ||
       context.emotion?.includes('fragile')) {
     return 'gentle';
   }
-  
+
   // Default to moderate Sacred Mirror intervention
   return 'moderate';
 }

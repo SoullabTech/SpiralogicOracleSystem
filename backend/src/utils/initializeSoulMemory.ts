@@ -26,7 +26,7 @@ export async function initializeSoulMemorySystem(): Promise<{
 
     // Test database path
     const testDbPath = path.join(dbDir, 'soul_memory_test.db');
-    
+
     // Create test Soul Memory System
     const testSoulMemory = new SoulMemorySystem({
       userId: 'test_user',
@@ -97,7 +97,7 @@ async function runSoulMemoryTests(soulMemory: SoulMemorySystem): Promise<any> {
       sacredMoment: true,
       metadata: { test: true }
     });
-    
+
     testResults.memoryStorage = !!testMemory.id;
     logger.info(`✓ Memory storage: ${testResults.memoryStorage ? 'PASSED' : 'FAILED'}`);
 
@@ -135,7 +135,7 @@ async function runSoulMemoryTests(soulMemory: SoulMemorySystem): Promise<any> {
       archetype: 'Warrior',
       metadata: { test: true }
     });
-    
+
     const archetypes = await soulMemory.getActiveArchetypes('test_user');
     testResults.archetypalPatterns = archetypes.length > 0;
     logger.info(`✓ Archetypal patterns: ${testResults.archetypalPatterns ? 'PASSED' : 'FAILED'}`);
@@ -162,14 +162,14 @@ async function runSoulMemoryTests(soulMemory: SoulMemorySystem): Promise<any> {
 
 export async function createUserSoulMemory(userId: string): Promise<SoulMemorySystem> {
   const dbDir = path.join(process.cwd(), 'soul_memory_dbs');
-  
+
   // Ensure directory exists
   if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
   }
 
   const userDbPath = path.join(dbDir, `soul_memory_${userId}.db`);
-  
+
   return new SoulMemorySystem({
     userId,
     storageType: 'sqlite',

@@ -88,14 +88,14 @@ router.post('/', asyncHandler(async (req: AuthenticatedRequest, res) => {
     // Store in both traditional memory service and Soul Memory
     const [traditionalMemory, soulMemory] = await Promise.all([
       memoryService.store(
-        userId, 
-        parse.data.content, 
-        parse.data.element, 
-        parse.data.sourceAgent, 
-        parse.data.confidence, 
+        userId,
+        parse.data.content,
+        parse.data.element,
+        parse.data.sourceAgent,
+        parse.data.confidence,
         parse.data.metadata
       ),
-      parse.data.type ? 
+      parse.data.type ?
         soulMemoryService.storeMemory(userId, {
           type: parse.data.type,
           content: parse.data.content,
@@ -223,7 +223,7 @@ router.get('/sacred-moments', asyncHandler(async (req: AuthenticatedRequest, res
 
   try {
     const sacredMoments = await soulMemoryService.getSacredMoments(
-      userId, 
+      userId,
       parseInt(limit as string)
     );
 

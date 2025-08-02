@@ -53,19 +53,19 @@ export class AgentOrchestrator {
   async processQuery(input: string, userContext?: UserContext): Promise<CollectiveResponse> {
     // Analyze archetypal intent
     const intent = this.archetypalIntentAnalyzer.analyze(input);
-    
+
     // Determine orchestration strategy
     const strategy = this.determineOrchestrationStrategy(intent, userContext);
-    
+
     // Get responses from relevant agents
     const responses = await this.gatherAgentResponses(input, intent, userContext, strategy);
-    
+
     // Synthesize collective response
     const synthesis = await this.responseSynthesizer.synthesize(responses, intent, strategy);
-    
+
     // Update collective memory
     this.updateCollectiveMemory(input, responses, synthesis, userContext);
-    
+
     return synthesis;
   }
 
@@ -74,7 +74,7 @@ export class AgentOrchestrator {
     if (intent.confidence > 0.8 && !intent.secondary) {
       return intent.primary === 'fire' ? 'fire_lead' : 'water_lead';
     }
-    
+
     // Dual agent strategies
     if (intent.primary === 'fire' && intent.secondary === 'water') {
       return 'fire_water_synthesis';
@@ -82,12 +82,12 @@ export class AgentOrchestrator {
     if (intent.primary === 'water' && intent.secondary === 'fire') {
       return 'water_fire_synthesis';
     }
-    
+
     // Contextual strategies
     const recentHistory = userContext?.archetypalHistory?.slice(-3) || [];
     const recentFireCount = recentHistory.filter(h => h.primary === 'fire').length;
     const recentWaterCount = recentHistory.filter(h => h.primary === 'water').length;
-    
+
     // Balance archetypal exposure
     if (recentFireCount > recentWaterCount + 1) {
       return 'water_balance';
@@ -95,19 +95,19 @@ export class AgentOrchestrator {
     if (recentWaterCount > recentFireCount + 1) {
       return 'fire_balance';
     }
-    
+
     // Default to synthesis
     return 'dual_synthesis';
   }
 
   private async gatherAgentResponses(
-    input: string, 
-    intent: ArchetypalIntent, 
+    input: string,
+    intent: ArchetypalIntent,
     userContext?: UserContext,
     strategy?: string
   ) {
     const responses: any = {};
-    
+
     // Always get primary agent response
     if (intent.primary === 'fire' || strategy?.includes('fire')) {
       try {
@@ -116,7 +116,7 @@ export class AgentOrchestrator {
         console.error('Fire agent error:', error);
       }
     }
-    
+
     if (intent.primary === 'water' || strategy?.includes('water')) {
       try {
         responses.water = await waterAgent.getOracleResponse(input, userContext);
@@ -124,7 +124,7 @@ export class AgentOrchestrator {
         console.error('Water agent error:', error);
       }
     }
-    
+
     // Get secondary agent if synthesis strategy
     if (strategy?.includes('synthesis') || strategy?.includes('balance')) {
       if (!responses.fire) {
@@ -142,7 +142,7 @@ export class AgentOrchestrator {
         }
       }
     }
-    
+
     return responses;
   }
 
@@ -153,33 +153,33 @@ export class AgentOrchestrator {
       archetypalPatterns: [],
       emergentWisdom: []
     };
-    
+
     sessionMemory.interactions.push({
       input,
       responses,
       synthesis: synthesis.synthesis,
       timestamp: new Date().toISOString()
     });
-    
+
     // Track archetypal patterns
     sessionMemory.archetypalPatterns.push({
       primary: synthesis.primaryAgent,
       secondary: synthesis.secondaryAgent,
       balance: synthesis.archetypalBalance
     });
-    
+
     // Limit memory size
     if (sessionMemory.interactions.length > 20) {
       sessionMemory.interactions = sessionMemory.interactions.slice(-15);
     }
-    
+
     this.collectiveMemory.set(memoryKey, sessionMemory);
   }
 
   async getArchetypalInsights(userContext?: UserContext) {
     const memoryKey = userContext?.sessionId || 'global';
     const sessionMemory = this.collectiveMemory.get(memoryKey);
-    
+
     if (!sessionMemory) {
       return {
         archetypalBalance: { fire: 0.5, water: 0.5 },
@@ -187,26 +187,26 @@ export class AgentOrchestrator {
         emergentWisdom: "Your journey is just beginning. Both fire and water energies await your exploration."
       };
     }
-    
+
     // Calculate archetypal balance over time
     const patterns = sessionMemory.archetypalPatterns;
     const avgFire = patterns.reduce((sum, p) => sum + p.balance.fire, 0) / patterns.length;
     const avgWater = patterns.reduce((sum, p) => sum + p.balance.water, 0) / patterns.length;
-    
+
     // Identify dominant patterns
     const agentCounts = patterns.reduce((counts, p) => {
       counts[p.primary] = (counts[p.primary] || 0) + 1;
       return counts;
     }, {} as Record<string, number>);
-    
+
     const dominantPatterns = Object.entries(agentCounts)
       .sort(([,a], [,b]) => b - a)
       .slice(0, 2)
       .map(([agent, count]) => ({ agent, frequency: count / patterns.length }));
-    
+
     // Generate emergent wisdom
     const emergentWisdom = this.generateEmergentWisdom(avgFire, avgWater, dominantPatterns);
-    
+
     return {
       archetypalBalance: { fire: avgFire, water: avgWater },
       dominantPatterns,
@@ -217,19 +217,19 @@ export class AgentOrchestrator {
   private generateEmergentWisdom(fireBalance: number, waterBalance: number, patterns: any[]): string {
     const dominant = patterns[0]?.agent;
     const balance = Math.abs(fireBalance - waterBalance);
-    
+
     if (balance < 0.2) {
       return "You're finding beautiful balance between vision and flow, action and feeling. This integration is your gift.";
     }
-    
+
     if (fireBalance > waterBalance + 0.3) {
       return "Your fire burns bright with vision and action. Consider how water's wisdom might deepen and sustain your flames.";
     }
-    
+
     if (waterBalance > fireBalance + 0.3) {
       return "You move with water's deep wisdom and emotional intelligence. Your fire energy awaits integration to manifest your visions.";
     }
-    
+
     return "Your archetypal journey is unfolding uniquely. Trust the dance between different energies within you.";
   }
 }
@@ -238,22 +238,22 @@ class ArchetypalIntentAnalyzer {
   analyze(input: string): ArchetypalIntent {
     const lowerInput = input.toLowerCase();
     const words = lowerInput.split(' ');
-    
+
     // Fire keywords
     const fireKeywords = [
-      'vision', 'create', 'passion', 'action', 'dream', 'manifest', 'power', 
+      'vision', 'create', 'passion', 'action', 'dream', 'manifest', 'power',
       'transform', 'ignite', 'spark', 'burn', 'energy', 'drive', 'ambition'
     ];
-    
-    // Water keywords  
+
+    // Water keywords
     const waterKeywords = [
       'feel', 'emotion', 'flow', 'heart', 'heal', 'intuition', 'sense',
       'emotional', 'relationship', 'connect', 'depth', 'compassion', 'empathy'
     ];
-    
+
     const fireScore = this.calculateKeywordScore(words, fireKeywords);
     const waterScore = this.calculateKeywordScore(words, waterKeywords);
-    
+
     // Determine primary and secondary archetypes
     if (fireScore > waterScore) {
       const confidence = fireScore / (fireScore + waterScore);
@@ -285,7 +285,7 @@ class ArchetypalIntentAnalyzer {
   }
 
   private calculateKeywordScore(words: string[], keywords: string[]): number {
-    const matches = words.filter(word => 
+    const matches = words.filter(word =>
       keywords.some(keyword => word.includes(keyword) || keyword.includes(word))
     );
     return matches.length / words.length;
@@ -295,7 +295,7 @@ class ArchetypalIntentAnalyzer {
     const matchedKeywords = words.filter(word =>
       keywords.some(keyword => word.includes(keyword) || keyword.includes(word))
     );
-    
+
     return [
       `Primary archetype: ${primary} (score: ${primaryScore.toFixed(2)})`,
       `Matched keywords: ${matchedKeywords.join(', ')}`,
@@ -307,20 +307,20 @@ class ArchetypalIntentAnalyzer {
 class ResponseSynthesizer {
   async synthesize(responses: any, intent: ArchetypalIntent, strategy: string): Promise<CollectiveResponse> {
     const { fire, water } = responses;
-    
+
     // Calculate archetypal balance
     const archetypalBalance = this.calculateArchetypalBalance(fire, water, intent);
-    
+
     // Generate synthesis based on strategy
     const synthesis = await this.generateSynthesis(fire, water, intent, strategy);
-    
+
     // Determine primary and secondary agents
     const primaryAgent = intent.primary;
     const secondaryAgent = intent.secondary;
-    
+
     // Generate collective wisdom
     const collectiveWisdom = this.generateCollectiveWisdom(fire, water, intent);
-    
+
     return {
       primaryAgent,
       secondaryAgent,
@@ -341,7 +341,7 @@ class ResponseSynthesizer {
     // Base balance on intent confidence
     let fireWeight = intent.primary === 'fire' ? intent.confidence : (1 - intent.confidence);
     let waterWeight = intent.primary === 'water' ? intent.confidence : (1 - intent.confidence);
-    
+
     // Adjust based on response quality/relevance
     if (fire?.metadata?.authenticityLevel) {
       fireWeight *= fire.metadata.authenticityLevel;
@@ -349,7 +349,7 @@ class ResponseSynthesizer {
     if (water?.metadata?.authenticityLevel) {
       waterWeight *= water.metadata.authenticityLevel;
     }
-    
+
     // Normalize
     const total = fireWeight + waterWeight;
     return {
@@ -365,24 +365,24 @@ class ResponseSynthesizer {
     if (strategy === 'water_lead' && water) {
       return water.message;
     }
-    
+
     // Synthesis strategies
     if (fire && water) {
       const fireMessage = fire.message || '';
       const waterMessage = water.message || '';
-      
+
       if (strategy === 'fire_water_synthesis') {
         return `${fireMessage}\n\nAnd as your vision clarifies, your emotional wisdom adds: ${waterMessage}`;
       }
-      
+
       if (strategy === 'water_fire_synthesis') {
         return `${waterMessage}\n\nAs you honor these feelings, your creative fire responds: ${fireMessage}`;
       }
-      
+
       // Default dual synthesis
       return `Your fire energy says: ${fireMessage}\n\nYour water wisdom adds: ${waterMessage}\n\nTogether, they invite you to honor both vision and feeling as you move forward.`;
     }
-    
+
     // Fallback to available response
     return fire?.message || water?.message || "I'm here to witness your journey with both fire and water wisdom.";
   }
@@ -394,15 +394,15 @@ class ResponseSynthesizer {
       balanced: "You're integrating both vision and feeling beautifully. This is the path of wholeness.",
       evolving: "I see both your creative fire and emotional depth evolving. Trust this archetypal dance."
     };
-    
+
     if (intent.confidence > 0.8) {
       return intent.primary === 'fire' ? wisdomTemplates.fire_dominant : wisdomTemplates.water_dominant;
     }
-    
+
     if (intent.secondary) {
       return wisdomTemplates.balanced;
     }
-    
+
     return wisdomTemplates.evolving;
   }
 
@@ -419,11 +419,11 @@ class ResponseSynthesizer {
   private determineTransformationGoal(fire: any, water: any, intent: ArchetypalIntent): string {
     const fireGoal = fire?.metadata?.transformationGoal;
     const waterGoal = water?.metadata?.transformationGoal;
-    
+
     if (fireGoal && waterGoal) {
       return `${fireGoal}_${waterGoal}_integration`;
     }
-    
+
     return fireGoal || waterGoal || 'archetypal_integration';
   }
 }

@@ -101,7 +101,7 @@
   ```bash
   # Using PM2
   pm2 start dist/server-simple.js --name soullab-backend
-  
+
   # Or using systemd
   sudo systemctl start soullab-backend
   ```
@@ -117,7 +117,7 @@
   ```bash
   vercel --prod
   ```
-  
+
   OR
 
 - [ ] **Self-Host Frontend**
@@ -133,16 +133,16 @@
   server {
       listen 443 ssl http2;
       server_name your-domain.com;
-      
+
       ssl_certificate /path/to/cert.pem;
       ssl_certificate_key /path/to/key.pem;
-      
+
       location /api {
           proxy_pass http://localhost:10000;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
       }
-      
+
       location / {
           root /var/www/soullab;
           try_files $uri $uri/ /index.html;

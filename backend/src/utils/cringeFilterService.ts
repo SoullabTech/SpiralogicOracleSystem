@@ -9,4 +9,3 @@ export const cringeFilterService = {
       return text
     }
   }
-  

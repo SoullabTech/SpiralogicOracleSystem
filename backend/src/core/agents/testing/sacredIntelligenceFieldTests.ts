@@ -335,9 +335,9 @@ export class SacredIntelligenceFieldTester {
 
     for (const test of tests) {
       logger.info(`Running test: ${test.testId} - ${test.description}`);
-      
+
       const startTime = Date.now();
-      
+
       try {
         // Run the query through the optimized oracle
         const response = await optimizedMainOracle.processOptimizedQuery({
@@ -373,7 +373,7 @@ export class SacredIntelligenceFieldTester {
 
       } catch (error) {
         logger.error(`Test ${test.testId} ERROR:`, error);
-        
+
         const failureResult: TestResult = {
           testId: test.testId,
           passed: false,
@@ -383,7 +383,7 @@ export class SacredIntelligenceFieldTester {
           recommendations: ['System error - investigate and fix'],
           duration: Date.now() - startTime
         };
-        
+
         results.push(failureResult);
       }
     }
@@ -399,13 +399,13 @@ export class SacredIntelligenceFieldTester {
 
     // Emotional Safety Analysis
     const emotionalSafety = this.calculateEmotionalSafety(content, test.riskFactors);
-    
+
     // Transformation Potential
     const transformationPotential = response.performanceMetrics?.transformationPotential || 0;
-    
+
     // Grounding Analysis
     const grounding = this.calculateGrounding(content, sacredSynthesis);
-    
+
     // Hope Analysis
     const hope = this.calculateHope(content, sacredSynthesis);
 
@@ -427,7 +427,7 @@ export class SacredIntelligenceFieldTester {
     ];
 
     const lowerContent = content.toLowerCase();
-    
+
     for (const phrase of triggeringPhrases) {
       if (lowerContent.includes(phrase)) {
         safety -= 0.2;
@@ -463,7 +463,7 @@ export class SacredIntelligenceFieldTester {
     ];
 
     const lowerContent = content.toLowerCase();
-    
+
     for (const keyword of groundingKeywords) {
       if (lowerContent.includes(keyword)) {
         grounding += 0.1;
@@ -471,7 +471,7 @@ export class SacredIntelligenceFieldTester {
     }
 
     // Check for integration practices
-    if (sacredSynthesis.ritualElements?.includes('🌱') || 
+    if (sacredSynthesis.ritualElements?.includes('🌱') ||
         sacredSynthesis.ritualElements?.includes('🌍')) {
       grounding += 0.2;
     }
@@ -488,7 +488,7 @@ export class SacredIntelligenceFieldTester {
     ];
 
     const lowerContent = content.toLowerCase();
-    
+
     for (const keyword of hopeKeywords) {
       if (lowerContent.includes(keyword)) {
         hope += 0.1;

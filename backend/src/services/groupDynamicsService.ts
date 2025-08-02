@@ -83,7 +83,7 @@ export class GroupDynamicsService {
     try {
       // Get current group dynamics
       const dynamics = await this.getCurrentDynamics(retreatId, false);
-      
+
       // Update participant state
       const participantState: ParticipantState = {
         participantId,
@@ -97,13 +97,13 @@ export class GroupDynamicsService {
 
       // Store updated state
       await this.storeParticipantState(retreatId, participantState);
-      
+
       // Recalculate group dynamics
       await this.recalculateGroupDynamics(retreatId);
-      
-      logger.info('Participant state updated in group dynamics', { 
-        participantId, 
-        retreatId 
+
+      logger.info('Participant state updated in group dynamics', {
+        participantId,
+        retreatId
       });
     } catch (error) {
       logger.error('Failed to update participant state', error);
@@ -116,19 +116,19 @@ export class GroupDynamicsService {
     try {
       // Get all participant states
       const participantStates = await this.getAllParticipantStates(retreatId);
-      
+
       // Calculate elemental balance
       const elementalBalance = this.calculateElementalBalance(participantStates);
-      
+
       // Calculate energy field
       const energyField = this.calculateEnergyField(participantStates);
-      
+
       // Generate coherence map
       const coherenceMap = await this.generateCoherenceMap(retreatId, participantStates);
-      
+
       // Identify collective patterns
       const collectivePatterns = this.identifyCollectivePatterns(participantStates);
-      
+
       // Generate recommendations
       const recommendations = this.generateGroupRecommendations(
         elementalBalance,
@@ -169,7 +169,7 @@ export class GroupDynamicsService {
 
       // Update session field
       const currentField = await this.getSessionField(sessionId);
-      
+
       // Add participant contribution
       const updatedField = this.integrateParticipantContribution(
         currentField,
@@ -223,19 +223,19 @@ export class GroupDynamicsService {
   private determineContribution(checkIn: any): ParticipantState['contribution'] {
     const { energyLevel, emotionalTone } = checkIn.morningState;
     const { fire, water, earth, air, aether } = checkIn.elementalBalance;
-    
+
     // Find dominant element for today
     const elements = { fire, water, earth, air, aether };
     const dominant = Object.entries(elements)
       .sort(([,a], [,b]) => b - a)[0][0];
-    
+
     // Map contribution based on dominant element and energy
     if (dominant === 'earth' && energyLevel >= 6) return 'grounding';
     if (dominant === 'fire' && energyLevel >= 7) return 'catalyzing';
     if (dominant === 'water' && emotionalTone.includes('compassion')) return 'holding';
     if (dominant === 'air' && energyLevel >= 6) return 'flowing';
     if (dominant === 'aether' || energyLevel >= 8) return 'integrating';
-    
+
     // Default based on energy level
     return energyLevel >= 6 ? 'flowing' : 'holding';
   }
@@ -246,7 +246,7 @@ export class GroupDynamicsService {
       .select('preferredName, firstName')
       .eq('id', participantId)
       .single();
-    
+
     return data?.preferredName || data?.firstName || 'Participant';
   }
 
@@ -256,7 +256,7 @@ export class GroupDynamicsService {
       .select('oracleElement')
       .eq('id', participantId)
       .single();
-    
+
     return data?.oracleElement || 'aether';
   }
 
@@ -273,7 +273,7 @@ export class GroupDynamicsService {
 
   private async recalculateGroupDynamics(retreatId: string): Promise<void> {
     const dynamics = await this.getCurrentDynamics(retreatId, false);
-    
+
     await supabase
       .from('group_dynamics')
       .upsert({
@@ -288,7 +288,7 @@ export class GroupDynamicsService {
       .from('participant_states')
       .select('state_data')
       .eq('retreat_id', retreatId);
-    
+
     return data?.map(d => d.state_data) || [];
   }
 
@@ -317,15 +317,15 @@ export class GroupDynamicsService {
     // Calculate average energies
     const elementAverages: any = {};
     Object.entries(elementEnergies).forEach(([element, energies]) => {
-      elementAverages[element] = energies.length > 0 
-        ? (energies as number[]).reduce((a, b) => a + b, 0) / energies.length 
+      elementAverages[element] = energies.length > 0
+        ? (energies as number[]).reduce((a, b) => a + b, 0) / energies.length
         : 0;
     });
 
     // Find dominant and missing
     const dominant = Object.entries(elementCounts)
       .sort(([,a], [,b]) => (b as number) - (a as number))[0][0];
-    
+
     const missing = Object.entries(elementCounts)
       .filter(([,count]) => count === 0)
       .map(([element]) => element);
@@ -348,22 +348,22 @@ export class GroupDynamicsService {
   private calculateEnergyField(states: ParticipantState[]): EnergyField {
     const energyLevels = states.map(s => s.currentEnergy);
     const avgEnergy = energyLevels.reduce((a, b) => a + b, 0) / energyLevels.length;
-    
+
     // Calculate intensity
     const intensity = Math.min(10, Math.round(avgEnergy));
-    
+
     // Calculate coherence (inverse of variance)
     const variance = this.calculateVariance(energyLevels);
     const coherence = Math.max(1, Math.round(10 - variance));
-    
+
     // Determine flow
     let flow: EnergyField['flow'] = 'flowing';
     if (avgEnergy < 4 || coherence < 4) flow = 'blocked';
     if (avgEnergy > 7 && coherence > 7) flow = 'accelerating';
-    
+
     // Identify vortex points
     const vortexPoints = this.identifyVortexPoints(states);
-    
+
     // Generate field notes
     const fieldNotes = this.generateFieldNotes(intensity, coherence, flow, vortexPoints);
 
@@ -408,14 +408,14 @@ export class GroupDynamicsService {
 
     // Identify clusters
     const clusters = this.identifyClusters(states, connectionMap);
-    
+
     // Find isolated participants
     const connectedParticipants = new Set<string>();
     connections.forEach(c => {
       connectedParticipants.add(c.participant1);
       connectedParticipants.add(c.participant2);
     });
-    
+
     const isolatedParticipants = states
       .map(s => s.participantId)
       .filter(id => !connectedParticipants.has(id));
@@ -450,7 +450,7 @@ export class GroupDynamicsService {
     }
 
     // Check for high coherence pattern
-    const supportiveStates = states.filter(s => 
+    const supportiveStates = states.filter(s =>
       s.contribution === 'holding' || s.contribution === 'integrating'
     );
     if (supportiveStates.length > states.length * 0.6) {
@@ -597,16 +597,16 @@ export class GroupDynamicsService {
 
     if (intensity >= 8) notes.push('High energy field - channel wisely');
     if (intensity <= 4) notes.push('Low energy field - gentle restoration needed');
-    
+
     if (coherence >= 8) notes.push('Excellent group coherence');
     if (coherence <= 4) notes.push('Fragmented field - unify through shared practice');
-    
+
     if (flow === 'blocked') notes.push('Energy blockages detected');
     if (flow === 'accelerating') notes.push('Rapid transformation potential');
-    
+
     const catalysts = vortexPoints.filter(v => v.type === 'catalyst').length;
     if (catalysts > 2) notes.push(`${catalysts} catalysts active - expect breakthroughs`);
-    
+
     const disruptors = vortexPoints.filter(v => v.type === 'disruptor').length;
     if (disruptors > 0) notes.push(`${disruptors} participants need support`);
 
@@ -628,7 +628,7 @@ export class GroupDynamicsService {
           visited,
           states
         );
-        
+
         if (cluster.participants.length > 2) {
           clusters.push(cluster);
         }
@@ -651,16 +651,16 @@ export class GroupDynamicsService {
     while (queue.length > 0) {
       const current = queue.shift()!;
       if (visited.has(current)) continue;
-      
+
       visited.add(current);
       participants.push(current);
-      
+
       // Track elements
       const state = states.find(s => s.participantId === current);
       if (state) {
         elements[state.element] = (elements[state.element] || 0) + 1;
       }
-      
+
       // Add connected participants
       const connections = connectionMap.get(current) || new Set();
       connections.forEach(connected => {
@@ -677,7 +677,7 @@ export class GroupDynamicsService {
     // Calculate cluster coherence
     const clusterStates = states.filter(s => participants.includes(s.participantId));
     const energies = clusterStates.map(s => s.currentEnergy);
-    const coherence = energies.length > 0 
+    const coherence = energies.length > 0
       ? 10 - this.calculateVariance(energies)
       : 5;
 
@@ -694,7 +694,7 @@ export class GroupDynamicsService {
 
   private determineClusterPurpose(states: ParticipantState[]): string {
     const contributions = states.map(s => s.contribution);
-    
+
     if (contributions.filter(c => c === 'grounding').length > states.length / 2) {
       return 'Stability anchor';
     }
@@ -707,54 +707,54 @@ export class GroupDynamicsService {
     if (contributions.filter(c => c === 'integrating').length > states.length / 2) {
       return 'Integration circle';
     }
-    
+
     return 'Mixed support';
   }
 
   private calculateOverallCoherence(connections: Connection[], totalParticipants: number): number {
     if (totalParticipants < 2) return 10;
-    
+
     // Calculate based on connection density and quality
     const possibleConnections = (totalParticipants * (totalParticipants - 1)) / 2;
     const connectionDensity = connections.length / possibleConnections;
-    
+
     // Calculate average connection strength
     const avgStrength = connections.length > 0
       ? connections.reduce((sum, c) => sum + c.strength, 0) / connections.length
       : 0;
-    
+
     // Weight supportive connections higher
     const supportiveRatio = connections.filter(c => c.type === 'supportive').length / connections.length;
-    
+
     // Combined coherence score
     const coherence = (connectionDensity * 3 + avgStrength / 10 * 3 + supportiveRatio * 4);
-    
+
     return Math.min(10, Math.round(coherence));
   }
 
   private integrateParticipantContribution(currentField: any, participation: any): any {
     // Update field based on participation
     const field = { ...currentField };
-    
+
     // Add energy contribution
     field.totalEnergy = (field.totalEnergy || 0) + participation.engagement.presenceLevel;
     field.participantCount = (field.participantCount || 0) + 1;
-    
+
     // Track energy contributions
     if (!field.energyContributions) field.energyContributions = {};
-    field.energyContributions[participation.engagement.energyContribution] = 
+    field.energyContributions[participation.engagement.energyContribution] =
       (field.energyContributions[participation.engagement.energyContribution] || 0) + 1;
-    
+
     // Update coherence
     field.coherenceReadings = field.coherenceReadings || [];
     field.coherenceReadings.push(participation.groupResonance.groupCoherence);
-    
+
     // Track breakthroughs
     if (participation.engagement.breakthroughs?.length > 0) {
       field.breakthroughs = field.breakthroughs || [];
       field.breakthroughs.push(...participation.engagement.breakthroughs);
     }
-    
+
     return field;
   }
 

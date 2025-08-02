@@ -116,12 +116,12 @@ export class ArchetypalVoiceSelector {
    */
   static getVoiceProfile(archetype: string): ArchetypalVoiceProfile {
     const profile = ARCHETYPAL_VOICE_PROFILES[archetype.toLowerCase()];
-    
+
     if (!profile) {
       // Default to water for unknown archetypes (nurturing fallback)
       return ARCHETYPAL_VOICE_PROFILES.water;
     }
-    
+
     return profile;
   }
 
@@ -129,25 +129,25 @@ export class ArchetypalVoiceSelector {
    * Get blended voice settings for dual archetypal responses
    */
   static getBlendedVoiceProfile(
-    primary: string, 
+    primary: string,
     secondary?: string,
     blendRatio: number = 0.7
   ): ArchetypalVoiceProfile {
     const primaryProfile = this.getVoiceProfile(primary);
-    
+
     if (!secondary) {
       return primaryProfile;
     }
-    
+
     const secondaryProfile = this.getVoiceProfile(secondary);
-    
+
     // Create blended voice settings
     const blendedSettings = {
-      stability: primaryProfile.voiceSettings.stability * blendRatio + 
+      stability: primaryProfile.voiceSettings.stability * blendRatio +
                  secondaryProfile.voiceSettings.stability * (1 - blendRatio),
-      similarity_boost: primaryProfile.voiceSettings.similarity_boost * blendRatio + 
+      similarity_boost: primaryProfile.voiceSettings.similarity_boost * blendRatio +
                        secondaryProfile.voiceSettings.similarity_boost * (1 - blendRatio),
-      style: (primaryProfile.voiceSettings.style || 0.5) * blendRatio + 
+      style: (primaryProfile.voiceSettings.style || 0.5) * blendRatio +
              (secondaryProfile.voiceSettings.style || 0.5) * (1 - blendRatio),
       use_speaker_boost: primaryProfile.voiceSettings.use_speaker_boost
     };
@@ -165,7 +165,7 @@ export class ArchetypalVoiceSelector {
    */
   static enhanceTextForArchetype(text: string, archetype: string): string {
     const profile = this.getVoiceProfile(archetype);
-    
+
     // Add archetypal voice cues based on speaking style
     switch (archetype.toLowerCase()) {
       case 'fire':
@@ -226,7 +226,7 @@ export class ArchetypalVoiceSelector {
     voiceProfile: ArchetypalVoiceProfile;
     synthesisMetadata: any;
   } {
-    const voiceProfile = secondary 
+    const voiceProfile = secondary
       ? this.getBlendedVoiceProfile(primary, secondary, confidence)
       : this.getVoiceProfile(primary);
 

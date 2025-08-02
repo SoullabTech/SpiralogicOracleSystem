@@ -11,7 +11,7 @@ const hasRetreatAccess = async (req: any, res: any, next: any) => {
   try {
     const userId = req.user?.id;
     const { retreatId } = req.params;
-    
+
     // Check if user is part of this retreat
     const { data: participant } = await supabase
       .from('retreat_participants')
@@ -19,14 +19,14 @@ const hasRetreatAccess = async (req: any, res: any, next: any) => {
       .eq('retreat_id', retreatId)
       .eq('user_id', userId)
       .single();
-      
+
     if (!participant) {
       return res.status(403).json({
         success: false,
         error: 'Access denied to this retreat'
       });
     }
-    
+
     req.participant = participant;
     next();
   } catch (error) {
@@ -38,7 +38,7 @@ const hasRetreatAccess = async (req: any, res: any, next: any) => {
 retreatModeRouter.get('/:retreatId', authenticate, hasRetreatAccess, async (req, res) => {
   try {
     const { retreatId } = req.params;
-    
+
     // Get all participants in retreat
     const { data: participants, error } = await supabase
       .from('retreat_participants')
@@ -49,16 +49,16 @@ retreatModeRouter.get('/:retreatId', authenticate, hasRetreatAccess, async (req,
       `)
       .eq('retreat_id', retreatId)
       .order('name');
-      
+
     if (error) throw error;
-    
+
     // Get retreat metadata (if exists)
     const { data: retreatInfo } = await supabase
       .from('retreats')
       .select('*')
       .eq('id', retreatId)
       .single();
-    
+
     res.json({
       success: true,
       data: {
@@ -67,7 +67,7 @@ retreatModeRouter.get('/:retreatId', authenticate, hasRetreatAccess, async (req,
         totalParticipants: participants?.length || 0
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching retreat:', error);
     res.status(500).json({
@@ -81,7 +81,7 @@ retreatModeRouter.get('/:retreatId', authenticate, hasRetreatAccess, async (req,
 retreatModeRouter.get('/:retreatId/participant/:participantId', authenticate, hasRetreatAccess, async (req, res) => {
   try {
     const { retreatId, participantId } = req.params;
-    
+
     const { data: participant, error } = await supabase
       .from('retreat_participants')
       .select(`
@@ -92,14 +92,14 @@ retreatModeRouter.get('/:retreatId/participant/:participantId', authenticate, ha
       .eq('retreat_id', retreatId)
       .eq('id', participantId)
       .single();
-      
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data: participant
     });
-    
+
   } catch (error) {
     console.error('Error fetching participant:', error);
     res.status(500).json({
@@ -119,7 +119,7 @@ retreatModeRouter.patch('/:retreatId/my-states', authenticate, hasRetreatAccess,
   try {
     const { retreatId } = req.params;
     const userId = req.user!.id;
-    
+
     const validationResult = updateStatesSchema.safeParse(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
@@ -127,7 +127,7 @@ retreatModeRouter.patch('/:retreatId/my-states', authenticate, hasRetreatAccess,
         error: 'Invalid state data'
       });
     }
-    
+
     const updateData: any = {};
     if (validationResult.data.currentState !== undefined) {
       updateData.current_state = validationResult.data.currentState;
@@ -135,7 +135,7 @@ retreatModeRouter.patch('/:retreatId/my-states', authenticate, hasRetreatAccess,
     if (validationResult.data.becomingState !== undefined) {
       updateData.becoming_state = validationResult.data.becomingState;
     }
-    
+
     const { data, error } = await supabase
       .from('retreat_participants')
       .update(updateData)
@@ -143,14 +143,14 @@ retreatModeRouter.patch('/:retreatId/my-states', authenticate, hasRetreatAccess,
       .eq('user_id', userId)
       .select()
       .single();
-      
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data
     });
-    
+
   } catch (error) {
     console.error('Error updating states:', error);
     res.status(500).json({
@@ -173,7 +173,7 @@ retreatModeRouter.post('/:retreatId/journal', authenticate, hasRetreatAccess, as
   try {
     const { retreatId } = req.params;
     const userId = req.user!.id;
-    
+
     const validationResult = journalEntrySchema.safeParse(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
@@ -181,13 +181,13 @@ retreatModeRouter.post('/:retreatId/journal', authenticate, hasRetreatAccess, as
         error: 'Invalid journal entry data'
       });
     }
-    
+
     const entry = {
       ...validationResult.data,
       timestamp: new Date().toISOString(),
       id: crypto.randomUUID()
     };
-    
+
     // Get current participant
     const { data: participant } = await supabase
       .from('retreat_participants')
@@ -195,10 +195,10 @@ retreatModeRouter.post('/:retreatId/journal', authenticate, hasRetreatAccess, as
       .eq('retreat_id', retreatId)
       .eq('user_id', userId)
       .single();
-      
+
     const currentEntries = participant?.journal_entries || [];
     const updatedEntries = [...currentEntries, entry];
-    
+
     const { data, error } = await supabase
       .from('retreat_participants')
       .update({ journal_entries: updatedEntries })
@@ -206,14 +206,14 @@ retreatModeRouter.post('/:retreatId/journal', authenticate, hasRetreatAccess, as
       .eq('user_id', userId)
       .select()
       .single();
-      
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data: entry
     });
-    
+
   } catch (error) {
     console.error('Error adding journal entry:', error);
     res.status(500).json({
@@ -228,16 +228,16 @@ retreatModeRouter.get('/:retreatId/my-journal', authenticate, hasRetreatAccess, 
   try {
     const { retreatId } = req.params;
     const userId = req.user!.id;
-    
+
     const { data: participant } = await supabase
       .from('retreat_participants')
       .select('journal_entries')
       .eq('retreat_id', retreatId)
       .eq('user_id', userId)
       .single();
-      
+
     const entries = participant?.journal_entries || [];
-    
+
     res.json({
       success: true,
       data: {
@@ -245,7 +245,7 @@ retreatModeRouter.get('/:retreatId/my-journal', authenticate, hasRetreatAccess, 
         count: entries.length
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching journal:', error);
     res.status(500).json({
@@ -260,7 +260,7 @@ retreatModeRouter.post('/:retreatId/generate-report', authenticate, async (req, 
   try {
     const { retreatId } = req.params;
     const userId = req.user!.id;
-    
+
     // Check if user is facilitator or participant
     const { data: participant } = await supabase
       .from('retreat_participants')
@@ -268,14 +268,14 @@ retreatModeRouter.post('/:retreatId/generate-report', authenticate, async (req, 
       .eq('retreat_id', retreatId)
       .eq('user_id', userId)
       .single();
-      
+
     if (!participant) {
       return res.status(403).json({
         success: false,
         error: 'Access denied'
       });
     }
-    
+
     // Check if participant already has a report
     if (participant.spiralogic_report_id) {
       return res.status(400).json({
@@ -283,7 +283,7 @@ retreatModeRouter.post('/:retreatId/generate-report', authenticate, async (req, 
         error: 'Report already exists for this participant'
       });
     }
-    
+
     // Birth data should be provided in request
     const { birthData } = req.body;
     if (!birthData) {
@@ -292,29 +292,29 @@ retreatModeRouter.post('/:retreatId/generate-report', authenticate, async (req, 
         error: 'Birth data required'
       });
     }
-    
+
     // Generate report using the existing service
     const birthChart = await spiralogicAstrologyService.calculatePreciseBirthChart(birthData);
     birthChart.userId = userId;
-    
+
     const savedChart = await spiralogicAstrologyService.saveBirthChart(
       userId,
       birthData,
       birthChart
     );
-    
+
     const phaseMapping = spiralogicAstrologyService.mapToSpiralogicPhases(birthChart);
-    
+
     const report = await spiralogicAstrologyService.generateSpiralogicReport(
       userId,
       savedChart.id,
       birthChart,
       phaseMapping
     );
-    
+
     // Save report
     const savedReport = await spiralogicAstrologyService.saveReport(report);
-    
+
     // Update participant with report reference
     const { error: updateError } = await supabase
       .from('retreat_participants')
@@ -324,9 +324,9 @@ retreatModeRouter.post('/:retreatId/generate-report', authenticate, async (req, 
         depth_agent: determineDepthAgent(report.elementalInsights)
       })
       .eq('id', participant.id);
-      
+
     if (updateError) throw updateError;
-    
+
     res.json({
       success: true,
       data: {
@@ -340,7 +340,7 @@ retreatModeRouter.post('/:retreatId/generate-report', authenticate, async (req, 
         }
       }
     });
-    
+
   } catch (error) {
     console.error('Error generating retreat report:', error);
     res.status(500).json({
@@ -363,7 +363,7 @@ const setupRetreatSchema = z.object({
 retreatModeRouter.post('/setup', authenticate, async (req, res) => {
   try {
     const facilitatorId = req.user!.id;
-    
+
     const validationResult = setupRetreatSchema.safeParse(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
@@ -371,10 +371,10 @@ retreatModeRouter.post('/setup', authenticate, async (req, res) => {
         error: 'Invalid retreat setup data'
       });
     }
-    
+
     const { name, participants } = validationResult.data;
     const retreatId = `retreat-${Date.now()}`;
-    
+
     // Create retreat record
     const { data: retreat, error: retreatError } = await supabase
       .from('retreats')
@@ -386,9 +386,9 @@ retreatModeRouter.post('/setup', authenticate, async (req, res) => {
       })
       .select()
       .single();
-      
+
     if (retreatError) throw retreatError;
-    
+
     // Create participant records
     const participantInserts = participants.map(p => ({
       retreat_id: retreatId,
@@ -397,14 +397,14 @@ retreatModeRouter.post('/setup', authenticate, async (req, res) => {
       // Create temporary user if email provided
       user_id: crypto.randomUUID() // Simplified - would create actual user accounts
     }));
-    
+
     const { data: createdParticipants, error: participantsError } = await supabase
       .from('retreat_participants')
       .insert(participantInserts)
       .select();
-      
+
     if (participantsError) throw participantsError;
-    
+
     res.json({
       success: true,
       data: {
@@ -413,7 +413,7 @@ retreatModeRouter.post('/setup', authenticate, async (req, res) => {
         accessUrl: `/retreat/${retreatId}`
       }
     });
-    
+
   } catch (error) {
     console.error('Error setting up retreat:', error);
     res.status(500).json({
@@ -428,36 +428,36 @@ function determineDepthAgent(elementalInsights: any): string {
   // Determine which elemental agent best matches the participant
   let dominantElement = 'water'; // Default to water for depth work
   let maxStrength = 0;
-  
+
   Object.entries(elementalInsights).forEach(([element, insight]: [string, any]) => {
     if (insight.strength > maxStrength) {
       maxStrength = insight.strength;
       dominantElement = element;
     }
   });
-  
+
   // Map elements to depth agents
   const agentMap: { [key: string]: string } = {
     fire: 'fire',
-    water: 'water', 
+    water: 'water',
     earth: 'earth',
     air: 'air'
   };
-  
+
   return agentMap[dominantElement] || 'water';
 }
 
 function getDominantElement(elementalInsights: any): string {
   let dominant = '';
   let maxStrength = 0;
-  
+
   Object.entries(elementalInsights).forEach(([element, insight]: [string, any]) => {
     if (insight.strength > maxStrength) {
       maxStrength = insight.strength;
       dominant = element;
     }
   });
-  
+
   return dominant || 'balanced';
 }
 
@@ -465,7 +465,7 @@ function getDominantElement(elementalInsights: any): string {
 retreatModeRouter.get('/:retreatId/prompts', authenticate, hasRetreatAccess, async (req, res) => {
   try {
     const { day } = req.query;
-    
+
     // Retreat-specific prompts based on day/phase
     const promptsByDay: { [key: string]: any } = {
       '1': {
@@ -505,9 +505,9 @@ retreatModeRouter.get('/:retreatId/prompts', authenticate, hasRetreatAccess, asy
         }
       }
     };
-    
+
     const dayPrompts = promptsByDay[day as string] || promptsByDay['1'];
-    
+
     res.json({
       success: true,
       data: {
@@ -521,7 +521,7 @@ retreatModeRouter.get('/:retreatId/prompts', authenticate, hasRetreatAccess, asy
           },
           {
             name: 'Elemental Walk',
-            time: '10:00 AM', 
+            time: '10:00 AM',
             description: 'Silent nature immersion'
           },
           {
@@ -537,7 +537,7 @@ retreatModeRouter.get('/:retreatId/prompts', authenticate, hasRetreatAccess, asy
         ]
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching prompts:', error);
     res.status(500).json({

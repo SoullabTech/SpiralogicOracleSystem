@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  UserHolisticProfile, 
+import {
+  UserHolisticProfile,
   HolisticDomain,
   DevelopmentStage,
   DevelopmentGoal,
@@ -154,16 +154,16 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
         {activeView === 'overview' && (
           <div className="space-y-6">
             <HolisticOverview profile={userProfile} pathway={pathway} />
-            <AdaptiveInterface 
-              userProfile={userProfile} 
-              onProfileUpdate={handleProfileUpdate} 
+            <AdaptiveInterface
+              userProfile={userProfile}
+              onProfileUpdate={handleProfileUpdate}
             />
           </div>
         )}
 
         {activeView === 'pathway' && pathway && (
-          <PathwayView 
-            pathway={pathway} 
+          <PathwayView
+            pathway={pathway}
             onStepComplete={(stepId) => {
               // Handle step completion
               console.log('Step completed:', stepId);
@@ -172,7 +172,7 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
         )}
 
         {activeView === 'assessment' && (
-          <AssessmentView 
+          <AssessmentView
             currentProfile={userProfile}
             onAssessmentComplete={handleProfileUpdate}
           />
@@ -205,12 +205,12 @@ const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway })
       {/* Current State Summary */}
       <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border p-6">
         <h2 className="text-lg font-semibold mb-4">Development Overview</h2>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {profile.domains.map(domain => (
             <div key={domain.domain} className="text-center">
               <div className="w-16 h-16 mx-auto mb-2 rounded-full border-4 border-gray-200 flex items-center justify-center">
-                <div 
+                <div
                   className={`w-12 h-12 rounded-full ${getDomainColor(domain.currentLevel)} flex items-center justify-center text-white font-bold`}
                 >
                   {domain.currentLevel.toFixed(1)}
@@ -226,7 +226,7 @@ const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway })
         <div className="bg-blue-50 rounded-lg p-4">
           <h3 className="font-medium text-blue-900 mb-2">Current Phase</h3>
           <p className="text-blue-700">{pathway?.currentPhase || 'Assessment Complete'}</p>
-          
+
           {pathway && (
             <div className="mt-3">
               <div className="flex justify-between text-sm text-blue-700 mb-1">
@@ -234,7 +234,7 @@ const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway })
                 <span>{getProgressPercentage().toFixed(1)}%</span>
               </div>
               <div className="w-full bg-blue-200 rounded-full h-2">
-                <div 
+                <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${getProgressPercentage()}%` }}
                 />
@@ -299,7 +299,7 @@ const PathwayView: React.FC<PathwayViewProps> = ({ pathway, onStepComplete }) =>
         <p className="text-gray-600 mb-4">
           Current Phase: <span className="font-medium">{pathway.currentPhase}</span>
         </p>
-        
+
         {nextStep && (
           <div className="bg-blue-50 rounded-lg p-4 mb-6">
             <h3 className="font-medium text-blue-900 mb-2">Next Step</h3>
@@ -325,9 +325,9 @@ const PathwayView: React.FC<PathwayViewProps> = ({ pathway, onStepComplete }) =>
         <h3 className="text-lg font-semibold mb-4">Pathway Steps</h3>
         <div className="space-y-4">
           {pathway.pathwaySteps.map((step, index) => (
-            <PathwayStepCard 
-              key={step.id} 
-              step={step} 
+            <PathwayStepCard
+              key={step.id}
+              step={step}
               stepNumber={index + 1}
               onComplete={() => onStepComplete(step.id)}
             />
@@ -484,16 +484,16 @@ const AssessmentView: React.FC<AssessmentViewProps> = ({ currentProfile, onAsses
               {currentDomainIndex + 1} of {domains.length}
             </span>
           </div>
-          
+
           <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div 
+            <div
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${((currentDomainIndex + 1) / domains.length) * 100}%` }}
             />
           </div>
         </div>
 
-        <DomainAssessmentForm 
+        <DomainAssessmentForm
           domain={currentDomain}
           onComplete={handleDomainResponse}
         />

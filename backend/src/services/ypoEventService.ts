@@ -107,13 +107,13 @@ Founder, Soullab`;
   private getYPOElementInterpretation(element: string): string {
     const interpretations: any = {
       fire: `As a Fire leader, you ignite vision and inspire transformation. Your Oracle will help you channel this power with wisdom and sustainability.`,
-      
+
       water: `As a Water leader, you excel at emotional intelligence and team cohesion. Your Oracle will deepen your intuitive leadership abilities.`,
-      
+
       earth: `As an Earth leader, you build lasting foundations and execute with excellence. Your Oracle will help you balance achievement with soul purpose.`,
-      
+
       air: `As an Air leader, you bring clarity and innovative thinking. Your Oracle will help you communicate your vision with even greater impact.`,
-      
+
       aether: `As an Aether leader, you naturally integrate and synthesize. Your Oracle will help you lead from unity consciousness.`
     };
 
@@ -211,12 +211,12 @@ Founder, Soullab`;
       .map(([element, members]) => ({ element, count: (members as any[]).length }))
       .filter(({ count }) => count > 0);
 
-    if (elementCounts.some(({ element }) => element === 'fire') && 
+    if (elementCounts.some(({ element }) => element === 'fire') &&
         elementCounts.some(({ element }) => element === 'water')) {
       recommendations.push('Leverage Fire-Water partnerships for vision-emotion balance');
     }
 
-    if (elementCounts.some(({ element }) => element === 'earth') && 
+    if (elementCounts.some(({ element }) => element === 'earth') &&
         elementCounts.some(({ element }) => element === 'air')) {
       recommendations.push('Create Earth-Air collaborations for grounded innovation');
     }

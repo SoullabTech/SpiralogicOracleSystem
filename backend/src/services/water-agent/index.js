@@ -62,12 +62,12 @@ const oracleResponseSchema = Joi.object({
 
 // Routes
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'healthy', 
+  res.json({
+    status: 'healthy',
     archetype: 'Water',
     capabilities: [
       'Emotional Intelligence',
-      'Flow State Detection', 
+      'Flow State Detection',
       'Trauma-Informed Processing',
       'Shadow Work Integration'
     ],
@@ -80,7 +80,7 @@ app.post('/emotional-prompt', async (req, res) => {
   try {
     const { userContext } = req.body;
     const result = await waterAgent.getEmotionalPrompt(userContext);
-    
+
     logger.info('Emotional prompt generated', { userContext });
     res.json(result);
   } catch (error) {
@@ -95,14 +95,14 @@ app.post('/oracle-response', async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    
+
     const { input, userContext } = value;
     const result = await waterAgent.getOracleResponse(input, userContext);
-    
-    logger.info('Water oracle response generated', { 
-      input: input.substring(0, 50), 
+
+    logger.info('Water oracle response generated', {
+      input: input.substring(0, 50),
       emotionalState: result.emotionalState?.primary,
-      flowState: result.flowState?.present 
+      flowState: result.flowState?.present
     });
     res.json(result);
   } catch (error) {

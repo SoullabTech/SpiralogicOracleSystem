@@ -34,20 +34,20 @@ export class PersonalOracleAgent extends BaseAgent {
   private ainConnection: MainOracleAgentInterface;
   private elementalAgents: ElementalAgentCollection;
   private specializedAgents: SpecializedAgentCollection;
-  
+
   constructor(config: PersonalOracleConfig) {
     super(config);
-    
+
     // Initialize elemental agents as owned by PersonalOracleAgent
     this.elementalAgents = {
       fire: new FireAgent(),
-      water: new WaterAgent(), 
+      water: new WaterAgent(),
       earth: new EarthAgent(),
       air: new AirAgent(),
       aether: new AetherAgent(),
       shadow: new ShadowAgent()
     };
-    
+
     // Initialize connection to AIN collective intelligence
     this.ainConnection = new MainOracleAgentInterface(this.userId);
   }
@@ -61,13 +61,13 @@ export class PersonalOracleAgent extends BaseAgent {
 interface MainOracleAgentInterface {
   // Send patterns to collective intelligence
   async contributePattern(pattern: PatternContribution): Promise<void>;
-  
+
   // Request collective wisdom for current query
   async requestCollectiveWisdom(query: QueryInput): Promise<CollectiveWisdom>;
-  
+
   // Notify AIN of significant transformations
   async reportTransformation(transformation: TransformationEvent): Promise<void>;
-  
+
   // Request universal field guidance
   async consultUniversalField(query: QueryInput): Promise<UniversalGuidance>;
 }
@@ -91,21 +91,21 @@ class PersonalOracleAgent extends BaseAgent {
   async processQuery(query: QueryInput): Promise<AIResponse> {
     // 1. Sacred Mirror Protocol - Check for patterns/resistance
     const mirrorAnalysis = await this.applySacredMirrorProtocol(query);
-    
+
     // 2. Personal Context Analysis
     const personalContext = await this.gatherPersonalContext(query.userId);
-    
+
     // 3. Request AIN Collective Wisdom
     const collectiveWisdom = await this.ainConnection.requestCollectiveWisdom(query);
-    
+
     // 4. Determine Elemental Need (individual + collective wisdom)
     const elementalNeed = this.determineElementalNeed(
-      query, 
-      personalContext, 
+      query,
+      personalContext,
       collectiveWisdom,
       mirrorAnalysis
     );
-    
+
     // 5. Route to Appropriate Elemental Agent
     const enhancedQuery = this.enhanceQueryWithContext(query, {
       personal: personalContext,
@@ -113,19 +113,19 @@ class PersonalOracleAgent extends BaseAgent {
       mirror: mirrorAnalysis,
       relationship: this.sacredRelationship
     });
-    
+
     const elementalResponse = await this.elementalAgents[elementalNeed].processQuery(enhancedQuery);
-    
+
     // 6. Integrate Elemental Wisdom with Personal Journey
     const personalResponse = await this.integrateElementalWisdom(
-      elementalResponse, 
+      elementalResponse,
       personalContext,
       mirrorAnalysis
     );
-    
+
     // 7. Update Sacred Relationship
     await this.updateSacredRelationship(query, personalResponse);
-    
+
     // 8. Contribute Pattern to AIN Collective Intelligence
     await this.ainConnection.contributePattern({
       userId: query.userId,
@@ -136,7 +136,7 @@ class PersonalOracleAgent extends BaseAgent {
       transformationIndicators: this.extractTransformationIndicators(personalResponse),
       collectiveRelevance: this.calculateCollectiveRelevance(elementalResponse)
     });
-    
+
     return personalResponse;
   }
 }
@@ -151,34 +151,34 @@ export class MainOracleAgent {
   private universalFieldConnection: UniversalFieldConnection;
   private agentEvolutionTracking: AgentEvolutionSystem;
   private emergentWisdomEngine: EmergentWisdomEngine;
-  
+
   // Remove direct elemental agent instantiation
   // Focus on collective intelligence functions
-  
+
   async receivePatternContribution(contribution: PatternContribution): Promise<void> {
     // Store in collective memory
     await this.collectiveMemory.storePattern(contribution);
-    
+
     // Analyze for emergent patterns
     const emergentPatterns = await this.emergentWisdomEngine.analyzeNewPattern(contribution);
-    
+
     // Update agent evolution tracking
     await this.agentEvolutionTracking.trackElementalEffectiveness(contribution);
-    
+
     // Check for collective salon opportunities
     await this.assessCollectiveSalonReadiness();
-    
+
     // Evolve system protocols based on patterns
     await this.evolveSystemProtocols(emergentPatterns);
   }
-  
+
   async provideCollectiveWisdom(query: QueryInput): Promise<CollectiveWisdom> {
     // Access universal field for cosmic guidance
     const universalGuidance = await this.accessUniversalField(query);
-    
+
     // Find relevant collective patterns
     const relevantPatterns = await this.collectiveMemory.findRelevantPatterns(query);
-    
+
     // Generate collective wisdom synthesis
     return {
       universalGuidance,
@@ -198,26 +198,26 @@ export class MainOracleAgent {
 export class FireAgent extends OracleAgent {
   async processQuery(query: EnhancedQueryInput): Promise<AIResponse> {
     const { input, userId, personalContext, collectiveWisdom, relationshipContext } = query;
-    
+
     // Use personal context to customize fire response
     const fireType = this.detectFireType(input, personalContext.memories);
-    
+
     // Incorporate collective wisdom about fire effectiveness
     const collectiveFireWisdom = collectiveWisdom.relevantPatterns
       .filter(p => p.element === 'fire');
-    
+
     // Craft response that serves both individual and collective evolution
     const fireResponse = this.craftFireResponse(
-      input, 
-      fireType, 
+      input,
+      fireType,
       personalContext,
       collectiveFireWisdom,
       relationshipContext
     );
-    
+
     // Include relationship-aware signature
     const signature = this.selectFireSignature(fireType, relationshipContext.trustLevel);
-    
+
     return {
       content: fireResponse + '\n\n' + signature,
       provider: 'fire-agent-via-personal-oracle',
@@ -251,7 +251,7 @@ export class FireAgent extends OracleAgent {
 - [ ] Add collective wisdom integration to query processing
 - [ ] Implement pattern contribution after each interaction
 
-### **Phase 3: MainOracleAgent Refactor** 🔄  
+### **Phase 3: MainOracleAgent Refactor** 🔄
 - [ ] Remove direct elemental agent instantiation from MainOracleAgent
 - [ ] Focus MainOracleAgent on collective intelligence functions
 - [ ] Implement pattern reception and analysis

@@ -15,7 +15,7 @@ export function demonstrateAdaptiveWisdom() {
   // Example 1: User with strong grasping patterns
   console.log('\n🧪 Example 1: Strong Grasping Patterns');
   console.log('=====================================');
-  
+
   const graspingPatterns: Pattern[] = [
     {
       type: 'grasping',
@@ -52,7 +52,7 @@ export function demonstrateAdaptiveWisdom() {
   // Example 2: User with avoidance patterns
   console.log('\n🌀 Example 2: Strong Avoidance Patterns');
   console.log('=====================================');
-  
+
   const avoidancePatterns: Pattern[] = [
     {
       type: 'avoidance',
@@ -88,7 +88,7 @@ export function demonstrateAdaptiveWisdom() {
   // Example 3: Identity crisis situation
   console.log('\n🔍 Example 3: Identity Crisis');
   console.log('============================');
-  
+
   const identityCrisisPatterns: Pattern[] = [
     {
       type: 'identity_crisis',
@@ -117,7 +117,7 @@ export function demonstrateAdaptiveWisdom() {
   // Example 4: Complex mixed patterns
   console.log('\n⚖️ Example 4: Mixed Patterns (Hybrid Approach)');
   console.log('===============================================');
-  
+
   const mixedPatterns: Pattern[] = [
     {
       type: 'grasping',
@@ -160,7 +160,7 @@ export function demonstrateAdaptiveWisdom() {
   // Example 5: Pattern analysis
   console.log('\n📊 Example 5: Pattern Analysis');
   console.log('=============================');
-  
+
   const analysisPatterns: Pattern[] = [
     ...graspingPatterns,
     ...avoidancePatterns,
@@ -200,13 +200,13 @@ export class ExampleOracle {
   async respondToUser(userInput: string, userHistory: any): Promise<string> {
     // Build context from user input and history
     const context = this.buildUserContext(userInput, userHistory);
-    
+
     // Get routing decision
     const routing = this.wisdomEngine.determineApproach(context);
-    
+
     // Generate response based on approach
     let response = '';
-    
+
     switch (routing.approach) {
       case 'jung':
         response = this.generateJungResponse(userInput, routing);
@@ -234,7 +234,7 @@ export class ExampleOracle {
     // This would analyze the input and build proper context
     // For demo purposes, simplified:
     const patterns: Pattern[] = [];
-    
+
     if (input.toLowerCase().includes('need to') || input.toLowerCase().includes('must')) {
       patterns.push({
         type: 'grasping',

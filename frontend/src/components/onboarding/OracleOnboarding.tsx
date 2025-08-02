@@ -25,13 +25,13 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
-  
+
   const [formData, setFormData] = useState({
     oracle_name: '',
     oracle_voice: '',
     insight: ''
   });
-  
+
   const [voices, setVoices] = useState<VoiceOption[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -47,7 +47,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
       if (voicesResponse.ok) {
         const voicesData = await voicesResponse.json();
         setVoices(voicesData.voices || []);
-        
+
         // Set default voice if available
         if (voicesData.voices?.length > 0 && !formData.oracle_voice) {
           setFormData(prev => ({ ...prev, oracle_voice: voicesData.voices[0].id }));
@@ -61,7 +61,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
             'Authorization': `Bearer ${user.access_token}`
           }
         });
-        
+
         if (prefsResponse.ok) {
           const prefsData = await prefsResponse.json();
           if (prefsData.preferences) {
@@ -80,7 +80,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.oracle_name.trim()) {
       newErrors.oracle_name = 'Please name your Oracle';
     } else if (formData.oracle_name.length > 40) {
@@ -104,24 +104,24 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
       }
 
       setPlayingVoice(voiceId);
-      
+
       // Create and play audio
       const audio = new Audio(`/api/voice/preview?voiceId=${voiceId}`);
-      
+
       audio.onended = () => setPlayingVoice(null);
       audio.onerror = () => {
         setPlayingVoice(null);
         console.error('Failed to play voice preview');
       };
-      
+
       await audio.play();
-      
+
       // Auto-stop after 5 seconds
       setTimeout(() => {
         audio.pause();
         setPlayingVoice(null);
       }, 5000);
-      
+
     } catch (error) {
       setPlayingVoice(null);
       console.error('Voice preview failed:', error);
@@ -130,12 +130,12 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm() || !user) return;
 
     setSaving(true);
     setErrors({});
-    
+
     try {
       const response = await fetch('/api/oracle/preferences', {
         method: 'POST',
@@ -160,8 +160,8 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
 
     } catch (error) {
       console.error('Failed to save Oracle preferences:', error);
-      setErrors({ 
-        submit: error instanceof Error ? error.message : 'Failed to save preferences' 
+      setErrors({
+        submit: error instanceof Error ? error.message : 'Failed to save preferences'
       });
     } finally {
       setSaving(false);
@@ -205,7 +205,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
               <circle cx="32" cy="32" r="8" fill="none" stroke="#F6E27F" strokeWidth="1" opacity="0.4" />
             </svg>
           </motion.div>
-          
+
           <h1 className="text-3xl font-light text-[#F6E27F] mb-3">
             Configure Your Oracle
           </h1>
@@ -267,7 +267,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
                   </option>
                 ))}
               </select>
-              
+
               <button
                 type="button"
                 onClick={() => formData.oracle_voice && handleVoicePreview(formData.oracle_voice)}
@@ -320,7 +320,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
                 <p className="text-red-400 text-sm">{errors.submit}</p>
               </div>
             )}
-            
+
             <button
               type="submit"
               disabled={saving || !formData.oracle_name.trim() || !formData.oracle_voice}

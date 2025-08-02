@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
-  res.json({ 
+  res.json({
     status: 'alive',
     message: '🌀 Sacred Techno-Interface is operational',
     timestamp: new Date().toISOString()
@@ -60,11 +60,11 @@ app.get('/api/elemental/balance', (_req, res) => {
 // Simple oracle message endpoint
 app.post('/api/oracle/message', (req, res) => {
   const { message } = req.body;
-  
+
   if (!message) {
     return res.status(400).json({ error: 'Message required' });
   }
-  
+
   res.json({
     received: message,
     response: 'The Oracle contemplates your words...',
@@ -76,7 +76,7 @@ app.post('/api/oracle/message', (req, res) => {
 // Error handling middleware
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('Error:', err);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Internal server error',
     message: 'The sacred connection was disrupted'
   });

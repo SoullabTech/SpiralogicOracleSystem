@@ -22,14 +22,14 @@ router.get('/health', (_req: Request, res: Response) => {
 // Basic oracle endpoint
 router.post('/oracle/echo', (req: Request, res: Response) => {
   const { message } = req.body;
-  
+
   if (!message) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: 'No message provided',
-      hint: 'Send your query to the Oracle' 
+      hint: 'Send your query to the Oracle'
     });
   }
-  
+
   res.json({
     echo: message,
     oracle_response: `The Oracle reflects: "${message}"`,
@@ -62,10 +62,10 @@ router.get('/wisdom/daily', (_req: Request, res: Response) => {
     'Integration comes through acceptance',
     'The Oracle sees your authentic self'
   ];
-  
+
   const today = new Date().getDate();
   const wisdom = wisdoms[today % wisdoms.length];
-  
+
   res.json({
     wisdom,
     element: ['fire', 'water', 'earth', 'air', 'aether'][today % 5],

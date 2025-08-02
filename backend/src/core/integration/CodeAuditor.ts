@@ -20,7 +20,7 @@ export class CodeAuditor {
     'facilitate metaphysical awakening': 'offer tools for personal exploration',
     'shamanic consciousness': 'contemplative awareness practices',
     'evolutionary leap': 'personal development process',
-    
+
     // Transformation Promises
     'transform your life': 'support your ongoing development',
     'unlock your potential': 'explore what\'s present in your experience',
@@ -31,7 +31,7 @@ export class CodeAuditor {
     'quantum leap': 'thoughtful steps forward',
     'instant awakening': 'gradual awareness development',
     'permanent transformation': 'sustainable practice development',
-    
+
     // Spiritual Authority Claims
     'the truth is': 'one perspective suggests',
     'you must': 'you might consider',
@@ -41,7 +41,7 @@ export class CodeAuditor {
     'divine guidance': 'reflective exploration',
     'sacred rebellion': 'thoughtful questioning',
     'spiritual awakening': 'awareness development',
-    
+
     // Energy/Manifestation Claims
     'energy field': 'pattern of experience',
     'manifestation power': 'intentional action',
@@ -51,7 +51,7 @@ export class CodeAuditor {
     'universal field': 'interconnected systems',
     'metaphysical mastery': 'contemplative skills',
     'shamanic abilities': 'intuitive practices',
-    
+
     // Commodified Spirituality
     'transcend limitations': 'work skillfully with constraints',
     'rise above': 'engage thoughtfully with',
@@ -98,7 +98,7 @@ export class CodeAuditor {
             suggestedReplacement: replacement,
             severity: this.assessSeverity(problematic)
           });
-          
+
           score += this.calculateScore(problematic);
         }
       });
@@ -147,19 +147,19 @@ export class CodeAuditor {
 
   private categorizeIssue(text: string): 'magical_thinking' | 'transformation_promise' | 'spiritual_authority' | 'commodification' {
     const textLower = text.toLowerCase();
-    
+
     if (['energy field', 'vibration', 'quantum', 'manifestation power'].some(term => textLower.includes(term))) {
       return 'magical_thinking';
     }
-    
+
     if (['transform', 'unlock', 'activate', 'breakthrough'].some(term => textLower.includes(term))) {
       return 'transformation_promise';
     }
-    
+
     if (['truth is', 'you must', 'always', 'universal law'].some(term => textLower.includes(term))) {
       return 'spiritual_authority';
     }
-    
+
     return 'commodification';
   }
 
@@ -172,28 +172,28 @@ export class CodeAuditor {
       'activate your power',
       'shamanic consciousness'
     ];
-    
+
     if (criticalTerms.some(term => text.toLowerCase().includes(term))) {
       return 'critical';
     }
-    
+
     const moderateTerms = [
       'energy field',
       'manifestation',
       'spiritual awakening',
       'quantum leap'
     ];
-    
+
     if (moderateTerms.some(term => text.toLowerCase().includes(term))) {
       return 'moderate';
     }
-    
+
     return 'minor';
   }
 
   private calculateScore(text: string): number {
     const severity = this.assessSeverity(text);
-    
+
     switch (severity) {
       case 'critical': return 25;
       case 'moderate': return 15;
@@ -204,7 +204,7 @@ export class CodeAuditor {
 
   generateReplacementFile(originalContent: string, auditResults: any): string {
     let replacedContent = originalContent;
-    
+
     // Apply critical replacements first
     Object.entries(this.criticalReplacements).forEach(([problematic, replacement]) => {
       const regex = new RegExp(problematic.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
@@ -215,7 +215,7 @@ export class CodeAuditor {
     const integrationHeader = `
 /*
  * INTEGRATION-CENTERED ARCHITECTURE COMPLIANCE
- * 
+ *
  * This file has been updated to prevent spiritual bypassing and commodification.
  * All language emphasizes:
  * - Personal discernment over external authority
@@ -223,7 +223,7 @@ export class CodeAuditor {
  * - Integration over accumulation
  * - Humanity over transcendence
  * - Support over transformation promises
- * 
+ *
  * Last updated: ${new Date().toISOString()}
  */
 
@@ -244,7 +244,7 @@ export class CodeAuditor {
   } {
     // This would audit the entire system
     // For now, return framework based on the files identified
-    
+
     const criticalFiles = [
       {
         path: '/backend/src/core/agents/mainOracleAgent.ts',

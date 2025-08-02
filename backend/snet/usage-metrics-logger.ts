@@ -34,7 +34,7 @@ export class UsageMetricsLogger {
   constructor() {
     this.logPath = process.env.METRICS_LOG_PATH || path.join(__dirname, '../../../logs/snet-usage');
     this.ensureLogDirectory();
-    
+
     // Flush metrics every 60 seconds
     this.flushInterval = setInterval(() => this.flushMetrics(), 60000);
   }

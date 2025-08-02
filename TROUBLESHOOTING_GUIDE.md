@@ -245,7 +245,7 @@ ALTER SYSTEM SET log_duration = on;
 
 # Add database indexes
 psql $DATABASE_URL -c "
-  CREATE INDEX idx_memories_user_created 
+  CREATE INDEX idx_memories_user_created
   ON soul_memories(user_id, created_at DESC);
 "
 
@@ -343,7 +343,7 @@ pm2 logs soullab-backend --lines 100
 psql $DATABASE_URL -c "
   SELECT COUNT(*) as total_users FROM users;
   SELECT COUNT(*) as total_memories FROM soul_memories;
-  SELECT COUNT(*) as active_sessions FROM sessions 
+  SELECT COUNT(*) as active_sessions FROM sessions
   WHERE expires_at > NOW();
 "
 ```

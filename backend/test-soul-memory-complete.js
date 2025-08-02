@@ -6,11 +6,11 @@ console.log('====================================\n');
 
 async function testSoulMemory() {
   const db = new Database('./soul_memory.db');
-  
+
   try {
     // Test 1: Store Oracle Exchange
     console.log('1️⃣ Testing Oracle exchange storage...');
-    
+
     const testMemory = {
       id: 'memory_' + Date.now(),
       user_id: 'test_user_123',
@@ -22,14 +22,14 @@ async function testSoulMemory() {
       sacred_moment: 1,
       oracle_response: 'I sense the weight you\'re carrying. What feels most overwhelming right now?'
     };
-    
+
     const insertMemory = db.prepare(`
       INSERT INTO memories (
-        id, user_id, timestamp, type, content, element, 
+        id, user_id, timestamp, type, content, element,
         emotional_tone, sacred_moment, oracle_response
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    
+
     insertMemory.run(
       testMemory.id,
       testMemory.user_id,
@@ -41,12 +41,12 @@ async function testSoulMemory() {
       testMemory.sacred_moment,
       testMemory.oracle_response
     );
-    
+
     console.log('✅ Oracle exchange stored\n');
-    
+
     // Test 2: Store Breakthrough
     console.log('2️⃣ Testing breakthrough detection...');
-    
+
     const breakthrough = {
       id: 'breakthrough_' + Date.now(),
       user_id: 'test_user_123',
@@ -58,7 +58,7 @@ async function testSoulMemory() {
       transformation_marker: 1,
       sacred_moment: 1
     };
-    
+
     insertMemory.run(
       breakthrough.id,
       breakthrough.user_id,
@@ -70,12 +70,12 @@ async function testSoulMemory() {
       breakthrough.sacred_moment,
       null  // oracle_response
     );
-    
+
     console.log('✅ Breakthrough stored\n');
-    
+
     // Test 3: Store Archetypal Pattern
     console.log('3️⃣ Testing archetypal pattern tracking...');
-    
+
     const archetypalPattern = {
       id: 'pattern_' + Date.now(),
       user_id: 'test_user_123',
@@ -85,14 +85,14 @@ async function testSoulMemory() {
       pattern_strength: 0.6,
       related_memories: JSON.stringify([breakthrough.id])
     };
-    
+
     const insertPattern = db.prepare(`
       INSERT INTO archetypal_patterns (
-        id, user_id, archetype, activation_count, 
+        id, user_id, archetype, activation_count,
         last_activated, pattern_strength, related_memories
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
-    
+
     insertPattern.run(
       archetypalPattern.id,
       archetypalPattern.user_id,
@@ -102,12 +102,12 @@ async function testSoulMemory() {
       archetypalPattern.pattern_strength,
       archetypalPattern.related_memories
     );
-    
+
     console.log('✅ Archetypal pattern stored\n');
-    
+
     // Test 4: Retreat Mode Memory
     console.log('4️⃣ Testing retreat mode memory...');
-    
+
     const retreatMemory = {
       id: 'retreat_' + Date.now(),
       user_id: 'test_user_123',
@@ -123,14 +123,14 @@ async function testSoulMemory() {
         retreatIntensive: true
       })
     };
-    
+
     const insertWithMetadata = db.prepare(`
       INSERT INTO memories (
-        id, user_id, timestamp, type, content, element, 
+        id, user_id, timestamp, type, content, element,
         ritual_context, sacred_moment, metadata
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    
+
     insertWithMetadata.run(
       retreatMemory.id,
       retreatMemory.user_id,
@@ -142,24 +142,24 @@ async function testSoulMemory() {
       retreatMemory.sacred_moment,
       retreatMemory.metadata
     );
-    
+
     console.log('✅ Retreat memory stored\n');
-    
+
     // Test 5: Query Tests
     console.log('5️⃣ Testing memory queries...');
-    
+
     // All memories for user
     const allMemories = db.prepare('SELECT * FROM memories WHERE user_id = ?').all('test_user_123');
     console.log(`📊 Total memories: ${allMemories.length}`);
-    
+
     // Sacred moments
     const sacredMoments = db.prepare('SELECT * FROM memories WHERE user_id = ? AND sacred_moment = 1').all('test_user_123');
     console.log(`✨ Sacred moments: ${sacredMoments.length}`);
-    
+
     // Breakthrough moments
     const breakthroughs = db.prepare('SELECT * FROM memories WHERE user_id = ? AND transformation_marker = 1').all('test_user_123');
     console.log(`💫 Breakthroughs: ${breakthroughs.length}`);
-    
+
     // Retreat memories (by metadata)
     const retreatMemories = allMemories.filter(m => {
       if (!m.metadata) return false;
@@ -171,23 +171,23 @@ async function testSoulMemory() {
       }
     });
     console.log(`🏔️ Retreat memories: ${retreatMemories.length}`);
-    
+
     // Archetypal patterns
     const patterns = db.prepare('SELECT * FROM archetypal_patterns WHERE user_id = ?').all('test_user_123');
     console.log(`🎭 Archetypal patterns: ${patterns.length}`);
-    
+
     if (patterns.length > 0) {
       console.log('   Active archetypes:', patterns.map(p => `${p.archetype} (${p.pattern_strength})`).join(', '));
     }
-    
+
     console.log('\\n6️⃣ Memory timeline:');
     allMemories.forEach((memory, i) => {
       const time = new Date(memory.timestamp).toLocaleTimeString();
       console.log(`   ${i + 1}. [${time}] ${memory.type}: ${memory.content.substring(0, 40)}...`);
     });
-    
+
     console.log('\\n✅ All tests completed successfully!');
-    
+
     console.log('\\n🔗 System Status:');
     console.log(`   Database: ✅ Connected (${db.name})`);
     console.log(`   Tables: ✅ memories, memory_threads, archetypal_patterns`);
@@ -195,7 +195,7 @@ async function testSoulMemory() {
     console.log(`   Pattern Detection: ✅ Working`);
     console.log(`   Retreat Support: ✅ Working`);
     console.log(`   Sacred Moments: ✅ Working`);
-    
+
   } catch (error) {
     console.error('❌ Test failed:', error.message);
   } finally {

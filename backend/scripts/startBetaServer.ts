@@ -35,7 +35,7 @@ async function startBetaServer() {
     const bookPath = path.join(knowledgeDir, 'elemental-alchemy-book.json');
     const bookContent = await fs.readFile(bookPath, 'utf-8');
     const bookData = JSON.parse(bookContent);
-    
+
     console.log('\n📖 Book Data Verification:');
     console.log(`✅ Title: ${bookData.title}`);
     console.log(`✅ Author: ${bookData.author}`);

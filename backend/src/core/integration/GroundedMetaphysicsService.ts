@@ -83,7 +83,7 @@ export class GroundedMetaphysicsService {
         air: "Notice your natural communication patterns and mental processes without imposing external frameworks.",
         aether: "Experiment with integration in ways that feel organic to your actual life circumstances."
       };
-      
+
       if (elementSpecific[element]) {
         basePrompts.push(elementSpecific[element]);
       }
@@ -227,7 +227,7 @@ export class GroundedMetaphysicsService {
   } {
     const improvements: string[] = [];
     const validGroundingElements: string[] = [];
-    
+
     // Check for proper disclaimers
     if (content.disclaimers && content.disclaimers.length > 0) {
       validGroundingElements.push("Includes appropriate disclaimers");
@@ -263,7 +263,7 @@ export class GroundedMetaphysicsService {
       content.content.includes('try') ||
       content.content.includes('notice')
     );
-    
+
     if (hasExperimentationLanguage) {
       validGroundingElements.push("Uses experimental rather than authoritative language");
     } else {
@@ -286,7 +286,7 @@ export class GroundedMetaphysicsService {
     const hasEmotionalAvoidance = userArchitecture.bypassingHistory.some(
       b => b.pattern === 'emotional_avoidance' && !b.addressed
     );
-    
+
     const hasInsightAddiction = userArchitecture.bypassingHistory.some(
       b => b.pattern === 'insight_addiction' && !b.addressed
     );

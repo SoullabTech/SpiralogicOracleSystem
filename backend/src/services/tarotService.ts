@@ -44,7 +44,7 @@ const TAROT_SPREADS = {
   'celtic-cross': {
     name: 'Celtic Cross',
     positions: [
-      'Present Situation', 'Challenge/Cross', 'Distant Past/Foundation', 
+      'Present Situation', 'Challenge/Cross', 'Distant Past/Foundation',
       'Possible Outcome', 'Crown/Possible Future', 'Immediate Future',
       'Your Approach', 'External Influences', 'Hopes and Fears', 'Final Outcome'
     ],
@@ -75,7 +75,7 @@ const TAROT_SPREADS = {
  */
 function drawCard(position: string, isReversed?: boolean): TarotCard {
   const reversed = isReversed ?? Math.random() < 0.3; // 30% chance of reversal
-  
+
   // 70% chance for Major Arcana, 30% for Minor
   if (Math.random() < 0.7) {
     const cardTemplate = MAJOR_ARCANA[Math.floor(Math.random() * MAJOR_ARCANA.length)];
@@ -91,10 +91,10 @@ function drawCard(position: string, isReversed?: boolean): TarotCard {
     const suits = Object.keys(MINOR_ARCANA_SUITS) as Array<keyof typeof MINOR_ARCANA_SUITS>;
     const suit = suits[Math.floor(Math.random() * suits.length)];
     const number = Math.floor(Math.random() * 14) + 1; // 1-14 (Ace to King)
-    
+
     const cardName = generateMinorArcanaName(suit, number);
     const keywords = MINOR_ARCANA_SUITS[suit].keywords;
-    
+
     const card: TarotCard = {
       name: cardName,
       arcana: 'minor',
@@ -106,7 +106,7 @@ function drawCard(position: string, isReversed?: boolean): TarotCard {
       meaning: generateMinorMeaning(suit, number, reversed),
       interpretation: generateMinorInterpretation(suit, number, reversed, position)
     };
-    
+
     return card;
   }
 }
@@ -114,11 +114,11 @@ function drawCard(position: string, isReversed?: boolean): TarotCard {
 function generateMinorArcanaName(suit: string, number: number): string {
   const faceCards = {
     11: 'Page',
-    12: 'Knight', 
+    12: 'Knight',
     13: 'Queen',
     14: 'King'
   };
-  
+
   if (number === 1) return `Ace of ${suit.charAt(0).toUpperCase() + suit.slice(1)}`;
   if (number > 10) return `${faceCards[number as keyof typeof faceCards]} of ${suit.charAt(0).toUpperCase() + suit.slice(1)}`;
   return `${number} of ${suit.charAt(0).toUpperCase() + suit.slice(1)}`;
@@ -126,10 +126,10 @@ function generateMinorArcanaName(suit: string, number: number): string {
 
 function generateCardMeaning(card: any, reversed: boolean, position: string): string {
   const reversalText = reversed ? ' (Reversed)' : '';
-  const baseKeywords = reversed ? 
+  const baseKeywords = reversed ?
     card.keywords.map((k: string) => `blocked ${k}` || `imbalanced ${k}`).slice(0, 3) :
     card.keywords.slice(0, 3);
-  
+
   return `${card.name}${reversalText} in ${position}: ${baseKeywords.join(', ')}`;
 }
 
@@ -156,8 +156,8 @@ function generateCardInterpretation(card: any, reversed: boolean, position: stri
       true: 'Loss of faith or direction may be clouding your vision. Reconnect with your higher purpose.'
     }
   };
-  
-  return interpretations[card.name]?.[reversed] || 
+
+  return interpretations[card.name]?.[reversed] ||
     `The energy of ${card.name} ${reversed ? 'in reverse' : ''} brings ${card.keywords[0]} to your ${position.toLowerCase()}.`;
 }
 
@@ -174,7 +174,7 @@ function generateMinorInterpretation(suit: string, number: number, reversed: boo
     swords: reversed ? 'Mental confusion or communication breakdown' : 'Clear thinking and honest communication',
     pentacles: reversed ? 'Financial or material instability' : 'Material success and practical achievements'
   };
-  
+
   return suitMeanings[suit as keyof typeof suitMeanings] + ` influence your ${position.toLowerCase()}.`;
 }
 
@@ -183,10 +183,10 @@ function generateMinorInterpretation(suit: string, number: number, reversed: boo
  */
 export function getTarotReading(query: string, spreadType: string = 'three-card'): DivinationInsight {
   const spread = TAROT_SPREADS[spreadType as keyof typeof TAROT_SPREADS] || TAROT_SPREADS['three-card'];
-  
+
   // Draw cards for each position
   const cards = spread.positions.map(position => drawCard(position));
-  
+
   // Generate overall reading
   const tarotReading: TarotReading = {
     cards,
@@ -196,10 +196,10 @@ export function getTarotReading(query: string, spreadType: string = 'three-card'
     overallMessage: generateOverallMessage(cards, query),
     advice: generateAdvice(cards)
   };
-  
+
   // Create ritual suggestion
   const ritual = generateTarotRitual(cards);
-  
+
   return {
     method: 'tarot',
     title: `${spread.name} Reading`,
@@ -219,15 +219,15 @@ export function getTarotReading(query: string, spreadType: string = 'three-card'
 
 function generateOverallMessage(cards: TarotCard[], query: string): string {
   const themes = cards.flatMap(card => card.keywords);
-  const dominantTheme = themes.find(theme => 
+  const dominantTheme = themes.find(theme =>
     themes.filter(t => t === theme).length > 1
   ) || themes[0];
-  
+
   const hasReversals = cards.some(card => card.reversed);
-  const reversalNote = hasReversals ? 
-    ' Pay attention to what needs to be released or transformed.' : 
+  const reversalNote = hasReversals ?
+    ' Pay attention to what needs to be released or transformed.' :
     ' The energy flows favorably for your question.';
-  
+
   return `Regarding "${query}", the cards reveal a pattern of ${dominantTheme} influencing your situation.${reversalNote} The key theme emerging is one of ${themes.slice(0, 3).join(', ')}.`;
 }
 
@@ -238,7 +238,7 @@ function generateAdvice(cards: TarotCard[]): string {
     'Consider how these energies manifest in your daily life.',
     'Use this insight as guidance, not absolute prediction.'
   ];
-  
+
   const specificAdvice = cards.map(card => {
     if (card.reversed) {
       return `Address the ${card.keywords[0]} that may be blocked or imbalanced.`;
@@ -246,16 +246,16 @@ function generateAdvice(cards: TarotCard[]): string {
       return `Embrace the ${card.keywords[0]} energy available to you.`;
     }
   }).join(' ');
-  
+
   return `${specificAdvice} ${adviceElements[Math.floor(Math.random() * adviceElements.length)]}`;
 }
 
 function generateTarotRitual(cards: TarotCard[]): DivinationRitual {
   const majorArcanaCount = cards.filter(card => card.arcana === 'major').length;
   const hasReversals = cards.some(card => card.reversed);
-  
+
   let ritual: DivinationRitual;
-  
+
   if (majorArcanaCount >= 2) {
     ritual = {
       name: 'Major Arcana Integration',
@@ -305,7 +305,7 @@ function generateTarotRitual(cards: TarotCard[]): DivinationRitual {
       archetype: 'The Grateful Heart'
     };
   }
-  
+
   return ritual;
 }
 
@@ -314,7 +314,7 @@ function generateTarotRitual(cards: TarotCard[]): DivinationRitual {
  */
 export function getDailyTarot(): DivinationInsight {
   const card = drawCard('Daily Guidance');
-  
+
   return {
     method: 'tarot',
     title: 'Daily Tarot Card',
@@ -343,10 +343,10 @@ export function getDailyTarot(): DivinationInsight {
  * Get card meanings for reference
  */
 export function getCardMeanings(cardName: string): TarotCard | null {
-  const majorCard = MAJOR_ARCANA.find(card => 
+  const majorCard = MAJOR_ARCANA.find(card =>
     card.name.toLowerCase() === cardName.toLowerCase()
   );
-  
+
   if (majorCard) {
     return {
       ...majorCard,
@@ -356,7 +356,7 @@ export function getCardMeanings(cardName: string): TarotCard | null {
       interpretation: generateCardInterpretation(majorCard, false, 'your life')
     };
   }
-  
+
   return null;
 }
 

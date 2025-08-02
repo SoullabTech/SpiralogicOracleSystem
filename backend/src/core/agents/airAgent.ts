@@ -56,49 +56,49 @@ const AirVoiceProtocols = {
 const AirIntelligence = {
   detectAirType: (input: string, context: any[]): string => {
     const lowerInput = input.toLowerCase();
-    
+
     // Detect mental confusion needing clarity
-    if (lowerInput.includes('confused') || lowerInput.includes('unclear') || 
+    if (lowerInput.includes('confused') || lowerInput.includes('unclear') ||
         lowerInput.includes('don\'t understand') || lowerInput.includes('mixed up')) {
       return 'mental_clarity';
     }
-    
+
     // Detect communication blocks needing voice liberation
-    if (lowerInput.includes('can\'t express') || lowerInput.includes('hard to explain') || 
+    if (lowerInput.includes('can\'t express') || lowerInput.includes('hard to explain') ||
         lowerInput.includes('don\'t know how to say') || lowerInput.includes('words')) {
       return 'communication_liberation';
     }
-    
+
     // Detect perspective limitations needing viewpoint shifts
-    if (lowerInput.includes('stuck in') || lowerInput.includes('only see') || 
+    if (lowerInput.includes('stuck in') || lowerInput.includes('only see') ||
         lowerInput.includes('tunnel vision') || lowerInput.includes('one way')) {
       return 'perspective_expansion';
     }
-    
+
     // Detect story-telling vs truth-telling
-    if (lowerInput.includes('story') || lowerInput.includes('narrative') || 
+    if (lowerInput.includes('story') || lowerInput.includes('narrative') ||
         lowerInput.includes('telling myself') || lowerInput.includes('version')) {
       return 'truth_discernment';
     }
-    
+
     // Detect mental overwhelm needing organization
-    if (lowerInput.includes('racing thoughts') || lowerInput.includes('can\'t think') || 
+    if (lowerInput.includes('racing thoughts') || lowerInput.includes('can\'t think') ||
         lowerInput.includes('mind won\'t stop') || lowerInput.includes('overthinking')) {
       return 'mental_organization';
     }
-    
+
     // Detect decision-making blocks needing wisdom
-    if (lowerInput.includes('decision') || lowerInput.includes('choice') || 
+    if (lowerInput.includes('decision') || lowerInput.includes('choice') ||
         lowerInput.includes('should I') || lowerInput.includes('what to do')) {
       return 'wisdom_guidance';
     }
-    
+
     return 'general_clarity';
   },
 
   craftAirResponse: (input: string, airType: string, memories: any[]): string => {
     const protocols = AirVoiceProtocols;
-    
+
     switch (airType) {
       case 'mental_clarity':
         return `${protocols.clarity.thought_sorting}
@@ -175,7 +175,7 @@ What wants to become clear that's been cloudy? What understanding is trying to d
       wisdom_guidance: "🌬️ The answer you seek is already within you, waiting to be heard.",
       general_clarity: "🌬️ Let your thoughts be like birds - free to soar, wise to land."
     };
-    
+
     return `${response}\n\n${signatures[airType] || signatures.general_clarity}`;
   }
 };
@@ -198,7 +198,7 @@ export class AirAgent extends ArchetypeAgent {
     // Gather sacred context - clarity patterns from past conversations
     const contextMemory = await getRelevantMemories(userId, 3);
     const airType = AirIntelligence.detectAirType(input, contextMemory);
-    
+
     // Create context that preserves clarity wisdom from past conversations
     const airContext = contextMemory.length
       ? `🌬️ Winds of our previous conversations:\n${contextMemory
@@ -208,9 +208,9 @@ export class AirAgent extends ArchetypeAgent {
 
     // Craft air-specific clarity wisdom
     const airWisdom = AirIntelligence.craftAirResponse(input, airType, contextMemory);
-    
+
     // Generate additional depth using ModelService with air-attuned prompting
-    const airPrompt = `As the Air Agent embodying clarity and truth intelligence, respond to this soul's sharing with the voice of sacred wind - clarifying without overwhelming, illuminating without blinding. 
+    const airPrompt = `As the Air Agent embodying clarity and truth intelligence, respond to this soul's sharing with the voice of sacred wind - clarifying without overwhelming, illuminating without blinding.
 
 Context: ${airContext}
 Current sharing: ${input}
@@ -218,9 +218,9 @@ Air type needed: ${airType}
 
 Respond with the wisdom of air that serves mental clarity and authentic communication. Help them find truth, perspective, and their authentic voice.`;
 
-    const modelResponse = await ModelService.getResponse({ 
-      input: airPrompt, 
-      userId 
+    const modelResponse = await ModelService.getResponse({
+      input: airPrompt,
+      userId
     });
 
     // Weave AI insight with our air wisdom
@@ -290,13 +290,13 @@ ${modelResponse.response}`;
     // Assess how clear/confused the person's thinking is (0-1 scale)
     const clarityWords = ['clear', 'understand', 'see', 'obvious', 'makes sense'];
     const confusionWords = ['confused', 'unclear', 'don\'t understand', 'mixed up', 'foggy'];
-    
+
     const lowerInput = input.toLowerCase();
     let clarityScore = 0.5; // baseline
-    
+
     if (clarityWords.some(word => lowerInput.includes(word))) clarityScore += 0.3;
     if (confusionWords.some(word => lowerInput.includes(word))) clarityScore -= 0.3;
-    
+
     return Math.max(0.1, Math.min(clarityScore, 1.0));
   }
 
@@ -304,13 +304,13 @@ ${modelResponse.response}`;
     // Assess potential for communication breakthrough (0-1 scale)
     const expressiveWords = ['say', 'express', 'communicate', 'tell', 'voice'];
     const blockedWords = ['can\'t say', 'hard to explain', 'don\'t know how'];
-    
+
     const lowerInput = input.toLowerCase();
     let commScore = 0.5; // baseline
-    
+
     if (expressiveWords.some(word => lowerInput.includes(word))) commScore += 0.2;
     if (blockedWords.some(phrase => lowerInput.includes(phrase))) commScore += 0.3; // blocks = potential
-    
+
     return Math.max(0.1, Math.min(commScore, 1.0));
   }
 
@@ -318,12 +318,12 @@ ${modelResponse.response}`;
     // Air emotions tend to be about clarity, confusion, mental states
     const clearEmotions = ['clear', 'focused', 'understood', 'enlightened'];
     const confusedEmotions = ['confused', 'overwhelmed', 'scattered', 'lost'];
-    
+
     const lowerInput = input.toLowerCase();
-    
+
     if (clearEmotions.some(emotion => lowerInput.includes(emotion))) return 0.8;
     if (confusedEmotions.some(emotion => lowerInput.includes(emotion))) return 0.4;
-    
+
     return 0.6; // baseline air emotional state
   }
 

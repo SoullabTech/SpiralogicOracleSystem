@@ -26,19 +26,19 @@ export const OracleChatComponent: React.FC = () => {
 
   const handleAskOracle = async () => {
     if (!input.trim()) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const res = await fetch('/api/oracle/respond', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           query: input.trim(),
-          includeVoice: true 
+          includeVoice: true
         }),
       });
 
@@ -47,14 +47,14 @@ export const OracleChatComponent: React.FC = () => {
       }
 
       const data = await res.json();
-      
+
       if (data.error) {
         throw new Error(data.error);
       }
-      
+
       setResponse(data);
       setInput(''); // Clear input after successful response
-      
+
     } catch (err) {
       console.error('Oracle consultation error:', err);
       setError(err instanceof Error ? err.message : 'Failed to consult Oracle');
@@ -87,7 +87,7 @@ export const OracleChatComponent: React.FC = () => {
         <label htmlFor="oracle-input" className="block text-sm font-medium text-gray-700 mb-2">
           What wisdom do you seek?
         </label>
-        
+
         <textarea
           id="oracle-input"
           className="w-full p-4 border border-gray-300 rounded-xl shadow-sm resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
@@ -98,12 +98,12 @@ export const OracleChatComponent: React.FC = () => {
           rows={3}
           disabled={loading}
         />
-        
+
         <div className="flex justify-between items-center mt-4">
           <div className="text-xs text-gray-500">
             Press Enter to send, Shift+Enter for new line
           </div>
-          
+
           <button
             onClick={handleAskOracle}
             disabled={loading || !input.trim()}
@@ -156,13 +156,13 @@ export const OracleChatComponent: React.FC = () => {
               </span>
             )}
           </div>
-          
+
           <OracleVoicePlayer
             audioUrl={response.metadata.audioUrl}
             text={response.content}
             voiceProfile={response.metadata.voice_profile}
           />
-          
+
           {/* Additional Metadata */}
           {response.metadata.archetypal_presence && (
             <div className="text-center text-sm text-purple-600 italic">

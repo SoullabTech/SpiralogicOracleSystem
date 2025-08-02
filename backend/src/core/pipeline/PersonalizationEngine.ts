@@ -1,6 +1,6 @@
 /**
  * 🎯 Personalization Engine - Oracle Agent Customization & Memory System
- * 
+ *
  * Handles user-specific Oracle agent naming, voice selection, and adaptive
  * spiritual intelligence based on interaction patterns and growth phases.
  */
@@ -113,7 +113,7 @@ export class PersonalizationEngine {
 
     // Store in database
     await this.savePersonalization(oraclePersonalization);
-    
+
     // Cache in memory
     this.userProfiles.set(userId, oraclePersonalization);
 
@@ -192,7 +192,7 @@ export class PersonalizationEngine {
 
     // Analyze current input for archetypal patterns
     const inputAnalysis = this.analyzeInputForArchetypes(currentInput);
-    
+
     // Update interaction patterns
     await this.updateInteractionPatterns(userId, inputAnalysis);
 
@@ -242,10 +242,10 @@ export class PersonalizationEngine {
     if (response.archetype && response.confidence > 0.7) {
       const currentBalance = personalization.soulprintEvolution.elementalBalance;
       const element = response.archetype;
-      
+
       // Gradual evolution toward used archetypes
       currentBalance[element] = Math.min(currentBalance[element] + 0.05, 1.0);
-      
+
       // Normalize to maintain balance
       const total = Object.values(currentBalance).reduce((sum, val) => sum + val, 0);
       Object.keys(currentBalance).forEach(key => {
@@ -303,7 +303,7 @@ export class PersonalizationEngine {
   private async savePersonalization(personalization: OraclePersonalization): Promise<void> {
     try {
       const serialized = this.serializePersonalization(personalization);
-      
+
       const { error } = await supabase
         .from('oracle_personalizations')
         .upsert(serialized, { onConflict: 'user_id' });
@@ -428,15 +428,15 @@ export class PersonalizationEngine {
   private detectUrgency(input: string): 'low' | 'medium' | 'high' {
     const urgentWords = ['urgent', 'quickly', 'immediately', 'emergency', 'crisis'];
     const lowercaseInput = input.toLowerCase();
-    
+
     if (urgentWords.some(word => lowercaseInput.includes(word))) {
       return 'high';
     }
-    
+
     if (input.includes('!') || input.includes('?!')) {
       return 'medium';
     }
-    
+
     return 'low';
   }
 
@@ -487,7 +487,7 @@ export class PersonalizationEngine {
   private updateDominantArchetypes(personalization: OraclePersonalization, response: any): void {
     const archetype = response.archetype;
     const current = personalization.personalizedContext.dominantArchetypes;
-    
+
     // Gradual shift toward used archetypes
     if (current[archetype]) {
       current[archetype] = Math.min(current[archetype] + 0.1, 1.0);

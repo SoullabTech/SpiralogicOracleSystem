@@ -36,7 +36,7 @@ export const useOraclePreferences = (): UseOraclePreferencesReturn => {
 
     try {
       setError(null);
-      
+
       const { data, error: fetchError } = await supabase
         .from('oracle_preferences')
         .select('oracle_name, oracle_voice, updated_at')
@@ -61,7 +61,7 @@ export const useOraclePreferences = (): UseOraclePreferencesReturn => {
 
     try {
       setError(null);
-      
+
       const { data, error: saveError } = await supabase
         .from('oracle_preferences')
         .insert({
@@ -89,7 +89,7 @@ export const useOraclePreferences = (): UseOraclePreferencesReturn => {
 
     try {
       setError(null);
-      
+
       const { data, error: updateError } = await supabase
         .from('oracle_preferences')
         .update({
@@ -117,7 +117,7 @@ export const useOraclePreferences = (): UseOraclePreferencesReturn => {
 
     try {
       setError(null);
-      
+
       const { error: deleteError } = await supabase
         .from('oracle_preferences')
         .delete()

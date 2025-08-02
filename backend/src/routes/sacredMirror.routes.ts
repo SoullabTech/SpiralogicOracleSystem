@@ -18,7 +18,7 @@ const router = Router();
 router.get('/metrics', authenticateToken, async (req, res) => {
   try {
     const metrics = sacredMirrorProtocol.getSacredMirrorMetrics();
-    
+
     res.json({
       success: true,
       data: {
@@ -48,7 +48,7 @@ router.get('/metrics', authenticateToken, async (req, res) => {
 router.get('/user-pattern/:userId', authenticateToken, isAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     // This would retrieve user pattern data from the Sacred Mirror Protocol
     // For now, returning placeholder data
     const userPattern = {
@@ -83,10 +83,10 @@ router.get('/user-pattern/:userId', authenticateToken, isAdmin, async (req, res)
 router.post('/weekly-reflection/:userId', authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     // Trigger weekly mirror reflection
     const reflection = await sacredMirrorProtocol.performWeeklyMirrorReflection(userId);
-    
+
     if (reflection) {
       res.json({
         success: true,
@@ -124,7 +124,7 @@ router.get('/prompts', authenticateToken, isAdmin, async (req, res) => {
   try {
     // Import the Sacred Mirror prompts
     const sacredMirrorPrompts = await import('../../api/oracle-agent/prompts/sacred-mirror.json');
-    
+
     res.json({
       success: true,
       data: sacredMirrorPrompts.default
@@ -254,10 +254,10 @@ You are not an assistant. You are an initiatory mirror. Your purpose is not to p
  */
 router.post('/configure', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { 
-      dissonance_threshold, 
-      challenge_threshold, 
-      shadow_oracle_active 
+    const {
+      dissonance_threshold,
+      challenge_threshold,
+      shadow_oracle_active
     } = req.body;
 
     // Update Sacred Mirror configuration

@@ -9,7 +9,7 @@ export enum IntegrationStage {
 
 export enum SpiralPhase {
   FOUNDATION = 'foundation',
-  EXPLORATION = 'exploration', 
+  EXPLORATION = 'exploration',
   INTEGRATION = 'integration',
   DEEPENING = 'deepening',
   SERVICE = 'service',

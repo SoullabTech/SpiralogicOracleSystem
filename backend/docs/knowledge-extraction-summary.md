@@ -20,7 +20,7 @@
 **Core Concepts:**
 - Elemental agents as dynamic mentors
 - Fire Agent: Mars/Sun - catalytic action
-- Water Agent: Moon/Neptune - emotional navigation  
+- Water Agent: Moon/Neptune - emotional navigation
 - Earth Agent: Saturn/Venus - practical manifestation
 - Air Agent: Mercury/Uranus - mental clarity
 - Aether Agent: Jupiter/Pluto - integration

@@ -1,10 +1,10 @@
 /**
  * Integration Practice Generator
- * 
- * Designs personalized soul development practices that integrate shadow work, life purpose, 
- * and dream insights within cultural wisdom frameworks. Creates comprehensive practice 
+ *
+ * Designs personalized soul development practices that integrate shadow work, life purpose,
+ * and dream insights within cultural wisdom frameworks. Creates comprehensive practice
  * ecosystems for holistic consciousness evolution.
- * 
+ *
  * Features:
  * - Personalized practice creation based on soul development assessments
  * - Cultural wisdom integration in practice design
@@ -17,22 +17,22 @@
 
 import { logger } from '../../utils/logger';
 import { CulturalProfile } from '../cultural/CulturalContextAwareness';
-import { 
+import {
   culturalContextAwareness,
   crossCulturalArchetypeMapping,
   culturalShadowIntegration
 } from '../cultural/index';
-import { 
+import {
   jungianShadowIntegrationEngine,
   ShadowIntegrationPlan,
   IntegrationPractice as ShadowIntegrationPractice
 } from './JungianShadowIntegrationEngine';
-import { 
+import {
   lifeSpiralHarmonizer,
   LifeSpiralHarmonizerPlan,
   HarmonizationPractice
 } from './LifeSpiralHarmonizer';
-import { 
+import {
   dreamJournalingIntegration,
   DreamJournalingPlan,
   DreamAnalysis
@@ -400,7 +400,7 @@ export class IntegrationPracticeGenerator {
     dreamPlan?: DreamJournalingPlan,
     practicePreferences?: Partial<PracticePreferences>
   ): Promise<PracticeEcosystem> {
-    
+
     try {
       logger.info('Generating practice ecosystem', {
         userId,
@@ -510,10 +510,10 @@ export class IntegrationPracticeGenerator {
       lifeCircumstancesChanged?: any;
     }
   ): Promise<PracticeEcosystem> {
-    
+
     try {
       const currentEcosystem = this.practiceEcosystems.get(userId);
-      
+
       if (!currentEcosystem) {
         throw new Error('Practice ecosystem not found for user');
       }
@@ -581,10 +581,10 @@ export class IntegrationPracticeGenerator {
     progressOpportunities: string[];
     culturalRelevance: string[];
   }> {
-    
+
     try {
       const ecosystem = this.practiceEcosystems.get(userId);
-      
+
       if (!ecosystem) {
         throw new Error('Practice ecosystem not found for user');
       }
@@ -660,10 +660,10 @@ export class IntegrationPracticeGenerator {
     nextRecommendations: string[];
     celebrationMoments: string[];
   }> {
-    
+
     try {
       const ecosystem = this.practiceEcosystems.get(userId);
-      
+
       if (!ecosystem) {
         throw new Error('Practice ecosystem not found for user');
       }
@@ -742,9 +742,9 @@ export class IntegrationPracticeGenerator {
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
     dreamPlan?: DreamJournalingPlan
   ): Promise<PracticeProfile> {
-    
+
     const profileId = `profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Assess integration levels
     const shadowIntegrationLevel = shadowPlan ? this.assessShadowIntegrationLevel(shadowPlan) : 0.3;
     const lifeSpiralmaturalization = lifeSpiralPlan ? this.assessLifeSpiralMaturation(lifeSpiralPlan) : 0.3;
@@ -786,7 +786,7 @@ export class IntegrationPracticeGenerator {
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
     dreamPlan?: DreamJournalingPlan
   ): Promise<IntegrationPractice[]> {
-    
+
     const corePractices: IntegrationPractice[] = [];
 
     // Generate shadow integration practices
@@ -956,7 +956,7 @@ export class IntegrationPracticeGenerator {
     shadowPlan: ShadowIntegrationPlan
   ): Promise<IntegrationPractice[]> {
     const practices: IntegrationPractice[] = [];
-    
+
     // Create practice for each shadow complex
     for (const shadowComplex of shadowPlan.shadowComplexes) {
       const practice: IntegrationPractice = {
@@ -1018,10 +1018,10 @@ export class IntegrationPracticeGenerator {
         adaptationProtocols: [],
         communityComponents: []
       };
-      
+
       practices.push(practice);
     }
-    
+
     return practices;
   }
 
@@ -1118,12 +1118,12 @@ export class IntegrationPracticeGenerator {
 
   private async checkCelebrationMoments(profile: PracticeProfile, completed: CompletedPractice): Promise<string[]> {
     const celebrations = [];
-    
+
     // Check for practice streaks
     if (profile.practiceHistory.completedPractices.length % 7 === 0) {
       celebrations.push('Weekly practice streak achieved!');
     }
-    
+
     return celebrations;
   }
 

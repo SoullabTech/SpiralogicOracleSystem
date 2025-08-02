@@ -28,7 +28,7 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res) => {
 
     // Use universal speak function with Oracle agent type
     const audioUrl = await speak(
-      response.content, 
+      response.content,
       'oracle',
       'PersonalOracleAgent'
     );

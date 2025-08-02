@@ -143,23 +143,23 @@ AKASH_DEPLOYMENT_ID=your_deployment_id
 graph TB
     Internet[🌐 Internet] --> Caddy[🔒 Caddy Proxy]
     Caddy --> AIN[🧠 AIN Orchestrator]
-    
+
     AIN --> Fire[🔥 Fire Agent]
     AIN --> Water[💧 Water Agent]
     AIN --> Earth[🌍 Earth Agent]
     AIN --> Air[💨 Air Agent]
     AIN --> Aether[✨ Aether Agent]
-    
+
     AIN --> DB[(🗄️ PostgreSQL)]
     AIN --> Cache[(⚡ Redis)]
-    
+
     Monitor[📊 Prometheus] --> AIN
     Monitor --> Fire
     Monitor --> Water
     Monitor --> Earth
     Monitor --> Air
     Monitor --> Aether
-    
+
     Backup[💾 Backup Service] --> DB
     Backup --> Cache
     Backup --> AIN

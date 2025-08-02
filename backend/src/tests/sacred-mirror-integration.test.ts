@@ -7,7 +7,7 @@ import { sacredMirrorProtocol, SacredMirrorContext } from '../core/agents/Sacred
 import type { AIResponse } from '../types/ai';
 
 describe('Sacred Mirror Integrity Protocol Integration', () => {
-  
+
   describe('Dissonance Detection', () => {
     test('should detect high sentiment with low challenge as sycophancy risk', async () => {
       const context: SacredMirrorContext = {
@@ -31,7 +31,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       expect(result.metadata?.sacred_mirror_active).toBe(true);
       expect(result.metadata?.dissonance_injected).toBe(true);
       expect(result.content).toContain('🪞');
@@ -60,7 +60,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       expect(result.metadata?.sacred_mirror_active).toBeFalsy();
       expect(result.metadata?.archetypal_challenge_added).toBe(true);
     });
@@ -89,7 +89,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       expect(result.metadata?.sacred_mirror_active).toBe(true);
       expect(result.content).toContain('🪞');
       expect(result.content.toLowerCase()).toContain('pattern');
@@ -119,7 +119,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       expect(result.metadata?.sacred_mirror_active).toBe(true);
       expect(result.content).toContain('🪞');
       expect(result.content.toLowerCase()).toMatch(/(shadow|mirror|pattern|projection)/);
@@ -149,7 +149,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       if (result.metadata?.sacred_mirror_active) {
         expect(result.content).toContain('gentle mirror');
       }
@@ -177,7 +177,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       expect(result.metadata?.sacred_mirror_active).toBe(true);
       expect(result.content).toContain('🪞');
       expect(result.content.toLowerCase()).toMatch(/(tower|pattern|descent|mirror)/);
@@ -188,10 +188,10 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
     test('should generate reflection for significant patterns', async () => {
       // Simulate user with repetitive pattern
       const userId = 'test-user-weekly';
-      
+
       // This would need the protocol to have tracked patterns
       const reflection = await sacredMirrorProtocol.performWeeklyMirrorReflection(userId);
-      
+
       // Since no patterns are tracked in this test, should return null
       expect(reflection).toBeNull();
     });
@@ -220,7 +220,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       expect(result.metadata?.archetypal_challenge_added).toBe(true);
       expect(result.content).toContain('🏺 Archetypal Invitation:');
       expect(result.content.toLowerCase()).toMatch(/(hero|sage|magician|sovereign|lover|fool)/);
@@ -250,7 +250,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
       };
 
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       expect(result.content).not.toContain('Absolutely!');
       expect(result.content).not.toContain('definitely amazing');
       expect(result.content).not.toContain('Perfect!');
@@ -281,7 +281,7 @@ describe('Sacred Mirror Integrity Protocol Integration', () => {
 
       // Mock an error condition
       const result = await sacredMirrorProtocol.applySacredMirror(context);
-      
+
       // Should not throw and should return a valid response
       expect(result).toBeDefined();
       expect(result.content).toBeDefined();

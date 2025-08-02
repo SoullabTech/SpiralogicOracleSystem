@@ -27,7 +27,7 @@ const welcomeParticipantSchema = z.object({
 
 const retreatQuestionnaireSchema = z.object({
   participantId: z.string().uuid(),
-  
+
   // Life Context
   lifeContext: z.object({
     currentLifePhase: z.string(),
@@ -35,7 +35,7 @@ const retreatQuestionnaireSchema = z.object({
     primaryRelationships: z.string(),
     professionalContext: z.string()
   }),
-  
+
   // Emotional Landscape
   emotionalLandscape: z.object({
     dominantEmotions: z.array(z.string()),
@@ -43,7 +43,7 @@ const retreatQuestionnaireSchema = z.object({
     emotionalStrengths: z.array(z.string()),
     stressResponses: z.array(z.string())
   }),
-  
+
   // Spiritual Journey
   spiritualJourney: z.object({
     practicesEngaged: z.array(z.string()),
@@ -51,7 +51,7 @@ const retreatQuestionnaireSchema = z.object({
     connectionToNature: z.number().min(1).max(10),
     mysticalExperiences: z.string().optional()
   }),
-  
+
   // Shadow Work
   shadowWork: z.object({
     shadowAwareness: z.number().min(1).max(10),
@@ -59,7 +59,7 @@ const retreatQuestionnaireSchema = z.object({
     fears: z.array(z.string()),
     hiddenGifts: z.string().optional()
   }),
-  
+
   // Intentions
   intentions: z.object({
     primaryIntention: z.string().min(20),
@@ -68,7 +68,7 @@ const retreatQuestionnaireSchema = z.object({
     willingToRelease: z.array(z.string()),
     newToEmbody: z.array(z.string())
   }),
-  
+
   // Retreat Readiness
   readiness: z.object({
     physicalHealth: z.number().min(1).max(10),
@@ -84,20 +84,20 @@ router.post('/welcome', async (req: Request, res: Response) => {
   try {
     const validation = welcomeParticipantSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid welcome data', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid welcome data',
+        details: validation.error.format()
       });
     }
 
     const data = validation.data;
-    
+
     // Determine retreat ID based on dates
     let retreatId: string;
     const arrivalDate = new Date(data.arrivalDate);
-    
+
     // Check if it's for YPO event (June 10th)
-    if (data.eventType === 'ypo' || 
+    if (data.eventType === 'ypo' ||
         (arrivalDate.getMonth() === 5 && arrivalDate.getDate() === 10 && arrivalDate.getFullYear() === 2024)) {
       retreatId = await ensureYPOEventExists();
     } else {
@@ -153,7 +153,7 @@ router.post('/welcome', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Welcome initialization failed', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Welcome process failed',
       message: 'Please try again or contact support@soullab.com'
     });
@@ -165,14 +165,14 @@ router.post('/questionnaire', async (req: Request, res: Response) => {
   try {
     const validation = retreatQuestionnaireSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid questionnaire data', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid questionnaire data',
+        details: validation.error.format()
       });
     }
 
     const data = validation.data;
-    
+
     // Store questionnaire data
     await supabase
       .from('retreat_participants')
@@ -191,7 +191,7 @@ router.post('/questionnaire', async (req: Request, res: Response) => {
 
     // Generate elemental profile based on questionnaire
     const elementalProfile = await generateElementalProfile(data);
-    
+
     // Store elemental profile
     await supabase
       .from('retreat_participants')
@@ -213,7 +213,7 @@ router.post('/questionnaire', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Questionnaire submission failed', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process questionnaire',
       message: 'Your responses are important. Please try again.'
     });
@@ -224,7 +224,7 @@ router.post('/questionnaire', async (req: Request, res: Response) => {
 router.post('/oracle-assignment/:participantId', async (req: Request, res: Response) => {
   try {
     const { participantId } = req.params;
-    
+
     // Get participant with questionnaire data
     const { data: participant } = await supabase
       .from('retreat_participants')
@@ -253,7 +253,7 @@ router.post('/oracle-assignment/:participantId', async (req: Request, res: Respo
 
   } catch (error) {
     logger.error('Oracle assignment failed', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to assign Personal Oracle',
       message: 'Your sacred guide awaits. Please try again.'
     });
@@ -264,12 +264,12 @@ router.post('/oracle-assignment/:participantId', async (req: Request, res: Respo
 router.get('/ypo/overview', async (req: Request, res: Response) => {
   try {
     const ypoEvent = await getYPOEventDetails();
-    
+
     res.json({
       event: ypoEvent,
       specialMessage: `Welcome YPO Members,
 
-Kelly is honored to share the Spiralogic wisdom with your chapter. 
+Kelly is honored to share the Spiralogic wisdom with your chapter.
 This evening will be a taste of the deeper work available at our Switzerland retreat.
 
 During our time together, you'll:
@@ -295,9 +295,9 @@ Kelly & The Soullab Team`,
 router.get('/preparation/:participantId', async (req: Request, res: Response) => {
   try {
     const { participantId } = req.params;
-    
+
     const preparation = await generateRetreatPreparation(participantId);
-    
+
     res.json({
       success: true,
       preparation,
@@ -371,7 +371,7 @@ async function ensureSwissRetreatExists(): Promise<string> {
 
 async function generatePersonalizedWelcome(participant: any, eventType: string): Promise<any> {
   const { soullabFounderAgent } = await import('../core/agents/soullabFounderAgent');
-  
+
   const welcomeMessage = await soullabFounderAgent.generatePersonalWelcome({
     ...participant,
     metadata: { eventType }
@@ -379,8 +379,8 @@ async function generatePersonalizedWelcome(participant: any, eventType: string):
 
   return {
     message: welcomeMessage.message,
-    videoUrl: eventType === 'ypo' 
-      ? 'https://soullab.com/welcome-ypo' 
+    videoUrl: eventType === 'ypo'
+      ? 'https://soullab.com/welcome-ypo'
       : 'https://soullab.com/welcome-retreat',
     personalizedElements: welcomeMessage.personalizedElements,
     journeyHighlights: eventType === 'ypo'
@@ -401,7 +401,7 @@ async function generateElementalProfile(questionnaire: any): Promise<any> {
 
   // Analyze responses to determine elemental affinities
   // Fire: passion, vision, transformation
-  if (questionnaire.intentions.primaryIntention.includes('transform') || 
+  if (questionnaire.intentions.primaryIntention.includes('transform') ||
       questionnaire.intentions.primaryIntention.includes('create')) {
     scores.fire += 3;
   }
@@ -449,7 +449,7 @@ async function generateElementalProfile(questionnaire: any): Promise<any> {
 
 async function getFounderQuestionnaireReflection(participantId: string, questionnaire: any): Promise<string> {
   const { soullabFounderAgent } = await import('../core/agents/soullabFounderAgent');
-  
+
   const reflection = await soullabFounderAgent.reflectOnQuestionnaire({
     participantId,
     intentions: questionnaire.intentions,
@@ -482,7 +482,7 @@ async function assignEnhancedPersonalOracle(participant: any): Promise<any> {
 function getArchetypeForProfile(participant: any): string {
   const { dominantElement } = participant.elementalProfile;
   const { primaryIntention } = participant.retreatIntentions || {};
-  
+
   // Enhanced archetype selection based on element and intention
   const archetypeMap: any = {
     fire: {
@@ -518,7 +518,7 @@ function getArchetypeForProfile(participant: any): string {
   };
 
   const elementArchetypes = archetypeMap[dominantElement] || archetypeMap.aether;
-  
+
   // Match intention keywords to specific archetypes
   if (primaryIntention) {
     for (const [key, archetype] of Object.entries(elementArchetypes)) {
@@ -533,7 +533,7 @@ function getArchetypeForProfile(participant: any): string {
 
 async function createOracleIntroduction(participant: any, assignment: any): Promise<any> {
   const { soullabFounderAgent } = await import('../core/agents/soullabFounderAgent');
-  
+
   const intro = await soullabFounderAgent.introducePersonalOracle(
     participant,
     assignment.element,
@@ -583,13 +583,13 @@ The mountains are calling, and your transformation awaits.
 
 With love,
 Kelly & Your ${participant.oracleArchetype}`,
-    
+
     practices: {
       daily: getDailyPractice(participant.oracleElement),
       preparatory: getPreparatoryWork(participant.retreatIntentions),
       integration: 'Begin imagining yourself already transformed'
     },
-    
+
     reminders: [
       'Complete your medical and dietary forms',
       'Book your flights to Zurich',
@@ -617,15 +617,15 @@ function getPreparatoryWork(intentions: any): string[] {
     'Gratitude practice: Acknowledge your journey thus far',
     'Vision casting: See yourself post-transformation'
   ];
-  
+
   if (intentions?.primaryIntention?.includes('relationship')) {
     work.push('Relationship inventory: Current dynamics and desired shifts');
   }
-  
+
   if (intentions?.primaryIntention?.includes('purpose')) {
     work.push('Purpose clarification: Your unique medicine for the world');
   }
-  
+
   return work;
 }
 

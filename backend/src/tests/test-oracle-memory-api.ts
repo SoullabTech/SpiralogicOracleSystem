@@ -26,16 +26,16 @@ async function testOracleMemoryAPI() {
     // 2. Send message to Oracle
     console.log('2️⃣ Sending message to Oracle...');
     const testMessage = "I'm feeling overwhelmed by all these changes in my life";
-    
+
     const oracleResponse = await axios.post(
       `${API_BASE}/oracle/message`,
-      { 
+      {
         userId: TEST_USER_ID,
-        message: testMessage 
+        message: testMessage
       },
       { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } }
     );
-    
+
     console.log('User:', testMessage);
     console.log('Oracle:', oracleResponse.data.response);
     console.log('');
@@ -46,7 +46,7 @@ async function testOracleMemoryAPI() {
       `${API_BASE}/soul-memory/memories/${TEST_USER_ID}?limit=1`,
       { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } }
     );
-    
+
     const latestMemory = memoriesResponse.data[0];
     if (latestMemory) {
       console.log('✅ Latest memory found:');
@@ -73,7 +73,7 @@ async function testOracleMemoryAPI() {
       },
       { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } }
     );
-    
+
     console.log(`Found ${searchResponse.data.length} related memories`);
     console.log('');
 
@@ -89,7 +89,7 @@ async function testOracleMemoryAPI() {
       },
       { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } }
     );
-    
+
     console.log('Ritual recorded:', ritualResponse.data.memory.id);
     console.log('Oracle guidance:', ritualResponse.data.guidance.substring(0, 100) + '...');
     console.log('');
@@ -100,7 +100,7 @@ async function testOracleMemoryAPI() {
       `${API_BASE}/memories/sacred/${TEST_USER_ID}`,
       { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } }
     );
-    
+
     console.log(`Found ${sacredResponse.data.length} sacred moments`);
     console.log('');
 
@@ -110,7 +110,7 @@ async function testOracleMemoryAPI() {
       `${API_BASE}/memories/transformation/${TEST_USER_ID}`,
       { headers: { Authorization: `Bearer ${AUTH_TOKEN}` } }
     );
-    
+
     console.log('Transformation journey:', {
       currentPhase: journeyResponse.data.currentPhase,
       milestones: journeyResponse.data.milestones.length,
@@ -132,7 +132,7 @@ console.log(`
 const testOracleMemory = async () => {
   // Test Oracle exchange memory
   const testMessage = "I'm feeling overwhelmed by all these changes in my life";
-  
+
   // Send to Oracle
   const oracleResponse = await fetch('/api/oracle/message', {
     method: 'POST',
@@ -145,7 +145,7 @@ const testOracleMemory = async () => {
       message: testMessage
     })
   });
-  
+
   const { response } = await oracleResponse.json();
   console.log('Oracle response:', response);
 
@@ -155,7 +155,7 @@ const testOracleMemory = async () => {
       'Authorization': \`Bearer \${authToken}\`
     }
   });
-  
+
   const memories = await recentMemories.json();
   console.log('Latest memory:', memories[0]);
   // Should show the exchange with emotional tone, element, etc.

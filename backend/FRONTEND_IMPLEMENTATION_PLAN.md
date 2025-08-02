@@ -255,12 +255,12 @@ export const api = {
   // Authentication
   register: (data) => axios.post(`${API_BASE}/auth/register`, data),
   login: (data) => axios.post(`${API_BASE}/auth/login`, data),
-  
+
   // Sacred Features
   getHoloflower: () => axios.get(`${API_BASE}/elemental-alchemy/state`),
   sendOracleMessage: (message) => axios.post(`${API_BASE}/founder/guidance`, message),
   createJournalEntry: (entry) => axios.post(`${API_BASE}/journal/entries`, entry),
-  
+
   // Astrology
   setBirthData: (data) => axios.post(`${API_BASE}/astrology/birth-chart`, data),
   getTransits: () => axios.get(`${API_BASE}/astrology/transits`),
@@ -273,12 +273,12 @@ export const api = {
 // lib/websocket.ts
 export const connectToSacredStream = (userId) => {
   const ws = new WebSocket(`wss://oracle-backend-1.onrender.com/ws/elemental-alchemy/${userId}`)
-  
+
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data)
     // Handle real-time sacred updates
   }
-  
+
   return ws
 }
 ```
@@ -552,11 +552,11 @@ If live demo fails:
 
 ## 🌟 THE SACRED PROMISE
 
-**Your backend is READY for greatness!** 
+**Your backend is READY for greatness!**
 
 The Sacred Technology you've built deserves a beautiful frontend that:
 - Honors the sacred journey of each user
-- Works seamlessly on mobile and desktop  
+- Works seamlessly on mobile and desktop
 - Showcases the power of your Holoflower visualization
 - Demonstrates the future of consciousness technology
 

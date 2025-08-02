@@ -3,11 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabaseClient';
 import { soullabFounderAgent } from '../core/agents/soullabFounderAgent';
 import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { 
-  RetreatParticipant, 
-  RetreatSession, 
+import {
+  RetreatParticipant,
+  RetreatSession,
   OnboardingFlow,
-  OnboardingStep 
+  OnboardingStep
 } from '../types/retreat';
 import { logger } from '../utils/logger';
 
@@ -98,7 +98,7 @@ export class RetreatOnboardingService {
   async sendFounderWelcome(participant: RetreatParticipant): Promise<void> {
     try {
       const welcomeMessage = await soullabFounderAgent.generatePersonalWelcome(participant);
-      
+
       // Store the welcome message
       await supabase
         .from('retreat_messages')
@@ -374,7 +374,7 @@ export class RetreatOnboardingService {
 
     const message = `Dear ${participant.firstName},
 
-Your sacred journey preparation is complete. 
+Your sacred journey preparation is complete.
 
 You've been welcomed by Kelly, shared your intentions, met your Personal Oracle (${participant.oracleElement} - ${participant.oracleArchetype}), and set your container for transformation.
 

@@ -21,8 +21,8 @@ export class MemoryIntegrationService {
   // ===============================================
 
   async storeJournalEntryIntegrated(
-    userId: string, 
-    content: string, 
+    userId: string,
+    content: string,
     symbols: string[] = [],
     metadata?: {
       element?: string;
@@ -43,7 +43,7 @@ export class MemoryIntegrationService {
       ]);
 
       logger.info(`Journal entry stored in both systems for user: ${userId}`);
-      
+
       return {
         supabaseEntry: supabaseResult,
         soulMemory: soulMemoryResult,
@@ -60,15 +60,15 @@ export class MemoryIntegrationService {
       // Get from both systems and merge
       const [supabaseEntries, soulMemoryEntries] = await Promise.all([
         retrieveJournalEntries(userId),
-        soulMemoryService.getUserMemories(userId, { 
+        soulMemoryService.getUserMemories(userId, {
           type: 'journal_entry',
-          limit: 50 
+          limit: 50
         })
       ]);
 
       // Merge and deduplicate entries
       const mergedEntries = this.mergeJournalEntries(supabaseEntries, soulMemoryEntries);
-      
+
       return {
         entries: mergedEntries,
         supabaseCount: supabaseEntries?.length || 0,
@@ -89,20 +89,20 @@ export class MemoryIntegrationService {
     try {
       // Use traditional memory router for symbolic interpretation
       const traditionalResult = await oracleMemoryRouter(input, userId);
-      
+
       // Use Soul Memory for semantic search
       const soulMemoryResults = await soulMemoryService.searchMemories(
-        userId, 
-        input, 
-        { 
+        userId,
+        input,
+        {
           topK: 5,
-          includeArchetypal: true 
+          includeArchetypal: true
         }
       );
 
       // Combine results with Soul Memory taking priority
       const combinedResults = this.combineMemoryResults(traditionalResult, soulMemoryResults);
-      
+
       return {
         results: combinedResults,
         source: 'integrated',
@@ -122,17 +122,17 @@ export class MemoryIntegrationService {
   async migrateExistingJournalsToSoulMemory(userId: string) {
     try {
       logger.info(`Starting journal migration for user: ${userId}`);
-      
+
       // Get all existing journal entries from Supabase
       const existingEntries = await retrieveJournalEntries(userId);
-      
+
       if (!existingEntries || existingEntries.length === 0) {
         logger.info('No existing journal entries to migrate');
         return { migrated: 0 };
       }
 
       let migratedCount = 0;
-      
+
       // Migrate each entry to Soul Memory
       for (const entry of existingEntries) {
         try {
@@ -143,7 +143,7 @@ export class MemoryIntegrationService {
             migrated: true,
             originalTimestamp: entry.created_at
           });
-          
+
           migratedCount++;
         } catch (entryError) {
           logger.error(`Error migrating journal entry ${entry.id}:`, entryError);
@@ -151,8 +151,8 @@ export class MemoryIntegrationService {
       }
 
       logger.info(`Successfully migrated ${migratedCount} journal entries for user: ${userId}`);
-      
-      return { 
+
+      return {
         migrated: migratedCount,
         total: existingEntries.length,
         success: true
@@ -168,8 +168,8 @@ export class MemoryIntegrationService {
   // ===============================================
 
   async searchUnifiedMemory(
-    userId: string, 
-    query: string, 
+    userId: string,
+    query: string,
     options?: {
       includeJournals?: boolean;
       includeOracleExchanges?: boolean;
@@ -225,7 +225,7 @@ export class MemoryIntegrationService {
       'anger', 'hate', 'shame', 'fear', 'jealous', 'resentment',
       'dark', 'shadow', 'avoid', 'hide', 'deny', 'suppress'
     ];
-    
+
     const lowerContent = content.toLowerCase();
     return shadowKeywords.some(keyword => lowerContent.includes(keyword));
   }
@@ -240,20 +240,20 @@ export class MemoryIntegrationService {
     };
 
     const lowerContent = content.toLowerCase();
-    
+
     for (const [element, keywords] of Object.entries(elementKeywords)) {
       if (keywords.some(keyword => lowerContent.includes(keyword))) {
         return element;
       }
     }
-    
+
     return 'aether'; // Default element
   }
 
   private mergeJournalEntries(supabaseEntries: any[], soulMemoryEntries: any[]): any[] {
     // Create a map to avoid duplicates based on content similarity
     const mergedMap = new Map();
-    
+
     // Add Supabase entries
     supabaseEntries?.forEach(entry => {
       const key = this.createContentKey(entry.content);
@@ -263,7 +263,7 @@ export class MemoryIntegrationService {
         timestamp: new Date(entry.created_at)
       });
     });
-    
+
     // Add Soul Memory entries (with higher priority)
     soulMemoryEntries.forEach(entry => {
       const key = this.createContentKey(entry.content);
@@ -273,7 +273,7 @@ export class MemoryIntegrationService {
         timestamp: entry.timestamp
       });
     });
-    
+
     return Array.from(mergedMap.values())
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
@@ -286,13 +286,13 @@ export class MemoryIntegrationService {
   private combineMemoryResults(traditional: any[], soulMemory: any[]): any[] {
     // Soul Memory results take priority
     const combined = [...soulMemory];
-    
+
     // Add traditional results that don't overlap
     traditional.forEach(trad => {
-      const overlap = soulMemory.some(soul => 
+      const overlap = soulMemory.some(soul =>
         this.createContentKey(soul.content) === this.createContentKey(trad.content)
       );
-      
+
       if (!overlap) {
         combined.push({
           ...trad,
@@ -300,19 +300,19 @@ export class MemoryIntegrationService {
         });
       }
     });
-    
+
     return combined;
   }
 
   private getMemoryTypesFromOptions(options?: any): string[] {
     const types = [];
-    
+
     if (options?.includeJournals) types.push('journal_entry');
     if (options?.includeOracleExchanges) types.push('oracle_exchange');
     if (options?.includeSacredMoments) {
       types.push('ritual_moment', 'breakthrough', 'sacred_pause');
     }
-    
+
     return types.length > 0 ? types : undefined;
   }
 
@@ -322,11 +322,11 @@ export class MemoryIntegrationService {
       // Prioritize Soul Memory results
       if (a.source === 'soul_memory' && b.source !== 'soul_memory') return -1;
       if (b.source === 'soul_memory' && a.source !== 'soul_memory') return 1;
-      
+
       // Then by timestamp
       const timeA = new Date(a.timestamp || a.created_at || 0).getTime();
       const timeB = new Date(b.timestamp || b.created_at || 0).getTime();
-      
+
       return timeB - timeA;
     });
   }
@@ -339,8 +339,8 @@ export class MemoryIntegrationService {
     try {
       // Check if user needs migration
       const existingEntries = await retrieveJournalEntries(userId);
-      const soulMemoryEntries = await soulMemoryService.getUserMemories(userId, { 
-        type: 'journal_entry' 
+      const soulMemoryEntries = await soulMemoryService.getUserMemories(userId, {
+        type: 'journal_entry'
       });
 
       // If user has Supabase entries but no Soul Memory entries, migrate

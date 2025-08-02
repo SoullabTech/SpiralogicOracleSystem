@@ -173,7 +173,7 @@ describe('SoullabFounderAgent', () => {
 
 /**
  * 🧪 TEST COVERAGE
- * 
+ *
  * These tests verify that the SoullabFounderAgent:
  * - Shares philosophy appropriately
  * - Protects technical IP while being helpful
@@ -181,7 +181,7 @@ describe('SoullabFounderAgent', () => {
  * - Maintains vision coherence
  * - Respects access boundaries
  * - Speaks with authentic organizational voice
- * 
+ *
  * Additional tests would include:
  * - Knowledge document upload processing
  * - Long-term vision articulation

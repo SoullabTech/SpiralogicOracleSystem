@@ -193,7 +193,7 @@ export class SpiritualBypassingDetectionService {
     const rapidConsumption = contentInteraction.dailyContentRequests > 5;
     const lowIntegration = integrationHistory.averageIntegrationDays < 2;
     const bypassAttempts = integrationHistory.reflectionGapsBypassAttempts > 0;
-    
+
     return rapidConsumption && (lowIntegration || bypassAttempts);
   }
 
@@ -201,7 +201,7 @@ export class SpiritualBypassingDetectionService {
     const shadowAvoidance = userBehavior.shadowWorkAvoidance > 1;
     const emotionalContentSkip = contentInteraction.emotionalProcessingSkipped > 2;
     const intellectualization = userBehavior.intellectualizationPattern > 3;
-    
+
     return shadowAvoidance || emotionalContentSkip || intellectualization;
   }
 
@@ -209,7 +209,7 @@ export class SpiritualBypassingDetectionService {
     const peakSeekingBehavior = contentInteraction.peakExperienceRequests > contentInteraction.dailyPracticeEngagement;
     const ordinaryRejection = userBehavior.ordinaryMomentRejection > 50;
     const transcendenceLanguage = userBehavior.transcendenceLanguageUsage > 5;
-    
+
     return peakSeekingBehavior || ordinaryRejection || transcendenceLanguage;
   }
 

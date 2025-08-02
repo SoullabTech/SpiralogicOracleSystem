@@ -1,7 +1,7 @@
 /**
  * 12 Facets Consciousness Detection Engine
  * Phase 1 Integration with existing Soul Lab architecture
- * 
+ *
  * Enhances HierarchyOrchestrator and PersonalOracleAgent with advanced
  * consciousness mapping capabilities while maintaining cultural sovereignty
  */
@@ -19,17 +19,17 @@ export interface TwelveFacetsProfile {
   spiritual_connection: FacetLevel;        // Connection to divine, sacred practices
   transcendent_purpose: FacetLevel;        // Higher calling, soul mission
   wisdom_integration: FacetLevel;          // Embodying learned wisdom
-  
-  // Emotional Intelligence Facets  
+
+  // Emotional Intelligence Facets
   emotional_regulation: FacetLevel;        // Managing emotional states
   empathy: FacetLevel;                    // Understanding others' experiences
   shadow_integration: FacetLevel;          // Accepting rejected aspects
-  
+
   // Mental Clarity Facets
   analytical_thinking: FacetLevel;         // Logical problem-solving
   intuitive_wisdom: FacetLevel;           // Non-linear knowing
   communication: FacetLevel;              // Clear expression and listening
-  
+
   // Physical Vitality Facets
   physical_vitality: FacetLevel;          // Health, energy, embodiment
   creative_expression: FacetLevel;         // Artistic and innovative output
@@ -49,7 +49,7 @@ export interface FacetLevel {
 
 export interface ElementalResonance {
   fire: number;        // 0-1 scale of fire element resonance
-  water: number;       // 0-1 scale of water element resonance  
+  water: number;       // 0-1 scale of water element resonance
   earth: number;       // 0-1 scale of earth element resonance
   air: number;         // 0-1 scale of air element resonance
   aether: number;      // 0-1 scale of aether element resonance
@@ -120,7 +120,7 @@ export class TwelveFacetsDetectionEngine {
   private facetKeywordMap: Map<keyof TwelveFacetsProfile, string[]>;
   private elementalFacetMapping: ElementalFacetMapping;
   private culturalAdaptations: Map<string, CulturalFacetExpression[]>;
-  
+
   // QUANTUM COHERENCE LEARNING ENHANCEMENT
   private transformationOutcomes: Map<string, TransformationMeasurement[]> = new Map();
   private symbolicEffectiveness: Map<string, SymbolicResonanceScore> = new Map();
@@ -138,7 +138,7 @@ export class TwelveFacetsDetectionEngine {
    * Enhanced facet detection that integrates with existing archetypal analysis
    */
   detectFacetsFromQuery(
-    query: string, 
+    query: string,
     archetypalIntent?: ArchetypalIntent,
     culturalContext?: string,
     userHistory?: any[]
@@ -151,7 +151,7 @@ export class TwelveFacetsDetectionEngine {
 
     // Primary facet detection through keyword analysis
     const primaryFacets = this.analyzeFacetKeywords(query);
-    
+
     // Enhance with archetypal intelligence if available
     if (archetypalIntent) {
       this.enhanceWithArchetypalIntelligence(primaryFacets, archetypalIntent);
@@ -194,7 +194,7 @@ export class TwelveFacetsDetectionEngine {
    * Create comprehensive 12 facets profile for user
    */
   createFacetsProfile(
-    detectionResults: FacetDetectionResult[], 
+    detectionResults: FacetDetectionResult[],
     culturalContext?: string
   ): TwelveFacetsProfile {
     const profile: TwelveFacetsProfile = this.initializeEmptyProfile();
@@ -380,7 +380,7 @@ export class TwelveFacetsDetectionEngine {
       if (matches.length > 0) {
         const strength = Math.min(totalScore / words.length, 1.0);
         const confidence = Math.min(matches.length / keywords.length, 0.95);
-        
+
         results.push({
           facet,
           strength,
@@ -415,7 +415,7 @@ export class TwelveFacetsDetectionEngine {
     };
 
     const boostFacets = elementalBoosts[archetypalIntent.primary] || [];
-    
+
     for (const facet of facets) {
       if (boostFacets.includes(facet.facet as string)) {
         facet.strength = Math.min(facet.strength * (1 + archetypalIntent.confidence * 0.3), 1.0);
@@ -437,7 +437,7 @@ export class TwelveFacetsDetectionEngine {
     if (!culturalContext) return [];
 
     const adaptations = this.culturalAdaptations.get(culturalContext) || [];
-    return adaptations.filter(adaptation => 
+    return adaptations.filter(adaptation =>
       facets.some(f => f.facet === adaptation.facet)
     );
   }
@@ -451,7 +451,7 @@ export class TwelveFacetsDetectionEngine {
     }>
   ): ElementalFacetMapping {
     const mapping = JSON.parse(JSON.stringify(this.elementalFacetMapping));
-    
+
     // Weight the mapping based on detected facet strengths
     for (const facet of facets) {
       for (const element of ['fire', 'water', 'earth', 'air', 'aether'] as const) {
@@ -520,7 +520,7 @@ export class TwelveFacetsDetectionEngine {
 
     // Look for complementary facet combinations
     const facetNames = facets.map(f => f.facet);
-    
+
     if (facetNames.includes('analytical_thinking') && facetNames.includes('intuitive_wisdom')) {
       opportunities.push({
         facet_combination: ['analytical_thinking', 'intuitive_wisdom'],
@@ -733,7 +733,7 @@ export class TwelveFacetsDetectionEngine {
    */
   recordTransformationOutcome(transformationData: TransformationMeasurement): void {
     const userId = transformationData.userId;
-    
+
     // Store individual transformation data
     if (!this.transformationOutcomes.has(userId)) {
       this.transformationOutcomes.set(userId, []);
@@ -763,9 +763,9 @@ export class TwelveFacetsDetectionEngine {
   private updateSymbolicEffectivenessScores(transformationData: TransformationMeasurement): void {
     for (const intervention of transformationData.symbolicInterventions) {
       const symbolKey = `${intervention.archetypalPatterns.join('+')}_${intervention.elementalResonance.fire}_${intervention.elementalResonance.water}`;
-      
+
       let resonanceScore = this.symbolicEffectiveness.get(symbolKey);
-      
+
       if (!resonanceScore) {
         resonanceScore = {
           symbolCombination: symbolKey,
@@ -785,17 +785,17 @@ export class TwelveFacetsDetectionEngine {
         (resonanceScore.averageEffectiveness * resonanceScore.totalApplications + newEffectiveness) /
         (resonanceScore.totalApplications + 1)
       );
-      
+
       resonanceScore.totalApplications += 1;
       resonanceScore.quantumCoherenceAmplification = (
         (resonanceScore.quantumCoherenceAmplification * (resonanceScore.totalApplications - 1) + transformationData.quantumCoherence) /
         resonanceScore.totalApplications
       );
-      
+
       if (intervention.culturalAdaptation && !resonanceScore.culturalContexts.includes(intervention.culturalAdaptation)) {
         resonanceScore.culturalContexts.push(intervention.culturalAdaptation);
       }
-      
+
       resonanceScore.lastUpdated = new Date().toISOString();
       this.symbolicEffectiveness.set(symbolKey, resonanceScore);
     }
@@ -806,7 +806,7 @@ export class TwelveFacetsDetectionEngine {
    */
   private updateCollectiveWisdomAccumulator(transformationData: TransformationMeasurement): void {
     this.collectiveWisdomAccumulator.totalTransformations += 1;
-    
+
     // Update average growth rate
     const totalGrowth = this.collectiveWisdomAccumulator.averageGrowthRate * (this.collectiveWisdomAccumulator.totalTransformations - 1) + transformationData.transformationDelta;
     this.collectiveWisdomAccumulator.averageGrowthRate = totalGrowth / this.collectiveWisdomAccumulator.totalTransformations;
@@ -820,18 +820,18 @@ export class TwelveFacetsDetectionEngine {
     // Update species consciousness metrics
     const metrics = this.collectiveWisdomAccumulator.speciesConsciousnessMetrics;
     const totalTransformations = this.collectiveWisdomAccumulator.totalTransformations;
-    
+
     metrics.averageConsciousnessLevel = (
-      (metrics.averageConsciousnessLevel * (totalTransformations - 1) + 
+      (metrics.averageConsciousnessLevel * (totalTransformations - 1) +
        this.calculateOverallConsciousnessLevel(transformationData.postAssessment)) /
       totalTransformations
     );
-    
+
     metrics.collectiveWisdomAccumulation = (
       (metrics.collectiveWisdomAccumulation * (totalTransformations - 1) + transformationData.collectiveContribution) /
       totalTransformations
     );
-    
+
     metrics.evolutionaryMomentum = Math.min(
       metrics.evolutionaryMomentum * 1.001 + (transformationData.transformationDelta * 0.01),
       1.0
@@ -912,7 +912,7 @@ export class TwelveFacetsDetectionEngine {
     dominantFacets: Array<keyof TwelveFacetsProfile>,
     archetypalIntent: ArchetypalIntent
   ): QuantumGuidanceEnhancements {
-    const mostEffectiveSymbols = dominantFacets.map(facet => 
+    const mostEffectiveSymbols = dominantFacets.map(facet =>
       this.getMostEffectiveSymbolicCombinations(facet, 2)
     ).flat();
 
@@ -936,7 +936,7 @@ export class TwelveFacetsDetectionEngine {
   private calculateOverallConsciousnessLevel(assessment: ConsciousnessBaseline): number {
     const facetLevels = Object.values(assessment.facetLevels).map(facet => facet.current_level);
     const averageFacetLevel = facetLevels.reduce((sum, level) => sum + level, 0) / facetLevels.length;
-    
+
     return (
       averageFacetLevel * 0.4 +
       assessment.emotionalRegulation * 0.2 +

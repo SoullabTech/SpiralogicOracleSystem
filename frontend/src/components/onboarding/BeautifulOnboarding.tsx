@@ -21,13 +21,13 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
-  
+
   const [formData, setFormData] = useState({
     oracle_name: '',
     oracle_voice: 'AuntAnnie',
     reflection: ''
   });
-  
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Check if user already has Oracle preferences
@@ -53,13 +53,13 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
     } catch (error) {
       // No existing preferences found, continue with onboarding
     }
-    
+
     setLoading(false);
   };
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.oracle_name.trim()) {
       newErrors.oracle_name = 'Please choose a name for your Oracle';
     } else if (formData.oracle_name.trim().length < 2) {
@@ -85,7 +85,7 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
         stopVoiceSample();
         setPlayingVoice(voiceId);
         await playVoiceSample(voiceId);
-        
+
         // Auto-stop after 5 seconds
         setTimeout(() => {
           setPlayingVoice(null);
@@ -99,12 +99,12 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
     if (!user) return;
 
     setSaving(true);
-    
+
     try {
       const { data, error } = await supabase
         .from('oracle_preferences')
@@ -212,12 +212,12 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
               />
             </svg>
           </motion.div>
-          
+
           <h1 className="text-4xl font-light text-[#F6E27F] mb-4">
             Name Your Oracle
           </h1>
           <p className="text-lg text-gray-300 max-w-lg mx-auto leading-relaxed">
-            Choose a name and voice for your personal guide. This creates the foundation 
+            Choose a name and voice for your personal guide. This creates the foundation
             of your relationship with the Oracle System.
           </p>
         </div>
@@ -286,11 +286,11 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
                       )}
                     </div>
                   </div>
-                  
+
                   <p className="text-sm text-gray-400 mb-4 leading-relaxed">
                     {voice.description}
                   </p>
-                  
+
                   <button
                     type="button"
                     onClick={(e) => {
@@ -363,7 +363,7 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
                 <p className="text-red-400 text-sm">{errors.submit}</p>
               </div>
             )}
-            
+
             <button
               type="submit"
               disabled={saving || !formData.oracle_name.trim()}

@@ -1,10 +1,10 @@
 /**
  * Community Story Weaving Network
- * 
+ *
  * Creates meaningful connections between individual stories, dreams, and collective narratives
  * with full honor for cultural storytelling traditions and shadow integration. Expands the
  * DreamJournalingIntegration from Phase 2 into collective community story weaving.
- * 
+ *
  * Features:
  * - Dream weaving network expansion from Phase 2
  * - Mythological pattern recognition across cultures
@@ -17,13 +17,13 @@
 
 import { logger } from '../../utils/logger';
 import { CulturalProfile } from '../cultural/CulturalContextAwareness';
-import { 
+import {
   culturalContextAwareness,
   indigenousSovereigntyProtocol,
   crossCulturalArchetypeMapping,
   CulturalProtocolResult
 } from '../cultural/index';
-import { 
+import {
   dreamJournalingIntegration,
   DreamAnalysis,
   DreamEntry,
@@ -31,15 +31,15 @@ import {
   StoryWeavingConnection,
   NarrativeThread
 } from '../soulDevelopment/DreamJournalingIntegration';
-import { 
+import {
   jungianShadowIntegrationEngine,
   ShadowIntegrationPlan
 } from '../soulDevelopment/JungianShadowIntegrationEngine';
-import { 
+import {
   lifeSpiralHarmonizer,
   LifeSpiralHarmonizerPlan
 } from '../soulDevelopment/LifeSpiralHarmonizer';
-import { 
+import {
   collectiveWisdomSynthesis,
   ProcessedWisdom,
   CollectiveWisdom
@@ -470,7 +470,7 @@ export class CommunityStoryWeavingNetwork {
     communityContext: CommunityContext,
     culturalProfile: CulturalProfile
   ): Promise<StoryWeavingNetwork> {
-    
+
     try {
       logger.info('Expanding dream weaving network', {
         dreamInsightsCount: dreamInsights.length,
@@ -538,7 +538,7 @@ export class CommunityStoryWeavingNetwork {
     stories: CommunityStory[],
     culturalWisdomMap: CulturalWisdomMap
   ): Promise<MythologicalPattern[]> {
-    
+
     try {
       logger.info('Recognizing mythological patterns', {
         storiesCount: stories.length,
@@ -579,7 +579,7 @@ export class CommunityStoryWeavingNetwork {
       // Store patterns by cultural context
       for (const culture of culturalWisdomMap.representedCultures) {
         const culturePatterns = this.mythologicalPatterns.get(culture) || [];
-        culturePatterns.push(...respectfulPatterns.filter(p => 
+        culturePatterns.push(...respectfulPatterns.filter(p =>
           p.culturalOrigins.includes(culture)
         ));
         this.mythologicalPatterns.set(culture, culturePatterns);
@@ -606,7 +606,7 @@ export class CommunityStoryWeavingNetwork {
     narratives: Narrative[],
     sovereigntyProtocol: typeof indigenousSovereigntyProtocol
   ): Promise<CulturalStoryIntegration> {
-    
+
     try {
       logger.info('Integrating cultural stories', {
         narrativesCount: narratives.length
@@ -679,7 +679,7 @@ export class CommunityStoryWeavingNetwork {
     shadowIntegration: ShadowIntegrationPlan,
     culturalProfile: CulturalProfile
   ): Promise<CommunityNarrative> {
-    
+
     try {
       logger.info('Building community narrative', {
         storyElementsCount: storyElements.length,
@@ -784,7 +784,7 @@ export class CommunityStoryWeavingNetwork {
     culturalAttributions: CulturalAttribution[],
     targetCommunity: string
   ): Promise<WisdomStorySharing> {
-    
+
     try {
       logger.info('Sharing wisdom stories', {
         storiesCount: stories.length,
@@ -868,7 +868,7 @@ export class CommunityStoryWeavingNetwork {
     culturalContext: CulturalProfile,
     facilitatorId: string
   ): Promise<CommunityStoryWeavingSession> {
-    
+
     try {
       logger.info('Facilitating community story weaving session', {
         sessionType,
@@ -975,9 +975,9 @@ export class CommunityStoryWeavingNetwork {
     communityContext: CommunityContext,
     culturalProfile: CulturalProfile
   ): Promise<DreamStoryConnection[]> {
-    
+
     const connections: DreamStoryConnection[] = [];
-    
+
     for (const dreamAnalysis of dreamInsights) {
       const connection: DreamStoryConnection = {
         connectionId: `dream_connection_${Date.now()}_${Math.random().toString(36).substr(2, 3)}`,
@@ -991,7 +991,7 @@ export class CommunityStoryWeavingNetwork {
       };
       connections.push(connection);
     }
-    
+
     return connections;
   }
 
@@ -1000,14 +1000,14 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile
   ): Promise<string[]> {
     const themes = [];
-    
+
     // Extract common themes from dream analyses
     for (const dream of dreamInsights) {
       if (dream.narrativeAnalysis.conflictThemes) {
         themes.push(...dream.narrativeAnalysis.conflictThemes);
       }
     }
-    
+
     // Remove duplicates and add cultural context
     const uniqueThemes = [...new Set(themes)];
     return uniqueThemes.map(theme => `${theme} (${culturalProfile.primaryCulture} perspective)`);
@@ -1039,7 +1039,7 @@ export class CommunityStoryWeavingNetwork {
     narrative: string,
     wisdom: string[]
   ): Promise<StoryWeavingNetwork> {
-    
+
     return {
       networkId: `expanded_network_${Date.now()}`,
       dreamConnections: [], // Would map from DreamStoryConnection to StoryWeavingConnection
@@ -1082,7 +1082,7 @@ export class CommunityStoryWeavingNetwork {
     archetypes: string[],
     culturalMap: CulturalWisdomMap
   ): Promise<MythologicalPattern> {
-    
+
     return {
       patternId: `pattern_${Date.now()}`,
       patternName: theme,

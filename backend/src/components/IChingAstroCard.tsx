@@ -58,11 +58,11 @@ const symbolColors = {
   Water: 'text-blue-600'
 };
 
-export default function IChingAstroCard({ 
-  profile, 
-  birthArchetype, 
-  currentArchetype, 
-  compatibility 
+export default function IChingAstroCard({
+  profile,
+  birthArchetype,
+  currentArchetype,
+  compatibility
 }: IChingAstroCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [showHexagrams, setShowHexagrams] = useState(false);
@@ -107,7 +107,7 @@ export default function IChingAstroCard({
               <Compass className="h-4 w-4 text-purple-600" />
               <h3 className="font-semibold text-gray-900">Birth Trigram</h3>
             </div>
-            
+
             <div className="bg-white rounded-lg p-4 border border-purple-100">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
@@ -123,11 +123,11 @@ export default function IChingAstroCard({
                   {profile.birthElement}
                 </Badge>
               </div>
-              
+
               <div className="text-sm text-gray-600 mb-2">
                 <strong>Base Number:</strong> {profile.baseNumber} • <strong>Direction:</strong> {birthArchetype?.direction}
               </div>
-              
+
               {birthArchetype && (
                 <div className="text-sm text-gray-700">
                   {birthArchetype.description}
@@ -142,7 +142,7 @@ export default function IChingAstroCard({
               <Zap className="h-4 w-4 text-indigo-600" />
               <h3 className="font-semibold text-gray-900">Current Year Energy</h3>
             </div>
-            
+
             <div className="bg-white rounded-lg p-4 border border-indigo-100">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
@@ -158,11 +158,11 @@ export default function IChingAstroCard({
                   {currentArchetype?.element || 'Unknown'}
                 </Badge>
               </div>
-              
+
               <div className="text-sm text-gray-600 mb-2">
                 <strong>Year Number:</strong> {profile.currentYearNumber} • <strong>Phase:</strong> {profile.cyclePosition}
               </div>
-              
+
               <div className="text-sm text-gray-700">
                 {profile.fractalPhase}
               </div>
@@ -197,7 +197,7 @@ export default function IChingAstroCard({
         {expanded && (
           <>
             <Separator />
-            
+
             {/* Keywords */}
             {birthArchetype?.keywords && (
               <div>
@@ -225,7 +225,7 @@ export default function IChingAstroCard({
                   {showHexagrams ? 'Hide' : 'Show'} Hexagrams
                 </Button>
               </div>
-              
+
               {showHexagrams && (
                 <div className="bg-gray-50 rounded-lg p-3">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -250,7 +250,7 @@ export default function IChingAstroCard({
                     <div><strong>Element:</strong> {birthArchetype.element}</div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <h5 className="font-medium text-gray-900">Cycle Information</h5>
                   <div className="text-sm space-y-1">

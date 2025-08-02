@@ -25,15 +25,15 @@
     }
   },
   "include": [
-    "next-env.d.ts", 
-    "**/*.ts", 
-    "**/*.tsx", 
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
     ".next/types/**/*.ts",
     "app/**/*"
   ],
   "exclude": [
-    "node_modules", 
-    "backend", 
+    "node_modules",
+    "backend",
     "oracle-backend",
     "oracle-frontend",
     "frontend",

@@ -23,7 +23,7 @@
             "description": "Single consciousness query with archetypal analysis"
           },
           {
-            "price_model": "fixed_price", 
+            "price_model": "fixed_price",
             "price_in_cogs": 2000000,
             "package_name": "voice_query",
             "description": "Consciousness query with archetypal voice synthesis"

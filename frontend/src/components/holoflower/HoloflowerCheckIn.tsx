@@ -43,7 +43,7 @@ const HoloflowerCheckIn: React.FC = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    
+
     const checkInData = {
       ...currentState,
       reflection: reflection.trim() || undefined,
@@ -76,21 +76,21 @@ const HoloflowerCheckIn: React.FC = () => {
     const maxRadius = 80;
     const minRadius = 20;
     const radius = minRadius + (maxRadius - minRadius) * (petal.value / 100);
-    
+
     const angleRad = (petal.angle * Math.PI) / 180;
     const x = centerX + radius * Math.cos(angleRad);
     const y = centerY + radius * Math.sin(angleRad);
-    
+
     // Create organic petal shape
     const controlRadius = radius * 0.7;
     const angle1 = angleRad - 0.3;
     const angle2 = angleRad + 0.3;
-    
+
     const cx1 = centerX + controlRadius * Math.cos(angle1);
     const cy1 = centerY + controlRadius * Math.sin(angle1);
     const cx2 = centerX + controlRadius * Math.cos(angle2);
     const cy2 = centerY + controlRadius * Math.sin(angle2);
-    
+
     return `M ${centerX} ${centerY} Q ${cx1} ${cy1} ${x} ${y} Q ${cx2} ${cy2} ${centerX} ${centerY}`;
   };
 
@@ -122,7 +122,7 @@ const HoloflowerCheckIn: React.FC = () => {
                   strokeWidth="1"
                   opacity="0.3"
                 />
-                
+
                 {/* Petals */}
                 {currentState.petals.map((petal) => (
                   <motion.path
@@ -140,7 +140,7 @@ const HoloflowerCheckIn: React.FC = () => {
                     transition={{ duration: 1, delay: 0.1 * currentState.petals.indexOf(petal) }}
                   />
                 ))}
-                
+
                 {/* Center point */}
                 <circle
                   cx="150"
@@ -156,7 +156,7 @@ const HoloflowerCheckIn: React.FC = () => {
                 const angleRad = (petal.angle * Math.PI) / 180;
                 const x = 150 + labelRadius * Math.cos(angleRad);
                 const y = 150 + labelRadius * Math.sin(angleRad);
-                
+
                 return (
                   <div
                     key={`label-${petal.id}`}
@@ -184,7 +184,7 @@ const HoloflowerCheckIn: React.FC = () => {
                 {(() => {
                   const petal = currentState.petals.find(p => p.id === activeElement);
                   if (!petal) return null;
-                  
+
                   return (
                     <>
                       <h3 className="text-xl text-amber-100 font-medium">{petal.label} Element</h3>

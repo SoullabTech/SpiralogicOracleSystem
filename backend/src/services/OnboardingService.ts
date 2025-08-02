@@ -1,6 +1,6 @@
 /**
  * 🌟 Onboarding Service - Personal Oracle Assignment
- * 
+ *
  * Creates the foundational Oracle experience for new users,
  * ensuring every user begins their journey with a personalized spiritual guide.
  */
@@ -36,7 +36,7 @@ export interface OnboardingAssessmentResult {
 }
 
 export class OnboardingService {
-  
+
   /**
    * 🎭 Create Default Oracle for New User (Immediate Assignment)
    */
@@ -57,10 +57,10 @@ export class OnboardingService {
       updatedAt: new Date(),
       evolutionHistory: []
     };
-    
+
     // Store Oracle settings in database
     await this.storeOracleSettings(defaultOracleSettings);
-    
+
     // Pre-create Oracle agent for immediate use
     await ArchetypeAgentFactory.createPersonalOracle({
       archetype: defaultOracleSettings.archetype,
@@ -70,16 +70,16 @@ export class OnboardingService {
       userId,
       userContext: { isNewUser: true, defaultAssignment: true }
     });
-    
+
     logger.info('Default Oracle Assigned:', {
       userId,
       oracleName: defaultOracleSettings.oracleAgentName,
       archetype: defaultOracleSettings.archetype
     });
-    
+
     return defaultOracleSettings;
   }
-  
+
   /**
    * 🔮 Personalized Oracle Assignment Based on User Preferences
    */
@@ -87,10 +87,10 @@ export class OnboardingService {
     userId: string,
     preferences: OnboardingPreferences
   ): Promise<UserOracleSettings> {
-    
+
     // Analyze preferences to determine optimal Oracle configuration
     const assessment = await this.assessUserPreferences(preferences);
-    
+
     const personalizedOracleSettings: UserOracleSettings = {
       userId,
       oracleAgentName: assessment.oracleName,
@@ -101,10 +101,10 @@ export class OnboardingService {
       updatedAt: new Date(),
       evolutionHistory: []
     };
-    
+
     // Store Oracle settings
     await this.storeOracleSettings(personalizedOracleSettings);
-    
+
     // Create personalized Oracle agent
     await ArchetypeAgentFactory.createPersonalOracle({
       archetype: personalizedOracleSettings.archetype,
@@ -112,13 +112,13 @@ export class OnboardingService {
       voiceProfile: personalizedOracleSettings.voiceSettings,
       phase: personalizedOracleSettings.phase,
       userId,
-      userContext: { 
-        isNewUser: true, 
+      userContext: {
+        isNewUser: true,
         preferences,
         assessment
       }
     });
-    
+
     logger.info('Personalized Oracle Assigned:', {
       userId,
       preferences,
@@ -128,10 +128,10 @@ export class OnboardingService {
         phase: personalizedOracleSettings.phase
       }
     });
-    
+
     return personalizedOracleSettings;
   }
-  
+
   /**
    * 🧙‍♀️ Oracle Introduction & First Interaction
    */
@@ -142,53 +142,53 @@ export class OnboardingService {
   }> {
     const oracle = await OracleService.getUserOracle(userId);
     const settings = await this.getOracleSettings(userId);
-    
+
     if (!settings) {
       throw new Error(`No Oracle found for user ${userId}`);
     }
-    
+
     // Get ceremonial greeting
     const greeting = oracle.getCeremonialGreeting();
-    
+
     // Create first interaction experience
     const firstInteraction = await OracleService.processOracleQuery(
       userId,
       "I'm ready to begin my spiritual journey. What should I know about you?",
       { context: 'onboarding', firstInteraction: true }
     );
-    
+
     return {
       greeting,
       oracle: settings,
       firstInteraction
     };
   }
-  
+
   /**
    * 🎯 Assessment Algorithm for Oracle Assignment
    */
   private static async assessUserPreferences(
     preferences: OnboardingPreferences
   ): Promise<OnboardingAssessmentResult> {
-    
+
     // Determine archetype based on preferences
     const archetype = this.determineArchetype(preferences);
-    
+
     // Determine starting phase
     const phase = this.determineStartingPhase(preferences);
-    
+
     // Generate Oracle name
     const oracleName = this.generateOracleName(preferences, archetype);
-    
+
     // Create voice profile
     const voiceProfile = this.createVoiceProfile(preferences, archetype);
-    
+
     // Generate personality insights
     const personalityInsights = this.generatePersonalityInsights(preferences, archetype);
-    
+
     // Create journey map
     const journeyMap = this.createJourneyMap(phase, preferences);
-    
+
     return {
       recommendedArchetype: archetype,
       recommendedPhase: phase,
@@ -198,13 +198,13 @@ export class OnboardingService {
       journeyMap
     };
   }
-  
+
   private static determineArchetype(preferences: OnboardingPreferences): string {
     // If user has explicit preference, honor it
     if (preferences.preferredArchetype) {
       return preferences.preferredArchetype;
     }
-    
+
     // Determine based on personality type
     const archetypeMapping = {
       'catalyst': 'fire',
@@ -213,24 +213,24 @@ export class OnboardingService {
       'explorer': 'air',
       'visionary': 'aether'
     };
-    
-    const archetype = preferences.personalityType ? 
+
+    const archetype = preferences.personalityType ?
       archetypeMapping[preferences.personalityType] : 'aether';
-    
+
     return archetype || 'aether';
   }
-  
+
   private static determineStartingPhase(preferences: OnboardingPreferences): string {
     const phaseMapping = {
       'beginner': 'initiation',
       'intermediate': 'exploration',
       'advanced': 'integration'
     };
-    
-    return preferences.spiritualBackground ? 
+
+    return preferences.spiritualBackground ?
       phaseMapping[preferences.spiritualBackground] : 'initiation';
   }
-  
+
   private static generateOracleName(
     preferences: OnboardingPreferences,
     archetype: string
@@ -239,7 +239,7 @@ export class OnboardingService {
     if (preferences.preferredName) {
       return preferences.preferredName;
     }
-    
+
     // Generate based on archetype and voice preference
     const archetypeNames = {
       fire: {
@@ -268,13 +268,13 @@ export class OnboardingService {
         neutral: ['Unity', 'Void', 'Source', 'Nexus']
       }
     };
-    
+
     const voicePreference = preferences.voicePreference || 'neutral';
     const names = archetypeNames[archetype]?.[voicePreference] || archetypeNames.aether.neutral;
-    
+
     return names[Math.floor(Math.random() * names.length)];
   }
-  
+
   private static createVoiceProfile(
     preferences: OnboardingPreferences,
     archetype: string
@@ -286,9 +286,9 @@ export class OnboardingService {
       air: { stability: 0.6, style: 0.7, tone: 'clarifying' },
       aether: { stability: 0.8, style: 0.7, tone: 'transcendent' }
     };
-    
+
     const baseProfile = baseProfiles[archetype] || baseProfiles.aether;
-    
+
     // Adjust based on communication style
     const styleAdjustments = {
       'direct': { stability: 0.1, style: 0.2 },
@@ -296,10 +296,10 @@ export class OnboardingService {
       'ceremonial': { stability: 0.0, style: 0.0, ceremonyPacing: true },
       'conversational': { stability: -0.1, style: 0.1 }
     };
-    
-    const adjustment = preferences.communicationStyle ? 
+
+    const adjustment = preferences.communicationStyle ?
       styleAdjustments[preferences.communicationStyle] : { stability: 0, style: 0 };
-    
+
     return {
       voiceId: `elevenlabs_${archetype}_voice`,
       stability: Math.max(0.1, Math.min(1.0, baseProfile.stability + adjustment.stability)),
@@ -308,7 +308,7 @@ export class OnboardingService {
       ceremonyPacing: adjustment.ceremonyPacing || false
     };
   }
-  
+
   private static generatePersonalityInsights(
     preferences: OnboardingPreferences,
     archetype: string
@@ -340,10 +340,10 @@ export class OnboardingService {
         soulPurpose: 'To bridge spiritual and material worlds, facilitating unity and wholeness'
       }
     };
-    
+
     return archetypeInsights[archetype] || archetypeInsights.aether;
   }
-  
+
   private static createJourneyMap(
     phase: string,
     preferences: OnboardingPreferences
@@ -355,37 +355,37 @@ export class OnboardingService {
       transcendence: { next: 'mastery', timeframe: '12+ months' },
       mastery: { next: 'teaching', timeframe: 'Ongoing' }
     };
-    
+
     const progression = phaseProgression[phase] || phaseProgression.initiation;
-    
+
     return {
       currentPhase: phase,
       nextPhase: progression.next,
       timeframe: progression.timeframe
     };
   }
-  
+
   /**
    * 🗄️ Database Integration Methods
    */
   private static async storeOracleSettings(settings: UserOracleSettings): Promise<void> {
     // Implementation depends on your database (Supabase, Prisma, etc.)
     // Example: await db.oracles.create({ data: settings });
-    
+
     logger.info('Oracle Settings Stored:', {
       userId: settings.userId,
       oracleName: settings.oracleAgentName,
       archetype: settings.archetype
     });
   }
-  
+
   private static async getOracleSettings(userId: string): Promise<UserOracleSettings | null> {
     // Implementation depends on your database
     // Example: return await db.oracles.findUnique({ where: { userId } });
-    
+
     return null; // Placeholder
   }
-  
+
   /**
    * 🔄 Post-Onboarding Optimization
    */
@@ -393,10 +393,10 @@ export class OnboardingService {
     // Analyze user interactions over first week
     // Suggest optimizations to Oracle configuration
     // This would typically run as a background job
-    
+
     logger.info('Oracle Optimization Scheduled:', { userId });
   }
-  
+
   /**
    * 📊 Onboarding Analytics
    */

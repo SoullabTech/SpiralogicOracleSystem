@@ -1,9 +1,9 @@
 /**
  * Dream Journaling Integration Framework
- * 
+ *
  * Builds story weaving networks for dream analysis and integration with soul development.
  * Provides comprehensive dream analysis through cultural, archetypal, and psychological lenses.
- * 
+ *
  * Features:
  * - Dream narrative analysis and pattern recognition
  * - Cultural dream interpretation integration
@@ -16,17 +16,17 @@
 
 import { logger } from '../../utils/logger';
 import { CulturalProfile } from '../cultural/CulturalContextAwareness';
-import { 
+import {
   crossCulturalArchetypeMapping,
   culturalContextAwareness
 } from '../cultural/index';
-import { 
+import {
   jungianShadowIntegrationEngine,
-  ShadowIntegrationPlan 
+  ShadowIntegrationPlan
 } from './JungianShadowIntegrationEngine';
-import { 
+import {
   lifeSpiralHarmonizer,
-  LifeSpiralHarmonizerPlan 
+  LifeSpiralHarmonizerPlan
 } from './LifeSpiralHarmonizer';
 
 export interface DreamEntry {
@@ -412,7 +412,7 @@ export class DreamJournalingIntegration {
     shadowPlan?: ShadowIntegrationPlan,
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan
   ): Promise<DreamAnalysis> {
-    
+
     try {
       logger.info('Processing dream entry', {
         userId: dreamEntry.userId,
@@ -524,7 +524,7 @@ export class DreamJournalingIntegration {
     integrationOpportunities: string[];
     evolutionGuidance: string[];
   }> {
-    
+
     try {
       const userDreams = this.dreamEntries.get(userId) || [];
       const userAnalyses = this.dreamAnalyses.get(userId) || [];
@@ -581,10 +581,10 @@ export class DreamJournalingIntegration {
     evolutionTimeline: any[];
     integrationMap: any;
   }> {
-    
+
     try {
       const storyNetwork = this.storyWeavingNetworks.get(userId);
-      
+
       if (!storyNetwork) {
         throw new Error('Story weaving network not found for user');
       }
@@ -633,7 +633,7 @@ export class DreamJournalingIntegration {
     shadowWorkPractices: string[];
     mandateIntegrationPractices: string[];
   }> {
-    
+
     try {
       // Generate daily practices
       const dailyPractices = await this.createDailyDreamPractices(
@@ -693,28 +693,28 @@ export class DreamJournalingIntegration {
     dreamEntry: DreamEntry,
     culturalProfile: CulturalProfile
   ): Promise<NarrativeAnalysis> {
-    
+
     // Analyze story structure
     const storyStructure = this.identifyStoryStructure(dreamEntry.dreamNarrative);
-    
+
     // Analyze narrative arc
     const narrativeArc = this.identifyNarrativeArc(dreamEntry.dreamNarrative);
-    
+
     // Identify conflict themes
     const conflictThemes = this.identifyConflictThemes(dreamEntry.dreamNarrative);
-    
+
     // Identify resolution patterns
     const resolutionPatterns = this.identifyResolutionPatterns(dreamEntry.dreamNarrative);
-    
+
     // Identify transformation elements
     const transformationElements = this.identifyTransformationElements(dreamEntry.dreamNarrative);
-    
+
     // Analyze narrative voice
     const narrativeVoice = this.analyzeNarrativeVoice(dreamEntry.dreamNarrative);
-    
+
     // Analyze timeline structure
     const timelineStructure = this.analyzeTimelineStructure(dreamEntry.dreamNarrative);
-    
+
     // Analyze emotional journey
     const emotionalJourney = this.analyzeEmotionalJourney(dreamEntry);
 
@@ -734,28 +734,28 @@ export class DreamJournalingIntegration {
     dreamEntry: DreamEntry,
     culturalProfile: CulturalProfile
   ): Promise<SymbolAnalysis> {
-    
+
     // Analyze universal symbols
     const universalSymbols = await this.analyzeUniversalSymbols(dreamEntry.dreamSymbols);
-    
+
     // Analyze cultural symbols
     const culturalSymbols = await this.analyzeCulturalSymbols(
       dreamEntry.dreamSymbols,
       culturalProfile
     );
-    
+
     // Analyze personal symbols
     const personalSymbols = await this.analyzePersonalSymbols(dreamEntry.dreamSymbols);
-    
+
     // Analyze archetypal symbols
     const archetypalSymbols = await this.analyzeArchetypalSymbols(dreamEntry.dreamSymbols);
-    
+
     // Analyze shadow symbols
     const shadowSymbols = await this.analyzeShadowSymbols(dreamEntry.dreamSymbols);
-    
+
     // Analyze transformation symbols
     const transformationSymbols = await this.analyzeTransformationSymbols(dreamEntry.dreamSymbols);
-    
+
     // Create symbol connections
     const symbolConnections = await this.createSymbolConnections(dreamEntry.dreamSymbols);
 
@@ -774,19 +774,19 @@ export class DreamJournalingIntegration {
     dreamEntry: DreamEntry,
     culturalProfile: CulturalProfile
   ): Promise<CharacterAnalysis> {
-    
+
     // Analyze shadow projections
     const shadowProjections = await this.analyzeShadowProjections(dreamEntry.dreamCharacters);
-    
+
     // Analyze animal presences
     const animalPresences = await this.analyzeAnimalPresences(dreamEntry.dreamCharacters);
-    
+
     // Analyze archetypal figures
     const archetypalFigures = await this.analyzeArchetypalFigures(dreamEntry.dreamCharacters);
-    
+
     // Analyze guide figures
     const guideFigures = await this.analyzeGuideFigures(dreamEntry.dreamCharacters);
-    
+
     // Analyze relationship dynamics
     const relationshipDynamics = await this.analyzeRelationshipDynamics(dreamEntry.dreamCharacters);
 
@@ -804,40 +804,40 @@ export class DreamJournalingIntegration {
     dreamEntry: DreamEntry,
     culturalProfile: CulturalProfile
   ): Promise<CulturalDreamInterpretation> {
-    
+
     // Get cultural context
     const culturalContext = culturalProfile.primaryCulture;
-    
+
     // Create traditional interpretation
     const traditionalInterpretation = await this.createTraditionalInterpretation(
       dreamEntry,
       culturalProfile
     );
-    
+
     // Create modern cultural lens
     const modernCulturalLens = await this.createModernCulturalLens(
       dreamEntry,
       culturalProfile
     );
-    
+
     // Get ancestral wisdom relevance
     const ancestralWisdomRelevance = await this.getAncestralWisdomRelevance(
       dreamEntry,
       culturalProfile
     );
-    
+
     // Identify cultural healing opportunities
     const culturalHealingOpportunities = await this.identifyCulturalHealingOpportunities(
       dreamEntry,
       culturalProfile
     );
-    
+
     // Create cross-cultural insights
     const crossCulturalInsights = await this.createCrossCulturalInsights(
       dreamEntry,
       culturalProfile
     );
-    
+
     // Create respectful framing
     const respectfulFraming = await this.createRespectfulFraming(
       dreamEntry,

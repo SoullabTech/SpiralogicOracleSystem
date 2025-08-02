@@ -32,7 +32,7 @@ export const useOracleConfig = (): UseOracleConfigReturn => {
 
   const loadConfig = async () => {
     setIsLoading(true);
-    
+
     try {
       if (user) {
         // Try to load from Supabase
@@ -63,20 +63,20 @@ export const useOracleConfig = (): UseOracleConfigReturn => {
     // Fallback to localStorage
     const savedName = localStorage.getItem('oracleName');
     const savedVoice = localStorage.getItem('oracleVoice');
-    
+
     if (savedName && savedVoice) {
       setConfig({
         oracleName: savedName,
         oracleVoice: savedVoice,
       });
     }
-    
+
     setIsLoading(false);
   };
 
   const saveConfig = async (newConfig: OracleConfig) => {
     setConfig(newConfig);
-    
+
     // Always save to localStorage first
     localStorage.setItem('oracleName', newConfig.oracleName);
     localStorage.setItem('oracleVoice', newConfig.oracleVoice);
@@ -105,7 +105,7 @@ export const useOracleConfig = (): UseOracleConfigReturn => {
     setConfig({ oracleName: '', oracleVoice: '' });
     localStorage.removeItem('oracleName');
     localStorage.removeItem('oracleVoice');
-    
+
     // Note: We don't automatically clear Supabase data
     // That should be done through a separate "delete account" flow
   };

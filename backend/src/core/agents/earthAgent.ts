@@ -56,49 +56,49 @@ const EarthVoiceProtocols = {
 const EarthIntelligence = {
   detectEarthType: (input: string, context: any[]): string => {
     const lowerInput = input.toLowerCase();
-    
+
     // Detect overwhelm needing grounding
-    if (lowerInput.includes('overwhelm') || lowerInput.includes('scattered') || 
+    if (lowerInput.includes('overwhelm') || lowerInput.includes('scattered') ||
         lowerInput.includes('chaos') || lowerInput.includes('spinning')) {
       return 'grounding_stabilization';
     }
-    
+
     // Detect visions needing practical manifestation
-    if (lowerInput.includes('dream') || lowerInput.includes('vision') || 
+    if (lowerInput.includes('dream') || lowerInput.includes('vision') ||
         lowerInput.includes('goal') || lowerInput.includes('want to create')) {
       return 'vision_manifestation';
     }
-    
+
     // Detect body disconnection needing embodiment
-    if (lowerInput.includes('tired') || lowerInput.includes('health') || 
+    if (lowerInput.includes('tired') || lowerInput.includes('health') ||
         lowerInput.includes('body') || lowerInput.includes('energy')) {
       return 'embodiment_healing';
     }
-    
+
     // Detect resource/abundance blocks
-    if (lowerInput.includes('money') || lowerInput.includes('afford') || 
+    if (lowerInput.includes('money') || lowerInput.includes('afford') ||
         lowerInput.includes('resources') || lowerInput.includes('abundance')) {
       return 'resource_wisdom';
     }
-    
+
     // Detect rhythm/sustainability issues
-    if (lowerInput.includes('burnout') || lowerInput.includes('sustainable') || 
+    if (lowerInput.includes('burnout') || lowerInput.includes('sustainable') ||
         lowerInput.includes('balance') || lowerInput.includes('too much')) {
       return 'rhythm_restoration';
     }
-    
+
     // Detect need for practical next steps
-    if (lowerInput.includes('how') || lowerInput.includes('steps') || 
+    if (lowerInput.includes('how') || lowerInput.includes('steps') ||
         lowerInput.includes('practical') || lowerInput.includes('where to start')) {
       return 'practical_guidance';
     }
-    
+
     return 'general_grounding';
   },
 
   craftEarthResponse: (input: string, earthType: string, memories: any[]): string => {
     const protocols = EarthVoiceProtocols;
-    
+
     switch (earthType) {
       case 'grounding_stabilization':
         return `${protocols.grounding.overwhelm_settling}
@@ -175,7 +175,7 @@ What in your life feels most solid and trustworthy right now? Let's start there 
       practical_guidance: "🌱 The path is made by walking, one step at a time.",
       general_grounding: "🌱 You are more rooted than you remember."
     };
-    
+
     return `${response}\n\n${signatures[earthType] || signatures.general_grounding}`;
   }
 };
@@ -198,7 +198,7 @@ export class EarthAgent extends ArchetypeAgent {
     // Gather sacred context - grounding patterns from past conversations
     const contextMemory = await getRelevantMemories(userId, 3);
     const earthType = EarthIntelligence.detectEarthType(input, contextMemory);
-    
+
     // Create context that preserves grounding wisdom from past conversations
     const earthContext = contextMemory.length
       ? `🌱 Roots of our previous conversations:\n${contextMemory
@@ -208,9 +208,9 @@ export class EarthAgent extends ArchetypeAgent {
 
     // Craft earth-specific grounding wisdom
     const earthWisdom = EarthIntelligence.craftEarthResponse(input, earthType, contextMemory);
-    
+
     // Generate additional depth using ModelService with earth-attuned prompting
-    const earthPrompt = `As the Earth Agent embodying grounding manifestation wisdom, respond to this soul's sharing with the voice of sacred earth - grounding without limiting, manifesting without forcing. 
+    const earthPrompt = `As the Earth Agent embodying grounding manifestation wisdom, respond to this soul's sharing with the voice of sacred earth - grounding without limiting, manifesting without forcing.
 
 Context: ${earthContext}
 Current sharing: ${input}
@@ -218,9 +218,9 @@ Earth type needed: ${earthType}
 
 Respond with the wisdom of earth that serves practical manifestation and embodied living. Help them find solid ground while honoring their human rhythms and natural cycles.`;
 
-    const modelResponse = await ModelService.getResponse({ 
-      input: earthPrompt, 
-      userId 
+    const modelResponse = await ModelService.getResponse({
+      input: earthPrompt,
+      userId
     });
 
     // Weave AI insight with our earth wisdom
@@ -290,13 +290,13 @@ ${modelResponse.response}`;
     // Assess how grounded/scattered the person feels (0-1 scale)
     const groundedWords = ['stable', 'centered', 'calm', 'focused', 'present'];
     const scatteredWords = ['overwhelm', 'scattered', 'chaos', 'spinning', 'lost'];
-    
+
     const lowerInput = input.toLowerCase();
     let groundingScore = 0.5; // baseline
-    
+
     if (groundedWords.some(word => lowerInput.includes(word))) groundingScore += 0.3;
     if (scatteredWords.some(word => lowerInput.includes(word))) groundingScore -= 0.3;
-    
+
     return Math.max(0.1, Math.min(groundingScore, 1.0));
   }
 
@@ -304,13 +304,13 @@ ${modelResponse.response}`;
     // Assess readiness to take practical action (0-1 scale)
     const actionWords = ['ready', 'start', 'begin', 'do', 'create', 'build'];
     const stuckWords = ['stuck', 'don\'t know how', 'impossible', 'can\'t'];
-    
+
     const lowerInput = input.toLowerCase();
     let manifestationScore = 0.5; // baseline
-    
+
     if (actionWords.some(word => lowerInput.includes(word))) manifestationScore += 0.3;
     if (stuckWords.some(word => lowerInput.includes(word))) manifestationScore -= 0.2;
-    
+
     return Math.max(0.1, Math.min(manifestationScore, 1.0));
   }
 
@@ -318,12 +318,12 @@ ${modelResponse.response}`;
     // Earth emotions tend to be more stable and embodied
     const earthEmotions = ['grounded', 'stable', 'secure', 'nurtured', 'supported'];
     const ungroundedEmotions = ['scattered', 'anxious', 'floating', 'disconnected'];
-    
+
     const lowerInput = input.toLowerCase();
-    
+
     if (earthEmotions.some(emotion => lowerInput.includes(emotion))) return 0.8;
     if (ungroundedEmotions.some(emotion => lowerInput.includes(emotion))) return 0.4;
-    
+
     return 0.6; // baseline earth emotional state
   }
 

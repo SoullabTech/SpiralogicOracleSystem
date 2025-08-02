@@ -18,7 +18,7 @@ Click "Add Domain" and add these one by one:
    - Click "Add"
 
 2. **oracle.soullab.life**
-   - Click "Add Domain" 
+   - Click "Add Domain"
    - Enter: `oracle.soullab.life`
    - Click "Add"
 

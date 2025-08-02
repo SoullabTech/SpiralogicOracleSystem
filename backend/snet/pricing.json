@@ -62,7 +62,7 @@
       "valid_for_days": 30
     },
     {
-      "package_name": "oracle_practitioner", 
+      "package_name": "oracle_practitioner",
       "package_description": "500 queries + 250 voice syntheses + 10 streaming sessions",
       "price_in_agix": "0.00750000",
       "price_in_cogs": "750000000",

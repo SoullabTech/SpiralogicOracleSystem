@@ -1,9 +1,9 @@
 /**
  * Enhanced Shadow Agent - Integrating Cultural Consciousness
- * 
+ *
  * Extends the existing Shadow Agent with Universal Consciousness Platform capabilities
  * while preserving all original functionality and adding cultural trauma awareness.
- * 
+ *
  * This enhanced agent:
  * - Maintains all existing shadow work capabilities
  * - Adds cultural trauma recognition and healing
@@ -13,9 +13,9 @@
  */
 
 import { logger } from '../../utils/logger';
-import { 
+import {
   universalConsciousnessOrchestrator,
-  OracleQueryEnhancementRequest 
+  OracleQueryEnhancementRequest
 } from '../cultural/UniversalConsciousnessOrchestrator';
 
 // Import existing shadow agent types and functionality
@@ -44,7 +44,7 @@ export class EnhancedShadowAgent {
 
       // Step 2: Check if cultural enhancement should be applied
       const shouldEnhance = await this.shouldApplyCulturalEnhancement(query);
-      
+
       if (!shouldEnhance) {
         return originalResponse;
       }
@@ -66,7 +66,7 @@ export class EnhancedShadowAgent {
 
     } catch (error) {
       logger.error('Error in Enhanced Shadow Agent processing:', error);
-      
+
       // Always fall back to original functionality
       return await this.getOriginalShadowResponse(query);
     }
@@ -84,7 +84,7 @@ export class EnhancedShadowAgent {
     ancestralWisdomIntegration: string;
     communityRecommendations: string[];
   }> {
-    
+
     try {
       // Get original shadow response
       const originalResponse = await this.getOriginalShadowResponse(query);
@@ -115,7 +115,7 @@ export class EnhancedShadowAgent {
 
     } catch (error) {
       logger.error('Error in cultural trauma shadow work:', error);
-      
+
       // Fallback to original shadow work
       const originalResponse = await this.getOriginalShadowResponse(query);
       return {
@@ -136,7 +136,7 @@ export class EnhancedShadowAgent {
     traumaIndicated: boolean;
     culturalHealingNeeded: boolean;
   } {
-    
+
     const universalShadowType = this.detectShadowType(input);
     let culturalShadowType: string | undefined;
     let traumaIndicated = false;
@@ -158,7 +158,7 @@ export class EnhancedShadowAgent {
       'generational pattern'
     ];
 
-    traumaIndicated = traumaIndicators.some(indicator => 
+    traumaIndicated = traumaIndicators.some(indicator =>
       input.toLowerCase().includes(indicator)
     );
 
@@ -181,31 +181,31 @@ export class EnhancedShadowAgent {
     culturalContext: string,
     userInput: string
   ): Promise<string> {
-    
+
     const culturalShadowResponses = {
       native_american: {
         victim_transformation: `Your ancestors survived incredible challenges and passed their strength to you. The victim story honors your pain, but your heritage calls you to reclaim the warrior spirit that lives in your DNA. What would your ancestors say about the power you're not owning?`,
-        
+
         cultural_disconnection: `The disconnection from your roots has created a wound that only cultural reconnection can heal. Your people's wisdom is calling you home - not to the past, but to the integrated future where ancient wisdom meets modern life. How might you begin returning to yourself?`,
-        
+
         intergenerational_trauma: `The pain you carry isn't only yours - it's the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who transforms ancestral pain into ancestral medicine. What healing would honor both your journey and your people's future?`
       },
 
       african_american: {
         cultural_shame: `The shame about your heritage was planted by systems that feared your power. Your ancestors transformed oppression into resilience and passed that strength to you. What would change if you saw your cultural identity as a source of power rather than shame?`,
-        
+
         identity_fragmentation: `Living between worlds created survival skills your ancestors needed. Now you can integrate all parts of yourself - the strength that survived, the culture that persevered, and the future you're creating. How do all pieces of your identity want to work together?`
       },
 
       hispanic_latino: {
         language_shame: `The shame about your language or accent carries generational survival patterns. Your ancestors' voices live in your speech. What would it mean to honor the languages that carried your family's love across generations?`,
-        
+
         cultural_splitting: `The pressure to choose between cultures created an inner split that doesn't reflect your wholeness. You can be fully integrated across all your cultural identities. How might you honor all parts of your heritage?`
       }
     };
 
     const culturalResponses = culturalShadowResponses[culturalContext as keyof typeof culturalShadowResponses];
-    
+
     if (culturalResponses && culturalResponses[shadowType as keyof typeof culturalResponses]) {
       return culturalResponses[shadowType as keyof typeof culturalResponses];
     }
@@ -243,7 +243,7 @@ export class EnhancedShadowAgent {
       'generational', 'roots', 'identity', 'belonging', 'community'
     ];
 
-    return culturalKeywords.some(keyword => 
+    return culturalKeywords.some(keyword =>
       query.input.toLowerCase().includes(keyword)
     );
   }
@@ -252,7 +252,7 @@ export class EnhancedShadowAgent {
     originalResponse: AgentResponse,
     query: { input: string; userId?: string; userProfile?: any }
   ): Promise<AgentResponse> {
-    
+
     // Use the Universal Consciousness Orchestrator for enhancement
     const enhancement = await universalConsciousnessOrchestrator.enhanceShadowResponse(
       originalResponse.content,
@@ -277,7 +277,7 @@ export class EnhancedShadowAgent {
   private detectShadowType(input: string): string {
     // Use existing shadow type detection logic
     const lowerInput = input.toLowerCase();
-    
+
     if (lowerInput.includes('always happens to me') || lowerInput.includes('victim')) {
       return 'victim_transformation';
     }
@@ -299,13 +299,13 @@ export class EnhancedShadowAgent {
     if (lowerInput.includes('approval') || lowerInput.includes('disappoint')) {
       return 'people_pleasing_liberation';
     }
-    
+
     return 'general_shadow_work';
   }
 
   private detectCulturalShadowPattern(input: string, culturalBackground: string): string | undefined {
     const lowerInput = input.toLowerCase();
-    
+
     const culturalPatterns = {
       'native_american': {
         'disconnected from nature': 'cultural_disconnection',
@@ -326,7 +326,7 @@ export class EnhancedShadowAgent {
     };
 
     const patterns = culturalPatterns[culturalBackground as keyof typeof culturalPatterns];
-    
+
     if (patterns) {
       for (const [trigger, pattern] of Object.entries(patterns)) {
         if (lowerInput.includes(trigger)) {
@@ -343,10 +343,10 @@ export class EnhancedShadowAgent {
     ancestralWisdom: string;
     communityRecommendations: string[];
   } {
-    
+
     // Extract cultural components from the enhanced response
     const lines = enhancement.enhancedResponse.split('\n');
-    
+
     let healingGuidance = '';
     let ancestralWisdom = '';
     const communityRecommendations: string[] = [];
@@ -419,7 +419,7 @@ export class EnhancedShadowAgent {
       supportedCultures: ['native_american', 'african_american', 'hispanic_latino', 'universal'],
       supportedShadowTypes: [
         'victim_transformation',
-        'projection_integration', 
+        'projection_integration',
         'pattern_recognition',
         'self_judgment_healing',
         'fear_transformation',

@@ -168,14 +168,14 @@ const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onStateChange,
           background: #0a0a0f;
           color: white;
         }
-        
+
         .controls {
           display: flex;
           gap: 15px;
           margin-bottom: 20px;
           align-items: center;
         }
-        
+
         .controls button {
           padding: 8px 16px;
           background: #2a2a3e;
@@ -185,12 +185,12 @@ const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onStateChange,
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .controls button:hover {
           background: #3a3a4e;
           transform: translateY(-2px);
         }
-        
+
         .house-details {
           position: absolute;
           top: 20px;
@@ -201,13 +201,13 @@ const HoloflowerVisualization = ({ userId, groupId, onHouseClick, onStateChange,
           border: 1px solid #FFD700;
           min-width: 200px;
         }
-        
+
         .house-details h3 {
           margin: 0 0 10px 0;
           color: #FFD700;
           text-transform: capitalize;
         }
-        
+
         .house-details p {
           margin: 5px 0;
           font-size: 14px;

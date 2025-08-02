@@ -1,9 +1,9 @@
 /**
  * Jungian Shadow Integration Engine
- * 
+ *
  * Extends the Cultural Shadow Integration with complete Jungian psychological protocols.
  * Provides comprehensive shadow work that honors both individual psychology and cultural context.
- * 
+ *
  * Features:
  * - Active Imagination protocols for shadow dialogue
  * - Projection withdrawal techniques
@@ -14,10 +14,10 @@
  */
 
 import { logger } from '../../utils/logger';
-import { 
+import {
   culturalShadowIntegration,
   CulturalShadowPattern,
-  CulturalTraumaAssessment 
+  CulturalTraumaAssessment
 } from '../cultural/CulturalShadowIntegration';
 import { CulturalProfile } from '../cultural/CulturalContextAwareness';
 
@@ -112,7 +112,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
     previousShadowWork?: any[]
   ): Promise<ShadowIntegrationPlan> {
-    
+
     try {
       logger.info('Beginning comprehensive shadow assessment', {
         userId,
@@ -122,7 +122,7 @@ export class JungianShadowIntegrationEngine {
 
       // Step 1: Jungian shadow complex analysis
       const shadowComplexes = await this.analyzeShadowComplexes(userInput, culturalProfile);
-      
+
       // Step 2: Cultural shadow integration from existing system
       const culturalShadowResult = await culturalShadowIntegration.enhanceShadowWorkWithCulture(
         '', // Original response will be built
@@ -133,25 +133,25 @@ export class JungianShadowIntegrationEngine {
 
       // Step 3: Projection analysis
       const projectionWithdrawals = await this.analyzeProjections(userInput, shadowComplexes);
-      
+
       // Step 4: Active imagination session planning
       const activeImaginationSessions = await this.planActiveImaginationSessions(
         shadowComplexes,
         culturalProfile
       );
-      
+
       // Step 5: Integration practices design
       const integrationPractices = await this.designIntegrationPractices(
         shadowComplexes,
         culturalProfile
       );
-      
+
       // Step 6: Professional referral assessment
       const professionalReferrals = await this.assessProfessionalReferralNeeds(
         shadowComplexes,
         culturalProfile
       );
-      
+
       // Step 7: Progress markers creation
       const progressMarkers = await this.createProgressMarkers(
         shadowComplexes,
@@ -195,19 +195,19 @@ export class JungianShadowIntegrationEngine {
     sessionType: 'inner_critic' | 'rejected_self' | 'cultural_shadow' | 'archetypal_shadow',
     culturalProfile: CulturalProfile
   ): Promise<ActiveImaginationSession> {
-    
+
     try {
       const sessionId = `ai_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Get shadow dialogue partner based on session type
       const shadowPartner = this.identifyShadowDialoguePartner(sessionType, culturalProfile);
-      
+
       // Create initial dialogue script
       const initialDialogue = await this.createInitialDialogue(sessionType, shadowPartner, culturalProfile);
-      
+
       // Generate integration tasks
       const integrationTasks = this.generateActiveImaginationTasks(sessionType, culturalProfile);
-      
+
       // Plan next session focus
       const nextSessionFocus = this.planNextSessionFocus(sessionType);
 
@@ -250,11 +250,11 @@ export class JungianShadowIntegrationEngine {
     projectedQualities: string[],
     culturalProfile: CulturalProfile
   ): Promise<ProjectionWithdrawalProcess> {
-    
+
     try {
       // Identify owned qualities within projections
       const ownedQualities = await this.identifyOwnedQualities(projectedQualities, culturalProfile);
-      
+
       // Design withdrawal steps
       const withdrawalSteps = await this.designWithdrawalSteps(
         projectionTarget,
@@ -262,13 +262,13 @@ export class JungianShadowIntegrationEngine {
         ownedQualities,
         culturalProfile
       );
-      
+
       // Create integration practices
       const integrationPractices = await this.createProjectionIntegrationPractices(
         ownedQualities,
         culturalProfile
       );
-      
+
       // Define completion indicators
       const completionIndicators = this.defineCompletionIndicators(ownedQualities);
 
@@ -305,7 +305,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
     sessionType: string
   ): Promise<DialogueExchange> {
-    
+
     const shadowResponses = {
       inner_critic: await this.generateInnerCriticResponse(userMessage, culturalProfile),
       rejected_self: await this.generateRejectedSelfResponse(userMessage, culturalProfile),
@@ -331,7 +331,7 @@ export class JungianShadowIntegrationEngine {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ShadowComplexAnalysis[]> {
-    
+
     const complexes = [];
     const lowerInput = userInput.toLowerCase();
 
@@ -420,7 +420,7 @@ export class JungianShadowIntegrationEngine {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ShadowComplexAnalysis> {
-    
+
     return {
       complexType: 'anima_animus',
       intensity: 0.7,
@@ -440,7 +440,7 @@ export class JungianShadowIntegrationEngine {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ShadowComplexAnalysis> {
-    
+
     return {
       complexType: 'mother_father',
       intensity: 0.8,
@@ -460,7 +460,7 @@ export class JungianShadowIntegrationEngine {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ShadowComplexAnalysis> {
-    
+
     return {
       complexType: 'persona',
       intensity: 0.6,
@@ -480,7 +480,7 @@ export class JungianShadowIntegrationEngine {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ShadowComplexAnalysis> {
-    
+
     return {
       complexType: 'self_sabotage',
       intensity: 0.75,
@@ -500,7 +500,7 @@ export class JungianShadowIntegrationEngine {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ShadowComplexAnalysis> {
-    
+
     return {
       complexType: 'power_shadow',
       intensity: 0.7,
@@ -520,7 +520,7 @@ export class JungianShadowIntegrationEngine {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ShadowComplexAnalysis> {
-    
+
     return {
       complexType: 'victim_shadow',
       intensity: 0.8,
@@ -544,7 +544,7 @@ export class JungianShadowIntegrationEngine {
       asian: ['Yin-yang balance concepts', 'Harmonious relationship ideals'],
       universal: ['Gender role conditioning', 'Romantic idealization patterns']
     };
-    
+
     return influences[culturalProfile.primaryCulture as keyof typeof influences] || influences.universal;
   }
 
@@ -556,7 +556,7 @@ export class JungianShadowIntegrationEngine {
       asian: ['Filial piety expectations', 'Achievement pressure'],
       universal: ['Nuclear family dynamics', 'Individual achievement focus']
     };
-    
+
     return influences[culturalProfile.primaryCulture as keyof typeof influences] || influences.universal;
   }
 
@@ -568,7 +568,7 @@ export class JungianShadowIntegrationEngine {
       asian: ['Face-saving importance', 'Collective shame avoidance'],
       universal: ['Professional identity pressure', 'Social media presentation']
     };
-    
+
     return influences[culturalProfile.primaryCulture as keyof typeof influences] || influences.universal;
   }
 
@@ -580,7 +580,7 @@ export class JungianShadowIntegrationEngine {
       asian: ['Model minority pressure', 'Perfectionism burden'],
       universal: ['Imposter syndrome', 'Success anxiety']
     };
-    
+
     return influences[culturalProfile.primaryCulture as keyof typeof influences] || influences.universal;
   }
 
@@ -592,7 +592,7 @@ export class JungianShadowIntegrationEngine {
       asian: ['Hierarchical respect systems', 'Collective power concepts'],
       universal: ['Individual power struggles', 'Authority relationship issues']
     };
-    
+
     return influences[culturalProfile.primaryCulture as keyof typeof influences] || influences.universal;
   }
 
@@ -604,7 +604,7 @@ export class JungianShadowIntegrationEngine {
       asian: ['Model minority myths', 'Cultural invisibility'],
       universal: ['Personal victimization experiences', 'Learned helplessness patterns']
     };
-    
+
     return influences[culturalProfile.primaryCulture as keyof typeof influences] || influences.universal;
   }
 
@@ -661,7 +661,7 @@ export class JungianShadowIntegrationEngine {
       cultural_shadow: `Cultural Shadow (${culturalProfile.primaryCulture})`,
       archetypal_shadow: 'Archetypal Shadow'
     };
-    
+
     return partners[sessionType as keyof typeof partners] || 'Shadow Aspect';
   }
 
@@ -753,7 +753,7 @@ export class JungianShadowIntegrationEngine {
       cultural_shadow: 'wise but suppressed',
       archetypal_shadow: 'ancient and powerful'
     };
-    
+
     return tones[sessionType as keyof typeof tones] || 'neutral';
   }
 
@@ -764,7 +764,7 @@ export class JungianShadowIntegrationEngine {
       cultural_shadow: 'Heal cultural shame and reclaim heritage',
       archetypal_shadow: 'Connect with universal human experience'
     };
-    
+
     return purposes[sessionType as keyof typeof purposes] || 'Shadow integration';
   }
 

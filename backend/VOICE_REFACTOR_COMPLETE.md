@@ -11,7 +11,7 @@ Successfully refactored the ElevenLabs integration to only handle static narrati
 - Narrator role → Always ElevenLabs for static content
 
 ### 2. **Personal Oracle Route Updated**
-- Modified `src/routes/oracle/personalOracle.routes.ts` 
+- Modified `src/routes/oracle/personalOracle.routes.ts`
 - Now uses `routeVoice()` instead of direct `synthesizeVoice()`
 - Properly identifies oracle agents for Sesame routing
 

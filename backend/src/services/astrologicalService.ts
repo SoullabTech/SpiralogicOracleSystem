@@ -35,7 +35,7 @@ export class AstrologicalService {
   private startEphemerisUpdates() {
     // Update immediately
     this.updateCurrentEphemeris();
-    
+
     // Then update every hour
     this.ephemerisUpdateInterval = setInterval(() => {
       this.updateCurrentEphemeris();
@@ -49,12 +49,12 @@ export class AstrologicalService {
       // For now, we'll use calculated positions
       const now = new Date();
       const positions = this.calculateCurrentPositions(now);
-      
+
       this.currentEphemeris = {
         date: now,
         planets: positions
       };
-      
+
       // Update all active user holoflowers
       await this.updateAllUserTransits();
     } catch (error) {
@@ -65,11 +65,11 @@ export class AstrologicalService {
   // Calculate current planetary positions (simplified)
   private calculateCurrentPositions(date: Date): Map<Planet, { sign: ZodiacSign; degree: number; retrograde: boolean }> {
     const positions = new Map<Planet, { sign: ZodiacSign; degree: number; retrograde: boolean }>();
-    
+
     // Simplified calculations - in production would use Swiss Ephemeris or similar
     const dayOfYear = this.getDayOfYear(date);
     const year = date.getFullYear();
-    
+
     // Sun position (approximately 1 degree per day)
     const sunDegree = (dayOfYear - 80) % 360; // Spring equinox around day 80
     positions.set('sun', {
@@ -77,7 +77,7 @@ export class AstrologicalService {
       degree: sunDegree % 30,
       retrograde: false
     });
-    
+
     // Moon position (approximately 13 degrees per day)
     const moonDegree = (dayOfYear * 13.176) % 360;
     positions.set('moon', {
@@ -85,7 +85,7 @@ export class AstrologicalService {
       degree: moonDegree % 30,
       retrograde: false
     });
-    
+
     // Mercury (approximately 4 degrees per day when direct)
     const mercuryDegree = (dayOfYear * 4.09) % 360;
     positions.set('mercury', {
@@ -93,7 +93,7 @@ export class AstrologicalService {
       degree: mercuryDegree % 30,
       retrograde: this.isMercuryRetrograde(date)
     });
-    
+
     // Venus (approximately 1.6 degrees per day)
     const venusDegree = (dayOfYear * 1.6) % 360;
     positions.set('venus', {
@@ -101,7 +101,7 @@ export class AstrologicalService {
       degree: venusDegree % 30,
       retrograde: false
     });
-    
+
     // Mars (approximately 0.5 degrees per day)
     const marsDegree = (dayOfYear * 0.524) % 360;
     positions.set('mars', {
@@ -109,7 +109,7 @@ export class AstrologicalService {
       degree: marsDegree % 30,
       retrograde: false
     });
-    
+
     // Jupiter (approximately 0.083 degrees per day - 12 year cycle)
     const jupiterDegree = ((year - 2020) * 30 + dayOfYear * 0.083) % 360;
     positions.set('jupiter', {
@@ -117,7 +117,7 @@ export class AstrologicalService {
       degree: jupiterDegree % 30,
       retrograde: false
     });
-    
+
     // Saturn (approximately 0.033 degrees per day - 29.5 year cycle)
     const saturnDegree = ((year - 2020) * 12.2 + dayOfYear * 0.033) % 360;
     positions.set('saturn', {
@@ -125,26 +125,26 @@ export class AstrologicalService {
       degree: saturnDegree % 30,
       retrograde: false
     });
-    
+
     // Outer planets move very slowly
     positions.set('uranus', {
       sign: 'taurus',
       degree: 15 + (year - 2020) * 4.3,
       retrograde: false
     });
-    
+
     positions.set('neptune', {
       sign: 'pisces',
       degree: 25 + (year - 2020) * 2.1,
       retrograde: false
     });
-    
+
     positions.set('pluto', {
       sign: 'aquarius',
       degree: 0 + (year - 2024) * 1.5,
       retrograde: false
     });
-    
+
     return positions;
   }
 
@@ -174,8 +174,8 @@ export class AstrologicalService {
       { start: 134, end: 155 },  // Mid-May to early June
       { start: 254, end: 275 }   // Mid-Sept to early Oct
     ];
-    
-    return retroPeriods.some(period => 
+
+    return retroPeriods.some(period =>
       dayOfYear >= period.start && dayOfYear <= period.end
     );
   }
@@ -183,7 +183,7 @@ export class AstrologicalService {
   // Update all user transits
   private async updateAllUserTransits() {
     if (!this.currentEphemeris) return;
-    
+
     for (const [userId, userData] of this.userAstroData) {
       await this.updateUserTransits(userId);
     }
@@ -207,10 +207,10 @@ export class AstrologicalService {
           birth_lng: birthData.location.lng,
           updated_at: new Date().toISOString()
         });
-      
+
       // Calculate natal chart (simplified)
       const natalChart = await this.calculateNatalChart(birthData);
-      
+
       // Store in memory
       this.userAstroData.set(userId, {
         userId,
@@ -219,7 +219,7 @@ export class AstrologicalService {
         currentTransits: [],
         lastUpdate: new Date()
       });
-      
+
       // Update user's holoflower with natal data
       return natalChart;
     } catch (error) {
@@ -236,9 +236,9 @@ export class AstrologicalService {
   }) {
     // In production, this would use a proper astrology calculation library
     // For now, we'll create a simplified natal chart
-    
+
     const natalPlanets = new Map<Planet, NatalPlacement>();
-    
+
     // Example natal placements (would be calculated based on birth data)
     natalPlanets.set('sun', {
       planet: 'sun',
@@ -248,7 +248,7 @@ export class AstrologicalService {
       strength: 0.9,
       interpretation: 'Strong sense of self and creative expression'
     });
-    
+
     natalPlanets.set('moon', {
       planet: 'moon',
       sign: 'cancer',
@@ -257,7 +257,7 @@ export class AstrologicalService {
       strength: 0.95,
       interpretation: 'Deep emotional intelligence and nurturing nature'
     });
-    
+
     natalPlanets.set('mercury', {
       planet: 'mercury',
       sign: 'virgo',
@@ -266,11 +266,11 @@ export class AstrologicalService {
       strength: 0.85,
       interpretation: 'Analytical mind with attention to detail'
     });
-    
+
     // Calculate ascendant and midheaven based on birth time and location
     const ascendant = this.calculateAscendant(birthData);
     const midheaven = this.calculateMidheaven(birthData);
-    
+
     return {
       birthData,
       ascendant,
@@ -311,18 +311,18 @@ export class AstrologicalService {
                       'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
                       .indexOf(ascendant);
     const cusps: number[] = [];
-    
+
     for (let i = 0; i < 12; i++) {
       cusps.push((ascIndex * 30 + i * 30) % 360);
     }
-    
+
     return cusps;
   }
 
   // Get user's current astrological state
   public async getUserAstrologicalState(userId: string) {
     let userData = this.userAstroData.get(userId);
-    
+
     if (!userData) {
       // Load from database
       const { data: birthData } = await supabase
@@ -330,7 +330,7 @@ export class AstrologicalService {
         .select('*')
         .eq('user_id', userId)
         .single();
-      
+
       if (birthData) {
         userData = {
           userId,
@@ -342,18 +342,18 @@ export class AstrologicalService {
           currentTransits: [],
           lastUpdate: new Date()
         };
-        
+
         // Calculate natal chart
         userData.natalChart = await this.calculateNatalChart(userData.birthData);
         this.userAstroData.set(userId, userData);
       }
     }
-    
+
     // Update current transits
     if (userData) {
       await this.updateUserTransits(userId);
     }
-    
+
     return userData;
   }
 
@@ -361,13 +361,13 @@ export class AstrologicalService {
   private async updateUserTransits(userId: string) {
     const userData = this.userAstroData.get(userId);
     if (!userData || !this.currentEphemeris) return;
-    
+
     const transits: PlanetaryTransit[] = [];
-    
+
     // Calculate which houses are being transited
     this.currentEphemeris.planets.forEach((position, planet) => {
       const houseNumber = this.getTransitedHouse(position, userData.natalChart);
-      
+
       if (houseNumber) {
         transits.push({
           planet,
@@ -382,10 +382,10 @@ export class AstrologicalService {
         });
       }
     });
-    
+
     userData.currentTransits = transits;
     userData.lastUpdate = new Date();
-    
+
     // Save to database
     await supabase
       .from('user_transits')
@@ -399,18 +399,18 @@ export class AstrologicalService {
   // Get which house is being transited
   private getTransitedHouse(position: { sign: ZodiacSign; degree: number }, natalChart: any): number | null {
     if (!natalChart || !natalChart.houses) return null;
-    
+
     const absoluteDegree = this.getAbsoluteDegree(position.sign, position.degree);
-    
+
     for (let i = 0; i < 12; i++) {
       const houseCusp = natalChart.houses[i];
       const nextCusp = natalChart.houses[(i + 1) % 12];
-      
+
       if (this.isDegreeInHouse(absoluteDegree, houseCusp, nextCusp)) {
         return i + 1;
       }
     }
-    
+
     return null;
   }
 
@@ -466,8 +466,8 @@ export class AstrologicalService {
       }
       // ... other planets
     };
-    
-    return interpretations[planet]?.[houseNumber] || 
+
+    return interpretations[planet]?.[houseNumber] ||
            `${planet} activating house ${houseNumber}`;
   }
 
@@ -476,10 +476,10 @@ export class AstrologicalService {
     const synodicMonth = 29.53059;
     const knownNewMoon = new Date('2024-01-11');
     const now = new Date();
-    
+
     const daysSince = (now.getTime() - knownNewMoon.getTime()) / (1000 * 60 * 60 * 24);
     const phasePercentage = (daysSince % synodicMonth) / synodicMonth;
-    
+
     let phase = 'New Moon';
     if (phasePercentage < 0.125) phase = 'New Moon';
     else if (phasePercentage < 0.25) phase = 'Waxing Crescent';
@@ -489,7 +489,7 @@ export class AstrologicalService {
     else if (phasePercentage < 0.75) phase = 'Waning Gibbous';
     else if (phasePercentage < 0.875) phase = 'Last Quarter';
     else phase = 'Waning Crescent';
-    
+
     return { phase, percentage: phasePercentage };
   }
 
@@ -498,7 +498,7 @@ export class AstrologicalService {
     const now = new Date();
     const month = now.getMonth();
     const day = now.getDate();
-    
+
     // Approximate seasonal boundaries
     if ((month === 2 && day >= 20) || month === 3 || month === 4 || (month === 5 && day < 21)) {
       return { season: 'Spring', energy: 'New beginnings and growth' };
@@ -516,27 +516,27 @@ export class AstrologicalService {
     // Simplified - would calculate actual VOC periods
     const periods: { start: Date; end: Date }[] = [];
     const now = new Date();
-    
+
     // Example VOC period
     periods.push({
       start: new Date(now.getTime() + 3600000), // 1 hour from now
       end: new Date(now.getTime() + 7200000)    // 2 hours from now
     });
-    
+
     return periods;
   }
 
   // Get retrograde planets
   public getRetrogradePlanets(): Planet[] {
     if (!this.currentEphemeris) return [];
-    
+
     const retrogrades: Planet[] = [];
     this.currentEphemeris.planets.forEach((position, planet) => {
       if (position.retrograde) {
         retrogrades.push(planet);
       }
     });
-    
+
     return retrogrades;
   }
 
@@ -687,10 +687,10 @@ export class AstrologicalService {
     if (!placement) {
       return { sign: 'unknown', house: 1 };
     }
-    
+
     // Calculate house (simplified - would use actual house calculation)
     const house = Math.floor(placement.degree / 30) + 1;
-    
+
     return {
       sign: placement.sign,
       house: house

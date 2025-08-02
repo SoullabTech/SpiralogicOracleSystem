@@ -1,6 +1,6 @@
 /**
  * Fire Agent - Refactored with Human-Centered Spiritual Support
- * 
+ *
  * This agent facilitates exploration of passion, action, and transformation themes
  * while maintaining clear boundaries between AI support and user spiritual agency.
  */
@@ -10,7 +10,7 @@ import { logOracleInsight } from "../utils/oracleLogger";
 import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
 import ModelService from "../../utils/modelService";
 import type { AIResponse } from "../../types/ai";
-import { 
+import {
   HumanCenteredSpiritualSupport,
   FACILITATOR_RESPONSES,
   BoundaryEnforcer,
@@ -64,7 +64,7 @@ const detectFireThemes = (input: string, memories: any[]): {
 } => {
   const themes: string[] = [];
   const lowerInput = input.toLowerCase();
-  
+
   // Detect themes from user's own words
   if (lowerInput.includes('stuck') || lowerInput.includes('stagnant')) {
     themes.push('movement_seeking');
@@ -81,16 +81,16 @@ const detectFireThemes = (input: string, memories: any[]): {
   if (lowerInput.includes('energy') || lowerInput.includes('motivat')) {
     themes.push('energy_awareness');
   }
-  
+
   // Analyze patterns from memories without mystical interpretation
   const recentThemes = memories
     .filter(m => m.timestamp > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
     .map(m => m.content.toLowerCase());
-  
+
   if (recentThemes.some(t => t.includes('goal') || t.includes('dream'))) {
     themes.push('goal_clarification');
   }
-  
+
   // Suggest focus based on detected themes
   let suggestedFocus = "exploring what energizes you";
   if (themes.includes('movement_seeking')) {
@@ -98,14 +98,14 @@ const detectFireThemes = (input: string, memories: any[]): {
   } else if (themes.includes('transformation_process')) {
     suggestedFocus = "navigating change with clarity";
   }
-  
+
   return { themes, suggestedFocus };
 };
 
 export class FireAgentRefactored extends OracleAgent {
   name = "Fire Facilitator";
   description = "Supports exploration of passion, action, and transformation themes";
-  
+
   constructor() {
     super(
       "fire",
@@ -125,22 +125,22 @@ export class FireAgentRefactored extends OracleAgent {
     try {
       // Get user's previous reflections
       const memories = await getRelevantMemories(userId, 10);
-      
+
       // Detect themes from user input
       const { themes, suggestedFocus } = detectFireThemes(input, memories);
-      
+
       // Build facilitation response
       let response = await this.buildFacilitationResponse(input, themes, memories);
-      
+
       // Validate and enforce boundaries
       const validation = BoundaryEnforcer.validateResponse(response);
       if (!validation.isValid) {
         response = BoundaryEnforcer.transformResponse(response);
       }
-      
+
       // Reinforce user agency
       response = UserAgencyReinforcer.reinforceAgency(response);
-      
+
       // Store the interaction for continuity
       await storeMemoryItem({
         user_id: userId,
@@ -153,7 +153,7 @@ export class FireAgentRefactored extends OracleAgent {
           interaction_type: 'facilitation'
         }
       });
-      
+
       // Log for monitoring (without mystical claims)
       await logOracleInsight({
         userId,
@@ -163,7 +163,7 @@ export class FireAgentRefactored extends OracleAgent {
         response,
         metadata: { themes, boundary_compliant: true }
       });
-      
+
       return {
         content: response,
         provider: 'fire-facilitator',
@@ -176,10 +176,10 @@ export class FireAgentRefactored extends OracleAgent {
           user_agency_emphasized: true
         }
       };
-      
+
     } catch (error) {
       logger.error('Fire facilitation error:', error);
-      
+
       // Error response that maintains boundaries
       return {
         content: "I notice there was an interruption. Let's return to your reflection when you're ready. What would you like to explore about passion or action in your life?",
@@ -204,14 +204,14 @@ export class FireAgentRefactored extends OracleAgent {
   ): Promise<string> {
     const protocols = FireFacilitationProtocols;
     let response = "";
-    
+
     // Choose appropriate greeting
     if (memories.length === 0) {
       response += protocols.greeting.initial + "\n\n";
     } else {
       response += protocols.greeting.returning + "\n\n";
     }
-    
+
     // Address primary theme
     if (themes.includes('movement_seeking')) {
       response += "You've mentioned feeling stuck. " + protocols.exploration.action + "\n\n";
@@ -230,17 +230,17 @@ export class FireAgentRefactored extends OracleAgent {
       response += protocols.exploration.passion + "\n\n";
       response += protocols.practices.journaling;
     }
-    
+
     // Add integration prompt
     response += "\n\n" + protocols.reflection.integration;
-    
+
     // Include practical suggestions without mystical framing
     if (themes.length > 0) {
       response += "\n\nBased on your exploration, you might consider:\n";
       response += "- " + protocols.practices.action_steps + "\n";
       response += "- " + protocols.practices.energy_tracking;
     }
-    
+
     return response;
   }
 
@@ -249,30 +249,30 @@ export class FireAgentRefactored extends OracleAgent {
    */
   generateReflectionPrompts(themes: string[]): string[] {
     const prompts: string[] = [];
-    
+
     // Theme-specific prompts that empower user insight
     if (themes.includes('movement_seeking')) {
       prompts.push("What would movement look like in your current situation?");
       prompts.push("What's one thing you could do differently tomorrow?");
     }
-    
+
     if (themes.includes('passion_exploration')) {
       prompts.push("When do you feel most alive and energized?");
       prompts.push("What activities make you lose track of time?");
     }
-    
+
     if (themes.includes('transformation_process')) {
       prompts.push("What is ending and what is beginning in your life?");
       prompts.push("How can you honor both the old and the new?");
     }
-    
+
     // Always include general fire prompts
     prompts.push(...[
       "What lights you up right now?",
       "Where is your energy wanting to flow?",
       "What action feels most aligned with your values?"
     ]);
-    
+
     return prompts;
   }
 
@@ -285,27 +285,27 @@ export class FireAgentRefactored extends OracleAgent {
   } {
     const tools: string[] = [];
     const practices: string[] = [];
-    
+
     // Theme-based suggestions
     if (themes.includes('movement_seeking')) {
       tools.push("Daily micro-action tracker");
       practices.push("5-minute morning intention setting");
     }
-    
+
     if (themes.includes('passion_exploration')) {
       tools.push("Energy level journal");
       practices.push("Weekly passion project time");
     }
-    
+
     if (themes.includes('transformation_process')) {
       tools.push("Change milestone map");
       practices.push("Transition ritual creation");
     }
-    
+
     // General fire element tools
     tools.push("Goal clarification worksheet");
     practices.push("Evening reflection on daily wins");
-    
+
     return { tools, practices };
   }
 }

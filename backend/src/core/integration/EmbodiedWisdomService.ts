@@ -80,7 +80,7 @@ export class EmbodiedWisdomService {
 
     // Check for daily application
     const dailyIndicators = ['daily', 'everyday', 'routine', 'regular', 'consistent'];
-    const hasDailyApplication = dailyIndicators.some(indicator => 
+    const hasDailyApplication = dailyIndicators.some(indicator =>
       bodyIntegration.dailyApplication.toLowerCase().includes(indicator)
     );
 
@@ -91,7 +91,7 @@ export class EmbodiedWisdomService {
     }
 
     // Check for practical evidence
-    if (bodyIntegration.integrationEvidence.includes('noticed') || 
+    if (bodyIntegration.integrationEvidence.includes('noticed') ||
         bodyIntegration.integrationEvidence.includes('observed') ||
         bodyIntegration.integrationEvidence.includes('changed')) {
       strengths.push('Observable integration evidence');
@@ -310,10 +310,10 @@ export class EmbodiedWisdomService {
     });
 
     // Celebrate boring consistency
-    const boringButConsistent = metrics.filter(m => 
+    const boringButConsistent = metrics.filter(m =>
       m.consistencyRating >= 6 && m.maintainedFor >= 21
     );
-    
+
     if (boringButConsistent.length > 0) {
       celebrations.push(
         '✨ Your "boring" consistency is actually the most profound spiritual practice. This steady showing up transforms life.'
@@ -369,11 +369,11 @@ export class EmbodiedWisdomService {
     // Analyze body integration
     if (tracking.bodyBasedIntegrations.length > 0) {
       strengths.push('You recognize the importance of embodied wisdom');
-      
+
       const somaticDepth = tracking.bodyBasedIntegrations.reduce(
         (sum, b) => sum + b.somaticAwareness.length, 0
       ) / tracking.bodyBasedIntegrations.length;
-      
+
       if (somaticDepth < 30) {
         growthEdges.push('Develop more detailed somatic awareness descriptions');
       }
@@ -382,7 +382,7 @@ export class EmbodiedWisdomService {
     }
 
     // Analyze struggle wisdom
-    const wisdomToStruggleRatio = tracking.mistakesAndStruggles.length > 0 ? 
+    const wisdomToStruggleRatio = tracking.mistakesAndStruggles.length > 0 ?
       tracking.livedExperiences.length / tracking.mistakesAndStruggles.length : 0;
 
     if (wisdomToStruggleRatio > 3) {

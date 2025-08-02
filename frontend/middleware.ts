@@ -35,25 +35,25 @@ const monitoredApiRoutes = [
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  
+
   // Check if it's a protected route
   const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
   const isMonitoredApi = monitoredApiRoutes.some(route => path.startsWith(route));
-  
+
   // For protected routes, check authentication
   if (isProtectedRoute) {
     const token = request.cookies.get('supabase-auth-token');
-    
+
     if (!token) {
       return NextResponse.redirect(new URL('/auth/signin', request.url));
     }
   }
-  
+
   // Apply bypassing prevention middleware to monitored routes
   if (isMonitoredApi || path.startsWith('/elemental') || path.startsWith('/oracle')) {
     return await bypassingPrevention(request);
   }
-  
+
   // Allow static files and other routes
   return NextResponse.next();
 }

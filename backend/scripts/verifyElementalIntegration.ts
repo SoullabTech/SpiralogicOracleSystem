@@ -9,18 +9,18 @@ async function verifyElementalIntegration() {
     console.log('🧪 Verifying Elemental Alchemy Integration...\n');
 
     const knowledgeDir = path.join(__dirname, '../data/founder-knowledge');
-    
+
     // Check for source book file
     const bookPath = path.join(knowledgeDir, 'elemental-alchemy-book.json');
     const summaryPath = path.join(knowledgeDir, 'elemental-alchemy-summary.json');
 
     console.log('📁 Checking Knowledge Files:');
-    
+
     // Verify book data exists
     try {
       const bookContent = await fs.readFile(bookPath, 'utf-8');
       const bookData = JSON.parse(bookContent);
-      
+
       console.log('✅ elemental-alchemy-book.json - Found');
       console.log(`   - Title: ${bookData.title}`);
       console.log(`   - Author: ${bookData.author}`);
@@ -49,11 +49,11 @@ async function verifyElementalIntegration() {
     try {
       const summaryContent = await fs.readFile(summaryPath, 'utf-8');
       const summaryData = JSON.parse(summaryContent);
-      
+
       console.log('\n✅ elemental-alchemy-summary.json - Found');
       console.log(`   - Integration Status: ${summaryData.integration_status}`);
       console.log(`   - Total Chapters: ${summaryData.chapters.length}`);
-      
+
     } catch (error) {
       console.log('\n❌ elemental-alchemy-summary.json - Missing');
     }
@@ -67,7 +67,7 @@ async function verifyElementalIntegration() {
 
     // Now run the founder knowledge service integration
     console.log('\n🔄 Running Founder Knowledge Service Integration...');
-    
+
     try {
       // Create processed and summary files that the founder service expects
       const processedPath = path.join(knowledgeDir, 'elemental-alchemy-processed.json');

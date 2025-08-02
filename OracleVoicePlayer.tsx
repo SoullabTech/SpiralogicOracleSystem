@@ -9,9 +9,9 @@ interface OracleVoicePlayerProps {
   className?: string;
 }
 
-export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({ 
-  audioUrl, 
-  text, 
+export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
+  audioUrl,
+  text,
   voiceProfile = 'oracle_matrix',
   className = ''
 }) => {
@@ -27,7 +27,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
 
     try {
       setIsLoading(true);
-      
+
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
         await audioRef.current.play();
@@ -90,8 +90,8 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
           <button
             onClick={isPlaying ? handlePause : handlePlay}
             disabled={isLoading}
-            className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 hover:bg-purple-200 
-                       text-purple-800 rounded-full transition-colors duration-200 
+            className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 hover:bg-purple-200
+                       text-purple-800 rounded-full transition-colors duration-200
                        disabled:opacity-50 disabled:cursor-not-allowed"
             title={`${isPlaying ? 'Pause' : 'Play'} Oracle voice`}
           >

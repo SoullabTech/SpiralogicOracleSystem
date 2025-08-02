@@ -28,9 +28,9 @@ export class JungBuddhaDemo {
     // ===============================================
     // ANGER EXAMPLES
     // ===============================================
-    
+
     console.log('🔥 ANGER PATTERNS\n');
-    
+
     // Jung Mode - Rejection/Integration needed
     console.log('💭 User: "I hate how angry I get"');
     const angerJung = await this.simulateResponse("I hate how angry I get");
@@ -38,7 +38,7 @@ export class JungBuddhaDemo {
     console.log('🎯 Routing:', angerJung.routing);
     console.log('');
 
-    // Buddha Mode - Over-identification  
+    // Buddha Mode - Over-identification
     console.log('💭 User: "I AM an angry person"');
     const angerBuddha = await this.simulateResponse("I AM an angry person");
     console.log('☸️ Buddha Response:', angerBuddha.response);
@@ -55,9 +55,9 @@ export class JungBuddhaDemo {
     // ===============================================
     // FEAR EXAMPLES
     // ===============================================
-    
+
     console.log('😰 FEAR PATTERNS\n');
-    
+
     console.log('💭 User: "I hate being so afraid all the time"');
     const fearJung = await this.simulateResponse("I hate being so afraid all the time");
     console.log('🧿 Jung Response:', fearJung.response);
@@ -76,9 +76,9 @@ export class JungBuddhaDemo {
     // ===============================================
     // SHAME EXAMPLES
     // ===============================================
-    
+
     console.log('😔 SHAME PATTERNS\n');
-    
+
     console.log('💭 User: "I hate myself for being so pathetic"');
     const shameJung = await this.simulateResponse("I hate myself for being so pathetic");
     console.log('🧿 Jung Response:', shameJung.response);
@@ -90,11 +90,11 @@ export class JungBuddhaDemo {
     console.log('');
 
     // ===============================================
-    // SADNESS EXAMPLES  
+    // SADNESS EXAMPLES
     // ===============================================
-    
+
     console.log('😢 SADNESS PATTERNS\n');
-    
+
     console.log('💭 User: "I hate feeling this sad"');
     const sadnessJung = await this.simulateResponse("I hate feeling this sad");
     console.log('🧿 Jung Response:', sadnessJung.response);
@@ -113,9 +113,9 @@ export class JungBuddhaDemo {
     // ===============================================
     // COMPLEX PATTERNS
     // ===============================================
-    
+
     console.log('🌀 COMPLEX PATTERNS\n');
-    
+
     console.log('💭 User: "I keep getting stuck in the same relationship patterns"');
     const relationshipPattern = await this.simulateResponse("I keep getting stuck in the same relationship patterns");
     console.log('⚖️ Hybrid Response:', relationshipPattern.response);
@@ -131,9 +131,9 @@ export class JungBuddhaDemo {
     // ===============================================
     // WEEKLY RHYTHM INTEGRATION
     // ===============================================
-    
+
     console.log('📅 WEEKLY SACRED RHYTHM INTEGRATION\n');
-    
+
     const todaysPractice = await this.oracle.getTodaysSacredPractice();
     console.log('🌟 Today\'s Sacred Practice:');
     console.log(todaysPractice);
@@ -147,9 +147,9 @@ export class JungBuddhaDemo {
     // ===============================================
     // PATTERN ANALYSIS
     // ===============================================
-    
+
     console.log('📊 PATTERN ANALYSIS\n');
-    
+
     const patternAnalysis = await this.oracle.analyzeUserPatterns();
     console.log('📈 Current Pattern Analysis:');
     console.log(patternAnalysis);
@@ -176,11 +176,11 @@ export class JungBuddhaDemo {
     // Simulate the oracle's response process
     const response = await this.oracle.respondToPrompt(userInput);
     const wisdomRouting = this.oracle.getWisdomRouting();
-    
+
     return {
       response,
-      routing: wisdomRouting ? 
-        `${wisdomRouting.approach} (${wisdomRouting.confidence.toFixed(2)} confidence)` : 
+      routing: wisdomRouting ?
+        `${wisdomRouting.approach} (${wisdomRouting.confidence.toFixed(2)} confidence)` :
         'No routing available',
       confidence: wisdomRouting?.confidence
     };
@@ -200,7 +200,7 @@ export const JungBuddhaResponseExamples = {
     },
     identification: {
       input: "I AM an angry person",
-      expected: "buddha", 
+      expected: "buddha",
       response: "You experience anger, but are you the anger itself? What remains when the anger passes? Who is the one watching?"
     },
     recurring: {
@@ -223,7 +223,7 @@ export const JungBuddhaResponseExamples = {
     },
     recurring: {
       input: "This fear keeps returning",
-      expected: "hybrid", 
+      expected: "hybrid",
       response: "This fear returns as a teacher. Let's learn its wisdom AND practice meeting it with spacious awareness. The wave teaches, but we are the ocean."
     }
   },
@@ -244,7 +244,7 @@ export const JungBuddhaResponseExamples = {
   sadness: {
     rejection: {
       input: "I hate feeling this sad",
-      expected: "jung", 
+      expected: "jung",
       response: "Your sadness holds the wisdom of what matters most to you. What love or loss is it honoring? Let's listen to its medicine."
     },
     identification: {
@@ -267,7 +267,7 @@ export const JungBuddhaResponseExamples = {
     },
     identity_story: {
       input: "This is just who I am - someone who fails",
-      expected: "buddha", 
+      expected: "buddha",
       response: "This story feels so real, so solid. But stories arise and pass away. What is the space in which all stories appear?"
     }
   }
@@ -281,20 +281,20 @@ export async function testJungBuddhaRouting() {
   console.log('🧪 TESTING JUNG-BUDDHA ROUTING\n');
 
   const demo = new JungBuddhaDemo();
-  
+
   // Test each category
   for (const [emotion, patterns] of Object.entries(JungBuddhaResponseExamples)) {
     console.log(`\n🔍 Testing ${emotion.toUpperCase()} patterns:`);
-    
+
     for (const [patternType, example] of Object.entries(patterns)) {
       console.log(`\n  ${patternType}:`);
       console.log(`  Input: "${example.input}"`);
       console.log(`  Expected: ${example.expected}`);
-      
+
       const result = await demo.simulateResponse(example.input);
       console.log(`  Actual: ${result.routing}`);
       console.log(`  Response: "${result.response}"`);
-      
+
       // Check if routing matches expectation
       const actualApproach = result.routing.split(' ')[0];
       const isCorrect = actualApproach === example.expected;

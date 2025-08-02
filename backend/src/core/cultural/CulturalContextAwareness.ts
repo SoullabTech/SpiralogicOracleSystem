@@ -1,9 +1,9 @@
 /**
  * Cultural Context Awareness System
- * 
+ *
  * Detects and adapts to user's cultural background, ensuring all guidance
  * respects cultural values, traditional practices, and indigenous sovereignty.
- * 
+ *
  * Key Features:
  * - Cultural background detection and validation
  * - Cultural adaptation of archetypal systems
@@ -140,10 +140,10 @@ export class CulturalContextAwareness {
     culturalProfile: CulturalProfile,
     requestedElement: string
   ): Promise<{adaptedGuidance: string; culturalAdaptation: CulturalAdaptation}> {
-    
+
     const culturalAdaptation = await this.createCulturalAdaptation(culturalProfile);
     const elementArchetype = this.getElementalArchetype(requestedElement, culturalProfile.primaryCulture);
-    
+
     const adaptedGuidance = await this.adaptGuidanceLanguage(
       originalGuidance,
       culturalProfile,
@@ -162,7 +162,7 @@ export class CulturalContextAwareness {
     content: string,
     userProfile: CulturalProfile
   ): Promise<{permitted: boolean; guidance?: string; adaptedContent?: string}> {
-    
+
     // Check indigenous sovereignty protocols
     const wisdomRequest: IndigenousWisdomRequest = {
       tradition,
@@ -171,7 +171,7 @@ export class CulturalContextAwareness {
     };
 
     const protocolResult = await indigenousSovereigntyProtocol.evaluateWisdomRequest(wisdomRequest);
-    
+
     if (!protocolResult.permitted) {
       return {
         permitted: false,
@@ -193,13 +193,13 @@ export class CulturalContextAwareness {
    * Create comprehensive cultural adaptation
    */
   private async createCulturalAdaptation(culturalProfile: CulturalProfile): Promise<CulturalAdaptation> {
-    const archetypalMapping = this.culturalArchetypeRegistry.get(culturalProfile.primaryCulture) || 
+    const archetypalMapping = this.culturalArchetypeRegistry.get(culturalProfile.primaryCulture) ||
                              this.getUniversalArchetypalMapping();
-    
-    const healingGuidance = this.culturalHealingRegistry.get(culturalProfile.primaryCulture) || 
+
+    const healingGuidance = this.culturalHealingRegistry.get(culturalProfile.primaryCulture) ||
                            this.getUniversalHealingGuidance();
-    
-    const communicationStyle = this.culturalCommunicationStyles.get(culturalProfile.primaryCulture) || 
+
+    const communicationStyle = this.culturalCommunicationStyles.get(culturalProfile.primaryCulture) ||
                               this.getUniversalCommunicationStyle();
 
     return {
@@ -216,7 +216,7 @@ export class CulturalContextAwareness {
    */
   private extractCulturalIndicators(userInput: string): any {
     const lowerInput = userInput.toLowerCase();
-    
+
     const culturalKeywords = {
       native_american: ['medicine wheel', 'four directions', 'eagle', 'sage', 'ceremony', 'tribal', 'nation'],
       african: ['ancestors', 'ubuntu', 'orisha', 'ancestral', 'community', 'elder'],
@@ -334,7 +334,7 @@ export class CulturalContextAwareness {
     elementArchetype: CulturalArchetype,
     culturalAdaptation: CulturalAdaptation
   ): Promise<string> {
-    
+
     let adaptedGuidance = originalGuidance;
 
     // Replace archetypal references with cultural equivalents

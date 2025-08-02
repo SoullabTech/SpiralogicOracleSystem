@@ -1,9 +1,9 @@
 /**
  * Universal Consciousness Orchestrator
- * 
+ *
  * Integrates the Universal Consciousness Platform with existing Oracle agents,
  * providing seamless cultural enhancement while maintaining all existing functionality.
- * 
+ *
  * This orchestrator acts as a middleware layer that:
  * - Preserves existing agent behavior
  * - Adds cultural consciousness capabilities
@@ -12,7 +12,7 @@
  */
 
 import { logger } from '../../utils/logger';
-import { 
+import {
   universalConsciousnessIntegration,
   UniversalConsciousnessQuery,
   UniversalConsciousnessResponse
@@ -67,7 +67,7 @@ export class UniversalConsciousnessOrchestrator {
   async enhanceOracleResponse(
     request: OracleQueryEnhancementRequest
   ): Promise<EnhancedOracleResponse> {
-    
+
     try {
       // Always preserve original functionality first
       if (!this.enhancementEnabled) {
@@ -111,7 +111,7 @@ export class UniversalConsciousnessOrchestrator {
 
     } catch (error) {
       logger.error('Error enhancing Oracle response:', error);
-      
+
       // Always fall back to preserving original functionality
       return this.createPreservedResponse(request);
     }
@@ -127,7 +127,7 @@ export class UniversalConsciousnessOrchestrator {
     userId: string,
     userProfile?: any
   ): Promise<{enhancedResponse: string; culturalGuidance: string}> {
-    
+
     try {
       const ucQuery: UniversalConsciousnessQuery = {
         userInput,
@@ -142,9 +142,9 @@ export class UniversalConsciousnessOrchestrator {
 
       // Extract shadow-specific cultural enhancements
       const culturalGuidance = ucResponse.shadowIntegration.ancestralWisdomIntegration;
-      
+
       let enhancedResponse = originalShadowResponse;
-      
+
       // Add cultural shadow work guidance if available
       if (culturalGuidance) {
         enhancedResponse += `\n\n🌍 **Cultural Shadow Wisdom**: ${culturalGuidance}`;
@@ -179,7 +179,7 @@ export class UniversalConsciousnessOrchestrator {
     userId: string,
     userProfile?: any
   ): Promise<{enhancedResponse: string; culturalArchetype: string}> {
-    
+
     try {
       const ucQuery: UniversalConsciousnessQuery = {
         userInput,
@@ -199,7 +199,7 @@ export class UniversalConsciousnessOrchestrator {
       if (ucResponse.archetypalAdaptation.recommendedExpression) {
         const culturalExpression = ucResponse.archetypalAdaptation.recommendedExpression;
         culturalArchetype = culturalExpression.culturalName;
-        
+
         enhancedResponse += `\n\n🌍 **Cultural Expression**: In your tradition, this ${element} energy is known as ${culturalExpression.culturalName} - ${culturalExpression.traditionalRole}. ${culturalExpression.modernIntegration}`;
       }
 
@@ -249,7 +249,7 @@ export class UniversalConsciousnessOrchestrator {
     indigenousProtocolsUsed: number;
     crossCulturalInsightsShared: number;
   }> {
-    
+
     return {
       enhancementsApplied: this.culturalEnhancementMetrics.get(`${userId}_total`) || 0,
       culturalContextsDetected: [], // Would be tracked in practice
@@ -265,7 +265,7 @@ export class UniversalConsciousnessOrchestrator {
     request: OracleQueryEnhancementRequest,
     ucResponse: UniversalConsciousnessResponse
   ): Promise<EnhancedOracleResponse> {
-    
+
     // Start with original response to preserve existing functionality
     let enhancedResponse = request.originalResponse;
 
@@ -334,21 +334,21 @@ export class UniversalConsciousnessOrchestrator {
    */
   private extractCulturalPreferences(userProfile?: any): string[] {
     if (!userProfile) return [];
-    
+
     const preferences = [];
-    
+
     if (userProfile.culturalBackground) {
       preferences.push(userProfile.culturalBackground);
     }
-    
+
     if (userProfile.culturalIdentities) {
       preferences.push(...userProfile.culturalIdentities);
     }
-    
+
     if (userProfile.preferredWisdomTraditions) {
       preferences.push(...userProfile.preferredWisdomTraditions);
     }
-    
+
     return preferences;
   }
 

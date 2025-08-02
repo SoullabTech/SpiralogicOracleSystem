@@ -49,9 +49,9 @@ router.post('/query', authenticate, async (req, res) => {
 
   } catch (error) {
     logger.error('Founder query error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process founder query',
-      message: error.message 
+      message: error.message
     });
   }
 });
@@ -64,8 +64,8 @@ router.post('/vision-check', authenticate, async (req, res) => {
 
     // Check if user has appropriate permissions (team member or higher)
     if (!userId || !req.user?.metadata?.isTeamMember) {
-      return res.status(403).json({ 
-        error: 'Vision coherence check requires team member access' 
+      return res.status(403).json({
+        error: 'Vision coherence check requires team member access'
       });
     }
 
@@ -82,9 +82,9 @@ router.post('/vision-check', authenticate, async (req, res) => {
 
   } catch (error) {
     logger.error('Vision coherence check error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to check vision coherence',
-      message: error.message 
+      message: error.message
     });
   }
 });
@@ -97,8 +97,8 @@ router.post('/knowledge/upload', authenticate, upload.single('document'), async 
 
     // Check founder/admin permissions
     if (!userId || !req.user?.metadata?.isFounder) {
-      return res.status(403).json({ 
-        error: 'Knowledge upload requires founder access' 
+      return res.status(403).json({
+        error: 'Knowledge upload requires founder access'
       });
     }
 
@@ -129,9 +129,9 @@ router.post('/knowledge/upload', authenticate, upload.single('document'), async 
 
   } catch (error) {
     logger.error('Knowledge upload error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to upload knowledge document',
-      message: error.message 
+      message: error.message
     });
   }
 });
@@ -144,13 +144,13 @@ router.get('/onboarding/:role', authenticate, async (req, res) => {
 
     const validRoles = ['team', 'facilitator', 'developer', 'partner'];
     if (!validRoles.includes(role)) {
-      return res.status(400).json({ 
-        error: 'Invalid role. Valid roles: ' + validRoles.join(', ') 
+      return res.status(400).json({
+        error: 'Invalid role. Valid roles: ' + validRoles.join(', ')
       });
     }
 
     const onboardingQuery = `I'm joining Soullab as a ${role}. What should I know to begin my journey?`;
-    
+
     const response = await founderAgent.processQuery({
       input: onboardingQuery,
       userId,
@@ -165,9 +165,9 @@ router.get('/onboarding/:role', authenticate, async (req, res) => {
 
   } catch (error) {
     logger.error('Onboarding guidance error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to get onboarding guidance',
-      message: error.message 
+      message: error.message
     });
   }
 });
@@ -180,15 +180,15 @@ router.get('/philosophy/:topic', async (req, res) => {
 
     const validTopics = ['sacred-techno-interface', 'spiralogic', 'synergetics', 'codex-universalis', 'overview'];
     if (!validTopics.includes(topic)) {
-      return res.status(400).json({ 
-        error: 'Invalid topic. Valid topics: ' + validTopics.join(', ') 
+      return res.status(400).json({
+        error: 'Invalid topic. Valid topics: ' + validTopics.join(', ')
       });
     }
 
-    const topicQuery = topic === 'overview' 
+    const topicQuery = topic === 'overview'
       ? 'What is the philosophical foundation of Soullab?'
       : `Explain the ${topic.replace('-', ' ')} in detail.`;
-    
+
     const response = await founderAgent.processQuery({
       input: topicQuery,
       userId,
@@ -203,9 +203,9 @@ router.get('/philosophy/:topic', async (req, res) => {
 
   } catch (error) {
     logger.error('Philosophy query error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to get philosophical foundations',
-      message: error.message 
+      message: error.message
     });
   }
 });
@@ -214,20 +214,20 @@ export default router;
 
 /**
  * 🌀 FOUNDER ROUTES API
- * 
+ *
  * PUBLIC ENDPOINTS:
  * - GET /philosophy/:topic - Access philosophical foundations
- * 
+ *
  * AUTHENTICATED ENDPOINTS:
  * - POST /query - General founder wisdom queries
  * - GET /onboarding/:role - Role-specific onboarding guidance
- * 
+ *
  * TEAM MEMBER ENDPOINTS:
  * - POST /vision-check - Check initiative alignment with vision
- * 
+ *
  * FOUNDER/ADMIN ENDPOINTS:
  * - POST /knowledge/upload - Upload knowledge documents
- * 
+ *
  * The Founder Agent maintains organizational coherence while
  * sharing wisdom at appropriate levels of depth and protection.
  */

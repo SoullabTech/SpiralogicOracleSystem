@@ -12,7 +12,7 @@ import { UserDevelopmentMetrics, PlatformAnalytics, ResearchInsights, ElementalA
 export default function AnalyticsDashboardPage() {
   const router = useRouter();
   const authService = new IntegrationAuthService();
-  
+
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -46,7 +46,7 @@ export default function AnalyticsDashboardPage() {
       });
 
       const response = await fetch(`/api/analytics/dashboard?${params}`);
-      
+
       if (response.status === 204) {
         // Insufficient data for analytics
         setAnalyticsData(null);
@@ -106,7 +106,7 @@ export default function AnalyticsDashboardPage() {
                 Privacy-focused insights into your integration journey
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowPrivacyDetails(!showPrivacyDetails)}
@@ -131,7 +131,7 @@ export default function AnalyticsDashboardPage() {
           <div className="flex items-start space-x-3">
             <span className="text-blue-600 text-sm">🔒</span>
             <div className="text-sm text-blue-800">
-              <strong>Privacy-First Analytics:</strong> All data is processed with your privacy settings. 
+              <strong>Privacy-First Analytics:</strong> All data is processed with your privacy settings.
               Platform and research analytics use only anonymized, aggregated data with minimum cohort sizes.
               {showPrivacyDetails && analyticsData?.privacyReport && (
                 <PrivacyDetails report={analyticsData.privacyReport} />
@@ -164,7 +164,7 @@ export default function AnalyticsDashboardPage() {
                   )}
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Timeframe
@@ -199,18 +199,18 @@ export default function AnalyticsDashboardPage() {
         ) : (
           <>
             {analyticsData.userMetrics && (
-              <UserMetricsView 
+              <UserMetricsView
                 metrics={analyticsData.userMetrics}
                 preferences={analyticsPreferences}
                 onUpdatePreferences={setAnalyticsPreferences}
                 onSavePreferences={updateAnalyticsPreferences}
               />
             )}
-            
+
             {analyticsData.platformAnalytics && (
               <PlatformAnalyticsView analytics={analyticsData.platformAnalytics} />
             )}
-            
+
             {analyticsData.researchInsights && (
               <ResearchInsightsView insights={analyticsData.researchInsights} />
             )}
@@ -254,7 +254,7 @@ const InsufficientDataMessage: React.FC = () => (
       Insufficient Data for Analytics
     </h3>
     <p className="text-gray-600 mb-6">
-      Analytics require minimum data thresholds to protect user privacy. 
+      Analytics require minimum data thresholds to protect user privacy.
       Continue your integration journey to unlock insights.
     </p>
     <div className="text-sm text-gray-500">
@@ -459,7 +459,7 @@ const ResearchInsightsView: React.FC<{ insights: ResearchInsights }> = ({ insigh
       <div className="text-sm text-gray-600 mb-4">
         Based on anonymized data from consenting participants
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <h4 className="font-medium text-gray-900 mb-3">Development Patterns</h4>
@@ -469,7 +469,7 @@ const ResearchInsightsView: React.FC<{ insights: ResearchInsights }> = ({ insigh
             ))}
           </ul>
         </div>
-        
+
         <div>
           <h4 className="font-medium text-gray-900 mb-3">Effective Interventions</h4>
           <ul className="space-y-2 text-sm text-gray-700">

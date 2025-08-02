@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  UserHolisticProfile, 
-  UserState, 
-  HolisticDomain, 
+import {
+  UserHolisticProfile,
+  UserState,
+  HolisticDomain,
   DevelopmentStage
 } from '../../../lib/types/holistic';
 
@@ -117,12 +117,12 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
               </p>
             </div>
           </div>
-          
+
           {/* Complexity Selector */}
           <div className="flex items-center space-x-2">
             <label className="text-sm text-gray-700">Practice Level:</label>
-            <select 
-              value={currentComplexity} 
+            <select
+              value={currentComplexity}
               onChange={(e) => handleComplexityChange(e.target.value as DevelopmentStage)}
               className="border rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -143,7 +143,7 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
                 <span className="text-2xl">{getDomainIcon(domain.domain)}</span>
                 <span className="text-xs font-medium capitalize">{domain.domain}</span>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
+                  <div
                     className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${(domain.currentLevel / 10) * 100}%` }}
                   />
@@ -161,9 +161,9 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
           <h3 className="text-lg font-semibold mb-4">Personalized Recommendations</h3>
           <div className="grid gap-4">
             {guidance.recommendations.map((rec, index) => (
-              <RecommendationCard 
-                key={rec.id} 
-                recommendation={rec} 
+              <RecommendationCard
+                key={rec.id}
+                recommendation={rec}
                 priority={index + 1}
                 userComplexity={currentComplexity}
               />
@@ -175,7 +175,7 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
       {/* Quick State Adjustment */}
       <div className="bg-white rounded-lg shadow-sm border p-6">
         <h3 className="text-lg font-semibold mb-4">Quick Check-In</h3>
-        <QuickStateAdjustment 
+        <QuickStateAdjustment
           currentProfile={userProfile}
           onStateUpdate={onProfileUpdate}
         />
@@ -190,13 +190,13 @@ interface RecommendationCardProps {
   userComplexity: DevelopmentStage;
 }
 
-const RecommendationCard: React.FC<RecommendationCardProps> = ({ 
-  recommendation, 
-  priority, 
-  userComplexity 
+const RecommendationCard: React.FC<RecommendationCardProps> = ({
+  recommendation,
+  priority,
+  userComplexity
 }) => {
   const [expanded, setExpanded] = useState(false);
-  
+
   const isAppropriateComplexity = recommendation.complexity === userComplexity;
   const cardOpacity = isAppropriateComplexity ? 'opacity-100' : 'opacity-60';
 
@@ -217,11 +217,11 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
               {recommendation.estimatedTime}min
             </span>
           </div>
-          
+
           <h4 className="font-medium text-gray-900 mb-1">
             {recommendation.title}
           </h4>
-          
+
           <div className="flex items-center space-x-1 mb-2">
             {recommendation.domains.map(domain => (
               <span key={domain} className="text-sm">
@@ -247,7 +247,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                   ))}
                 </ul>
               </div>
-              
+
               {recommendation.prerequisites && (
                 <div>
                   <h5 className="text-xs font-medium text-gray-700 mb-1">Prerequisites:</h5>

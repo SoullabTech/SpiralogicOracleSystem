@@ -9,7 +9,7 @@ import { EarthAgent } from './earthAgent';
 import { AirAgent } from './airAgent';
 import { AetherAgent } from './aetherAgent';
 import { ShadowAgent } from './shadowAgents';
-import type { 
+import type {
   MainOracleAgentInterface,
   PatternContribution,
   CollectiveWisdom,
@@ -55,7 +55,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
   private oracleName: string;
   private mode: 'daily' | 'retreat';
   private ainConnection?: MainOracleAgentInterface;
-  
+
   // Elemental Agents - owned by PersonalOracleAgent
   private elementalAgents: {
     fire: FireAgent;
@@ -65,10 +65,10 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     aether: AetherAgent;
     shadow: ShadowAgent;
   };
-  
+
   // Sacred Relationship State
   private sacredRelationship: SacredRelationship;
-  
+
   // Personal Context Cache
   private personalContext: any = {};
   private lastContextUpdate: string = '';
@@ -155,17 +155,17 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
       // 4. Determine elemental need
       const elementalNeed = this.determineElementalNeed(
-        query, 
-        personalContext, 
-        collectiveWisdom, 
+        query,
+        personalContext,
+        collectiveWisdom,
         mirrorAnalysis
       );
 
       // 5. Create enhanced query for elemental agent
       const enhancedQuery = this.createEnhancedQuery(
-        query, 
-        personalContext, 
-        collectiveWisdom, 
+        query,
+        personalContext,
+        collectiveWisdom,
         mirrorAnalysis
       );
 
@@ -186,9 +186,9 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       // 9. Contribute pattern to AIN collective intelligence
       if (this.ainConnection) {
         await this.contributePatternToAIN(
-          query, 
-          personalResponse, 
-          elementalNeed, 
+          query,
+          personalResponse,
+          elementalNeed,
           personalContext
         );
       }
@@ -207,7 +207,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
     } catch (error) {
       logger.error('Error in enhanced query processing:', error);
-      
+
       // Graceful fallback response
       return {
         content: "I sense a temporary disruption in our connection. Let me re-center and be present with you. What's most alive in you right now?",
@@ -230,7 +230,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     try {
       // Get recent memories
       const memories = await getRelevantMemories(this.userId, 5);
-      
+
       // Extract transformation history
       const transformationHistory = memories
         .filter(m => m.metadata?.transformationIndicator)
@@ -281,7 +281,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
   private async applySacredMirrorProtocol(query: QueryInput, personalContext: any) {
     const input = query.input.toLowerCase();
     const recentMemories = personalContext.memories.slice(0, 3);
-    
+
     // Detect patterns that need mirroring
     const isSeekingValidation = this.detectValidationSeeking(input, recentMemories);
     const isInRepetitivePattern = this.detectRepetitivePattern(input, recentMemories);
@@ -302,9 +302,9 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
    * Determine which elemental agent to route to
    */
   private determineElementalNeed(
-    query: QueryInput, 
-    personalContext: any, 
-    collectiveWisdom: CollectiveWisdom | null, 
+    query: QueryInput,
+    personalContext: any,
+    collectiveWisdom: CollectiveWisdom | null,
     mirrorAnalysis: any
   ): ElementalType {
     const input = query.input.toLowerCase();
@@ -335,9 +335,9 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
    * Create enhanced query for elemental agent with full context
    */
   private createEnhancedQuery(
-    query: QueryInput, 
-    personalContext: any, 
-    collectiveWisdom: CollectiveWisdom | null, 
+    query: QueryInput,
+    personalContext: any,
+    collectiveWisdom: CollectiveWisdom | null,
     mirrorAnalysis: any
   ): EnhancedQueryInput {
     return {
@@ -421,7 +421,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     }
 
     // Track depth reached
-    if (query.input.toLowerCase().includes('shadow') || 
+    if (query.input.toLowerCase().includes('shadow') ||
         query.input.toLowerCase().includes('fear') ||
         query.input.toLowerCase().includes('vulnerable')) {
       this.sacredRelationship.depthReached.push(`${elementUsed} depth work`);
@@ -548,32 +548,32 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
   private detectIntegrationNeed(input: string, context: any): boolean {
     const integrationWords = ['integrate', 'bring together', 'make sense', 'understand'];
-    const hasMultipleElements = context.elementalPreferences && 
+    const hasMultipleElements = context.elementalPreferences &&
       Object.values(context.elementalPreferences).filter((v: any) => v > 0.3).length > 2;
-    
+
     return integrationWords.some(word => input.includes(word)) || hasMultipleElements;
   }
 
   private detectValidationSeeking(input: string, memories: any[]): boolean {
     const validationWords = ['right thing', 'doing good', 'am i', 'should i'];
-    const recentValidation = memories.some(m => 
+    const recentValidation = memories.some(m =>
       validationWords.some(word => m.content.toLowerCase().includes(word))
     );
-    
+
     return validationWords.some(word => input.includes(word)) && recentValidation;
   }
 
   private detectRepetitivePattern(input: string, memories: any[]): boolean {
     const currentTheme = this.extractTheme(input);
     const recentThemes = memories.map(m => this.extractTheme(m.content));
-    
+
     return recentThemes.filter(theme => theme === currentTheme).length >= 2;
   }
 
   private detectDepthAvoidance(input: string, context: any): boolean {
     const surfaceWords = ['fine', 'okay', 'just wondering', 'simple question'];
     const hasDepthHistory = context.sacredRelationship.depthReached.length > 0;
-    
+
     return surfaceWords.some(word => input.includes(word)) && hasDepthHistory;
   }
 
@@ -585,7 +585,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
   // Additional helper methods would be implemented here...
   private calculateElementalPreferences(memories: any[]): Record<ElementalType, number> {
     const preferences: Record<ElementalType, number> = { fire: 0, water: 0, earth: 0, air: 0, aether: 0 };
-    
+
     memories.forEach(memory => {
       if (memory.element && memory.element in preferences) {
         preferences[memory.element as ElementalType] += 1;
@@ -603,7 +603,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
   private selectBasedOnElementalJourney(preferences: Record<ElementalType, number>): ElementalType {
     // Find element with highest preference, or default to aether for integration
-    const maxElement = Object.entries(preferences).reduce((a, b) => 
+    const maxElement = Object.entries(preferences).reduce((a, b) =>
       preferences[a[0] as ElementalType] > preferences[b[0] as ElementalType] ? a : b
     )[0] as ElementalType;
 

@@ -5,7 +5,7 @@
 ### 📊 Database Status
 - **Database File**: `soul_memory.db` (12KB, last modified May 24)
 - **Schema**: ✅ Fully implemented with proper structure
-- **Tables**: 
+- **Tables**:
   - `memories` - Core memory storage with 15 columns
   - `memory_threads` - Journey/thread tracking
   - `archetypal_patterns` - Archetypal pattern detection

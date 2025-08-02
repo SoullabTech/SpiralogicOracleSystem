@@ -263,11 +263,11 @@
             .container {
                 padding: 20px;
             }
-            
+
             h1 {
                 font-size: 2em;
             }
-            
+
             .checkbox-group, .radio-group {
                 flex-direction: column;
             }
@@ -293,14 +293,14 @@
                     <div class="element-icon earth"></div>
                     Life Context
                 </h2>
-                
+
                 <div class="oracle-message">
                     "Share where you stand in this moment of your journey..."
                 </div>
 
                 <div class="form-group">
                     <label for="currentLifePhase">What phase of life are you currently in?</label>
-                    <textarea id="currentLifePhase" name="currentLifePhase" required 
+                    <textarea id="currentLifePhase" name="currentLifePhase" required
                         placeholder="Describe your current life chapter..."></textarea>
                 </div>
 
@@ -353,7 +353,7 @@
                     <div class="element-icon water"></div>
                     Emotional Landscape
                 </h2>
-                
+
                 <div class="oracle-message">
                     "Let us witness the waters of your emotional world..."
                 </div>
@@ -463,7 +463,7 @@
                     <div class="element-icon air"></div>
                     Spiritual Journey
                 </h2>
-                
+
                 <div class="oracle-message">
                     "Your spirit calls you deeper..."
                 </div>
@@ -515,7 +515,7 @@
                 <div class="form-group">
                     <label for="connectionToNature">How connected do you feel to nature?</label>
                     <div class="slider-container">
-                        <input type="range" id="connectionToNature" name="connectionToNature" 
+                        <input type="range" id="connectionToNature" name="connectionToNature"
                             min="1" max="10" value="5" class="slider">
                         <div class="slider-labels">
                             <span>Disconnected</span>
@@ -537,7 +537,7 @@
                     <div class="element-icon fire"></div>
                     Shadow Work
                 </h2>
-                
+
                 <div class="oracle-message">
                     "In the darkness lies your hidden gold..."
                 </div>
@@ -545,7 +545,7 @@
                 <div class="form-group">
                     <label for="shadowAwareness">How aware are you of your shadow aspects?</label>
                     <div class="slider-container">
-                        <input type="range" id="shadowAwareness" name="shadowAwareness" 
+                        <input type="range" id="shadowAwareness" name="shadowAwareness"
                             min="1" max="10" value="5" class="slider">
                         <div class="slider-labels">
                             <span>Just beginning</span>
@@ -643,7 +643,7 @@
                     <div class="element-icon aether"></div>
                     Sacred Intentions
                 </h2>
-                
+
                 <div class="oracle-message">
                     "Speak your deepest calling into being..."
                 </div>
@@ -767,7 +767,7 @@
                     <div class="element-icon earth"></div>
                     Retreat Readiness
                 </h2>
-                
+
                 <div class="oracle-message">
                     "Assessing your readiness for transformation..."
                 </div>
@@ -775,7 +775,7 @@
                 <div class="form-group">
                     <label for="physicalHealth">Physical health & vitality:</label>
                     <div class="slider-container">
-                        <input type="range" id="physicalHealth" name="physicalHealth" 
+                        <input type="range" id="physicalHealth" name="physicalHealth"
                             min="1" max="10" value="5" class="slider">
                         <div class="slider-labels">
                             <span>Challenged</span>
@@ -787,7 +787,7 @@
                 <div class="form-group">
                     <label for="mentalClarity">Mental clarity & focus:</label>
                     <div class="slider-container">
-                        <input type="range" id="mentalClarity" name="mentalClarity" 
+                        <input type="range" id="mentalClarity" name="mentalClarity"
                             min="1" max="10" value="5" class="slider">
                         <div class="slider-labels">
                             <span>Foggy</span>
@@ -799,7 +799,7 @@
                 <div class="form-group">
                     <label for="emotionalOpenness">Emotional openness:</label>
                     <div class="slider-container">
-                        <input type="range" id="emotionalOpenness" name="emotionalOpenness" 
+                        <input type="range" id="emotionalOpenness" name="emotionalOpenness"
                             min="1" max="10" value="5" class="slider">
                         <div class="slider-labels">
                             <span>Guarded</span>
@@ -811,7 +811,7 @@
                 <div class="form-group">
                     <label for="groupReadiness">Readiness for group process:</label>
                     <div class="slider-container">
-                        <input type="range" id="groupReadiness" name="groupReadiness" 
+                        <input type="range" id="groupReadiness" name="groupReadiness"
                             min="1" max="10" value="5" class="slider">
                         <div class="slider-labels">
                             <span>Prefer solo</span>
@@ -851,27 +851,27 @@
             for (let i = 1; i <= totalSections; i++) {
                 document.getElementById(`section${i}`).classList.add('hidden');
             }
-            
+
             // Show current section
             document.getElementById(`section${sectionNum}`).classList.remove('hidden');
-            
+
             // Update buttons
             document.getElementById('prevBtn').classList.toggle('hidden', sectionNum === 1);
             document.getElementById('nextBtn').classList.toggle('hidden', sectionNum === totalSections);
             document.getElementById('submitBtn').classList.toggle('hidden', sectionNum !== totalSections);
-            
+
             updateProgress();
         }
 
         function changeSection(direction) {
             const newSection = currentSection + direction;
-            
+
             if (newSection >= 1 && newSection <= totalSections) {
                 // Basic validation for current section
                 if (direction === 1 && !validateSection(currentSection)) {
                     return;
                 }
-                
+
                 currentSection = newSection;
                 showSection(currentSection);
                 window.scrollTo(0, 0);
@@ -881,7 +881,7 @@
         function validateSection(sectionNum) {
             const section = document.getElementById(`section${sectionNum}`);
             const requiredInputs = section.querySelectorAll('[required]');
-            
+
             for (let input of requiredInputs) {
                 if (!input.value.trim()) {
                     input.focus();
@@ -889,7 +889,7 @@
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -936,24 +936,24 @@
                     groupReadiness: parseInt(formData.get('groupReadiness'))
                 }
             };
-            
+
             return data;
         }
 
         document.getElementById('questionnaireForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             if (!validateSection(currentSection)) {
                 return;
             }
-            
+
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Processing your sacred data...';
-            
+
             try {
                 const data = getFormData();
-                
+
                 const response = await fetch('/api/retreat/onboarding/questionnaire', {
                     method: 'POST',
                     headers: {
@@ -961,34 +961,34 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 if (response.ok) {
                     const result = await response.json();
-                    
+
                     // Show completion message
                     document.querySelector('.container').innerHTML = `
                         <div class="header">
                             <div class="spiral-logo"></div>
                             <h1>Sacred Assessment Complete</h1>
                         </div>
-                        
+
                         <div class="oracle-message">
                             <h2>Thank you for sharing your sacred journey</h2>
                             <p>${result.message}</p>
                         </div>
-                        
+
                         <div class="section">
                             <h3>Your Elemental Profile:</h3>
                             <p>Dominant Element: <strong>${result.elementalProfile.dominantElement}</strong></p>
                         </div>
-                        
+
                         <div class="section">
                             <h3>Kelly's Reflection:</h3>
                             <div class="oracle-message">
                                 ${result.founderReflection}
                             </div>
                         </div>
-                        
+
                         <div class="button-group">
                             <a href="${result.nextStep}" class="btn-primary" style="text-decoration: none; display: inline-block; text-align: center;">
                                 Meet Your Personal Oracle
@@ -1008,7 +1008,7 @@
 
         // Initialize
         showSection(1);
-        
+
         // Add smooth transitions for sliders
         document.querySelectorAll('.slider').forEach(slider => {
             slider.addEventListener('input', function() {

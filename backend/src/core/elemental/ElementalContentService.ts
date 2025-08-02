@@ -1,7 +1,7 @@
-import { 
-  ElementalContent, 
-  ElementalArchetype, 
-  ContentComplexity, 
+import {
+  ElementalContent,
+  ElementalArchetype,
+  ContentComplexity,
   ContentType,
   ContentDeliveryContext,
   ContentRecommendation,
@@ -32,7 +32,7 @@ export class ElementalContentService {
   ): Promise<ContentRecommendation[]> {
     // Get user's elemental profile
     const userProfile = await this.getUserElementalProfile(context.userId);
-    
+
     // Check anti-commodification gates
     const commodificationCheck = this.antiCommodification.implementPacingAlgorithm(
       { lastIntegrationCheck: new Date() } as any,
@@ -45,7 +45,7 @@ export class ElementalContentService {
 
     // Filter content based on user readiness
     const availableContent = await this.filterContentByReadiness(context, userProfile);
-    
+
     // Generate recommendations with integration focus
     const recommendations = await this.generateRecommendations(
       availableContent,
@@ -79,7 +79,7 @@ export class ElementalContentService {
     profile: UserElementalProfile
   ): Promise<ElementalContent[]> {
     const allContent = Array.from(this.contentLibrary.values());
-    
+
     return allContent.filter(content => {
       // Check prerequisite gates
       if (!this.prerequisitesMet(content, context)) {
@@ -131,12 +131,12 @@ export class ElementalContentService {
 
   private hasUnintegratedContent(content: ElementalContent, context: ContentDeliveryContext): boolean {
     // Prevent new content if user has unintegrated previous content
-    return context.unintegratedContent.length > 0 && 
+    return context.unintegratedContent.length > 0 &&
            content.complexity !== ContentComplexity.INTEGRATION_FOCUSED;
   }
 
   private triggersRecentBypassingPatterns(content: ElementalContent, context: ContentDeliveryContext): boolean {
-    return content.bypassingAlerts.some(alert => 
+    return content.bypassingAlerts.some(alert =>
       context.recentBypassingPatterns.includes(alert)
     );
   }
@@ -152,7 +152,7 @@ export class ElementalContentService {
     for (const content of availableContent) {
       const adaptationReason = this.determineAdaptationReason(content, context, profile);
       const integrationReadiness = this.calculateIntegrationReadiness(content, context, profile);
-      
+
       if (integrationReadiness < 3) continue; // Skip if not ready
 
       const recommendation: ContentRecommendation = {
@@ -179,7 +179,7 @@ export class ElementalContentService {
     if (context.stressLevel > 7) {
       return 'Adapted for high stress - focusing on grounding and stability';
     }
-    
+
     if (context.energyLevel < 4) {
       return 'Adapted for low energy - gentle, accessible practices';
     }
@@ -204,7 +204,7 @@ export class ElementalContentService {
 
     // Adjust for user capacity
     readiness += Math.min(context.integrationCapacity - this.calculateRequiredCapacity(content), 3);
-    
+
     // Adjust for archetype alignment
     if (content.archetype === profile.primaryArchetype) {
       readiness += 2;
@@ -251,7 +251,7 @@ export class ElementalContentService {
     // Adapt complexity based on user state
     if (context.stressLevel > 7) {
       adapted.content = this.simplifyForStressState(adapted.content);
-      adapted.realWorldApplications = adapted.realWorldApplications.filter(app => 
+      adapted.realWorldApplications = adapted.realWorldApplications.filter(app =>
         app.includes('gentle') || app.includes('simple') || app.includes('basic')
       );
     }
@@ -390,7 +390,7 @@ export class ElementalContentService {
       updatedAt: new Date()
     });
 
-    // Water archetype content  
+    // Water archetype content
     this.addContent({
       id: 'water-foundational-flow',
       title: 'Adaptive Flow and Emotional Wisdom',
@@ -427,7 +427,7 @@ export class ElementalContentService {
       id: 'earth-foundational-grounding',
       title: 'Practical Wisdom and Embodied Stability',
       archetype: ElementalArchetype.EARTH,
-      complexity: ContentComplexity.FOUNDATIONAL, 
+      complexity: ContentComplexity.FOUNDATIONAL,
       contentType: ContentType.PRACTICE,
       description: 'Building stability through consistent, practical wisdom application',
       content: 'True grounding comes not from peak experiences but from showing up consistently to ordinary life...',
@@ -457,7 +457,7 @@ export class ElementalContentService {
     // Air archetype content
     this.addContent({
       id: 'air-foundational-perspective',
-      title: 'Mental Clarity and Balanced Perspective', 
+      title: 'Mental Clarity and Balanced Perspective',
       archetype: ElementalArchetype.AIR,
       complexity: ContentComplexity.FOUNDATIONAL,
       contentType: ContentType.REFLECTION,
@@ -498,9 +498,9 @@ export class ElementalContentService {
   ): Promise<CrossDomainIntegration[]> {
     const userProfile = await this.getUserElementalProfile(userId);
     const contentHistory = completedContent.map(id => this.contentLibrary.get(id)).filter(Boolean);
-    
+
     const archetypesExplored = Array.from(new Set(contentHistory.map(c => c!.archetype)));
-    
+
     if (archetypesExplored.length < 2) {
       return []; // Need at least 2 archetypes for cross-domain work
     }
@@ -508,7 +508,7 @@ export class ElementalContentService {
     const integrations: CrossDomainIntegration[] = [];
 
     // Fire + Water integration
-    if (archetypesExplored.includes(ElementalArchetype.FIRE) && 
+    if (archetypesExplored.includes(ElementalArchetype.FIRE) &&
         archetypesExplored.includes(ElementalArchetype.WATER)) {
       integrations.push({
         domains: [ElementalArchetype.FIRE, ElementalArchetype.WATER],
@@ -531,7 +531,7 @@ export class ElementalContentService {
     }
 
     // Earth + Air integration
-    if (archetypesExplored.includes(ElementalArchetype.EARTH) && 
+    if (archetypesExplored.includes(ElementalArchetype.EARTH) &&
         archetypesExplored.includes(ElementalArchetype.AIR)) {
       integrations.push({
         domains: [ElementalArchetype.EARTH, ElementalArchetype.AIR],
@@ -562,7 +562,7 @@ export class ElementalContentService {
     engagement: Partial<ContentEngagement>
   ): Promise<void> {
     const userProfile = await this.getUserElementalProfile(userId);
-    
+
     const fullEngagement: ContentEngagement = {
       contentId,
       accessedAt: new Date(),

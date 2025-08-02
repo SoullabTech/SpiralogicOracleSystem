@@ -93,7 +93,7 @@ export class ElevenLabsService {
    */
   async testArchetypalVoices(): Promise<void> {
     const { ARCHETYPAL_VOICE_PROFILES } = await import('../config/archetypalVoiceProfiles.js');
-    
+
     console.log('🎤 Testing Archetypal Voices...\n');
 
     for (const [archetype, profile] of Object.entries(ARCHETYPAL_VOICE_PROFILES)) {

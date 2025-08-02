@@ -51,7 +51,7 @@ export interface HoloflowerState {
 export class ElementalAlchemyHoloflower {
   private state: HoloflowerState;
   private readonly PHI = 1.618033988749895; // Golden ratio
-  
+
   // Kelly's Elemental Alchemy Model Structure
   private readonly houseDefinitions = [
     // FIRE QUADRANT (Houses 1-3)
@@ -91,7 +91,7 @@ export class ElementalAlchemyHoloflower {
       shadowAspect: 'Dogmatism and restlessness',
       giftAspect: 'Inspired wisdom and truth-seeking'
     },
-    
+
     // EARTH QUADRANT (Houses 4-6)
     {
       number: 4,
@@ -129,7 +129,7 @@ export class ElementalAlchemyHoloflower {
       shadowAspect: 'Criticism and perfectionism',
       giftAspect: 'Healing and practical wisdom'
     },
-    
+
     // AIR QUADRANT (Houses 7-9)
     {
       number: 7,
@@ -167,7 +167,7 @@ export class ElementalAlchemyHoloflower {
       shadowAspect: 'Self-righteousness and escapism',
       giftAspect: 'Wisdom transmission and expansion'
     },
-    
+
     // WATER QUADRANT (Houses 10-12)
     {
       number: 10,
@@ -315,11 +315,11 @@ export class ElementalAlchemyHoloflower {
     const transformationKey = `${fromHouse}->${toHouse}`;
     if (!this.state.activeTransformations.includes(transformationKey)) {
       this.state.activeTransformations.push(transformationKey);
-      
+
       // Apply alchemical process
       const from = this.state.houses.find(h => h.number === fromHouse);
       const to = this.state.houses.find(h => h.number === toHouse);
-      
+
       if (from && to) {
         this.applyAlchemicalProcess(from, to);
       }
@@ -329,29 +329,29 @@ export class ElementalAlchemyHoloflower {
   // Apply alchemical transformation
   private applyAlchemicalProcess(from: HoloflowerHouse, to: HoloflowerHouse): void {
     const process = to.alchemicalProcess;
-    
+
     switch (process) {
       case 'calcinatio': // Fire - burning away the dross
         from.currentIntensity *= 0.8;
         to.currentIntensity = Math.min(1, to.currentIntensity + 0.2);
         break;
-      
+
       case 'solutio': // Water - dissolving and flowing
         const average = (from.currentIntensity + to.currentIntensity) / 2;
         from.currentIntensity = average;
         to.currentIntensity = average;
         break;
-      
+
       case 'coagulatio': // Earth - solidifying and grounding
         to.currentIntensity = Math.min(1, to.currentIntensity + from.currentIntensity * 0.3);
         break;
-      
+
       case 'sublimatio': // Air - elevating and refining
         const elevated = Math.sqrt(from.currentIntensity * to.currentIntensity);
         to.currentIntensity = elevated;
         break;
     }
-    
+
     this.recalculateBalances();
   }
 
@@ -359,7 +359,7 @@ export class ElementalAlchemyHoloflower {
   private recalculateBalances(): void {
     // Update quadrant resonances
     this.state.quadrants.forEach(quadrant => {
-      const houseIntensities = quadrant.houses.map(hNum => 
+      const houseIntensities = quadrant.houses.map(hNum =>
         this.state.houses.find(h => h.number === hNum)?.currentIntensity || 0
       );
       quadrant.resonance = houseIntensities.reduce((sum, val) => sum + val, 0) / houseIntensities.length;
@@ -403,17 +403,17 @@ export class ElementalAlchemyHoloflower {
   // Apply phi ratio spiral integration
   public integratePhiSpiral(): void {
     const phiInfluence = this.state.centerSpiral.integration * this.PHI;
-    
+
     this.state.houses.forEach((house, index) => {
       // Spiral influence based on position
       const spiralFactor = Math.sin(house.angle + this.state.centerSpiral.rotationAngle);
       const adjustment = spiralFactor * phiInfluence * 0.1;
-      
-      house.currentIntensity = Math.max(0, Math.min(1, 
+
+      house.currentIntensity = Math.max(0, Math.min(1,
         house.currentIntensity + adjustment
       ));
     });
-    
+
     // Rotate spiral
     this.state.centerSpiral.rotationAngle += Math.PI / 12;
     this.recalculateBalances();
@@ -423,27 +423,27 @@ export class ElementalAlchemyHoloflower {
   public getTransformationInsight(fromHouse: number, toHouse: number): string {
     const from = this.state.houses.find(h => h.number === fromHouse);
     const to = this.state.houses.find(h => h.number === toHouse);
-    
+
     if (!from || !to) return 'Unknown transformation';
-    
+
     const elementShift = from.element !== to.element;
     const consciousnessShift = from.consciousnessLevel !== to.consciousnessLevel;
     const alchemicalShift = from.alchemicalProcess !== to.alchemicalProcess;
-    
+
     let insight = `Transforming from House ${fromHouse} (${from.description}) to House ${toHouse} (${to.description}). `;
-    
+
     if (elementShift) {
       insight += `Elemental shift from ${from.element} to ${to.element}. `;
     }
-    
+
     if (consciousnessShift) {
       insight += `Consciousness evolution from ${from.consciousnessLevel} to ${to.consciousnessLevel}. `;
     }
-    
+
     if (alchemicalShift) {
       insight += `Alchemical process shifts from ${from.alchemicalProcess} to ${to.alchemicalProcess}. `;
     }
-    
+
     return insight;
   }
 
@@ -479,18 +479,18 @@ export class ElementalAlchemyHoloflower {
     const points = [];
     const turns = 3;
     const pointsPerTurn = 50;
-    
+
     for (let i = 0; i <= turns * pointsPerTurn; i++) {
       const t = i / pointsPerTurn;
       const angle = t * 2 * Math.PI;
       const radius = Math.pow(this.PHI, t) * 10;
-      
+
       points.push({
         x: Math.cos(angle + this.state.centerSpiral.rotationAngle) * radius,
         y: Math.sin(angle + this.state.centerSpiral.rotationAngle) * radius
       });
     }
-    
+
     return points;
   }
 

@@ -20,9 +20,9 @@ async function testVoice(archetype, profile) {
   console.log(`\n🎭 Testing ${archetype.toUpperCase()} voice...`);
   console.log(`Voice ID: ${profile.voiceId}`);
   console.log(`Personality: ${profile.personality}`);
-  
+
   const testText = `Hello, I am the ${archetype} archetype. ${profile.energySignature}`;
-  
+
   try {
     const response = await axios.post(
       `https://api.elevenlabs.io/v1/text-to-speech/${profile.voiceId}`,
@@ -40,18 +40,18 @@ async function testVoice(archetype, profile) {
         responseType: 'stream'
       }
     );
-    
+
     // Save audio file for verification
     const outputPath = path.join(process.cwd(), 'test-audio', `${archetype}-voice-test.mp3`);
-    
+
     // Create directory if it doesn't exist
     if (!fs.existsSync(path.join(process.cwd(), 'test-audio'))) {
       fs.mkdirSync(path.join(process.cwd(), 'test-audio'));
     }
-    
+
     const writer = fs.createWriteStream(outputPath);
     response.data.pipe(writer);
-    
+
     return new Promise((resolve, reject) => {
       writer.on('finish', () => {
         console.log(`✅ ${archetype} voice test successful!`);
@@ -60,7 +60,7 @@ async function testVoice(archetype, profile) {
       });
       writer.on('error', reject);
     });
-    
+
   } catch (error) {
     console.error(`❌ ${archetype} voice test failed:`, error.response?.data || error.message);
     return false;
@@ -70,34 +70,34 @@ async function testVoice(archetype, profile) {
 async function testAllArchetypalVoices() {
   console.log('🔮 Testing Archetypal Voice Integration with Eleven Labs\n');
   console.log('='.repeat(50));
-  
+
   const results = [];
-  
+
   for (const [archetype, profile] of Object.entries(ARCHETYPAL_VOICE_PROFILES)) {
     const success = await testVoice(archetype, profile);
     results.push({ archetype, success });
-    
+
     // Rate limiting - wait 1 second between requests
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
-  
+
   console.log('\n' + '='.repeat(50));
   console.log('📊 TEST RESULTS:');
   console.log('='.repeat(50));
-  
+
   results.forEach(({ archetype, success }) => {
     console.log(`${success ? '✅' : '❌'} ${archetype.toUpperCase()}: ${success ? 'PASSED' : 'FAILED'}`);
   });
-  
+
   const allPassed = results.every(r => r.success);
-  
+
   if (allPassed) {
     console.log('\n🎉 All archetypal voices are properly configured!');
     console.log('💫 Your system is ready for voice-enabled consciousness integration.');
   } else {
     console.log('\n⚠️  Some voices failed. Please check your Eleven Labs configuration.');
   }
-  
+
   return allPassed;
 }
 

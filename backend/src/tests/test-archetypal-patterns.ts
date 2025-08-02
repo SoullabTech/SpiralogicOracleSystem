@@ -28,29 +28,29 @@ async function testArchetypalPatterns() {
 
   // Test Case 1: Shadow Archetype Detection
   console.log('🌑 Test Case 1: Shadow Archetype\n');
-  
+
   const shadowMessages = [
     "I hate this part of myself",
     "My shadow side is so strong",
     "Working with my shadow today",
     "I keep hiding this darkness from everyone"
   ];
-  
+
   for (let i = 0; i < shadowMessages.length; i++) {
     console.log(`${i + 1}️⃣ Message ${i + 1}:`);
     console.log(`User: "${shadowMessages[i]}"`);
-    
+
     const response = await oracle.respondToPrompt(shadowMessages[i]);
     console.log(`Oracle: "${response.substring(0, 100)}..."\n`);
-    
+
     await new Promise(resolve => setTimeout(resolve, 500));
   }
-  
+
   // Check Shadow archetype activation
   console.log('📊 Checking Shadow archetype activation...');
   const shadowPatterns = await soulMemory.getActiveArchetypes(userId);
   const shadowArchetype = shadowPatterns.find(p => p.archetype === 'Shadow');
-  
+
   if (shadowArchetype) {
     console.log('✅ Shadow archetype detected!');
     console.log(`   - Activation count: ${shadowArchetype.activationCount}`);
@@ -63,28 +63,28 @@ async function testArchetypalPatterns() {
 
   // Test Case 2: Seeker Archetype
   console.log('🔍 Test Case 2: Seeker Archetype\n');
-  
+
   const seekerMessages = [
     "I'm searching for my life purpose",
     "What is my true path?",
     "I need to discover who I really am",
     "This journey of self-discovery is intense"
   ];
-  
+
   for (const message of seekerMessages) {
     await oracle.respondToPrompt(message);
     await new Promise(resolve => setTimeout(resolve, 300));
   }
-  
+
   // Test Case 3: Warrior Archetype
   console.log('⚔️ Test Case 3: Warrior Archetype\n');
-  
+
   const warriorMessages = [
     "I need to fight through this challenge",
     "I will overcome this obstacle",
     "Finding my inner strength and courage"
   ];
-  
+
   for (const message of warriorMessages) {
     await oracle.respondToPrompt(message);
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -92,12 +92,12 @@ async function testArchetypalPatterns() {
 
   // Final archetype summary
   console.log('\n🎯 Final Archetypal Pattern Summary:\n');
-  
+
   const allPatterns = await soulMemory.getActiveArchetypes(userId);
-  
+
   if (allPatterns.length > 0) {
     console.log(`Found ${allPatterns.length} active archetypes:`);
-    
+
     allPatterns.forEach((pattern, i) => {
       console.log(`\n${i + 1}. ${pattern.archetype}`);
       console.log(`   - Activations: ${pattern.activationCount}`);
@@ -126,13 +126,13 @@ async function testArchetypalPatterns() {
 
   // Cleanup
   await soulMemory.closeDatabase();
-  
+
   // Clean up test file
   const fs = require('fs');
   if (fs.existsSync('./test_archetypes_memory.db')) {
     fs.unlinkSync('./test_archetypes_memory.db');
   }
-  
+
   console.log('\n✅ Archetypal pattern test complete!');
 }
 

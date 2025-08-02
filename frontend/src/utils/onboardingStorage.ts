@@ -56,7 +56,7 @@ class OnboardingStorage {
         });
 
       if (error) throw error;
-      
+
       // Also save locally as backup
       this.saveToLocal(config);
     } catch (error) {

@@ -60,19 +60,19 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
   const renderHouse = (house: HoloflowerHouse) => {
     const visualData = holoflower.exportVisualizationData();
     const houseVis = visualData.houses.find(h => h.number === house.number)!;
-    
+
     const isSelected = selectedHouse?.number === house.number;
     const isHovered = hoveredHouse?.number === house.number;
-    
+
     return (
       <motion.g
         key={house.number}
         initial={{ scale: 0, opacity: 0 }}
-        animate={{ 
+        animate={{
           scale: isSelected ? 1.15 : (isHovered ? 1.08 : 1),
-          opacity: 1 
+          opacity: 1
         }}
-        transition={{ 
+        transition={{
           duration: 0.3 * animationSpeed,
           type: "spring"
         }}
@@ -87,7 +87,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
             opacity={0.2}
           />
         )}
-        
+
         {/* Consciousness level ring */}
         {showConsciousnessRings && (
           <motion.circle
@@ -100,14 +100,14 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
             strokeDasharray="5,3"
             opacity={0.6}
             animate={{ rotate: 360 }}
-            transition={{ 
-              duration: 20 / animationSpeed, 
-              repeat: Infinity, 
-              ease: "linear" 
+            transition={{
+              duration: 20 / animationSpeed,
+              repeat: Infinity,
+              ease: "linear"
             }}
           />
         )}
-        
+
         {/* Main house circle */}
         <motion.circle
           cx={centerX + houseVis.x}
@@ -125,7 +125,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           whileHover={interactive ? { scale: 1.05 } : {}}
           whileTap={interactive ? { scale: 0.95 } : {}}
         />
-        
+
         {/* House number */}
         <text
           x={centerX + houseVis.x}
@@ -139,7 +139,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
         >
           {house.number}
         </text>
-        
+
         {/* Sacred symbol */}
         <text
           x={centerX + houseVis.x}
@@ -151,7 +151,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
         >
           {house.sacredSymbol}
         </text>
-        
+
         {/* Transformation glow */}
         {houseVis.glowIntensity > 0.5 && (
           <motion.circle
@@ -162,13 +162,13 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
             stroke="#FFD700"
             strokeWidth={2}
             opacity={houseVis.glowIntensity * 0.5}
-            animate={{ 
+            animate={{
               r: [houseVis.size, houseVis.size * 1.3, houseVis.size],
               opacity: [0.5, 0.2, 0.5]
             }}
-            transition={{ 
-              duration: 2 / animationSpeed, 
-              repeat: Infinity 
+            transition={{
+              duration: 2 / animationSpeed,
+              repeat: Infinity
             }}
           />
         )}
@@ -179,11 +179,11 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
   const renderCenterSpiral = () => {
     const visualData = holoflower.exportVisualizationData();
     const spiralPoints = visualData.spiral.points;
-    
+
     const pathData = spiralPoints
       .map((point, index) => `${index === 0 ? 'M' : 'L'} ${centerX + point.x} ${centerY + point.y}`)
       .join(' ');
-    
+
     return (
       <motion.g>
         {/* Phi ratio sacred geometry */}
@@ -194,13 +194,13 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           strokeWidth={2}
           opacity={state.centerSpiral.integration}
           animate={{ rotate: 360 }}
-          transition={{ 
-            duration: 60 / animationSpeed, 
-            repeat: Infinity, 
-            ease: "linear" 
+          transition={{
+            duration: 60 / animationSpeed,
+            repeat: Infinity,
+            ease: "linear"
           }}
         />
-        
+
         {/* Center integration circle */}
         <motion.circle
           cx={centerX}
@@ -208,16 +208,16 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           r={40}
           fill="url(#centerGradient)"
           fillOpacity={0.3}
-          animate={{ 
+          animate={{
             scale: [1, 1.1, 1],
             opacity: [0.3, 0.5, 0.3]
           }}
-          transition={{ 
-            duration: 3 / animationSpeed, 
-            repeat: Infinity 
+          transition={{
+            duration: 3 / animationSpeed,
+            repeat: Infinity
           }}
         />
-        
+
         {/* Integration percentage */}
         <text
           x={centerX}
@@ -230,7 +230,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
         >
           {Math.round(state.centerSpiral.integration * 100)}%
         </text>
-        
+
         {/* Phi symbol */}
         <text
           x={centerX}
@@ -250,23 +250,23 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
     return state.quadrants.map((quadrant, index) => {
       const startAngle = index * 90 - 90;
       const endAngle = startAngle + 90;
-      
+
       const startRad = startAngle * Math.PI / 180;
       const endRad = endAngle * Math.PI / 180;
-      
+
       const largeArcFlag = 0;
       const x1 = centerX + Math.cos(startRad) * baseRadius * 1.5;
       const y1 = centerY + Math.sin(startRad) * baseRadius * 1.5;
       const x2 = centerX + Math.cos(endRad) * baseRadius * 1.5;
       const y2 = centerY + Math.sin(endRad) * baseRadius * 1.5;
-      
+
       const pathData = [
         `M ${centerX} ${centerY}`,
         `L ${x1} ${y1}`,
         `A ${baseRadius * 1.5} ${baseRadius * 1.5} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
         'Z'
       ].join(' ');
-      
+
       return (
         <motion.path
           key={quadrant.element}
@@ -286,18 +286,18 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
 
   const renderActiveTransformations = () => {
     const visualData = holoflower.exportVisualizationData();
-    
+
     return visualData.connections.map((connection, index) => {
       const fromHouse = visualData.houses.find(h => h.number === connection.from);
       const toHouse = visualData.houses.find(h => h.number === connection.to);
-      
+
       if (!fromHouse || !toHouse) return null;
-      
+
       const x1 = centerX + fromHouse.x;
       const y1 = centerY + fromHouse.y;
       const x2 = centerX + toHouse.x;
       const y2 = centerY + toHouse.y;
-      
+
       return (
         <motion.line
           key={`${connection.from}-${connection.to}`}
@@ -311,7 +311,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           opacity={0.6}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ 
+          transition={{
             duration: 2 * animationSpeed,
             repeat: Infinity,
             repeatType: "reverse"
@@ -328,39 +328,39 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
 
   const handleMouseUp = (e: React.MouseEvent) => {
     if (!dragStart || !svgRef.current) return;
-    
+
     const rect = svgRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - centerX;
     const y = e.clientY - rect.top - centerY;
-    
+
     // Find nearest house
     const visualData = holoflower.exportVisualizationData();
     let nearestHouse: HoloflowerHouse | null = null;
     let minDistance = Infinity;
-    
+
     visualData.houses.forEach(houseVis => {
       const dx = x - houseVis.x;
       const dy = y - houseVis.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      
+
       if (distance < minDistance && distance < 50) {
         minDistance = distance;
         nearestHouse = state.houses.find(h => h.number === houseVis.number) || null;
       }
     });
-    
+
     if (nearestHouse && nearestHouse.number !== dragStart.number) {
       holoflower.activateTransformation(dragStart.number, nearestHouse.number);
       onTransformation?.(dragStart.number, nearestHouse.number);
     }
-    
+
     setDragStart(null);
   };
 
   const renderMetrics = () => {
     const visualData = holoflower.exportVisualizationData();
     const { consciousnessDistribution, alchemicalBalance } = visualData.metrics;
-    
+
     return (
       <div className="metrics-panel">
         <div className="consciousness-levels">
@@ -380,7 +380,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
             </div>
           ))}
         </div>
-        
+
         <div className="alchemical-processes">
           <h4>Alchemical Balance</h4>
           {Object.entries(alchemicalBalance).map(([process, value]) => (
@@ -424,14 +424,14 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
         />
         <span>Speed: {animationSpeed}x</span>
       </div>
-      
+
       <svg
         ref={svgRef}
         width={width}
         height={height}
         onMouseUp={handleMouseUp}
         onMouseLeave={() => setDragStart(null)}
-        style={{ 
+        style={{
           background: 'radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)',
           borderRadius: '50%',
           cursor: dragStart ? 'grabbing' : 'default'
@@ -443,35 +443,35 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
             <stop offset="50%" stopColor="#FFA500" />
             <stop offset="100%" stopColor="#FF6347" />
           </radialGradient>
-          
+
           <linearGradient id="spiralGradient">
             <stop offset="0%" stopColor="#FFD700" />
             <stop offset="100%" stopColor="#FF6347" />
           </linearGradient>
-          
+
           {/* Alchemical process patterns */}
           <pattern id="ascending-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
             <path d="M10 20 L10 5 M5 10 L10 5 L15 10" stroke="#87CEEB" strokeWidth="1" fill="none" opacity="0.5"/>
           </pattern>
-          
+
           <pattern id="fire-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
             <path d="M10 15 Q5 10 10 5 Q15 10 10 15" fill="#FF6B6B" opacity="0.3"/>
           </pattern>
-          
+
           <pattern id="crystal-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
             <polygon points="10,2 18,10 10,18 2,10" fill="none" stroke="#8B6B47" strokeWidth="1" opacity="0.5"/>
           </pattern>
-          
+
           <pattern id="wave-pattern" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
             <path d="M0 10 Q10 0 20 10 T40 10" fill="none" stroke="#6B8DD6" strokeWidth="1" opacity="0.5"/>
           </pattern>
         </defs>
-        
+
         {renderQuadrantBackgrounds()}
         {renderActiveTransformations()}
         {renderCenterSpiral()}
         {state.houses.map(renderHouse)}
-        
+
         {/* Drag line preview */}
         {dragStart && (
           <line
@@ -487,7 +487,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           />
         )}
       </svg>
-      
+
       {selectedHouse && (
         <div className="house-details">
           <h3>House {selectedHouse.number}: {selectedHouse.description}</h3>
@@ -501,9 +501,9 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           <p><strong>Intensity:</strong> {Math.round(selectedHouse.currentIntensity * 100)}%</p>
         </div>
       )}
-      
+
       {renderMetrics()}
-      
+
       <style jsx>{`
         .elemental-alchemy-container {
           display: flex;
@@ -514,7 +514,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           color: white;
           position: relative;
         }
-        
+
         .controls {
           display: flex;
           gap: 15px;
@@ -522,7 +522,7 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           align-items: center;
           z-index: 10;
         }
-        
+
         .controls button {
           padding: 8px 16px;
           background: #2a2a3e;
@@ -532,12 +532,12 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .controls button:hover {
           background: #3a3a4e;
           transform: translateY(-2px);
         }
-        
+
         .house-details {
           position: absolute;
           top: 80px;
@@ -549,23 +549,23 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           max-width: 300px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
-        
+
         .house-details h3 {
           margin: 0 0 15px 0;
           color: #FFD700;
           font-size: 18px;
         }
-        
+
         .house-details p {
           margin: 8px 0;
           font-size: 14px;
           line-height: 1.5;
         }
-        
+
         .house-details strong {
           color: #87CEEB;
         }
-        
+
         .metrics-panel {
           position: absolute;
           top: 80px;
@@ -577,25 +577,25 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           width: 280px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
-        
+
         .metrics-panel h4 {
           margin: 0 0 15px 0;
           color: #FFD700;
           font-size: 16px;
         }
-        
+
         .metric-bar {
           display: flex;
           align-items: center;
           margin-bottom: 10px;
           font-size: 12px;
         }
-        
+
         .metric-bar .label {
           width: 100px;
           text-transform: capitalize;
         }
-        
+
         .metric-bar .bar {
           flex: 1;
           height: 16px;
@@ -604,18 +604,18 @@ export const ElementalAlchemyVisualization: React.FC<ElementalAlchemyVisualizati
           overflow: hidden;
           margin: 0 10px;
         }
-        
+
         .metric-bar .fill {
           height: 100%;
           border-radius: 8px;
           transition: width 0.5s ease;
         }
-        
+
         .metric-bar .value {
           width: 40px;
           text-align: right;
         }
-        
+
         .consciousness-levels {
           margin-bottom: 25px;
         }

@@ -168,7 +168,7 @@ const ElementalAlchemyVisualization = ({ userId, onHouseClick, onTransformation,
           color: white;
           position: relative;
         }
-        
+
         .controls {
           display: flex;
           gap: 15px;
@@ -176,7 +176,7 @@ const ElementalAlchemyVisualization = ({ userId, onHouseClick, onTransformation,
           align-items: center;
           z-index: 10;
         }
-        
+
         .controls button {
           padding: 8px 16px;
           background: #2a2a3e;
@@ -186,12 +186,12 @@ const ElementalAlchemyVisualization = ({ userId, onHouseClick, onTransformation,
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .controls button:hover {
           background: #3a3a4e;
           transform: translateY(-2px);
         }
-        
+
         .house-details {
           position: absolute;
           top: 80px;
@@ -203,23 +203,23 @@ const ElementalAlchemyVisualization = ({ userId, onHouseClick, onTransformation,
           max-width: 300px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
-        
+
         .house-details h3 {
           margin: 0 0 15px 0;
           color: #FFD700;
           font-size: 18px;
         }
-        
+
         .house-details p {
           margin: 8px 0;
           font-size: 14px;
           line-height: 1.5;
         }
-        
+
         .house-details strong {
           color: #87CEEB;
         }
-        
+
         .metrics-panel {
           position: absolute;
           top: 80px;
@@ -231,25 +231,25 @@ const ElementalAlchemyVisualization = ({ userId, onHouseClick, onTransformation,
           width: 280px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
-        
+
         .metrics-panel h4 {
           margin: 0 0 15px 0;
           color: #FFD700;
           font-size: 16px;
         }
-        
+
         .metric-bar {
           display: flex;
           align-items: center;
           margin-bottom: 10px;
           font-size: 12px;
         }
-        
+
         .metric-bar .label {
           width: 100px;
           text-transform: capitalize;
         }
-        
+
         .metric-bar .bar {
           flex: 1;
           height: 16px;
@@ -258,18 +258,18 @@ const ElementalAlchemyVisualization = ({ userId, onHouseClick, onTransformation,
           overflow: hidden;
           margin: 0 10px;
         }
-        
+
         .metric-bar .fill {
           height: 100%;
           border-radius: 8px;
           transition: width 0.5s ease;
         }
-        
+
         .metric-bar .value {
           width: 40px;
           text-align: right;
         }
-        
+
         .consciousness-levels {
           margin-bottom: 25px;
         }

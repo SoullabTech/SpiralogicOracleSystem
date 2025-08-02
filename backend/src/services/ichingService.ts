@@ -45,7 +45,7 @@ const TRIGRAM_ARCHETYPES: Record<number, TrigramArchetype> = {
   2: {
     name: 'Wind',
     symbol: '☴',
-    element: 'Wood', 
+    element: 'Wood',
     direction: 'Southeast',
     attribute: 'Gentle',
     archetype: 'The Influencer',
@@ -140,7 +140,7 @@ const TRIGRAM_HEXAGRAMS: Record<number, string[]> = {
 // Fractal phase descriptions for deeper insight
 const FRACTAL_PHASES: Record<number, string> = {
   1: 'Initiation Phase - Seeds of new potential breaking through',
-  2: 'Growth Phase - Gentle cultivation and steady development', 
+  2: 'Growth Phase - Gentle cultivation and steady development',
   3: 'Illumination Phase - Clarity emerges and consciousness expands',
   4: 'Grounding Phase - Integration and practical manifestation',
   5: 'Expression Phase - Joy and creative communication flows',
@@ -214,15 +214,15 @@ export function generateYearlyGuidance(currentTrigram: TrigramArchetype): string
 export function generateIChingAstroProfile(birthDate: Date): IChingAstroProfile {
   const birthYear = getYear(birthDate);
   const currentYear = getYear(new Date());
-  
+
   // Calculate birth trigram
   const baseNumber = getBaseNumberFromYear(birthYear);
   const birthTrigram = mapTrigramFromBaseNumber(baseNumber);
-  
+
   // Calculate current year trigram
   const currentYearNumber = getBaseNumberFromYear(currentYear);
   const currentTrigram = mapTrigramFromBaseNumber(currentYearNumber);
-  
+
   return {
     baseNumber,
     birthTrigram: birthTrigram.name,
@@ -257,11 +257,11 @@ export function calculateTrigramCompatibility(trigram1: string, trigram2: string
 } {
   const arch1 = getTrigramArchetype(trigram1);
   const arch2 = getTrigramArchetype(trigram2);
-  
+
   if (!arch1 || !arch2) {
     return { compatibility: 0, description: 'Unable to calculate compatibility' };
   }
-  
+
   // Simple compatibility based on element cycles
   const elementCycles: Record<string, string[]> = {
     'Wood': ['Water', 'Wood', 'Fire'], // Water feeds Wood, Wood feeds Fire
@@ -270,22 +270,22 @@ export function calculateTrigramCompatibility(trigram1: string, trigram2: string
     'Metal': ['Earth', 'Metal', 'Water'],
     'Water': ['Metal', 'Water', 'Wood']
   };
-  
+
   const compatible = elementCycles[arch1.element]?.includes(arch2.element);
   const sameElement = arch1.element === arch2.element;
-  
+
   let compatibility = 50; // Base compatibility
   if (sameElement) compatibility += 30;
   if (compatible) compatibility += 20;
-  
+
   const descriptions = {
     high: 'Highly compatible - natural harmony and mutual support',
     medium: 'Moderately compatible - balance through differences',
     low: 'Challenging but growth-oriented - requires conscious effort'
   };
-  
+
   const level = compatibility >= 80 ? 'high' : compatibility >= 60 ? 'medium' : 'low';
-  
+
   return {
     compatibility,
     description: descriptions[level]
@@ -398,7 +398,7 @@ export function castIChingHexagram(query: string): DivinationInsight {
   // Simulate coin throws or yarrow stalk method
   const lines: string[] = [];
   const changingLines: number[] = [];
-  
+
   for (let i = 0; i < 6; i++) {
     const value = Math.floor(Math.random() * 4) + 6; // 6-9 traditional values
     if (value === 6) {
@@ -413,14 +413,14 @@ export function castIChingHexagram(query: string): DivinationInsight {
       changingLines.push(i + 1);
     }
   }
-  
+
   // Find matching hexagram (simplified approach)
   const hexagramNumber = Math.floor(Math.random() * 64) + 1;
   const hexagram = YI_JING_HEXAGRAMS[hexagramNumber] || createDefaultHexagram(hexagramNumber, lines);
-  
+
   // Add changing lines
   hexagram.changingLines = changingLines;
-  
+
   // Calculate transformed hexagram if there are changing lines
   if (changingLines.length > 0) {
     const transformedNumber = (hexagramNumber % 64) + 1;
@@ -430,9 +430,9 @@ export function castIChingHexagram(query: string): DivinationInsight {
       keyword: YI_JING_HEXAGRAMS[transformedNumber]?.keyword || 'Transformation'
     };
   }
-  
+
   const ritual = generateIChingRitual(hexagram);
-  
+
   return {
     method: 'iching',
     title: `I Ching Oracle - Hexagram ${hexagram.number}`,
@@ -458,12 +458,12 @@ export function castIChingHexagram(query: string): DivinationInsight {
 export function castYiJingReading(query: string): DivinationInsight {
   const hexagramNumber = Math.floor(Math.random() * 64) + 1;
   const hexagram = YI_JING_HEXAGRAMS[hexagramNumber] || createDefaultHexagram(hexagramNumber);
-  
+
   // Yi Jing focuses on soul journey and spiritual development
   const spiritualInterpretation = adaptForSoulJourney(hexagram, query);
   const soulGuidance = generateSoulGuidance(hexagram);
   const ritual = generateYiJingRitual(hexagram);
-  
+
   return {
     method: 'yijing',
     title: `Yi Jing Soul Oracle - ${hexagram.name}`,
@@ -488,7 +488,7 @@ function createDefaultHexagram(number: number, lines?: string[]): HexagramReadin
   const defaultLines = lines || [
     '-------', '--- ---', '-------', '--- ---', '-------', '--- ---'
   ];
-  
+
   return {
     number,
     name: `Hexagram ${number}`,
@@ -509,7 +509,7 @@ function adaptForSoulJourney(hexagram: HexagramReading, query: string): string {
     'The divine within you seeks',
     'Your soul\'s wisdom speaks of'
   ];
-  
+
   const theme = soulThemes[Math.floor(Math.random() * soulThemes.length)];
   return `${theme} ${hexagram.interpretation.toLowerCase()} In response to "${query}", your soul offers this reflection: The path of ${hexagram.keyword.toLowerCase()} is opening before you.`;
 }
@@ -520,11 +520,11 @@ function generateSoulGuidance(hexagram: HexagramReading): string {
 
 function getArchetypalTheme(hexagram: HexagramReading): string {
   const archetypes = [
-    'The Spiritual Warrior', 'The Mystic Seeker', 'The Divine Child', 
+    'The Spiritual Warrior', 'The Mystic Seeker', 'The Divine Child',
     'The Wise Elder', 'The Sacred Healer', 'The Cosmic Dancer',
     'The Truth Speaker', 'The Light Bearer', 'The Shadow Walker'
   ];
-  
+
   return archetypes[hexagram.number % archetypes.length];
 }
 
@@ -537,7 +537,7 @@ function generateEnergeticSignature(hexagram: HexagramReading): string {
     'Thunder power awakening dormant potentials',
     'Radiant light dissolving old patterns'
   ];
-  
+
   return signatures[hexagram.number % signatures.length];
 }
 
@@ -594,9 +594,9 @@ export function getDailyIChing(): DivinationInsight {
   const today = new Date();
   const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
   const hexagramNumber = (dayOfYear % 64) + 1;
-  
+
   const hexagram = YI_JING_HEXAGRAMS[hexagramNumber] || createDefaultHexagram(hexagramNumber);
-  
+
   return {
     method: 'iching',
     title: 'Daily I Ching Wisdom',

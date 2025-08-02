@@ -48,46 +48,46 @@ const FireVoiceProtocols = {
 const FireIntelligence = {
   detectFireType: (input: string, context: any[]): string => {
     const lowerInput = input.toLowerCase();
-    
+
     // Detect stagnation needing catalytic fire
-    if (lowerInput.includes('stuck') || lowerInput.includes('same') || 
+    if (lowerInput.includes('stuck') || lowerInput.includes('same') ||
         lowerInput.includes('boring') || lowerInput.includes('unmotivated')) {
       return 'catalytic_disruption';
     }
-    
+
     // Detect vision/dreams needing ignition
-    if (lowerInput.includes('dream') || lowerInput.includes('vision') || 
+    if (lowerInput.includes('dream') || lowerInput.includes('vision') ||
         lowerInput.includes('want to') || lowerInput.includes('hope')) {
       return 'vision_ignition';
     }
-    
+
     // Detect fear/doubt needing rebellious fire
-    if (lowerInput.includes('afraid') || lowerInput.includes('scared') || 
+    if (lowerInput.includes('afraid') || lowerInput.includes('scared') ||
         lowerInput.includes('doubt') || lowerInput.includes('can\'t')) {
       return 'sacred_rebellion';
     }
-    
+
     // Detect creative energy needing direction
-    if (lowerInput.includes('creative') || lowerInput.includes('passion') || 
+    if (lowerInput.includes('creative') || lowerInput.includes('passion') ||
         lowerInput.includes('inspired') || lowerInput.includes('energy')) {
       return 'creative_channeling';
     }
-    
+
     // Detect overwhelm needing integration
-    if (lowerInput.includes('overwhelm') || lowerInput.includes('too much') || 
+    if (lowerInput.includes('overwhelm') || lowerInput.includes('too much') ||
         lowerInput.includes('scattered')) {
       return 'integration_wisdom';
     }
-    
+
     return 'general_ignition';
   },
 
   craftFireResponse: (input: string, fireType: string, memories: any[]): string => {
     const protocols = FireVoiceProtocols;
-    
+
     switch (fireType) {
       case 'catalytic_disruption':
-        return `${protocols.catalyst.stagnation_breaker} 
+        return `${protocols.catalyst.stagnation_breaker}
 
 I can feel the creative force in you pushing against the walls of where you've been. Stagnation isn't your enemy - it's your soul's way of saying "we've outgrown this space."
 
@@ -117,7 +117,7 @@ What wants to be created through you isn't just for you - it's your gift to the 
       case 'integration_wisdom':
         return `${protocols.integration.sustainable_burning}
 
-Too much fire all at once can burn what it means to illuminate. Your creative force is powerful - now it needs container and rhythm. 
+Too much fire all at once can burn what it means to illuminate. Your creative force is powerful - now it needs container and rhythm.
 
 What if this scattered energy is actually trying to show you multiple pathways? Instead of choosing one, what's the thread that connects them all? What's the deeper fire underneath all these sparks?`;
 
@@ -139,7 +139,7 @@ What's alive in you right now that hasn't found its voice yet? What wants to eme
       integration_wisdom: "🔥 True power is fire that serves both wildness and wisdom.",
       general_ignition: "🔥 You carry embers of something the world has never seen."
     };
-    
+
     return `${response}\n\n${signatures[fireType] || signatures.general_ignition}`;
   }
 };
@@ -157,11 +157,11 @@ export class FireAgent extends ArchetypeAgent {
     userId: string;
   }): Promise<AIResponse> {
     const { input, userId } = query;
-    
+
     // Gather sacred context - not just recent memories but fire-specific insights
     const contextMemory = await getRelevantMemories(userId, 3);
     const fireType = FireIntelligence.detectFireType(input, contextMemory);
-    
+
     // Create context that preserves fire wisdom from past conversations
     const fireContext = contextMemory.length
       ? `🔥 Flames of our previous conversations:\n${contextMemory
@@ -171,9 +171,9 @@ export class FireAgent extends ArchetypeAgent {
 
     // Instead of mechanical response, craft fire-specific wisdom
     const fireWisdom = FireIntelligence.craftFireResponse(input, fireType, contextMemory);
-    
+
     // Generate additional depth using ModelService but with fire-attuned prompting
-    const firePrompt = `As the Fire Agent embodying catalytic consciousness, respond to this soul's sharing with the voice of sacred fire - igniting without burning, catalyzing without forcing. 
+    const firePrompt = `As the Fire Agent embodying catalytic consciousness, respond to this soul's sharing with the voice of sacred fire - igniting without burning, catalyzing without forcing.
 
 Context: ${fireContext}
 Current sharing: ${input}
@@ -181,9 +181,9 @@ Fire type needed: ${fireType}
 
 Respond with the wisdom of fire that serves becoming, not comfort. Be present, be real, be the spark that ignites authentic transformation.`;
 
-    const modelResponse = await ModelService.getResponse({ 
-      input: firePrompt, 
-      userId 
+    const modelResponse = await ModelService.getResponse({
+      input: firePrompt,
+      userId
     });
 
     // Weave AI insight with our fire wisdom
@@ -201,9 +201,9 @@ ${modelResponse.response}`;
       element: "fire",
       sourceAgent: "fire-agent",
       confidence: 0.95,
-      metadata: { 
-        role: "oracle", 
-        phase: "ignition", 
+      metadata: {
+        role: "oracle",
+        phase: "ignition",
         archetype: "Fire",
         fireType,
         catalyticEnergy: true,
@@ -216,8 +216,8 @@ ${modelResponse.response}`;
       anon_id: userId,
       archetype: "Fire",
       element: "fire",
-      insight: { 
-        message: content, 
+      insight: {
+        message: content,
         raw_input: input,
         fireType,
         catalyticLevel: this.assessCatalyticLevel(input)
@@ -252,14 +252,14 @@ ${modelResponse.response}`;
     const stagnationWords = ['stuck', 'same', 'boring', 'unmotivated', 'routine'];
     const visionWords = ['dream', 'want', 'hope', 'vision', 'create'];
     const fearWords = ['afraid', 'scared', 'doubt', 'can\'t', 'worried'];
-    
+
     const lowerInput = input.toLowerCase();
     let catalyticScore = 0.5; // baseline
-    
+
     if (stagnationWords.some(word => lowerInput.includes(word))) catalyticScore += 0.3;
     if (fearWords.some(word => lowerInput.includes(word))) catalyticScore += 0.2;
     if (visionWords.some(word => lowerInput.includes(word))) catalyticScore += 0.1;
-    
+
     return Math.min(catalyticScore, 1.0);
   }
 

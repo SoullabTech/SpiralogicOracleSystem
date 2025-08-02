@@ -11,7 +11,7 @@ The PersonalOracleAgent has been enhanced with profound depth psychology (Jung) 
 - **Approach**: Embrace, understand, and integrate rejected aspects
 - **Key Question**: "What part of yourself are you not seeing?"
 
-### Buddha Mode: Liberation & Non-Attachment  
+### Buddha Mode: Liberation & Non-Attachment
 - **Focus**: "What can be released and seen through?"
 - **Approach**: Spaciousness, non-attachment, seeing through stories
 - **Key Question**: "Who would you be without this story?"
@@ -31,13 +31,13 @@ interface SacredMirrorProtocol {
     focus: "Integration, wholeness, shadow work",
     response: "Let's explore what's hidden in your shadow..."
   },
-  
+
   buddhaMode: {
     prompt: "Who would you be without this story?",
     focus: "Liberation, spaciousness, non-attachment",
     response: "Notice how this identity feels... can you hold it lightly?"
   },
-  
+
   hybridMode: {
     prompt: "What needs integration AND what needs release?",
     response: "Let's both honor this pattern and see through it..."
@@ -61,7 +61,7 @@ class PersonalOracleAgent {
 ### 1. Adaptive Mode Selection
 The Oracle intelligently chooses approach based on content:
 - **Shadow material detected** → Jung mode
-- **Attachment patterns detected** → Buddha mode  
+- **Attachment patterns detected** → Buddha mode
 - **Both present** → Hybrid mode
 - **Integration needed** → Hybrid mode
 
@@ -117,7 +117,7 @@ POST /api/soul-memory/oracle/sacred-mirror/balance
 # Jung archetypal patterns
 GET /api/soul-memory/oracle/jung-patterns
 
-# Buddha attachment patterns  
+# Buddha attachment patterns
 GET /api/soul-memory/oracle/buddha-attachments
 ```
 
@@ -129,7 +129,7 @@ await oracle.setSacredMirrorMode('jung');
 const response = await oracle.respondToPrompt(
   "I hate this part of myself that gets so jealous"
 );
-// Response: "What aspect of yourself are you rejecting in this situation? 
+// Response: "What aspect of yourself are you rejecting in this situation?
 //           I sense this connects to your Shadow aspect."
 ```
 
@@ -139,7 +139,7 @@ await oracle.setSacredMirrorMode('buddha');
 const response = await oracle.respondToPrompt(
   "I need this relationship to work or I'll be nothing"
 );
-// Response: "Who would you be without this story about yourself? 
+// Response: "Who would you be without this story about yourself?
 //           I notice patterns of worthiness here."
 ```
 
@@ -149,7 +149,7 @@ await oracle.setSacredMirrorMode('hybrid');
 const response = await oracle.respondToPrompt(
   "Part of me wants to be perfect and another part wants to be free"
 );
-// Response: "Let's both honor this pattern and question its ultimate reality. 
+// Response: "Let's both honor this pattern and question its ultimate reality.
 //           What needs to be integrated, and what needs to be released?"
 ```
 
@@ -175,7 +175,7 @@ All Jung-Buddha interactions are stored in Soul Memory with:
 - Integration-focused inquiries
 - Dream symbolism exploration
 
-### Buddha-Enhanced Responses  
+### Buddha-Enhanced Responses
 - Non-attachment inquiries
 - Spaciousness invitations
 - Story deconstruction

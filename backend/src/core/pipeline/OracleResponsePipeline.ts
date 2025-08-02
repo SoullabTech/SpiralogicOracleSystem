@@ -1,6 +1,6 @@
 /**
  * 🌟 Oracle Response Pipeline - Optimized for Real-Time Spiritual Intelligence
- * 
+ *
  * This pipeline orchestrates the flow from user input to spoken oracle voice
  * with minimal latency through parallel processing and intelligent caching.
  */
@@ -87,7 +87,7 @@ export class OracleResponsePipeline extends EventEmitter {
    */
   async processQuery(query: OracleQuery): Promise<OracleResponse> {
     const startTime = Date.now();
-    
+
     try {
       // Phase 1: Parallel Analysis (300-500ms)
       const [
@@ -110,8 +110,8 @@ export class OracleResponsePipeline extends EventEmitter {
 
       // Phase 2: Archetypal Intelligence Selection (100-200ms)
       const selectedArchetype = await this.selectOptimalArchetype(
-        query, 
-        personalizedContext, 
+        query,
+        personalizedContext,
         soulprintAnalysis
       );
 
@@ -219,7 +219,7 @@ export class OracleResponsePipeline extends EventEmitter {
     personalizedContext: any
   ): Promise<{ text: string; confidence: number }> {
     const agent = this.archetypeFactory.createAgent(archetype);
-    
+
     const enhancedQuery = {
       ...query,
       context: {
@@ -231,7 +231,7 @@ export class OracleResponsePipeline extends EventEmitter {
     };
 
     const response = await agent.processQuery(enhancedQuery);
-    
+
     return {
       text: response.content,
       confidence: response.confidence || 0.8
@@ -253,7 +253,7 @@ export class OracleResponsePipeline extends EventEmitter {
         voicePreparation.voiceConfig,
         voicePreparation.ritualTiming
       );
-      
+
       return { audioStream };
     } else {
       // Traditional synthesis
@@ -261,7 +261,7 @@ export class OracleResponsePipeline extends EventEmitter {
         text,
         voicePreparation.voiceConfig
       );
-      
+
       return { audioUrl };
     }
   }
@@ -278,7 +278,7 @@ export class OracleResponsePipeline extends EventEmitter {
     soulprintAnalysis: any
   ): Promise<OracleResponse> {
     const responseTime = Date.now() - startTime;
-    
+
     return {
       textResponse: archetypalResponse.text,
       audioUrl: audioResult.audioUrl,
@@ -305,11 +305,11 @@ export class OracleResponsePipeline extends EventEmitter {
   private async checkResponseCache(query: OracleQuery): Promise<OracleResponse | null> {
     const cacheKey = this.generateCacheKey(query);
     const cached = this.responseCache.get(cacheKey);
-    
+
     if (cached && this.isCacheValid(cached)) {
       return cached;
     }
-    
+
     return null;
   }
 
@@ -324,7 +324,7 @@ export class OracleResponsePipeline extends EventEmitter {
 
   private async preloadCommonVoices(): Promise<void> {
     const commonArchetypes = ['fire', 'water', 'earth', 'air', 'aether'];
-    
+
     for (const archetype of commonArchetypes) {
       try {
         const voiceConfig = ARCHETYPE_VOICES[archetype];
@@ -336,7 +336,7 @@ export class OracleResponsePipeline extends EventEmitter {
         logger.warn(`Failed to preload voice for ${archetype}:`, error);
       }
     }
-    
+
     logger.info('Voice preloading completed:', {
       preloadedCount: this.preloadedVoices.size,
       archetypes: Array.from(this.preloadedVoices)
@@ -390,7 +390,7 @@ export class OracleResponsePipeline extends EventEmitter {
   private async prepareVoiceSynthesis(archetype: string, context: any): Promise<any> {
     const voiceConfig = ARCHETYPE_VOICES[archetype];
     const ritualTiming = context.ritualPreferences?.pacing || 'normal';
-    
+
     return {
       voiceConfig,
       ritualTiming,
@@ -410,7 +410,7 @@ export class OracleResponsePipeline extends EventEmitter {
   private cacheResponse(query: OracleQuery, response: OracleResponse): void {
     const cacheKey = this.generateCacheKey(query);
     this.responseCache.set(cacheKey, response);
-    
+
     // Limit cache size
     if (this.responseCache.size > 1000) {
       const firstKey = this.responseCache.keys().next().value;

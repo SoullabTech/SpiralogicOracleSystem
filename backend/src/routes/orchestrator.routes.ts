@@ -11,16 +11,16 @@ const router = Router();
 router.post('/query', async (req, res) => {
   try {
     const { input, userContext } = req.body;
-    
+
     if (!input) {
       return res.status(400).json({
         success: false,
         error: 'Input is required'
       });
     }
-    
+
     const result = await agentOrchestrator.processQuery(input, userContext);
-    
+
     res.json({
       success: true,
       data: result,
@@ -44,9 +44,9 @@ router.get('/insights', async (req, res) => {
   try {
     const { sessionId, userId } = req.query;
     const userContext = { sessionId: sessionId as string, userId: userId as string };
-    
+
     const insights = await agentOrchestrator.getArchetypalInsights(userContext);
-    
+
     res.json({
       success: true,
       data: insights,
@@ -81,7 +81,7 @@ router.get('/health', (req, res) => {
     ],
     orchestrationStrategies: [
       'fire_lead',
-      'water_lead', 
+      'water_lead',
       'fire_water_synthesis',
       'water_fire_synthesis',
       'dual_synthesis',
@@ -109,14 +109,14 @@ router.get('/health', (req, res) => {
 router.post('/reset-session', async (req, res) => {
   try {
     const { sessionId } = req.body;
-    
+
     if (!sessionId) {
       return res.status(400).json({
         success: false,
         error: 'Session ID is required'
       });
     }
-    
+
     // Clear session memory (orchestrator handles this internally)
     res.json({
       success: true,

@@ -72,16 +72,16 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            
+
             <h2 className="text-2xl font-light text-[#F6E27F] mb-4">
               Check Your Email
             </h2>
-            
+
             <p className="text-gray-300 mb-6 leading-relaxed">
-              We've sent a confirmation link to <strong>{formData.email}</strong>. 
+              We've sent a confirmation link to <strong>{formData.email}</strong>.
               Click the link to activate your account and begin your Oracle journey.
             </p>
-            
+
             <button
               onClick={onSwitchToLogin}
               className="text-[#F6E27F] hover:underline text-sm"
@@ -176,10 +176,10 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
 
           <div className="mt-6 pt-6 border-t border-gray-700">
             <div className="text-xs text-gray-500 leading-relaxed mb-4">
-              By creating an account, you agree to use this system for personal development 
+              By creating an account, you agree to use this system for personal development
               and consciousness exploration in alignment with the principles of Spiralogic.
             </div>
-            
+
             <div className="text-center">
               <p className="text-gray-400 text-sm">
                 Already have an account?{' '}

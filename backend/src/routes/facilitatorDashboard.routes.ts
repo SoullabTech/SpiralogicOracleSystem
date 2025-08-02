@@ -16,14 +16,14 @@ const facilitatorAuth = async (req: any, res: any, next: any) => {
       .select('id')
       .eq('user_id', req.user.id)
       .single();
-    
+
     if (!facilitator) {
       return res.status(403).json({
         success: false,
         error: 'Access denied. Facilitator account required.'
       });
     }
-    
+
     req.facilitator = facilitator;
     next();
   } catch (error) {
@@ -38,10 +38,10 @@ const facilitatorAuth = async (req: any, res: any, next: any) => {
 facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async (req, res) => {
   try {
     const facilitatorId = req.facilitator.id;
-    
+
     // Get today's priorities
     const priorities = await facilitatorDashboardService.generateDailyPriorities(facilitatorId);
-    
+
     // Get upcoming sessions
     const { data: upcomingSessions } = await supabase
       .from('session_records')
@@ -50,7 +50,7 @@ facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async
       .gte('scheduled_time', new Date().toISOString())
       .order('scheduled_time', { ascending: true })
       .limit(5);
-    
+
     // Get pending communications
     const { data: pendingEmails } = await supabase
       .from('facilitator_inbox')
@@ -59,7 +59,7 @@ facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async
       .eq('response_status', 'needed')
       .order('received_at', { ascending: false })
       .limit(5);
-    
+
     // Get active events
     const { data: activeEvents } = await supabase
       .from('sacred_events')
@@ -68,7 +68,7 @@ facilitatorDashboardRouter.get('/overview', authenticate, facilitatorAuth, async
       .gte('start_date', new Date().toISOString())
       .order('start_date', { ascending: true })
       .limit(3);
-    
+
     res.json({
       success: true,
       data: {
@@ -97,9 +97,9 @@ facilitatorDashboardRouter.post('/events', authenticate, facilitatorAuth, async 
   try {
     const facilitatorId = req.facilitator.id;
     const eventData = req.body;
-    
+
     const event = await facilitatorDashboardService.createSacredEvent(facilitatorId, eventData);
-    
+
     res.json({
       success: true,
       data: event
@@ -117,7 +117,7 @@ facilitatorDashboardRouter.post('/events', authenticate, facilitatorAuth, async 
 facilitatorDashboardRouter.get('/events/:eventId', authenticate, facilitatorAuth, async (req, res) => {
   try {
     const { eventId } = req.params;
-    
+
     const { data: event } = await supabase
       .from('sacred_events')
       .select(`
@@ -129,14 +129,14 @@ facilitatorDashboardRouter.get('/events/:eventId', authenticate, facilitatorAuth
       .eq('id', eventId)
       .eq('facilitator_id', req.facilitator.id)
       .single();
-    
+
     if (!event) {
       return res.status(404).json({
         success: false,
         error: 'Event not found'
       });
     }
-    
+
     res.json({
       success: true,
       data: event
@@ -155,7 +155,7 @@ facilitatorDashboardRouter.get('/participants', authenticate, facilitatorAuth, a
   try {
     const facilitatorId = req.facilitator.id;
     const { filter, sort = 'name', order = 'asc' } = req.query;
-    
+
     let query = supabase
       .from('sacred_participants')
       .select(`
@@ -165,21 +165,21 @@ facilitatorDashboardRouter.get('/participants', authenticate, facilitatorAuth, a
         last_session:session_records(scheduled_time)
       `)
       .eq('facilitator_id', facilitatorId);
-    
+
     // Apply filters
     if (filter === 'active') {
-      query = query.gte('last_session.scheduled_time', 
+      query = query.gte('last_session.scheduled_time',
         new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
       );
     }
-    
+
     // Apply sorting
     query = query.order(sort as string, { ascending: order === 'asc' });
-    
+
     const { data: participants, error } = await query;
-    
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data: participants
@@ -197,7 +197,7 @@ facilitatorDashboardRouter.get('/participants', authenticate, facilitatorAuth, a
 facilitatorDashboardRouter.get('/participants/:participantId', authenticate, facilitatorAuth, async (req, res) => {
   try {
     const { participantId } = req.params;
-    
+
     const { data: participant } = await supabase
       .from('sacred_participants')
       .select(`
@@ -211,20 +211,20 @@ facilitatorDashboardRouter.get('/participants/:participantId', authenticate, fac
       .eq('id', participantId)
       .eq('facilitator_id', req.facilitator.id)
       .single();
-    
+
     if (!participant) {
       return res.status(404).json({
         success: false,
         error: 'Participant not found'
       });
     }
-    
+
     // Get recent breakthroughs
     const breakthroughs = await getParticipantBreakthroughs(participantId);
-    
+
     // Get transformation timeline
     const timeline = await getTransformationTimeline(participantId);
-    
+
     res.json({
       success: true,
       data: {
@@ -247,7 +247,7 @@ facilitatorDashboardRouter.post('/sessions/:sessionId/complete', authenticate, f
   try {
     const { sessionId } = req.params;
     const { notes, recording, breakthroughs, followUpActions } = req.body;
-    
+
     // Update session record
     await supabase
       .from('session_records')
@@ -261,7 +261,7 @@ facilitatorDashboardRouter.post('/sessions/:sessionId/complete', authenticate, f
       })
       .eq('id', sessionId)
       .eq('facilitator_id', req.facilitator.id);
-    
+
     // Process recording if provided
     if (recording) {
       await facilitatorDashboardService.processSessionRecording({
@@ -270,12 +270,12 @@ facilitatorDashboardRouter.post('/sessions/:sessionId/complete', authenticate, f
         participantId: req.body.participantId
       });
     }
-    
+
     // Schedule follow-up actions
     if (followUpActions && followUpActions.length > 0) {
       await scheduleFollowUpActions(sessionId, followUpActions, req.facilitator.id);
     }
-    
+
     res.json({
       success: true,
       message: 'Session completed successfully'
@@ -294,24 +294,24 @@ facilitatorDashboardRouter.get('/inbox', authenticate, facilitatorAuth, async (r
   try {
     const facilitatorId = req.facilitator.id;
     const { category, status } = req.query;
-    
+
     let query = supabase
       .from('facilitator_inbox')
       .select('*, participant:sacred_participants(*)')
       .eq('facilitator_id', facilitatorId);
-    
+
     if (category) {
       query = query.eq('category', category);
     }
-    
+
     if (status) {
       query = query.eq('response_status', status);
     }
-    
+
     const { data: inbox, error } = await query.order('received_at', { ascending: false });
-    
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data: inbox
@@ -330,7 +330,7 @@ facilitatorDashboardRouter.post('/communications/send', authenticate, facilitato
   try {
     const facilitatorId = req.facilitator.id;
     const { recipientId, subject, content, template, category } = req.body;
-    
+
     // Send communication
     const result = await facilitatorDashboardService.sendCommunication(facilitatorId, {
       recipientId,
@@ -339,7 +339,7 @@ facilitatorDashboardRouter.post('/communications/send', authenticate, facilitato
       template,
       category
     });
-    
+
     res.json({
       success: true,
       data: result
@@ -358,11 +358,11 @@ facilitatorDashboardRouter.post('/calendar/calendly/setup', authenticate, facili
   try {
     const facilitatorId = req.facilitator.id;
     const { apiKey } = req.body;
-    
+
     // Setup Calendly integration
     const webhookUrl = `${process.env.API_URL}/webhooks/calendly/${facilitatorId}`;
     const result = await calendarIntegrationService.setupCalendlyWebhook(facilitatorId, webhookUrl);
-    
+
     res.json({
       success: true,
       data: result
@@ -381,7 +381,7 @@ facilitatorDashboardRouter.post('/calendar/teams/setup', authenticate, facilitat
   try {
     const facilitatorId = req.facilitator.id;
     const result = await calendarIntegrationService.setupMSTeamsIntegration(facilitatorId);
-    
+
     res.json({
       success: true,
       data: result
@@ -400,7 +400,7 @@ facilitatorDashboardRouter.get('/priorities', authenticate, facilitatorAuth, asy
   try {
     const facilitatorId = req.facilitator.id;
     const priorities = await facilitatorDashboardService.generateDailyPriorities(facilitatorId);
-    
+
     res.json({
       success: true,
       data: priorities
@@ -419,7 +419,7 @@ facilitatorDashboardRouter.patch('/priorities/:priorityId', authenticate, facili
   try {
     const { priorityId } = req.params;
     const { completed, snoozedUntil } = req.body;
-    
+
     await supabase
       .from('daily_priorities')
       .update({
@@ -428,7 +428,7 @@ facilitatorDashboardRouter.patch('/priorities/:priorityId', authenticate, facili
       })
       .eq('id', priorityId)
       .eq('facilitator_id', req.facilitator.id);
-    
+
     res.json({
       success: true,
       message: 'Priority updated'
@@ -446,24 +446,24 @@ facilitatorDashboardRouter.patch('/priorities/:priorityId', authenticate, facili
 facilitatorDashboardRouter.get('/templates', authenticate, facilitatorAuth, async (req, res) => {
   try {
     const { type, element } = req.query;
-    
+
     let query = supabase
       .from('message_templates')
       .select('*')
       .eq('facilitator_id', req.facilitator.id);
-    
+
     if (type) {
       query = query.eq('category', type);
     }
-    
+
     if (element) {
       query = query.eq('element', element);
     }
-    
+
     const { data: templates, error } = await query;
-    
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data: templates
@@ -539,35 +539,35 @@ async function scheduleFollowUpActions(sessionId: string, actions: string[], fac
 
 // WebSocket setup for real-time dashboard updates
 export function setupFacilitatorDashboardWebSocket(server: Server) {
-  const wss = new WebSocketServer({ 
+  const wss = new WebSocketServer({
     server,
     path: '/ws/facilitator-dashboard'
   });
-  
+
   wss.on('connection', (ws, req) => {
     const facilitatorId = req.url?.split('/').pop();
-    
+
     if (!facilitatorId) {
       ws.close();
       return;
     }
-    
+
     console.log(`Facilitator dashboard connected: ${facilitatorId}`);
-    
+
     ws.on('message', async (message) => {
       try {
         const data = JSON.parse(message.toString());
-        
+
         // Handle real-time dashboard actions
         switch (data.type) {
           case 'subscribe-updates':
             // Subscribe to real-time updates
             break;
-          
+
           case 'focus-mode':
             // Toggle focus mode
             break;
-          
+
           case 'quick-action':
             // Handle quick actions
             break;
@@ -576,12 +576,12 @@ export function setupFacilitatorDashboardWebSocket(server: Server) {
         console.error('Dashboard WebSocket error:', error);
       }
     });
-    
+
     ws.on('close', () => {
       console.log(`Facilitator dashboard disconnected: ${facilitatorId}`);
     });
   });
-  
+
   return wss;
 }
 

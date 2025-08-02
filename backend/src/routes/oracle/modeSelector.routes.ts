@@ -28,7 +28,7 @@ function getOrCreateOracle(userId: string): PersonalOracleAgent {
     oracleInstances.set(userId, oracle);
     logger.info(`Created new oracle instance for user: ${userId}`);
   }
-  
+
   return oracleInstances.get(userId)!;
 }
 
@@ -41,7 +41,7 @@ router.post('/switch-mode', authenticateToken, async (req: Request, res: Respons
   try {
     const { modeId } = req.body;
     const userId = (req as any).user?.id || 'demo-user';
-    
+
     if (!modeId) {
       return res.status(400).json({
         success: false,
@@ -50,13 +50,13 @@ router.post('/switch-mode', authenticateToken, async (req: Request, res: Respons
     }
 
     const oracle = getOrCreateOracle(userId);
-    
+
     // Switch the mode
     const result = await oracle.switchMode(modeId);
-    
+
     // Get updated status
     const status = oracle.getCurrentModeStatus();
-    
+
     logger.info('Oracle mode switched via API:', {
       userId,
       newMode: modeId,
@@ -85,10 +85,10 @@ router.get('/available-modes', authenticateToken, async (req: Request, res: Resp
   try {
     const userId = (req as any).user?.id || 'demo-user';
     const oracle = getOrCreateOracle(userId);
-    
+
     const modes = oracle.getAllAvailableModes();
     const currentStatus = oracle.getCurrentModeStatus();
-    
+
     res.json({
       success: true,
       modes,
@@ -109,7 +109,7 @@ router.post('/suggest-mode', authenticateToken, async (req: Request, res: Respon
   try {
     const { userInput } = req.body;
     const userId = (req as any).user?.id || 'demo-user';
-    
+
     if (!userInput) {
       return res.status(400).json({
         success: false,
@@ -118,10 +118,10 @@ router.post('/suggest-mode', authenticateToken, async (req: Request, res: Respon
     }
 
     const oracle = getOrCreateOracle(userId);
-    
+
     // Get mode suggestion
     const suggestion = await oracle.suggestModeForInput(userInput);
-    
+
     logger.info('Mode suggestion generated:', {
       userId,
       userInput: userInput.substring(0, 100),
@@ -148,11 +148,11 @@ router.get('/wisdom-status', authenticateToken, async (req: Request, res: Respon
   try {
     const userId = (req as any).user?.id || 'demo-user';
     const oracle = getOrCreateOracle(userId);
-    
+
     const status = oracle.getCurrentModeStatus();
     const wisdomRouting = oracle.getWisdomRouting();
     const sacredMirrorStatus = oracle.getSacredMirrorStatus();
-    
+
     res.json({
       success: true,
       currentOracleMode: status.currentOracleMode,
@@ -178,7 +178,7 @@ router.post('/set-wisdom-mode', authenticateToken, async (req: Request, res: Res
   try {
     const { wisdomMode } = req.body;
     const userId = (req as any).user?.id || 'demo-user';
-    
+
     if (!wisdomMode || !['jung', 'buddha', 'hybrid'].includes(wisdomMode)) {
       return res.status(400).json({
         success: false,
@@ -188,9 +188,9 @@ router.post('/set-wisdom-mode', authenticateToken, async (req: Request, res: Res
 
     const oracle = getOrCreateOracle(userId);
     oracle.setWisdomMode(wisdomMode);
-    
+
     const updatedStatus = oracle.getCurrentModeStatus();
-    
+
     logger.info('Wisdom mode manually set:', {
       userId,
       wisdomMode,
@@ -217,7 +217,7 @@ router.post('/set-sacred-mirror-mode', authenticateToken, async (req: Request, r
   try {
     const { sacredMirrorMode } = req.body;
     const userId = (req as any).user?.id || 'demo-user';
-    
+
     if (!sacredMirrorMode || !['jung', 'buddha', 'hybrid', 'adaptive'].includes(sacredMirrorMode)) {
       return res.status(400).json({
         success: false,
@@ -227,9 +227,9 @@ router.post('/set-sacred-mirror-mode', authenticateToken, async (req: Request, r
 
     const oracle = getOrCreateOracle(userId);
     const result = await oracle.setSacredMirrorMode(sacredMirrorMode);
-    
+
     const updatedStatus = oracle.getCurrentModeStatus();
-    
+
     logger.info('Sacred mirror mode set:', {
       userId,
       sacredMirrorMode,
@@ -256,10 +256,10 @@ router.get('/analyze-patterns', authenticateToken, async (req: Request, res: Res
   try {
     const userId = (req as any).user?.id || 'demo-user';
     const oracle = getOrCreateOracle(userId);
-    
+
     const analysis = await oracle.analyzeUserPatterns();
     const wisdomRouting = oracle.getWisdomRouting();
-    
+
     res.json({
       success: true,
       patternAnalysis: analysis,
@@ -281,10 +281,10 @@ router.get('/todays-sacred-practice', authenticateToken, async (req: Request, re
   try {
     const userId = (req as any).user?.id || 'demo-user';
     const oracle = getOrCreateOracle(userId);
-    
+
     const practice = await oracle.getTodaysSacredPractice();
     const wisdomMode = oracle.getCurrentWisdomMode();
-    
+
     res.json({
       success: true,
       practice,
@@ -306,9 +306,9 @@ router.get('/weekly-sacred-overview', authenticateToken, async (req: Request, re
   try {
     const userId = (req as any).user?.id || 'demo-user';
     const oracle = getOrCreateOracle(userId);
-    
+
     const overview = await oracle.getWeeklySacredOverview();
-    
+
     res.json({
       success: true,
       overview,
@@ -329,9 +329,9 @@ router.get('/weekly-reflection', authenticateToken, async (req: Request, res: Re
   try {
     const userId = (req as any).user?.id || 'demo-user';
     const oracle = getOrCreateOracle(userId);
-    
+
     const reflection = await oracle.reflectOnWeeklyCycle();
-    
+
     res.json({
       success: true,
       reflection,

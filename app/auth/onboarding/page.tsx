@@ -46,7 +46,7 @@ const onboardingSteps: OnboardingStep[] = [
 export default function OnboardingPage() {
   const router = useRouter();
   const authService = new IntegrationAuthService();
-  
+
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     personalInfo: {
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
     switch (onboardingSteps[currentStep].id) {
       case 'introduction':
         return <IntroductionStep onNext={nextStep} />;
-      
+
       case 'personal_info':
         return (
           <PersonalInfoStep
@@ -117,7 +117,7 @@ export default function OnboardingPage() {
             onPrev={prevStep}
           />
         );
-      
+
       case 'development_assessment':
         return (
           <DevelopmentAssessmentStep
@@ -127,7 +127,7 @@ export default function OnboardingPage() {
             onPrev={prevStep}
           />
         );
-      
+
       case 'privacy_settings':
         return (
           <PrivacySettingsStep
@@ -137,7 +137,7 @@ export default function OnboardingPage() {
             onPrev={prevStep}
           />
         );
-      
+
       case 'integration_commitment':
         return (
           <IntegrationCommitmentStep
@@ -147,7 +147,7 @@ export default function OnboardingPage() {
             onPrev={prevStep}
           />
         );
-      
+
       case 'completion':
         return (
           <CompletionStep
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
             onPrev={prevStep}
           />
         );
-      
+
       default:
         return null;
     }
@@ -175,7 +175,7 @@ export default function OnboardingPage() {
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${((currentStep + 1) / onboardingSteps.length) * 100}%` }}
             />
@@ -206,14 +206,14 @@ const IntroductionStep: React.FC<{ onNext: () => void }> = ({ onNext }) => (
       <h3 className="text-lg font-medium text-gray-900 mb-4">
         Welcome to an Integration-Centered Approach
       </h3>
-      
+
       <div className="space-y-4 text-gray-700">
         <p>
-          This platform is designed to support your human development through a process that 
-          honors the slow, spiral nature of growth. We emphasize integration over accumulation, 
+          This platform is designed to support your human development through a process that
+          honors the slow, spiral nature of growth. We emphasize integration over accumulation,
           ordinary moments over peak experiences, and community reality-checking over individual insight collection.
         </p>
-        
+
         <h4 className="font-medium text-gray-900">What Makes This Different:</h4>
         <ul className="list-disc pl-6 space-y-2">
           <li><strong>Process over breakthrough:</strong> We celebrate consistent daily practice over dramatic revelations</li>
@@ -222,12 +222,12 @@ const IntroductionStep: React.FC<{ onNext: () => void }> = ({ onNext }) => (
           <li><strong>Community support:</strong> Peer validation for authentic development, not spiritual performance</li>
           <li><strong>Professional integration:</strong> Seamless connection with therapists and coaches when needed</li>
         </ul>
-        
+
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h4 className="font-medium text-blue-900 mb-2">Important Note:</h4>
           <p className="text-blue-800 text-sm">
-            This platform serves as a tool for reflection and practice, not as a source of spiritual authority. 
-            Your own discernment, lived experience, and professional support when needed are always the 
+            This platform serves as a tool for reflection and practice, not as a source of spiritual authority.
+            Your own discernment, lived experience, and professional support when needed are always the
             primary guides in your development.
           </p>
         </div>
@@ -493,20 +493,20 @@ const PrivacySettingsStep: React.FC<{
       </p>
       <div className="space-y-3">
         {[
-          { 
-            value: 'private', 
-            label: 'Private', 
-            description: 'Keep your journey private, no community interaction' 
+          {
+            value: 'private',
+            label: 'Private',
+            description: 'Keep your journey private, no community interaction'
           },
-          { 
-            value: 'supportive', 
-            label: 'Supportive Community', 
-            description: 'Share with others focused on mutual support and growth' 
+          {
+            value: 'supportive',
+            label: 'Supportive Community',
+            description: 'Share with others focused on mutual support and growth'
           },
-          { 
-            value: 'open', 
-            label: 'Open Community', 
-            description: 'Full community participation and public sharing' 
+          {
+            value: 'open',
+            label: 'Open Community',
+            description: 'Full community participation and public sharing'
           }
         ].map(option => (
           <label key={option.value} className="flex items-start space-x-3 cursor-pointer">
@@ -652,7 +652,7 @@ const IntegrationCommitmentStep: React.FC<{
           Integration-Centered Approach
         </h3>
         <p className="text-sm text-gray-600 mb-6">
-          Our platform is designed to prevent spiritual bypassing and support embodied development. 
+          Our platform is designed to prevent spiritual bypassing and support embodied development.
           Please review and consent to our approach:
         </p>
 
@@ -692,8 +692,8 @@ const IntegrationCommitmentStep: React.FC<{
           Important Understanding
         </h4>
         <p className="text-sm text-amber-800">
-          This platform supports your development process but cannot replace professional mental health care, 
-          medical advice, or spiritual direction. We encourage maintaining relationships with qualified 
+          This platform supports your development process but cannot replace professional mental health care,
+          medical advice, or spiritual direction. We encourage maintaining relationships with qualified
           professionals as appropriate for your individual needs.
         </p>
       </div>
@@ -763,8 +763,8 @@ const CompletionStep: React.FC<{
         Ready to Begin?
       </h4>
       <p className="text-sm text-blue-800 mb-4">
-        Your integration-centered development platform is now ready. Take your time, 
-        honor your process, and remember that sustainable growth happens through 
+        Your integration-centered development platform is now ready. Take your time,
+        honor your process, and remember that sustainable growth happens through
         consistency rather than intensity.
       </p>
     </div>

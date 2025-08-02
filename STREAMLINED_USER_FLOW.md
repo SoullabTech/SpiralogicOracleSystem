@@ -132,7 +132,7 @@ The **Memory Garden** (`/journal` → Memory Garden tab) allows users to upload:
 
 ### **📁 Upload Types:**
 - 🎤 **Audio Recordings** - Therapy sessions, meditation, voice notes
-- 🌙 **Dream Journals** - Dreams, visions, subconscious material  
+- 🌙 **Dream Journals** - Dreams, visions, subconscious material
 - 📄 **Text Documents** - Transcripts, notes, written reflections
 - 🧠 **Session Notes** - Coaching, therapy, spiritual work sessions
 

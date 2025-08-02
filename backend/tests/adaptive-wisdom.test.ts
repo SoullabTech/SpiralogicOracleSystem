@@ -21,9 +21,9 @@ describe('Adaptive Wisdom Engine Tests', () => {
       databasePath: ':memory:',
       memoryDepth: 100
     });
-    
+
     await soulMemory.initialize();
-    
+
     // Initialize Wisdom Engine
     wisdomEngine = new AdaptiveWisdomEngine({
       userId: testUserId,
@@ -68,7 +68,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
       }
 
       const pattern = await wisdomEngine.detectPattern('spiritual_bypassing');
-      
+
       expect(pattern).toBeDefined();
       expect(pattern.strength).toBeGreaterThan(0.7);
       expect(pattern.frequency).toBeGreaterThanOrEqual(3);
@@ -97,7 +97,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
       }
 
       const analysis = await wisdomEngine.analyzeConversationFlow(testUserId);
-      
+
       expect(analysis.patterns).toContain('victim_consciousness');
       expect(analysis.stuckPoints).toHaveLength(1);
       expect(analysis.recommendedIntervention).toMatch(/agency|choice|empower/i);
@@ -135,7 +135,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
       }
 
       const growthEdge = await wisdomEngine.identifyGrowthEdge(testUserId);
-      
+
       expect(growthEdge.edge).toBe('vulnerability');
       expect(growthEdge.currentCapacity).toBeLessThan(0.5);
       expect(growthEdge.readiness).toBeGreaterThan(0.6);
@@ -165,7 +165,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
       }
 
       const activation = await wisdomEngine.getArchetypalActivation(testUserId);
-      
+
       expect(activation.dominantArchetype).toBe('Shadow');
       expect(activation.emergingArchetype).toBe('Warrior');
       expect(activation.integrationSuggestion).toBeDefined();
@@ -176,7 +176,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
   describe('Wisdom Approach Adaptation Tests', () => {
     test('Should adapt Jung approach for shadow work', async () => {
       const shadowPrompt = "I hate this part of myself";
-      
+
       const approach = await wisdomEngine.selectWisdomApproach(shadowPrompt, {
         emotionalState: 'self-rejection',
         currentArchetype: 'Shadow',
@@ -190,7 +190,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
 
     test('Should adapt Buddha approach for attachment issues', async () => {
       const attachmentPrompt = "I can't let go of how things used to be";
-      
+
       const approach = await wisdomEngine.selectWisdomApproach(attachmentPrompt, {
         emotionalState: 'clinging',
         currentArchetype: 'Seeker',
@@ -204,7 +204,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
 
     test('Should blend approaches for complex situations', async () => {
       const complexPrompt = "I want to let go but I also need to understand why this happened";
-      
+
       const approach = await wisdomEngine.selectWisdomApproach(complexPrompt, {
         emotionalState: 'confused',
         currentArchetype: 'Sage',
@@ -247,7 +247,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
       });
 
       const effectiveness = await wisdomEngine.getApproachEffectiveness(testUserId);
-      
+
       expect(effectiveness.jung.averageScore).toBeGreaterThan(0.8);
       expect(effectiveness.buddha.averageScore).toBeLessThan(0.5);
       expect(effectiveness.recommendation).toBe('jung');
@@ -258,7 +258,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
     test('Should adapt wisdom to elemental resonance', async () => {
       const elements = ['fire', 'water', 'earth', 'air', 'aether'] as const;
       const testPrompt = "I feel stuck and need guidance";
-      
+
       for (const element of elements) {
         const wisdom = await wisdomEngine.generateElementalWisdom(testPrompt, {
           primaryElement: element,
@@ -311,7 +311,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
     test('Should maintain wisdom coherence across sessions', async () => {
       // Store a wisdom theme
       const wisdomTheme = "Learning to receive help";
-      
+
       await soulMemory.storeMemory({
         userId: testUserId,
         type: 'breakthrough',
@@ -338,7 +338,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
       // Store old wisdom
       const oldDate = new Date();
       oldDate.setDate(oldDate.getDate() - 30); // 30 days ago
-      
+
       await soulMemory.storeMemory({
         userId: testUserId,
         type: 'sacred_moment',
@@ -366,7 +366,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
   describe('Performance Optimization Tests', () => {
     test('Should cache frequently accessed patterns', async () => {
       const startTime = Date.now();
-      
+
       // First access (uncached)
       const pattern1 = await wisdomEngine.detectPattern('spiritual_bypassing');
       const firstAccessTime = Date.now() - startTime;
@@ -382,7 +382,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
 
     test('Should batch pattern detection efficiently', async () => {
       const patterns = ['shadow_work', 'victim_consciousness', 'spiritual_bypassing'];
-      
+
       const batchStart = Date.now();
       const results = await wisdomEngine.detectMultiplePatterns(patterns);
       const batchTime = Date.now() - batchStart;
@@ -428,7 +428,7 @@ describe('Adaptive Wisdom Engine Tests', () => {
       });
 
       const analysis = await wisdomEngine.analyzeContradictions(testUserId);
-      
+
       expect(analysis.hasContradiction).toBe(true);
       expect(analysis.type).toBe('transform_vs_preserve');
       expect(analysis.resolution).toMatch(/both|paradox|explore/i);

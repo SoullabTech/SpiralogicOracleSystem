@@ -98,7 +98,7 @@ async function ingestAdvancedSpiralogicDocs() {
     // Process each document
     for (const docInfo of DOCUMENT_PATHS) {
       console.log(`📄 Processing: ${path.basename(docInfo.path)}`);
-      
+
       try {
         const content = await fs.readFile(docInfo.path, 'utf-8');
         const processed = await processDocument(content, docInfo);
@@ -106,7 +106,7 @@ async function ingestAdvancedSpiralogicDocs() {
 
         // Collect intellectual influences
         processed.intellectualSources.forEach(source => intellectualInfluences.add(source));
-        
+
         // Extract themes from insights
         processed.keyInsights.forEach(insight => {
           extractThemes(insight).forEach(theme => emergentThemes.add(theme));
@@ -153,7 +153,7 @@ async function ingestAdvancedSpiralogicDocs() {
 async function processDocument(content: string, docInfo: any): Promise<ProcessedDocument> {
   const lines = content.split('\n');
   const title = extractTitle(content, docInfo.path);
-  
+
   return {
     title,
     filepath: docInfo.path,
@@ -170,13 +170,13 @@ async function processDocument(content: string, docInfo: any): Promise<Processed
 function extractTitle(content: string, filepath: string): string {
   // Try to find title in first few lines
   const lines = content.split('\n').slice(0, 10);
-  
+
   for (const line of lines) {
     if (line.match(/^#\s+(.+)/) && !line.includes('##')) {
       return line.replace(/^#\s+/, '').trim();
     }
   }
-  
+
   // Fallback to filename
   return path.basename(filepath, '.md').replace(/[-_]/g, ' ');
 }
@@ -184,20 +184,20 @@ function extractTitle(content: string, filepath: string): string {
 function extractKeyInsights(content: string): string[] {
   const insights: string[] = [];
   const lines = content.split('\n');
-  
+
   lines.forEach((line, index) => {
     // Extract insights from headers, bullet points, and emphasized text
     if (line.match(/^#{2,4}\s+(.+)/) && line.length > 20) {
       const insight = line.replace(/^#{2,4}\s+/, '').trim();
       insights.push(insight);
     }
-    
+
     // Extract from bullet points with substantial content
     if (line.match(/^[\s]*[-•*]\s+(.+)/) && line.length > 40) {
       const insight = line.replace(/^[\s]*[-•*]\s+/, '').trim();
       insights.push(insight);
     }
-    
+
     // Extract emphasized key concepts
     if (line.match(/\*\*([^*]+)\*\*/) && line.length > 30) {
       const matches = line.match(/\*\*([^*]+)\*\*/g);
@@ -211,32 +211,32 @@ function extractKeyInsights(content: string): string[] {
       }
     }
   });
-  
+
   return insights.slice(0, 15); // Limit to top insights
 }
 
 function extractCoreTheses(content: string): string[] {
   const theses: string[] = [];
   const lines = content.split('\n');
-  
+
   // Look for thesis-like statements
   const thesisIndicators = [
     'thesis', 'argument', 'proposition', 'claim', 'assertion',
     'fundamental', 'core principle', 'central insight', 'key insight'
   ];
-  
+
   lines.forEach(line => {
     const lowerLine = line.toLowerCase();
     if (thesisIndicators.some(indicator => lowerLine.includes(indicator)) && line.length > 50) {
       theses.push(line.trim());
     }
-    
+
     // Extract numbered statements that look like theses
     if (line.match(/^\d+\.\s+.{50,}/) && line.includes('.')) {
       theses.push(line.trim());
     }
   });
-  
+
   return theses.slice(0, 10);
 }
 
@@ -246,7 +246,7 @@ function extractPracticalApplications(content: string): string[] {
     'application', 'practice', 'implementation', 'use case',
     'how to', 'method', 'technique', 'approach', 'strategy'
   ];
-  
+
   const lines = content.split('\n');
   lines.forEach(line => {
     const lowerLine = line.toLowerCase();
@@ -254,7 +254,7 @@ function extractPracticalApplications(content: string): string[] {
       applications.push(line.trim());
     }
   });
-  
+
   return applications.slice(0, 8);
 }
 
@@ -264,7 +264,7 @@ function extractFutureImplications(content: string): string[] {
     'future', 'will', 'potential', 'possibility', 'evolution',
     'emergence', 'development', 'trajectory', 'horizon', 'vision'
   ];
-  
+
   const lines = content.split('\n');
   lines.forEach(line => {
     const lowerLine = line.toLowerCase();
@@ -272,17 +272,17 @@ function extractFutureImplications(content: string): string[] {
       implications.push(line.trim());
     }
   });
-  
+
   return implications.slice(0, 8);
 }
 
 function extractIntellectualSources(content: string): string[] {
   const sources = new Set<string>();
-  
+
   // Common intellectual figures mentioned in these documents
   const knownFigures = [
     'Federico Faggin', 'Faggin',
-    'Donald Hoffman', 'Hoffman', 
+    'Donald Hoffman', 'Hoffman',
     'Carl Jung', 'Jung',
     'Buckminster Fuller', 'Fuller',
     'Iain McGilchrist', 'McGilchrist',
@@ -294,13 +294,13 @@ function extractIntellectualSources(content: string): string[] {
     'Ervin Laszlo', 'Laszlo',
     'Rupert Sheldrake', 'Sheldrake'
   ];
-  
+
   knownFigures.forEach(figure => {
     if (content.includes(figure)) {
       sources.add(figure);
     }
   });
-  
+
   // Extract from citation patterns
   const citations = content.match(/\(([A-Z][a-z]+ \d{4})\)/g);
   if (citations) {
@@ -311,7 +311,7 @@ function extractIntellectualSources(content: string): string[] {
       }
     });
   }
-  
+
   return Array.from(sources);
 }
 
@@ -324,20 +324,20 @@ function extractThemes(text: string): string[] {
     'meaning crisis', 'elemental', 'spiritual', 'metaphysics',
     'witnessing', 'manifestation', 'collective', 'individual'
   ];
-  
+
   const lowerText = text.toLowerCase();
   themeKeywords.forEach(keyword => {
     if (lowerText.includes(keyword)) {
       themes.add(keyword);
     }
   });
-  
+
   return Array.from(themes);
 }
 
 async function saveAdvancedKnowledge(collection: DocumentCollection): Promise<void> {
   const knowledgePath = path.join(
-    __dirname, 
+    __dirname,
     '../data/founder-knowledge/advanced-spiralogic-collection.json'
   );
 
@@ -353,26 +353,26 @@ async function saveAdvancedKnowledge(collection: DocumentCollection): Promise<vo
 function displayIngestionResults(collection: DocumentCollection): void {
   console.log('\n📊 INGESTION RESULTS:');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  
+
   console.log(`📚 Total Documents Processed: ${collection.metadata.totalDocuments}`);
   console.log(`🏷️  Categories: ${collection.metadata.categories.join(', ')}`);
-  
+
   console.log('\n🧠 INTELLECTUAL INFLUENCES:');
   collection.metadata.intellectualInfluences.forEach(influence => {
     console.log(`  • ${influence}`);
   });
-  
+
   console.log('\n🎯 EMERGENT THEMES:');
   collection.metadata.emergentThemes.slice(0, 10).forEach(theme => {
     console.log(`  • ${theme}`);
   });
-  
+
   console.log('\n📂 DOCUMENT CATEGORIES:');
   console.log(`  🌌 Multidimensional AI: ${collection.multidimensionalDocs.length} docs`);
   console.log(`  🌀 Spiralogic Core: ${collection.spiralogicDocs.length} docs`);
   console.log(`  📋 IP & Framework: ${collection.ipDocs.length} docs`);
   console.log(`  🔮 Future & Meaning: ${collection.futureDocs.length} docs`);
-  
+
   console.log('\n🎖️  PHILOSOPHICAL DEPTH:');
   const depthCounts = collection.multidimensionalDocs.concat(
     collection.spiralogicDocs, collection.ipDocs, collection.futureDocs
@@ -380,16 +380,16 @@ function displayIngestionResults(collection: DocumentCollection): void {
     acc[doc.philosophicalDepth] = (acc[doc.philosophicalDepth] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-  
+
   Object.entries(depthCounts).forEach(([depth, count]) => {
     console.log(`  ${depth}: ${count} documents`);
   });
-  
+
   console.log('\n✨ KEY INSIGHTS SAMPLE:');
   const allInsights = collection.multidimensionalDocs.concat(
     collection.spiralogicDocs, collection.ipDocs, collection.futureDocs
   ).flatMap(doc => doc.keyInsights);
-  
+
   allInsights.slice(0, 5).forEach((insight, index) => {
     console.log(`  ${index + 1}. ${insight.substring(0, 80)}...`);
   });
@@ -400,16 +400,16 @@ ingestAdvancedSpiralogicDocs();
 
 /**
  * 🌀 ADVANCED SPIRALOGIC DOCUMENTS INGESTION
- * 
- * This script processes the cutting-edge collection of Spiralogic and 
+ *
+ * This script processes the cutting-edge collection of Spiralogic and
  * multidimensional documents, extracting:
- * 
+ *
  * - Core philosophical theses and insights
  * - Practical applications and methods
  * - Future implications and visions
  * - Intellectual sources and influences
  * - Emergent themes and patterns
- * 
+ *
  * The processed knowledge significantly enhances the Founder Agent's
  * ability to discuss:
  * - The intersection of consciousness and AI
@@ -418,7 +418,7 @@ ingestAdvancedSpiralogicDocs();
  * - Future-oriented frameworks
  * - Intellectual property and development
  * - Cultural applications of Spiralogic
- * 
+ *
  * This represents the cutting edge of Soullab's philosophical and
  * technical development.
  */

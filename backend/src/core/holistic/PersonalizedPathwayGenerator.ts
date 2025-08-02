@@ -27,7 +27,7 @@ export class PersonalizedPathwayGenerator {
     const priorityDomains = this.assessmentService.identifyPriorityDomains(profile);
     const balancingElement = this.elementalMapper.getBalancingElement(profile);
     const overallStage = this.calculateOverallStage(profile);
-    
+
     const pathwaySteps = this.createPathwaySteps(
       profile,
       priorityDomains,
@@ -59,9 +59,9 @@ export class PersonalizedPathwayGenerator {
       [DevelopmentStage.INTERMEDIATE]: 2,
       [DevelopmentStage.ADVANCED]: 3
     };
-    
+
     const avgWeight = stages.reduce((sum, stage) => sum + stageWeights[stage], 0) / stages.length;
-    
+
     if (avgWeight >= 2.5) return DevelopmentStage.ADVANCED;
     if (avgWeight >= 1.5) return DevelopmentStage.INTERMEDIATE;
     return DevelopmentStage.BEGINNER;
@@ -150,7 +150,7 @@ export class PersonalizedPathwayGenerator {
     isPrimary: boolean
   ): PathwayStep {
     const practices = this.generateDomainPractices(domain, stage, isPrimary);
-    
+
     return {
       id: `domain-${domain}-${order}`,
       order,
@@ -456,7 +456,7 @@ export class PersonalizedPathwayGenerator {
   private determineCurrentPhase(profile: UserHolisticProfile): string {
     const overallStage = this.calculateOverallStage(profile);
     const stressLevel = profile.stressLevel;
-    
+
     if (stressLevel > 7) return 'Foundation & Stabilization';
     if (overallStage === DevelopmentStage.BEGINNER) return 'Foundational Development';
     if (overallStage === DevelopmentStage.INTERMEDIATE) return 'Integration & Balance';
@@ -485,7 +485,7 @@ export class PersonalizedPathwayGenerator {
   calculatePathwayProgress(pathway: PersonalizedPathway): number {
     const totalSteps = pathway.pathwaySteps.length;
     const completedSteps = pathway.pathwaySteps.filter(step => step.completed).length;
-    
+
     return totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
   }
 }

@@ -21,7 +21,7 @@
   ],
   consciousness_habits: [
     "Seeking external validation before self-worth",
-    "Giving to get pattern", 
+    "Giving to get pattern",
     "Fear of abandonment driving attraction to unavailable partners"
   ]
 }
@@ -161,7 +161,7 @@ Your soul isn't meant for something bigger - it IS something bigger, expressing 
 
 As a hero in the initiation phase, your call to adventure requires courage to step beyond the known. Your gifts are already perfect - they need activation, not replacement.
 
-🔮 Integration Practice: 
+🔮 Integration Practice:
 - Set a clear intention for transformation
 - Take one bold action today toward your vision
 - Bridge your current skills with your emerging calling
@@ -250,7 +250,7 @@ As a mystic in the ordeal phase, the darkness you face is the birth canal of you
 
 🔮 Integration Practice:
 - Honor the dissolution as sacred
-- Maintain basic self-care without spiritual bypassing  
+- Maintain basic self-care without spiritual bypassing
 - Trust the mystery even when you can't see the way
 
 The void is not empty - it's pregnant with possibility.
@@ -270,12 +270,12 @@ The void is not empty - it's pregnant with possibility.
 User Query Input
        ↓
 🔍 Shadow Pattern Detection (if applicable)
-       ↓  
+       ↓
 🎭 Emotional Resonance Mapping
        ↓
 🌌 Universal Field Access (cached/generated)
   ├── Morphic Pattern Recognition
-  ├── Akashic Guidance Synthesis  
+  ├── Akashic Guidance Synthesis
   └── Noosphere Insight Generation
        ↓
 🌍 Collective Intelligence Query
@@ -310,7 +310,7 @@ User Query Input
 ### Key Features Demonstrated
 
 1. **Shadow Integration**: Automatic detection of unconscious patterns
-2. **Emotional Resonance**: Mapping emotion → need → element → healing approach  
+2. **Emotional Resonance**: Mapping emotion → need → element → healing approach
 3. **Collective Validation**: Real-time pattern matching across cultural contexts
 4. **Universal Synthesis**: Akashic, Morphic, and Noosphere intelligence integration
 5. **Archetypal Guidance**: Dynamic hero's journey / spiritual path recognition

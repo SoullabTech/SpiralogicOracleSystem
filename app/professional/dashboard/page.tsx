@@ -35,7 +35,7 @@ interface ClientOverview {
 export default function ProfessionalDashboard() {
   const router = useRouter();
   const authService = new IntegrationAuthService();
-  
+
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [connections, setConnections] = useState<ProfessionalConnection[]>([]);
   const [clientOverviews, setClientOverviews] = useState<ClientOverview[]>([]);
@@ -67,7 +67,7 @@ export default function ProfessionalDashboard() {
       if (connectionsResponse.ok) {
         const connectionsData = await connectionsResponse.json();
         setConnections(connectionsData);
-        
+
         // Generate client overviews
         const overviews = await generateClientOverviews(connectionsData);
         setClientOverviews(overviews);
@@ -81,7 +81,7 @@ export default function ProfessionalDashboard() {
 
   const generateClientOverviews = async (connections: ProfessionalConnection[]): Promise<ClientOverview[]> => {
     const overviews: ClientOverview[] = [];
-    
+
     for (const connection of connections.filter(c => c.status === 'active')) {
       try {
         const clientDataResponse = await fetch(`/api/professional/client-overview/${connection.user_id}?sharing_level=${connection.data_sharing_level}`);
@@ -102,7 +102,7 @@ export default function ProfessionalDashboard() {
         console.error('Client overview loading error:', error);
       }
     }
-    
+
     return overviews;
   };
 
@@ -136,7 +136,7 @@ export default function ProfessionalDashboard() {
         <div className="text-center max-w-md">
           <h2 className="text-xl font-semibold mb-4">Professional Verification Required</h2>
           <p className="text-gray-600 mb-6">
-            Your professional credentials are being reviewed. You'll receive access to the professional 
+            Your professional credentials are being reviewed. You'll receive access to the professional
             dashboard once verification is complete.
           </p>
           <button
@@ -162,7 +162,7 @@ export default function ProfessionalDashboard() {
                 {currentUser.profile.professional_type} • {connections.filter(c => c.status === 'active').length} active clients
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
                 Verified Professional
@@ -207,28 +207,28 @@ export default function ProfessionalDashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === 'overview' && (
-          <OverviewTab 
+          <OverviewTab
             clientOverviews={clientOverviews}
             connections={connections}
             professionalType={currentUser.profile.professional_type}
           />
         )}
-        
+
         {activeTab === 'clients' && (
-          <ClientManagementTab 
+          <ClientManagementTab
             connections={connections}
             onUpdateConnection={updateConnectionStatus}
           />
         )}
-        
+
         {activeTab === 'insights' && (
-          <IntegrationInsightsTab 
+          <IntegrationInsightsTab
             clientOverviews={clientOverviews}
           />
         )}
-        
+
         {activeTab === 'resources' && (
-          <ProfessionalResourcesTab 
+          <ProfessionalResourcesTab
             professionalType={currentUser.profile.professional_type}
           />
         )}
@@ -386,7 +386,7 @@ const ClientOverviewCard: React.FC<{ client: ClientOverview }> = ({ client }) =>
         {client.connection_type}
       </span>
     </div>
-    
+
     <div className="space-y-2">
       <div>
         <div className="flex justify-between text-xs text-gray-600 mb-1">
@@ -394,24 +394,24 @@ const ClientOverviewCard: React.FC<{ client: ClientOverview }> = ({ client }) =>
           <span>{client.integration_progress}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-1.5">
-          <div 
+          <div
             className="bg-blue-600 h-1.5 rounded-full"
             style={{ width: `${client.integration_progress}%` }}
           />
         </div>
       </div>
-      
+
       <div className="flex justify-between text-xs text-gray-600">
         <span>Last Active</span>
         <span>{new Date(client.last_active).toLocaleDateString()}</span>
       </div>
-      
+
       <div className="flex justify-between text-xs text-gray-600">
         <span>Data Sharing</span>
         <span className="capitalize">{client.data_sharing_level}</span>
       </div>
     </div>
-    
+
     {client.recent_alerts.length > 0 && (
       <div className="mt-3 pt-3 border-t border-gray-200">
         <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">
@@ -433,8 +433,8 @@ const ClientManagementTab: React.FC<{
       {connections.length > 0 ? (
         <div className="space-y-4">
           {connections.map(connection => (
-            <ConnectionCard 
-              key={connection.id} 
+            <ConnectionCard
+              key={connection.id}
               connection={connection}
               onUpdate={onUpdateConnection}
             />
@@ -466,7 +466,7 @@ const ConnectionCard: React.FC<{
           Data Sharing: {connection.data_sharing_level}
         </p>
       </div>
-      
+
       <div className="flex space-x-2">
         {connection.status === 'pending' && (
           <>
@@ -484,7 +484,7 @@ const ConnectionCard: React.FC<{
             </button>
           </>
         )}
-        
+
         {connection.status === 'active' && (
           <button
             onClick={() => onUpdate(connection.id, 'paused')}

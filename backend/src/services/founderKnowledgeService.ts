@@ -81,12 +81,12 @@ export class FounderKnowledgeService {
       logger.info('FounderKnowledge: Loading Elemental Alchemy Book knowledge');
 
       const knowledgePath = path.join(__dirname, '../../data/founder-knowledge/elemental-alchemy-book.json');
-      
+
       // Check if the book has been processed
       try {
         const content = await fs.readFile(knowledgePath, 'utf-8');
         const bookData = JSON.parse(content);
-        
+
         // Transform the data structure for founder agent
         const elementalBook: ElementalAlchemyBook = {
           title: bookData.title,
@@ -132,13 +132,13 @@ export class FounderKnowledgeService {
 
       // Read the manifesto file
       const content = await fs.readFile(filePath, 'utf-8');
-      
+
       // Parse the manifesto structure
       const manifesto = this.parseManifesto(content, 'Spiralogic Process Manifesto');
-      
+
       // Extract core insights
       const coreInsights = this.extractSpiralogicInsights(manifesto);
-      
+
       // Update founder agent knowledge base
       await this.updateFounderKnowledge(manifesto, coreInsights);
 
@@ -183,7 +183,7 @@ export class FounderKnowledgeService {
           tags: tags ? tags.map(t => t.substring(1)) : [],
           keyInsights: []
         };
-      } 
+      }
       // Parse subsection headers
       else if (line.startsWith('#### ')) {
         if (currentSection) {
@@ -229,7 +229,7 @@ export class FounderKnowledgeService {
    */
   private extractKeyInsights(content: string): string[] {
     const insights: string[] = [];
-    
+
     // Extract bullet points as insights
     const bulletPoints = content.match(/^[\s]*[-•]\s*(.+)$/gm);
     if (bulletPoints) {
@@ -448,7 +448,7 @@ export class FounderKnowledgeService {
    */
   private async storeElementalKnowledge(knowledge: any): Promise<void> {
     const knowledgePath = path.join(
-      __dirname, 
+      __dirname,
       '../../data/founder-knowledge/elemental-alchemy-processed.json'
     );
 
@@ -467,7 +467,7 @@ export class FounderKnowledgeService {
    */
   private async storeElementalSummary(summary: any): Promise<void> {
     const summaryPath = path.join(
-      __dirname, 
+      __dirname,
       '../../data/founder-knowledge/elemental-wisdom-summary.json'
     );
 
@@ -484,7 +484,7 @@ export class FounderKnowledgeService {
    * Update the founder agent's knowledge base
    */
   private async updateFounderKnowledge(
-    manifesto: ManifestoContent, 
+    manifesto: ManifestoContent,
     insights: SpiralogicInsights
   ): Promise<void> {
     // Create structured knowledge update
@@ -518,7 +518,7 @@ export class FounderKnowledgeService {
     // In production, this would store to a vector database or similar
     // For now, we'll create a JSON file the agent can reference
     const knowledgePath = path.join(
-      __dirname, 
+      __dirname,
       '../../data/founder-knowledge/spiralogic-manifesto.json'
     );
 
@@ -555,15 +555,15 @@ export const founderKnowledgeService = new FounderKnowledgeService();
 
 /**
  * 🌀 FOUNDER KNOWLEDGE SERVICE
- * 
+ *
  * This service processes organizational wisdom documents and integrates them
  * into the Founder Agent's knowledge base. It:
- * 
+ *
  * 1. Parses manifestos and extracts structured insights
  * 2. Identifies core principles and elemental mappings
  * 3. Updates the agent's knowledge repository
  * 4. Maintains version history and accessibility levels
- * 
+ *
  * The Spiralogic Process Manifesto integration extracts:
  * - Elemental quadrants and their meanings
  * - Spiral movement dynamics

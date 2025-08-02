@@ -136,17 +136,17 @@ export function generateAstroOracle(birthData?: BirthData): DivinationInsight {
   if (!birthData?.date) {
     return generateGenericAstroOracle();
   }
-  
+
   try {
     // Use I Ching astrology profile as foundation
     const ichingProfile = generateIChingAstroProfile(new Date(birthData.date));
-    
+
     // Select archetype based on birth element and current transits
     const archetype = selectArchetype(ichingProfile.birthElement);
     const moonPhase = getCurrentMoonPhase();
     const planetaryInfluences = generatePlanetaryInfluences();
     const cosmicTheme = generateCosmicTheme(ichingProfile, archetype);
-    
+
     const astrologyReading: AstrologyReading = {
       archetype: archetype.name,
       currentTransits: planetaryInfluences.map(p => `${p.planet}: ${p.influence}`),
@@ -157,9 +157,9 @@ export function generateAstroOracle(birthData?: BirthData): DivinationInsight {
       guidance: combineGuidance(archetype, moonPhase, planetaryInfluences),
       cosmicTheme
     };
-    
+
     const ritual = generateAstroRitual(astrologyReading);
-    
+
     return {
       method: 'astro',
       title: 'Astrological Oracle Reading',
@@ -178,7 +178,7 @@ export function generateAstroOracle(birthData?: BirthData): DivinationInsight {
       confidence: 0.88,
       resonance: 'high'
     };
-    
+
   } catch (error) {
     console.error('Astro oracle generation error:', error);
     return generateGenericAstroOracle();
@@ -187,17 +187,17 @@ export function generateAstroOracle(birthData?: BirthData): DivinationInsight {
 
 function selectArchetype(birthElement: string): any {
   const archetypeNames = Object.keys(ASTROLOGICAL_ARCHETYPES);
-  
+
   // Select based on element affinity
   const elementMatches = archetypeNames.filter(name => {
     const archetype = ASTROLOGICAL_ARCHETYPES[name as keyof typeof ASTROLOGICAL_ARCHETYPES];
     return archetype.elements.includes(birthElement);
   });
-  
-  const selectedName = elementMatches.length > 0 ? 
+
+  const selectedName = elementMatches.length > 0 ?
     elementMatches[Math.floor(Math.random() * elementMatches.length)] :
     archetypeNames[Math.floor(Math.random() * archetypeNames.length)];
-  
+
   return {
     name: selectedName,
     ...ASTROLOGICAL_ARCHETYPES[selectedName as keyof typeof ASTROLOGICAL_ARCHETYPES]
@@ -207,7 +207,7 @@ function selectArchetype(birthElement: string): any {
 function getCurrentMoonPhase(): any {
   const phases = Object.keys(MOON_PHASES);
   const currentPhase = phases[Math.floor(Math.random() * phases.length)];
-  
+
   return {
     phase: currentPhase,
     ...MOON_PHASES[currentPhase as keyof typeof MOON_PHASES]
@@ -217,12 +217,12 @@ function getCurrentMoonPhase(): any {
 function generatePlanetaryInfluences(): Array<{planet: string, influence: string, oracle: string, element: string}> {
   const planets = Object.keys(PLANETARY_ORACLES);
   const numInfluences = Math.floor(Math.random() * 3) + 2; // 2-4 influences
-  
+
   const influences = [];
   for (let i = 0; i < numInfluences; i++) {
     const planet = planets[Math.floor(Math.random() * planets.length)];
     const planetData = PLANETARY_ORACLES[planet as keyof typeof PLANETARY_ORACLES];
-    
+
     influences.push({
       planet,
       influence: planetData.influence,
@@ -230,7 +230,7 @@ function generatePlanetaryInfluences(): Array<{planet: string, influence: string
       element: planetData.element
     });
   }
-  
+
   return influences;
 }
 
@@ -241,23 +241,23 @@ function generateCosmicTheme(ichingProfile: any, archetype: any): string {
     `Cosmic timing supports your journey as ${archetype.name}.`,
     `The stars illuminate your path of ${archetype.keywords[2]} and spiritual mastery.`
   ];
-  
+
   return themes[Math.floor(Math.random() * themes.length)];
 }
 
 function calculateElementalBalance(primaryElement: string): Record<string, number> {
   const baseBalance = { Fire: 20, Water: 20, Earth: 20, Air: 20, Metal: 20 };
-  
+
   // Boost primary element
   baseBalance[primaryElement as keyof typeof baseBalance] += 30;
-  
+
   // Add some randomness to other elements
   Object.keys(baseBalance).forEach(element => {
     if (element !== primaryElement) {
       baseBalance[element as keyof typeof baseBalance] += Math.floor(Math.random() * 20);
     }
   });
-  
+
   return baseBalance;
 }
 
@@ -267,7 +267,7 @@ function combineGuidance(archetype: any, moonPhase: any, influences: any[]): str
     moonPhase.guidance,
     influences[0]?.oracle || 'Trust the cosmic flow.'
   ];
-  
+
   return guidance.join(' ');
 }
 
@@ -277,7 +277,7 @@ function generateTimingGuidance(moonPhase: any, influences: any[]): string {
     `with ${influences[0]?.planet || 'cosmic'} energy active`,
     'the timing is perfect for spiritual advancement'
   ];
-  
+
   return timingElements.join(' ');
 }
 
@@ -287,13 +287,13 @@ function generateEnergeticSignature(archetype: any, moonPhase: any): string {
     `Cosmic ${archetype.keywords[1]} flowing through ${moonPhase.energy.toLowerCase()}`,
     `Divine ${archetype.keywords[2]} harmonizing with lunar ${moonPhase.phase.toLowerCase()} cycles`
   ];
-  
+
   return signatures[Math.floor(Math.random() * signatures.length)];
 }
 
 function generateAstroRitual(reading: AstrologyReading): DivinationRitual {
   const moonRitual = MOON_PHASES[reading.moonPhase as keyof typeof MOON_PHASES]?.ritual || 'Light a candle and meditate';
-  
+
   return {
     name: `${reading.archetype} Cosmic Alignment`,
     duration: 30,
@@ -315,7 +315,7 @@ function generateAstroRitual(reading: AstrologyReading): DivinationRitual {
 function generateGenericAstroOracle(): DivinationInsight {
   const genericArchetype = Object.keys(ASTROLOGICAL_ARCHETYPES)[0];
   const archetype = ASTROLOGICAL_ARCHETYPES[genericArchetype as keyof typeof ASTROLOGICAL_ARCHETYPES];
-  
+
   return {
     method: 'astro',
     title: 'Cosmic Oracle Guidance',
@@ -348,7 +348,7 @@ function generateGenericAstroOracle(): DivinationInsight {
 export function getDailyAstroGuidance(): DivinationInsight {
   const moonPhase = getCurrentMoonPhase();
   const planetaryInfluences = generatePlanetaryInfluences().slice(0, 2); // Just 2 for daily
-  
+
   return {
     method: 'astro',
     title: 'Daily Cosmic Guidance',

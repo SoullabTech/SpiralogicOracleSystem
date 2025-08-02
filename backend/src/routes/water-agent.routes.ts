@@ -12,7 +12,7 @@ router.post('/emotional-prompt', async (req, res) => {
   try {
     const { userContext } = req.body;
     const result = await waterAgent.getEmotionalPrompt(userContext);
-    
+
     res.json({
       success: true,
       data: result,
@@ -35,16 +35,16 @@ router.post('/emotional-prompt', async (req, res) => {
 router.post('/oracle-response', async (req, res) => {
   try {
     const { input, userContext } = req.body;
-    
+
     if (!input) {
       return res.status(400).json({
         success: false,
         error: 'Input is required'
       });
     }
-    
+
     const result = await waterAgent.getOracleResponse(input, userContext);
-    
+
     res.json({
       success: true,
       data: result,

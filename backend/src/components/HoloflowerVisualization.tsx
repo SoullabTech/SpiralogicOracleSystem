@@ -38,7 +38,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
   useEffect(() => {
     if (realTimeUpdates && userId) {
       const ws = new WebSocket(`ws://localhost:5001/holoflower/${userId}`);
-      
+
       ws.onmessage = (event) => {
         const update = JSON.parse(event.data);
         if (update.type === 'state-update') {
@@ -58,7 +58,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         });
       }
     });
-    
+
     const updatedState = holoflower.getState();
     setState(updatedState);
     onStateChange?.(updatedState);
@@ -68,23 +68,23 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
     const x = centerX + Math.cos(house.angle) * house.radius;
     const y = centerY + Math.sin(house.angle) * house.radius;
     const size = house.intensity * 40 + 20;
-    
+
     const isSelected = selectedHouse?.id === house.id;
     const isHovered = hoveredHouse?.id === house.id;
-    
+
     return (
       <motion.g
         key={house.id}
         initial={{ scale: 0, opacity: 0 }}
-        animate={{ 
+        animate={{
           scale: isSelected ? 1.2 : (isHovered ? 1.1 : 1),
-          opacity: 1 
+          opacity: 1
         }}
-        transition={{ 
+        transition={{
           duration: 0.5 * animationSpeed,
           type: "spring",
           stiffness: 260,
-          damping: 20 
+          damping: 20
         }}
       >
         {showShadows && house.shadowAspect && (
@@ -98,14 +98,14 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
             strokeDasharray="5,5"
             opacity={0.3}
             animate={{ rotate: 360 }}
-            transition={{ 
-              duration: 20 / animationSpeed, 
-              repeat: Infinity, 
-              ease: "linear" 
+            transition={{
+              duration: 20 / animationSpeed,
+              repeat: Infinity,
+              ease: "linear"
             }}
           />
         )}
-        
+
         <motion.polygon
           points={getPolygonPoints(x, y, size, getShapeForPhase(house.phase))}
           fill={house.color}
@@ -120,7 +120,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         />
-        
+
         <text
           x={x}
           y={y}
@@ -133,7 +133,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         >
           {house.jungianMapping}
         </text>
-        
+
         {house.transformationVector && (
           <motion.line
             x1={x}
@@ -184,16 +184,16 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isDragging || !dragTarget || !svgRef.current) return;
-    
+
     const rect = svgRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     const dx = x - centerX;
     const dy = y - centerY;
     const distance = Math.sqrt(dx * dx + dy * dy);
     const intensity = Math.min(1, Math.max(0, (distance - 50) / 150));
-    
+
     holoflower.updateHouseIntensity(dragTarget.id, intensity);
     setState(holoflower.getState());
   }, [isDragging, dragTarget, holoflower, centerX, centerY]);
@@ -206,7 +206,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
 
   const renderAetherCenter = () => {
     const pulseScale = 0.8 + state.centerIntegration * 0.4;
-    
+
     return (
       <motion.g>
         <motion.circle
@@ -215,16 +215,16 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           r={50}
           fill="url(#aetherGradient)"
           fillOpacity={0.3}
-          animate={{ 
+          animate={{
             scale: [pulseScale, pulseScale + 0.1, pulseScale],
             opacity: [0.3, 0.5, 0.3]
           }}
-          transition={{ 
-            duration: 3 / animationSpeed, 
-            repeat: Infinity 
+          transition={{
+            duration: 3 / animationSpeed,
+            repeat: Infinity
           }}
         />
-        
+
         <motion.path
           d={createSacredGeometryPath(centerX, centerY, 40)}
           fill="none"
@@ -232,13 +232,13 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           strokeWidth={2}
           opacity={state.centerIntegration}
           animate={{ rotate: 360 }}
-          transition={{ 
-            duration: 60 / animationSpeed, 
-            repeat: Infinity, 
-            ease: "linear" 
+          transition={{
+            duration: 60 / animationSpeed,
+            repeat: Infinity,
+            ease: "linear"
           }}
         />
-        
+
         <text
           x={centerX}
           y={centerY}
@@ -250,7 +250,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         >
           Aether
         </text>
-        
+
         <text
           x={centerX}
           y={centerY + 20}
@@ -267,22 +267,22 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
   const createSacredGeometryPath = (cx: number, cy: number, radius: number): string => {
     const points = 12;
     const path = [];
-    
+
     for (let i = 0; i < points; i++) {
       const angle1 = (i * 2 * Math.PI) / points;
       const angle2 = ((i + 4) * 2 * Math.PI) / points;
-      
+
       const x1 = cx + radius * Math.cos(angle1);
       const y1 = cy + radius * Math.sin(angle1);
       const x2 = cx + radius * Math.cos(angle2);
       const y2 = cy + radius * Math.sin(angle2);
-      
+
       if (i === 0) {
         path.push(`M ${x1} ${y1}`);
       }
       path.push(`L ${x2} ${y2}`);
     }
-    
+
     return path.join(' ') + ' Z';
   };
 
@@ -291,14 +291,14 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
       const [fromId, toId] = transformation.split('->');
       const fromHouse = state.houses.find(h => h.id === fromId);
       const toHouse = state.houses.find(h => h.id === toId);
-      
+
       if (!fromHouse || !toHouse) return null;
-      
+
       const x1 = centerX + Math.cos(fromHouse.angle) * fromHouse.radius;
       const y1 = centerY + Math.sin(fromHouse.angle) * fromHouse.radius;
       const x2 = centerX + Math.cos(toHouse.angle) * toHouse.radius;
       const y2 = centerY + Math.sin(toHouse.angle) * toHouse.radius;
-      
+
       return (
         <motion.line
           key={transformation}
@@ -312,7 +312,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           opacity={0.5}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ 
+          transition={{
             duration: 2 * animationSpeed,
             repeat: Infinity,
             repeatType: "reverse"
@@ -341,7 +341,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         />
         <span>Speed: {animationSpeed}x</span>
       </div>
-      
+
       <svg
         ref={svgRef}
         width={width}
@@ -349,7 +349,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        style={{ 
+        style={{
           background: 'radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)',
           borderRadius: '50%'
         }}
@@ -360,7 +360,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
             <stop offset="50%" stopColor="#FFA500" />
             <stop offset="100%" stopColor="#FF6347" />
           </radialGradient>
-          
+
           <marker
             id="arrowhead"
             markerWidth="10"
@@ -375,12 +375,12 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
             />
           </marker>
         </defs>
-        
+
         {renderConnections()}
         {renderAetherCenter()}
         {state.houses.map(renderHouse)}
       </svg>
-      
+
       {selectedHouse && (
         <div className="house-details">
           <h3>{selectedHouse.element} - {selectedHouse.phase}</h3>
@@ -391,7 +391,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           )}
         </div>
       )}
-      
+
       <style jsx>{`
         .holoflower-container {
           display: flex;
@@ -401,14 +401,14 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           background: #0a0a0f;
           color: white;
         }
-        
+
         .controls {
           display: flex;
           gap: 15px;
           margin-bottom: 20px;
           align-items: center;
         }
-        
+
         .controls button {
           padding: 8px 16px;
           background: #2a2a3e;
@@ -418,12 +418,12 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .controls button:hover {
           background: #3a3a4e;
           transform: translateY(-2px);
         }
-        
+
         .house-details {
           position: absolute;
           top: 20px;
@@ -434,13 +434,13 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           border: 1px solid #FFD700;
           min-width: 200px;
         }
-        
+
         .house-details h3 {
           margin: 0 0 10px 0;
           color: #FFD700;
           text-transform: capitalize;
         }
-        
+
         .house-details p {
           margin: 5px 0;
           font-size: 14px;

@@ -9,7 +9,7 @@ Our service combines ancient wisdom traditions with cutting-edge AI to deliver p
 ### 🎭 The Five Archetypes
 
 - **🔥 Fire**: Transformation, vision, creative breakthroughs
-- **💧 Water**: Emotional wisdom, healing, flow states  
+- **💧 Water**: Emotional wisdom, healing, flow states
 - **🌍 Earth**: Grounding, stability, practical manifestation
 - **💨 Air**: Mental clarity, fresh perspectives, communication
 - **✨ Aether**: Unity consciousness, spiritual integration
@@ -81,7 +81,7 @@ Main consciousness analysis endpoint.
   "oracle_response": "string",
   "analysis": {
     "primary_archetype": "string",
-    "secondary_archetype": "string", 
+    "secondary_archetype": "string",
     "elemental_contributions": {},
     "detected_patterns": [],
     "energy_signature": "string"

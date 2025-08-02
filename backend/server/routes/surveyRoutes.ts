@@ -25,7 +25,7 @@ router.get('/profile/:userId', (req, res) => {
 router.post('/submit', (req, res) => {
   try {
     const submission: SurveySubmission = req.body;
-    
+
     // Calculate elemental scores
     const scores = {
       fire: 0,

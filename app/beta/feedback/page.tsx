@@ -111,7 +111,7 @@ export default function BetaFeedbackPage() {
           </div>
           <h1 className="text-4xl font-bold mb-4">Thank You!</h1>
           <p className="text-lg opacity-80 mb-8">
-            Your feedback is invaluable in shaping the future of consciousness technology. 
+            Your feedback is invaluable in shaping the future of consciousness technology.
             We're honored to have you as part of this revolutionary journey.
           </p>
           <div className="space-y-4">
@@ -148,19 +148,19 @@ export default function BetaFeedbackPage() {
             {/* Overall Experience */}
             <div className="bg-white/5 rounded-lg p-6 border border-white/10">
               <h3 className="text-xl font-semibold mb-6">Overall Experience</h3>
-              
+
               <StarRating
                 value={feedback.overallRating}
                 onChange={(value) => updateRating('overallRating', value)}
                 label="Overall satisfaction with Soullab Oracle Beta"
               />
-              
+
               <StarRating
                 value={feedback.consciousnessValue}
                 onChange={(value) => updateRating('consciousnessValue', value)}
                 label="Value for personal consciousness development"
               />
-              
+
               <StarRating
                 value={feedback.recommendLikelihood}
                 onChange={(value) => updateRating('recommendLikelihood', value)}
@@ -171,37 +171,37 @@ export default function BetaFeedbackPage() {
             {/* Feature Ratings */}
             <div className="bg-white/5 rounded-lg p-6 border border-white/10">
               <h3 className="text-xl font-semibold mb-6">Feature Ratings</h3>
-              
+
               <StarRating
                 value={feedback.features.fireAgent}
                 onChange={(value) => updateRating('features.fireAgent', value)}
                 label="🔥 Fire Agent (Vision & Creativity)"
               />
-              
+
               <StarRating
                 value={feedback.features.waterAgent}
                 onChange={(value) => updateRating('features.waterAgent', value)}
                 label="🌊 Water Agent (Emotional Wisdom)"
               />
-              
+
               <StarRating
                 value={feedback.features.earthAgent}
                 onChange={(value) => updateRating('features.earthAgent', value)}
                 label="🌍 Earth Agent (Grounding & Practical)"
               />
-              
+
               <StarRating
                 value={feedback.features.airAgent}
                 onChange={(value) => updateRating('features.airAgent', value)}
                 label="💨 Air Agent (Mental Clarity)"
               />
-              
+
               <StarRating
                 value={feedback.features.interface}
                 onChange={(value) => updateRating('features.interface', value)}
                 label="User Interface & Experience"
               />
-              
+
               <StarRating
                 value={feedback.features.performance}
                 onChange={(value) => updateRating('features.performance', value)}
@@ -212,7 +212,7 @@ export default function BetaFeedbackPage() {
             {/* Written Feedback */}
             <div className="bg-white/5 rounded-lg p-6 border border-white/10">
               <h3 className="text-xl font-semibold mb-6">Detailed Feedback</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2 text-yellow-400">
@@ -308,7 +308,7 @@ export default function BetaFeedbackPage() {
           <div className="mt-12 bg-yellow-400/10 border border-yellow-400/30 rounded-lg p-6 text-center">
             <h3 className="text-lg font-semibold mb-2 text-yellow-400">🌟 Beta Tester Appreciation</h3>
             <p className="opacity-80 text-sm">
-              As a beta tester, you're part of a revolutionary moment in consciousness technology. 
+              As a beta tester, you're part of a revolutionary moment in consciousness technology.
               Your insights help us create tools that serve the evolution of human awareness and wisdom.
             </p>
           </div>

@@ -14,7 +14,7 @@ app.use(express.json());
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
-  res.json({ 
+  res.json({
     status: 'healthy',
     message: '🔮 Oracle backend is operational',
     timestamp: new Date().toISOString()

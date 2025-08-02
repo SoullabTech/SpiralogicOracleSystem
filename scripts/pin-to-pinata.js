@@ -22,17 +22,17 @@ if (!PINATA_API_KEY || !PINATA_SECRET_KEY) {
 async function pinDirectoryToPinata() {
   const url = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
   const src = path.join(__dirname, '../out');
-  
+
   console.log('📌 Pinning directory to Pinata...');
   console.log(`Source: ${src}`);
-  
+
   try {
     // Get all files recursively
     const { files } = await recursive.read(src);
-    
+
     // Create form data
     const data = new FormData();
-    
+
     // Add all files
     for (const file of files) {
       const content = fs.createReadStream(file);
@@ -41,7 +41,7 @@ async function pinDirectoryToPinata() {
         filepath: `spiralogic-oracle/${relativePath}`
       });
     }
-    
+
     // Add metadata
     const metadata = JSON.stringify({
       name: 'Spiralogic Oracle Frontend',
@@ -53,14 +53,14 @@ async function pinDirectoryToPinata() {
       }
     });
     data.append('pinataMetadata', metadata);
-    
+
     // Pin options
     const pinataOptions = JSON.stringify({
       cidVersion: 1,
       wrapWithDirectory: true
     });
     data.append('pinataOptions', pinataOptions);
-    
+
     // Make request
     const response = await axios.post(url, data, {
       headers: {
@@ -70,29 +70,29 @@ async function pinDirectoryToPinata() {
       },
       maxBodyLength: Infinity
     });
-    
+
     console.log('✅ Successfully pinned to Pinata!');
     console.log('📊 Pin Details:');
     console.log(`  - IPFS Hash: ${response.data.IpfsHash}`);
     console.log(`  - Pin Size: ${response.data.PinSize} bytes`);
     console.log(`  - Timestamp: ${response.data.Timestamp}`);
-    
+
     // Save hash
     fs.writeFileSync('pinata-hash.txt', response.data.IpfsHash);
-    
+
     // Generate access URLs
     console.log('\n🌐 Access URLs:');
     console.log(`  - Pinata Gateway: https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`);
     console.log(`  - Cloudflare: https://cloudflare-ipfs.com/ipfs/${response.data.IpfsHash}`);
     console.log(`  - IPFS Protocol: ipfs://${response.data.IpfsHash}`);
-    
+
     // Update package.json with IPFS hash
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     packageJson.ipfsHash = response.data.IpfsHash;
     fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
-    
+
     return response.data;
-    
+
   } catch (error) {
     console.error('❌ Error pinning to Pinata:', error.response?.data || error.message);
     process.exit(1);

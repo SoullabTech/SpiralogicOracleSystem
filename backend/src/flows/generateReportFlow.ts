@@ -2,8 +2,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import { openai } from '../lib/openaiClient';
 import { logger } from '../lib/logger';
-import { 
-  SpiralogicReportInput, 
+import {
+  SpiralogicReportInput,
   SpiralogicReportOutput,
   ChartData,
   ArchetypalElement
@@ -119,7 +119,7 @@ export class GenerateReportFlow {
    */
   private parseReportSections(content: string): Record<string, string> {
     const sections: Record<string, string> = {};
-    
+
     // Define section markers
     const sectionMarkers = [
       'Soul\'s Welcome Message',
@@ -136,10 +136,10 @@ export class GenerateReportFlow {
     let currentContent = '';
 
     const lines = content.split('\n');
-    
+
     for (const line of lines) {
       // Check if this line contains a section marker
-      const matchedSection = sectionMarkers.find(marker => 
+      const matchedSection = sectionMarkers.find(marker =>
         line.includes(marker) || line.toLowerCase().includes(marker.toLowerCase())
       );
 
@@ -148,7 +148,7 @@ export class GenerateReportFlow {
         if (currentContent.trim()) {
           sections[currentSection] = currentContent.trim();
         }
-        
+
         // Start new section
         currentSection = this.slugify(matchedSection);
         currentContent = '';
@@ -169,7 +169,7 @@ export class GenerateReportFlow {
    * Generate metadata for the report
    */
   private generateReportMetadata(
-    input: SpiralogicReportInput, 
+    input: SpiralogicReportInput,
     sections: Record<string, string>
   ) {
     return {
@@ -201,7 +201,7 @@ export class GenerateReportFlow {
     // This would integrate with your existing PDF generation service
     // For now, returning a placeholder
     logger.info('PDF generation requested for Spiralogic report');
-    
+
     // TODO: Integrate with spiralogicReportPdfService
     return Buffer.from('PDF generation not yet implemented');
   }
@@ -210,12 +210,12 @@ export class GenerateReportFlow {
    * Save report to database
    */
   async saveReport(
-    userId: string, 
+    userId: string,
     report: SpiralogicReportOutput['report']
   ): Promise<string> {
     // TODO: Integrate with Supabase to save the report
     logger.info(`Saving report for user ${userId}`);
-    
+
     // This would save to a reports table
     // Return the report ID
     return `report_${Date.now()}`;
@@ -248,7 +248,7 @@ export class GenerateReportFlow {
     };
 
     const enhancedSections = { ...report.sections };
-    
+
     if (enhancedSections['sacred-practices-rituals']) {
       enhancedSections['sacred-practices-rituals'] += `\n\n## Elemental Balance Rituals\n`;
       enhancedSections['sacred-practices-rituals'] += `\n**For your dominant ${userElements.dominant} element:**\n`;

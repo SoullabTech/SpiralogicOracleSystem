@@ -19,7 +19,7 @@ const IChingCompatibilityRequestSchema = z.object({
 export async function getIChingAstroProfile(req: Request, res: Response) {
   try {
     const { birthDate } = req.query;
-    
+
     if (!birthDate) {
       return res.status(400).json({
         success: false,
@@ -47,7 +47,7 @@ export async function getIChingAstroProfile(req: Request, res: Response) {
 
     // Generate I Ching profile
     const profile = generateIChingAstroProfile(parsedDate);
-    
+
     // Get detailed archetype information
     const birthArchetype = getTrigramArchetype(profile.birthTrigram);
     const currentArchetype = getTrigramArchetype(profile.currentTrigramCycle);
@@ -86,7 +86,7 @@ export async function postIChingAstroProfile(req: Request, res: Response) {
 
     const { birthDate } = validation.data;
     const parsedDate = new Date(birthDate);
-    
+
     if (isNaN(parsedDate.getTime())) {
       return res.status(400).json({
         success: false,
@@ -96,14 +96,14 @@ export async function postIChingAstroProfile(req: Request, res: Response) {
 
     // Generate I Ching profile
     const profile = generateIChingAstroProfile(parsedDate);
-    
+
     // Get detailed archetype information
     const birthArchetype = getTrigramArchetype(profile.birthTrigram);
     const currentArchetype = getTrigramArchetype(profile.currentTrigramCycle);
 
     // Calculate self-compatibility (birth vs current year)
     const selfCompatibility = calculateTrigramCompatibility(
-      profile.birthTrigram, 
+      profile.birthTrigram,
       profile.currentTrigramCycle
     );
 
@@ -141,11 +141,11 @@ export async function calculateIChingCompatibility(req: Request, res: Response) 
     }
 
     const { trigram1, trigram2 } = validation.data;
-    
+
     // Get archetype details
     const archetype1 = getTrigramArchetype(trigram1);
     const archetype2 = getTrigramArchetype(trigram2);
-    
+
     if (!archetype1 || !archetype2) {
       return res.status(400).json({
         success: false,
@@ -180,7 +180,7 @@ export async function calculateIChingCompatibility(req: Request, res: Response) 
 export async function getAllTrigrams(req: Request, res: Response) {
   try {
     const trigrams = [
-      'Thunder', 'Wind', 'Fire', 'Earth', 
+      'Thunder', 'Wind', 'Fire', 'Earth',
       'Lake', 'Heaven', 'Water', 'Mountain'
     ].map(name => getTrigramArchetype(name)).filter(Boolean);
 
@@ -208,7 +208,7 @@ export async function getYearlyGuidance(req: Request, res: Response) {
   try {
     const { year } = req.query;
     const targetYear = year ? parseInt(year as string) : new Date().getFullYear();
-    
+
     if (isNaN(targetYear) || targetYear < 1900 || targetYear > 2100) {
       return res.status(400).json({
         success: false,

@@ -48,7 +48,7 @@ export class ElementalDomainMapper {
   getDominantElementForProfile(profile: UserHolisticProfile): string {
     const domainStrengths = this.calculateDomainStrengths(profile);
     const elementScores = this.calculateElementalAffinity(domainStrengths);
-    
+
     return Object.entries(elementScores)
       .sort(([, a], [, b]) => b - a)[0][0];
   }
@@ -90,7 +90,7 @@ export class ElementalDomainMapper {
   ): HolisticRecommendation[] {
     const element = targetElement || this.getDominantElementForProfile(profile);
     const mapping = this.getElementalMapping(element);
-    
+
     if (!mapping) return [];
 
     const recommendations: HolisticRecommendation[] = [];
@@ -119,9 +119,9 @@ export class ElementalDomainMapper {
       [DevelopmentStage.INTERMEDIATE]: 2,
       [DevelopmentStage.ADVANCED]: 3
     };
-    
+
     const avgWeight = stages.reduce((sum, stage) => sum + stageWeights[stage], 0) / stages.length;
-    
+
     if (avgWeight >= 2.5) return DevelopmentStage.ADVANCED;
     if (avgWeight >= 1.5) return DevelopmentStage.INTERMEDIATE;
     return DevelopmentStage.BEGINNER;
@@ -165,7 +165,7 @@ export class ElementalDomainMapper {
       }
     };
 
-    let description = baseDescriptions[element]?.[practice] || 
+    let description = baseDescriptions[element]?.[practice] ||
       `Elemental practice focusing on ${practice} with ${element} energy.`;
 
     if (stage === DevelopmentStage.BEGINNER) {
@@ -321,17 +321,17 @@ export class ElementalDomainMapper {
       }
     };
 
-    return instructions[element]?.[practice]?.[stage] || 
+    return instructions[element]?.[practice]?.[stage] ||
       `Practice ${practice} with ${element} elemental energy at your level.`;
   }
 
   createElementalBalance(profile: UserHolisticProfile): Record<string, number> {
     const domainStrengths = this.calculateDomainStrengths(profile);
     const elementalAffinity = this.calculateElementalAffinity(domainStrengths);
-    
+
     const totalScore = Object.values(elementalAffinity).reduce((sum, score) => sum + score, 0);
     const balance: Record<string, number> = {};
-    
+
     Object.entries(elementalAffinity).forEach(([element, score]) => {
       balance[element] = totalScore > 0 ? (score / totalScore) * 100 : 20;
     });

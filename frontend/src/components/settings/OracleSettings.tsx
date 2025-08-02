@@ -75,7 +75,7 @@ const OracleSettings: React.FC = () => {
     >
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold text-[#F6E27F]">Oracle Configuration</h3>
-        
+
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
@@ -159,7 +159,7 @@ const OracleSettings: React.FC = () => {
             >
               {isSaving ? "Saving..." : "Save Changes"}
             </button>
-            
+
             <button
               onClick={handleCancel}
               disabled={isSaving}

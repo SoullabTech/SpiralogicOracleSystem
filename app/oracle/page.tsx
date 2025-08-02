@@ -18,7 +18,7 @@ export default function OraclePage() {
           <p className="text-lg opacity-80 mb-6">
             The Oracle system is currently being calibrated with enhanced sacred intelligence.
           </p>
-          
+
           <div className="space-y-3 text-left">
             <div className="flex items-center">
               <span className="text-green-400 mr-3">✓</span>
@@ -44,8 +44,8 @@ export default function OraclePage() {
         </div>
 
         <div className="mt-8">
-          <a 
-            href="/dashboard" 
+          <a
+            href="/dashboard"
             className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
           >
             🌌 Explore Dashboard

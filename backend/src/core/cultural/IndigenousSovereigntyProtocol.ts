@@ -1,9 +1,9 @@
 /**
  * Indigenous Sovereignty Protocol - Honoring Traditional Wisdom with Respect
- * 
+ *
  * This module ensures all indigenous wisdom is accessed with proper protocols,
  * permissions, and attribution while respecting cultural sovereignty.
- * 
+ *
  * Core Principles:
  * - Nothing Sacred is Taken Without Permission
  * - Traditional Knowledge Sovereignty is Respected
@@ -51,7 +51,7 @@ export interface TraditionalKnowledgeProtection {
 export class IndigenousSovereigntyProtocol {
   private traditionalKnowledgeRegistry: Map<string, TraditionalKnowledgeProtection> = new Map();
   private culturalConsultants: Map<string, string[]> = new Map();
-  
+
   constructor() {
     this.initializeTraditionalKnowledgeRegistry();
     this.initializeCulturalConsultants();
@@ -63,14 +63,14 @@ export class IndigenousSovereigntyProtocol {
   async evaluateWisdomRequest(request: IndigenousWisdomRequest): Promise<CulturalProtocolResult> {
     try {
       const traditionalKnowledge = this.traditionalKnowledgeRegistry.get(request.tradition);
-      
+
       if (!traditionalKnowledge) {
         return this.handleUnknownTradition(request);
       }
 
       // Check protection level
       const protocolResult = await this.assessProtectionLevel(request, traditionalKnowledge);
-      
+
       // Log the cultural protocol evaluation
       logger.info('Indigenous wisdom request evaluated', {
         tradition: request.tradition,
@@ -94,23 +94,23 @@ export class IndigenousSovereigntyProtocol {
    * Assess protection level and determine permissions
    */
   private async assessProtectionLevel(
-    request: IndigenousWisdomRequest, 
+    request: IndigenousWisdomRequest,
     tk: TraditionalKnowledgeProtection
   ): Promise<CulturalProtocolResult> {
-    
+
     switch (tk.protectionLevel) {
       case 'open':
         return this.handleOpenTradition(request, tk);
-        
+
       case 'restricted':
         return this.handleRestrictedTradition(request, tk);
-        
+
       case 'sacred':
         return this.handleSacredTradition(request, tk);
-        
+
       case 'closed':
         return this.handleClosedTradition(request, tk);
-        
+
       default:
         return {
           permitted: false,
@@ -123,7 +123,7 @@ export class IndigenousSovereigntyProtocol {
    * Handle open traditional knowledge (publicly shared wisdom)
    */
   private handleOpenTradition(
-    request: IndigenousWisdomRequest, 
+    request: IndigenousWisdomRequest,
     tk: TraditionalKnowledgeProtection
   ): CulturalProtocolResult {
     return {
@@ -143,12 +143,12 @@ export class IndigenousSovereigntyProtocol {
    * Handle restricted traditional knowledge (requires cultural understanding)
    */
   private handleRestrictedTradition(
-    request: IndigenousWisdomRequest, 
+    request: IndigenousWisdomRequest,
     tk: TraditionalKnowledgeProtection
   ): CulturalProtocolResult {
-    
+
     const isCulturalMember = this.checkCulturalMembership(request.userCulturalBackground, request.tradition);
-    const hasProperContext = tk.appropriateContexts.some(context => 
+    const hasProperContext = tk.appropriateContexts.some(context =>
       request.intentionForUse.toLowerCase().includes(context.toLowerCase())
     );
 
@@ -177,10 +177,10 @@ export class IndigenousSovereigntyProtocol {
    * Handle sacred traditional knowledge (requires initiation/permission)
    */
   private handleSacredTradition(
-    request: IndigenousWisdomRequest, 
+    request: IndigenousWisdomRequest,
     tk: TraditionalKnowledgeProtection
   ): CulturalProtocolResult {
-    
+
     if (request.elderPermission && request.communityConsent) {
       return {
         permitted: true,
@@ -207,12 +207,12 @@ export class IndigenousSovereigntyProtocol {
    * Handle closed traditional knowledge (not for sharing outside community)
    */
   private handleClosedTradition(
-    request: IndigenousWisdomRequest, 
+    request: IndigenousWisdomRequest,
     tk: TraditionalKnowledgeProtection
   ): CulturalProtocolResult {
-    
+
     const isCulturalMember = this.checkCulturalMembership(request.userCulturalBackground, request.tradition);
-    
+
     if (isCulturalMember && request.elderPermission) {
       return {
         permitted: true,
@@ -251,7 +251,7 @@ export class IndigenousSovereigntyProtocol {
   private checkCulturalMembership(userBackground: string, tradition: string): boolean {
     // Simplified check - in production, this would integrate with cultural verification systems
     const culturalKeywords = this.getCulturalKeywords(tradition);
-    return culturalKeywords.some(keyword => 
+    return culturalKeywords.some(keyword =>
       userBackground.toLowerCase().includes(keyword.toLowerCase())
     );
   }
@@ -272,7 +272,7 @@ export class IndigenousSovereigntyProtocol {
       'taoist': 'Support Taoist temple preservation, traditional Chinese medicine, or philosophical education.'
     };
 
-    return reciprocityGuidance[tradition as keyof typeof reciprocityGuidance] || 
+    return reciprocityGuidance[tradition as keyof typeof reciprocityGuidance] ||
            'Consider supporting the cultural preservation and community development of the originating tradition.';
   }
 
@@ -354,7 +354,7 @@ export class IndigenousSovereigntyProtocol {
     });
 
     // Add more traditions as needed...
-    
+
     logger.info('Traditional knowledge protection registry initialized', {
       registeredTraditions: this.traditionalKnowledgeRegistry.size
     });
@@ -367,7 +367,7 @@ export class IndigenousSovereigntyProtocol {
     // This would connect to real cultural consultant networks
     this.culturalConsultants.set('native_american', ['National Congress of American Indians', 'Indigenous Wellness Research Institute']);
     this.culturalConsultants.set('aboriginal_australian', ['National Native Title Council', 'Aboriginal Medical Services Alliance']);
-    
+
     logger.info('Cultural consultants registry initialized');
   }
 
@@ -382,12 +382,12 @@ export class IndigenousSovereigntyProtocol {
    * Check if wisdom sharing would violate cultural protocols
    */
   async validateWisdomSharing(
-    tradition: string, 
-    content: string, 
+    tradition: string,
+    content: string,
     userContext: any
   ): Promise<{valid: boolean, guidance?: string}> {
     const tk = this.traditionalKnowledgeRegistry.get(tradition);
-    
+
     if (!tk) {
       return {
         valid: false,
@@ -397,7 +397,7 @@ export class IndigenousSovereigntyProtocol {
 
     // Check for inappropriate contexts
     const hasInappropriateContext = tk.inappropriateContexts.some(context =>
-      content.toLowerCase().includes(context) || 
+      content.toLowerCase().includes(context) ||
       userContext.intention?.toLowerCase().includes(context)
     );
 

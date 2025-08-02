@@ -45,17 +45,17 @@ export enum ErrorType {
 class FallbackStrategy {
   static async handleDatabaseFailure(operation: string, context: any): Promise<any> {
     logger.warn(`Database operation failed: ${operation}. Using fallback strategy.`, context);
-    
+
     switch (operation) {
       case 'memory_store':
         return { stored: false, error: 'Storage temporarily unavailable', fallback: true };
-        
+
       case 'user_profile':
         return { id: context.userId, minimal: true, fallback: true };
-        
+
       case 'oracle_session':
         return { id: `temp_${Date.now()}`, temporary: true, persisted: false };
-        
+
       default:
         return { error: 'Service temporarily unavailable', fallback: true };
     }
@@ -63,7 +63,7 @@ class FallbackStrategy {
 
   static async handleOracleProcessingFailure(userInput: string): Promise<any> {
     logger.warn('Oracle processing failed. Using fallback response.');
-    
+
     return {
       response: "I sense a disturbance in the digital realm. While I gather my sacred energies, please know that your words are heard. Try again in a moment, and the wisdom will flow.",
       mode: 'guardian',
@@ -74,7 +74,7 @@ class FallbackStrategy {
 
   static async handleExternalAPIFailure(service: string): Promise<any> {
     logger.warn(`External API failure: ${service}. Using fallback.`);
-    
+
     return {
       error: `Service ${service} temporarily unavailable`,
       fallback: true,
@@ -106,7 +106,7 @@ export const errorHandler = async (
   // Determine error type and appropriate response
   const errorType = classifyError(error);
   const statusCode = error.statusCode || getStatusCodeForErrorType(errorType);
-  
+
   // Try graceful fallback
   let fallbackResponse = null;
   try {
@@ -117,7 +117,7 @@ export const errorHandler = async (
 
   // Handle specific error types
   if (error instanceof ValidationError) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       success: false,
       error: { type: 'validation', message: error.message },
       ...(fallbackResponse && { fallback: fallbackResponse })
@@ -125,7 +125,7 @@ export const errorHandler = async (
   }
 
   if (error instanceof AuthenticationError) {
-    return res.status(401).json({ 
+    return res.status(401).json({
       success: false,
       error: { type: 'authentication', message: 'Sacred authentication required' },
       ...(fallbackResponse && { fallback: fallbackResponse })
@@ -133,7 +133,7 @@ export const errorHandler = async (
   }
 
   if (error instanceof AuthorizationError) {
-    return res.status(403).json({ 
+    return res.status(403).json({
       success: false,
       error: { type: 'permission', message: 'Sacred permission required' },
       ...(fallbackResponse && { fallback: fallbackResponse })
@@ -141,7 +141,7 @@ export const errorHandler = async (
   }
 
   if (error instanceof NotFoundError) {
-    return res.status(404).json({ 
+    return res.status(404).json({
       success: false,
       error: { type: 'not_found', message: error.message },
       ...(fallbackResponse && { fallback: fallbackResponse })
@@ -149,11 +149,11 @@ export const errorHandler = async (
   }
 
   if (error instanceof AppError) {
-    return res.status(error.statusCode).json({ 
+    return res.status(error.statusCode).json({
       success: false,
-      error: { 
-        type: errorType, 
-        message: getClientSafeMessage(error, errorType) 
+      error: {
+        type: errorType,
+        message: getClientSafeMessage(error, errorType)
       },
       ...(fallbackResponse && { fallback: fallbackResponse })
     });
@@ -183,7 +183,7 @@ export const errorHandler = async (
 
 function classifyError(error: SacredError): ErrorType {
   const message = error.message.toLowerCase();
-  
+
   if (message.includes('database') || message.includes('connection')) {
     return ErrorType.DATABASE;
   }
@@ -205,7 +205,7 @@ function classifyError(error: SacredError): ErrorType {
   if (message.includes('validation') || message.includes('invalid')) {
     return ErrorType.VALIDATION;
   }
-  
+
   return ErrorType.SYSTEM;
 }
 
@@ -241,29 +241,29 @@ function getClientSafeMessage(error: SacredError, errorType: ErrorType): string 
 
 async function handleGracefulFallback(error: SacredError, req: Request): Promise<any> {
   const errorType = classifyError(error);
-  const context = { 
-    ...error.context, 
+  const context = {
+    ...error.context,
     userId: (req as any).user?.id,
-    path: req.path 
+    path: req.path
   };
 
   switch (errorType) {
     case ErrorType.DATABASE:
       return await FallbackStrategy.handleDatabaseFailure(
-        error.context?.operation || 'unknown', 
+        error.context?.operation || 'unknown',
         context
       );
-      
+
     case ErrorType.ORACLE_PROCESSING:
       return await FallbackStrategy.handleOracleProcessingFailure(
         error.context?.userInput || ''
       );
-      
+
     case ErrorType.EXTERNAL_API:
       return await FallbackStrategy.handleExternalAPIFailure(
         error.context?.service || 'unknown'
       );
-      
+
     default:
       return null;
   }

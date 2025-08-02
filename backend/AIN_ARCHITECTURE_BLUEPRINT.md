@@ -100,7 +100,7 @@ class NeuromorphicSensor:
     def __init__(self):
         self.spike_threshold = 0.7
         self.refractory_period = 100  # ms
-        
+
     async def on_input_change(self, delta):
         if delta > self.spike_threshold:
             await self.emit_spike()
@@ -113,7 +113,7 @@ class NeuroSymbolicProcessor:
     def __init__(self):
         self.neural_classifier = TransformerIntent()
         self.symbolic_reasoner = RuleEngine()
-        
+
     async def process(self, input):
         intent = await self.neural_classifier.classify(input)
         rules = self.symbolic_reasoner.match_rules(intent)
@@ -165,15 +165,15 @@ class QuantumThoughtEngine:
     def __init__(self):
         self.classical_model = mLSTM()
         self.quantum_simulator = QiskitSimulator()
-        
+
     async def quantum_thought(self, state):
         # Prepare quantum circuit
         circuit = self.prepare_thought_circuit(state)
-        
+
         # Run hybrid inference
         classical_output = await self.classical_model.process(state)
         quantum_samples = await self.quantum_simulator.sample(circuit)
-        
+
         # Coherence synthesis
         return self.synthesize_coherence(classical_output, quantum_samples)
 ```

@@ -91,7 +91,7 @@ class GeometricTransforms {
 class VectorEquilibrium {
   private center: [number, number];
   private radius: number;
-  
+
   constructor(centerX: number, centerY: number, radius: number) {
     this.center = [centerX, centerY];
     this.radius = radius;
@@ -100,7 +100,7 @@ class VectorEquilibrium {
   // Generate the 12 vertices of a cuboctahedron (vector equilibrium)
   generateVertices(): Array<[number, number]> {
     const vertices: Array<[number, number]> = [];
-    
+
     // Top square vertices
     for (let i = 0; i < 4; i++) {
       const angle = (i * 90 + 45) * Math.PI / 180;
@@ -109,7 +109,7 @@ class VectorEquilibrium {
         this.center[1] + this.radius * Math.sin(angle) * PHI_INVERSE
       ]);
     }
-    
+
     // Middle hexagon vertices
     for (let i = 0; i < 6; i++) {
       const angle = (i * 60) * Math.PI / 180;
@@ -118,7 +118,7 @@ class VectorEquilibrium {
         this.center[1] + this.radius * Math.sin(angle)
       ]);
     }
-    
+
     // Bottom square vertices (rotated 45 degrees from top)
     for (let i = 0; i < 4; i++) {
       const angle = (i * 90) * Math.PI / 180;
@@ -127,7 +127,7 @@ class VectorEquilibrium {
         this.center[1] - this.radius * Math.sin(angle) * PHI_INVERSE
       ]);
     }
-    
+
     return vertices;
   }
 
@@ -135,7 +135,7 @@ class VectorEquilibrium {
   generateEdges(): Array<[[number, number], [number, number]]> {
     const vertices = this.generateVertices();
     const edges: Array<[[number, number], [number, number]]> = [];
-    
+
     // Define connectivity based on VE structure
     const connections = [
       [0, 1], [1, 2], [2, 3], [3, 0], // Top square
@@ -144,13 +144,13 @@ class VectorEquilibrium {
       [0, 4], [1, 6], [2, 8], [3, 10], // Vertical connections
       [4, 10], [5, 11], [6, 12], [7, 13], [8, 10], [9, 11] // Diagonal connections
     ];
-    
+
     connections.forEach(([i, j]) => {
       if (vertices[i] && vertices[j]) {
         edges.push([vertices[i], vertices[j]]);
       }
     });
-    
+
     return edges;
   }
 }
@@ -160,11 +160,11 @@ class MandalaPatterns {
   // Generate Flower of Life pattern
   static flowerOfLife(center: [number, number], radius: number, rings: number): string {
     let path = '';
-    
+
     for (let ring = 0; ring <= rings; ring++) {
       const circleRadius = radius;
       const distance = ring * radius * 2;
-      
+
       if (ring === 0) {
         path += `M ${center[0] + circleRadius} ${center[1]} `;
         path += `A ${circleRadius} ${circleRadius} 0 1 0 ${center[0] - circleRadius} ${center[1]} `;
@@ -174,14 +174,14 @@ class MandalaPatterns {
           const angle = (i * 60 / ring) * Math.PI / 180;
           const cx = center[0] + distance * Math.cos(angle);
           const cy = center[1] + distance * Math.sin(angle);
-          
+
           path += `M ${cx + circleRadius} ${cy} `;
           path += `A ${circleRadius} ${circleRadius} 0 1 0 ${cx - circleRadius} ${cy} `;
           path += `A ${circleRadius} ${circleRadius} 0 1 0 ${cx + circleRadius} ${cy} `;
         }
       }
     }
-    
+
     return path;
   }
 
@@ -189,16 +189,16 @@ class MandalaPatterns {
   static sriYantraPattern(center: [number, number], radius: number, element: string): string {
     let path = '';
     const levels = element === 'aether' ? 9 : 5; // More complex for aether
-    
+
     for (let level = 0; level < levels; level++) {
       const levelRadius = radius * (1 - level / levels);
       const rotation = level * 40; // Each level rotated
-      
+
       // Upward triangles
       for (let i = 0; i < 3; i++) {
         const angle1 = (i * 120 + rotation) * Math.PI / 180;
         const angle2 = ((i + 1) * 120 + rotation) * Math.PI / 180;
-        
+
         const p1: [number, number] = [
           center[0] + levelRadius * Math.cos(angle1),
           center[1] + levelRadius * Math.sin(angle1)
@@ -211,15 +211,15 @@ class MandalaPatterns {
           center[0],
           center[1] - levelRadius * PHI_INVERSE
         ];
-        
+
         path += `M ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]} L ${p3[0]} ${p3[1]} Z `;
       }
-      
+
       // Downward triangles
       for (let i = 0; i < 3; i++) {
         const angle1 = (i * 120 + rotation + 60) * Math.PI / 180;
         const angle2 = ((i + 1) * 120 + rotation + 60) * Math.PI / 180;
-        
+
         const p1: [number, number] = [
           center[0] + levelRadius * Math.cos(angle1) * PHI_INVERSE,
           center[1] + levelRadius * Math.sin(angle1) * PHI_INVERSE
@@ -232,11 +232,11 @@ class MandalaPatterns {
           center[0],
           center[1] + levelRadius * PHI_INVERSE * PHI_INVERSE
         ];
-        
+
         path += `M ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]} L ${p3[0]} ${p3[1]} Z `;
       }
     }
-    
+
     return path;
   }
 
@@ -245,14 +245,14 @@ class MandalaPatterns {
     let path = '';
     const ve = new VectorEquilibrium(center[0], center[1], radius);
     const vertices = ve.generateVertices();
-    
+
     // Connect all vertices to create Metatron's Cube
     for (let i = 0; i < vertices.length; i++) {
       for (let j = i + 1; j < vertices.length; j++) {
         path += `M ${vertices[i][0]} ${vertices[i][1]} L ${vertices[j][0]} ${vertices[j][1]} `;
       }
     }
-    
+
     return path;
   }
 }
@@ -262,7 +262,7 @@ export class GeometryEngine {
   private width: number;
   private height: number;
   private center: [number, number];
-  
+
   constructor(width: number = 800, height: number = 800) {
     this.width = width;
     this.height = height;
@@ -273,26 +273,26 @@ export class GeometryEngine {
   generateMandala(elementalState: ElementalBalance): string {
     const svg = this.createSVGContainer();
     const layers: string[] = [];
-    
+
     // Background gradient based on dominant element
     const dominantElement = this.getDominantElement(elementalState);
     layers.push(this.createBackgroundGradient(dominantElement));
-    
+
     // Layer 1: Vector Equilibrium foundation
     layers.push(this.createVectorEquilibriumLayer(elementalState));
-    
+
     // Layer 2: Elemental patterns
     layers.push(this.createElementalPatternLayer(elementalState));
-    
+
     // Layer 3: Harmonic resonance patterns
     layers.push(this.createHarmonicLayer(elementalState));
-    
+
     // Layer 4: Sacred geometry overlays
     layers.push(this.createSacredGeometryLayer(elementalState));
-    
+
     // Layer 5: Consciousness field
     layers.push(this.createConsciousnessField(elementalState));
-    
+
     return this.assembleSVG(svg, layers);
   }
 
@@ -318,20 +318,20 @@ export class GeometryEngine {
     const baseRadius = Math.min(this.width, this.height) * 0.3;
     const ve = new VectorEquilibrium(this.center[0], this.center[1], baseRadius);
     const edges = ve.generateEdges();
-    
+
     let layer = '<g id="vector-equilibrium" opacity="0.6">';
-    
+
     // Draw edges with elemental influence
     edges.forEach(([p1, p2], index) => {
       const element = this.getElementForIndex(index, elementalState);
       const color = ELEMENT_COLORS[element as keyof typeof ELEMENT_COLORS].primary;
       const strokeWidth = 2 + (elementalState[element] || 0) * 0.02;
-      
-      layer += `<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" 
-                      stroke="${color}" stroke-width="${strokeWidth}" 
+
+      layer += `<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}"
+                      stroke="${color}" stroke-width="${strokeWidth}"
                       stroke-linecap="round" opacity="0.8" />`;
     });
-    
+
     layer += '</g>';
     return layer;
   }
@@ -339,7 +339,7 @@ export class GeometryEngine {
   private createElementalPatternLayer(elementalState: ElementalBalance): string {
     let layer = '<g id="elemental-patterns">';
     const elements = Object.keys(elementalState) as Array<keyof ElementalBalance>;
-    
+
     elements.forEach((element, index) => {
       const strength = elementalState[element] || 0;
       if (strength > 10) { // Only show if element has significant presence
@@ -347,11 +347,11 @@ export class GeometryEngine {
         const distance = this.width * 0.25;
         const cx = this.center[0] + distance * Math.cos(angle);
         const cy = this.center[1] + distance * Math.sin(angle);
-        
+
         layer += this.createElementalSymbol(element, cx, cy, strength);
       }
     });
-    
+
     layer += '</g>';
     return layer;
   }
@@ -359,32 +359,32 @@ export class GeometryEngine {
   private createElementalSymbol(element: string, cx: number, cy: number, strength: number): string {
     const radius = 20 + strength * 0.5;
     const colors = ELEMENT_COLORS[element as keyof typeof ELEMENT_COLORS];
-    
+
     switch(element) {
       case 'fire':
         // Upward triangle
-        return `<path d="M ${cx} ${cy - radius} L ${cx - radius * 0.866} ${cy + radius * 0.5} 
-                        L ${cx + radius * 0.866} ${cy + radius * 0.5} Z" 
+        return `<path d="M ${cx} ${cy - radius} L ${cx - radius * 0.866} ${cy + radius * 0.5}
+                        L ${cx + radius * 0.866} ${cy + radius * 0.5} Z"
                         fill="${colors.primary}" opacity="${strength / 100}" />`;
-      
+
       case 'water':
         // Downward triangle
-        return `<path d="M ${cx} ${cy + radius} L ${cx - radius * 0.866} ${cy - radius * 0.5} 
-                        L ${cx + radius * 0.866} ${cy - radius * 0.5} Z" 
+        return `<path d="M ${cx} ${cy + radius} L ${cx - radius * 0.866} ${cy - radius * 0.5}
+                        L ${cx + radius * 0.866} ${cy - radius * 0.5} Z"
                         fill="${colors.primary}" opacity="${strength / 100}" />`;
-      
+
       case 'earth':
         // Square
-        return `<rect x="${cx - radius * 0.7}" y="${cy - radius * 0.7}" 
-                      width="${radius * 1.4}" height="${radius * 1.4}" 
+        return `<rect x="${cx - radius * 0.7}" y="${cy - radius * 0.7}"
+                      width="${radius * 1.4}" height="${radius * 1.4}"
                       fill="${colors.primary}" opacity="${strength / 100}" />`;
-      
+
       case 'air':
         // Circle
-        return `<circle cx="${cx}" cy="${cy}" r="${radius}" 
-                        fill="none" stroke="${colors.primary}" 
+        return `<circle cx="${cx}" cy="${cy}" r="${radius}"
+                        fill="none" stroke="${colors.primary}"
                         stroke-width="3" opacity="${strength / 100}" />`;
-      
+
       case 'aether':
         // Pentagon
         let path = 'M ';
@@ -395,7 +395,7 @@ export class GeometryEngine {
           path += `${x} ${y} ${i < 4 ? 'L ' : 'Z'}`;
         }
         return `<path d="${path}" fill="${colors.primary}" opacity="${strength / 100}" />`;
-      
+
       default:
         return '';
     }
@@ -404,20 +404,20 @@ export class GeometryEngine {
   private createHarmonicLayer(elementalState: ElementalBalance): string {
     let layer = '<g id="harmonic-resonance" opacity="0.4">';
     const baseRadius = Math.min(this.width, this.height) * 0.35;
-    
+
     // Create harmonic circles based on elemental balance
     Object.entries(elementalState).forEach(([element, value], index) => {
       if (value && value > 0) {
         const harmonic = Object.values(HARMONIC_RATIOS)[index % Object.values(HARMONIC_RATIOS).length];
         const radius = baseRadius * harmonic * (value / 100);
         const colors = ELEMENT_COLORS[element as keyof typeof ELEMENT_COLORS];
-        
+
         layer += `<circle cx="${this.center[0]}" cy="${this.center[1]}" r="${radius}"
-                         fill="none" stroke="${colors.secondary}" 
+                         fill="none" stroke="${colors.secondary}"
                          stroke-width="1" opacity="${value / 200}" />`;
       }
     });
-    
+
     layer += '</g>';
     return layer;
   }
@@ -426,29 +426,29 @@ export class GeometryEngine {
     let layer = '<g id="sacred-geometry" opacity="0.3">';
     const dominantElement = this.getDominantElement(elementalState);
     const baseRadius = Math.min(this.width, this.height) * 0.25;
-    
+
     // Choose pattern based on dominant element
     switch(dominantElement) {
       case 'fire':
         layer += `<path d="${MandalaPatterns.sriYantraPattern(this.center, baseRadius, 'fire')}"
                        fill="none" stroke="${ELEMENT_COLORS.fire.primary}" stroke-width="1" />`;
         break;
-        
+
       case 'water':
         layer += `<path d="${MandalaPatterns.flowerOfLife(this.center, baseRadius * 0.1, 3)}"
                        fill="none" stroke="${ELEMENT_COLORS.water.primary}" stroke-width="1" />`;
         break;
-        
+
       case 'earth':
         layer += `<path d="${MandalaPatterns.metatronsCube(this.center, baseRadius)}"
                        fill="none" stroke="${ELEMENT_COLORS.earth.primary}" stroke-width="0.5" />`;
         break;
-        
+
       case 'air':
         // Spiral pattern
         layer += this.createSpiralPattern(baseRadius, ELEMENT_COLORS.air.primary);
         break;
-        
+
       case 'aether':
         // All patterns combined with low opacity
         layer += `<g opacity="0.5">
@@ -459,7 +459,7 @@ export class GeometryEngine {
                   </g>`;
         break;
     }
-    
+
     layer += '</g>';
     return layer;
   }
@@ -467,7 +467,7 @@ export class GeometryEngine {
   private createSpiralPattern(radius: number, color: string): string {
     let path = 'M ' + this.center[0] + ' ' + this.center[1];
     const points = 1000;
-    
+
     for (let i = 0; i < points; i++) {
       const angle = i * 0.1;
       const r = radius * (i / points) * PHI;
@@ -475,26 +475,26 @@ export class GeometryEngine {
       const y = this.center[1] + r * Math.sin(angle * PHI);
       path += ` L ${x} ${y}`;
     }
-    
+
     return `<path d="${path}" fill="none" stroke="${color}" stroke-width="1" />`;
   }
 
   private createConsciousnessField(elementalState: ElementalBalance): string {
     let layer = '<g id="consciousness-field" opacity="0.2">';
-    
+
     // Create interference patterns based on elemental interactions
     const totalEnergy = Object.values(elementalState).reduce((sum, val) => sum + (val || 0), 0);
     const avgEnergy = totalEnergy / Object.keys(elementalState).length;
-    
+
     // Radial pulse pattern
     for (let i = 0; i < 12; i++) {
       const radius = (avgEnergy / 100) * this.width * 0.4 * (1 + 0.1 * Math.sin(i * PHI));
       const opacity = 0.1 - (i * 0.008);
-      
+
       layer += `<circle cx="${this.center[0]}" cy="${this.center[1]}" r="${radius}"
                        fill="none" stroke="white" stroke-width="0.5" opacity="${opacity}" />`;
     }
-    
+
     layer += '</g>';
     return layer;
   }
@@ -502,14 +502,14 @@ export class GeometryEngine {
   private getDominantElement(elementalState: ElementalBalance): string {
     let maxElement = 'aether';
     let maxValue = 0;
-    
+
     Object.entries(elementalState).forEach(([element, value]) => {
       if (value && value > maxValue) {
         maxValue = value;
         maxElement = element;
       }
     });
-    
+
     return maxElement;
   }
 
@@ -525,7 +525,7 @@ export class GeometryEngine {
   // Generate animated mandala
   generateAnimatedMandala(elementalState: ElementalBalance, duration: number = 10): string {
     const staticMandala = this.generateMandala(elementalState);
-    
+
     // Add rotation animation to vector equilibrium
     const rotationAnimation = `
       <animateTransform
@@ -537,7 +537,7 @@ export class GeometryEngine {
         dur="${duration}s"
         repeatCount="indefinite" />
     `;
-    
+
     // Add pulsing animation to consciousness field
     const pulseAnimation = `
       <animate
@@ -546,13 +546,13 @@ export class GeometryEngine {
         dur="${duration / 3}s"
         repeatCount="indefinite" />
     `;
-    
+
     // Insert animations into appropriate groups
-    let animated = staticMandala.replace('<g id="vector-equilibrium"', 
+    let animated = staticMandala.replace('<g id="vector-equilibrium"',
       `<g id="vector-equilibrium">${rotationAnimation}`);
-    animated = animated.replace('<g id="consciousness-field"', 
+    animated = animated.replace('<g id="consciousness-field"',
       `<g id="consciousness-field">${pulseAnimation}`);
-    
+
     return animated;
   }
 
@@ -567,27 +567,27 @@ export class GeometryEngine {
   ): string {
     // Modify base mandala with personal resonances
     let mandala = this.generateMandala(elementalState);
-    
+
     if (birthData?.moonPhase) {
       // Add moon phase geometry
       const moonRadius = this.width * 0.05;
       const moonSVG = this.createMoonPhase(birthData.moonPhase, moonRadius);
       mandala = mandala.replace('</svg>', moonSVG + '</svg>');
     }
-    
+
     if (birthData?.numerology) {
       // Add numerological pattern
       const numPattern = this.createNumerologicalPattern(birthData.numerology);
       mandala = mandala.replace('</svg>', numPattern + '</svg>');
     }
-    
+
     return mandala;
   }
 
   private createMoonPhase(phase: string, radius: number): string {
     const cx = this.width * 0.9;
     const cy = this.height * 0.1;
-    
+
     let moonPath = '';
     switch(phase) {
       case 'new_moon':
@@ -597,32 +597,32 @@ export class GeometryEngine {
         moonPath = `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="#FFF" opacity="0.9" />`;
         break;
       case 'first_quarter':
-        moonPath = `<path d="M ${cx} ${cy - radius} A ${radius} ${radius} 0 0 1 ${cx} ${cy + radius} 
-                           A ${radius * 0.5} ${radius} 0 0 0 ${cx} ${cy - radius}" 
+        moonPath = `<path d="M ${cx} ${cy - radius} A ${radius} ${radius} 0 0 1 ${cx} ${cy + radius}
+                           A ${radius * 0.5} ${radius} 0 0 0 ${cx} ${cy - radius}"
                            fill="#FFF" opacity="0.8" />`;
         break;
       default:
         moonPath = `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="#AAA" opacity="0.7" />`;
     }
-    
+
     return `<g id="moon-phase">${moonPath}</g>`;
   }
 
   private createNumerologicalPattern(number: number): string {
     let pattern = '<g id="numerology" opacity="0.15">';
     const angleStep = 360 / number;
-    
+
     for (let i = 0; i < number; i++) {
       const angle = i * angleStep * Math.PI / 180;
       const x1 = this.center[0];
       const y1 = this.center[1];
       const x2 = this.center[0] + this.width * 0.4 * Math.cos(angle);
       const y2 = this.center[1] + this.width * 0.4 * Math.sin(angle);
-      
-      pattern += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" 
+
+      pattern += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
                        stroke="gold" stroke-width="0.5" />`;
     }
-    
+
     pattern += '</g>';
     return pattern;
   }
@@ -658,14 +658,14 @@ export function calculateElementalBalance(memories: any[]): ElementalBalance {
     air: 0,
     aether: 0
   };
-  
+
   memories.forEach(memory => {
     const element = memory.element as keyof ElementalBalance;
     if (element && balance.hasOwnProperty(element)) {
       balance[element] = (balance[element] || 0) + 1;
     }
   });
-  
+
   // Normalize to percentages
   const total = Object.values(balance).reduce((sum, val) => sum + val, 0);
   if (total > 0) {
@@ -674,7 +674,7 @@ export function calculateElementalBalance(memories: any[]): ElementalBalance {
       balance[element] = Math.round(((balance[element] || 0) / total) * 100);
     });
   }
-  
+
   return balance;
 }
 

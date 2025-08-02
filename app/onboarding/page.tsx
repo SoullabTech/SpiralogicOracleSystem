@@ -260,7 +260,7 @@ export default function OnboardingPage() {
             {step === 6 && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Experience & Intentions</h2>
-                
+
                 <div className="mb-6">
                   <p className="opacity-80 mb-4">Your experience level with consciousness work:</p>
                   <div className="space-y-3">
@@ -303,7 +303,7 @@ export default function OnboardingPage() {
               >
                 ← Previous
               </button>
-              
+
               <button
                 onClick={nextStep}
                 disabled={

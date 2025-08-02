@@ -1,11 +1,11 @@
 /**
  * Collective Intelligence Integration Tests
- * 
+ *
  * Comprehensive testing for Phase 3: Collective Intelligence Network (AIN)
  * Tests all four core modules and their integration with Cultural Foundation and Soul Development
  */
 
-import { 
+import {
   interArchetypalDialogueEngine,
   collectiveWisdomSynthesis,
   communityStoryWeavingNetwork,
@@ -22,7 +22,7 @@ import { CulturalProfile } from '../core/cultural/CulturalContextAwareness';
 import { UserInsight, UserInteraction } from '../core/collectiveIntelligence';
 
 describe('Collective Intelligence Integration Tests', () => {
-  
+
   const testCulturalProfile: CulturalProfile = {
     primaryCulture: 'native_american',
     culturalIdentities: ['native_american', 'universal'],
@@ -37,10 +37,10 @@ describe('Collective Intelligence Integration Tests', () => {
   const testUserId = 'collective_test_user_123';
 
   describe('Inter-Archetypal Dialogue Engine', () => {
-    
+
     test('should convene archetypal council with cultural integration', async () => {
       const challenge = 'How can I balance serving my community while honoring my individual growth?';
-      
+
       const councilSession = await interArchetypalDialogueEngine.conveneArchetypalCouncil(
         challenge,
         testUserId,
@@ -62,7 +62,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should facilitate shadow-light dialogue', async () => {
       const challenge = 'I struggle with anger when I see injustice in my community';
-      
+
       const shadowLightDialogue = await interArchetypalDialogueEngine.facilitateShadowLightDialogue(
         testUserId,
         challenge,
@@ -82,7 +82,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should synthesize multi-perspective wisdom', async () => {
       const challenge = 'What is my role in healing ancestral trauma?';
-      
+
       const wisdomSynthesis = await interArchetypalDialogueEngine.synthesizeMultiPerspectiveWisdom(
         testUserId,
         challenge,
@@ -100,7 +100,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should create integration pathway', async () => {
       const challenge = 'How do I step into leadership while staying humble?';
-      
+
       const integrationPathway = await interArchetypalDialogueEngine.createArchetypalIntegrationPathway(
         testUserId,
         challenge,
@@ -118,7 +118,7 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('Collective Wisdom Synthesis', () => {
-    
+
     const testUserInsight: UserInsight = {
       insightId: 'test_insight_123',
       userId: testUserId,
@@ -244,7 +244,7 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('Community Story Weaving Network', () => {
-    
+
     const testCommunityContext = {
       communityId: 'ojibwe_wisdom_circle',
       communityName: 'Ojibwe Wisdom Circle',
@@ -343,7 +343,7 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('AIN Enhancement', () => {
-    
+
     const testUserInteractions: UserInteraction[] = [{
       interactionId: 'test_interaction_123',
       userId: testUserId,
@@ -447,7 +447,7 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('Collective Intelligence Network Integration', () => {
-    
+
     test('should check system readiness', () => {
       const isReady = collectiveIntelligenceNetworkIntegration.isSystemReady();
       expect(isReady).toBe(true);
@@ -467,7 +467,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should process archetypal dialogue query', async () => {
       const userInput = 'How can I integrate my shadow while serving my community?';
-      
+
       const response = await collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
         userInput,
         testUserId,
@@ -486,7 +486,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should process wisdom synthesis query', async () => {
       const userInput = 'I want to share my healing knowledge with the community';
-      
+
       const response = await collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
         userInput,
         testUserId,
@@ -503,7 +503,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should process story weaving query', async () => {
       const userInput = 'I want to weave my dreams into community healing stories';
-      
+
       const response = await collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
         userInput,
         testUserId,
@@ -520,7 +520,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should process consciousness patterns query', async () => {
       const userInput = 'What consciousness patterns are emerging in our community?';
-      
+
       const response = await collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
         userInput,
         testUserId,
@@ -538,7 +538,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should process comprehensive collective intelligence query', async () => {
       const userInput = 'I need guidance for my role in planetary healing and collective evolution';
-      
+
       const response = await collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
         userInput,
         testUserId,
@@ -561,11 +561,11 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('Helper Functions', () => {
-    
+
     test('should process archetypal dialogue with integration helper', async () => {
       const userInput = 'How do I balance warrior and healer energies?';
       const userProfile = { culturalBackground: 'native_american' };
-      
+
       const response = await processArchetypalDialogueWithIntegration(
         userInput,
         testUserId,
@@ -580,7 +580,7 @@ describe('Collective Intelligence Integration Tests', () => {
     test('should process wisdom synthesis with integration helper', async () => {
       const userInput = 'I learned a powerful healing practice from my grandmother';
       const userProfile = { culturalBackground: 'native_american' };
-      
+
       const response = await processWisdomSynthesisWithIntegration(
         userInput,
         testUserId,
@@ -595,7 +595,7 @@ describe('Collective Intelligence Integration Tests', () => {
     test('should process story weaving with integration helper', async () => {
       const userInput = 'My dreams are showing me the healing our land needs';
       const userProfile = { culturalBackground: 'native_american' };
-      
+
       const response = await processStoryWeavingWithIntegration(
         userInput,
         testUserId,
@@ -610,7 +610,7 @@ describe('Collective Intelligence Integration Tests', () => {
     test('should process consciousness patterns with integration helper', async () => {
       const userInput = 'What patterns of awakening are happening globally?';
       const userProfile = { culturalBackground: 'native_american' };
-      
+
       const response = await processConsciousnessPatternWithIntegration(
         userInput,
         testUserId,
@@ -625,7 +625,7 @@ describe('Collective Intelligence Integration Tests', () => {
     test('should process comprehensive collective intelligence helper', async () => {
       const userInput = 'Guide me in my role as a bridge between worlds';
       const userProfile = { culturalBackground: 'native_american' };
-      
+
       const response = await processComprehensiveCollectiveIntelligence(
         userInput,
         testUserId,
@@ -642,10 +642,10 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('Error Handling', () => {
-    
+
     test('should handle invalid user ID gracefully', async () => {
       const invalidUserId = '';
-      
+
       try {
         await interArchetypalDialogueEngine.conveneArchetypalCouncil(
           'test challenge',
@@ -685,10 +685,10 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('Integration with Cultural Foundation and Soul Development', () => {
-    
+
     test('should integrate with cultural context awareness', async () => {
       const userInput = 'I need guidance that honors my ancestral ways';
-      
+
       const response = await collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
         userInput,
         testUserId,
@@ -702,7 +702,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should respect indigenous sovereignty protocols', async () => {
       const userInput = 'I want to share traditional healing knowledge respectfully';
-      
+
       const response = await processWisdomSynthesisWithIntegration(
         userInput,
         testUserId,
@@ -715,7 +715,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should integrate with soul development insights', async () => {
       const userInput = 'How does my shadow work serve the collective healing?';
-      
+
       const response = await processArchetypalDialogueWithIntegration(
         userInput,
         testUserId,
@@ -728,7 +728,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should honor seven generations thinking', async () => {
       const userInput = 'What are my responsibilities to future generations?';
-      
+
       const response = await processConsciousnessPatternWithIntegration(
         userInput,
         testUserId,
@@ -742,10 +742,10 @@ describe('Collective Intelligence Integration Tests', () => {
   });
 
   describe('Planetary Consciousness Integration', () => {
-    
+
     test('should recognize planetary consciousness patterns', async () => {
       const userInput = 'How can I serve the healing of Mother Earth?';
-      
+
       const response = await processComprehensiveCollectiveIntelligence(
         userInput,
         testUserId,
@@ -760,7 +760,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should integrate environmental awareness', async () => {
       const userInput = 'What is my role in environmental stewardship?';
-      
+
       const response = await processConsciousnessPatternWithIntegration(
         userInput,
         testUserId,
@@ -776,7 +776,7 @@ describe('Collective Intelligence Integration Tests', () => {
 
     test('should support species collaboration awareness', async () => {
       const userInput = 'How do I learn from the wisdom of animals and plants?';
-      
+
       const response = await processStoryWeavingWithIntegration(
         userInput,
         testUserId,

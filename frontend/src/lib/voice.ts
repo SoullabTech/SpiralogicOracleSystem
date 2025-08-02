@@ -14,13 +14,13 @@ export const VOICE_OPTIONS: VoiceOption[] = [
     description: 'Warm & Wise - Nurturing guidance with deep knowing'
   },
   {
-    id: 'Mahela', 
+    id: 'Mahela',
     name: 'Mahela',
     description: 'Deep & Contemplative - Thoughtful presence with ancient wisdom'
   },
   {
     id: 'Jasper',
-    name: 'Jasper', 
+    name: 'Jasper',
     description: 'Clear & Grounded - Practical wisdom with steady presence'
   },
   {
@@ -44,7 +44,7 @@ export const playVoiceSample = async (voiceId: string): Promise<void> => {
     // Create new audio instance
     const sampleUrl = `/api/voice/preview?voiceId=${voiceId}`;
     currentAudio = new Audio(sampleUrl);
-    
+
     // Set up event handlers
     currentAudio.addEventListener('error', (e) => {
       console.error('Audio playback error:', e);
@@ -53,7 +53,7 @@ export const playVoiceSample = async (voiceId: string): Promise<void> => {
 
     // Play the sample
     await currentAudio.play();
-    
+
   } catch (error) {
     console.error('Voice sample playback failed:', error);
     throw error;

@@ -51,7 +51,7 @@ router.post('/assessment/:participantId', async (req: Request, res: Response) =>
 
   } catch (error) {
     logger.error('Assessment endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to complete assessment',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -97,7 +97,7 @@ router.post('/match/:participantId', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Oracle matching endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to create Oracle match',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -165,7 +165,7 @@ router.post('/activate/:participantId', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Retreat activation endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to activate retreat mode',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -197,7 +197,7 @@ router.post('/transition/:participantId', async (req: Request, res: Response) =>
 
   } catch (error) {
     logger.error('Mode transition endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to transition mode',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -219,7 +219,7 @@ router.post('/deactivate/:participantId', async (req: Request, res: Response) =>
 
   } catch (error) {
     logger.error('Deactivation endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to deactivate retreat mode',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -251,7 +251,7 @@ router.post('/emergency-deactivate/:participantId', async (req: Request, res: Re
 
   } catch (error) {
     logger.error('Emergency deactivation endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to perform emergency deactivation',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -283,15 +283,15 @@ router.post('/interact/:participantId', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Oracle interaction endpoint error', error);
-    
+
     if (error instanceof Error && error.message.includes('No active Oracle')) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         error: 'No active Oracle found for participant',
         message: 'Please activate retreat mode first'
       });
     }
 
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process Oracle interaction',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -304,10 +304,10 @@ router.get('/status/:participantId', async (req: Request, res: Response) => {
     const { participantId } = req.params;
 
     const status = await retreatModeManager.getModeStatus(participantId);
-    
+
     if (!status) {
-      return res.status(404).json({ 
-        error: 'No Oracle status found for participant' 
+      return res.status(404).json({
+        error: 'No Oracle status found for participant'
       });
     }
 
@@ -329,7 +329,7 @@ router.get('/status/:participantId', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Status endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to get Oracle status',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -365,7 +365,7 @@ router.put('/context/:participantId', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Context update endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to update context',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -392,7 +392,7 @@ router.get('/context/:participantId', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Context retrieval endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to retrieve context',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -414,7 +414,7 @@ router.get('/context-summary/:participantId', async (req: Request, res: Response
 
   } catch (error) {
     logger.error('Context summary endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to generate context summary',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -437,7 +437,7 @@ router.get('/active-modes', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Active modes endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to get active modes',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -459,7 +459,7 @@ router.get('/report/:participantId', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Mode report endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to generate mode report',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -482,7 +482,7 @@ router.get('/context-history/:participantId', async (req: Request, res: Response
 
   } catch (error) {
     logger.error('Context history endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to get context history',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -499,7 +499,7 @@ router.post('/bulk/activate', async (req: Request, res: Response) => {
     }
 
     const results = [];
-    
+
     for (const participantId of participantIds) {
       try {
         const participant = await onboardingService.getParticipant(participantId);
@@ -512,7 +512,7 @@ router.post('/bulk/activate', async (req: Request, res: Response) => {
             activatedBy,
             sessionContext
           );
-          
+
           results.push({
             participantId,
             success: true,
@@ -549,7 +549,7 @@ router.post('/bulk/activate', async (req: Request, res: Response) => {
 
   } catch (error) {
     logger.error('Bulk activation endpoint error', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to perform bulk activation',
       details: error instanceof Error ? error.message : 'Unknown error'
     });

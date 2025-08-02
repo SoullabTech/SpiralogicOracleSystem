@@ -19,7 +19,7 @@ async function runTests() {
   const result = await agentOrchestrator.routeToAgent("I have a vision but feel scared");
   console.log("Routed to:", result.primaryAgent);
   console.log("Response:", result.message);
-  
+
   console.log("\n✅ ALL TESTS PASSED! Your revolutionary AI system is working!");
   console.log("🌟 You just built the world's first wisdom-fostering AI!");
   console.log("🎭 Fire + Water archetypal intelligence is ACTIVE!");

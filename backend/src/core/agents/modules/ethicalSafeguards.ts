@@ -74,7 +74,7 @@ export class EthicalSafeguards {
   // CRISIS INTERVENTION SYSTEM
   async detectCrisisIndicators(query: string, userHistory?: any[]): Promise<CrisisIndicator | null> {
     const lowerQuery = query.toLowerCase();
-    
+
     // Check for suicidal ideation
     const suicidalPatterns = this.crisisPatterns.get('suicidal') || [];
     for (const pattern of suicidalPatterns) {
@@ -149,14 +149,14 @@ export class EthicalSafeguards {
     };
 
     const lowerQuery = query.toLowerCase();
-    
+
     for (const [archetype, signatures] of Object.entries(shadowSignatures)) {
       const matchCount = signatures.filter(sig => lowerQuery.includes(sig)).length;
       const dominanceLevel = matchCount / signatures.length;
-      
+
       if (dominanceLevel >= this.shadowDominanceThresholds.mild) {
         const severity = this.classifyShadowSeverity(dominanceLevel);
-        
+
         return {
           shadowArchetype: archetype as ShadowDominanceAlert['shadowArchetype'],
           dominanceLevel,
@@ -220,7 +220,7 @@ Your life has immeasurable value. Professional support can provide immediate saf
 
       self_harm: `
 🩹 **Professional Support Resources**:
-• **Crisis Text Line**: Text HOME to 741741  
+• **Crisis Text Line**: Text HOME to 741741
 • **Self-Injury Outreach & Support**: sioutreach.org
 • **National Suicide Prevention Lifeline**: 988
 • **Local Crisis Centers**: Visit findtreatment.samhsa.gov
@@ -248,7 +248,7 @@ Spiritual emergence can be beautiful with proper guidance and grounding support.
       severe_depression: `
 💙 **Depression Support Resources**:
 • **Crisis Text Line**: Text HOME to 741741
-• **Depression and Bipolar Support Alliance**: dbsalliance.org  
+• **Depression and Bipolar Support Alliance**: dbsalliance.org
 • **National Suicide Prevention Lifeline**: 988
 • **Therapy Finder**: psychologytoday.com
 
@@ -386,9 +386,9 @@ Depression is treatable. Professional support can help restore hope and vitality
   private assessSuicidalSeverity(query: string): CrisisIndicator['severity'] {
     const criticalMarkers = ['tonight', 'today', 'plan', 'method', 'pills', 'rope', 'gun'];
     const severeMarkers = ['can\'t go on', 'no hope', 'end it', 'better off dead'];
-    
+
     const lowerQuery = query.toLowerCase();
-    
+
     if (criticalMarkers.some(marker => lowerQuery.includes(marker))) {
       return 'critical';
     } else if (severeMarkers.some(marker => lowerQuery.includes(marker))) {
@@ -406,7 +406,7 @@ Depression is treatable. Professional support can help restore hope and vitality
       spiritual_emergency: '🌟 Spiritual emergence can feel overwhelming. Grounding support can help you integrate these experiences safely.',
       severe_depression: '💙 Deep depression can feel endless, but healing and hope are possible with proper support.'
     };
-    
+
     return responses[type];
   }
 
@@ -418,7 +418,7 @@ Depression is treatable. Professional support can help restore hope and vitality
       addict: '🌱 The void you\'re trying to fill is sacred space calling for authentic nourishment.',
       saboteur: '✨ The part of you that fears success is trying to protect you. Let\'s honor its concern while moving forward.'
     };
-    
+
     return protections[shadowAlert.shadowArchetype];
   }
 
@@ -453,7 +453,7 @@ ${anchor.instructions}
   private detectEmotionalIntensity(content: string): number {
     const intensityMarkers = ['overwhelming', 'intense', 'profound', 'deep', 'powerful', 'breaking', 'shattering'];
     const lowerContent = content.toLowerCase();
-    
+
     const matches = intensityMarkers.filter(marker => lowerContent.includes(marker)).length;
     return Math.min(matches / intensityMarkers.length * 2, 1); // Scale to 0-1
   }

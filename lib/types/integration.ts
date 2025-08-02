@@ -1,5 +1,5 @@
 // lib/types/integration.ts
-export type IntegrationStage = 
+export type IntegrationStage =
   | 'initial_insight'
   | 'reflection_gap'
   | 'reality_application'

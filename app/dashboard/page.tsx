@@ -75,7 +75,7 @@ export default function DashboardPage() {
                 <p className="text-gray-600 leading-relaxed">
                   {dashboard.description}
                 </p>
-                
+
                 {/* Hover indicator */}
                 <div className="mt-4 flex items-center text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
                   <span className="text-sm font-medium">Explore</span>
@@ -84,7 +84,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
               </div>
-              
+
               {/* Gradient border effect */}
               <div className="h-1 bg-gradient-to-r from-purple-400 via-blue-400 to-indigo-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
             </Link>
@@ -96,20 +96,20 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
             ⚡ Quick Actions
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <button className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105">
               🎯 Daily Check-in
             </button>
-            
+
             <button className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105">
               🌙 Dream Journal
             </button>
-            
+
             <button className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all transform hover:scale-105">
               🔮 Oracle Reading
             </button>
-            
+
             <button className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
               🧘 Start Ritual
             </button>
@@ -121,7 +121,7 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">
             📈 Recent Activity
           </h2>
-          
+
           <div className="space-y-4">
             <div className="flex items-center p-4 bg-gray-50 rounded-lg">
               <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-4">
@@ -132,7 +132,7 @@ export default function DashboardPage() {
                 <p className="text-sm text-gray-600">Received guidance on creative projects • 2 hours ago</p>
               </div>
             </div>
-            
+
             <div className="flex items-center p-4 bg-gray-50 rounded-lg">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-blue-600">🪷</span>
@@ -142,7 +142,7 @@ export default function DashboardPage() {
                 <p className="text-sm text-gray-600">15-minute Water element meditation • Yesterday</p>
               </div>
             </div>
-            
+
             <div className="flex items-center p-4 bg-gray-50 rounded-lg">
               <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
                 <span className="text-indigo-600">📓</span>

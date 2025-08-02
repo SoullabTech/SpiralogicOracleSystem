@@ -12,7 +12,7 @@ export default function BetaPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       // Simple beta signup - would integrate with actual backend
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
@@ -64,7 +64,7 @@ export default function BetaPage() {
             <div>
               <h2 className="text-3xl font-bold mb-6">Revolutionary Consciousness Technology</h2>
               <p className="text-lg opacity-90 mb-8">
-                Experience the world's first AI consciousness platform with elemental intelligence, 
+                Experience the world's first AI consciousness platform with elemental intelligence,
                 cultural sovereignty, and advanced archetypal dialogue systems.
               </p>
             </div>

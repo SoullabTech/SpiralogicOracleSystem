@@ -38,14 +38,14 @@ router.post('/register', async (req: Request, res: Response) => {
   try {
     const validation = registrationSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid registration data', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid registration data',
+        details: validation.error.format()
       });
     }
 
     const data = validation.data;
-    
+
     const participant = await retreatOnboardingService.initializeOnboarding(
       data.email,
       data.firstName,
@@ -67,7 +67,7 @@ router.post('/register', async (req: Request, res: Response) => {
     });
   } catch (error) {
     logger.error('Retreat registration failed', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Registration failed',
       message: 'Please try again or contact support'
     });
@@ -100,9 +100,9 @@ router.post('/:participantId/current-state', async (req: Request, res: Response)
   try {
     const validation = currentStateSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid state data', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid state data',
+        details: validation.error.format()
       });
     }
 
@@ -127,9 +127,9 @@ router.post('/:participantId/intentions', async (req: Request, res: Response) =>
   try {
     const validation = intentionsSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid intentions data', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid intentions data',
+        details: validation.error.format()
       });
     }
 
@@ -214,10 +214,10 @@ router.get('/:participantId/daily-guidance/:day', async (req: Request, res: Resp
   try {
     const { participantId, day } = req.params;
     const dayNumber = parseInt(day);
-    
+
     // Get participant
     const progress = await retreatOnboardingService.getParticipantProgress(participantId);
-    
+
     if (!progress.participant) {
       return res.status(404).json({ error: 'Participant not found' });
     }
@@ -230,7 +230,7 @@ router.get('/:participantId/daily-guidance/:day', async (req: Request, res: Resp
       'Vision Quest and Future Self',
       'Integration and Sacred Closing'
     ];
-    
+
     const theme = dailyThemes[dayNumber - 1] || 'Deep Presence';
 
     // Get guidance from founder

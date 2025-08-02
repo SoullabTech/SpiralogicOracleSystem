@@ -236,7 +236,7 @@ describe('DivinationAgent', () => {
 
     test('daily divination rotates methods based on day', async () => {
       const results: string[] = [];
-      
+
       // Get multiple daily readings (simulating different days)
       for (let i = 0; i < 5; i++) {
         const result = await divinationAgent.getDailyDivination();
@@ -305,7 +305,7 @@ describe('DivinationAgent', () => {
   describe('Response Structure Validation', () => {
     test('all readings include required fields', async () => {
       const methods: Array<DivinationQuery['method']> = ['tarot', 'iching', 'yijing', 'astro'];
-      
+
       for (const method of methods) {
         const query: DivinationQuery = {
           method,
@@ -349,7 +349,7 @@ describe('DivinationAgent', () => {
   describe('Performance', () => {
     test('readings complete within reasonable time', async () => {
       const startTime = Date.now();
-      
+
       const query: DivinationQuery = {
         method: 'unified',
         query: 'Performance test query',
@@ -357,7 +357,7 @@ describe('DivinationAgent', () => {
       };
 
       await divinationAgent.performDivination(query);
-      
+
       const duration = Date.now() - startTime;
       expect(duration).toBeLessThan(5000); // Should complete within 5 seconds
     });

@@ -1,10 +1,10 @@
 /**
  * Cross-Cultural Archetype Mapping System
- * 
+ *
  * Maps universal elemental archetypes to their cultural expressions across
  * different wisdom traditions, ensuring respectful and accurate representation
  * of diverse cultural perspectives on consciousness development.
- * 
+ *
  * Features:
  * - Universal-to-cultural archetype translation
  * - Cultural role systems integration
@@ -145,7 +145,7 @@ export class CrossCulturalArchetypeMapping {
     element: string,
     userCulturalBackground: string
   ): Promise<Map<string, CulturalArchetypeExpression>> {
-    
+
     const availableExpressions = new Map<string, CulturalArchetypeExpression>();
 
     for (const [cultureName, culturalSystem] of this.culturalSystems) {
@@ -175,7 +175,7 @@ export class CrossCulturalArchetypeMapping {
     targetCulture: string,
     userBackground: string
   ): Promise<{adaptedGuidance: string; culturalContext: string}> {
-    
+
     const translationRequest: ArchetypeTranslationRequest = {
       sourceElement: element,
       targetCulture,
@@ -185,7 +185,7 @@ export class CrossCulturalArchetypeMapping {
     };
 
     const translation = await this.translateArchetype(translationRequest);
-    
+
     if (!translation.permitted || !translation.culturalExpression) {
       return {
         adaptedGuidance: originalGuidance,
@@ -194,27 +194,27 @@ export class CrossCulturalArchetypeMapping {
     }
 
     const culturalExpression = translation.culturalExpression;
-    
+
     // Adapt guidance language
     let adaptedGuidance = originalGuidance;
-    
+
     // Replace universal terms with cultural equivalents
     adaptedGuidance = adaptedGuidance.replace(
       new RegExp(`${element} energy`, 'gi'),
       `${culturalExpression.culturalName} energy`
     );
-    
+
     adaptedGuidance = adaptedGuidance.replace(
       new RegExp(`${element} element`, 'gi'),
       culturalExpression.traditionalRole
     );
 
     // Add cultural framing
-    const culturalFraming = translation.respectfulFraming ? 
+    const culturalFraming = translation.respectfulFraming ?
       `\n\n${translation.respectfulFraming}` : '';
 
     // Add cultural qualities
-    const culturalQualities = culturalExpression.sacredQualities.length > 0 ? 
+    const culturalQualities = culturalExpression.sacredQualities.length > 0 ?
       `\n\nIn ${targetCulture} tradition, this energy embodies: ${culturalExpression.sacredQualities.slice(0, 3).join(', ')}.` : '';
 
     return {
@@ -228,7 +228,7 @@ export class CrossCulturalArchetypeMapping {
    */
   private async checkCulturalProtocols(request: ArchetypeTranslationRequest): Promise<ArchetypeTranslationResult> {
     const culturalSystem = this.culturalSystems.get(request.targetCulture);
-    
+
     if (!culturalSystem) {
       return { permitted: true }; // Unknown cultures default to permitted
     }
@@ -250,7 +250,7 @@ export class CrossCulturalArchetypeMapping {
       };
 
       const protocolResult = await indigenousSovereigntyProtocol.evaluateWisdomRequest(wisdomRequest);
-      
+
       if (!protocolResult.permitted) {
         return {
           permitted: false,
@@ -271,7 +271,7 @@ export class CrossCulturalArchetypeMapping {
     culturalSystem: CulturalArchetypeSystem,
     expression: CulturalArchetypeExpression
   ): Promise<string> {
-    
+
     const framings = {
       open: `Drawing inspiration from ${culturalSystem.traditionName} wisdom traditions, we honor the ${expression.culturalName} archetype.`,
       restricted: `With deep respect for ${culturalSystem.traditionName} traditions, we explore the ${expression.culturalName} wisdom.`,
@@ -279,9 +279,9 @@ export class CrossCulturalArchetypeMapping {
     };
 
     const baseFraming = framings[culturalSystem.protectionLevel] || framings.open;
-    
+
     // Add attribution if required
-    const attribution = culturalSystem.properAttribution ? 
+    const attribution = culturalSystem.properAttribution ?
       `\n\n*${culturalSystem.properAttribution}*` : '';
 
     return baseFraming + attribution;
@@ -294,9 +294,9 @@ export class CrossCulturalArchetypeMapping {
     culturalSystem: CulturalArchetypeSystem,
     expression: CulturalArchetypeExpression
   ): string {
-    
+
     let guidance = `This wisdom comes from ${culturalSystem.traditionName} traditions. `;
-    
+
     if (expression.appropriateUse.length > 0) {
       guidance += `Appropriate contexts include: ${expression.appropriateUse.join(', ')}. `;
     }
@@ -319,7 +319,7 @@ export class CrossCulturalArchetypeMapping {
     culturalSystem: CulturalArchetypeSystem,
     expression: CulturalArchetypeExpression
   ): string {
-    
+
     let context = '';
 
     if (expression.seasonalAssociation) {
@@ -358,7 +358,7 @@ export class CrossCulturalArchetypeMapping {
     request: ArchetypeTranslationRequest,
     culturalSystem: CulturalArchetypeSystem
   ): ArchetypeTranslationResult {
-    
+
     // Check if additional roles might match
     if (culturalSystem.additionalRoles) {
       const matchingRole = culturalSystem.additionalRoles.find(role =>
@@ -574,11 +574,11 @@ export class CrossCulturalArchetypeMapping {
     // Create quick reference matrix for common translations
     for (const [cultureName, culturalSystem] of this.culturalSystems) {
       const cultureMatrix = new Map<string, string>();
-      
+
       for (const [element, expression] of culturalSystem.elementalCorrespondences) {
         cultureMatrix.set(element, expression.culturalName);
       }
-      
+
       this.translationMatrix.set(cultureName, cultureMatrix);
     }
 

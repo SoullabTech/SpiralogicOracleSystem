@@ -6,17 +6,17 @@ export interface RetreatParticipant {
   firstName: string;
   lastName: string;
   preferredName?: string;
-  
+
   // Onboarding Status
   onboardingStatus: 'registered' | 'welcomed' | 'oracle_assigned' | 'intentions_set' | 'completed';
   welcomedAt?: Date;
   oracleAssignedAt?: Date;
-  
+
   // Personal Oracle Assignment
   personalOracleId?: string;
   oracleElement?: 'fire' | 'water' | 'earth' | 'air' | 'aether';
   oracleArchetype?: string;
-  
+
   // Intentions & State
   currentState?: {
     emotionalTone: string;
@@ -24,14 +24,14 @@ export interface RetreatParticipant {
     primaryChallenge?: string;
     seekingGuidanceOn?: string[];
   };
-  
+
   retreatIntentions?: {
     primaryIntention: string;
     secondaryIntentions?: string[];
     desiredOutcomes: string[];
     openToExploring?: string[];
   };
-  
+
   // Elemental Profile
   elementalProfile?: {
     fire: number;
@@ -41,7 +41,7 @@ export interface RetreatParticipant {
     aether: number;
     dominantElement: string;
   };
-  
+
   // Retreat Details
   retreatId: string;
   arrivalDate: Date;
@@ -49,7 +49,7 @@ export interface RetreatParticipant {
   accommodationType?: string;
   dietaryRestrictions?: string[];
   specialNeeds?: string[];
-  
+
   // Metadata
   createdAt: Date;
   updatedAt: Date;
@@ -65,12 +65,12 @@ export interface RetreatSession {
   maxParticipants: number;
   currentParticipants: number;
   status: 'upcoming' | 'active' | 'completed';
-  
+
   // Retreat Theme
   theme: string;
   description: string;
   guidingQuestions: string[];
-  
+
   // Schedule
   dailySchedule?: {
     day: number;
@@ -82,14 +82,14 @@ export interface RetreatSession {
       isOptional?: boolean;
     }>;
   }[];
-  
+
   // Facilitators
   facilitators: Array<{
     name: string;
     role: string;
     bio?: string;
   }>;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -100,21 +100,21 @@ export interface OnboardingFlow {
   completedSteps: OnboardingStep[];
   startedAt: Date;
   lastUpdatedAt: Date;
-  
+
   // Step Data
   welcomeData?: {
     personalMessage?: string;
     videoWatched?: boolean;
     agreedToGuidelines?: boolean;
   };
-  
+
   oracleAssignment?: {
     assignedElement: string;
     assignedArchetype: string;
     introductionMessage: string;
     firstGuidance?: string;
   };
-  
+
   intentionData?: {
     capturedAt: Date;
     reviewedByFounder?: boolean;
@@ -122,7 +122,7 @@ export interface OnboardingFlow {
   };
 }
 
-export type OnboardingStep = 
+export type OnboardingStep =
   | 'welcome'
   | 'retreat_overview'
   | 'personal_info'

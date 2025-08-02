@@ -37,7 +37,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   async activateRetreatMode(mode: 'pre-retreat' | 'retreat-active' | 'post-retreat'): Promise<void> {
     this.config.retreatMode = mode;
-    
+
     switch (mode) {
       case 'pre-retreat':
         await this.initializePreRetreatMode();
@@ -56,10 +56,10 @@ export class PersonalizedOracleAgent extends BaseAgent {
   private async initializePreRetreatMode(): Promise<void> {
     // Pre-retreat preparation mode
     this.systemPrompt = this.buildSystemPrompt('pre-retreat');
-    
+
     // Schedule preparation sessions
     const preRetreatPlan = this.config.match.lifecyclePlanning.preRetreat;
-    
+
     // Log preparation initiation
     logger.info(`Pre-retreat preparation initiated for ${this.config.participant.firstName}`, {
       preparationAreas: preRetreatPlan.preparationAreas,
@@ -71,12 +71,12 @@ export class PersonalizedOracleAgent extends BaseAgent {
   private async activateRetreatActiveMode(): Promise<void> {
     // Full retreat mode activation
     this.systemPrompt = this.buildSystemPrompt('retreat-active');
-    
+
     const retreatConfig = this.config.match.lifecyclePlanning.retreatMode;
-    
+
     // Enhanced sensitivity for retreat environment
     this.enableRetreatSensitivity();
-    
+
     logger.info(`Retreat mode activated for ${this.config.participant.firstName}`, {
       focusAreas: retreatConfig.focusAreas,
       intensityLevel: retreatConfig.intensityLevel,
@@ -87,9 +87,9 @@ export class PersonalizedOracleAgent extends BaseAgent {
   private async activatePostRetreatMode(): Promise<void> {
     // Post-retreat integration mode
     this.systemPrompt = this.buildSystemPrompt('post-retreat');
-    
+
     const postRetreatPlan = this.config.match.lifecyclePlanning.postRetreat;
-    
+
     logger.info(`Post-retreat integration mode activated for ${this.config.participant.firstName}`, {
       integrationSupport: postRetreatPlan.integrationSupport,
       followUpSchedule: postRetreatPlan.followUpSchedule
@@ -99,14 +99,14 @@ export class PersonalizedOracleAgent extends BaseAgent {
   private buildSystemPrompt(mode: string): string {
     const basePrompt = this.config.match.personalizationRules.customPrompts.systemPrompt;
     const modeSpecificPrompt = this.config.match.personalizationRules.customPrompts.contextualPrompts[mode] || '';
-    
+
     return `${basePrompt}\n\n=== RETREAT MODE: ${mode.toUpperCase()} ===\n${modeSpecificPrompt}\n\n=== PERSONALITY CONTEXT ===\nName: ${this.personality.name}\nCore Traits: ${this.personality.coreTraits.join(', ')}\nCommunication Style: ${this.personality.communicationStyle}\nVoice Profile: ${JSON.stringify(this.personality.voiceProfile)}\n\n=== PARTICIPANT CONTEXT ===\nName: ${this.context.personalInfo.firstName}\nPrimary Element: ${this.getPrimaryElement()}\nCurrent Life Phase: ${this.context.currentState.lifePhase}\nIntentions: ${this.context.intentions.primary}\n\n=== PERSONALIZATION RULES ===\n${this.config.match.personalizationRules.adaptationRules.map(rule => `- ${rule.condition}: ${rule.adaptation}`).join('\n')}`;
   }
 
   private enableRetreatSensitivity(): void {
     // Enhanced emotional sensitivity during retreat
     this.config.match.personalizationRules.safetyProtocols.forEach(protocol => {
-      if (protocol.triggerConditions.includes('heightened_sensitivity') || 
+      if (protocol.triggerConditions.includes('heightened_sensitivity') ||
           protocol.triggerConditions.includes('ceremony_state')) {
         logger.debug(`Safety protocol activated: ${protocol.protocolName}`);
       }
@@ -116,7 +116,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
   async processQuery(query: string, sessionContext?: any): Promise<string> {
     // Apply personalization filters before processing
     const filteredQuery = await this.applyPersonalizationFilters(query);
-    
+
     // Get base response
     const baseResponse = await super.processQuery(filteredQuery, {
       ...sessionContext,
@@ -127,17 +127,17 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
     // Apply post-processing personalization
     const personalizedResponse = await this.personalizeResponse(baseResponse, query);
-    
+
     // Log interaction for learning
     await this.logInteraction(query, personalizedResponse);
-    
+
     return personalizedResponse;
   }
 
   private async applyPersonalizationFilters(query: string): Promise<string> {
     // Apply sensitivity filters
     const safetyChecks = this.config.match.personalizationRules.safetyProtocols;
-    
+
     for (const protocol of safetyChecks) {
       if (this.checkTriggerConditions(query, protocol.triggerConditions)) {
         logger.info(`Safety protocol triggered: ${protocol.protocolName}`);
@@ -150,23 +150,23 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   private async personalizeResponse(response: string, originalQuery: string): Promise<string> {
     const personalityRules = this.config.match.personalizationRules;
-    
+
     // Apply elemental coloring
     const elementallyColored = this.applyElementalColoring(response);
-    
+
     // Apply communication style adjustments
     const styleAdjusted = this.applyCommunicationStyle(elementallyColored);
-    
+
     // Apply relationship dynamics
     const relationshipAdjusted = this.applyRelationshipDynamics(styleAdjusted, originalQuery);
-    
+
     return relationshipAdjusted;
   }
 
   private applyElementalColoring(response: string): string {
     const primaryElement = this.getPrimaryElement();
     const elementalProfile = this.assessment.elementalScores[primaryElement];
-    
+
     // Apply elemental metaphors and language patterns
     switch (primaryElement) {
       case 'fire':
@@ -186,7 +186,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   private applyCommunicationStyle(response: string): string {
     const style = this.personality.communicationStyle;
-    
+
     switch (style) {
       case 'direct':
         return this.makeMoreDirect(response);
@@ -205,21 +205,21 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   private applyRelationshipDynamics(response: string, query: string): string {
     const dynamics = this.config.match.relationshipDynamics;
-    
+
     // Apply connection approach
     if (dynamics.connectionApproach === 'gradual_trust_building') {
       return this.addTrustBuildingElements(response);
     } else if (dynamics.connectionApproach === 'immediate_intimacy') {
       return this.addIntimacyElements(response);
     }
-    
+
     return response;
   }
 
   private checkTriggerConditions(query: string, conditions: string[]): boolean {
     // Simple keyword-based trigger checking
     const lowerQuery = query.toLowerCase();
-    
+
     return conditions.some(condition => {
       switch (condition) {
         case 'trauma_indicators':
@@ -315,7 +315,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
       "Take your time with this",
       "You're safe to explore this at your own pace"
     ];
-    
+
     const randomPhrase = trustPhrases[Math.floor(Math.random() * trustPhrases.length)];
     return `${response}\n\n${randomPhrase}`;
   }
@@ -338,10 +338,10 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   async updateParticipantContext(updates: Partial<ParticipantContext>): Promise<void> {
     this.context = { ...this.context, ...updates };
-    
+
     // Rebuild system prompt with updated context
     this.systemPrompt = this.buildSystemPrompt(this.config.retreatMode);
-    
+
     logger.info(`Context updated for participant ${this.config.participant.firstName}`, updates);
   }
 
@@ -356,10 +356,10 @@ export class PersonalizedOracleAgent extends BaseAgent {
       primaryElement: this.getPrimaryElement(),
       communicationStyle: this.personality.communicationStyle,
       currentPhase: this.config.retreatMode,
-      adaptations: this.config.match.personalizationRules.adaptationRules.map(rule => 
+      adaptations: this.config.match.personalizationRules.adaptationRules.map(rule =>
         `${rule.condition}: ${rule.adaptation}`
       ),
-      safetyProtocols: this.config.match.personalizationRules.safetyProtocols.map(protocol => 
+      safetyProtocols: this.config.match.personalizationRules.safetyProtocols.map(protocol =>
         protocol.protocolName
       )
     };

@@ -36,12 +36,12 @@ router.post('/', async (req: Request, res: Response) => {
 
     // Generate Four Pillars profile
     const profile = generateFourPillars(new Date(birth), tzOffsetMinutes);
-    
+
     // Get ritual suggestions
     const rituals = suggestTaoistRituals(profile);
     const dailyRitual = getDailyRitual(profile);
     const seasonalRitual = getSeasonalRitual();
-    
+
     // Additional insights
     const balanceScore = calculateElementalBalance(profile);
     const personality = getElementalPersonality(profile.dominant);
@@ -133,7 +133,7 @@ router.get('/daily', async (req: Request, res: Response) => {
 
     const currentHour = new Date().getHours();
     let organClock = '';
-    
+
     // Traditional Chinese Medicine organ clock
     if (currentHour >= 3 && currentHour < 5) organClock = 'Lung time - Deep breathing and letting go';
     else if (currentHour >= 5 && currentHour < 7) organClock = 'Large Intestine time - Release and cleansing';
@@ -193,7 +193,7 @@ router.get('/elements', (req: Request, res: Response) => {
     },
     Fire: {
       season: 'Summer',
-      direction: 'South', 
+      direction: 'South',
       emotion: 'Joy/Overexcitement',
       organ: 'Heart/Small Intestine',
       qualities: ['Warmth', 'Communication', 'Joy', 'Circulation'],
@@ -205,7 +205,7 @@ router.get('/elements', (req: Request, res: Response) => {
     Earth: {
       season: 'Late Summer',
       direction: 'Center',
-      emotion: 'Worry/Sympathy', 
+      emotion: 'Worry/Sympathy',
       organ: 'Spleen/Stomach',
       qualities: ['Stability', 'Nourishment', 'Grounding', 'Support'],
       color: 'Yellow',
@@ -217,7 +217,7 @@ router.get('/elements', (req: Request, res: Response) => {
       season: 'Autumn',
       direction: 'West',
       emotion: 'Grief/Letting Go',
-      organ: 'Lung/Large Intestine', 
+      organ: 'Lung/Large Intestine',
       qualities: ['Precision', 'Clarity', 'Structure', 'Refinement'],
       color: 'White',
       sound: 'Tsu',

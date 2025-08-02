@@ -16,7 +16,7 @@ describe('Oracle Onboarding Flow', () => {
     });
 
     if (error) throw error;
-    
+
     authToken = data.session?.access_token || '';
     userId = data.user?.id || '';
   });
@@ -28,7 +28,7 @@ describe('Oracle Onboarding Flow', () => {
         .from('oracle_preferences')
         .delete()
         .eq('user_id', userId);
-      
+
       await supabase
         .from('memory_items')
         .delete()
@@ -45,7 +45,7 @@ describe('Oracle Onboarding Flow', () => {
       expect(response.body).toHaveProperty('voices');
       expect(Array.isArray(response.body.voices)).toBe(true);
       expect(response.body.voices.length).toBeGreaterThan(0);
-      
+
       // Check voice structure
       const voice = response.body.voices[0];
       expect(voice).toHaveProperty('id');
@@ -200,7 +200,7 @@ describe('Oracle Onboarding Flow', () => {
 
       expect(memoryItems).toBeTruthy();
       expect(memoryItems?.length).toBeGreaterThan(0);
-      
+
       const memoryItem = memoryItems?.[0];
       expect(memoryItem?.title).toBe('Oracle Configuration');
       expect(memoryItem?.content).toContain('MemoryTestOracle');

@@ -104,7 +104,7 @@ export class AntiCommodificationService {
       'perfect alignment': 'explore greater harmony while accepting imperfection'
     };
 
-    return replacements[transformationPhrase.toLowerCase() as keyof typeof replacements] || 
+    return replacements[transformationPhrase.toLowerCase() as keyof typeof replacements] ||
            'support your human development process';
   }
 

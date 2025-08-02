@@ -66,13 +66,13 @@ export const memoryService = {
     metadata?: any
   ): Promise<MemoryItem | null> => {
     const symbols = extractSymbolicTags(content, sourceAgent || 'oracle');
-    
+
     // Extract themes from content
     const themes = extractThemesFromContent(content.toLowerCase());
-    
+
     // Check for spiritual keywords
     const spiritualKeywords = detectSpiritualKeywords(content);
-    
+
     // Enhanced metadata with pattern recognition
     const enhancedMetadata = {
       ...metadata,
@@ -103,11 +103,11 @@ export const memoryService = {
       console.error('Error storing memory:', error.message);
       return null;
     }
-    
+
     // After storing, check for emerging patterns
     const recentMemories = await memoryService.recall(userId, { userId, limit: 50 });
     const patterns = await checkForEmergingPatterns(recentMemories, data as MemoryItem);
-    
+
     if (patterns.length > 0) {
       // Store pattern alerts for the oracle agents to use
       await supabase
@@ -206,7 +206,7 @@ export const memoryService = {
   // Get memory insights for a user
   getMemoryInsights: async (userId: string): Promise<any> => {
     const memories = await memoryService.recall(userId);
-    
+
     const elementCounts = memories.reduce((acc, memory) => {
       const element = memory.element || 'unknown';
       acc[element] = (acc[element] || 0) + 1;
@@ -260,10 +260,10 @@ export const memoryService = {
     memories.forEach(memory => {
       const content = memory.content.toLowerCase();
       const symbols = memory.metadata?.symbols || [];
-      
+
       Object.entries(themePatterns).forEach(([themeName, keywords]) => {
-        const found = keywords.some(keyword => 
-          content.includes(keyword) || 
+        const found = keywords.some(keyword =>
+          content.includes(keyword) ||
           symbols.some((symbol: string) => symbol.toLowerCase().includes(keyword))
         );
 
@@ -283,7 +283,7 @@ export const memoryService = {
             existing.evolution.push(`${memory.timestamp}: ${content.substring(0, 100)}...`);
           }
           existing.relatedSymbols = Array.from(new Set([...existing.relatedSymbols, ...symbols]));
-          
+
           themes.set(themeName, existing);
         }
       });
@@ -297,7 +297,7 @@ export const memoryService = {
   // Detect symbolic synchronicities
   detectSynchronicities: async (memories: MemoryItem[]): Promise<SymbolicSynchronicity[]> => {
     const symbolOccurrences: Map<string, SymbolicSynchronicity> = new Map();
-    
+
     // Sacred symbols to track
     const sacredSymbols = [
       'phoenix', 'serpent', 'lotus', 'rose', 'cross', 'spiral', 'mandala',
@@ -312,7 +312,7 @@ export const memoryService = {
     memories.forEach(memory => {
       const content = memory.content.toLowerCase();
       const memorySymbols = memory.metadata?.symbols || [];
-      
+
       sacredSymbols.forEach(symbol => {
         if (content.includes(symbol) || memorySymbols.some((s: string) => s.toLowerCase().includes(symbol))) {
           const existing = symbolOccurrences.get(symbol) || {
@@ -341,10 +341,10 @@ export const memoryService = {
         // Detect pattern timing
         const dates = sync.occurrences.map(o => new Date(o.date));
         sync.pattern = detectTimingPattern(dates);
-        
+
         // Determine significance based on frequency and context
         sync.significance = determineSymbolicSignificance(sync);
-        
+
         return sync;
       })
       .sort((a, b) => b.occurrences.length - a.occurrences.length);
@@ -353,7 +353,7 @@ export const memoryService = {
   // Extract mystical insights from memory patterns
   extractMysticalInsights: async (memories: MemoryItem[]): Promise<MysticalInsight[]> => {
     const insights: MysticalInsight[] = [];
-    
+
     // Pattern recognition for mystical insights
     const insightPatterns = [
       {
@@ -432,14 +432,14 @@ function extractThemesFromContent(content: string): string[] {
 
 function detectTimingPattern(dates: Date[]): string {
   if (dates.length < 2) return 'singular';
-  
-  const intervals = dates.slice(1).map((date, i) => 
+
+  const intervals = dates.slice(1).map((date, i) =>
     date.getTime() - dates[i].getTime()
   );
-  
+
   const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
   const dayInMs = 24 * 60 * 60 * 1000;
-  
+
   if (avgInterval < dayInMs) return 'intense_clustering';
   if (avgInterval < 7 * dayInMs) return 'weekly_rhythm';
   if (avgInterval < 28 * dayInMs) return 'lunar_cycle';
@@ -451,7 +451,7 @@ function determineSymbolicSignificance(sync: SymbolicSynchronicity): string {
   const count = sync.occurrences.length;
   const elementDiversity = new Set(sync.occurrences.map(o => o.element)).size;
   const hasIntenseClustering = sync.pattern === 'intense_clustering';
-  
+
   if (count >= 7 && elementDiversity >= 3) {
     return 'Major archetypal activation - this symbol is a primary guide';
   }
@@ -469,15 +469,15 @@ function determineSymbolicSignificance(sync: SymbolicSynchronicity): string {
 
 function detectAdvancedMysticalPatterns(memories: MemoryItem[]): MysticalInsight[] {
   const insights: MysticalInsight[] = [];
-  
+
   // Elemental progression patterns
   const elementalJourney = memories
     .filter(m => m.element)
     .map(m => m.element);
-    
-  if (elementalJourney.includes('fire') && 
-      elementalJourney.includes('water') && 
-      elementalJourney.includes('earth') && 
+
+  if (elementalJourney.includes('fire') &&
+      elementalJourney.includes('water') &&
+      elementalJourney.includes('earth') &&
       elementalJourney.includes('air')) {
     insights.push({
       insight: 'You have journeyed through all elements - integration into Aether consciousness is available',
@@ -489,14 +489,14 @@ function detectAdvancedMysticalPatterns(memories: MemoryItem[]): MysticalInsight
   }
 
   // Dark night to dawn pattern
-  const darkNightMemories = memories.filter(m => 
-    m.content.toLowerCase().includes('dark') || 
+  const darkNightMemories = memories.filter(m =>
+    m.content.toLowerCase().includes('dark') ||
     m.content.toLowerCase().includes('lost') ||
     m.content.toLowerCase().includes('despair')
   );
-  
-  const dawnMemories = memories.filter(m => 
-    m.content.toLowerCase().includes('light') || 
+
+  const dawnMemories = memories.filter(m =>
+    m.content.toLowerCase().includes('light') ||
     m.content.toLowerCase().includes('hope') ||
     m.content.toLowerCase().includes('breakthrough')
   );
@@ -504,7 +504,7 @@ function detectAdvancedMysticalPatterns(memories: MemoryItem[]): MysticalInsight
   if (darkNightMemories.length > 0 && dawnMemories.length > 0) {
     const lastDark = new Date(darkNightMemories[darkNightMemories.length - 1].timestamp);
     const firstLight = dawnMemories.find(m => new Date(m.timestamp) > lastDark);
-    
+
     if (firstLight) {
       insights.push({
         insight: 'Dark night of the soul completed - dawn of new consciousness emerging',
@@ -537,30 +537,30 @@ export const getRelevantMemories = async (
   limit: number = 10
 ): Promise<MemoryItem[]> => {
   const memories = await memoryService.recall(userId, { userId, limit });
-  
+
   // Simple relevance filtering if query provided
   if (query) {
     const queryLower = query.toLowerCase();
-    return memories.filter(memory => 
+    return memories.filter(memory =>
       memory.content.toLowerCase().includes(queryLower) ||
-      (memory.metadata?.symbols && memory.metadata.symbols.some((symbol: string) => 
+      (memory.metadata?.symbols && memory.metadata.symbols.some((symbol: string) =>
         symbol.toLowerCase().includes(queryLower)
       ))
     );
   }
-  
+
   return memories;
 };
 
 export const getAggregatedWisdom = async (userId: string): Promise<string[]> => {
   const memories = await memoryService.recall(userId);
-  
+
   // Extract key insights from memories
   const wisdom = memories
     .filter(memory => memory.confidence && memory.confidence > 0.7)
     .map(memory => memory.content)
     .slice(0, 20); // Top 20 high-confidence memories
-    
+
   return wisdom;
 };
 
@@ -572,22 +572,22 @@ export const getSpiritualPatternInsights = async (userId: string): Promise<{
   elementalBalance: Record<string, number>;
 }> => {
   const insights = await memoryService.getMemoryInsights(userId);
-  
+
   // Extract active themes
   const activeThemes = insights.spiritualThemes
     ?.filter((theme: SpiritualTheme) => theme.frequency >= 3)
     .map((theme: SpiritualTheme) => theme.name) || [];
-  
+
   // Current synchronicities
   const currentSynchronicities = insights.synchronicities
     ?.filter((sync: SymbolicSynchronicity) => sync.pattern === 'intense_clustering')
     .map((sync: SymbolicSynchronicity) => `${sync.symbol}: ${sync.significance}`) || [];
-  
+
   // Emerging insights
   const emergingInsights = insights.mysticalInsights
     ?.filter((insight: MysticalInsight) => insight.depth === 'emerging' || insight.depth === 'deep')
     .map((insight: MysticalInsight) => insight.insight) || [];
-  
+
   return {
     activeThemes,
     currentSynchronicities,
@@ -677,7 +677,7 @@ function calculateMoonPhase(): string {
   let year = now.getFullYear();
   let month = now.getMonth() + 1;
   const day = now.getDate();
-  
+
   // Using a simplified algorithm - for production, use a proper astronomical library
   let c, e, jd, b;
   if (month < 3) {
@@ -691,10 +691,10 @@ function calculateMoonPhase(): string {
   b = Math.floor(jd); // int(jd) -> b, take integer part of jd
   jd -= b; // subtract integer part to leave fractional part of original jd
   b = Math.round(jd * 8); // scale fraction from 0-8 and round
-  
-  const phases = ['new_moon', 'waxing_crescent', 'first_quarter', 'waxing_gibbous', 
+
+  const phases = ['new_moon', 'waxing_crescent', 'first_quarter', 'waxing_gibbous',
                   'full_moon', 'waning_gibbous', 'last_quarter', 'waning_crescent'];
-  
+
   return phases[b % 8];
 }
 
@@ -702,7 +702,7 @@ function getCurrentSeasonalEnergy(): string {
   const now = new Date();
   const month = now.getMonth();
   const day = now.getDate();
-  
+
   // Northern hemisphere seasons with energetic qualities
   if ((month === 11 && day >= 21) || month === 0 || month === 1 || (month === 2 && day < 20)) {
     return 'winter_introspection';
@@ -717,20 +717,20 @@ function getCurrentSeasonalEnergy(): string {
 
 async function checkForEmergingPatterns(memories: MemoryItem[], newMemory: MemoryItem): Promise<Array<{type: string, data: any}>> {
   const patterns: Array<{type: string, data: any}> = [];
-  
+
   // Check for symbol repetition in last 7 days
   const weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
-  
+
   const recentSymbols = memories
     .filter(m => new Date(m.timestamp) > weekAgo)
     .flatMap(m => m.metadata?.symbols || []);
-    
+
   const symbolCounts = recentSymbols.reduce((acc, symbol) => {
     acc[symbol] = (acc[symbol] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-  
+
   // Alert if any symbol appears 3+ times in a week
   Object.entries(symbolCounts).forEach(([symbol, count]) => {
     if ((count as number) >= 3) {
@@ -740,7 +740,7 @@ async function checkForEmergingPatterns(memories: MemoryItem[], newMemory: Memor
       });
     }
   });
-  
+
   // Check for elemental imbalance
   const elementCounts = memories
     .filter(m => m.element)
@@ -748,7 +748,7 @@ async function checkForEmergingPatterns(memories: MemoryItem[], newMemory: Memor
       acc[m.element!] = (acc[m.element!] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-    
+
   const totalElemental = Object.values(elementCounts).reduce((a, b) => a + b, 0);
   Object.entries(elementCounts).forEach(([element, count]) => {
     const percentage = (count / totalElemental) * 100;
@@ -759,18 +759,18 @@ async function checkForEmergingPatterns(memories: MemoryItem[], newMemory: Memor
       });
     }
   });
-  
+
   // Check for spiritual emergence patterns
   const spiritualKeywords = memories
     .flatMap(m => m.metadata?.spiritualKeywords || []);
-    
+
   if (spiritualKeywords.filter(k => k === 'awakening').length >= 3) {
     patterns.push({
       type: 'awakening_process',
       data: { stage: 'active', intensity: 'high' }
     });
   }
-  
+
   return patterns;
 }
 

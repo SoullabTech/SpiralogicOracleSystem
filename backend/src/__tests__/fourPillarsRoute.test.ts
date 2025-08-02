@@ -12,7 +12,7 @@ describe('Four Pillars API Routes', () => {
     test('returns Four Pillars profile for valid birth date', async () => {
       const response = await request(app)
         .post('/api/astrology/four-pillars')
-        .send({ 
+        .send({
           birth: '2000-01-01T12:00:00Z',
           tzOffsetMinutes: 0
         });
@@ -22,18 +22,18 @@ describe('Four Pillars API Routes', () => {
       expect(response.body).toHaveProperty('profile');
       expect(response.body).toHaveProperty('rituals');
       expect(response.body).toHaveProperty('insights');
-      
+
       // Verify profile structure
       const { profile } = response.body;
       expect(profile).toHaveProperty('year');
-      expect(profile).toHaveProperty('month'); 
+      expect(profile).toHaveProperty('month');
       expect(profile).toHaveProperty('day');
       expect(profile).toHaveProperty('hour');
       expect(profile).toHaveProperty('elementTally');
       expect(profile).toHaveProperty('dominant');
       expect(profile).toHaveProperty('deficient');
       expect(profile).toHaveProperty('hexagram');
-      
+
       // Verify insights structure
       const { insights } = response.body;
       expect(insights).toHaveProperty('balanceScore');
@@ -41,7 +41,7 @@ describe('Four Pillars API Routes', () => {
       expect(insights).toHaveProperty('affirmations');
       expect(insights).toHaveProperty('dailyRitual');
       expect(insights).toHaveProperty('seasonalRitual');
-      
+
       // Verify rituals is an array
       expect(Array.isArray(response.body.rituals)).toBe(true);
     });
@@ -59,7 +59,7 @@ describe('Four Pillars API Routes', () => {
     test('handles invalid birth date format', async () => {
       const response = await request(app)
         .post('/api/astrology/four-pillars')
-        .send({ 
+        .send({
           birth: 'invalid-date'
         });
 
@@ -70,7 +70,7 @@ describe('Four Pillars API Routes', () => {
     test('uses default timezone offset when not provided', async () => {
       const response = await request(app)
         .post('/api/astrology/four-pillars')
-        .send({ 
+        .send({
           birth: '1990-06-15T14:30:00Z'
         });
 
@@ -81,21 +81,21 @@ describe('Four Pillars API Routes', () => {
     test('handles different timezone offsets', async () => {
       const response1 = await request(app)
         .post('/api/astrology/four-pillars')
-        .send({ 
+        .send({
           birth: '1990-06-15T14:30:00Z',
           tzOffsetMinutes: 0
         });
 
       const response2 = await request(app)
         .post('/api/astrology/four-pillars')
-        .send({ 
+        .send({
           birth: '1990-06-15T14:30:00Z',
           tzOffsetMinutes: 480 // +8 hours
         });
 
       expect(response1.status).toBe(200);
       expect(response2.status).toBe(200);
-      
+
       // Profiles should potentially be different due to timezone
       expect(response1.body.success).toBe(true);
       expect(response2.body.success).toBe(true);
@@ -106,7 +106,7 @@ describe('Four Pillars API Routes', () => {
     test('generates ritual sequence for valid input', async () => {
       const response = await request(app)
         .post('/api/astrology/four-pillars/ritual-sequence')
-        .send({ 
+        .send({
           birth: '1985-09-22T08:15:00Z',
           duration: 30
         });
@@ -116,7 +116,7 @@ describe('Four Pillars API Routes', () => {
       expect(response.body).toHaveProperty('sequence');
       expect(response.body).toHaveProperty('totalDuration');
       expect(response.body).toHaveProperty('profile');
-      
+
       expect(Array.isArray(response.body.sequence)).toBe(true);
       expect(typeof response.body.totalDuration).toBe('number');
       expect(response.body.totalDuration).toBeLessThanOrEqual(30);
@@ -125,7 +125,7 @@ describe('Four Pillars API Routes', () => {
     test('handles missing birth date in ritual sequence', async () => {
       const response = await request(app)
         .post('/api/astrology/four-pillars/ritual-sequence')
-        .send({ 
+        .send({
           duration: 20
         });
 
@@ -137,7 +137,7 @@ describe('Four Pillars API Routes', () => {
     test('uses default duration when not provided', async () => {
       const response = await request(app)
         .post('/api/astrology/four-pillars/ritual-sequence')
-        .send({ 
+        .send({
           birth: '1992-12-03T16:45:00Z'
         });
 
@@ -151,7 +151,7 @@ describe('Four Pillars API Routes', () => {
     test('returns daily guidance for valid birth date', async () => {
       const response = await request(app)
         .get('/api/astrology/four-pillars/daily')
-        .query({ 
+        .query({
           birth: '1988-04-10T11:30:00Z'
         });
 
@@ -159,7 +159,7 @@ describe('Four Pillars API Routes', () => {
       expect(response.body.success).toBe(true);
       expect(response.body).toHaveProperty('dailyGuidance');
       expect(response.body).toHaveProperty('profile');
-      
+
       const { dailyGuidance } = response.body;
       expect(dailyGuidance).toHaveProperty('dailyRitual');
       expect(dailyGuidance).toHaveProperty('seasonalRitual');
@@ -180,7 +180,7 @@ describe('Four Pillars API Routes', () => {
     test('handles timezone offset in daily guidance', async () => {
       const response = await request(app)
         .get('/api/astrology/four-pillars/daily')
-        .query({ 
+        .query({
           birth: '1993-07-25T20:00:00Z',
           tzOffsetMinutes: -300 // -5 hours
         });
@@ -199,10 +199,10 @@ describe('Four Pillars API Routes', () => {
       expect(response.body.success).toBe(true);
       expect(response.body).toHaveProperty('elements');
       expect(response.body).toHaveProperty('cycles');
-      
+
       const { elements } = response.body;
       const expectedElements = ['Wood', 'Fire', 'Earth', 'Metal', 'Water'];
-      
+
       expectedElements.forEach(element => {
         expect(elements).toHaveProperty(element);
         expect(elements[element]).toHaveProperty('season');
@@ -213,7 +213,7 @@ describe('Four Pillars API Routes', () => {
         expect(elements[element]).toHaveProperty('color');
         expect(elements[element]).toHaveProperty('sound');
       });
-      
+
       expect(response.body.cycles).toHaveProperty('generation');
       expect(response.body.cycles).toHaveProperty('destruction');
     });
@@ -225,7 +225,7 @@ describe('Four Pillars API Routes', () => {
       // For now, just verify the route exists
       const response = await request(app)
         .post('/api/astrology/four-pillars')
-        .send({ 
+        .send({
           birth: '2000-01-01T12:00:00Z'
         });
 

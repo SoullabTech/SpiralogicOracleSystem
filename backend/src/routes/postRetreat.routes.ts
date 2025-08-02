@@ -11,7 +11,7 @@ const router = Router();
 const transformationUpdateSchema = z.object({
   participantId: z.string().uuid(),
   retreatId: z.string().uuid(),
-  
+
   currentState: z.object({
     overallWellbeing: z.number().min(1).max(10),
     emotionalClarity: z.number().min(1).max(10),
@@ -19,7 +19,7 @@ const transformationUpdateSchema = z.object({
     lifeAlignment: z.number().min(1).max(10),
     shadowIntegration: z.number().min(1).max(10)
   }),
-  
+
   transformations: z.object({
     implemented: z.array(z.object({
       area: z.string(),
@@ -39,7 +39,7 @@ const transformationUpdateSchema = z.object({
       readinessLevel: z.number().min(1).max(10)
     }))
   }),
-  
+
   practices: z.object({
     dailyPractices: z.array(z.string()),
     weeklyPractices: z.array(z.string()),
@@ -49,20 +49,20 @@ const transformationUpdateSchema = z.object({
       balance: z.number().min(1).max(10)
     })
   }),
-  
+
   challenges: z.array(z.object({
     type: z.string(),
     description: z.string(),
     impactLevel: z.number().min(1).max(10),
     resourcesNeeded: z.array(z.string()).optional()
   })).optional(),
-  
+
   celebrations: z.array(z.object({
     achievement: z.string(),
     date: z.string().datetime(),
     significance: z.string()
   })).optional(),
-  
+
   oracleQuestions: z.array(z.string()).optional()
 });
 
@@ -99,19 +99,19 @@ router.post('/transformation/update', async (req: Request, res: Response) => {
   try {
     const validation = transformationUpdateSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid transformation data', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid transformation data',
+        details: validation.error.format()
       });
     }
 
     const update = await postRetreatService.recordTransformationUpdate(validation.data);
-    
+
     // Analyze transformation patterns
     const analysis = await postRetreatService.analyzeTransformationJourney(
       validation.data.participantId
     );
-    
+
     // Get personalized guidance
     const guidance = await postRetreatService.generateIntegrationGuidance(
       validation.data.participantId,
@@ -138,7 +138,7 @@ router.get('/transformation/timeline/:participantId', async (req: Request, res: 
   try {
     const { participantId } = req.params;
     const { retreatId } = req.query;
-    
+
     const timeline = await postRetreatService.getTransformationTimeline(
       participantId,
       retreatId as string
@@ -165,10 +165,10 @@ router.get('/transformation/timeline/:participantId', async (req: Request, res: 
 router.post('/oracle/guidance', async (req: Request, res: Response) => {
   try {
     const { participantId, context, question, lifeArea } = req.body;
-    
+
     // Get participant's retreat data and current state
     const retreatContext = await postRetreatService.getParticipantRetreatContext(participantId);
-    
+
     // Generate contextual guidance
     const guidance = await postRetreatService.generateSacredGuidance({
       participantId,
@@ -203,7 +203,7 @@ router.post('/oracle/guidance', async (req: Request, res: Response) => {
 router.post('/oracle/schedule-checkin', async (req: Request, res: Response) => {
   try {
     const { participantId, frequency, preferredTime, focusAreas } = req.body;
-    
+
     const schedule = await postRetreatService.scheduleOracleCheckIns({
       participantId,
       frequency, // weekly, biweekly, monthly
@@ -228,20 +228,20 @@ router.post('/milestone/record', async (req: Request, res: Response) => {
   try {
     const validation = milestoneSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid milestone data', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid milestone data',
+        details: validation.error.format()
       });
     }
 
     const milestone = await postRetreatService.recordMilestone(validation.data);
-    
+
     // Generate celebration message
     const celebration = await postRetreatService.generateCelebration(
       validation.data.participantId,
       milestone
     );
-    
+
     // Share with community if requested
     if (validation.data.shareWithCommunity) {
       await postRetreatService.shareWithAlumniCommunity(milestone);
@@ -265,7 +265,7 @@ router.get('/milestones/:participantId', async (req: Request, res: Response) => 
   try {
     const { participantId } = req.params;
     const { type, limit = 20 } = req.query;
-    
+
     const milestones = await postRetreatService.getMilestones(participantId, {
       type: type as string,
       limit: parseInt(limit as string)
@@ -291,7 +291,7 @@ router.get('/milestones/:participantId', async (req: Request, res: Response) => 
 router.post('/challenge/support', async (req: Request, res: Response) => {
   try {
     const { participantId, challengeType, description, currentApproaches, desiredOutcome } = req.body;
-    
+
     // Get tailored support based on retreat learnings
     const support = await postRetreatService.generateChallengeSupport({
       participantId,
@@ -327,17 +327,17 @@ router.post('/wisdom/contribute', async (req: Request, res: Response) => {
   try {
     const validation = wisdomContributionSchema.safeParse(req.body);
     if (!validation.success) {
-      return res.status(400).json({ 
-        error: 'Invalid wisdom contribution', 
-        details: validation.error.format() 
+      return res.status(400).json({
+        error: 'Invalid wisdom contribution',
+        details: validation.error.format()
       });
     }
 
     const wisdom = await wisdomKeeperService.addWisdom(validation.data);
-    
+
     // Index for searchability
     await wisdomKeeperService.indexWisdom(wisdom);
-    
+
     // Notify relevant community members
     if (validation.data.accessibility !== 'private') {
       await wisdomKeeperService.notifyRelevantMembers(wisdom);
@@ -359,7 +359,7 @@ router.post('/wisdom/contribute', async (req: Request, res: Response) => {
 router.get('/wisdom/search', async (req: Request, res: Response) => {
   try {
     const { query, element, type, tags, participantId } = req.query;
-    
+
     const results = await wisdomKeeperService.searchWisdom({
       query: query as string,
       element: element as string,
@@ -389,7 +389,7 @@ router.get('/wisdom/search', async (req: Request, res: Response) => {
 router.get('/wisdom/personal/:participantId', async (req: Request, res: Response) => {
   try {
     const { participantId } = req.params;
-    
+
     const collection = await wisdomKeeperService.getPersonalCollection(participantId);
 
     res.json({
@@ -412,7 +412,7 @@ router.get('/wisdom/personal/:participantId', async (req: Request, res: Response
 router.get('/integration/reminders/:participantId', async (req: Request, res: Response) => {
   try {
     const { participantId } = req.params;
-    
+
     const reminders = await postRetreatService.getIntegrationReminders(participantId);
 
     res.json({
@@ -434,7 +434,7 @@ router.get('/community/alumni/:retreatId', async (req: Request, res: Response) =
   try {
     const { retreatId } = req.params;
     const { element, interests } = req.query;
-    
+
     const community = await postRetreatService.getAlumniCommunity(retreatId, {
       element: element as string,
       interests: interests ? (interests as string).split(',') : undefined
@@ -459,7 +459,7 @@ router.get('/transformation/annual-review/:participantId', async (req: Request, 
   try {
     const { participantId } = req.params;
     const { year } = req.query;
-    
+
     const review = await postRetreatService.generateAnnualReview(
       participantId,
       parseInt(year as string) || new Date().getFullYear()
@@ -487,15 +487,15 @@ router.get('/transformation/annual-review/:participantId', async (req: Request, 
 router.get('/anniversary/:participantId', async (req: Request, res: Response) => {
   try {
     const { participantId } = req.params;
-    
+
     const anniversary = await postRetreatService.checkRetreatAnniversary(participantId);
-    
+
     if (anniversary.isAnniversary) {
       const message = await postRetreatService.generateAnniversaryMessage(
         participantId,
         anniversary
       );
-      
+
       res.json({
         isAnniversary: true,
         yearsElapsed: anniversary.years,

@@ -29,7 +29,7 @@ async function quickTest() {
   // Test message
   const testMessage = "I'm feeling overwhelmed by all these changes in my life";
   console.log(`📤 User: "${testMessage}"`);
-  
+
   const response = await oracle.respondToPrompt(testMessage);
   console.log(`📥 Oracle: "${response}"\n`);
 
@@ -38,7 +38,7 @@ async function quickTest() {
 
   // Check memory
   const memories = await soulMemory.retrieveMemories(userId, { limit: 1 });
-  
+
   if (memories.length > 0) {
     console.log('✅ Memory stored successfully!');
     console.log('📊 Memory details:');
@@ -57,7 +57,7 @@ async function quickTest() {
 
   // Cleanup
   await soulMemory.closeDatabase();
-  
+
   // Clean up test file
   const fs = require('fs');
   if (fs.existsSync('./quick_test_soul_memory.db')) {

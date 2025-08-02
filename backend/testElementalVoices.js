@@ -69,11 +69,11 @@ function createTestOutputDir() {
 
 async function generateSingleVoice(role, text, outputPath, profileOverride = null) {
   const profile = profileOverride || profiles[role];
-  
+
   if (!profile) {
     throw new Error(`Profile not found for role: ${role}`);
   }
-  
+
   const styledText = `${profile.promptMarkers} ${text}`;
   const promptData = {
     text: styledText,
@@ -89,40 +89,40 @@ async function generateSingleVoice(role, text, outputPath, profileOverride = nul
 
   try {
     const wrapperPath = path.join(__dirname, "external/csm/voiceWrapper.py");
-    
+
     if (USE_FALLBACK_ONLY || !fs.existsSync(wrapperPath)) {
       if (USE_FALLBACK_ONLY) {
         console.log("🔄 Using fallback mode (TEST_FALLBACK=true)");
       } else {
         console.log("⚠️  Sesame wrapper not found, using fallback");
       }
-      
+
       // Simulate voice generation with mock fallback
       const mockAudioPath = path.join(path.dirname(outputPath), `fallback_${path.basename(outputPath)}`);
-      
+
       // Create a mock audio file to simulate successful generation
       require('fs').writeFileSync(mockAudioPath, Buffer.from('mock audio data'));
-      
+
       const duration = 1500; // Simulate 1.5 second generation time
       console.log(`✅ Success via ElevenLabs fallback! (${duration}ms)`);
       return { success: true, outputPath: mockAudioPath, duration, fileSize: 1000 };
     }
-    
+
     const startTime = Date.now();
     // Properly escape JSON for shell
     const jsonInput = JSON.stringify(promptData).replace(/'/g, "'\"'\"'");
-    
+
     // Use virtual environment python if it exists, otherwise fall back to system python
     const venvPython = path.join(__dirname, ".venv/bin/python");
     const pythonCmd = fs.existsSync(venvPython) ? venvPython : "python3";
-    
+
     const result = execSync(
       `"${pythonCmd}" "${wrapperPath}" '${jsonInput}'`,
       { encoding: 'utf8', timeout: 30000 }
     ).toString().trim();
-    
+
     const duration = Date.now() - startTime;
-    
+
     // Check if file was created
     if (fs.existsSync(outputPath)) {
       const stats = fs.statSync(outputPath);
@@ -131,7 +131,7 @@ async function generateSingleVoice(role, text, outputPath, profileOverride = nul
     } else {
       throw new Error("Audio file was not created");
     }
-    
+
   } catch (error) {
     console.error(`❌ Error with ${role}: ${error.message}`);
     return { success: false, error: error.message };
@@ -141,33 +141,33 @@ async function generateSingleVoice(role, text, outputPath, profileOverride = nul
 async function testBasicVoices() {
   console.log("🌀 Testing Basic Elemental Voices");
   console.log("==================================\n");
-  
+
   const outputDir = createTestOutputDir();
   const results = [];
-  
+
   for (const [role, text] of Object.entries(testLines)) {
     const outputPath = path.join(outputDir, `${role}_basic.wav`);
     const result = await generateSingleVoice(role, text, outputPath);
     results.push({ role, type: 'basic', ...result });
     console.log(); // Add spacing
   }
-  
+
   return results;
 }
 
 async function testExtendedVoices() {
   console.log("🎭 Testing Extended Voice Personalities");
   console.log("======================================\n");
-  
+
   const outputDir = createTestOutputDir();
   const results = [];
-  
+
   for (const [role, texts] of Object.entries(extendedTestLines)) {
     for (const [index, text] of texts.entries()) {
       const outputPath = path.join(outputDir, `${role}_extended_${index + 1}.wav`);
       const result = await generateSingleVoice(role, text, outputPath);
       results.push({ role, type: 'extended', index, ...result });
-      
+
       // Brief pause between generations
       if (index < texts.length - 1) {
         console.log("   ⏳ Brief pause...\n");
@@ -175,14 +175,14 @@ async function testExtendedVoices() {
     }
     console.log(); // Add spacing between roles
   }
-  
+
   return results;
 }
 
 async function testMatrixOracleConversation() {
   console.log("🔮 Testing Matrix Oracle Conversation");
   console.log("====================================\n");
-  
+
   const outputDir = createTestOutputDir();
   const conversation = [
     "You already know what I'm going to say, don't you?",
@@ -192,59 +192,59 @@ async function testMatrixOracleConversation() {
     "And don't worry about the vase.",
     "There's a difference between knowing the path and walking the path."
   ];
-  
+
   const results = [];
-  
+
   for (const [index, text] of conversation.entries()) {
     const outputPath = path.join(outputDir, `matrix_oracle_${index + 1}.wav`);
     const result = await generateSingleVoice('oracle_matrix', text, outputPath);
     results.push({ role: 'oracle_matrix', type: 'conversation', index, ...result });
-    
+
     if (index < conversation.length - 1) {
       console.log("   ⏳ Oracle pause...\n");
     }
   }
-  
+
   return results;
 }
 
 function generateTestReport(allResults) {
   console.log("📊 Voice Generation Test Report");
   console.log("===============================\n");
-  
+
   const successful = allResults.filter(r => r.success);
   const failed = allResults.filter(r => !r.success);
-  
+
   console.log(`✅ Successful generations: ${successful.length}/${allResults.length}`);
   console.log(`❌ Failed generations: ${failed.length}/${allResults.length}`);
-  
+
   if (successful.length > 0) {
     const avgTime = successful.reduce((sum, r) => sum + r.duration, 0) / successful.length;
     const totalSize = successful.reduce((sum, r) => sum + (r.fileSize || 0), 0);
     console.log(`⏱️  Average generation time: ${avgTime.toFixed(0)}ms`);
     console.log(`📁 Total audio generated: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
   }
-  
+
   // Group by role
   const byRole = {};
   successful.forEach(r => {
     if (!byRole[r.role]) byRole[r.role] = [];
     byRole[r.role].push(r);
   });
-  
+
   console.log("\n🎭 By Voice Profile:");
   Object.entries(byRole).forEach(([role, results]) => {
     const avgTime = results.reduce((sum, r) => sum + r.duration, 0) / results.length;
     console.log(`   ${role}: ${results.length} files, avg ${avgTime.toFixed(0)}ms`);
   });
-  
+
   if (failed.length > 0) {
     console.log("\n❌ Failed Generations:");
     failed.forEach(r => {
       console.log(`   ${r.role}: ${r.error}`);
     });
   }
-  
+
   console.log(`\n📁 Audio files saved to: ${path.join(__dirname, "test_outputs")}`);
 }
 
@@ -257,7 +257,7 @@ function playAudioFile(filePath) {
       'paplay',  // Linux PulseAudio
       'play'     // SOX
     ];
-    
+
     for (const cmd of commands) {
       try {
         execSync(`which ${cmd}`, { stdio: 'ignore' });
@@ -275,26 +275,26 @@ function playAudioFile(filePath) {
 
 function interactivePlayback() {
   const outputDir = path.join(__dirname, "test_outputs");
-  
+
   if (!fs.existsSync(outputDir)) {
     console.log("❌ No test outputs found. Run voice generation first.");
     return;
   }
-  
+
   const audioFiles = fs.readdirSync(outputDir)
     .filter(f => f.endsWith('.wav'))
     .sort();
-  
+
   if (audioFiles.length === 0) {
     console.log("❌ No audio files found in test_outputs/");
     return;
   }
-  
+
   console.log("🔊 Available Audio Files:");
   audioFiles.forEach((file, index) => {
     console.log(`   ${index + 1}. ${file}`);
   });
-  
+
   console.log("\nTo play a file, run:");
   console.log("afplay test_outputs/[filename]  # macOS");
   console.log("aplay test_outputs/[filename]   # Linux");
@@ -303,7 +303,7 @@ function interactivePlayback() {
 // Main execution
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--help') || args.includes('-h')) {
     console.log("Usage:");
     console.log("  node testElementalVoices.js [options]");
@@ -317,14 +317,14 @@ async function main() {
     console.log("  --help        Show this help");
     return;
   }
-  
+
   if (args.includes('--play')) {
     interactivePlayback();
     return;
   }
-  
+
   let allResults = [];
-  
+
   if (args.includes('--basic')) {
     allResults = await testBasicVoices();
   } else if (args.includes('--extended')) {
@@ -338,7 +338,7 @@ async function main() {
     const matrixResults = await testMatrixOracleConversation();
     allResults = [...basicResults, ...extendedResults, ...matrixResults];
   }
-  
+
   generateTestReport(allResults);
 }
 

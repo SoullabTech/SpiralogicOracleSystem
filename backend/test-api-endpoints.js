@@ -50,52 +50,52 @@ async function testEndpoint(method, path) {
 
 async function runTests() {
   console.log('🔌 Testing server connection...');
-  
+
   // Test basic health endpoint first
   const healthTest = await testEndpoint('GET', '/health');
-  
+
   if (healthTest.status === 'ERROR') {
     console.log('❌ Server not running. Please start the server first:');
     console.log('   cd backend && npm run start');
     return;
   }
-  
+
   if (healthTest.status === 200) {
     console.log('✅ Server is responding\\n');
   } else {
     console.log(`⚠️ Server responding with status: ${healthTest.status}\\n`);
   }
-  
+
   // Test each endpoint
   for (const endpoint of testEndpoints) {
     const [method, path] = endpoint.split(' ');
     console.log(`Testing: ${endpoint}`);
-    
+
     const result = await testEndpoint(method, path);
-    
+
     if (result.status === 'ERROR') {
       console.log(`❌ ${result.error}`);
     } else if (result.status === 200) {
       try {
         const data = JSON.parse(result.data);
         console.log(`✅ Status ${result.status} - ${data.success ? 'Success' : 'Response received'}`);
-        
+
         // Show relevant data
         if (data.memories) console.log(`   📊 ${data.memories.length} memories`);
         if (data.sacredMoments) console.log(`   ✨ ${data.sacredMoments.length} sacred moments`);
         if (data.patterns) console.log(`   🎭 ${data.patterns.length} archetypal patterns`);
         if (data.journey) console.log(`   🌟 Journey phase: ${data.journey.currentPhase}`);
-        
+
       } catch (e) {
         console.log(`✅ Status ${result.status} - Response received`);
       }
     } else {
       console.log(`⚠️ Status ${result.status}`);
     }
-    
+
     console.log('');
   }
-  
+
   console.log('🔗 Manual API Test Commands:');
   console.log('curl http://localhost:3001/health');
   console.log('curl http://localhost:3001/api/soul-memory/health');

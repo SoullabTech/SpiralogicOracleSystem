@@ -185,7 +185,7 @@ const AstrologicalHoloflowerVisualization = ({ userId, birthData, showPlanetaryI
           color: white;
           position: relative;
         }
-        
+
         .controls {
           display: flex;
           gap: 15px;
@@ -193,7 +193,7 @@ const AstrologicalHoloflowerVisualization = ({ userId, birthData, showPlanetaryI
           align-items: center;
           z-index: 10;
         }
-        
+
         .controls button {
           padding: 8px 16px;
           background: #2a2a3e;
@@ -203,13 +203,13 @@ const AstrologicalHoloflowerVisualization = ({ userId, birthData, showPlanetaryI
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .controls button.active,
         .controls button:hover {
           background: #3a3a4e;
           transform: translateY(-2px);
         }
-        
+
         .house-details-panel {
           position: absolute;
           top: 100px;
@@ -223,42 +223,42 @@ const AstrologicalHoloflowerVisualization = ({ userId, birthData, showPlanetaryI
           overflow-y: auto;
           box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
         }
-        
+
         .house-details-panel h2 {
           margin: 0 0 5px 0;
           color: #FFD700;
           font-size: 24px;
         }
-        
+
         .house-details-panel h3 {
           margin: 0 0 20px 0;
           color: #87CEEB;
           font-size: 18px;
           font-weight: normal;
         }
-        
+
         .detail-section {
           margin-bottom: 20px;
           padding-bottom: 20px;
           border-bottom: 1px solid rgba(255, 215, 0, 0.2);
         }
-        
+
         .detail-section:last-child {
           border-bottom: none;
         }
-        
+
         .detail-section h4 {
           margin: 0 0 10px 0;
           color: #FFD700;
           font-size: 16px;
         }
-        
+
         .detail-section p {
           margin: 5px 0;
           font-size: 14px;
           line-height: 1.6;
         }
-        
+
         .detail-section strong {
           color: #87CEEB;
         }

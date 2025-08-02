@@ -1,5 +1,5 @@
 // Frontend configuration for API endpoints
-export const API_BASE_URL = process.env.NODE_ENV === 'production' 
+export const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? 'https://soullab-backend.onrender.com' // Replace with your actual backend URL
   : 'http://localhost:3001'; // Local development backend
 
@@ -32,7 +32,7 @@ export const apiClient = {
     }
     return response.json();
   },
-  
+
   post: async (endpoint: string, data?: any) => {
     const response = await fetch(createApiUrl(endpoint), {
       method: 'POST',

@@ -72,7 +72,7 @@ export class CalendarIntegrationService {
   private calendlyApiKey: string;
   private msGraphToken: string;
   private googleCalendarToken: string;
-  
+
   constructor() {
     this.calendlyApiKey = process.env.CALENDLY_API_KEY || '';
     this.msGraphToken = process.env.MS_GRAPH_TOKEN || '';
@@ -97,7 +97,7 @@ export class CalendarIntegrationService {
           }
         }
       );
-      
+
       // Save webhook config
       await supabase
         .from('calendar_integrations')
@@ -106,7 +106,7 @@ export class CalendarIntegrationService {
           calendly_webhook_active: true
         })
         .eq('facilitator_id', facilitatorId);
-      
+
       return response.data;
     } catch (error) {
       console.error('Error setting up Calendly webhook:', error);
@@ -116,27 +116,27 @@ export class CalendarIntegrationService {
 
   public async handleCalendlyWebhook(data: CalendlyWebhook, facilitatorId: string) {
     const { event, payload } = data;
-    
+
     if (event === 'invitee.created') {
       // New booking created
       const calendarEvent = await this.convertCalendlyToEvent(payload);
-      
+
       // Match to existing participant or create new
       const participant = await this.matchOrCreateParticipant(
         payload.invitee.email,
         payload.invitee.name,
         facilitatorId
       );
-      
+
       // Create session record
       await this.createSessionRecord(calendarEvent, participant.id, facilitatorId);
-      
+
       // Generate prep notes
       await this.generateSessionPrep(calendarEvent, participant);
-      
+
       // Schedule reminders
       await this.scheduleSessionReminders(calendarEvent, facilitatorId);
-      
+
       // Send confirmation with sacred prep
       await this.sendSacredSessionConfirmation(calendarEvent, participant);
     } else if (event === 'invitee.canceled') {
@@ -175,12 +175,12 @@ export class CalendarIntegrationService {
           // ... other OAuth params
         }
       );
-      
+
       this.msGraphToken = tokenResponse.data.access_token;
-      
+
       // Subscribe to calendar notifications
       await this.subscribeMSCalendarNotifications(facilitatorId);
-      
+
       return { success: true };
     } catch (error) {
       console.error('Error setting up MS Teams:', error);
@@ -205,7 +205,7 @@ export class CalendarIntegrationService {
         }
       }
     );
-    
+
     await supabase
       .from('calendar_integrations')
       .update({
@@ -231,16 +231,16 @@ export class CalendarIntegrationService {
           }
         }
       );
-      
+
       const events: MSTeamsEvent[] = response.data.value;
-      
+
       for (const msEvent of events) {
         const calendarEvent = await this.convertMSTeamsToEvent(msEvent);
-        
+
         // Process each event
         await this.processCalendarEvent(calendarEvent, facilitatorId);
       }
-      
+
       return events.length;
     } catch (error) {
       console.error('Error syncing MS Teams calendar:', error);
@@ -293,20 +293,20 @@ export class CalendarIntegrationService {
       recentBreakthroughs: [],
       currentChallenges: []
     };
-    
+
     // Get participant's recent activity
     const recentActivity = await this.getParticipantRecentActivity(participant.id);
-    
+
     // Get their holoflower state
     const holoflowerState = await this.getParticipantHoloflower(participant.id);
-    
+
     // Generate prep based on their journey
     prep.prepNotes.push(
       `${participant.name} is in ${recentActivity.transformationStage} stage`,
       `Primary element: ${participant.primaryElement}`,
       `Last session focus: ${recentActivity.lastSessionFocus}`
     );
-    
+
     // Generate suggested questions based on their active houses
     if (holoflowerState.activeHouses.includes(7)) {
       prep.suggestedQuestions.push(
@@ -314,10 +314,10 @@ export class CalendarIntegrationService {
         'What patterns are you noticing in your partnerships?'
       );
     }
-    
+
     // Check for recent breakthroughs
     prep.recentBreakthroughs = recentActivity.breakthroughs;
-    
+
     // Save prep notes
     await supabase
       .from('session_prep')
@@ -328,7 +328,7 @@ export class CalendarIntegrationService {
         prep_data: prep,
         created_at: new Date()
       });
-    
+
     return prep;
   }
 
@@ -336,7 +336,7 @@ export class CalendarIntegrationService {
   private async scheduleSessionReminders(event: CalendarEvent, facilitatorId: string) {
     const facilitatorSettings = await this.getFacilitatorSettings(facilitatorId);
     const reminderTimes = this.calculateReminderTimes(event, facilitatorSettings);
-    
+
     for (const reminderTime of reminderTimes) {
       await supabase
         .from('smart_reminders')
@@ -356,14 +356,14 @@ export class CalendarIntegrationService {
   private calculateReminderTimes(event: CalendarEvent, settings: any) {
     const reminders = [];
     const sessionTime = event.start.getTime();
-    
+
     // 24 hours before
     reminders.push({
       time: new Date(sessionTime - 24 * 60 * 60 * 1000),
       priority: 'gentle',
       message: `Tomorrow: ${event.participants[0].name} at ${event.start.toLocaleTimeString()}`
     });
-    
+
     // Morning of
     const morningOf = new Date(event.start);
     morningOf.setHours(9, 0, 0, 0);
@@ -374,21 +374,21 @@ export class CalendarIntegrationService {
         message: `Today: ${event.participants[0].name} - Review prep notes`
       });
     }
-    
+
     // 2 hours before
     reminders.push({
       time: new Date(sessionTime - 2 * 60 * 60 * 1000),
       priority: 'interrupt',
       message: `Upcoming: ${event.participants[0].name} in 2 hours - ${settings.prepReminder}`
     });
-    
+
     // 30 minutes before
     reminders.push({
       time: new Date(sessionTime - 30 * 60 * 1000),
       priority: 'interrupt',
       message: `Starting soon: ${event.participants[0].name} - ${event.meetingLink ? 'Join link ready' : 'Prepare space'}`
     });
-    
+
     return reminders;
   }
 
@@ -396,7 +396,7 @@ export class CalendarIntegrationService {
   private async processCalendarEvent(event: CalendarEvent, facilitatorId: string) {
     // Check if it's a client session
     const participant = await this.matchEventToParticipant(event);
-    
+
     if (participant) {
       // It's a client session
       await this.createSessionRecord(event, participant.id, facilitatorId);
@@ -414,15 +414,15 @@ export class CalendarIntegrationService {
   // Match calendar event to participant
   private async matchEventToParticipant(event: CalendarEvent) {
     if (event.participants.length === 0) return null;
-    
+
     const participantEmail = event.participants[0].email;
-    
+
     const { data: participant } = await supabase
       .from('sacred_participants')
       .select('*')
       .eq('email', participantEmail)
       .single();
-    
+
     return participant;
   }
 
@@ -434,7 +434,7 @@ export class CalendarIntegrationService {
       .eq('email', email)
       .eq('facilitator_id', facilitatorId)
       .single();
-    
+
     if (!participant) {
       // Create new participant
       const { data: newParticipant } = await supabase
@@ -448,13 +448,13 @@ export class CalendarIntegrationService {
         })
         .select()
         .single();
-      
+
       participant = newParticipant;
-      
+
       // Trigger onboarding
       await this.triggerParticipantOnboarding(participant);
     }
-    
+
     return participant;
   }
 
@@ -475,7 +475,7 @@ export class CalendarIntegrationService {
 
   private detectEventType(title: string): 'session' | 'event' | 'prep' | 'personal' {
     const lowerTitle = title.toLowerCase();
-    
+
     if (lowerTitle.includes('session') || lowerTitle.includes('consultation') || lowerTitle.includes('1:1')) {
       return 'session';
     } else if (lowerTitle.includes('workshop') || lowerTitle.includes('retreat') || lowerTitle.includes('group')) {
@@ -483,14 +483,14 @@ export class CalendarIntegrationService {
     } else if (lowerTitle.includes('prep') || lowerTitle.includes('preparation')) {
       return 'prep';
     }
-    
+
     return 'personal';
   }
 
   private async sendSacredSessionConfirmation(event: CalendarEvent, participant: any) {
     // Would integrate with email service
     const template = await this.getEmailTemplate('session-confirmation', participant.primaryElement);
-    
+
     const emailData = {
       to: participant.email,
       subject: `Sacred Session Confirmed - ${event.start.toLocaleDateString()}`,
@@ -504,7 +504,7 @@ export class CalendarIntegrationService {
         prepSuggestions: this.getSacredPrepSuggestions(participant.primaryElement)
       }
     };
-    
+
     // Send via email service
     await this.sendEmail(emailData);
   }
@@ -532,7 +532,7 @@ export class CalendarIntegrationService {
         'Write down questions or insights'
       ]
     };
-    
+
     return suggestions[element] || suggestions.fire;
   }
 

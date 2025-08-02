@@ -3,14 +3,14 @@ const { ArchetypeAgentFactory } = require('./backend/src/core/agents/ArchetypeAg
 
 async function testAgentSystem() {
   console.log('🔧 Testing Spiralogic Oracle Agent System...');
-  
+
   try {
     // Test factory status
     console.log('📊 Factory Status:', ArchetypeAgentFactory.getFactoryStatus());
-    
+
     // Test available archetypes
     console.log('🎭 Available Archetypes:', ArchetypeAgentFactory.getAllArchetypes());
-    
+
     // Test personalized query processing
     const userProfile = {
       userId: 'test-user-123',
@@ -31,12 +31,12 @@ async function testAgentSystem() {
         }
       }
     };
-    
+
     console.log('🎯 Testing personalized query processing...');
-    
+
     // This should work without errors showing the system is properly integrated
     console.log('✅ Agent system architecture is harmonized!');
-    
+
   } catch (error) {
     console.error('❌ Error in agent system:', error.message);
   }

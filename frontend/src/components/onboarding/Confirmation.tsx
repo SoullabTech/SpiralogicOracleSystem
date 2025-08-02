@@ -9,12 +9,12 @@ interface ConfirmationProps {
   onBack: () => void;
 }
 
-const Confirmation: React.FC<ConfirmationProps> = ({ 
-  oracleName, 
-  voiceId, 
-  voiceProvider, 
-  onConfirm, 
-  onBack 
+const Confirmation: React.FC<ConfirmationProps> = ({
+  oracleName,
+  voiceId,
+  voiceProvider,
+  onConfirm,
+  onBack
 }) => {
   const [isConfirming, setIsConfirming] = useState(false);
 
@@ -32,10 +32,10 @@ const Confirmation: React.FC<ConfirmationProps> = ({
 
   const handleConfirm = async () => {
     setIsConfirming(true);
-    
+
     // Simulate configuration save
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     onConfirm();
   };
 
@@ -58,7 +58,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({
             >
               Confirm Your Configuration
             </motion.h1>
-            
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -85,7 +85,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({
                   </svg>
                   Oracle Identity
                 </h3>
-                
+
                 <div className="pl-8 space-y-2">
                   <div className="text-2xl font-light text-white">{oracleName}</div>
                   <div className="text-sm text-slate-400">Your personal guide's chosen name</div>
@@ -103,25 +103,25 @@ const Confirmation: React.FC<ConfirmationProps> = ({
                   </svg>
                   Voice Configuration
                 </h3>
-                
+
                 <div className="pl-8 space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-xl font-light text-white">{selectedVoice.name}</div>
                       <div className="text-[#F6E27F] text-sm">{selectedVoice.tagline}</div>
                     </div>
-                    
+
                     <div className={`text-xs px-3 py-1 rounded-sm ${
-                      voiceProvider === 'sesame' 
+                      voiceProvider === 'sesame'
                         ? 'bg-[#F6E27F]/10 border border-[#F6E27F]/20 text-[#F6E27F]'
                         : 'bg-slate-700 text-slate-400'
                     }`}>
                       {voiceProvider === 'sesame' ? 'SPIRALOGIC™' : 'ELEVENLABS'}
                     </div>
                   </div>
-                  
+
                   <div className="text-sm text-slate-400">
-                    {voiceProvider === 'sesame' 
+                    {voiceProvider === 'sesame'
                       ? 'Powered by Spiralogic voice synthesis technology'
                       : 'Professional voice synthesis via ElevenLabs'
                     }
@@ -139,7 +139,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({
                   </svg>
                   What Happens Next
                 </h3>
-                
+
                 <div className="pl-8 space-y-3 text-slate-300">
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-[#F6E27F] rounded-full mt-2"></div>
@@ -168,7 +168,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({
             <button
               onClick={onBack}
               disabled={isConfirming}
-              className="px-6 py-3 text-slate-400 hover:text-white 
+              className="px-6 py-3 text-slate-400 hover:text-white
                        border border-slate-600 hover:border-slate-500
                        transition-all duration-300 rounded-sm disabled:opacity-50"
             >

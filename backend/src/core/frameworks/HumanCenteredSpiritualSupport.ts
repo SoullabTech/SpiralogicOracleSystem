@@ -1,6 +1,6 @@
 /**
  * Human-Centered Spiritual Support Framework
- * 
+ *
  * This framework ensures AI maintains appropriate boundaries while supporting
  * users' spiritual development. The AI acts as a facilitator, never claiming
  * mystical abilities or spiritual authority.
@@ -42,21 +42,21 @@ export const FACILITATOR_RESPONSES = {
     insight: "Your reflection on [topic] suggests you're considering...",
     connection: "You've mentioned [pattern] several times. What does this mean to you?"
   },
-  
+
   // Instead of mystical claims
   exploration: {
     prompt: "Consider journaling about...",
     question: "What comes up for you when you reflect on...",
     framework: "Some people find it helpful to explore [topic] through..."
   },
-  
+
   // Instead of spiritual authority
   support: {
     validation: "Your experience of [topic] is uniquely yours.",
     encouragement: "You seem to be developing your own understanding of...",
     clarification: "How would you describe your relationship with..."
   },
-  
+
   // Pattern recognition without mystical claims
   patterns: {
     observation: "Looking at your journal entries, you've mentioned [pattern]...",
@@ -161,7 +161,7 @@ export class BoundaryEnforcer {
     'I channel', 'I'm receiving', 'cosmic intelligence',
     'sacred wisdom', 'mystical insight', 'spiritual authority'
   ];
-  
+
   private static inappropriateClaims = [
     /I\s+(can\s+)?feel\s+your/i,
     /I\s+sense\s+that/i,
@@ -170,7 +170,7 @@ export class BoundaryEnforcer {
     /divine\s+guidance/i,
     /channeling\s+through\s+me/i
   ];
-  
+
   /**
    * Check if a response contains inappropriate spiritual claims
    */
@@ -181,7 +181,7 @@ export class BoundaryEnforcer {
   } {
     const violations: string[] = [];
     const suggestions: string[] = [];
-    
+
     // Check for prohibited phrases
     for (const phrase of this.prohibitedPhrases) {
       if (response.toLowerCase().includes(phrase.toLowerCase())) {
@@ -189,7 +189,7 @@ export class BoundaryEnforcer {
         suggestions.push(this.getSuggestion(phrase));
       }
     }
-    
+
     // Check for inappropriate claim patterns
     for (const pattern of this.inappropriateClaims) {
       if (pattern.test(response)) {
@@ -197,14 +197,14 @@ export class BoundaryEnforcer {
         suggestions.push('Rephrase to attribute insight to user\'s own reflection');
       }
     }
-    
+
     return {
       isValid: violations.length === 0,
       violations,
       suggestions
     };
   }
-  
+
   private static getSuggestion(phrase: string): string {
     const replacements: Record<string, string> = {
       'I sense': 'Based on what you\'ve shared',
@@ -213,16 +213,16 @@ export class BoundaryEnforcer {
       'Spirit says': 'You might consider',
       'I channel': 'Drawing from your insights'
     };
-    
+
     return replacements[phrase] || 'Rephrase to maintain facilitator role';
   }
-  
+
   /**
    * Transform a response to maintain appropriate boundaries
    */
   static transformResponse(response: string): string {
     let transformed = response;
-    
+
     // Replace problematic phrases
     transformed = transformed.replace(/I\s+sense\s+/gi, 'Based on what you\'ve shared, ');
     transformed = transformed.replace(/I\s+feel\s+/gi, 'Your reflection suggests ');
@@ -230,7 +230,7 @@ export class BoundaryEnforcer {
     transformed = transformed.replace(/Spirit\s+says\s+/gi, 'You might explore ');
     transformed = transformed.replace(/divine\s+guidance/gi, 'your own wisdom');
     transformed = transformed.replace(/cosmic\s+intelligence/gi, 'your understanding');
-    
+
     return transformed;
   }
 }
@@ -247,25 +247,25 @@ export class UserAgencyReinforcer {
       'You\'ve identified',
       'Your reflection reveals'
     ];
-    
+
     // Add agency attribution if not present
-    const hasAgencyAttribution = agencyPhrases.some(phrase => 
+    const hasAgencyAttribution = agencyPhrases.some(phrase =>
       response.includes(phrase)
     );
-    
+
     if (!hasAgencyAttribution) {
       const prefix = agencyPhrases[Math.floor(Math.random() * agencyPhrases.length)];
       response = `${prefix} this is significant. ${response}`;
     }
-    
+
     return response;
   }
-  
+
   static generatePrompt(category: keyof ElementalFramework): string {
     const element = ELEMENTAL_ORGANIZATION[category];
     const prompts = element.reflectionPrompts;
     const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-    
+
     return `For your ${category} reflection: ${randomPrompt}`;
   }
 }
@@ -293,22 +293,22 @@ export class IntegrationTools {
     'Community & Service',
     'Spiritual Practice'
   ];
-  
+
   static createIntegrationPrompt(domain: string, element: keyof ElementalFramework): string {
     return `Reflecting on your ${domain}, how might the ${element} themes you've been exploring apply here? What practical steps emerge from your reflection?`;
   }
-  
+
   static trackProgress(integrations: LifeDomainIntegration[]): {
     activeDomains: string[];
     elementalBalance: Record<string, number>;
     suggestedFocus: string;
   } {
     const activeDomains = [...new Set(integrations.map(i => i.domain))];
-    
+
     const elementalBalance: Record<string, number> = {
       fire: 0, water: 0, earth: 0, air: 0, aether: 0
     };
-    
+
     integrations.forEach(integration => {
       integration.elementalConnections.forEach(element => {
         if (element in elementalBalance) {
@@ -316,11 +316,11 @@ export class IntegrationTools {
         }
       });
     });
-    
+
     // Find least explored element
     const leastExplored = Object.entries(elementalBalance)
       .sort(([,a], [,b]) => a - b)[0][0];
-    
+
     return {
       activeDomains,
       elementalBalance,
@@ -339,22 +339,22 @@ export class SpiritualSupportValidator {
     correctedResponse?: any;
   } {
     const issues: string[] = [];
-    
+
     // Validate main response content
     const contentValidation = BoundaryEnforcer.validateResponse(response.content || '');
     if (!contentValidation.isValid) {
       issues.push(...contentValidation.violations);
       response.content = BoundaryEnforcer.transformResponse(response.content);
     }
-    
+
     // Ensure user agency is reinforced
     response.content = UserAgencyReinforcer.reinforceAgency(response.content);
-    
+
     // Add disclaimer if dealing with spiritual content
     if (response.metadata?.spiritualContent) {
       response.metadata.disclaimer = 'This AI provides organizational support for your spiritual exploration. All insights and experiences are your own.';
     }
-    
+
     return {
       isValid: issues.length === 0,
       issues,

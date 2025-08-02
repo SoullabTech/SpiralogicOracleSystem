@@ -31,13 +31,13 @@ async function testTransformationJourney() {
 
   // Phase 1: Initial exploration
   console.log('🌱 Phase 1: Initiation\n');
-  
+
   const initiationMessages = [
     "I feel lost and don't know who I am anymore",
     "Something needs to change in my life",
     "I'm ready to look at my shadows"
   ];
-  
+
   for (const msg of initiationMessages) {
     console.log(`User: "${msg}"`);
     const response = await oracle.respondToPrompt(msg);
@@ -47,13 +47,13 @@ async function testTransformationJourney() {
 
   // Phase 2: Breakthroughs
   console.log('💫 Phase 2: Breakthroughs\n');
-  
+
   const breakthroughMessages = [
     "I just realized I've been living my mother's dreams, not mine!",
     "Aha! I see the pattern now - I keep choosing unavailable partners",
     "I understand why I've been so afraid of success"
   ];
-  
+
   for (const msg of breakthroughMessages) {
     console.log(`User: "${msg}"`);
     const response = await oracle.respondToPrompt(msg);
@@ -63,13 +63,13 @@ async function testTransformationJourney() {
 
   // Phase 3: Shadow work
   console.log('🌑 Phase 3: Shadow Work\n');
-  
+
   const shadowMessages = [
     "I hate this jealous part of myself",
     "Working with my shadow today, it's intense",
     "I'm learning to accept my dark side"
   ];
-  
+
   for (const msg of shadowMessages) {
     console.log(`User: "${msg}"`);
     const response = await oracle.respondToPrompt(msg);
@@ -79,13 +79,13 @@ async function testTransformationJourney() {
 
   // Phase 4: Integration
   console.log('🔄 Phase 4: Integration\n');
-  
+
   const integrationMessages = [
     "I'm starting to feel whole again",
     "Integrating all these insights into daily life",
     "I feel like a different person than when I started"
   ];
-  
+
   for (const msg of integrationMessages) {
     console.log(`User: "${msg}"`);
     const response = await oracle.respondToPrompt(msg);
@@ -95,14 +95,14 @@ async function testTransformationJourney() {
 
   // Check transformation journey
   console.log('📊 Checking Transformation Journey...\n');
-  
+
   const journey = await soulMemory.getTransformationJourney(userId);
-  
+
   console.log('🗺️ Transformation Journey Summary:');
   console.log(`Current Phase: ${journey.currentPhase}`);
   console.log(`Total Milestones: ${journey.milestones.length}`);
   console.log(`Next Suggestion: ${journey.nextSpiralSuggestion}\n`);
-  
+
   if (journey.milestones.length > 0) {
     console.log('🏆 Transformation Milestones:');
     journey.milestones.forEach((milestone, i) => {
@@ -135,22 +135,22 @@ async function testTransformationJourney() {
 
   // Cleanup
   await soulMemory.closeDatabase();
-  
+
   // Clean up test file
   const fs = require('fs');
   if (fs.existsSync('./test_transformation_journey.db')) {
     fs.unlinkSync('./test_transformation_journey.db');
   }
-  
+
   console.log('\n✅ Transformation journey test complete!');
 }
 
 function analyzeTransformationPhases(journey: any): string {
   const milestoneCount = journey.milestones.length;
   const phase = journey.currentPhase;
-  
+
   let analysis = `Phase: ${phase}\n`;
-  
+
   if (milestoneCount === 0) {
     analysis += 'Status: Just beginning the journey';
   } else if (milestoneCount < 3) {
@@ -162,7 +162,7 @@ function analyzeTransformationPhases(journey: any): string {
   } else {
     analysis += 'Status: Mastery phase, teaching and guiding others';
   }
-  
+
   return analysis;
 }
 

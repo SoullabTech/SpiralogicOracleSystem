@@ -43,7 +43,7 @@ async function testArchetypalVoices() {
       console.log(`🧪 Testing ${test.archetype.toUpperCase()} archetype voice:`);
       console.log(`   Text: "${test.testText}"`);
       console.log(`   Expected Voice: ${test.expectedVoice}`);
-      
+
       try {
         // Test individual voice synthesis
         const voiceResult = await synthesizeArchetypalVoice({
@@ -56,7 +56,7 @@ async function testArchetypalVoices() {
         console.log(`   🎭 Personality: ${voiceResult.voiceMetadata.personality}`);
         console.log(`   ⚡ Energy: ${voiceResult.voiceMetadata.energySignature}`);
         console.log('');
-        
+
         successfulVoices++;
       } catch (error) {
         console.log(`   ❌ Voice synthesis failed: ${error.message}`);
@@ -91,11 +91,11 @@ async function testArchetypalVoices() {
     ];
 
     let dualVoiceTests = 0;
-    
+
     for (const test of dualArchetypeTests) {
       console.log(`🧪 Testing ${test.description}:`);
       console.log(`   Text: "${test.text}"`);
-      
+
       try {
         const voiceResult = await synthesizeArchetypalVoice({
           text: test.text,
@@ -108,7 +108,7 @@ async function testArchetypalVoices() {
         console.log(`   ✅ Dual Voice Generated: ${voiceResult.audioUrl}`);
         console.log(`   🎭 Blended Personality: ${voiceResult.voiceMetadata.personality}`);
         console.log('');
-        
+
         dualVoiceTests++;
       } catch (error) {
         console.log(`   ❌ Dual voice synthesis failed: ${error.message}`);
@@ -153,11 +153,11 @@ async function testEnhancedHierarchyWithVoice() {
     for (const test of testQueries) {
       console.log(`🧪 Testing: ${test.description}`);
       console.log(`   Query: "${test.query}"`);
-      
+
       try {
         const userId = `test-hierarchy-${Date.now()}`;
         const response = await hierarchyOrchestrator.processUserQuery(
-          userId, 
+          userId,
           test.query,
           { includeVoice: true } // Enable voice synthesis
         );
@@ -166,7 +166,7 @@ async function testEnhancedHierarchyWithVoice() {
         console.log(`   🔮 Primary Archetype: ${response.archetypalMetadata.primary}`);
         console.log(`   🎭 Maya Mode: ${response.mayaMetadata.archetypeMode}`);
         console.log(`   📊 Wisdom Vector: ${response.mayaMetadata.wisdomVector}`);
-        
+
         if (response.voiceMetadata) {
           console.log(`   🔊 Voice Generated: ${response.voiceMetadata.audioUrl}`);
           console.log(`   🎭 Voice Personality: ${response.voiceMetadata.personality}`);
@@ -174,10 +174,10 @@ async function testEnhancedHierarchyWithVoice() {
         } else {
           console.log('   ⚠️ No voice generated (API may be unavailable)');
         }
-        
+
         console.log('');
         hierarchyTests++;
-        
+
       } catch (error) {
         console.log(`   ❌ Test failed: ${error.message}`);
         console.log('');
@@ -185,7 +185,7 @@ async function testEnhancedHierarchyWithVoice() {
     }
 
     console.log(`🎯 Enhanced Hierarchy Tests: ${hierarchyTests}/${testQueries.length} successful\n`);
-    
+
     return hierarchyTests;
 
   } catch (error) {
@@ -197,10 +197,10 @@ async function testEnhancedHierarchyWithVoice() {
 async function testVoicePreviews() {
   try {
     console.log('🎵 Testing Archetypal Voice Previews...\n');
-    
+
     const archetypes = ['fire', 'water', 'earth', 'air', 'aether'];
     let previewTests = 0;
-    
+
     for (const archetype of archetypes) {
       try {
         console.log(`🎧 Generating ${archetype} voice preview...`);
@@ -211,10 +211,10 @@ async function testVoicePreviews() {
         console.log(`   ❌ Preview failed: ${error.message}\n`);
       }
     }
-    
+
     console.log(`🎯 Voice Preview Tests: ${previewTests}/${archetypes.length} successful\n`);
     return previewTests;
-    
+
   } catch (error) {
     console.error('❌ Voice preview testing failed:', error);
     return 0;

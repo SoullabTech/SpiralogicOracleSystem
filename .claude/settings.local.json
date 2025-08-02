@@ -109,7 +109,11 @@
       "Bash(NODE_ENV=production npm run build)",
       "Bash(git init:*)",
       "Bash(git subtree push:*)",
-      "Bash(git gc:*)"
+      "Bash(git gc:*)",
+      "Bash(git subtree split:*)",
+      "Bash(claude doctor)",
+      "Bash(git config:*)",
+      "Bash(git pull:*)"
     ],
     "deny": []
   },
