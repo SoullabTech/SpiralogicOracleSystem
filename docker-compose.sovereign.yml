@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Sovereign Oracle Backend
   oracle-backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile.sovereign
     container_name: sovereign-oracle-backend

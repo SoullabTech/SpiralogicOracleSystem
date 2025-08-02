@@ -63,24 +63,24 @@ OSEQ=1
 
 if [ "$PROVIDER" != "null" ] && [ "$PROVIDER" != "" ]; then
     akash tx market lease create --dseq "$DSEQ" --gseq "$GSEQ" --oseq "$OSEQ" --provider "$PROVIDER" --from "$KEY_NAME" --chain-id "$AKASH_CHAIN_ID" --node "$AKASH_NODE" --broadcast-mode block --gas auto --gas-adjustment 1.4 -y
-    
+
     echo "✅ Lease created with provider: $PROVIDER"
-    
+
     # Send manifest
     echo "📦 Sending manifest..."
     akash provider send-manifest "$DEPLOYMENT_FILE" --dseq "$DSEQ" --gseq "$GSEQ" --oseq "$OSEQ" --provider "$PROVIDER" --from "$KEY_NAME"
-    
+
     # Get service URLs
     echo "🌐 Getting service URLs..."
     sleep 10
     akash provider lease-status --dseq "$DSEQ" --gseq "$GSEQ" --oseq "$OSEQ" --provider "$PROVIDER" --from "$KEY_NAME"
-    
+
     echo "🎉 Deployment complete!"
     echo "📝 Deployment Details:"
     echo "   DSEQ: $DSEQ"
     echo "   Provider: $PROVIDER"
     echo "   Services: Fire Agent (3001), Water Agent (3002), Orchestrator (80)"
-    
+
 else
     echo "❌ No bids received. Please check deployment requirements and try again."
     exit 1

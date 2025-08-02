@@ -264,7 +264,7 @@
   desc: Monitor configuration file changes
   condition: >
     (open_write or rename or unlink) and
-    (fd.name contains "config" or fd.name contains ".conf" or 
+    (fd.name contains "config" or fd.name contains ".conf" or
      fd.name contains ".yaml" or fd.name contains ".json") and
     container.name contains "spiralogic" and
     not proc.name in (node, config-reloader, external-secrets)
@@ -372,7 +372,7 @@
 - list: spiralogic_allowed_outbound_domains
   items: [
     "api.openai.com",
-    "api.elevenlabs.io", 
+    "api.elevenlabs.io",
     "vault.service.consul",
     "prometheus.monitoring.svc.cluster.local",
     "grafana.monitoring.svc.cluster.local",

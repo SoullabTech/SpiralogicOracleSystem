@@ -72,11 +72,11 @@ metadata:
 data:
   loki.yaml: |
     auth_enabled: false
-    
+
     server:
       http_listen_port: 3100
       grpc_listen_port: 9096
-    
+
     common:
       path_prefix: /loki
       storage:
@@ -88,7 +88,7 @@ data:
         instance_addr: 127.0.0.1
         kvstore:
           store: inmemory
-    
+
     schema_config:
       configs:
         - from: 2020-10-24
@@ -98,7 +98,7 @@ data:
           index:
             prefix: index_
             period: 24h
-    
+
     ruler:
       alertmanager_url: http://alertmanager:9093
       storage:
@@ -108,7 +108,7 @@ data:
       rule_path: /loki/rules
       enable_api: true
       enable_alertmanager_v2: true
-    
+
     analytics:
       reporting_enabled: false
 
@@ -302,81 +302,81 @@ data:
     server:
       http_listen_port: 3101
       grpc_listen_port: 0
-    
+
     positions:
       filename: /tmp/positions/positions.yaml
-    
+
     clients:
       - url: http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
-    
+
     scrape_configs:
     # Kubernetes pods
     - job_name: kubernetes-pods
       kubernetes_sd_configs:
       - role: pod
-      
+
       relabel_configs:
       # Only scrape pods with logging annotation
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
         action: keep
         regex: true
-      
+
       # Rename the job
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_job]
         action: replace
         target_label: job
-      
+
       # Add namespace label
       - source_labels: [__meta_kubernetes_namespace]
         target_label: namespace
-      
+
       # Add pod name label
       - source_labels: [__meta_kubernetes_pod_name]
         target_label: pod
-      
+
       # Add container name label
       - source_labels: [__meta_kubernetes_pod_container_name]
         target_label: container
-      
+
       # Add elemental type for consciousness agents
       - source_labels: [__meta_kubernetes_pod_label_elemental_type]
         target_label: elemental_type
-      
+
       # Add consciousness data classification
       - source_labels: [__meta_kubernetes_pod_label_data_classification]
         target_label: data_classification
-      
+
       pipeline_stages:
       # Parse log level
       - regex:
           expression: '(?P<level>(DEBUG|INFO|WARN|ERROR|CRITICAL))'
-      
+
       # Parse consciousness events
       - regex:
           expression: '(?P<consciousness_event>(model_access|sacred_mirror|voice_synthesis|elemental_communication))'
-      
+
       # Parse user interactions
       - regex:
           expression: 'user_id:(?P<user_id>[a-zA-Z0-9-]+)'
-      
+
       # Parse session data
       - regex:
           expression: 'session_id:(?P<session_id>[a-zA-Z0-9-]+)'
-      
+
       # Add labels
       - labels:
           level:
           consciousness_event:
           user_id:
           session_id:
-    
+
     # Spiralogic namespace specific scraping
     - job_name: spiralogic-consciousness-logs
       kubernetes_sd_configs:
       - role: pod
         namespaces:
           names: [spiralogic, spiralogic-prod, spiralogic-staging]
-      
+
       relabel_configs:
       - source_labels: [__meta_kubernetes_namespace]
         target_label: namespace
@@ -388,28 +388,28 @@ data:
         target_label: app
       - source_labels: [__meta_kubernetes_pod_label_elemental_type]
         target_label: elemental_type
-      
+
       pipeline_stages:
       # Enhanced consciousness log parsing
       - regex:
           expression: '(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+(?P<level>\w+)\s+(?P<message>.*)'
-      
+
       # Parse consciousness-specific events
       - regex:
           expression: 'consciousness_state:(?P<consciousness_state>\w+)'
-      
+
       # Parse sacred mirror events
       - regex:
           expression: 'sacred_mirror_event:(?P<sacred_mirror_event>\w+)'
-      
+
       # Parse elemental agent interactions
       - regex:
           expression: 'elemental_interaction:(?P<from_agent>\w+)->(?P<to_agent>\w+)'
-      
+
       # Parse voice synthesis events
       - regex:
           expression: 'voice_synthesis:(?P<voice_model>\w+):(?P<synthesis_event>\w+)'
-      
+
       # Add consciousness-specific labels
       - labels:
           timestamp:
@@ -465,7 +465,7 @@ metadata:
 data:
   datasources.yaml: |
     apiVersion: 1
-    
+
     datasources:
     # Prometheus for metrics
     - name: Prometheus
@@ -475,7 +475,7 @@ data:
       isDefault: true
       jsonData:
         timeInterval: 30s
-    
+
     # Loki for logs
     - name: Loki
       type: loki
@@ -488,7 +488,7 @@ data:
           matcherRegex: "trace_id:(\\w+)"
           url: "http://jaeger-query.observability.svc.cluster.local:16686/trace/$${__value.raw}"
           datasourceUid: jaeger
-    
+
     # Jaeger for tracing
     - name: Jaeger
       type: jaeger
@@ -659,7 +659,7 @@ spec:
       annotations:
         summary: "Loki is down"
         description: "Loki has been down for more than 5 minutes"
-    
+
     - alert: JaegerDown
       expr: up{job="jaeger"} == 0
       for: 5m
@@ -669,7 +669,7 @@ spec:
       annotations:
         summary: "Jaeger is down"
         description: "Jaeger has been down for more than 5 minutes"
-    
+
     - alert: HighLogIngestionRate
       expr: rate(loki_ingester_streams_created_total[5m]) > 100
       for: 10m
@@ -679,7 +679,7 @@ spec:
       annotations:
         summary: "High log ingestion rate"
         description: "Log ingestion rate is unusually high"
-    
+
     - alert: ConsciousnessLogErrors
       expr: |
         sum(rate({namespace="spiralogic"} |= "ERROR" |= "consciousness" [5m])) > 5

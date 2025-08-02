@@ -58,10 +58,10 @@ is_ci() {
 # Install tools if not present
 install_tools() {
     log "Installing secret scanning tools..."
-    
+
     # Create bin directory if it doesn't exist
     mkdir -p "$PROJECT_ROOT/bin"
-    
+
     # Install gitleaks
     if ! command -v gitleaks &> /dev/null; then
         log "Installing gitleaks v$GITLEAKS_VERSION..."
@@ -70,12 +70,12 @@ install_tools() {
         else
             GITLEAKS_URL="https://github.com/gitleaks/gitleaks/releases/download/v$GITLEAKS_VERSION/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
         fi
-        
+
         curl -sSL "$GITLEAKS_URL" | tar -xz -C "$PROJECT_ROOT/bin" gitleaks
         chmod +x "$PROJECT_ROOT/bin/gitleaks"
         export PATH="$PROJECT_ROOT/bin:$PATH"
     fi
-    
+
     # Install trufflehog
     if ! command -v trufflehog &> /dev/null; then
         log "Installing trufflehog v$TRUFFLEHOG_VERSION..."
@@ -84,12 +84,12 @@ install_tools() {
         else
             TRUFFLEHOG_URL="https://github.com/trufflesecurity/trufflehog/releases/download/v$TRUFFLEHOG_VERSION/trufflehog_${TRUFFLEHOG_VERSION}_linux_amd64.tar.gz"
         fi
-        
+
         curl -sSL "$TRUFFLEHOG_URL" | tar -xz -C "$PROJECT_ROOT/bin" trufflehog
         chmod +x "$PROJECT_ROOT/bin/trufflehog"
         export PATH="$PROJECT_ROOT/bin:$PATH"
     fi
-    
+
     # Install detect-secrets
     if ! command -v detect-secrets &> /dev/null; then
         log "Installing detect-secrets v$DETECT_SECRETS_VERSION..."
@@ -214,9 +214,9 @@ EOF
 # Run gitleaks scan
 run_gitleaks() {
     log "Running gitleaks secret detection..."
-    
+
     create_gitleaks_config
-    
+
     if gitleaks detect \
         --source="$PROJECT_ROOT" \
         --report-format=json \
@@ -240,7 +240,7 @@ run_gitleaks() {
 # Run trufflehog scan
 run_trufflehog() {
     log "Running trufflehog secret detection..."
-    
+
     if trufflehog filesystem \
         --directory="$PROJECT_ROOT" \
         --json \
@@ -321,11 +321,11 @@ run_detect_secrets() {
         warn "detect-secrets not available, skipping..."
         return 0
     fi
-    
+
     log "Running detect-secrets scan..."
-    
+
     cd "$PROJECT_ROOT"
-    
+
     # Initialize baseline if it doesn't exist
     if [[ ! -f .secrets.baseline ]]; then
         detect-secrets scan --baseline .secrets.baseline \
@@ -335,7 +335,7 @@ run_detect_secrets() {
             --exclude-files '\.git/.*' \
             --exclude-files 'security-reports/.*'
     fi
-    
+
     # Audit for new secrets
     if detect-secrets scan --baseline .secrets.baseline \
         --exclude-files '\.lock$' \
@@ -355,11 +355,11 @@ run_detect_secrets() {
 # Combine and analyze results
 analyze_results() {
     log "Analyzing secret scanning results..."
-    
+
     local total_secrets=0
     local critical_secrets=0
     local findings=()
-    
+
     # Analyze gitleaks results
     if [[ -f "$GITLEAKS_REPORT" ]] && [[ -s "$GITLEAKS_REPORT" ]]; then
         local gitleaks_count=$(jq length "$GITLEAKS_REPORT" 2>/dev/null || echo "0")
@@ -371,7 +371,7 @@ analyze_results() {
             critical_secrets=$((critical_secrets + critical_count))
         fi
     fi
-    
+
     # Analyze trufflehog results
     if [[ -f "$TRUFFLEHOG_REPORT" ]] && [[ -s "$TRUFFLEHOG_REPORT" ]]; then
         local trufflehog_count=$(wc -l < "$TRUFFLEHOG_REPORT" 2>/dev/null || echo "0")
@@ -381,7 +381,7 @@ analyze_results() {
             critical_secrets=$((critical_secrets + trufflehog_count))  # All trufflehog findings are verified
         fi
     fi
-    
+
     # Analyze detect-secrets results
     if [[ -f "$DETECT_SECRETS_REPORT" ]] && [[ -s "$DETECT_SECRETS_REPORT" ]]; then
         local detect_secrets_count=$(jq '.results | length' "$DETECT_SECRETS_REPORT" 2>/dev/null || echo "0")
@@ -390,7 +390,7 @@ analyze_results() {
             findings+=("Detect-secrets: $detect_secrets_count potential secrets")
         fi
     fi
-    
+
     # Create combined report
     {
         echo "# Spiralogic Oracle System - Secret Scanning Report"
@@ -401,7 +401,7 @@ analyze_results() {
         echo "Total findings: $total_secrets"
         echo "Critical findings: $critical_secrets"
         echo ""
-        
+
         if [[ ${#findings[@]} -gt 0 ]]; then
             echo "## Tool Results"
             for finding in "${findings[@]}"; do
@@ -409,13 +409,13 @@ analyze_results() {
             done
             echo ""
         fi
-        
+
         if [[ $critical_secrets -gt 0 ]]; then
             echo "## ⚠️  CRITICAL ALERT"
             echo "Found $critical_secrets critical secrets that require immediate attention!"
             echo ""
         fi
-        
+
         echo "## Recommendations"
         if [[ $total_secrets -eq 0 ]]; then
             echo "✅ No secrets detected. Repository appears clean."
@@ -426,19 +426,19 @@ analyze_results() {
             echo "3. Use environment variables or vault integration"
             echo "4. Update .gitignore to prevent future commits"
             echo "5. Consider rotating any exposed credentials"
-            
+
             if is_ci; then
                 echo "6. Block this deployment until secrets are resolved"
             fi
         fi
-        
+
         echo ""
         echo "## Detailed Reports"
         echo "- Gitleaks: $GITLEAKS_REPORT"
         echo "- Trufflehog: $TRUFFLEHOG_REPORT"
         echo "- Detect-secrets: $DETECT_SECRETS_REPORT"
     } > "$SUMMARY_REPORT"
-    
+
     # Create combined JSON report
     {
         echo "{"
@@ -460,7 +460,7 @@ analyze_results() {
         echo "  }"
         echo "}"
     } > "$COMBINED_REPORT"
-    
+
     return $critical_secrets
 }
 
@@ -468,17 +468,17 @@ analyze_results() {
 send_notifications() {
     local severity=$1
     local message=$2
-    
+
     if [[ -n "${SLACK_WEBHOOK_URL:-}" ]]; then
         local color="good"
         [[ $severity == "critical" ]] && color="danger"
         [[ $severity == "warning" ]] && color="warning"
-        
+
         curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"🔐 Secret Scan Alert\",\"attachments\":[{\"color\":\"$color\",\"text\":\"$message\"}]}" \
             "$SLACK_WEBHOOK_URL" || warn "Failed to send Slack notification"
     fi
-    
+
     if [[ -n "${TEAMS_WEBHOOK_URL:-}" ]]; then
         curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"🔐 Secret Scan Alert: $message\"}" \
@@ -489,33 +489,33 @@ send_notifications() {
 # Main execution
 main() {
     log "Starting Spiralogic Oracle System secret scanning..."
-    
+
     # Create report directory
     mkdir -p "$REPORT_DIR"
-    
+
     # Install tools
     install_tools
-    
+
     # Create ignore files
     create_trufflehog_ignore
-    
+
     # Initialize variables
     local gitleaks_exit=0
     local trufflehog_exit=0
     local detect_secrets_exit=0
-    
+
     # Run scans
     run_gitleaks || gitleaks_exit=$?
     run_trufflehog || trufflehog_exit=$?
     run_detect_secrets || detect_secrets_exit=$?
-    
+
     # Analyze results
     analyze_results
     local critical_count=$?
-    
+
     # Display summary
     cat "$SUMMARY_REPORT"
-    
+
     # Send notifications if needed
     if [[ $critical_count -gt 0 ]]; then
         send_notifications "critical" "Found $critical_count critical secrets in Spiralogic Oracle System"
@@ -524,11 +524,11 @@ main() {
     else
         send_notifications "good" "Secret scanning completed successfully - no secrets found"
     fi
-    
+
     # Cleanup
     rm -f "$PROJECT_ROOT/.gitleaks.toml"
     rm -f "$PROJECT_ROOT/.trufflehogignore"
-    
+
     # Exit with appropriate code
     if [[ $critical_count -gt 0 ]] || [[ $gitleaks_exit -eq 1 ]] || [[ $trufflehog_exit -eq 183 ]]; then
         error "Secret scanning failed - secrets detected!"
