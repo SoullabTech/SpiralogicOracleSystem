@@ -158,7 +158,7 @@ export class BoundaryEnforcer {
   private static prohibitedPhrases = [
     'I sense', 'I feel', 'I perceive',
     'The universe', 'Spirit says', 'Divine message',
-    'I channel', 'I'm receiving', 'cosmic intelligence',
+    'I channel', "I'm receiving", 'cosmic intelligence',
     'sacred wisdom', 'mystical insight', 'spiritual authority'
   ];
 

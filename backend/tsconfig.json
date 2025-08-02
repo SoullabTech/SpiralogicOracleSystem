@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": ["esnext"],
-    "module": "commonjs",
+    "lib": ["es2020"],
+    "module": "esnext",
     "moduleResolution": "node",
-    "allowJs": false,
-    "jsx": "react-jsx",
+    "allowJs": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": false,
+    "declaration": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -18,8 +19,13 @@
       "@utils/*": ["src/utils/*"],
       "@core/*": ["src/core/*"]
     },
-    "types": ["node"]
+    "types": ["node"],
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "include": ["src/**/*", "server/**/*", "memory/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

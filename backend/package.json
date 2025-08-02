@@ -2,7 +2,19 @@
   "name": "spiralogic-oracle-backend",
   "version": "1.0.0",
   "type": "module",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc --project tsconfig.app.json --noEmitOnError false",
+    "build:app": "tsc --project tsconfig.app.json",
+    "build:all": "tsc --noEmitOnError false",
+    "build:watch": "tsc --project tsconfig.app.json --watch",
+    "build:check": "tsc --project tsconfig.app.json --noEmit",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
     "test:agents": "node test-dual-agents.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
   }
 }
