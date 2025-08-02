@@ -121,7 +121,8 @@
       "Bash(sudo pkill:*)",
       "Bash(open:*)",
       "Bash(docker:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(xattr:*)"
     ],
     "deny": []
   },

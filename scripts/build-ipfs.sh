@@ -65,7 +65,7 @@ if command -v ipfs &> /dev/null && pgrep -x "ipfs" > /dev/null; then
     IPFS_HASH=$(ipfs add -r -q out | tail -n 1)
     echo "✅ IPFS Hash: $IPFS_HASH"
     echo $IPFS_HASH > ipfs-hash.txt
-    
+
     # Generate gateway URLs
     echo ""
     echo "🌐 Access URLs:"

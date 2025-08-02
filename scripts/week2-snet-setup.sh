@@ -89,7 +89,7 @@ const PROTO_PATH = path.join(__dirname, 'proto/archetypal_consciousness.proto');
 async function testGrpcService() {
   const packageDefinition = protoLoader.loadSync(PROTO_PATH);
   const proto = grpc.loadPackageDefinition(packageDefinition).archetypal_consciousness;
-  
+
   const client = new proto.ArchetypalConsciousnessService(
     'localhost:7000',
     grpc.credentials.createInsecure()

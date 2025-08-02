@@ -25,7 +25,7 @@ REQUIRED_TOOLS=(
     "docker"
     "kubectl"
     "helm"
-    "trivy" 
+    "trivy"
     "gitleaks"
     "jq"
     "openssl"
@@ -42,7 +42,7 @@ log() {
     shift
     local message="$*"
     local timestamp=$(date +'%Y-%m-%d %H:%M:%S')
-    
+
     case $level in
         "INFO")  echo -e "${BLUE}[$timestamp] [INFO] $message${NC}" | tee -a "$LOG_FILE" ;;
         "WARN")  echo -e "${YELLOW}[$timestamp] [WARN] $message${NC}" | tee -a "$LOG_FILE" ;;
@@ -55,65 +55,65 @@ log() {
 # Check prerequisites
 check_prerequisites() {
     log "INFO" "Checking DevSecOps prerequisites..."
-    
+
     local missing_tools=()
-    
+
     for tool in "${REQUIRED_TOOLS[@]}"; do
         if ! command -v "$tool" &> /dev/null; then
             missing_tools+=("$tool")
         fi
     done
-    
+
     if [[ ${#missing_tools[@]} -gt 0 ]]; then
         log "ERROR" "Missing required tools: ${missing_tools[*]}"
         log "INFO" "Please install missing tools and run again"
         exit 1
     fi
-    
+
     # Check Kubernetes connectivity
     if ! kubectl cluster-info &> /dev/null; then
         log "ERROR" "Cannot connect to Kubernetes cluster"
         exit 1
     fi
-    
+
     # Check Docker daemon
     if ! docker info &> /dev/null; then
         log "ERROR" "Docker daemon not running or accessible"
         exit 1
     fi
-    
+
     log "SUCCESS" "All prerequisites satisfied"
 }
 
 # Initialize security baseline
 initialize_security() {
     log "INFO" "Initializing security baseline..."
-    
+
     # Create security directories
     mkdir -p "$PROJECT_ROOT"/{security-logs,security-reports,security-configs}
     mkdir -p "$PROJECT_ROOT"/k8s/{secrets,policies,configs}
-    
+
     # Set proper permissions
     chmod 750 "$PROJECT_ROOT"/security-*
     chmod 700 "$PROJECT_ROOT"/k8s/secrets
-    
+
     # Initialize Git hooks if in Git repo
     if [[ -d "$PROJECT_ROOT/.git" ]]; then
         log "INFO" "Setting up Git security hooks..."
         cp "$SCRIPT_DIR"/git-hooks/* "$PROJECT_ROOT"/.git/hooks/ 2>/dev/null || log "WARN" "Git hooks not found"
         chmod +x "$PROJECT_ROOT"/.git/hooks/* 2>/dev/null || true
     fi
-    
+
     log "SUCCESS" "Security baseline initialized"
 }
 
 # Container security hardening
 harden_containers() {
     log "INFO" "Hardening container security..."
-    
+
     # Build hardened images
     log "INFO" "Building hardened container images..."
-    
+
     # Build main Oracle image
     docker build -f "$PROJECT_ROOT/Dockerfile.hardened" \
         --tag "spiralogic-oracle:$TIMESTAMP" \
@@ -124,7 +124,7 @@ harden_containers() {
         log "ERROR" "Failed to build hardened Oracle image"
         return 1
     }
-    
+
     # Build elemental agent images
     for agent in fire water earth air aether; do
         if [[ -f "$PROJECT_ROOT/backend/src/services/$agent-agent/Dockerfile.hardened" ]]; then
@@ -137,29 +137,29 @@ harden_containers() {
             }
         fi
     done
-    
+
     # Scan images for vulnerabilities
     log "INFO" "Scanning container images for vulnerabilities..."
     "$SCRIPT_DIR/vulnerability-scanning.sh" || log "WARN" "Vulnerability scanning completed with warnings"
-    
+
     log "SUCCESS" "Container hardening completed"
 }
 
 # Secret management setup
 setup_secret_management() {
     log "INFO" "Setting up secret management..."
-    
+
     # Check if Vault is accessible
     if ! curl -sSf "$VAULT_ADDR/v1/sys/health" &> /dev/null; then
         log "WARN" "Vault not accessible at $VAULT_ADDR - setting up local Vault"
         setup_local_vault
     fi
-    
+
     # Deploy External Secrets Operator
     log "INFO" "Deploying External Secrets Operator..."
     helm repo add external-secrets https://charts.external-secrets.io || true
     helm repo update
-    
+
     helm upgrade --install external-secrets external-secrets/external-secrets \
         --namespace external-secrets-system \
         --create-namespace \
@@ -169,24 +169,24 @@ setup_secret_management() {
         log "ERROR" "Failed to deploy External Secrets Operator"
         return 1
     }
-    
+
     # Apply Vault and secret configurations
     kubectl apply -f "$PROJECT_ROOT/k8s/vault-external-secrets.yaml" || {
         log "ERROR" "Failed to apply Vault configurations"
         return 1
     }
-    
+
     log "SUCCESS" "Secret management setup completed"
 }
 
 # Setup local Vault for development
 setup_local_vault() {
     log "INFO" "Setting up local Vault instance..."
-    
+
     # Deploy Vault using Helm
     helm repo add hashicorp https://helm.releases.hashicorp.com || true
     helm repo update
-    
+
     helm upgrade --install vault hashicorp/vault \
         --namespace spiralogic \
         --create-namespace \
@@ -200,7 +200,7 @@ setup_local_vault() {
         log "ERROR" "Failed to deploy local Vault"
         return 1
     }
-    
+
     # Wait for Vault to be ready
     log "INFO" "Waiting for Vault to be ready..."
     kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=vault \
@@ -208,26 +208,26 @@ setup_local_vault() {
         log "ERROR" "Vault failed to become ready"
         return 1
     }
-    
+
     log "SUCCESS" "Local Vault setup completed"
 }
 
 # Network security hardening
 harden_network_security() {
     log "INFO" "Hardening network security..."
-    
+
     # Apply network policies
     kubectl apply -f "$PROJECT_ROOT/k8s/network-policies.yaml" || {
         log "ERROR" "Failed to apply network policies"
         return 1
     }
-    
+
     # Install/configure ingress controller with mTLS
     if ! kubectl get namespace ingress-nginx &> /dev/null; then
         log "INFO" "Installing NGINX ingress controller..."
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx || true
         helm repo update
-        
+
         helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
             --namespace ingress-nginx \
             --create-namespace \
@@ -239,26 +239,26 @@ harden_network_security() {
             return 1
         }
     fi
-    
+
     # Configure firewall rules (if running on host)
     if [[ -f "/etc/ufw/ufw.conf" ]]; then
         log "INFO" "Configuring UFW firewall rules..."
         "$SCRIPT_DIR/ufw-security-setup.sh" || log "WARN" "UFW setup completed with warnings"
     fi
-    
+
     log "SUCCESS" "Network security hardening completed"
 }
 
 # Policy enforcement setup
 setup_policy_enforcement() {
     log "INFO" "Setting up policy enforcement..."
-    
+
     # Install OPA Gatekeeper
     if ! kubectl get namespace gatekeeper-system &> /dev/null; then
         log "INFO" "Installing OPA Gatekeeper..."
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts || true
         helm repo update
-        
+
         helm upgrade --install gatekeeper gatekeeper/gatekeeper \
             --namespace gatekeeper-system \
             --create-namespace \
@@ -269,7 +269,7 @@ setup_policy_enforcement() {
             log "ERROR" "Failed to install OPA Gatekeeper"
             return 1
         }
-        
+
         # Wait for Gatekeeper to be ready
         kubectl wait --for=condition=ready pod -l app=gatekeeper-controller-manager \
             --namespace gatekeeper-system --timeout=300s || {
@@ -277,7 +277,7 @@ setup_policy_enforcement() {
             return 1
         }
     fi
-    
+
     # Apply security constraints
     log "INFO" "Applying security constraints..."
     sleep 30  # Give Gatekeeper time to install CRDs
@@ -285,20 +285,20 @@ setup_policy_enforcement() {
         log "ERROR" "Failed to apply security constraints"
         return 1
     }
-    
+
     log "SUCCESS" "Policy enforcement setup completed"
 }
 
 # Monitoring and alerting setup
 setup_monitoring() {
     log "INFO" "Setting up security monitoring..."
-    
+
     # Install Prometheus stack
     if ! kubectl get namespace monitoring &> /dev/null; then
         log "INFO" "Installing Prometheus monitoring stack..."
         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true
         helm repo update
-        
+
         helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
             --namespace monitoring \
             --create-namespace \
@@ -310,13 +310,13 @@ setup_monitoring() {
             return 1
         }
     fi
-    
+
     # Install Falco for runtime security
     if ! kubectl get namespace falco &> /dev/null; then
         log "INFO" "Installing Falco runtime security..."
         helm repo add falcosecurity https://falcosecurity.github.io/charts || true
         helm repo update
-        
+
         helm upgrade --install falco falcosecurity/falco \
             --namespace falco \
             --create-namespace \
@@ -327,7 +327,7 @@ setup_monitoring() {
             log "ERROR" "Failed to install Falco"
             return 1
         }
-        
+
         # Apply custom Falco rules
         kubectl create configmap falco-rules \
             --from-file="$PROJECT_ROOT/security/falco-rules.yaml" \
@@ -335,32 +335,32 @@ setup_monitoring() {
             log "WARN" "Failed to apply custom Falco rules"
         }
     fi
-    
+
     # Apply Prometheus service monitors
     kubectl apply -f "$PROJECT_ROOT/monitoring/prometheus-servicemonitor.yaml" || {
         log "WARN" "Failed to apply Prometheus service monitors"
     }
-    
+
     log "SUCCESS" "Security monitoring setup completed"
 }
 
 # Compliance and audit setup
 setup_compliance() {
     log "INFO" "Setting up compliance and audit logging..."
-    
+
     # Enable Kubernetes audit logging
     local audit_policy="$PROJECT_ROOT/k8s/audit-policy.yaml"
     if [[ ! -f "$audit_policy" ]]; then
         log "INFO" "Creating Kubernetes audit policy..."
         create_audit_policy "$audit_policy"
     fi
-    
+
     # Setup log aggregation
     if ! kubectl get namespace logging &> /dev/null; then
         log "INFO" "Installing logging stack..."
         helm repo add elastic https://helm.elastic.co || true
         helm repo update
-        
+
         # Install Elasticsearch
         helm upgrade --install elasticsearch elastic/elasticsearch \
             --namespace logging \
@@ -372,7 +372,7 @@ setup_compliance() {
             --set volumeClaimTemplate.resources.requests.storage=10Gi || {
             log "WARN" "Failed to install Elasticsearch"
         }
-        
+
         # Install Filebeat for log collection
         helm upgrade --install filebeat elastic/filebeat \
             --namespace logging \
@@ -381,14 +381,14 @@ setup_compliance() {
             log "WARN" "Failed to install Filebeat"
         }
     fi
-    
+
     log "SUCCESS" "Compliance and audit setup completed"
 }
 
 # Create Kubernetes audit policy
 create_audit_policy() {
     local policy_file=$1
-    
+
     cat > "$policy_file" << 'EOF'
 apiVersion: audit.k8s.io/v1
 kind: Policy
@@ -427,22 +427,22 @@ rules:
   - group: "templates.gatekeeper.sh"
   - group: "constraints.gatekeeper.sh"
 EOF
-    
+
     log "INFO" "Created Kubernetes audit policy at $policy_file"
 }
 
 # Automated security scanning
 run_security_scans() {
     log "INFO" "Running automated security scans..."
-    
+
     # Secret scanning
     log "INFO" "Running secret scanning..."
     "$SCRIPT_DIR/secret-scanning.sh" || log "WARN" "Secret scanning completed with warnings"
-    
+
     # Vulnerability scanning
     log "INFO" "Running vulnerability scanning..."
     "$SCRIPT_DIR/vulnerability-scanning.sh" || log "WARN" "Vulnerability scanning completed with warnings"
-    
+
     # Container image scanning
     log "INFO" "Scanning container images..."
     for image in spiralogic-oracle spiralogic-fire-agent spiralogic-water-agent; do
@@ -452,7 +452,7 @@ run_security_scans() {
             }
         fi
     done
-    
+
     # Kubernetes security scanning
     if command -v kubesec &> /dev/null; then
         log "INFO" "Running Kubernetes security scanning..."
@@ -460,26 +460,26 @@ run_security_scans() {
             log "WARN" "Kubesec scanning completed with warnings"
         }
     fi
-    
+
     log "SUCCESS" "Security scanning completed"
 }
 
 # Generate security report
 generate_security_report() {
     log "INFO" "Generating comprehensive security report..."
-    
+
     local report_file="$PROJECT_ROOT/security-reports/devsecops-report-$TIMESTAMP.md"
-    
+
     {
         echo "# Spiralogic Oracle System - DevSecOps Security Report"
         echo "Generated: $(date)"
         echo "Environment: $ENVIRONMENT"
         echo "Cluster: $CLUSTER_NAME"
         echo ""
-        
+
         echo "## Security Posture Summary"
         echo ""
-        
+
         # Container security
         echo "### Container Security"
         echo "- ✅ Hardened multi-stage Dockerfiles"
@@ -488,7 +488,7 @@ generate_security_report() {
         echo "- ✅ Read-only root filesystems"
         echo "- ✅ Security scanning integrated"
         echo ""
-        
+
         # Secret management
         echo "### Secret Management"
         echo "- ✅ HashiCorp Vault deployed"
@@ -496,7 +496,7 @@ generate_security_report() {
         echo "- ✅ Secrets rotation enabled"
         echo "- ✅ Encryption at rest and in transit"
         echo ""
-        
+
         # Network security
         echo "### Network Security"
         echo "- ✅ Zero-trust network policies"
@@ -504,7 +504,7 @@ generate_security_report() {
         echo "- ✅ Ingress controller with security headers"
         echo "- ✅ Firewall rules configured"
         echo ""
-        
+
         # Policy enforcement
         echo "### Policy Enforcement"
         echo "- ✅ OPA Gatekeeper installed"
@@ -512,7 +512,7 @@ generate_security_report() {
         echo "- ✅ Resource limits mandated"
         echo "- ✅ Image security policies active"
         echo ""
-        
+
         # Monitoring
         echo "### Security Monitoring"
         echo "- ✅ Prometheus metrics collection"
@@ -520,7 +520,7 @@ generate_security_report() {
         echo "- ✅ Security alerting configured"
         echo "- ✅ Audit logging enabled"
         echo ""
-        
+
         # Compliance
         echo "### Compliance & Audit"
         echo "- ✅ Comprehensive audit logging"
@@ -528,10 +528,10 @@ generate_security_report() {
         echo "- ✅ Compliance dashboard available"
         echo "- ✅ Automated compliance reporting"
         echo ""
-        
+
         echo "## Security Scan Results"
         echo ""
-        
+
         # Include scan summaries
         if [[ -f "$PROJECT_ROOT/security-reports/secret-scan-summary-$TIMESTAMP.txt" ]]; then
             echo "### Secret Scanning"
@@ -540,7 +540,7 @@ generate_security_report() {
             echo '```'
             echo ""
         fi
-        
+
         if [[ -f "$PROJECT_ROOT/security-reports/vulnerability-scan-summary-$TIMESTAMP.txt" ]]; then
             echo "### Vulnerability Scanning"
             echo '```'
@@ -548,7 +548,7 @@ generate_security_report() {
             echo '```'
             echo ""
         fi
-        
+
         echo "## Recommendations"
         echo ""
         echo "1. **Regular Security Reviews**: Schedule monthly security posture reviews"
@@ -557,43 +557,43 @@ generate_security_report() {
         echo "4. **Penetration Testing**: Annual third-party security assessments"
         echo "5. **Compliance Monitoring**: Continuous compliance monitoring and reporting"
         echo ""
-        
+
         echo "## Security Contacts"
         echo ""
         echo "- Security Team: security@spiralogic.network"
         echo "- Incident Response: incident-response@spiralogic.network"
         echo "- Compliance: compliance@spiralogic.network"
         echo ""
-        
+
         echo "---"
         echo "Report generated by Spiralogic Oracle DevSecOps automation"
         echo "For questions or concerns, contact the security team."
-        
+
     } > "$report_file"
-    
+
     log "SUCCESS" "Security report generated: $report_file"
 }
 
 # Cleanup and finalization
 cleanup() {
     log "INFO" "Performing cleanup tasks..."
-    
+
     # Remove temporary files
     find /tmp -name "*spiralogic*" -type f -mtime +1 -delete 2>/dev/null || true
-    
+
     # Compress old logs
     find "$LOG_DIR" -name "*.log" -mtime +7 -exec gzip {} \; 2>/dev/null || true
-    
+
     # Cleanup old Docker images
     docker image prune -f --filter "until=24h" || log "WARN" "Docker cleanup failed"
-    
+
     log "SUCCESS" "Cleanup completed"
 }
 
 # Emergency rollback function
 emergency_rollback() {
     log "ERROR" "Emergency rollback initiated..."
-    
+
     # Rollback Helm releases
     for release in vault external-secrets gatekeeper kube-prometheus-stack falco; do
         if helm list -A | grep -q "$release"; then
@@ -601,11 +601,11 @@ emergency_rollback() {
             helm rollback "$release" 0 --namespace "$(helm list -A | grep "$release" | awk '{print $2}')" || true
         fi
     done
-    
+
     # Remove applied policies
     kubectl delete -f "$PROJECT_ROOT/security/opa-gatekeeper-constraints.yaml" --ignore-not-found=true || true
     kubectl delete -f "$PROJECT_ROOT/k8s/network-policies.yaml" --ignore-not-found=true || true
-    
+
     log "WARN" "Emergency rollback completed - manual intervention may be required"
 }
 
@@ -619,10 +619,10 @@ main() {
     log "INFO" "Environment: $ENVIRONMENT"
     log "INFO" "Cluster: $CLUSTER_NAME"
     log "INFO" "Log file: $LOG_FILE"
-    
+
     # Create log directory
     mkdir -p "$LOG_DIR"
-    
+
     # Run hardening steps
     check_prerequisites
     initialize_security
@@ -635,11 +635,11 @@ main() {
     run_security_scans
     generate_security_report
     cleanup
-    
+
     log "SUCCESS" "DevSecOps hardening completed successfully!"
     log "INFO" "Security report available at: $PROJECT_ROOT/security-reports/devsecops-report-$TIMESTAMP.md"
     log "INFO" "Monitor security status: kubectl get pods -A | grep -E '(vault|falco|gatekeeper|prometheus)'"
-    
+
     # Display next steps
     echo ""
     echo -e "${CYAN}=== Next Steps ===${NC}"

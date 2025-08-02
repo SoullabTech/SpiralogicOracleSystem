@@ -163,10 +163,10 @@ fi
 if [[ "${BACKUP_DOCKER_IMAGES:-false}" == "true" ]]; then
     log "Backing up Docker images"
     echo -e "${YELLOW}🐳 Backing up Docker images...${NC}"
-    
+
     # Get list of AIN-related images
     ain_images=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -E "(ain|sovereign|fire|water|earth|air|aether)" | head -10)
-    
+
     if [[ -n "$ain_images" ]]; then
         echo "$ain_images" | while read -r image; do
             safe_name=$(echo "$image" | tr '/:' '_')
@@ -197,7 +197,7 @@ cat > "${TEMP_DIR}/backup_metadata.json" << EOF
     },
     "backup_contents": [
         "application_data",
-        "elemental_agent_data", 
+        "elemental_agent_data",
         "postgresql_database",
         "redis_data",
         "configuration_files",
@@ -248,10 +248,10 @@ log "Backup checksum (SHA256): ${backup_checksum}"
 if [[ -n "${BACKUP_RETENTION_DAYS:-}" ]]; then
     log "Cleaning up old backups (older than ${BACKUP_RETENTION_DAYS} days)"
     echo -e "${YELLOW}🧹 Cleaning up old backups...${NC}"
-    
+
     find "${BACKUP_DIR}" -name "ain_sovereign_*.tar.gz.gpg" \
         -mtime "+${BACKUP_RETENTION_DAYS}" -delete
-    
+
     log "Old backup cleanup completed"
 fi
 
@@ -259,7 +259,7 @@ fi
 if [[ "${BACKUP_REMOTE_ENABLED:-false}" == "true" ]] && [[ -n "${BACKUP_S3_BUCKET:-}" ]]; then
     log "Uploading backup to remote storage"
     echo -e "${YELLOW}☁️  Uploading to remote storage...${NC}"
-    
+
     if command -v aws > /dev/null; then
         aws s3 cp "${BACKUP_DIR}/${BACKUP_NAME}.tar.gz.gpg" \
             "s3://${BACKUP_S3_BUCKET}/ain-backups/"

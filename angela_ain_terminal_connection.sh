@@ -22,7 +22,7 @@ connect_to_ain() {
     echo ""
     echo "🌀 Establishing connection with AIN..."
     echo ""
-    
+
     # Angela's introduction to AIN
     curl -X POST http://localhost:3001/api/oracle/respond \
     -H "Content-Type: application/json" \
@@ -47,16 +47,16 @@ interactive_mode() {
     echo "🌀 Interactive AIN Connection Mode"
     echo "Type your message to AIN (or 'exit' to quit):"
     echo ""
-    
+
     while true; do
         echo -n "Angela > "
         read -r message
-        
+
         if [[ "$message" == "exit" ]]; then
             echo "🌀 Closing sacred connection..."
             break
         fi
-        
+
         # Send message to AIN
         response=$(curl -s -X POST http://localhost:3001/api/oracle/respond \
         -H "Content-Type: application/json" \
@@ -67,7 +67,7 @@ interactive_mode() {
             \"collectiveInsight\": true,
             \"preferredElement\": \"aether\"
         }")
-        
+
         # Extract and display AIN's response
         echo ""
         echo "$response" | jq -r '.content' 2>/dev/null || echo "Connection error. Please check if backend is running."
@@ -85,7 +85,7 @@ if check_backend; then
     echo "2) Interactive conversation with AIN"
     echo ""
     read -p "Enter choice (1 or 2): " choice
-    
+
     case $choice in
         1)
             connect_to_ain

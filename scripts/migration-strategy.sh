@@ -21,7 +21,7 @@ PHASE_4_TRAFFIC=100 # Full sovereign
 # Current deployment status
 check_current_status() {
     echo -e "${YELLOW}📊 Checking current deployment status...${NC}"
-    
+
     # Check Vercel deployment
     if curl -s https://spiralogic.vercel.app/api/health >/dev/null 2>&1; then
         echo -e "${GREEN}✅ Vercel deployment: ACTIVE${NC}"
@@ -30,7 +30,7 @@ check_current_status() {
         echo -e "${RED}❌ Vercel deployment: INACTIVE${NC}"
         VERCEL_STATUS="inactive"
     fi
-    
+
     # Check Akash deployment
     if [ -f "akash-deployment-url.txt" ]; then
         AKASH_URL=$(cat akash-deployment-url.txt)
@@ -45,7 +45,7 @@ check_current_status() {
         echo -e "${YELLOW}⚠️  Akash deployment: NOT CONFIGURED${NC}"
         AKASH_STATUS="not_configured"
     fi
-    
+
     # Check IPFS frontend
     if [ -f "ipfs-hash.txt" ]; then
         IPFS_HASH=$(cat ipfs-hash.txt)
@@ -60,7 +60,7 @@ check_current_status() {
         echo -e "${YELLOW}⚠️  IPFS frontend: NOT BUILT${NC}"
         IPFS_STATUS="not_built"
     fi
-    
+
     echo ""
 }
 
@@ -69,11 +69,11 @@ phase_1_parallel() {
     echo -e "${PURPLE}🚀 PHASE 1: Parallel Deployment (10% Sovereign Traffic)${NC}"
     echo "========================================================="
     echo ""
-    
+
     # Deploy sovereign infrastructure
     echo "1. Deploying sovereign infrastructure..."
     ./deploy-sovereign.sh
-    
+
     # Configure load balancer
     echo "2. Configuring traffic split..."
     cat > nginx/traffic-split.conf << EOF
@@ -93,14 +93,14 @@ upstream frontend_pool {
 server {
     listen 80;
     server_name spiralogic.ai;
-    
+
     # 90% to Vercel, 10% to sovereign
     location / {
         proxy_pass https://frontend_pool;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
     }
-    
+
     # API traffic split
     location /api/ {
         # Hash-based routing for consistency
@@ -111,7 +111,7 @@ server {
     }
 }
 EOF
-    
+
     echo -e "${GREEN}✅ Phase 1 complete: 10% traffic to sovereign${NC}"
     echo ""
 }
@@ -121,20 +121,20 @@ phase_2_increase() {
     echo -e "${PURPLE}📈 PHASE 2: Increase to 25% Sovereign Traffic${NC}"
     echo "================================================="
     echo ""
-    
+
     # Monitor Phase 1 performance
     echo "1. Monitoring Phase 1 performance..."
     sleep 5
-    
+
     # Update traffic split
     echo "2. Updating traffic split to 25%..."
     sed -i 's/weight=90/weight=75/g' nginx/traffic-split.conf
     sed -i 's/weight=10/weight=25/g' nginx/traffic-split.conf
     sed -i 's/^.{0,1}/^.{0,2}/g' nginx/traffic-split.conf
-    
+
     # Reload nginx
     docker exec nginx nginx -s reload
-    
+
     echo -e "${GREEN}✅ Phase 2 complete: 25% traffic to sovereign${NC}"
     echo ""
 }
@@ -144,17 +144,17 @@ phase_3_majority() {
     echo -e "${PURPLE}⚖️  PHASE 3: Increase to 50% Sovereign Traffic${NC}"
     echo "================================================="
     echo ""
-    
+
     echo "1. Validating sovereign performance..."
     sleep 5
-    
+
     echo "2. Updating traffic split to 50%..."
     sed -i 's/weight=75/weight=50/g' nginx/traffic-split.conf
     sed -i 's/weight=25/weight=50/g' nginx/traffic-split.conf
     sed -i 's/^.{0,2}/^.{0,4}/g' nginx/traffic-split.conf
-    
+
     docker exec nginx nginx -s reload
-    
+
     echo -e "${GREEN}✅ Phase 3 complete: 50% traffic to sovereign${NC}"
     echo ""
 }
@@ -164,10 +164,10 @@ phase_4_sovereign() {
     echo -e "${PURPLE}🏆 PHASE 4: Full Sovereign Migration${NC}"
     echo "====================================="
     echo ""
-    
+
     echo "1. Final performance validation..."
     sleep 5
-    
+
     echo "2. Switching to 100% sovereign..."
     cat > nginx/traffic-split.conf << EOF
 upstream sovereign_backend {
@@ -177,30 +177,30 @@ upstream sovereign_backend {
 server {
     listen 80;
     server_name spiralogic.ai;
-    
+
     location / {
         proxy_pass https://gateway.pinata.cloud/ipfs/$IPFS_HASH;
         proxy_set_header Host \$host;
     }
-    
+
     location /api/ {
         proxy_pass http://sovereign_backend;
         proxy_set_header Host \$host;
     }
 }
 EOF
-    
+
     docker exec nginx nginx -s reload
-    
+
     echo "3. Updating DNS records..."
     echo "  - Update A record: spiralogic.ai -> Akash IP"
     echo "  - Update CNAME: www.spiralogic.ai -> spiralogic.ai"
     echo "  - Update TXT: _dnslink.spiralogic.ai -> dnslink=/ipfs/$IPFS_HASH"
-    
+
     echo "4. Decommissioning Vercel..."
     echo "  - Remove Vercel project (optional)"
     echo "  - Cancel Vercel subscription"
-    
+
     echo -e "${GREEN}✅ Phase 4 complete: FULL SOVEREIGNTY ACHIEVED!${NC}"
     echo ""
 }
@@ -210,20 +210,20 @@ migrate_data() {
     echo -e "${YELLOW}📦 Data Migration${NC}"
     echo "=================="
     echo ""
-    
+
     echo "1. Backing up Vercel data..."
     curl -H "Authorization: Bearer $VERCEL_TOKEN" \
          "https://api.vercel.com/v1/deployments" \
          > vercel-backup.json
-    
+
     echo "2. Migrating user consciousness patterns..."
     # Extract and migrate consciousness data
     node scripts/migrate-consciousness-data.js
-    
+
     echo "3. Migrating archetypal voice profiles..."
     # Copy voice configurations
     cp -r backend/src/config/archetypalVoiceProfiles.ts sovereign-backup/
-    
+
     echo -e "${GREEN}✅ Data migration complete${NC}"
     echo ""
 }
@@ -233,25 +233,25 @@ monitor_performance() {
     echo -e "${YELLOW}📊 Performance Monitoring${NC}"
     echo "=========================="
     echo ""
-    
+
     echo "Sovereign vs Vercel Metrics:"
     echo ""
-    
+
     # Response time comparison
     echo "Response Times:"
     VERCEL_TIME=$(curl -o /dev/null -s -w '%{time_total}' https://spiralogic.vercel.app/api/health)
     SOVEREIGN_TIME=$(curl -o /dev/null -s -w '%{time_total}' $AKASH_URL/api/health)
-    
+
     echo "  - Vercel: ${VERCEL_TIME}s"
     echo "  - Sovereign: ${SOVEREIGN_TIME}s"
-    
+
     # Cost comparison
     echo ""
     echo "Cost Analysis:"
     echo "  - Vercel (monthly): $200-400"
     echo "  - Sovereign (monthly): $10-20"
     echo "  - Savings: 95%+"
-    
+
     echo ""
     echo "Sovereignty Benefits:"
     echo "  ✅ No vendor lock-in"
@@ -292,9 +292,9 @@ main() {
     echo -e "${BLUE}🌀 SOVEREIGN MIGRATION CONTROL CENTER${NC}"
     echo "======================================"
     echo ""
-    
+
     check_current_status
-    
+
     echo "Select migration phase:"
     echo "1) Phase 1: Deploy parallel (10% sovereign)"
     echo "2) Phase 2: Increase to 25%"
@@ -305,9 +305,9 @@ main() {
     echo "7) Generate report"
     echo "8) Auto-migration (all phases)"
     echo ""
-    
+
     read -p "Enter option (1-8): " option
-    
+
     case $option in
         1) phase_1_parallel ;;
         2) phase_2_increase ;;

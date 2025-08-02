@@ -5,14 +5,14 @@ groups:
 - name: spiralogic.security.authentication
   interval: 30s
   rules:
-  
+
   # Authentication failure rate
   - record: spiralogic:auth_failure_rate
     expr: rate(spiralogic_auth_failures_total[5m])
     labels:
       severity: warning
       component: authentication
-  
+
   # Suspicious authentication patterns
   - record: spiralogic:auth_pattern_anomaly
     expr: |
@@ -25,7 +25,7 @@ groups:
       severity: critical
       component: authentication
       pattern: spike
-  
+
   # Failed login attempts from same IP
   - record: spiralogic:auth_ip_abuse
     expr: |
@@ -36,19 +36,19 @@ groups:
       severity: warning
       component: authentication
       abuse_type: ip_flooding
-  
+
   # JWT token anomalies
   - record: spiralogic:jwt_anomalies
     expr: rate(spiralogic_jwt_validation_failures_total[5m])
     labels:
       severity: warning
       component: jwt
-  
+
   # Session hijacking indicators
   - record: spiralogic:session_anomaly
     expr: |
       (
-        rate(spiralogic_session_created_total[5m]) - 
+        rate(spiralogic_session_created_total[5m]) -
         rate(spiralogic_session_destroyed_total[5m])
       ) > 10
     labels:
@@ -58,13 +58,13 @@ groups:
 - name: spiralogic.security.consciousness
   interval: 60s
   rules:
-  
+
   # Consciousness model access patterns
   - record: spiralogic:consciousness_access_rate
     expr: rate(spiralogic_consciousness_model_access_total[5m])
     labels:
       component: consciousness
-  
+
   # Unauthorized consciousness data access
   - record: spiralogic:consciousness_unauthorized_access
     expr: |
@@ -75,17 +75,17 @@ groups:
       severity: critical
       component: consciousness
       violation_type: unauthorized_access
-  
+
   # Sacred mirror data access anomalies
   - record: spiralogic:sacred_mirror_anomaly
     expr: |
-      rate(spiralogic_sacred_mirror_access_total[10m]) > 
+      rate(spiralogic_sacred_mirror_access_total[10m]) >
       quantile(0.95, rate(spiralogic_sacred_mirror_access_total[1h]))
     labels:
       severity: warning
       component: sacred_mirror
       pattern: anomaly
-  
+
   # Voice model manipulation detection
   - record: spiralogic:voice_model_tampering
     expr: |
@@ -94,13 +94,13 @@ groups:
       severity: critical
       component: voice_synthesis
       violation_type: tampering
-  
+
   # Elemental agent communication anomalies
   - record: spiralogic:elemental_comm_anomaly
     expr: |
       sum by (from_agent, to_agent) (
         rate(spiralogic_elemental_communication_total[5m])
-      ) > 
+      ) >
       sum by (from_agent, to_agent) (
         rate(spiralogic_elemental_communication_total[1h])
       ) * 2
@@ -112,7 +112,7 @@ groups:
 - name: spiralogic.security.infrastructure
   interval: 30s
   rules:
-  
+
   # Container escape attempts
   - record: spiralogic:container_escape_attempts
     expr: increase(container_runtime_violations_total{violation_type="escape"}[5m])
@@ -120,7 +120,7 @@ groups:
       severity: critical
       component: container_security
       violation_type: escape_attempt
-  
+
   # Privilege escalation detection
   - record: spiralogic:privilege_escalation
     expr: increase(kubernetes_audit_total{verb="create",objectRef_resource="pods",user_username!~"system:.*"}[5m]) > 0
@@ -128,21 +128,21 @@ groups:
       severity: critical
       component: kubernetes
       violation_type: privilege_escalation
-  
+
   # Network policy violations
   - record: spiralogic:network_policy_violations
     expr: rate(calico_denied_packets_total[5m])
     labels:
       severity: warning
       component: network_security
-  
+
   # TLS certificate expiry warnings
   - record: spiralogic:cert_expiry_warning
     expr: (probe_ssl_earliest_cert_expiry - time()) / 86400 < 30
     labels:
       severity: warning
       component: tls_certificates
-  
+
   # Vault unsealing events
   - record: spiralogic:vault_unseal_events
     expr: increase(vault_core_unsealed[1h])
@@ -154,21 +154,21 @@ groups:
 - name: spiralogic.security.data_protection
   interval: 60s
   rules:
-  
+
   # Data encryption at rest verification
   - record: spiralogic:encryption_at_rest_status
     expr: spiralogic_encryption_at_rest_enabled
     labels:
       component: data_protection
       protection_type: encryption_at_rest
-  
+
   # Backup encryption status
   - record: spiralogic:backup_encryption_status
     expr: spiralogic_backup_encryption_enabled
     labels:
       component: backup
       protection_type: encryption
-  
+
   # Data retention policy compliance
   - record: spiralogic:data_retention_compliance
     expr: |
@@ -178,14 +178,14 @@ groups:
     labels:
       component: compliance
       policy_type: data_retention
-  
+
   # PII access tracking
   - record: spiralogic:pii_access_rate
     expr: rate(spiralogic_pii_access_total[5m])
     labels:
       component: privacy
       data_type: pii
-  
+
   # Unauthorized data export attempts
   - record: spiralogic:data_export_violations
     expr: |
@@ -200,7 +200,7 @@ groups:
 - name: spiralogic.security.compliance
   interval: 300s  # 5 minutes
   rules:
-  
+
   # GDPR compliance score
   - record: spiralogic:gdpr_compliance_score
     expr: |
@@ -214,7 +214,7 @@ groups:
     labels:
       component: compliance
       standard: gdpr
-  
+
   # Security framework compliance (NIST, SOC2)
   - record: spiralogic:security_framework_score
     expr: |
@@ -228,7 +228,7 @@ groups:
     labels:
       component: compliance
       framework: security_controls
-  
+
   # Audit log integrity
   - record: spiralogic:audit_log_integrity
     expr: |
@@ -242,26 +242,26 @@ groups:
 - name: spiralogic.security.threat_detection
   interval: 15s
   rules:
-  
+
   # Anomalous API request patterns
   - record: spiralogic:api_anomaly_score
     expr: |
       (
-        (rate(spiralogic_api_requests_total[5m]) > 
+        (rate(spiralogic_api_requests_total[5m]) >
          quantile(0.95, rate(spiralogic_api_requests_total[1h]))) * 3
       ) +
       (
-        (rate(spiralogic_api_errors_total[5m]) > 
+        (rate(spiralogic_api_errors_total[5m]) >
          quantile(0.90, rate(spiralogic_api_errors_total[1h]))) * 2
       ) +
       (
-        (avg_over_time(spiralogic_api_response_time_seconds[5m]) > 
+        (avg_over_time(spiralogic_api_response_time_seconds[5m]) >
          quantile(0.95, avg_over_time(spiralogic_api_response_time_seconds[1h]))) * 1
       )
     labels:
       component: threat_detection
       detection_type: api_anomaly
-  
+
   # Brute force attack detection
   - record: spiralogic:brute_force_score
     expr: |
@@ -271,25 +271,25 @@ groups:
     labels:
       component: threat_detection
       attack_type: brute_force
-  
+
   # Data exfiltration indicators
   - record: spiralogic:data_exfiltration_score
     expr: |
       (
-        (rate(spiralogic_data_download_bytes[5m]) > 
+        (rate(spiralogic_data_download_bytes[5m]) >
          quantile(0.99, rate(spiralogic_data_download_bytes[1h]))) * 3
       ) +
       (
         (rate(spiralogic_data_access_unusual_hours[5m]) > 0) * 2
       ) +
       (
-        (rate(spiralogic_bulk_data_queries[5m]) > 
+        (rate(spiralogic_bulk_data_queries[5m]) >
          quantile(0.95, rate(spiralogic_bulk_data_queries[1h]))) * 2
       )
     labels:
       component: threat_detection
       threat_type: data_exfiltration
-  
+
   # Insider threat indicators
   - record: spiralogic:insider_threat_score
     expr: |
@@ -307,7 +307,7 @@ groups:
 - name: spiralogic.security.incident_response
   interval: 30s
   rules:
-  
+
   # Critical security event aggregation
   - record: spiralogic:critical_security_events
     expr: |
@@ -319,7 +319,7 @@ groups:
     labels:
       severity: critical
       response_required: immediate
-  
+
   # Security incident severity scoring
   - record: spiralogic:incident_severity_score
     expr: |
@@ -333,7 +333,7 @@ groups:
     labels:
       component: incident_response
       metric_type: severity_score
-  
+
   # Response time tracking
   - record: spiralogic:incident_response_time
     expr: |
@@ -341,7 +341,7 @@ groups:
     labels:
       component: incident_response
       metric_type: response_time
-  
+
   # Automated response actions
   - record: spiralogic:automated_responses_triggered
     expr: rate(spiralogic_automated_response_actions_total[5m])
@@ -352,40 +352,40 @@ groups:
 - name: spiralogic.security.performance_impact
   interval: 60s
   rules:
-  
+
   # Security overhead on application performance
   - record: spiralogic:security_performance_overhead
     expr: |
       (
-        avg(spiralogic_api_response_time_with_security) / 
+        avg(spiralogic_api_response_time_with_security) /
         avg(spiralogic_api_response_time_baseline)
       ) - 1
     labels:
       component: performance
       metric_type: security_overhead
-  
+
   # mTLS handshake performance
   - record: spiralogic:mtls_handshake_performance
     expr: histogram_quantile(0.95, rate(spiralogic_mtls_handshake_duration_bucket[5m]))
     labels:
       component: mtls
       metric_type: handshake_latency
-  
+
   # Encryption/decryption latency
   - record: spiralogic:encryption_latency
     expr: |
-      histogram_quantile(0.95, 
+      histogram_quantile(0.95,
         rate(spiralogic_encryption_operation_duration_bucket[5m])
       )
     labels:
       component: encryption
       metric_type: operation_latency
-  
+
   # Security scanning impact
   - record: spiralogic:security_scan_impact
     expr: |
       (
-        avg_over_time(spiralogic_cpu_usage_percent[5m]) during 
+        avg_over_time(spiralogic_cpu_usage_percent[5m]) during
         spiralogic_security_scan_active == 1
       ) - avg_over_time(spiralogic_cpu_usage_percent[5m])
     labels:
@@ -396,7 +396,7 @@ groups:
 - name: spiralogic.security.derived_metrics
   interval: 120s
   rules:
-  
+
   # Overall security health score
   - record: spiralogic:security_health_score
     expr: |
@@ -413,7 +413,7 @@ groups:
     labels:
       component: security_posture
       metric_type: health_score
-  
+
   # Risk assessment score
   - record: spiralogic:risk_assessment_score
     expr: |
@@ -427,7 +427,7 @@ groups:
     labels:
       component: risk_management
       metric_type: risk_score
-  
+
   # Security trend analysis
   - record: spiralogic:security_trend_7d
     expr: |
@@ -438,7 +438,7 @@ groups:
     labels:
       component: security_posture
       metric_type: trend_7day
-  
+
   # Consciousness security index
   - record: spiralogic:consciousness_security_index
     expr: |

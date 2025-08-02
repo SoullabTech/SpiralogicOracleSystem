@@ -155,7 +155,7 @@ if command -v docker &> /dev/null; then
     if docker info >/dev/null 2>&1; then
         echo -e "${GREEN}✅ Docker is available and running${NC}"
         echo "Building Docker containers..."
-        
+
         # Build backend container
         cd backend
         if docker build -t spiralogic-oracle-backend:local . >/dev/null 2>&1; then
@@ -164,14 +164,14 @@ if command -v docker &> /dev/null; then
             echo -e "${YELLOW}⚠️  Backend container build failed${NC}"
         fi
         cd ..
-        
+
         # Build frontend container
         if docker build -t spiralogic-oracle-frontend:local . >/dev/null 2>&1; then
             echo -e "${GREEN}✅ Frontend container built${NC}"
         else
             echo -e "${YELLOW}⚠️  Frontend container build failed${NC}"
         fi
-        
+
     else
         echo -e "${YELLOW}⚠️  Docker available but not running${NC}"
         echo "Start Docker Desktop to enable containerization"

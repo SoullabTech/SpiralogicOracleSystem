@@ -2,7 +2,7 @@
 version: '3.8'
 services:
   fire-agent:
-    build: 
+    build:
       context: ../src/services/fire-agent
       dockerfile: Dockerfile
     ports:

@@ -17,9 +17,9 @@ rules:
   resources:
   - group: ""
     resources: ["secrets", "configmaps"]
-    resourceNames: 
+    resourceNames:
     - "consciousness-secrets"
-    - "voice-model-secrets" 
+    - "voice-model-secrets"
     - "sacred-mirror-secrets"
     - "elemental-agent-secrets"
   omitStages: ["RequestReceived"]
@@ -30,7 +30,7 @@ rules:
   resources:
   - group: ""
     resources: ["persistentvolumes", "persistentvolumeclaims"]
-  resourceNames: 
+  resourceNames:
   - "*consciousness*"
   - "*sacred-mirror*"
   - "*voice-model*"
@@ -95,7 +95,7 @@ rules:
     resources: ["secretproviderclasses", "secretproviderclasspodstatuses"]
 
 # =====================================
-# NETWORK SECURITY AUDIT  
+# NETWORK SECURITY AUDIT
 # =====================================
 
 # Log network policy changes
@@ -308,7 +308,7 @@ rules:
 
 # Log emergency access operations
 - level: RequestResponse
-  users: 
+  users:
   - "emergency@spiralogic.network"
   - "incident-response@spiralogic.network"
   omitStages: ["RequestReceived"]

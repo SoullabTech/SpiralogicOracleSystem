@@ -36,50 +36,50 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package spiralogic.security.context
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           not container.securityContext.runAsNonRoot
           msg := sprintf("Container %v must run as non-root user", [container.name])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           user_id := container.securityContext.runAsUser
           not user_id_allowed(user_id)
           msg := sprintf("Container %v uses forbidden user ID %v", [container.name, user_id])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           not container.securityContext.readOnlyRootFilesystem
           msg := sprintf("Container %v must have read-only root filesystem", [container.name])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           container.securityContext.privileged
           msg := sprintf("Container %v must not run in privileged mode", [container.name])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           container.securityContext.allowPrivilegeEscalation
           msg := sprintf("Container %v must not allow privilege escalation", [container.name])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           cap := container.securityContext.capabilities.add[_]
           forbidden_capability(cap)
           msg := sprintf("Container %v uses forbidden capability %v", [container.name, cap])
         }
-        
+
         user_id_allowed(user_id) {
           allowed_users := input.parameters.allowedUsers
           user_id == allowed_users[_]
         }
-        
+
         forbidden_capability(cap) {
           forbidden_caps := input.parameters.forbiddenCapabilities
           cap == forbidden_caps[_]
@@ -100,9 +100,9 @@ spec:
   parameters:
     allowedUsers: [1001, 65532, 65534]  # spiralogic, nonroot, nobody
     allowedGroups: [1001, 65532, 65534]
-    forbiddenCapabilities: 
+    forbiddenCapabilities:
       - "SYS_ADMIN"
-      - "NET_ADMIN" 
+      - "NET_ADMIN"
       - "SYS_TIME"
       - "SYS_MODULE"
       - "SYS_RAWIO"
@@ -136,60 +136,60 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package spiralogic.resources.limits
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           not container.resources.limits.cpu
           msg := sprintf("Container %v must have CPU limits", [container.name])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           not container.resources.limits.memory
           msg := sprintf("Container %v must have memory limits", [container.name])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           cpu_limit := container.resources.limits.cpu
           exceeds_cpu_limit(cpu_limit)
           msg := sprintf("Container %v CPU limit %v exceeds maximum %v", [container.name, cpu_limit, input.parameters.maxCpu])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           memory_limit := container.resources.limits.memory
           exceeds_memory_limit(memory_limit)
           msg := sprintf("Container %v memory limit %v exceeds maximum %v", [container.name, memory_limit, input.parameters.maxMemory])
         }
-        
+
         exceeds_cpu_limit(limit) {
           limit_val := parse_cpu(limit)
           max_val := parse_cpu(input.parameters.maxCpu)
           limit_val > max_val
         }
-        
+
         exceeds_memory_limit(limit) {
           limit_val := parse_memory(limit)
           max_val := parse_memory(input.parameters.maxMemory)
           limit_val > max_val
         }
-        
+
         parse_cpu(cpu_str) = cpu_val {
           endswith(cpu_str, "m")
           cpu_val := to_number(trim_suffix(cpu_str, "m"))
         }
-        
+
         parse_cpu(cpu_str) = cpu_val {
           not endswith(cpu_str, "m")
           cpu_val := to_number(cpu_str) * 1000
         }
-        
+
         parse_memory(mem_str) = mem_val {
           endswith(mem_str, "Mi")
           mem_val := to_number(trim_suffix(mem_str, "Mi"))
         }
-        
+
         parse_memory(mem_str) = mem_val {
           endswith(mem_str, "Gi")
           mem_val := to_number(trim_suffix(mem_str, "Gi")) * 1024
@@ -242,37 +242,37 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package spiralogic.image.security
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           not image_from_allowed_registry(container.image)
           msg := sprintf("Container %v uses image from forbidden registry: %v", [container.name, container.image])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           uses_forbidden_tag(container.image)
           msg := sprintf("Container %v uses forbidden image tag: %v", [container.name, container.image])
         }
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           not has_required_labels(container.image)
           msg := sprintf("Container %v image lacks required security labels", [container.name])
         }
-        
+
         image_from_allowed_registry(image) {
           allowed_registries := input.parameters.allowedRegistries
           registry := split(image, "/")[0]
           registry == allowed_registries[_]
         }
-        
+
         uses_forbidden_tag(image) {
           forbidden_tags := input.parameters.forbiddenTags
           tag := split(image, ":")[1]
           tag == forbidden_tags[_]
         }
-        
+
         has_required_labels(image) {
           # This would need to be implemented with additional image inspection
           # For now, allow all images that pass registry check
@@ -335,7 +335,7 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package spiralogic.network.policy
-        
+
         violation[{"msg": msg}] {
           input.parameters.requireNetworkPolicy
           input.review.object.kind == "Pod"
@@ -343,7 +343,7 @@ spec:
           not network_policy_exists(namespace)
           msg := sprintf("Namespace %v requires a NetworkPolicy", [namespace])
         }
-        
+
         network_policy_exists(namespace) {
           # This would need to query existing NetworkPolicies
           # For now, assume NetworkPolicy exists if not in default namespace
@@ -391,51 +391,51 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package spiralogic.consciousness.security
-        
+
         violation[{"msg": msg}] {
           input.parameters.requireVaultIntegration
           has_consciousness_labels
           not has_vault_integration
           msg := "Consciousness containers must integrate with Vault for secret management"
         }
-        
+
         violation[{"msg": msg}] {
           input.parameters.requireModelEncryption
           has_consciousness_labels
           not has_model_encryption
           msg := "Consciousness containers must enable model encryption"
         }
-        
+
         violation[{"msg": msg}] {
           input.parameters.requireAuditLogging
           has_consciousness_labels
           not has_audit_logging
           msg := "Consciousness containers must enable audit logging"
         }
-        
+
         has_consciousness_labels {
           label := input.review.object.metadata.labels["elemental.type"]
           label != null
         }
-        
+
         has_consciousness_labels {
           label := input.review.object.metadata.labels["consciousness.enabled"]
           label == "true"
         }
-        
+
         has_vault_integration {
           container := input.review.object.spec.containers[_]
           env := container.env[_]
           contains(env.name, "VAULT")
         }
-        
+
         has_model_encryption {
           container := input.review.object.spec.containers[_]
           env := container.env[_]
           env.name == "MODEL_ENCRYPTION_ENABLED"
           env.value == "true"
         }
-        
+
         has_audit_logging {
           container := input.review.object.spec.containers[_]
           env := container.env[_]

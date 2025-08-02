@@ -77,7 +77,7 @@ echo "🎵 Checking ffmpeg..."
 ffmpeg -version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "⚠️  ffmpeg not found. Installing..."
-    
+
     # Try different package managers
     if command -v brew >/dev/null 2>&1; then
         echo "Installing ffmpeg via Homebrew..."
@@ -115,7 +115,7 @@ from transformers import AutoProcessor
 print('✅ Basic imports successful')
 print(f'PyTorch version: {torch.__version__}')
 "
-    
+
     if [ $? -eq 0 ]; then
         echo "✅ Setup appears successful!"
     else
