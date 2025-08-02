@@ -58,16 +58,16 @@ async function ingestElementalAlchemyBook() {
 
     // Read the book file
     const content = await fs.readFile(bookPath, 'utf-8');
-    
+
     // Parse the book structure
     const book = await parseElementalAlchemyBook(content);
-    
+
     // Extract elemental wisdom
     const elementalWisdom = extractElementalWisdom(book);
-    
+
     // Create knowledge update for Founder Agent
     const knowledgeUpdate = createKnowledgeUpdate(book, elementalWisdom);
-    
+
     // Save the processed knowledge
     await saveProcessedKnowledge(knowledgeUpdate);
 
@@ -184,7 +184,7 @@ async function parseElementalAlchemyBook(content: string): Promise<BookContent> 
 function extractDedication(lines: string[]): string {
   const dedStart = lines.findIndex(line => line.includes('Dedication'));
   const dedEnd = lines.findIndex((line, index) => index > dedStart && line.includes('Acknowledgments'));
-  
+
   if (dedStart !== -1 && dedEnd !== -1) {
     return lines.slice(dedStart + 1, dedEnd).join(' ').trim();
   }
@@ -237,7 +237,7 @@ function extractElementalWisdom(book: BookContent): ElementalWisdom {
 
 function extractElementTeaching(book: BookContent, element: string): ElementTeaching {
   const elementChapter = book.chapters.find(ch => ch.element === element);
-  
+
   if (!elementChapter) {
     return {
       essence: '',
@@ -249,7 +249,7 @@ function extractElementTeaching(book: BookContent, element: string): ElementTeac
   }
 
   const content = elementChapter.content;
-  
+
   return {
     essence: extractEssence(content, element),
     practices: extractPractices(content),
@@ -324,7 +324,7 @@ function extractQualities(content: string, element: string): string[] {
 function extractHealingApplications(content: string): string[] {
   const applications: string[] = [];
   const healingKeywords = ['healing', 'balance', 'restore', 'transform', 'integrate', 'harmonize'];
-  
+
   const lines = content.split('\n');
   lines.forEach(line => {
     if (healingKeywords.some(keyword => line.toLowerCase().includes(keyword)) && line.length > 40) {
@@ -375,7 +375,7 @@ function createKnowledgeUpdate(book: BookContent, wisdom: ElementalWisdom) {
 
 async function saveProcessedKnowledge(knowledge: any): Promise<void> {
   const knowledgePath = path.join(
-    __dirname, 
+    __dirname,
     '../data/founder-knowledge/elemental-alchemy-book.json'
   );
 
@@ -393,17 +393,17 @@ ingestElementalAlchemyBook();
 
 /**
  * 📚 ELEMENTAL ALCHEMY BOOK INGESTION
- * 
+ *
  * This script processes Kelly Nezat's "Elemental Alchemy: The Ancient Art of Living a Phenomenal Life"
  * and integrates it into the Soullab Founder Agent's knowledge base.
- * 
+ *
  * The script extracts:
  * - Chapter structure and key teachings
  * - Elemental wisdom for Fire, Water, Earth, Air, and Aether
  * - Practical applications and exercises
  * - Core philosophical teachings
  * - Healing applications and shadow work
- * 
+ *
  * This enriches the Founder Agent's ability to explain:
  * - The practical application of elemental alchemy
  * - Personal transformation through elemental balance

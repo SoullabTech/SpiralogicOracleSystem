@@ -1,10 +1,10 @@
 /**
  * Inter-Archetypal Dialogue Engine
- * 
+ *
  * Facilitates dynamic collaboration between archetypal forces with full integration
  * of shadow work and cultural wisdom from Phase 1 & 2. Creates collective consciousness
  * through respectful archetypal collaboration and wisdom synthesis.
- * 
+ *
  * Features:
  * - Archetypal council convening with cultural adaptation
  * - Shadow-light dialogue facilitation using JungianShadowIntegrationEngine
@@ -16,23 +16,23 @@
 
 import { logger } from '../../utils/logger';
 import { CulturalProfile } from '../cultural/CulturalContextAwareness';
-import { 
+import {
   culturalContextAwareness,
   crossCulturalArchetypeMapping,
   indigenousSovereigntyProtocol,
   CulturalArchetypeExpression
 } from '../cultural/index';
-import { 
+import {
   jungianShadowIntegrationEngine,
   ShadowIntegrationPlan,
   ShadowComplexAnalysis
 } from '../soulDevelopment/JungianShadowIntegrationEngine';
-import { 
+import {
   lifeSpiralHarmonizer,
   LifeSpiralHarmonizerPlan,
   SoulMandateAnalysis
 } from '../soulDevelopment/LifeSpiralHarmonizer';
-import { 
+import {
   dreamJournalingIntegration,
   DreamAnalysis,
   StoryWeavingConnection
@@ -407,7 +407,7 @@ export class InterArchetypalDialogueEngine {
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
     dreamAnalyses?: DreamAnalysis[]
   ): Promise<ArchetypalCouncilSession> {
-    
+
     try {
       logger.info('Convening archetypal council', {
         userId,
@@ -518,10 +518,10 @@ export class InterArchetypalDialogueEngine {
     culturalProfile: CulturalProfile,
     shadowPlan?: ShadowIntegrationPlan
   ): Promise<ShadowLightDialogue> {
-    
+
     try {
       const dialogueId = `dialogue_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Create dialogue participants from archetypes and shadow aspects
       const dialogueParticipants = await this.createDialogueParticipants(
         archetypes,
@@ -598,7 +598,7 @@ export class InterArchetypalDialogueEngine {
     shadowLightDialogue: ShadowLightDialogue,
     culturalProfile: CulturalProfile
   ): Promise<MultiPerspectiveWisdomSynthesis> {
-    
+
     try {
       const synthesisId = `synthesis_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -676,7 +676,7 @@ export class InterArchetypalDialogueEngine {
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
     dreamAnalyses?: DreamAnalysis[]
   ): Promise<ArchetypalIntegrationPathway> {
-    
+
     try {
       const pathwayId = `pathway_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -752,12 +752,12 @@ export class InterArchetypalDialogueEngine {
     shadowPlan?: ShadowIntegrationPlan,
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan
   ): Promise<ConvenedArchetype[]> {
-    
+
     const archetypes: ConvenedArchetype[] = [];
-    
+
     // Identify primary elemental archetypes
     const primaryArchetypes = await this.identifyPrimaryArchetypes(challenge);
-    
+
     // Add cultural archetypal expressions
     for (const archetype of primaryArchetypes) {
       const culturalExpression = await crossCulturalArchetypeMapping.translateArchetype({
@@ -823,7 +823,7 @@ export class InterArchetypalDialogueEngine {
     archetype: string,
     shadowPlan?: ShadowIntegrationPlan
   ): Promise<string[]> {
-    
+
     const archetypeShadows = {
       fire: ['Burnout', 'Destructive rage', 'Impulsiveness', 'Domination'],
       water: ['Emotional overwhelm', 'Codependency', 'Victim consciousness', 'Emotional manipulation'],
@@ -859,11 +859,11 @@ export class InterArchetypalDialogueEngine {
     archetype: string,
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan
   ): Promise<number> {
-    
+
     if (!lifeSpiralPlan) return 0.5; // Default moderate activation
 
     const elementalSignature = lifeSpiralPlan.soulMandateAnalysis.elementalSignature;
-    
+
     if (elementalSignature.primaryElement === archetype) {
       return 0.8; // High activation for primary element
     } else if (elementalSignature.secondaryElement === archetype) {
@@ -1140,7 +1140,7 @@ export class InterArchetypalDialogueEngine {
     pathway: ArchetypalIntegrationPathway,
     adaptations: CulturalAdaptation[]
   ): Promise<CouncilOutcome> {
-    
+
     return {
       outcomeId: `outcome_${Date.now()}`,
       primaryResolution: `Archetypal council provides integrated wisdom for: ${challenge}`,

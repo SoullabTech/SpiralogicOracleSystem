@@ -67,16 +67,16 @@ ingestSpiralogicManifesto();
 
 /**
  * 🌀 SPIRALOGIC MANIFESTO INGESTION
- * 
+ *
  * This script processes the Spiralogic Process Manifesto and integrates it
  * into the Soullab Founder Agent's knowledge base.
- * 
+ *
  * Usage:
  * npm run scripts:ingest-manifesto
- * 
+ *
  * Or directly:
  * ts-node scripts/ingestSpiralogicManifesto.ts
- * 
+ *
  * The script will:
  * 1. Read the manifesto markdown file
  * 2. Parse its structure and extract key insights

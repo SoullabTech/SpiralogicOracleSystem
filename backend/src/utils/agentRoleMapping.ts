@@ -19,12 +19,12 @@ export interface AgentMetadata {
  */
 export function getAgentRole(metadata: AgentMetadata): AgentRole {
   const { agentType, context } = metadata;
-  
+
   // Check for narrator-specific contexts
   if (context?.isNarration || context?.type === 'meditation' || context?.type === 'ceremony') {
     return AgentRole.NARRATOR;
   }
-  
+
   // Map agent types to roles
   const agentTypeMap: Record<string, AgentRole> = {
     // Oracle agents
@@ -32,7 +32,7 @@ export function getAgentRole(metadata: AgentMetadata): AgentRole {
     'PersonalOracleAgent': AgentRole.ORACLE,
     'EnhancedPersonalOracleAgent': AgentRole.ORACLE,
     'PersonalizedOracleAgent': AgentRole.ORACLE,
-    
+
     // Elemental agents
     'FireAgent': AgentRole.ELEMENTAL,
     'WaterAgent': AgentRole.ELEMENTAL,
@@ -40,14 +40,14 @@ export function getAgentRole(metadata: AgentMetadata): AgentRole {
     'AirAgent': AgentRole.ELEMENTAL,
     'AetherAgent': AgentRole.ELEMENTAL,
     'ShadowAgent': AgentRole.ELEMENTAL,
-    
+
     // Narrator agents (for static content)
     'NarrationAgent': AgentRole.NARRATOR,
     'MeditationGuide': AgentRole.NARRATOR,
     'CeremonyFacilitator': AgentRole.NARRATOR,
     'TeachingDeliverer': AgentRole.NARRATOR
   };
-  
+
   return agentTypeMap[agentType] || AgentRole.ORACLE;
 }
 
@@ -67,7 +67,7 @@ export function isNarrationContent(content: string): boolean {
     'ancient wisdom teaches',
     'the teaching tells us'
   ];
-  
+
   const lowerContent = content.toLowerCase();
   return narrationKeywords.some(keyword => lowerContent.includes(keyword));
 }

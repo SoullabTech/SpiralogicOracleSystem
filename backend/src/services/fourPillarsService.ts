@@ -66,14 +66,14 @@ export function generateFourPillars(
 
   // Calculate each pillar
   const year = pillar(yearStemIndex, yearBranchIndex);
-  
+
   // Month pillar (simplified - should use solar terms)
   const month = pillar((yearStemIndex + m) % 10, (yearBranchIndex + m) % 12);
-  
+
   // Day pillar (simplified - should use proper Julian day calculation)
   const dayNumber = Math.floor(local.getTime() / 86400000);
   const day = pillar((dayNumber + 40) % 10, (dayNumber + 16) % 12);
-  
+
   // Hour pillar (based on Chinese double-hour system)
   const hourBranchIndex = Math.floor((h + 1) / 2) % 12;
   const hourStemIndex = (yearStemIndex * 2 + hourBranchIndex) % 10;
@@ -121,11 +121,11 @@ function getBranchElement(branch: string): Element | null {
 export function getHexagramByPillars(yearBranch: string, monthBranch: string): string {
   const yearIndex = BRANCHES.indexOf(yearBranch);
   const monthIndex = BRANCHES.indexOf(monthBranch);
-  
+
   // Simple mapping based on branch combinations
   const hexagramMap: Record<string, string> = {
     'ZiZi': '䷀ Qian / Creative',
-    'ChouChou': '䷁ Kun / Receptive', 
+    'ChouChou': '䷁ Kun / Receptive',
     'YinYin': '䷂ Zhun / Difficulty at Beginning',
     'MaoMao': '䷃ Meng / Youthful Folly',
     'ChenChen': '䷄ Xu / Waiting',
@@ -148,7 +148,7 @@ export function getHexagramByPillars(yearBranch: string, monthBranch: string): s
 export function getElementRelationship(element1: Element, element2: Element): 'generates' | 'destroys' | 'neutral' {
   const generationCycle: Record<Element, Element> = {
     Wood: 'Fire',
-    Fire: 'Earth', 
+    Fire: 'Earth',
     Earth: 'Metal',
     Metal: 'Water',
     Water: 'Wood'
@@ -174,7 +174,7 @@ export function calculateElementalBalance(profile: FourPillarsProfile): number {
   const values = Object.values(profile.elementTally);
   const average = values.reduce((a, b) => a + b, 0) / values.length;
   const variance = values.reduce((acc, val) => acc + Math.pow(val - average, 2), 0) / values.length;
-  
+
   // Lower variance = better balance
   return Math.max(0, 100 - (variance * 25));
 }

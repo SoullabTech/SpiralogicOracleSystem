@@ -9,7 +9,7 @@ class SOUL {
         default: return 'Neutral';
       }
     }
-  
+
     public static adjustContent(userArchetype: string): string {
       switch (userArchetype) {
         case 'Visionary': return 'Here’s a new vision for your future...';
@@ -18,4 +18,3 @@ class SOUL {
       }
     }
   }
-  

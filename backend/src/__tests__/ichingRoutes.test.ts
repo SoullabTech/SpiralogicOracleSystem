@@ -19,7 +19,7 @@ describe('I Ching API Routes', () => {
       expect(response.body).toHaveProperty('profile');
       expect(response.body).toHaveProperty('birthArchetype');
       expect(response.body).toHaveProperty('currentArchetype');
-      
+
       // Verify profile structure
       const { profile } = response.body;
       expect(profile).toHaveProperty('baseNumber');
@@ -28,7 +28,7 @@ describe('I Ching API Routes', () => {
       expect(profile).toHaveProperty('currentTrigramCycle');
       expect(profile).toHaveProperty('hexagramMapping');
       expect(profile).toHaveProperty('yearlyGuidance');
-      
+
       expect(typeof profile.baseNumber).toBe('number');
       expect(profile.baseNumber).toBeGreaterThanOrEqual(1);
       expect(profile.baseNumber).toBeLessThanOrEqual(9);
@@ -75,7 +75,7 @@ describe('I Ching API Routes', () => {
       expect(response.body).toHaveProperty('birthArchetype');
       expect(response.body).toHaveProperty('currentArchetype');
       expect(response.body).toHaveProperty('selfCompatibility');
-      
+
       // Verify self-compatibility calculation
       const { selfCompatibility } = response.body;
       expect(selfCompatibility).toHaveProperty('compatibility');
@@ -109,7 +109,7 @@ describe('I Ching API Routes', () => {
     test('calculates compatibility between valid trigrams', async () => {
       const response = await request(app)
         .post('/api/iching/compatibility')
-        .send({ 
+        .send({
           trigram1: 'Thunder',
           trigram2: 'Wind'
         });
@@ -119,11 +119,11 @@ describe('I Ching API Routes', () => {
       expect(response.body).toHaveProperty('trigram1');
       expect(response.body).toHaveProperty('trigram2');
       expect(response.body).toHaveProperty('compatibility');
-      
+
       // Verify trigram details
       expect(response.body.trigram1.name).toBe('Thunder');
       expect(response.body.trigram2.name).toBe('Wind');
-      
+
       // Verify compatibility calculation
       const { compatibility } = response.body;
       expect(compatibility).toHaveProperty('compatibility');
@@ -134,7 +134,7 @@ describe('I Ching API Routes', () => {
     test('handles invalid trigram names', async () => {
       const response = await request(app)
         .post('/api/iching/compatibility')
-        .send({ 
+        .send({
           trigram1: 'Invalid',
           trigram2: 'Thunder'
         });
@@ -157,7 +157,7 @@ describe('I Ching API Routes', () => {
     test('calculates same trigram compatibility', async () => {
       const response = await request(app)
         .post('/api/iching/compatibility')
-        .send({ 
+        .send({
           trigram1: 'Heaven',
           trigram2: 'Heaven'
         });
@@ -178,11 +178,11 @@ describe('I Ching API Routes', () => {
       expect(response.body).toHaveProperty('trigrams');
       expect(response.body).toHaveProperty('count');
       expect(Array.isArray(response.body.trigrams)).toBe(true);
-      
+
       // Should have 8 unique trigrams (Thunder appears twice but archetype is same)
       expect(response.body.trigrams.length).toBeGreaterThan(0);
       expect(response.body.count).toBe(response.body.trigrams.length);
-      
+
       // Verify trigram structure
       const trigram = response.body.trigrams[0];
       expect(trigram).toHaveProperty('name');
@@ -208,7 +208,7 @@ describe('I Ching API Routes', () => {
       expect(response.body).toHaveProperty('guidance');
       expect(response.body).toHaveProperty('fractalPhase');
       expect(response.body).toHaveProperty('cyclePosition');
-      
+
       expect(response.body.year).toBe(new Date().getFullYear());
       expect(typeof response.body.guidance).toBe('string');
       expect(response.body.guidance.length).toBeGreaterThan(10);
@@ -284,12 +284,12 @@ describe('I Ching API Routes', () => {
 
       for (const route of routes) {
         const req = request(app)[route.method](route.path);
-        
+
         if (route.query) req.query(route.query);
         if (route.body) req.send(route.body);
-        
+
         const response = await req;
-        
+
         if (response.status === 200) {
           expect(response.body).toHaveProperty('success');
           expect(response.body.success).toBe(true);
@@ -307,12 +307,12 @@ describe('I Ching API Routes', () => {
 
       for (const route of errorRoutes) {
         const req = request(app)[route.method](route.path);
-        
+
         if (route.query) req.query(route.query);
         if (route.body) req.send(route.body);
-        
+
         const response = await req;
-        
+
         if (response.status >= 400) {
           expect(response.body).toHaveProperty('success');
           expect(response.body.success).toBe(false);

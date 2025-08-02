@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { 
+import {
   getIChingAstroProfile,
   postIChingAstroProfile,
   calculateIChingCompatibility,
@@ -11,7 +11,7 @@ const router = Router();
 
 /**
  * I Ching Astrology Routes
- * 
+ *
  * Provides complete I Ching astrology calculations based on:
  * - Joel Seigneur's I Ching Astrology system
  * - Katya Walter's Tao of Chaos fractal patterns

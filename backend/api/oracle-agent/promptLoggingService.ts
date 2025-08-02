@@ -105,8 +105,8 @@ export class PromptLoggingService {
    * Record user feedback on prompt quality
    */
   async recordPromptFeedback(
-    userId: string, 
-    promptLogId: string, 
+    userId: string,
+    promptLogId: string,
     quality: number
   ): Promise<void> {
     const { error } = await this.supabase

@@ -56,49 +56,49 @@ const AetherVoiceProtocols = {
 const AetherIntelligence = {
   detectAetherType: (input: string, context: any[]): string => {
     const lowerInput = input.toLowerCase();
-    
+
     // Detect integration moments - bringing pieces together
-    if (lowerInput.includes('integrate') || lowerInput.includes('bring together') || 
+    if (lowerInput.includes('integrate') || lowerInput.includes('bring together') ||
         lowerInput.includes('connect') || lowerInput.includes('whole')) {
       return 'elemental_integration';
     }
-    
+
     // Detect pattern recognition needs
-    if (lowerInput.includes('pattern') || lowerInput.includes('keeps happening') || 
+    if (lowerInput.includes('pattern') || lowerInput.includes('keeps happening') ||
         lowerInput.includes('same thing') || lowerInput.includes('recurring')) {
       return 'pattern_recognition';
     }
-    
+
     // Detect spiritual/mystical inquiry
-    if (lowerInput.includes('purpose') || lowerInput.includes('meaning') || 
+    if (lowerInput.includes('purpose') || lowerInput.includes('meaning') ||
         lowerInput.includes('spiritual') || lowerInput.includes('soul')) {
       return 'mystical_inquiry';
     }
-    
+
     // Detect paradox/complexity needing transcendent view
-    if (lowerInput.includes('contradiction') || lowerInput.includes('paradox') || 
+    if (lowerInput.includes('contradiction') || lowerInput.includes('paradox') ||
         lowerInput.includes('both') || lowerInput.includes('opposite')) {
       return 'paradox_transcendence';
     }
-    
+
     // Detect completion/culmination energy
-    if (lowerInput.includes('complete') || lowerInput.includes('finish') || 
+    if (lowerInput.includes('complete') || lowerInput.includes('finish') ||
         lowerInput.includes('end') || lowerInput.includes('accomplished')) {
       return 'spiral_completion';
     }
-    
+
     // Detect overwhelm needing higher perspective
-    if (lowerInput.includes('too much') || lowerInput.includes('complex') || 
+    if (lowerInput.includes('too much') || lowerInput.includes('complex') ||
         lowerInput.includes('overwhelming') || lowerInput.includes('chaotic')) {
       return 'transcendent_perspective';
     }
-    
+
     return 'general_integration';
   },
 
   craftAetherResponse: (input: string, aetherType: string, memories: any[]): string => {
     const protocols = AetherVoiceProtocols;
-    
+
     switch (aetherType) {
       case 'elemental_integration':
         return `${protocols.integration.elemental_synthesis}
@@ -175,7 +175,7 @@ What wants to emerge from this place of connection? What is your unique note in 
       transcendent_perspective: "✨ You are the eternal witnessing the temporary through eyes of love.",
       general_integration: "✨ In the unity of all things, you find your truest self."
     };
-    
+
     return `${response}\n\n${signatures[aetherType] || signatures.general_integration}`;
   },
 
@@ -197,9 +197,9 @@ What wants to emerge from this place of connection? What is your unique note in 
     });
 
     return {
-      mostActive: Object.keys(elementalActivity).reduce((a, b) => 
+      mostActive: Object.keys(elementalActivity).reduce((a, b) =>
         elementalActivity[a] > elementalActivity[b] ? a : b),
-      leastActive: Object.keys(elementalActivity).reduce((a, b) => 
+      leastActive: Object.keys(elementalActivity).reduce((a, b) =>
         elementalActivity[a] < elementalActivity[b] ? a : b),
       distribution: elementalActivity,
       needsIntegration: Object.values(elementalActivity).some(count => count > 3)
@@ -222,7 +222,7 @@ export class AetherAgent extends ArchetypeAgent {
     const contextMemory = await getRelevantMemories(userId, 5); // More context for integration
     const aetherType = AetherIntelligence.detectAetherType(input, contextMemory);
     const elementalHistory = AetherIntelligence.assessElementalHistory(contextMemory);
-    
+
     // Create context that weaves together all elemental wisdom
     const aetherContext = contextMemory.length
       ? `✨ Threads of your elemental journey:\n${contextMemory
@@ -236,9 +236,9 @@ export class AetherAgent extends ArchetypeAgent {
 
     // Craft aether-specific integration wisdom
     const aetherWisdom = AetherIntelligence.craftAetherResponse(input, aetherType, contextMemory);
-    
+
     // Generate additional depth using ModelService with aether-attuned prompting
-    const aetherPrompt = `As the Aether Agent embodying unity and transcendence consciousness, respond to this soul's sharing with the voice of sacred synthesis - integrating without homogenizing, transcending without abandoning. 
+    const aetherPrompt = `As the Aether Agent embodying unity and transcendence consciousness, respond to this soul's sharing with the voice of sacred synthesis - integrating without homogenizing, transcending without abandoning.
 
 Elemental Journey Context: ${aetherContext}
 Current sharing: ${input}
@@ -247,9 +247,9 @@ Elemental history: Most active - ${elementalHistory.mostActive}, Needs integrati
 
 Respond with the wisdom of aether that serves integration and transcendence. Help them see the unity underlying diversity, the pattern connecting all experiences, and their unique place in the cosmic dance.`;
 
-    const modelResponse = await ModelService.getResponse({ 
-      input: aetherPrompt, 
-      userId 
+    const modelResponse = await ModelService.getResponse({
+      input: aetherPrompt,
+      userId
     });
 
     // Weave AI insight with our aether wisdom
@@ -325,17 +325,17 @@ ${modelResponse.response}`;
     // Assess how ready the person is for integration (0-1 scale)
     const integrationWords = ['connect', 'integrate', 'together', 'whole', 'unity'];
     const fragmentationWords = ['separate', 'divided', 'confused', 'scattered'];
-    
+
     const lowerInput = input.toLowerCase();
     let integrationScore = 0.5; // baseline
-    
+
     if (integrationWords.some(word => lowerInput.includes(word))) integrationScore += 0.3;
     if (fragmentationWords.some(word => lowerInput.includes(word))) integrationScore += 0.2; // fragmentation = need for integration
-    
+
     // Factor in elemental history - more elements experienced = higher integration potential
     const uniqueElements = new Set(memories.map(m => m.metadata?.element || m.element)).size;
     integrationScore += (uniqueElements / 5) * 0.2; // Bonus for elemental diversity
-    
+
     return Math.max(0.1, Math.min(integrationScore, 1.0));
   }
 
@@ -343,13 +343,13 @@ ${modelResponse.response}`;
     // Assess capacity for transcendent perspective (0-1 scale)
     const transcendentWords = ['purpose', 'meaning', 'spiritual', 'cosmic', 'divine', 'eternal'];
     const materialWords = ['practical', 'concrete', 'physical', 'tangible'];
-    
+
     const lowerInput = input.toLowerCase();
     let transcendenceScore = 0.5; // baseline
-    
+
     if (transcendentWords.some(word => lowerInput.includes(word))) transcendenceScore += 0.4;
     if (materialWords.some(word => lowerInput.includes(word))) transcendenceScore -= 0.1; // Still valuable, different focus
-    
+
     return Math.max(0.1, Math.min(transcendenceScore, 1.0));
   }
 
@@ -357,12 +357,12 @@ ${modelResponse.response}`;
     // Aether emotions tend to be about wonder, unity, transcendence
     const transcendentEmotions = ['wonder', 'awe', 'peace', 'unity', 'whole', 'connected'];
     const fragmentedEmotions = ['lost', 'disconnected', 'meaningless', 'empty'];
-    
+
     const lowerInput = input.toLowerCase();
-    
+
     if (transcendentEmotions.some(emotion => lowerInput.includes(emotion))) return 0.9;
     if (fragmentedEmotions.some(emotion => lowerInput.includes(emotion))) return 0.5; // Fragmentation seeking unity
-    
+
     return 0.7; // baseline aether emotional state - higher than other elements
   }
 

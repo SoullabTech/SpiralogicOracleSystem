@@ -36,18 +36,18 @@ router.get('/', asyncHandler(async (req, res) => {
   // Check if file exists
   if (!fs.existsSync(filePath)) {
     logger.warn(`Voice sample not found: ${filePath}`);
-    
+
     // For development: return a mock audio response
     if (process.env.NODE_ENV === 'development') {
       // Generate a simple beep tone or return demo audio
-      res.status(200).json({ 
+      res.status(200).json({
         message: 'Demo mode: Voice sample would play here',
         voice_id: voiceId,
         duration: 5000
       });
       return;
     }
-    
+
     throw createError('Voice sample not available', 404);
   }
 
@@ -69,7 +69,7 @@ router.get('/', asyncHandler(async (req, res) => {
     const start = parseInt(parts[0], 10);
     const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
     const chunksize = (end - start) + 1;
-    
+
     const stream = fs.createReadStream(filePath, { start, end });
     res.writeHead(206, {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
@@ -105,7 +105,7 @@ function getVoiceDescription(voiceId: string): string {
     'Jasper': 'Clear & Grounded - Practical wisdom with steady presence',
     'Orion': 'Cosmic & Transcendent - Ethereal guidance from stellar depths'
   };
-  
+
   return descriptions[voiceId as keyof typeof descriptions] || 'Voice description not available';
 }
 

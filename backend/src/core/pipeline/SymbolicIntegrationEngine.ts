@@ -1,6 +1,6 @@
 /**
  * 🔮 Symbolic Integration Engine - Sacred Wisdom & Ritual Guidance
- * 
+ *
  * Integrates symbolic elements, ritual guidance, and journaling prompts
  * based on archetypal wisdom and Spiralogic phases.
  */
@@ -40,11 +40,11 @@ export class SymbolicIntegrationEngine {
   private seasonalWisdom: Map<string, any> = new Map();
   private mythicReferences: Map<string, string[]> = new Map();
   private sacredSymbols: Map<string, string[]> = new Map();
-  
+
   constructor() {
     this.initializeSymbolicKnowledge();
   }
-  
+
   /**
    * 🌟 Main Integration Method
    */
@@ -55,7 +55,7 @@ export class SymbolicIntegrationEngine {
     userProfile: any,
     context: any
   ): Promise<SymbolicInsight> {
-    
+
     const ritualPrompts = await this.generateRitualPrompts(archetype, userPhase, userInput);
     const journalQuestions = await this.generateJournalQuestions(archetype, userInput, userProfile);
     const dreamReflections = await this.generateDreamReflections(userInput, archetype);
@@ -63,7 +63,7 @@ export class SymbolicIntegrationEngine {
     const sacredSymbols = this.getSacredSymbols(archetype, userInput);
     const seasonalGuidance = await this.getSeasonalGuidance(archetype);
     const astrologicalInfluence = await this.getAstrologicalInfluence(archetype, userProfile);
-    
+
     logger.info('Symbolic Integration Generated:', {
       archetype,
       userPhase,
@@ -71,7 +71,7 @@ export class SymbolicIntegrationEngine {
       journalCount: journalQuestions.length,
       symbolCount: sacredSymbols.length
     });
-    
+
     return {
       ritualPrompts,
       journalQuestions,
@@ -82,7 +82,7 @@ export class SymbolicIntegrationEngine {
       astrologicalInfluence
     };
   }
-  
+
   /**
    * 🕯️ Ritual Guidance Generation
    */
@@ -92,7 +92,7 @@ export class SymbolicIntegrationEngine {
     userInput: string,
     urgency: 'immediate' | 'daily' | 'weekly' = 'daily'
   ): Promise<RitualGuidance> {
-    
+
     const baseRituals = {
       fire: {
         initiation: {
@@ -255,10 +255,10 @@ export class SymbolicIntegrationEngine {
         }
       }
     };
-    
+
     const ritual = baseRituals[archetype]?.[userPhase] || baseRituals.earth.initiation;
     const timing = this.determineBestTiming(archetype, urgency);
-    
+
     return {
       element: archetype,
       suggestion: ritual.suggestion,
@@ -270,7 +270,7 @@ export class SymbolicIntegrationEngine {
       affirmation: ritual.affirmation
     };
   }
-  
+
   /**
    * 📝 Journal Prompts Generation
    */
@@ -279,7 +279,7 @@ export class SymbolicIntegrationEngine {
     userInput: string,
     userProfile: any
   ): Promise<string[]> {
-    
+
     const basePrompts = {
       fire: [
         "What is ready to be transformed in my life?",
@@ -317,17 +317,17 @@ export class SymbolicIntegrationEngine {
         "How can I honor the sacred in daily life?"
       ]
     };
-    
+
     const contextualPrompts = this.generateContextualPrompts(userInput, archetype);
     const phasePrompts = this.generatePhasePrompts(userProfile.currentPhase, archetype);
-    
+
     return [
       ...basePrompts[archetype].slice(0, 2),
       ...contextualPrompts.slice(0, 2),
       ...phasePrompts.slice(0, 1)
     ];
   }
-  
+
   /**
    * 🌙 Dream Reflections Generation
    */
@@ -359,10 +359,10 @@ export class SymbolicIntegrationEngine {
         "Dreams of temples, sacred geometry, or universal love"
       ]
     };
-    
+
     return dreamThemes[archetype] || dreamThemes.earth;
   }
-  
+
   /**
    * 🏛️ Mythic References
    */
@@ -399,10 +399,10 @@ export class SymbolicIntegrationEngine {
         "Christ consciousness, universal love"
       ]
     };
-    
+
     return myths[archetype] || myths.earth;
   }
-  
+
   /**
    * 🔮 Sacred Symbols
    */
@@ -414,17 +414,17 @@ export class SymbolicIntegrationEngine {
       air: ["🌬️", "🕊️", "☁️", "🪶", "🎵", "💨"],
       aether: ["✨", "🌟", "🔮", "🕉️", "⭐", "🌌"]
     };
-    
+
     return symbols[archetype] || symbols.earth;
   }
-  
+
   /**
    * 🌅 Seasonal Guidance
    */
   private async getSeasonalGuidance(archetype: string): Promise<string> {
     const month = new Date().getMonth();
     const season = month < 3 ? 'winter' : month < 6 ? 'spring' : month < 9 ? 'summer' : 'autumn';
-    
+
     const seasonalGuidance = {
       fire: {
         spring: "Channel fire's creative energy for new beginnings",
@@ -457,17 +457,17 @@ export class SymbolicIntegrationEngine {
         winter: "Connect with universal love and cosmic wisdom"
       }
     };
-    
+
     return seasonalGuidance[archetype][season];
   }
-  
+
   /**
    * ⭐ Astrological Influence
    */
   private async getAstrologicalInfluence(archetype: string, userProfile: any): Promise<string> {
     // Simple moon phase integration - could be expanded with full astrology
     const moonPhase = this.getCurrentMoonPhase();
-    
+
     const moonGuidance = {
       fire: {
         new: "New moon fire energy perfect for setting intentions",
@@ -500,18 +500,18 @@ export class SymbolicIntegrationEngine {
         waning: "Release what separates you from unity"
       }
     };
-    
+
     return moonGuidance[archetype][moonPhase];
   }
-  
+
   /**
    * 🔧 Helper Methods
    */
   private determineBestTiming(archetype: string, urgency: string): 'now' | 'evening' | 'morning' | 'dawn' | 'dusk' | 'midnight' {
     if (urgency === 'immediate') return 'now';
-    
+
     const hour = new Date().getHours();
-    
+
     const timingMap = {
       fire: hour < 12 ? 'morning' : 'evening',
       water: hour < 6 || hour > 18 ? 'evening' : 'morning',
@@ -519,14 +519,14 @@ export class SymbolicIntegrationEngine {
       air: hour < 14 ? 'morning' : 'evening',
       aether: hour < 6 || hour > 22 ? 'midnight' : 'evening'
     };
-    
+
     return timingMap[archetype] || 'evening';
   }
-  
+
   private generateContextualPrompts(userInput: string, archetype: string): string[] {
     const input = userInput.toLowerCase();
     const contextualPrompts = [];
-    
+
     if (input.includes('fear') || input.includes('anxiety')) {
       contextualPrompts.push("What is my fear trying to protect or teach me?");
     }
@@ -539,10 +539,10 @@ export class SymbolicIntegrationEngine {
     if (input.includes('change') || input.includes('transition')) {
       contextualPrompts.push("What is trying to be born through this change?");
     }
-    
+
     return contextualPrompts;
   }
-  
+
   private generatePhasePrompts(phase: string, archetype: string): string[] {
     const phasePrompts = {
       initiation: ["What new beginning is calling to me?"],
@@ -551,10 +551,10 @@ export class SymbolicIntegrationEngine {
       transcendence: ["What is ready to be transcended or released?"],
       unity: ["How can I serve the greater good?"]
     };
-    
+
     return phasePrompts[phase] || phasePrompts.initiation;
   }
-  
+
   private getCurrentMoonPhase(): 'new' | 'waxing' | 'full' | 'waning' {
     // Simplified moon phase calculation - replace with proper lunar calculation
     const dayOfMonth = new Date().getDate();
@@ -563,7 +563,7 @@ export class SymbolicIntegrationEngine {
     if (dayOfMonth < 22) return 'full';
     return 'waning';
   }
-  
+
   private initializeSymbolicKnowledge(): void {
     // Initialize seasonal wisdom, mythic references, and sacred symbols
     // This would be expanded with full symbolic knowledge base

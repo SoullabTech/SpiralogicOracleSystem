@@ -104,7 +104,7 @@ export class HolisticAssessmentService {
 
   private identifyStrengths(domain: HolisticDomain, responses: Record<string, string>, score: number): string[] {
     const strengths: string[] = [];
-    
+
     if (domain === HolisticDomain.MIND && score >= 6) {
       strengths.push("Clear thinking patterns", "Effective communication");
     }
@@ -117,13 +117,13 @@ export class HolisticAssessmentService {
     if (domain === HolisticDomain.EMOTIONS && score >= 6) {
       strengths.push("Emotional intelligence", "Healthy expression");
     }
-    
+
     return strengths;
   }
 
   private identifyGrowthEdges(domain: HolisticDomain, responses: Record<string, string>, score: number): string[] {
     const growthEdges: string[] = [];
-    
+
     if (domain === HolisticDomain.MIND && score < 6) {
       growthEdges.push("Mental clarity practices", "Communication skills");
     }
@@ -136,29 +136,29 @@ export class HolisticAssessmentService {
     if (domain === HolisticDomain.EMOTIONS && score < 6) {
       growthEdges.push("Emotional regulation", "Expression techniques");
     }
-    
+
     return growthEdges;
   }
 
   detectUserState(profile: UserHolisticProfile, recentInputs?: string[]): UserState {
     const { stressLevel, energyLevel, domains } = profile;
-    
+
     if (stressLevel > 7) return UserState.STRESSED;
     if (energyLevel < 3) return UserState.PHYSICAL_CONCERNS;
-    
+
     const mindScore = domains.find(d => d.domain === HolisticDomain.MIND)?.currentLevel || 0;
     const spiritScore = domains.find(d => d.domain === HolisticDomain.SPIRIT)?.currentLevel || 0;
-    
+
     if (mindScore < 4) return UserState.SEEKING_CLARITY;
     if (spiritScore < 4) return UserState.DISCONNECTED;
     if (energyLevel > 7) return UserState.ENERGIZED;
-    
+
     return UserState.BALANCED;
   }
 
   generateHolisticProfile(userId: string, assessmentData: any): UserHolisticProfile {
     const domains: DomainProfile[] = [];
-    
+
     Object.values(HolisticDomain).forEach(domain => {
       if (assessmentData[domain]) {
         domains.push(this.assessUserDomain(domain, assessmentData[domain]));
@@ -178,7 +178,7 @@ export class HolisticAssessmentService {
     };
 
     profile.currentState = this.detectUserState(profile);
-    
+
     return profile;
   }
 
@@ -200,7 +200,7 @@ export class HolisticAssessmentService {
   identifyPriorityDomains(profile: UserHolisticProfile): HolisticDomain[] {
     const balance = this.calculateDomainBalance(profile);
     const avgScore = Object.values(balance).reduce((a, b) => a + b, 0) / 4;
-    
+
     return Object.entries(balance)
       .filter(([_, score]) => score < avgScore - 1)
       .sort(([_, a], [__, b]) => a - b)

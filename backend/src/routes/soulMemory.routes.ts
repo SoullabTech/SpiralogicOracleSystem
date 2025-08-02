@@ -67,9 +67,9 @@ router.post('/oracle/retreat/activate', async (req, res) => {
 
     const validPhases = ['pre-retreat', 'retreat-active', 'post-retreat'];
     if (!phase || !validPhases.includes(phase)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Valid retreat phase required',
-        validPhases 
+        validPhases
       });
     }
 
@@ -142,8 +142,8 @@ router.post('/ritual', async (req, res) => {
     }
 
     if (!ritualType || !content || !element) {
-      return res.status(400).json({ 
-        error: 'Ritual type, content, and element are required' 
+      return res.status(400).json({
+        error: 'Ritual type, content, and element are required'
       });
     }
 
@@ -185,8 +185,8 @@ router.post('/breakthrough', async (req, res) => {
     }
 
     if (!content || !insights) {
-      return res.status(400).json({ 
-        error: 'Content and insights are required' 
+      return res.status(400).json({
+        error: 'Content and insights are required'
       });
     }
 
@@ -249,7 +249,7 @@ router.get('/memories', async (req, res) => {
     if (element) options.element = element;
     if (sacred === 'true') options.sacred = true;
     if (transformations === 'true') options.transformations = true;
-    
+
     if (startDate && endDate) {
       options.dateRange = {
         start: new Date(startDate as string),
@@ -262,7 +262,7 @@ router.get('/memories', async (req, res) => {
     // Filter by retreat context if requested
     let filteredMemories = memories;
     if (retreatMode === 'true') {
-      filteredMemories = memories.filter(memory => 
+      filteredMemories = memories.filter(memory =>
         memory.metadata?.mode === 'retreat' ||
         memory.metadata?.retreatPhase ||
         memory.metadata?.retreatIntensive ||
@@ -271,7 +271,7 @@ router.get('/memories', async (req, res) => {
     }
 
     if (retreatPhase) {
-      filteredMemories = filteredMemories.filter(memory => 
+      filteredMemories = filteredMemories.filter(memory =>
         memory.metadata?.retreatPhase === retreatPhase
       );
     }
@@ -317,7 +317,7 @@ router.get('/sacred-moments', async (req, res) => {
 
     const { limit = '10' } = req.query;
     const sacredMoments = await soulMemoryService.getSacredMoments(
-      userId, 
+      userId,
       parseInt(limit as string)
     );
 
@@ -492,9 +492,9 @@ router.post('/threads', async (req, res) => {
 
     const validTypes = ['ritual', 'shadow_work', 'transformation', 'integration'];
     if (!threadName || !threadType || !validTypes.includes(threadType)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Valid thread name and type required',
-        validTypes 
+        validTypes
       });
     }
 
@@ -634,9 +634,9 @@ router.post('/oracle/sacred-mirror/mode', async (req, res) => {
 
     const validModes = ['jung', 'buddha', 'hybrid', 'adaptive'];
     if (!mode || !validModes.includes(mode)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Valid sacred mirror mode required',
-        validModes 
+        validModes
       });
     }
 
@@ -692,9 +692,9 @@ router.post('/oracle/sacred-mirror/balance', async (req, res) => {
 
     const validDirections = ['more_integration', 'more_liberation', 'balanced'];
     if (!direction || !validDirections.includes(direction)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Valid balance direction required',
-        validDirections 
+        validDirections
       });
     }
 

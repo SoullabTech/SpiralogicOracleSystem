@@ -39,7 +39,7 @@ The domains are hitting Vercel but returning 404 because they need to be assigne
 3. **Remove domains** from old project
 4. **Add domains** to current project:
    - `soullab.life`
-   - `www.soullab.life` 
+   - `www.soullab.life`
    - `oracle.soullab.life`
 
 ### Expected Result After Domain Transfer:

@@ -136,7 +136,7 @@ export class EnhancedSacredIntelligence {
   async enhanceSymbolicRouting(context: SacredIntelligenceContext): Promise<string> {
     const currentElement = context.individual.element;
     const archetype = context.individual.archetype;
-    
+
     // Check for elemental transitions
     const transitionOpportunity = this.detectElementalTransition(context);
     if (transitionOpportunity) {
@@ -164,28 +164,28 @@ export class EnhancedSacredIntelligence {
   // ENHANCEMENT 4: Entropy Balancing
   async balanceResponseEntropy(response: string, context: SacredIntelligenceContext): Promise<string> {
     const entropy = this.calculateResponseEntropy(response);
-    
+
     if (!entropy.optimalBalance) {
       return this.adjustResponseEntropy(response, entropy, context);
     }
-    
+
     return response;
   }
 
   // ENHANCEMENT 5: Semantic Clustering for Pattern Recognition
   async enhancePatternRecognition(patterns: ElementalPattern[]): Promise<SemanticCluster[]> {
     const clusters: SemanticCluster[] = [];
-    
+
     // Group patterns by semantic similarity
     const similarityMatrix = await this.buildSemanticSimilarityMatrix(patterns);
     const clusterGroups = this.clusterBySimilarity(patterns, similarityMatrix);
-    
+
     for (const group of clusterGroups) {
       const cluster = await this.createSemanticCluster(group);
       clusters.push(cluster);
       this.semanticClusters.set(cluster.clusterName, cluster);
     }
-    
+
     return clusters;
   }
 
@@ -195,15 +195,15 @@ export class EnhancedSacredIntelligence {
     if (systemHealth.patternRecognitionAccuracy < 0.7) {
       await this.recalibratePatternThresholds();
     }
-    
+
     if (systemHealth.cacheHitRate < 0.6) {
       await this.optimizeCacheStrategy();
     }
-    
+
     if (systemHealth.agentCommunicationLatency > 1000) {
       await this.clearAgentCommunicationBacklog();
     }
-    
+
     if (systemHealth.universalFieldCoherence < 0.5) {
       await this.regenerateUniversalFieldConnections();
     }
@@ -211,7 +211,7 @@ export class EnhancedSacredIntelligence {
 
   // ENHANCEMENT 7: Ritual Response Integration
   async generateRitualResponse(
-    baseResponse: string, 
+    baseResponse: string,
     context: SacredIntelligenceContext,
     emotionalResonance: EmotionalResonanceMap
   ): Promise<string> {
@@ -227,20 +227,20 @@ export class EnhancedSacredIntelligence {
   private detectRepetitiveLanguage(queries: string[]): string | null {
     const phrases = queries.join(' ').split(/[.!?]+/);
     const phraseCounts = new Map<string, number>();
-    
+
     phrases.forEach(phrase => {
       const cleaned = phrase.trim().toLowerCase();
       if (cleaned.length > 10) {
         phraseCounts.set(cleaned, (phraseCounts.get(cleaned) || 0) + 1);
       }
     });
-    
+
     for (const [phrase, count] of phraseCounts.entries()) {
       if (count >= 3) {
         return `Repetitive pattern: "${phrase}"`;
       }
     }
-    
+
     return null;
   }
 
@@ -254,16 +254,16 @@ export class EnhancedSacredIntelligence {
       /it's not my fault/i,
       /they make me/i
     ];
-    
+
     const allText = queries.join(' ');
-    
+
     for (const pattern of avoidancePatterns) {
       const matches = allText.match(pattern);
       if (matches) {
         return `Avoidance detected: ${matches[0]}`;
       }
     }
-    
+
     return null;
   }
 
@@ -275,15 +275,15 @@ export class EnhancedSacredIntelligence {
       /the world is/i,
       /life is/i
     ];
-    
+
     const allText = queries.join(' ');
-    
+
     for (const pattern of projectionPatterns) {
       if (pattern.test(allText)) {
         return `Projection pattern detected`;
       }
     }
-    
+
     return null;
   }
 
@@ -305,26 +305,26 @@ export class EnhancedSacredIntelligence {
       'joyful', 'worried', 'calm', 'stressed', 'grateful', 'lonely', 'loved',
       'afraid', 'confident', 'overwhelmed', 'content', 'hopeful', 'despair'
     ];
-    
-    return emotionalWords.filter(word => 
-      query.toLowerCase().includes(word) || 
+
+    return emotionalWords.filter(word =>
+      query.toLowerCase().includes(word) ||
       query.toLowerCase().includes(word.slice(0, -1)) // handles 'worri' from 'worried'
     );
   }
 
   private identifyPrimaryEmotion(emotionalWords: string[]): string {
     if (emotionalWords.length === 0) return 'neutral';
-    
+
     // Emotion hierarchy - some emotions are more primary than others
     const emotionHierarchy = {
       'afraid': 10, 'angry': 9, 'sad': 8, 'overwhelmed': 7,
       'anxious': 6, 'frustrated': 5, 'stressed': 4, 'worried': 3,
       'lonely': 2, 'peaceful': 2, 'grateful': 2, 'happy': 1
     };
-    
+
     let primaryEmotion = emotionalWords[0];
     let highestScore = 0;
-    
+
     for (const emotion of emotionalWords) {
       const score = emotionHierarchy[emotion as keyof typeof emotionHierarchy] || 0;
       if (score > highestScore) {
@@ -332,7 +332,7 @@ export class EnhancedSacredIntelligence {
         primaryEmotion = emotion;
       }
     }
-    
+
     return primaryEmotion;
   }
 
@@ -356,7 +356,7 @@ export class EnhancedSacredIntelligence {
       'grateful': 'aether',
       'content': 'aether'
     };
-    
+
     return emotionElementMap[emotion] || 'aether';
   }
 
@@ -463,7 +463,7 @@ export class EnhancedSacredIntelligence {
   private detectElementalTransition(context: SacredIntelligenceContext): string | null { return null; }
   private detectArchetypalEvolution(archetype: string | undefined, context: SacredIntelligenceContext): string | null { return null; }
   private getSeasonalCorrespondence(): string { return 'spring'; }
-  private calculateResponseEntropy(response: string): EntropyBalance { 
+  private calculateResponseEntropy(response: string): EntropyBalance {
     return {
       informationOverload: 0.5,
       mysticalDepth: 0.6,

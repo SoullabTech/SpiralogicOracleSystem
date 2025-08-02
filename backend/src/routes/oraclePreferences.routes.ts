@@ -87,9 +87,9 @@ router.post('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, 
   }
 
   logger.info(`Oracle preferences saved for user ${userId}: ${oracle_name} (${oracle_voice})`);
-  res.status(201).json({ 
+  res.status(201).json({
     message: 'Oracle preferences saved successfully',
-    preferences: data 
+    preferences: data
   });
 }));
 
@@ -126,9 +126,9 @@ router.put('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, r
   }
 
   logger.info(`Oracle preferences updated for user ${userId}: ${oracle_name} (${oracle_voice})`);
-  res.json({ 
+  res.json({
     message: 'Oracle preferences updated successfully',
-    preferences: data 
+    preferences: data
   });
 }));
 

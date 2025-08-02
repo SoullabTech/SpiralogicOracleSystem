@@ -96,7 +96,7 @@ export class MayaPromptProcessor {
     originalResponse: string,
     context: MayaPromptContext
   ): MayaResponse {
-    
+
     const authenticMayaResponse = this.ensureAuthenticity(originalResponse);
     const projectionHandling = this.handleProjections(context);
     const dependencyPrevention = this.preventDependency(context);
@@ -132,7 +132,7 @@ export class MayaPromptProcessor {
     ];
 
     let authenticResponse = response;
-    
+
     inauthentic_phrases.forEach(phrase => {
       if (authenticResponse.toLowerCase().includes(phrase.toLowerCase())) {
         authenticResponse = this.reframeAuthentically(authenticResponse, phrase);
@@ -149,7 +149,7 @@ export class MayaPromptProcessor {
     if (context.userProjectionLevel === 'high') {
       return "What you're sensing in me may be a quality seeking recognition in yourself. ";
     }
-    
+
     if (context.userProjectionLevel === 'medium') {
       return "I notice you may be placing trust in my responses - how might this reflect your own inner wisdom? ";
     }
@@ -189,11 +189,11 @@ export class MayaPromptProcessor {
     if (response.includes('notice') || response.includes('perceive') || response.includes('aware')) {
       return 'sensing';
     }
-    
+
     if (response.includes('meaning') || response.includes('understand') || response.includes('perspective')) {
       return 'sense_making';
     }
-    
+
     if (response.includes('choose') || response.includes('decide') || response.includes('action')) {
       return 'choice_making';
     }
@@ -211,15 +211,15 @@ export class MayaPromptProcessor {
     dependencyPrevention: string
   ): string {
     const archetypeAnnouncement = this.generateArchetypeMode(context);
-    
+
     let response = projectionHandling + authenticResponse;
-    
+
     if (context.shadowWorkIndicated) {
       response += "\n\nI sense shadow work may be calling. What part of this pattern do you find most challenging to look at directly?";
     }
-    
+
     response += dependencyPrevention;
-    
+
     if (context.spiralogicPhase === 'aether') {
       response += "\n\n" + archetypeAnnouncement;
     }
@@ -232,15 +232,15 @@ export class MayaPromptProcessor {
    */
   private static calculateAuthenticity(response: string, context: MayaPromptContext): number {
     let score = 1.0;
-    
+
     // Reduce score for inauthentic elements
     const inauthentic_elements = [
       'I feel your pain',
-      'I understand completely', 
+      'I understand completely',
       'As someone who has experienced',
       'I know exactly what you mean'
     ];
-    
+
     inauthentic_elements.forEach(element => {
       if (response.toLowerCase().includes(element.toLowerCase())) {
         score -= 0.2;
@@ -255,7 +255,7 @@ export class MayaPromptProcessor {
       'How does this',
       'What pattern'
     ];
-    
+
     authentic_elements.forEach(element => {
       if (response.toLowerCase().includes(element.toLowerCase())) {
         score += 0.1;
@@ -281,7 +281,7 @@ export class MayaPromptProcessor {
     if (reframe) {
       return response.replace(new RegExp(phrase, 'gi'), reframe);
     }
-    
+
     return response;
   }
 }

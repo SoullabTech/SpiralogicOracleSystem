@@ -119,7 +119,7 @@ export class AgentCommunicationProtocol {
   // Broadcast a message to all agents
   async broadcast(message: Omit<AgentMessage, 'to'>): Promise<void> {
     const agents = Array.from(this.messageQueue.keys()).filter(agent => agent !== message.from);
-    
+
     for (const agent of agents) {
       await this.sendMessage({
         ...message,
@@ -256,7 +256,7 @@ export class AgentCommunicationProtocol {
   // Add to broadcast channel with size limit
   private addToBroadcastChannel(message: AgentMessage): void {
     this.broadcastChannel.push(message);
-    
+
     // Maintain size limit
     if (this.broadcastChannel.length > this.maxBroadcastSize) {
       this.broadcastChannel = this.broadcastChannel.slice(-this.maxBroadcastSize);
@@ -273,7 +273,7 @@ export class AgentCommunicationProtocol {
   }): Promise<void> {
     // Determine which agents should receive this pattern
     const interestedAgents = this.determineInterestedAgents(pattern.elements);
-    
+
     for (const agent of interestedAgents) {
       await this.sendMessage({
         from: pattern.discoveredBy,
@@ -318,7 +318,7 @@ export class AgentCommunicationProtocol {
     };
 
     const agents = new Set<string>();
-    
+
     // Add elemental agents
     elements.forEach(element => {
       const agent = elementAgentMap[element];

@@ -38,7 +38,7 @@ sudo /etc/init.d/networking restart
 dig +short soullab.life @1.1.1.1
 # Returns: 76.76.21.21 ✅
 
-dig +short oracle.soullab.life @1.1.1.1  
+dig +short oracle.soullab.life @1.1.1.1
 # Returns: cname.vercel-dns.com. ✅
 ```
 

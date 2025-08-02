@@ -23,15 +23,15 @@ describe('System Integration Tests', () => {
       databasePath: ':memory:',
       memoryDepth: 500
     });
-    
+
     await soulMemory.initialize();
-    
+
     oracle = new PersonalOracleAgent({
       userId: testUserId,
       oracleName: 'Integration Oracle',
       mode: 'daily'
     });
-    
+
     wisdomEngine = new AdaptiveWisdomEngine({
       userId: testUserId,
       soulMemory
@@ -78,21 +78,21 @@ describe('System Integration Tests', () => {
       // 3. Oracle interaction with mode switching
       await oracle.switchMode('alchemist');
       const response1 = await oracle.respondToPrompt("I'm ready to begin my shadow work");
-      
+
       expect(response1).toMatch(/shadow|integrate|transform|alchemy/i);
-      
+
       // 4. Memory storage and retrieval
       const memories = await soulMemory.retrieveMemories(testUserId, { limit: 10 });
       expect(memories.length).toBeGreaterThanOrEqual(3);
-      
+
       // 5. Wisdom engine adaptation
       const approach = await wisdomEngine.selectWisdomApproach(
         "I discovered something dark about myself",
         { emotionalState: 'concerned' }
       );
-      
+
       expect(approach.primary).toBe('jung');
-      
+
       // 6. Full conversation with adaptive responses
       const responses = [];
       const prompts = [
@@ -116,22 +116,22 @@ describe('System Integration Tests', () => {
       // Start conversation in one mode
       await oracle.switchMode('buddha');
       const buddhaResponse = await oracle.respondToPrompt("I'm attached to my old self");
-      
+
       expect(buddhaResponse).toMatch(/attachment|let go|impermanence/i);
-      
+
       // Switch to another mode
       await oracle.switchMode('alchemist');
       const alchemistResponse = await oracle.respondToPrompt("How do I work with this attachment?");
-      
+
       // Should reference previous exchange
       expect(alchemistResponse).toMatch(/attachment|transform|integrate/i);
-      
+
       // Memory should contain both exchanges
       const memories = await soulMemory.retrieveMemories(testUserId, {
         type: 'oracle_exchange',
         limit: 5
       });
-      
+
       expect(memories.some(m => m.metadata?.oracleMode === 'buddha')).toBe(true);
       expect(memories.some(m => m.metadata?.oracleMode === 'alchemist')).toBe(true);
     });
@@ -151,17 +151,17 @@ describe('System Integration Tests', () => {
       // Breakthrough moment
       const breakthroughPrompt = "Oh my god... I realize I push people away when they get close because I'm terrified of abandonment!";
       const breakthroughResponse = await oracle.respondToPrompt(breakthroughPrompt);
-      
+
       // Should recognize and celebrate breakthrough
       expect(breakthroughResponse).toMatch(/beautiful|breakthrough|aware|truth/i);
-      
+
       // Should be stored as sacred moment
       const sacredMoments = await soulMemory.getSacredMoments(testUserId);
       const latestSacred = sacredMoments[sacredMoments.length - 1];
-      
+
       expect(latestSacred.type).toBe('breakthrough');
       expect(latestSacred.sacredMoment).toBe(true);
-      
+
       // Wisdom engine should detect the pattern
       const patterns = await wisdomEngine.detectPattern('abandonment_fear');
       expect(patterns.strength).toBeGreaterThan(0.7);
@@ -172,11 +172,11 @@ describe('System Integration Tests', () => {
     test('Should maintain wisdom continuity across time gaps', async () => {
       // Session 1: Initial exploration
       await oracle.respondToPrompt("I'm struggling with self-worth");
-      
+
       // Simulate time gap (7 days)
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
-      
+
       await soulMemory.storeMemory({
         userId: testUserId,
         type: 'oracle_exchange',
@@ -188,10 +188,10 @@ describe('System Integration Tests', () => {
 
       // Session 2: Return to theme
       const continuationResponse = await oracle.respondToPrompt("I'm back to working on my self-worth issues");
-      
+
       // Should reference previous work
       expect(continuationResponse).toMatch(/continue|journey|progress|remember/i);
-      
+
       // Memory should bridge the gap
       const threads = await soulMemory.getMemoryThreads(testUserId);
       expect(threads.some(t => t.threadType === 'shadow_work' || t.threadType === 'self_worth')).toBe(true);
@@ -224,7 +224,7 @@ describe('System Integration Tests', () => {
       for (const step of journeySteps) {
         const timestamp = new Date();
         timestamp.setDate(timestamp.getDate() - (14 - step.day));
-        
+
         await soulMemory.storeMemory({
           userId: testUserId,
           type: 'transformation_milestone',
@@ -241,7 +241,7 @@ describe('System Integration Tests', () => {
       }
 
       const journey = await soulMemory.getTransformationJourney(testUserId);
-      
+
       expect(journey.milestones.length).toBeGreaterThanOrEqual(4);
       expect(journey.currentPhase).toBe('return');
       expect(journey.nextSpiralSuggestion).toBeDefined();
@@ -252,22 +252,22 @@ describe('System Integration Tests', () => {
     test('Should adapt oracle voice to user elemental resonance', async () => {
       // Set user elemental resonance
       await oracle.setElementalResonance('water');
-      
+
       const waterResponse = await oracle.respondToPrompt("I'm feeling overwhelmed");
       expect(waterResponse).toMatch(/flow|feel|emotion|tide|depth/i);
-      
+
       // Switch elemental resonance
       await oracle.setElementalResonance('fire');
-      
+
       const fireResponse = await oracle.respondToPrompt("I'm feeling stuck");
       expect(fireResponse).toMatch(/ignite|action|transform|burn|spark/i);
-      
+
       // Memory should track elemental context
       const memories = await soulMemory.retrieveMemories(testUserId, {
         includeElementalContext: true,
         limit: 5
       });
-      
+
       expect(memories.some(m => m.element === 'water')).toBe(true);
       expect(memories.some(m => m.element === 'fire')).toBe(true);
     });
@@ -285,16 +285,16 @@ describe('System Integration Tests', () => {
       });
 
       const balanceResponse = await oracle.respondToPrompt("I'm burning out from too much intensity");
-      
+
       // Should recommend cooling/balancing elements
       expect(balanceResponse).toMatch(/water|earth|cool|ground|gentle|rest/i);
-      
+
       // Wisdom engine should suggest water practices
       const balanceWisdom = await wisdomEngine.generateBalancedWisdom(
         "I need more balance",
         { userElement: 'fire', needsBalance: true }
       );
-      
+
       expect(balanceWisdom.primaryElement).toBe('water');
     });
   });
@@ -306,11 +306,11 @@ describe('System Integration Tests', () => {
       soulMemory.storeMemory = jest.fn().mockRejectedValue(new Error('Memory system down'));
 
       const response = await oracle.respondToPrompt("How are you today?");
-      
+
       // Should still respond despite memory failure
       expect(response).toBeDefined();
       expect(response.length).toBeGreaterThan(10);
-      
+
       // Restore original function
       soulMemory.storeMemory = originalStoreMemory;
     });
@@ -318,13 +318,13 @@ describe('System Integration Tests', () => {
     test('Should handle wisdom engine unavailability', async () => {
       // Disconnect wisdom engine
       await oracle.disconnectWisdomEngine();
-      
+
       const response = await oracle.respondToPrompt("I need guidance on shadow work");
-      
+
       // Should fall back to default oracle response
       expect(response).toBeDefined();
       expect(response).toMatch(/shadow|explore|understand/i);
-      
+
       // Reconnect wisdom engine
       await oracle.connectToWisdomEngine(wisdomEngine);
     });
@@ -360,13 +360,13 @@ describe('System Integration Tests', () => {
       ];
 
       const startTime = Date.now();
-      
+
       const responses = await Promise.all(
         rapidPrompts.map(prompt => oracle.respondToPrompt(prompt))
       );
-      
+
       const totalTime = Date.now() - startTime;
-      
+
       expect(responses).toHaveLength(5);
       expect(responses.every(r => r.length > 10)).toBe(true);
       expect(totalTime).toBeLessThan(10000); // Less than 10 seconds for 5 rapid responses
@@ -383,14 +383,14 @@ describe('System Integration Tests', () => {
           element: ['fire', 'water', 'earth', 'air', 'aether'][i % 5] as any
         }));
       }
-      
+
       await Promise.all(memoryPromises);
-      
+
       // Test response time with large history
       const startTime = Date.now();
       const response = await oracle.respondToPrompt("Looking back on my journey, what wisdom do you see?");
       const responseTime = Date.now() - startTime;
-      
+
       expect(response).toBeDefined();
       expect(responseTime).toBeLessThan(5000); // Less than 5 seconds despite large history
     });
@@ -408,7 +408,7 @@ describe('System Integration Tests', () => {
 
       for (const prompt of boundaryTestPrompts) {
         const response = await oracle.respondToPrompt(prompt);
-        
+
         // Should maintain sacred container language
         expect(response).toMatch(/sacred|mirror|guide|container|reflection|growth/i);
         expect(response).not.toMatch(/^yes|^sure|^of course.*friend|i love you too/i);
@@ -417,21 +417,21 @@ describe('System Integration Tests', () => {
 
     test('Should integrate all system components in wisdom delivery', async () => {
       const deepPrompt = "I feel like I'm trapped in patterns my father taught me, but I also know I need to honor him";
-      
+
       const response = await oracle.respondToPrompt(deepPrompt);
-      
+
       // Should show integration of:
       // 1. Sacred Mirror resistance to oversimplification
       expect(response).not.toMatch(/just honor him|simply let go|easy answer/i);
-      
+
       // 2. Wisdom engine pattern detection
       expect(response).toMatch(/pattern|paradox|both|complex/i);
-      
+
       // 3. Elemental voice
       const element = oracle.getCurrentElementalResonance();
       if (element === 'fire') expect(response).toMatch(/transform|alchemize/i);
       if (element === 'water') expect(response).toMatch(/feel|honor|flow/i);
-      
+
       // 4. Memory integration
       const storedMemory = await soulMemory.retrieveMemories(testUserId, { limit: 1 });
       expect(storedMemory[0].content).toBe(deepPrompt);

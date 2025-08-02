@@ -24,19 +24,19 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
 
     try {
       setError(null);
-      
+
       if (!audioRef.current) {
         setIsLoading(true);
         audioRef.current = new Audio(audioUrl);
-        
+
         audioRef.current.addEventListener('loadeddata', () => {
           setIsLoading(false);
         });
-        
+
         audioRef.current.addEventListener('ended', () => {
           setIsPlaying(false);
         });
-        
+
         audioRef.current.addEventListener('error', () => {
           setError('Failed to load audio');
           setIsLoading(false);
@@ -95,8 +95,8 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
             disabled={!audioUrl || isLoading}
             className={`
               flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all
-              ${audioUrl 
-                ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+              ${audioUrl
+                ? 'bg-purple-600 hover:bg-purple-700 text-white'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }
               ${isLoading ? 'animate-pulse' : ''}

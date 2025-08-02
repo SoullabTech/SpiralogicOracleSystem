@@ -49,7 +49,7 @@ const OracleNaming: React.FC<OracleNamingProps> = ({ onNameChosen, onBack }) => 
             className="w-full px-6 py-4 bg-[#1A1C2C] border border-gray-600 text-white placeholder-gray-400 text-lg rounded-xl focus:border-[#F6E27F] focus:outline-none transition-all duration-300"
             maxLength={50}
           />
-          
+
           {/* Tooltip trigger */}
           <button
             type="button"
@@ -69,7 +69,7 @@ const OracleNaming: React.FC<OracleNamingProps> = ({ onNameChosen, onBack }) => 
               animate={{ opacity: 1, y: 0 }}
               className="absolute right-0 top-full mt-2 w-64 p-3 bg-[#1A1C2C] border border-gray-600 rounded-xl text-sm text-gray-300 shadow-lg z-10"
             >
-              This name establishes psychological resonance with your guide. 
+              This name establishes psychological resonance with your guide.
               Consider names that feel trustworthy and aligned with your practice.
             </motion.div>
           )}

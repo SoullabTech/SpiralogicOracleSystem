@@ -7,9 +7,9 @@ export async function runScheduledAnalysis() {
     // Analyze last 24 hours of feedback
     const end = new Date();
     const start = new Date(end.getTime() - ANALYSIS_INTERVAL);
-    
+
     const metrics = await analyzeFeedbackTrends({ start, end });
-    
+
     // Update personality weights based on analysis
     await updatePersonalityWeights(
       Object.entries(metrics.confidenceScores).map(([element, confidence]) => ({
@@ -32,7 +32,7 @@ export async function runScheduledAnalysis() {
 export function initializeScheduledTasks() {
   // Run initial analysis
   runScheduledAnalysis().catch(console.error);
-  
+
   // Schedule periodic analysis
   setInterval(runScheduledAnalysis, ANALYSIS_INTERVAL);
 }

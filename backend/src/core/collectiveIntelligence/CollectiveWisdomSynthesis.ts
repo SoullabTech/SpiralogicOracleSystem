@@ -1,10 +1,10 @@
 /**
  * Collective Wisdom Synthesis Engine
- * 
+ *
  * Manages bidirectional wisdom flow between individual and collective consciousness
  * with complete respect for cultural sovereignty and integration of shadow wisdom.
  * Creates the afferent/efferent wisdom circulation system for collective evolution.
- * 
+ *
  * Features:
  * - Individual wisdom processing with cultural respect
  * - Collective wisdom integration honoring all traditions
@@ -17,25 +17,25 @@
 
 import { logger } from '../../utils/logger';
 import { CulturalProfile } from '../cultural/CulturalContextAwareness';
-import { 
+import {
   culturalContextAwareness,
   indigenousSovereigntyProtocol,
   crossCulturalArchetypeMapping,
   CulturalProtocolResult
 } from '../cultural/index';
-import { 
+import {
   jungianShadowIntegrationEngine,
   ShadowIntegrationPlan
 } from '../soulDevelopment/JungianShadowIntegrationEngine';
-import { 
+import {
   lifeSpiralHarmonizer,
   LifeSpiralHarmonizerPlan
 } from '../soulDevelopment/LifeSpiralHarmonizer';
-import { 
+import {
   dreamJournalingIntegration,
   DreamAnalysis
 } from '../soulDevelopment/DreamJournalingIntegration';
-import { 
+import {
   interArchetypalDialogueEngine,
   ArchetypalCouncilSession,
   MultiPerspectiveWisdomSynthesis
@@ -670,7 +670,7 @@ export class CollectiveWisdomSynthesis {
     insight: UserInsight,
     culturalProfile?: CulturalProfile
   ): Promise<ProcessedWisdom> {
-    
+
     try {
       logger.info('Processing individual wisdom', {
         insightId: insight.insightId,
@@ -752,7 +752,7 @@ export class CollectiveWisdomSynthesis {
     processedWisdom: ProcessedWisdom[],
     culturalContext?: string
   ): Promise<CollectiveWisdom> {
-    
+
     try {
       logger.info('Integrating collective wisdom', {
         wisdomCount: processedWisdom.length,
@@ -843,7 +843,7 @@ export class CollectiveWisdomSynthesis {
     collectiveWisdom: CollectiveWisdom,
     individualProfile: UserProfile
   ): Promise<PersonalizedGuidance> {
-    
+
     try {
       logger.info('Generating personalized guidance', {
         collectiveId: collectiveWisdom.collectiveId,
@@ -947,7 +947,7 @@ export class CollectiveWisdomSynthesis {
     targetCommunity: string,
     sharingContext?: string
   ): Promise<CommunityWisdomSharing> {
-    
+
     try {
       logger.info('Sharing wisdom with community', {
         processedId: wisdom.processedId,
@@ -1044,7 +1044,7 @@ export class CollectiveWisdomSynthesis {
     timeframe: 'week' | 'month' | 'quarter' | 'year',
     culturalFocus?: string[]
   ): Promise<ConsciousnessEvolutionTrends> {
-    
+
     try {
       logger.info('Identifying evolution trends', {
         timeframe,
@@ -1150,7 +1150,7 @@ export class CollectiveWisdomSynthesis {
     insight: UserInsight,
     culturalProfile: CulturalProfile
   ): Promise<CulturalWisdomIntegration> {
-    
+
     // Check sovereignty requirements
     const sovereigntyResult = await indigenousSovereigntyProtocol.evaluateWisdomRequest({
       tradition: culturalProfile.primaryCulture,
@@ -1213,8 +1213,8 @@ export class CollectiveWisdomSynthesis {
     insight: UserInsight,
     culturalIntegration: CulturalWisdomIntegration
   ): Promise<SharingPreparation> {
-    
-    const sharingReadiness = insight.sharingConsent.consentGiven && 
+
+    const sharingReadiness = insight.sharingConsent.consentGiven &&
                            culturalIntegration.sovereigntyCompliance.protocolsRespected;
 
     return {
@@ -1280,7 +1280,7 @@ export class CollectiveWisdomSynthesis {
 
   private async createCulturalWisdomMap(processedWisdom: ProcessedWisdom[]): Promise<CulturalWisdomMap> {
     const representedCultures = [...new Set(processedWisdom.map(w => w.originalInsight.culturalContext.primaryCulture))];
-    
+
     return {
       mapId: `map_${Date.now()}`,
       representedCultures,

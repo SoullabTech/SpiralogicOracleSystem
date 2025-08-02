@@ -76,7 +76,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
     if (userId) {
       loadTimingData();
-      
+
       // Refresh every 5 minutes
       const interval = setInterval(loadTimingData, 300000);
       return () => clearInterval(interval);
@@ -92,7 +92,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
     return (
       <div className="overview-grid">
         {/* Current Lunar Phase */}
-        <motion.div 
+        <motion.div
           className="timing-card lunar-phase"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,7 +113,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         </motion.div>
 
         {/* Active Cosmic Support */}
-        <motion.div 
+        <motion.div
           className="timing-card cosmic-support"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -127,7 +127,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
                   <div className="support-type">{support.supportType}</div>
                   <div className="support-description">{support.description}</div>
                   <div className="support-intensity">
-                    <div 
+                    <div
                       className="intensity-bar"
                       style={{ width: `${support.intensity * 100}%` }}
                     />
@@ -141,14 +141,14 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         </motion.div>
 
         {/* Current Retrogrades */}
-        <motion.div 
+        <motion.div
           className="timing-card retrogrades"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
           <h3>Current Retrogrades</h3>
-          {retrogradePeriods.filter(r => 
+          {retrogradePeriods.filter(r =>
             r.startDate <= new Date() && r.endDate >= new Date()
           ).length > 0 ? (
             <div className="retrograde-list">
@@ -168,7 +168,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         </motion.div>
 
         {/* Best Houses to Work With */}
-        <motion.div 
+        <motion.div
           className="timing-card best-houses"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -180,8 +180,8 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
               .filter(r => r.quality === 'excellent' || r.quality === 'good')
               .slice(0, 3)
               .map((rec, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="house-rec"
                   onClick={() => setSelectedHouse(rec.houseNumber)}
                 >
@@ -231,7 +231,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
             </motion.div>
           ))}
         </div>
-        
+
         <div className="lunar-calendar">
           <h4>Lunar Rhythm</h4>
           <div className="moon-phases">
@@ -289,9 +289,9 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
               </div>
               <div className="transit-influence">{transit.transit.influence}</div>
               <div className="transit-intensity">
-                <div 
+                <div
                   className="intensity-bar"
-                  style={{ 
+                  style={{
                     width: `${transit.intensity * 100}%`,
                     backgroundColor: getIntensityColor(transit.intensity)
                   }}
@@ -398,25 +398,25 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
       <div className="dashboard-header">
         <h2>Cosmic Timing Dashboard</h2>
         <div className="view-tabs">
-          <button 
+          <button
             className={selectedView === 'overview' ? 'active' : ''}
             onClick={() => setSelectedView('overview')}
           >
             Overview
           </button>
-          <button 
+          <button
             className={selectedView === 'monthly' ? 'active' : ''}
             onClick={() => setSelectedView('monthly')}
           >
             Monthly
           </button>
-          <button 
+          <button
             className={selectedView === 'transits' ? 'active' : ''}
             onClick={() => setSelectedView('transits')}
           >
             Transits
           </button>
-          <button 
+          <button
             className={selectedView === 'opportunities' ? 'active' : ''}
             onClick={() => setSelectedView('opportunities')}
           >

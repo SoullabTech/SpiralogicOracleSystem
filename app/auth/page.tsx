@@ -18,7 +18,7 @@ export default function AuthPage() {
           <p className="opacity-90 mb-6">
             User authentication and profile management will be available in the next update.
           </p>
-          
+
           <div className="space-y-2 text-sm">
             <div>✨ Sacred Profile Creation</div>
             <div>🔮 Oracle Memory Sync</div>
@@ -27,15 +27,15 @@ export default function AuthPage() {
         </div>
 
         <div className="mt-8 space-y-4">
-          <a 
-            href="/dashboard" 
+          <a
+            href="/dashboard"
             className="block bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition"
           >
             🌌 Enter Dashboard
           </a>
-          
-          <a 
-            href="/" 
+
+          <a
+            href="/"
             className="block bg-white/10 text-yellow-400 px-6 py-3 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition"
           >
             ← Back to Home

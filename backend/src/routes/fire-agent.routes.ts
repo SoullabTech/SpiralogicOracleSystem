@@ -12,7 +12,7 @@ router.post('/vision-prompt', async (req, res) => {
   try {
     const { userContext } = req.body;
     const result = await fireAgent.getVisionPrompt(userContext);
-    
+
     res.json({
       success: true,
       data: result,
@@ -35,16 +35,16 @@ router.post('/vision-prompt', async (req, res) => {
 router.post('/oracle-response', async (req, res) => {
   try {
     const { input, userContext } = req.body;
-    
+
     if (!input) {
       return res.status(400).json({
         success: false,
         error: 'Input is required'
       });
     }
-    
+
     const result = await fireAgent.getOracleResponse(input, userContext);
-    
+
     res.json({
       success: true,
       data: result,

@@ -11,30 +11,30 @@ import { logger } from '../src/utils/logger';
 // SqliteDB wrapper for MemGPT-like API
 class SqliteDB {
   private db: Database.Database;
-  
+
   constructor(path: string) {
     this.db = new Database(path);
   }
-  
+
   async exec(sql: string): Promise<void> {
     this.db.exec(sql);
   }
-  
+
   async run(sql: string, params: any[]): Promise<void> {
     const stmt = this.db.prepare(sql);
     stmt.run(...params);
   }
-  
+
   async get(sql: string, params: any[]): Promise<any> {
     const stmt = this.db.prepare(sql);
     return stmt.get(...params);
   }
-  
+
   async all(sql: string, params: any[]): Promise<any[]> {
     const stmt = this.db.prepare(sql);
     return stmt.all(...params);
   }
-  
+
   close(): void {
     this.db.close();
   }
@@ -81,7 +81,7 @@ export interface EnhancedMemory extends Memory {
   wisdomType?: WisdomMemoryType; // Specialized wisdom memory classification
 }
 
-export type MemoryType = 
+export type MemoryType =
   | 'journal_entry'
   | 'oracle_exchange'
   | 'ritual_moment'
@@ -100,7 +100,7 @@ export type MemoryType =
   | 'sacred_balance'; // Both
 
 // New wisdom memory types for Jung-Buddha integration
-export type WisdomMemoryType = 
+export type WisdomMemoryType =
   | 'shadow_integration' // Jung: Embracing rejected aspects
   | 'identity_release' // Buddha: Letting go of fixed self-concepts
   | 'paradox_holding' // Both: Holding opposing truths simultaneously
@@ -152,7 +152,7 @@ export class SoulMemorySystem {
   private semanticIndex: VectorStoreIndex;
   private activeMemories: Map<string, Memory[]> = new Map();
   private memoryThreads: Map<string, MemoryThread> = new Map();
-  
+
   constructor(config: SoulMemoryConfig) {
     this.config = config;
     this.initializeDatabase();
@@ -165,9 +165,9 @@ export class SoulMemorySystem {
 
   private async initializeDatabase() {
     const dbPath = this.config.databasePath || './soul_memory.db';
-    
+
     this.db = new SqliteDB(dbPath);
-    
+
     // Create memories table with mythic structure
     await this.db.exec(`
       CREATE TABLE IF NOT EXISTS memories (
@@ -189,7 +189,7 @@ export class SoulMemorySystem {
         embedding BLOB,
         FOREIGN KEY (user_id) REFERENCES users(id)
       );
-      
+
       CREATE INDEX IF NOT EXISTS idx_user_memories ON memories(user_id);
       CREATE INDEX IF NOT EXISTS idx_memory_type ON memories(type);
       CREATE INDEX IF NOT EXISTS idx_sacred_moments ON memories(sacred_moment);
@@ -232,7 +232,7 @@ export class SoulMemorySystem {
   private async initializeSemanticIndex() {
     // Initialize LlamaIndex for semantic search
     const indexPath = this.config.semanticIndexPath || './soul_semantic_index';
-    
+
     try {
       // Load existing index or create new
       this.semanticIndex = await VectorStoreIndex.fromPersistDir(indexPath);
@@ -240,7 +240,7 @@ export class SoulMemorySystem {
       // Create new index if doesn't exist
       this.semanticIndex = await VectorStoreIndex.fromDocuments([]);
     }
-    
+
     logger.info('Semantic Index initialized');
   }
 
@@ -251,7 +251,7 @@ export class SoulMemorySystem {
   async storeMemory(memory: Omit<Memory, 'id' | 'timestamp'>): Promise<Memory> {
     const id = this.generateMemoryId();
     const timestamp = new Date();
-    
+
     const fullMemory: Memory = {
       id,
       timestamp,
@@ -261,7 +261,7 @@ export class SoulMemorySystem {
     // Store in database
     await this.db.run(`
       INSERT INTO memories (
-        id, user_id, timestamp, type, content, element, 
+        id, user_id, timestamp, type, content, element,
         archetype, spiral_phase, emotional_tone, shadow_content,
         transformation_marker, sacred_moment, ritual_context,
         oracle_response, metadata
@@ -283,26 +283,26 @@ export class SoulMemorySystem {
       fullMemory.oracleResponse,
       JSON.stringify(fullMemory.metadata || {})
     ]);
-    
+
     // Add to semantic index
     await this.indexMemory(fullMemory);
-    
+
     // Update active memories
     this.updateActiveMemories(fullMemory);
-    
+
     // Check for archetypal patterns
     await this.detectArchetypalPatterns(fullMemory);
-    
+
     // Update memory threads
     await this.updateMemoryThreads(fullMemory);
 
     logger.info(`Memory stored: ${fullMemory.type} for user ${fullMemory.userId}`);
-    
+
     return fullMemory;
   }
 
   async retrieveMemories(
-    userId: string, 
+    userId: string,
     options?: {
       type?: MemoryType;
       element?: ElementalType;
@@ -347,7 +347,7 @@ export class SoulMemorySystem {
     }
 
     const rows = await this.db.all(query, params);
-    
+
     return rows.map(row => ({
       ...row,
       timestamp: new Date(row.timestamp),
@@ -373,7 +373,7 @@ export class SoulMemorySystem {
   ): Promise<Memory[]> {
     // Convert query to embedding
     const queryDoc = new Document({ text: query, metadata: { userId } });
-    
+
     // Search semantic index
     const results = await this.semanticIndex.query(
       queryDoc,
@@ -410,7 +410,7 @@ export class SoulMemorySystem {
 
     // Add to semantic index
     await this.semanticIndex.insert(doc);
-    
+
     // Persist index
     await this.semanticIndex.persist();
   }
@@ -445,7 +445,7 @@ export class SoulMemorySystem {
     `, [thread.id, userId, threadName, threadType, JSON.stringify(thread.state)]);
 
     this.memoryThreads.set(thread.id, thread);
-    
+
     return thread;
   }
 
@@ -457,7 +457,7 @@ export class SoulMemorySystem {
     thread.lastUpdated = new Date();
 
     await this.db.run(`
-      UPDATE memory_threads 
+      UPDATE memory_threads
       SET last_updated = ?, thread_state = ?
       WHERE id = ?
     `, [thread.lastUpdated.toISOString(), JSON.stringify(thread.state), threadId]);
@@ -472,14 +472,14 @@ export class SoulMemorySystem {
 
     // Check if pattern exists
     const existing = await this.db.get(`
-      SELECT * FROM archetypal_patterns 
+      SELECT * FROM archetypal_patterns
       WHERE user_id = ? AND archetype = ?
     `, [memory.userId, memory.archetype]);
 
     if (existing) {
       // Update existing pattern
       await this.db.run(`
-        UPDATE archetypal_patterns 
+        UPDATE archetypal_patterns
         SET activation_count = activation_count + 1,
             last_activated = ?,
             pattern_strength = pattern_strength + 0.1
@@ -501,8 +501,8 @@ export class SoulMemorySystem {
 
   async getActiveArchetypes(userId: string): Promise<ArchetypalPattern[]> {
     const patterns = await this.db.all(`
-      SELECT * FROM archetypal_patterns 
-      WHERE user_id = ? 
+      SELECT * FROM archetypal_patterns
+      WHERE user_id = ?
       ORDER BY pattern_strength DESC, last_activated DESC
       LIMIT 5
     `, [userId]);
@@ -559,15 +559,15 @@ export class SoulMemorySystem {
     const existingMemory = await this.getMemoryById(memoryId);
     const updatedMetadata = {
       ...(existingMemory?.metadata || {}),
-      transformation: { 
-        type: transformationType, 
-        insights, 
-        markedAt: new Date().toISOString() 
+      transformation: {
+        type: transformationType,
+        insights,
+        markedAt: new Date().toISOString()
       }
     };
 
     await this.db.run(`
-      UPDATE memories 
+      UPDATE memories
       SET transformation_marker = 1,
           metadata = ?
       WHERE id = ?
@@ -607,7 +607,7 @@ export class SoulMemorySystem {
     const recentMemories = await this.retrieveMemories(userId, { limit: 20 });
     const sacredMoments = await this.getSacredMoments(userId, 5);
     const activeArchetypes = await this.getActiveArchetypes(userId);
-    
+
     // Create context summary for oracle
     const memoryContext = {
       recentThemes: this.extractThemes(recentMemories),
@@ -631,12 +631,12 @@ export class SoulMemorySystem {
   private updateActiveMemories(memory: Memory) {
     const userMemories = this.activeMemories.get(memory.userId) || [];
     userMemories.unshift(memory);
-    
+
     // Keep only recent memories in active cache
     if (userMemories.length > this.config.memoryDepth) {
       userMemories.pop();
     }
-    
+
     this.activeMemories.set(memory.userId, userMemories);
   }
 
@@ -644,7 +644,7 @@ export class SoulMemorySystem {
     // Auto-add to relevant threads based on type and content
     for (const [threadId, thread] of this.memoryThreads) {
       if (thread.userId !== memory.userId) continue;
-      
+
       // Check if memory belongs to thread
       if (this.memoryBelongsToThread(memory, thread)) {
         await this.addToThread(threadId, memory.id);
@@ -657,14 +657,14 @@ export class SoulMemorySystem {
     if (thread.threadType === 'shadow_work' && memory.shadowContent) return true;
     if (thread.threadType === 'transformation' && memory.transformationMarker) return true;
     if (thread.threadType === 'ritual' && memory.type === 'ritual_moment') return true;
-    
+
     return false;
   }
 
   private extractThemes(memories: Memory[]): string[] {
     // Extract recurring themes from memories
     const themes = new Map<string, number>();
-    
+
     memories.forEach(m => {
       // Simple theme extraction (can be enhanced with NLP)
       const words = m.content.toLowerCase().split(/\s+/);
@@ -692,7 +692,7 @@ export class SoulMemorySystem {
   private suggestNextSpiral(milestones: any[]): string {
     const lastMilestone = milestones[0];
     if (!lastMilestone) return 'Begin your sacred journey';
-    
+
     // Suggestion logic based on last transformation
     const suggestions: Record<string, string> = {
       'breakthrough': 'Time to integrate this breakthrough into daily practice',
@@ -700,7 +700,7 @@ export class SoulMemorySystem {
       'integration': 'Ready to explore a new layer of your spiral',
       'ritual_moment': 'Let the ritual\'s wisdom guide your next steps'
     };
-    
+
     return suggestions[lastMilestone.type] || 'Continue deepening your practice';
   }
 
@@ -719,7 +719,7 @@ export class SoulMemorySystem {
   private async getMemoryById(id: string): Promise<Memory | null> {
     const row = await this.db.get('SELECT * FROM memories WHERE id = ?', [id]);
     if (!row) return null;
-    
+
     return {
       ...row,
       timestamp: new Date(row.timestamp),
@@ -740,11 +740,11 @@ export class SoulMemorySystem {
 
   async getUserThreads(userId: string): Promise<MemoryThread[]> {
     const rows = await this.db.all(`
-      SELECT * FROM memory_threads 
-      WHERE user_id = ? 
+      SELECT * FROM memory_threads
+      WHERE user_id = ?
       ORDER BY last_updated DESC
     `, [userId]);
-    
+
     return rows.map(row => ({
       ...row,
       createdAt: new Date(row.created_at),

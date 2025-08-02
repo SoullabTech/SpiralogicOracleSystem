@@ -91,7 +91,7 @@ export class PostRetreatService {
   async recordTransformationUpdate(update: TransformationUpdate): Promise<any> {
     try {
       const updateId = uuidv4();
-      
+
       // Store transformation update
       const { data, error } = await supabase
         .from('transformation_updates')
@@ -116,9 +116,9 @@ export class PostRetreatService {
       // Calculate next check-in date
       const nextCheckInDate = this.calculateNextCheckIn(update);
 
-      logger.info('Transformation update recorded', { 
+      logger.info('Transformation update recorded', {
         participantId: update.participantId,
-        updateId 
+        updateId
       });
 
       return {
@@ -181,7 +181,7 @@ export class PostRetreatService {
     try {
       // Get participant's retreat data
       const retreatContext = await this.getParticipantRetreatContext(participantId);
-      
+
       // Generate personalized guidance
       const guidance = await this.createPersonalizedGuidance(
         retreatContext,
@@ -410,9 +410,9 @@ export class PostRetreatService {
       // Update participant stats
       await this.updateMilestoneStats(milestone.participantId, milestone.type);
 
-      logger.info('Milestone recorded', { 
+      logger.info('Milestone recorded', {
         milestoneId: milestone.id,
-        type: milestone.type 
+        type: milestone.type
       });
 
       return milestone;
@@ -746,9 +746,9 @@ export class PostRetreatService {
 
       const retreatDate = new Date(participant.created_at);
       const today = new Date();
-      
+
       // Check if it's anniversary (same month and day)
-      const isAnniversary = 
+      const isAnniversary =
         retreatDate.getMonth() === today.getMonth() &&
         retreatDate.getDate() === today.getDate();
 
@@ -757,7 +757,7 @@ export class PostRetreatService {
       if (isAnniversary && yearsElapsed > 0) {
         // Get transformation summary
         const transformation = await this.getTransformationSummary(participantId);
-        
+
         return {
           isAnniversary: true,
           years: yearsElapsed,
@@ -813,13 +813,13 @@ export class PostRetreatService {
     const baseInterval = 30; // days
     const wellbeingFactor = update.currentState.overallWellbeing / 10;
     const intervalDays = Math.round(baseInterval * wellbeingFactor);
-    
+
     return new Date(Date.now() + intervalDays * 24 * 60 * 60 * 1000);
   }
 
   private async updateIntegrationStatus(participantId: string, update: TransformationUpdate): Promise<void> {
     const integrationScore = this.calculateIntegrationScore(update);
-    
+
     await supabase
       .from('retreat_participants')
       .update({
@@ -843,14 +843,14 @@ export class PostRetreatService {
     };
 
     const wellbeingScore = Object.values(update.currentState).reduce((a, b) => a + b, 0) / 50;
-    const transformationScore = (update.transformations.implemented.length * 10 + 
+    const transformationScore = (update.transformations.implemented.length * 10 +
                                 update.transformations.inProgress.length * 5) / 100;
-    const practiceScore = (update.practices.dailyPractices.length + 
+    const practiceScore = (update.practices.dailyPractices.length +
                           update.practices.weeklyPractices.length) / 10;
     const challengeScore = update.challenges ? (10 - update.challenges.length) / 10 : 1;
     const celebrationScore = update.celebrations ? update.celebrations.length / 5 : 0;
 
-    return Math.min(10, 
+    return Math.min(10,
       wellbeingScore * weights.wellbeing +
       transformationScore * weights.transformations +
       practiceScore * weights.practices +
@@ -881,26 +881,26 @@ export class PostRetreatService {
 
   private calculateOverallProgress(updates: any[]): number {
     if (updates.length === 0) return 0;
-    
+
     const latest = updates[updates.length - 1];
     const earliest = updates[0];
-    
+
     const startScore = Object.values(earliest.current_state).reduce((a: number, b: any) => a + b, 0) / 5;
     const currentScore = Object.values(latest.current_state).reduce((a: number, b: any) => a + b, 0) / 5;
-    
+
     return Math.round(((currentScore - startScore) / startScore) * 100);
   }
 
   private determineGrowthTrajectory(updates: any[]): TransformationAnalysis['growthTrajectory'] {
     if (updates.length < 3) return 'steady';
-    
+
     const recent = updates.slice(-3);
-    const scores = recent.map(u => 
+    const scores = recent.map(u =>
       Object.values(u.current_state).reduce((a: number, b: any) => a + b, 0) / 5
     );
-    
+
     const trend = scores[2] - scores[0];
-    
+
     if (trend > 1) return 'accelerating';
     if (trend < -0.5) return 'integrating';
     if (Math.abs(trend) < 0.2) return 'plateauing';
@@ -910,36 +910,36 @@ export class PostRetreatService {
   private identifyStrengths(updates: any[]): string[] {
     const latest = updates[updates.length - 1];
     const strengths: string[] = [];
-    
+
     if (latest.current_state.emotionalClarity >= 8) strengths.push('Emotional mastery');
     if (latest.current_state.spiritualConnection >= 8) strengths.push('Deep spiritual connection');
     if (latest.current_state.lifeAlignment >= 8) strengths.push('Living in alignment');
     if (latest.current_state.shadowIntegration >= 8) strengths.push('Shadow integration');
-    
+
     if (latest.transformations.implemented.length > 5) strengths.push('Implementation power');
     if (latest.practices.dailyPractices.length >= 3) strengths.push('Consistent practice');
-    
+
     return strengths;
   }
 
   private identifyGrowthEdges(updates: any[]): string[] {
     const latest = updates[updates.length - 1];
     const edges: string[] = [];
-    
+
     Object.entries(latest.current_state).forEach(([key, value]) => {
       if (value < 5) {
         edges.push(key.replace(/([A-Z])/g, ' $1').toLowerCase());
       }
     });
-    
+
     if (latest.challenges && latest.challenges.length > 3) {
       edges.push('Challenge navigation');
     }
-    
+
     if (latest.transformations.inProgress.length > latest.transformations.implemented.length) {
       edges.push('Completion and integration');
     }
-    
+
     return edges;
   }
 
@@ -949,37 +949,37 @@ export class PostRetreatService {
       emerging: [] as string[],
       challenging: [] as string[]
     };
-    
+
     // Analyze consistent practices
     const allPractices = updates.flatMap(u => u.practices.dailyPractices);
     const practiceCounts: any = {};
     allPractices.forEach(p => practiceCounts[p] = (practiceCounts[p] || 0) + 1);
-    
+
     Object.entries(practiceCounts).forEach(([practice, count]) => {
       if ((count as number) > updates.length * 0.7) {
         patterns.consistent.push(practice);
       }
     });
-    
+
     // Analyze emerging patterns
     if (updates.length >= 3) {
       const recent = updates.slice(-3);
       const recentPractices = recent.flatMap(u => u.practices.dailyPractices);
-      const emerging = [...new Set(recentPractices)].filter(p => 
+      const emerging = [...new Set(recentPractices)].filter(p =>
         !patterns.consistent.includes(p)
       );
       patterns.emerging = emerging;
     }
-    
+
     // Analyze challenges
     const allChallenges = updates.flatMap(u => u.challenges || []).map(c => c.type);
     const challengeCounts: any = {};
     allChallenges.forEach(c => challengeCounts[c] = (challengeCounts[c] || 0) + 1);
-    
+
     patterns.challenging = Object.entries(challengeCounts)
       .filter(([, count]) => (count as number) > 2)
       .map(([challenge]) => challenge);
-    
+
     return patterns;
   }
 
@@ -989,34 +989,34 @@ export class PostRetreatService {
     trajectory: string
   ): string[] {
     const recommendations: string[] = [];
-    
+
     // Trajectory-based recommendations
     if (trajectory === 'plateauing') {
       recommendations.push('Consider a new practice or challenge to reignite growth');
       recommendations.push('Schedule an Oracle session for fresh perspective');
     }
-    
+
     if (trajectory === 'integrating') {
       recommendations.push('Honor this integration phase with gentle practices');
       recommendations.push('Journal about what is settling and rooting');
     }
-    
+
     // Pattern-based recommendations
     if (patterns.challenging.length > 0) {
       recommendations.push(`Focus support on recurring challenge: ${patterns.challenging[0]}`);
     }
-    
+
     if (patterns.emerging.length > 0) {
       recommendations.push(`Deepen into emerging practice: ${patterns.emerging[0]}`);
     }
-    
+
     // State-based recommendations
     Object.entries(latest.current_state).forEach(([key, value]) => {
       if (value < 5) {
         recommendations.push(`Gentle attention to ${key.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
       }
     });
-    
+
     return recommendations.slice(0, 5); // Top 5 recommendations
   }
 
@@ -1027,17 +1027,17 @@ export class PostRetreatService {
   ): Promise<any> {
     // In production, this would use the PersonalOracleAgent
     const insights = [];
-    
+
     if (analysis.growthTrajectory === 'accelerating') {
       insights.push('Your rapid growth is beautiful. Remember to ground and integrate.');
     }
-    
+
     if (update.challenges && update.challenges.length > 0) {
       insights.push(`The ${update.challenges[0].type} you face is a teacher in disguise.`);
     }
-    
+
     insights.push(`Your ${context.element} nature is calling for ${this.getElementalNeed(context.element, update)}.`);
-    
+
     return {
       message: `Dear one, ${insights.join(' ')} Trust your journey.`,
       insights,
@@ -1053,7 +1053,7 @@ export class PostRetreatService {
       air: 'mental clarity and new perspectives',
       aether: 'integration and unity consciousness'
     };
-    
+
     // Adjust based on current state
     if (update.currentState.overallWellbeing < 6) {
       needs.fire = 'gentle rekindling of your inner flame';
@@ -1062,7 +1062,7 @@ export class PostRetreatService {
       needs.air = 'breathing space';
       needs.aether = 'gentle integration';
     }
-    
+
     return needs[element] || 'balanced attention';
   }
 
@@ -1072,7 +1072,7 @@ export class PostRetreatService {
     analysis: TransformationAnalysis
   ): string[] {
     const practices: string[] = [];
-    
+
     // Element-specific practices
     const elementPractices: any = {
       fire: ['Morning intention setting', 'Creative expression', 'Passion activation'],
@@ -1081,19 +1081,19 @@ export class PostRetreatService {
       air: ['Breathwork', 'Mind clearing', 'Vision meditation'],
       aether: ['Unity meditation', 'Integration practice', 'Sacred geometry']
     };
-    
+
     practices.push(...(elementPractices[element] || elementPractices.aether));
-    
+
     // Trajectory-specific practices
     if (analysis.growthTrajectory === 'integrating') {
       practices.push('Gentle yoga', 'Journaling', 'Rest');
     }
-    
+
     // Challenge-specific practices
     if (update.challenges && update.challenges.length > 0) {
       practices.push('Shadow work journaling', 'Support circle connection');
     }
-    
+
     return practices.slice(0, 5);
   }
 
@@ -1119,9 +1119,9 @@ export class PostRetreatService {
     // Prioritize based on lowest scores
     const stateScores = Object.entries(update.currentState)
       .sort(([,a], [,b]) => a - b);
-    
+
     const lowestArea = stateScores[0][0];
-    
+
     return `Gentle focus on ${lowestArea.replace(/([A-Z])/g, ' $1').toLowerCase()}`;
   }
 
@@ -1136,7 +1136,7 @@ export class PostRetreatService {
   }
 
   private calculateAverageWellbeing(updates: any[]): number {
-    const total = updates.reduce((sum, update) => 
+    const total = updates.reduce((sum, update) =>
       sum + update.current_state.overallWellbeing, 0
     );
     return Math.round(total / updates.length * 10) / 10;
@@ -1144,35 +1144,35 @@ export class PostRetreatService {
 
   private calculateTransformationVelocity(updates: any[]): number {
     if (updates.length < 2) return 0;
-    
-    const totalTransformations = updates.reduce((sum, update) => 
+
+    const totalTransformations = updates.reduce((sum, update) =>
       sum + update.transformations.implemented.length, 0
     );
-    
-    const timeSpan = new Date(updates[updates.length - 1].created_at).getTime() - 
+
+    const timeSpan = new Date(updates[updates.length - 1].created_at).getTime() -
                      new Date(updates[0].created_at).getTime();
     const months = timeSpan / (1000 * 60 * 60 * 24 * 30);
-    
+
     return Math.round(totalTransformations / months * 10) / 10;
   }
 
   private calculateTimelineConsistency(updates: any[]): number {
     if (updates.length < 2) return 10;
-    
+
     // Calculate intervals between updates
     const intervals: number[] = [];
     for (let i = 1; i < updates.length; i++) {
-      const interval = new Date(updates[i].created_at).getTime() - 
+      const interval = new Date(updates[i].created_at).getTime() -
                       new Date(updates[i-1].created_at).getTime();
       intervals.push(interval);
     }
-    
+
     // Calculate variance
     const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-    const variance = intervals.reduce((sum, interval) => 
+    const variance = intervals.reduce((sum, interval) =>
       sum + Math.pow(interval - avgInterval, 2), 0
     ) / intervals.length;
-    
+
     // Convert to 0-10 score (lower variance = higher score)
     const consistencyScore = Math.max(0, 10 - (Math.sqrt(variance) / (avgInterval * 0.5)));
     return Math.round(consistencyScore * 10) / 10;
@@ -1180,10 +1180,10 @@ export class PostRetreatService {
 
   private calculateGrowthRate(updates: any[]): number {
     if (updates.length < 2) return 0;
-    
+
     const firstWellbeing = updates[0].current_state.overallWellbeing;
     const lastWellbeing = updates[updates.length - 1].current_state.overallWellbeing;
-    
+
     const growth = ((lastWellbeing - firstWellbeing) / firstWellbeing) * 100;
     return Math.round(growth * 10) / 10;
   }
@@ -1224,19 +1224,19 @@ export class PostRetreatService {
 
   private selectGuidancePractices(element: string, lifeArea: string, context: string): string[] {
     const practices: string[] = [];
-    
+
     // Base elemental practice
     practices.push(`${element} meditation for ${lifeArea}`);
-    
+
     // Context-specific practices
     if (context.includes('challenge')) {
       practices.push('Shadow work journaling', 'Support circle activation');
     }
-    
+
     if (context.includes('celebration')) {
       practices.push('Gratitude practice', 'Sharing your gifts');
     }
-    
+
     return practices;
   }
 
@@ -1281,14 +1281,14 @@ export class PostRetreatService {
       biweekly: 14,
       monthly: 30
     };
-    
+
     const days = intervals[frequency] || 30;
     return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
   }
 
   private generateReminderSchedule(frequency: string): any[] {
     const base = this.calculateNextScheduledCheckIn(frequency);
-    
+
     return [
       {
         type: 'advance',
@@ -1310,10 +1310,10 @@ export class PostRetreatService {
       .select('*')
       .eq('participant_id', participantId)
       .single();
-    
+
     const milestoneCount = stats?.milestone_count || {};
     milestoneCount[type] = (milestoneCount[type] || 0) + 1;
-    
+
     await supabase
       .from('participant_stats')
       .upsert({
@@ -1351,7 +1351,7 @@ export class PostRetreatService {
         offering: 'Create art representing your journey'
       }
     };
-    
+
     return rituals[element] || rituals.aether;
   }
 
@@ -1374,7 +1374,7 @@ export class PostRetreatService {
       .select('milestone_count')
       .eq('participant_id', participantId)
       .single();
-    
+
     return {
       byType: stats?.milestone_count || {}
     };
@@ -1398,7 +1398,7 @@ export class PostRetreatService {
       spiritual: 'Trust and surrender',
       financial: 'Abundance and security'
     };
-    
+
     return shadowMap[type] || 'Integration opportunity';
   }
 
@@ -1474,7 +1474,7 @@ export class PostRetreatService {
       areas: new Set(),
       timeline: []
     };
-    
+
     updates.forEach(update => {
       update.transformations.implemented.forEach((t: any) => {
         map.implemented.add(t.area);
@@ -1485,7 +1485,7 @@ export class PostRetreatService {
         });
       });
     });
-    
+
     return {
       totalAreas: map.implemented.size,
       timeline: map.timeline
@@ -1503,7 +1503,7 @@ export class PostRetreatService {
 
   private trackElementalJourney(updates: any[]): any {
     const journey: any = {};
-    
+
     updates.forEach(update => {
       const element = update.practices.elementalWork.primaryElement;
       if (!journey[element]) {
@@ -1513,26 +1513,26 @@ export class PostRetreatService {
           practices: new Set()
         };
       }
-      
+
       journey[element].visits++;
       journey[element].totalBalance += update.practices.elementalWork.balance;
-      update.practices.elementalWork.practices.forEach((p: string) => 
+      update.practices.elementalWork.practices.forEach((p: string) =>
         journey[element].practices.add(p)
       );
     });
-    
+
     // Calculate averages
     Object.keys(journey).forEach(element => {
       journey[element].averageBalance = journey[element].totalBalance / journey[element].visits;
       journey[element].practiceCount = journey[element].practices.size;
     });
-    
+
     return journey;
   }
 
   private summarizeChallenges(updates: any[]): any {
     const challenges: any = {};
-    
+
     updates.forEach(update => {
       update.challenges?.forEach(challenge => {
         if (!challenges[challenge.type]) {
@@ -1542,19 +1542,19 @@ export class PostRetreatService {
             descriptions: []
           };
         }
-        
+
         challenges[challenge.type].occurrences++;
         challenges[challenge.type].totalImpact += challenge.impactLevel;
         challenges[challenge.type].descriptions.push(challenge.description);
       });
     });
-    
+
     return challenges;
   }
 
   private compileYearWisdom(updates: any[]): string[] {
     const wisdom: string[] = [];
-    
+
     updates.forEach(update => {
       // Extract wisdom from transformations
       update.transformations.implemented.forEach((t: any) => {
@@ -1563,7 +1563,7 @@ export class PostRetreatService {
         }
       });
     });
-    
+
     return wisdom;
   }
 
@@ -1575,32 +1575,32 @@ export class PostRetreatService {
       dropped: [],
       added: []
     };
-    
+
     // Track practice consistency
     const allPractices = new Set<string>();
     updates.forEach(update => {
       update.practices.dailyPractices.forEach((p: string) => allPractices.add(p));
     });
-    
+
     allPractices.forEach(practice => {
       const count = updates.filter(u => u.practices.dailyPractices.includes(practice)).length;
       evolution.consistency[practice] = count / updates.length;
     });
-    
+
     return evolution;
   }
 
   private async getYearCommunityContributions(participantId: string, year: number): Promise<any> {
     const startDate = new Date(year, 0, 1);
     const endDate = new Date(year, 11, 31);
-    
+
     const { data: contributions } = await supabase
       .from('community_shares')
       .select('*')
       .eq('shared_by', participantId)
       .gte('created_at', startDate.toISOString())
       .lte('created_at', endDate.toISOString());
-    
+
     return {
       totalShares: contributions?.length || 0,
       types: this.categorizeContributions(contributions || [])
@@ -1618,22 +1618,22 @@ export class PostRetreatService {
   private generateNextYearRecommendations(updates: any[]): string[] {
     const latest = updates[updates.length - 1];
     const recommendations: string[] = [];
-    
+
     // Based on current state
     const lowestState = Object.entries(latest.current_state)
       .sort(([,a], [,b]) => (a as number) - (b as number))[0];
-    
+
     recommendations.push(`Focus on elevating ${lowestState[0].replace(/([A-Z])/g, ' $1').toLowerCase()}`);
-    
+
     // Based on patterns
     if (latest.transformations.inProgress.length > 3) {
       recommendations.push('Complete in-progress transformations before starting new ones');
     }
-    
+
     recommendations.push('Deepen your elemental practice');
     recommendations.push('Share your wisdom with the community');
     recommendations.push('Consider mentoring newer retreat participants');
-    
+
     return recommendations;
   }
 
@@ -1649,7 +1649,7 @@ export class PostRetreatService {
       .eq('participant_id', participantId)
       .order('created_at', { ascending: false })
       .limit(1);
-    
+
     return updates?.[0] || {};
   }
 

@@ -10,7 +10,7 @@ import type { Memory, MemoryThread, ArchetypalPattern, TransformationJourney } f
 describe('Soul Memory System Tests', () => {
   let soulMemory: SoulMemorySystem;
   const testUserId = 'test-user-' + Date.now(); // Unique user ID for each test run
-  
+
   beforeAll(async () => {
     soulMemory = new SoulMemorySystem({
       userId: testUserId,
@@ -18,10 +18,10 @@ describe('Soul Memory System Tests', () => {
       databasePath: ':memory:',
       memoryDepth: 100
     });
-    
+
     await soulMemory.initialize();
   });
-  
+
   afterAll(async () => {
     await soulMemory.close();
   });
@@ -36,7 +36,7 @@ describe('Soul Memory System Tests', () => {
         oracleResponse: 'Let us explore what lies beneath the surface...',
         emotionalTone: 'curious',
         shadowContent: true,
-        metadata: { 
+        metadata: {
           oracleMode: 'alchemist',
           wisdomApproach: 'jung'
         }
@@ -48,13 +48,13 @@ describe('Soul Memory System Tests', () => {
       expect(memory.timestamp).toBeInstanceOf(Date);
       expect(memory.content).toBe(memoryData.content);
       expect(memory.oracleResponse).toBe(memoryData.oracleResponse);
-      
+
       // Retrieve and verify
       const retrieved = await soulMemory.retrieveMemories(testUserId, {
         type: 'oracle_exchange',
         limit: 1
       });
-      
+
       expect(retrieved).toHaveLength(1);
       expect(retrieved[0].content).toBe('What is my deepest fear?');
       expect(retrieved[0].oracleResponse).toBe('Let us explore what lies beneath the surface...');
@@ -82,7 +82,7 @@ describe('Soul Memory System Tests', () => {
 
       const sacredMoments = await soulMemory.getSacredMoments(testUserId);
       expect(sacredMoments.length).toBeGreaterThan(0);
-      
+
       const latestSacred = sacredMoments[sacredMoments.length - 1];
       expect(latestSacred.sacredMoment).toBe(true);
       expect(latestSacred.type).toBe('breakthrough');
@@ -118,7 +118,7 @@ describe('Soul Memory System Tests', () => {
 
       const patterns = await soulMemory.getActiveArchetypes(testUserId);
       const shadowPattern = patterns.find(p => p.archetype === 'Shadow');
-      
+
       expect(shadowPattern).toBeDefined();
       expect(shadowPattern!.activationCount).toBeGreaterThanOrEqual(3);
       expect(shadowPattern!.patternStrength).toBeGreaterThan(0);
@@ -165,7 +165,7 @@ describe('Soul Memory System Tests', () => {
     test('Should create and track memory threads', async () => {
       // Create a series of related memories
       const shadowWorkMemories = [];
-      
+
       for (let i = 0; i < 3; i++) {
         const memory = await soulMemory.storeMemory({
           userId: testUserId,
@@ -206,18 +206,18 @@ describe('Soul Memory System Tests', () => {
     test('Should track transformation milestones', async () => {
       // Add transformation memories representing a journey
       const milestones = [
-        { 
-          type: 'sacred_moment' as const, 
+        {
+          type: 'sacred_moment' as const,
           content: 'First glimpse of my true nature',
           phase: 'initiation' as const
         },
-        { 
-          type: 'breakthrough' as const, 
+        {
+          type: 'breakthrough' as const,
           content: 'Shadow integration - embracing my anger',
           phase: 'descent' as const
         },
-        { 
-          type: 'integration' as const, 
+        {
+          type: 'integration' as const,
           content: 'Living with both light and shadow',
           phase: 'return' as const
         }
@@ -238,11 +238,11 @@ describe('Soul Memory System Tests', () => {
       }
 
       const journey = await soulMemory.getTransformationJourney(testUserId);
-      
+
       expect(journey.milestones.length).toBeGreaterThanOrEqual(3);
       expect(journey.currentPhase).toBeDefined();
       expect(journey.nextSpiralSuggestion).toBeDefined();
-      
+
       // Check if phases are tracked correctly
       const phases = journey.milestones.map(m => m.phase);
       expect(phases).toContain('initiation');
@@ -285,7 +285,7 @@ describe('Soul Memory System Tests', () => {
 
       const patterns = await soulMemory.getActiveArchetypes(testUserId);
       const deathRebirthPattern = patterns.find(p => p.archetype === 'Death-Rebirth');
-      
+
       expect(deathRebirthPattern).toBeDefined();
       expect(deathRebirthPattern!.patternStrength).toBeGreaterThan(0.5);
     });
@@ -325,7 +325,7 @@ describe('Soul Memory System Tests', () => {
       // Should show progression from anxious to empowered
       expect(emotionalProgression).toContain('anxious');
       expect(emotionalProgression).toContain('empowered');
-      
+
       const anxiousIndex = emotionalProgression.indexOf('anxious');
       const empoweredIndex = emotionalProgression.indexOf('empowered');
       expect(empoweredIndex).toBeGreaterThan(anxiousIndex);
@@ -368,7 +368,7 @@ describe('Soul Memory System Tests', () => {
   describe('Memory Integration Tests', () => {
     test('Should link oracle responses to user prompts', async () => {
       const exchangeId = 'exchange-' + Date.now();
-      
+
       // Store user prompt
       const promptMemory = await soulMemory.storeMemory({
         userId: testUserId,
@@ -385,10 +385,10 @@ describe('Soul Memory System Tests', () => {
         content: 'What patterns from your early relationships might you be recreating?',
         element: 'water',
         oracleResponse: 'What patterns from your early relationships might you be recreating?',
-        metadata: { 
-          exchangeId, 
+        metadata: {
+          exchangeId,
           role: 'oracle',
-          linkedMemoryId: promptMemory.id 
+          linkedMemoryId: promptMemory.id
         }
       });
 
@@ -411,7 +411,7 @@ describe('Soul Memory System Tests', () => {
           type: 'integration',
           content: stage.content,
           element: 'earth',
-          metadata: { 
+          metadata: {
             integrationScore: stage.integration,
             pattern: 'people-pleasing'
           }
@@ -448,7 +448,7 @@ describe('Soul Memory System Tests', () => {
       await perfMemory.initialize();
 
       const startTime = Date.now();
-      
+
       // Store 100 memories
       const promises = [];
       for (let i = 0; i < 100; i++) {
@@ -459,7 +459,7 @@ describe('Soul Memory System Tests', () => {
           element: ['fire', 'water', 'earth', 'air', 'aether'][i % 5] as any
         }));
       }
-      
+
       await Promise.all(promises);
       const storeTime = Date.now() - startTime;
 

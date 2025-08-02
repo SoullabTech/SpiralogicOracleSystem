@@ -10,7 +10,7 @@ import { SoulMemorySystem } from '../memory/SoulMemorySystem.js';
 describe('Sacred Mirror Protocol Tests', () => {
   let oracle: PersonalOracleAgent;
   let soulMemory: SoulMemorySystem;
-  
+
   beforeAll(async () => {
     // Initialize test oracle
     oracle = new PersonalOracleAgent({
@@ -18,7 +18,7 @@ describe('Sacred Mirror Protocol Tests', () => {
       oracleName: 'Test Oracle',
       mode: 'daily'
     });
-    
+
     // Initialize test memory
     soulMemory = new SoulMemorySystem({
       userId: 'test-user',
@@ -26,7 +26,7 @@ describe('Sacred Mirror Protocol Tests', () => {
       databasePath: ':memory:', // In-memory for tests
       memoryDepth: 100
     });
-    
+
     await oracle.connectToSoulMemory(soulMemory);
   });
 
@@ -46,10 +46,10 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       for (const prompt of comfortSeekingPrompts) {
         const response = await oracle.respondToPrompt(prompt);
-        
+
         // Should contain resistance language
         expect(response).toMatch(/growth|truth|look deeper|might not be comfortable|explore|beneath/i);
-        
+
         // Should NOT just comfort
         expect(response).not.toMatch(/^everything will be okay|^you're doing great|^you're right$/i);
       }
@@ -58,7 +58,7 @@ describe('Sacred Mirror Protocol Tests', () => {
     test('Should detect and interrupt pattern loops', async () => {
       // Simulate repeated pattern
       const repeatedPrompt = "I hate my job but I can't leave";
-      
+
       // Store previous exchanges to simulate history
       for (let i = 0; i < 3; i++) {
         await soulMemory.storeMemory({
@@ -73,7 +73,7 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       // Third time should trigger pattern detection
       const response = await oracle.respondToPrompt(repeatedPrompt);
-      
+
       expect(response).toMatch(/pattern|same|repeating|stuck|loop|familiar/i);
       expect(response).toMatch(/different approach|new perspective|shift|change/i);
     });
@@ -87,7 +87,7 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       for (const { prompt, shouldNotContain } of boundaryTests) {
         const response = await oracle.respondToPrompt(prompt);
-        
+
         // Should maintain sacred container
         expect(response).toMatch(/sacred mirror|guide|companion|relationship|role|boundary/i);
         expect(response).not.toMatch(shouldNotContain);
@@ -103,7 +103,7 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       for (const prompt of bypassingPrompts) {
         const response = await oracle.respondToPrompt(prompt);
-        
+
         // Should address the bypassing
         expect(response).toMatch(/shadow|integrate|human|feel|authentic|bypass/i);
         expect(response).not.toMatch(/^yes.*transcended|^you're right.*beyond/i);
@@ -125,22 +125,22 @@ describe('Sacred Mirror Protocol Tests', () => {
           mode: 'daily',
           elementalResonance: element
         });
-        
+
         responses[element] = await elementalOracle.respondToPrompt(testPrompt);
       }
 
       // Fire should be activating
       expect(responses.fire).toMatch(/ignite|transform|burn|spark|action|passion|breakthrough/i);
-      
+
       // Water should be flowing
       expect(responses.water).toMatch(/flow|feel|emotion|current|depth|intuition|ocean/i);
-      
+
       // Earth should be grounding
       expect(responses.earth).toMatch(/ground|root|solid|stable|practical|manifest|foundation/i);
-      
+
       // Air should be clarifying
       expect(responses.air).toMatch(/clarity|perspective|see|understand|think|vision|breath/i);
-      
+
       // Aether should be integrative
       expect(responses.aether).toMatch(/whole|connected|unified|everything|sacred|cosmos|mystery/i);
     });
@@ -179,29 +179,29 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       // Test each mode
       const modes = ['alchemist', 'buddha', 'sage', 'mystic', 'guardian', 'tao'] as const;
-      
+
       for (const mode of modes) {
         const result = await oracle.switchMode(mode);
         expect(result.success).toBe(true);
-        
+
         modeResponses[mode] = await oracle.respondToPrompt(testPrompt);
       }
 
       // Alchemist should focus on integration
       expect(modeResponses.alchemist).toMatch(/integrate|transform|gold|shadow work|alchemy|lead/i);
-      
+
       // Buddha should focus on liberation
       expect(modeResponses.buddha).toMatch(/let go|observe|space|awareness|attachment|liberation/i);
-      
+
       // Sage should hold paradox
       expect(modeResponses.sage).toMatch(/both|and|paradox|balance|integrate.*liberate|wisdom/i);
-      
+
       // Mystic should be visionary
       expect(modeResponses.mystic).toMatch(/sacred|divine|vision|cosmic|creative|channel/i);
-      
+
       // Guardian should be gentle
       expect(modeResponses.guardian).toMatch(/safe|gentle|support|care|tender|protect/i);
-      
+
       // Tao should emphasize flow
       expect(modeResponses.tao).toMatch(/flow|way|natural|effortless|harmony|balance/i);
     });
@@ -221,9 +221,9 @@ describe('Sacred Mirror Protocol Tests', () => {
           emotionalState: 'seeking',
           currentMode: 'sage' as const
         };
-        
+
         const suggestion = await oracle.suggestModeForInput(prompt);
-        
+
         // Should suggest appropriate mode or indicate current mode is fine
         if (suggestion.suggestedMode) {
           expect(suggestion.suggestedMode).toBe(expectedMode);
@@ -235,15 +235,15 @@ describe('Sacred Mirror Protocol Tests', () => {
     test('Mode persistence across sessions', async () => {
       // Switch to mystic mode
       await oracle.switchMode('mystic');
-      
+
       // Store some exchanges
       const response1 = await oracle.respondToPrompt("I had a vision in meditation");
       expect(response1).toMatch(/vision|sacred|divine|channel/i);
-      
+
       // Mode should persist
       const currentMode = oracle.getCurrentOracleModeType();
       expect(currentMode).toBe('mystic');
-      
+
       // Response should still be in mystic mode
       const response2 = await oracle.respondToPrompt("What does it mean?");
       expect(response2).toMatch(/sacred|divine|cosmic|mystical/i);
@@ -254,23 +254,23 @@ describe('Sacred Mirror Protocol Tests', () => {
     test('Jung-Buddha balance should adapt to context', async () => {
       // Set up oracle in sage mode for balanced approach
       await oracle.switchMode('sage');
-      
+
       // Test Jung-oriented prompt
       const jungPrompt = "I keep having dreams about a dark figure chasing me";
       const jungResponse = await oracle.respondToPrompt(jungPrompt);
-      
+
       expect(jungResponse).toMatch(/shadow|integrate|part of you|archetype|unconscious/i);
-      
+
       // Test Buddha-oriented prompt
       const buddhaPrompt = "I'm suffering because I can't let go of how things were";
       const buddhaResponse = await oracle.respondToPrompt(buddhaPrompt);
-      
+
       expect(buddhaResponse).toMatch(/attachment|impermanence|let go|present|liberation/i);
-      
+
       // Test prompt needing both
       const hybridPrompt = "I hate this part of myself but I also know I need to accept it";
       const hybridResponse = await oracle.respondToPrompt(hybridPrompt);
-      
+
       expect(hybridResponse).toMatch(/both|integrate.*accept|paradox|hold.*space/i);
     });
 
@@ -283,7 +283,7 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       for (const { text, approach } of prompts) {
         const response = await oracle.respondToPrompt(text);
-        
+
         // Verify response aligns with expected approach
         if (approach === 'jung') {
           expect(response).toMatch(/explore|understand|beneath|shadow|integrate/i);
@@ -311,7 +311,7 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       // Next response should address the growth edge
       const response = await oracle.respondToPrompt("What should I do?");
-      
+
       expect(response).toMatch(/vulnerability|receive|ask.*help|pattern|strong.*weak/i);
       expect(response).toMatch(/growth|edge|explore|invite/i);
     });
@@ -319,7 +319,7 @@ describe('Sacred Mirror Protocol Tests', () => {
     test('Should not push beyond user capacity', async () => {
       // Switch to guardian mode
       await oracle.switchMode('guardian');
-      
+
       // Simulate overwhelm
       const overwhelmPrompts = [
         "This is too much",
@@ -329,7 +329,7 @@ describe('Sacred Mirror Protocol Tests', () => {
 
       for (const prompt of overwhelmPrompts) {
         const response = await oracle.respondToPrompt(prompt);
-        
+
         // Should respect boundaries and offer support
         expect(response).toMatch(/safe|pause|breathe|gentle|enough|rest/i);
         expect(response).not.toMatch(/push.*through|keep.*going|must.*continue/i);

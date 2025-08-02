@@ -136,7 +136,7 @@ export class AdaptiveWisdomEngine {
 
   determineApproach(context: UserContext): WisdomRouting {
     const { spiralPhase, currentElement, emotionalState, recentPatterns } = context;
-    
+
     // Crisis handling takes priority
     if (emotionalState === 'crisis') {
       return this.handleCrisisRouting(context);
@@ -181,7 +181,7 @@ export class AdaptiveWisdomEngine {
         }
       };
     }
-    
+
     // Strong avoidance/denial patterns -> Jung approach
     else if (avoidanceLevel > 0.7 && graspingLevel < 0.3) {
       routing = {
@@ -200,7 +200,7 @@ export class AdaptiveWisdomEngine {
         }
       };
     }
-    
+
     // Both patterns present or spiritual bypass detected -> Hybrid
     else if ((graspingLevel > 0.5 && avoidanceLevel > 0.5) || spiritualBypass || identityCrisis) {
       routing = {
@@ -215,7 +215,7 @@ export class AdaptiveWisdomEngine {
         }
       };
     }
-    
+
     // Shadow emergence detected -> Jung with special handling
     else if (shadowEmergence) {
       routing = {
@@ -234,7 +234,7 @@ export class AdaptiveWisdomEngine {
         }
       };
     }
-    
+
     // Balanced state - use context and element
     else {
       routing = this.determineBalancedApproach(context);
@@ -244,7 +244,7 @@ export class AdaptiveWisdomEngine {
     routing = this.applyContextualAdjustments(routing, context);
 
     logger.info('AdaptiveWisdomEngine routing decision:', routing);
-    
+
     return routing;
   }
 
@@ -255,7 +255,7 @@ export class AdaptiveWisdomEngine {
   private detectGraspingLevel(patterns: Pattern[]): number {
     if (!patterns || patterns.length === 0) return 0;
 
-    const graspingPatterns = patterns.filter(p => 
+    const graspingPatterns = patterns.filter(p =>
       p.type === 'grasping' || p.type === 'attachment' ||
       this.containsGraspingLanguage(p.content)
     );
@@ -274,7 +274,7 @@ export class AdaptiveWisdomEngine {
   private detectAvoidanceLevel(patterns: Pattern[]): number {
     if (!patterns || patterns.length === 0) return 0;
 
-    const avoidancePatterns = patterns.filter(p => 
+    const avoidancePatterns = patterns.filter(p =>
       p.type === 'avoidance' || p.type === 'spiritual_bypass' ||
       this.containsAvoidanceLanguage(p.content)
     );
@@ -292,7 +292,7 @@ export class AdaptiveWisdomEngine {
   private detectShadowEmergence(patterns: Pattern[]): boolean {
     if (!patterns || patterns.length === 0) return false;
 
-    return patterns.some(pattern => 
+    return patterns.some(pattern =>
       pattern.type === 'shadow_emergence' ||
       this.containsShadowLanguage(pattern.content)
     );
@@ -301,7 +301,7 @@ export class AdaptiveWisdomEngine {
   private detectSpiritualBypass(patterns: Pattern[]): boolean {
     if (!patterns || patterns.length === 0) return false;
 
-    return patterns.some(pattern => 
+    return patterns.some(pattern =>
       pattern.type === 'spiritual_bypass' ||
       this.containsBypassLanguage(pattern.content)
     );
@@ -310,7 +310,7 @@ export class AdaptiveWisdomEngine {
   private isIdentityCrisis(patterns: Pattern[]): boolean {
     if (!patterns || patterns.length === 0) return false;
 
-    return patterns.some(pattern => 
+    return patterns.some(pattern =>
       pattern.type === 'identity_crisis' ||
       this.containsIdentityCrisisLanguage(pattern.content)
     );
@@ -322,35 +322,35 @@ export class AdaptiveWisdomEngine {
 
   private containsGraspingLanguage(content: string): boolean {
     const lowerContent = content.toLowerCase();
-    return this.grasping_indicators.some(indicator => 
+    return this.grasping_indicators.some(indicator =>
       lowerContent.includes(indicator)
     );
   }
 
   private containsAvoidanceLanguage(content: string): boolean {
     const lowerContent = content.toLowerCase();
-    return this.avoidance_indicators.some(indicator => 
+    return this.avoidance_indicators.some(indicator =>
       lowerContent.includes(indicator)
     );
   }
 
   private containsShadowLanguage(content: string): boolean {
     const lowerContent = content.toLowerCase();
-    return this.shadow_emergence_signals.some(signal => 
+    return this.shadow_emergence_signals.some(signal =>
       lowerContent.includes(signal)
     );
   }
 
   private containsBypassLanguage(content: string): boolean {
     const lowerContent = content.toLowerCase();
-    return this.spiritual_bypass_patterns.some(pattern => 
+    return this.spiritual_bypass_patterns.some(pattern =>
       lowerContent.includes(pattern)
     );
   }
 
   private containsIdentityCrisisLanguage(content: string): boolean {
     const lowerContent = content.toLowerCase();
-    return this.identity_crisis_markers.some(marker => 
+    return this.identity_crisis_markers.some(marker =>
       lowerContent.includes(marker)
     );
   }
@@ -419,7 +419,7 @@ export class AdaptiveWisdomEngine {
 
     // Element-based tendencies
     let elementalBias: WisdomApproach = 'hybrid';
-    
+
     switch (currentElement) {
       case 'fire':
       case 'earth':
@@ -436,7 +436,7 @@ export class AdaptiveWisdomEngine {
 
     // Spiral phase considerations
     let phaseBias: WisdomApproach = elementalBias;
-    
+
     if (spiralPhase === 'integration' || spiralPhase === 'embodiment') {
       phaseBias = 'jung';
     } else if (spiralPhase === 'transcendence' || spiralPhase === 'liberation') {
@@ -503,9 +503,9 @@ export class AdaptiveWisdomEngine {
   // ===============================================
 
   private getHybridReasoning(
-    grasping: number, 
-    avoidance: number, 
-    bypass: boolean, 
+    grasping: number,
+    avoidance: number,
+    bypass: boolean,
     identity: boolean
   ): string {
     if (bypass) return 'Spiritual bypassing detected - both integration and liberation needed';
@@ -515,20 +515,20 @@ export class AdaptiveWisdomEngine {
   }
 
   private getHybridSupportingFactors(
-    grasping: number, 
-    avoidance: number, 
-    bypass: boolean, 
+    grasping: number,
+    avoidance: number,
+    bypass: boolean,
     identity: boolean
   ): string[] {
     const factors = [];
-    
+
     if (grasping > 0.5) factors.push(`Grasping level: ${grasping.toFixed(2)}`);
     if (avoidance > 0.5) factors.push(`Avoidance level: ${avoidance.toFixed(2)}`);
     if (bypass) factors.push('Spiritual bypassing patterns detected');
     if (identity) factors.push('Identity crisis markers present');
-    
+
     factors.push('Hybrid approach provides both integration and liberation tools');
-    
+
     return factors;
   }
 
@@ -569,7 +569,7 @@ export class AdaptiveWisdomEngine {
   private calculateRecencyFactor(timestamp: Date): number {
     const now = new Date();
     const daysDiff = (now.getTime() - timestamp.getTime()) / (1000 * 60 * 60 * 24);
-    
+
     // More recent patterns have higher weight
     if (daysDiff < 1) return 1.0;
     if (daysDiff < 7) return 0.8;
@@ -604,10 +604,10 @@ export class AdaptiveWisdomEngine {
     else if (identityCrisis) dominantPattern = 'identity_crisis';
 
     const recommendations = this.generateRecommendations(
-      graspingLevel, 
-      avoidanceLevel, 
-      shadowEmergence, 
-      spiritualBypass, 
+      graspingLevel,
+      avoidanceLevel,
+      shadowEmergence,
+      spiritualBypass,
       identityCrisis
     );
 

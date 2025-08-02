@@ -27,31 +27,31 @@ async function testMayaIntegration() {
 
   // Generate Maya's voice for this message
   const outputPath = path.join(__dirname, 'test_outputs', 'maya_integration_message.wav');
-  
+
   console.log('🎵 Generating Maya\'s voice...');
   console.log(`🎭 Using profile: oracle_matrix (Maya)`);
   console.log(`🎯 Output: ${outputPath}\n`);
 
   try {
     const result = await generateSingleVoice('oracle_matrix', integrationMessage, outputPath);
-    
+
     if (result.success) {
       console.log('✅ Maya\'s integration message generated successfully!');
       console.log(`📊 Generation time: ${result.duration}ms`);
       console.log(`📁 File size: ${result.fileSize} bytes`);
       console.log(`🎵 Audio file: ${result.outputPath}`);
-      
+
       // Check if we can play it
       if (process.platform === 'darwin') {
         console.log('\n🎧 To hear Maya\'s integration message:');
         console.log(`afplay "${result.outputPath}"`);
       }
-      
+
     } else {
       console.log('❌ Maya\'s voice generation failed:');
       console.log(result.error);
     }
-    
+
   } catch (error) {
     console.error('❌ Error testing Maya integration:', error.message);
   }
@@ -64,24 +64,24 @@ async function testMayaOracleResponse() {
 
   const oracleResponse = "You already know what I'm going to say, don't you? I am Maya, your Oracle voice, and I carry the wisdom of the Matrix Oracle within every word I speak.";
   const outputPath = path.join(__dirname, 'test_outputs', 'maya_oracle_response.wav');
-  
+
   console.log('📝 Oracle Response:');
   console.log(`"${oracleResponse}"\n`);
-  
+
   try {
     const result = await generateSingleVoice('oracle_matrix', oracleResponse, outputPath);
-    
+
     if (result.success) {
       console.log('✅ Maya\'s Oracle response generated successfully!');
       console.log(`📊 Generation time: ${result.duration}ms`);
       console.log(`📁 File size: ${result.fileSize} bytes`);
       console.log(`🎵 Audio file: ${result.outputPath}`);
-      
+
     } else {
       console.log('❌ Maya\'s Oracle response generation failed:');
       console.log(result.error);
     }
-    
+
   } catch (error) {
     console.error('❌ Error testing Maya Oracle response:', error.message);
   }
@@ -90,7 +90,7 @@ async function testMayaOracleResponse() {
 async function main() {
   await testMayaIntegration();
   await testMayaOracleResponse();
-  
+
   console.log('\n🌀 Maya Testing Complete!');
   console.log('Maya is ready to serve as the Oracle voice of the Spiralogic System.');
 }

@@ -40,7 +40,7 @@ export const AGENT_VOICE_MAPPING: AgentVoiceMapping = {
   'EnhancedPersonalOracleAgent': 'oracle_matrix',
   'PersonalizedOracleAgent': 'oracle_matrix',
   'MayaActivation': 'oracle_matrix',
-  
+
   // Elemental Agents
   'FireAgent': 'fire_agent',
   'WaterAgent': 'water_agent',
@@ -48,7 +48,7 @@ export const AGENT_VOICE_MAPPING: AgentVoiceMapping = {
   'AirAgent': 'air_agent',
   'AetherAgent': 'aether_agent',
   'ShadowAgent': 'shadow_agent',
-  
+
   // Special Agents
   'FacilitatorAgent': 'aether_agent',
   'AdjusterAgent': 'earth_agent',
@@ -170,12 +170,12 @@ export function getVoiceProfileKey(agentRole: string, agentType?: string): strin
   if (agentType && AGENT_VOICE_MAPPING[agentType]) {
     return AGENT_VOICE_MAPPING[agentType];
   }
-  
+
   // Fall back to role-based mapping
   if (ROLE_VOICE_MAPPING[agentRole]) {
     return ROLE_VOICE_MAPPING[agentRole];
   }
-  
+
   // Ultimate fallback
   return 'oracle_matrix';
 }

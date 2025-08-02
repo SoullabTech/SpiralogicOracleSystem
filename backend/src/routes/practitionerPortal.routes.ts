@@ -12,21 +12,21 @@ const isPractitioner = async (req: any, res: any, next: any) => {
     if (!userId) {
       return res.status(401).json({ success: false, error: 'Unauthorized' });
     }
-    
+
     // Check if user has practitioner role
     const { data: user, error } = await supabase
       .from('users')
       .select('role')
       .eq('id', userId)
       .single();
-      
+
     if (error || !user || user.role !== 'practitioner') {
-      return res.status(403).json({ 
-        success: false, 
-        error: 'Practitioner access required' 
+      return res.status(403).json({
+        success: false,
+        error: 'Practitioner access required'
       });
     }
-    
+
     next();
   } catch (error) {
     res.status(500).json({ success: false, error: 'Server error' });
@@ -37,16 +37,16 @@ const isPractitioner = async (req: any, res: any, next: any) => {
 practitionerPortalRouter.get('/dashboard', authenticate, isPractitioner, async (req, res) => {
   try {
     const practitionerId = req.user!.id;
-    
+
     // Get practitioner's clients
     const { data: clients, error: clientsError } = await supabase
       .from('practitioner_clients')
       .select('*, spiralogic_reports(count)')
       .eq('practitioner_id', practitionerId)
       .order('created_at', { ascending: false });
-      
+
     if (clientsError) throw clientsError;
-    
+
     // Get recent reports
     const { data: recentReports, error: reportsError } = await supabase
       .from('spiralogic_reports')
@@ -54,16 +54,16 @@ practitionerPortalRouter.get('/dashboard', authenticate, isPractitioner, async (
       .eq('created_by', practitionerId)
       .order('created_at', { ascending: false })
       .limit(10);
-      
+
     if (reportsError) throw reportsError;
-    
+
     // Get practitioner branding
     const { data: branding } = await supabase
       .from('practitioner_branding')
       .select('*')
       .eq('practitioner_id', practitionerId)
       .single();
-    
+
     res.json({
       success: true,
       data: {
@@ -82,7 +82,7 @@ practitionerPortalRouter.get('/dashboard', authenticate, isPractitioner, async (
         }
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching dashboard:', error);
     res.status(500).json({
@@ -102,7 +102,7 @@ const addClientSchema = z.object({
 practitionerPortalRouter.post('/clients', authenticate, isPractitioner, async (req, res) => {
   try {
     const practitionerId = req.user!.id;
-    
+
     const validationResult = addClientSchema.safeParse(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
@@ -111,18 +111,18 @@ practitionerPortalRouter.post('/clients', authenticate, isPractitioner, async (r
         details: validationResult.error.errors
       });
     }
-    
+
     const { email, name, notes } = validationResult.data;
-    
+
     // Check if user exists
     const { data: existingUser } = await supabase
       .from('users')
       .select('id')
       .eq('email', email)
       .single();
-    
+
     let clientId: string;
-    
+
     if (existingUser) {
       clientId = existingUser.id;
     } else {
@@ -135,11 +135,11 @@ practitionerPortalRouter.post('/clients', authenticate, isPractitioner, async (r
           invited_by: practitionerId
         }
       });
-      
+
       if (authError) throw authError;
       clientId = authData.user.id;
     }
-    
+
     // Create practitioner-client relationship
     const { data: client, error } = await supabase
       .from('practitioner_clients')
@@ -152,7 +152,7 @@ practitionerPortalRouter.post('/clients', authenticate, isPractitioner, async (r
       })
       .select()
       .single();
-      
+
     if (error) {
       if (error.code === '23505') { // Unique constraint violation
         return res.status(400).json({
@@ -162,12 +162,12 @@ practitionerPortalRouter.post('/clients', authenticate, isPractitioner, async (r
       }
       throw error;
     }
-    
+
     res.json({
       success: true,
       data: client
     });
-    
+
   } catch (error) {
     console.error('Error adding client:', error);
     res.status(500).json({
@@ -181,7 +181,7 @@ practitionerPortalRouter.post('/clients', authenticate, isPractitioner, async (r
 practitionerPortalRouter.get('/clients', authenticate, isPractitioner, async (req, res) => {
   try {
     const practitionerId = req.user!.id;
-    
+
     const { data: clients, error } = await supabase
       .from('practitioner_clients')
       .select(`
@@ -191,9 +191,9 @@ practitionerPortalRouter.get('/clients', authenticate, isPractitioner, async (re
       `)
       .eq('practitioner_id', practitionerId)
       .order('client_name');
-      
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data: {
@@ -201,7 +201,7 @@ practitionerPortalRouter.get('/clients', authenticate, isPractitioner, async (re
         count: clients?.length || 0
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching clients:', error);
     res.status(500).json({
@@ -216,7 +216,7 @@ practitionerPortalRouter.get('/clients/:clientId', authenticate, isPractitioner,
   try {
     const practitionerId = req.user!.id;
     const { clientId } = req.params;
-    
+
     // Verify practitioner-client relationship
     const { data: relation, error: relError } = await supabase
       .from('practitioner_clients')
@@ -224,28 +224,28 @@ practitionerPortalRouter.get('/clients/:clientId', authenticate, isPractitioner,
       .eq('practitioner_id', practitionerId)
       .eq('client_id', clientId)
       .single();
-      
+
     if (relError || !relation) {
       return res.status(404).json({
         success: false,
         error: 'Client not found'
       });
     }
-    
+
     // Get client's reports
     const { data: reports } = await supabase
       .from('spiralogic_reports')
       .select('*, birth_charts(*)')
       .eq('user_id', clientId)
       .order('created_at', { ascending: false });
-    
+
     // Get client's birth charts
     const { data: birthCharts } = await supabase
       .from('birth_charts')
       .select('*')
       .eq('user_id', clientId)
       .order('created_at', { ascending: false });
-    
+
     res.json({
       success: true,
       data: {
@@ -254,7 +254,7 @@ practitionerPortalRouter.get('/clients/:clientId', authenticate, isPractitioner,
         birthCharts: birthCharts || []
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching client details:', error);
     res.status(500).json({
@@ -270,7 +270,7 @@ practitionerPortalRouter.patch('/clients/:clientId/notes', authenticate, isPract
     const practitionerId = req.user!.id;
     const { clientId } = req.params;
     const { notes } = req.body;
-    
+
     const { data, error } = await supabase
       .from('practitioner_clients')
       .update({ notes })
@@ -278,14 +278,14 @@ practitionerPortalRouter.patch('/clients/:clientId/notes', authenticate, isPract
       .eq('client_id', clientId)
       .select()
       .single();
-      
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data
     });
-    
+
   } catch (error) {
     console.error('Error updating client notes:', error);
     res.status(500).json({
@@ -299,20 +299,20 @@ practitionerPortalRouter.patch('/clients/:clientId/notes', authenticate, isPract
 practitionerPortalRouter.get('/branding', authenticate, isPractitioner, async (req, res) => {
   try {
     const practitionerId = req.user!.id;
-    
+
     const { data: branding, error } = await supabase
       .from('practitioner_branding')
       .select('*')
       .eq('practitioner_id', practitionerId)
       .single();
-      
+
     if (error && error.code !== 'PGRST116') throw error; // Ignore not found error
-    
+
     res.json({
       success: true,
       data: branding || null
     });
-    
+
   } catch (error) {
     console.error('Error fetching branding:', error);
     res.status(500).json({
@@ -336,7 +336,7 @@ const brandingSchema = z.object({
 practitionerPortalRouter.put('/branding', authenticate, isPractitioner, async (req, res) => {
   try {
     const practitionerId = req.user!.id;
-    
+
     const validationResult = brandingSchema.safeParse(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
@@ -345,7 +345,7 @@ practitionerPortalRouter.put('/branding', authenticate, isPractitioner, async (r
         details: validationResult.error.errors
       });
     }
-    
+
     const brandingData = {
       practitioner_id: practitionerId,
       business_name: validationResult.data.businessName,
@@ -356,20 +356,20 @@ practitionerPortalRouter.put('/branding', authenticate, isPractitioner, async (r
       report_header_text: validationResult.data.reportHeaderText,
       report_footer_text: validationResult.data.reportFooterText
     };
-    
+
     const { data, error } = await supabase
       .from('practitioner_branding')
       .upsert(brandingData)
       .select()
       .single();
-      
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
       data
     });
-    
+
   } catch (error) {
     console.error('Error updating branding:', error);
     res.status(500).json({
@@ -416,50 +416,50 @@ practitionerPortalRouter.get('/analytics', authenticate, isPractitioner, async (
   try {
     const practitionerId = req.user!.id;
     const { timeframe = '30d' } = req.query;
-    
+
     // Calculate date range
     const days = timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : 90;
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
-    
+
     // Get reports created in timeframe
     const { data: reports } = await supabase
       .from('spiralogic_reports')
       .select('created_at, user_id')
       .eq('created_by', practitionerId)
       .gte('created_at', startDate.toISOString());
-    
+
     // Get new clients in timeframe
     const { data: newClients } = await supabase
       .from('practitioner_clients')
       .select('created_at')
       .eq('practitioner_id', practitionerId)
       .gte('created_at', startDate.toISOString());
-    
+
     // Calculate daily stats
     const dailyStats: { [key: string]: { reports: number, clients: number } } = {};
-    
+
     for (let i = 0; i < days; i++) {
       const date = new Date();
       date.setDate(date.getDate() - i);
       const dateKey = date.toISOString().split('T')[0];
       dailyStats[dateKey] = { reports: 0, clients: 0 };
     }
-    
+
     reports?.forEach(report => {
       const dateKey = new Date(report.created_at).toISOString().split('T')[0];
       if (dailyStats[dateKey]) {
         dailyStats[dateKey].reports++;
       }
     });
-    
+
     newClients?.forEach(client => {
       const dateKey = new Date(client.created_at).toISOString().split('T')[0];
       if (dailyStats[dateKey]) {
         dailyStats[dateKey].clients++;
       }
     });
-    
+
     res.json({
       success: true,
       data: {
@@ -472,7 +472,7 @@ practitionerPortalRouter.get('/analytics', authenticate, isPractitioner, async (
           .reverse()
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching analytics:', error);
     res.status(500).json({

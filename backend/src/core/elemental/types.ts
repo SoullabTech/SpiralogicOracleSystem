@@ -1,6 +1,6 @@
 export enum ElementalArchetype {
   FIRE = 'fire',
-  WATER = 'water', 
+  WATER = 'water',
   EARTH = 'earth',
   AIR = 'air'
 }

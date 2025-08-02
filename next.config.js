@@ -9,16 +9,16 @@ const nextConfig = {
   trailingSlash: isIPFS ? true : false,
   skipTrailingSlashRedirect: isIPFS ? true : false,
   distDir: isIPFS ? 'dist' : '.next',
-  
+
   // Images configuration
   images: {
     unoptimized: isIPFS ? true : false,
     domains: ['oracle-backend-1.onrender.com'],
   },
-  
+
   // Asset prefix for IPFS
   assetPrefix: isProd && isIPFS ? './' : '',
-  
+
   // Environment variables
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://oracle-backend-1.onrender.com',
@@ -28,20 +28,20 @@ const nextConfig = {
     AIR_AGENT_ENDPOINT: process.env.AIR_AGENT_ENDPOINT || 'http://localhost:3004',
     AETHER_AGENT_ENDPOINT: process.env.AETHER_AGENT_ENDPOINT || 'http://localhost:3005',
   },
-  
+
   // Optimize for deployment
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  
+
   // Ensure CSS is processed correctly
   experimental: {
     optimizeCss: true,
   },
-  
+
   // Optimize production builds
   productionBrowserSourceMaps: false,
-  
+
   // Webpack configuration for IPFS compatibility
   webpack: (config, { isServer }) => {
     if (isIPFS && !isServer) {

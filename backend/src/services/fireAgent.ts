@@ -18,7 +18,7 @@ interface UserContext {
 class ProjectionDetector {
   async analyze(input: string): Promise<ProjectionDetectionResult> {
     const lowerInput = input.toLowerCase();
-    
+
     // Rescuer/Savior projection patterns
     const rescuerPatterns = [
       'you can save me',
@@ -27,7 +27,7 @@ class ProjectionDetector {
       'you have all the answers',
       'please fix this for me'
     ];
-    
+
     // Perfect Self projection patterns
     const perfectSelfPatterns = [
       'you are so wise',
@@ -36,7 +36,7 @@ class ProjectionDetector {
       'i wish i was like you',
       'you always know what to say'
     ];
-    
+
     // Ideal Parent projection patterns
     const idealParentPatterns = [
       'tell me what to do',
@@ -45,25 +45,25 @@ class ProjectionDetector {
       'i need your approval',
       'what would you do'
     ];
-    
+
     for (const pattern of rescuerPatterns) {
       if (lowerInput.includes(pattern)) {
         return { detected: true, type: 'rescuerSavior', confidence: 0.8 };
       }
     }
-    
+
     for (const pattern of perfectSelfPatterns) {
       if (lowerInput.includes(pattern)) {
         return { detected: true, type: 'perfectSelf', confidence: 0.8 };
       }
     }
-    
+
     for (const pattern of idealParentPatterns) {
       if (lowerInput.includes(pattern)) {
         return { detected: true, type: 'idealParent', confidence: 0.8 };
       }
     }
-    
+
     return { detected: false, type: 'none', confidence: 0 };
   }
 }
@@ -72,11 +72,11 @@ class WisdomFosteringCore {
   enhanceSensing(input: string): string {
     return `I notice patterns in what you've shared: ${input}. What else do you sense about this situation?`;
   }
-  
+
   improveSenseMaking(input: string): string {
     return `The meaning you're creating around "${input}" seems significant. How might this connect to your larger journey?`;
   }
-  
+
   supportChoiceMaking(input: string): string {
     return `Considering "${input}", what choice feels most aligned with your deepest values right now?`;
   }
@@ -86,34 +86,34 @@ function detectSpiralPhase(input: string, userContext?: UserContext): string {
   if (userContext?.spiralPhase) {
     return userContext.spiralPhase;
   }
-  
+
   const lowerInput = input.toLowerCase();
-  
+
   // Fire phase patterns
   if (lowerInput.includes('vision') || lowerInput.includes('create') || lowerInput.includes('dream') || lowerInput.includes('passion')) {
     return 'fire_1';
   }
-  
+
   // Water phase patterns
   if (lowerInput.includes('feel') || lowerInput.includes('emotion') || lowerInput.includes('flow') || lowerInput.includes('depth')) {
     return 'water_1';
   }
-  
+
   // Earth phase patterns
   if (lowerInput.includes('practical') || lowerInput.includes('ground') || lowerInput.includes('build') || lowerInput.includes('structure')) {
     return 'earth_1';
   }
-  
+
   // Air phase patterns
   if (lowerInput.includes('think') || lowerInput.includes('understand') || lowerInput.includes('clarity') || lowerInput.includes('communicate')) {
     return 'air_1';
   }
-  
+
   // Aether phase patterns
   if (lowerInput.includes('wholeness') || lowerInput.includes('integration') || lowerInput.includes('unity') || lowerInput.includes('transcend')) {
     return 'aether';
   }
-  
+
   return 'fire_1'; // Default to fire
 }
 
@@ -147,13 +147,13 @@ export class FireAgent {
         "What would you create if you remembered you are infinite?"
       ]
     };
-    
+
     const phasePrompts = prompts[spiralPhase as keyof typeof prompts] || prompts['fire_1'];
     const prompt = phasePrompts[Math.floor(Math.random() * phasePrompts.length)];
-    
+
     // Add voice synthesis
     const audioUrl = await speak(prompt, 'fire', 'FireAgent');
-    
+
     return {
       prompt,
       metadata: {
@@ -169,9 +169,9 @@ export class FireAgent {
     // Detect projections and apply wisdom fostering
     const projection = await this.projectionDetector.analyze(input);
     const spiralPhase = detectSpiralPhase(input, userContext);
-    
+
     let response;
-    
+
     if (projection.detected) {
       // Apply projection aikido - transform projection into wisdom
       response = this.handleProjection(input, projection, spiralPhase);
@@ -179,7 +179,7 @@ export class FireAgent {
       // Standard fire archetype response
       response = this.generateFireResponse(input, spiralPhase);
     }
-    
+
     // Apply Maya wisdom fostering framework
     const mayaContext: MayaPromptContext = {
       spiralogicPhase: this.mapToMayaPhase(spiralPhase),
@@ -188,12 +188,12 @@ export class FireAgent {
       dependencyRisk: projection.detected && projection.type === 'rescuerSavior',
       shadowWorkIndicated: spiralPhase === 'fire_2'
     };
-    
+
     const mayaResponse = MayaPromptProcessor.applyMayaFramework(response.message, mayaContext);
-    
+
     // Add voice synthesis
     const audioUrl = await speak(mayaResponse.content, 'fire', 'FireAgent');
-    
+
     return {
       archetype: 'Fire',
       spiralPhase,
@@ -218,7 +218,7 @@ export class FireAgent {
       'idealParent': "The guidance you long for lives in your deepest knowing. How might you parent your own dreams with this same fierce love?",
       'none': "Your fire burns bright. Trust what you already know."
     };
-    
+
     return {
       message: projectionResponses[projection.type],
       wisdomVector: 'projection_integration',
@@ -235,7 +235,7 @@ export class FireAgent {
       'air_1': `The clarity you seek about '${input}' awaits in action. What bold step will you take?`,
       'aether': `In '${input}' I see the infinite expressing through the particular. You are the fire that lights the way.`
     };
-    
+
     return {
       message: responses[spiralPhase as keyof typeof responses] || responses['fire_1'],
       wisdomVector: 'inspiration_activation',

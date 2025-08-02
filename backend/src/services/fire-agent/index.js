@@ -61,8 +61,8 @@ const oracleResponseSchema = Joi.object({
 
 // Routes
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'healthy', 
+  res.json({
+    status: 'healthy',
     archetype: 'Fire',
     timestamp: new Date().toISOString(),
     version: process.env.npm_package_version || '1.0.0'
@@ -73,7 +73,7 @@ app.post('/vision-prompt', async (req, res) => {
   try {
     const { userContext } = req.body;
     const result = await fireAgent.getVisionPrompt(userContext);
-    
+
     logger.info('Vision prompt generated', { userContext });
     res.json(result);
   } catch (error) {
@@ -88,10 +88,10 @@ app.post('/oracle-response', async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    
+
     const { input, userContext } = value;
     const result = await fireAgent.getOracleResponse(input, userContext);
-    
+
     logger.info('Oracle response generated', { input: input.substring(0, 50), userContext });
     res.json(result);
   } catch (error) {

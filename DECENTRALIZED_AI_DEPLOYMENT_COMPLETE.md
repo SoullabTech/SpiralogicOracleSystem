@@ -11,7 +11,7 @@ Your **Archetypal Consciousness Oracle** is now fully deployed across the decent
 - 5 ElevenLabs archetypal voices configured
 - Local testing infrastructure
 
-### ✅ Week 2: SingularityNET Integration  
+### ✅ Week 2: SingularityNET Integration
 - gRPC service implementation
 - Protobuf definitions
 - SNet daemon configuration

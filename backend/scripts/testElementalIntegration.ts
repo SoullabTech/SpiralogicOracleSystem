@@ -33,21 +33,21 @@ async function testElementalIntegration() {
     // Verify knowledge files were created
     console.log('\n📁 Checking Knowledge Files:');
     const knowledgeDir = path.join(__dirname, '../data/founder-knowledge');
-    
+
     try {
       const processedPath = path.join(knowledgeDir, 'elemental-alchemy-processed.json');
       const summaryPath = path.join(knowledgeDir, 'elemental-wisdom-summary.json');
-      
+
       await fs.access(processedPath);
       await fs.access(summaryPath);
-      
+
       console.log('✅ elemental-alchemy-processed.json - Created');
       console.log('✅ elemental-wisdom-summary.json - Created');
 
       // Show summary structure
       const summaryContent = await fs.readFile(summaryPath, 'utf-8');
       const summary = JSON.parse(summaryContent);
-      
+
       console.log('\n🔮 Elemental Wisdom Summary:');
       console.log(`- Type: ${summary.type}`);
       console.log(`- Created: ${summary.created_at}`);

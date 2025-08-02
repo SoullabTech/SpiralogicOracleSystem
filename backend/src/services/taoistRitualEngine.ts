@@ -13,9 +13,9 @@ export interface RitualSuggestion {
 // Taoist ritual practices mapped to Five Elements
 const ELEMENT_RITUAL_MAP: Record<Element, RitualSuggestion[]> = {
   Wood: [
-    { 
-      id: 'inner-smile-liver', 
-      title: 'Inner Smile – Liver Qi', 
+    {
+      id: 'inner-smile-liver',
+      title: 'Inner Smile – Liver Qi',
       durationMin: 10,
       description: 'Cultivate growth energy and flexibility',
       instruction: 'Smile to your liver, visualize green healing light, stretch gently',
@@ -33,9 +33,9 @@ const ELEMENT_RITUAL_MAP: Record<Element, RitualSuggestion[]> = {
     }
   ],
   Fire: [
-    { 
-      id: 'heart-fire-qigong', 
-      title: 'Heart Fire Qi Gong', 
+    {
+      id: 'heart-fire-qigong',
+      title: 'Heart Fire Qi Gong',
       durationMin: 12,
       description: 'Ignite joy and circulation',
       instruction: 'Open heart center, circulate warm red energy, smile from heart',
@@ -53,9 +53,9 @@ const ELEMENT_RITUAL_MAP: Record<Element, RitualSuggestion[]> = {
     }
   ],
   Earth: [
-    { 
-      id: 'micro-orbit', 
-      title: 'Microcosmic Orbit Grounding', 
+    {
+      id: 'micro-orbit',
+      title: 'Microcosmic Orbit Grounding',
       durationMin: 15,
       description: 'Center and stabilize your energy',
       instruction: 'Circulate energy from tailbone up spine to crown, down front to navel',
@@ -73,9 +73,9 @@ const ELEMENT_RITUAL_MAP: Record<Element, RitualSuggestion[]> = {
     }
   ],
   Metal: [
-    { 
-      id: 'lung-healing-sound', 
-      title: 'Lung Healing Sound (Tsu)', 
+    {
+      id: 'lung-healing-sound',
+      title: 'Lung Healing Sound (Tsu)',
       durationMin: 8,
       description: 'Release grief and cultivate clarity',
       instruction: 'Exhale "Tsuuuu" sound while visualizing white light in lungs',
@@ -93,9 +93,9 @@ const ELEMENT_RITUAL_MAP: Record<Element, RitualSuggestion[]> = {
     }
   ],
   Water: [
-    { 
-      id: 'kidney-water-breath', 
-      title: 'Kidney Water Breath', 
+    {
+      id: 'kidney-water-breath',
+      title: 'Kidney Water Breath',
       durationMin: 10,
       description: 'Restore vitality and inner wisdom',
       instruction: 'Deep belly breathing while warming kidney area with palms',
@@ -119,7 +119,7 @@ const ELEMENT_RITUAL_MAP: Record<Element, RitualSuggestion[]> = {
  */
 export function suggestTaoistRituals(profile: FourPillarsProfile): RitualSuggestion[] {
   // Primary focus: balance deficient elements
-  const deficientRituals = profile.deficient.flatMap(element => 
+  const deficientRituals = profile.deficient.flatMap(element =>
     ELEMENT_RITUAL_MAP[element] || []
   );
 
@@ -137,7 +137,7 @@ export function suggestTaoistRituals(profile: FourPillarsProfile): RitualSuggest
  */
 export function getDailyRitual(profile: FourPillarsProfile): RitualSuggestion {
   const hour = new Date().getHours();
-  
+
   // Time-based element recommendations (Traditional Chinese Medicine organ clock)
   let timeElement: Element;
   if (hour >= 3 && hour < 7) timeElement = 'Wood';  // Liver/Gallbladder time
@@ -149,7 +149,7 @@ export function getDailyRitual(profile: FourPillarsProfile): RitualSuggestion {
   // Prioritize deficient elements, otherwise use time element
   const targetElement = profile.deficient.length > 0 ? profile.deficient[0] : timeElement;
   const rituals = ELEMENT_RITUAL_MAP[targetElement];
-  
+
   return rituals[0] || ELEMENT_RITUAL_MAP.Water[0];
 }
 
@@ -159,12 +159,12 @@ export function getDailyRitual(profile: FourPillarsProfile): RitualSuggestion {
 export function getSeasonalRitual(): RitualSuggestion {
   const month = new Date().getMonth();
   let seasonElement: Element;
-  
+
   if (month >= 2 && month <= 4) seasonElement = 'Wood';   // Spring
   else if (month >= 5 && month <= 7) seasonElement = 'Fire';  // Summer
   else if (month >= 8 && month <= 10) seasonElement = 'Metal'; // Autumn
   else seasonElement = 'Water'; // Winter
-  
+
   return ELEMENT_RITUAL_MAP[seasonElement][0];
 }
 
@@ -189,7 +189,7 @@ export function generateRitualSequence(profile: FourPillarsProfile, duration: nu
   for (const element of allElements) {
     if (remainingTime <= 0) break;
     if (profile.dominant.includes(element)) continue;
-    
+
     const ritual = ELEMENT_RITUAL_MAP[element][0];
     if (ritual && remainingTime >= ritual.durationMin) {
       sequence.push(ritual);

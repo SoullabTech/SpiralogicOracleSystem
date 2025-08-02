@@ -65,7 +65,7 @@ export class Vertex {
     const dx = this.x - center.x;
     const dy = this.y - center.y;
     const dz = this.z - center.z;
-    
+
     // Apply phase-specific transformations
     switch (phase) {
       case JitterbugPhase.REVERSE_TETRAHEDRON:
@@ -76,7 +76,7 @@ export class Vertex {
           center.z - dz * ratio,
           'void'
         );
-      
+
       case JitterbugPhase.ICOSAHEDRON:
       case JitterbugPhase.EXPANDING_ICOSAHEDRON:
         // Twist transformation for water phases
@@ -89,7 +89,7 @@ export class Vertex {
           center.z + dz * ratio,
           'water'
         );
-      
+
       default:
         // Simple radial scaling for other phases
         return new Vertex(
@@ -117,7 +117,7 @@ export class VectorEquilibrium {
   private radius: number;
   private currentPhase: JitterbugPhase = JitterbugPhase.VECTOR_EQUILIBRIUM;
   private phaseTransition: number = 0; // 0-1 for smooth transitions
-  
+
   constructor(centerX: number = 0, centerY: number = 0, centerZ: number = 0, radius: number = 100) {
     this.center = new Vertex(centerX, centerY, centerZ, 'aether');
     this.radius = radius;
@@ -127,12 +127,12 @@ export class VectorEquilibrium {
   // Initialize the 12 vertices of the VE
   private initializeVertices(): void {
     this.vertices = [];
-    
+
     // VE vertices are at the corners of a cuboctahedron
     // 4 vertices in upper square
     const upperSquareY = this.radius / SQRT_2;
     const squareRadius = this.radius / SQRT_2;
-    
+
     for (let i = 0; i < 4; i++) {
       const angle = (i * Math.PI / 2) + (Math.PI / 4);
       this.vertices.push(new Vertex(
@@ -142,10 +142,10 @@ export class VectorEquilibrium {
         i < 2 ? 'fire' : 'air'
       ));
     }
-    
+
     // 4 vertices in lower square (rotated 45°)
     const lowerSquareY = -this.radius / SQRT_2;
-    
+
     for (let i = 0; i < 4; i++) {
       const angle = i * Math.PI / 2;
       this.vertices.push(new Vertex(
@@ -155,7 +155,7 @@ export class VectorEquilibrium {
         i < 2 ? 'earth' : 'water'
       ));
     }
-    
+
     // 4 vertices in middle square (equator)
     for (let i = 0; i < 4; i++) {
       const angle = (i * Math.PI / 2) + (Math.PI / 4);
@@ -173,15 +173,15 @@ export class VectorEquilibrium {
     if (this.phaseTransition === 0) {
       return this.vertices.map(v => v.transform(this.currentPhase, this.center));
     }
-    
+
     // Interpolate between phases
     const fromPhase = this.currentPhase;
     const toPhase = this.getNextPhase(fromPhase);
-    
+
     return this.vertices.map(v => {
       const from = v.transform(fromPhase, this.center);
       const to = v.transform(toPhase, this.center);
-      
+
       return new Vertex(
         from.x + (to.x - from.x) * this.phaseTransition,
         from.y + (to.y - from.y) * this.phaseTransition,
@@ -194,27 +194,27 @@ export class VectorEquilibrium {
   // Get edges connecting vertices
   getEdges(): Array<[number, number]> {
     const edges: Array<[number, number]> = [];
-    
+
     // Upper square edges
     for (let i = 0; i < 4; i++) {
       edges.push([i, (i + 1) % 4]);
     }
-    
+
     // Lower square edges
     for (let i = 4; i < 8; i++) {
       edges.push([i, 4 + ((i - 4 + 1) % 4)]);
     }
-    
+
     // Middle square edges
     for (let i = 8; i < 12; i++) {
       edges.push([i, 8 + ((i - 8 + 1) % 4)]);
     }
-    
+
     // Vertical edges connecting squares
     edges.push([0, 8], [1, 10], [2, 8], [3, 10]); // Upper to middle
     edges.push([4, 9], [5, 11], [6, 9], [7, 11]); // Lower to middle
     edges.push([0, 5], [1, 4], [2, 7], [3, 6]); // Upper to lower diagonals
-    
+
     return edges;
   }
 
@@ -245,7 +245,7 @@ export class VectorEquilibrium {
   // Animate through jitterbug transformation
   animateJitterbug(deltaTime: number, speed: number = 1.0): void {
     this.phaseTransition += deltaTime * speed;
-    
+
     if (this.phaseTransition >= 1.0) {
       this.currentPhase = this.getNextPhase(this.currentPhase);
       this.phaseTransition = 0;
@@ -264,17 +264,17 @@ export class VectorEquilibrium {
     const vertices = this.getVertices();
     let totalDeviation = 0;
     let edgeCount = 0;
-    
+
     // Check edge length consistency
     const edges = this.getEdges();
     const idealLength = this.radius * PHASE_RATIOS[this.currentPhase];
-    
+
     edges.forEach(([i, j]) => {
       const length = vertices[i].distanceTo(vertices[j]);
       totalDeviation += Math.abs(length - idealLength);
       edgeCount++;
     });
-    
+
     // Return coherence as percentage (100% = perfect VE)
     return Math.max(0, 100 - (totalDeviation / edgeCount / idealLength * 100));
   }
@@ -284,13 +284,13 @@ export class VectorEquilibrium {
     return new Promise((resolve) => {
       // Move to death state (reverse tetrahedron)
       this.setPhase(JitterbugPhase.REVERSE_TETRAHEDRON, 0);
-      
+
       // Animate through void
       const startTime = Date.now();
       const animate = () => {
         const elapsed = Date.now() - startTime;
         const progress = elapsed / duration;
-        
+
         if (progress < 0.5) {
           // Contraction to void
           this.phaseTransition = progress * 2;
@@ -303,10 +303,10 @@ export class VectorEquilibrium {
           resolve();
           return;
         }
-        
+
         requestAnimationFrame(animate);
       };
-      
+
       animate();
     });
   }
@@ -321,26 +321,26 @@ export class VectorEquilibrium {
       air: 0,
       aether: 0
     };
-    
+
     // Count vertices by element
     vertices.forEach(v => {
       if (v.element && v.element in balance) {
         balance[v.element as keyof ElementalBalance]++;
       }
     });
-    
+
     // Add phase-specific weighting
     const phaseElement = PHASE_ELEMENTS[this.currentPhase];
     if (phaseElement in balance) {
       balance[phaseElement as keyof ElementalBalance] += 20;
     }
-    
+
     // Normalize to percentages
     const total = Object.values(balance).reduce((sum, val) => sum + val, 0);
     Object.keys(balance).forEach(key => {
       balance[key as keyof ElementalBalance] = Math.round((balance[key as keyof ElementalBalance]! / total) * 100);
     });
-    
+
     return balance;
   }
 
@@ -351,12 +351,12 @@ export class VectorEquilibrium {
     const centerX = width / 2;
     const centerY = height / 2;
     const scale = Math.min(width, height) / (this.radius * 4);
-    
+
     let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
-    
+
     // Background
     svg += `<rect width="${width}" height="${height}" fill="#0a0a0a" />`;
-    
+
     // Draw edges
     svg += '<g id="edges" stroke="#ffffff" stroke-width="1" opacity="0.6">';
     edges.forEach(([i, j]) => {
@@ -366,29 +366,29 @@ export class VectorEquilibrium {
       const y1 = centerY - (v1.y - this.center.y) * scale; // Flip Y for SVG
       const x2 = centerX + (v2.x - this.center.x) * scale;
       const y2 = centerY - (v2.y - this.center.y) * scale;
-      
+
       svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`;
     });
     svg += '</g>';
-    
+
     // Draw vertices
     svg += '<g id="vertices">';
     vertices.forEach((v, i) => {
       const x = centerX + (v.x - this.center.x) * scale;
       const y = centerY - (v.y - this.center.y) * scale;
       const color = this.getElementColor(v.element);
-      
+
       svg += `<circle cx="${x}" cy="${y}" r="5" fill="${color}" opacity="0.8" />`;
     });
     svg += '</g>';
-    
+
     // Draw center
     svg += `<circle cx="${centerX}" cy="${centerY}" r="8" fill="#9B5DE5" opacity="0.9" />`;
-    
+
     // Phase indicator
     svg += `<text x="10" y="20" fill="#ffffff" font-family="Arial" font-size="14">Phase: ${this.currentPhase}</text>`;
     svg += `<text x="10" y="40" fill="#ffffff" font-family="Arial" font-size="14">Coherence: ${this.getCoherence().toFixed(1)}%</text>`;
-    
+
     svg += '</svg>';
     return svg;
   }
@@ -411,7 +411,7 @@ export class Water2Process {
   private ve: VectorEquilibrium;
   private stage: 'descent' | 'void' | 'ascent' | 'integration' = 'descent';
   private progress: number = 0;
-  
+
   constructor(ve: VectorEquilibrium) {
     this.ve = ve;
   }
@@ -420,23 +420,23 @@ export class Water2Process {
   async initiate(): Promise<void> {
     this.stage = 'descent';
     this.progress = 0;
-    
+
     // Phase 1: Descent into void
     await this.descend();
-    
+
     // Phase 2: Void state (integration of shadow)
     await this.voidState();
-    
+
     // Phase 3: Ascent/Rebirth
     await this.ascend();
-    
+
     // Phase 4: Integration
     await this.integrate();
   }
 
   private async descend(): Promise<void> {
     this.stage = 'descent';
-    
+
     // Contract through phases
     const phases = [
       JitterbugPhase.ICOSAHEDRON,
@@ -444,7 +444,7 @@ export class Water2Process {
       JitterbugPhase.TETRAHEDRON,
       JitterbugPhase.REVERSE_TETRAHEDRON
     ];
-    
+
     for (const phase of phases) {
       this.ve.setPhase(phase, 0);
       await this.animateTransition(1000);
@@ -454,7 +454,7 @@ export class Water2Process {
 
   private async voidState(): Promise<void> {
     this.stage = 'void';
-    
+
     // Hold in void for integration
     await new Promise(resolve => setTimeout(resolve, 2000));
     this.progress = 0.5;
@@ -462,14 +462,14 @@ export class Water2Process {
 
   private async ascend(): Promise<void> {
     this.stage = 'ascent';
-    
+
     // Expand through phases
     const phases = [
       JitterbugPhase.EXPANDING_OCTAHEDRON,
       JitterbugPhase.EXPANDING_ICOSAHEDRON,
       JitterbugPhase.RETURN_TO_VE
     ];
-    
+
     for (const phase of phases) {
       this.ve.setPhase(phase, 0);
       await this.animateTransition(1000);
@@ -479,7 +479,7 @@ export class Water2Process {
 
   private async integrate(): Promise<void> {
     this.stage = 'integration';
-    
+
     // Return to balanced VE
     this.ve.setPhase(JitterbugPhase.VECTOR_EQUILIBRIUM, 0);
     await this.animateTransition(1000);
@@ -492,9 +492,9 @@ export class Water2Process {
       const animate = () => {
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        
+
         this.ve.setPhase(this.ve['currentPhase'], progress);
-        
+
         if (progress >= 1) {
           resolve();
         } else {
@@ -552,7 +552,7 @@ function calculateSymmetry(ve: VectorEquilibrium): number {
     y: acc.y + v.y / vertices.length,
     z: acc.z + v.z / vertices.length
   }), { x: 0, y: 0, z: 0 });
-  
+
   // Calculate deviation from center
   let totalDeviation = 0;
   vertices.forEach(v => {
@@ -563,10 +563,10 @@ function calculateSymmetry(ve: VectorEquilibrium): number {
     );
     totalDeviation += dist;
   });
-  
+
   const avgDeviation = totalDeviation / vertices.length;
   const maxDeviation = 100; // Arbitrary max for normalization
-  
+
   return Math.max(0, 100 - (avgDeviation / maxDeviation * 100));
 }
 

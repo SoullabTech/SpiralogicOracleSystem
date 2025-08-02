@@ -11,14 +11,14 @@ astrologyRouter.post('/birth-chart', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const { date, time, location } = req.body;
-    
+
     if (!date || !time || !location) {
       return res.status(400).json({
         success: false,
         error: 'Birth date, time, and location are required'
       });
     }
-    
+
     const birthData = {
       date: new Date(date),
       time,
@@ -28,12 +28,12 @@ astrologyRouter.post('/birth-chart', authenticate, async (req, res) => {
         timezone: location.timezone || 'UTC'
       }
     };
-    
+
     const birthChart = await comprehensiveAstrologicalService.calculateComprehensiveBirthChart(
       userId,
       birthData
     );
-    
+
     res.json({
       success: true,
       data: {
@@ -61,7 +61,7 @@ astrologyRouter.get('/transits', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const transits = await comprehensiveAstrologicalService.trackCurrentTransits(userId);
-    
+
     res.json({
       success: true,
       data: {
@@ -86,7 +86,7 @@ astrologyRouter.get('/sacred-timing', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const sacredTiming = await comprehensiveAstrologicalService.generateSacredTiming(userId);
-    
+
     res.json({
       success: true,
       data: sacredTiming
@@ -105,17 +105,17 @@ astrologyRouter.get('/house/:houseNumber/timing', authenticate, async (req, res)
   try {
     const userId = req.user!.id;
     const houseNumber = parseInt(req.params.houseNumber);
-    
+
     if (houseNumber < 1 || houseNumber > 12) {
       return res.status(400).json({
         success: false,
         error: 'Invalid house number. Must be between 1 and 12.'
       });
     }
-    
+
     const sacredTiming = await comprehensiveAstrologicalService.generateSacredTiming(userId);
     const houseTiming = sacredTiming.recommendations.find(r => r.houseNumber === houseNumber);
-    
+
     res.json({
       success: true,
       data: {
@@ -141,7 +141,7 @@ astrologyRouter.get('/lunar-cycle', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const sacredTiming = await comprehensiveAstrologicalService.generateSacredTiming(userId);
-    
+
     res.json({
       success: true,
       data: sacredTiming.lunarCycle
@@ -160,7 +160,7 @@ astrologyRouter.get('/eclipses', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const sacredTiming = await comprehensiveAstrologicalService.generateSacredTiming(userId);
-    
+
     res.json({
       success: true,
       data: {
@@ -182,7 +182,7 @@ astrologyRouter.get('/retrogrades', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const sacredTiming = await comprehensiveAstrologicalService.generateSacredTiming(userId);
-    
+
     res.json({
       success: true,
       data: {
@@ -207,19 +207,19 @@ astrologyRouter.post('/group/:groupId/analyze', authenticate, async (req, res) =
   try {
     const { groupId } = req.params;
     const { participantIds } = req.body;
-    
+
     if (!participantIds || !Array.isArray(participantIds) || participantIds.length < 2) {
       return res.status(400).json({
         success: false,
         error: 'At least 2 participant IDs are required'
       });
     }
-    
+
     const groupData = await comprehensiveAstrologicalService.analyzeGroupAstrology(
       groupId,
       participantIds
     );
-    
+
     res.json({
       success: true,
       data: {
@@ -245,16 +245,16 @@ astrologyRouter.post('/group/:groupId/analyze', authenticate, async (req, res) =
 astrologyRouter.get('/synastry/:userId1/:userId2', authenticate, async (req, res) => {
   try {
     const { userId1, userId2 } = req.params;
-    
+
     // Create temporary group to analyze synastry
     const tempGroupId = `synastry-${userId1}-${userId2}`;
     const groupData = await comprehensiveAstrologicalService.analyzeGroupAstrology(
       tempGroupId,
       [userId1, userId2]
     );
-    
+
     const synastry = groupData.synastryPatterns[0];
-    
+
     res.json({
       success: true,
       data: {
@@ -278,7 +278,7 @@ astrologyRouter.get('/transformation-opportunities', authenticate, async (req, r
   try {
     const userId = req.user!.id;
     const transits = await comprehensiveAstrologicalService.trackCurrentTransits(userId);
-    
+
     // Filter for major transformation opportunities
     const opportunities = transits
       .filter(t => t.intensity > 0.7)
@@ -294,7 +294,7 @@ astrologyRouter.get('/transformation-opportunities', authenticate, async (req, r
           end: t.transit.endDate
         }
       }));
-    
+
     res.json({
       success: true,
       data: {
@@ -317,14 +317,14 @@ astrologyRouter.get('/cosmic-support', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const sacredTiming = await comprehensiveAstrologicalService.generateSacredTiming(userId);
-    
+
     const currentSupport = sacredTiming.cosmicSupport
       .filter(s => s.startDate <= new Date() && s.endDate >= new Date());
-    
+
     const upcomingSupport = sacredTiming.cosmicSupport
       .filter(s => s.startDate > new Date())
       .slice(0, 5);
-    
+
     res.json({
       success: true,
       data: {
@@ -345,25 +345,25 @@ astrologyRouter.get('/cosmic-support', authenticate, async (req, res) => {
 
 // WebSocket endpoint for real-time astrological updates
 export function setupAstrologyWebSocket(server: Server) {
-  const wss = new WebSocketServer({ 
+  const wss = new WebSocketServer({
     server,
     path: '/ws/astrology'
   });
-  
+
   wss.on('connection', (ws, req) => {
     const userId = req.url?.split('/').pop();
-    
+
     if (!userId) {
       ws.close();
       return;
     }
-    
+
     console.log(`Astrology WebSocket connected for user ${userId}`);
-    
+
     ws.on('message', async (message) => {
       try {
         const data = JSON.parse(message.toString());
-        
+
         switch (data.type) {
           case 'set-birth-data':
             await comprehensiveAstrologicalService.calculateComprehensiveBirthChart(
@@ -371,18 +371,18 @@ export function setupAstrologyWebSocket(server: Server) {
               data.birthData
             );
             break;
-          
+
           case 'request-timing':
             await comprehensiveAstrologicalService.generateSacredTiming(userId);
             break;
-          
+
           case 'request-group-analysis':
             await comprehensiveAstrologicalService.analyzeGroupAstrology(
               data.groupId,
               data.participantIds
             );
             break;
-          
+
           case 'subscribe-transits':
             // Client wants real-time transit updates
             const interval = setInterval(async () => {
@@ -393,7 +393,7 @@ export function setupAstrologyWebSocket(server: Server) {
                 timestamp: new Date()
               }));
             }, 60000); // Every minute
-            
+
             ws.on('close', () => clearInterval(interval));
             break;
         }
@@ -405,15 +405,15 @@ export function setupAstrologyWebSocket(server: Server) {
         }));
       }
     });
-    
+
     ws.on('close', () => {
       console.log(`Astrology WebSocket closed for user ${userId}`);
     });
-    
+
     ws.on('error', (error) => {
       console.error(`WebSocket error for user ${userId}:`, error);
     });
-    
+
     // Send initial astrological state
     comprehensiveAstrologicalService.trackCurrentTransits(userId).then(transits => {
       ws.send(JSON.stringify({
@@ -423,6 +423,6 @@ export function setupAstrologyWebSocket(server: Server) {
       }));
     });
   });
-  
+
   return wss;
 }

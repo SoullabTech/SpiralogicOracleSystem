@@ -118,7 +118,7 @@ The system exposes 40+ routes including:
    class ConsciousnessCommandService {
      async recordInteraction(command: InteractionCommand): Promise<void>
    }
-   
+
    // Query side
    class ConsciousnessQueryService {
      async getPatterns(query: PatternQuery): Promise<Patterns>
@@ -162,7 +162,7 @@ class OptimizedOrchestrator {
       this.loadUserContext(query.userId),
       this.checkPatterns(query)
     ];
-    
+
     const [archetype, context, patterns] = await Promise.all(tasks);
     return this.synthesizeResponse(archetype, context, patterns);
   }
@@ -175,9 +175,9 @@ class CachedConsciousnessService {
   async getArchetypalPattern(userId: string): Promise<Pattern> {
     const cacheKey = `pattern:${userId}`;
     const cached = await this.cache.get(cacheKey);
-    
+
     if (cached) return cached;
-    
+
     const pattern = await this.computePattern(userId);
     await this.cache.set(cacheKey, pattern, TTL_1_HOUR);
     return pattern;

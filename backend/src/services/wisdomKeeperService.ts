@@ -82,9 +82,9 @@ export class WisdomKeeperService {
       // Find and link related wisdom
       await this.linkRelatedWisdom(wisdom);
 
-      logger.info('Wisdom added to keeper', { 
+      logger.info('Wisdom added to keeper', {
         wisdomId: wisdom.id,
-        type: wisdom.type 
+        type: wisdom.type
       });
 
       return wisdom;
@@ -150,9 +150,9 @@ export class WisdomKeeperService {
         .from('participant_notifications')
         .insert(notifications);
 
-      logger.info('Members notified of new wisdom', { 
+      logger.info('Members notified of new wisdom', {
         wisdomId: wisdom.id,
-        notifiedCount: notifications.length 
+        notifiedCount: notifications.length
       });
     } catch (error) {
       logger.error('Failed to notify members', error);
@@ -168,7 +168,7 @@ export class WisdomKeeperService {
 
       // Access control
       query = query.or(`accessibility.eq.public,accessibility.eq.retreat_alumni`);
-      
+
       // Add participant's private wisdom
       query = query.or(`and(participant_id.eq.${params.requesterId},accessibility.eq.private)`);
 
@@ -452,10 +452,10 @@ export class WisdomKeeperService {
       // Update connections in both wisdom entries
       await this.updateWisdomConnections(sourceWisdomId, targetWisdomId);
 
-      logger.info('Wisdom thread created', { 
-        sourceWisdomId, 
-        targetWisdomId, 
-        connectionType 
+      logger.info('Wisdom thread created', {
+        sourceWisdomId,
+        targetWisdomId,
+        connectionType
       });
     } catch (error) {
       logger.error('Failed to create wisdom thread', error);
@@ -524,7 +524,7 @@ export class WisdomKeeperService {
   async exportWisdomJournal(participantId: string): Promise<any> {
     try {
       const collection = await this.getPersonalCollection(participantId);
-      
+
       // Get participant info
       const { data: participant } = await supabase
         .from('retreat_participants')
@@ -649,7 +649,7 @@ export class WisdomKeeperService {
 
     if (data && data.length > 0) {
       const average = data.reduce((sum, r) => sum + r.resonance_level, 0) / data.length;
-      
+
       await supabase
         .from('wisdom_keeper')
         .update({ 'metadata.resonance': average })

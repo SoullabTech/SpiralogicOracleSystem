@@ -39,7 +39,7 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
           if (data.user) {
             setStatus('success');
             setMessage('Authentication successful! Redirecting...');
-            
+
             // Small delay before calling onSuccess
             setTimeout(() => {
               onSuccess?.();
@@ -50,13 +50,13 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
         } else {
           // Check if there's a session in the URL hash (for some OAuth flows)
           const { data, error: sessionError } = await supabase.auth.getSessionFromUrl();
-          
+
           if (sessionError) throw sessionError;
-          
+
           if (data.session) {
             setStatus('success');
             setMessage('Authentication successful! Redirecting...');
-            
+
             setTimeout(() => {
               onSuccess?.();
             }, 1500);
@@ -87,7 +87,7 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
           {status === 'loading' && (
             <div className="w-16 h-16 border-2 border-[#F6E27F] border-t-transparent rounded-full animate-spin mx-auto"></div>
           )}
-          
+
           {status === 'success' && (
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
               <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,7 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
               </svg>
             </div>
           )}
-          
+
           {status === 'error' && (
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto">
               <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

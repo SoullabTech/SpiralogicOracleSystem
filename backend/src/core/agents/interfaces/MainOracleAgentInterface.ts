@@ -85,33 +85,33 @@ export interface MainOracleAgentInterface {
    * Send patterns discovered in individual sessions to collective intelligence
    */
   contributePattern(pattern: PatternContribution): Promise<void>;
-  
+
   /**
    * Request collective wisdom to enhance individual guidance
    */
   requestCollectiveWisdom(query: QueryInput): Promise<CollectiveWisdom>;
-  
+
   /**
    * Notify AIN of significant transformations for collective learning
    */
   reportTransformation(transformation: TransformationEvent): Promise<void>;
-  
+
   /**
    * Request universal field guidance for complex queries
    */
   consultUniversalField(query: QueryInput): Promise<UniversalGuidance>;
-  
+
   /**
    * Check if collective salons are available for this user
    */
   checkCollectiveSalonAvailability(userId: string): Promise<CollectiveSalonInfo[]>;
-  
+
   /**
    * Report on the effectiveness of elemental routing decisions
    */
   reportElementalEffectiveness(
-    element: ElementalType, 
-    effectiveness: number, 
+    element: ElementalType,
+    effectiveness: number,
     context: any
   ): Promise<void>;
 }
@@ -140,7 +140,7 @@ export interface EnhancedQueryInput extends QueryInput {
   collectiveWisdom: CollectiveWisdom;
   mirrorAnalysis: {
     needsResistance: boolean;
-    needsDepth: boolean; 
+    needsDepth: boolean;
     needsShadowWork: boolean;
     isInLoop: boolean;
     reason: string;

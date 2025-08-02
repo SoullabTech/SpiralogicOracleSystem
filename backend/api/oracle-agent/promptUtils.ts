@@ -29,7 +29,7 @@ export class PromptManager {
    * Get prompts for a phase from file or database
    */
   async getPromptsForPhase(
-    phase: SpiralogicPhase, 
+    phase: SpiralogicPhase,
     options?: {
       preferDatabase?: boolean;
       includeMetadata?: boolean;
@@ -108,7 +108,7 @@ export class PromptManager {
       const filePath = path.resolve(__dirname, "prompts", `${phase.toLowerCase()}.json`);
       const data = await fs.readFile(filePath, "utf-8");
       const prompts = JSON.parse(data);
-      
+
       return prompts.map((prompt: string) => ({
         prompt,
         phase,
@@ -146,7 +146,7 @@ export class PromptManager {
       filteredPrompts = prompts.filter(p => p.elemental_voice === options.elementalVoice);
     }
     if (options?.contextTags && options.contextTags.length > 0) {
-      filteredPrompts = filteredPrompts.filter(p => 
+      filteredPrompts = filteredPrompts.filter(p =>
         p.context_tags?.some(tag => options.contextTags!.includes(tag))
       );
     }

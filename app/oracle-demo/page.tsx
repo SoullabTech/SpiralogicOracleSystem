@@ -92,12 +92,12 @@ export default function OracleDemoPage() {
     if (!userInput.trim()) return;
 
     setLoading(true);
-    
+
     try {
       // Simulate API call with demo response
       await new Promise(resolve => setTimeout(resolve, 1500));
       const oracleResponse = generateDemoResponse(userInput, selectedAgent);
-      
+
       setResponse(oracleResponse);
       setConversationHistory(prev => [...prev, {
         user: userInput,
@@ -173,15 +173,15 @@ export default function OracleDemoPage() {
                   <span className="text-2xl mr-3">{agents[response.agent].emoji}</span>
                   <h3 className="text-xl font-semibold">{agents[response.agent].name} Speaks</h3>
                 </div>
-                
+
                 <div className={`${agents[response.agent].bgColor} rounded-lg p-4 border ${agents[response.agent].borderColor} mb-4`}>
                   <p className="mb-4">{response.message}</p>
-                  
+
                   <div className="bg-white/10 rounded-lg p-3 mb-4">
                     <h4 className="font-semibold mb-2 text-yellow-400">🌟 Insight</h4>
                     <p className="text-sm">{response.insight}</p>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-semibold mb-2 text-yellow-400">🔮 Symbolic Guidance</h4>
                     <div className="flex flex-wrap gap-2">
@@ -211,7 +211,7 @@ export default function OracleDemoPage() {
                   required
                 />
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <div className="text-xs opacity-60">
                   Demo mode - responses are simulated

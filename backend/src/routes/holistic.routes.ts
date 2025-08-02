@@ -25,14 +25,14 @@ const pathwayGenerator = new PersonalizedPathwayGenerator();
 router.post('/assessment', async (req, res) => {
   try {
     const { userId, assessmentData } = req.body;
-    
+
     const profile = assessmentService.generateHolisticProfile(userId, assessmentData);
     profiles.set(userId, profile);
-    
+
     // Generate personalized pathway
     const pathway = pathwayGenerator.generatePersonalizedPathway(profile);
     pathways.set(userId, pathway);
-    
+
     res.json(profile);
   } catch (error) {
     console.error('Assessment error:', error);
@@ -45,11 +45,11 @@ router.get('/profile/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const profile = profiles.get(userId);
-    
+
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
-    
+
     res.json(profile);
   } catch (error) {
     console.error('Profile retrieval error:', error);
@@ -62,13 +62,13 @@ router.put('/profile/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const updatedProfile: UserHolisticProfile = req.body;
-    
+
     // Re-detect user state based on updated information
     updatedProfile.currentState = assessmentService.detectUserState(updatedProfile);
     updatedProfile.lastUpdated = new Date();
-    
+
     profiles.set(userId, updatedProfile);
-    
+
     res.json(updatedProfile);
   } catch (error) {
     console.error('Profile update error:', error);
@@ -81,11 +81,11 @@ router.get('/pathway/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const pathway = pathways.get(userId);
-    
+
     if (!pathway) {
       return res.status(404).json({ error: 'Pathway not found' });
     }
-    
+
     res.json(pathway);
   } catch (error) {
     console.error('Pathway retrieval error:', error);
@@ -98,15 +98,15 @@ router.put('/pathway/:userId/step/:stepId', async (req, res) => {
   try {
     const { userId, stepId } = req.params;
     const { completed } = req.body;
-    
+
     const pathway = pathways.get(userId);
     if (!pathway) {
       return res.status(404).json({ error: 'Pathway not found' });
     }
-    
+
     const updatedPathway = pathwayGenerator.updatePathwayProgress(pathway, stepId, completed);
     pathways.set(userId, updatedPathway);
-    
+
     res.json(updatedPathway);
   } catch (error) {
     console.error('Pathway update error:', error);
@@ -118,9 +118,9 @@ router.put('/pathway/:userId/step/:stepId', async (req, res) => {
 router.post('/guidance', async (req, res) => {
   try {
     const { profile } = req.body;
-    
+
     const guidance = experienceEngine.generateStateResponsiveGuidance(profile);
-    
+
     res.json(guidance);
   } catch (error) {
     console.error('Guidance generation error:', error);
@@ -132,13 +132,13 @@ router.post('/guidance', async (req, res) => {
 router.post('/content/adaptive', async (req, res) => {
   try {
     const { baseContent, userProfile, targetDomains } = req.body;
-    
+
     const adaptiveContent = experienceEngine.generateAdaptiveContent(
       baseContent,
       userProfile,
       targetDomains
     );
-    
+
     res.json(adaptiveContent);
   } catch (error) {
     console.error('Adaptive content error:', error);
@@ -150,12 +150,12 @@ router.post('/content/adaptive', async (req, res) => {
 router.post('/elemental/recommendations', async (req, res) => {
   try {
     const { profile, targetElement } = req.body;
-    
+
     const recommendations = elementalMapper.generateElementalRecommendations(
       profile,
       targetElement
     );
-    
+
     res.json(recommendations);
   } catch (error) {
     console.error('Elemental recommendations error:', error);
@@ -168,15 +168,15 @@ router.get('/elemental/balance/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const profile = profiles.get(userId);
-    
+
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
-    
+
     const balance = elementalMapper.createElementalBalance(profile);
     const dominantElement = elementalMapper.getDominantElementForProfile(profile);
     const balancingElement = elementalMapper.getBalancingElement(profile);
-    
+
     res.json({
       balance,
       dominantElement,
@@ -193,20 +193,20 @@ router.post('/goals/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const goals: DevelopmentGoal[] = req.body;
-    
+
     const profile = profiles.get(userId);
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
-    
+
     profile.developmentGoals = goals;
     profile.lastUpdated = new Date();
     profiles.set(userId, profile);
-    
+
     // Regenerate pathway with new goals
     const updatedPathway = pathwayGenerator.generatePersonalizedPathway(profile, goals);
     pathways.set(userId, updatedPathway);
-    
+
     res.json({ profile, pathway: updatedPathway });
   } catch (error) {
     console.error('Goals update error:', error);
@@ -218,7 +218,7 @@ router.post('/goals/:userId', async (req, res) => {
 router.get('/assessment/questions/:domain', async (req, res) => {
   try {
     const { domain } = req.params;
-    
+
     // This would typically come from a configuration or database
     const questions = {
       [HolisticDomain.MIND]: [
@@ -278,12 +278,12 @@ router.get('/assessment/questions/:domain', async (req, res) => {
         }
       ]
     };
-    
+
     const domainQuestions = questions[domain as HolisticDomain];
     if (!domainQuestions) {
       return res.status(400).json({ error: 'Invalid domain' });
     }
-    
+
     res.json(domainQuestions);
   } catch (error) {
     console.error('Questions retrieval error:', error);
@@ -297,15 +297,15 @@ router.get('/progress/:userId', async (req, res) => {
     const { userId } = req.params;
     const profile = profiles.get(userId);
     const pathway = pathways.get(userId);
-    
+
     if (!profile || !pathway) {
       return res.status(404).json({ error: 'Data not found' });
     }
-    
+
     const pathwayProgress = pathwayGenerator.calculatePathwayProgress(pathway);
     const domainBalance = assessmentService.calculateDomainBalance(profile);
     const priorityDomains = assessmentService.identifyPriorityDomains(profile);
-    
+
     res.json({
       pathwayProgress,
       domainBalance,
@@ -324,17 +324,17 @@ router.post('/reassess/:userId/:domain', async (req, res) => {
   try {
     const { userId, domain } = req.params;
     const { responses } = req.body;
-    
+
     const profile = profiles.get(userId);
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
-    
+
     const domainProfile = assessmentService.assessUserDomain(
       domain as HolisticDomain,
       responses
     );
-    
+
     // Update the specific domain in the profile
     const domainIndex = profile.domains.findIndex(d => d.domain === domain);
     if (domainIndex >= 0) {
@@ -342,20 +342,20 @@ router.post('/reassess/:userId/:domain', async (req, res) => {
     } else {
       profile.domains.push(domainProfile);
     }
-    
+
     // Re-detect overall state
     profile.currentState = assessmentService.detectUserState(profile);
     profile.lastUpdated = new Date();
-    
+
     profiles.set(userId, profile);
-    
+
     // Regenerate pathway if needed
     const updatedPathway = pathwayGenerator.generatePersonalizedPathway(
       profile,
       profile.developmentGoals
     );
     pathways.set(userId, updatedPathway);
-    
+
     res.json({ profile, pathway: updatedPathway });
   } catch (error) {
     console.error('Reassessment error:', error);

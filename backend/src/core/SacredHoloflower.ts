@@ -90,7 +90,7 @@ export class SacredHoloflower {
     const houses: HoloflowerHouse[] = [];
     const elements: ElementType[] = ['fire', 'earth', 'air', 'water'];
     const phases: PhaseType[] = ['cardinal', 'fixed', 'mutable'];
-    
+
     let houseIndex = 0;
     elements.forEach((element) => {
       phases.forEach((phase) => {
@@ -98,7 +98,7 @@ export class SacredHoloflower {
         const angle = (houseIndex * 30) * (Math.PI / 180); // 12 houses = 30 degrees each
         const baseRadius = 100;
         const phaseRadius = this.calculatePhaseRadius(phase, baseRadius);
-        
+
         houses.push({
           id: `${element}-${phase}`,
           element,
@@ -110,7 +110,7 @@ export class SacredHoloflower {
           intensity: 0.5,
           shadowAspect: this.getShadowAspect(element, phase)
         });
-        
+
         houseIndex++;
       });
     });
@@ -154,7 +154,7 @@ export class SacredHoloflower {
       'water-fixed': 'Emotional Stagnation',
       'water-mutable': 'Emotional Dissolution'
     };
-    
+
     return shadowMap[`${element}-${phase}`] || 'Unknown Shadow';
   }
 
@@ -179,11 +179,11 @@ export class SacredHoloflower {
       const [fromId, toId] = transformation.split('->');
       const fromHouse = this.state.houses.find(h => h.id === fromId);
       const toHouse = this.state.houses.find(h => h.id === toId);
-      
+
       if (fromHouse && toHouse) {
         const dx = Math.cos(toHouse.angle) * toHouse.radius - Math.cos(fromHouse.angle) * fromHouse.radius;
         const dy = Math.sin(toHouse.angle) * toHouse.radius - Math.sin(fromHouse.angle) * fromHouse.radius;
-        
+
         fromHouse.transformationVector = { x: dx * 0.1, y: dy * 0.1 };
       }
     });
@@ -192,40 +192,40 @@ export class SacredHoloflower {
   private recalculateBalance(): void {
     const elementBalance = new Map<ElementType, number>();
     const phaseBalance = new Map<PhaseType, number>();
-    
+
     this.state.houses.forEach(house => {
       const currentElement = elementBalance.get(house.element) || 0;
       const currentPhase = phaseBalance.get(house.phase) || 0;
-      
+
       elementBalance.set(house.element, currentElement + house.intensity);
       phaseBalance.set(house.phase, currentPhase + house.intensity);
     });
-    
+
     const totalIntensity = Array.from(elementBalance.values()).reduce((sum, val) => sum + val, 0);
     const avgIntensity = totalIntensity / this.state.houses.length;
-    
+
     const elementVariance = Array.from(elementBalance.values())
       .map(val => Math.pow(val - avgIntensity * 3, 2))
       .reduce((sum, val) => sum + val, 0) / 4;
-    
+
     this.state.overallBalance = 1 - Math.sqrt(elementVariance) / (avgIntensity * 3 || 1);
     this.state.centerIntegration = Math.min(...Array.from(elementBalance.values())) / (avgIntensity * 3 || 1);
   }
 
   public integrateAether(): void {
     const aetherInfluence = this.state.centerIntegration * this.geometricRatios.phi;
-    
+
     this.state.houses.forEach(house => {
       const distanceFromBalance = Math.abs(house.intensity - 0.5);
       const aetherCorrection = distanceFromBalance * aetherInfluence * 0.1;
-      
+
       if (house.intensity < 0.5) {
         house.intensity += aetherCorrection;
       } else {
         house.intensity -= aetherCorrection;
       }
     });
-    
+
     this.recalculateBalance();
   }
 
@@ -238,26 +238,26 @@ export class SacredHoloflower {
     const dy = y - centerY;
     const distance = Math.sqrt(dx * dx + dy * dy);
     const angle = Math.atan2(dy, dx);
-    
+
     return this.state.houses.find(house => {
       const angleDiff = Math.abs(angle - house.angle);
       const normalizedDiff = Math.min(angleDiff, 2 * Math.PI - angleDiff);
-      
-      return normalizedDiff < Math.PI / 12 && 
+
+      return normalizedDiff < Math.PI / 12 &&
              Math.abs(distance - house.radius) < 20;
     }) || null;
   }
 
   public applyLunarInfluence(lunarPhase: number): void {
     this.state.lunarPhase = lunarPhase;
-    
+
     const waterHouses = this.state.houses.filter(h => h.element === 'water');
     const lunarMultiplier = 0.5 + 0.5 * Math.sin(lunarPhase * 2 * Math.PI);
-    
+
     waterHouses.forEach(house => {
       house.intensity = house.intensity * 0.7 + lunarMultiplier * 0.3;
     });
-    
+
     this.recalculateBalance();
   }
 

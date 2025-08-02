@@ -7,7 +7,7 @@ import { getSupabaseConfig } from '../../../../lib/config/supabase';
 export async function GET(request: NextRequest) {
   try {
     const supabaseConfig = getSupabaseConfig();
-    
+
     if (!supabaseConfig.isConfigured) {
       return NextResponse.json(
         { error: 'Analytics service not available in demo mode' },
@@ -103,10 +103,10 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Analytics dashboard error:', error);
-    
+
     if (error instanceof Error && error.message.includes('Insufficient data')) {
       return NextResponse.json(
-        { 
+        {
           error: 'Insufficient anonymized data available',
           message: 'Analytics require minimum user cohorts to protect privacy'
         },
@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const supabaseConfig = getSupabaseConfig();
-    
+
     if (!supabaseConfig.isConfigured) {
       return NextResponse.json(
         { error: 'Analytics service not available in demo mode' },

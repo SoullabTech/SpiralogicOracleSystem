@@ -43,45 +43,45 @@ export default function HomePage() {
               Continue your integration-centered development journey
             </p>
           </header>
-          
+
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Link href="/integration/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
               <div className="text-3xl mb-3">📊</div>
               <h3 className="text-xl font-semibold mb-2">Integration Dashboard</h3>
               <p className="text-gray-300 text-sm">Track your holistic development progress and integration milestones</p>
             </Link>
-            
+
             <Link href="/elemental/content" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
               <div className="text-3xl mb-3">🌀</div>
               <h3 className="text-xl font-semibold mb-2">Elemental Content</h3>
               <p className="text-gray-300 text-sm">Access adaptive content through Fire, Water, Earth, and Air wisdom</p>
             </Link>
-            
+
             <Link href="/community/reality-check" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
               <div className="text-3xl mb-3">🤝</div>
               <h3 className="text-xl font-semibold mb-2">Community Support</h3>
               <p className="text-gray-300 text-sm">Connect with others for reality-checking and mutual support</p>
             </Link>
-            
+
             <Link href="/analytics/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
               <div className="text-3xl mb-3">📈</div>
               <h3 className="text-xl font-semibold mb-2">Development Analytics</h3>
               <p className="text-gray-300 text-sm">Privacy-focused insights into your growth patterns</p>
             </Link>
-            
+
             <Link href="/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
               <div className="text-3xl mb-3">🔮</div>
               <h3 className="text-xl font-semibold mb-2">Oracle Interface</h3>
               <p className="text-gray-300 text-sm">Access the AÍÑ Oracle for guidance and reflection</p>
             </Link>
-            
+
             <Link href="/professional/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
               <div className="text-3xl mb-3">🎓</div>
               <h3 className="text-xl font-semibold mb-2">Professional Support</h3>
               <p className="text-gray-300 text-sm">Connect with verified practitioners and therapists</p>
             </Link>
           </div>
-          
+
           <div className="text-center mt-12">
             <button
               onClick={async () => {
@@ -113,7 +113,7 @@ export default function HomePage() {
             Integration-centered personal development platform supporting authentic growth through elemental wisdom and community grounding
           </p>
         </header>
-        
+
         <div className="max-w-4xl mx-auto mb-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="bg-white/5 backdrop-blur rounded-lg p-6">
@@ -121,13 +121,13 @@ export default function HomePage() {
               <h3 className="text-xl font-semibold mb-2">Elemental Wisdom</h3>
               <p className="text-gray-300 text-sm">Fire, Water, Earth, and Air archetypes guide adaptive content delivery</p>
             </div>
-            
+
             <div className="bg-white/5 backdrop-blur rounded-lg p-6">
               <div className="text-3xl mb-3">🚫</div>
               <h3 className="text-xl font-semibold mb-2">Bypassing Prevention</h3>
               <p className="text-gray-300 text-sm">Systematic integration requirements prevent spiritual materialism</p>
             </div>
-            
+
             <div className="bg-white/5 backdrop-blur rounded-lg p-6">
               <div className="text-3xl mb-3">🤝</div>
               <h3 className="text-xl font-semibold mb-2">Community Grounding</h3>
@@ -135,7 +135,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        
+
         <div className="text-center">
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
             <Link href="/auth/onboarding" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition text-lg">
@@ -145,13 +145,13 @@ export default function HomePage() {
               🔮 Try Demo
             </Link>
           </div>
-          
+
           <div className="mb-8">
             <Link href="/auth" className="text-gray-400 hover:text-white underline text-sm">
               Existing users sign in
             </Link>
           </div>
-          
+
           <div className="text-xs text-gray-500 space-y-1">
             <p>AÍÑ ∙ Spiralogic ∙ Soullab®</p>
             <p>Integration-centered development prevents spiritual bypassing</p>

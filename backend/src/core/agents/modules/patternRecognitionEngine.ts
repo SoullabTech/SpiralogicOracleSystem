@@ -65,7 +65,7 @@ export class PatternRecognitionEngine {
   private async initializePatternDetection() {
     // Load existing patterns from database
     await this.loadExistingPatterns();
-    
+
     // Set up periodic pattern analysis
     setInterval(() => this.analyzePatternCandidates(), 5 * 60 * 1000); // Every 5 minutes
   }
@@ -79,7 +79,7 @@ export class PatternRecognitionEngine {
 
       // Create pattern key
       const patternKey = this.createPatternKey(elements);
-      
+
       // Update pattern candidate
       this.updatePatternCandidate(patternKey, elements, context);
 
@@ -97,7 +97,7 @@ export class PatternRecognitionEngine {
   // Extract elements involved in an interaction
   private extractElements(context: PatternRecognitionContext): string[] {
     const elements: string[] = [];
-    
+
     // Primary element from context
     if (context.element) {
       elements.push(context.element);
@@ -114,7 +114,7 @@ export class PatternRecognitionEngine {
     };
 
     const content = (context.response + ' ' + context.query).toLowerCase();
-    
+
     for (const [element, keywords] of Object.entries(elementKeywords)) {
       const keywordCount = keywords.filter(keyword => content.includes(keyword)).length;
       if (keywordCount >= 2 && !elements.includes(element)) {
@@ -133,7 +133,7 @@ export class PatternRecognitionEngine {
   // Update pattern candidate with new occurrence
   private updatePatternCandidate(key: string, elements: string[], context: PatternRecognitionContext): void {
     let candidate = this.patternCandidates.get(key);
-    
+
     if (!candidate) {
       candidate = {
         elements,
@@ -147,15 +147,15 @@ export class PatternRecognitionEngine {
 
     candidate.occurrences++;
     candidate.users.add(context.userId);
-    
+
     // Extract context domain
     const domain = this.extractDomain(context);
     if (domain) candidate.contexts.add(domain);
-    
+
     // Update average confidence
-    candidate.averageConfidence = 
+    candidate.averageConfidence =
       (candidate.averageConfidence * (candidate.occurrences - 1) + context.confidence) / candidate.occurrences;
-    
+
     // Extract wisdom from this interaction
     const wisdom = this.extractWisdom(context);
     if (wisdom) candidate.wisdomExtracted.push(wisdom);
@@ -176,7 +176,7 @@ export class PatternRecognitionEngine {
     ) {
       // Create new pattern
       const pattern = await this.createPattern(key, candidate);
-      
+
       // Share with agents
       await agentComms.sharePatternDiscovery({
         discoveredBy: 'PatternRecognitionEngine',
@@ -378,7 +378,7 @@ export class PatternRecognitionEngine {
   // Helper methods
   private extractDomain(context: PatternRecognitionContext): string {
     const query = context.query.toLowerCase();
-    
+
     if (query.includes('relationship') || query.includes('love')) return 'relationships';
     if (query.includes('work') || query.includes('career')) return 'career';
     if (query.includes('purpose') || query.includes('meaning')) return 'purpose';
@@ -386,14 +386,14 @@ export class PatternRecognitionEngine {
     if (query.includes('spiritual') || query.includes('soul')) return 'spirituality';
     if (query.includes('creative') || query.includes('art')) return 'creativity';
     if (query.includes('money') || query.includes('abundance')) return 'abundance';
-    
+
     return 'general';
   }
 
   private extractWisdom(context: PatternRecognitionContext): string {
     // Extract key insights from high-confidence interactions
     if (context.confidence < 0.8) return '';
-    
+
     // This would use more sophisticated NLP in production
     const response = context.response;
     const wisdomPhrases = [
@@ -413,14 +413,14 @@ export class PatternRecognitionEngine {
 
   private determinePrimaryDomain(contexts: Set<string>): string {
     if (contexts.size === 0) return 'general';
-    
+
     // Return most common context
     const contextArray = Array.from(contexts);
     const counts = contextArray.reduce((acc, ctx) => {
       acc[ctx] = (acc[ctx] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-    
+
     return Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
   }
 
@@ -432,11 +432,11 @@ export class PatternRecognitionEngine {
 
   private synthesizeWisdom(wisdomPieces: string[]): string {
     if (wisdomPieces.length === 0) return 'Pattern emerging from collective experience';
-    
+
     // Take most common themes
     const uniqueWisdom = [...new Set(wisdomPieces)];
     if (uniqueWisdom.length === 1) return uniqueWisdom[0];
-    
+
     // Combine multiple insights
     return `Integration insight: ${uniqueWisdom.slice(0, 3).join('; ')}`;
   }
@@ -447,7 +447,7 @@ export class PatternRecognitionEngine {
     const userScore = Math.min(candidate.users.size / 5, 1) * 0.25;
     const confidenceScore = candidate.averageConfidence * 0.3;
     const diversityScore = Math.min(candidate.contexts.size / 3, 1) * 0.2;
-    
+
     return occurrenceScore + userScore + confidenceScore + diversityScore;
   }
 

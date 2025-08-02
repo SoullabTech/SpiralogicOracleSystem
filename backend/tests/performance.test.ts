@@ -21,15 +21,15 @@ describe('Performance Benchmarks', () => {
       databasePath: ':memory:',
       memoryDepth: 1000
     });
-    
+
     await soulMemory.initialize();
-    
+
     oracle = new PersonalOracleAgent({
       userId: testUserId,
       oracleName: 'Performance Oracle',
       mode: 'daily'
     });
-    
+
     wisdomEngine = new AdaptiveWisdomEngine({
       userId: testUserId,
       soulMemory
@@ -83,22 +83,22 @@ describe('Performance Benchmarks', () => {
     });
 
     test('Should maintain response quality under concurrent load', async () => {
-      const concurrentPrompts = Array(10).fill(0).map((_, i) => 
+      const concurrentPrompts = Array(10).fill(0).map((_, i) =>
         `Concurrent test prompt ${i}: Help me understand my patterns`
       );
 
       const startTime = Date.now();
-      
+
       const responses = await Promise.all(
         concurrentPrompts.map(prompt => oracle.respondToPrompt(prompt))
       );
-      
+
       const totalTime = Date.now() - startTime;
 
       expect(responses).toHaveLength(10);
       expect(responses.every(r => r.length > 20)).toBe(true);
       expect(totalTime).toBeLessThan(15000); // 15 seconds for 10 concurrent requests
-      
+
       // Responses should be unique (not cached duplicates)
       const uniqueResponses = new Set(responses);
       expect(uniqueResponses.size).toBeGreaterThan(5); // At least some variation
@@ -117,13 +117,13 @@ describe('Performance Benchmarks', () => {
       }));
 
       const startTime = Date.now();
-      
+
       await Promise.all(
         memories.map(memory => soulMemory.storeMemory(memory))
       );
-      
+
       const storageTime = Date.now() - startTime;
-      
+
       expect(storageTime).toBeLessThan(10000); // 10 seconds for 100 memories
       console.log(`Stored ${memoryCount} memories in ${storageTime}ms (${(storageTime/memoryCount).toFixed(2)}ms per memory)`);
     });
@@ -220,7 +220,7 @@ describe('Performance Benchmarks', () => {
     test('Should detect patterns efficiently with large memory sets', async () => {
       // Create patterns in the data
       const patterns = ['shadow_work', 'spiritual_bypassing', 'victim_consciousness'];
-      
+
       for (const pattern of patterns) {
         for (let i = 0; i < 20; i++) {
           await soulMemory.storeMemory({
@@ -248,7 +248,7 @@ describe('Performance Benchmarks', () => {
 
     test('Should batch process multiple patterns efficiently', async () => {
       const patterns = ['shadow_work', 'spiritual_bypassing', 'victim_consciousness', 'death_rebirth', 'inner_child'];
-      
+
       const startTime = Date.now();
       const results = await wisdomEngine.detectMultiplePatterns(patterns);
       const batchTime = Date.now() - startTime;
@@ -281,7 +281,7 @@ describe('Performance Benchmarks', () => {
   describe('Oracle Mode Performance', () => {
     test('Should switch modes efficiently', async () => {
       const modes = ['alchemist', 'buddha', 'sage', 'mystic', 'guardian', 'tao'] as const;
-      
+
       for (const mode of modes) {
         const startTime = Date.now();
         const result = await oracle.switchMode(mode);
@@ -296,10 +296,10 @@ describe('Performance Benchmarks', () => {
     test('Should maintain mode-specific responses efficiently', async () => {
       const testPrompt = "Help me understand my anger";
       const modes = ['alchemist', 'buddha', 'guardian'] as const;
-      
+
       for (const mode of modes) {
         await oracle.switchMode(mode);
-        
+
         const startTime = Date.now();
         const response = await oracle.respondToPrompt(testPrompt);
         const responseTime = Date.now() - startTime;
@@ -327,7 +327,7 @@ describe('Performance Benchmarks', () => {
           emotionalTone: (['peaceful', 'curious', 'excited', 'anxious', 'grateful'] as const)[i % 5]
         }));
       }
-      
+
       await Promise.all(conversations);
       const generationTime = Date.now() - startGeneration;
       console.log(`Generated ${conversationSize} conversations in ${generationTime}ms`);
@@ -345,7 +345,7 @@ describe('Performance Benchmarks', () => {
 
     test('Should maintain transformation tracking with extensive data', async () => {
       const milestones = 50;
-      
+
       // Create extensive transformation journey
       const startTime = Date.now();
       for (let i = 0; i < milestones; i++) {
@@ -362,7 +362,7 @@ describe('Performance Benchmarks', () => {
           }
         });
       }
-      
+
       // Test journey analysis performance
       const analysisStart = Date.now();
       const journey = await soulMemory.getTransformationJourney(testUserId);
@@ -377,11 +377,11 @@ describe('Performance Benchmarks', () => {
   describe('System Resource Monitoring', () => {
     test('Should not exhibit memory leaks during extended operation', async () => {
       const initialMemory = process.memoryUsage();
-      
+
       // Simulate extended operation
       for (let i = 0; i < 100; i++) {
         await oracle.respondToPrompt(`Extended operation test ${i}`);
-        
+
         // Occasional mode switches
         if (i % 10 === 0) {
           await oracle.switchMode((['alchemist', 'buddha', 'sage'] as const)[i % 3]);
@@ -390,7 +390,7 @@ describe('Performance Benchmarks', () => {
 
       const finalMemory = process.memoryUsage();
       const memoryIncrease = finalMemory.heapUsed - initialMemory.heapUsed;
-      
+
       // Memory increase should be reasonable (less than 50MB)
       expect(memoryIncrease).toBeLessThan(50 * 1024 * 1024);
       console.log(`Memory increase after 100 operations: ${(memoryIncrease / (1024 * 1024)).toFixed(2)}MB`);
@@ -398,14 +398,14 @@ describe('Performance Benchmarks', () => {
 
     test('Should handle cleanup efficiently', async () => {
       const cleanupStart = Date.now();
-      
+
       // Test various cleanup operations
       await soulMemory.cleanup();
       await oracle.clearTemporaryState();
       await wisdomEngine.clearCache();
-      
+
       const cleanupTime = Date.now() - cleanupStart;
-      
+
       expect(cleanupTime).toBeLessThan(2000); // 2 seconds max for cleanup
       console.log(`System cleanup took ${cleanupTime}ms`);
     });
@@ -423,7 +423,7 @@ describe('Performance Benchmarks', () => {
 
       for (const test of slaTests) {
         const startTime = Date.now();
-        
+
         switch (test.operation) {
           case 'Simple oracle response':
             await oracle.respondToPrompt("Hello");
@@ -446,9 +446,9 @@ describe('Performance Benchmarks', () => {
             await wisdomEngine.detectPattern('shadow_work');
             break;
         }
-        
+
         const operationTime = Date.now() - startTime;
-        
+
         expect(operationTime).toBeLessThan(test.maxTime);
         console.log(`${test.operation}: ${operationTime}ms (SLA: ${test.maxTime}ms)`);
       }
@@ -480,22 +480,22 @@ describe('Performance Benchmarks', () => {
       databasePath: ':memory:',
       memoryDepth: 100
     });
-    
+
     await userMemory.initialize();
-    
+
     const userOracle = new PersonalOracleAgent({
       userId,
       oracleName: 'Concurrent Oracle',
       mode: 'daily'
     });
-    
+
     await userOracle.connectToSoulMemory(userMemory);
-    
+
     // Simulate user interactions
     await userOracle.respondToPrompt("Hello, I'm new here");
     await userOracle.switchMode('alchemist');
     await userOracle.respondToPrompt("Help me with shadow work");
-    
+
     await userMemory.close();
   }
 });

@@ -37,7 +37,7 @@ expect.extend({
   toBeWithinRange(received: number, min: number, max: number) {
     const pass = received >= min && received <= max;
     return {
-      message: () => pass 
+      message: () => pass
         ? `expected ${received} not to be within range ${min}-${max}`
         : `expected ${received} to be within range ${min}-${max}`,
       pass,
@@ -50,10 +50,10 @@ expect.extend({
       'transformation', 'awakening', 'consciousness', 'wisdom', 'truth',
       'mirror', 'reflection', 'journey', 'path', 'growth', 'healing'
     ];
-    
+
     const lowerReceived = received.toLowerCase();
     const containsSacred = sacredWords.some(word => lowerReceived.includes(word));
-    
+
     return {
       message: () => containsSacred
         ? `expected "${received}" not to contain sacred language`
@@ -68,18 +68,18 @@ expect.extend({
       notTooLong: received.length < 2000,
       notGeneric: !received.match(/^(yes|no|ok|sure|maybe)$/i),
       hasDepth: received.length > 30 && (
-        received.includes('?') || 
+        received.includes('?') ||
         received.match(/\b(explore|consider|reflect|notice|aware)\b/i)
       ),
       maintainsBoundaries: !received.match(/^(i love you too|yes.*friend|we are friends)/i)
     };
-    
+
     const failedChecks = Object.entries(checks)
       .filter(([_, passed]) => !passed)
       .map(([check, _]) => check);
-    
+
     const pass = failedChecks.length === 0;
-    
+
     return {
       message: () => pass
         ? `expected "${received}" not to be a valid oracle response`
@@ -94,7 +94,7 @@ beforeAll(async () => {
   // Set test environment variables
   process.env.NODE_ENV = 'test';
   process.env.LOG_LEVEL = 'error'; // Reduce log noise during tests
-  
+
   // Configure timeouts for different test types
   if (expect.getState().testPath?.includes('performance')) {
     jest.setTimeout(120000); // 2 minutes for performance tests
@@ -108,7 +108,7 @@ beforeAll(async () => {
 beforeEach(() => {
   // Clear all timers before each test
   jest.clearAllTimers();
-  
+
   // Reset console spies
   jest.clearAllMocks();
 });
@@ -135,10 +135,10 @@ export const consoleSpy = {
 export const testUtils = {
   // Create test user ID
   createTestUserId: (prefix = 'test-user') => `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-  
+
   // Wait for async operations
   wait: (ms: number) => new Promise(resolve => setTimeout(resolve, ms)),
-  
+
   // Create test memory data
   createTestMemory: (overrides = {}) => ({
     userId: testUtils.createTestUserId(),
@@ -148,7 +148,7 @@ export const testUtils = {
     timestamp: new Date(),
     ...overrides
   }),
-  
+
   // Validate oracle response structure
   validateOracleResponse: (response: any) => {
     expect(response).toBeDefined();
@@ -156,7 +156,7 @@ export const testUtils = {
     expect(response.length).toBeGreaterThan(10);
     expect(response).toBeValidOracleResponse();
   },
-  
+
   // Create test conversation flow
   createConversationFlow: (exchanges: Array<{ prompt: string; expectedKeywords?: string[] }>) => {
     return exchanges.map(exchange => ({
@@ -164,18 +164,18 @@ export const testUtils = {
       expectedKeywords: exchange.expectedKeywords || []
     }));
   },
-  
+
   // Performance measurement utility
   measurePerformance: async <T>(operation: () => Promise<T>, label: string): Promise<{ result: T; duration: number }> => {
     const startTime = Date.now();
     const result = await operation();
     const duration = Date.now() - startTime;
-    
+
     console.log(`[PERF] ${label}: ${duration}ms`);
-    
+
     return { result, duration };
   },
-  
+
   // Mock implementation helpers
   createMockSoulMemory: () => ({
     initialize: jest.fn().mockResolvedValue(undefined),
@@ -193,17 +193,17 @@ export const testUtils = {
     createMemoryThread: jest.fn().mockResolvedValue({ id: 'thread-id', memories: [] }),
     getMemoryThreads: jest.fn().mockResolvedValue([])
   }),
-  
+
   createMockWisdomEngine: () => ({
     detectPattern: jest.fn().mockResolvedValue({ strength: 0.8, frequency: 3 }),
     selectWisdomApproach: jest.fn().mockResolvedValue({ primary: 'jung', confidence: 0.9 }),
     generateElementalWisdom: jest.fn().mockResolvedValue('Mock elemental wisdom'),
     analyzeConversationFlow: jest.fn().mockResolvedValue({ patterns: [], stuckPoints: [] }),
     identifyGrowthEdge: jest.fn().mockResolvedValue({ edge: 'vulnerability', readiness: 0.7 }),
-    getArchetypalActivation: jest.fn().mockResolvedValue({ 
-      dominantArchetype: 'Shadow', 
+    getArchetypalActivation: jest.fn().mockResolvedValue({
+      dominantArchetype: 'Shadow',
       emergingArchetype: 'Warrior',
-      balanceScore: 0.6 
+      balanceScore: 0.6
     })
   })
 };
@@ -215,7 +215,7 @@ export const testConstants = {
   MEMORY_TYPES: ['oracle_exchange', 'journal_entry', 'breakthrough', 'sacred_moment', 'shadow_work'] as const,
   EMOTIONAL_TONES: ['peaceful', 'curious', 'excited', 'anxious', 'grateful', 'angry', 'sad', 'joyful'] as const,
   SPIRAL_PHASES: ['initiation', 'descent', 'revelation', 'return'] as const,
-  
+
   // Sample test prompts for different scenarios
   SAMPLE_PROMPTS: {
     simple: [

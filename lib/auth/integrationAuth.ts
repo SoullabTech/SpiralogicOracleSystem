@@ -90,10 +90,10 @@ export class IntegrationAuthService {
       if (authData.user) {
         // Create user profile with integration-centered data
         await this.createUserProfile(authData.user.id, onboardingData);
-        
+
         // Initialize domain assessments
         await this.initializeDomainAssessments(authData.user.id);
-        
+
         // Create initial integration architecture
         await this.initializeIntegrationArchitecture(authData.user.id);
       }
@@ -159,7 +159,7 @@ export class IntegrationAuthService {
 
   private async initializeDomainAssessments(userId: string) {
     const domains: HolisticDomain[] = [HolisticDomain.MIND, HolisticDomain.BODY, HolisticDomain.SPIRIT, HolisticDomain.EMOTIONS];
-    
+
     const domainProfiles = domains.map(domain => ({
       user_id: userId,
       domain,
@@ -235,7 +235,7 @@ export class IntegrationAuthService {
 
   private assessInitialState(onboardingData: OnboardingData): UserState {
     const challenges = onboardingData.developmentAssessment.currentChallenges;
-    
+
     if (challenges.includes('stress') || challenges.includes('overwhelm')) {
       return UserState.STRESSED;
     }
@@ -251,7 +251,7 @@ export class IntegrationAuthService {
     if (challenges.includes('energy') || challenges.includes('motivation')) {
       return UserState.ENERGIZED;
     }
-    
+
     return UserState.BALANCED;
   }
 
@@ -341,8 +341,8 @@ export class IntegrationAuthService {
   }
 
   async createProfessionalConnection(
-    userId: string, 
-    professionalId: string, 
+    userId: string,
+    professionalId: string,
     connectionType: string,
     reason?: string
   ) {
@@ -382,7 +382,7 @@ export class IntegrationAuthService {
 
   async withdrawConsent(userId: string, consentType: string) {
     const updates: any = {};
-    
+
     switch (consentType) {
       case 'professional_support':
         updates.professional_support_consent = false;

@@ -15,7 +15,7 @@ elementalAlchemyRouter.get('/state', authenticate, async (req, res) => {
     const userState = await elementalAlchemyService.getUserState(userId);
     const state = userState.holoflower.getState();
     const visualData = userState.holoflower.exportVisualizationData();
-    
+
     res.json({
       success: true,
       data: {
@@ -40,16 +40,16 @@ elementalAlchemyRouter.post('/house/:houseNumber/intensity', authenticate, async
     const userId = req.user!.id;
     const houseNumber = parseInt(req.params.houseNumber);
     const { intensity } = req.body;
-    
+
     if (houseNumber < 1 || houseNumber > 12) {
       return res.status(400).json({
         success: false,
         error: 'Invalid house number. Must be between 1 and 12.'
       });
     }
-    
+
     await elementalAlchemyService.updateHouseIntensity(userId, houseNumber, intensity);
-    
+
     res.json({
       success: true,
       message: 'House intensity updated'
@@ -68,16 +68,16 @@ elementalAlchemyRouter.post('/transformation', authenticate, async (req, res) =>
   try {
     const userId = req.user!.id;
     const { fromHouse, toHouse } = req.body;
-    
+
     if (fromHouse < 1 || fromHouse > 12 || toHouse < 1 || toHouse > 12) {
       return res.status(400).json({
         success: false,
         error: 'Invalid house numbers. Must be between 1 and 12.'
       });
     }
-    
+
     await elementalAlchemyService.activateTransformation(userId, fromHouse, toHouse);
-    
+
     res.json({
       success: true,
       message: 'Transformation activated'
@@ -96,7 +96,7 @@ elementalAlchemyRouter.post('/integrate-phi', authenticate, async (req, res) => 
   try {
     const userId = req.user!.id;
     await elementalAlchemyService.integratePhiSpiral(userId);
-    
+
     res.json({
       success: true,
       message: 'Phi spiral integration activated'
@@ -115,7 +115,7 @@ elementalAlchemyRouter.get('/insights', authenticate, async (req, res) => {
   try {
     const userId = req.user!.id;
     const insights = await elementalAlchemyService.generatePersonalInsights(userId);
-    
+
     res.json({
       success: true,
       data: insights
@@ -134,7 +134,7 @@ elementalAlchemyRouter.get('/transformations', authenticate, async (req, res) =>
   try {
     const userId = req.user!.id;
     const userState = await elementalAlchemyService.getUserState(userId);
-    
+
     res.json({
       success: true,
       data: userState.transformationHistory
@@ -153,7 +153,7 @@ elementalAlchemyRouter.post('/group/:groupId/analyze', authenticate, async (req,
   try {
     const { groupId } = req.params;
     const pattern = await elementalAlchemyService.analyzeGroupAlchemy(groupId);
-    
+
     res.json({
       success: true,
       data: pattern
@@ -171,26 +171,26 @@ elementalAlchemyRouter.post('/group/:groupId/analyze', authenticate, async (req,
 elementalAlchemyRouter.get('/house/:houseNumber', async (req, res) => {
   try {
     const houseNumber = parseInt(req.params.houseNumber);
-    
+
     if (houseNumber < 1 || houseNumber > 12) {
       return res.status(400).json({
         success: false,
         error: 'Invalid house number. Must be between 1 and 12.'
       });
     }
-    
+
     // Get house definition from the model
     const holoflower = new (await import('../core/ElementalAlchemyHoloflower')).ElementalAlchemyHoloflower();
     const state = holoflower.getState();
     const house = state.houses.find(h => h.number === houseNumber);
-    
+
     if (!house) {
       return res.status(404).json({
         success: false,
         error: 'House not found'
       });
     }
-    
+
     res.json({
       success: true,
       data: {
@@ -220,7 +220,7 @@ elementalAlchemyRouter.get('/houses', async (req, res) => {
   try {
     const holoflower = new (await import('../core/ElementalAlchemyHoloflower')).ElementalAlchemyHoloflower();
     const state = holoflower.getState();
-    
+
     const houses = state.houses.map(house => ({
       number: house.number,
       element: house.element,
@@ -230,7 +230,7 @@ elementalAlchemyRouter.get('/houses', async (req, res) => {
       sacredSymbol: house.sacredSymbol,
       description: house.description
     }));
-    
+
     res.json({
       success: true,
       data: houses
@@ -280,7 +280,7 @@ elementalAlchemyRouter.get('/book/element/:elementName', authenticate, async (re
   try {
     const { elementName } = req.params;
     const validElements = ['fire', 'water', 'earth', 'air', 'aether'];
-    
+
     if (!validElements.includes(elementName.toLowerCase())) {
       return res.status(400).json({
         success: false,
@@ -294,7 +294,7 @@ elementalAlchemyRouter.get('/book/element/:elementName', authenticate, async (re
     const wisdom = JSON.parse(content);
 
     const elementWisdom = wisdom.elements[elementName.toLowerCase()];
-    
+
     if (!elementWisdom) {
       return res.status(404).json({
         success: false,
@@ -370,7 +370,7 @@ elementalAlchemyRouter.get('/book/info', authenticate, async (req, res) => {
 elementalAlchemyRouter.get('/book/teachings/:limit?', authenticate, async (req, res) => {
   try {
     const limit = parseInt(req.params.limit || '10');
-    
+
     const bookPath = path.join(__dirname, '../../data/founder-knowledge/elemental-alchemy-book.json');
     const content = await fs.readFile(bookPath, 'utf-8');
     const bookData = JSON.parse(content);
@@ -401,50 +401,50 @@ elementalAlchemyRouter.get('/book/teachings/:limit?', authenticate, async (req, 
 
 // WebSocket endpoint for real-time updates
 export function setupElementalAlchemyWebSocket(server: Server) {
-  const wss = new WebSocketServer({ 
+  const wss = new WebSocketServer({
     server,
     path: '/ws/elemental-alchemy'
   });
-  
+
   wss.on('connection', (ws, req) => {
     const userId = req.url?.split('/').pop();
-    
+
     if (!userId) {
       ws.close();
       return;
     }
-    
+
     console.log(`Elemental Alchemy WebSocket connected for user ${userId}`);
-    
+
     ws.on('message', async (message) => {
       try {
         const data = JSON.parse(message.toString());
-        
+
         switch (data.type) {
           case 'update-intensity':
             await elementalAlchemyService.updateHouseIntensity(
-              userId, 
-              data.houseNumber, 
+              userId,
+              data.houseNumber,
               data.intensity
             );
             break;
-          
+
           case 'activate-transformation':
             await elementalAlchemyService.activateTransformation(
-              userId, 
-              data.fromHouse, 
+              userId,
+              data.fromHouse,
               data.toHouse
             );
             break;
-          
+
           case 'integrate-phi-spiral':
             await elementalAlchemyService.integratePhiSpiral(userId);
             break;
-          
+
           case 'request-insights':
             await elementalAlchemyService.generatePersonalInsights(userId);
             break;
-          
+
           case 'request-group-alchemy':
             await elementalAlchemyService.analyzeGroupAlchemy(data.groupId);
             break;
@@ -457,15 +457,15 @@ export function setupElementalAlchemyWebSocket(server: Server) {
         }));
       }
     });
-    
+
     ws.on('close', () => {
       console.log(`Elemental Alchemy WebSocket closed for user ${userId}`);
     });
-    
+
     ws.on('error', (error) => {
       console.error(`WebSocket error for user ${userId}:`, error);
     });
   });
-  
+
   return wss;
 }

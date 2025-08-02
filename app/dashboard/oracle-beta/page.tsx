@@ -89,7 +89,7 @@ export default function OracleBetaDashboard() {
 
     setLoading(true);
     setCurrentResponse(null);
-    
+
     try {
       // Try to call the real backend API
       const response = await fetch(agents[selectedAgent].endpoint, {
@@ -128,28 +128,28 @@ export default function OracleBetaDashboard() {
       }
 
       setCurrentResponse(oracleResponse);
-      
+
       const newConversation: Conversation = {
         id: `conv-${Date.now()}`,
         userInput,
         response: oracleResponse
       };
-      
+
       setConversations(prev => [newConversation, ...prev.slice(0, 9)]); // Keep last 10
       setUserInput('');
-      
+
     } catch (error) {
       console.error('Oracle API error:', error);
       // Fallback to demo response
       const fallbackResponse = generateEnhancedDemoResponse(userInput, selectedAgent);
       setCurrentResponse(fallbackResponse);
-      
+
       const newConversation: Conversation = {
         id: `conv-${Date.now()}`,
         userInput,
         response: fallbackResponse
       };
-      
+
       setConversations(prev => [newConversation, ...prev.slice(0, 9)]);
       setUserInput('');
     } finally {
@@ -190,13 +190,13 @@ export default function OracleBetaDashboard() {
   };
 
   const handleRating = (conversationId: string, rating: number) => {
-    setConversations(prev => prev.map(conv => 
+    setConversations(prev => prev.map(conv =>
       conv.id === conversationId ? { ...conv, rating } : conv
     ));
   };
 
   const handleFeedback = (conversationId: string) => {
-    setConversations(prev => prev.map(conv => 
+    setConversations(prev => prev.map(conv =>
       conv.id === conversationId ? { ...conv, feedback: feedbackText } : conv
     ));
     setShowFeedback(null);
@@ -279,7 +279,7 @@ export default function OracleBetaDashboard() {
                     required
                   />
                 </div>
-                
+
                 <button
                   type="submit"
                   disabled={loading || !userInput.trim()}
@@ -307,19 +307,19 @@ export default function OracleBetaDashboard() {
                     {new Date(currentResponse.timestamp).toLocaleTimeString()}
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="bg-white/10 rounded-lg p-4">
                     <p className="leading-relaxed">{currentResponse.message}</p>
                   </div>
-                  
+
                   {currentResponse.insight && (
                     <div className="bg-yellow-400/10 border border-yellow-400/30 rounded-lg p-4">
                       <h4 className="font-semibold mb-2 text-yellow-400">✨ Key Insight</h4>
                       <p className="text-sm">{currentResponse.insight}</p>
                     </div>
                   )}
-                  
+
                   {currentResponse.symbols && currentResponse.symbols.length > 0 && (
                     <div>
                       <h4 className="font-semibold mb-2 text-yellow-400">🔮 Sacred Symbols</h4>
@@ -341,7 +341,7 @@ export default function OracleBetaDashboard() {
           <div className="space-y-6">
             <div className="bg-white/5 rounded-lg p-6 border border-white/10">
               <h3 className="text-lg font-semibold mb-4">Recent Conversations</h3>
-              
+
               {conversations.length === 0 ? (
                 <div className="text-center py-8 opacity-60">
                   <p className="text-sm">No conversations yet.</p>
@@ -360,16 +360,16 @@ export default function OracleBetaDashboard() {
                           </p>
                         </div>
                       </div>
-                      
+
                       <div className="text-xs mb-2 opacity-80">
                         <strong>You asked:</strong> {conversation.userInput.slice(0, 100)}
                         {conversation.userInput.length > 100 && '...'}
                       </div>
-                      
+
                       <div className="text-xs opacity-80 mb-3">
                         <strong>Oracle said:</strong> {conversation.response.message.slice(0, 150)}...
                       </div>
-                      
+
                       {/* Rating */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-1">
@@ -387,7 +387,7 @@ export default function OracleBetaDashboard() {
                             </button>
                           ))}
                         </div>
-                        
+
                         <button
                           onClick={() => setShowFeedback(conversation.id)}
                           className="text-xs text-yellow-400 hover:text-yellow-300 underline"
@@ -395,7 +395,7 @@ export default function OracleBetaDashboard() {
                           Feedback
                         </button>
                       </div>
-                      
+
                       {showFeedback === conversation.id && (
                         <div className="mt-3 pt-3 border-t border-white/10">
                           <textarea
@@ -421,7 +421,7 @@ export default function OracleBetaDashboard() {
                           </div>
                         </div>
                       )}
-                      
+
                       {conversation.feedback && (
                         <div className="mt-2 pt-2 border-t border-white/10">
                           <p className="text-xs opacity-60">
@@ -434,7 +434,7 @@ export default function OracleBetaDashboard() {
                 </div>
               )}
             </div>
-            
+
             {/* Beta Feedback */}
             <div className="bg-yellow-400/10 border border-yellow-400/30 rounded-lg p-4">
               <h4 className="font-semibold mb-2 text-yellow-400">🚀 Beta Testing</h4>

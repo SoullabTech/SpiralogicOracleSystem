@@ -30,14 +30,14 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
 
   useEffect(() => {
     const ws = new WebSocket(`ws://localhost:5002`);
-    
+
     ws.onopen = () => {
       ws.send(JSON.stringify({
         type: 'request-group-pattern',
         groupId
       }));
     };
-    
+
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'group-pattern' && data.pattern.groupId === groupId) {
@@ -51,14 +51,14 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
   const renderParticipantGrid = () => {
     const gridSize = Math.ceil(Math.sqrt(participantIds.length));
     const cellSize = 200;
-    
+
     return (
       <div className="participant-grid">
         {participantIds.map((userId, index) => {
           const row = Math.floor(index / gridSize);
           const col = index % gridSize;
           const isSelected = selectedParticipant === userId;
-          
+
           return (
             <motion.div
               key={userId}
@@ -71,7 +71,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
                 height: cellSize
               }}
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
+              animate={{
                 scale: isSelected ? 1.1 : 0.3,
                 opacity: isSelected ? 1 : 0.6
               }}
@@ -97,7 +97,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
     const radius = 300;
     const centerX = 400;
     const centerY = 400;
-    
+
     return (
       <svg width={800} height={800} className="circular-arrangement">
         <defs>
@@ -106,7 +106,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
             <stop offset="100%" stopColor="#FF6347" stopOpacity={0.1} />
           </radialGradient>
         </defs>
-        
+
         {showResonance && groupPattern && (
           <motion.circle
             cx={centerX}
@@ -118,12 +118,12 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
             transition={{ duration: 1 }}
           />
         )}
-        
+
         {participantIds.map((userId, index) => {
           const angle = (index * 2 * Math.PI) / participantIds.length;
           const x = centerX + Math.cos(angle) * radius;
           const y = centerY + Math.sin(angle) * radius;
-          
+
           return (
             <g key={userId} transform={`translate(${x}, ${y})`}>
               <foreignObject
@@ -141,7 +141,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
                   />
                 </div>
               </foreignObject>
-              
+
               {showResonance && index < participantIds.length - 1 && (
                 <motion.line
                   x1={0}
@@ -159,7 +159,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
             </g>
           );
         })}
-        
+
         <g transform={`translate(${centerX}, ${centerY})`}>
           <foreignObject x={-100} y={-100} width={200} height={200}>
             <div className="collective-center">
@@ -181,7 +181,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
     const centerX = 400;
     const centerY = 400;
     const spiralTurns = 2;
-    
+
     return (
       <svg width={800} height={800} className="spiral-arrangement">
         {participantIds.map((userId, index) => {
@@ -191,7 +191,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           const x = centerX + Math.cos(angle) * radius;
           const y = centerY + Math.sin(angle) * radius;
           const scale = 0.1 + t * 0.15;
-          
+
           return (
             <motion.g
               key={userId}
@@ -218,7 +218,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
             </motion.g>
           );
         })}
-        
+
         <motion.path
           d={generateSpiralPath(centerX, centerY, spiralTurns, participantIds.length)}
           fill="none"
@@ -241,7 +241,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
       const radius = 50 + t * 250;
       const x = cx + Math.cos(angle) * radius;
       const y = cy + Math.sin(angle) * radius;
-      
+
       if (i === 0) {
         path.push(`M ${x} ${y}`);
       } else {
@@ -253,7 +253,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
 
   const renderResonanceMetrics = () => {
     if (!groupPattern) return null;
-    
+
     return (
       <div className="resonance-metrics">
         <h3>Collective Resonance</h3>
@@ -274,7 +274,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
             </div>
           ))}
         </div>
-        
+
         {groupPattern.emergentQualities.length > 0 && (
           <div className="emergent-qualities">
             <h4>Emergent Qualities</h4>
@@ -328,15 +328,15 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           Spiral View
         </button>
       </div>
-      
+
       <div className="visualization-area">
         {resonanceView === 'grid' && renderParticipantGrid()}
         {resonanceView === 'circle' && renderCircularArrangement()}
         {resonanceView === 'spiral' && renderSpiralArrangement()}
       </div>
-      
+
       {renderResonanceMetrics()}
-      
+
       <style jsx>{`
         .group-holoflower-container {
           display: flex;
@@ -347,13 +347,13 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           color: white;
           min-height: 100vh;
         }
-        
+
         .view-controls {
           display: flex;
           gap: 10px;
           margin-bottom: 20px;
         }
-        
+
         .view-controls button {
           padding: 10px 20px;
           background: #2a2a3e;
@@ -363,38 +363,38 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .view-controls button.active,
         .view-controls button:hover {
           background: #3a3a4e;
           transform: translateY(-2px);
         }
-        
+
         .visualization-area {
           position: relative;
           width: 800px;
           height: 800px;
           margin-bottom: 40px;
         }
-        
+
         .participant-grid {
           position: relative;
           width: 100%;
           height: 100%;
         }
-        
+
         .participant-cell {
           cursor: pointer;
           transition: all 0.3s;
         }
-        
+
         .participant-label {
           text-align: center;
           margin-top: 5px;
           font-size: 12px;
           color: #FFD700;
         }
-        
+
         .collective-center {
           display: flex;
           flex-direction: column;
@@ -407,18 +407,18 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           border: 2px solid #FFD700;
           text-align: center;
         }
-        
+
         .collective-center h3 {
           margin: 0 0 10px 0;
           color: #FFD700;
           font-size: 16px;
         }
-        
+
         .field-metrics {
           font-size: 14px;
           line-height: 1.5;
         }
-        
+
         .resonance-metrics {
           width: 100%;
           max-width: 600px;
@@ -427,31 +427,31 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           border-radius: 8px;
           border: 1px solid #FFD700;
         }
-        
+
         .resonance-metrics h3 {
           margin: 0 0 20px 0;
           color: #FFD700;
           text-align: center;
         }
-        
+
         .metrics-grid {
           display: flex;
           flex-direction: column;
           gap: 15px;
           margin-bottom: 30px;
         }
-        
+
         .metric {
           display: flex;
           align-items: center;
           gap: 10px;
         }
-        
+
         .metric-label {
           width: 100px;
           text-transform: capitalize;
         }
-        
+
         .metric-bar {
           flex: 1;
           height: 20px;
@@ -459,28 +459,28 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           border-radius: 10px;
           overflow: hidden;
         }
-        
+
         .metric-fill {
           height: 100%;
           border-radius: 10px;
         }
-        
+
         .metric-value {
           width: 50px;
           text-align: right;
         }
-        
+
         .emergent-qualities h4 {
           margin: 0 0 10px 0;
           color: #FFD700;
         }
-        
+
         .qualities-list {
           display: flex;
           flex-wrap: wrap;
           gap: 10px;
         }
-        
+
         .quality-badge {
           padding: 5px 15px;
           background: #3a3a4e;

@@ -37,7 +37,7 @@ describe('Elemental Alchemy Knowledge Integration', () => {
       expect(response.content).toContain('Earth');
       expect(response.content).toContain('Air');
       expect(response.content).toContain('Aether');
-      
+
       // Check key concepts
       expect(response.content).toContain('transformation');
       expect(response.content).toContain('emotional intelligence');
@@ -143,10 +143,10 @@ describe('Elemental Alchemy Knowledge Integration', () => {
 
 /**
  * 🧪 ELEMENTAL ALCHEMY KNOWLEDGE TESTS
- * 
+ *
  * These tests verify that the Founder Agent has successfully integrated
  * the Elemental Alchemy book knowledge and can:
- * 
+ *
  * - Explain the core philosophy and teachings
  * - Describe all five elements and their qualities
  * - Discuss shadow aspects and integration
@@ -154,7 +154,7 @@ describe('Elemental Alchemy Knowledge Integration', () => {
  * - Provide practical applications
  * - Properly attribute the author
  * - Share healing wisdom
- * 
+ *
  * The tests ensure the book knowledge is accessible and accurately
  * represented in the agent's responses.
  */

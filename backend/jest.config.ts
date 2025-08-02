@@ -3,7 +3,7 @@ import type { Config } from '@jest/types';
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  
+
   // Test file patterns
   testMatch: [
     '**/__tests__/**/*.test.ts',
@@ -11,16 +11,16 @@ const config: Config.InitialOptions = {
     '**/tests/**/*.spec.ts',
     '**/*.test.js'
   ],
-  
+
   // Module resolution
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1'
   },
-  
+
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
-  
+
   // Transform configuration
   transform: {
     '^.+\\.ts$': ['ts-jest', {
@@ -31,7 +31,7 @@ const config: Config.InitialOptions = {
       }
     }]
   },
-  
+
   // ES modules support
   extensionsToTreatAsEsm: ['.ts'],
   globals: {
@@ -39,7 +39,7 @@ const config: Config.InitialOptions = {
       useESM: true
     }
   },
-  
+
   // Coverage configuration
   collectCoverage: true,
   coverageDirectory: 'coverage',
@@ -51,7 +51,7 @@ const config: Config.InitialOptions = {
     '!src/**/*.test.ts',
     '!src/**/*.spec.ts'
   ],
-  
+
   // Coverage thresholds for production readiness
   coverageThreshold: {
     global: {
@@ -74,25 +74,25 @@ const config: Config.InitialOptions = {
       statements: 85
     }
   },
-  
+
   // Test timeout configuration
   testTimeout: 30000, // 30 seconds for integration tests
-  
+
   // Verbose output for debugging
   verbose: true,
-  
+
   // Parallel execution
   maxWorkers: '50%',
-  
-  
+
+
   // Mock configuration
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
-  
+
   // Error handling
   errorOnDeprecated: true,
-  
+
   // Reporter configuration
   reporters: [
     'default',

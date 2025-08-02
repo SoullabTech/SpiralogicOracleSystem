@@ -46,8 +46,8 @@ export abstract class ArchetypeAgent extends OracleAgent {
   public lastInteraction: Date;
 
   constructor(
-    element: string, 
-    oracleName: string = 'Oracle', 
+    element: string,
+    oracleName: string = 'Oracle',
     voiceProfile?: OracleIdentity['voiceProfile'],
     phase: string = 'initiation'
   ) {
@@ -66,10 +66,10 @@ export abstract class ArchetypeAgent extends OracleAgent {
     // Convert to extended format for subclasses
     const extendedQuery = { input: query, userId: 'anonymous' };
     const aiResponse = await this.processExtendedQuery(extendedQuery);
-    
+
     // Update last interaction
     this.lastInteraction = new Date();
-    
+
     // Convert AIResponse to AgentResponse for compatibility
     return {
       response: aiResponse.content,
@@ -98,33 +98,33 @@ export abstract class ArchetypeAgent extends OracleAgent {
       voiceProfile: this.voiceProfile,
       phase: this.phase
     };
-    
+
     // Update last interaction
     this.lastInteraction = new Date();
-    
+
     // Call the extended processQuery with enriched context
     return await this.processExtendedQuery(enrichedQuery);
   }
 
   // Oracle Identity Methods
-  public getElement(): string { 
-    return this.element; 
+  public getElement(): string {
+    return this.element;
   }
-  
-  public getOracleName(): string { 
-    return this.oracleName; 
+
+  public getOracleName(): string {
+    return this.oracleName;
   }
-  
-  public getVoiceProfile(): OracleIdentity['voiceProfile'] { 
-    return this.voiceProfile; 
+
+  public getVoiceProfile(): OracleIdentity['voiceProfile'] {
+    return this.voiceProfile;
   }
-  
-  public getPhase(): string { 
-    return this.phase; 
+
+  public getPhase(): string {
+    return this.phase;
   }
-  
-  public getEvolutionHistory(): OracleIdentity['evolutionHistory'] { 
-    return this.evolutionHistory; 
+
+  public getEvolutionHistory(): OracleIdentity['evolutionHistory'] {
+    return this.evolutionHistory;
   }
 
   /**
@@ -149,7 +149,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
   public evolveToPhase(newPhase: string, newArchetype?: string, userInitiated: boolean = true): void {
     const oldPhase = this.phase;
     const oldArchetype = this.element;
-    
+
     // Record evolution
     this.evolutionHistory.push({
       fromPhase: oldPhase,
@@ -157,10 +157,10 @@ export abstract class ArchetypeAgent extends OracleAgent {
       timestamp: new Date(),
       userInitiated
     });
-    
+
     // Update phase
     this.phase = newPhase;
-    
+
     // Update archetype if specified
     if (newArchetype) {
       this.element = newArchetype;
@@ -187,7 +187,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
       air: { voiceId: 'elevenlabs_air_voice', stability: 0.6, style: 0.7, tone: 'clarifying' },
       aether: { voiceId: 'elevenlabs_aether_voice', stability: 0.8, style: 0.7, tone: 'transcendent' }
     };
-    
+
     return elementVoiceProfiles[this.element] || elementVoiceProfiles.aether;
   }
 
@@ -199,7 +199,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
       transcendence: ['Access higher perspectives', 'Dissolve limitations', 'Embrace unity'],
       mastery: ['Become the teaching', 'Serve others\' growth', 'Embody mastery']
     };
-    
+
     return phaseBenefits[newPhase] || ['Evolve your consciousness', 'Deepen your journey'];
   }
 
@@ -209,7 +209,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
   public getCeremonialGreeting(): string {
     const timeOfDay = this.getTimeOfDay();
     const elementalGreeting = this.getElementalGreeting();
-    
+
     return `${elementalGreeting} I am ${this.oracleName}, your ${this.element} guide. ${timeOfDay}`;
   }
 
@@ -229,7 +229,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
       air: '🌬️ I breathe clarity into our connection.',
       aether: '✨ I weave the threads of your soul story.'
     };
-    
+
     return greetings[this.element] || greetings.aether;
   }
 }

@@ -33,7 +33,7 @@ export function selectLLM(query: string): LLMProvider {
 export async function callLLM(provider: LLMProvider, query: string): Promise<string> {
   // Simulated API call delay
   await new Promise(resolve => setTimeout(resolve, 500));
-  
+
   if (provider === 'claude') {
     return `Claude Response to "${query}": Embracing your emotional depth and intuitive insight.`;
   } else {

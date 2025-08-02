@@ -13,7 +13,7 @@ import { HolisticAssessmentService } from './HolisticAssessmentService';
 
 export class AdaptiveExperienceEngine {
   private assessmentService: HolisticAssessmentService;
-  
+
   constructor() {
     this.assessmentService = new HolisticAssessmentService();
   }
@@ -25,7 +25,7 @@ export class AdaptiveExperienceEngine {
   ): AdaptiveContent {
     const userStage = this.calculateOverallStage(userProfile);
     const adaptations = this.createStageAdaptations(baseContent, targetDomains);
-    
+
     return {
       id: this.generateId(),
       baseContent,
@@ -41,9 +41,9 @@ export class AdaptiveExperienceEngine {
       [DevelopmentStage.INTERMEDIATE]: 2,
       [DevelopmentStage.ADVANCED]: 3
     };
-    
+
     const avgWeight = stages.reduce((sum, stage) => sum + stageWeights[stage], 0) / stages.length;
-    
+
     if (avgWeight >= 2.5) return DevelopmentStage.ADVANCED;
     if (avgWeight >= 1.5) return DevelopmentStage.INTERMEDIATE;
     return DevelopmentStage.BEGINNER;
@@ -158,7 +158,7 @@ export class AdaptiveExperienceEngine {
 
   private identifyDomainConnections(domains: HolisticDomain[]) {
     const connections = [];
-    
+
     for (let i = 0; i < domains.length; i++) {
       for (let j = i + 1; j < domains.length; j++) {
         connections.push({
@@ -327,7 +327,7 @@ export class AdaptiveExperienceEngine {
       complexity,
       estimatedTime,
       benefits,
-      prerequisites: complexity === DevelopmentStage.ADVANCED ? 
+      prerequisites: complexity === DevelopmentStage.ADVANCED ?
         ['Intermediate practice experience'] : undefined
     };
   }
@@ -339,14 +339,14 @@ export class AdaptiveExperienceEngine {
     return recommendations
       .sort((a, b) => {
         if (profile.currentState === UserState.STRESSED) {
-          const aIsGrounding = a.domains.includes(HolisticDomain.BODY) || 
+          const aIsGrounding = a.domains.includes(HolisticDomain.BODY) ||
                               a.domains.includes(HolisticDomain.EMOTIONS);
-          const bIsGrounding = b.domains.includes(HolisticDomain.BODY) || 
+          const bIsGrounding = b.domains.includes(HolisticDomain.BODY) ||
                               b.domains.includes(HolisticDomain.EMOTIONS);
           if (aIsGrounding && !bIsGrounding) return -1;
           if (!aIsGrounding && bIsGrounding) return 1;
         }
-        
+
         return a.estimatedTime - b.estimatedTime;
       })
       .map(r => r.id);
@@ -373,15 +373,15 @@ export class AdaptiveExperienceEngine {
   ): any {
     const userStage = requestedComplexity || this.calculateOverallStage(profile);
     const { stressLevel, energyLevel } = profile;
-    
+
     if (stressLevel > 7 || energyLevel < 3) {
       return this.simplifyForCurrentCapacity(content, userStage);
     }
-    
+
     if (energyLevel > 7 && userStage === DevelopmentStage.ADVANCED) {
       return this.enhanceForHighCapacity(content);
     }
-    
+
     return content;
   }
 

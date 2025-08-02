@@ -48,55 +48,55 @@ const ShadowVoiceProtocols = {
 const ShadowIntelligence = {
   detectShadowType: (input: string, context: any[]): string => {
     const lowerInput = input.toLowerCase();
-    
+
     // Detect victim patterns needing empowerment
-    if (lowerInput.includes('always happens to me') || lowerInput.includes('why me') || 
+    if (lowerInput.includes('always happens to me') || lowerInput.includes('why me') ||
         lowerInput.includes('unfair') || lowerInput.includes('victim')) {
       return 'victim_transformation';
     }
-    
+
     // Detect projections needing integration
-    if (lowerInput.includes('they always') || lowerInput.includes('people are') || 
+    if (lowerInput.includes('they always') || lowerInput.includes('people are') ||
         lowerInput.includes('everyone else') || lowerInput.includes('hate when people')) {
       return 'projection_integration';
     }
-    
+
     // Detect repeating patterns needing recognition
-    if (lowerInput.includes('keeps happening') || lowerInput.includes('same thing') || 
+    if (lowerInput.includes('keeps happening') || lowerInput.includes('same thing') ||
         lowerInput.includes('pattern') || lowerInput.includes('always')) {
       return 'pattern_recognition';
     }
-    
+
     // Detect self-judgment needing compassion
-    if (lowerInput.includes('hate myself') || lowerInput.includes('terrible person') || 
+    if (lowerInput.includes('hate myself') || lowerInput.includes('terrible person') ||
         lowerInput.includes('worthless') || lowerInput.includes('failure')) {
       return 'self_judgment_healing';
     }
-    
+
     // Detect fear-based limitations needing courage
-    if (lowerInput.includes('afraid') || lowerInput.includes('scared') || 
+    if (lowerInput.includes('afraid') || lowerInput.includes('scared') ||
         lowerInput.includes('can\'t') || lowerInput.includes('impossible')) {
       return 'fear_transformation';
     }
-    
+
     // Detect perfectionism needing integration
-    if (lowerInput.includes('perfect') || lowerInput.includes('not good enough') || 
+    if (lowerInput.includes('perfect') || lowerInput.includes('not good enough') ||
         lowerInput.includes('standards') || lowerInput.includes('should')) {
       return 'perfectionism_integration';
     }
-    
+
     // Detect people-pleasing needing boundaries
-    if (lowerInput.includes('everyone likes me') || lowerInput.includes('disappoint') || 
+    if (lowerInput.includes('everyone likes me') || lowerInput.includes('disappoint') ||
         lowerInput.includes('what they think') || lowerInput.includes('approval')) {
       return 'people_pleasing_liberation';
     }
-    
+
     return 'general_shadow_work';
   },
 
   craftShadowResponse: (input: string, shadowType: string, memories: any[]): string => {
     const protocols = ShadowVoiceProtocols;
-    
+
     switch (shadowType) {
       case 'victim_transformation':
         return `${protocols.resistance.victim_transformation}
@@ -183,7 +183,7 @@ What in your life keeps triggering the same response? What pattern keeps playing
       people_pleasing_liberation: "🜃 Being disliked for who you are is better than being loved for who you're not.",
       general_shadow_work: "🜃 In the mirror of shadow, your hidden power waits to be reclaimed."
     };
-    
+
     return `${response}\n\n${signatures[shadowType] || signatures.general_shadow_work}`;
   }
 };
@@ -197,7 +197,7 @@ export class ShadowAgent extends OracleAgent {
     // Gather shadow-specific context from memory
     const contextMemory = MemoryModule.getRecentEntries(5);
     const shadowType = ShadowIntelligence.detectShadowType(query.input, contextMemory);
-    
+
     // Create context that reveals shadow patterns from past conversations
     const shadowContext = contextMemory.length
       ? `🜃 Shadows from our previous conversations:\n${contextMemory
@@ -207,7 +207,7 @@ export class ShadowAgent extends OracleAgent {
 
     // Craft shadow-specific resistance wisdom
     const shadowWisdom = ShadowIntelligence.craftShadowResponse(query.input, shadowType, contextMemory);
-    
+
     // Generate additional depth using ModelService with shadow-attuned prompting
     const shadowPrompt = `As the Shadow Agent embodying loving resistance and sacred mirroring, respond to this soul's sharing with the voice that reveals hidden truth - challenging without crushing, mirroring without judging.
 
@@ -284,13 +284,13 @@ ${baseResponse.response}`;
     // Assess how much loving resistance this person can handle (0-1 scale)
     const openWords = ['ready', 'curious', 'want to understand', 'help me see'];
     const defensiveWords = ['not my fault', 'always', 'never', 'everyone else'];
-    
+
     const lowerInput = input.toLowerCase();
     let resistanceCapacity = 0.5; // baseline
-    
+
     if (openWords.some(phrase => lowerInput.includes(phrase))) resistanceCapacity += 0.3;
     if (defensiveWords.some(phrase => lowerInput.includes(phrase))) resistanceCapacity -= 0.2;
-    
+
     return Math.max(0.2, Math.min(resistanceCapacity, 1.0));
   }
 
@@ -298,13 +298,13 @@ ${baseResponse.response}`;
     // Assess readiness for shadow integration (0-1 scale)
     const integrationWords = ['understand', 'change', 'grow', 'heal', 'integrate'];
     const resistanceWords = ['can\'t', 'won\'t', 'impossible', 'never'];
-    
+
     const lowerInput = input.toLowerCase();
     let integrationScore = 0.5; // baseline
-    
+
     if (integrationWords.some(word => lowerInput.includes(word))) integrationScore += 0.3;
     if (resistanceWords.some(word => lowerInput.includes(word))) integrationScore -= 0.1;
-    
+
     return Math.max(0.1, Math.min(integrationScore, 1.0));
   }
 
@@ -312,12 +312,12 @@ ${baseResponse.response}`;
     // Shadow emotions tend to be intense and often avoided
     const intenseEmotions = ['angry', 'furious', 'devastated', 'terrified', 'ashamed'];
     const avoidedEmotions = ['fine', 'okay', 'whatever', 'don\'t care'];
-    
+
     const lowerInput = input.toLowerCase();
-    
+
     if (intenseEmotions.some(emotion => lowerInput.includes(emotion))) return 0.9;
     if (avoidedEmotions.some(emotion => lowerInput.includes(emotion))) return 0.7; // Avoidance = shadow present
-    
+
     return 0.8; // baseline shadow emotional intensity
   }
 
@@ -325,7 +325,7 @@ ${baseResponse.response}`;
     // Confidence varies based on shadow type and user readiness
     const baseConfidence = 0.92;
     const resistanceCapacity = this.assessResistanceLevel(input);
-    
+
     // More resistance capacity = higher confidence in shadow work
     return Math.max(0.85, baseConfidence + (resistanceCapacity * 0.08));
   }

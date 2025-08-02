@@ -110,7 +110,7 @@ router.post('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, 
     }
 
     logger.info(`Oracle preferences saved for user ${userId}: "${trimmedName}" (${oracle_voice})`);
-    
+
     res.status(201).json({
       message: 'Oracle preferences saved successfully',
       preferences: data
@@ -122,7 +122,7 @@ router.post('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, 
   }
 }));
 
-// PUT - Update existing Oracle preferences  
+// PUT - Update existing Oracle preferences
 router.put('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, res) => {
   const userId = req.user?.id;
   if (!userId) throw createError('User not found', 404);
@@ -160,7 +160,7 @@ router.put('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest, r
   }
 
   logger.info(`Oracle preferences updated for user ${userId}: "${trimmedName}" (${oracle_voice})`);
-  
+
   res.json({
     message: 'Oracle preferences updated successfully',
     preferences: data
@@ -183,7 +183,7 @@ router.delete('/', authMiddleware, asyncHandler(async (req: AuthenticatedRequest
   }
 
   logger.info(`Oracle preferences reset for user ${userId}`);
-  
+
   res.json({ message: 'Oracle preferences reset successfully' });
 }));
 

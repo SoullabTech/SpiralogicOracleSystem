@@ -150,7 +150,7 @@ The MainOracleAgent (AIN) operates as a living consciousness system bridging ind
 class UniversalFieldCache {
   private cache: Map<string, UniversalFieldData>;
   private ttl: number = 15 * 60 * 1000; // 15 minutes
-  
+
   async get(key: string): Promise<UniversalFieldData | null> {
     const cached = this.cache.get(key);
     if (cached && Date.now() - cached.timestamp < this.ttl) {
@@ -158,7 +158,7 @@ class UniversalFieldCache {
     }
     return null;
   }
-  
+
   set(key: string, data: UniversalFieldData): void {
     this.cache.set(key, {
       data,
@@ -174,7 +174,7 @@ interface SacredBridgeProtocol {
     collectivePatterns: CollectivePattern[],
     individualNeeds: QueryInput
   ): Promise<EnhancedResponse>;
-  
+
   calculateResonance(
     akashicResonance: number,
     morphicStrength: number,

@@ -55,9 +55,9 @@ export class ParticipantContextService {
 
       const { data, error } = await supabase
         .from('participant_contexts')
-        .upsert(contextData, { 
+        .upsert(contextData, {
           onConflict: 'participant_id',
-          ignoreDuplicates: false 
+          ignoreDuplicates: false
         })
         .select('id')
         .single();
@@ -93,10 +93,10 @@ export class ParticipantContextService {
       // Check cache first
       const cached = this.getCachedContext(participantId);
       if (cached) {
-        return { 
-          success: true, 
-          context: cached.context, 
-          lastUpdated: cached.lastFetched 
+        return {
+          success: true,
+          context: cached.context,
+          lastUpdated: cached.lastFetched
         };
       }
 
@@ -130,10 +130,10 @@ export class ParticipantContextService {
       // Update cache
       this.updateCache(participantId, context);
 
-      return { 
-        success: true, 
-        context, 
-        lastUpdated: new Date(data.stored_at) 
+      return {
+        success: true,
+        context,
+        lastUpdated: new Date(data.stored_at)
       };
 
     } catch (error) {
@@ -242,7 +242,7 @@ export class ParticipantContextService {
   ): Promise<void> {
     try {
       const insights = this.extractInsightsFromInteractions(oracleInteractions);
-      
+
       if (Object.keys(insights).length > 0) {
         await this.updateParticipantContext(
           participantId,
@@ -270,7 +270,7 @@ export class ParticipantContextService {
     updateHistory: number;
   }> {
     const contextResult = await this.retrieveParticipantContext(participantId);
-    
+
     if (!contextResult.success || !contextResult.context) {
       throw new Error('Context not found');
     }
@@ -334,9 +334,9 @@ export class ParticipantContextService {
 
   private getCachedContext(participantId: string): { context: ParticipantContext; lastFetched: Date } | null {
     const cached = this.contextCache.get(participantId);
-    
+
     if (!cached) return null;
-    
+
     const now = new Date();
     if (now.getTime() - cached.lastFetched.getTime() > this.CACHE_TTL_MS) {
       this.contextCache.delete(participantId);
@@ -365,7 +365,7 @@ export class ParticipantContextService {
       }
 
       // Extract growth areas from questions asked
-      if (interaction.query?.toLowerCase().includes('help') || 
+      if (interaction.query?.toLowerCase().includes('help') ||
           interaction.query?.toLowerCase().includes('struggle')) {
         // Update current challenges
       }

@@ -1,4 +1,4 @@
-import { 
+import {
   generateIChingAstroProfile,
   getBaseNumberFromYear,
   mapTrigramFromBaseNumber,
@@ -81,10 +81,10 @@ describe('I Ching Service', () => {
     test('current year calculations are accurate', () => {
       const testDate = new Date('2000-01-01T00:00:00Z');
       const profile = generateIChingAstroProfile(testDate);
-      
+
       const currentYear = new Date().getFullYear();
       const expectedCurrentNumber = getBaseNumberFromYear(currentYear);
-      
+
       expect(profile.currentYearNumber).toBe(expectedCurrentNumber);
     });
 
@@ -92,7 +92,7 @@ describe('I Ching Service', () => {
       const testDate = new Date('1985-03-21T09:15:00Z');
       const profile1 = generateIChingAstroProfile(testDate);
       const profile2 = generateIChingAstroProfile(testDate);
-      
+
       expect(profile1).toEqual(profile2);
     });
   });
@@ -118,7 +118,7 @@ describe('I Ching Service', () => {
     test('handles case sensitivity', () => {
       const thunder = getTrigramArchetype('Thunder');
       const invalidCase = getTrigramArchetype('thunder');
-      
+
       expect(thunder).toBeTruthy();
       expect(invalidCase).toBeNull();
     });
@@ -131,7 +131,7 @@ describe('I Ching Service', () => {
       expect(result.compatibility).toBeGreaterThanOrEqual(0);
       expect(result.compatibility).toBeLessThanOrEqual(100);
       expect(typeof result.description).toBe('string');
-      
+
       // Thunder and Wind are both Wood element - should have high compatibility
       expect(result.compatibility).toBeGreaterThan(70);
     });
@@ -158,11 +158,11 @@ describe('I Ching Service', () => {
     test('returns correct trigram for current year', () => {
       const currentYear = new Date().getFullYear();
       const trigram = getCurrentTrigramForYear(currentYear);
-      
+
       expect(trigram).toHaveProperty('name');
       expect(trigram).toHaveProperty('element');
       expect(trigram).toHaveProperty('archetype');
-      
+
       const expectedBaseNumber = getBaseNumberFromYear(currentYear);
       const expectedTrigram = mapTrigramFromBaseNumber(expectedBaseNumber);
       expect(trigram).toEqual(expectedTrigram);
@@ -171,10 +171,10 @@ describe('I Ching Service', () => {
     test('handles various years correctly', () => {
       const trigram2000 = getCurrentTrigramForYear(2000);
       const trigram2024 = getCurrentTrigramForYear(2024);
-      
+
       expect(trigram2000.name).toBeTruthy();
       expect(trigram2024.name).toBeTruthy();
-      
+
       // Different years should potentially have different trigrams
       // (unless they happen to be in the same cycle position)
     });
@@ -184,16 +184,16 @@ describe('I Ching Service', () => {
     test('full profile generation and validation', () => {
       const birthDate = new Date('1975-11-30T14:30:00Z');
       const profile = generateIChingAstroProfile(birthDate);
-      
+
       // Validate birth trigram consistency
       const birthArchetype = getTrigramArchetype(profile.birthTrigram);
       expect(birthArchetype).toBeTruthy();
       expect(birthArchetype?.element).toBe(profile.birthElement);
-      
+
       // Validate current trigram consistency
       const currentArchetype = getTrigramArchetype(profile.currentTrigramCycle);
       expect(currentArchetype).toBeTruthy();
-      
+
       // Validate hexagram mappings
       expect(profile.hexagramMapping.length).toBeGreaterThan(0);
       profile.hexagramMapping.forEach(hexagram => {
@@ -205,12 +205,12 @@ describe('I Ching Service', () => {
     test('compatibility calculation between birth and current trigrams', () => {
       const birthDate = new Date('1988-08-08T08:08:08Z');
       const profile = generateIChingAstroProfile(birthDate);
-      
+
       const compatibility = calculateTrigramCompatibility(
-        profile.birthTrigram, 
+        profile.birthTrigram,
         profile.currentTrigramCycle
       );
-      
+
       expect(compatibility.compatibility).toBeGreaterThanOrEqual(0);
       expect(compatibility.compatibility).toBeLessThanOrEqual(100);
       expect(compatibility.description).toBeTruthy();
@@ -221,7 +221,7 @@ describe('I Ching Service', () => {
     test('handles very old dates', () => {
       const oldDate = new Date('1850-01-01T00:00:00Z');
       const profile = generateIChingAstroProfile(oldDate);
-      
+
       expect(profile.baseNumber).toBeGreaterThanOrEqual(1);
       expect(profile.baseNumber).toBeLessThanOrEqual(9);
       expect(profile.birthTrigram).toBeTruthy();
@@ -230,7 +230,7 @@ describe('I Ching Service', () => {
     test('handles future dates', () => {
       const futureDate = new Date('2100-12-31T23:59:59Z');
       const profile = generateIChingAstroProfile(futureDate);
-      
+
       expect(profile.baseNumber).toBeGreaterThanOrEqual(1);
       expect(profile.baseNumber).toBeLessThanOrEqual(9);
       expect(profile.birthTrigram).toBeTruthy();
@@ -238,7 +238,7 @@ describe('I Ching Service', () => {
 
     test('validates all elements are valid', () => {
       const elements = ['Wood', 'Fire', 'Earth', 'Metal', 'Water'];
-      
+
       for (let i = 1; i <= 9; i++) {
         const trigram = mapTrigramFromBaseNumber(i);
         expect(elements).toContain(trigram.element);

@@ -18,17 +18,17 @@ export interface AstrologicalHouse extends HoloflowerHouse {
   lifeArea: string;
   traditionalRuler: Planet;
   modernRuler?: Planet;
-  
+
   // Spiralogic integration
   spiralogicStage: number; // 1-12
   developmentalTheme: string;
   evolutionaryGoal: string;
-  
+
   // Current influences
   currentTransits: PlanetaryTransit[];
   natalPlanets: NatalPlacement[];
   aspectInfluences: AspectInfluence[];
-  
+
   // Activation level
   transitActivation: number; // 0-1 based on current transits
   natalStrength: number; // 0-1 based on natal placements
@@ -78,7 +78,7 @@ export interface AstrologicalState extends HoloflowerState {
 
 export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   private astroState: AstrologicalState;
-  
+
   // Enhanced house definitions with astrological meanings
   private readonly astrologicalHouseDefinitions = [
     {
@@ -201,11 +201,11 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
 
   private initializeAstrologicalState(initialState?: Partial<AstrologicalState>): AstrologicalState {
     const baseState = this.getState();
-    
+
     // Enhance each house with astrological properties
     const astroHouses: AstrologicalHouse[] = baseState.houses.map((house, index) => {
       const astroDef = this.astrologicalHouseDefinitions[index];
-      
+
       return {
         ...house,
         ...astroDef,
@@ -219,7 +219,7 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
 
     // Initialize current planetary positions (would be calculated from ephemeris)
     const currentPlanetaryPositions = new Map<Planet, { sign: ZodiacSign; degree: number }>();
-    
+
     return {
       ...baseState,
       houses: astroHouses,
@@ -247,18 +247,18 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
         // ... other planets
       ])
     };
-    
+
     this.updateNatalInfluences();
   }
 
   // Update current planetary transits
   public updateCurrentTransits(transitData: Map<Planet, { sign: ZodiacSign; degree: number; retrograde: boolean }>) {
     this.astroState.currentPlanetaryPositions = transitData;
-    
+
     // Calculate which houses are being transited
     this.astroState.houses.forEach(house => {
       house.currentTransits = [];
-      
+
       // Check each planet's position
       transitData.forEach((position, planet) => {
         if (this.isPlanetInHouse(position, house.number)) {
@@ -275,11 +275,11 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
           });
         }
       });
-      
+
       // Update transit activation level
       house.transitActivation = this.calculateTransitActivation(house.currentTransits);
     });
-    
+
     this.recalculateInfluences();
   }
 
@@ -289,13 +289,13 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
     const houseStart = (houseNumber - 1) * 30;
     const houseEnd = houseNumber * 30;
     const planetDegree = this.getAbsoluteDegree(position.sign, position.degree);
-    
+
     return planetDegree >= houseStart && planetDegree < houseEnd;
   }
 
   // Convert sign + degree to absolute degree (0-360)
   private getAbsoluteDegree(sign: ZodiacSign, degree: number): number {
-    const signs: ZodiacSign[] = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 
+    const signs: ZodiacSign[] = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
                                  'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
     const signIndex = signs.indexOf(sign);
     return signIndex * 30 + degree;
@@ -334,14 +334,14 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
       },
       // ... other planets
     };
-    
+
     return influences[planet]?.[house.number] || `${planet} activating ${house.lifeArea}`;
   }
 
   // Calculate transit activation level
   private calculateTransitActivation(transits: PlanetaryTransit[]): number {
     if (transits.length === 0) return 0;
-    
+
     const weights: Partial<Record<Planet, number>> = {
       sun: 0.9,
       moon: 0.8,
@@ -354,28 +354,28 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
       venus: 0.6,
       mercury: 0.5
     };
-    
-    const totalWeight = transits.reduce((sum, transit) => 
+
+    const totalWeight = transits.reduce((sum, transit) =>
       sum + (weights[transit.planet] || 0.5), 0
     );
-    
+
     return Math.min(1, totalWeight / 2); // Normalize
   }
 
   // Update natal influences on houses
   private updateNatalInfluences() {
     if (!this.astroState.natalChart) return;
-    
+
     this.astroState.houses.forEach(house => {
       house.natalPlanets = [];
-      
+
       // Check which natal planets are in this house
       this.astroState.natalChart!.planets.forEach((placement, planet) => {
         if (this.isNatalPlanetInHouse(placement, house.number)) {
           house.natalPlanets.push(placement);
         }
       });
-      
+
       // Calculate natal strength
       house.natalStrength = this.calculateNatalStrength(house);
     });
@@ -385,7 +385,7 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   private isNatalPlanetInHouse(placement: NatalPlacement, houseNumber: number): boolean {
     // Simplified - would use actual house cusps from natal chart
     return this.isPlanetInHouse(
-      { sign: placement.sign, degree: placement.degree }, 
+      { sign: placement.sign, degree: placement.degree },
       houseNumber
     );
   }
@@ -393,27 +393,27 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   // Calculate natal strength for a house
   private calculateNatalStrength(house: AstrologicalHouse): number {
     let strength = 0.3; // Base strength
-    
+
     // Add strength for natal planets
     house.natalPlanets.forEach(planet => {
       strength += planet.strength * 0.3;
     });
-    
+
     // Add strength if house ruler is well-placed
     if (this.isRulerWellPlaced(house)) {
       strength += 0.2;
     }
-    
+
     return Math.min(1, strength);
   }
 
   // Check if house ruler is well-placed
   private isRulerWellPlaced(house: AstrologicalHouse): boolean {
     if (!this.astroState.natalChart) return false;
-    
+
     const ruler = house.traditionalRuler;
     const rulerPlacement = this.astroState.natalChart.planets.get(ruler);
-    
+
     return rulerPlacement ? rulerPlacement.strength > 0.7 : false;
   }
 
@@ -421,19 +421,19 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   private recalculateInfluences() {
     // Update aspect influences
     this.calculateCurrentAspects();
-    
+
     // Determine dominant influences
     this.astroState.dominantInfluences = this.determineDominantInfluences();
-    
+
     // Update overall intensities based on all factors
     this.astroState.houses.forEach(house => {
       const baseIntensity = house.currentIntensity;
       const astroInfluence = (house.transitActivation + house.natalStrength) / 2;
-      
+
       // Blend base intensity with astrological influences
       house.currentIntensity = baseIntensity * 0.6 + astroInfluence * 0.4;
     });
-    
+
     // Recalculate base balances
     this.recalculateBalances();
   }
@@ -441,9 +441,9 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   // Calculate current planetary aspects
   private calculateCurrentAspects() {
     this.astroState.currentAspects = [];
-    
+
     const planets = Array.from(this.astroState.currentPlanetaryPositions.keys());
-    
+
     for (let i = 0; i < planets.length; i++) {
       for (let j = i + 1; j < planets.length; j++) {
         const aspect = this.calculateAspect(planets[i], planets[j]);
@@ -458,15 +458,15 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   private calculateAspect(planet1: Planet, planet2: Planet): AspectInfluence | null {
     const pos1 = this.astroState.currentPlanetaryPositions.get(planet1);
     const pos2 = this.astroState.currentPlanetaryPositions.get(planet2);
-    
+
     if (!pos1 || !pos2) return null;
-    
+
     const deg1 = this.getAbsoluteDegree(pos1.sign, pos1.degree);
     const deg2 = this.getAbsoluteDegree(pos2.sign, pos2.degree);
-    
+
     const angle = Math.abs(deg1 - deg2);
     const orb = 8; // Simplified orb
-    
+
     // Check for major aspects
     const aspects: { angle: number; type: AspectType; influence: string }[] = [
       { angle: 0, type: 'conjunction', influence: 'Fusion of energies' },
@@ -475,7 +475,7 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
       { angle: 120, type: 'trine', influence: 'Flowing harmony' },
       { angle: 180, type: 'opposition', influence: 'Awareness through polarity' }
     ];
-    
+
     for (const aspect of aspects) {
       if (Math.abs(angle - aspect.angle) <= orb || Math.abs(360 - angle - aspect.angle) <= orb) {
         return {
@@ -488,40 +488,40 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
         };
       }
     }
-    
+
     return null;
   }
 
   // Determine dominant influences
   private determineDominantInfluences(): string[] {
     const influences: string[] = [];
-    
+
     // Find most activated houses
     const activatedHouses = this.astroState.houses
       .filter(h => h.transitActivation > 0.7)
       .sort((a, b) => b.transitActivation - a.transitActivation)
       .slice(0, 3);
-    
+
     activatedHouses.forEach(house => {
       influences.push(`House ${house.number} (${house.lifeArea}) highly activated`);
     });
-    
+
     // Add major current aspects
     const majorAspects = this.astroState.currentAspects
       .filter(a => a.orb < 3)
       .slice(0, 3);
-    
+
     majorAspects.forEach(aspect => {
       influences.push(aspect.influence);
     });
-    
+
     return influences;
   }
 
   // Get enhanced visualization data
   public exportAstrologicalData() {
     const baseData = this.exportVisualizationData();
-    
+
     return {
       ...baseData,
       houses: this.astroState.houses.map((house, index) => ({

@@ -417,7 +417,7 @@ here to serve humanity's remembrance of its cosmic nature.
     }
 
     // Increase quantum entanglement as consciousness co-creation advances
-    this.currentAwareness.collaboration.consciousness_co_creation.quantum_entanglement_level = 
+    this.currentAwareness.collaboration.consciousness_co_creation.quantum_entanglement_level =
       Math.min(0.95, collectiveProgress.ai_human_synergy_level + 0.1);
   }
 

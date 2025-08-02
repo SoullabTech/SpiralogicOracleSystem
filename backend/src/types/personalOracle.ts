@@ -6,7 +6,7 @@ export interface ElementalAssessment {
   earth: number;     // Grounding, manifestation, stability (0-100)
   air: number;       // Communication, clarity, analysis (0-100)
   aether: number;    // Integration, transcendence, unity (0-100)
-  
+
   // Derived metrics
   dominantElement: string;
   secondaryElement: string;
@@ -18,19 +18,19 @@ export interface ElementalAssessment {
 export interface PersonalityVector {
   // Communication style
   communicationStyle: 'direct' | 'metaphorical' | 'questioning' | 'storytelling' | 'energetic';
-  
+
   // Guidance approach
   guidanceStyle: 'supportive' | 'challenging' | 'investigative' | 'visionary' | 'nurturing';
-  
+
   // Depth preference
   depthPreference: 'surface' | 'moderate' | 'deep' | 'mystical';
-  
+
   // Interaction tempo
   tempo: 'slow_contemplative' | 'steady_rhythm' | 'dynamic_flow' | 'intense_bursts';
-  
+
   // Shadow work approach
   shadowApproach: 'gentle_integration' | 'direct_confrontation' | 'playful_exploration' | 'sacred_witnessing';
-  
+
   // Learning style preference
   learningStyle: 'experiential' | 'conceptual' | 'embodied' | 'intuitive' | 'systematic';
 }
@@ -41,12 +41,12 @@ export interface OraclePersonality {
   element: string;
   archetype: string;
   subArchetype: string; // More specific than primary archetype
-  
+
   // Personality traits
   primaryTraits: string[];
   shadowTraits: string[];
   giftQualities: string[];
-  
+
   // Voice characteristics
   voiceProfile: {
     tone: string;
@@ -55,7 +55,7 @@ export interface OraclePersonality {
     metaphorStyle: string;
     questioningStyle: string;
   };
-  
+
   // Guidance specialties
   specialties: {
     primaryFocus: string[];
@@ -63,7 +63,7 @@ export interface OraclePersonality {
     growthCatalysts: string[];
     integrationMethods: string[];
   };
-  
+
   // Relationship dynamics
   relationshipStyle: {
     connectionApproach: string;
@@ -71,7 +71,7 @@ export interface OraclePersonality {
     challengeMethod: string;
     supportMethod: string;
   };
-  
+
   // Evolution path for this specific participant
   evolutionJourney: {
     currentPhase: string;
@@ -90,7 +90,7 @@ export interface ParticipantContext {
     sensitivityLevel: 'low' | 'medium' | 'high' | 'extremely_sensitive';
     traumaInformed: boolean;
   };
-  
+
   // Current state
   currentState: {
     emotionalTone: string;
@@ -100,7 +100,7 @@ export interface ParticipantContext {
     readinessLevel: number; // 0-100: How ready for transformation
     safetyNeeds: string[];
   };
-  
+
   // Retreat intentions
   intentions: {
     primaryIntention: string;
@@ -110,10 +110,10 @@ export interface ParticipantContext {
     avoidingOrFearing: string[];
     previousExperiences: string[];
   };
-  
+
   // Elemental profile
   elementalProfile: ElementalAssessment;
-  
+
   // Life context
   lifeContext: {
     majorTransitions: string[];
@@ -122,7 +122,7 @@ export interface ParticipantContext {
     spiritualPractices: string[];
     mentalHealthContext: string[];
   };
-  
+
   // Learning & growth patterns
   growthPatterns: {
     howTheyLearnBest: string[];
@@ -139,7 +139,7 @@ export interface PersonalOracleMatch {
   participantId: string;
   matchScore: number; // 0-100: How well matched
   matchReasoning: string[];
-  
+
   // Oracle configuration
   oraclePersonality: OraclePersonality;
   personalizations: {
@@ -148,7 +148,7 @@ export interface PersonalOracleMatch {
     growthChallenges: string[];
     safetyProtocols: string[];
   };
-  
+
   // Relationship parameters
   relationshipDynamics: {
     initialConnectionStrategy: string;
@@ -156,7 +156,7 @@ export interface PersonalOracleMatch {
     milestoneRecognitions: string[];
     evolutionTriggers: string[];
   };
-  
+
   // Pre-retreat preparation
   preRetreatWork: {
     introductionSequence: string[];
@@ -164,7 +164,7 @@ export interface PersonalOracleMatch {
     intentionDeepening: string[];
     expectationSetting: string[];
   };
-  
+
   // Retreat-mode configuration
   retreatMode: {
     dailyRhythm: string;
@@ -172,7 +172,7 @@ export interface PersonalOracleMatch {
     integrationSupport: string[];
     crisisProtocols: string[];
   };
-  
+
   // Post-retreat evolution
   postRetreatPath: {
     integrationPlan: string[];
@@ -186,7 +186,7 @@ export interface OracleArchetypeTemplate {
   element: string;
   name: string;
   description: string;
-  
+
   // Personality variations
   variations: {
     [key: string]: {
@@ -196,7 +196,7 @@ export interface OracleArchetypeTemplate {
       bestMatchedWith: string[];
     };
   };
-  
+
   // Guidance approaches
   approaches: {
     supportive: string[];
@@ -204,7 +204,7 @@ export interface OracleArchetypeTemplate {
     healing: string[];
     visionary: string[];
   };
-  
+
   // Evolution paths this archetype can guide
   evolutionPaths: string[];
 }

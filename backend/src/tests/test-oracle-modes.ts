@@ -4,7 +4,7 @@ import { OracleModeType } from '../types/oracleMode';
 // Test themes that will be used across all modes
 const testThemes = [
   "I'm struggling with anger at my mother",
-  "I feel stuck in my relationship", 
+  "I feel stuck in my relationship",
   "I'm afraid of failing at my career",
   "I keep having the same dream"
 ];
@@ -45,42 +45,42 @@ async function testOracleModes() {
     oracleName: 'Test Oracle',
     mode: 'daily'
   });
-  
+
   // Test each theme across all modes
   for (const theme of testThemes) {
     console.log(`${colors.bright}📝 THEME: "${theme}"${colors.reset}`);
     console.log('─'.repeat(80));
-    
+
     // Get the detected theme type
     const detectedTheme = detectThemeType(theme);
     console.log(`${colors.dim}Detected theme type: ${detectedTheme}${colors.reset}\n`);
-    
+
     // Test each oracle mode
     for (const mode of oracleModes) {
       const modeColor = modeColors[mode];
       console.log(`${modeColor}${colors.bright}[${mode.toUpperCase()} MODE]${colors.reset}`);
-      
+
       try {
         // Switch to the current mode
         await oracle.switchMode(mode);
-        
+
         // Get mode-specific response using the private method through reflection
         const response = getThemeResponseForMode(theme, mode);
-        
+
         // Display the response with formatting
         console.log(`${modeColor}Response:${colors.reset}`);
         console.log(formatResponse(response, modeColor));
-        
+
       } catch (error) {
         console.error(`${colors.red}Error in ${mode} mode: ${error}${colors.reset}`);
       }
-      
+
       console.log(''); // Add spacing between modes
     }
-    
+
     console.log('═'.repeat(80) + '\n');
   }
-  
+
   // Summary statistics
   console.log(`${colors.bright}📊 TEST SUMMARY${colors.reset}`);
   console.log(`✓ Tested ${oracleModes.length} oracle modes`);
@@ -91,7 +91,7 @@ async function testOracleModes() {
 // Helper function to detect theme type (mimics internal logic)
 function detectThemeType(input: string): string {
   const lowerInput = input.toLowerCase();
-  
+
   if (lowerInput.includes('anger') || lowerInput.includes('frustrated')) {
     return 'shadow';
   } else if (lowerInput.includes('stuck') || lowerInput.includes('relationship')) {
@@ -101,14 +101,14 @@ function detectThemeType(input: string): string {
   } else if (lowerInput.includes('dream')) {
     return 'dream';
   }
-  
+
   return 'general';
 }
 
 // Helper function to get mode-specific responses for themes
 function getThemeResponseForMode(theme: string, mode: OracleModeType): string {
   const lowerTheme = theme.toLowerCase();
-  
+
   // Detect theme type
   let themeType: string;
   if (lowerTheme.includes('anger') && lowerTheme.includes('mother')) {

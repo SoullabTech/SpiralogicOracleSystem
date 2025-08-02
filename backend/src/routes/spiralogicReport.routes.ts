@@ -20,7 +20,7 @@ const generateReportSchema = z.object({
 router.post('/generate', authenticateToken, async (req: Request, res: Response) => {
   try {
     const userId = req.user.userId;
-    
+
     // Validate request body
     const validation = generateReportSchema.safeParse(req.body);
     if (!validation.success) {
@@ -50,7 +50,7 @@ router.post('/generate', authenticateToken, async (req: Request, res: Response) 
 
   } catch (error: any) {
     logger.error('Error generating Spiralogic report:', error);
-    
+
     if (error.message.includes('birth data not found')) {
       return res.status(400).json({
         success: false,
@@ -89,7 +89,7 @@ router.get('/history', authenticateToken, async (req: Request, res: Response) =>
 
   } catch (error: any) {
     logger.error('Error fetching report history:', error);
-    
+
     res.status(500).json({
       success: false,
       error: 'Failed to fetch report history',
@@ -128,7 +128,7 @@ router.get('/:reportId', authenticateToken, async (req: Request, res: Response) 
 
   } catch (error: any) {
     logger.error('Error fetching report:', error);
-    
+
     res.status(500).json({
       success: false,
       error: 'Failed to fetch report',
@@ -173,7 +173,7 @@ router.post('/:reportId/download', authenticateToken, async (req: Request, res: 
 
   } catch (error: any) {
     logger.error('Error downloading report:', error);
-    
+
     res.status(500).json({
       success: false,
       error: 'Failed to download report',
@@ -225,7 +225,7 @@ router.post('/sample', async (req: Request, res: Response) => {
 
   } catch (error: any) {
     logger.error('Error generating sample report:', error);
-    
+
     res.status(500).json({
       success: false,
       error: 'Failed to generate sample report',

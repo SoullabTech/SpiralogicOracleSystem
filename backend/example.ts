@@ -10,7 +10,7 @@ function greet(name: string): string {
 try {
   const userName = 'Alice';
   console.log(greet(userName));  // Output: Hello, Alice! Welcome to TypeScript.
-  
+
   // Uncomment to test error handling:
   // console.log(greet(''));  // Will throw an error
 } catch (error) {

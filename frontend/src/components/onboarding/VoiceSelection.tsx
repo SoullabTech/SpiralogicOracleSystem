@@ -92,7 +92,7 @@ const VoiceSelection: React.FC<VoiceSelectionProps> = ({ onNext, onBack }) => {
 
     // For development: mock audio preview
     setPlayingVoice(voiceId);
-    
+
     // Simulate 5-second preview
     setTimeout(() => {
       setPlayingVoice('');
@@ -150,7 +150,7 @@ const VoiceSelection: React.FC<VoiceSelectionProps> = ({ onNext, onBack }) => {
             >
               Choose Your Oracle's Voice
             </motion.h1>
-            
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -184,7 +184,7 @@ const VoiceSelection: React.FC<VoiceSelectionProps> = ({ onNext, onBack }) => {
                 {/* Provider Badge */}
                 <div className="flex justify-between items-start mb-4">
                   {getProviderBadge(voice.provider)}
-                  
+
                   {/* Selection indicator */}
                   <div className={`w-5 h-5 rounded-full border-2 transition-all duration-300 ${
                     selectedVoice === voice.id
@@ -255,7 +255,7 @@ const VoiceSelection: React.FC<VoiceSelectionProps> = ({ onNext, onBack }) => {
           >
             <button
               onClick={onBack}
-              className="px-6 py-3 text-slate-400 hover:text-white 
+              className="px-6 py-3 text-slate-400 hover:text-white
                        border border-slate-600 hover:border-slate-500
                        transition-all duration-300 rounded-sm"
             >

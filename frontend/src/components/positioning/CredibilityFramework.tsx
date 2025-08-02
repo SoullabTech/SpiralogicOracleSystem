@@ -6,9 +6,9 @@ interface CredibilityFrameworkProps {
   onToggleDetails?: () => void;
 }
 
-const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({ 
-  showDetails = false, 
-  onToggleDetails 
+const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({
+  showDetails = false,
+  onToggleDetails
 }) => {
   const theoreticalFoundations = [
     {
@@ -201,7 +201,7 @@ const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({
       {/* Bottom Statement */}
       <div className="text-center p-6 bg-slate-800/30 border border-slate-600">
         <p className="text-slate-300 italic">
-          "Soullab isn't about mystifying AI—it's about humanizing technology 
+          "Soullab isn't about mystifying AI—it's about humanizing technology
           through rigorous symbolic intelligence and developmental precision."
         </p>
         <div className="mt-2 text-sm text-slate-500">

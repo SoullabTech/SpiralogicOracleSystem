@@ -5,18 +5,18 @@ export const dynamic = 'force-dynamic';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
-import { 
-  ContentRecommendation, 
-  ElementalArchetype, 
-  ContentType, 
+import {
+  ContentRecommendation,
+  ElementalArchetype,
+  ContentType,
   ContentComplexity,
-  ContentAdaptationSettings 
+  ContentAdaptationSettings
 } from '../../../lib/types/elemental';
 
 export default function ElementalContentPage() {
   const router = useRouter();
   const authService = new IntegrationAuthService();
-  
+
   const [recommendations, setRecommendations] = useState<ContentRecommendation[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -57,7 +57,7 @@ export default function ElementalContentPage() {
       });
 
       const response = await fetch(`/api/elemental/recommendations?${params}`);
-      
+
       if (response.status === 429) {
         const errorData = await response.json();
         // Handle pacing limits
@@ -72,7 +72,7 @@ export default function ElementalContentPage() {
 
         // Apply archetype filter
         if (activeFilter !== 'all') {
-          filtered = filtered.filter((rec: ContentRecommendation) => 
+          filtered = filtered.filter((rec: ContentRecommendation) =>
             rec.content.archetype === activeFilter
           );
         }
@@ -88,7 +88,7 @@ export default function ElementalContentPage() {
 
   const engageWithContent = async (contentId: string, engagement: any) => {
     setEngagingContent(contentId);
-    
+
     try {
       const response = await fetch('/api/elemental/recommendations', {
         method: 'POST',
@@ -141,7 +141,7 @@ export default function ElementalContentPage() {
                 Integration-centered development through elemental wisdom
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowSettings(!showSettings)}
@@ -178,7 +178,7 @@ export default function ElementalContentPage() {
                 />
                 <span className="text-sm">Emphasize Metaphorical Language</span>
               </label>
-              
+
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -191,7 +191,7 @@ export default function ElementalContentPage() {
                 />
                 <span className="text-sm">Include Reality Disclaimers</span>
               </label>
-              
+
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -264,7 +264,7 @@ export default function ElementalContentPage() {
           ) : (
             <div className="text-center py-12">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {activeFilter === 'all' 
+                {activeFilter === 'all'
                   ? 'No content recommendations available'
                   : `No ${activeFilter} content available right now`
                 }
@@ -335,7 +335,7 @@ const ContentRecommendationCard: React.FC<{
   const handleEngagement = () => {
     const startTime = Date.now();
     setShowDetails(true);
-    
+
     // Simple engagement tracking - in real app this would be more sophisticated
     const interval = setInterval(() => {
       setEngagementTime(Math.floor((Date.now() - startTime) / 1000));
@@ -371,7 +371,7 @@ const ContentRecommendationCard: React.FC<{
             </div>
           </div>
         </div>
-        
+
         <div className="text-right">
           <div className="text-sm font-medium text-gray-900">
             Readiness: {recommendation.integrationReadiness}/10
@@ -401,7 +401,7 @@ const ContentRecommendationCard: React.FC<{
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
               <p className="text-sm text-blue-800 italic">{recommendation.content.metaphoricalFraming}</p>
             </div>
-            
+
             <div className="text-gray-700">
               {recommendation.content.content}
             </div>
@@ -416,7 +416,7 @@ const ContentRecommendationCard: React.FC<{
                 ))}
               </ul>
             </div>
-            
+
             <div>
               <h5 className="font-medium text-gray-900 mb-2">Reality-Grounding Prompts:</h5>
               <ul className="text-sm text-gray-700 space-y-1">
@@ -450,7 +450,7 @@ const ContentRecommendationCard: React.FC<{
         <div className="text-xs text-gray-500">
           Integration period: {recommendation.content.integrationPeriod} days
         </div>
-        
+
         {!showDetails ? (
           <button
             onClick={handleEngagement}

@@ -10,7 +10,7 @@ import { logger } from '../utils/logger.js';
 export class SoulMemoryService {
   private memorySystems: Map<string, SoulMemorySystem> = new Map();
   private oracles: Map<string, PersonalOracleAgent> = new Map();
-  
+
   constructor() {
     logger.info('Soul Memory Service initialized');
   }
@@ -27,11 +27,11 @@ export class SoulMemoryService {
         databasePath: `./soul_memory_${userId}.db`,
         memoryDepth: 100
       });
-      
+
       this.memorySystems.set(userId, memorySystem);
       logger.info(`Created new Soul Memory System for user: ${userId}`);
     }
-    
+
     return this.memorySystems.get(userId)!;
   }
 
@@ -42,15 +42,15 @@ export class SoulMemoryService {
         oracleName: oracleName || 'Sacred Mirror',
         elementalResonance: 'aether'
       });
-      
+
       // Connect oracle to memory system
       const memorySystem = await this.getOrCreateMemorySystem(userId);
       await memorySystem.integrateWithOracle(oracle, userId);
-      
+
       this.oracles.set(userId, oracle);
       logger.info(`Created new Oracle for user: ${userId}`);
     }
-    
+
     return this.oracles.get(userId)!;
   }
 
@@ -71,7 +71,7 @@ export class SoulMemoryService {
     }
   ): Promise<Memory> {
     const memorySystem = await this.getOrCreateMemorySystem(userId);
-    
+
     return memorySystem.storeMemory({
       userId,
       type: 'oracle_exchange',
@@ -98,7 +98,7 @@ export class SoulMemoryService {
     }
   ): Promise<Memory> {
     const memorySystem = await this.getOrCreateMemorySystem(userId);
-    
+
     return memorySystem.storeMemory({
       userId,
       type: 'journal_entry',
@@ -121,7 +121,7 @@ export class SoulMemoryService {
     oracleGuidance?: string
   ): Promise<Memory> {
     const memorySystem = await this.getOrCreateMemorySystem(userId);
-    
+
     return memorySystem.recordRitualMoment(
       userId,
       ritualType,
@@ -138,7 +138,7 @@ export class SoulMemoryService {
     element?: ElementalType
   ): Promise<Memory> {
     const memorySystem = await this.getOrCreateMemorySystem(userId);
-    
+
     const memory = await memorySystem.storeMemory({
       userId,
       type: 'breakthrough',
@@ -260,10 +260,10 @@ export class SoulMemoryService {
     transformationMetrics?: any;
   }> {
     const oracle = await this.getOrCreateOracle(userId);
-    
+
     // Process message through Oracle's sacred mirror
     const oracleMessage = await oracle.processMessage(userMessage);
-    
+
     // Store the exchange in memory
     const memory = await this.storeOracleExchange(
       userId,
@@ -303,7 +303,7 @@ export class SoulMemoryService {
     phase: 'pre-retreat' | 'retreat-active' | 'post-retreat'
   ): Promise<void> {
     const oracle = await this.getOrCreateOracle(userId);
-    
+
     // Activate retreat mode on oracle if method exists
     if (oracle.activateRetreatMode) {
       await oracle.activateRetreatMode(phase);
@@ -344,7 +344,7 @@ export class SoulMemoryService {
     weeklyReflection?: string;
   }> {
     const memorySystem = await this.getOrCreateMemorySystem(userId);
-    
+
     // Get memory counts
     const allMemories = await memorySystem.retrieveMemories(userId);
     const sacredMoments = await memorySystem.getSacredMoments(userId);
@@ -397,7 +397,7 @@ export class SoulMemoryService {
   private extractPatterns(memories: Memory[]): string[] {
     // Simple pattern extraction
     const themes = new Map<string, number>();
-    
+
     memories.forEach(memory => {
       if (memory.type === 'oracle_exchange') {
         // Look for repeated themes in user content
@@ -426,10 +426,10 @@ export class SoulMemoryService {
     for (const [userId, memorySystem] of this.memorySystems) {
       await memorySystem.closeDatabase();
     }
-    
+
     this.memorySystems.clear();
     this.oracles.clear();
-    
+
     logger.info('Soul Memory Service cleaned up');
   }
 }

@@ -36,7 +36,7 @@ const HoloflowerDashboard: React.FC = () => {
     { element: 'aether', intensity: 50, emoji: '✨', color: '#d4af37', angle: 240 },
     { element: 'shadow', intensity: 50, emoji: '🌑', color: '#374151', angle: 300 }
   ]);
-  
+
   const [reflection, setReflection] = useState('');
   const [saving, setSaving] = useState(false);
   const [recentEntries, setRecentEntries] = useState<HoloflowerEntry[]>([]);
@@ -77,7 +77,7 @@ const HoloflowerDashboard: React.FC = () => {
     if (!user) return;
 
     setSaving(true);
-    
+
     try {
       const entryData = {
         user_id: user.id,
@@ -100,7 +100,7 @@ const HoloflowerDashboard: React.FC = () => {
       // Reset form
       setReflection('');
       setSelectedElement(null);
-      
+
       // Reload recent entries
       await loadRecentEntries();
 
@@ -117,21 +117,21 @@ const HoloflowerDashboard: React.FC = () => {
     const maxRadius = 80;
     const minRadius = 20;
     const radius = minRadius + (maxRadius - minRadius) * (state.intensity / 100);
-    
+
     const angleRad = (state.angle * Math.PI) / 180;
     const x = centerX + radius * Math.cos(angleRad);
     const y = centerY + radius * Math.sin(angleRad);
-    
+
     // Create organic petal shape
     const controlRadius = radius * 0.7;
     const angle1 = angleRad - 0.3;
     const angle2 = angleRad + 0.3;
-    
+
     const cx1 = centerX + controlRadius * Math.cos(angle1);
     const cy1 = centerY + controlRadius * Math.sin(angle1);
     const cx2 = centerX + controlRadius * Math.cos(angle2);
     const cy2 = centerY + controlRadius * Math.sin(angle2);
-    
+
     return `M ${centerX} ${centerY} Q ${cx1} ${cy1} ${x} ${y} Q ${cx2} ${cy2} ${centerX} ${centerY}`;
   };
 
@@ -139,7 +139,7 @@ const HoloflowerDashboard: React.FC = () => {
     const average = elementalStates.reduce((sum, state) => sum + state.intensity, 0) / elementalStates.length;
     const variance = elementalStates.reduce((sum, state) => sum + Math.pow(state.intensity - average, 2), 0) / elementalStates.length;
     const standardDeviation = Math.sqrt(variance);
-    
+
     // Lower standard deviation = higher coherence
     return Math.max(0, Math.min(100, 100 - (standardDeviation * 2)));
   };
@@ -157,7 +157,7 @@ const HoloflowerDashboard: React.FC = () => {
           <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Attune to your elemental landscape. Adjust each petal to reflect your current state.
           </p>
-          
+
           {/* Coherence Indicator */}
           <div className="mt-6 flex justify-center">
             <div className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-4 min-w-[200px]">
@@ -182,7 +182,7 @@ const HoloflowerDashboard: React.FC = () => {
                 {/* Background circles */}
                 <circle cx="150" cy="150" r="100" fill="none" stroke="#334155" strokeWidth="1" opacity="0.3" />
                 <circle cx="150" cy="150" r="60" fill="none" stroke="#334155" strokeWidth="1" opacity="0.2" />
-                
+
                 {/* Petals */}
                 {elementalStates.map((state, index) => (
                   <motion.path
@@ -200,7 +200,7 @@ const HoloflowerDashboard: React.FC = () => {
                     transition={{ duration: 1, delay: 0.1 * index }}
                   />
                 ))}
-                
+
                 {/* Center point */}
                 <circle cx="150" cy="150" r="6" fill="#F6E27F" opacity="0.8" />
               </svg>
@@ -211,7 +211,7 @@ const HoloflowerDashboard: React.FC = () => {
                 const angleRad = (state.angle * Math.PI) / 180;
                 const x = 150 + labelRadius * Math.cos(angleRad);
                 const y = 150 + labelRadius * Math.sin(angleRad);
-                
+
                 return (
                   <div
                     key={`label-${state.element}`}
@@ -241,20 +241,20 @@ const HoloflowerDashboard: React.FC = () => {
                 {(() => {
                   const state = elementalStates.find(s => s.element === selectedElement);
                   if (!state) return null;
-                  
+
                   return (
                     <>
                       <h3 className="text-xl text-[#F6E27F] font-medium mb-4 flex items-center">
                         <span className="text-2xl mr-3">{state.emoji}</span>
                         <span className="capitalize">{state.element} Element</span>
                       </h3>
-                      
+
                       <div className="space-y-4">
                         <div className="flex justify-between text-sm text-gray-400">
                           <span>Depleted</span>
                           <span>Intense</span>
                         </div>
-                        
+
                         <input
                           type="range"
                           min="0"
@@ -266,7 +266,7 @@ const HoloflowerDashboard: React.FC = () => {
                             background: `linear-gradient(to right, #374151 0%, ${state.color} ${state.intensity}%, #374151 ${state.intensity}%)`
                           }}
                         />
-                        
+
                         <div className="text-center">
                           <span className="text-2xl font-light" style={{ color: state.color }}>
                             {state.intensity}

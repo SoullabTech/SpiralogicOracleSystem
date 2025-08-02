@@ -23,7 +23,7 @@ const redisConfig = {
   maxRetriesPerRequest: 3,
   connectTimeout: 10000,
   lazyConnect: true,
-  
+
   // TLS for production
   ...(process.env.REDIS_TLS_URL && {
     tls: {
@@ -33,7 +33,7 @@ const redisConfig = {
 };
 
 // Create Redis client with connection URL if available
-export const redis = process.env.REDIS_URL 
+export const redis = process.env.REDIS_URL
   ? new Redis(process.env.REDIS_URL)
   : new Redis(redisConfig);
 
@@ -74,24 +74,24 @@ export class SoulMemoryRedis {
 
   // Store memory with optional TTL
   static async storeMemory(
-    userId: string, 
-    memoryId: string, 
+    userId: string,
+    memoryId: string,
     memoryData: any,
     ttl?: number
   ): Promise<boolean> {
     try {
       const key = `${this.MEMORY_PREFIX}${userId}:${memoryId}`;
       const serialized = JSON.stringify(memoryData);
-      
+
       if (ttl) {
         await redis.setex(key, ttl, serialized);
       } else {
         await redis.setex(key, this.DEFAULT_TTL, serialized);
       }
-      
+
       // Add to user's memory index
       await redis.sadd(`${this.MEMORY_PREFIX}${userId}:index`, memoryId);
-      
+
       return true;
     } catch (error) {
       logger.error('Failed to store memory in Redis:', error);
@@ -104,11 +104,11 @@ export class SoulMemoryRedis {
     try {
       const key = `${this.MEMORY_PREFIX}${userId}:${memoryId}`;
       const data = await redis.get(key);
-      
+
       if (data) {
         return JSON.parse(data);
       }
-      
+
       return null;
     } catch (error) {
       logger.error('Failed to retrieve memory from Redis:', error);
@@ -130,7 +130,7 @@ export class SoulMemoryRedis {
 
   // Store session data
   static async storeSession(
-    sessionId: string, 
+    sessionId: string,
     sessionData: any,
     ttl: number = 3600 // 1 hour default
   ): Promise<boolean> {
@@ -149,11 +149,11 @@ export class SoulMemoryRedis {
     try {
       const key = `${this.SESSION_PREFIX}${sessionId}`;
       const data = await redis.get(key);
-      
+
       if (data) {
         return JSON.parse(data);
       }
-      
+
       return null;
     } catch (error) {
       logger.error('Failed to get session:', error);
@@ -174,12 +174,12 @@ export class SoulMemoryRedis {
         metadata,
         timestamp: Date.now()
       };
-      
+
       await redis.set(key, JSON.stringify(data));
-      
+
       // Add to vector index (for batch processing)
       await redis.sadd(`${this.VECTOR_PREFIX}index`, vectorId);
-      
+
       return true;
     } catch (error) {
       logger.error('Failed to store vector:', error);
@@ -200,10 +200,10 @@ export class SoulMemoryRedis {
         created: Date.now(),
         updated: Date.now()
       }));
-      
+
       // Add to user's thread index
       await redis.sadd(`${this.THREAD_PREFIX}${userId}:index`, threadId);
-      
+
       return true;
     } catch (error) {
       logger.error('Failed to store thread:', error);
@@ -213,25 +213,25 @@ export class SoulMemoryRedis {
 
   // Batch operations for performance
   static async batchGetMemories(
-    userId: string, 
+    userId: string,
     memoryIds: string[]
   ): Promise<Map<string, any>> {
     try {
       const pipeline = redis.pipeline();
       const keys = memoryIds.map(id => `${this.MEMORY_PREFIX}${userId}:${id}`);
-      
+
       keys.forEach(key => pipeline.get(key));
-      
+
       const results = await pipeline.exec();
       const memoryMap = new Map<string, any>();
-      
+
       results?.forEach((result, index) => {
         if (result && result[1]) {
           const memoryId = memoryIds[index];
           memoryMap.set(memoryId, JSON.parse(result[1] as string));
         }
       });
-      
+
       return memoryMap;
     } catch (error) {
       logger.error('Failed to batch get memories:', error);
@@ -244,30 +244,30 @@ export class SoulMemoryRedis {
     try {
       // Get all memory IDs
       const memoryIds = await this.getUserMemoryIds(userId);
-      
+
       if (memoryIds.length === 0) {
         return true;
       }
-      
+
       // Delete all memories
       const pipeline = redis.pipeline();
-      
+
       memoryIds.forEach(id => {
         pipeline.del(`${this.MEMORY_PREFIX}${userId}:${id}`);
       });
-      
+
       // Delete index
       pipeline.del(`${this.MEMORY_PREFIX}${userId}:index`);
-      
+
       // Delete threads
       const threadIds = await redis.smembers(`${this.THREAD_PREFIX}${userId}:index`);
       threadIds.forEach(id => {
         pipeline.del(`${this.THREAD_PREFIX}${userId}:${id}`);
       });
       pipeline.del(`${this.THREAD_PREFIX}${userId}:index`);
-      
+
       await pipeline.exec();
-      
+
       logger.info(`Cleared all Redis memory for user: ${userId}`);
       return true;
     } catch (error) {
@@ -318,7 +318,7 @@ export class CacheManager {
     try {
       const keys = await redis.keys(pattern);
       if (keys.length === 0) return 0;
-      
+
       const result = await redis.del(...keys);
       return result;
     } catch (error) {
@@ -343,7 +343,7 @@ export class CacheManager {
       // Generate new value
       const value = await factory();
       await this.set(key, value, ttl);
-      
+
       return value;
     } catch (error) {
       logger.error('Cache getOrSet failed:', error);
@@ -387,7 +387,7 @@ export class RateLimiter {
 
       // Get oldest entry to determine reset time
       const oldestEntries = await redis.zrange(key, 0, 0, 'WITHSCORES');
-      const resetAt = oldestEntries.length > 1 
+      const resetAt = oldestEntries.length > 1
         ? parseInt(oldestEntries[1]) + (windowSeconds * 1000)
         : now + (windowSeconds * 1000);
 
@@ -422,11 +422,11 @@ export class WebSocketRedis {
 
   // Subscribe to channel
   static async subscribe(
-    channel: string, 
+    channel: string,
     handler: (message: any) => void
   ): Promise<void> {
     await subClient.subscribe(channel);
-    
+
     subClient.on('message', (receivedChannel, message) => {
       if (receivedChannel === channel) {
         try {
@@ -455,11 +455,11 @@ export async function checkRedisHealth(): Promise<{
   info?: any;
 }> {
   const start = Date.now();
-  
+
   try {
     await redis.ping();
     const info = await redis.info();
-    
+
     return {
       connected: true,
       latency: Date.now() - start,

@@ -87,23 +87,23 @@ const AppLayout: React.FC = () => {
                       <p className="text-sm text-gray-400">Signed in as</p>
                       <p className="text-sm text-white truncate">{user?.email}</p>
                     </div>
-                    
+
                     <button
                       onClick={() => setShowUserMenu(false)}
                       className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-[#0E0F1B] hover:text-white transition-colors"
                     >
                       Settings
                     </button>
-                    
+
                     <button
                       onClick={() => setShowUserMenu(false)}
                       className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-[#0E0F1B] hover:text-white transition-colors"
                     >
                       Oracle Configuration
                     </button>
-                    
+
                     <hr className="border-gray-700" />
-                    
+
                     <button
                       onClick={handleSignOut}
                       className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
@@ -120,7 +120,7 @@ const AppLayout: React.FC = () => {
 
       {/* Main Content */}
       <main className="relative">
-        <CoreDashboard 
+        <CoreDashboard
           userConfig={{
             oracleName: preferences?.oracle_name || '',
             voiceId: preferences?.oracle_voice || '',

@@ -48,7 +48,7 @@ The AIN Oracle now speaks with the wisdom and presence of the Matrix Oracle, usi
     "element": "aether",
     "voiceStyle": "warm-wise",
     "tempo": "slow-medium",
-    "pitch": "medium-low", 
+    "pitch": "medium-low",
     "emotionalQuality": "grounded, serene, subtly amused",
     "speakerId": "0",
     "promptMarkers": "[pause][smile][soft]",
@@ -59,7 +59,7 @@ The AIN Oracle now speaks with the wisdom and presence of the Matrix Oracle, usi
 
 ### Elemental Agents
 - **Fire**: `[energy][spark][bold]` - Passionate, catalyzing
-- **Water**: `[flow][depth][gentle]` - Deep, emotionally aware  
+- **Water**: `[flow][depth][gentle]` - Deep, emotionally aware
 - **Earth**: `[ground][steady][root]` - Stable, practical
 - **Air**: `[clarity][light][breath]` - Clear, insightful
 - **Aether**: `[unity][transcend][cosmic]` - Unified, cosmic
@@ -71,8 +71,8 @@ The AIN Oracle now speaks with the wisdom and presence of the Matrix Oracle, usi
 ```typescript
 // Main entry point for all voice synthesis
 export async function speak(
-  text: string, 
-  agentRole: string, 
+  text: string,
+  agentRole: string,
   agentType?: string
 ): Promise<string>
 ```
@@ -90,7 +90,7 @@ const audioUrl = await speak(
 // Fire elemental with energetic voice
 const audioUrl = await speak(
   "Your inner flame burns bright!",
-  'elemental', 
+  'elemental',
   'FireAgent'
 );
 
@@ -114,7 +114,7 @@ const audioUrl = await speak(
 Input: "The path forward is clear."
 ↓
 Profile: oracle_matrix
-↓ 
+↓
 Styled: "[grounded, serene, subtly amused] [pause][smile][soft] The path forward is clear."
 ↓
 Sesame CSM synthesis with speakerId: "0"
@@ -216,7 +216,7 @@ torchaudio>=2.0.0
 
 ### Future Integrations
 - Main Oracle Agent responses
-- Elemental agent conversations  
+- Elemental agent conversations
 - Retreat mode guided sessions
 - Interactive meditation systems
 
@@ -232,7 +232,7 @@ torchaudio>=2.0.0
 - Medium-low pitch, grounded presence
 - Strategic pauses for wisdom absorption
 
-### Fire Agent Sample Output  
+### Fire Agent Sample Output
 *"[energy][spark][bold] Your inner flame burns bright today! Time to take bold action on those dreams you've been carrying."*
 
 **Expected Voice Qualities:**

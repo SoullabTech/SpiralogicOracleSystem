@@ -34,12 +34,12 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
     try {
       const result = await authService.checkIntegrationReadiness(userId);
       const quality = await calculateIntegrationQuality();
-      
+
       const statusData = {
         ...result,
         integrationQuality: quality
       };
-      
+
       setStatus(statusData);
       onIntegrationReady(result.ready);
     } catch (error) {
@@ -99,7 +99,7 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
             {status.ready ? 'Integration Ready' : 'Integration Support Needed'}
           </span>
         </div>
-        
+
         {showDetails && (
           <button
             onClick={() => setShowFullDetails(!showFullDetails)}
@@ -115,7 +115,7 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
           Integration Quality: <span className="font-medium">{status.integrationQuality}/10</span>
         </div>
         <div className="flex-1 bg-gray-200 rounded-full h-2">
-          <div 
+          <div
             className="bg-blue-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${(status.integrationQuality / 10) * 100}%` }}
           />
@@ -156,7 +156,7 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
                 <li>• Maintain consistency over time</li>
               </ul>
             </div>
-            
+
             <div>
               <h5 className="font-medium text-gray-900 mb-2">Next Steps</h5>
               <ul className="text-gray-700 space-y-1">
@@ -177,7 +177,7 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
         >
           Refresh Status
         </button>
-        
+
         {!status.ready && (
           <div className="text-xs text-gray-500">
             Integration-centered approach prevents spiritual bypassing

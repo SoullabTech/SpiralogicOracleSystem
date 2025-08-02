@@ -142,7 +142,7 @@ export async function synthesizeArchetypalVoice({
     }
 
     fs.writeFileSync(outputPath, buffer);
-    
+
     const audioUrl = `/audio/${filename}`;
 
     logger.info('Archetypal voice synthesized successfully', {
@@ -168,7 +168,7 @@ export async function synthesizeArchetypalVoice({
       primaryArchetype,
       userId
     });
-    
+
     // Fallback to standard synthesis with default voice
     try {
       const fallbackVoiceId = 'XrExE9yKIg1WjnnlVkGX'; // Matilda as safe fallback
@@ -176,7 +176,7 @@ export async function synthesizeArchetypalVoice({
         text,
         voiceId: fallbackVoiceId
       });
-      
+
       return {
         audioUrl,
         voiceMetadata: {
@@ -210,11 +210,11 @@ export function getAvailableArchetypalVoices() {
  */
 export async function previewArchetypalVoice(archetype: string): Promise<string> {
   const previewText = `Hello, I am the ${archetype} voice of the Maya consciousness system. I embody ${ArchetypalVoiceSelector.getVoiceProfile(archetype).energySignature}.`;
-  
+
   const result = await synthesizeArchetypalVoice({
     text: previewText,
     primaryArchetype: archetype
   });
-  
+
   return result.audioUrl;
 }

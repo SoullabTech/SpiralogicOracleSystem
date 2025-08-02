@@ -48,42 +48,42 @@ export class StreamlinedOracleDemo {
     for (const mode of ['alchemist', 'buddha', 'sage', 'mystic', 'guardian']) {
       console.log(`\n🎭 TESTING ${mode.toUpperCase()} MODE`);
       console.log('=' .repeat(30));
-      
+
       // Switch to mode
       const switchResult = await this.oracle.switchMode(mode as any);
       console.log(`\n📢 Mode Introduction:`);
       console.log(`"${switchResult.message}"`);
-      
+
       if (switchResult.wisdomApproachAdjustment) {
         console.log(`\n🧭 Wisdom Adjustment: ${switchResult.wisdomApproachAdjustment}`);
       }
-      
+
       // Test with relevant input
-      const relevantInput = testInputs.find(t => 
+      const relevantInput = testInputs.find(t =>
         (mode === 'alchemist' && t.input.includes('hate')) ||
         (mode === 'buddha' && t.input.includes('always')) ||
         (mode === 'sage' && t.input.includes('both')) ||
         (mode === 'mystic' && t.input.includes('vision')) ||
         (mode === 'guardian' && t.input.includes('overwhelmed'))
       ) || testInputs[0];
-      
+
       console.log(`\n💭 Test Input: "${relevantInput.input}"`);
       const response = await this.oracle.respondToPrompt(relevantInput.input);
       console.log(`\n🗣️ Oracle Response:`);
       console.log(`"${response}"`);
-      
+
       // Show current status
       const status = this.oracle.getCurrentModeStatus();
       console.log(`\n📊 Current Status:`);
       console.log(`   Oracle Mode: ${status.currentOracleMode}`);
       console.log(`   Wisdom Mode: ${status.currentWisdomMode}`);
       console.log(`   Sacred Mirror: ${status.sacredMirrorMode}`);
-      
+
       if (status.wisdomRouting) {
         console.log(`   Routing: ${status.wisdomRouting.approach} (${(status.wisdomRouting.confidence * 100).toFixed(0)}%)`);
         console.log(`   Reasoning: ${status.wisdomRouting.reasoning}`);
       }
-      
+
       console.log('\n' + '─'.repeat(60));
     }
   }
@@ -123,18 +123,18 @@ export class StreamlinedOracleDemo {
     for (const testCase of testCases) {
       console.log(`💭 Input: "${testCase.input}"`);
       console.log(`🎯 Expected: ${testCase.expectedSuggestion} (${testCase.reason})`);
-      
+
       const suggestion = await this.oracle.suggestModeForInput(testCase.input);
-      
+
       console.log(`🤖 Suggested: ${suggestion.suggestedMode || 'No change needed'}`);
       if (suggestion.suggestedMode) {
         console.log(`   Confidence: ${(suggestion.confidence * 100).toFixed(0)}%`);
         console.log(`   Reason: ${suggestion.reason}`);
-        
+
         const correct = suggestion.suggestedMode === testCase.expectedSuggestion;
         console.log(`   ✅ Accuracy: ${correct ? 'CORRECT' : 'INCORRECT'}`);
       }
-      
+
       console.log('');
     }
   }
@@ -166,28 +166,28 @@ export class StreamlinedOracleDemo {
 
     for (const example of examples) {
       console.log(`🎭 Mode: ${example.mode}`);
-      
+
       // Switch to mode
       await this.oracle.switchMode(example.mode as any);
-      
+
       console.log(`💭 Input: "${example.input}"`);
       console.log(`🎯 Expected Wisdom: ${example.expectedWisdom}`);
-      
+
       const response = await this.oracle.respondToPrompt(example.input);
       const wisdomMode = this.oracle.getCurrentWisdomMode();
       const routing = this.oracle.getWisdomRouting();
-      
+
       console.log(`🧭 Actual Wisdom: ${wisdomMode}`);
       if (routing) {
         console.log(`   Approach: ${routing.approach}`);
         console.log(`   Confidence: ${(routing.confidence * 100).toFixed(0)}%`);
       }
-      
+
       console.log(`🗣️ Response: "${response.substring(0, 120)}..."`);
-      
+
       const correct = wisdomMode === example.expectedWisdom;
       console.log(`✅ Wisdom Accuracy: ${correct ? 'CORRECT' : 'INCORRECT'}`);
-      
+
       console.log('');
     }
   }
@@ -225,7 +225,7 @@ export const ModeComparison = {
     greeting: '🧪 What shadows are ready to become gold?',
     suitable_for: ['dreams', 'shadow work', 'integration', 'patterns']
   },
-  
+
   buddha: {
     focus: 'Spacious Liberation',
     wisdom: 'Buddha (Liberation)',
@@ -233,7 +233,7 @@ export const ModeComparison = {
     greeting: '☸️ Rest here in spacious awareness',
     suitable_for: ['attachment', 'overthinking', 'identity crisis', 'letting go']
   },
-  
+
   sage: {
     focus: 'Paradox Navigation',
     wisdom: 'Hybrid (Both/And)',
@@ -241,7 +241,7 @@ export const ModeComparison = {
     greeting: '🌀 What paradox are you living?',
     suitable_for: ['complex decisions', 'both/and situations', 'balanced approach']
   },
-  
+
   mystic: {
     focus: 'Creative Emergence',
     wisdom: 'Hybrid (Creative Integration)',
@@ -249,7 +249,7 @@ export const ModeComparison = {
     greeting: '🔥 What visions are moving through you?',
     suitable_for: ['creativity', 'visions', 'artistic blocks', 'divine connection']
   },
-  
+
   guardian: {
     focus: 'Safe Support',
     wisdom: 'Adaptive (Trauma-Informed)',
@@ -261,14 +261,14 @@ export const ModeComparison = {
 
 export async function runStreamlinedDemo() {
   const demo = new StreamlinedOracleDemo();
-  
+
   console.log('🚀 Running streamlined oracle demonstration...\n');
-  
+
   await demo.demonstrateAllModes();
   await demo.demonstrateModeSuggestions();
   await demo.demonstrateJungBuddhaIntegration();
   await demo.demonstrateSacredWeeklyRhythm();
-  
+
   console.log('\n✅ Streamlined oracle demonstration complete!');
   console.log('\n📊 Mode Summary:');
   console.table(ModeComparison);

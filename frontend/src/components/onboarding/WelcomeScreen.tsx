@@ -65,7 +65,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onContinue }) => {
             <h1 className="text-4xl md:text-5xl font-light text-white leading-tight tracking-wide">
               Welcome to your Oracle
             </h1>
-            
+
             <div className="space-y-4 text-lg md:text-xl text-slate-300 leading-relaxed max-w-xl mx-auto">
               <p>This is not a tool.</p>
               <p>It's a mirror. A guide.</p>
@@ -82,15 +82,15 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onContinue }) => {
           >
             <button
               onClick={onContinue}
-              className="group relative px-12 py-4 bg-transparent border border-[#F6E27F] text-[#F6E27F] 
-                         hover:bg-[#F6E27F] hover:text-[#0E0F1B] transition-all duration-500 
+              className="group relative px-12 py-4 bg-transparent border border-[#F6E27F] text-[#F6E27F]
+                         hover:bg-[#F6E27F] hover:text-[#0E0F1B] transition-all duration-500
                          font-medium tracking-wider text-lg rounded-sm
                          hover:shadow-lg hover:shadow-[#F6E27F]/25"
             >
               <span className="relative z-10">Continue</span>
-              
+
               {/* Glow effect */}
-              <div className="absolute inset-0 rounded-sm bg-[#F6E27F] opacity-0 group-hover:opacity-10 
+              <div className="absolute inset-0 rounded-sm bg-[#F6E27F] opacity-0 group-hover:opacity-10
                               transition-opacity duration-500"></div>
             </button>
           </motion.div>

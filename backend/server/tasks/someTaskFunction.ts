@@ -19,12 +19,12 @@ export const someTaskFunction = async () => {
   try {
     logger.info('Starting task...');
     const data = await fetch('https://api.example.com/data');
-    
+
     // Handle non-200 HTTP responses
     if (!data.ok) {
       throw new Error(`Failed to fetch data: ${data.statusText}`);
     }
-    
+
     const json = await data.json();
     logger.info('Fetched data:', json);
   } catch (error) {

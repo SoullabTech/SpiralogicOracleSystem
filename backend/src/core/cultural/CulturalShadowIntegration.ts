@@ -1,6 +1,6 @@
 /**
  * Cultural Shadow Integration - Enhanced Shadow Work with Cultural Trauma Awareness
- * 
+ *
  * Extends the existing Shadow Agent capabilities with:
  * - Cultural trauma recognition and healing
  * - Collective shadow integration
@@ -64,14 +64,14 @@ export class CulturalShadowIntegration {
     culturalProfile: CulturalProfile,
     shadowType: string
   ): Promise<{enhancedResponse: string; culturalGuidance: string; healingRecommendations: string[]}> {
-    
+
     try {
       // Assess cultural trauma context
       const culturalTrauma = await this.assessCulturalTrauma(userInput, culturalProfile);
-      
+
       // Identify cultural shadow patterns
       const culturalShadowPattern = this.identifyCulturalShadowPattern(userInput, culturalProfile);
-      
+
       // Generate cultural healing guidance
       const culturalGuidance = await this.generateCulturalHealingGuidance(
         shadowType,
@@ -124,7 +124,7 @@ export class CulturalShadowIntegration {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<CulturalTraumaAssessment | null> {
-    
+
     if (!culturalProfile.culturalTrauma) {
       return null;
     }
@@ -134,7 +134,7 @@ export class CulturalShadowIntegration {
 
     // Detect trauma triggers in input
     const traumaTriggers = this.detectTraumaTriggers(lowerInput, traumaContext);
-    
+
     if (traumaTriggers.length === 0) {
       return null;
     }
@@ -160,18 +160,18 @@ export class CulturalShadowIntegration {
     userInput: string,
     culturalProfile: CulturalProfile
   ): CulturalShadowPattern | null {
-    
+
     const patterns = this.culturalShadowPatterns.get(culturalProfile.primaryCulture);
     if (!patterns) return null;
 
     const lowerInput = userInput.toLowerCase();
-    
+
     // Find matching pattern based on manifestations
     for (const pattern of patterns) {
       const manifestationMatch = pattern.manifestation.some(manifestation =>
         lowerInput.includes(manifestation.toLowerCase())
       );
-      
+
       if (manifestationMatch) {
         return pattern;
       }
@@ -189,7 +189,7 @@ export class CulturalShadowIntegration {
     culturalTrauma: CulturalTraumaAssessment | null,
     culturalPattern: CulturalShadowPattern | null
   ): Promise<string> {
-    
+
     let guidance = '';
 
     // Add cultural context to shadow work
@@ -222,22 +222,22 @@ export class CulturalShadowIntegration {
     trauma: CulturalTraumaAssessment,
     culturalProfile: CulturalProfile
   ): Promise<string> {
-    
+
     const traumaGuidance = {
       'cultural_suppression': `
 The suppression of your cultural identity created wounds that run deep. Healing involves reclaiming what was taken and honoring what survived. Your ancestors preserved their essence through the darkest times - their resilience lives in you.`,
-      
+
       'intergenerational_trauma': `
 The pain you carry isn't only yours - it's the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who breaks the cycle and transforms ancestral pain into ancestral wisdom.`,
-      
+
       'cultural_disconnection': `
 The disconnection from your cultural roots created an inner emptiness that no amount of assimilation could fill. Healing involves returning home to yourself, to your people, to the traditions that nourish your soul.`,
-      
+
       'identity_fragmentation': `
 When your cultural identity was devalued, parts of yourself went into hiding for protection. Now those parts are ready to emerge and be integrated. You can be whole in your cultural identity while navigating the modern world.`
     };
 
-    return traumaGuidance[trauma.traumaType as keyof typeof traumaGuidance] || 
+    return traumaGuidance[trauma.traumaType as keyof typeof traumaGuidance] ||
            `Your cultural healing journey requires gentle patience with yourself and connection to your cultural community.`;
   }
 
@@ -248,9 +248,9 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     pattern: CulturalShadowPattern,
     culturalProfile: CulturalProfile
   ): Promise<string> {
-    
+
     const ancestralWisdom = this.ancestralWisdomRegistry.get(culturalProfile.primaryCulture);
-    
+
     if (!ancestralWisdom) {
       return `\n\nYour ancestors faced similar challenges and found ways to transform them into strength. Their wisdom lives in your DNA and in your cultural memory.`;
     }
@@ -266,7 +266,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     culturalProfile: CulturalProfile,
     culturalPattern: CulturalShadowPattern | null
   ): Promise<string> {
-    
+
     let enhancedResponse = originalResponse;
 
     // Add cultural framing if appropriate
@@ -292,7 +292,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     pattern: CulturalShadowPattern | null,
     culturalProfile: CulturalProfile
   ): string[] {
-    
+
     const recommendations = [];
 
     // Universal cultural healing practices
@@ -327,9 +327,9 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     const triggers = [];
 
     // Check for cultural suppression themes
-    if (traumaContext.culturalSuppression.some(pattern => 
-      input.includes(pattern.toLowerCase()) || 
-      input.includes('not allowed') || 
+    if (traumaContext.culturalSuppression.some(pattern =>
+      input.includes(pattern.toLowerCase()) ||
+      input.includes('not allowed') ||
       input.includes('forbidden') ||
       input.includes('ashamed of culture')
     )) {
@@ -337,7 +337,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     }
 
     // Check for intergenerational themes
-    if (traumaContext.intergenerationalPatterns.some(pattern => 
+    if (traumaContext.intergenerationalPatterns.some(pattern =>
       input.includes(pattern.toLowerCase()) ||
       input.includes('family pattern') ||
       input.includes('generational')
@@ -511,11 +511,11 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     approach: string,
     culturalProfile: CulturalProfile
   ): Promise<{valid: boolean; guidance?: string}> {
-    
+
     // Check indigenous sovereignty protocols if needed
-    if (culturalProfile.primaryCulture.includes('native') || 
+    if (culturalProfile.primaryCulture.includes('native') ||
         culturalProfile.primaryCulture.includes('indigenous')) {
-      
+
       return await indigenousSovereigntyProtocol.validateWisdomSharing(
         culturalProfile.primaryCulture,
         approach,

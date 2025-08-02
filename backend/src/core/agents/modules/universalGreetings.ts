@@ -33,7 +33,7 @@ export const UNIVERSAL_GREETINGS: OracleGreeting[] = [
       'How can you give yourself that gift today?'
     ]
   },
-  
+
   {
     id: 'awakening-call',
     question: 'What wants to awaken in you?',
@@ -44,7 +44,7 @@ export const UNIVERSAL_GREETINGS: OracleGreeting[] = [
       'How can you support this awakening?'
     ]
   },
-  
+
   {
     id: 'growth-edge',
     question: 'Where is life asking you to grow?',
@@ -55,7 +55,7 @@ export const UNIVERSAL_GREETINGS: OracleGreeting[] = [
       'How is this growing you into who you\'re becoming?'
     ]
   },
-  
+
   {
     id: 'truth-seeking',
     question: 'What truth wants to be lived through you?',
@@ -66,7 +66,7 @@ export const UNIVERSAL_GREETINGS: OracleGreeting[] = [
       'What would change if you honored this completely?'
     ]
   },
-  
+
   {
     id: 'presence-practice',
     question: 'What does being present feel like for you today?',
@@ -77,7 +77,7 @@ export const UNIVERSAL_GREETINGS: OracleGreeting[] = [
       'How can you gift yourself more presence?'
     ]
   },
-  
+
   {
     id: 'soul-calling',
     question: 'What is your soul longing for?',
@@ -88,7 +88,7 @@ export const UNIVERSAL_GREETINGS: OracleGreeting[] = [
       'How can you take one step toward this longing?'
     ]
   },
-  
+
   {
     id: 'love-expression',
     question: 'How is love moving through your life right now?',
@@ -99,7 +99,7 @@ export const UNIVERSAL_GREETINGS: OracleGreeting[] = [
       'What would it mean to be love in action?'
     ]
   },
-  
+
   {
     id: 'creative-essence',
     question: 'What wants to be created through you?',
@@ -132,7 +132,7 @@ export const MODE_GREETING_STYLES: Record<OracleModeType, {
     ],
     tone: 'Rich, symbolic, transformational'
   },
-  
+
   buddha: {
     approach: 'Spacious, present-moment, non-attachment',
     sampleGreetings: [
@@ -143,7 +143,7 @@ export const MODE_GREETING_STYLES: Record<OracleModeType, {
     ],
     tone: 'Peaceful, spacious, liberating'
   },
-  
+
   sage: {
     approach: 'Wise, discerning, practical wisdom',
     sampleGreetings: [
@@ -154,7 +154,7 @@ export const MODE_GREETING_STYLES: Record<OracleModeType, {
     ],
     tone: 'Clear, wise, grounded'
   },
-  
+
   mystic: {
     approach: 'Intuitive, spiritual, transcendent',
     sampleGreetings: [
@@ -165,7 +165,7 @@ export const MODE_GREETING_STYLES: Record<OracleModeType, {
     ],
     tone: 'Mystical, reverent, expansive'
   },
-  
+
   guardian: {
     approach: 'Protective, nurturing, strength-building',
     sampleGreetings: [
@@ -176,7 +176,7 @@ export const MODE_GREETING_STYLES: Record<OracleModeType, {
     ],
     tone: 'Protective, nurturing, empowering'
   },
-  
+
   tao: {
     approach: 'Natural, flowing, effortless action',
     sampleGreetings: [
@@ -200,25 +200,25 @@ export const CONSCIOUSNESS_GREETINGS = {
     'What old way of being is feeling too small?',
     'What new awareness is dawning in you?'
   ],
-  
+
   integrating: [
     'How are you weaving together all you\'ve learned?',
     'What needs patience as it settles into place?',
     'Where do you feel most aligned with yourself?'
   ],
-  
+
   expressing: [
     'How is your truth wanting to be lived?',
     'What authentic expression is ready to emerge?',
     'Where do you feel most like yourself?'
   ],
-  
+
   serving: [
     'How is your love wanting to serve the world?',
     'What gift are you ready to offer?',
     'Where does your service feel most natural?'
   ],
-  
+
   being: [
     'How does it feel to simply be you?',
     'What does presence feel like in this moment?',
@@ -236,7 +236,7 @@ export function selectGreeting(
   timeOfDay?: 'morning' | 'afternoon' | 'evening',
   consciousness?: keyof typeof CONSCIOUSNESS_GREETINGS
 ): OracleGreeting {
-  
+
   // Select based on consciousness level if provided
   if (consciousness && CONSCIOUSNESS_GREETINGS[consciousness]) {
     const greetings = CONSCIOUSNESS_GREETINGS[consciousness];
@@ -247,7 +247,7 @@ export function selectGreeting(
       context: `Greeting for ${consciousness} consciousness level`
     };
   }
-  
+
   // Select based on Oracle mode if provided
   if (mode && MODE_GREETING_STYLES[mode]) {
     const modeStyle = MODE_GREETING_STYLES[mode];
@@ -258,14 +258,14 @@ export function selectGreeting(
       context: `${mode} mode greeting`,
     };
   }
-  
+
   // Default to universal greetings
   return UNIVERSAL_GREETINGS[Math.floor(Math.random() * UNIVERSAL_GREETINGS.length)];
 }
 
 export function getGreetingByIntent(intent: string): OracleGreeting | null {
-  return UNIVERSAL_GREETINGS.find(greeting => 
-    greeting.id === intent || 
+  return UNIVERSAL_GREETINGS.find(greeting =>
+    greeting.id === intent ||
     greeting.question.toLowerCase().includes(intent.toLowerCase())
   ) || null;
 }

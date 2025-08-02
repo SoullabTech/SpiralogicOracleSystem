@@ -39,13 +39,13 @@ router.post('/synthesize', authenticateToken, async (req: AuthenticatedRequest, 
     });
 
     // Use ElevenLabs directly for narration (always)
-    const audioUrl = await synthesizeVoice({ 
-      text, 
-      voiceId 
+    const audioUrl = await synthesizeVoice({
+      text,
+      voiceId
     });
 
-    return res.status(200).json({ 
-      success: true, 
+    return res.status(200).json({
+      success: true,
       audioUrl,
       metadata: {
         type,

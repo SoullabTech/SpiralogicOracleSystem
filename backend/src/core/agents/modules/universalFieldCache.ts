@@ -208,7 +208,7 @@ export class UniversalFieldCache {
   private evictOldest(): void {
     const entries = Array.from(this.memoryCache.entries());
     entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-    
+
     // Remove oldest 10% of entries
     const toRemove = Math.floor(this.config.maxSize * 0.1);
     for (let i = 0; i < toRemove; i++) {
@@ -236,7 +236,7 @@ export class UniversalFieldCache {
   // Clear cache for specific user
   async clearUser(userId: string): Promise<void> {
     const keysToRemove: string[] = [];
-    
+
     for (const key of this.memoryCache.keys()) {
       if (key.includes(userId)) {
         keysToRemove.push(key);
@@ -256,7 +256,7 @@ export class UniversalFieldCache {
   // Clear entire cache
   async clearAll(): Promise<void> {
     this.memoryCache.clear();
-    
+
     if (this.redis) {
       const pattern = `${this.config.namespace}:*`;
       const keys = await this.redis.keys(pattern);

@@ -1,6 +1,6 @@
 /**
  * 🌀 Spiralogic Astrology Report Generator - Example Usage
- * 
+ *
  * This example demonstrates how to use the Spiralogic Report Generator
  * to create personalized, mythic astrology reports.
  */
@@ -63,9 +63,9 @@ async function generateNoemiReport() {
 
   try {
     console.log('🌙 Generating Sacred Report for Noemi...');
-    
+
     const reportOutput = await reportFlow.generateReport(noemiData);
-    
+
     // Enhance with elemental rituals
     const enhancedReport = await reportFlow.enhanceWithRituals(
       reportOutput.report,
@@ -73,7 +73,7 @@ async function generateNoemiReport() {
     );
 
     console.log('\n✧ ◈ ☽ REPORT PREVIEW ☽ ◈ ✧\n');
-    
+
     // Display the Soul's Welcome Message
     if (enhancedReport.sections['souls-welcome-message']) {
       console.log('💫 SOUL\'S WELCOME MESSAGE:');
@@ -122,7 +122,7 @@ async function generateCustomReport() {
 
   try {
     const reportOutput = await reportFlow.generateReport(customData);
-    
+
     console.log('🌊 Water-dominant report generated');
     console.log('🎭 Shadow archetypes integrated');
     console.log('🪐 Saturn Return guidance included');
@@ -139,7 +139,7 @@ async function generateCustomReport() {
  */
 async function apiExample() {
   // Example API calls (axios/fetch)
-  
+
   // 1. Generate report for authenticated user
   const generateReport = async (authToken: string) => {
     const response = await fetch('http://localhost:3000/api/spiralogic-report/generate', {
@@ -193,7 +193,7 @@ async function main() {
   // Uncomment to run other examples:
   // await generateUserReport('your-user-id');
   // await generateCustomReport();
-  
+
   console.log('\n✨ Examples completed successfully!');
 }
 

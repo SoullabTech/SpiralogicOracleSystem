@@ -18,20 +18,20 @@ const router = Router();
 const validateWebhookSignature = (req: Request, res: Response, next: any) => {
   const signature = req.headers['x-webhook-signature'] as string;
   const payload = JSON.stringify(req.body);
-  
+
   if (!signature || !process.env.N8N_WEBHOOK_SECRET) {
     return res.status(401).json({ error: 'Missing webhook signature' });
   }
-  
+
   const expectedSignature = crypto
     .createHmac('sha256', process.env.N8N_WEBHOOK_SECRET)
     .update(payload)
     .digest('hex');
-  
+
   if (signature !== `sha256=${expectedSignature}`) {
     return res.status(401).json({ error: 'Invalid webhook signature' });
   }
-  
+
   next();
 };
 
@@ -46,7 +46,7 @@ const validateWebhookSignature = (req: Request, res: Response, next: any) => {
 router.post('/webhook/user-signup', validateWebhookSignature, async (req: Request, res: Response) => {
   try {
     const { userId, email, name, signupSource, timestamp } = req.body;
-    
+
     // Initialize automation data for new user
     const automationData = {
       userId,
@@ -63,7 +63,7 @@ router.post('/webhook/user-signup', validateWebhookSignature, async (req: Reques
         supportAutomation: true
       }
     };
-    
+
     // Store in Soul Memory as initialization marker
     await SoulMemoryService.store({
       userId,
@@ -75,7 +75,7 @@ router.post('/webhook/user-signup', validateWebhookSignature, async (req: Reques
         transformationMarker: true
       }
     });
-    
+
     // Return data for n8n workflow continuation
     res.status(200).json({
       success: true,
@@ -87,10 +87,10 @@ router.post('/webhook/user-signup', validateWebhookSignature, async (req: Reques
       ],
       message: 'User automation initialization complete'
     });
-    
+
   } catch (error) {
     console.error('User signup webhook error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process user signup automation',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -103,18 +103,18 @@ router.post('/webhook/user-signup', validateWebhookSignature, async (req: Reques
  */
 router.post('/webhook/breakthrough', validateWebhookSignature, async (req: Request, res: Response) => {
   try {
-    const { 
-      userId, 
-      breakthroughType, 
-      confidenceScore, 
+    const {
+      userId,
+      breakthroughType,
+      confidenceScore,
       conversationId,
       breakthroughMarkers,
-      timestamp 
+      timestamp
     } = req.body;
-    
+
     // Validate breakthrough authenticity
     const isValidBreakthrough = confidenceScore > 0.8 && breakthroughMarkers?.length >= 2;
-    
+
     if (!isValidBreakthrough) {
       return res.status(200).json({
         success: false,
@@ -122,7 +122,7 @@ router.post('/webhook/breakthrough', validateWebhookSignature, async (req: Reque
         action: 'no_automation_triggered'
       });
     }
-    
+
     // Store breakthrough in Soul Memory
     await SoulMemoryService.store({
       userId,
@@ -139,11 +139,11 @@ router.post('/webhook/breakthrough', validateWebhookSignature, async (req: Reque
         transformationMarker: true
       }
     });
-    
+
     // Get user details for personalized response
     const userMemories = await SoulMemoryService.retrieve({ userId, limit: 10 });
     const userContext = userMemories.find(m => m.type === 'automation_initialization');
-    
+
     // Return celebration automation data
     res.status(200).json({
       success: true,
@@ -163,10 +163,10 @@ router.post('/webhook/breakthrough', validateWebhookSignature, async (req: Reque
       ],
       message: 'Breakthrough celebration automation triggered'
     });
-    
+
   } catch (error) {
     console.error('Breakthrough webhook error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process breakthrough automation',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -179,14 +179,14 @@ router.post('/webhook/breakthrough', validateWebhookSignature, async (req: Reque
  */
 router.post('/webhook/sacred-moment', validateWebhookSignature, async (req: Request, res: Response) => {
   try {
-    const { 
-      userId, 
-      momentType, 
-      content, 
+    const {
+      userId,
+      momentType,
+      content,
       emotionalResonance,
-      timestamp 
+      timestamp
     } = req.body;
-    
+
     // Store sacred moment
     await SoulMemoryService.store({
       userId,
@@ -200,7 +200,7 @@ router.post('/webhook/sacred-moment', validateWebhookSignature, async (req: Requ
         acknowledgeInDashboard: true
       }
     });
-    
+
     res.status(200).json({
       success: true,
       sacredMomentData: {
@@ -216,10 +216,10 @@ router.post('/webhook/sacred-moment', validateWebhookSignature, async (req: Requ
       ],
       message: 'Sacred moment acknowledged'
     });
-    
+
   } catch (error) {
     console.error('Sacred moment webhook error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process sacred moment',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -232,14 +232,14 @@ router.post('/webhook/sacred-moment', validateWebhookSignature, async (req: Requ
  */
 router.post('/webhook/stuck-pattern', validateWebhookSignature, async (req: Request, res: Response) => {
   try {
-    const { 
-      userId, 
-      patternType, 
-      occurrenceCount, 
+    const {
+      userId,
+      patternType,
+      occurrenceCount,
       suggestedIntervention,
-      lastOccurrences 
+      lastOccurrences
     } = req.body;
-    
+
     // Store pattern recognition
     await SoulMemoryService.store({
       userId,
@@ -254,7 +254,7 @@ router.post('/webhook/stuck-pattern', validateWebhookSignature, async (req: Requ
         timestamp: new Date().toISOString()
       }
     });
-    
+
     res.status(200).json({
       success: true,
       supportData: {
@@ -270,10 +270,10 @@ router.post('/webhook/stuck-pattern', validateWebhookSignature, async (req: Requ
       ],
       message: 'Support automation triggered for stuck pattern'
     });
-    
+
   } catch (error) {
     console.error('Stuck pattern webhook error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to process stuck pattern automation',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -291,20 +291,20 @@ router.post('/webhook/stuck-pattern', validateWebhookSignature, async (req: Requ
 router.get('/metrics/daily', authenticateToken, async (req: Request, res: Response) => {
   try {
     const today = new Date().toISOString().split('T')[0];
-    
+
     // Get today's metrics
     const metrics = await generateDailyMetrics(today);
-    
+
     res.status(200).json({
       date: today,
       metrics,
       systemHealth: await getAutomationSystemHealth(),
       alerts: await getActiveAlerts()
     });
-    
+
   } catch (error) {
     console.error('Daily metrics error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch daily metrics',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -318,7 +318,7 @@ router.get('/metrics/daily', authenticateToken, async (req: Request, res: Respon
 router.get('/users/needs-attention', authenticateToken, async (req: Request, res: Response) => {
   try {
     const usersNeedingAttention = await getUsersNeedingAttention();
-    
+
     res.status(200).json({
       totalCount: usersNeedingAttention.length,
       users: usersNeedingAttention,
@@ -328,10 +328,10 @@ router.get('/users/needs-attention', authenticateToken, async (req: Request, res
         medium: usersNeedingAttention.filter(u => u.priority === 'medium').length
       }
     });
-    
+
   } catch (error) {
     console.error('Users needing attention error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch users needing attention',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -352,12 +352,12 @@ router.get('/status', authenticateToken, async (req: Request, res: Response) => 
       systemUptime: process.uptime(),
       lastHealthCheck: new Date().toISOString()
     };
-    
+
     res.status(200).json(status);
-    
+
   } catch (error) {
     console.error('Automation status error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch automation status',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
@@ -380,7 +380,7 @@ function generateBreakthroughMessage(breakthroughType: string): string {
     'clarity_moment': 'Clarity emerged from confusion like dawn.',
     'integration': 'Something deep is integrating within you.'
   };
-  
+
   return messages[breakthroughType as keyof typeof messages] || 'Something sacred shifted in your consciousness.';
 }
 
@@ -393,12 +393,12 @@ async function generateDailyMetrics(date: string) {
     const today = new Date(date);
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     const memories = await SoulMemoryService.getMemoriesByDateRange(
       today.toISOString(),
       tomorrow.toISOString()
     );
-    
+
     const metrics = {
       newSignups: memories.filter(m => m.type === 'automation_initialization').length,
       breakthroughsDetected: memories.filter(m => m.type === 'breakthrough_moment').length,
@@ -409,7 +409,7 @@ async function generateDailyMetrics(date: string) {
       activeUsers: await getActiveUsersToday(),
       emailsSent: await getEmailsSentToday()
     };
-    
+
     return metrics;
   } catch (error) {
     console.error('Error generating daily metrics:', error);
@@ -446,10 +446,10 @@ async function getUsersNeedingAttention() {
   try {
     // Query for users with concerning patterns
     const concerningPatterns = await SoulMemoryService.getUsersWithPattern('pattern_recognition');
-    const stuckUsers = concerningPatterns.filter(user => 
+    const stuckUsers = concerningPatterns.filter(user =>
       user.patternCount >= 5 || user.lastActivity > 7 // days ago
     );
-    
+
     return stuckUsers.map(user => ({
       userId: user.userId,
       issue: user.patternType || 'inactive',

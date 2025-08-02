@@ -5,13 +5,13 @@
   "registry_address_key": "0x663422c6999Ff94933DBCb388623952CF2407F6f",
   "organization_id": "spiralogic",
   "service_id": "archetypal-consciousness-oracle",
-  
+
   "passthrough_enabled": true,
   "passthrough_endpoint": "http://localhost:7001",
-  
+
   "blockchain_enabled": true,
   "blockchain_network_selected": "main",
-  
+
   "log": {
     "level": "info",
     "output": {
@@ -20,7 +20,7 @@
       "current_link": "./logs/snet-daemon.log"
     }
   },
-  
+
   "payment_channel_storage_type": "etcd",
   "payment_channel_storage_server": {
     "id": "storage-1",
@@ -32,22 +32,22 @@
     "data_dir": "./etcd-data",
     "enabled": true
   },
-  
+
   "ssl_cert": "/etc/letsencrypt/live/oracle.spiralogic.ai/fullchain.pem",
   "ssl_key": "/etc/letsencrypt/live/oracle.spiralogic.ai/privkey.pem",
-  
+
   "payment_channel_ca_path": "/opt/singularitynet/config/ca.pem",
   "payment_channel_cert_path": "/opt/singularitynet/config/client.pem",
   "payment_channel_key_path": "/opt/singularitynet/config/client-key.pem",
-  
+
   "metering_enabled": true,
   "pvt_key_for_metering": "YOUR_PRIVATE_KEY",
-  
+
   "rate_limit_per_minute": 20,
   "burst_size": 30,
-  
+
   "alerts_email": "alerts@spiralogic.ai",
-  
+
   "authentication": {
     "allowed_users": [],
     "basic_auth_users": []

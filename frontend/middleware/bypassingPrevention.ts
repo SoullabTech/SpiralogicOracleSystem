@@ -22,7 +22,7 @@ export class BypassingPreventionMiddleware {
   async processRequest(request: NextRequest): Promise<NextResponse> {
     try {
       const supabaseConfig = getSupabaseConfig();
-      
+
       // Skip bypassing prevention if Supabase is not configured (demo mode)
       if (!supabaseConfig.isConfigured) {
         return NextResponse.next();
@@ -50,13 +50,13 @@ export class BypassingPreventionMiddleware {
 
     // Get request frequency data
     const requestFrequency = await this.getRecentRequestFrequency(userId);
-    
+
     // Analyze URL patterns for bypassing behavior
     const urlPatterns = this.analyzeUrlPatterns(path, requestFrequency);
-    
+
     // Check for rapid content consumption
     const contentConsumption = this.analyzeContentConsumption(requestFrequency);
-    
+
     // Check for integration avoidance
     const integrationAvoidance = await this.checkIntegrationAvoidance(userId);
 
@@ -135,7 +135,7 @@ export class BypassingPreventionMiddleware {
   } {
     const consumptionRate = frequency.contentRequests / frequency.timespan;
     const integrationRatio = frequency.integrationSubmissions / Math.max(frequency.contentRequests, 1);
-    
+
     return {
       rapidAccess: consumptionRate > 0.3, // More than one content request every 3 hours
       consumptionRate,
@@ -171,7 +171,7 @@ export class BypassingPreventionMiddleware {
   }> {
     const url = new URL(request.url);
     const contentType = this.extractContentType(url);
-    
+
     // Check if user has active integration gates for this content
     // In real implementation, query from database
     return {
@@ -193,7 +193,7 @@ export class BypassingPreventionMiddleware {
     alternatives?: string[];
   }> {
     const userBehavior = await this.getUserBehaviorData(userId);
-    
+
     // Apply anti-commodification pacing algorithms via backend API
     let pacingResult;
     try {
@@ -248,7 +248,7 @@ export class BypassingPreventionMiddleware {
     // Add headers for client-side handling
     response.headers.set('X-Integration-Support', 'required');
     response.headers.set('X-Bypassing-Patterns', JSON.stringify(analysis.patterns));
-    
+
     return response;
   }
 
@@ -327,7 +327,7 @@ export class BypassingPreventionMiddleware {
     if (!this.config.enableRealTimeDetection) return;
 
     const patterns = await this.detectSessionPatterns(sessionData);
-    
+
     if (patterns.length > 0) {
       await this.triggerRealTimeIntervention(userId, patterns);
     }
@@ -357,7 +357,7 @@ export class BypassingPreventionMiddleware {
   private async triggerRealTimeIntervention(userId: string, patterns: string[]): Promise<void> {
     // Send gentle intervention prompts
     const interventions = patterns.map(pattern => this.getPatternIntervention(pattern));
-    
+
     // In real implementation, this would use WebSocket or Server-Sent Events
     console.log(`Real-time intervention for user ${userId}:`, interventions);
   }
@@ -393,7 +393,7 @@ export class BypassingPreventionMiddleware {
     if (!this.config.enableCommunityAlerts) return false;
 
     const alertTriggers = this.analyzeInteractionForAlerts(interaction);
-    
+
     if (alertTriggers.length > 0) {
       await this.createCommunityAlert(userId, alertTriggers, interaction);
       return true;
@@ -445,7 +445,7 @@ export class BypassingPreventionMiddleware {
 // Export middleware factory
 export function createBypassingPreventionMiddleware(config: BypassingPreventionConfig) {
   const middleware = new BypassingPreventionMiddleware(config);
-  
+
   return async function bypassingPreventionMiddleware(request: NextRequest) {
     return await middleware.processRequest(request);
   };

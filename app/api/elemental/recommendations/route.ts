@@ -28,7 +28,7 @@ interface ContentAdaptationSettings {
 export async function GET(request: NextRequest) {
   try {
     const supabaseConfig = getSupabaseConfig();
-    
+
     if (!supabaseConfig.isConfigured) {
       return NextResponse.json(
         { error: 'Elemental content service not available in demo mode' },
@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
         context,
         settings
       };
-      
+
       const recommendations = await apiClient.post(endpoint, requestData);
 
       // Track the recommendation request locally
@@ -163,7 +163,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const supabaseConfig = getSupabaseConfig();
-    
+
     if (!supabaseConfig.isConfigured) {
       return NextResponse.json(
         { error: 'Elemental content service not available in demo mode' },

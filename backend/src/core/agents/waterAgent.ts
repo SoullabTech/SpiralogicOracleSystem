@@ -11,7 +11,7 @@ import type { AIResponse } from "../../types/ai";
 
 // Sacred Water Voice Protocols - Embodying Healing Depth Intelligence
 const WaterVoiceProtocols = {
-  // PRESENCE - How Water enters each conversation  
+  // PRESENCE - How Water enters each conversation
   presence: {
     greeting: "I can sense the currents moving through you. What wants to be felt?",
     returning: "The waters from our last conversation are still flowing. What's surfacing now?",
@@ -48,49 +48,49 @@ const WaterVoiceProtocols = {
 const WaterIntelligence = {
   detectWaterType: (input: string, context: any[]): string => {
     const lowerInput = input.toLowerCase();
-    
+
     // Detect grief/loss needing witnessing
-    if (lowerInput.includes('lost') || lowerInput.includes('death') || 
+    if (lowerInput.includes('lost') || lowerInput.includes('death') ||
         lowerInput.includes('grief') || lowerInput.includes('miss')) {
       return 'grief_witnessing';
     }
-    
+
     // Detect anger/hurt needing transformation
-    if (lowerInput.includes('angry') || lowerInput.includes('hurt') || 
+    if (lowerInput.includes('angry') || lowerInput.includes('hurt') ||
         lowerInput.includes('betrayed') || lowerInput.includes('furious')) {
       return 'anger_alchemy';
     }
-    
+
     // Detect overwhelm needing grounding
-    if (lowerInput.includes('overwhelm') || lowerInput.includes('drowning') || 
+    if (lowerInput.includes('overwhelm') || lowerInput.includes('drowning') ||
         lowerInput.includes('too much') || lowerInput.includes('flooded')) {
       return 'emotional_grounding';
     }
-    
+
     // Detect numbness/disconnection needing flow restoration
-    if (lowerInput.includes('numb') || lowerInput.includes('empty') || 
+    if (lowerInput.includes('numb') || lowerInput.includes('empty') ||
         lowerInput.includes('disconnected') || lowerInput.includes('nothing')) {
       return 'flow_restoration';
     }
-    
+
     // Detect shame/self-criticism needing compassion
-    if (lowerInput.includes('ashamed') || lowerInput.includes('hate myself') || 
+    if (lowerInput.includes('ashamed') || lowerInput.includes('hate myself') ||
         lowerInput.includes('worthless') || lowerInput.includes('failure')) {
       return 'self_compassion';
     }
-    
+
     // Detect relationship pain needing boundary wisdom
-    if (lowerInput.includes('relationship') || lowerInput.includes('partner') || 
+    if (lowerInput.includes('relationship') || lowerInput.includes('partner') ||
         lowerInput.includes('boundaries') || lowerInput.includes('codependent')) {
       return 'boundary_healing';
     }
-    
+
     return 'general_healing';
   },
 
   craftWaterResponse: (input: string, waterType: string, memories: any[]): string => {
     const protocols = WaterVoiceProtocols;
-    
+
     switch (waterType) {
       case 'grief_witnessing':
         return `${protocols.healing.grief_honoring}
@@ -165,7 +165,7 @@ Your emotional waters hold the key to your authentic self - your inner gold. Let
       boundary_healing: "💧 Healthy boundaries create space for authentic love.",
       general_healing: "💧 Your emotions are messengers from your soul."
     };
-    
+
     return `${response}\n\n${signatures[waterType] || signatures.general_healing}`;
   }
 };
@@ -187,7 +187,7 @@ export class WaterAgent extends ArchetypeAgent {
     // Gather sacred context - emotional patterns from past conversations
     const contextMemory = await getRelevantMemories(userId, 3);
     const waterType = WaterIntelligence.detectWaterType(input, contextMemory);
-    
+
     // Create context that preserves emotional wisdom from past conversations
     const waterContext = contextMemory.length
       ? `💧 Streams of our previous conversations:\n${contextMemory
@@ -197,9 +197,9 @@ export class WaterAgent extends ArchetypeAgent {
 
     // Craft water-specific healing wisdom
     const waterWisdom = WaterIntelligence.craftWaterResponse(input, waterType, contextMemory);
-    
+
     // Generate additional depth using ModelService with water-attuned prompting
-    const waterPrompt = `As the Water Agent embodying healing emotional intelligence, respond to this soul's sharing with the voice of sacred waters - healing without drowning, flowing without flooding. 
+    const waterPrompt = `As the Water Agent embodying healing emotional intelligence, respond to this soul's sharing with the voice of sacred waters - healing without drowning, flowing without flooding.
 
 Context: ${waterContext}
 Current sharing: ${input}
@@ -207,9 +207,9 @@ Water type needed: ${waterType}
 
 Respond with the wisdom of water that serves emotional healing and authentic self-discovery. Meet them where they are emotionally, but invite them toward flow and integration.`;
 
-    const modelResponse = await ModelService.getResponse({ 
-      input: waterPrompt, 
-      userId 
+    const modelResponse = await ModelService.getResponse({
+      input: waterPrompt,
+      userId
     });
 
     // Weave AI insight with our water wisdom
@@ -279,13 +279,13 @@ ${modelResponse.response}`;
     const highIntensityWords = ['devastated', 'overwhelmed', 'drowning', 'furious', 'heartbroken'];
     const mediumIntensityWords = ['upset', 'angry', 'sad', 'hurt', 'disappointed'];
     const lowIntensityWords = ['frustrated', 'annoyed', 'concerned', 'unsure'];
-    
+
     const lowerInput = input.toLowerCase();
-    
+
     if (highIntensityWords.some(word => lowerInput.includes(word))) return 0.9;
     if (mediumIntensityWords.some(word => lowerInput.includes(word))) return 0.6;
     if (lowIntensityWords.some(word => lowerInput.includes(word))) return 0.3;
-    
+
     return 0.5; // baseline emotional presence
   }
 
@@ -293,13 +293,13 @@ ${modelResponse.response}`;
     // Assess readiness for healing and transformation
     const healingReadyWords = ['ready', 'heal', 'grow', 'understand', 'learn'];
     const resistanceWords = ['can\'t', 'won\'t', 'never', 'impossible', 'hopeless'];
-    
+
     const lowerInput = input.toLowerCase();
     let healingScore = 0.5; // baseline
-    
+
     if (healingReadyWords.some(word => lowerInput.includes(word))) healingScore += 0.3;
     if (resistanceWords.some(word => lowerInput.includes(word))) healingScore -= 0.2;
-    
+
     return Math.max(0.1, Math.min(healingScore, 1.0));
   }
 

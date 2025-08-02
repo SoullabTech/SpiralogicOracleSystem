@@ -1,10 +1,10 @@
 /**
  * Life Spiral Harmonizer
- * 
+ *
  * Creates soul mandate clarification with cultural wisdom integration.
  * Provides comprehensive life purpose analysis through the lens of elemental alchemy,
  * cultural wisdom, and archetypal development patterns.
- * 
+ *
  * Features:
  * - Soul mandate detection and clarification
  * - Life spiral phase analysis
@@ -17,13 +17,13 @@
 
 import { logger } from '../../utils/logger';
 import { CulturalProfile } from '../cultural/CulturalContextAwareness';
-import { 
+import {
   culturalContextAwareness,
-  crossCulturalArchetypeMapping 
+  crossCulturalArchetypeMapping
 } from '../cultural/index';
-import { 
+import {
   jungianShadowIntegrationEngine,
-  ShadowIntegrationPlan 
+  ShadowIntegrationPlan
 } from './JungianShadowIntegrationEngine';
 
 export interface SoulMandateAnalysis {
@@ -223,7 +223,7 @@ export class LifeSpiralHarmonizer {
     culturalProfile: CulturalProfile,
     shadowIntegrationPlan?: ShadowIntegrationPlan
   ): Promise<LifeSpiralHarmonizerPlan> {
-    
+
     try {
       logger.info('Beginning soul mandate analysis', {
         userId,
@@ -318,10 +318,10 @@ export class LifeSpiralHarmonizer {
     evolutionSupports: string[];
     evolutionPractices: string[];
   }> {
-    
+
     try {
       const soulMandate = this.soulMandateRegistry.get(userId);
-      
+
       if (!soulMandate) {
         throw new Error('Soul mandate analysis not found for user');
       }
@@ -385,10 +385,10 @@ export class LifeSpiralHarmonizer {
     culturalTransitionWisdom: string;
     transitionSupport: string[];
   }> {
-    
+
     try {
       const soulMandate = this.soulMandateRegistry.get(userId);
-      
+
       if (!soulMandate) {
         throw new Error('Soul mandate analysis not found for user');
       }
@@ -449,64 +449,64 @@ export class LifeSpiralHarmonizer {
     culturalProfile: CulturalProfile,
     shadowIntegrationPlan?: ShadowIntegrationPlan
   ): Promise<SoulMandateAnalysis> {
-    
+
     const mandateId = `mandate_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Analyze core purpose
     const corePurpose = await this.extractCorePurpose(userInput, culturalProfile);
-    
+
     // Analyze elemental signature
     const elementalSignature = await this.analyzeElementalPurposeSignature(
       userInput,
       culturalProfile
     );
-    
+
     // Get cultural purpose expression
     const culturalPurposeExpression = await this.getCulturalPurposeExpression(
       corePurpose,
       culturalProfile
     );
-    
+
     // Analyze archetypal role
     const archetypalRole = await this.analyzeArchetypalRole(
       userInput,
       culturalProfile,
       elementalSignature
     );
-    
+
     // Analyze intergenerational purpose
     const intergenerationalPurpose = await this.analyzeIntergenerationalPurpose(
       userInput,
       culturalProfile
     );
-    
+
     // Determine current life phase
     const currentLifePhase = await this.determineLifeSpiralPhase(
       userInput,
       culturalProfile
     );
-    
+
     // Identify purpose blockages
     const purposeBlockages = await this.identifyPurposeBlockages(
       userInput,
       culturalProfile,
       shadowIntegrationPlan
     );
-    
+
     // Analyze mandate activation
     const mandateActivation = await this.analyzeMandateActivation(
       userInput,
       culturalProfile,
       purposeBlockages
     );
-    
+
     // Identify soul gifts
     const soulGifts = await this.identifySoulGifts(
       userInput,
       culturalProfile,
       elementalSignature
     );
-    
+
     // Analyze service expression
     const serviceExpression = await this.analyzeServiceExpression(
       userInput,
@@ -533,16 +533,16 @@ export class LifeSpiralHarmonizer {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<string> {
-    
+
     // Extract purpose themes from user input
     const purposeKeywords = this.extractPurposeKeywords(userInput);
-    
+
     // Analyze through cultural lens
     const culturalPurposeThemes = this.getCulturalPurposeThemes(culturalProfile);
-    
+
     // Synthesize core purpose
     const corePurpose = this.synthesizeCorePurpose(purposeKeywords, culturalPurposeThemes);
-    
+
     return corePurpose;
   }
 
@@ -550,24 +550,24 @@ export class LifeSpiralHarmonizer {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<ElementalPurposeSignature> {
-    
+
     // Detect elemental themes in purpose
     const elementalThemes = this.detectElementalThemes(userInput);
-    
+
     // Determine primary and secondary elements
     const primaryElement = this.determinePrimaryElement(elementalThemes);
     const secondaryElement = this.determineSecondaryElement(elementalThemes, primaryElement);
-    
+
     // Calculate elemental balance
     const elementalBalance = this.calculateElementalBalance(elementalThemes);
-    
+
     // Get purpose archetype
     const purposeArchetype = this.getPurposeArchetype(primaryElement, secondaryElement);
-    
+
     // Identify elemental challenges and gifts
     const elementalChallenges = this.getElementalChallenges(primaryElement, secondaryElement);
     const elementalGifts = this.getElementalGifts(primaryElement, secondaryElement);
-    
+
     // Find integration opportunities
     const integrationOpportunities = this.getIntegrationOpportunities(
       primaryElement,
@@ -591,7 +591,7 @@ export class LifeSpiralHarmonizer {
     culturalProfile: CulturalProfile,
     elementalSignature: ElementalPurposeSignature
   ): Promise<ArchetypalRole> {
-    
+
     // Translate elemental archetype to cultural expression
     const archetypalTranslation = await crossCulturalArchetypeMapping.translateArchetype({
       sourceElement: elementalSignature.primaryElement,
@@ -603,25 +603,25 @@ export class LifeSpiralHarmonizer {
 
     const primaryArchetype = archetypalTranslation.culturalExpression.culturalName;
     const archetypalFunction = archetypalTranslation.culturalExpression.traditionalRole;
-    
+
     // Analyze collective service
     const collectiveService = this.analyzeCollectiveService(
       userInput,
       primaryArchetype,
       culturalProfile
     );
-    
+
     // Analyze individual expression
     const individualExpression = this.analyzeIndividualExpression(
       userInput,
       primaryArchetype,
       culturalProfile
     );
-    
+
     // Identify archetypal wounds and medicine
     const archetypalWounds = this.identifyArchetypalWounds(primaryArchetype, culturalProfile);
     const archetypalMedicine = this.identifyArchetypalMedicine(primaryArchetype, culturalProfile);
-    
+
     // Determine evolutionary stage
     const evolutionaryStage = this.determineEvolutionaryStage(userInput, primaryArchetype);
 
@@ -640,33 +640,33 @@ export class LifeSpiralHarmonizer {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<IntergenerationalPurpose> {
-    
+
     // Analyze ancestral patterns
     const ancestralPatterns = this.analyzeAncestralPatterns(userInput, culturalProfile);
-    
+
     // Identify family purpose lineage
     const familyPurposeLineage = this.identifyFamilyPurposeLineage(
       userInput,
       culturalProfile
     );
-    
+
     // Determine generational healing needs
     const generationalHealing = this.identifyGenerationalHealing(
       userInput,
       culturalProfile
     );
-    
+
     // Identify ancestral gifts
     const ancestralGifts = this.identifyAncestralGifts(culturalProfile);
-    
+
     // Analyze lineage service
     const lineageService = this.analyzeLineageService(culturalProfile);
-    
+
     // Get cultural purpose inheritance
     const culturalPurposeInheritance = this.getCulturalPurposeInheritance(
       culturalProfile
     );
-    
+
     // Identify intergenerational blocks
     const intergenerationalBlocks = this.identifyIntergenerationalBlocks(
       userInput,
@@ -688,32 +688,32 @@ export class LifeSpiralHarmonizer {
     userInput: string,
     culturalProfile: CulturalProfile
   ): Promise<LifeSpiralPhase> {
-    
+
     // Analyze life phase indicators
     const phaseIndicators = this.analyzePhaseIndicators(userInput);
-    
+
     // Determine current phase
     const currentPhase = this.determineCurrentPhase(phaseIndicators);
-    
+
     // Get phase description
     const phaseDescription = this.getPhaseDescription(currentPhase, culturalProfile);
-    
+
     // Identify phase challenges and opportunities
     const phaseChallenges = this.getPhaseChallenges(currentPhase, culturalProfile);
     const phaseOpportunities = this.getPhaseOpportunities(currentPhase, culturalProfile);
-    
+
     // Create next phase preparation
     const nextPhasePreparation = this.createNextPhasePreparation(
       currentPhase,
       culturalProfile
     );
-    
+
     // Generate phase transition guidance
     const phaseTransitionGuidance = this.generatePhaseTransitionGuidance(
       currentPhase,
       culturalProfile
     );
-    
+
     // Get cultural phase context
     const culturalPhaseContext = this.getCulturalPhaseContext(
       currentPhase,
@@ -781,13 +781,13 @@ export class LifeSpiralHarmonizer {
       'purpose', 'calling', 'mission', 'vision', 'passion', 'gift', 'service',
       'contribution', 'meaning', 'fulfillment', 'legacy', 'impact', 'help'
     ];
-    
+
     for (const word of purposeWords) {
       if (userInput.toLowerCase().includes(word)) {
         keywords.push(word);
       }
     }
-    
+
     return keywords;
   }
 
@@ -798,7 +798,7 @@ export class LifeSpiralHarmonizer {
       hispanic_latino: ['family service', 'cultural bridge-building', 'community support'],
       universal: ['human connection', 'wisdom sharing', 'creative expression']
     };
-    
+
     return themes[culturalProfile.primaryCulture as keyof typeof themes] || themes.universal;
   }
 
@@ -811,27 +811,27 @@ export class LifeSpiralHarmonizer {
 
   private detectElementalThemes(userInput: string): Record<string, number> {
     const themes = { fire: 0, water: 0, earth: 0, air: 0 };
-    
+
     // Fire themes
     if (userInput.match(/passion|energy|leadership|inspire|transform|create/i)) {
       themes.fire += 1;
     }
-    
+
     // Water themes
     if (userInput.match(/healing|flow|intuition|emotion|nurture|connect/i)) {
       themes.water += 1;
     }
-    
+
     // Earth themes
     if (userInput.match(/build|ground|practical|structure|stability|manifest/i)) {
       themes.earth += 1;
     }
-    
+
     // Air themes
     if (userInput.match(/communicate|teach|ideas|wisdom|knowledge|connect/i)) {
       themes.air += 1;
     }
-    
+
     return themes;
   }
 
@@ -855,7 +855,7 @@ export class LifeSpiralHarmonizer {
     const values = Object.values(themes);
     const total = values.reduce((sum, val) => sum + val, 0);
     const max = Math.max(...values);
-    
+
     return total > 0 ? (total - max) / total : 0;
   }
 
@@ -877,7 +877,7 @@ export class LifeSpiralHarmonizer {
       air_water: 'Compassionate Guide',
       air_earth: 'Structured Communicator'
     };
-    
+
     return archetypes[`${primary}_${secondary}` as keyof typeof archetypes] || 'Universal Purpose Bearer';
   }
 
@@ -888,7 +888,7 @@ export class LifeSpiralHarmonizer {
       earth: ['Rigidity', 'Resistance to change', 'Perfectionism'],
       air: ['Overthinking', 'Disconnection from body', 'Analysis paralysis']
     };
-    
+
     return [
       ...challenges[primary as keyof typeof challenges],
       ...challenges[secondary as keyof typeof challenges]
@@ -902,7 +902,7 @@ export class LifeSpiralHarmonizer {
       earth: ['Stability', 'Manifestation', 'Grounding'],
       air: ['Clarity', 'Communication', 'Vision']
     };
-    
+
     return [
       ...gifts[primary as keyof typeof gifts],
       ...gifts[secondary as keyof typeof gifts]

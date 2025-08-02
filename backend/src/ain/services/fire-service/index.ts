@@ -12,34 +12,34 @@ export class FireService extends EdgeAgent {
   private sensor: NeuromorphicSensor;
   private visionThreshold = 0.8;
   private lastProcessedTime = 0;
-  
+
   constructor() {
     super('fire-service');
     this.sensor = new NeuromorphicSensor({
       spikeThreshold: 0.7,
       refractoryPeriod: 100
     });
-    
+
     this.setupEventHandlers();
   }
-  
+
   private setupEventHandlers() {
     // Subscribe to relevant events
     this.subscribe('vision.update', this.onVisionUpdate.bind(this));
     this.subscribe('user.intent', this.onUserIntent.bind(this));
     this.subscribe('energy.spike', this.onEnergySpike.bind(this));
   }
-  
+
   /**
    * Process vision updates with neuromorphic spike detection
    */
   private async onVisionUpdate(event: SpiralogicEvent) {
     const delta = this.calculateDelta(event.payload.content);
-    
+
     if (await this.sensor.shouldSpike(delta)) {
       const catalystEvent = this.createCatalystEvent(event);
       await this.publish('catalyst.trigger', catalystEvent);
-      
+
       // Edge processing for immediate response
       const quickResponse = await this.generateQuickInsight(event);
       await this.publish('fire.response', {
@@ -49,13 +49,13 @@ export class FireService extends EdgeAgent {
       });
     }
   }
-  
+
   /**
    * Handle user intent with transformation logic
    */
   private async onUserIntent(event: SpiralogicEvent) {
     const { intent, intensity } = event.payload.content;
-    
+
     if (this.isTransformativeIntent(intent) && intensity > this.visionThreshold) {
       await this.publish('transformation.begin', {
         catalyst: 'user-intent',
@@ -65,13 +65,13 @@ export class FireService extends EdgeAgent {
       });
     }
   }
-  
+
   /**
    * Respond to energy spikes with catalytic action
    */
   private async onEnergySpike(event: SpiralogicEvent) {
     const { source, magnitude } = event.payload.content;
-    
+
     // Fire element amplifies energy spikes
     const amplifiedResponse = {
       original_magnitude: magnitude,
@@ -79,10 +79,10 @@ export class FireService extends EdgeAgent {
       catalyst_type: 'energy-surge',
       action_required: magnitude > 0.9
     };
-    
+
     await this.publish('catalyst.trigger', amplifiedResponse);
   }
-  
+
   /**
    * Calculate delta for neuromorphic processing
    */
@@ -90,12 +90,12 @@ export class FireService extends EdgeAgent {
     const currentTime = Date.now();
     const timeDelta = currentTime - this.lastProcessedTime;
     this.lastProcessedTime = currentTime;
-    
+
     // Simplified delta calculation - replace with actual logic
     const contentMagnitude = this.extractMagnitude(content);
     return contentMagnitude / Math.max(timeDelta, 1);
   }
-  
+
   /**
    * Generate quick insight at the edge
    */
@@ -107,12 +107,12 @@ export class FireService extends EdgeAgent {
       'Catalyst energy detected - change is imminent...',
       'Your inner flame responds to this calling...'
     ];
-    
+
     // Simple pattern selection based on event signature
     const index = Math.floor(event.timestamp % patterns.length);
     return patterns[index];
   }
-  
+
   /**
    * Check if intent is transformative
    */
@@ -121,12 +121,12 @@ export class FireService extends EdgeAgent {
       'change', 'transform', 'evolve', 'breakthrough',
       'release', 'ignite', 'catalyst', 'shift'
     ];
-    
-    return transformativeKeywords.some(keyword => 
+
+    return transformativeKeywords.some(keyword =>
       intent.toLowerCase().includes(keyword)
     );
   }
-  
+
   /**
    * Create catalyst event with fire signature
    */
@@ -160,7 +160,7 @@ export class FireService extends EdgeAgent {
       }
     };
   }
-  
+
   /**
    * Generate unique fire signature
    */
@@ -172,10 +172,10 @@ export class FireService extends EdgeAgent {
       'forge-heat',
       'stellar-ignition'
     ];
-    
+
     return signatures[Math.floor(Math.random() * signatures.length)];
   }
-  
+
   /**
    * Calculate transformation potential
    */
@@ -183,10 +183,10 @@ export class FireService extends EdgeAgent {
     // Simplified calculation - enhance with actual logic
     const baseIntensity = event.payload.metadata?.intensity || 0.5;
     const fireAmplification = 1.5;
-    
+
     return Math.min(baseIntensity * fireAmplification, 1.0);
   }
-  
+
   /**
    * Extract magnitude from content
    */

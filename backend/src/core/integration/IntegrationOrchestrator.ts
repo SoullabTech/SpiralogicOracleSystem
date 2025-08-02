@@ -109,7 +109,7 @@ export class IntegrationOrchestrator {
     }
 
     // 4. Check integration gates
-    const activeGate = architecture.activeGates.find(gate => 
+    const activeGate = architecture.activeGates.find(gate =>
       gate.contentToUnlock === requestedContent.type
     );
 
@@ -183,14 +183,14 @@ export class IntegrationOrchestrator {
           submission.challenges,
           submission.adaptations
         );
-        
+
         architecture.embodiedWisdom.livedExperiences.push(livedExperience);
         accepted = true;
-        
+
         if (livedExperience.ongoingPractice) {
           celebration.push("🌱 You recognize that growth is an ongoing process - this shows wisdom!");
         }
-        
+
         if (submission.challenges.length > 0) {
           celebration.push("✨ Your honesty about challenges prevents spiritual bypassing.");
         } else {
@@ -206,9 +206,9 @@ export class IntegrationOrchestrator {
           submission.integrationEvidence,
           submission.dailyApplication
         );
-        
+
         const bodyValidation = this.embodiedWisdom.validateBodyIntegration(bodyIntegration);
-        
+
         if (bodyValidation.isEmbodied) {
           architecture.embodiedWisdom.bodyBasedIntegrations.push(bodyIntegration);
           accepted = true;
@@ -227,9 +227,9 @@ export class IntegrationOrchestrator {
           submission.wisdomGained,
           submission.humilityDeveloped
         );
-        
+
         const wisdomValidation = this.embodiedWisdom.validateStruggleWisdom(struggleWisdom);
-        
+
         if (wisdomValidation.isWisdom) {
           architecture.embodiedWisdom.mistakesAndStruggles.push(struggleWisdom);
           accepted = true;
@@ -249,9 +249,9 @@ export class IntegrationOrchestrator {
           submission.practiceApplied,
           submission.humanness
         );
-        
+
         const momentValidation = this.embodiedWisdom.validateOrdinaryMoment(ordinaryMoment);
-        
+
         if (momentValidation.isTrulyOrdinary) {
           architecture.embodiedWisdom.ordinaryMomentAwareness.push(ordinaryMoment);
           accepted = true;
@@ -298,8 +298,8 @@ export class IntegrationOrchestrator {
       spiralPoint,
       progressValidation,
       spiralInsights,
-      celebration: progressValidation.isHealthy ? 
-        "🌀 Your spiral growth pattern shows healthy development!" : 
+      celebration: progressValidation.isHealthy ?
+        "🌀 Your spiral growth pattern shows healthy development!" :
         "🌱 Consider allowing more time for integration and revisiting earlier themes."
     };
   }
@@ -323,15 +323,15 @@ export class IntegrationOrchestrator {
 
     // Find corresponding reflection gap
     const reflectionGap = this.findReflectionGap(architecture, gate.contentToUnlock);
-    
+
     const ready = this.gateService.checkGateReadiness(gate, reflectionGap);
-    
+
     const completedRequirements = gate.requirements.filter(req => req.completed);
     const progress = {
       completedRequirements: completedRequirements.length,
       totalRequirements: gate.requirements.length,
       percentComplete: (completedRequirements.length / gate.requirements.length) * 100,
-      integrationQuality: reflectionGap ? 
+      integrationQuality: reflectionGap ?
         this.gateService.calculateIntegrationQuality(
           reflectionGap.integrationEvidence,
           gate.requirements

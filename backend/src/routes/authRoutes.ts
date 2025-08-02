@@ -11,7 +11,7 @@ const supabase = createClient(config.supabase.url, config.supabase.anonKey);
 router.post('/login', validate(loginSchema), async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     const { data: { user, session }, error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -33,8 +33,8 @@ router.post('/login', validate(loginSchema), async (req, res) => {
     });
   } catch (error) {
     logger.error('Login failed', { error });
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'Login failed' 
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Login failed'
     });
   }
 });
@@ -42,7 +42,7 @@ router.post('/login', validate(loginSchema), async (req, res) => {
 router.post('/refresh', validate(refreshTokenSchema), async (req, res) => {
   try {
     const { refreshToken } = req.body;
-    
+
     const { data: { session }, error } = await supabase.auth.refreshSession({
       refresh_token: refreshToken
     });
@@ -59,8 +59,8 @@ router.post('/refresh', validate(refreshTokenSchema), async (req, res) => {
     });
   } catch (error) {
     logger.error('Token refresh failed', { error });
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'Token refresh failed' 
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Token refresh failed'
     });
   }
 });
@@ -76,8 +76,8 @@ router.post('/logout', async (req, res) => {
     res.json({ message: 'Logged out successfully' });
   } catch (error) {
     logger.error('Logout failed', { error });
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'Logout failed' 
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Logout failed'
     });
   }
 });

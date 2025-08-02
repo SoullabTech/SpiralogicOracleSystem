@@ -52,7 +52,7 @@ function OracleChat() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ input: userInput })
     });
-    
+
     const oracleData = await response.json();
     setOracleResponse(oracleData);
   };
@@ -60,7 +60,7 @@ function OracleChat() {
   return (
     <div className="oracle-chat">
       {/* Your existing chat UI */}
-      
+
       {oracleResponse && (
         <OracleResponseWithVoice response={oracleResponse} />
       )}
@@ -83,7 +83,7 @@ const router = express.Router();
 router.get('/oracle/:filename', (req, res) => {
   const filename = req.params.filename;
   const audioPath = path.join(__dirname, '../../audio_outputs', filename);
-  
+
   res.sendFile(audioPath, (err) => {
     if (err) {
       res.status(404).send('Audio file not found');
@@ -161,7 +161,7 @@ useEffect(() => {
 
 ### Matrix Oracle Features
 - **Warm maternal presence** in voice tone
-- **Strategic pauses** for wisdom absorption  
+- **Strategic pauses** for wisdom absorption
 - **Knowing humor** in delivery
 - **Visual feedback** during playback
 - **Graceful fallbacks** when audio unavailable
@@ -208,7 +208,7 @@ ELEVENLABS_API_KEY=your_key_here
 Input: "The path forward is clear."
 ↓
 Styled: "[pause][smile][soft] The path forward is clear."
-↓  
+↓
 Oracle Voice: Warm, wise delivery with strategic pauses
 ```
 

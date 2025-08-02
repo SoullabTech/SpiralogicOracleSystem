@@ -72,7 +72,7 @@ export interface EnhancedOracleResponse {
   // Standard response
   content: string;
   confidence: number;
-  
+
   // Sacred Intelligence enhancements
   emotionMeterData: EmotionMeterData;
   holoflowerData: HoloflowerData;
@@ -80,12 +80,12 @@ export interface EnhancedOracleResponse {
   panentheisticStatus: PanentheisticStatus;
   collectiveDisplay: CollectiveIntelligenceDisplay;
   sacredRouting: SacredRoutingDisplay;
-  
+
   // Ritual and integration
   ritualElements: string[];
   integrationPractices: string[];
   nextEvolutionStep: string;
-  
+
   // Performance and safeguards
   processingTime: number;
   safeguardsTriggered: string[];
@@ -94,7 +94,7 @@ export interface EnhancedOracleResponse {
 
 export class FrontendIntegration {
   private static instance: FrontendIntegration;
-  
+
   // Color mappings for UI consistency
   private elementalColors = {
     fire: '#FF6B35',
@@ -142,18 +142,18 @@ export class FrontendIntegration {
       return {
         content: sacredResponse.content,
         confidence: sacredResponse.confidence || 0.8,
-        
+
         emotionMeterData: this.createEmotionMeterData(sacredResponse),
         holoflowerData: await this.createHoloflowerData(sacredResponse, userId),
         archetypalDisplay: this.createArchetypalDisplay(sacredResponse),
         panentheisticStatus: this.createPanentheisticStatus(sacredResponse),
         collectiveDisplay: this.createCollectiveDisplay(sacredResponse),
         sacredRouting: this.createSacredRouting(sacredResponse),
-        
+
         ritualElements: this.extractRitualElements(sacredResponse),
         integrationPractices: this.extractIntegrationPractices(sacredResponse),
         nextEvolutionStep: sacredResponse.sacredSynthesis?.nextEvolution || 'Continue your sacred journey',
-        
+
         processingTime: sacredResponse.performanceMetrics?.processingTime || 0,
         safeguardsTriggered: this.extractSafeguards(sacredResponse),
         transformationPotential: sacredResponse.performanceMetrics?.transformationPotential || 0
@@ -187,7 +187,7 @@ export class FrontendIntegration {
     // Extract elemental balance from response metadata
     const elementalBalance = this.extractElementalBalance(response);
     const fieldCoherence = response.performanceMetrics?.fieldCoherence || 0.5;
-    
+
     return {
       timestamp: new Date().toISOString(),
       fire: elementalBalance.fire || 0.2,
@@ -206,7 +206,7 @@ export class FrontendIntegration {
   private createArchetypalDisplay(response: EnhancedResponse): ArchetypalDisplay {
     const archetype = this.extractArchetype(response);
     const stage = this.extractEvolutionaryStage(response);
-    
+
     return {
       currentArchetype: archetype,
       evolutionaryStage: stage,
@@ -222,7 +222,7 @@ export class FrontendIntegration {
   private createPanentheisticStatus(response: EnhancedResponse): PanentheisticStatus {
     const fieldCoherence = response.performanceMetrics?.fieldCoherence || 0.5;
     const connectionLevel = this.calculateConnectionLevel(response);
-    
+
     return {
       fieldCoherence,
       akashicAccess: connectionLevel > 0.7,
@@ -250,7 +250,7 @@ export class FrontendIntegration {
   // SACRED ROUTING DISPLAY
   private createSacredRouting(response: EnhancedResponse): SacredRoutingDisplay {
     const element = this.extractPrimaryElement(response);
-    
+
     return {
       activeYogi: this.getYogiName(element),
       routingReason: this.getRoutingReason(response),
@@ -264,8 +264,8 @@ export class FrontendIntegration {
   // HELPER METHODS FOR DATA EXTRACTION
 
   private extractPrimaryElement(response: EnhancedResponse): string {
-    return response.metadata?.element || 
-           response.sacredSynthesis?.emotionalResonance?.split('→')[0]?.trim() || 
+    return response.metadata?.element ||
+           response.sacredSynthesis?.emotionalResonance?.split('→')[0]?.trim() ||
            'aether';
   }
 
@@ -317,10 +317,10 @@ export class FrontendIntegration {
     // Extract from response metadata or calculate from content
     const element = this.extractPrimaryElement(response);
     const base = { fire: 0.2, water: 0.2, earth: 0.2, air: 0.2, aether: 0.2 };
-    
+
     // Boost primary element
     base[element as keyof typeof base] = 0.4;
-    
+
     return base;
   }
 
@@ -351,7 +351,7 @@ export class FrontendIntegration {
   private getNextEmergence(archetype: string, stage: string): string {
     const progressions = {
       'initiation': 'ordeal',
-      'ordeal': 'revelation', 
+      'ordeal': 'revelation',
       'revelation': 'atonement',
       'atonement': 'return',
       'return': 'mastery',
@@ -424,13 +424,13 @@ export class FrontendIntegration {
   private extractIntegrationPractices(response: EnhancedResponse): string[] {
     const content = response.content || '';
     const practices = [];
-    
+
     if (content.includes('breathe')) practices.push('Conscious breathing');
     if (content.includes('meditat')) practices.push('Meditation');
     if (content.includes('journal')) practices.push('Journaling');
     if (content.includes('nature')) practices.push('Nature connection');
     if (content.includes('practice')) practices.push('Embodied practice');
-    
+
     return practices.length > 0 ? practices : ['Mindful awareness'];
   }
 

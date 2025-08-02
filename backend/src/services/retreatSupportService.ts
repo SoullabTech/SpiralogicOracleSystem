@@ -73,7 +73,7 @@ export class RetreatSupportService {
   async recordDailyCheckIn(checkIn: DailyCheckIn): Promise<any> {
     try {
       const checkInId = uuidv4();
-      
+
       // Store check-in data
       const { data, error } = await supabase
         .from('daily_checkins')
@@ -101,9 +101,9 @@ export class RetreatSupportService {
         await this.flagSupportNeeded(checkIn.participantId, checkIn.supportNeeded);
       }
 
-      logger.info('Daily check-in recorded', { 
+      logger.info('Daily check-in recorded', {
         participantId: checkIn.participantId,
-        day: checkIn.dayNumber 
+        day: checkIn.dayNumber
       });
 
       return { id: checkInId, ...checkIn };
@@ -162,7 +162,7 @@ export class RetreatSupportService {
 
 Your ${participant.oracleElement} essence is ${this.interpretEnergyLevel(checkIn.morningState.energyLevel)} today.
 
-Based on your check-in, I sense ${checkIn.morningState.emotionalTone} flowing through you. 
+Based on your check-in, I sense ${checkIn.morningState.emotionalTone} flowing through you.
 ${checkIn.shadowWork?.breakthroughMoments ? `Beautiful breakthrough: ${checkIn.shadowWork.breakthroughMoments}` : ''}
 
 Today's medicine: ${this.getElementalMedicine(participant.oracleElement, checkIn)}
@@ -218,9 +218,9 @@ Trust your journey today.
       // Initialize tracking
       await this.initializeSessionTracking(session.id);
 
-      logger.info('Live session started', { 
+      logger.info('Live session started', {
         sessionId: session.id,
-        type: session.sessionType 
+        type: session.sessionType
       });
 
       return session;
@@ -335,9 +335,9 @@ Trust your journey today.
       // Update wisdom index
       await this.updateWisdomIndex(wisdom);
 
-      logger.info('Collective wisdom captured', { 
+      logger.info('Collective wisdom captured', {
         wisdomId: wisdom.id,
-        type: wisdom.type 
+        type: wisdom.type
       });
 
       return wisdom;
@@ -718,17 +718,17 @@ Trust your journey today.
 
   private getIntegrationPractices(checkIn: DailyCheckIn): string[] {
     const practices = ['Journaling before bed'];
-    
+
     if (checkIn.morningState.energyLevel < 5) {
       practices.push('Restorative yoga or gentle movement');
     }
-    
+
     if (checkIn.shadowWork?.breakthroughMoments) {
       practices.push('Celebrate your breakthrough with creative expression');
     }
-    
+
     practices.push('Share one insight with a retreat buddy');
-    
+
     return practices;
   }
 
@@ -780,7 +780,7 @@ Trust your journey today.
 
   private async generateFacilitatorReport(sessionId: string): Promise<any> {
     const summary = await this.generateSessionSummary(sessionId);
-    
+
     return {
       summary,
       recommendations: [
@@ -821,7 +821,7 @@ Trust your journey today.
 
   private trackElementalEvolution(checkIns: any[]): any {
     const evolution: any = {};
-    
+
     ['fire', 'water', 'earth', 'air', 'aether'].forEach(element => {
       evolution[element] = {
         start: checkIns[0]?.elemental_balance?.[element] || 5,
@@ -844,17 +844,17 @@ Trust your journey today.
 
   private generateRecommendations(patterns: any, growth: any): string[] {
     const recommendations = [];
-    
+
     if (patterns.energyTrend === 'declining') {
       recommendations.push('Schedule extra rest and restoration');
     }
-    
+
     if (growth.breakthroughs > 2) {
       recommendations.push('Journal extensively about your breakthroughs');
     }
-    
+
     recommendations.push('Continue your elemental practices daily');
-    
+
     return recommendations;
   }
 
@@ -960,9 +960,9 @@ Trust your journey today.
 
   private async scheduleFollowUp(integration: any): Promise<void> {
     // In production, this would schedule actual follow-up communications
-    logger.info('Follow-up scheduled', { 
+    logger.info('Follow-up scheduled', {
       participantId: integration.participant_id,
-      date: integration.follow_up_date 
+      date: integration.follow_up_date
     });
   }
 
@@ -1014,7 +1014,7 @@ Trust your journey today.
   private calculateGrowthTrajectory(checkIns: any[]): string {
     const energyTrend = this.calculateTrend(checkIns.map(c => c.morning_state?.energyLevel || 5));
     const breakthroughs = checkIns.filter(c => c.shadow_work?.breakthroughMoments).length;
-    
+
     if (breakthroughs > 2 && energyTrend === 'rising') return 'transformational';
     if (breakthroughs > 0 || energyTrend === 'rising') return 'expanding';
     if (energyTrend === 'declining') return 'integrating';
@@ -1024,20 +1024,20 @@ Trust your journey today.
   private getMostCommonEmotion(checkIns: any[]): string {
     const emotions = checkIns.map(c => c.morning_state?.emotionalTone).filter(Boolean);
     if (emotions.length === 0) return 'neutral';
-    
+
     const counts: any = {};
     emotions.forEach(e => counts[e] = (counts[e] || 0) + 1);
-    
+
     return Object.entries(counts)
       .sort(([,a], [,b]) => (b as number) - (a as number))[0]?.[0] || 'varied';
   }
 
   private calculateCoherence(checkIns: any[]): number {
     if (checkIns.length < 2) return 0;
-    
+
     const energyLevels = checkIns.map(c => c.morning_state?.energyLevel || 5);
     const variance = this.calculateVariance(energyLevels);
-    
+
     // Lower variance = higher coherence
     return Math.max(0, 10 - variance);
   }
@@ -1050,10 +1050,10 @@ Trust your journey today.
 
   private calculateAverageEngagement(participations: any[]): number {
     if (participations.length === 0) return 0;
-    
-    const engagementScores = participations.map(p => 
+
+    const engagementScores = participations.map(p =>
       (p.engagement?.presenceLevel || 0) + (p.engagement?.shareDepth || 0)) / 2;
-    
+
     return this.average(engagementScores);
   }
 
@@ -1067,26 +1067,26 @@ Trust your journey today.
 
   private calculateGroupCoherence(participations: any[]): number {
     if (participations.length === 0) return 0;
-    
+
     const coherenceScores = participations.map(p => p.group_resonance?.groupCoherence || 0);
     return this.average(coherenceScores);
   }
 
   private extractSessionHighlights(summary: any): string[] {
     const highlights = [];
-    
+
     if (summary.breakthroughs.length > 0) {
       highlights.push(`${summary.breakthroughs.length} breakthrough moments`);
     }
-    
+
     if (summary.groupCoherence > 7) {
       highlights.push('High group coherence achieved');
     }
-    
+
     if (summary.wisdomCaptured > 5) {
       highlights.push(`${summary.wisdomCaptured} wisdom nuggets captured`);
     }
-    
+
     return highlights;
   }
 }

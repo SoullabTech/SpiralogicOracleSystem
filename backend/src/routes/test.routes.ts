@@ -13,10 +13,10 @@ const router = express.Router();
 // Test endpoint for Soul Memory integration
 router.post('/test-integration', asyncHandler(async (req, res) => {
   const { message = "I'm feeling overwhelmed by all these changes in my life" } = req.body;
-  
+
   // Create test instances
   const userId = 'test_user_' + Date.now();
-  
+
   const soulMemory = new SoulMemorySystem({
     userId,
     storageType: 'sqlite',
@@ -41,7 +41,7 @@ router.post('/test-integration', asyncHandler(async (req, res) => {
 
   // Retrieve stored memory
   const memories = await soulMemory.retrieveMemories(userId, { limit: 1 });
-  
+
   // Clean up
   await soulMemory.closeDatabase();
 
@@ -60,7 +60,7 @@ router.post('/test-integration', asyncHandler(async (req, res) => {
 // Test semantic search
 router.post('/test-search', asyncHandler(async (req, res) => {
   const { userId = 'test_user_123', query } = req.body;
-  
+
   const soulMemory = new SoulMemorySystem({
     userId,
     storageType: 'sqlite',
@@ -69,7 +69,7 @@ router.post('/test-search', asyncHandler(async (req, res) => {
   });
 
   const results = await soulMemory.semanticSearch(userId, query, { topK: 5 });
-  
+
   await soulMemory.closeDatabase();
 
   res.json({

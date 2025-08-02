@@ -67,16 +67,16 @@ async function ingestElementalAlchemyBook() {
     // Read the book file
     const content = await fs.readFile(bookPath, 'utf-8');
     console.log(`✅ Successfully read ${content.length} characters from book\n`);
-    
+
     // Parse the book structure
     const book = await parseElementalAlchemyBook(content);
-    
+
     // Extract elemental wisdom
     book.elementalWisdom = extractElementalWisdom(book);
-    
+
     // Create knowledge update for Founder Agent
     const knowledgeUpdate = createKnowledgeUpdate(book, book.elementalWisdom);
-    
+
     // Save the processed knowledge
     await saveProcessedKnowledge(knowledgeUpdate);
 
@@ -144,11 +144,11 @@ async function parseElementalAlchemyBook(content: string): Promise<BookContent> 
         currentChapter.keyTeachings = extractKeyTeachings(currentChapter.content);
         chapters.push(currentChapter);
       }
-      
+
       // Extract chapter info
       const chapterMatch = line.match(/Chapter\s+(\d+)/i);
       const elementMatch = line.match(/(Fire|Water|Earth|Air|Aether)/i);
-      
+
       currentChapter = {
         number: chapterMatch ? parseInt(chapterMatch[1]) : chapters.length + 1,
         title: line.replace(/^#{1,3}\s*/, '').trim(),
@@ -204,14 +204,14 @@ async function parseElementalAlchemyBook(content: string): Promise<BookContent> 
 function extractDedication(lines: string[]): string {
   const dedStart = lines.findIndex(line => line.includes('Dedication'));
   if (dedStart === -1) return '';
-  
+
   // Look for the next section or a significant break
-  let dedEnd = lines.findIndex((line, index) => 
+  let dedEnd = lines.findIndex((line, index) =>
     index > dedStart && (line.includes('Acknowledgments') || line.includes('Chapter') || line.match(/^#{1,3}/))
   );
-  
+
   if (dedEnd === -1) dedEnd = Math.min(dedStart + 10, lines.length); // Fallback
-  
+
   return lines.slice(dedStart + 1, dedEnd)
     .filter(line => line.trim())
     .join(' ')
@@ -264,7 +264,7 @@ function extractElementalWisdom(book: BookContent): ElementalWisdom {
 
 function extractElementTeaching(book: BookContent, element: string): ElementTeaching {
   const elementChapter = book.chapters.find(ch => ch.element === element);
-  
+
   if (!elementChapter) {
     // Create default wisdom based on traditional associations
     return {
@@ -277,7 +277,7 @@ function extractElementTeaching(book: BookContent, element: string): ElementTeac
   }
 
   const content = elementChapter.content;
-  
+
   return {
     essence: extractEssence(content, element),
     practices: extractPractices(content),
@@ -389,7 +389,7 @@ function getDefaultQualities(element: string): string[] {
 function extractHealingApplications(content: string): string[] {
   const applications: string[] = [];
   const healingKeywords = ['healing', 'balance', 'restore', 'transform', 'integrate', 'harmonize'];
-  
+
   const lines = content.split('\n');
   lines.forEach(line => {
     if (healingKeywords.some(keyword => line.toLowerCase().includes(keyword)) && line.length > 40) {
@@ -470,11 +470,11 @@ async function saveProcessedKnowledge(knowledge: any): Promise<void> {
   try {
     // Ensure directory exists
     await fs.mkdir(outputDir, { recursive: true });
-    
+
     // Save the knowledge
     await fs.writeFile(knowledgePath, JSON.stringify(knowledge, null, 2));
     console.log('💾 Knowledge saved to:', knowledgePath);
-    
+
     // Also save a summary for quick reference
     const summaryPath = path.join(outputDir, 'elemental-alchemy-summary.json');
     const summary = {
@@ -491,10 +491,10 @@ async function saveProcessedKnowledge(knowledge: any): Promise<void> {
       book_length_chars: knowledge.metadata.book_length,
       integration_status: 'complete'
     };
-    
+
     await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2));
     console.log('📋 Summary saved to:', summaryPath);
-    
+
   } catch (error) {
     console.error('❌ Error saving knowledge:', error);
     throw error;

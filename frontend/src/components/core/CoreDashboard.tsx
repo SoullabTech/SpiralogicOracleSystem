@@ -125,7 +125,7 @@ const CoreDashboard: React.FC<CoreDashboard> = ({ userConfig, onNavigate }) => {
                 Powered by Spiralogic™ • Ensouled by Soullab®
               </div>
             </div>
-            
+
             {/* Coherence Indicator */}
             {userConfig.coherenceLevel && (
               <div className="text-right">
@@ -149,16 +149,16 @@ const CoreDashboard: React.FC<CoreDashboard> = ({ userConfig, onNavigate }) => {
                 key={module.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 0.618, 
+                transition={{
+                  duration: 0.618,
                   delay: index * 0.1,
                   type: "spring",
                   stiffness: 100
                 }}
                 className={`
                   group cursor-pointer p-6 bg-slate-800/60 backdrop-blur-sm border transition-all duration-300
-                  ${module.priority === 'primary' 
-                    ? 'border-slate-600 hover:border-amber-500 hover:bg-slate-800/80' 
+                  ${module.priority === 'primary'
+                    ? 'border-slate-600 hover:border-amber-500 hover:bg-slate-800/80'
                     : 'border-slate-700 hover:border-slate-500 hover:bg-slate-800/70'}
                 `}
                 onClick={() => onNavigate(module.route)}
@@ -173,15 +173,15 @@ const CoreDashboard: React.FC<CoreDashboard> = ({ userConfig, onNavigate }) => {
                     </div>
                   )}
                 </div>
-                
+
                 <h3 className="text-xl font-medium text-amber-100 mb-2 group-hover:text-amber-50 transition-colors">
                   {module.title}
                 </h3>
-                
+
                 <p className="text-slate-300 text-sm mb-3 group-hover:text-slate-200 transition-colors">
                   {module.subtitle}
                 </p>
-                
+
                 <div className="text-xs text-slate-500 group-hover:text-slate-400 transition-colors">
                   {module.description}
                 </div>

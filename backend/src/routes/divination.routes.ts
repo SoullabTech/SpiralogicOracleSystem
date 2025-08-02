@@ -11,7 +11,7 @@ const router = Router();
 
 /**
  * Sacred Divination Routes
- * 
+ *
  * Provides access to multiple divination methods:
  * - Tarot: Card wisdom and archetypal guidance
  * - I Ching: Traditional Chinese oracle of change

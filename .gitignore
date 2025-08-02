@@ -9,3 +9,40 @@ SpiralogicOracleSystem_backup.zip
 .vercel
 legacy-backups.zip
 *.log
+
+# macOS system files
+._*
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.backup
+*.bak
+*~
+*.orig
+
+# Temporary files and directories
+.temp/
+.tmp/
+temp/
+tmp/
+
+# Duplicate directories that don't belong
+oracle-backend/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+ehthumbs.db
+Desktop.ini

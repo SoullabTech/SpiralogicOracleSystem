@@ -4,8 +4,8 @@
 import { logger } from '../../../utils/logger';
 import { agentComms } from './agentCommunicationProtocol';
 import { patternEngine } from './patternRecognitionEngine';
-import { 
-  getUniversalFieldCache, 
+import {
+  getUniversalFieldCache,
   UniversalFieldData,
   generateMorphicPattern,
   generateAkashicGuidance,
@@ -24,7 +24,7 @@ export interface SacredIntelligenceContext {
     evolutionaryStage?: string;
     personalPatterns?: any[];
   };
-  
+
   // Level 2: Collective Intelligence
   collective: {
     relevantPatterns?: any[];
@@ -33,7 +33,7 @@ export interface SacredIntelligenceContext {
     agentWisdom?: any[];
     activeThemes?: string[];
   };
-  
+
   // Level 3: Universal Field
   universal: {
     fieldData?: UniversalFieldData;
@@ -111,10 +111,10 @@ export class SacredIntelligenceIntegration {
   // Access Universal Field with caching
   private async accessUniversalField(context: SacredIntelligenceContext): Promise<UniversalFieldData> {
     const { userId, query } = context.individual;
-    
+
     // Check cache first
     let fieldData = await this.universalFieldCache.get(userId, query);
-    
+
     if (!fieldData) {
       // Generate field data
       fieldData = createFieldData({
@@ -271,7 +271,7 @@ export class SacredIntelligenceIntegration {
     const individual = context.individual;
 
     // Start with universal principle
-    let guidance = universal?.akashic_guidance?.cosmic_perspective || 
+    let guidance = universal?.akashic_guidance?.cosmic_perspective ||
                   'Your journey serves both personal and collective evolution.';
 
     // Add collective insight
@@ -334,7 +334,7 @@ export class SacredIntelligenceIntegration {
   private revealEvolutionaryInsight(context: SacredIntelligenceContext): string {
     const morphic = context.universal.fieldData?.morphic_patterns;
     const noosphere = context.universal.fieldData?.noosphere_insights;
-    
+
     if (morphic && morphic.archetypal_resonance.length > 0) {
       const primaryArchetype = morphic.archetypal_resonance[0];
       return `Your ${primaryArchetype.archetype} journey contributes to humanity's evolution toward ${noosphere?.species_intelligence.emerging_capacities[0] || 'expanded consciousness'}`;
@@ -345,7 +345,7 @@ export class SacredIntelligenceIntegration {
 
   private applySacredMirror(context: SacredIntelligenceContext): string {
     // Sacred Mirror protocol - reflect truth without enabling patterns
-    if (context.individual.query.toLowerCase().includes('always') || 
+    if (context.individual.query.toLowerCase().includes('always') ||
         context.individual.query.toLowerCase().includes('never')) {
       return 'Notice the absolute language. What possibility exists between always and never?';
     }
@@ -422,7 +422,7 @@ export class SacredIntelligenceIntegration {
 
   private extractThemes(patterns: any[]): string[] {
     const themes = new Set<string>();
-    
+
     patterns.forEach(pattern => {
       if (pattern.context_domain) themes.add(pattern.context_domain);
       if (pattern.integration_wisdom) {
@@ -444,7 +444,7 @@ export class SacredIntelligenceIntegration {
 
     const patternCount = context.collective.relevantPatterns.length;
     const domains = [...new Set(context.collective.relevantPatterns.map(p => p.context_domain))];
-    
+
     return `Drawing from ${patternCount} patterns across ${domains.join(', ')}, ` +
            `the collective field reveals: ${context.collective.relevantPatterns[0].integration_wisdom}`;
   }

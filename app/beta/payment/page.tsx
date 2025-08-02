@@ -36,7 +36,7 @@ export default function BetaPaymentPage() {
 
   const handlePayment = async () => {
     setProcessing(true);
-    
+
     try {
       // Simulate payment processing
       // In production, this would integrate with Stripe
@@ -137,7 +137,7 @@ export default function BetaPaymentPage() {
           {/* Payment Form */}
           <div className="max-w-md mx-auto bg-white/5 rounded-lg p-8 border border-white/10">
             <h3 className="text-xl font-bold mb-6 text-center">Complete Your Purchase</h3>
-            
+
             <div className="mb-6 p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <span>{plans[selectedPlan].description}</span>

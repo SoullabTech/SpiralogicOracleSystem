@@ -34,13 +34,13 @@ class ConsciousnessDataMigrator {
 
       // Migrate user consciousness patterns
       await this.migrateUserPatterns(db);
-      
+
       // Migrate archetypal interactions
       await this.migrateArchetypalInteractions(db);
-      
+
       // Migrate voice synthesis cache
       await this.migrateVoiceCache(db);
-      
+
       // Migrate session data
       await this.migrateSessionData(db);
 
@@ -56,7 +56,7 @@ class ConsciousnessDataMigrator {
 
   async migrateUserPatterns(db) {
     console.log('🧠 Migrating user consciousness patterns...');
-    
+
     try {
       // Export patterns from Vercel
       const response = await axios.get(`${VERCEL_API_URL}/export/user-patterns`, {
@@ -81,11 +81,11 @@ class ConsciousnessDataMigrator {
 
   async migrateArchetypalInteractions(db) {
     console.log('🎭 Migrating archetypal interactions...');
-    
+
     try {
       const response = await axios.get(`${VERCEL_API_URL}/export/archetypal-interactions`);
       const interactions = response.data.interactions;
-      
+
       console.log(`Found ${interactions.length} archetypal interactions`);
 
       if (interactions.length > 0) {
@@ -102,11 +102,11 @@ class ConsciousnessDataMigrator {
 
   async migrateVoiceCache(db) {
     console.log('🎤 Migrating voice synthesis cache...');
-    
+
     try {
       const response = await axios.get(`${VERCEL_API_URL}/export/voice-cache`);
       const voiceData = response.data.voiceCache;
-      
+
       console.log(`Found ${voiceData.length} cached voice syntheses`);
 
       if (voiceData.length > 0) {
@@ -123,11 +123,11 @@ class ConsciousnessDataMigrator {
 
   async migrateSessionData(db) {
     console.log('📊 Migrating session data...');
-    
+
     try {
       const response = await axios.get(`${VERCEL_API_URL}/export/sessions`);
       const sessions = response.data.sessions;
-      
+
       console.log(`Found ${sessions.length} user sessions`);
 
       if (sessions.length > 0) {
@@ -144,7 +144,7 @@ class ConsciousnessDataMigrator {
 
   async validateMigration() {
     console.log('\n🔍 Validating migration...');
-    
+
     try {
       // Test sovereign API endpoints
       const healthCheck = await axios.get(`${SOVEREIGN_API_URL}/health`);
@@ -156,7 +156,7 @@ class ConsciousnessDataMigrator {
         message: 'Test migration query',
         includeVoice: false
       });
-      
+
       if (testQuery.data.response) {
         console.log('✅ Archetypal processing: WORKING');
       }
@@ -165,10 +165,10 @@ class ConsciousnessDataMigrator {
       const client = new MongoClient(MONGODB_URI);
       await client.connect();
       const db = client.db('spiralogic');
-      
+
       const patternCount = await db.collection('consciousness_patterns').countDocuments();
       console.log(`✅ Consciousness patterns: ${patternCount} documents`);
-      
+
       await client.close();
 
     } catch (error) {
@@ -178,14 +178,14 @@ class ConsciousnessDataMigrator {
 
   generateMigrationReport() {
     const duration = (Date.now() - this.startTime) / 1000;
-    
+
     console.log('\n📋 MIGRATION REPORT');
     console.log('==================');
     console.log(`Duration: ${duration} seconds`);
     console.log(`Records migrated: ${this.migratedCount}`);
     console.log(`Errors: ${this.errorCount}`);
     console.log(`Success rate: ${((this.migratedCount / (this.migratedCount + this.errorCount)) * 100).toFixed(2)}%`);
-    
+
     // Save report
     const report = {
       timestamp: new Date().toISOString(),
@@ -194,7 +194,7 @@ class ConsciousnessDataMigrator {
       errors: this.errorCount,
       successRate: (this.migratedCount / (this.migratedCount + this.errorCount)) * 100
     };
-    
+
     fs.writeFileSync('migration-report.json', JSON.stringify(report, null, 2));
     console.log('\n✅ Report saved to migration-report.json');
   }

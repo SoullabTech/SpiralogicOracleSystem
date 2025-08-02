@@ -14,7 +14,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [oracleName, setOracleName] = useState<string>("");
   const [oracleVoice, setOracleVoice] = useState<string>("");
-  
+
   const { config, isLoading, saveConfig, isConfigured } = useOracleConfig();
 
   // Check if already configured on mount
@@ -35,18 +35,18 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
 
   const handleVoiceChosen = async (voiceId: string) => {
     setOracleVoice(voiceId);
-    
+
     // Save complete configuration
     const finalConfig = {
       oracleName,
       oracleVoice: voiceId,
     };
-    
+
     try {
       await saveConfig(finalConfig);
       localStorage.setItem("oracleVoice", voiceId);
       setStep(3);
-      
+
       // Auto-complete after 3 seconds
       setTimeout(() => {
         onComplete?.();
@@ -122,7 +122,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
           <p className="text-md text-gray-400 mb-8">
             Let's begin your daily journey inward.
           </p>
-          
+
           {/* Auto-advance progress bar */}
           <motion.div
             initial={{ width: 0 }}

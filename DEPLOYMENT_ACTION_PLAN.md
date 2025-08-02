@@ -18,7 +18,7 @@
 1. **Go to Vercel Dashboard**: https://vercel.com/dashboard
 2. **Find ALL your teams/accounts**:
    - spiralogic-oracle-system
-   - soullab-025ab39a  
+   - soullab-025ab39a
    - soullab-badc0d59
    - Spiralogic Oracle System
 3. **Search each team** for domains:

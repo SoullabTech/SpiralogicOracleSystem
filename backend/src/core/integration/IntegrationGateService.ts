@@ -22,7 +22,7 @@ export class IntegrationGateService {
     userId: string
   ): ReflectionGap {
     const minimumDuration = this.minimumReflectionDays[contentType];
-    
+
     return {
       id: this.generateId(),
       contentId,
@@ -138,14 +138,14 @@ export class IntegrationGateService {
     // Real implementation would use NLP analysis of evidence description
     // For now, basic validation logic
     const evidenceText = `${evidence.description} ${evidence.realWorldContext}`.toLowerCase();
-    
+
     // Check for grounding indicators
     const groundingWords = ['daily', 'practical', 'ordinary', 'real', 'human', 'struggle', 'consistent'];
     const bypassingWords = ['transcend', 'beyond', 'escape', 'transform completely', 'never again'];
-    
+
     const groundingScore = groundingWords.filter(word => evidenceText.includes(word)).length;
     const bypassingScore = bypassingWords.filter(word => evidenceText.includes(word)).length;
-    
+
     return groundingScore > bypassingScore && groundingScore >= 2;
   }
 
@@ -154,7 +154,7 @@ export class IntegrationGateService {
     const daysSinceStart = Math.floor(
       (Date.now() - reflectionGap.startDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-    
+
     if (daysSinceStart < reflectionGap.minimumDuration) {
       return false;
     }
@@ -177,7 +177,7 @@ export class IntegrationGateService {
 
   handleBypassAttempt(reflectionGap: ReflectionGap, userId: string): string {
     reflectionGap.bypassAttempts += 1;
-    
+
     const messages = {
       1: "Integration takes time. Your insights will be more sustainable if you allow them to settle into your daily life before moving forward.",
       2: "Rushing to new content can prevent deep integration. Consider what you might be avoiding by seeking the next insight.",
@@ -304,20 +304,20 @@ export class IntegrationGateService {
 
     const qualityScores = evidence.map(e => {
       let score = 0;
-      
+
       // Diversity of evidence types
       if (evidence.filter(ev => ev.type === e.type).length <= 2) score += 20;
-      
+
       // Real-world context detail
       if (e.realWorldContext.length > 50) score += 20;
-      
+
       // Validation by others
       if (e.validatedBy === 'peer' || e.validatedBy === 'mentor') score += 30;
-      
+
       // Recent and sustained
       const daysSince = Math.floor((Date.now() - e.date.getTime()) / (1000 * 60 * 60 * 24));
       if (daysSince <= 7) score += 30;
-      
+
       return score;
     });
 
@@ -406,7 +406,7 @@ export class IntegrationGateService {
 
   private calculateCurrentSpiralDepth(architecture: IntegrationArchitecture): number {
     if (architecture.spiralProgress.length === 0) return 1;
-    
+
     return Math.max(...architecture.spiralProgress.map(p => p.depth));
   }
 

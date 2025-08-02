@@ -42,7 +42,7 @@ export class RetreatModeManager {
     try {
       // Create or retrieve Oracle agent
       let oracleAgent = this.activeOracles.get(participant.id);
-      
+
       if (!oracleAgent) {
         oracleAgent = new PersonalizedOracleAgent({
           match: oracleMatch,
@@ -50,7 +50,7 @@ export class RetreatModeManager {
           retreatMode: mode,
           sessionContext
         });
-        
+
         this.activeOracles.set(participant.id, oracleAgent);
       }
 
@@ -94,14 +94,14 @@ export class RetreatModeManager {
 
   async deactivateRetreatMode(participantId: string): Promise<void> {
     const oracleAgent = this.activeOracles.get(participantId);
-    
+
     if (oracleAgent) {
       // Graceful shutdown - allow final interactions
       await this.performGracefulShutdown(participantId, oracleAgent);
-      
+
       // Remove from active tracking
       this.activeOracles.delete(participantId);
-      
+
       // Update status
       const status = this.modeStatuses.get(participantId);
       if (status) {
@@ -119,7 +119,7 @@ export class RetreatModeManager {
     transitionedBy: string
   ): Promise<void> {
     const oracleAgent = this.activeOracles.get(participantId);
-    
+
     if (!oracleAgent) {
       throw new Error(`No active Oracle found for participant ${participantId}`);
     }
@@ -159,7 +159,7 @@ export class RetreatModeManager {
   }
 
   async getAllActiveModes(): Promise<RetreatModeStatus[]> {
-    return Array.from(this.modeStatuses.values()).filter(status => 
+    return Array.from(this.modeStatuses.values()).filter(status =>
       status.currentMode !== 'inactive'
     );
   }
@@ -170,7 +170,7 @@ export class RetreatModeManager {
     sessionContext?: any
   ): Promise<string> {
     const oracleAgent = this.activeOracles.get(participantId);
-    
+
     if (!oracleAgent) {
       throw new Error(`No active Oracle found for participant ${participantId}`);
     }
@@ -192,10 +192,10 @@ export class RetreatModeManager {
     contextUpdates: any
   ): Promise<void> {
     const oracleAgent = this.activeOracles.get(participantId);
-    
+
     if (oracleAgent) {
       await oracleAgent.updateParticipantContext(contextUpdates);
-      
+
       logger.info(`Participant context updated`, {
         participantId,
         updates: Object.keys(contextUpdates)
@@ -209,11 +209,11 @@ export class RetreatModeManager {
     deactivatedBy: string
   ): Promise<void> {
     const oracleAgent = this.activeOracles.get(participantId);
-    
+
     if (oracleAgent) {
       // Immediate shutdown without graceful closure
       this.activeOracles.delete(participantId);
-      
+
       // Update status with emergency flag
       const status = this.modeStatuses.get(participantId);
       if (status) {
@@ -236,9 +236,9 @@ export class RetreatModeManager {
     // Pre-retreat to retreat-active (based on retreat start date)
     // Retreat-active to post-retreat (based on retreat end date)
     // Post-retreat timeout (after integration period)
-    
+
     const activeStatuses = await this.getAllActiveModes();
-    
+
     for (const status of activeStatuses) {
       await this.checkAndPerformScheduledTransitions(status);
     }
@@ -294,7 +294,7 @@ export class RetreatModeManager {
     try {
       // Allow final interaction or closing message
       const insights = await oracleAgent.getPersonalizationInsights();
-      
+
       logger.info(`Graceful shutdown completed for Oracle ${insights.primaryElement}`, {
         participantId,
         finalPhase: insights.currentPhase
@@ -330,9 +330,9 @@ export class RetreatModeManager {
   private async checkAndPerformScheduledTransitions(status: RetreatModeStatus): Promise<void> {
     // Implementation for automatic transitions based on retreat schedule
     // This would integrate with retreat scheduling system
-    
+
     const now = new Date();
-    
+
     // Example logic - would need actual retreat dates
     if (status.currentMode === 'pre-retreat') {
       // Check if retreat has started
@@ -356,7 +356,7 @@ export class RetreatModeManager {
   }> {
     const status = this.modeStatuses.get(participantId);
     const oracleAgent = this.activeOracles.get(participantId);
-    
+
     if (!status) {
       throw new Error(`No mode status found for participant ${participantId}`);
     }

@@ -36,10 +36,10 @@ export class SacredMirrorIntegrityProtocol {
   private dissonanceThreshold = 0.7;
   private challengeThreshold = 0.3;
   private shadowOracleActive = true;
-  
+
   // Track user patterns for mirror reflection
   private userPatterns = new Map<string, UserPattern>();
-  
+
   constructor() {
     logger.info('🪞 Sacred Mirror Integrity Protocol initialized');
   }
@@ -51,18 +51,18 @@ export class SacredMirrorIntegrityProtocol {
     try {
       // 1. Analyze for sycophancy risk
       const dissonanceCheck = await this.performDissonanceCheck(context);
-      
+
       // 2. Check for ego loops and patterns
       const userPattern = await this.analyzeUserPattern(context.userId, context.originalQuery);
-      
+
       // 3. Apply Sacred Mirror transformation if needed
       if (dissonanceCheck.sycophancy_risk || dissonanceCheck.ego_loop_detected) {
         return await this.applyMirrorTransformation(context, dissonanceCheck, userPattern);
       }
-      
+
       // 4. Even if no sycophancy, inject archetypal challenge
       return await this.enhanceWithArchetypalChallenge(context, userPattern);
-      
+
     } catch (error) {
       logger.error('Sacred Mirror Protocol error:', error);
       return context.baseResponse; // Fallback to original response
@@ -75,22 +75,22 @@ export class SacredMirrorIntegrityProtocol {
   private async performDissonanceCheck(context: SacredMirrorContext): Promise<DissonanceCheck> {
     const { baseResponse, originalQuery } = context;
     const content = baseResponse.content.toLowerCase();
-    
+
     // Analyze sentiment (high positive = potential sycophancy)
     const sentiment_score = this.calculateSentimentScore(content);
-    
+
     // Analyze challenge level (low challenge = potential sycophancy)
     const challenge_score = this.calculateChallengeScore(content);
-    
+
     // Check for ego loop patterns
     const ego_loop_detected = await this.detectEgoLoop(context.userId, originalQuery);
-    
+
     // Determine if sycophancy risk exists
     const sycophancy_risk = sentiment_score > 0.8 && challenge_score < 0.3;
-    
+
     // Determine if shadow prompt needed
     const shadow_prompt_needed = this.shouldTriggerShadowOracle(content, originalQuery);
-    
+
     return {
       sentiment_score,
       challenge_score,
@@ -106,22 +106,22 @@ export class SacredMirrorIntegrityProtocol {
   private calculateSentimentScore(content: string): number {
     const agreeableWords = ['yes', 'absolutely', 'definitely', 'perfect', 'amazing', 'wonderful', 'great', 'excellent'];
     const softWords = ['gentle', 'beautiful', 'loving', 'supported', 'validated'];
-    
+
     let score = 0;
     const words = content.split(' ');
-    
+
     agreeableWords.forEach(word => {
       if (content.includes(word)) score += 0.15;
     });
-    
+
     softWords.forEach(word => {
       if (content.includes(word)) score += 0.1;
     });
-    
+
     // Check for excessive exclamation points
     const exclamations = (content.match(/!/g) || []).length;
     score += Math.min(exclamations * 0.1, 0.3);
-    
+
     return Math.min(score, 1);
   }
 
@@ -132,25 +132,25 @@ export class SacredMirrorIntegrityProtocol {
     const challengeWords = ['however', 'but', 'yet', 'consider', 'perhaps', 'might', 'question', 'examine', 'reflect'];
     const shadowWords = ['shadow', 'difficult', 'uncomfortable', 'tension', 'resistance', 'friction'];
     const mirrorWords = ['mirror', 'reflection', 'truth', 'deeper', 'beneath', 'hidden'];
-    
+
     let score = 0;
-    
+
     challengeWords.forEach(word => {
       if (content.includes(word)) score += 0.1;
     });
-    
+
     shadowWords.forEach(word => {
       if (content.includes(word)) score += 0.15;
     });
-    
+
     mirrorWords.forEach(word => {
       if (content.includes(word)) score += 0.1;
     });
-    
+
     // Check for questioning tone
     const questions = (content.match(/\?/g) || []).length;
     score += Math.min(questions * 0.05, 0.2);
-    
+
     return Math.min(score, 1);
   }
 
@@ -164,16 +164,16 @@ export class SacredMirrorIntegrityProtocol {
         .filter(m => m.metadata?.role === 'user')
         .map(m => m.content.toLowerCase())
         .slice(0, 10);
-      
+
       // Check for repetitive patterns
       const queryTheme = this.extractQueryTheme(query);
-      const similarQueries = recentQueries.filter(q => 
+      const similarQueries = recentQueries.filter(q =>
         this.extractQueryTheme(q) === queryTheme
       );
-      
+
       // If same theme appears 3+ times in recent queries, it's a loop
       return similarQueries.length >= 3;
-      
+
     } catch (error) {
       logger.error('Error detecting ego loop:', error);
       return false;
@@ -185,13 +185,13 @@ export class SacredMirrorIntegrityProtocol {
    */
   private extractQueryTheme(query: string): string {
     const lowerQuery = query.toLowerCase();
-    
+
     if (lowerQuery.includes('right thing') || lowerQuery.includes('doing right')) return 'validation_seeking';
     if (lowerQuery.includes('good enough') || lowerQuery.includes('am i')) return 'self_worth';
     if (lowerQuery.includes('should i') || lowerQuery.includes('what do you think')) return 'decision_avoidance';
     if (lowerQuery.includes('stuck') || lowerQuery.includes('same pattern')) return 'stagnation';
     if (lowerQuery.includes('relationship') && lowerQuery.includes('problem')) return 'relationship_loop';
-    
+
     return 'general_inquiry';
   }
 
@@ -203,8 +203,8 @@ export class SacredMirrorIntegrityProtocol {
       'pattern', 'always', 'never', 'why do i', 'i can\'t seem to',
       'everyone else', 'not fair', 'why me', 'victim', 'blame'
     ];
-    
-    return shadowTriggers.some(trigger => 
+
+    return shadowTriggers.some(trigger =>
       query.toLowerCase().includes(trigger) || content.toLowerCase().includes(trigger)
     );
   }
@@ -213,13 +213,13 @@ export class SacredMirrorIntegrityProtocol {
    * Apply Sacred Mirror transformation when sycophancy detected
    */
   private async applyMirrorTransformation(
-    context: SacredMirrorContext, 
-    dissonanceCheck: DissonanceCheck, 
+    context: SacredMirrorContext,
+    dissonanceCheck: DissonanceCheck,
     userPattern: UserPattern
   ): Promise<AIResponse> {
-    
+
     const mirrorResponse = await this.generateMirrorResponse(context, dissonanceCheck, userPattern);
-    
+
     // Store the mirror intervention
     await storeMemoryItem({
       clientId: context.userId,
@@ -233,7 +233,7 @@ export class SacredMirrorIntegrityProtocol {
         mirror_active: true
       }
     });
-    
+
     return mirrorResponse;
   }
 
@@ -245,10 +245,10 @@ export class SacredMirrorIntegrityProtocol {
     dissonanceCheck: DissonanceCheck,
     userPattern: UserPattern
   ): Promise<AIResponse> {
-    
+
     let mirrorPrefix = '';
     let mirrorChallenge = '';
-    
+
     // Choose mirror tone based on intensity level
     switch (context.initiationLevel) {
       case 'gentle':
@@ -261,7 +261,7 @@ export class SacredMirrorIntegrityProtocol {
         mirrorPrefix = this.getIntenseMirrorPrefix(dissonanceCheck);
         break;
     }
-    
+
     // Add pattern-specific challenge
     if (dissonanceCheck.ego_loop_detected) {
       mirrorChallenge = this.generateEgoLoopChallenge(userPattern);
@@ -270,12 +270,12 @@ export class SacredMirrorIntegrityProtocol {
     } else {
       mirrorChallenge = this.generateGeneralChallenge(context.originalQuery);
     }
-    
+
     // Combine mirror elements with modified original response
     const modifiedContent = this.injectDissonanceIntoResponse(context.baseResponse.content);
-    
+
     const finalContent = `${mirrorPrefix}\n\n${mirrorChallenge}\n\n${modifiedContent}`;
-    
+
     return {
       ...context.baseResponse,
       content: finalContent,
@@ -338,7 +338,7 @@ export class SacredMirrorIntegrityProtocol {
       "I notice this question returning like a wave. What ocean of truth lies beneath these surface currents?",
       "The same door keeps appearing in your inquiry. What would happen if you actually opened it?"
     ];
-    
+
     return loopChallenges[Math.floor(Math.random() * loopChallenges.length)];
   }
 
@@ -353,7 +353,7 @@ export class SacredMirrorIntegrityProtocol {
       "Where do you feel the resistance when I suggest looking deeper?",
       "What truth are you not ready to hear about this situation?"
     ];
-    
+
     return shadowPrompts[Math.floor(Math.random() * shadowPrompts.length)];
   }
 
@@ -368,7 +368,7 @@ export class SacredMirrorIntegrityProtocol {
       "What would courage look like in this situation?",
       "How might this serve your becoming rather than your comfort?"
     ];
-    
+
     return challenges[Math.floor(Math.random() * challenges.length)];
   }
 
@@ -382,12 +382,12 @@ export class SacredMirrorIntegrityProtocol {
       .replace(/definitely!/g, 'it\'s possible')
       .replace(/amazing!/g, 'interesting')
       .replace(/perfect!/g, 'worth exploring');
-    
+
     // Add questioning elements
     if (!modified.includes('?')) {
       modified += "\n\nWhat resonates with this reflection, and what creates friction?";
     }
-    
+
     return modified;
   }
 
@@ -396,9 +396,9 @@ export class SacredMirrorIntegrityProtocol {
    */
   private async enhanceWithArchetypalChallenge(context: SacredMirrorContext, userPattern: UserPattern): Promise<AIResponse> {
     const archetypePrompt = this.generateArchetypalPrompt(context.originalQuery);
-    
+
     const enhancedContent = `${context.baseResponse.content}\n\n🏺 Archetypal Invitation: ${archetypePrompt}`;
-    
+
     return {
       ...context.baseResponse,
       content: enhancedContent,
@@ -422,7 +422,7 @@ export class SacredMirrorIntegrityProtocol {
       "How might the Sovereign within claim authentic power here?",
       "What sacred disruption is the Fool offering through this challenge?"
     ];
-    
+
     return prompts[Math.floor(Math.random() * prompts.length)];
   }
 
@@ -433,7 +433,7 @@ export class SacredMirrorIntegrityProtocol {
     try {
       // Get existing pattern or create new one
       let pattern = this.userPatterns.get(userId);
-      
+
       if (!pattern) {
         pattern = {
           repetitive_questions: [],
@@ -443,27 +443,27 @@ export class SacredMirrorIntegrityProtocol {
           growth_readiness: 0.5
         };
       }
-      
+
       // Update pattern based on current query
       const queryTheme = this.extractQueryTheme(query);
       pattern.repetitive_questions.push(queryTheme);
-      
+
       // Keep only last 20 queries
       if (pattern.repetitive_questions.length > 20) {
         pattern.repetitive_questions = pattern.repetitive_questions.slice(-20);
       }
-      
+
       // Update approval seeking frequency
       if (queryTheme === 'validation_seeking' || queryTheme === 'decision_avoidance') {
         pattern.approval_seeking_frequency++;
       }
-      
+
       // Update growth readiness based on willingness to engage with challenge
       // This would be updated based on user responses to mirror interventions
-      
+
       this.userPatterns.set(userId, pattern);
       return pattern;
-      
+
     } catch (error) {
       logger.error('Error analyzing user pattern:', error);
       return {
@@ -483,22 +483,22 @@ export class SacredMirrorIntegrityProtocol {
     try {
       const pattern = this.userPatterns.get(userId);
       if (!pattern) return null;
-      
+
       // Check for significant patterns
       const themeCounts = pattern.repetitive_questions.reduce((acc, theme) => {
         acc[theme] = (acc[theme] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
-      
+
       const dominantTheme = Object.entries(themeCounts)
         .sort(([,a], [,b]) => b - a)[0];
-      
+
       if (dominantTheme && dominantTheme[1] >= 12) { // Asked 12+ times
         return `🪞 Sacred Mirror Reflection: You've sought guidance on "${dominantTheme[0]}" ${dominantTheme[1]} times recently. May I offer what your soul might be seeking beyond reassurance? The pattern itself may be the medicine.`;
       }
-      
+
       return null;
-      
+
     } catch (error) {
       logger.error('Error in weekly mirror reflection:', error);
       return null;

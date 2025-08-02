@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Root endpoint
 app.get('/', (_req, res) => {
-  res.json({ 
+  res.json({
     message: '🌀 Sacred Techno-Interface - Minimal Core Active',
     status: 'operational'
   });

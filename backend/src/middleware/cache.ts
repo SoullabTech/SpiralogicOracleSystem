@@ -28,27 +28,27 @@ const cacheConfigs: Record<string, CacheConfig> = {
     varyBy: ['userId', 'oracleMode'],
     invalidateOn: ['POST', 'PUT', 'DELETE']
   },
-  
+
   // User profiles - longer TTL
   '/api/user/profile': {
     ttl: 3600, // 1 hour
     keyPrefix: 'user:profile',
     varyBy: ['userId']
   },
-  
+
   // Holoflower states - medium TTL
   '/api/holoflower/state': {
     ttl: 600, // 10 minutes
     keyPrefix: 'holoflower:state',
     varyBy: ['userId']
   },
-  
+
   // Available oracle modes - long TTL (static content)
   '/api/oracle/available-modes': {
     ttl: 86400, // 24 hours
     keyPrefix: 'oracle:modes'
   },
-  
+
   // Transformation metrics - medium TTL
   '/api/analytics/transformation': {
     ttl: 1800, // 30 minutes
@@ -62,26 +62,26 @@ const cacheConfigs: Record<string, CacheConfig> = {
 // ===============================================
 
 function generateCacheKey(
-  req: Request, 
+  req: Request,
   config: CacheConfig
 ): string {
   const parts = [config.keyPrefix];
-  
+
   // Add varied parameters
   if (config.varyBy) {
     config.varyBy.forEach(param => {
-      const value = 
-        req.params[param] || 
-        req.query[param] || 
+      const value =
+        req.params[param] ||
+        req.query[param] ||
         (req as any).user?.[param] ||
         req.body?.[param];
-      
+
       if (value) {
         parts.push(`${param}:${value}`);
       }
     });
   }
-  
+
   // Add query string hash for complex queries
   if (Object.keys(req.query).length > 0) {
     const queryHash = crypto
@@ -91,7 +91,7 @@ function generateCacheKey(
       .substring(0, 8);
     parts.push(`q:${queryHash}`);
   }
-  
+
   return parts.join(':');
 }
 
@@ -107,10 +107,10 @@ export const cacheMiddleware = (configKey?: string) => {
     }
 
     // Get cache configuration
-    const config = configKey 
-      ? cacheConfigs[configKey] 
+    const config = configKey
+      ? cacheConfigs[configKey]
       : cacheConfigs[req.path];
-    
+
     if (!config) {
       return next(); // No cache config, proceed without caching
     }
@@ -134,33 +134,33 @@ export const cacheMiddleware = (configKey?: string) => {
       if (cached) {
         // Cache hit
         logger.debug(`Cache hit: ${cacheKey}`);
-        
+
         // Set cache headers
         res.set('X-Cache', 'HIT');
         res.set('X-Cache-Key', cacheKey);
-        
+
         // Restore cached headers
         Object.entries(cached.headers).forEach(([key, value]) => {
           res.set(key, value);
         });
-        
+
         // Send cached response
         return res.status(cached.statusCode).json(cached.data);
       }
 
       // Cache miss - intercept response
       logger.debug(`Cache miss: ${cacheKey}`);
-      
+
       const originalJson = res.json;
       const originalStatus = res.status;
       let statusCode = 200;
-      
+
       // Override status to capture it
       res.status = function(code: number) {
         statusCode = code;
         return originalStatus.call(this, code);
       };
-      
+
       // Override json to cache the response
       res.json = function(data: any) {
         // Only cache successful responses
@@ -174,21 +174,21 @@ export const cacheMiddleware = (configKey?: string) => {
             },
             statusCode
           };
-          
+
           // Store in cache (async, don't wait)
           CacheManager.set(cacheKey, cacheData, config.ttl)
             .then(() => logger.debug(`Cached response: ${cacheKey}`))
             .catch(err => logger.error('Cache storage failed:', err));
         }
-        
+
         // Set cache headers
         res.set('X-Cache', 'MISS');
         res.set('X-Cache-Key', cacheKey);
-        
+
         // Call original json method
         return originalJson.call(this, data);
       };
-      
+
       next();
     } catch (error) {
       logger.error('Cache middleware error:', error);
@@ -227,7 +227,7 @@ export const cacheInvalidationMiddleware = () => {
             .then(count => logger.debug(`Invalidated ${count} cache entries for ${prefix}`))
             .catch(err => logger.error('Cache invalidation failed:', err));
         });
-        
+
         return originalJson.call(this, data);
       };
     }
@@ -248,7 +248,7 @@ export const compressionMiddleware = compression({
     if (res.getHeader('Content-Encoding')) {
       return false;
     }
-    
+
     // Use compression for text-based responses
     return compression.filter(req, res);
   },
@@ -263,7 +263,7 @@ export const compressionMiddleware = compression({
 export const etagMiddleware = () => {
   return (req: Request, res: Response, next: NextFunction) => {
     const originalJson = res.json;
-    
+
     res.json = function(data: any) {
       // Generate ETag
       const content = JSON.stringify(data);
@@ -271,19 +271,19 @@ export const etagMiddleware = () => {
         .createHash('md5')
         .update(content)
         .digest('hex');
-      
+
       res.set('ETag', `"${etag}"`);
-      
+
       // Check if client has matching ETag
       const clientEtag = req.get('If-None-Match');
       if (clientEtag === `"${etag}"`) {
         res.status(304).end();
         return res;
       }
-      
+
       return originalJson.call(this, data);
     };
-    
+
     next();
   };
 };
@@ -295,12 +295,12 @@ export const etagMiddleware = () => {
 export const performanceMiddleware = () => {
   return (req: Request, res: Response, next: NextFunction) => {
     const start = process.hrtime.bigint();
-    
+
     // Monitor response time
     res.on('finish', () => {
       const end = process.hrtime.bigint();
       const duration = Number(end - start) / 1e6; // Convert to milliseconds
-      
+
       // Log slow requests
       if (duration > 1000) { // > 1 second
         logger.warn('Slow request detected', {
@@ -310,10 +310,10 @@ export const performanceMiddleware = () => {
           statusCode: res.statusCode
         });
       }
-      
+
       // Set response time header
       res.set('X-Response-Time', `${duration.toFixed(2)}ms`);
-      
+
       // Track metrics (could send to monitoring service)
       if (process.env.ENABLE_METRICS === 'true') {
         // Example: send to metrics collector
@@ -326,7 +326,7 @@ export const performanceMiddleware = () => {
         });
       }
     });
-    
+
     next();
   };
 };
@@ -353,10 +353,10 @@ export const queryOptimizationMiddleware = () => {
       includes: req.query.include ? (req.query.include as string).split(',') : undefined,
       sort: req.query.sort ? parseSort(req.query.sort as string) : undefined
     };
-    
+
     // Attach to request for use in handlers
     (req as any).optimizations = optimizations;
-    
+
     next();
   };
 };

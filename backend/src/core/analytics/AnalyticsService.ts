@@ -141,7 +141,7 @@ export class AnalyticsService {
 
   async generatePlatformAnalytics(timeframe: 'month' | 'quarter' | 'year' = 'month'): Promise<PlatformAnalytics> {
     const cohortData = await this.getCohortData(timeframe);
-    
+
     // Only generate analytics if we have sufficient anonymized data
     if (cohortData.totalUsers < this.ANONYMIZATION_THRESHOLD) {
       throw new Error('Insufficient data for analytics generation');
@@ -163,7 +163,7 @@ export class AnalyticsService {
     timeframe: 'quarter' | 'year' = 'year'
   ): Promise<ResearchInsights> {
     const cohortData = await this.getResearchCohortData(timeframe, minCohortSize);
-    
+
     if (cohortData.length < minCohortSize) {
       throw new Error(`Insufficient anonymized data for research insights (minimum ${minCohortSize} participants)`);
     }
@@ -269,7 +269,7 @@ export class AnalyticsService {
 
   private calculateAverageIntegrationTime(integrationHistory: any[]): number {
     if (integrationHistory.length === 0) return 0;
-    
+
     const totalTime = integrationHistory.reduce((sum, integration) => {
       const startTime = new Date(integration.startDate).getTime();
       const endTime = new Date(integration.completionDate).getTime();
@@ -281,23 +281,23 @@ export class AnalyticsService {
 
   private calculateConsistencyScore(dailyActivity: any[]): number {
     if (dailyActivity.length === 0) return 0;
-    
+
     const totalDays = dailyActivity.length;
     const activeDays = dailyActivity.filter(day => day.hasActivity).length;
     const streaks = this.calculateStreaks(dailyActivity);
     const longestStreak = Math.max(...streaks.map(s => s.length), 0);
-    
+
     // Consistency score based on activity rate and streak length
     const activityRate = activeDays / totalDays;
     const streakBonus = Math.min(longestStreak / 30, 0.3); // Max 30% bonus for 30+ day streaks
-    
+
     return Math.round((activityRate * 7 + streakBonus * 3) * 10) / 10;
   }
 
   private calculateStreaks(dailyActivity: any[]): any[] {
     const streaks = [];
     let currentStreak = { start: 0, length: 0 };
-    
+
     for (let i = 0; i < dailyActivity.length; i++) {
       if (dailyActivity[i].hasActivity) {
         if (currentStreak.length === 0) {
@@ -311,35 +311,35 @@ export class AnalyticsService {
         }
       }
     }
-    
+
     if (currentStreak.length > 0) {
       streaks.push(currentStreak);
     }
-    
+
     return streaks;
   }
 
   private calculateSpiralDepth(spiralProgress: SpiralProgressPoint[]): number {
     if (spiralProgress.length === 0) return 0;
-    
+
     // Group by theme and calculate maximum depth reached
     const themeDepths = new Map<string, number>();
-    
+
     spiralProgress.forEach(point => {
       const currentDepth = themeDepths.get(point.theme) || 0;
       themeDepths.set(point.theme, Math.max(currentDepth, point.depth));
     });
-    
+
     const depths = Array.from(themeDepths.values());
     return depths.length > 0 ? Math.max(...depths) : 0;
   }
 
   private countRegressionInstances(spiralProgress: SpiralProgressPoint[]): number {
     // Count instances where user revisited a theme at a similar or deeper level
-    const regressions = spiralProgress.filter(point => 
+    const regressions = spiralProgress.filter(point =>
       point.phase.includes('regression') || point.phase.includes('revisit')
     );
-    
+
     return regressions.length;
   }
 
@@ -347,9 +347,9 @@ export class AnalyticsService {
     // Calculate percentage increase in community engagement after bypassing interventions
     const preInterventionEngagement = activityData.preInterventionCommunityActivity || 0;
     const postInterventionEngagement = activityData.postInterventionCommunityActivity || 0;
-    
+
     if (preInterventionEngagement === 0) return 0;
-    
+
     return Math.round(((postInterventionEngagement - preInterventionEngagement) / preInterventionEngagement) * 100);
   }
 

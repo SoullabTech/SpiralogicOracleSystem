@@ -48,7 +48,7 @@ const audioPath = await routeVoice({
 
 ### 3. Agent Role Routing Logic
 - `oracle` → Sesame CSM (if enabled), else ElevenLabs
-- `elemental` → Sesame CSM (if enabled), else ElevenLabs  
+- `elemental` → Sesame CSM (if enabled), else ElevenLabs
 - `narrator` → Always ElevenLabs (for static narrations)
 
 ## Next Steps

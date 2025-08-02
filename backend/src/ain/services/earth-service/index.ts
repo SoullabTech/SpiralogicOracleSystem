@@ -12,16 +12,16 @@ export class EarthService extends CloudAgent {
   private ruleEngine: RuleEngine;
   private structureAnalyzer: StructureAnalyzer;
   private knowledgeBase: KnowledgeBase;
-  
+
   constructor() {
     super('earth-service');
     this.ruleEngine = new RuleEngine(this.loadEarthRules());
     this.structureAnalyzer = new StructureAnalyzer();
     this.knowledgeBase = new KnowledgeBase();
-    
+
     this.setupEventHandlers();
   }
-  
+
   private setupEventHandlers() {
     // Subscribe to structure and planning events
     this.subscribe('plan.request', this.onPlanRequest.bind(this));
@@ -29,7 +29,7 @@ export class EarthService extends CloudAgent {
     this.subscribe('resource.query', this.onResourceQuery.bind(this));
     this.subscribe('grounding.request', this.onGroundingRequest.bind(this));
   }
-  
+
   /**
    * Load earth element rules for symbolic reasoning
    */
@@ -70,26 +70,26 @@ export class EarthService extends CloudAgent {
       ]
     };
   }
-  
+
   /**
    * Handle planning requests with structured approach
    */
   private async onPlanRequest(event: SpiralogicEvent) {
     const { goal, context, constraints } = event.payload.content;
-    
+
     // Analyze structure needs
     const structureAnalysis = await this.structureAnalyzer.analyze({
       goal,
       currentState: context,
       constraints
     });
-    
+
     // Apply rule-based reasoning
     const applicableRules = await this.ruleEngine.evaluate({
       ...context,
       analysis: structureAnalysis
     });
-    
+
     // Create structured plan
     const plan = await this.createStructuredPlan({
       goal,
@@ -97,10 +97,10 @@ export class EarthService extends CloudAgent {
       structure: structureAnalysis,
       constraints
     });
-    
+
     // Store in knowledge base
     await this.knowledgeBase.store('plans', plan);
-    
+
     await this.publish('plan.created', {
       plan,
       structure_score: structureAnalysis.score,
@@ -109,19 +109,19 @@ export class EarthService extends CloudAgent {
       earth_wisdom: this.provideEarthWisdom(plan)
     });
   }
-  
+
   /**
    * Handle structure needs with earth element wisdom
    */
   private async onStructureNeed(event: SpiralogicEvent) {
     const { situation, desired_outcome, current_chaos } = event.payload.content;
-    
+
     // Identify structural patterns
     const patterns = await this.identifyStructuralPatterns({
       situation,
       chaos_level: current_chaos
     });
-    
+
     // Create stabilizing structure
     const structure = {
       foundation: this.createFoundation(patterns),
@@ -129,7 +129,7 @@ export class EarthService extends CloudAgent {
       connections: this.mapConnections(patterns),
       growth_pattern: this.determineGrowthPattern(patterns, desired_outcome)
     };
-    
+
     // Apply earth element principles
     const earthStructure = {
       ...structure,
@@ -137,16 +137,16 @@ export class EarthService extends CloudAgent {
       stability_metrics: this.defineStabilityMetrics(structure),
       material_resources: await this.identifyMaterialNeeds(structure)
     };
-    
+
     await this.publish('structure.defined', earthStructure);
   }
-  
+
   /**
    * Handle resource queries with practical wisdom
    */
   private async onResourceQuery(event: SpiralogicEvent) {
     const { need, available, timeline } = event.payload.content;
-    
+
     // Evaluate resources using rules
     const resourceEvaluation = await this.ruleEngine.evaluate({
       type: 'resource-check',
@@ -154,7 +154,7 @@ export class EarthService extends CloudAgent {
       available,
       timeline
     });
-    
+
     // Create resource plan
     const resourcePlan = {
       immediate_resources: this.identifyImmediateResources(available, need),
@@ -163,7 +163,7 @@ export class EarthService extends CloudAgent {
       conservation_practices: this.suggestConservation(available),
       abundance_mindset: this.cultivateAbundance(available, need)
     };
-    
+
     await this.publish('earth.response', {
       type: 'resource-wisdom',
       plan: resourcePlan,
@@ -171,20 +171,20 @@ export class EarthService extends CloudAgent {
       earth_teaching: this.provideResourceWisdom()
     });
   }
-  
+
   /**
    * Provide grounding support
    */
   private async onGroundingRequest(event: SpiralogicEvent) {
     const { current_state, instability_factors } = event.payload.content;
-    
+
     // Assess grounding needs
     const groundingAssessment = {
       current_grounding: this.assessCurrentGrounding(current_state),
       instability_level: this.calculateInstability(instability_factors),
       root_causes: this.identifyRootCauses(instability_factors)
     };
-    
+
     // Create grounding protocol
     const groundingProtocol = {
       immediate_practices: this.selectImmediatePractices(groundingAssessment),
@@ -193,17 +193,17 @@ export class EarthService extends CloudAgent {
       stability_anchors: this.identifyStabilityAnchors(current_state),
       long_term_foundation: this.buildLongTermFoundation(groundingAssessment)
     };
-    
+
     await this.publish('grounding.protocol', groundingProtocol);
   }
-  
+
   /**
    * Create structured plan based on rules and analysis
    */
   private async createStructuredPlan(input: PlanInput): Promise<StructuredPlan> {
     const phases = this.identifyPhases(input.goal);
     const milestones = this.defineMilestones(phases, input.constraints);
-    
+
     return {
       id: this.generatePlanId(),
       goal: input.goal,
@@ -222,7 +222,7 @@ export class EarthService extends CloudAgent {
       earth_wisdom_guidance: this.generateEarthGuidance(input.goal)
     };
   }
-  
+
   /**
    * Calculate stability rating for plan
    */
@@ -233,15 +233,15 @@ export class EarthService extends CloudAgent {
       milestone_definition: plan.phases.every(p => p.milestones.length > 0) ? 0.2 : 0,
       risk_mitigation: plan.risk_mitigation ? 0.2 : 0
     };
-    
+
     return Object.values(factors).reduce((sum, val) => sum + val, 0);
   }
-  
+
   /**
    * Generate implementation steps
    */
   private generateImplementationSteps(plan: StructuredPlan): ImplementationStep[] {
-    return plan.phases.flatMap(phase => 
+    return plan.phases.flatMap(phase =>
       phase.milestones.map(milestone => ({
         step: milestone.name,
         phase: phase.name,
@@ -251,7 +251,7 @@ export class EarthService extends CloudAgent {
       }))
     );
   }
-  
+
   /**
    * Provide earth element wisdom
    */
@@ -262,10 +262,10 @@ export class EarthService extends CloudAgent {
       `Root deeply into your purpose, and your ${plan.goal} will flourish.`,
       `With earth's steadiness, transform vision into reality.`
     ];
-    
+
     return wisdomTemplates[Math.floor(Math.random() * wisdomTemplates.length)];
   }
-  
+
   /**
    * Create foundation based on patterns
    */
@@ -277,7 +277,7 @@ export class EarthService extends CloudAgent {
       material: 'crystalline-wisdom' // Earth element foundation
     };
   }
-  
+
   /**
    * Suggest grounding practices based on chaos level
    */
@@ -292,12 +292,12 @@ export class EarthService extends CloudAgent {
       'mud or clay work',
       'mountain visualization'
     ];
-    
+
     // More practices for higher chaos
     const count = Math.ceil(chaosLevel * 3) + 1;
     return practices.slice(0, Math.min(count, practices.length));
   }
-  
+
   /**
    * Identify structural patterns
    */
@@ -318,7 +318,7 @@ export class EarthService extends CloudAgent {
       }
     ];
   }
-  
+
   /**
    * Generate practical steps
    */
@@ -410,14 +410,14 @@ interface Foundation {
 // Knowledge base implementation
 class KnowledgeBase {
   private storage: Map<string, any[]> = new Map();
-  
+
   async store(category: string, data: any): Promise<void> {
     if (!this.storage.has(category)) {
       this.storage.set(category, []);
     }
     this.storage.get(category)!.push(data);
   }
-  
+
   async retrieve(category: string, query: any): Promise<any> {
     return this.storage.get(category) || [];
   }

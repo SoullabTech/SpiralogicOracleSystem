@@ -104,7 +104,7 @@ export class PersonalOracleAgent extends OracleAgent {
   private async wrapAgent(agent: OracleAgent, query: string | { input: string; userId: string }, context: any[]): Promise<AgentResponse> {
     const input = typeof query === 'string' ? query : query.input;
     const userId = typeof query === 'string' ? 'anonymous' : query.userId;
-    
+
     const response = await agent.processQuery(input);
     const facet = await detectFacetFromInput(input);
 

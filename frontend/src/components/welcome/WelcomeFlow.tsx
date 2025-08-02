@@ -101,7 +101,7 @@ const WelcomeFlow: React.FC<WelcomeFlowProps> = ({ onComplete }) => {
               <h1 className="text-3xl font-light text-amber-100 tracking-wide">
                 {phases[currentPhase].title}
               </h1>
-              
+
               <p className="text-lg text-slate-300 leading-relaxed max-w-xl mx-auto">
                 {phases[currentPhase].content}
               </p>
@@ -184,7 +184,7 @@ const OracleNaming: React.FC<OracleNamingProps> = ({ onSetup }) => {
 
         <div className="space-y-4">
           <h3 className="text-lg text-amber-100 font-medium">Voice Selection</h3>
-          
+
           {Object.entries(voices).map(([provider, voiceList]) => (
             <div key={provider} className="space-y-2">
               <h4 className="text-sm text-slate-400 uppercase tracking-wide">{provider}</h4>

@@ -20,7 +20,7 @@
    - Check all teams/accounts in dropdown:
      - soullab's projects
      - soullab-025ab39a
-     - soullab-badc0d59  
+     - soullab-badc0d59
      - Spiralogic Oracle System
 
 2. **Locate domains in old project**:
@@ -78,7 +78,7 @@ curl -I https://oracle.soullab.life/
 
 - [ ] DNS records configured (✅ DONE)
 - [ ] Find old project with domains
-- [ ] Remove domains from old project  
+- [ ] Remove domains from old project
 - [ ] Add domains to current project
 - [ ] Verify all URLs return HTTP/2 200
 - [ ] 🎉 Celebrate complete deployment!

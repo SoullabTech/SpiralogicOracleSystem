@@ -72,12 +72,12 @@ export interface VoiceMetadata {
  * Returns audioUrl or null on failure with comprehensive error handling
  */
 export async function speak(
-  text: string, 
-  agentRole: string, 
+  text: string,
+  agentRole: string,
   agentType?: string
 ): Promise<string | null> {
   const startTime = Date.now();
-  
+
   try {
     logger.info('Voice synthesis initiated', {
       agentRole,
@@ -87,7 +87,7 @@ export async function speak(
     });
 
     const result = await speakWithMetadata({ text, agentRole, agentType });
-    
+
     const duration = Date.now() - startTime;
     logger.info('Voice synthesis completed', {
       service: result.service,
@@ -122,7 +122,7 @@ export async function speakWithMetadata(options: SpeakOptions): Promise<SpeakRes
     // Get voice profile and configuration
     const profile = await getVoiceProfile(agentRole, agentType);
     const profileKey = getVoiceProfileKey(agentRole, agentType);
-    
+
     logger.info('Voice profile selected', {
       profileKey,
       profileName: profile.name || 'Unknown',
@@ -132,10 +132,10 @@ export async function speakWithMetadata(options: SpeakOptions): Promise<SpeakRes
 
     // Apply voice styling
     const styledText = applyVoiceStyle(text, profile);
-    
+
     // Determine service to use
     const shouldUseSesame = USE_SESAME && (agentRole === 'oracle' || agentRole === 'elemental');
-    
+
     let audioUrl: string | null = null;
     let service: 'sesame' | 'elevenlabs' | 'error' = 'error';
 
@@ -148,7 +148,7 @@ export async function speakWithMetadata(options: SpeakOptions): Promise<SpeakRes
         logger.warn('Sesame CSM failed, trying ElevenLabs fallback', {
           error: sesameError.message
         });
-        
+
         if (VOICE_SERVICE_CONFIG.FALLBACK_TO_ELEVENLABS) {
           audioUrl = await synthesizeWithElevenLabs(styledText, agentRole);
           service = 'elevenlabs';
@@ -195,7 +195,7 @@ export async function speakWithMetadata(options: SpeakOptions): Promise<SpeakRes
  */
 export function generateVoiceMetadata(result: SpeakResult): VoiceMetadata {
   const profile = voiceProfilesCache[result.voiceProfile] || DEFAULT_VOICE_PROFILE;
-  
+
   return {
     voice_synthesis: !!result.audioUrl,
     voice_profile: result.voiceProfile,
@@ -237,11 +237,11 @@ async function getVoiceProfile(agentRole: string, agentType?: string): Promise<V
 async function loadVoiceProfiles(): Promise<void> {
   try {
     const voiceProfilesPath = path.join(__dirname, '../config/voiceProfiles.json');
-    
+
     if (fs.existsSync(voiceProfilesPath)) {
       const profilesData = fs.readFileSync(voiceProfilesPath, 'utf8');
       const profiles = JSON.parse(profilesData);
-      
+
       // Validate profiles
       const validProfiles: Record<string, VoiceProfile> = {};
       for (const [key, profile] of Object.entries(profiles)) {
@@ -251,10 +251,10 @@ async function loadVoiceProfiles(): Promise<void> {
           logger.warn('Invalid voice profile found', { key, profile });
         }
       }
-      
+
       voiceProfilesCache = validProfiles;
       profilesLastLoaded = Date.now();
-      
+
       logger.info('Voice profiles loaded successfully', {
         count: Object.keys(validProfiles).length,
         profiles: Object.keys(validProfiles)
@@ -276,18 +276,18 @@ async function loadVoiceProfiles(): Promise<void> {
  */
 function applyVoiceStyle(text: string, profile: VoiceProfile): string {
   const { promptMarkers, emotionalQuality } = profile;
-  
+
   // Add emotional quality context
   let styledText = text;
   if (emotionalQuality) {
     styledText = `[${emotionalQuality}] ${styledText}`;
   }
-  
+
   // Add prompt markers
   if (promptMarkers) {
     styledText = `${promptMarkers} ${styledText}`;
   }
-  
+
   return styledText;
 }
 
@@ -297,7 +297,7 @@ function applyVoiceStyle(text: string, profile: VoiceProfile): string {
 async function synthesizeWithSesameCSM(text: string, profile: VoiceProfile): Promise<string> {
   const filename = `sesame_${uuidv4()}.wav`;
   const outputPath = path.resolve(__dirname, '../../public/audio', filename);
-  
+
   // Ensure audio directory exists
   const audioDir = path.dirname(outputPath);
   if (!fs.existsSync(audioDir)) {
@@ -311,7 +311,7 @@ async function synthesizeWithSesameCSM(text: string, profile: VoiceProfile): Pro
   };
 
   const wrapperPath = path.join(__dirname, '../../external/csm/voiceWrapper.py');
-  
+
   if (!fs.existsSync(wrapperPath)) {
     throw new Error('Sesame CSM wrapper not found. Please run voice setup.');
   }
@@ -322,7 +322,7 @@ async function synthesizeWithSesameCSM(text: string, profile: VoiceProfile): Pro
 
   try {
     const input = JSON.stringify(promptData).replace(/'/g, "'\"'\"'");
-    
+
     execSync(`"${pythonCmd}" "${wrapperPath}" '${input}'`, {
       encoding: 'utf8',
       timeout: VOICE_SERVICE_CONFIG.SESAME_TIMEOUT
@@ -353,7 +353,7 @@ async function synthesizeWithElevenLabs(text: string, agentRole: string): Promis
       text: text,
       voiceId: config.voiceId
     });
-    
+
     return result;
   } catch (error: any) {
     throw new Error(`ElevenLabs synthesis failed: ${error.message}`);
@@ -368,22 +368,22 @@ export async function testVoiceSynthesis(
   agentType: string = 'MainOracleAgent'
 ): Promise<SpeakResult> {
   const testText = "You already know what I'm going to say, don't you? This is a test of the voice synthesis system.";
-  
+
   logger.info('Starting voice synthesis test', { agentRole, agentType });
-  
+
   const result = await speakWithMetadata({
     text: testText,
     agentRole,
     agentType
   });
-  
+
   logger.info('Voice synthesis test completed', {
     success: !!result.audioUrl,
     service: result.service,
     profile: result.voiceProfile,
     error: result.error
   });
-  
+
   return result;
 }
 

@@ -17,15 +17,15 @@ export class WaterService extends HybridAgent {
     flow: 0.5,
     clarity: 0.7
   };
-  
+
   constructor() {
     super('water-service');
     this.emotionalSensor = new EmotionalSensor();
     this.symbolicMemory = new SymbolicMemory('emotional-patterns');
-    
+
     this.setupEventHandlers();
   }
-  
+
   private setupEventHandlers() {
     // Subscribe to emotional and intuitive events
     this.subscribe('emotion.shift', this.onEmotionShift.bind(this));
@@ -33,24 +33,24 @@ export class WaterService extends HybridAgent {
     this.subscribe('memory.create', this.onMemoryCreate.bind(this));
     this.subscribe('intuition.request', this.onIntuitionRequest.bind(this));
   }
-  
+
   /**
    * Process emotional shifts with both edge and cloud capabilities
    */
   private async onEmotionShift(event: SpiralogicEvent) {
     // Edge processing for immediate response
     const immediateReading = await this.emotionalSensor.readCurrent(event);
-    
+
     // Update local emotional state
     this.updateEmotionalState(immediateReading);
-    
+
     // Publish immediate state
     await this.publish('emotion.state', {
       current: this.emotionalState,
       timestamp: Date.now(),
       processing: 'edge'
     });
-    
+
     // If significant shift, request cloud processing
     if (immediateReading.magnitude > 0.7) {
       await this.requestCloudProcessing('deep-emotional-analysis', {
@@ -60,16 +60,16 @@ export class WaterService extends HybridAgent {
       });
     }
   }
-  
+
   /**
    * Process dream captures with symbolic analysis
    */
   private async onDreamCapture(event: SpiralogicEvent) {
     const { content, symbols, emotions } = event.payload.content;
-    
+
     // Edge: Quick symbolic matching
     const immediateSymbols = await this.symbolicMemory.matchPatterns(symbols);
-    
+
     // Create dream insight
     const dreamInsight = {
       type: 'dream-wisdom',
@@ -77,9 +77,9 @@ export class WaterService extends HybridAgent {
       emotional_tone: this.analyzeEmotionalTone(emotions),
       water_message: this.generateWaterMessage(immediateSymbols, emotions)
     };
-    
+
     await this.publish('water.response', dreamInsight);
-    
+
     // Store in symbolic memory
     await this.symbolicMemory.store({
       type: 'dream',
@@ -89,13 +89,13 @@ export class WaterService extends HybridAgent {
       emotional_signature: emotions
     });
   }
-  
+
   /**
    * Tag memories with emotional context
    */
   private async onMemoryCreate(event: SpiralogicEvent) {
     const memory = event.payload.content;
-    
+
     // Add emotional context to memory
     const emotionalContext = {
       state_at_creation: this.emotionalState,
@@ -103,7 +103,7 @@ export class WaterService extends HybridAgent {
       flow_pattern: this.identifyFlowPattern(memory),
       water_element_strength: this.calculateWaterStrength(memory)
     };
-    
+
     // Publish enhanced memory
     await this.publish('memory.enhanced', {
       ...memory,
@@ -114,16 +114,16 @@ export class WaterService extends HybridAgent {
       }
     });
   }
-  
+
   /**
    * Provide intuitive guidance
    */
   private async onIntuitionRequest(event: SpiralogicEvent) {
     const { question, context } = event.payload.content;
-    
+
     // Access intuitive patterns
     const intuitivePatterns = await this.accessIntuitiveField(question, context);
-    
+
     // Generate water wisdom
     const waterWisdom = {
       intuitive_sense: intuitivePatterns.primaryInsight,
@@ -132,10 +132,10 @@ export class WaterService extends HybridAgent {
       depth_level: intuitivePatterns.depth,
       clarity_score: intuitivePatterns.clarity
     };
-    
+
     await this.publish('intuition.insight', waterWisdom);
   }
-  
+
   /**
    * Update emotional state based on sensor reading
    */
@@ -148,7 +148,7 @@ export class WaterService extends HybridAgent {
       lastUpdated: Date.now()
     };
   }
-  
+
   /**
    * Access intuitive field for guidance
    */
@@ -174,12 +174,12 @@ export class WaterService extends HybridAgent {
         resonance: 0.9
       }
     ];
-    
+
     // Select based on question resonance
     const index = question.length % patterns.length;
     return patterns[index];
   }
-  
+
   /**
    * Generate emotional guidance based on patterns
    */
@@ -189,10 +189,10 @@ export class WaterService extends HybridAgent {
       `Diving to depth level ${patterns.depth}, we find: ${patterns.primaryInsight}`,
       `The emotional currents resonate at ${patterns.resonance}: ${patterns.primaryInsight}`
     ];
-    
+
     return guidanceTemplates[Math.floor(Math.random() * guidanceTemplates.length)];
   }
-  
+
   /**
    * Recommend flow state based on context
    */
@@ -204,7 +204,7 @@ export class WaterService extends HybridAgent {
       practice: this.suggestWaterPractice()
     };
   }
-  
+
   /**
    * Suggest water element practice
    */
@@ -216,12 +216,12 @@ export class WaterService extends HybridAgent {
       'Intuitive journaling',
       'Dream water ritual'
     ];
-    
+
     // Select based on current emotional state
     const index = Math.floor(this.emotionalState.depth * practices.length);
     return practices[Math.min(index, practices.length - 1)];
   }
-  
+
   /**
    * Calculate emotional significance of memory
    */
@@ -229,14 +229,14 @@ export class WaterService extends HybridAgent {
     // Simplified calculation - enhance with actual logic
     const emotionalKeywords = ['feel', 'felt', 'emotion', 'heart', 'soul', 'love', 'fear', 'joy'];
     const content = JSON.stringify(memory).toLowerCase();
-    
-    const keywordCount = emotionalKeywords.filter(keyword => 
+
+    const keywordCount = emotionalKeywords.filter(keyword =>
       content.includes(keyword)
     ).length;
-    
+
     return Math.min(keywordCount / emotionalKeywords.length, 1.0);
   }
-  
+
   /**
    * Identify flow pattern in memory
    */
@@ -244,17 +244,17 @@ export class WaterService extends HybridAgent {
     const patterns = ['tidal', 'river', 'rain', 'ocean', 'spring', 'waterfall'];
     return patterns[Math.floor(Math.random() * patterns.length)];
   }
-  
+
   /**
    * Calculate water element strength
    */
   private calculateWaterStrength(memory: any): number {
     const significance = this.calculateEmotionalSignificance(memory);
     const currentWaterState = this.emotionalState.depth * this.emotionalState.flow;
-    
+
     return (significance + currentWaterState) / 2;
   }
-  
+
   /**
    * Analyze emotional tone from emotions array
    */
@@ -269,17 +269,17 @@ export class WaterService extends HybridAgent {
       fear: 0.2,
       sadness: 0.1
     };
-    
+
     const scores = emotions.map(e => toneMap[e.toLowerCase()] || 0.5);
     const average = scores.reduce((a, b) => a + b, 0) / scores.length;
-    
+
     return {
       value: average,
       primary: emotions[0] || 'neutral',
       complexity: emotions.length
     };
   }
-  
+
   /**
    * Generate water element message
    */
@@ -289,10 +289,10 @@ export class WaterService extends HybridAgent {
       `Deep currents reveal: ${symbols.map(s => s.name).join(', ')}`,
       `Emotional tides bring wisdom through ${emotions.join(' and ')}`
     ];
-    
+
     return templates[Math.floor(Math.random() * templates.length)];
   }
-  
+
   /**
    * Get local emotional history for context
    */

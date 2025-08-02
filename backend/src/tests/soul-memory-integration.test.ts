@@ -39,7 +39,7 @@ async function testSoulMemoryIntegration() {
   console.log('4️⃣ Testing Oracle Exchange...');
   const testMessage = "I'm feeling overwhelmed by all these changes in my life";
   console.log(`User: "${testMessage}"`);
-  
+
   const oracleResponse = await oracle.respondToPrompt(testMessage);
   console.log(`Oracle: "${oracleResponse}"\n`);
 
@@ -48,7 +48,7 @@ async function testSoulMemoryIntegration() {
   const recentMemories = await soulMemory.retrieveMemories('test_user_123', {
     limit: 1
   });
-  
+
   if (recentMemories.length > 0) {
     const latestMemory = recentMemories[0];
     console.log('✅ Memory stored successfully!');
@@ -77,7 +77,7 @@ async function testSoulMemoryIntegration() {
 
   // 7. Test Pattern Detection with Multiple Exchanges
   console.log('7️⃣ Testing pattern detection...');
-  
+
   // Store a few more related exchanges
   const testExchanges = [
     "I keep feeling like I'm not making progress",
@@ -89,7 +89,7 @@ async function testSoulMemoryIntegration() {
     console.log(`User: "${message}"`);
     const response = await oracle.respondToPrompt(message);
     console.log(`Oracle: "${response.substring(0, 100)}..."\n`);
-    
+
     // Small delay to ensure sequential timestamps
     await new Promise(resolve => setTimeout(resolve, 100));
   }
@@ -117,7 +117,7 @@ async function testSoulMemoryIntegration() {
 
   // 10. Test Archetypal Pattern Detection
   console.log('🔟 Testing archetypal patterns...');
-  
+
   // Store memory with archetype
   await soulMemory.storeMemory({
     userId: 'test_user_123',
