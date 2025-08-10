@@ -4,6 +4,7 @@
 import { Router } from 'express';
 import { errorResponse } from '../utils/sharedUtilities';
 import personalOracleRouter from './routes/personalOracleRouter';
+import ainEngineRouter from './routes/ainEngineRouter';
 import oracleGatewayRouter from '../routes/oracleGateway';
 import healthRouter from '../routes/health.routes';
 import { logger } from '../utils/logger';
@@ -26,6 +27,12 @@ router.use('/', oracleGatewayRouter);
 router.use(`/${API_VERSION}/personal-oracle`, personalOracleRouter);
 
 /**
+ * Mount AIN Engine routes - Public API for third-party developers
+ * Provides access to collective insights and archetypal wisdom
+ */
+router.use(`/${API_VERSION}/ain-engine`, ainEngineRouter);
+
+/**
  * Health and monitoring endpoints
  */
 router.use(`/${API_VERSION}/health`, healthRouter);
@@ -43,6 +50,7 @@ router.get('/', (req, res) => {
       endpoints: {
         oracle: `/${API_VERSION}/oracle`,
         personalOracle: `/${API_VERSION}/personal-oracle`,
+        ainEngine: `/${API_VERSION}/ain-engine`,
         health: `/${API_VERSION}/health`
       },
       documentation: process.env.API_DOCS_URL || '/docs',
@@ -64,12 +72,16 @@ router.get(`/${API_VERSION}`, (req, res) => {
       environment: process.env.NODE_ENV || 'development',
       features: [
         'Personal Oracle Agent',
+        'AIN Engine Public API',
+        'Collective Intelligence',
+        'Archetypal Processes',
         'Elemental Routing',
         'Astrology Integration',
         'Journal Integration',
         'Assessment Integration',
         'Rate Limiting',
         'Authentication',
+        'Developer SDK',
         'Standardized Responses'
       ]
     },
@@ -89,7 +101,7 @@ router.use('*', (req, res) => {
   
   res.status(404).json(errorResponse([
     'API endpoint not found',
-    `Available endpoints: /${API_VERSION}/personal-oracle, /${API_VERSION}/health`
+    `Available endpoints: /${API_VERSION}/personal-oracle, /${API_VERSION}/ain-engine, /${API_VERSION}/health`
   ]));
 });
 
