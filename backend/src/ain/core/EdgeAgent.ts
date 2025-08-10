@@ -5,7 +5,7 @@
 
 import { EventEmitter } from 'events';
 import { SpiralogicEvent, ElementalService, EventHandler, ProcessingMode } from '../types';
-import { BaseAgent } from './BaseAgent';
+import { BaseAgent } from '../../core/agents/baseAgent';
 
 export class EdgeAgent extends BaseAgent {
   protected processingMode: ProcessingMode;
@@ -181,10 +181,15 @@ export class EdgeAgent extends BaseAgent {
   private async checkConnectivity(): Promise<void> {
     try {
       // Try to reach cloud service
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
       const response = await fetch('/health', {
         method: 'HEAD',
-        timeout: 5000
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       this.offlineMode = !response.ok;
     } catch (error) {
@@ -289,9 +294,9 @@ export class EdgeAgent extends BaseAgent {
   protected calculateResonance(signature: any): number {
     if (!this.elementalService) return 0.5;
 
-    const myStrength = signature[this.elementalService] || 0;
-    const totalStrength = Object.values(signature)
-      .reduce((sum: number, val: any) => sum + (val as number), 0);
+    const myStrength = Number(signature[this.elementalService] || 0);
+    const totalStrength: number = (Object.values(signature) as any[])
+      .reduce((sum: number, val: any) => sum + (typeof val === 'number' ? val : 0), 0);
 
     return totalStrength > 0 ? myStrength / totalStrength : 0.5;
   }
@@ -301,6 +306,20 @@ export class EdgeAgent extends BaseAgent {
    */
   protected generateResponseEventType(event: SpiralogicEvent): string {
     return `${this.elementalService}.response`;
+  }
+
+  /**
+   * Subscribe to events
+   */
+  subscribe(eventType: string, handler: EventHandler): void {
+    this.on(eventType, handler);
+  }
+
+  /**
+   * Generate event ID
+   */
+  generateEventId(): string {
+    return `${this.serviceId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**

@@ -40,7 +40,11 @@ export async function performDivinationReading(req: Request, res: Response) {
       });
     }
 
-    const query: DivinationQuery = validation.data;
+    const query: DivinationQuery = {
+      ...validation.data,
+      method: validation.data.method || 'unified',
+      query: validation.data.query || 'General guidance needed'
+    };
 
     // Validate birth data if provided
     if (query.birthData?.date && isNaN(new Date(query.birthData.date).getTime())) {
@@ -226,7 +230,11 @@ export async function validateDivinationQuery(req: Request, res: Response) {
       });
     }
 
-    const query = validation.data;
+    const query: DivinationQuery = {
+      ...validation.data,
+      method: validation.data.method || 'unified',
+      query: validation.data.query || 'Daily guidance needed'
+    };
 
     // Additional business logic validation
     const businessValidation = validateBusinessRules(query);

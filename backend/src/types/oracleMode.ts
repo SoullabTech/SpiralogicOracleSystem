@@ -132,15 +132,16 @@ export interface ModeEffectiveness {
   timestamp: Date;
 }
 
-export default {
-  OracleModeType,
-  OracleMode,
-  ModeSwitchMemory,
-  ModePreference,
-  ModeAnalytics,
-  ContextualModeRecommendation,
-  ModeCapability,
-  ModeResponseTemplate,
-  ConversationContext,
-  ModeEffectiveness
-};
+// Export types as values for runtime use if needed
+export const OracleModeTypes = {
+  OracleModeType: 'OracleModeType',
+  OracleMode: 'OracleMode',
+  ModeSwitchMemory: 'ModeSwitchMemory',
+  ModePreference: 'ModePreference',
+  ModeAnalytics: 'ModeAnalytics',
+  ContextualModeRecommendation: 'ContextualModeRecommendation',
+  ModeCapability: 'ModeCapability',
+  ModeResponseTemplate: 'ModeResponseTemplate',
+  ConversationContext: 'ConversationContext',
+  ModeEffectiveness: 'ModeEffectiveness'
+} as const;

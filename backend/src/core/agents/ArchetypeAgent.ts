@@ -72,10 +72,14 @@ export abstract class ArchetypeAgent extends OracleAgent {
 
     // Convert AIResponse to AgentResponse for compatibility
     return {
-      response: aiResponse.content,
+      content: aiResponse.content,
+      response: aiResponse.content, // Legacy compatibility
       metadata: aiResponse.metadata,
       routingPath: [this.element.toLowerCase(), 'oracle-agent'],
-      memoryEnhanced: true
+      memoryEnhanced: true,
+      confidence: aiResponse.confidence,
+      provider: aiResponse.provider,
+      model: aiResponse.model
     };
   }
 

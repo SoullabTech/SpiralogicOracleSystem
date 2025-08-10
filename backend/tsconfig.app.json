@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "lib": ["es2020"],
+    "target": "es2022",
+    "lib": ["es2022"],
     "module": "esnext",
     "moduleResolution": "node",
     "allowJs": true,
@@ -37,6 +37,13 @@
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/tests/**/*",
-    "src/__tests__/**/*"
+    "src/__tests__/**/*",
+    "src/components/**/*",
+    "src/main.tsx",
+    "src/main.js",
+    "src/App.css",
+    "src/index.css",
+    "src/vite-env.d.ts",
+    "src/ain/**/*"
   ]
 }

@@ -1,7 +1,7 @@
-import winston from 'winston';
-import fs from 'fs';
-import path from 'path';
-import { config } from '@/config';
+import * as winston from 'winston';
+import * as fs from 'fs';
+import * as path from 'path';
+// import { config } from '@/config'; // Temporarily disabled
 
 // Define log levels
 const levels = {
@@ -48,7 +48,7 @@ const transports = [
 
 // Create the logger
 export const logger = winston.createLogger({
-  level: config.logging.level,
+  level: process.env.LOG_LEVEL || 'info',
   levels,
   format,
   transports,

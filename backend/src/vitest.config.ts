@@ -19,6 +19,7 @@ export default defineConfig({
     ],
     reporters: process.env.CI ? ['default', 'junit'] : ['default'], // 🧪 CI-friendly
     coverage: {
+      provider: 'v8',
       all: true,
       include: ['src/**/*.ts'],
       exclude: ['**/*.test.ts', '**/__tests__/**', '**/__mocks__/**'],

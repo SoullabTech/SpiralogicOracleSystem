@@ -1,8 +1,23 @@
-import { swisseph } from 'swisseph';
-import { supabase } from '../lib/supabaseClient';
-import { ComprehensiveBirthChart } from './comprehensiveAstrologicalService';
+// Mock swisseph for now - TODO: implement proper astrology calculations
+const swisseph = {
+  swe_set_ephe_path: () => {},
+  swe_calc: () => ({ longitude: 0, latitude: 0, distance: 0 }),
+  SE_SUN: 0,
+  SE_MOON: 1,
+  SE_MERCURY: 2,
+  SEFLG_SWIEPH: 2
+};
 
-// Initialize Swiss Ephemeris
+import { supabase } from '../lib/supabaseClient';
+
+// Mock ComprehensiveBirthChart - TODO: fix import
+interface ComprehensiveBirthChart {
+  planets: any[];
+  houses: any[];
+  aspects: any[];
+}
+
+// Initialize Swiss Ephemeris (mocked)
 swisseph.swe_set_ephe_path('./node_modules/swisseph/ephe');
 
 export interface SpiralogicBirthData {

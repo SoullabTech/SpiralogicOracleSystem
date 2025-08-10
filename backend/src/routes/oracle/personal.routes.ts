@@ -3,7 +3,7 @@
 import { Router } from 'express';
 import { authenticateToken } from '../../middleware/authenticateToken';
 import type { AuthenticatedRequest } from '../../types';
-import { PersonalOracleAgent } from '../../core/agents/PersonalOracleAgent';
+import { PersonalOracleAgent } from '../../core/agents/adjusterAgent';
 import logger from '../../utils/logger';
 
 const router = Router();

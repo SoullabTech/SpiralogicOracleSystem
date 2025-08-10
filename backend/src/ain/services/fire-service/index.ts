@@ -14,11 +14,9 @@ export class FireService extends EdgeAgent {
   private lastProcessedTime = 0;
 
   constructor() {
-    super('fire-service');
-    this.sensor = new NeuromorphicSensor({
-      spikeThreshold: 0.7,
-      refractoryPeriod: 100
-    });
+    super('fire-service', ElementalService.Fire);
+    this.sensor = new NeuromorphicSensor();
+    this.sensor.calibrate(0.7, 100);
 
     this.setupEventHandlers();
   }

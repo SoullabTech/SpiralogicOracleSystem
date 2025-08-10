@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabaseClient';
 import { logger } from '../utils/logger';
 import { soullabFounderAgent } from '../core/agents/soullabFounderAgent';
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
+import { PersonalOracleAgent } from '../core/agents/adjusterAgent';
 
 interface DailyCheckIn {
   participantId: string;

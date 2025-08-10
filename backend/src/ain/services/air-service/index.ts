@@ -287,7 +287,7 @@ export class AirService extends HybridAgent {
   /**
    * Calculate message priority
    */
-  private calculatePriority(urgency: string, routing: RoutingDecision): string {
+  private calculatePriority(urgency: string, routing: RoutingDecision): 'critical' | 'high' | 'medium' | 'low' {
     const urgencyScore = {
       'critical': 1.0,
       'high': 0.8,

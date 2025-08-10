@@ -1,7 +1,7 @@
 export type DivinationMethod = 'tarot' | 'iching' | 'yijing' | 'astro' | 'unified';
 
 export interface BirthData {
-  date: string;
+  date?: string;
   time?: string;
   location?: string;
   timezone?: string;
@@ -149,15 +149,16 @@ export interface DivinationRitual {
   archetype?: string;
 }
 
-export default {
-  DivinationMethod,
-  DivinationQuery,
-  DivinationInsight,
-  HexagramReading,
-  TarotReading,
-  TarotCard,
-  AstrologyReading,
-  DivinationHistory,
-  UnifiedDivination,
-  DivinationRitual
-};
+// Export types as values for runtime use if needed
+export const DivinationTypes = {
+  DivinationMethod: 'DivinationMethod',
+  DivinationQuery: 'DivinationQuery', 
+  DivinationInsight: 'DivinationInsight',
+  HexagramReading: 'HexagramReading',
+  TarotReading: 'TarotReading',
+  TarotCard: 'TarotCard',
+  AstrologyReading: 'AstrologyReading',
+  DivinationHistory: 'DivinationHistory',
+  UnifiedDivination: 'UnifiedDivination',
+  DivinationRitual: 'DivinationRitual'
+} as const;

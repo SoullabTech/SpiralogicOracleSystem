@@ -1,7 +1,7 @@
 // oracle-backend/src/types/session.ts
 
 import type { Metadata } from './metadata';
-import { supabase } from '../services/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 /**
  * Represents a symbolic tag emitted during processing
