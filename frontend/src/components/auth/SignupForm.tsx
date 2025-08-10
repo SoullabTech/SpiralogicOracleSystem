@@ -203,4 +203,4 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
   );
 };
 
-export default SignupForm;
+export { SignupForm };

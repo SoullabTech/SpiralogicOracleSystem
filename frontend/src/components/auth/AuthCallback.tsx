@@ -132,4 +132,4 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
   );
 };
 
-export default AuthCallback;
+export { AuthCallback };

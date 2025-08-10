@@ -395,4 +395,4 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
   );
 };
 
-export default BeautifulOnboarding;
+export { BeautifulOnboarding };

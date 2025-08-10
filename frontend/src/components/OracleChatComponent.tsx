@@ -175,4 +175,4 @@ export const OracleChatComponent: React.FC = () => {
   );
 };
 
-export default OracleChatComponent;
+export { OracleChatComponent };

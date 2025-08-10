@@ -150,4 +150,3 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
   );
 };
 
-export default OracleVoicePlayer;

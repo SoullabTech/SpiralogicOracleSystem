@@ -271,4 +271,4 @@ const HoloflowerCheckIn: React.FC = () => {
   );
 };
 
-export default HoloflowerCheckIn;
+export { HoloflowerCheckIn };

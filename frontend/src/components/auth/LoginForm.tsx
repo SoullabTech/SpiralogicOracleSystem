@@ -206,4 +206,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
   );
 };
 
-export default LoginForm;
+export { LoginForm };
