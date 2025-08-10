@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import CollectiveInsightsPanel from "./CollectiveInsightsPanel";
+import SoullabCollectiveInsightsPanel from "./SoullabCollectiveInsightsPanel";
 
 interface SpiralogicPhase {
   name: string;
@@ -315,7 +315,7 @@ const PersonalOracleHome: React.FC = () => {
       </div>
 
       {/* Collective Insights Panel */}
-      <CollectiveInsightsPanel />
+      <SoullabCollectiveInsightsPanel />
     </motion.div>
   );
 };

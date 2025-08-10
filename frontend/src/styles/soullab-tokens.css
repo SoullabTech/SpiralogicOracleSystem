@@ -1,0 +1,271 @@
+/* Soullab Sacred Minimalism Design Tokens */
+
+:root {
+  /* Elemental Color Palette */
+  --earth: #D9C6A5;
+  --water: #A9C4D6;
+  --fire: #E5A77A;
+  --air: #ECECEC;
+  --aether: #CBB8E2;
+
+  /* Earth variants */
+  --earth-light: #E8DCC7;
+  --earth-dark: #C4A882;
+  --earth-muted: rgba(217, 198, 165, 0.1);
+  --earth-subtle: rgba(217, 198, 165, 0.05);
+
+  /* Water variants */
+  --water-light: #C2D6E6;
+  --water-dark: #8AADBE;
+  --water-muted: rgba(169, 196, 214, 0.1);
+  --water-subtle: rgba(169, 196, 214, 0.05);
+
+  /* Fire variants */
+  --fire-light: #F0C19F;
+  --fire-dark: #D18D55;
+  --fire-muted: rgba(229, 167, 122, 0.1);
+  --fire-subtle: rgba(229, 167, 122, 0.05);
+
+  /* Air variants */
+  --air-light: #F6F6F6;
+  --air-dark: #DADADA;
+  --air-muted: rgba(236, 236, 236, 0.1);
+  --air-subtle: rgba(236, 236, 236, 0.05);
+
+  /* Aether variants */
+  --aether-light: #DDD0E9;
+  --aether-dark: #B29FD4;
+  --aether-muted: rgba(203, 184, 226, 0.1);
+  --aether-subtle: rgba(203, 184, 226, 0.05);
+
+  /* Typography */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+
+  /* Font Weights */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+
+  /* Sacred Spacing */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-base: 1rem;    /* 16px */
+  --space-lg: 1.5rem;    /* 24px - minimum between unrelated elements */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 350ms;
+  --ease: ease-in-out;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-base: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Shadows */
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Backgrounds */
+  --bg-primary: #FEFEFE;
+  --bg-secondary: #F9F9F9;
+  --bg-tertiary: #F4F4F4;
+  --bg-overlay: rgba(255, 255, 255, 0.95);
+
+  /* Text Colors */
+  --text-primary: #2D2D2D;
+  --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
+  --text-inverse: #FFFFFF;
+
+  /* Borders */
+  --border-light: rgba(0, 0, 0, 0.05);
+  --border-medium: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.2);
+}
+
+/* Sacred Typography Classes */
+.soullab-heading {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-medium);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.soullab-body {
+  font-family: var(--font-body);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+}
+
+.soullab-mono {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-regular);
+  line-height: 1.5;
+}
+
+/* Sacred Motion Classes */
+.soullab-transition {
+  transition: all var(--duration-base) var(--ease);
+}
+
+.soullab-transition-fast {
+  transition: all var(--duration-fast) var(--ease);
+}
+
+.soullab-transition-slow {
+  transition: all var(--duration-slow) var(--ease);
+}
+
+/* Sacred Layout Classes */
+.soullab-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.soullab-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-subtle);
+}
+
+.soullab-button {
+  font-family: var(--font-body);
+  font-weight: var(--weight-medium);
+  padding: var(--space-base) var(--space-lg);
+  border-radius: var(--radius-base);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.soullab-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Elemental Button Variants */
+.soullab-button--earth {
+  background: var(--earth);
+  color: var(--text-primary);
+}
+
+.soullab-button--earth:hover {
+  background: var(--earth-dark);
+}
+
+.soullab-button--water {
+  background: var(--water);
+  color: var(--text-primary);
+}
+
+.soullab-button--water:hover {
+  background: var(--water-dark);
+}
+
+.soullab-button--fire {
+  background: var(--fire);
+  color: var(--text-primary);
+}
+
+.soullab-button--fire:hover {
+  background: var(--fire-dark);
+}
+
+.soullab-button--air {
+  background: var(--air);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+
+.soullab-button--air:hover {
+  background: var(--air-dark);
+}
+
+.soullab-button--aether {
+  background: var(--aether);
+  color: var(--text-primary);
+}
+
+.soullab-button--aether:hover {
+  background: var(--aether-dark);
+}
+
+/* Sacred Form Elements */
+.soullab-input {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  padding: var(--space-base);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-base);
+  background: var(--bg-primary);
+  transition: border-color var(--duration-base) var(--ease);
+  width: 100%;
+}
+
+.soullab-input:focus {
+  outline: none;
+  border-color: var(--earth);
+  box-shadow: 0 0 0 3px var(--earth-muted);
+}
+
+.soullab-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Sacred Utilities */
+.soullab-fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: soullabFadeIn var(--duration-slow) var(--ease) forwards;
+}
+
+@keyframes soullabFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.soullab-curtain-open {
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: soullabCurtainOpen var(--duration-slow) var(--ease) forwards;
+}
+
+@keyframes soullabCurtainOpen {
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}

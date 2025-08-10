@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
 // Dynamic import to handle client-side components
-const DeveloperPortal = dynamic(
-  () => import('../../frontend/src/components/developer/DeveloperPortal'),
+const SoullabDeveloperPortal = dynamic(
+  () => import('../../frontend/src/components/developer/SoullabDeveloperPortal'),
   { ssr: false }
 );
 
@@ -24,10 +24,8 @@ function DeveloperLoadingFallback() {
 
 export default function DeveloperPage() {
   return (
-    <div className="min-h-screen bg-[#0E0F1B] py-8">
-      <Suspense fallback={<DeveloperLoadingFallback />}>
-        <DeveloperPortal />
-      </Suspense>
-    </div>
+    <Suspense fallback={<DeveloperLoadingFallback />}>
+      <SoullabDeveloperPortal />
+    </Suspense>
   );
 }
