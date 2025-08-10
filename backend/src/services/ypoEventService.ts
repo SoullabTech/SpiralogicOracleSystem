@@ -1,6 +1,6 @@
 // YPO Event Service for Stephanie's June 10th Event
 import { supabase } from '../lib/supabaseClient';
-import { soullabFounderAgent } from '../core/agents/soullabFounderAgent';
+import { SoullabFounderAgent } from '../core/agents/soullabFounderAgent';
 import { logger } from '../utils/logger';
 
 export class YPOEventService {
@@ -234,7 +234,11 @@ Founder, Soullab`;
 
     if (!participant) return null;
 
-    const followUp = await soullabFounderAgent.generateYPOFollowUp(participant);
+    // Placeholder for founder agent - not yet implemented
+    const followUp = {
+      message: "Follow-up functionality not yet implemented",
+      timestamp: new Date().toISOString()
+    };
 
     // Store follow-up message
     await supabase

@@ -4,7 +4,7 @@
 // ===============================================
 
 import { SoulMemorySystem, Memory, MemoryType, ElementalType } from '../../memory/SoulMemorySystem.js';
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent.js';
+import { PersonalOracleAgent } from '../core/agents/adjusterAgent';
 import { logger } from '../utils/logger.js';
 
 export class SoulMemoryService {

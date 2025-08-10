@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabaseClient';
 import { soullabFounderAgent } from '../core/agents/soullabFounderAgent';
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
+import { PersonalOracleAgent } from '../core/agents/adjusterAgent';
 import {
   RetreatParticipant,
   RetreatSession,

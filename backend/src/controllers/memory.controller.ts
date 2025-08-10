@@ -14,7 +14,12 @@ export async function storeMemory(req: Request, res: Response) {
     }
 
     const userId = (req as any).user?.id || 'anonymous';
-    const memory = await service.storeMemory({ ...parse.data, userId });
+    const memoryData = {
+      ...parse.data,
+      userId,
+      content: parse.data.content || 'No content provided'
+    };
+    const memory = await service.storeMemory(memoryData);
     return res.status(200).json(memory);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to store memory', details: error });

@@ -1,6 +1,6 @@
 import { getRitualForPhase } from "../../lib/ritualEngine";
 import { getElementalPhase } from "../../lib/spiralLogic";
-import type { AgentResponse } from "../../types/agent";
+import type { AgentResponse } from "../../types/index";
 import type { Metadata } from "../../types/metadata";
 
 export class OracleAgent {
@@ -31,7 +31,8 @@ export class OracleAgent {
     };
 
     return {
-      response: simulatedResponse,
+      content: simulatedResponse,
+      response: simulatedResponse, // Legacy compatibility
       confidence: 0.9,
       metadata,
       routingPath: [detectedElement.toLowerCase(), "oracle-agent"],

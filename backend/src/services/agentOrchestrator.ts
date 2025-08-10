@@ -1,6 +1,6 @@
 // services/agentOrchestrator.ts - Dual Agent Orchestration System
-import { fireAgent } from './fireAgent';
-import { waterAgent } from './waterAgent';
+import { FireAgent } from '../core/agents/elemental/fireAgent';
+import { WaterAgent } from '../core/agents/elemental/waterAgent';
 import { MayaPromptProcessor, MayaPromptContext } from '../config/mayaSystemPrompt';
 
 interface ArchetypalIntent {
@@ -43,11 +43,15 @@ export class AgentOrchestrator {
   private archetypalIntentAnalyzer: ArchetypalIntentAnalyzer;
   private responseSynthesizer: ResponseSynthesizer;
   private collectiveMemory: Map<string, any>;
+  private fireAgent: FireAgent;
+  private waterAgent: WaterAgent;
 
   constructor() {
     this.archetypalIntentAnalyzer = new ArchetypalIntentAnalyzer();
     this.responseSynthesizer = new ResponseSynthesizer();
     this.collectiveMemory = new Map();
+    this.fireAgent = new FireAgent();
+    this.waterAgent = new WaterAgent();
   }
 
   async processQuery(input: string, userContext?: UserContext): Promise<CollectiveResponse> {
@@ -111,7 +115,7 @@ export class AgentOrchestrator {
     // Always get primary agent response
     if (intent.primary === 'fire' || strategy?.includes('fire')) {
       try {
-        responses.fire = await fireAgent.getOracleResponse(input, userContext);
+        responses.fire = await this.fireAgent.processQuery(input);
       } catch (error) {
         console.error('Fire agent error:', error);
       }
@@ -119,7 +123,7 @@ export class AgentOrchestrator {
 
     if (intent.primary === 'water' || strategy?.includes('water')) {
       try {
-        responses.water = await waterAgent.getOracleResponse(input, userContext);
+        responses.water = await this.waterAgent.processQuery(input);
       } catch (error) {
         console.error('Water agent error:', error);
       }
@@ -129,14 +133,14 @@ export class AgentOrchestrator {
     if (strategy?.includes('synthesis') || strategy?.includes('balance')) {
       if (!responses.fire) {
         try {
-          responses.fire = await fireAgent.getOracleResponse(input, userContext);
+          responses.fire = await this.fireAgent.processQuery(input);
         } catch (error) {
           console.error('Fire agent secondary error:', error);
         }
       }
       if (!responses.water) {
         try {
-          responses.water = await waterAgent.getOracleResponse(input, userContext);
+          responses.water = await this.waterAgent.processQuery(input);
         } catch (error) {
           console.error('Water agent secondary error:', error);
         }

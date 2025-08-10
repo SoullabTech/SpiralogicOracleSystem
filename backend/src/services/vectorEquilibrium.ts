@@ -304,7 +304,8 @@ export class VectorEquilibrium {
           return;
         }
 
-        requestAnimationFrame(animate);
+        // Use setTimeout instead of requestAnimationFrame for Node.js
+        setTimeout(animate, 16); // ~60fps equivalent
       };
 
       animate();
@@ -498,7 +499,8 @@ export class Water2Process {
         if (progress >= 1) {
           resolve();
         } else {
-          requestAnimationFrame(animate);
+          // Use setTimeout instead of requestAnimationFrame for Node.js
+        setTimeout(animate, 16); // ~60fps equivalent
         }
       };
       animate();

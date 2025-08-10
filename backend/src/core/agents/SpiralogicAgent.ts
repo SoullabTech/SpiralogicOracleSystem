@@ -5,7 +5,7 @@ import { SOUL } from '../core/SOUL';
 import { HumanPacedLearning } from '../core/HumanPacedLearning';
 import { ArchetypeFramework } from '../core/ArchetypeFramework';
 
-class SpiralogicAgent {
+export class SpiralogicAgent {
   private soul: SOUL;
   private hpp: HumanPacedLearning;
   private archetypes: ArchetypeFramework;

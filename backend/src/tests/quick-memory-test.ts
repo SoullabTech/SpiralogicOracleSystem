@@ -3,7 +3,7 @@
 // Run with: npx ts-node src/tests/quick-memory-test.ts
 // ===============================================
 
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
+import { PersonalOracleAgent } from '../core/agents/adjusterAgent';
 import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
 
 async function quickTest() {

@@ -178,7 +178,7 @@ export class PubSubManager extends EventEmitter {
     const result: PublishResult = {
       message_id: queuedMessage.id,
       topic,
-      subscribers_notified: deliveryResults.successful,
+      subscribers_notified: deliveryResults.successful.length,
       failed_deliveries: deliveryResults.failed,
       delivery_guarantee: topicObj.config.delivery_guarantee
     };

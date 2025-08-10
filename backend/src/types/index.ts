@@ -90,6 +90,23 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
+/**
+ * Agent response type for oracle system - compatible with AIResponse
+ */
+export interface AgentResponse {
+  id?: string;
+  content: string;
+  type?: 'oracle' | 'response' | 'insight';
+  element?: string;
+  phase?: string;
+  metadata?: Record<string, any>;
+  confidence?: number;
+  timestamp?: number;
+  provider?: string;
+  model?: string;
+  response?: string; // Legacy compatibility property
+}
+
 // Optional re-exports
 export * from './auth';
 export * from './memory';

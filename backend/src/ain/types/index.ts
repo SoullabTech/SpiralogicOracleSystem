@@ -22,7 +22,8 @@ export enum EventType {
   Integration = 'integration',
   Quantum = 'quantum',
   Broadcast = 'broadcast',
-  Response = 'response'
+  Response = 'response',
+  EmergenceInstruction = 'emergence_instruction'
 }
 
 // Core Event Interface
@@ -30,9 +31,18 @@ export interface SpiralogicEvent {
   id: string;
   timestamp: number;
   source: ElementalService;
-  type: EventType;
+  type: EventType | string;
   payload: EventPayload;
   routing: EventRouting;
+  mode?: string;
+  reduce_non_critical?: boolean;
+  cache_aggressive?: boolean;
+  reduce_latency?: boolean;
+  focus_coherence?: boolean;
+  prioritize_safety?: boolean;
+  increase_thresholds?: boolean;
+  reduce_complexity?: boolean;
+  defer_complex_operations?: boolean;
 }
 
 export interface EventPayload {
@@ -52,6 +62,8 @@ export interface EventRouting {
   target?: ElementalService;
   broadcast?: boolean;
   priority: 'critical' | 'high' | 'medium' | 'low';
+  load_balanced?: boolean;
+  orchestrated?: boolean;
 }
 
 // Elemental Signature

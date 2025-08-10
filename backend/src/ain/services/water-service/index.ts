@@ -19,7 +19,7 @@ export class WaterService extends HybridAgent {
   };
 
   constructor() {
-    super('water-service');
+    super('water-service', ElementalService.Water);
     this.emotionalSensor = new EmotionalSensor();
     this.symbolicMemory = new SymbolicMemory('emotional-patterns');
 

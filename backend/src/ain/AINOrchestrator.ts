@@ -460,11 +460,11 @@ export class AINOrchestrator extends EventEmitter {
     this.config.sync_interval = Math.max(this.config.sync_interval * 0.8, 1000);
 
     // Enable aggressive caching
-    await this.pubsub.publish('system.optimization', {
+    await this.pubsub.publish('system.optimization', this.createSystemEvent('system.optimization', {
       mode: 'performance',
       cache_aggressive: true,
       reduce_latency: true
-    });
+    }));
   }
 
   /**
@@ -475,11 +475,11 @@ export class AINOrchestrator extends EventEmitter {
     this.config.sync_interval = Math.min(this.config.sync_interval * 1.2, 30000);
 
     // Focus on coherence building
-    await this.pubsub.publish('system.stabilization', {
+    await this.pubsub.publish('system.stabilization', this.createSystemEvent('system.stabilization', {
       mode: 'stability',
       focus_coherence: true,
       reduce_complexity: true
-    });
+    }));
   }
 
   /**
@@ -510,11 +510,11 @@ export class AINOrchestrator extends EventEmitter {
    */
   private async activateEmergencyMode(): Promise<void> {
     // Reduce non-critical processing
-    await this.pubsub.publish('system.emergency', {
+    await this.pubsub.publish('system.emergency', this.createSystemEvent('system.emergency', {
       mode: 'emergency',
       reduce_non_critical: true,
       prioritize_safety: true
-    });
+    }));
   }
 
   /**
@@ -539,11 +539,11 @@ export class AINOrchestrator extends EventEmitter {
    */
   private async implementLoadShedding(): Promise<void> {
     // Temporarily reduce processing of non-critical events
-    await this.pubsub.publish('system.load_shedding', {
+    await this.pubsub.publish('system.load_shedding', this.createSystemEvent('system.load_shedding', {
       reduce_non_critical: true,
       increase_thresholds: true,
       defer_complex_operations: true
-    });
+    }));
   }
 
   /**
@@ -573,6 +573,24 @@ export class AINOrchestrator extends EventEmitter {
    */
   private generateEventId(): string {
     return `ain-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Create properly formatted SpiralogicEvent
+   */
+  private createSystemEvent(type: string, content: any): SpiralogicEvent {
+    return {
+      id: this.generateEventId(),
+      timestamp: Date.now(),
+      source: ElementalService.Aether,
+      type: type,
+      payload: {
+        content,
+        metadata: { orchestrated: true },
+        elemental_signature: { aether: 1.0, fire: 0, water: 0, earth: 0, air: 0 }
+      },
+      routing: { priority: 'high' }
+    };
   }
 
   /**

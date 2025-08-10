@@ -14,13 +14,12 @@ export class ShadowWorkClass {
 }
 
 // Export runShadowWork function for compatibility
-export const runShadowWork = async (userId: string, data: any) => {
-  // Placeholder implementation
+export const runShadowWork = async (input: string, userId: string) => {
+  // Placeholder implementation - return null to indicate no shadow work needed
+  // or return AIResponse-compatible object
   const shadowWork = new ShadowWorkClass(userId);
   shadowWork.performWork();
-  return {
-    status: 'completed',
-    insights: [],
-    transformations: []
-  };
+  
+  // Return null to indicate no shadow work response (will fall through to elemental routing)
+  return null;
 };
