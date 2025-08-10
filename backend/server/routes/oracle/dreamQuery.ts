@@ -1,8 +1,8 @@
-import express from 'express';
-import { z } from 'zod';
-import { supabase } from '../../lib/supabase';
-import { extractSymbolsFromText } from '../../lib/extractSymbols';
-import { getOracleInterpretation } from '../../services/oracleService';
+import express from "express";
+import { z } from "zod";
+import { supabase } from "../../lib/supabase";
+import { extractSymbolsFromText } from "../../lib/extractSymbols";
+import { getOracleInterpretation } from "../../services/oracleService";
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ const dreamSchema = z.object({
     .optional(),
 });
 
-router.post('/dream/query', async (req, res) => {
+router.post("/dream/query", async (req, res) => {
   try {
     const parsed = dreamSchema.parse(req.body);
     const { userId, dreamDescription, context } = parsed;
@@ -32,7 +32,7 @@ router.post('/dream/query', async (req, res) => {
 
     const { interpretation, phase, archetype } = result;
 
-    const { error: dbError } = await supabase.from('journal').insert([
+    const { error: dbError } = await supabase.from("journal").insert([
       {
         user_id: userId,
         content: dreamDescription,
@@ -45,7 +45,7 @@ router.post('/dream/query', async (req, res) => {
     ]);
 
     if (dbError) {
-      console.error('🛑 Supabase insert error:', dbError.message);
+      console.error("🛑 Supabase insert error:", dbError.message);
     }
 
     return res.status(200).json({
@@ -55,7 +55,7 @@ router.post('/dream/query', async (req, res) => {
       archetype,
     });
   } catch (err: any) {
-    console.error('🌑 Oracle error:', err.message);
+    console.error("🌑 Oracle error:", err.message);
     return res.status(500).json({ error: err.message });
   }
 });

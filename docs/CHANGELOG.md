@@ -1,6 +1,7 @@
 # 🌀 Spiralogic Oracle System — Sacred Intelligence Changelog
 
 ## v1.0.0 (2025-06-11)
+
 ### 🎉 Initial Public Release
 
 - ✅ **Next.js App Router Setup**: Added root-level `app/` directory with `layout.tsx` and `page.tsx` for proper routing
@@ -20,6 +21,7 @@
 - 🧹 **Codebase Cleanup**: Removed duplicate frontend directories and build artifacts
 
 ### Technical Infrastructure
+
 - **Backend**: Express.js with TypeScript, Supabase integration
 - **Frontend**: Next.js 15 with App Router, TailwindCSS
 - **Oracle Agents**: Multi-agent system with elemental wisdom routing
@@ -27,6 +29,7 @@
 - **Testing**: Comprehensive test suite for oracle functionality
 
 ### Deployment Status
+
 - ✅ Live at Vercel deployment
 - ✅ Clean repository structure
 - ✅ Security vulnerabilities addressed

@@ -3,14 +3,14 @@ name: Detect Trailing Whitespace
 on:
   pull_request:
     paths:
-      - '**/*.py'
-      - '**/*.js'
-      - '**/*.ts'
-      - '**/*.md'
-      - '**/*.txt'
-      - '**/*.sh'
-      - '**/*.yml'
-      - '**/*.yaml'
+      - "**/*.py"
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.md"
+      - "**/*.txt"
+      - "**/*.sh"
+      - "**/*.yml"
+      - "**/*.yaml"
 
 jobs:
   whitespace-check:

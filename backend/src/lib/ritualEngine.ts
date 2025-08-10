@@ -9,12 +9,14 @@ type RitualPrompt = {
 const ritualPrompts: RitualPrompt[] = [
   {
     title: "Ignite the Vision",
-    description: "Write a declaration of purpose. What are you ready to burn for?",
+    description:
+      "Write a declaration of purpose. What are you ready to burn for?",
     phase: "Fire",
   },
   {
     title: "Flow of Meaning",
-    description: "Reflect on your current emotional undercurrents. What truth is rising?",
+    description:
+      "Reflect on your current emotional undercurrents. What truth is rising?",
     phase: "Water",
   },
   {
@@ -35,9 +37,11 @@ const ritualPrompts: RitualPrompt[] = [
 ];
 
 export function getRitualForPhase(phase: Element): RitualPrompt {
-  return ritualPrompts.find((ritual) => ritual.phase === phase) ?? {
-    title: "Center in Mystery",
-    description: "Pause. Listen inwardly. Let the unknown reveal a step.",
-    phase: "Aether",
-  };
+  return (
+    ritualPrompts.find((ritual) => ritual.phase === phase) ?? {
+      title: "Center in Mystery",
+      description: "Pause. Listen inwardly. Let the unknown reveal a step.",
+      phase: "Aether",
+    }
+  );
 }

@@ -17,30 +17,30 @@ export interface OracleMetadata {
   tokens?: number;
   model?: string;
   provider?: string;
-  
+
   // Elemental properties
   phase?: string;
   facet?: string;
   symbols?: string[];
-  
+
   // Spiritual insights
   reflections?: string[];
   ritual?: string;
   guidance?: string;
-  
+
   // Session context
   sessionId?: string;
   conversationId?: string;
   memoryContext?: boolean;
-  
+
   // Quality metrics
-  resonance?: 'high' | 'medium' | 'low';
-  depth?: 'basic' | 'detailed' | 'comprehensive';
-  
+  resonance?: "high" | "medium" | "low";
+  depth?: "basic" | "detailed" | "comprehensive";
+
   // System information
   version?: string;
   buildVersion?: string;
-  
+
   // Error information (if applicable)
   warning?: string;
   debugInfo?: Record<string, any>;
@@ -89,22 +89,22 @@ export const OracleResponseCodes = {
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
   SERVICE_UNAVAILABLE: 503,
-  GATEWAY_TIMEOUT: 504
+  GATEWAY_TIMEOUT: 504,
 } as const;
 
 // Oracle-specific error codes
 export const OracleErrorCodes = {
-  INVALID_ELEMENT: 'ORACLE_INVALID_ELEMENT',
-  AGENT_NOT_AVAILABLE: 'ORACLE_AGENT_NOT_AVAILABLE',
-  PROCESSING_FAILED: 'ORACLE_PROCESSING_FAILED',
-  RATE_LIMITED: 'ORACLE_RATE_LIMITED',
-  INSUFFICIENT_CONTEXT: 'ORACLE_INSUFFICIENT_CONTEXT',
-  AUTHENTICATION_REQUIRED: 'ORACLE_AUTH_REQUIRED',
-  PERMISSION_DENIED: 'ORACLE_PERMISSION_DENIED',
-  VALIDATION_FAILED: 'ORACLE_VALIDATION_FAILED',
-  CACHE_ERROR: 'ORACLE_CACHE_ERROR',
-  MEMORY_SERVICE_ERROR: 'ORACLE_MEMORY_ERROR',
-  AI_SERVICE_ERROR: 'ORACLE_AI_SERVICE_ERROR'
+  INVALID_ELEMENT: "ORACLE_INVALID_ELEMENT",
+  AGENT_NOT_AVAILABLE: "ORACLE_AGENT_NOT_AVAILABLE",
+  PROCESSING_FAILED: "ORACLE_PROCESSING_FAILED",
+  RATE_LIMITED: "ORACLE_RATE_LIMITED",
+  INSUFFICIENT_CONTEXT: "ORACLE_INSUFFICIENT_CONTEXT",
+  AUTHENTICATION_REQUIRED: "ORACLE_AUTH_REQUIRED",
+  PERMISSION_DENIED: "ORACLE_PERMISSION_DENIED",
+  VALIDATION_FAILED: "ORACLE_VALIDATION_FAILED",
+  CACHE_ERROR: "ORACLE_CACHE_ERROR",
+  MEMORY_SERVICE_ERROR: "ORACLE_MEMORY_ERROR",
+  AI_SERVICE_ERROR: "ORACLE_AI_SERVICE_ERROR",
 } as const;
 
 // Response builder utility class
@@ -161,7 +161,7 @@ export class OracleResponseBuilder {
     return this;
   }
 
-  resonance(resonance: 'high' | 'medium' | 'low'): OracleResponseBuilder {
+  resonance(resonance: "high" | "medium" | "low"): OracleResponseBuilder {
     this.metadata.resonance = resonance;
     return this;
   }
@@ -194,32 +194,32 @@ export class OracleResponseBuilder {
   build(): OracleResponse {
     // Ensure required fields are present
     if (!this.response.element) {
-      throw new Error('Oracle response must have an element');
+      throw new Error("Oracle response must have an element");
     }
     if (!this.response.archetype) {
-      throw new Error('Oracle response must have an archetype');
+      throw new Error("Oracle response must have an archetype");
     }
     if (!this.response.message) {
-      throw new Error('Oracle response must have a message');
+      throw new Error("Oracle response must have a message");
     }
 
     // Set default metadata
     this.metadata.timestamp = new Date().toISOString();
-    this.metadata.version = process.env.APP_VERSION || '1.0.0';
+    this.metadata.version = process.env.APP_VERSION || "1.0.0";
 
     return {
       element: this.response.element,
       archetype: this.response.archetype,
       message: this.response.message,
-      metadata: this.metadata as OracleMetadata
+      metadata: this.metadata as OracleMetadata,
     };
   }
 }
 
 // Error response builder
 export class OracleErrorResponseBuilder {
-  private error: Partial<OracleErrorResponse['error']> = {};
-  private metadata: Partial<OracleErrorResponse['metadata']> = {};
+  private error: Partial<OracleErrorResponse["error"]> = {};
+  private metadata: Partial<OracleErrorResponse["metadata"]> = {};
 
   static create(): OracleErrorResponseBuilder {
     return new OracleErrorResponseBuilder();
@@ -257,17 +257,17 @@ export class OracleErrorResponseBuilder {
 
   build(): OracleErrorResponse {
     if (!this.error.code) {
-      throw new Error('Error response must have a code');
+      throw new Error("Error response must have a code");
     }
     if (!this.error.message) {
-      throw new Error('Error response must have a message');
+      throw new Error("Error response must have a message");
     }
 
     this.metadata.timestamp = new Date().toISOString();
 
     return {
-      error: this.error as OracleErrorResponse['error'],
-      metadata: this.metadata as OracleErrorResponse['metadata']
+      error: this.error as OracleErrorResponse["error"],
+      metadata: this.metadata as OracleErrorResponse["metadata"],
     };
   }
 }

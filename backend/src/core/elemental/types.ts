@@ -1,24 +1,24 @@
 export enum ElementalArchetype {
-  FIRE = 'fire',
-  WATER = 'water',
-  EARTH = 'earth',
-  AIR = 'air'
+  FIRE = "fire",
+  WATER = "water",
+  EARTH = "earth",
+  AIR = "air",
 }
 
 export enum ContentComplexity {
-  FOUNDATIONAL = 'foundational',
-  INTERMEDIATE = 'intermediate',
-  ADVANCED = 'advanced',
-  INTEGRATION_FOCUSED = 'integration_focused'
+  FOUNDATIONAL = "foundational",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
+  INTEGRATION_FOCUSED = "integration_focused",
 }
 
 export enum ContentType {
-  INSIGHT = 'insight',
-  PRACTICE = 'practice',
-  REFLECTION = 'reflection',
-  COMMUNITY_PROMPT = 'community_prompt',
-  INTEGRATION_EXERCISE = 'integration_exercise',
-  REALITY_CHECK = 'reality_check'
+  INSIGHT = "insight",
+  PRACTICE = "practice",
+  REFLECTION = "reflection",
+  COMMUNITY_PROMPT = "community_prompt",
+  INTEGRATION_EXERCISE = "integration_exercise",
+  REALITY_CHECK = "reality_check",
 }
 
 export interface ElementalContent {
@@ -42,7 +42,11 @@ export interface ElementalContent {
 }
 
 export interface IntegrationRequirement {
-  type: 'reflection' | 'application' | 'community_validation' | 'consistency_demonstration';
+  type:
+    | "reflection"
+    | "application"
+    | "community_validation"
+    | "consistency_demonstration";
   description: string;
   minimumPeriod: number; // days
   validationCriteria: string[];

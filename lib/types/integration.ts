@@ -1,11 +1,11 @@
 // lib/types/integration.ts
 export type IntegrationStage =
-  | 'initial_insight'
-  | 'reflection_gap'
-  | 'reality_application'
-  | 'daily_integration'
-  | 'embodied_wisdom'
-  | 'spiral_revisit';
+  | "initial_insight"
+  | "reflection_gap"
+  | "reality_application"
+  | "daily_integration"
+  | "embodied_wisdom"
+  | "spiral_revisit";
 
 export interface SpiralProgressPoint {
   id: string;
@@ -79,7 +79,7 @@ export interface ConsistencyMetric {
 export interface BypassingDetection {
   id: string;
   pattern: string;
-  severity: 'low' | 'medium' | 'high';
+  severity: "low" | "medium" | "high";
   intervention: string;
   resolved: boolean;
   timestamp: Date;
@@ -88,16 +88,16 @@ export interface BypassingDetection {
 export interface IntegrationGap {
   id: string;
   content: string;
-  gapType: 'reflection' | 'application' | 'community' | 'embodiment';
-  status: 'pending' | 'processing' | 'completed';
+  gapType: "reflection" | "application" | "community" | "embodiment";
+  status: "pending" | "processing" | "completed";
   requirements: string[];
   dueDate: Date;
 }
 
 export interface CommunityConnection {
   id: string;
-  type: 'reality_check' | 'support' | 'accountability' | 'wisdom_share';
+  type: "reality_check" | "support" | "accountability" | "wisdom_share";
   participants: string[];
-  status: 'active' | 'completed' | 'paused';
+  status: "active" | "completed" | "paused";
   lastActivity: Date;
 }

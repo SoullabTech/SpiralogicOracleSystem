@@ -19,7 +19,7 @@ services:
         to:
           - global: true
       - port: 5001
-        as: 5001  # IPFS API
+        as: 5001 # IPFS API
         to:
           - service: ipfs-gateway
     env:
@@ -52,7 +52,7 @@ services:
       - MONGO_INITDB_DATABASE=spiralogic
     args:
       - "--wiredTigerCacheSizeGB"
-      - "0.5"  # Optimize memory usage
+      - "0.5" # Optimize memory usage
 
   # Redis
   redis:
@@ -159,7 +159,7 @@ profiles:
       pricing:
         oracle-system:
           denom: uakt
-          amount: 150  # ~$5/month
+          amount: 150 # ~$5/month
         mongo:
           denom: uakt
           amount: 100
@@ -177,7 +177,7 @@ deployment:
   oracle-system:
     sovereign:
       profile: oracle-system
-      count: 2  # High availability
+      count: 2 # High availability
   mongo:
     sovereign:
       profile: mongo

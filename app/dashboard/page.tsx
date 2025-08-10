@@ -1,41 +1,45 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const dashboards = [
   {
-    title: '🔥 Oracle Beta Testing',
-    description: 'Test real Fire/Water/Earth/Air agents with consciousness technology.',
-    href: '/dashboard/oracle-beta',
-    badge: 'BETA'
+    title: "🔥 Oracle Beta Testing",
+    description:
+      "Test real Fire/Water/Earth/Air agents with consciousness technology.",
+    href: "/dashboard/oracle-beta",
+    badge: "BETA",
   },
   {
-    title: '🌀 Personal Oracle Agent',
-    description: 'Track insights, messages, and actions from your dynamic guide.',
-    href: '/dashboard/agent',
+    title: "🌀 Personal Oracle Agent",
+    description:
+      "Track insights, messages, and actions from your dynamic guide.",
+    href: "/dashboard/agent",
   },
   {
-    title: '🌌 Astrology Dashboard',
-    description: 'Explore astrological influences, transits, and energetic timing.',
-    href: '/dashboard/astrology',
+    title: "🌌 Astrology Dashboard",
+    description:
+      "Explore astrological influences, transits, and energetic timing.",
+    href: "/dashboard/astrology",
   },
   {
-    title: '🪷 Taoist Elemental Alchemy',
-    description: 'Discover your Five-Element chart and Taoist practice path.',
-    href: '/dashboard/taoist-elements',
+    title: "🪷 Taoist Elemental Alchemy",
+    description: "Discover your Five-Element chart and Taoist practice path.",
+    href: "/dashboard/taoist-elements",
   },
   {
-    title: '🌸 Holoflower Insights',
-    description: 'View and interact with your petal state history over time.',
-    href: '/dashboard/holoflower',
+    title: "🌸 Holoflower Insights",
+    description: "View and interact with your petal state history over time.",
+    href: "/dashboard/holoflower",
   },
   {
-    title: '📓 Journal & Memory',
-    description: 'Access journal entries, reflections, dreams, and memory uploads.',
-    href: '/dashboard/journal',
+    title: "📓 Journal & Memory",
+    description:
+      "Access journal entries, reflections, dreams, and memory uploads.",
+    href: "/dashboard/journal",
   },
   {
-    title: '🧪 Experimental & Future Interfaces',
-    description: 'Preview experimental features and upcoming expansions.',
-    href: '/dashboard/experimental',
+    title: "🧪 Experimental & Future Interfaces",
+    description: "Preview experimental features and upcoming expansions.",
+    href: "/dashboard/experimental",
   },
 ];
 
@@ -49,7 +53,8 @@ export default function DashboardPage() {
             🔮 Sacred Technology Dashboard
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Access your personalized oracle interfaces, elemental insights, and consciousness exploration tools
+            Access your personalized oracle interfaces, elemental insights, and
+            consciousness exploration tools
           </p>
         </div>
 
@@ -66,7 +71,7 @@ export default function DashboardPage() {
                   <h3 className="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
                     {dashboard.title}
                   </h3>
-                  {'badge' in dashboard && (
+                  {"badge" in dashboard && (
                     <span className="bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">
                       {dashboard.badge}
                     </span>
@@ -79,8 +84,18 @@ export default function DashboardPage() {
                 {/* Hover indicator */}
                 <div className="mt-4 flex items-center text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
                   <span className="text-sm font-medium">Explore</span>
-                  <svg className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </div>
               </div>
@@ -128,8 +143,12 @@ export default function DashboardPage() {
                 <span className="text-purple-600">🌀</span>
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">Oracle Reading Completed</p>
-                <p className="text-sm text-gray-600">Received guidance on creative projects • 2 hours ago</p>
+                <p className="font-medium text-gray-900">
+                  Oracle Reading Completed
+                </p>
+                <p className="text-sm text-gray-600">
+                  Received guidance on creative projects • 2 hours ago
+                </p>
               </div>
             </div>
 
@@ -138,8 +157,12 @@ export default function DashboardPage() {
                 <span className="text-blue-600">🪷</span>
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">Taoist Practice Session</p>
-                <p className="text-sm text-gray-600">15-minute Water element meditation • Yesterday</p>
+                <p className="font-medium text-gray-900">
+                  Taoist Practice Session
+                </p>
+                <p className="text-sm text-gray-600">
+                  15-minute Water element meditation • Yesterday
+                </p>
               </div>
             </div>
 
@@ -149,7 +172,9 @@ export default function DashboardPage() {
               </div>
               <div className="flex-1">
                 <p className="font-medium text-gray-900">Journal Entry Added</p>
-                <p className="text-sm text-gray-600">Morning reflection on creative flow • 2 days ago</p>
+                <p className="text-sm text-gray-600">
+                  Morning reflection on creative flow • 2 days ago
+                </p>
               </div>
             </div>
           </div>

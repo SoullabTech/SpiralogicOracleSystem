@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   UserHolisticProfile,
   UserState,
   HolisticDomain,
-  DevelopmentStage
-} from '../../../lib/types/holistic';
+  DevelopmentStage,
+} from "../../../lib/types/holistic";
 
 // Define missing types locally for now
 interface StateResponsiveGuidance {
@@ -19,7 +19,7 @@ interface StateResponsiveGuidance {
 interface HolisticRecommendation {
   id: string;
   domains: HolisticDomain[];
-  type: 'practice' | 'insight' | 'integration' | 'resource';
+  type: "practice" | "insight" | "integration" | "resource";
   title: string;
   description: string;
   complexity: DevelopmentStage;
@@ -35,11 +35,13 @@ interface AdaptiveInterfaceProps {
 
 export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
   userProfile,
-  onProfileUpdate
+  onProfileUpdate,
 }) => {
-  const [guidance, setGuidance] = useState<StateResponsiveGuidance | null>(null);
+  const [guidance, setGuidance] = useState<StateResponsiveGuidance | null>(
+    null,
+  );
   const [currentComplexity, setCurrentComplexity] = useState<DevelopmentStage>(
-    DevelopmentStage.INTERMEDIATE
+    DevelopmentStage.INTERMEDIATE,
   );
 
   useEffect(() => {
@@ -48,27 +50,55 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
 
   const fetchStateGuidance = async () => {
     try {
-      const response = await fetch('/api/holistic/guidance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: userProfile })
+      const response = await fetch("/api/holistic/guidance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile: userProfile }),
       });
       const guidanceData = await response.json();
       setGuidance(guidanceData);
     } catch (error) {
-      console.error('Failed to fetch guidance:', error);
+      console.error("Failed to fetch guidance:", error);
     }
   };
 
   const getStateIndicator = (state: UserState) => {
     const indicators = {
-      [UserState.STRESSED]: { color: 'text-red-600', icon: '⚡', label: 'Stressed' },
-      [UserState.SEEKING_CLARITY]: { color: 'text-blue-600', icon: '🔍', label: 'Seeking Clarity' },
-      [UserState.DISCONNECTED]: { color: 'text-purple-600', icon: '🌊', label: 'Disconnected' },
-      [UserState.PHYSICAL_CONCERNS]: { color: 'text-orange-600', icon: '🌱', label: 'Physical Focus' },
-      [UserState.BALANCED]: { color: 'text-green-600', icon: '⚖️', label: 'Balanced' },
-      [UserState.ENERGIZED]: { color: 'text-yellow-600', icon: '🔥', label: 'Energized' },
-      [UserState.REFLECTIVE]: { color: 'text-indigo-600', icon: '🪞', label: 'Reflective' }
+      [UserState.STRESSED]: {
+        color: "text-red-600",
+        icon: "⚡",
+        label: "Stressed",
+      },
+      [UserState.SEEKING_CLARITY]: {
+        color: "text-blue-600",
+        icon: "🔍",
+        label: "Seeking Clarity",
+      },
+      [UserState.DISCONNECTED]: {
+        color: "text-purple-600",
+        icon: "🌊",
+        label: "Disconnected",
+      },
+      [UserState.PHYSICAL_CONCERNS]: {
+        color: "text-orange-600",
+        icon: "🌱",
+        label: "Physical Focus",
+      },
+      [UserState.BALANCED]: {
+        color: "text-green-600",
+        icon: "⚖️",
+        label: "Balanced",
+      },
+      [UserState.ENERGIZED]: {
+        color: "text-yellow-600",
+        icon: "🔥",
+        label: "Energized",
+      },
+      [UserState.REFLECTIVE]: {
+        color: "text-indigo-600",
+        icon: "🪞",
+        label: "Reflective",
+      },
     };
 
     return indicators[state] || indicators[UserState.BALANCED];
@@ -76,19 +106,19 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
 
   const getDomainIcon = (domain: HolisticDomain) => {
     const icons = {
-      [HolisticDomain.MIND]: '🧠',
-      [HolisticDomain.BODY]: '🌱',
-      [HolisticDomain.SPIRIT]: '✨',
-      [HolisticDomain.EMOTIONS]: '💧'
+      [HolisticDomain.MIND]: "🧠",
+      [HolisticDomain.BODY]: "🌱",
+      [HolisticDomain.SPIRIT]: "✨",
+      [HolisticDomain.EMOTIONS]: "💧",
     };
     return icons[domain];
   };
 
   const getComplexityLabel = (stage: DevelopmentStage) => {
     const labels = {
-      [DevelopmentStage.BEGINNER]: 'Foundation',
-      [DevelopmentStage.INTERMEDIATE]: 'Integration',
-      [DevelopmentStage.ADVANCED]: 'Mastery'
+      [DevelopmentStage.BEGINNER]: "Foundation",
+      [DevelopmentStage.INTERMEDIATE]: "Integration",
+      [DevelopmentStage.ADVANCED]: "Mastery",
     };
     return labels[stage];
   };
@@ -113,7 +143,7 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
                 Current State: {stateIndicator.label}
               </h2>
               <p className="text-sm text-gray-600">
-                {guidance?.adaptiveMessage || 'Assessing your current state...'}
+                {guidance?.adaptiveMessage || "Assessing your current state..."}
               </p>
             </div>
           </div>
@@ -123,10 +153,12 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
             <label className="text-sm text-gray-700">Practice Level:</label>
             <select
               value={currentComplexity}
-              onChange={(e) => handleComplexityChange(e.target.value as DevelopmentStage)}
+              onChange={(e) =>
+                handleComplexityChange(e.target.value as DevelopmentStage)
+              }
               className="border rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {Object.values(DevelopmentStage).map(stage => (
+              {Object.values(DevelopmentStage).map((stage) => (
                 <option key={stage} value={stage}>
                   {getComplexityLabel(stage)}
                 </option>
@@ -137,18 +169,22 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
 
         {/* Domain Balance Visualization */}
         <div className="grid grid-cols-4 gap-4">
-          {userProfile.domains.map(domain => (
+          {userProfile.domains.map((domain) => (
             <div key={domain.domain} className="text-center">
               <div className="flex flex-col items-center space-y-2">
                 <span className="text-2xl">{getDomainIcon(domain.domain)}</span>
-                <span className="text-xs font-medium capitalize">{domain.domain}</span>
+                <span className="text-xs font-medium capitalize">
+                  {domain.domain}
+                </span>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
                     className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${(domain.currentLevel / 10) * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-gray-600">{domain.currentLevel.toFixed(1)}</span>
+                <span className="text-xs text-gray-600">
+                  {domain.currentLevel.toFixed(1)}
+                </span>
               </div>
             </div>
           ))}
@@ -158,7 +194,9 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
       {/* State-Responsive Recommendations */}
       {guidance && (
         <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold mb-4">Personalized Recommendations</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Personalized Recommendations
+          </h3>
           <div className="grid gap-4">
             {guidance.recommendations.map((rec, index) => (
               <RecommendationCard
@@ -193,17 +231,19 @@ interface RecommendationCardProps {
 const RecommendationCard: React.FC<RecommendationCardProps> = ({
   recommendation,
   priority,
-  userComplexity
+  userComplexity,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
   const isAppropriateComplexity = recommendation.complexity === userComplexity;
-  const cardOpacity = isAppropriateComplexity ? 'opacity-100' : 'opacity-60';
+  const cardOpacity = isAppropriateComplexity ? "opacity-100" : "opacity-60";
 
   return (
-    <div className={`border rounded-lg p-4 transition-all duration-200 ${cardOpacity} ${
-      isAppropriateComplexity ? 'border-blue-200' : 'border-gray-200'
-    }`}>
+    <div
+      className={`border rounded-lg p-4 transition-all duration-200 ${cardOpacity} ${
+        isAppropriateComplexity ? "border-blue-200" : "border-gray-200"
+      }`}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-2">
@@ -223,13 +263,13 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
           </h4>
 
           <div className="flex items-center space-x-1 mb-2">
-            {recommendation.domains.map(domain => (
+            {recommendation.domains.map((domain) => (
               <span key={domain} className="text-sm">
                 {getDomainIcon(domain)}
               </span>
             ))}
             <span className="text-xs text-gray-500 ml-2">
-              {recommendation.domains.join(', ')}
+              {recommendation.domains.join(", ")}
             </span>
           </div>
 
@@ -240,7 +280,9 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
           {expanded && (
             <div className="space-y-2 mt-3 pt-3 border-t border-gray-100">
               <div>
-                <h5 className="text-xs font-medium text-gray-700 mb-1">Benefits:</h5>
+                <h5 className="text-xs font-medium text-gray-700 mb-1">
+                  Benefits:
+                </h5>
                 <ul className="text-xs text-gray-600 list-disc list-inside">
                   {recommendation.benefits.map((benefit, idx) => (
                     <li key={idx}>{benefit}</li>
@@ -250,7 +292,9 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
 
               {recommendation.prerequisites && (
                 <div>
-                  <h5 className="text-xs font-medium text-gray-700 mb-1">Prerequisites:</h5>
+                  <h5 className="text-xs font-medium text-gray-700 mb-1">
+                    Prerequisites:
+                  </h5>
                   <ul className="text-xs text-gray-600 list-disc list-inside">
                     {recommendation.prerequisites.map((prereq, idx) => (
                       <li key={idx}>{prereq}</li>
@@ -266,7 +310,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
           onClick={() => setExpanded(!expanded)}
           className="text-gray-400 hover:text-gray-600 ml-4"
         >
-          {expanded ? '▼' : '▶'}
+          {expanded ? "▼" : "▶"}
         </button>
       </div>
 
@@ -289,7 +333,7 @@ interface QuickStateAdjustmentProps {
 
 const QuickStateAdjustment: React.FC<QuickStateAdjustmentProps> = ({
   currentProfile,
-  onStateUpdate
+  onStateUpdate,
 }) => {
   const [stressLevel, setStressLevel] = useState(currentProfile.stressLevel);
   const [energyLevel, setEnergyLevel] = useState(currentProfile.energyLevel);
@@ -299,7 +343,7 @@ const QuickStateAdjustment: React.FC<QuickStateAdjustmentProps> = ({
       ...currentProfile,
       stressLevel,
       energyLevel,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
     onStateUpdate(updatedProfile);
   };
@@ -354,10 +398,10 @@ const QuickStateAdjustment: React.FC<QuickStateAdjustmentProps> = ({
 
 function getDomainIcon(domain: HolisticDomain): string {
   const icons = {
-    [HolisticDomain.MIND]: '🧠',
-    [HolisticDomain.BODY]: '🌱',
-    [HolisticDomain.SPIRIT]: '✨',
-    [HolisticDomain.EMOTIONS]: '💧'
+    [HolisticDomain.MIND]: "🧠",
+    [HolisticDomain.BODY]: "🌱",
+    [HolisticDomain.SPIRIT]: "✨",
+    [HolisticDomain.EMOTIONS]: "💧",
   };
   return icons[domain];
 }

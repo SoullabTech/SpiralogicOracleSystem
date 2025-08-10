@@ -11,3 +11,4 @@ flowchart TD
     C --> D[oracleArchetypes.ts]
     D --> E[Archetype Message, Card, Tone, Symbol, Ritual]
     E --> F[Frontend Modal: Oracle Reflection UI]
+```

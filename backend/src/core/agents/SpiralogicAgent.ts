@@ -1,9 +1,9 @@
 // /src/agents/SpiralogicAgent.ts
 
-import { Agent, AgentContext } from '@singularitynet/sdk';
-import { SOUL } from '../core/SOUL';
-import { HumanPacedLearning } from '../core/HumanPacedLearning';
-import { ArchetypeFramework } from '../core/ArchetypeFramework';
+import { Agent, AgentContext } from "@singularitynet/sdk";
+import { SOUL } from "../core/SOUL";
+import { HumanPacedLearning } from "../core/HumanPacedLearning";
+import { ArchetypeFramework } from "../core/ArchetypeFramework";
 
 export class SpiralogicAgent {
   private soul: SOUL;
@@ -21,7 +21,7 @@ export class SpiralogicAgent {
   async engage(query: string) {
     // Ensure the agent follows the HPP (Human-Paced Protocol)
     if (!this.hpp.isReadyToProgress()) {
-      console.log('Please reflect and engage more before progressing.');
+      console.log("Please reflect and engage more before progressing.");
       return;
     }
 
@@ -41,10 +41,15 @@ export class SpiralogicAgent {
   }
 
   // Allow multiple agents to communicate and collaborate
-  async collaborateWithOtherAgents(otherAgents: SpiralogicAgent[], query: string) {
-    const responses = await Promise.all(otherAgents.map(agent => agent.engage(query)));
+  async collaborateWithOtherAgents(
+    otherAgents: SpiralogicAgent[],
+    query: string,
+  ) {
+    const responses = await Promise.all(
+      otherAgents.map((agent) => agent.engage(query)),
+    );
     // Combine results and generate an emergent response
-    const collectiveResponse = responses.join('\n');
+    const collectiveResponse = responses.join("\n");
     console.log(`Collective Agent Response: ${collectiveResponse}`);
     return collectiveResponse;
   }

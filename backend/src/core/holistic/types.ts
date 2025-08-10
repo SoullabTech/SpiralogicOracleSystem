@@ -1,24 +1,24 @@
 export enum HolisticDomain {
-  MIND = 'mind',
-  BODY = 'body',
-  SPIRIT = 'spirit',
-  EMOTIONS = 'emotions'
+  MIND = "mind",
+  BODY = "body",
+  SPIRIT = "spirit",
+  EMOTIONS = "emotions",
 }
 
 export enum DevelopmentStage {
-  BEGINNER = 'beginner',
-  INTERMEDIATE = 'intermediate',
-  ADVANCED = 'advanced'
+  BEGINNER = "beginner",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
 }
 
 export enum UserState {
-  STRESSED = 'stressed',
-  SEEKING_CLARITY = 'seeking_clarity',
-  DISCONNECTED = 'disconnected',
-  PHYSICAL_CONCERNS = 'physical_concerns',
-  BALANCED = 'balanced',
-  ENERGIZED = 'energized',
-  REFLECTIVE = 'reflective'
+  STRESSED = "stressed",
+  SEEKING_CLARITY = "seeking_clarity",
+  DISCONNECTED = "disconnected",
+  PHYSICAL_CONCERNS = "physical_concerns",
+  BALANCED = "balanced",
+  ENERGIZED = "energized",
+  REFLECTIVE = "reflective",
 }
 
 export interface DomainProfile {
@@ -44,7 +44,7 @@ export interface UserHolisticProfile {
 }
 
 export interface LifeCircumstance {
-  type: 'transition' | 'crisis' | 'celebration' | 'growth' | 'maintenance';
+  type: "transition" | "crisis" | "celebration" | "growth" | "maintenance";
   description: string;
   impactLevel: number;
   startDate: Date;
@@ -52,11 +52,11 @@ export interface LifeCircumstance {
 }
 
 export enum LearningStyle {
-  VISUAL = 'visual',
-  AUDITORY = 'auditory',
-  KINESTHETIC = 'kinesthetic',
-  READING_WRITING = 'reading_writing',
-  MIXED = 'mixed'
+  VISUAL = "visual",
+  AUDITORY = "auditory",
+  KINESTHETIC = "kinesthetic",
+  READING_WRITING = "reading_writing",
+  MIXED = "mixed",
 }
 
 export interface DevelopmentGoal {
@@ -65,7 +65,7 @@ export interface DevelopmentGoal {
   description: string;
   targetDate?: Date;
   milestones: Milestone[];
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
 }
 
 export interface Milestone {
@@ -78,7 +78,7 @@ export interface Milestone {
 export interface HolisticRecommendation {
   id: string;
   domains: HolisticDomain[];
-  type: 'practice' | 'insight' | 'integration' | 'resource';
+  type: "practice" | "insight" | "integration" | "resource";
   title: string;
   description: string;
   complexity: DevelopmentStage;
@@ -112,7 +112,7 @@ export interface Exercise {
 export interface Resource {
   id: string;
   title: string;
-  type: 'article' | 'video' | 'audio' | 'practice' | 'tool';
+  type: "article" | "video" | "audio" | "practice" | "tool";
   url?: string;
   content?: string;
   domains: HolisticDomain[];
@@ -121,7 +121,7 @@ export interface Resource {
 export interface DomainConnection {
   primaryDomain: HolisticDomain;
   secondaryDomain: HolisticDomain;
-  connectionType: 'supports' | 'enhances' | 'balances' | 'integrates';
+  connectionType: "supports" | "enhances" | "balances" | "integrates";
   description: string;
 }
 
@@ -133,7 +133,7 @@ export interface StateResponsiveGuidance {
 }
 
 export interface ElementalDomainMapping {
-  element: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  element: "fire" | "water" | "earth" | "air" | "aether";
   primaryDomains: HolisticDomain[];
   qualities: string[];
   practices: string[];
@@ -161,9 +161,9 @@ export interface PathwayStep {
 
 export interface ProgressMetric {
   domain: HolisticDomain;
-  metricType: 'quantitative' | 'qualitative';
+  metricType: "quantitative" | "qualitative";
   currentValue: number | string;
   targetValue: number | string;
-  trend: 'improving' | 'stable' | 'declining';
+  trend: "improving" | "stable" | "declining";
   lastMeasured: Date;
 }

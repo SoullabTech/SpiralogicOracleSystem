@@ -15,23 +15,23 @@ npm install ain-engine-sdk
 ## Quick Start
 
 ```javascript
-import { AINEngineClient } from 'ain-engine-sdk';
+import { AINEngineClient } from "ain-engine-sdk";
 
 const client = new AINEngineClient({
-  apiKey: 'your_api_key_here',
-  baseUrl: 'https://api.spiralogic.oracle/v1/ain-engine' // Optional
+  apiKey: "your_api_key_here",
+  baseUrl: "https://api.spiralogic.oracle/v1/ain-engine", // Optional
 });
 
 // Get collective insights
 const insights = await client.getCollectiveInsights({
   limit: 10,
-  confidenceThreshold: 0.7
+  confidenceThreshold: 0.7,
 });
 
 // Get archetypal processes
 const processes = await client.getArchetypalProcesses({
-  element: 'fire',
-  activeOnly: true
+  element: "fire",
+  activeOnly: true,
 });
 
 // Get elemental wisdom
@@ -54,14 +54,15 @@ All requests require an API key. Contact the Spiralogic Oracle team to register 
 
 ```javascript
 await client.getCollectiveInsights({
-  limit: 10,                    // Max 50
-  type: 'archetypal_pattern',   // Optional filter
-  element: 'water',             // Optional filter  
-  confidenceThreshold: 0.5      // Min confidence level
+  limit: 10, // Max 50
+  type: "archetypal_pattern", // Optional filter
+  element: "water", // Optional filter
+  confidenceThreshold: 0.5, // Min confidence level
 });
 ```
 
 **Response Format:**
+
 ```javascript
 {
   success: true,
@@ -69,7 +70,7 @@ await client.getCollectiveInsights({
     {
       id: "insight_123",
       type: "elemental_shift",
-      title: "Rising Water Element Integration", 
+      title: "Rising Water Element Integration",
       description: "Collective movement toward emotional intelligence...",
       elementalResonance: {
         fire: 0.2, water: 0.6, earth: 0.1, air: 0.05, aether: 0.05
@@ -94,13 +95,14 @@ await client.getCollectiveInsights({
 
 ```javascript
 await client.getArchetypalProcesses({
-  element: 'fire',     // Optional filter
-  archetype: 'Warrior', // Optional filter
-  activeOnly: true     // Default true
+  element: "fire", // Optional filter
+  archetype: "Warrior", // Optional filter
+  activeOnly: true, // Default true
 });
 ```
 
 **Response Format:**
+
 ```javascript
 {
   success: true,
@@ -108,7 +110,7 @@ await client.getArchetypalProcesses({
     {
       id: "fire_warrior_integration",
       name: "Fire Warrior Integration",
-      element: "fire", 
+      element: "fire",
       archetype: "Warrior",
       description: "Process for integrating Fire Warrior archetype...",
       phases: ["Recognition", "Channeling", "Refinement", ...],
@@ -128,6 +130,7 @@ await client.getElementalWisdom();
 ```
 
 **Response Format:**
+
 ```javascript
 {
   success: true,
@@ -158,11 +161,11 @@ try {
   const insights = await client.getCollectiveInsights();
 } catch (error) {
   if (error.status === 401) {
-    console.error('Invalid API key');
+    console.error("Invalid API key");
   } else if (error.status === 429) {
-    console.error('Rate limit exceeded');
+    console.error("Rate limit exceeded");
   } else {
-    console.error('API error:', error.message);
+    console.error("API error:", error.message);
   }
 }
 ```

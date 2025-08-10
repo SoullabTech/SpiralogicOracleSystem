@@ -52,7 +52,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
         onComplete?.();
       }, 3000);
     } catch (error) {
-      console.error('Failed to save Oracle configuration:', error);
+      console.error("Failed to save Oracle configuration:", error);
       // Still proceed to step 3 since localStorage worked
       setStep(3);
     }
@@ -86,8 +86,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                   stepNum < step
                     ? "bg-[#F6E27F]"
                     : stepNum === step
-                    ? "bg-[#F6E27F] ring-2 ring-[#F6E27F]/30"
-                    : "bg-gray-600"
+                      ? "bg-[#F6E27F] ring-2 ring-[#F6E27F]/30"
+                      : "bg-gray-600"
                 }`}
               />
               {stepNum < 3 && (
@@ -130,9 +130,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
             transition={{ duration: 3 }}
             className="w-full h-1 bg-[#F6E27F] mx-auto max-w-xs rounded-full"
           />
-          <p className="text-xs text-gray-500 mt-2">
-            Starting in 3 seconds...
-          </p>
+          <p className="text-xs text-gray-500 mt-2">Starting in 3 seconds...</p>
         </motion.div>
       )}
 

@@ -3,9 +3,9 @@
  * Agent that can process both at edge and cloud with intelligent routing
  */
 
-import { EventEmitter } from 'events';
-import { BaseAgent } from '../../core/agents/baseAgent';
-import { SpiralogicEvent, ElementalService, EventHandler } from '../types';
+import { EventEmitter } from "events";
+import { BaseAgent } from "../../core/agents/baseAgent";
+import { SpiralogicEvent, ElementalService, EventHandler } from "../types";
 
 export class HybridAgent extends EventEmitter {
   protected serviceId: string;
@@ -17,7 +17,7 @@ export class HybridAgent extends EventEmitter {
     this.serviceId = serviceId;
     this.elementalService = elementalService;
     this.baseAgent = new BaseAgent();
-    
+
     // Set reasonable max listeners for hybrid services
     this.setMaxListeners(500);
   }
@@ -34,21 +34,21 @@ export class HybridAgent extends EventEmitter {
       payload: {
         content: payload,
         metadata: {
-          processed_at: 'hybrid',
-          intensity: 1.0
+          processed_at: "hybrid",
+          intensity: 1.0,
         },
         elemental_signature: {
           fire: 0.2,
           water: 0.2,
           earth: 0.2,
           air: 0.2,
-          aether: 0.2
-        }
+          aether: 0.2,
+        },
       },
       routing: {
-        priority: 'medium',
-        broadcast: false
-      }
+        priority: "medium",
+        broadcast: false,
+      },
     };
 
     this.emit(eventType, event);
@@ -79,11 +79,11 @@ export class HybridAgent extends EventEmitter {
    * Request cloud processing for complex operations
    */
   async requestCloudProcessing(operation: string, data: any): Promise<void> {
-    await this.publish('cloud.processing.request', {
+    await this.publish("cloud.processing.request", {
       operation,
       data,
       requesting_service: this.serviceId,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 }

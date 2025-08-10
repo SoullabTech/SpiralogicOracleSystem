@@ -1,49 +1,49 @@
 import {
   AntiCommodificationSafeguards,
   IntegrationArchitecture,
-  BypassingPattern
-} from './types';
+  BypassingPattern,
+} from "./types";
 
 export class AntiCommodificationService {
   private transformationPromisePhrases = [
-    'transform your life',
-    'breakthrough to new levels',
-    'unlock your potential',
-    'activate your power',
-    'quantum leap',
-    'instant healing',
-    'permanent change',
-    'never struggle again',
-    'complete transformation',
-    'life-changing results',
-    'guaranteed success',
-    'revolutionary breakthrough',
-    'unlock hidden abilities',
-    'transcend limitations',
-    'accelerate growth',
-    'instant awakening',
-    'miraculous healing',
-    'effortless transformation',
-    'ultimate freedom',
-    'perfect alignment'
+    "transform your life",
+    "breakthrough to new levels",
+    "unlock your potential",
+    "activate your power",
+    "quantum leap",
+    "instant healing",
+    "permanent change",
+    "never struggle again",
+    "complete transformation",
+    "life-changing results",
+    "guaranteed success",
+    "revolutionary breakthrough",
+    "unlock hidden abilities",
+    "transcend limitations",
+    "accelerate growth",
+    "instant awakening",
+    "miraculous healing",
+    "effortless transformation",
+    "ultimate freedom",
+    "perfect alignment",
   ];
 
   private humanityEmphasizingLanguage = [
-    'support your ongoing human development',
-    'honor your process and struggles',
-    'embrace the fullness of human experience',
-    'navigate life\'s ordinary challenges',
-    'find meaning in mundane moments',
-    'celebrate small daily consistencies',
-    'support your journey as a human being',
-    'honor both growth and maintenance phases',
-    'validate the slow work of development',
-    'appreciate the beauty of ordinary moments',
-    'support your humanity rather than transcend it',
-    'honor your limitations and vulnerabilities',
-    'celebrate showing up imperfectly',
-    'find wisdom in mistakes and struggles',
-    'appreciate the grit and grind of daily practice'
+    "support your ongoing human development",
+    "honor your process and struggles",
+    "embrace the fullness of human experience",
+    "navigate life's ordinary challenges",
+    "find meaning in mundane moments",
+    "celebrate small daily consistencies",
+    "support your journey as a human being",
+    "honor both growth and maintenance phases",
+    "validate the slow work of development",
+    "appreciate the beauty of ordinary moments",
+    "support your humanity rather than transcend it",
+    "honor your limitations and vulnerabilities",
+    "celebrate showing up imperfectly",
+    "find wisdom in mistakes and struggles",
+    "appreciate the grit and grind of daily practice",
   ];
 
   private consumptionPrevention = {
@@ -51,10 +51,10 @@ export class AntiCommodificationService {
     mandatoryReflectionPeriods: {
       insight: 24, // hours
       practice: 72, // hours
-      breakthrough: 168 // hours (1 week)
+      breakthrough: 168, // hours (1 week)
     },
     integrationRequiredForAdvancement: true,
-    communityValidationForMajorContent: true
+    communityValidationForMajorContent: true,
   };
 
   scanForTransformationPromises(content: string): {
@@ -66,7 +66,7 @@ export class AntiCommodificationService {
     const replacementSuggestions: string[] = [];
     const contentLower = content.toLowerCase();
 
-    this.transformationPromisePhrases.forEach(phrase => {
+    this.transformationPromisePhrases.forEach((phrase) => {
       if (contentLower.includes(phrase.toLowerCase())) {
         flaggedPhrases.push(phrase);
         replacementSuggestions.push(this.generateHumanityReplacement(phrase));
@@ -76,36 +76,47 @@ export class AntiCommodificationService {
     return {
       flagged: flaggedPhrases.length > 0,
       flaggedPhrases,
-      replacementSuggestions
+      replacementSuggestions,
     };
   }
 
   private generateHumanityReplacement(transformationPhrase: string): string {
     const replacements = {
-      'transform your life': 'support your ongoing development as a human being',
-      'breakthrough to new levels': 'explore new perspectives while honoring where you are',
-      'unlock your potential': 'discover what\'s already present in your experience',
-      'activate your power': 'connect with your inherent human capacity',
-      'quantum leap': 'take thoughtful steps in your development',
-      'instant healing': 'support your natural healing process over time',
-      'permanent change': 'cultivate sustainable practices that serve your growth',
-      'never struggle again': 'develop tools for navigating life\'s inevitable challenges',
-      'complete transformation': 'support your ongoing development journey',
-      'life-changing results': 'meaningful support for your growth process',
-      'guaranteed success': 'tools that some people find helpful',
-      'revolutionary breakthrough': 'gentle exploration of new perspectives',
-      'unlock hidden abilities': 'explore capacities that may be present in your experience',
-      'transcend limitations': 'work skillfully with your human limitations',
-      'accelerate growth': 'honor your natural pace of development',
-      'instant awakening': 'support your gradual awakening to what\'s present',
-      'miraculous healing': 'support your body\'s natural healing wisdom',
-      'effortless transformation': 'make space for the effort that real growth requires',
-      'ultimate freedom': 'find freedom within the constraints of human life',
-      'perfect alignment': 'explore greater harmony while accepting imperfection'
+      "transform your life":
+        "support your ongoing development as a human being",
+      "breakthrough to new levels":
+        "explore new perspectives while honoring where you are",
+      "unlock your potential":
+        "discover what's already present in your experience",
+      "activate your power": "connect with your inherent human capacity",
+      "quantum leap": "take thoughtful steps in your development",
+      "instant healing": "support your natural healing process over time",
+      "permanent change":
+        "cultivate sustainable practices that serve your growth",
+      "never struggle again":
+        "develop tools for navigating life's inevitable challenges",
+      "complete transformation": "support your ongoing development journey",
+      "life-changing results": "meaningful support for your growth process",
+      "guaranteed success": "tools that some people find helpful",
+      "revolutionary breakthrough": "gentle exploration of new perspectives",
+      "unlock hidden abilities":
+        "explore capacities that may be present in your experience",
+      "transcend limitations": "work skillfully with your human limitations",
+      "accelerate growth": "honor your natural pace of development",
+      "instant awakening": "support your gradual awakening to what's present",
+      "miraculous healing": "support your body's natural healing wisdom",
+      "effortless transformation":
+        "make space for the effort that real growth requires",
+      "ultimate freedom": "find freedom within the constraints of human life",
+      "perfect alignment":
+        "explore greater harmony while accepting imperfection",
     };
 
-    return replacements[transformationPhrase.toLowerCase() as keyof typeof replacements] ||
-           'support your human development process';
+    return (
+      replacements[
+        transformationPhrase.toLowerCase() as keyof typeof replacements
+      ] || "support your human development process"
+    );
   }
 
   detectConsumptionPatterns(userBehavior: any): {
@@ -118,30 +129,43 @@ export class AntiCommodificationService {
     let isConsumptive = false;
 
     // Check for rapid content consumption
-    if (userBehavior.dailyContentRequests > this.consumptionPrevention.maxDailyContentRequests) {
-      patterns.push('Rapid content consumption exceeding healthy limits');
-      interventions.push('Mandatory integration period before new content access');
+    if (
+      userBehavior.dailyContentRequests >
+      this.consumptionPrevention.maxDailyContentRequests
+    ) {
+      patterns.push("Rapid content consumption exceeding healthy limits");
+      interventions.push(
+        "Mandatory integration period before new content access",
+      );
       isConsumptive = true;
     }
 
     // Check for insight addiction patterns
     if (userBehavior.insightToApplicationRatio > 3) {
-      patterns.push('High ratio of insights to practical application');
-      interventions.push('Focus on applying existing insights before seeking new ones');
+      patterns.push("High ratio of insights to practical application");
+      interventions.push(
+        "Focus on applying existing insights before seeking new ones",
+      );
       isConsumptive = true;
     }
 
     // Check for breakthrough seeking
     if (userBehavior.breakthroughSeekingBehavior > 2) {
-      patterns.push('Pattern of seeking dramatic breakthroughs over consistent practice');
-      interventions.push('Celebrate ordinary moments and consistent small practices');
+      patterns.push(
+        "Pattern of seeking dramatic breakthroughs over consistent practice",
+      );
+      interventions.push(
+        "Celebrate ordinary moments and consistent small practices",
+      );
       isConsumptive = true;
     }
 
     // Check for avoiding ordinary content
     if (userBehavior.ordinaryContentAvoidance > 70) {
-      patterns.push('Consistent avoidance of ordinary, foundational content');
-      interventions.push('Engage with basic practices and mundane integration tools');
+      patterns.push("Consistent avoidance of ordinary, foundational content");
+      interventions.push(
+        "Engage with basic practices and mundane integration tools",
+      );
       isConsumptive = true;
     }
 
@@ -150,7 +174,7 @@ export class AntiCommodificationService {
 
   implementPacingAlgorithm(
     userArchitecture: IntegrationArchitecture,
-    requestedContent: any
+    requestedContent: any,
   ): {
     allowed: boolean;
     waitTime?: number;
@@ -163,38 +187,46 @@ export class AntiCommodificationService {
 
     // Check for insight addiction pattern
     const hasInsightAddiction = userArchitecture.bypassingHistory.some(
-      b => b.pattern === BypassingPattern.INSIGHT_ADDICTION && !b.addressed
+      (b) => b.pattern === BypassingPattern.INSIGHT_ADDICTION && !b.addressed,
     );
 
     if (hasInsightAddiction) {
-      const requiredWaitTime = this.consumptionPrevention.mandatoryReflectionPeriods.insight;
+      const requiredWaitTime =
+        this.consumptionPrevention.mandatoryReflectionPeriods.insight;
       if (hoursWaited < requiredWaitTime) {
         return {
           allowed: false,
           waitTime: requiredWaitTime - hoursWaited,
-          message: "Integration time is essential for sustainable growth. Your insights need time to settle into daily life.",
-          alternativeActivities: this.getIntegrationActivities()
+          message:
+            "Integration time is essential for sustainable growth. Your insights need time to settle into daily life.",
+          alternativeActivities: this.getIntegrationActivities(),
         };
       }
     }
 
     // Check for breakthrough content pacing
-    if (requestedContent.type === 'breakthrough' || requestedContent.intensity === 'high') {
-      const requiredWaitTime = this.consumptionPrevention.mandatoryReflectionPeriods.breakthrough;
+    if (
+      requestedContent.type === "breakthrough" ||
+      requestedContent.intensity === "high"
+    ) {
+      const requiredWaitTime =
+        this.consumptionPrevention.mandatoryReflectionPeriods.breakthrough;
       if (hoursWaited < requiredWaitTime) {
         return {
           allowed: false,
           waitTime: requiredWaitTime - hoursWaited,
-          message: "Major insights need extended integration time. This waiting period prevents spiritual bypassing and supports real transformation.",
-          alternativeActivities: this.getDeepIntegrationActivities()
+          message:
+            "Major insights need extended integration time. This waiting period prevents spiritual bypassing and supports real transformation.",
+          alternativeActivities: this.getDeepIntegrationActivities(),
         };
       }
     }
 
     return {
       allowed: true,
-      message: "Ready for new content. Remember to balance exploration with integration.",
-      alternativeActivities: []
+      message:
+        "Ready for new content. Remember to balance exploration with integration.",
+      alternativeActivities: [],
     };
   }
 
@@ -207,7 +239,7 @@ export class AntiCommodificationService {
       "Focus on being present during mundane daily tasks",
       "Practice gratitude for ordinary moments in your life",
       "Review and recommit to basic daily practices",
-      "Ask yourself: 'What am I avoiding by seeking new insights?'"
+      "Ask yourself: 'What am I avoiding by seeking new insights?'",
     ];
   }
 
@@ -220,7 +252,7 @@ export class AntiCommodificationService {
       "Volunteer or serve others as a way to ground your insights in meaningful action",
       "Work with a therapist or counselor to process the depth of your recent breakthrough",
       "Create art, write, or express your integration process creatively",
-      "Mentor someone else who might benefit from your hard-won wisdom"
+      "Mentor someone else who might benefit from your hard-won wisdom",
     ];
   }
 
@@ -229,26 +261,29 @@ export class AntiCommodificationService {
 
     // Replace transcendence language
     const transcendenceReplacements = {
-      'transcend': 'work skillfully with',
-      'beyond human': 'fully human',
-      'rise above': 'engage deeply with',
-      'escape from': 'find peace within',
-      'overcome': 'learn to dance with',
-      'conquer': 'befriend',
-      'master': 'develop a healthy relationship with',
-      'eliminate': 'transform your relationship with',
-      'eradicate': 'learn to navigate'
+      transcend: "work skillfully with",
+      "beyond human": "fully human",
+      "rise above": "engage deeply with",
+      "escape from": "find peace within",
+      overcome: "learn to dance with",
+      conquer: "befriend",
+      master: "develop a healthy relationship with",
+      eliminate: "transform your relationship with",
+      eradicate: "learn to navigate",
     };
 
-    Object.entries(transcendenceReplacements).forEach(([original, replacement]) => {
-      const regex = new RegExp(original, 'gi');
-      humanizedContent = humanizedContent.replace(regex, replacement);
-    });
+    Object.entries(transcendenceReplacements).forEach(
+      ([original, replacement]) => {
+        const regex = new RegExp(original, "gi");
+        humanizedContent = humanizedContent.replace(regex, replacement);
+      },
+    );
 
     // Add humanity emphasis
-    const randomHumanityPhrase = this.humanityEmphasizingLanguage[
-      Math.floor(Math.random() * this.humanityEmphasizingLanguage.length)
-    ];
+    const randomHumanityPhrase =
+      this.humanityEmphasizingLanguage[
+        Math.floor(Math.random() * this.humanityEmphasizingLanguage.length)
+      ];
 
     humanizedContent += `\n\n🌱 Remember: This practice is designed to ${randomHumanityPhrase}.`;
 
@@ -257,7 +292,7 @@ export class AntiCommodificationService {
 
   validateCommunityIntegration(
     userSharing: any,
-    communityFeedback: any
+    communityFeedback: any,
   ): {
     isGrounded: boolean;
     feedback: string[];
@@ -268,32 +303,36 @@ export class AntiCommodificationService {
 
     // Check for spiritual superiority in sharing
     const superiorityIndicators = [
-      'less awakened',
-      'not ready for',
-      'higher level',
-      'more evolved',
-      'beyond that stage',
-      'transcended that'
+      "less awakened",
+      "not ready for",
+      "higher level",
+      "more evolved",
+      "beyond that stage",
+      "transcended that",
     ];
 
-    const sharingText = userSharing.content?.toLowerCase() || '';
-    superiorityIndicators.forEach(indicator => {
+    const sharingText = userSharing.content?.toLowerCase() || "";
+    superiorityIndicators.forEach((indicator) => {
       if (sharingText.includes(indicator)) {
-        concerns.push(`Sharing shows potential spiritual superiority: "${indicator}"`);
+        concerns.push(
+          `Sharing shows potential spiritual superiority: "${indicator}"`,
+        );
       }
     });
 
     // Check community feedback for reality grounding
     if (communityFeedback.realityChecks > 0) {
-      feedback.push('Community is providing helpful reality checks');
+      feedback.push("Community is providing helpful reality checks");
     }
 
     if (communityFeedback.ordinaryMomentValidation > 0) {
-      feedback.push('Community is celebrating ordinary moments and struggles');
+      feedback.push("Community is celebrating ordinary moments and struggles");
     }
 
     if (communityFeedback.bypassingConcerns > 0) {
-      concerns.push('Community has expressed concerns about spiritual bypassing');
+      concerns.push(
+        "Community has expressed concerns about spiritual bypassing",
+      );
     }
 
     const isGrounded = concerns.length === 0 && feedback.length > 0;
@@ -306,18 +345,18 @@ export class AntiCommodificationService {
       transformationPromiseDetection: {
         flaggedPhrases: this.transformationPromisePhrases,
         replacementLanguage: this.humanityEmphasizingLanguage,
-        preventionActive: true
+        preventionActive: true,
       },
       pacingAlgorithms: {
         insightSeekingUserDetection: true,
         mandatorySlowDown: true,
-        integrationPeriodEnforcement: true
+        integrationPeriodEnforcement: true,
       },
       humanityEmphasis: {
         transcendenceSeekingPrevention: true,
         ordinaryStruggleValidation: true,
-        beingHumanCelebration: true
-      }
+        beingHumanCelebration: true,
+      },
     };
   }
 
@@ -331,27 +370,44 @@ export class AntiCommodificationService {
     const recommendations: string[] = [];
 
     // Check for transformation promises (heavy penalty)
-    const transformationScan = this.scanForTransformationPromises(content.text || '');
+    const transformationScan = this.scanForTransformationPromises(
+      content.text || "",
+    );
     if (transformationScan.flagged) {
       score += 30;
-      issues.push('Contains transformation promises');
-      recommendations.push('Replace transformation language with supportive development language');
+      issues.push("Contains transformation promises");
+      recommendations.push(
+        "Replace transformation language with supportive development language",
+      );
     }
 
     // Check for magical thinking
-    const magicalWords = ['manifest', 'vibration', 'frequency', 'energy field', 'quantum'];
-    const contentText = (content.text || '').toLowerCase();
-    magicalWords.forEach(word => {
+    const magicalWords = [
+      "manifest",
+      "vibration",
+      "frequency",
+      "energy field",
+      "quantum",
+    ];
+    const contentText = (content.text || "").toLowerCase();
+    magicalWords.forEach((word) => {
       if (contentText.includes(word)) {
         score += 10;
         issues.push(`Contains potentially magical thinking: "${word}"`);
-        recommendations.push(`Reframe "${word}" as metaphorical or provide scientific context`);
+        recommendations.push(
+          `Reframe "${word}" as metaphorical or provide scientific context`,
+        );
       }
     });
 
     // Check for authority claims
-    const authorityClaims = ['the truth is', 'you must', 'always works', 'guaranteed'];
-    authorityClaims.forEach(claim => {
+    const authorityClaims = [
+      "the truth is",
+      "you must",
+      "always works",
+      "guaranteed",
+    ];
+    authorityClaims.forEach((claim) => {
       if (contentText.includes(claim)) {
         score += 15;
         issues.push(`Contains authority claim: "${claim}"`);
@@ -360,18 +416,31 @@ export class AntiCommodificationService {
     });
 
     // Check for transcendence emphasis
-    const transcendenceWords = ['transcend', 'beyond human', 'rise above', 'escape'];
-    transcendenceWords.forEach(word => {
+    const transcendenceWords = [
+      "transcend",
+      "beyond human",
+      "rise above",
+      "escape",
+    ];
+    transcendenceWords.forEach((word) => {
       if (contentText.includes(word)) {
         score += 10;
         issues.push(`Emphasizes transcendence over humanity: "${word}"`);
-        recommendations.push(`Replace "${word}" with humanity-embracing language`);
+        recommendations.push(
+          `Replace "${word}" with humanity-embracing language`,
+        );
       }
     });
 
     // Positive elements (reduce score)
-    const humanityWords = ['human', 'ordinary', 'struggle', 'imperfect', 'journey'];
-    humanityWords.forEach(word => {
+    const humanityWords = [
+      "human",
+      "ordinary",
+      "struggle",
+      "imperfect",
+      "journey",
+    ];
+    humanityWords.forEach((word) => {
       if (contentText.includes(word)) {
         score = Math.max(0, score - 5);
       }
@@ -399,7 +468,7 @@ export class AntiCommodificationService {
       "🌿 Your struggles and mistakes are not obstacles to wisdom—they are wisdom itself.",
       "💫 There is profound beauty in choosing to show up for your mundane responsibilities.",
       "🌱 The most ordinary day contains infinite opportunities for presence and growth.",
-      "✨ Your humanity—including your limitations—is not something to transcend but to honor."
+      "✨ Your humanity—including your limitations—is not something to transcend but to honor.",
     ];
   }
 }

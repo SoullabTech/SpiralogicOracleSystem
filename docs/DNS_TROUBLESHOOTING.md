@@ -3,16 +3,19 @@
 ## Platform-Specific Commands
 
 ### macOS:
+
 ```bash
 sudo killall -HUP mDNSResponder
 ```
 
 ### Windows:
+
 ```bash
 ipconfig /flushdns
 ```
 
 ### Linux (depending on distro):
+
 ```bash
 # systemd-based (Ubuntu 20.04+, Fedora, etc.)
 sudo systemd-resolve --flush-caches
@@ -34,6 +37,7 @@ sudo /etc/init.d/networking restart
 ## Current Domain Status
 
 ### DNS Records (✅ Correct):
+
 ```bash
 dig +short soullab.life @1.1.1.1
 # Returns: 76.76.21.21 ✅
@@ -43,6 +47,7 @@ dig +short oracle.soullab.life @1.1.1.1
 ```
 
 ### Domain Response (❌ Needs Transfer):
+
 ```bash
 curl -I https://soullab.life/
 # Returns: HTTP/2 404 (x-vercel-error: NOT_FOUND)
@@ -69,6 +74,7 @@ curl -I https://soullab.life/
 ## After DNS Flush
 
 Run these tests to verify:
+
 ```bash
 # Check DNS resolution
 dig +short soullab.life
@@ -85,6 +91,7 @@ curl -I https://oracle.soullab.life/
 ## Expected Results After Domain Transfer
 
 All commands should return:
+
 ```
 HTTP/2 200 OK
 server: Vercel
@@ -92,6 +99,7 @@ x-matched-path: /
 ```
 
 Instead of:
+
 ```
 HTTP/2 404
 x-vercel-error: NOT_FOUND

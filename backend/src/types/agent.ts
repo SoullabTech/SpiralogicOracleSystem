@@ -1,4 +1,4 @@
-import type { Metadata } from './metadata';
+import type { Metadata } from "./metadata";
 
 export interface AgentResponse {
   content: string; // Primary field for compatibility

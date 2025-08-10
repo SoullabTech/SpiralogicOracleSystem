@@ -1,8 +1,8 @@
 // frontend/src/components/onboarding/OracleOnboarding.tsx
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface VoiceOption {
   id: string;
@@ -27,9 +27,9 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    oracle_name: '',
-    oracle_voice: '',
-    insight: ''
+    oracle_name: "",
+    oracle_voice: "",
+    insight: "",
   });
 
   const [voices, setVoices] = useState<VoiceOption[]>([]);
@@ -43,23 +43,26 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
   const loadInitialData = async () => {
     try {
       // Load available voices
-      const voicesResponse = await fetch('/api/voice/list');
+      const voicesResponse = await fetch("/api/voice/list");
       if (voicesResponse.ok) {
         const voicesData = await voicesResponse.json();
         setVoices(voicesData.voices || []);
 
         // Set default voice if available
         if (voicesData.voices?.length > 0 && !formData.oracle_voice) {
-          setFormData(prev => ({ ...prev, oracle_voice: voicesData.voices[0].id }));
+          setFormData((prev) => ({
+            ...prev,
+            oracle_voice: voicesData.voices[0].id,
+          }));
         }
       }
 
       // Check if user already has Oracle preferences
       if (user) {
-        const prefsResponse = await fetch('/api/oracle/preferences', {
+        const prefsResponse = await fetch("/api/oracle/preferences", {
           headers: {
-            'Authorization': `Bearer ${user.access_token}`
-          }
+            Authorization: `Bearer ${user.access_token}`,
+          },
         });
 
         if (prefsResponse.ok) {
@@ -72,7 +75,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
         }
       }
     } catch (error) {
-      console.error('Failed to load initial data:', error);
+      console.error("Failed to load initial data:", error);
     } finally {
       setLoading(false);
     }
@@ -82,13 +85,13 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.oracle_name.trim()) {
-      newErrors.oracle_name = 'Please name your Oracle';
+      newErrors.oracle_name = "Please name your Oracle";
     } else if (formData.oracle_name.length > 40) {
-      newErrors.oracle_name = 'Name must be 40 characters or less';
+      newErrors.oracle_name = "Name must be 40 characters or less";
     }
 
     if (!formData.oracle_voice) {
-      newErrors.oracle_voice = 'Please select a voice';
+      newErrors.oracle_voice = "Please select a voice";
     }
 
     setErrors(newErrors);
@@ -111,7 +114,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
       audio.onended = () => setPlayingVoice(null);
       audio.onerror = () => {
         setPlayingVoice(null);
-        console.error('Failed to play voice preview');
+        console.error("Failed to play voice preview");
       };
 
       await audio.play();
@@ -121,10 +124,9 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
         audio.pause();
         setPlayingVoice(null);
       }, 5000);
-
     } catch (error) {
       setPlayingVoice(null);
-      console.error('Voice preview failed:', error);
+      console.error("Voice preview failed:", error);
     }
   };
 
@@ -137,31 +139,31 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
     setErrors({});
 
     try {
-      const response = await fetch('/api/oracle/preferences', {
-        method: 'POST',
+      const response = await fetch("/api/oracle/preferences", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.access_token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
         },
         body: JSON.stringify({
           oracle_name: formData.oracle_name.trim(),
           oracle_voice: formData.oracle_voice,
-          insight: formData.insight.trim() || undefined
-        })
+          insight: formData.insight.trim() || undefined,
+        }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to save preferences');
+        throw new Error(errorData.error || "Failed to save preferences");
       }
 
       const result = await response.json();
       onComplete(result.preferences);
-
     } catch (error) {
-      console.error('Failed to save Oracle preferences:', error);
+      console.error("Failed to save Oracle preferences:", error);
       setErrors({
-        submit: error instanceof Error ? error.message : 'Failed to save preferences'
+        submit:
+          error instanceof Error ? error.message : "Failed to save preferences",
       });
     } finally {
       setSaving(false);
@@ -200,9 +202,33 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
             className="w-16 h-16 mx-auto mb-6"
           >
             <svg viewBox="0 0 64 64" className="w-full h-full">
-              <circle cx="32" cy="32" r="24" fill="none" stroke="#F6E27F" strokeWidth="2" opacity="0.8" />
-              <circle cx="32" cy="32" r="16" fill="none" stroke="#F6E27F" strokeWidth="1" opacity="0.6" />
-              <circle cx="32" cy="32" r="8" fill="none" stroke="#F6E27F" strokeWidth="1" opacity="0.4" />
+              <circle
+                cx="32"
+                cy="32"
+                r="24"
+                fill="none"
+                stroke="#F6E27F"
+                strokeWidth="2"
+                opacity="0.8"
+              />
+              <circle
+                cx="32"
+                cy="32"
+                r="16"
+                fill="none"
+                stroke="#F6E27F"
+                strokeWidth="1"
+                opacity="0.6"
+              />
+              <circle
+                cx="32"
+                cy="32"
+                r="8"
+                fill="none"
+                stroke="#F6E27F"
+                strokeWidth="1"
+                opacity="0.4"
+              />
             </svg>
           </motion.div>
 
@@ -210,7 +236,8 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
             Configure Your Oracle
           </h1>
           <p className="text-gray-300 leading-relaxed">
-            Personalize your guide with a name and voice that resonates with your practice.
+            Personalize your guide with a name and voice that resonates with
+            your practice.
           </p>
         </div>
 
@@ -228,7 +255,12 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
             <input
               type="text"
               value={formData.oracle_name}
-              onChange={(e) => setFormData(prev => ({ ...prev, oracle_name: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  oracle_name: e.target.value,
+                }))
+              }
               placeholder="Enter a name for your Oracle..."
               className="w-full px-4 py-3 bg-[#1A1C2C] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
               maxLength={40}
@@ -236,7 +268,9 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
             />
             <div className="flex justify-between mt-1">
               {errors.oracle_name && (
-                <span className="text-red-400 text-sm">{errors.oracle_name}</span>
+                <span className="text-red-400 text-sm">
+                  {errors.oracle_name}
+                </span>
               )}
               <span className="text-gray-500 text-xs ml-auto">
                 {formData.oracle_name.length}/40
@@ -256,7 +290,12 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
             <div className="flex gap-3">
               <select
                 value={formData.oracle_voice}
-                onChange={(e) => setFormData(prev => ({ ...prev, oracle_voice: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    oracle_voice: e.target.value,
+                  }))
+                }
                 className="flex-1 px-4 py-3 bg-[#1A1C2C] border border-gray-600 text-white rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
                 disabled={saving}
               >
@@ -270,19 +309,24 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
 
               <button
                 type="button"
-                onClick={() => formData.oracle_voice && handleVoicePreview(formData.oracle_voice)}
+                onClick={() =>
+                  formData.oracle_voice &&
+                  handleVoicePreview(formData.oracle_voice)
+                }
                 disabled={!formData.oracle_voice || saving}
                 className={`px-4 py-3 border rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   playingVoice === formData.oracle_voice
-                    ? 'border-red-500 bg-red-500/10 text-red-400'
-                    : 'border-gray-600 text-gray-300 hover:border-[#F6E27F] hover:text-[#F6E27F]'
+                    ? "border-red-500 bg-red-500/10 text-red-400"
+                    : "border-gray-600 text-gray-300 hover:border-[#F6E27F] hover:text-[#F6E27F]"
                 }`}
               >
-                {playingVoice === formData.oracle_voice ? '⏸️' : '▶️'}
+                {playingVoice === formData.oracle_voice ? "⏸️" : "▶️"}
               </button>
             </div>
             {errors.oracle_voice && (
-              <span className="text-red-400 text-sm mt-1 block">{errors.oracle_voice}</span>
+              <span className="text-red-400 text-sm mt-1 block">
+                {errors.oracle_voice}
+              </span>
             )}
           </motion.div>
 
@@ -293,11 +337,16 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
             transition={{ delay: 0.9 }}
           >
             <label className="block text-[#F6E27F] font-medium mb-2">
-              Why This Choice? <span className="text-gray-400 text-sm font-normal">(Optional)</span>
+              Why This Choice?{" "}
+              <span className="text-gray-400 text-sm font-normal">
+                (Optional)
+              </span>
             </label>
             <textarea
               value={formData.insight}
-              onChange={(e) => setFormData(prev => ({ ...prev, insight: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, insight: e.target.value }))
+              }
               placeholder="What drew you to this name and voice? This insight will be preserved..."
               className="w-full px-4 py-3 bg-[#1A1C2C] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors resize-none"
               rows={3}
@@ -323,7 +372,9 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
 
             <button
               type="submit"
-              disabled={saving || !formData.oracle_name.trim() || !formData.oracle_voice}
+              disabled={
+                saving || !formData.oracle_name.trim() || !formData.oracle_voice
+              }
               className="w-full bg-[#F6E27F] text-[#0E0F1B] py-3 px-6 rounded-lg font-medium hover:bg-[#F6E27F]/90 disabled:bg-gray-600 disabled:text-gray-400 transition-colors"
             >
               {saving ? (
@@ -332,7 +383,7 @@ const OracleOnboarding: React.FC<OracleOnboardingProps> = ({ onComplete }) => {
                   Saving Oracle...
                 </span>
               ) : (
-                'Save & Begin'
+                "Save & Begin"
               )}
             </button>
           </motion.div>

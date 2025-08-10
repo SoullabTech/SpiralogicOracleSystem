@@ -1,12 +1,14 @@
 // oracle-backend/src/services/supabaseClient.ts
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { config } from '../config';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { config } from "../config";
 
 const { url, anonKey, serviceRoleKey } = config.supabase;
 
 if (!url || !anonKey) {
-  throw new Error('❌ Missing Supabase configuration in environment variables.');
+  throw new Error(
+    "❌ Missing Supabase configuration in environment variables.",
+  );
 }
 
 // Public client (used by frontend-safe operations)
@@ -19,7 +21,9 @@ export const supabaseAdmin: SupabaseClient | null = serviceRoleKey
 
 export function getSupabaseAdmin(): SupabaseClient {
   if (!supabaseAdmin) {
-    console.warn('⚠️ Falling back to public Supabase client. Admin operations may be restricted.');
+    console.warn(
+      "⚠️ Falling back to public Supabase client. Admin operations may be restricted.",
+    );
     return supabase;
   }
   return supabaseAdmin;

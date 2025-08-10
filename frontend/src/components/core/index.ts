@@ -1,1 +1,1 @@
-export { CoreDashboard } from './CoreDashboard';
+export { CoreDashboard } from "./CoreDashboard";

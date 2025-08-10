@@ -5,6 +5,7 @@
 This is the minimal, deployment-ready version of the Sacred Techno-Interface. It provides core Oracle functionality without complex dependencies.
 
 ### Features
+
 - ✓ Health check endpoint
 - ✓ Basic Oracle echo responses
 - ✓ Elemental status monitoring
@@ -44,16 +45,19 @@ NODE_ENV=production
 ### Deployment
 
 #### Render.com
+
 - Build Command: `npm run build:minimal`
 - Start Command: `npm run start:minimal`
 
 #### Heroku
+
 ```bash
 heroku create sacred-techno-interface
 git push heroku main
 ```
 
 #### Generic
+
 1. Set `PORT` environment variable
 2. Run `npm run build:minimal`
 3. Run `npm run start:minimal`
@@ -73,6 +77,7 @@ curl -X POST http://localhost:3000/api/oracle/echo \
 ### Next Steps
 
 Once deployed and stable, you can incrementally add:
+
 1. Supabase integration for persistence
 2. OpenAI integration for advanced Oracle responses
 3. Authentication middleware

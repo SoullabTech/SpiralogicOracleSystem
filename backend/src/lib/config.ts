@@ -1,9 +1,11 @@
 // src/lib/config.ts
-import { z } from 'zod';
+import { z } from "zod";
 
 // 🧠 Define all env vars you use anywhere in your stack
 const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
 
   // backend Supabase (no VITE_ prefix)
   SUPABASE_URL: z.string().url(),
@@ -33,8 +35,11 @@ function validateEnv() {
 
   const parsed = envSchema.safeParse(raw);
   if (!parsed.success) {
-    console.error('❌ Invalid environment variables:', parsed.error.flatten().fieldErrors);
-    throw new Error('Invalid environment variables');
+    console.error(
+      "❌ Invalid environment variables:",
+      parsed.error.flatten().fieldErrors,
+    );
+    throw new Error("Invalid environment variables");
   }
   return parsed.data;
 }

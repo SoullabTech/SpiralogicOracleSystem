@@ -1,7 +1,11 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { AstrologicalHoloflower, AstrologicalHouse, Planet } from '../core/AstrologicalHoloflower';
-import { motion, AnimatePresence } from 'framer-motion';
-import { astrologicalService } from '../services/astrologicalService';
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import {
+  AstrologicalHoloflower,
+  AstrologicalHouse,
+  Planet,
+} from "../core/AstrologicalHoloflower";
+import { motion, AnimatePresence } from "framer-motion";
+import { astrologicalService } from "../services/astrologicalService";
 
 interface AstrologicalHoloflowerVisualizationProps {
   userId?: string;
@@ -15,22 +19,30 @@ interface AstrologicalHoloflowerVisualizationProps {
   onHouseClick?: (house: AstrologicalHouse) => void;
 }
 
-export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowerVisualizationProps> = ({
+export const AstrologicalHoloflowerVisualization: React.FC<
+  AstrologicalHoloflowerVisualizationProps
+> = ({
   userId,
   birthData,
   showPlanetaryInfluences = true,
   showNatalStrengths = true,
-  onHouseClick
+  onHouseClick,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [holoflower] = useState(() => new AstrologicalHoloflower());
   const [state, setState] = useState(holoflower.getAstrologicalState());
-  const [selectedHouse, setSelectedHouse] = useState<AstrologicalHouse | null>(null);
-  const [hoveredHouse, setHoveredHouse] = useState<AstrologicalHouse | null>(null);
+  const [selectedHouse, setSelectedHouse] = useState<AstrologicalHouse | null>(
+    null,
+  );
+  const [hoveredHouse, setHoveredHouse] = useState<AstrologicalHouse | null>(
+    null,
+  );
   const [showTransits, setShowTransits] = useState(true);
   const [showNatal, setShowNatal] = useState(true);
   const [showSpiralogic, setShowSpiralogic] = useState(true);
-  const [currentPlanets, setCurrentPlanets] = useState<Map<Planet, any>>(new Map());
+  const [currentPlanets, setCurrentPlanets] = useState<Map<Planet, any>>(
+    new Map(),
+  );
 
   const width = 1000;
   const height = 1000;
@@ -50,15 +62,16 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
   useEffect(() => {
     const updateTransits = async () => {
       if (userId) {
-        const astroData = await astrologicalService.getUserAstrologicalState(userId);
+        const astroData =
+          await astrologicalService.getUserAstrologicalState(userId);
         if (astroData && astroData.currentTransits) {
           // Update holoflower with current transits
           const transitMap = new Map();
-          astroData.currentTransits.forEach(transit => {
+          astroData.currentTransits.forEach((transit) => {
             transitMap.set(transit.planet, {
               sign: transit.sign,
               degree: transit.degree,
-              retrograde: transit.retrograde
+              retrograde: transit.retrograde,
             });
           });
           holoflower.updateCurrentTransits(transitMap);
@@ -75,39 +88,39 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
 
   // Planet symbols
   const planetSymbols: Record<Planet, string> = {
-    sun: '☉',
-    moon: '☽',
-    mercury: '☿',
-    venus: '♀',
-    mars: '♂',
-    jupiter: '♃',
-    saturn: '♄',
-    uranus: '♅',
-    neptune: '♆',
-    pluto: '♇',
-    north_node: '☊',
-    chiron: '⚷'
+    sun: "☉",
+    moon: "☽",
+    mercury: "☿",
+    venus: "♀",
+    mars: "♂",
+    jupiter: "♃",
+    saturn: "♄",
+    uranus: "♅",
+    neptune: "♆",
+    pluto: "♇",
+    north_node: "☊",
+    chiron: "⚷",
   };
 
   // Zodiac colors
   const zodiacColors: Record<string, string> = {
-    aries: '#FF0000',
-    taurus: '#228B22',
-    gemini: '#FFD700',
-    cancer: '#C0C0C0',
-    leo: '#FFA500',
-    virgo: '#8B4513',
-    libra: '#FFB6C1',
-    scorpio: '#8B0000',
-    sagittarius: '#9370DB',
-    capricorn: '#2F4F4F',
-    aquarius: '#00CED1',
-    pisces: '#4169E1'
+    aries: "#FF0000",
+    taurus: "#228B22",
+    gemini: "#FFD700",
+    cancer: "#C0C0C0",
+    leo: "#FFA500",
+    virgo: "#8B4513",
+    libra: "#FFB6C1",
+    scorpio: "#8B0000",
+    sagittarius: "#9370DB",
+    capricorn: "#2F4F4F",
+    aquarius: "#00CED1",
+    pisces: "#4169E1",
   };
 
   const renderHouse = (house: AstrologicalHouse) => {
     const visualData = holoflower.exportAstrologicalData();
-    const houseVis = visualData.houses.find(h => h.number === house.number)!;
+    const houseVis = visualData.houses.find((h) => h.number === house.number)!;
 
     const isSelected = selectedHouse?.number === house.number;
     const isHovered = hoveredHouse?.number === house.number;
@@ -117,7 +130,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
     // Calculate position with slight spiral for Spiralogic stages
     const spiralOffset = showSpiralogic ? (house.spiralogicStage - 1) * 2 : 0;
     const radius = baseRadius + spiralOffset;
-    const angle = ((house.number - 1) * 30 - 90) * Math.PI / 180;
+    const angle = (((house.number - 1) * 30 - 90) * Math.PI) / 180;
     const x = centerX + Math.cos(angle) * radius;
     const y = centerY + Math.sin(angle) * radius;
 
@@ -126,12 +139,12 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
         key={house.number}
         initial={{ scale: 0, opacity: 0 }}
         animate={{
-          scale: isSelected ? 1.2 : (isHovered ? 1.1 : 1),
-          opacity: 1
+          scale: isSelected ? 1.2 : isHovered ? 1.1 : 1,
+          opacity: 1,
         }}
         transition={{
           duration: 0.3,
-          delay: house.number * 0.05
+          delay: house.number * 0.05,
         }}
       >
         {/* Transit activation ring */}
@@ -147,11 +160,11 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
             opacity={house.transitActivation}
             animate={{
               rotate: 360,
-              scale: [1, 1.1, 1]
+              scale: [1, 1.1, 1],
             }}
             transition={{
               rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-              scale: { duration: 2, repeat: Infinity }
+              scale: { duration: 2, repeat: Infinity },
             }}
           />
         )}
@@ -176,9 +189,9 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
           r={30}
           fill={house.color}
           fillOpacity={0.3 + house.currentIntensity * 0.7}
-          stroke={isSelected ? '#FFD700' : (isHovered ? '#FFFFFF' : house.color)}
-          strokeWidth={isSelected ? 4 : (isHovered ? 3 : 2)}
-          style={{ cursor: 'pointer' }}
+          stroke={isSelected ? "#FFD700" : isHovered ? "#FFFFFF" : house.color}
+          strokeWidth={isSelected ? 4 : isHovered ? 3 : 2}
+          style={{ cursor: "pointer" }}
           onMouseEnter={() => setHoveredHouse(house)}
           onMouseLeave={() => setHoveredHouse(null)}
           onClick={() => handleHouseClick(house)}
@@ -195,7 +208,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
           fill="white"
           fontSize="16"
           fontWeight="bold"
-          style={{ pointerEvents: 'none' }}
+          style={{ pointerEvents: "none" }}
         >
           {house.number}
         </text>
@@ -208,50 +221,62 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
           alignmentBaseline="middle"
           fill="white"
           fontSize="14"
-          style={{ pointerEvents: 'none' }}
+          style={{ pointerEvents: "none" }}
         >
           {house.sacredSymbol}
         </text>
 
         {/* Transit planets */}
-        {showTransits && house.currentTransits.map((transit, index) => (
-          <text
-            key={transit.planet}
-            x={x + 25}
-            y={y + index * 12 - 10}
-            fill="#FFD700"
-            fontSize="12"
-            style={{ pointerEvents: 'none' }}
-          >
-            {planetSymbols[transit.planet]}
-          </text>
-        ))}
+        {showTransits &&
+          house.currentTransits.map((transit, index) => (
+            <text
+              key={transit.planet}
+              x={x + 25}
+              y={y + index * 12 - 10}
+              fill="#FFD700"
+              fontSize="12"
+              style={{ pointerEvents: "none" }}
+            >
+              {planetSymbols[transit.planet]}
+            </text>
+          ))}
 
         {/* Natal planets */}
-        {showNatal && house.natalPlanets.map((natal, index) => (
-          <text
-            key={natal.planet}
-            x={x - 25}
-            y={y + index * 12 - 10}
-            fill="#87CEEB"
-            fontSize="12"
-            style={{ pointerEvents: 'none' }}
-          >
-            {planetSymbols[natal.planet]}
-          </text>
-        ))}
+        {showNatal &&
+          house.natalPlanets.map((natal, index) => (
+            <text
+              key={natal.planet}
+              x={x - 25}
+              y={y + index * 12 - 10}
+              fill="#87CEEB"
+              fontSize="12"
+              style={{ pointerEvents: "none" }}
+            >
+              {planetSymbols[natal.planet]}
+            </text>
+          ))}
       </motion.g>
     );
   };
 
   const renderZodiacWheel = () => {
     const signs = [
-      'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-      'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+      "Aries",
+      "Taurus",
+      "Gemini",
+      "Cancer",
+      "Leo",
+      "Virgo",
+      "Libra",
+      "Scorpio",
+      "Sagittarius",
+      "Capricorn",
+      "Aquarius",
+      "Pisces",
     ];
 
     return signs.map((sign, index) => {
-      const angle = index * 30 * Math.PI / 180;
+      const angle = (index * 30 * Math.PI) / 180;
       const textRadius = baseRadius + 60;
       const x = centerX + Math.cos(angle - Math.PI / 2) * textRadius;
       const y = centerY + Math.sin(angle - Math.PI / 2) * textRadius;
@@ -283,7 +308,10 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
       <g className="current-planets">
         {planets.map(([planet, position], index) => {
           const radius = baseRadius - 40;
-          const angle = (this.getAbsoluteDegree(position.sign, position.degree) - 90) * Math.PI / 180;
+          const angle =
+            ((this.getAbsoluteDegree(position.sign, position.degree) - 90) *
+              Math.PI) /
+            180;
           const x = centerX + Math.cos(angle) * radius;
           const y = centerY + Math.sin(angle) * radius;
 
@@ -337,17 +365,17 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
 
     const points = [];
     for (let i = 0; i <= 12; i++) {
-      const angle = (i * 30 - 90) * Math.PI / 180;
+      const angle = ((i * 30 - 90) * Math.PI) / 180;
       const radius = baseRadius + i * 2;
       points.push({
         x: centerX + Math.cos(angle) * radius,
-        y: centerY + Math.sin(angle) * radius
+        y: centerY + Math.sin(angle) * radius,
       });
     }
 
     const pathData = points
-      .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
-      .join(' ');
+      .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
+      .join(" ");
 
     return (
       <motion.path
@@ -372,8 +400,18 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
   // Helper function to get absolute degree
   const getAbsoluteDegree = (sign: string, degree: number): number => {
     const signs = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     const signIndex = signs.indexOf(sign);
     return signIndex * 30 + degree;
@@ -383,19 +421,19 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
     <div className="astrological-holoflower-container">
       <div className="controls">
         <button
-          className={showTransits ? 'active' : ''}
+          className={showTransits ? "active" : ""}
           onClick={() => setShowTransits(!showTransits)}
         >
           Current Transits
         </button>
         <button
-          className={showNatal ? 'active' : ''}
+          className={showNatal ? "active" : ""}
           onClick={() => setShowNatal(!showNatal)}
         >
           Natal Planets
         </button>
         <button
-          className={showSpiralogic ? 'active' : ''}
+          className={showSpiralogic ? "active" : ""}
           onClick={() => setShowSpiralogic(!showSpiralogic)}
         >
           Spiralogic Stages
@@ -410,8 +448,9 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
         width={width}
         height={height}
         style={{
-          background: 'radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)',
-          borderRadius: '50%'
+          background:
+            "radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)",
+          borderRadius: "50%",
         }}
       >
         {/* Outer zodiac wheel */}
@@ -427,7 +466,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
 
         {/* House divisions */}
         {Array.from({ length: 12 }, (_, i) => {
-          const angle = (i * 30 - 90) * Math.PI / 180;
+          const angle = ((i * 30 - 90) * Math.PI) / 180;
           const x1 = centerX + Math.cos(angle) * (baseRadius - 50);
           const y1 = centerY + Math.sin(angle) * (baseRadius - 50);
           const x2 = centerX + Math.cos(angle) * (baseRadius + 80);
@@ -473,24 +512,38 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
 
           <div className="detail-section">
             <h4>Spiralogic Stage {selectedHouse.spiralogicStage}</h4>
-            <p><strong>Theme:</strong> {selectedHouse.developmentalTheme}</p>
-            <p><strong>Goal:</strong> {selectedHouse.evolutionaryGoal}</p>
+            <p>
+              <strong>Theme:</strong> {selectedHouse.developmentalTheme}
+            </p>
+            <p>
+              <strong>Goal:</strong> {selectedHouse.evolutionaryGoal}
+            </p>
           </div>
 
           <div className="detail-section">
             <h4>Elemental Alchemy</h4>
-            <p><strong>Element:</strong> {selectedHouse.element} {selectedHouse.sacredSymbol}</p>
-            <p><strong>Phase:</strong> {selectedHouse.phase}</p>
-            <p><strong>Process:</strong> {selectedHouse.alchemicalProcess}</p>
-            <p><strong>Consciousness:</strong> {selectedHouse.consciousnessLevel}</p>
+            <p>
+              <strong>Element:</strong> {selectedHouse.element}{" "}
+              {selectedHouse.sacredSymbol}
+            </p>
+            <p>
+              <strong>Phase:</strong> {selectedHouse.phase}
+            </p>
+            <p>
+              <strong>Process:</strong> {selectedHouse.alchemicalProcess}
+            </p>
+            <p>
+              <strong>Consciousness:</strong> {selectedHouse.consciousnessLevel}
+            </p>
           </div>
 
           {selectedHouse.currentTransits.length > 0 && (
             <div className="detail-section">
               <h4>Current Transits</h4>
-              {selectedHouse.currentTransits.map(transit => (
+              {selectedHouse.currentTransits.map((transit) => (
                 <p key={transit.planet}>
-                  {planetSymbols[transit.planet]} {transit.planet} in {transit.sign}: {transit.influence}
+                  {planetSymbols[transit.planet]} {transit.planet} in{" "}
+                  {transit.sign}: {transit.influence}
                 </p>
               ))}
             </div>
@@ -499,9 +552,10 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
           {selectedHouse.natalPlanets.length > 0 && (
             <div className="detail-section">
               <h4>Natal Planets</h4>
-              {selectedHouse.natalPlanets.map(natal => (
+              {selectedHouse.natalPlanets.map((natal) => (
                 <p key={natal.planet}>
-                  {planetSymbols[natal.planet]} {natal.planet}: {natal.interpretation}
+                  {planetSymbols[natal.planet]} {natal.planet}:{" "}
+                  {natal.interpretation}
                 </p>
               ))}
             </div>
@@ -509,8 +563,12 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
 
           <div className="detail-section">
             <h4>Shadow & Gift</h4>
-            <p><strong>Shadow:</strong> {selectedHouse.shadowAspect}</p>
-            <p><strong>Gift:</strong> {selectedHouse.giftAspect}</p>
+            <p>
+              <strong>Shadow:</strong> {selectedHouse.shadowAspect}
+            </p>
+            <p>
+              <strong>Gift:</strong> {selectedHouse.giftAspect}
+            </p>
           </div>
         </div>
       )}
@@ -537,8 +595,8 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
         .controls button {
           padding: 8px 16px;
           background: #2a2a3e;
-          border: 1px solid #FFD700;
-          color: #FFD700;
+          border: 1px solid #ffd700;
+          color: #ffd700;
           border-radius: 4px;
           cursor: pointer;
           transition: all 0.3s;
@@ -557,7 +615,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
           background: rgba(42, 42, 62, 0.95);
           padding: 25px;
           border-radius: 12px;
-          border: 2px solid #FFD700;
+          border: 2px solid #ffd700;
           max-width: 350px;
           max-height: 80vh;
           overflow-y: auto;
@@ -566,13 +624,13 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
 
         .house-details-panel h2 {
           margin: 0 0 5px 0;
-          color: #FFD700;
+          color: #ffd700;
           font-size: 24px;
         }
 
         .house-details-panel h3 {
           margin: 0 0 20px 0;
-          color: #87CEEB;
+          color: #87ceeb;
           font-size: 18px;
           font-weight: normal;
         }
@@ -589,7 +647,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
 
         .detail-section h4 {
           margin: 0 0 10px 0;
-          color: #FFD700;
+          color: #ffd700;
           font-size: 16px;
         }
 
@@ -600,7 +658,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<AstrologicalHoloflowe
         }
 
         .detail-section strong {
-          color: #87CEEB;
+          color: #87ceeb;
         }
       `}</style>
     </div>
@@ -619,11 +677,11 @@ const renderCenterSpiral = () => {
         fillOpacity={0.3}
         animate={{
           scale: [1, 1.1, 1],
-          rotate: 360
+          rotate: 360,
         }}
         transition={{
           scale: { duration: 3, repeat: Infinity },
-          rotate: { duration: 60, repeat: Infinity, ease: "linear" }
+          rotate: { duration: 60, repeat: Infinity, ease: "linear" },
         }}
       />
       <defs>

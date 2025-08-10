@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 // Dynamic import to handle client-side components
 const PersonalOracleHome = dynamic(
-  () => import('../../frontend/src/components/oracle/PersonalOracleHome'),
-  { ssr: false }
+  () => import("../../frontend/src/components/oracle/PersonalOracleHome"),
+  { ssr: false },
 );
 
 function OracleLoadingFallback() {
@@ -16,7 +16,9 @@ function OracleLoadingFallback() {
         <div className="w-16 h-16 bg-[#F6E27F] rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
           <span className="text-2xl">🔮</span>
         </div>
-        <p className="text-[#F6E27F] text-lg">Connecting to your Personal Oracle...</p>
+        <p className="text-[#F6E27F] text-lg">
+          Connecting to your Personal Oracle...
+        </p>
       </div>
     </div>
   );

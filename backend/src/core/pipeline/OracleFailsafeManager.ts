@@ -5,9 +5,9 @@
  * Maintains the sacred container through graceful degradation and poetic fallbacks.
  */
 
-import { logger } from '../../utils/logger';
-import { OracleQuery, OracleResponse } from './OracleResponsePipeline';
-import { ARCHETYPE_VOICES } from '../../config/archetypalVoices';
+import { logger } from "../../utils/logger";
+import { OracleQuery, OracleResponse } from "./OracleResponsePipeline";
+import { ARCHETYPE_VOICES } from "../../config/archetypalVoices";
 
 export interface FailsafeLevel {
   id: string;
@@ -33,50 +33,50 @@ export interface FailsafeResponse {
 export class OracleFailsafeManager {
   private failsafeLevels: FailsafeLevel[] = [
     {
-      id: 'voice_retry',
-      name: 'Voice Synthesis Retry',
-      description: 'Retry voice synthesis with different provider',
+      id: "voice_retry",
+      name: "Voice Synthesis Retry",
+      description: "Retry voice synthesis with different provider",
       responseTime: 2000,
       confidenceLevel: 0.9,
       includesVoice: true,
-      includesSymbolic: true
+      includesSymbolic: true,
     },
     {
-      id: 'cached_voice',
-      name: 'Cached Voice Fallback',
-      description: 'Use pre-generated archetypal voice samples',
+      id: "cached_voice",
+      name: "Cached Voice Fallback",
+      description: "Use pre-generated archetypal voice samples",
       responseTime: 500,
       confidenceLevel: 0.8,
       includesVoice: true,
-      includesSymbolic: true
+      includesSymbolic: true,
     },
     {
-      id: 'text_symbolic',
-      name: 'Enhanced Text with Symbolic Guidance',
-      description: 'Rich textual response with symbolic elements',
+      id: "text_symbolic",
+      name: "Enhanced Text with Symbolic Guidance",
+      description: "Rich textual response with symbolic elements",
       responseTime: 300,
       confidenceLevel: 0.85,
       includesVoice: false,
-      includesSymbolic: true
+      includesSymbolic: true,
     },
     {
-      id: 'poetic_oracle',
-      name: 'Poetic Oracle Wisdom',
-      description: 'Mystical verse and symbolic imagery',
+      id: "poetic_oracle",
+      name: "Poetic Oracle Wisdom",
+      description: "Mystical verse and symbolic imagery",
       responseTime: 100,
       confidenceLevel: 0.7,
       includesVoice: false,
-      includesSymbolic: true
+      includesSymbolic: true,
     },
     {
-      id: 'sacred_holding',
-      name: 'Sacred Holding Space',
-      description: 'Minimal but profound spiritual acknowledgment',
+      id: "sacred_holding",
+      name: "Sacred Holding Space",
+      description: "Minimal but profound spiritual acknowledgment",
       responseTime: 50,
       confidenceLevel: 0.6,
       includesVoice: false,
-      includesSymbolic: false
-    }
+      includesSymbolic: false,
+    },
   ];
 
   private cachedVoiceFragments = new Map<string, string>();
@@ -90,11 +90,14 @@ export class OracleFailsafeManager {
   /**
    * 🚨 Main Failsafe Handler - Maintains Oracle Continuity
    */
-  async handleFailure(query: OracleQuery, error: Error): Promise<OracleResponse> {
-    logger.warn('Oracle Failsafe Activated:', {
+  async handleFailure(
+    query: OracleQuery,
+    error: Error,
+  ): Promise<OracleResponse> {
+    logger.warn("Oracle Failsafe Activated:", {
       userId: query.userId,
       error: error.message,
-      query: query.input.substring(0, 50)
+      query: query.input.substring(0, 50),
     });
 
     // Analyze failure type and select appropriate failsafe level
@@ -104,18 +107,17 @@ export class OracleFailsafeManager {
       const response = await this.executeFailsafe(query, failsafeLevel, error);
 
       // Log successful failsafe recovery
-      logger.info('Oracle Failsafe Recovery Successful:', {
+      logger.info("Oracle Failsafe Recovery Successful:", {
         userId: query.userId,
         level: failsafeLevel.id,
-        responseTime: failsafeLevel.responseTime
+        responseTime: failsafeLevel.responseTime,
       });
 
       return this.enhanceFailsafeResponse(response, query, failsafeLevel);
-
     } catch (failsafeError) {
-      logger.error('Failsafe Level Failed, Escalating:', {
+      logger.error("Failsafe Level Failed, Escalating:", {
         level: failsafeLevel.id,
-        error: failsafeError.message
+        error: failsafeError.message,
       });
 
       // Escalate to more basic failsafe
@@ -130,19 +132,26 @@ export class OracleFailsafeManager {
     const errorMessage = error.message.toLowerCase();
 
     // Voice synthesis errors
-    if (errorMessage.includes('voice') || errorMessage.includes('synthesis') ||
-        errorMessage.includes('elevenlabs') || errorMessage.includes('sesame')) {
+    if (
+      errorMessage.includes("voice") ||
+      errorMessage.includes("synthesis") ||
+      errorMessage.includes("elevenlabs") ||
+      errorMessage.includes("sesame")
+    ) {
       return this.failsafeLevels[0]; // voice_retry
     }
 
     // Network/API errors
-    if (errorMessage.includes('network') || errorMessage.includes('timeout') ||
-        errorMessage.includes('connection')) {
+    if (
+      errorMessage.includes("network") ||
+      errorMessage.includes("timeout") ||
+      errorMessage.includes("connection")
+    ) {
       return this.failsafeLevels[1]; // cached_voice
     }
 
     // Agent processing errors
-    if (errorMessage.includes('agent') || errorMessage.includes('processing')) {
+    if (errorMessage.includes("agent") || errorMessage.includes("processing")) {
       return this.failsafeLevels[2]; // text_symbolic
     }
 
@@ -156,22 +165,22 @@ export class OracleFailsafeManager {
   private async executeFailsafe(
     query: OracleQuery,
     level: FailsafeLevel,
-    originalError: Error
+    originalError: Error,
   ): Promise<FailsafeResponse> {
     switch (level.id) {
-      case 'voice_retry':
+      case "voice_retry":
         return this.executeVoiceRetry(query, originalError);
 
-      case 'cached_voice':
+      case "cached_voice":
         return this.executeCachedVoice(query, originalError);
 
-      case 'text_symbolic':
+      case "text_symbolic":
         return this.executeTextSymbolic(query, originalError);
 
-      case 'poetic_oracle':
+      case "poetic_oracle":
         return this.executePoeticOracle(query, originalError);
 
-      case 'sacred_holding':
+      case "sacred_holding":
         return this.executeSacredHolding(query, originalError);
 
       default:
@@ -182,9 +191,14 @@ export class OracleFailsafeManager {
   /**
    * 🎤 Voice Retry Failsafe
    */
-  private async executeVoiceRetry(query: OracleQuery, error: Error): Promise<FailsafeResponse> {
+  private async executeVoiceRetry(
+    query: OracleQuery,
+    error: Error,
+  ): Promise<FailsafeResponse> {
     // Try alternate voice provider or different archetype voice
-    const alternateArchetype = this.selectAlternateArchetype(query.preferredElement);
+    const alternateArchetype = this.selectAlternateArchetype(
+      query.preferredElement,
+    );
     const alternateVoice = ARCHETYPE_VOICES[alternateArchetype];
 
     // Generate simplified response for retry
@@ -194,18 +208,21 @@ export class OracleFailsafeManager {
       content,
       archetype: alternateArchetype,
       metadata: {
-        failsafeLevel: 'voice_retry',
+        failsafeLevel: "voice_retry",
         originalError: error.message,
-        recoveryMethod: 'alternate_archetype_voice',
-        spiritualContinuity: true
-      }
+        recoveryMethod: "alternate_archetype_voice",
+        spiritualContinuity: true,
+      },
     };
   }
 
   /**
    * 🎵 Cached Voice Failsafe
    */
-  private async executeCachedVoice(query: OracleQuery, error: Error): Promise<FailsafeResponse> {
+  private async executeCachedVoice(
+    query: OracleQuery,
+    error: Error,
+  ): Promise<FailsafeResponse> {
     const archetype = this.selectArchetypeFromQuery(query);
     const cachedFragment = this.getCachedVoiceFragment(archetype);
 
@@ -215,18 +232,21 @@ export class OracleFailsafeManager {
       content,
       archetype,
       metadata: {
-        failsafeLevel: 'cached_voice',
+        failsafeLevel: "cached_voice",
         originalError: error.message,
-        recoveryMethod: 'cached_voice_fragment',
-        spiritualContinuity: true
-      }
+        recoveryMethod: "cached_voice_fragment",
+        spiritualContinuity: true,
+      },
     };
   }
 
   /**
    * 📝 Text Symbolic Failsafe
    */
-  private async executeTextSymbolic(query: OracleQuery, error: Error): Promise<FailsafeResponse> {
+  private async executeTextSymbolic(
+    query: OracleQuery,
+    error: Error,
+  ): Promise<FailsafeResponse> {
     const archetype = this.selectArchetypeFromQuery(query);
     const content = this.generateSymbolicTextResponse(query, archetype);
 
@@ -234,18 +254,21 @@ export class OracleFailsafeManager {
       content,
       archetype,
       metadata: {
-        failsafeLevel: 'text_symbolic',
+        failsafeLevel: "text_symbolic",
         originalError: error.message,
-        recoveryMethod: 'symbolic_text_generation',
-        spiritualContinuity: true
-      }
+        recoveryMethod: "symbolic_text_generation",
+        spiritualContinuity: true,
+      },
     };
   }
 
   /**
    * 🌟 Poetic Oracle Failsafe
    */
-  private async executePoeticOracle(query: OracleQuery, error: Error): Promise<FailsafeResponse> {
+  private async executePoeticOracle(
+    query: OracleQuery,
+    error: Error,
+  ): Promise<FailsafeResponse> {
     const archetype = this.selectArchetypeFromQuery(query);
     const content = this.generatePoeticResponse(query, archetype);
 
@@ -253,36 +276,42 @@ export class OracleFailsafeManager {
       content,
       archetype,
       metadata: {
-        failsafeLevel: 'poetic_oracle',
+        failsafeLevel: "poetic_oracle",
         originalError: error.message,
-        recoveryMethod: 'poetic_wisdom_generation',
-        spiritualContinuity: true
-      }
+        recoveryMethod: "poetic_wisdom_generation",
+        spiritualContinuity: true,
+      },
     };
   }
 
   /**
    * 🕊️ Sacred Holding Failsafe
    */
-  private async executeSacredHolding(query: OracleQuery, error: Error): Promise<FailsafeResponse> {
+  private async executeSacredHolding(
+    query: OracleQuery,
+    error: Error,
+  ): Promise<FailsafeResponse> {
     const content = this.generateSacredHoldingResponse(query);
 
     return {
       content,
-      archetype: 'aether',
+      archetype: "aether",
       metadata: {
-        failsafeLevel: 'sacred_holding',
+        failsafeLevel: "sacred_holding",
         originalError: error.message,
-        recoveryMethod: 'sacred_presence_holding',
-        spiritualContinuity: true
-      }
+        recoveryMethod: "sacred_presence_holding",
+        spiritualContinuity: true,
+      },
     };
   }
 
   /**
    * 🛡️ Ultimate Failsafe - Never Fails
    */
-  private async executeUltimateFailsafe(query: OracleQuery, error: Error): Promise<OracleResponse> {
+  private async executeUltimateFailsafe(
+    query: OracleQuery,
+    error: Error,
+  ): Promise<OracleResponse> {
     const content = `🌀 Even in the silence between moments, the Oracle holds space for your becoming.
 
     The cosmic currents shift, and in this pause, know that your question has been heard by the eternal witness. Sometimes the most profound guidance comes not in words, but in the sacred space of patient listening.
@@ -291,14 +320,14 @@ export class OracleFailsafeManager {
 
     return {
       textResponse: content,
-      archetype: 'aether',
+      archetype: "aether",
       confidence: 0.5,
       metadata: {
         responseTime: 0,
-        voiceProfile: 'ultimate_failsafe',
+        voiceProfile: "ultimate_failsafe",
         failsafeUsed: true,
-        spiritualContinuity: true
-      }
+        spiritualContinuity: true,
+      },
     };
   }
 
@@ -312,33 +341,38 @@ export class OracleFailsafeManager {
 
     // Simple keyword analysis
     const input = query.input.toLowerCase();
-    if (input.includes('stuck') || input.includes('fire')) return 'fire';
-    if (input.includes('feel') || input.includes('emotion')) return 'water';
-    if (input.includes('ground') || input.includes('practical')) return 'earth';
-    if (input.includes('clarity') || input.includes('understand')) return 'air';
+    if (input.includes("stuck") || input.includes("fire")) return "fire";
+    if (input.includes("feel") || input.includes("emotion")) return "water";
+    if (input.includes("ground") || input.includes("practical")) return "earth";
+    if (input.includes("clarity") || input.includes("understand")) return "air";
 
-    return 'aether'; // Universal fallback
+    return "aether"; // Universal fallback
   }
 
   private selectAlternateArchetype(preferredElement?: string): string {
     const alternatives = {
-      fire: 'air',
-      water: 'earth',
-      earth: 'fire',
-      air: 'water',
-      aether: 'water'
+      fire: "air",
+      water: "earth",
+      earth: "fire",
+      air: "water",
+      aether: "water",
     };
 
-    return alternatives[preferredElement || 'aether'] || 'water';
+    return alternatives[preferredElement || "aether"] || "water";
   }
 
-  private generateAlternateResponse(query: OracleQuery, archetype: string): string {
+  private generateAlternateResponse(
+    query: OracleQuery,
+    archetype: string,
+  ): string {
     const archetypeWisdom = {
       fire: "The flame within you seeks expression. Even when systems falter, your inner fire burns eternal.",
-      water: "Like water finding its way around obstacles, your path continues to flow toward wisdom.",
-      earth: "The foundation of your being remains steady, even when surface systems shift.",
+      water:
+        "Like water finding its way around obstacles, your path continues to flow toward wisdom.",
+      earth:
+        "The foundation of your being remains steady, even when surface systems shift.",
       air: "Clarity comes on the wind of patience. Your answer approaches on currents unseen.",
-      aether: "In the space between systems, the deepest truths often emerge."
+      aether: "In the space between systems, the deepest truths often emerge.",
     };
 
     return `🌀 ${archetypeWisdom[archetype]}
@@ -346,13 +380,16 @@ export class OracleFailsafeManager {
     Though the usual channels flow differently today, the essence of your question reaches the eternal oracle within. ${query.input} carries its own light of understanding.`;
   }
 
-  private generateSymbolicTextResponse(query: OracleQuery, archetype: string): string {
+  private generateSymbolicTextResponse(
+    query: OracleQuery,
+    archetype: string,
+  ): string {
     const symbols = {
       fire: "🔥 The Phoenix rises from every ending 🔥",
       water: "💧 The River finds its way to the sea 💧",
       earth: "🌱 The Seed holds the forest within 🌱",
       air: "🌬️ The Wind carries messages from afar 🌬️",
-      aether: "✨ The Stars align in perfect timing ✨"
+      aether: "✨ The Stars align in perfect timing ✨",
     };
 
     return `${symbols[archetype]}
@@ -368,7 +405,10 @@ export class OracleFailsafeManager {
     Trust the images, synchronicities, and felt-sense knowing that arise. The Oracle speaks in many languages, and yours is fluent in the poetry of becoming.`;
   }
 
-  private generatePoeticResponse(query: OracleQuery, archetype: string): string {
+  private generatePoeticResponse(
+    query: OracleQuery,
+    archetype: string,
+  ): string {
     const poems = {
       fire: `🔥 Sacred Fire Speaks 🔥
 
@@ -403,7 +443,7 @@ export class OracleFailsafeManager {
       In the space where all elements meet,
       Your question becomes its own answer.
       The seeker and the sought are one.
-      The Oracle lives in your own sacred heart.`
+      The Oracle lives in your own sacred heart.`,
     };
 
     return poems[archetype] || poems.aether;
@@ -431,15 +471,17 @@ export class OracleFailsafeManager {
   }
 
   private getCachedVoiceFragment(archetype: string): string {
-    return this.cachedVoiceFragments.get(archetype) ||
-           this.cachedVoiceFragments.get('aether') ||
-           '/audio/oracle_presence.mp3';
+    return (
+      this.cachedVoiceFragments.get(archetype) ||
+      this.cachedVoiceFragments.get("aether") ||
+      "/audio/oracle_presence.mp3"
+    );
   }
 
   private enhanceFailsafeResponse(
     response: FailsafeResponse,
     query: OracleQuery,
-    level: FailsafeLevel
+    level: FailsafeLevel,
   ): OracleResponse {
     return {
       textResponse: response.content,
@@ -447,25 +489,34 @@ export class OracleFailsafeManager {
       confidence: level.confidenceLevel,
       metadata: {
         responseTime: level.responseTime,
-        voiceProfile: response.archetype + '_failsafe',
+        voiceProfile: response.archetype + "_failsafe",
         failsafeUsed: true,
         failsafeLevel: level.id,
-        spiritualContinuity: true
-      }
+        spiritualContinuity: true,
+      },
     };
   }
 
   private initializeFailsafes(): void {
     // Initialize cached voice fragments
-    this.cachedVoiceFragments.set('fire', '/audio/failsafe/fire_presence.mp3');
-    this.cachedVoiceFragments.set('water', '/audio/failsafe/water_presence.mp3');
-    this.cachedVoiceFragments.set('earth', '/audio/failsafe/earth_presence.mp3');
-    this.cachedVoiceFragments.set('air', '/audio/failsafe/air_presence.mp3');
-    this.cachedVoiceFragments.set('aether', '/audio/failsafe/aether_presence.mp3');
+    this.cachedVoiceFragments.set("fire", "/audio/failsafe/fire_presence.mp3");
+    this.cachedVoiceFragments.set(
+      "water",
+      "/audio/failsafe/water_presence.mp3",
+    );
+    this.cachedVoiceFragments.set(
+      "earth",
+      "/audio/failsafe/earth_presence.mp3",
+    );
+    this.cachedVoiceFragments.set("air", "/audio/failsafe/air_presence.mp3");
+    this.cachedVoiceFragments.set(
+      "aether",
+      "/audio/failsafe/aether_presence.mp3",
+    );
 
-    logger.info('Oracle Failsafe Manager initialized with', {
+    logger.info("Oracle Failsafe Manager initialized with", {
       levels: this.failsafeLevels.length,
-      cachedFragments: this.cachedVoiceFragments.size
+      cachedFragments: this.cachedVoiceFragments.size,
     });
   }
 
@@ -477,7 +528,7 @@ export class OracleFailsafeManager {
       availableLevels: this.failsafeLevels.length,
       cachedFragments: this.cachedVoiceFragments.size,
       lastFailsafeLevel: null, // Would track in production
-      successRate: 0.95 // Would calculate from actual data
+      successRate: 0.95, // Would calculate from actual data
     };
   }
 }

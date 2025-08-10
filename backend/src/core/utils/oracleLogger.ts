@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabaseClient';
-import logger from './logger';
+import { supabase } from "../lib/supabaseClient";
+import logger from "./logger";
 
 export interface InsightLogEntry {
   anon_id: string | null;
@@ -16,11 +16,11 @@ export interface InsightLogEntry {
 
 // 🧠 1. Log an insight
 export async function logOracleInsight(
-  entry: InsightLogEntry
+  entry: InsightLogEntry,
 ): Promise<{ id: string }> {
   try {
     const { data, error } = await supabase
-      .from('insight_history')
+      .from("insight_history")
       .insert({
         anon_id: entry.anon_id,
         archetype: entry.archetype,
@@ -33,15 +33,17 @@ export async function logOracleInsight(
           context: entry.context || [],
         },
       })
-      .select('id')
+      .select("id")
       .single();
 
-    if (error || !data) throw error || new Error('No data returned');
+    if (error || !data) throw error || new Error("No data returned");
 
-    logger.info('[OracleLog] Insight logged', { id: data.id, ...entry });
+    logger.info("[OracleLog] Insight logged", { id: data.id, ...entry });
     return { id: data.id };
   } catch (err: any) {
-    logger.error('Failed to log Oracle insight:', { error: err.message || err });
+    logger.error("Failed to log Oracle insight:", {
+      error: err.message || err,
+    });
     throw err;
   }
 }
@@ -53,18 +55,18 @@ export async function getInsightHistory(
     type,
     limit = 50,
     offset = 0,
-  }: { type?: string; limit?: number; offset?: number }
+  }: { type?: string; limit?: number; offset?: number },
 ): Promise<any[]> {
   try {
     const query = supabase
-      .from('insight_history')
-      .select('*')
-      .eq('anon_id', userId)
-      .order('created_at', { ascending: false })
+      .from("insight_history")
+      .select("*")
+      .eq("anon_id", userId)
+      .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
     if (type) {
-      query.eq('metadata->>phase', type);
+      query.eq("metadata->>phase", type);
     }
 
     const { data, error } = await query;
@@ -73,7 +75,9 @@ export async function getInsightHistory(
 
     return data || [];
   } catch (err: any) {
-    logger.error('Failed to retrieve insight history', { error: err.message || err });
+    logger.error("Failed to retrieve insight history", {
+      error: err.message || err,
+    });
     throw err;
   }
 }
@@ -82,9 +86,9 @@ export async function getInsightHistory(
 export async function getInsightStats(userId: string): Promise<any> {
   try {
     const { data, error } = await supabase
-      .from('insight_history')
-      .select('element, metadata->>phase')
-      .eq('anon_id', userId);
+      .from("insight_history")
+      .select("element, metadata->>phase")
+      .eq("anon_id", userId);
 
     if (error) throw error;
 
@@ -96,7 +100,7 @@ export async function getInsightStats(userId: string): Promise<any> {
 
     for (const row of data) {
       const el = row.element;
-      const phase = row['metadata->>phase'];
+      const phase = row["metadata->>phase"];
 
       stats.byElement[el] = (stats.byElement[el] || 0) + 1;
       stats.byPhase[phase] = (stats.byPhase[phase] || 0) + 1;
@@ -104,7 +108,7 @@ export async function getInsightStats(userId: string): Promise<any> {
 
     return stats;
   } catch (err: any) {
-    logger.error('Failed to get insight stats', { error: err.message || err });
+    logger.error("Failed to get insight stats", { error: err.message || err });
     throw err;
   }
 }

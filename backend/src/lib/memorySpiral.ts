@@ -1,5 +1,5 @@
 // 📁 BACKEND/src/lib/memorySpiral.ts
-import { HarmonicConstants } from './harmonicPetalMap';
+import { HarmonicConstants } from "./harmonicPetalMap";
 
 interface MemoryEntry {
   content: string;

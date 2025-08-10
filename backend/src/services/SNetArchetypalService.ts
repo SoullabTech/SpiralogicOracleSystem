@@ -3,28 +3,32 @@
  * Connects the Spiralogic Oracle System to the decentralized AI network
  */
 
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { HierarchyOrchestrator } from '../core/agents/HierarchyOrchestrator.js';
-import { ArchetypalVoiceSelector } from '../config/archetypalVoiceProfiles.js';
-import { ElevenLabsService } from './ElevenLabsService.js';
+import * as grpc from "@grpc/grpc-js";
+import * as protoLoader from "@grpc/proto-loader";
+import path from "path";
+import { fileURLToPath } from "url";
+import { HierarchyOrchestrator } from "../core/agents/HierarchyOrchestrator.js";
+import { ArchetypalVoiceSelector } from "../config/archetypalVoiceProfiles.js";
+import { ElevenLabsService } from "./ElevenLabsService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load protobuf definition
-const PROTO_PATH = path.join(__dirname, '../../proto/archetypal_consciousness.proto');
+const PROTO_PATH = path.join(
+  __dirname,
+  "../../proto/archetypal_consciousness.proto",
+);
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
   enums: String,
   defaults: true,
-  oneofs: true
+  oneofs: true,
 });
 
-const archetypalProto = grpc.loadPackageDefinition(packageDefinition).archetypal_consciousness;
+const archetypalProto =
+  grpc.loadPackageDefinition(packageDefinition).archetypal_consciousness;
 
 export class SNetArchetypalService {
   private orchestrator: HierarchyOrchestrator;
@@ -42,25 +46,28 @@ export class SNetArchetypalService {
    */
   async initialize() {
     // Add service implementation
-    this.server.addService(archetypalProto.ArchetypalConsciousnessService.service, {
-      ProcessQuery: this.processQuery.bind(this),
-      StreamInsights: this.streamInsights.bind(this),
-      SynthesizeVoice: this.synthesizeVoice.bind(this)
-    });
+    this.server.addService(
+      archetypalProto.ArchetypalConsciousnessService.service,
+      {
+        ProcessQuery: this.processQuery.bind(this),
+        StreamInsights: this.streamInsights.bind(this),
+        SynthesizeVoice: this.synthesizeVoice.bind(this),
+      },
+    );
 
     // Bind to port
-    const port = process.env.SNET_SERVICE_PORT || '7000';
+    const port = process.env.SNET_SERVICE_PORT || "7000";
     this.server.bindAsync(
       `0.0.0.0:${port}`,
       grpc.ServerCredentials.createInsecure(),
       (err, port) => {
         if (err) {
-          console.error('Failed to bind gRPC server:', err);
+          console.error("Failed to bind gRPC server:", err);
           return;
         }
         console.log(`🌐 SingularityNET service listening on port ${port}`);
         this.server.start();
-      }
+      },
     );
   }
 
@@ -69,14 +76,14 @@ export class SNetArchetypalService {
    */
   private async processQuery(
     call: grpc.ServerUnaryCall<any, any>,
-    callback: grpc.sendUnaryData<any>
+    callback: grpc.sendUnaryData<any>,
   ) {
     try {
       const request = call.request;
-      console.log('📥 SNet Request:', {
+      console.log("📥 SNet Request:", {
         user_id: request.user_id,
-        query: request.query_text.substring(0, 50) + '...',
-        include_voice: request.include_voice
+        query: request.query_text.substring(0, 50) + "...",
+        include_voice: request.include_voice,
       });
 
       // Process through orchestrator
@@ -84,7 +91,7 @@ export class SNetArchetypalService {
         userId: request.user_id,
         message: request.query_text,
         context: request.context_history || [],
-        currentState: this.convertConsciousnessState(request.current_state)
+        currentState: this.convertConsciousnessState(request.current_state),
       });
 
       // Prepare response
@@ -95,39 +102,38 @@ export class SNetArchetypalService {
           primary_archetype: response.primaryArchetype,
           secondary_archetype: response.secondaryArchetype,
           elemental_contributions: response.elementalBalance,
-          detected_patterns: response.patterns.map(p => ({
+          detected_patterns: response.patterns.map((p) => ({
             pattern_id: p.id,
             pattern_name: p.name,
             strength: p.strength,
-            description: p.description
+            description: p.description,
           })),
-          energy_signature: response.energySignature
+          energy_signature: response.energySignature,
         },
         updated_state: {
           elemental_balance: response.updatedState.elementalBalance,
           dominant_archetype: response.updatedState.dominantArchetype,
           coherence_level: response.updatedState.coherenceLevel,
-          active_patterns: response.updatedState.activePatterns
+          active_patterns: response.updatedState.activePatterns,
         },
-        confidence_score: response.confidence
+        confidence_score: response.confidence,
       };
 
       // Add voice if requested
       if (request.include_voice) {
         const voiceData = await this.generateVoice(
           response.response,
-          response.primaryArchetype
+          response.primaryArchetype,
         );
         consciousnessResponse.voice_data = voiceData;
       }
 
       callback(null, consciousnessResponse);
-
     } catch (error) {
-      console.error('❌ SNet processing error:', error);
+      console.error("❌ SNet processing error:", error);
       callback({
         code: grpc.status.INTERNAL,
-        details: 'Failed to process consciousness query'
+        details: "Failed to process consciousness query",
       });
     }
   }
@@ -136,15 +142,15 @@ export class SNetArchetypalService {
    * Stream real-time insights
    */
   private async streamInsights(call: grpc.ServerDuplexStream<any, any>) {
-    console.log('🌊 Starting insight stream...');
+    console.log("🌊 Starting insight stream...");
 
-    call.on('data', async (request) => {
+    call.on("data", async (request) => {
       try {
         // Generate insights based on current state
         const insights = await this.orchestrator.generateInsights({
           sessionId: request.session_id,
           insightType: request.insight_type,
-          currentState: this.convertConsciousnessState(request.current_state)
+          currentState: this.convertConsciousnessState(request.current_state),
         });
 
         // Stream each insight
@@ -154,21 +160,20 @@ export class SNetArchetypalService {
             insight_text: insight.text,
             archetype_source: insight.archetype,
             relevance_score: insight.relevance,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
 
           // Pace the stream
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }
-
       } catch (error) {
-        console.error('Stream error:', error);
-        call.emit('error', error);
+        console.error("Stream error:", error);
+        call.emit("error", error);
       }
     });
 
-    call.on('end', () => {
-      console.log('🔚 Insight stream ended');
+    call.on("end", () => {
+      console.log("🔚 Insight stream ended");
       call.end();
     });
   }
@@ -178,39 +183,43 @@ export class SNetArchetypalService {
    */
   private async synthesizeVoice(
     call: grpc.ServerUnaryCall<any, any>,
-    callback: grpc.sendUnaryData<any>
+    callback: grpc.sendUnaryData<any>,
   ) {
     try {
       const { text, archetype, settings } = call.request;
 
       const voiceProfile = ArchetypalVoiceSelector.getVoiceProfile(archetype);
-      const enhancedText = ArchetypalVoiceSelector.enhanceTextForArchetype(text, archetype);
+      const enhancedText = ArchetypalVoiceSelector.enhanceTextForArchetype(
+        text,
+        archetype,
+      );
 
       // Merge custom settings if provided
-      const voiceSettings = settings ? {
-        ...voiceProfile.voiceSettings,
-        ...settings
-      } : voiceProfile.voiceSettings;
+      const voiceSettings = settings
+        ? {
+            ...voiceProfile.voiceSettings,
+            ...settings,
+          }
+        : voiceProfile.voiceSettings;
 
       // Generate audio
       const audioData = await this.elevenLabsService.synthesizeSpeech(
         enhancedText,
         voiceProfile.voiceId,
-        voiceSettings
+        voiceSettings,
       );
 
       callback(null, {
         audio_data: audioData,
-        audio_format: 'audio/mpeg',
+        audio_format: "audio/mpeg",
         duration_ms: this.estimateDuration(text),
-        voice_id: voiceProfile.voiceId
+        voice_id: voiceProfile.voiceId,
       });
-
     } catch (error) {
-      console.error('Voice synthesis error:', error);
+      console.error("Voice synthesis error:", error);
       callback({
         code: grpc.status.INTERNAL,
-        details: 'Failed to synthesize voice'
+        details: "Failed to synthesize voice",
       });
     }
   }
@@ -221,23 +230,25 @@ export class SNetArchetypalService {
   private async generateVoice(text: string, archetype: string): Promise<any> {
     try {
       const voiceProfile = ArchetypalVoiceSelector.getVoiceProfile(archetype);
-      const enhancedText = ArchetypalVoiceSelector.enhanceTextForArchetype(text, archetype);
+      const enhancedText = ArchetypalVoiceSelector.enhanceTextForArchetype(
+        text,
+        archetype,
+      );
 
       const audioData = await this.elevenLabsService.synthesizeSpeech(
         enhancedText,
         voiceProfile.voiceId,
-        voiceProfile.voiceSettings
+        voiceProfile.voiceSettings,
       );
 
       return {
         audio_content: audioData,
-        mime_type: 'audio/mpeg',
+        mime_type: "audio/mpeg",
         duration_ms: this.estimateDuration(text),
-        voice_profile: archetype
+        voice_profile: archetype,
       };
-
     } catch (error) {
-      console.error('Voice generation failed:', error);
+      console.error("Voice generation failed:", error);
       return null;
     }
   }
@@ -252,7 +263,7 @@ export class SNetArchetypalService {
       elementalBalance: protoState.elemental_balance || {},
       dominantArchetype: protoState.dominant_archetype,
       coherenceLevel: protoState.coherence_level,
-      activePatterns: protoState.active_patterns || []
+      activePatterns: protoState.active_patterns || [],
     };
   }
 
@@ -261,7 +272,7 @@ export class SNetArchetypalService {
    */
   private estimateDuration(text: string): number {
     // Rough estimate: 150 words per minute
-    const words = text.split(' ').length;
+    const words = text.split(" ").length;
     return Math.ceil((words / 150) * 60 * 1000);
   }
 
@@ -271,7 +282,7 @@ export class SNetArchetypalService {
   async shutdown() {
     return new Promise<void>((resolve) => {
       this.server.tryShutdown(() => {
-        console.log('🛑 SNet service shut down gracefully');
+        console.log("🛑 SNet service shut down gracefully");
         resolve();
       });
     });

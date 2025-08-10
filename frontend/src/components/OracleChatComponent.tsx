@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { OracleVoicePlayer } from './OracleVoicePlayer';
+import React, { useState } from "react";
+import { OracleVoicePlayer } from "./OracleVoicePlayer";
 
 interface OracleResponse {
   content: string;
@@ -11,7 +11,7 @@ interface OracleResponse {
     voice_synthesis?: boolean;
     voice_profile: string;
     voice_name?: string;
-    voice_service?: 'sesame' | 'elevenlabs' | 'error';
+    voice_service?: "sesame" | "elevenlabs" | "error";
     archetypal_presence?: string;
     logos_presence?: boolean;
     error?: string;
@@ -19,7 +19,7 @@ interface OracleResponse {
 }
 
 export const OracleChatComponent: React.FC = () => {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [response, setResponse] = useState<OracleResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,14 +31,14 @@ export const OracleChatComponent: React.FC = () => {
     setError(null);
 
     try {
-      const res = await fetch('/api/oracle/respond', {
-        method: 'POST',
+      const res = await fetch("/api/oracle/respond", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           query: input.trim(),
-          includeVoice: true
+          includeVoice: true,
         }),
       });
 
@@ -53,18 +53,17 @@ export const OracleChatComponent: React.FC = () => {
       }
 
       setResponse(data);
-      setInput(''); // Clear input after successful response
-
+      setInput(""); // Clear input after successful response
     } catch (err) {
-      console.error('Oracle consultation error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to consult Oracle');
+      console.error("Oracle consultation error:", err);
+      setError(err instanceof Error ? err.message : "Failed to consult Oracle");
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleAskOracle();
     }
@@ -84,7 +83,10 @@ export const OracleChatComponent: React.FC = () => {
 
       {/* Input Section */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <label htmlFor="oracle-input" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="oracle-input"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           What wisdom do you seek?
         </label>
 
@@ -109,9 +111,10 @@ export const OracleChatComponent: React.FC = () => {
             disabled={loading || !input.trim()}
             className={`
               px-6 py-3 rounded-xl font-medium transition-all shadow-md
-              ${loading || !input.trim()
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transform hover:scale-105'
+              ${
+                loading || !input.trim()
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transform hover:scale-105"
               }
             `}
           >
@@ -121,7 +124,7 @@ export const OracleChatComponent: React.FC = () => {
                 <span>Consulting Oracle...</span>
               </div>
             ) : (
-              '🔮 Ask Oracle'
+              "🔮 Ask Oracle"
             )}
           </button>
         </div>
@@ -133,7 +136,9 @@ export const OracleChatComponent: React.FC = () => {
           <div className="flex items-center">
             <div className="text-red-500 mr-2">⚠️</div>
             <div>
-              <h3 className="text-red-800 font-medium">Oracle Consultation Error</h3>
+              <h3 className="text-red-800 font-medium">
+                Oracle Consultation Error
+              </h3>
               <p className="text-red-600 text-sm mt-1">{error}</p>
             </div>
           </div>

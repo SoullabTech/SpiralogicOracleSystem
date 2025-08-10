@@ -1,5 +1,5 @@
-import type { Session, MemoryItem, SessionStats } from '../types';
-import { FlowManager } from './index';
+import type { Session, MemoryItem, SessionStats } from "../types";
+import { FlowManager } from "./index";
 
 export class LearningFlow {
   private flowManager: FlowManager;
@@ -25,13 +25,13 @@ export class LearningFlow {
     insights: string[];
   }> {
     if (!this.session) {
-      throw new Error('Learning flow not started');
+      throw new Error("Learning flow not started");
     }
 
     return this.flowManager.processInteractionFlow(
       this.clientId,
       this.session.id,
-      content
+      content,
     );
   }
 
@@ -40,12 +40,12 @@ export class LearningFlow {
     finalInsights: string[];
   }> {
     if (!this.session) {
-      throw new Error('Learning flow not started');
+      throw new Error("Learning flow not started");
     }
 
     return this.flowManager.completeLearningFlow(
       this.clientId,
-      this.session.id
+      this.session.id,
     );
   }
 }

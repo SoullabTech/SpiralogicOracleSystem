@@ -14,98 +14,99 @@ export interface ArchetypalVoiceProfile {
     use_speaker_boost?: boolean;
   };
   speakingStyle: {
-    pace: 'slow' | 'medium' | 'fast';
+    pace: "slow" | "medium" | "fast";
     tone: string;
     emphasis: string;
   };
 }
 
-export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> = {
-  fire: {
-    voiceId: 'EXAVITQu4vr4xnSDxMaL', // Sarah - Bold, inspiring voice
-    personality: 'Bold, inspiring, catalytic',
-    energySignature: 'Fierce compassion with transformational power',
-    voiceSettings: {
-      stability: 0.3, // More dynamic for fire energy
-      similarity_boost: 0.9,
-      style: 0.8, // High style for dramatic effect
-      use_speaker_boost: true
+export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
+  {
+    fire: {
+      voiceId: "EXAVITQu4vr4xnSDxMaL", // Sarah - Bold, inspiring voice
+      personality: "Bold, inspiring, catalytic",
+      energySignature: "Fierce compassion with transformational power",
+      voiceSettings: {
+        stability: 0.3, // More dynamic for fire energy
+        similarity_boost: 0.9,
+        style: 0.8, // High style for dramatic effect
+        use_speaker_boost: true,
+      },
+      speakingStyle: {
+        pace: "medium",
+        tone: "Passionate and empowering",
+        emphasis: "Strong on action words and visions",
+      },
     },
-    speakingStyle: {
-      pace: 'medium',
-      tone: 'Passionate and empowering',
-      emphasis: 'Strong on action words and visions'
-    }
-  },
 
-  water: {
-    voiceId: 'XrExE9yKIg1WjnnlVkGX', // Matilda - Soft, flowing voice
-    personality: 'Soft, flowing, nurturing',
-    energySignature: 'Deep emotional wisdom with healing presence',
-    voiceSettings: {
-      stability: 0.8, // More stable for water's flowing nature
-      similarity_boost: 0.7,
-      style: 0.3, // Gentler style
-      use_speaker_boost: false
+    water: {
+      voiceId: "XrExE9yKIg1WjnnlVkGX", // Matilda - Soft, flowing voice
+      personality: "Soft, flowing, nurturing",
+      energySignature: "Deep emotional wisdom with healing presence",
+      voiceSettings: {
+        stability: 0.8, // More stable for water's flowing nature
+        similarity_boost: 0.7,
+        style: 0.3, // Gentler style
+        use_speaker_boost: false,
+      },
+      speakingStyle: {
+        pace: "slow",
+        tone: "Gentle and understanding",
+        emphasis: "Emotional words and feeling states",
+      },
     },
-    speakingStyle: {
-      pace: 'slow',
-      tone: 'Gentle and understanding',
-      emphasis: 'Emotional words and feeling states'
-    }
-  },
 
-  earth: {
-    voiceId: 'pNInz6obpgDQGcFmaJgB', // Adam - Grounded, steady voice
-    personality: 'Grounded, steady, wise',
-    energySignature: 'Stable wisdom with practical compassion',
-    voiceSettings: {
-      stability: 0.9, // Very stable for earth energy
-      similarity_boost: 0.8,
-      style: 0.4, // Moderate style, more natural
-      use_speaker_boost: false
+    earth: {
+      voiceId: "pNInz6obpgDQGcFmaJgB", // Adam - Grounded, steady voice
+      personality: "Grounded, steady, wise",
+      energySignature: "Stable wisdom with practical compassion",
+      voiceSettings: {
+        stability: 0.9, // Very stable for earth energy
+        similarity_boost: 0.8,
+        style: 0.4, // Moderate style, more natural
+        use_speaker_boost: false,
+      },
+      speakingStyle: {
+        pace: "slow",
+        tone: "Calm and reassuring",
+        emphasis: "Practical steps and grounding concepts",
+      },
     },
-    speakingStyle: {
-      pace: 'slow',
-      tone: 'Calm and reassuring',
-      emphasis: 'Practical steps and grounding concepts'
-    }
-  },
 
-  air: {
-    voiceId: 'XB0fDUnXU5powFXDhCwa', // Charlotte - Light, clear voice
-    personality: 'Light, clear, communicative',
-    energySignature: 'Mental clarity with uplifting perspective',
-    voiceSettings: {
-      stability: 0.5, // Balanced for air's adaptability
-      similarity_boost: 0.8,
-      style: 0.6, // Moderate-high style for clarity
-      use_speaker_boost: true
+    air: {
+      voiceId: "XB0fDUnXU5powFXDhCwa", // Charlotte - Light, clear voice
+      personality: "Light, clear, communicative",
+      energySignature: "Mental clarity with uplifting perspective",
+      voiceSettings: {
+        stability: 0.5, // Balanced for air's adaptability
+        similarity_boost: 0.8,
+        style: 0.6, // Moderate-high style for clarity
+        use_speaker_boost: true,
+      },
+      speakingStyle: {
+        pace: "medium",
+        tone: "Clear and articulate",
+        emphasis: "Ideas, insights, and perspectives",
+      },
     },
-    speakingStyle: {
-      pace: 'medium',
-      tone: 'Clear and articulate',
-      emphasis: 'Ideas, insights, and perspectives'
-    }
-  },
 
-  aether: {
-    voiceId: 'ThT5KcBeYPX3keUQqHPh', // Dorothy - Transcendent, mystical voice
-    personality: 'Transcendent, mystical, unified',
-    energySignature: 'Divine wisdom with cosmic consciousness',
-    voiceSettings: {
-      stability: 0.7, // Stable but with mystical quality
-      similarity_boost: 0.6,
-      style: 0.9, // High style for transcendent quality
-      use_speaker_boost: false
+    aether: {
+      voiceId: "ThT5KcBeYPX3keUQqHPh", // Dorothy - Transcendent, mystical voice
+      personality: "Transcendent, mystical, unified",
+      energySignature: "Divine wisdom with cosmic consciousness",
+      voiceSettings: {
+        stability: 0.7, // Stable but with mystical quality
+        similarity_boost: 0.6,
+        style: 0.9, // High style for transcendent quality
+        use_speaker_boost: false,
+      },
+      speakingStyle: {
+        pace: "slow",
+        tone: "Mystical and profound",
+        emphasis: "Spiritual concepts and unity consciousness",
+      },
     },
-    speakingStyle: {
-      pace: 'slow',
-      tone: 'Mystical and profound',
-      emphasis: 'Spiritual concepts and unity consciousness'
-    }
-  }
-};
+  };
 
 /**
  * Voice Profile Selector for Archetypal Intelligence
@@ -131,7 +132,7 @@ export class ArchetypalVoiceSelector {
   static getBlendedVoiceProfile(
     primary: string,
     secondary?: string,
-    blendRatio: number = 0.7
+    blendRatio: number = 0.7,
   ): ArchetypalVoiceProfile {
     const primaryProfile = this.getVoiceProfile(primary);
 
@@ -143,20 +144,23 @@ export class ArchetypalVoiceSelector {
 
     // Create blended voice settings
     const blendedSettings = {
-      stability: primaryProfile.voiceSettings.stability * blendRatio +
-                 secondaryProfile.voiceSettings.stability * (1 - blendRatio),
-      similarity_boost: primaryProfile.voiceSettings.similarity_boost * blendRatio +
-                       secondaryProfile.voiceSettings.similarity_boost * (1 - blendRatio),
-      style: (primaryProfile.voiceSettings.style || 0.5) * blendRatio +
-             (secondaryProfile.voiceSettings.style || 0.5) * (1 - blendRatio),
-      use_speaker_boost: primaryProfile.voiceSettings.use_speaker_boost
+      stability:
+        primaryProfile.voiceSettings.stability * blendRatio +
+        secondaryProfile.voiceSettings.stability * (1 - blendRatio),
+      similarity_boost:
+        primaryProfile.voiceSettings.similarity_boost * blendRatio +
+        secondaryProfile.voiceSettings.similarity_boost * (1 - blendRatio),
+      style:
+        (primaryProfile.voiceSettings.style || 0.5) * blendRatio +
+        (secondaryProfile.voiceSettings.style || 0.5) * (1 - blendRatio),
+      use_speaker_boost: primaryProfile.voiceSettings.use_speaker_boost,
     };
 
     return {
       ...primaryProfile,
       voiceSettings: blendedSettings,
       personality: `${primaryProfile.personality} with ${secondary} integration`,
-      energySignature: `Blended ${primary}-${secondary} consciousness`
+      energySignature: `Blended ${primary}-${secondary} consciousness`,
     };
   }
 
@@ -168,15 +172,18 @@ export class ArchetypalVoiceSelector {
 
     // Add archetypal voice cues based on speaking style
     switch (archetype.toLowerCase()) {
-      case 'fire':
+      case "fire":
         // Add dynamic emphasis and pauses for fire energy
         return text
           .replace(/vision/gi, '<emphasis level="strong">vision</emphasis>')
-          .replace(/transform/gi, '<emphasis level="strong">transform</emphasis>')
+          .replace(
+            /transform/gi,
+            '<emphasis level="strong">transform</emphasis>',
+          )
           .replace(/ignite/gi, '<emphasis level="strong">ignite</emphasis>')
           .replace(/create/gi, '<emphasis level="strong">create</emphasis>');
 
-      case 'water':
+      case "water":
         // Add gentle flow and emotional emphasis
         return text
           .replace(/heal/gi, '<emphasis level="moderate">heal</emphasis>')
@@ -184,27 +191,39 @@ export class ArchetypalVoiceSelector {
           .replace(/feel/gi, '<emphasis level="moderate">feel</emphasis>')
           .replace(/\./g, '.<break time="500ms"/>'); // Gentle pauses
 
-      case 'earth':
+      case "earth":
         // Add grounding emphasis and steady pacing
         return text
           .replace(/ground/gi, '<emphasis level="moderate">ground</emphasis>')
           .replace(/stable/gi, '<emphasis level="moderate">stable</emphasis>')
           .replace(/build/gi, '<emphasis level="moderate">build</emphasis>')
-          .replace(/foundation/gi, '<emphasis level="moderate">foundation</emphasis>');
+          .replace(
+            /foundation/gi,
+            '<emphasis level="moderate">foundation</emphasis>',
+          );
 
-      case 'air':
+      case "air":
         // Add clarity emphasis and lighter delivery
         return text
           .replace(/clarity/gi, '<emphasis level="strong">clarity</emphasis>')
-          .replace(/understand/gi, '<emphasis level="moderate">understand</emphasis>')
-          .replace(/perspective/gi, '<emphasis level="moderate">perspective</emphasis>');
+          .replace(
+            /understand/gi,
+            '<emphasis level="moderate">understand</emphasis>',
+          )
+          .replace(
+            /perspective/gi,
+            '<emphasis level="moderate">perspective</emphasis>',
+          );
 
-      case 'aether':
+      case "aether":
         // Add mystical emphasis and transcendent pauses
         return text
           .replace(/sacred/gi, '<emphasis level="strong">sacred</emphasis>')
           .replace(/divine/gi, '<emphasis level="strong">divine</emphasis>')
-          .replace(/consciousness/gi, '<emphasis level="moderate">consciousness</emphasis>')
+          .replace(
+            /consciousness/gi,
+            '<emphasis level="moderate">consciousness</emphasis>',
+          )
           .replace(/unity/gi, '<emphasis level="moderate">unity</emphasis>')
           .replace(/\./g, '.<break time="800ms"/>'); // Longer mystical pauses
 
@@ -220,7 +239,7 @@ export class ArchetypalVoiceSelector {
     text: string,
     primary: string,
     secondary?: string,
-    confidence: number = 0.8
+    confidence: number = 0.8,
   ): {
     enhancedText: string;
     voiceProfile: ArchetypalVoiceProfile;
@@ -240,13 +259,13 @@ export class ArchetypalVoiceSelector {
         secondaryArchetype: secondary,
         confidence,
         voicePersonality: voiceProfile.personality,
-        energySignature: voiceProfile.energySignature
-      }
+        energySignature: voiceProfile.energySignature,
+      },
     };
   }
 }
 
 export default {
   ARCHETYPAL_VOICE_PROFILES,
-  ArchetypalVoiceSelector
+  ArchetypalVoiceSelector,
 };

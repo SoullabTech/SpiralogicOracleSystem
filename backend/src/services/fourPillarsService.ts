@@ -1,12 +1,12 @@
-import { addMinutes } from 'date-fns';
+import { addMinutes } from "date-fns";
 
-export type Element = 'Wood' | 'Fire' | 'Earth' | 'Metal' | 'Water';
+export type Element = "Wood" | "Fire" | "Earth" | "Metal" | "Water";
 
 export interface StemBranch {
   stem: string;
   branch: string;
   element: Element;
-  yinYang: 'Yin' | 'Yang';
+  yinYang: "Yin" | "Yang";
 }
 
 export interface FourPillarsProfile {
@@ -21,22 +21,94 @@ export interface FourPillarsProfile {
 }
 
 // Ten Heavenly Stems (天干)
-const STEMS = ['Jia','Yi','Bing','Ding','Wu','Ji','Geng','Xin','Ren','Gui'];
+const STEMS = [
+  "Jia",
+  "Yi",
+  "Bing",
+  "Ding",
+  "Wu",
+  "Ji",
+  "Geng",
+  "Xin",
+  "Ren",
+  "Gui",
+];
 
 // Twelve Earthly Branches (地支)
-const BRANCHES = ['Zi','Chou','Yin','Mao','Chen','Si','Wu','Wei','Shen','You','Xu','Hai'];
+const BRANCHES = [
+  "Zi",
+  "Chou",
+  "Yin",
+  "Mao",
+  "Chen",
+  "Si",
+  "Wu",
+  "Wei",
+  "Shen",
+  "You",
+  "Xu",
+  "Hai",
+];
 
 // Element associations for stems
-const STEM_ELEMENT: Element[] = ['Wood','Wood','Fire','Fire','Earth','Earth','Metal','Metal','Water','Water'];
+const STEM_ELEMENT: Element[] = [
+  "Wood",
+  "Wood",
+  "Fire",
+  "Fire",
+  "Earth",
+  "Earth",
+  "Metal",
+  "Metal",
+  "Water",
+  "Water",
+];
 
 // Yin/Yang polarity for stems
-const STEM_YY = ['Yang','Yin','Yang','Yin','Yang','Yin','Yang','Yin','Yang','Yin'];
+const STEM_YY = [
+  "Yang",
+  "Yin",
+  "Yang",
+  "Yin",
+  "Yang",
+  "Yin",
+  "Yang",
+  "Yin",
+  "Yang",
+  "Yin",
+];
 
 // Element associations for branches
-const BRANCH_ELEMENT: Element[] = ['Water','Earth','Wood','Wood','Earth','Fire','Fire','Earth','Metal','Metal','Earth','Water'];
+const BRANCH_ELEMENT: Element[] = [
+  "Water",
+  "Earth",
+  "Wood",
+  "Wood",
+  "Earth",
+  "Fire",
+  "Fire",
+  "Earth",
+  "Metal",
+  "Metal",
+  "Earth",
+  "Water",
+];
 
 // Yin/Yang polarity for branches
-const BRANCH_YY = ['Yang','Yin','Yang','Yin','Yang','Yang','Yin','Yin','Yang','Yin','Yang','Yin'];
+const BRANCH_YY = [
+  "Yang",
+  "Yin",
+  "Yang",
+  "Yin",
+  "Yang",
+  "Yang",
+  "Yin",
+  "Yin",
+  "Yang",
+  "Yin",
+  "Yang",
+  "Yin",
+];
 
 /**
  * Generate Four Pillars (Ba Zi) profile from birth date and time
@@ -45,7 +117,7 @@ const BRANCH_YY = ['Yang','Yin','Yang','Yin','Yang','Yang','Yin','Yin','Yang','Y
  */
 export function generateFourPillars(
   birth: Date,
-  tzOffsetMinutes = 0
+  tzOffsetMinutes = 0,
 ): FourPillarsProfile {
   const local = addMinutes(birth, tzOffsetMinutes);
   const y = local.getUTCFullYear();
@@ -61,7 +133,7 @@ export function generateFourPillars(
     stem: STEMS[stemIdx],
     branch: BRANCHES[branchIdx],
     element: STEM_ELEMENT[stemIdx],
-    yinYang: STEM_YY[stemIdx] as 'Yin' | 'Yang',
+    yinYang: STEM_YY[stemIdx] as "Yin" | "Yang",
   });
 
   // Calculate each pillar
@@ -80,8 +152,14 @@ export function generateFourPillars(
   const hour = pillar(hourStemIndex, hourBranchIndex);
 
   // Count elements
-  const tally: Record<Element, number> = { Wood: 0, Fire: 0, Earth: 0, Metal: 0, Water: 0 };
-  [year, month, day, hour].forEach(p => {
+  const tally: Record<Element, number> = {
+    Wood: 0,
+    Fire: 0,
+    Earth: 0,
+    Metal: 0,
+    Water: 0,
+  };
+  [year, month, day, hour].forEach((p) => {
     tally[p.element]++;
     // Also count branch elements
     const branchElement = getBranchElement(p.branch);
@@ -100,9 +178,13 @@ export function generateFourPillars(
     day,
     hour,
     elementTally: tally,
-    dominant: Object.keys(tally).filter(e => tally[e as Element] === max) as Element[],
-    deficient: Object.keys(tally).filter(e => tally[e as Element] === min) as Element[],
-    hexagram: getHexagramByPillars(year.branch, month.branch)
+    dominant: Object.keys(tally).filter(
+      (e) => tally[e as Element] === max,
+    ) as Element[],
+    deficient: Object.keys(tally).filter(
+      (e) => tally[e as Element] === min,
+    ) as Element[],
+    hexagram: getHexagramByPillars(year.branch, month.branch),
   };
 }
 
@@ -118,53 +200,59 @@ function getBranchElement(branch: string): Element | null {
  * Generate I Ching hexagram from pillars
  * Placeholder implementation - would use proper Ba Zi to I Ching mapping
  */
-export function getHexagramByPillars(yearBranch: string, monthBranch: string): string {
+export function getHexagramByPillars(
+  yearBranch: string,
+  monthBranch: string,
+): string {
   const yearIndex = BRANCHES.indexOf(yearBranch);
   const monthIndex = BRANCHES.indexOf(monthBranch);
 
   // Simple mapping based on branch combinations
   const hexagramMap: Record<string, string> = {
-    'ZiZi': '䷀ Qian / Creative',
-    'ChouChou': '䷁ Kun / Receptive',
-    'YinYin': '䷂ Zhun / Difficulty at Beginning',
-    'MaoMao': '䷃ Meng / Youthful Folly',
-    'ChenChen': '䷄ Xu / Waiting',
-    'SiSi': '䷅ Song / Conflict',
-    'WuWu': '䷆ Shi / Army',
-    'WeiWei': '䷇ Pi / Holding Together',
-    'ShenShen': '䷈ Xiao Xu / Small Taming',
-    'YouYou': '䷉ Lu / Treading',
-    'XuXu': '䷊ Tai / Peace',
-    'HaiHai': '䷋ Pi / Standstill'
+    ZiZi: "䷀ Qian / Creative",
+    ChouChou: "䷁ Kun / Receptive",
+    YinYin: "䷂ Zhun / Difficulty at Beginning",
+    MaoMao: "䷃ Meng / Youthful Folly",
+    ChenChen: "䷄ Xu / Waiting",
+    SiSi: "䷅ Song / Conflict",
+    WuWu: "䷆ Shi / Army",
+    WeiWei: "䷇ Pi / Holding Together",
+    ShenShen: "䷈ Xiao Xu / Small Taming",
+    YouYou: "䷉ Lu / Treading",
+    XuXu: "䷊ Tai / Peace",
+    HaiHai: "䷋ Pi / Standstill",
   };
 
   const key = yearBranch + monthBranch;
-  return hexagramMap[key] || '䷀ Qian / Creative Heaven';
+  return hexagramMap[key] || "䷀ Qian / Creative Heaven";
 }
 
 /**
  * Get element relationship (generation/destruction cycles)
  */
-export function getElementRelationship(element1: Element, element2: Element): 'generates' | 'destroys' | 'neutral' {
+export function getElementRelationship(
+  element1: Element,
+  element2: Element,
+): "generates" | "destroys" | "neutral" {
   const generationCycle: Record<Element, Element> = {
-    Wood: 'Fire',
-    Fire: 'Earth',
-    Earth: 'Metal',
-    Metal: 'Water',
-    Water: 'Wood'
+    Wood: "Fire",
+    Fire: "Earth",
+    Earth: "Metal",
+    Metal: "Water",
+    Water: "Wood",
   };
 
   const destructionCycle: Record<Element, Element> = {
-    Wood: 'Earth',
-    Fire: 'Metal',
-    Earth: 'Water',
-    Metal: 'Wood',
-    Water: 'Fire'
+    Wood: "Earth",
+    Fire: "Metal",
+    Earth: "Water",
+    Metal: "Wood",
+    Water: "Fire",
   };
 
-  if (generationCycle[element1] === element2) return 'generates';
-  if (destructionCycle[element1] === element2) return 'destroys';
-  return 'neutral';
+  if (generationCycle[element1] === element2) return "generates";
+  if (destructionCycle[element1] === element2) return "destroys";
+  return "neutral";
 }
 
 /**
@@ -173,10 +261,12 @@ export function getElementRelationship(element1: Element, element2: Element): 'g
 export function calculateElementalBalance(profile: FourPillarsProfile): number {
   const values = Object.values(profile.elementTally);
   const average = values.reduce((a, b) => a + b, 0) / values.length;
-  const variance = values.reduce((acc, val) => acc + Math.pow(val - average, 2), 0) / values.length;
+  const variance =
+    values.reduce((acc, val) => acc + Math.pow(val - average, 2), 0) /
+    values.length;
 
   // Lower variance = better balance
-  return Math.max(0, 100 - (variance * 25));
+  return Math.max(0, 100 - variance * 25);
 }
 
 /**
@@ -184,12 +274,12 @@ export function calculateElementalBalance(profile: FourPillarsProfile): number {
  */
 export function getElementalPersonality(dominant: Element[]): string[] {
   const personalities: Record<Element, string[]> = {
-    Wood: ['Growth-oriented', 'Creative', 'Flexible', 'Pioneering'],
-    Fire: ['Passionate', 'Charismatic', 'Expressive', 'Inspiring'],
-    Earth: ['Stable', 'Nurturing', 'Practical', 'Reliable'],
-    Metal: ['Precise', 'Organized', 'Disciplined', 'Analytical'],
-    Water: ['Intuitive', 'Adaptive', 'Wise', 'Mysterious']
+    Wood: ["Growth-oriented", "Creative", "Flexible", "Pioneering"],
+    Fire: ["Passionate", "Charismatic", "Expressive", "Inspiring"],
+    Earth: ["Stable", "Nurturing", "Practical", "Reliable"],
+    Metal: ["Precise", "Organized", "Disciplined", "Analytical"],
+    Water: ["Intuitive", "Adaptive", "Wise", "Mysterious"],
   };
 
-  return dominant.flatMap(element => personalities[element] || []);
+  return dominant.flatMap((element) => personalities[element] || []);
 }

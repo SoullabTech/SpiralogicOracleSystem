@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface MemoryThread {
   id: string;
@@ -8,7 +8,7 @@ interface MemoryThread {
   timestamp: Date;
   tags: string[];
   connections: string[]; // IDs of related threads
-  significance: 'high' | 'medium' | 'low';
+  significance: "high" | "medium" | "low";
 }
 
 interface MemoryThreadsProps {
@@ -17,16 +17,18 @@ interface MemoryThreadsProps {
 
 const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
   const [threads, setThreads] = useState<MemoryThread[]>([]);
-  const [selectedThread, setSelectedThread] = useState<MemoryThread | null>(null);
+  const [selectedThread, setSelectedThread] = useState<MemoryThread | null>(
+    null,
+  );
   const [isCreating, setIsCreating] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'list' | 'web'>('list');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"list" | "web">("list");
 
   const [newThread, setNewThread] = useState({
-    title: '',
-    content: '',
+    title: "",
+    content: "",
     tags: [] as string[],
-    significance: 'medium' as 'high' | 'medium' | 'low'
+    significance: "medium" as "high" | "medium" | "low",
   });
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
       const data = await response.json();
       setThreads(data);
     } catch (error) {
-      console.error('Failed to fetch memory threads:', error);
+      console.error("Failed to fetch memory threads:", error);
     }
   };
 
@@ -47,39 +49,51 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
     if (!newThread.title.trim() || !newThread.content.trim()) return;
 
     try {
-      const response = await fetch('/api/memory/threads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/memory/threads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...newThread,
           userId,
-          timestamp: new Date()
-        })
+          timestamp: new Date(),
+        }),
       });
 
       if (response.ok) {
         const created = await response.json();
-        setThreads(prev => [created, ...prev]);
-        setNewThread({ title: '', content: '', tags: [], significance: 'medium' });
+        setThreads((prev) => [created, ...prev]);
+        setNewThread({
+          title: "",
+          content: "",
+          tags: [],
+          significance: "medium",
+        });
         setIsCreating(false);
       }
     } catch (error) {
-      console.error('Failed to create thread:', error);
+      console.error("Failed to create thread:", error);
     }
   };
 
-  const filteredThreads = threads.filter(thread =>
-    thread.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    thread.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    thread.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredThreads = threads.filter(
+    (thread) =>
+      thread.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      thread.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      thread.tags.some((tag) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
   );
 
   const getSignificanceColor = (significance: string) => {
     switch (significance) {
-      case 'high': return '#dc2626';
-      case 'medium': return '#d4af37';
-      case 'low': return '#64748b';
-      default: return '#64748b';
+      case "high":
+        return "#dc2626";
+      case "medium":
+        return "#d4af37";
+      case "low":
+        return "#64748b";
+      default:
+        return "#64748b";
     }
   };
 
@@ -93,28 +107,32 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
           className="flex justify-between items-center mb-8"
         >
           <div>
-            <h1 className="text-3xl font-light text-amber-100 mb-2">Memory Threads</h1>
-            <p className="text-slate-300">Weave insights into coherent understanding</p>
+            <h1 className="text-3xl font-light text-amber-100 mb-2">
+              Memory Threads
+            </h1>
+            <p className="text-slate-300">
+              Weave insights into coherent understanding
+            </p>
           </div>
 
           <div className="flex space-x-4">
             <div className="flex border border-slate-600">
               <button
-                onClick={() => setViewMode('list')}
+                onClick={() => setViewMode("list")}
                 className={`px-4 py-2 text-sm ${
-                  viewMode === 'list'
-                    ? 'bg-amber-600 text-slate-900'
-                    : 'bg-transparent text-slate-300 hover:bg-slate-700'
+                  viewMode === "list"
+                    ? "bg-amber-600 text-slate-900"
+                    : "bg-transparent text-slate-300 hover:bg-slate-700"
                 }`}
               >
                 List
               </button>
               <button
-                onClick={() => setViewMode('web')}
+                onClick={() => setViewMode("web")}
                 className={`px-4 py-2 text-sm ${
-                  viewMode === 'web'
-                    ? 'bg-amber-600 text-slate-900'
-                    : 'bg-transparent text-slate-300 hover:bg-slate-700'
+                  viewMode === "web"
+                    ? "bg-amber-600 text-slate-900"
+                    : "bg-transparent text-slate-300 hover:bg-slate-700"
                 }`}
               >
                 Web
@@ -152,15 +170,23 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   className={`p-4 bg-slate-800 border border-slate-600 cursor-pointer hover:border-amber-500 transition-colors ${
-                    selectedThread?.id === thread.id ? 'border-amber-500 bg-slate-750' : ''
+                    selectedThread?.id === thread.id
+                      ? "border-amber-500 bg-slate-750"
+                      : ""
                   }`}
                   onClick={() => setSelectedThread(thread)}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg text-amber-100 font-medium">{thread.title}</h3>
+                    <h3 className="text-lg text-amber-100 font-medium">
+                      {thread.title}
+                    </h3>
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: getSignificanceColor(thread.significance) }}
+                      style={{
+                        backgroundColor: getSignificanceColor(
+                          thread.significance,
+                        ),
+                      }}
                     />
                   </div>
 
@@ -202,33 +228,52 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
                 animate={{ opacity: 1, x: 0 }}
                 className="p-6 bg-slate-800 border border-slate-600"
               >
-                <h3 className="text-xl text-amber-100 font-medium mb-4">New Memory Thread</h3>
+                <h3 className="text-xl text-amber-100 font-medium mb-4">
+                  New Memory Thread
+                </h3>
 
                 <div className="space-y-4">
                   <input
                     type="text"
                     placeholder="Thread title..."
                     value={newThread.title}
-                    onChange={(e) => setNewThread(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) =>
+                      setNewThread((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
                     className="w-full px-3 py-2 bg-slate-700 border border-slate-600 text-amber-100 placeholder-slate-400 focus:border-amber-500 focus:outline-none transition-colors"
                   />
 
                   <textarea
                     placeholder="Content, insights, connections..."
                     value={newThread.content}
-                    onChange={(e) => setNewThread(prev => ({ ...prev, content: e.target.value }))}
+                    onChange={(e) =>
+                      setNewThread((prev) => ({
+                        ...prev,
+                        content: e.target.value,
+                      }))
+                    }
                     className="w-full px-3 py-2 bg-slate-700 border border-slate-600 text-amber-100 placeholder-slate-400 focus:border-amber-500 focus:outline-none transition-colors resize-none"
                     rows={6}
                   />
 
                   <div>
-                    <label className="block text-slate-300 text-sm mb-2">Significance</label>
+                    <label className="block text-slate-300 text-sm mb-2">
+                      Significance
+                    </label>
                     <select
                       value={newThread.significance}
-                      onChange={(e) => setNewThread(prev => ({
-                        ...prev,
-                        significance: e.target.value as 'high' | 'medium' | 'low'
-                      }))}
+                      onChange={(e) =>
+                        setNewThread((prev) => ({
+                          ...prev,
+                          significance: e.target.value as
+                            | "high"
+                            | "medium"
+                            | "low",
+                        }))
+                      }
                       className="w-full px-3 py-2 bg-slate-700 border border-slate-600 text-amber-100 focus:border-amber-500 focus:outline-none transition-colors"
                     >
                       <option value="low">Low</option>
@@ -260,10 +305,16 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
                 className="p-6 bg-slate-800 border border-slate-600"
               >
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl text-amber-100 font-medium">{selectedThread.title}</h3>
+                  <h3 className="text-xl text-amber-100 font-medium">
+                    {selectedThread.title}
+                  </h3>
                   <div
                     className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: getSignificanceColor(selectedThread.significance) }}
+                    style={{
+                      backgroundColor: getSignificanceColor(
+                        selectedThread.significance,
+                      ),
+                    }}
                   />
                 </div>
 
@@ -273,7 +324,9 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
 
                 <div className="space-y-3">
                   <div>
-                    <h4 className="text-slate-400 text-sm font-medium mb-2">Tags</h4>
+                    <h4 className="text-slate-400 text-sm font-medium mb-2">
+                      Tags
+                    </h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedThread.tags.map((tag) => (
                         <span
@@ -287,7 +340,9 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
                   </div>
 
                   <div>
-                    <h4 className="text-slate-400 text-sm font-medium mb-2">Created</h4>
+                    <h4 className="text-slate-400 text-sm font-medium mb-2">
+                      Created
+                    </h4>
                     <span className="text-slate-300 text-sm">
                       {new Date(selectedThread.timestamp).toLocaleString()}
                     </span>
@@ -295,7 +350,9 @@ const MemoryThreads: React.FC<MemoryThreadsProps> = ({ userId }) => {
 
                   {selectedThread.connections.length > 0 && (
                     <div>
-                      <h4 className="text-slate-400 text-sm font-medium mb-2">Connected Threads</h4>
+                      <h4 className="text-slate-400 text-sm font-medium mb-2">
+                        Connected Threads
+                      </h4>
                       <div className="text-amber-400 text-sm">
                         {selectedThread.connections.length} connections
                       </div>

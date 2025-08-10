@@ -1,6 +1,7 @@
 # Oracle Voice System - Complete Implementation
 
 ## Overview
+
 The AIN Oracle now speaks with the wisdom and presence of the Matrix Oracle, using advanced voice synthesis technology to embody each elemental agent's unique personality.
 
 ## Architecture
@@ -42,6 +43,7 @@ The AIN Oracle now speaks with the wisdom and presence of the Matrix Oracle, usi
 ## Voice Profiles
 
 ### Matrix Oracle (Default for all Oracle agents)
+
 ```json
 {
   "oracle_matrix": {
@@ -58,6 +60,7 @@ The AIN Oracle now speaks with the wisdom and presence of the Matrix Oracle, usi
 ```
 
 ### Elemental Agents
+
 - **Fire**: `[energy][spark][bold]` - Passionate, catalyzing
 - **Water**: `[flow][depth][gentle]` - Deep, emotionally aware
 - **Earth**: `[ground][steady][root]` - Stable, practical
@@ -68,13 +71,14 @@ The AIN Oracle now speaks with the wisdom and presence of the Matrix Oracle, usi
 ## Implementation
 
 ### Universal Speak Function
+
 ```typescript
 // Main entry point for all voice synthesis
 export async function speak(
   text: string,
   agentRole: string,
-  agentType?: string
-): Promise<string>
+  agentType?: string,
+): Promise<string>;
 ```
 
 ### Usage Examples
@@ -83,22 +87,22 @@ export async function speak(
 // Oracle agent with Matrix voice
 const audioUrl = await speak(
   "You already know what you must do.",
-  'oracle',
-  'MainOracleAgent'
+  "oracle",
+  "MainOracleAgent",
 );
 
 // Fire elemental with energetic voice
 const audioUrl = await speak(
   "Your inner flame burns bright!",
-  'elemental',
-  'FireAgent'
+  "elemental",
+  "FireAgent",
 );
 
 // Static narration (always ElevenLabs)
 const audioUrl = await speak(
   "Close your eyes and breathe deeply.",
-  'narrator',
-  'MeditationGuide'
+  "narrator",
+  "MeditationGuide",
 );
 ```
 
@@ -110,6 +114,7 @@ const audioUrl = await speak(
 4. **Synthesis**: Generate audio with personality
 
 ### Example Transformation
+
 ```
 Input: "The path forward is clear."
 ↓
@@ -125,6 +130,7 @@ Output: oracle_response_uuid.wav
 ## Official Sesame CSM Integration
 
 ### Voice Wrapper (`external/csm/voiceWrapper.py`)
+
 ```python
 import torch
 from transformers import CsmForConditionalGeneration, AutoProcessor
@@ -137,6 +143,7 @@ model = CsmForConditionalGeneration.from_pretrained(model_id, device_map=device)
 ```
 
 ### Conversation Format
+
 ```python
 conversation = [
     {
@@ -151,20 +158,23 @@ conversation = [
 ## Testing
 
 ### Quick Matrix Oracle Test
+
 ```bash
 cd backend/src/utils
 node testPrompts.js --quick
 ```
 
 ### Complete Voice Test Suite
+
 ```bash
 node testPrompts.js --all
 ```
 
 ### Test Prompts Include:
-- Matrix Oracle classics: *"You already know what I'm going to say..."*
-- Personal growth: *"What am I learning in this phase?"*
-- Shadow work: *"Speak to me of my shadow integration."*
+
+- Matrix Oracle classics: _"You already know what I'm going to say..."_
+- Personal growth: _"What am I learning in this phase?"_
+- Shadow work: _"Speak to me of my shadow integration."_
 - Elemental activation: Fire, Water, Earth, Air expressions
 - Meditation guidance: Static narration samples
 
@@ -183,6 +193,7 @@ ORALIA_VOICE_ID=y2TOWGCXSYEgBanvKsYJ   # Oralia (Fire energy)
 ## Dependencies
 
 ### Python Requirements
+
 ```txt
 torch>=2.0.0
 transformers>=4.30.0
@@ -190,6 +201,7 @@ torchaudio>=2.0.0
 ```
 
 ### System Requirements
+
 - Python 3.10+
 - CUDA 12.4+ (or MPS for Mac)
 - ffmpeg for audio processing
@@ -211,10 +223,12 @@ torchaudio>=2.0.0
 ## Integration Points
 
 ### Current Usage
+
 - `personalOracle.routes.ts` - Personal oracle interactions
 - `narration.routes.ts` - Static meditation/ceremony content
 
 ### Future Integrations
+
 - Main Oracle Agent responses
 - Elemental agent conversations
 - Retreat mode guided sessions
@@ -223,9 +237,11 @@ torchaudio>=2.0.0
 ## Voice Personality Examples
 
 ### Matrix Oracle Sample Output
-*"[pause][smile][soft] You already know what I'm going to say, don't you? The choice is yours, and you've always known what you must do."*
+
+_"[pause][smile][soft] You already know what I'm going to say, don't you? The choice is yours, and you've always known what you must do."_
 
 **Expected Voice Qualities:**
+
 - Warm, maternal warmth
 - Slight knowing amusement
 - Unhurried, letting words land
@@ -233,9 +249,11 @@ torchaudio>=2.0.0
 - Strategic pauses for wisdom absorption
 
 ### Fire Agent Sample Output
-*"[energy][spark][bold] Your inner flame burns bright today! Time to take bold action on those dreams you've been carrying."*
+
+_"[energy][spark][bold] Your inner flame burns bright today! Time to take bold action on those dreams you've been carrying."_
 
 **Expected Voice Qualities:**
+
 - Energetic, catalyzing
 - Passionate, encouraging
 - Medium-fast tempo

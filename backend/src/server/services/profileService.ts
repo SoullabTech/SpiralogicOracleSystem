@@ -21,7 +21,7 @@ export async function getUserProfile(userId: string): Promise<ProfileData> {
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "user_id, fire, water, earth, air, aether, crystal_focus, voice_profile, guide_voice, guide_name, updated_at"
+      "user_id, fire, water, earth, air, aether, crystal_focus, voice_profile, guide_voice, guide_name, updated_at",
     )
     .eq("user_id", userId)
     .single();
@@ -37,7 +37,10 @@ export async function getUserProfile(userId: string): Promise<ProfileData> {
 /**
  * Update or insert a user profile.
  */
-export async function updateUserProfile(userId: string, profile: Partial<ProfileData>) {
+export async function updateUserProfile(
+  userId: string,
+  profile: Partial<ProfileData>,
+) {
   const payload = { ...profile, user_id: userId };
 
   const { data, error } = await supabase

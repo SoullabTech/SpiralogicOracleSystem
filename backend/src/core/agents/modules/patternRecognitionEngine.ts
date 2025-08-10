@@ -1,9 +1,9 @@
 // 🔍 Pattern Recognition Engine
 // Identifies and tracks patterns across user interactions for collective intelligence
 
-import { logger } from '../../../utils/logger';
-import { supabase } from '../../../services/supabaseClient';
-import { agentComms } from './agentCommunicationProtocol';
+import { logger } from "../../../utils/logger";
+import { supabase } from "../../../services/supabaseClient";
+import { agentComms } from "./agentCommunicationProtocol";
 
 export interface ElementalPattern {
   pattern_id?: string;
@@ -88,9 +88,8 @@ export class PatternRecognitionEngine {
 
       // Store observation for later analysis
       await this.storeObservation(context);
-
     } catch (error) {
-      logger.error('Error processing interaction for patterns:', error);
+      logger.error("Error processing interaction for patterns:", error);
     }
   }
 
@@ -105,18 +104,48 @@ export class PatternRecognitionEngine {
 
     // Extract elements from response content
     const elementKeywords = {
-      fire: ['ignite', 'spark', 'vision', 'passion', 'catalyze', 'transform'],
-      water: ['flow', 'emotion', 'depth', 'healing', 'intuition', 'feel'],
-      earth: ['ground', 'foundation', 'stable', 'manifest', 'practical', 'material'],
-      air: ['clarity', 'thought', 'perspective', 'insight', 'communicate', 'understand'],
-      aether: ['unity', 'integrate', 'wholeness', 'spirit', 'transcend', 'weave'],
-      shadow: ['darkness', 'unconscious', 'pattern', 'hidden', 'integrate', 'face']
+      fire: ["ignite", "spark", "vision", "passion", "catalyze", "transform"],
+      water: ["flow", "emotion", "depth", "healing", "intuition", "feel"],
+      earth: [
+        "ground",
+        "foundation",
+        "stable",
+        "manifest",
+        "practical",
+        "material",
+      ],
+      air: [
+        "clarity",
+        "thought",
+        "perspective",
+        "insight",
+        "communicate",
+        "understand",
+      ],
+      aether: [
+        "unity",
+        "integrate",
+        "wholeness",
+        "spirit",
+        "transcend",
+        "weave",
+      ],
+      shadow: [
+        "darkness",
+        "unconscious",
+        "pattern",
+        "hidden",
+        "integrate",
+        "face",
+      ],
     };
 
-    const content = (context.response + ' ' + context.query).toLowerCase();
+    const content = (context.response + " " + context.query).toLowerCase();
 
     for (const [element, keywords] of Object.entries(elementKeywords)) {
-      const keywordCount = keywords.filter(keyword => content.includes(keyword)).length;
+      const keywordCount = keywords.filter((keyword) =>
+        content.includes(keyword),
+      ).length;
       if (keywordCount >= 2 && !elements.includes(element)) {
         elements.push(element);
       }
@@ -127,11 +156,15 @@ export class PatternRecognitionEngine {
 
   // Create a unique key for a pattern
   private createPatternKey(elements: string[]): string {
-    return elements.sort().join('-');
+    return elements.sort().join("-");
   }
 
   // Update pattern candidate with new occurrence
-  private updatePatternCandidate(key: string, elements: string[], context: PatternRecognitionContext): void {
+  private updatePatternCandidate(
+    key: string,
+    elements: string[],
+    context: PatternRecognitionContext,
+  ): void {
     let candidate = this.patternCandidates.get(key);
 
     if (!candidate) {
@@ -141,7 +174,7 @@ export class PatternRecognitionEngine {
         contexts: new Set(),
         users: new Set(),
         averageConfidence: 0,
-        wisdomExtracted: []
+        wisdomExtracted: [],
       };
     }
 
@@ -154,7 +187,9 @@ export class PatternRecognitionEngine {
 
     // Update average confidence
     candidate.averageConfidence =
-      (candidate.averageConfidence * (candidate.occurrences - 1) + context.confidence) / candidate.occurrences;
+      (candidate.averageConfidence * (candidate.occurrences - 1) +
+        context.confidence) /
+      candidate.occurrences;
 
     // Extract wisdom from this interaction
     const wisdom = this.extractWisdom(context);
@@ -179,11 +214,11 @@ export class PatternRecognitionEngine {
 
       // Share with agents
       await agentComms.sharePatternDiscovery({
-        discoveredBy: 'PatternRecognitionEngine',
+        discoveredBy: "PatternRecognitionEngine",
         pattern_id: pattern.pattern_id!,
         elements: pattern.elements_involved,
         wisdom: pattern.integration_wisdom,
-        strength: pattern.pattern_strength
+        strength: pattern.pattern_strength,
       });
 
       // Remove from candidates
@@ -192,40 +227,43 @@ export class PatternRecognitionEngine {
   }
 
   // Create a new pattern from a candidate
-  private async createPattern(key: string, candidate: PatternCandidate): Promise<ElementalPattern> {
+  private async createPattern(
+    key: string,
+    candidate: PatternCandidate,
+  ): Promise<ElementalPattern> {
     const pattern: ElementalPattern = {
       elements_involved: candidate.elements,
       context_domain: this.determinePrimaryDomain(candidate.contexts),
       cultural_context: await this.determineCulturalContext(candidate),
-      age_demographic: 'mixed', // Would be calculated from user demographics
+      age_demographic: "mixed", // Would be calculated from user demographics
       success_metrics: {
         confidence: candidate.averageConfidence,
-        user_satisfaction: 'pending',
-        follow_up_success: 'pending'
+        user_satisfaction: "pending",
+        follow_up_success: "pending",
       },
       integration_wisdom: this.synthesizeWisdom(candidate.wisdomExtracted),
-      discovered_by_user: 'collective', // System discovered
+      discovered_by_user: "collective", // System discovered
       verified_by_others: candidate.users.size,
       pattern_strength: this.calculatePatternStrength(candidate),
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
 
     // Store in database
     const { data, error } = await supabase
-      .from('elemental_patterns')
+      .from("elemental_patterns")
       .insert(pattern)
       .select()
       .single();
 
     if (error) {
-      logger.error('Error storing pattern:', error);
+      logger.error("Error storing pattern:", error);
       throw error;
     }
 
-    logger.info('New pattern discovered', {
+    logger.info("New pattern discovered", {
       pattern_id: data.pattern_id,
       elements: pattern.elements_involved,
-      strength: pattern.pattern_strength
+      strength: pattern.pattern_strength,
     });
 
     return data;
@@ -242,36 +280,41 @@ export class PatternRecognitionEngine {
       // Check cache first
       const cacheKey = JSON.stringify(context);
       const cached = this.patternCache.get(cacheKey);
-      if (cached && Date.now() - (cached[0]?.created_at ? new Date(cached[0].created_at).getTime() : 0) < this.cacheExpiry) {
+      if (
+        cached &&
+        Date.now() -
+          (cached[0]?.created_at
+            ? new Date(cached[0].created_at).getTime()
+            : 0) <
+          this.cacheExpiry
+      ) {
         return cached;
       }
 
-      let query = supabase
-        .from('elemental_patterns')
-        .select('*');
+      let query = supabase.from("elemental_patterns").select("*");
 
       // Filter by elements
       if (context.elements && context.elements.length > 0) {
-        query = query.contains('elements_involved', context.elements);
+        query = query.contains("elements_involved", context.elements);
       }
 
       // Filter by domain
       if (context.domain) {
-        query = query.eq('context_domain', context.domain);
+        query = query.eq("context_domain", context.domain);
       }
 
       // Filter by culture
       if (context.culture) {
-        query = query.eq('cultural_context', context.culture);
+        query = query.eq("cultural_context", context.culture);
       }
 
       // Filter by strength
       if (context.minStrength) {
-        query = query.gte('pattern_strength', context.minStrength);
+        query = query.gte("pattern_strength", context.minStrength);
       }
 
       const { data, error } = await query
-        .order('pattern_strength', { ascending: false })
+        .order("pattern_strength", { ascending: false })
         .limit(10);
 
       if (error) throw error;
@@ -282,21 +325,24 @@ export class PatternRecognitionEngine {
       }
 
       return data || [];
-
     } catch (error) {
-      logger.error('Error finding relevant patterns:', error);
+      logger.error("Error finding relevant patterns:", error);
       return [];
     }
   }
 
   // Verify and strengthen existing patterns
-  async verifyPattern(patternId: string, userId: string, success: boolean): Promise<void> {
+  async verifyPattern(
+    patternId: string,
+    userId: string,
+    success: boolean,
+  ): Promise<void> {
     try {
       // Get current pattern
       const { data: pattern, error: fetchError } = await supabase
-        .from('elemental_patterns')
-        .select('*')
-        .eq('pattern_id', patternId)
+        .from("elemental_patterns")
+        .select("*")
+        .eq("pattern_id", patternId)
         .single();
 
       if (fetchError) throw fetchError;
@@ -304,50 +350,56 @@ export class PatternRecognitionEngine {
       // Update verification count and strength
       const newVerificationCount = pattern.verified_by_others + 1;
       const strengthAdjustment = success ? 0.01 : -0.005;
-      const newStrength = Math.max(0, Math.min(1, pattern.pattern_strength + strengthAdjustment));
+      const newStrength = Math.max(
+        0,
+        Math.min(1, pattern.pattern_strength + strengthAdjustment),
+      );
 
       const { error: updateError } = await supabase
-        .from('elemental_patterns')
+        .from("elemental_patterns")
         .update({
           verified_by_others: newVerificationCount,
-          pattern_strength: newStrength
+          pattern_strength: newStrength,
         })
-        .eq('pattern_id', patternId);
+        .eq("pattern_id", patternId);
 
       if (updateError) throw updateError;
 
       // Log contribution
-      await this.logPatternContribution(patternId, userId, success ? 'validation' : 'invalidation');
-
+      await this.logPatternContribution(
+        patternId,
+        userId,
+        success ? "validation" : "invalidation",
+      );
     } catch (error) {
-      logger.error('Error verifying pattern:', error);
+      logger.error("Error verifying pattern:", error);
     }
   }
 
   // Store observation for pattern analysis
-  private async storeObservation(context: PatternRecognitionContext): Promise<void> {
+  private async storeObservation(
+    context: PatternRecognitionContext,
+  ): Promise<void> {
     try {
-      await supabase
-        .from('collective_observations')
-        .insert({
-          user_id: context.userId,
-          query_text: context.query,
-          query_type: this.categorizeQuery(context.query),
-          preferred_element: context.element,
-          metadata: {
-            confidence: context.confidence,
-            ...context.metadata
-          }
-        });
+      await supabase.from("collective_observations").insert({
+        user_id: context.userId,
+        query_text: context.query,
+        query_type: this.categorizeQuery(context.query),
+        preferred_element: context.element,
+        metadata: {
+          confidence: context.confidence,
+          ...context.metadata,
+        },
+      });
     } catch (error) {
-      logger.error('Error storing observation:', error);
+      logger.error("Error storing observation:", error);
     }
   }
 
   // Analyze pattern candidates periodically
   private async analyzePatternCandidates(): Promise<void> {
-    logger.info('Analyzing pattern candidates', {
-      candidateCount: this.patternCandidates.size
+    logger.info("Analyzing pattern candidates", {
+      candidateCount: this.patternCandidates.size,
     });
 
     for (const [key, candidate] of this.patternCandidates.entries()) {
@@ -359,19 +411,18 @@ export class PatternRecognitionEngine {
   private async loadExistingPatterns(): Promise<void> {
     try {
       const { data, error } = await supabase
-        .from('elemental_patterns')
-        .select('*')
-        .order('pattern_strength', { ascending: false })
+        .from("elemental_patterns")
+        .select("*")
+        .order("pattern_strength", { ascending: false })
         .limit(100);
 
       if (error) throw error;
 
-      logger.info('Loaded existing patterns', {
-        count: data?.length || 0
+      logger.info("Loaded existing patterns", {
+        count: data?.length || 0,
       });
-
     } catch (error) {
-      logger.error('Error loading existing patterns:', error);
+      logger.error("Error loading existing patterns:", error);
     }
   }
 
@@ -379,20 +430,25 @@ export class PatternRecognitionEngine {
   private extractDomain(context: PatternRecognitionContext): string {
     const query = context.query.toLowerCase();
 
-    if (query.includes('relationship') || query.includes('love')) return 'relationships';
-    if (query.includes('work') || query.includes('career')) return 'career';
-    if (query.includes('purpose') || query.includes('meaning')) return 'purpose';
-    if (query.includes('heal') || query.includes('trauma')) return 'healing';
-    if (query.includes('spiritual') || query.includes('soul')) return 'spirituality';
-    if (query.includes('creative') || query.includes('art')) return 'creativity';
-    if (query.includes('money') || query.includes('abundance')) return 'abundance';
+    if (query.includes("relationship") || query.includes("love"))
+      return "relationships";
+    if (query.includes("work") || query.includes("career")) return "career";
+    if (query.includes("purpose") || query.includes("meaning"))
+      return "purpose";
+    if (query.includes("heal") || query.includes("trauma")) return "healing";
+    if (query.includes("spiritual") || query.includes("soul"))
+      return "spirituality";
+    if (query.includes("creative") || query.includes("art"))
+      return "creativity";
+    if (query.includes("money") || query.includes("abundance"))
+      return "abundance";
 
-    return 'general';
+    return "general";
   }
 
   private extractWisdom(context: PatternRecognitionContext): string {
     // Extract key insights from high-confidence interactions
-    if (context.confidence < 0.8) return '';
+    if (context.confidence < 0.8) return "";
 
     // This would use more sophisticated NLP in production
     const response = context.response;
@@ -400,7 +456,7 @@ export class PatternRecognitionEngine {
       /when (.+?) meets (.+?), (.+)/i,
       /the key is (.+)/i,
       /remember that (.+)/i,
-      /(.+) creates (.+)/i
+      /(.+) creates (.+)/i,
     ];
 
     for (const phrase of wisdomPhrases) {
@@ -408,37 +464,43 @@ export class PatternRecognitionEngine {
       if (match) return match[0];
     }
 
-    return '';
+    return "";
   }
 
   private determinePrimaryDomain(contexts: Set<string>): string {
-    if (contexts.size === 0) return 'general';
+    if (contexts.size === 0) return "general";
 
     // Return most common context
     const contextArray = Array.from(contexts);
-    const counts = contextArray.reduce((acc, ctx) => {
-      acc[ctx] = (acc[ctx] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const counts = contextArray.reduce(
+      (acc, ctx) => {
+        acc[ctx] = (acc[ctx] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     return Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
   }
 
-  private async determineCulturalContext(candidate: PatternCandidate): Promise<string> {
+  private async determineCulturalContext(
+    candidate: PatternCandidate,
+  ): Promise<string> {
     // This would analyze user profiles and content for cultural markers
     // Simplified for now
-    return 'universal';
+    return "universal";
   }
 
   private synthesizeWisdom(wisdomPieces: string[]): string {
-    if (wisdomPieces.length === 0) return 'Pattern emerging from collective experience';
+    if (wisdomPieces.length === 0)
+      return "Pattern emerging from collective experience";
 
     // Take most common themes
     const uniqueWisdom = [...new Set(wisdomPieces)];
     if (uniqueWisdom.length === 1) return uniqueWisdom[0];
 
     // Combine multiple insights
-    return `Integration insight: ${uniqueWisdom.slice(0, 3).join('; ')}`;
+    return `Integration insight: ${uniqueWisdom.slice(0, 3).join("; ")}`;
   }
 
   private calculatePatternStrength(candidate: PatternCandidate): number {
@@ -457,28 +519,30 @@ export class PatternRecognitionEngine {
       request: /(help|guide|show|teach|explain)/i,
       reflection: /(feel|think|wonder|realize|understand)/i,
       intention: /(want|need|wish|hope|plan)/i,
-      problem: /(stuck|confused|lost|struggling|difficult)/i
+      problem: /(stuck|confused|lost|struggling|difficult)/i,
     };
 
     for (const [category, pattern] of Object.entries(categories)) {
       if (pattern.test(query)) return category;
     }
 
-    return 'general';
+    return "general";
   }
 
-  private async logPatternContribution(patternId: string, userId: string, type: string): Promise<void> {
+  private async logPatternContribution(
+    patternId: string,
+    userId: string,
+    type: string,
+  ): Promise<void> {
     try {
-      await supabase
-        .from('pattern_contributions')
-        .insert({
-          user_id: userId,
-          pattern_id: patternId,
-          contribution_type: type,
-          impact_score: type === 'validation' ? 0.1 : 0.05
-        });
+      await supabase.from("pattern_contributions").insert({
+        user_id: userId,
+        pattern_id: patternId,
+        contribution_type: type,
+        impact_score: type === "validation" ? 0.1 : 0.05,
+      });
     } catch (error) {
-      logger.error('Error logging pattern contribution:', error);
+      logger.error("Error logging pattern contribution:", error);
     }
   }
 
@@ -491,36 +555,40 @@ export class PatternRecognitionEngine {
   }> {
     try {
       const { data: patterns, error } = await supabase
-        .from('elemental_patterns')
-        .select('pattern_strength, context_domain');
+        .from("elemental_patterns")
+        .select("pattern_strength, context_domain");
 
       if (error) throw error;
 
       const stats = {
         totalPatterns: patterns?.length || 0,
-        averageStrength: patterns?.reduce((sum, p) => sum + p.pattern_strength, 0) / (patterns?.length || 1) || 0,
+        averageStrength:
+          patterns?.reduce((sum, p) => sum + p.pattern_strength, 0) /
+            (patterns?.length || 1) || 0,
         topDomains: this.getTopDomains(patterns || []),
-        emergingPatterns: this.patternCandidates.size
+        emergingPatterns: this.patternCandidates.size,
       };
 
       return stats;
-
     } catch (error) {
-      logger.error('Error getting pattern statistics:', error);
+      logger.error("Error getting pattern statistics:", error);
       return {
         totalPatterns: 0,
         averageStrength: 0,
         topDomains: [],
-        emergingPatterns: 0
+        emergingPatterns: 0,
       };
     }
   }
 
   private getTopDomains(patterns: any[]): string[] {
-    const domainCounts = patterns.reduce((acc, p) => {
-      acc[p.context_domain] = (acc[p.context_domain] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const domainCounts = patterns.reduce(
+      (acc, p) => {
+        acc[p.context_domain] = (acc[p.context_domain] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     return Object.entries(domainCounts)
       .sort((a, b) => b[1] - a[1])

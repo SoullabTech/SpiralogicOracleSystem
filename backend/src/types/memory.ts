@@ -1,6 +1,6 @@
 // oracle-backend/src/types/memory.ts
 
-import type { Metadata } from './metadata';
+import type { Metadata } from "./metadata";
 
 /**
  * Represents a stored memory item, either user query or agent response.

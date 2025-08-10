@@ -3,18 +3,18 @@
 // Production-ready caching and memory system
 // ===============================================
 
-import Redis from 'ioredis';
-import { logger } from '../utils/logger.js';
+import Redis from "ioredis";
+import { logger } from "../utils/logger.js";
 
 // ===============================================
 // REDIS CLIENT CONFIGURATION
 // ===============================================
 
 const redisConfig = {
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
+  host: process.env.REDIS_HOST || "localhost",
+  port: parseInt(process.env.REDIS_PORT || "6379"),
   password: process.env.REDIS_PASSWORD,
-  db: parseInt(process.env.REDIS_DB || '0'),
+  db: parseInt(process.env.REDIS_DB || "0"),
   retryStrategy: (times: number) => {
     const delay = Math.min(times * 50, 2000);
     return delay;
@@ -27,9 +27,9 @@ const redisConfig = {
   // TLS for production
   ...(process.env.REDIS_TLS_URL && {
     tls: {
-      rejectUnauthorized: process.env.NODE_ENV === 'production'
-    }
-  })
+      rejectUnauthorized: process.env.NODE_ENV === "production",
+    },
+  }),
 };
 
 // Create Redis client with connection URL if available
@@ -45,20 +45,20 @@ export const subClient = redis.duplicate();
 // CONNECTION MANAGEMENT
 // ===============================================
 
-redis.on('connect', () => {
-  logger.info('Redis client connected successfully');
+redis.on("connect", () => {
+  logger.info("Redis client connected successfully");
 });
 
-redis.on('error', (error) => {
-  logger.error('Redis connection error:', error);
+redis.on("error", (error) => {
+  logger.error("Redis connection error:", error);
 });
 
-redis.on('ready', () => {
-  logger.info('Redis client ready for commands');
+redis.on("ready", () => {
+  logger.info("Redis client ready for commands");
 });
 
-redis.on('reconnecting', () => {
-  logger.warn('Redis client reconnecting...');
+redis.on("reconnecting", () => {
+  logger.warn("Redis client reconnecting...");
 });
 
 // ===============================================
@@ -66,10 +66,10 @@ redis.on('reconnecting', () => {
 // ===============================================
 
 export class SoulMemoryRedis {
-  private static readonly MEMORY_PREFIX = 'soul:memory:';
-  private static readonly SESSION_PREFIX = 'soul:session:';
-  private static readonly VECTOR_PREFIX = 'soul:vector:';
-  private static readonly THREAD_PREFIX = 'soul:thread:';
+  private static readonly MEMORY_PREFIX = "soul:memory:";
+  private static readonly SESSION_PREFIX = "soul:session:";
+  private static readonly VECTOR_PREFIX = "soul:vector:";
+  private static readonly THREAD_PREFIX = "soul:thread:";
   private static readonly DEFAULT_TTL = 2592000; // 30 days
 
   // Store memory with optional TTL
@@ -77,7 +77,7 @@ export class SoulMemoryRedis {
     userId: string,
     memoryId: string,
     memoryData: any,
-    ttl?: number
+    ttl?: number,
   ): Promise<boolean> {
     try {
       const key = `${this.MEMORY_PREFIX}${userId}:${memoryId}`;
@@ -94,13 +94,16 @@ export class SoulMemoryRedis {
 
       return true;
     } catch (error) {
-      logger.error('Failed to store memory in Redis:', error);
+      logger.error("Failed to store memory in Redis:", error);
       return false;
     }
   }
 
   // Retrieve memory
-  static async getMemory(userId: string, memoryId: string): Promise<any | null> {
+  static async getMemory(
+    userId: string,
+    memoryId: string,
+  ): Promise<any | null> {
     try {
       const key = `${this.MEMORY_PREFIX}${userId}:${memoryId}`;
       const data = await redis.get(key);
@@ -111,7 +114,7 @@ export class SoulMemoryRedis {
 
       return null;
     } catch (error) {
-      logger.error('Failed to retrieve memory from Redis:', error);
+      logger.error("Failed to retrieve memory from Redis:", error);
       return null;
     }
   }
@@ -123,7 +126,7 @@ export class SoulMemoryRedis {
       const memoryIds = await redis.smembers(indexKey);
       return memoryIds;
     } catch (error) {
-      logger.error('Failed to get user memory IDs:', error);
+      logger.error("Failed to get user memory IDs:", error);
       return [];
     }
   }
@@ -132,14 +135,14 @@ export class SoulMemoryRedis {
   static async storeSession(
     sessionId: string,
     sessionData: any,
-    ttl: number = 3600 // 1 hour default
+    ttl: number = 3600, // 1 hour default
   ): Promise<boolean> {
     try {
       const key = `${this.SESSION_PREFIX}${sessionId}`;
       await redis.setex(key, ttl, JSON.stringify(sessionData));
       return true;
     } catch (error) {
-      logger.error('Failed to store session:', error);
+      logger.error("Failed to store session:", error);
       return false;
     }
   }
@@ -156,7 +159,7 @@ export class SoulMemoryRedis {
 
       return null;
     } catch (error) {
-      logger.error('Failed to get session:', error);
+      logger.error("Failed to get session:", error);
       return null;
     }
   }
@@ -165,14 +168,14 @@ export class SoulMemoryRedis {
   static async storeVector(
     vectorId: string,
     vector: number[],
-    metadata: any
+    metadata: any,
   ): Promise<boolean> {
     try {
       const key = `${this.VECTOR_PREFIX}${vectorId}`;
       const data = {
         vector,
         metadata,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       await redis.set(key, JSON.stringify(data));
@@ -182,7 +185,7 @@ export class SoulMemoryRedis {
 
       return true;
     } catch (error) {
-      logger.error('Failed to store vector:', error);
+      logger.error("Failed to store vector:", error);
       return false;
     }
   }
@@ -191,22 +194,25 @@ export class SoulMemoryRedis {
   static async storeThread(
     userId: string,
     threadId: string,
-    memoryIds: string[]
+    memoryIds: string[],
   ): Promise<boolean> {
     try {
       const key = `${this.THREAD_PREFIX}${userId}:${threadId}`;
-      await redis.set(key, JSON.stringify({
-        memoryIds,
-        created: Date.now(),
-        updated: Date.now()
-      }));
+      await redis.set(
+        key,
+        JSON.stringify({
+          memoryIds,
+          created: Date.now(),
+          updated: Date.now(),
+        }),
+      );
 
       // Add to user's thread index
       await redis.sadd(`${this.THREAD_PREFIX}${userId}:index`, threadId);
 
       return true;
     } catch (error) {
-      logger.error('Failed to store thread:', error);
+      logger.error("Failed to store thread:", error);
       return false;
     }
   }
@@ -214,13 +220,15 @@ export class SoulMemoryRedis {
   // Batch operations for performance
   static async batchGetMemories(
     userId: string,
-    memoryIds: string[]
+    memoryIds: string[],
   ): Promise<Map<string, any>> {
     try {
       const pipeline = redis.pipeline();
-      const keys = memoryIds.map(id => `${this.MEMORY_PREFIX}${userId}:${id}`);
+      const keys = memoryIds.map(
+        (id) => `${this.MEMORY_PREFIX}${userId}:${id}`,
+      );
 
-      keys.forEach(key => pipeline.get(key));
+      keys.forEach((key) => pipeline.get(key));
 
       const results = await pipeline.exec();
       const memoryMap = new Map<string, any>();
@@ -234,7 +242,7 @@ export class SoulMemoryRedis {
 
       return memoryMap;
     } catch (error) {
-      logger.error('Failed to batch get memories:', error);
+      logger.error("Failed to batch get memories:", error);
       return new Map();
     }
   }
@@ -252,7 +260,7 @@ export class SoulMemoryRedis {
       // Delete all memories
       const pipeline = redis.pipeline();
 
-      memoryIds.forEach(id => {
+      memoryIds.forEach((id) => {
         pipeline.del(`${this.MEMORY_PREFIX}${userId}:${id}`);
       });
 
@@ -260,8 +268,10 @@ export class SoulMemoryRedis {
       pipeline.del(`${this.MEMORY_PREFIX}${userId}:index`);
 
       // Delete threads
-      const threadIds = await redis.smembers(`${this.THREAD_PREFIX}${userId}:index`);
-      threadIds.forEach(id => {
+      const threadIds = await redis.smembers(
+        `${this.THREAD_PREFIX}${userId}:index`,
+      );
+      threadIds.forEach((id) => {
         pipeline.del(`${this.THREAD_PREFIX}${userId}:${id}`);
       });
       pipeline.del(`${this.THREAD_PREFIX}${userId}:index`);
@@ -271,7 +281,7 @@ export class SoulMemoryRedis {
       logger.info(`Cleared all Redis memory for user: ${userId}`);
       return true;
     } catch (error) {
-      logger.error('Failed to clear user memory:', error);
+      logger.error("Failed to clear user memory:", error);
       return false;
     }
   }
@@ -283,12 +293,16 @@ export class SoulMemoryRedis {
 
 export class CacheManager {
   // Generic cache operations with TTL
-  static async set(key: string, value: any, ttl: number = 3600): Promise<boolean> {
+  static async set(
+    key: string,
+    value: any,
+    ttl: number = 3600,
+  ): Promise<boolean> {
     try {
       await redis.setex(key, ttl, JSON.stringify(value));
       return true;
     } catch (error) {
-      logger.error('Cache set failed:', error);
+      logger.error("Cache set failed:", error);
       return false;
     }
   }
@@ -298,7 +312,7 @@ export class CacheManager {
       const value = await redis.get(key);
       return value ? JSON.parse(value) : null;
     } catch (error) {
-      logger.error('Cache get failed:', error);
+      logger.error("Cache get failed:", error);
       return null;
     }
   }
@@ -308,7 +322,7 @@ export class CacheManager {
       await redis.del(key);
       return true;
     } catch (error) {
-      logger.error('Cache delete failed:', error);
+      logger.error("Cache delete failed:", error);
       return false;
     }
   }
@@ -322,7 +336,7 @@ export class CacheManager {
       const result = await redis.del(...keys);
       return result;
     } catch (error) {
-      logger.error('Pattern invalidation failed:', error);
+      logger.error("Pattern invalidation failed:", error);
       return 0;
     }
   }
@@ -331,7 +345,7 @@ export class CacheManager {
   static async getOrSet<T>(
     key: string,
     factory: () => Promise<T>,
-    ttl: number = 3600
+    ttl: number = 3600,
   ): Promise<T | null> {
     try {
       // Try to get from cache
@@ -346,7 +360,7 @@ export class CacheManager {
 
       return value;
     } catch (error) {
-      logger.error('Cache getOrSet failed:', error);
+      logger.error("Cache getOrSet failed:", error);
       return null;
     }
   }
@@ -360,15 +374,15 @@ export class RateLimiter {
   static async checkLimit(
     identifier: string,
     maxRequests: number = 100,
-    windowSeconds: number = 900 // 15 minutes
+    windowSeconds: number = 900, // 15 minutes
   ): Promise<{ allowed: boolean; remaining: number; resetAt: number }> {
     const key = `rate:${identifier}`;
     const now = Date.now();
-    const window = now - (windowSeconds * 1000);
+    const window = now - windowSeconds * 1000;
 
     try {
       // Remove old entries
-      await redis.zremrangebyscore(key, '-inf', window);
+      await redis.zremrangebyscore(key, "-inf", window);
 
       // Count requests in current window
       const count = await redis.zcard(key);
@@ -381,25 +395,30 @@ export class RateLimiter {
         return {
           allowed: true,
           remaining: maxRequests - count - 1,
-          resetAt: now + (windowSeconds * 1000)
+          resetAt: now + windowSeconds * 1000,
         };
       }
 
       // Get oldest entry to determine reset time
-      const oldestEntries = await redis.zrange(key, 0, 0, 'WITHSCORES');
-      const resetAt = oldestEntries.length > 1
-        ? parseInt(oldestEntries[1]) + (windowSeconds * 1000)
-        : now + (windowSeconds * 1000);
+      const oldestEntries = await redis.zrange(key, 0, 0, "WITHSCORES");
+      const resetAt =
+        oldestEntries.length > 1
+          ? parseInt(oldestEntries[1]) + windowSeconds * 1000
+          : now + windowSeconds * 1000;
 
       return {
         allowed: false,
         remaining: 0,
-        resetAt
+        resetAt,
       };
     } catch (error) {
-      logger.error('Rate limit check failed:', error);
+      logger.error("Rate limit check failed:", error);
       // Fail open in case of Redis issues
-      return { allowed: true, remaining: 1, resetAt: now + windowSeconds * 1000 };
+      return {
+        allowed: true,
+        remaining: 1,
+        resetAt: now + windowSeconds * 1000,
+      };
     }
   }
 }
@@ -415,7 +434,7 @@ export class WebSocketRedis {
       await pubClient.publish(channel, JSON.stringify(message));
       return true;
     } catch (error) {
-      logger.error('Failed to publish message:', error);
+      logger.error("Failed to publish message:", error);
       return false;
     }
   }
@@ -423,17 +442,17 @@ export class WebSocketRedis {
   // Subscribe to channel
   static async subscribe(
     channel: string,
-    handler: (message: any) => void
+    handler: (message: any) => void,
   ): Promise<void> {
     await subClient.subscribe(channel);
 
-    subClient.on('message', (receivedChannel, message) => {
+    subClient.on("message", (receivedChannel, message) => {
       if (receivedChannel === channel) {
         try {
           const parsed = JSON.parse(message);
           handler(parsed);
         } catch (error) {
-          logger.error('Failed to parse message:', error);
+          logger.error("Failed to parse message:", error);
         }
       }
     });
@@ -463,18 +482,18 @@ export async function checkRedisHealth(): Promise<{
     return {
       connected: true,
       latency: Date.now() - start,
-      info: info.split('\n').reduce((acc: any, line: string) => {
-        const [key, value] = line.split(':');
+      info: info.split("\n").reduce((acc: any, line: string) => {
+        const [key, value] = line.split(":");
         if (key && value) {
           acc[key.trim()] = value.trim();
         }
         return acc;
-      }, {})
+      }, {}),
     };
   } catch (error) {
     return {
       connected: false,
-      latency: -1
+      latency: -1,
     };
   }
 }

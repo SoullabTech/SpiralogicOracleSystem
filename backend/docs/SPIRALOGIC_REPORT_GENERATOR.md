@@ -5,6 +5,7 @@ A sacred technology for generating personalized, mythic astrology reports that s
 ## 🔮 Overview
 
 The Spiralogic Report Generator creates comprehensive astrological reports that blend:
+
 - **Archetypal Psychology** (Jung)
 - **Mythic Storytelling** (Campbell)
 - **Elemental Wisdom** (Sacred traditions)
@@ -13,6 +14,7 @@ The Spiralogic Report Generator creates comprehensive astrological reports that 
 ## 📋 Features
 
 ### Core Capabilities
+
 - ✨ **Personalized Narrative Reports**: Each report is a unique mythic story
 - 🌟 **Archetypal Integration**: Three primary archetypes per person
 - 🔥 **Elemental Balance Analysis**: Dominant and underactive elements
@@ -22,6 +24,7 @@ The Spiralogic Report Generator creates comprehensive astrological reports that 
 - 💫 **Neurodivergent Affirming**: Celebrates unique perception gifts
 
 ### Report Sections
+
 1. **Soul's Welcome Message** - Personal greeting acknowledging current journey
 2. **Mythic Chart Narrative** - Sun, Moon, Rising woven into story
 3. **Soul Journey Arc** - South Node shadows to North Node destiny
@@ -47,15 +50,15 @@ curl -X POST http://localhost:3000/api/spiralogic-report/sample
 ```javascript
 // Set birth data first (if not already set)
 await astrologicalService.setUserBirthData(userId, {
-  date: new Date('1990-03-15'),
-  time: '14:30',
-  location: { lat: 37.7749, lng: -122.4194 }
+  date: new Date("1990-03-15"),
+  time: "14:30",
+  location: { lat: 37.7749, lng: -122.4194 },
 });
 
 // Generate report
 const report = await astrologicalService.generateSpiralogicReport(userId, {
-  lifeStage: 'Saturn Return',
-  personalityNotes: ['Creative', 'HSP']
+  lifeStage: "Saturn Return",
+  personalityNotes: ["Creative", "HSP"],
 });
 ```
 
@@ -141,6 +144,7 @@ POST /api/spiralogic-report/sample
 ## 🎨 Customization
 
 ### Life Stages
+
 - "Childhood Wonder"
 - "Teenage Awakening"
 - "Quarter-life Quest"
@@ -150,6 +154,7 @@ POST /api/spiralogic-report/sample
 - "Rite of Passage"
 
 ### Personality Notes
+
 - Neurodivergent traits (ADD, Autism, etc.)
 - Sensitivity markers (HSP, Empath)
 - Creative expressions
@@ -157,6 +162,7 @@ POST /api/spiralogic-report/sample
 - Healing journey stage
 
 ### Archetypes
+
 - Classic: Warrior, Lover, Sage, Innocent
 - Shadow: Shadow Worker, Wounded Healer
 - Mystic: Oracle, Shaman, Priestess
@@ -165,6 +171,7 @@ POST /api/spiralogic-report/sample
 ## 🔧 Configuration
 
 ### Environment Variables
+
 ```bash
 OPENAI_API_KEY=your-api-key
 ANTHROPIC_API_KEY=your-claude-key  # Optional
@@ -173,6 +180,7 @@ SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### Database Schema
+
 ```sql
 -- Run migration
 supabase migration up 20250611_create_spiralogic_reports.sql
@@ -216,4 +224,4 @@ curl -X POST http://localhost:3000/api/spiralogic-report/sample
 
 ---
 
-*"Your birth chart is not your destiny—it's your palette. You are the artist." - Spiralogic Wisdom*
+_"Your birth chart is not your destiny—it's your palette. You are the artist." - Spiralogic Wisdom_

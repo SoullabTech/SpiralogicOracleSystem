@@ -1,7 +1,7 @@
 // src/utils/memoryModule.ts
 
-import { supabase } from '../lib/supabaseClient';
-import type { AIResponse } from '../types/ai';
+import { supabase } from "../lib/supabaseClient";
+import type { AIResponse } from "../types/ai";
 
 export interface SymbolicMemoryTag {
   userId: string;
@@ -17,7 +17,7 @@ class MemoryModule {
    * Stores a symbolic tag in Supabase.
    */
   async storeTag(tag: SymbolicMemoryTag): Promise<void> {
-    const { error } = await supabase.from('symbolic_tags').insert({
+    const { error } = await supabase.from("symbolic_tags").insert({
       user_id: tag.userId,
       symbol: tag.symbol,
       agent: tag.agent,
@@ -27,7 +27,7 @@ class MemoryModule {
     });
 
     if (error) {
-      console.error('❌ Failed to store symbolic tag:', error);
+      console.error("❌ Failed to store symbolic tag:", error);
       throw error;
     }
   }
@@ -37,13 +37,13 @@ class MemoryModule {
    */
   async getAllSymbolicTags(userId: string): Promise<SymbolicMemoryTag[]> {
     const { data, error } = await supabase
-      .from('symbolic_tags')
-      .select('*')
-      .eq('user_id', userId)
-      .order('timestamp', { ascending: false });
+      .from("symbolic_tags")
+      .select("*")
+      .eq("user_id", userId)
+      .order("timestamp", { ascending: false });
 
     if (error) {
-      console.error('❌ Failed to fetch all symbolic tags:', error);
+      console.error("❌ Failed to fetch all symbolic tags:", error);
       throw error;
     }
 
@@ -53,15 +53,18 @@ class MemoryModule {
   /**
    * Filters tags by symbol name.
    */
-  async getEntriesBySymbol(userId: string, symbol: string): Promise<SymbolicMemoryTag[]> {
+  async getEntriesBySymbol(
+    userId: string,
+    symbol: string,
+  ): Promise<SymbolicMemoryTag[]> {
     const { data, error } = await supabase
-      .from('symbolic_tags')
-      .select('*')
-      .eq('user_id', userId)
-      .ilike('symbol', symbol);
+      .from("symbolic_tags")
+      .select("*")
+      .eq("user_id", userId)
+      .ilike("symbol", symbol);
 
     if (error) {
-      console.error('❌ Error fetching entries by symbol:', error);
+      console.error("❌ Error fetching entries by symbol:", error);
       throw error;
     }
 
@@ -71,15 +74,18 @@ class MemoryModule {
   /**
    * Filters tags by agent name.
    */
-  async getEntriesByAgent(userId: string, agent: string): Promise<SymbolicMemoryTag[]> {
+  async getEntriesByAgent(
+    userId: string,
+    agent: string,
+  ): Promise<SymbolicMemoryTag[]> {
     const { data, error } = await supabase
-      .from('symbolic_tags')
-      .select('*')
-      .eq('user_id', userId)
-      .ilike('agent', agent);
+      .from("symbolic_tags")
+      .select("*")
+      .eq("user_id", userId)
+      .ilike("agent", agent);
 
     if (error) {
-      console.error('❌ Error fetching entries by agent:', error);
+      console.error("❌ Error fetching entries by agent:", error);
       throw error;
     }
 
@@ -89,15 +95,18 @@ class MemoryModule {
   /**
    * Filters tags after a specific timestamp.
    */
-  async getEntriesSince(userId: string, dateISO: string): Promise<SymbolicMemoryTag[]> {
+  async getEntriesSince(
+    userId: string,
+    dateISO: string,
+  ): Promise<SymbolicMemoryTag[]> {
     const { data, error } = await supabase
-      .from('symbolic_tags')
-      .select('*')
-      .eq('user_id', userId)
-      .gte('timestamp', dateISO);
+      .from("symbolic_tags")
+      .select("*")
+      .eq("user_id", userId)
+      .gte("timestamp", dateISO);
 
     if (error) {
-      console.error('❌ Error fetching entries since:', error);
+      console.error("❌ Error fetching entries since:", error);
       throw error;
     }
 

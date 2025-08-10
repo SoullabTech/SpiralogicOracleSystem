@@ -370,25 +370,34 @@
 # =====================================
 
 - list: spiralogic_allowed_outbound_domains
-  items: [
-    "api.openai.com",
-    "api.elevenlabs.io",
-    "vault.service.consul",
-    "prometheus.monitoring.svc.cluster.local",
-    "grafana.monitoring.svc.cluster.local",
-    "jaeger.observability.svc.cluster.local"
-  ]
+  items:
+    [
+      "api.openai.com",
+      "api.elevenlabs.io",
+      "vault.service.consul",
+      "prometheus.monitoring.svc.cluster.local",
+      "grafana.monitoring.svc.cluster.local",
+      "jaeger.observability.svc.cluster.local",
+    ]
 
 - list: spiralogic_system_processes
-  items: [
-    "runc", "containerd", "dockerd", "kubelet", "kube-proxy",
-    "external-secrets", "vault-agent", "istio-proxy"
-  ]
+  items:
+    [
+      "runc",
+      "containerd",
+      "dockerd",
+      "kubelet",
+      "kube-proxy",
+      "external-secrets",
+      "vault-agent",
+      "istio-proxy",
+    ]
 
 - list: spiralogic_config_files
-  items: [
-    "/app/config.json",
-    "/etc/spiralogic/oracle.yaml",
-    "/etc/ssl/certs/spiralogic.crt",
-    "/var/run/secrets/kubernetes.io/serviceaccount"
-  ]
+  items:
+    [
+      "/app/config.json",
+      "/etc/spiralogic/oracle.yaml",
+      "/etc/ssl/certs/spiralogic.crt",
+      "/var/run/secrets/kubernetes.io/serviceaccount",
+    ]

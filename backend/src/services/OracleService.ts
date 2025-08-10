@@ -5,10 +5,10 @@
  * ensuring every user has a persistent, personalized Oracle experience.
  */
 
-import { ArchetypeAgentFactory } from '../core/agents/ArchetypeAgentFactory';
-import { ArchetypeAgent, OracleIdentity } from '../core/agents/ArchetypeAgent';
-import { logger } from '../utils/logger';
-import type { AIResponse } from '../types/ai';
+import { ArchetypeAgentFactory } from "../core/agents/ArchetypeAgentFactory";
+import { ArchetypeAgent, OracleIdentity } from "../core/agents/ArchetypeAgent";
+import { logger } from "../utils/logger";
+import type { AIResponse } from "../types/ai";
 
 export interface UserOracleSettings {
   userId: string;
@@ -33,7 +33,8 @@ export interface UserOracleSettings {
 }
 
 export class OracleService {
-  private static oracleSettingsCache: Map<string, UserOracleSettings> = new Map();
+  private static oracleSettingsCache: Map<string, UserOracleSettings> =
+    new Map();
 
   /**
    * 🎭 Get User's Personal Oracle Agent (Primary Method)
@@ -43,7 +44,9 @@ export class OracleService {
     const oracleSettings = await this.getOracleSettings(userId);
 
     if (!oracleSettings) {
-      throw new Error(`No Oracle found for user ${userId}. User may need onboarding.`);
+      throw new Error(
+        `No Oracle found for user ${userId}. User may need onboarding.`,
+      );
     }
 
     // Create/retrieve Oracle agent through factory
@@ -53,7 +56,7 @@ export class OracleService {
       voiceProfile: oracleSettings.voiceSettings,
       phase: oracleSettings.phase,
       userId,
-      userContext: { settings: oracleSettings }
+      userContext: { settings: oracleSettings },
     });
   }
 
@@ -64,7 +67,7 @@ export class OracleService {
   static async processOracleQuery(
     userId: string,
     input: string,
-    context: any = {}
+    context: any = {},
   ): Promise<AIResponse> {
     const oracle = await this.getUserOracle(userId);
 
@@ -74,19 +77,19 @@ export class OracleService {
     // Process query through the personal Oracle
     const response = await oracle.processPersonalizedQuery(
       { input, userId },
-      { userId, archetype: oracle.element, phase: oracle.phase }
+      { userId, archetype: oracle.element, phase: oracle.phase },
     );
 
     // Check for evolution opportunities
     await this.checkForEvolutionOpportunity(userId, input, response);
 
-    logger.info('Oracle Query Processed:', {
+    logger.info("Oracle Query Processed:", {
       userId,
       oracleName: oracle.oracleName,
       archetype: oracle.element,
       phase: oracle.phase,
       inputLength: input.length,
-      responseLength: response.content.length
+      responseLength: response.content.length,
     });
 
     return response;
@@ -106,7 +109,7 @@ export class OracleService {
   static async suggestEvolution(
     userId: string,
     detectedPhase: string,
-    detectedArchetype?: string
+    detectedArchetype?: string,
   ): Promise<any> {
     const currentSettings = await this.getOracleSettings(userId);
 
@@ -115,11 +118,15 @@ export class OracleService {
     }
 
     // Only suggest if phase or archetype is different
-    if (currentSettings.phase !== detectedPhase ||
-        (detectedArchetype && currentSettings.archetype !== detectedArchetype)) {
-
+    if (
+      currentSettings.phase !== detectedPhase ||
+      (detectedArchetype && currentSettings.archetype !== detectedArchetype)
+    ) {
       const oracle = await this.getUserOracle(userId);
-      const suggestion = oracle.suggestEvolution(detectedPhase, detectedArchetype);
+      const suggestion = oracle.suggestEvolution(
+        detectedPhase,
+        detectedArchetype,
+      );
 
       // Store suggestion for user decision
       await this.storePendingEvolution(userId, suggestion);
@@ -136,7 +143,7 @@ export class OracleService {
   static async acceptEvolution(
     userId: string,
     newPhase: string,
-    newArchetype?: string
+    newArchetype?: string,
   ): Promise<void> {
     const oracle = await this.getUserOracle(userId);
 
@@ -148,18 +155,18 @@ export class OracleService {
       phase: newPhase,
       archetype: newArchetype || oracle.element,
       evolutionHistory: oracle.evolutionHistory,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
     // Clear cache to force recreation
     ArchetypeAgentFactory.clearUserCache(userId);
     this.oracleSettingsCache.delete(userId);
 
-    logger.info('Oracle Evolution Accepted:', {
+    logger.info("Oracle Evolution Accepted:", {
       userId,
       oracleName: oracle.oracleName,
       newPhase,
-      newArchetype
+      newArchetype,
     });
   }
 
@@ -168,7 +175,7 @@ export class OracleService {
    */
   static async updateOracleVoiceSettings(
     userId: string,
-    voiceSettings: Partial<UserOracleSettings['voiceSettings']>
+    voiceSettings: Partial<UserOracleSettings["voiceSettings"]>,
   ): Promise<void> {
     const currentSettings = await this.getOracleSettings(userId);
 
@@ -176,20 +183,26 @@ export class OracleService {
       throw new Error(`No Oracle found for user ${userId}`);
     }
 
-    const updatedVoiceSettings = { ...currentSettings.voiceSettings, ...voiceSettings };
+    const updatedVoiceSettings = {
+      ...currentSettings.voiceSettings,
+      ...voiceSettings,
+    };
 
     // Update Oracle agent
-    await ArchetypeAgentFactory.updateOracleVoiceProfile(userId, updatedVoiceSettings);
+    await ArchetypeAgentFactory.updateOracleVoiceProfile(
+      userId,
+      updatedVoiceSettings,
+    );
 
     // Update stored settings
     await this.updateOracleSettings(userId, {
       voiceSettings: updatedVoiceSettings,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
-    logger.info('Oracle Voice Settings Updated:', {
+    logger.info("Oracle Voice Settings Updated:", {
       userId,
-      voiceSettings: updatedVoiceSettings
+      voiceSettings: updatedVoiceSettings,
     });
   }
 
@@ -200,12 +213,12 @@ export class OracleService {
     // Update stored settings
     await this.updateOracleSettings(userId, {
       oracleAgentName: newName,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
-    logger.info('Oracle Renamed:', {
+    logger.info("Oracle Renamed:", {
       userId,
-      newName
+      newName,
     });
   }
 
@@ -234,13 +247,13 @@ export class OracleService {
       totalInteractions: 0,
       averageResponseTime: 0,
       topElements: [agent.element],
-      evolutionCount: settings.evolutionHistory.length
+      evolutionCount: settings.evolutionHistory.length,
     };
 
     return {
       oracle: settings,
       agent,
-      stats
+      stats,
     };
   }
 
@@ -248,7 +261,9 @@ export class OracleService {
    * 🗄️ Database Integration Methods
    * These would be implemented based on your specific database setup
    */
-  private static async getOracleSettings(userId: string): Promise<UserOracleSettings | null> {
+  private static async getOracleSettings(
+    userId: string,
+  ): Promise<UserOracleSettings | null> {
     // Check cache first
     if (this.oracleSettingsCache.has(userId)) {
       return this.oracleSettingsCache.get(userId)!;
@@ -270,7 +285,7 @@ export class OracleService {
 
   private static async updateOracleSettings(
     userId: string,
-    updates: Partial<UserOracleSettings>
+    updates: Partial<UserOracleSettings>,
   ): Promise<void> {
     // Update cache
     const currentSettings = this.oracleSettingsCache.get(userId);
@@ -283,41 +298,50 @@ export class OracleService {
     // Implementation depends on your database choice
     // Example: await db.oracles.update({ where: { userId }, data: updates });
 
-    logger.info('Oracle Settings Updated:', { userId, updates });
+    logger.info("Oracle Settings Updated:", { userId, updates });
   }
 
   private static async updateLastInteraction(userId: string): Promise<void> {
     await this.updateOracleSettings(userId, {
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
   }
 
-  private static async storePendingEvolution(userId: string, suggestion: any): Promise<void> {
+  private static async storePendingEvolution(
+    userId: string,
+    suggestion: any,
+  ): Promise<void> {
     // Store evolution suggestion for user review
     // Implementation depends on your database choice
-    logger.info('Evolution suggestion stored:', { userId, suggestion });
+    logger.info("Evolution suggestion stored:", { userId, suggestion });
   }
 
   private static async checkForEvolutionOpportunity(
     userId: string,
     input: string,
-    response: AIResponse
+    response: AIResponse,
   ): Promise<void> {
     // Analyze conversation for evolution opportunities
     // This could use AI to detect when user is ready for next phase
     // For now, this is a placeholder
 
     const phaseIndicators = {
-      exploration: ['curious', 'explore', 'discover', 'try', 'experiment'],
-      integration: ['understand', 'connect', 'synthesize', 'combine', 'integrate'],
-      transcendence: ['transcend', 'beyond', 'higher', 'unity', 'oneness'],
-      mastery: ['teach', 'guide', 'mentor', 'master', 'embody']
+      exploration: ["curious", "explore", "discover", "try", "experiment"],
+      integration: [
+        "understand",
+        "connect",
+        "synthesize",
+        "combine",
+        "integrate",
+      ],
+      transcendence: ["transcend", "beyond", "higher", "unity", "oneness"],
+      mastery: ["teach", "guide", "mentor", "master", "embody"],
     };
 
     const inputLower = input.toLowerCase();
 
     for (const [phase, indicators] of Object.entries(phaseIndicators)) {
-      if (indicators.some(indicator => inputLower.includes(indicator))) {
+      if (indicators.some((indicator) => inputLower.includes(indicator))) {
         await this.suggestEvolution(userId, phase);
         break;
       }
@@ -328,41 +352,44 @@ export class OracleService {
    * 🏥 Oracle Health & Maintenance
    */
   static async getOracleHealth(userId: string): Promise<{
-    status: 'healthy' | 'warning' | 'error';
+    status: "healthy" | "warning" | "error";
     lastInteraction: Date;
-    cacheStatus: 'cached' | 'not_cached';
+    cacheStatus: "cached" | "not_cached";
     issues: string[];
   }> {
     const oracle = await this.getUserOracle(userId);
     const settings = await this.getOracleSettings(userId);
 
     const issues = [];
-    let status: 'healthy' | 'warning' | 'error' = 'healthy';
+    let status: "healthy" | "warning" | "error" = "healthy";
 
     if (!settings) {
-      issues.push('No Oracle settings found');
-      status = 'error';
+      issues.push("No Oracle settings found");
+      status = "error";
     }
 
     if (!oracle) {
-      issues.push('Oracle agent not accessible');
-      status = 'error';
+      issues.push("Oracle agent not accessible");
+      status = "error";
     }
 
     // Check for stale interactions
-    const daysSinceLastInteraction = settings ?
-      (Date.now() - settings.updatedAt.getTime()) / (1000 * 60 * 60 * 24) : 0;
+    const daysSinceLastInteraction = settings
+      ? (Date.now() - settings.updatedAt.getTime()) / (1000 * 60 * 60 * 24)
+      : 0;
 
     if (daysSinceLastInteraction > 7) {
-      issues.push('No recent interactions');
-      status = status === 'healthy' ? 'warning' : status;
+      issues.push("No recent interactions");
+      status = status === "healthy" ? "warning" : status;
     }
 
     return {
       status,
       lastInteraction: settings?.updatedAt || new Date(),
-      cacheStatus: this.oracleSettingsCache.has(userId) ? 'cached' : 'not_cached',
-      issues
+      cacheStatus: this.oracleSettingsCache.has(userId)
+        ? "cached"
+        : "not_cached",
+      issues,
     };
   }
 

@@ -1,8 +1,11 @@
 // 📁 BACKEND: /supabase/functions/oracle-ritual-response.ts
-import { createClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import { createClient } from "@supabase/supabase-js";
+import OpenAI from "openai";
 
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!);
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_ANON_KEY!,
+);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 export const handler = async (req: Request): Promise<Response> => {
@@ -27,16 +30,16 @@ Reply with:
 
   const completion = await openai.chat.completions.create({
     messages: [
-      { role: 'system', content: 'You are a compassionate elemental oracle.' },
-      { role: 'user', content: prompt }
+      { role: "system", content: "You are a compassionate elemental oracle." },
+      { role: "user", content: prompt },
     ],
-    model: 'gpt-4'
+    model: "gpt-4",
   });
 
-  const reply = completion.choices[0]?.message.content ?? '';
+  const reply = completion.choices[0]?.message.content ?? "";
 
   return new Response(JSON.stringify({ reply }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { "Content-Type": "application/json" },
   });
 };

@@ -1,2 +1,2 @@
-export { HolisticDashboard } from './HolisticDashboard';
-export { AdaptiveInterface } from './AdaptiveInterface';
+export { HolisticDashboard } from "./HolisticDashboard";
+export { AdaptiveInterface } from "./AdaptiveInterface";

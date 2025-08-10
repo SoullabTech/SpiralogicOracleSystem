@@ -5,6 +5,7 @@
 The Vercel deployment failed because the **Supabase environment variables** are not properly configured in the production environment.
 
 ### Current Issue in `.env.local`:
+
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
@@ -23,6 +24,7 @@ Update the Supabase client to handle missing environment variables gracefully:
 ### **Option 2: Set Up Vercel Environment Variables**
 
 In your Vercel Dashboard:
+
 1. Go to **Project Settings** → **Environment Variables**
 2. Add the required variables:
    ```

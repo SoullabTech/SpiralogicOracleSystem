@@ -1,20 +1,20 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-const baseDir = path.resolve('./src');
+const baseDir = path.resolve("./src");
 
 function updateImportsInFile(filePath: string) {
-  let content = fs.readFileSync(filePath, 'utf8');
+  let content = fs.readFileSync(filePath, "utf8");
   const original = content;
 
   // Replace .js only in import/export paths
   content = content.replace(
     /((?:import|export)[^'"]+['"](?:[^'"]+))\.js(['"])/g,
-    '$1$2'
+    "$1$2",
   );
 
   if (content !== original) {
-    fs.writeFileSync(filePath, content, 'utf8');
+    fs.writeFileSync(filePath, content, "utf8");
     console.log(`✅ Updated: ${filePath}`);
   }
 }
@@ -29,8 +29,8 @@ function walkDir(dir: string) {
       walkDir(fullPath);
     } else if (
       entry.isFile() &&
-      fullPath.endsWith('.ts') &&
-      !fullPath.endsWith('.d.ts')
+      fullPath.endsWith(".ts") &&
+      !fullPath.endsWith(".d.ts")
     ) {
       updateImportsInFile(fullPath);
     }
@@ -38,4 +38,4 @@ function walkDir(dir: string) {
 }
 
 walkDir(baseDir);
-console.log('🎉 Finished cleaning .js extensions from import paths.');
+console.log("🎉 Finished cleaning .js extensions from import paths.");

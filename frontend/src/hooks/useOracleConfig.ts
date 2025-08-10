@@ -1,8 +1,8 @@
 // frontend/src/hooks/useOracleConfig.ts
 
-import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../contexts/AuthContext';
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../contexts/AuthContext";
 
 interface OracleConfig {
   oracleName: string;
@@ -20,8 +20,8 @@ interface UseOracleConfigReturn {
 export const useOracleConfig = (): UseOracleConfigReturn => {
   const { user } = useAuth();
   const [config, setConfig] = useState<OracleConfig>({
-    oracleName: '',
-    oracleVoice: '',
+    oracleName: "",
+    oracleVoice: "",
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -37,10 +37,10 @@ export const useOracleConfig = (): UseOracleConfigReturn => {
       if (user) {
         // Try to load from Supabase
         const { data: userConfig } = await supabase
-          .from('user_onboarding')
-          .select('oracle_name, oracle_voice')
-          .eq('user_id', user.id)
-          .eq('completed', true)
+          .from("user_onboarding")
+          .select("oracle_name, oracle_voice")
+          .eq("user_id", user.id)
+          .eq("completed", true)
           .single();
 
         if (userConfig?.oracle_name && userConfig?.oracle_voice) {
@@ -50,19 +50,19 @@ export const useOracleConfig = (): UseOracleConfigReturn => {
           };
           setConfig(loadedConfig);
           // Sync to localStorage
-          localStorage.setItem('oracleName', loadedConfig.oracleName);
-          localStorage.setItem('oracleVoice', loadedConfig.oracleVoice);
+          localStorage.setItem("oracleName", loadedConfig.oracleName);
+          localStorage.setItem("oracleVoice", loadedConfig.oracleVoice);
           setIsLoading(false);
           return;
         }
       }
     } catch (error) {
-      console.warn('Failed to load config from Supabase:', error);
+      console.warn("Failed to load config from Supabase:", error);
     }
 
     // Fallback to localStorage
-    const savedName = localStorage.getItem('oracleName');
-    const savedVoice = localStorage.getItem('oracleVoice');
+    const savedName = localStorage.getItem("oracleName");
+    const savedVoice = localStorage.getItem("oracleVoice");
 
     if (savedName && savedVoice) {
       setConfig({
@@ -78,33 +78,31 @@ export const useOracleConfig = (): UseOracleConfigReturn => {
     setConfig(newConfig);
 
     // Always save to localStorage first
-    localStorage.setItem('oracleName', newConfig.oracleName);
-    localStorage.setItem('oracleVoice', newConfig.oracleVoice);
+    localStorage.setItem("oracleName", newConfig.oracleName);
+    localStorage.setItem("oracleVoice", newConfig.oracleVoice);
 
     // Try to save to Supabase if user is authenticated
     try {
       if (user) {
-        await supabase
-          .from('user_onboarding')
-          .upsert({
-            user_id: user.id,
-            oracle_name: newConfig.oracleName,
-            oracle_voice: newConfig.oracleVoice,
-            step: 3,
-            completed: true,
-            updated_at: new Date().toISOString(),
-          });
+        await supabase.from("user_onboarding").upsert({
+          user_id: user.id,
+          oracle_name: newConfig.oracleName,
+          oracle_voice: newConfig.oracleVoice,
+          step: 3,
+          completed: true,
+          updated_at: new Date().toISOString(),
+        });
       }
     } catch (error) {
-      console.error('Failed to save config to Supabase:', error);
+      console.error("Failed to save config to Supabase:", error);
       // Don't throw - localStorage save succeeded
     }
   };
 
   const clearConfig = () => {
-    setConfig({ oracleName: '', oracleVoice: '' });
-    localStorage.removeItem('oracleName');
-    localStorage.removeItem('oracleVoice');
+    setConfig({ oracleName: "", oracleVoice: "" });
+    localStorage.removeItem("oracleName");
+    localStorage.removeItem("oracleVoice");
 
     // Note: We don't automatically clear Supabase data
     // That should be done through a separate "delete account" flow

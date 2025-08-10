@@ -3,14 +3,19 @@
  * Main coordinator for the Adaptive Intelligence Network
  */
 
-import { EventEmitter } from 'events';
-import { SpiralogicEvent, ElementalService, EdgeCloudConfig, DEFAULT_EDGE_CONFIG } from './types';
-import { PubSubManager } from './pubsub/PubSubManager';
-import { fireService } from './services/fire-service';
-import { waterService } from './services/water-service';
-import { earthService } from './services/earth-service';
-import { airService } from './services/air-service';
-import { aetherService } from './services/aether-service';
+import { EventEmitter } from "events";
+import {
+  SpiralogicEvent,
+  ElementalService,
+  EdgeCloudConfig,
+  DEFAULT_EDGE_CONFIG,
+} from "./types";
+import { PubSubManager } from "./pubsub/PubSubManager";
+import { fireService } from "./services/fire-service";
+import { waterService } from "./services/water-service";
+import { earthService } from "./services/earth-service";
+import { airService } from "./services/air-service";
+import { aetherService } from "./services/aether-service";
 
 export class AINOrchestrator extends EventEmitter {
   private static instance: AINOrchestrator;
@@ -24,11 +29,11 @@ export class AINOrchestrator extends EventEmitter {
     this.config = config;
     this.pubsub = PubSubManager.getInstance();
     this.orchestrationState = {
-      status: 'initializing',
+      status: "initializing",
       services_online: new Set(),
       current_load: new Map(),
       last_health_check: 0,
-      emergency_mode: false
+      emergency_mode: false,
     };
 
     this.initializeAIN();
@@ -45,7 +50,7 @@ export class AINOrchestrator extends EventEmitter {
    * Initialize the Adaptive Intelligence Network
    */
   private async initializeAIN(): Promise<void> {
-    console.log('🌌 Initializing Adaptive Intelligence Network...');
+    console.log("🌌 Initializing Adaptive Intelligence Network...");
 
     try {
       // Initialize services based on configuration
@@ -63,15 +68,16 @@ export class AINOrchestrator extends EventEmitter {
       // Setup health monitoring
       this.setupHealthMonitoring();
 
-      this.orchestrationState.status = 'online';
+      this.orchestrationState.status = "online";
 
-      console.log('✨ AIN Orchestrator online - All elemental services initialized');
-      this.emit('ain.online', { timestamp: Date.now() });
-
+      console.log(
+        "✨ AIN Orchestrator online - All elemental services initialized",
+      );
+      this.emit("ain.online", { timestamp: Date.now() });
     } catch (error) {
-      console.error('❌ Failed to initialize AIN:', error);
-      this.orchestrationState.status = 'failed';
-      this.emit('ain.failed', { error });
+      console.error("❌ Failed to initialize AIN:", error);
+      this.orchestrationState.status = "failed";
+      this.emit("ain.failed", { error });
       throw error;
     }
   }
@@ -85,14 +91,14 @@ export class AINOrchestrator extends EventEmitter {
       [ElementalService.Water]: waterService,
       [ElementalService.Earth]: earthService,
       [ElementalService.Air]: airService,
-      [ElementalService.Aether]: aetherService
+      [ElementalService.Aether]: aetherService,
     };
 
     // Initialize edge services first
     for (const element of this.config.edge_services) {
       const service = serviceMap[element];
       if (service) {
-        await this.initializeService(element, service, 'edge');
+        await this.initializeService(element, service, "edge");
       }
     }
 
@@ -100,7 +106,7 @@ export class AINOrchestrator extends EventEmitter {
     for (const element of this.config.hybrid_services) {
       const service = serviceMap[element];
       if (service) {
-        await this.initializeService(element, service, 'hybrid');
+        await this.initializeService(element, service, "hybrid");
       }
     }
 
@@ -108,7 +114,7 @@ export class AINOrchestrator extends EventEmitter {
     for (const element of this.config.cloud_services) {
       const service = serviceMap[element];
       if (service) {
-        await this.initializeService(element, service, 'cloud');
+        await this.initializeService(element, service, "cloud");
       }
     }
   }
@@ -119,7 +125,7 @@ export class AINOrchestrator extends EventEmitter {
   private async initializeService(
     element: ElementalService,
     service: any,
-    type: 'edge' | 'hybrid' | 'cloud'
+    type: "edge" | "hybrid" | "cloud",
   ): Promise<void> {
     try {
       console.log(`🔥🌊🌍🌬️✨ Initializing ${element} service (${type})`);
@@ -135,7 +141,6 @@ export class AINOrchestrator extends EventEmitter {
       this.monitorService(element, service);
 
       console.log(`✅ ${element} service online`);
-
     } catch (error) {
       console.error(`❌ Failed to initialize ${element} service:`, error);
       throw error;
@@ -147,12 +152,12 @@ export class AINOrchestrator extends EventEmitter {
    */
   private setupOrchestrationMonitoring(): void {
     // Monitor universal field coherence
-    this.pubsub.subscribe('coherence.state', async (event) => {
+    this.pubsub.subscribe("coherence.state", async (event) => {
       await this.handleCoherenceUpdate(event);
     });
 
     // Monitor emergence patterns
-    this.pubsub.subscribe('emergence.detected', async (event) => {
+    this.pubsub.subscribe("emergence.detected", async (event) => {
       await this.handleEmergence(event);
     });
 
@@ -167,17 +172,17 @@ export class AINOrchestrator extends EventEmitter {
    */
   private setupEmergencyProtocols(): void {
     // Listen for emergency signals
-    this.pubsub.subscribe('emergency.broadcast', async (event) => {
+    this.pubsub.subscribe("emergency.broadcast", async (event) => {
       await this.handleEmergency(event);
     });
 
     // Service failure detection
-    this.on('service.failure', async (data) => {
+    this.on("service.failure", async (data) => {
       await this.handleServiceFailure(data);
     });
 
     // System overload protection
-    this.on('system.overload', async (data) => {
+    this.on("system.overload", async (data) => {
       await this.handleSystemOverload(data);
     });
   }
@@ -187,14 +192,14 @@ export class AINOrchestrator extends EventEmitter {
    */
   private setupInterServiceCommunication(): void {
     // Monitor message flow between services
-    this.pubsub.on('message.published', (result) => {
+    this.pubsub.on("message.published", (result) => {
       this.updateLoadMetrics(result.topic, result.subscribers_notified);
     });
 
     // Setup intelligent routing
-    this.pubsub.subscribe('routing.request', async (event) => {
+    this.pubsub.subscribe("routing.request", async (event) => {
       const optimalRoute = await this.calculateOptimalRoute(event);
-      await this.pubsub.publish('routing.response', optimalRoute);
+      await this.pubsub.publish("routing.response", optimalRoute);
     });
   }
 
@@ -213,12 +218,12 @@ export class AINOrchestrator extends EventEmitter {
   private monitorService(element: ElementalService, service: any): void {
     // Monitor service events
     if (service.on) {
-      service.on('error', (error: any) => {
-        this.emit('service.failure', { element, error, timestamp: Date.now() });
+      service.on("error", (error: any) => {
+        this.emit("service.failure", { element, error, timestamp: Date.now() });
       });
 
-      service.on('overload', (data: any) => {
-        this.emit('service.overload', { element, data, timestamp: Date.now() });
+      service.on("overload", (data: any) => {
+        this.emit("service.overload", { element, data, timestamp: Date.now() });
       });
     }
   }
@@ -235,18 +240,19 @@ export class AINOrchestrator extends EventEmitter {
         healthResults.push(health);
 
         // Update orchestration state
-        if (health.status === 'healthy') {
+        if (health.status === "healthy") {
           this.orchestrationState.services_online.add(element);
         } else {
           this.orchestrationState.services_online.delete(element);
         }
-
       } catch (error) {
         healthResults.push({
           service: element,
-          status: 'unhealthy',
-          details: { error: error instanceof Error ? error.message : 'Unknown error' },
-          timestamp: Date.now()
+          status: "unhealthy",
+          details: {
+            error: error instanceof Error ? error.message : "Unknown error",
+          },
+          timestamp: Date.now(),
         });
       }
     }
@@ -254,16 +260,19 @@ export class AINOrchestrator extends EventEmitter {
     this.orchestrationState.last_health_check = Date.now();
 
     // Emit health status
-    this.emit('health.check.complete', {
+    this.emit("health.check.complete", {
       results: healthResults,
-      overall_health: this.calculateOverallHealth(healthResults)
+      overall_health: this.calculateOverallHealth(healthResults),
     });
   }
 
   /**
    * Check individual service health
    */
-  private async checkServiceHealth(element: ElementalService, service: any): Promise<HealthCheckResult> {
+  private async checkServiceHealth(
+    element: ElementalService,
+    service: any,
+  ): Promise<HealthCheckResult> {
     const startTime = Date.now();
 
     try {
@@ -277,21 +286,22 @@ export class AINOrchestrator extends EventEmitter {
 
       return {
         service: element,
-        status: isResponsive ? 'healthy' : 'unhealthy',
+        status: isResponsive ? "healthy" : "unhealthy",
         details: {
           response_time: responseTime,
           metrics,
-          last_check: Date.now()
+          last_check: Date.now(),
         },
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
-
     } catch (error) {
       return {
         service: element,
-        status: 'unhealthy',
-        details: { error: error instanceof Error ? error.message : 'Unknown error' },
-        timestamp: Date.now()
+        status: "unhealthy",
+        details: {
+          error: error instanceof Error ? error.message : "Unknown error",
+        },
+        timestamp: Date.now(),
       };
     }
   }
@@ -317,24 +327,26 @@ export class AINOrchestrator extends EventEmitter {
    */
   private calculateOverallHealth(results: HealthCheckResult[]): SystemHealth {
     const totalServices = results.length;
-    const healthyServices = results.filter(r => r.status === 'healthy').length;
+    const healthyServices = results.filter(
+      (r) => r.status === "healthy",
+    ).length;
     const healthRatio = healthyServices / totalServices;
 
-    let status: 'healthy' | 'degraded' | 'unhealthy';
+    let status: "healthy" | "degraded" | "unhealthy";
 
     if (healthRatio === 1.0) {
-      status = 'healthy';
+      status = "healthy";
     } else if (healthRatio >= 0.6) {
-      status = 'degraded';
+      status = "degraded";
     } else {
-      status = 'unhealthy';
+      status = "unhealthy";
     }
 
     return {
       status,
       healthy_services: healthyServices,
       total_services: totalServices,
-      health_ratio: healthRatio
+      health_ratio: healthRatio,
     };
   }
 
@@ -370,7 +382,7 @@ export class AINOrchestrator extends EventEmitter {
    * Handle emergency situations
    */
   private async handleEmergency(event: SpiralogicEvent): Promise<void> {
-    console.log('🚨 Emergency protocol activated');
+    console.log("🚨 Emergency protocol activated");
 
     this.orchestrationState.emergency_mode = true;
 
@@ -400,7 +412,7 @@ export class AINOrchestrator extends EventEmitter {
    * Handle system overload
    */
   private async handleSystemOverload(data: any): Promise<void> {
-    console.warn('⚡ System overload detected');
+    console.warn("⚡ System overload detected");
 
     // Implement load shedding
     await this.implementLoadShedding();
@@ -412,8 +424,12 @@ export class AINOrchestrator extends EventEmitter {
   /**
    * Calculate optimal route for message
    */
-  private async calculateOptimalRoute(event: SpiralogicEvent): Promise<SpiralogicEvent> {
-    const availableServices = Array.from(this.orchestrationState.services_online);
+  private async calculateOptimalRoute(
+    event: SpiralogicEvent,
+  ): Promise<SpiralogicEvent> {
+    const availableServices = Array.from(
+      this.orchestrationState.services_online,
+    );
     const loads = this.orchestrationState.current_load;
 
     // Find least loaded service that can handle the request
@@ -434,8 +450,8 @@ export class AINOrchestrator extends EventEmitter {
         ...event.routing,
         target: optimalTarget,
         load_balanced: true,
-        orchestrated: true
-      }
+        orchestrated: true,
+      },
     };
   }
 
@@ -444,10 +460,12 @@ export class AINOrchestrator extends EventEmitter {
    */
   private updateLoadMetrics(topic: string, subscriberCount: number): void {
     // Extract service from topic name
-    const serviceName = topic.split('.')[0] as ElementalService;
+    const serviceName = topic.split(".")[0] as ElementalService;
 
     if (this.orchestrationState.current_load.has(serviceName)) {
-      const currentLoad = this.orchestrationState.current_load.get(serviceName)! + subscriberCount;
+      const currentLoad =
+        this.orchestrationState.current_load.get(serviceName)! +
+        subscriberCount;
       this.orchestrationState.current_load.set(serviceName, currentLoad);
     }
   }
@@ -460,11 +478,14 @@ export class AINOrchestrator extends EventEmitter {
     this.config.sync_interval = Math.max(this.config.sync_interval * 0.8, 1000);
 
     // Enable aggressive caching
-    await this.pubsub.publish('system.optimization', this.createSystemEvent('system.optimization', {
-      mode: 'performance',
-      cache_aggressive: true,
-      reduce_latency: true
-    }));
+    await this.pubsub.publish(
+      "system.optimization",
+      this.createSystemEvent("system.optimization", {
+        mode: "performance",
+        cache_aggressive: true,
+        reduce_latency: true,
+      }),
+    );
   }
 
   /**
@@ -472,14 +493,20 @@ export class AINOrchestrator extends EventEmitter {
    */
   private async stabilizeSystem(): Promise<void> {
     // Increase sync interval for stability
-    this.config.sync_interval = Math.min(this.config.sync_interval * 1.2, 30000);
+    this.config.sync_interval = Math.min(
+      this.config.sync_interval * 1.2,
+      30000,
+    );
 
     // Focus on coherence building
-    await this.pubsub.publish('system.stabilization', this.createSystemEvent('system.stabilization', {
-      mode: 'stability',
-      focus_coherence: true,
-      reduce_complexity: true
-    }));
+    await this.pubsub.publish(
+      "system.stabilization",
+      this.createSystemEvent("system.stabilization", {
+        mode: "stability",
+        focus_coherence: true,
+        reduce_complexity: true,
+      }),
+    );
   }
 
   /**
@@ -494,13 +521,19 @@ export class AINOrchestrator extends EventEmitter {
         id: this.generateEventId(),
         timestamp: Date.now(),
         source: ElementalService.Aether,
-        type: 'emergence_instruction',
+        type: "emergence_instruction",
         payload: {
           content: { instruction, emergence },
           metadata: { orchestrated: true },
-          elemental_signature: { aether: 1.0, fire: 0, water: 0, earth: 0, air: 0 }
+          elemental_signature: {
+            aether: 1.0,
+            fire: 0,
+            water: 0,
+            earth: 0,
+            air: 0,
+          },
         },
-        routing: { priority: 'critical' }
+        routing: { priority: "critical" },
       });
     }
   }
@@ -510,17 +543,22 @@ export class AINOrchestrator extends EventEmitter {
    */
   private async activateEmergencyMode(): Promise<void> {
     // Reduce non-critical processing
-    await this.pubsub.publish('system.emergency', this.createSystemEvent('system.emergency', {
-      mode: 'emergency',
-      reduce_non_critical: true,
-      prioritize_safety: true
-    }));
+    await this.pubsub.publish(
+      "system.emergency",
+      this.createSystemEvent("system.emergency", {
+        mode: "emergency",
+        reduce_non_critical: true,
+        prioritize_safety: true,
+      }),
+    );
   }
 
   /**
    * Attempt to recover failed service
    */
-  private async attemptServiceRecovery(element: ElementalService): Promise<void> {
+  private async attemptServiceRecovery(
+    element: ElementalService,
+  ): Promise<void> {
     const service = this.services.get(element);
 
     if (service && service.restart) {
@@ -539,11 +577,14 @@ export class AINOrchestrator extends EventEmitter {
    */
   private async implementLoadShedding(): Promise<void> {
     // Temporarily reduce processing of non-critical events
-    await this.pubsub.publish('system.load_shedding', this.createSystemEvent('system.load_shedding', {
-      reduce_non_critical: true,
-      increase_thresholds: true,
-      defer_complex_operations: true
-    }));
+    await this.pubsub.publish(
+      "system.load_shedding",
+      this.createSystemEvent("system.load_shedding", {
+        reduce_non_critical: true,
+        increase_thresholds: true,
+        defer_complex_operations: true,
+      }),
+    );
   }
 
   /**
@@ -551,7 +592,7 @@ export class AINOrchestrator extends EventEmitter {
    */
   private async scaleServices(): Promise<void> {
     // In a production environment, this would trigger container scaling
-    console.log('🔄 Scaling services (placeholder for production scaling)');
+    console.log("🔄 Scaling services (placeholder for production scaling)");
   }
 
   /**
@@ -564,7 +605,9 @@ export class AINOrchestrator extends EventEmitter {
       total_services: this.services.size,
       emergency_mode: this.orchestrationState.emergency_mode,
       last_health_check: this.orchestrationState.last_health_check,
-      load_distribution: Object.fromEntries(this.orchestrationState.current_load)
+      load_distribution: Object.fromEntries(
+        this.orchestrationState.current_load,
+      ),
     };
   }
 
@@ -587,9 +630,15 @@ export class AINOrchestrator extends EventEmitter {
       payload: {
         content,
         metadata: { orchestrated: true },
-        elemental_signature: { aether: 1.0, fire: 0, water: 0, earth: 0, air: 0 }
+        elemental_signature: {
+          aether: 1.0,
+          fire: 0,
+          water: 0,
+          earth: 0,
+          air: 0,
+        },
       },
-      routing: { priority: 'high' }
+      routing: { priority: "high" },
     };
   }
 
@@ -597,9 +646,9 @@ export class AINOrchestrator extends EventEmitter {
    * Shutdown orchestrator gracefully
    */
   async shutdown(): Promise<void> {
-    console.log('🌌 Shutting down AIN Orchestrator...');
+    console.log("🌌 Shutting down AIN Orchestrator...");
 
-    this.orchestrationState.status = 'shutting_down';
+    this.orchestrationState.status = "shutting_down";
 
     // Shutdown all services
     for (const [element, service] of this.services.entries()) {
@@ -616,16 +665,22 @@ export class AINOrchestrator extends EventEmitter {
     // Cleanup pub/sub
     this.pubsub.cleanup();
 
-    this.orchestrationState.status = 'offline';
-    this.emit('ain.shutdown', { timestamp: Date.now() });
+    this.orchestrationState.status = "offline";
+    this.emit("ain.shutdown", { timestamp: Date.now() });
 
-    console.log('✨ AIN Orchestrator shutdown complete');
+    console.log("✨ AIN Orchestrator shutdown complete");
   }
 }
 
 // Type definitions
 interface OrchestrationState {
-  status: 'initializing' | 'online' | 'degraded' | 'failed' | 'shutting_down' | 'offline';
+  status:
+    | "initializing"
+    | "online"
+    | "degraded"
+    | "failed"
+    | "shutting_down"
+    | "offline";
   services_online: Set<ElementalService>;
   current_load: Map<ElementalService, number>;
   last_health_check: number;
@@ -634,13 +689,13 @@ interface OrchestrationState {
 
 interface HealthCheckResult {
   service: ElementalService;
-  status: 'healthy' | 'unhealthy';
+  status: "healthy" | "unhealthy";
   details: any;
   timestamp: number;
 }
 
 interface SystemHealth {
-  status: 'healthy' | 'degraded' | 'unhealthy';
+  status: "healthy" | "degraded" | "unhealthy";
   healthy_services: number;
   total_services: number;
   health_ratio: number;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 interface NavigationItem {
   id: string;
@@ -7,7 +7,7 @@ interface NavigationItem {
   icon: string;
   route: string;
   position: { x: number; y: number };
-  significance: 'primary' | 'secondary' | 'tertiary';
+  significance: "primary" | "secondary" | "tertiary";
 }
 
 interface SacredNavigationProps {
@@ -15,90 +15,98 @@ interface SacredNavigationProps {
   onNavigate: (route: string) => void;
 }
 
-const SacredNavigation: React.FC<SacredNavigationProps> = ({ currentRoute, onNavigate }) => {
+const SacredNavigation: React.FC<SacredNavigationProps> = ({
+  currentRoute,
+  onNavigate,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Sacred geometric arrangement based on Vector Equilibrium / Cuboctahedron
   const navigationItems: NavigationItem[] = [
     // Center - Oracle Access
     {
-      id: 'oracle',
-      label: 'Oracle',
-      icon: '🧙',
-      route: '/oracle',
+      id: "oracle",
+      label: "Oracle",
+      icon: "🧙",
+      route: "/oracle",
       position: { x: 0, y: 0 },
-      significance: 'primary'
+      significance: "primary",
     },
 
     // Primary vertices (core functions)
     {
-      id: 'holoflower',
-      label: 'Holoflower',
-      icon: '🌸',
-      route: '/holoflower',
+      id: "holoflower",
+      label: "Holoflower",
+      icon: "🌸",
+      route: "/holoflower",
       position: { x: 0, y: -80 },
-      significance: 'primary'
+      significance: "primary",
     },
     {
-      id: 'memory',
-      label: 'Memory',
-      icon: '📖',
-      route: '/memory',
+      id: "memory",
+      label: "Memory",
+      icon: "📖",
+      route: "/memory",
       position: { x: 69.3, y: 40 },
-      significance: 'primary'
+      significance: "primary",
     },
     {
-      id: 'insights',
-      label: 'Insights',
-      icon: '🌀',
-      route: '/insights',
+      id: "insights",
+      label: "Insights",
+      icon: "🌀",
+      route: "/insights",
       position: { x: -69.3, y: 40 },
-      significance: 'primary'
+      significance: "primary",
     },
 
     // Secondary vertices (expanded functions)
     {
-      id: 'astrology',
-      label: 'Astrology',
-      icon: '🪐',
-      route: '/astrology',
+      id: "astrology",
+      label: "Astrology",
+      icon: "🪐",
+      route: "/astrology",
       position: { x: 56.6, y: -56.6 },
-      significance: 'secondary'
+      significance: "secondary",
     },
     {
-      id: 'agents',
-      label: 'Agents',
-      icon: '👥',
-      route: '/agents',
+      id: "agents",
+      label: "Agents",
+      icon: "👥",
+      route: "/agents",
       position: { x: -56.6, y: -56.6 },
-      significance: 'secondary'
+      significance: "secondary",
     },
     {
-      id: 'patterns',
-      label: 'Patterns',
-      icon: '🔮',
-      route: '/patterns',
+      id: "patterns",
+      label: "Patterns",
+      icon: "🔮",
+      route: "/patterns",
       position: { x: 113.2, y: 0 },
-      significance: 'secondary'
+      significance: "secondary",
     },
     {
-      id: 'settings',
-      label: 'Settings',
-      icon: '⚙️',
-      route: '/settings',
+      id: "settings",
+      label: "Settings",
+      icon: "⚙️",
+      route: "/settings",
       position: { x: -113.2, y: 0 },
-      significance: 'secondary'
-    }
+      significance: "secondary",
+    },
   ];
 
   const getItemSize = (significance: string, isActive: boolean) => {
-    const baseSize = significance === 'primary' ? 60 : significance === 'secondary' ? 48 : 36;
+    const baseSize =
+      significance === "primary" ? 60 : significance === "secondary" ? 48 : 36;
     return isActive ? baseSize * 1.2 : baseSize;
   };
 
   const getItemOpacity = (significance: string, isExpanded: boolean) => {
-    if (!isExpanded && significance !== 'primary') return 0;
-    return significance === 'primary' ? 1 : significance === 'secondary' ? 0.8 : 0.6;
+    if (!isExpanded && significance !== "primary") return 0;
+    return significance === "primary"
+      ? 1
+      : significance === "secondary"
+        ? 0.8
+        : 0.6;
   };
 
   return (
@@ -115,21 +123,21 @@ const SacredNavigation: React.FC<SacredNavigationProps> = ({ currentRoute, onNav
                 key={item.id}
                 className={`absolute flex items-center justify-center rounded-full border-2 transition-all duration-300 ${
                   isActive
-                    ? 'bg-amber-600 border-amber-500 text-slate-900 shadow-lg shadow-amber-600/25'
-                    : 'bg-slate-800/90 border-slate-600 text-amber-100 hover:border-amber-500 backdrop-blur-sm'
+                    ? "bg-amber-600 border-amber-500 text-slate-900 shadow-lg shadow-amber-600/25"
+                    : "bg-slate-800/90 border-slate-600 text-amber-100 hover:border-amber-500 backdrop-blur-sm"
                 }`}
                 style={{
                   width: `${size}px`,
                   height: `${size}px`,
-                  left: `calc(50% + ${item.position.x}px - ${size/2}px)`,
-                  top: `calc(50% + ${item.position.y}px - ${size/2}px)`,
+                  left: `calc(50% + ${item.position.x}px - ${size / 2}px)`,
+                  top: `calc(50% + ${item.position.y}px - ${size / 2}px)`,
                 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{
                   scale: 1,
                   opacity: getItemOpacity(item.significance, isExpanded),
                   x: isExpanded ? 0 : item.position.x * 0.3,
-                  y: isExpanded ? 0 : item.position.y * 0.3
+                  y: isExpanded ? 0 : item.position.y * 0.3,
                 }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -138,7 +146,7 @@ const SacredNavigation: React.FC<SacredNavigationProps> = ({ currentRoute, onNav
                   delay: navigationItems.indexOf(item) * 0.05,
                   type: "spring",
                   stiffness: 200,
-                  damping: 20
+                  damping: 20,
                 }}
                 onClick={() => onNavigate(item.route)}
               >
@@ -203,7 +211,7 @@ const SacredNavigation: React.FC<SacredNavigationProps> = ({ currentRoute, onNav
             animate={{ rotate: isExpanded ? 45 : 0 }}
             transition={{ duration: 0.3 }}
           >
-            {isExpanded ? '✕' : '⚡'}
+            {isExpanded ? "✕" : "⚡"}
           </motion.span>
         </motion.button>
 
@@ -214,7 +222,8 @@ const SacredNavigation: React.FC<SacredNavigationProps> = ({ currentRoute, onNav
             animate={{ opacity: 1, y: 0 }}
             className="absolute -top-12 right-0 px-3 py-1 bg-slate-800/90 backdrop-blur-sm border border-slate-600 text-amber-100 text-sm font-medium"
           >
-            {navigationItems.find(item => item.route === currentRoute)?.label || 'Unknown'}
+            {navigationItems.find((item) => item.route === currentRoute)
+              ?.label || "Unknown"}
           </motion.div>
         )}
       </div>

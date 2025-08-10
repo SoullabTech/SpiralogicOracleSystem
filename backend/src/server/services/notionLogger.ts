@@ -1,6 +1,6 @@
 // src/services/notionLogger.ts
 
-type LogLevel = 'info' | 'warn' | 'error';
+type LogLevel = "info" | "warn" | "error";
 
 function formatMessage(level: LogLevel, message: string) {
   const timestamp = new Date().toISOString();
@@ -9,14 +9,14 @@ function formatMessage(level: LogLevel, message: string) {
 
 export const notionLogger = {
   info: (message: string) => {
-    console.log(formatMessage('info', message));
+    console.log(formatMessage("info", message));
   },
 
   warn: (message: string) => {
-    console.warn(formatMessage('warn', message));
+    console.warn(formatMessage("warn", message));
   },
 
   error: (message: string) => {
-    console.error(formatMessage('error', message));
+    console.error(formatMessage("error", message));
   },
 };

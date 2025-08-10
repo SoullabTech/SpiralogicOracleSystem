@@ -1,16 +1,21 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { IntegrationAuthService } from "../../../lib/auth/integrationAuth";
 
 interface ProfessionalConnection {
   id: string;
   user_id: string;
   professional_id: string;
-  connection_type: 'therapy' | 'coaching' | 'spiritual_direction' | 'somatic_work' | 'mentorship';
-  status: 'pending' | 'active' | 'paused' | 'completed' | 'declined';
-  data_sharing_level: 'minimal' | 'summary' | 'detailed';
+  connection_type:
+    | "therapy"
+    | "coaching"
+    | "spiritual_direction"
+    | "somatic_work"
+    | "mentorship";
+  status: "pending" | "active" | "paused" | "completed" | "declined";
+  data_sharing_level: "minimal" | "summary" | "detailed";
   platform_integration_consent: boolean;
   start_date?: string;
   user?: {
@@ -40,7 +45,9 @@ export default function ProfessionalDashboard() {
   const [connections, setConnections] = useState<ProfessionalConnection[]>([]);
   const [clientOverviews, setClientOverviews] = useState<ClientOverview[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'clients' | 'insights' | 'resources'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "clients" | "insights" | "resources"
+  >("overview");
 
   useEffect(() => {
     loadProfessionalData();
@@ -50,20 +57,22 @@ export default function ProfessionalDashboard() {
     try {
       const user = await authService.getCurrentUser();
       if (!user) {
-        router.push('/auth/signin');
+        router.push("/auth/signin");
         return;
       }
 
       const profile = await authService.getUserProfile(user.id);
-      if (profile?.account_type !== 'professional') {
-        router.push('/professional/verification');
+      if (profile?.account_type !== "professional") {
+        router.push("/professional/verification");
         return;
       }
 
       setCurrentUser({ ...user, profile });
 
       // Load professional connections
-      const connectionsResponse = await fetch(`/api/professional/connections/${user.id}`);
+      const connectionsResponse = await fetch(
+        `/api/professional/connections/${user.id}`,
+      );
       if (connectionsResponse.ok) {
         const connectionsData = await connectionsResponse.json();
         setConnections(connectionsData);
@@ -73,52 +82,62 @@ export default function ProfessionalDashboard() {
         setClientOverviews(overviews);
       }
     } catch (error) {
-      console.error('Professional dashboard loading error:', error);
+      console.error("Professional dashboard loading error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const generateClientOverviews = async (connections: ProfessionalConnection[]): Promise<ClientOverview[]> => {
+  const generateClientOverviews = async (
+    connections: ProfessionalConnection[],
+  ): Promise<ClientOverview[]> => {
     const overviews: ClientOverview[] = [];
 
-    for (const connection of connections.filter(c => c.status === 'active')) {
+    for (const connection of connections.filter((c) => c.status === "active")) {
       try {
-        const clientDataResponse = await fetch(`/api/professional/client-overview/${connection.user_id}?sharing_level=${connection.data_sharing_level}`);
+        const clientDataResponse = await fetch(
+          `/api/professional/client-overview/${connection.user_id}?sharing_level=${connection.data_sharing_level}`,
+        );
         if (clientDataResponse.ok) {
           const clientData = await clientDataResponse.json();
           overviews.push({
             id: connection.user_id,
-            display_name: connection.user?.display_name || 'Anonymous Client',
+            display_name: connection.user?.display_name || "Anonymous Client",
             connection_type: connection.connection_type,
-            current_state: connection.user?.current_state || 'unknown',
+            current_state: connection.user?.current_state || "unknown",
             integration_progress: clientData.integration_progress || 0,
-            last_active: clientData.last_active || connection.start_date || '',
+            last_active: clientData.last_active || connection.start_date || "",
             recent_alerts: clientData.recent_alerts || [],
-            data_sharing_level: connection.data_sharing_level
+            data_sharing_level: connection.data_sharing_level,
           });
         }
       } catch (error) {
-        console.error('Client overview loading error:', error);
+        console.error("Client overview loading error:", error);
       }
     }
 
     return overviews;
   };
 
-  const updateConnectionStatus = async (connectionId: string, status: string) => {
+  const updateConnectionStatus = async (
+    connectionId: string,
+    status: string,
+  ) => {
     try {
-      const response = await fetch(`/api/professional/connections/${connectionId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
+      const response = await fetch(
+        `/api/professional/connections/${connectionId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        },
+      );
 
       if (response.ok) {
         loadProfessionalData();
       }
     } catch (error) {
-      console.error('Connection update error:', error);
+      console.error("Connection update error:", error);
     }
   };
 
@@ -134,13 +153,15 @@ export default function ProfessionalDashboard() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md">
-          <h2 className="text-xl font-semibold mb-4">Professional Verification Required</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            Professional Verification Required
+          </h2>
           <p className="text-gray-600 mb-6">
-            Your professional credentials are being reviewed. You'll receive access to the professional
-            dashboard once verification is complete.
+            Your professional credentials are being reviewed. You'll receive
+            access to the professional dashboard once verification is complete.
           </p>
           <button
-            onClick={() => router.push('/professional/verification/status')}
+            onClick={() => router.push("/professional/verification/status")}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
           >
             Check Verification Status
@@ -157,9 +178,13 @@ export default function ProfessionalDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">Professional Dashboard</h1>
+              <h1 className="text-xl font-semibold text-gray-900">
+                Professional Dashboard
+              </h1>
               <p className="text-sm text-gray-600">
-                {currentUser.profile.professional_type} • {connections.filter(c => c.status === 'active').length} active clients
+                {currentUser.profile.professional_type} •{" "}
+                {connections.filter((c) => c.status === "active").length} active
+                clients
               </p>
             </div>
 
@@ -168,7 +193,7 @@ export default function ProfessionalDashboard() {
                 Verified Professional
               </span>
               <button
-                onClick={() => router.push('/professional/settings')}
+                onClick={() => router.push("/professional/settings")}
                 className="text-gray-500 hover:text-gray-700"
               >
                 Settings
@@ -183,18 +208,18 @@ export default function ProfessionalDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'clients', label: 'Client Management' },
-              { id: 'insights', label: 'Integration Insights' },
-              { id: 'resources', label: 'Professional Resources' }
-            ].map(tab => (
+              { id: "overview", label: "Overview" },
+              { id: "clients", label: "Client Management" },
+              { id: "insights", label: "Integration Insights" },
+              { id: "resources", label: "Professional Resources" },
+            ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
               >
                 {tab.label}
@@ -206,7 +231,7 @@ export default function ProfessionalDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {activeTab === 'overview' && (
+        {activeTab === "overview" && (
           <OverviewTab
             clientOverviews={clientOverviews}
             connections={connections}
@@ -214,20 +239,18 @@ export default function ProfessionalDashboard() {
           />
         )}
 
-        {activeTab === 'clients' && (
+        {activeTab === "clients" && (
           <ClientManagementTab
             connections={connections}
             onUpdateConnection={updateConnectionStatus}
           />
         )}
 
-        {activeTab === 'insights' && (
-          <IntegrationInsightsTab
-            clientOverviews={clientOverviews}
-          />
+        {activeTab === "insights" && (
+          <IntegrationInsightsTab clientOverviews={clientOverviews} />
         )}
 
-        {activeTab === 'resources' && (
+        {activeTab === "resources" && (
           <ProfessionalResourcesTab
             professionalType={currentUser.profile.professional_type}
           />
@@ -243,20 +266,39 @@ const OverviewTab: React.FC<{
   professionalType: string;
 }> = ({ clientOverviews, connections, professionalType }) => {
   const activeClients = clientOverviews.length;
-  const pendingConnections = connections.filter(c => c.status === 'pending').length;
-  const clientsNeedingAttention = clientOverviews.filter(c => c.recent_alerts.length > 0).length;
+  const pendingConnections = connections.filter(
+    (c) => c.status === "pending",
+  ).length;
+  const clientsNeedingAttention = clientOverviews.filter(
+    (c) => c.recent_alerts.length > 0,
+  ).length;
 
   return (
     <div className="space-y-6">
       {/* Professional Guidelines */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-medium text-blue-900 mb-2">Integration-Centered Professional Collaboration</h3>
+        <h3 className="font-medium text-blue-900 mb-2">
+          Integration-Centered Professional Collaboration
+        </h3>
         <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Platform data supplements but never replaces direct professional assessment</li>
-          <li>• Focus on supporting clients' integration of insights into daily life</li>
-          <li>• Watch for spiritual bypassing patterns and gently redirect to embodied work</li>
-          <li>• Encourage consistency over intensity in development practices</li>
-          <li>• Validate struggles and ordinary moments as sources of wisdom</li>
+          <li>
+            • Platform data supplements but never replaces direct professional
+            assessment
+          </li>
+          <li>
+            • Focus on supporting clients' integration of insights into daily
+            life
+          </li>
+          <li>
+            • Watch for spiritual bypassing patterns and gently redirect to
+            embodied work
+          </li>
+          <li>
+            • Encourage consistency over intensity in development practices
+          </li>
+          <li>
+            • Validate struggles and ordinary moments as sources of wisdom
+          </li>
         </ul>
       </div>
 
@@ -266,12 +308,18 @@ const OverviewTab: React.FC<{
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                <span className="text-blue-600 font-semibold">{activeClients}</span>
+                <span className="text-blue-600 font-semibold">
+                  {activeClients}
+                </span>
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900">Active Clients</h3>
-              <p className="text-xs text-gray-600">Platform integration enabled</p>
+              <h3 className="text-sm font-medium text-gray-900">
+                Active Clients
+              </h3>
+              <p className="text-xs text-gray-600">
+                Platform integration enabled
+              </p>
             </div>
           </div>
         </div>
@@ -280,11 +328,15 @@ const OverviewTab: React.FC<{
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <span className="text-yellow-600 font-semibold">{pendingConnections}</span>
+                <span className="text-yellow-600 font-semibold">
+                  {pendingConnections}
+                </span>
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900">Pending Connections</h3>
+              <h3 className="text-sm font-medium text-gray-900">
+                Pending Connections
+              </h3>
               <p className="text-xs text-gray-600">Awaiting client approval</p>
             </div>
           </div>
@@ -294,11 +346,15 @@ const OverviewTab: React.FC<{
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                <span className="text-red-600 font-semibold">{clientsNeedingAttention}</span>
+                <span className="text-red-600 font-semibold">
+                  {clientsNeedingAttention}
+                </span>
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900">Need Attention</h3>
+              <h3 className="text-sm font-medium text-gray-900">
+                Need Attention
+              </h3>
               <p className="text-xs text-gray-600">Recent integration alerts</p>
             </div>
           </div>
@@ -309,12 +365,20 @@ const OverviewTab: React.FC<{
             <div className="flex-shrink-0">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 <span className="text-green-600 font-semibold">
-                  {Math.round(clientOverviews.reduce((sum, c) => sum + c.integration_progress, 0) / Math.max(clientOverviews.length, 1))}%
+                  {Math.round(
+                    clientOverviews.reduce(
+                      (sum, c) => sum + c.integration_progress,
+                      0,
+                    ) / Math.max(clientOverviews.length, 1),
+                  )}
+                  %
                 </span>
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-sm font-medium text-gray-900">Avg Integration</h3>
+              <h3 className="text-sm font-medium text-gray-900">
+                Avg Integration
+              </h3>
               <p className="text-xs text-gray-600">Client progress metric</p>
             </div>
           </div>
@@ -324,11 +388,15 @@ const OverviewTab: React.FC<{
       {/* Recent Alerts */}
       {clientsNeedingAttention > 0 && (
         <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold mb-4">Clients Needing Attention</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Clients Needing Attention
+          </h3>
           <div className="space-y-4">
-            {clientOverviews.filter(c => c.recent_alerts.length > 0).map(client => (
-              <ClientAlertCard key={client.id} client={client} />
-            ))}
+            {clientOverviews
+              .filter((c) => c.recent_alerts.length > 0)
+              .map((client) => (
+                <ClientAlertCard key={client.id} client={client} />
+              ))}
           </div>
         </div>
       )}
@@ -338,13 +406,14 @@ const OverviewTab: React.FC<{
         <h3 className="text-lg font-semibold mb-4">Client Overview</h3>
         {clientOverviews.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {clientOverviews.map(client => (
+            {clientOverviews.map((client) => (
               <ClientOverviewCard key={client.id} client={client} />
             ))}
           </div>
         ) : (
           <p className="text-gray-600 text-center py-8">
-            No active client connections yet. Clients can request professional connections through their platform settings.
+            No active client connections yet. Clients can request professional
+            connections through their platform settings.
           </p>
         )}
       </div>
@@ -358,7 +427,8 @@ const ClientAlertCard: React.FC<{ client: ClientOverview }> = ({ client }) => (
       <div>
         <h4 className="font-medium text-amber-900">{client.display_name}</h4>
         <p className="text-sm text-amber-800">
-          {client.recent_alerts.length} integration alert{client.recent_alerts.length !== 1 ? 's' : ''}
+          {client.recent_alerts.length} integration alert
+          {client.recent_alerts.length !== 1 ? "s" : ""}
         </p>
       </div>
       <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">
@@ -368,19 +438,23 @@ const ClientAlertCard: React.FC<{ client: ClientOverview }> = ({ client }) => (
     <div className="mt-2 space-y-1">
       {client.recent_alerts.slice(0, 2).map((alert: any, index: number) => (
         <p key={index} className="text-xs text-amber-700">
-          • {alert.pattern?.replace('_', ' ') || 'Integration support needed'}
+          • {alert.pattern?.replace("_", " ") || "Integration support needed"}
         </p>
       ))}
     </div>
   </div>
 );
 
-const ClientOverviewCard: React.FC<{ client: ClientOverview }> = ({ client }) => (
+const ClientOverviewCard: React.FC<{ client: ClientOverview }> = ({
+  client,
+}) => (
   <div className="border border-gray-200 rounded-lg p-4">
     <div className="flex items-start justify-between mb-3">
       <div>
         <h4 className="font-medium text-gray-900">{client.display_name}</h4>
-        <p className="text-sm text-gray-600 capitalize">{client.current_state}</p>
+        <p className="text-sm text-gray-600 capitalize">
+          {client.current_state}
+        </p>
       </div>
       <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
         {client.connection_type}
@@ -415,7 +489,8 @@ const ClientOverviewCard: React.FC<{ client: ClientOverview }> = ({ client }) =>
     {client.recent_alerts.length > 0 && (
       <div className="mt-3 pt-3 border-t border-gray-200">
         <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">
-          {client.recent_alerts.length} alert{client.recent_alerts.length !== 1 ? 's' : ''}
+          {client.recent_alerts.length} alert
+          {client.recent_alerts.length !== 1 ? "s" : ""}
         </span>
       </div>
     )}
@@ -432,7 +507,7 @@ const ClientManagementTab: React.FC<{
       <h3 className="text-lg font-semibold mb-4">Client Connections</h3>
       {connections.length > 0 ? (
         <div className="space-y-4">
-          {connections.map(connection => (
+          {connections.map((connection) => (
             <ConnectionCard
               key={connection.id}
               connection={connection}
@@ -442,7 +517,8 @@ const ClientManagementTab: React.FC<{
         </div>
       ) : (
         <p className="text-gray-600 text-center py-8">
-          No client connections yet. Clients can initiate professional connections through their settings.
+          No client connections yet. Clients can initiate professional
+          connections through their settings.
         </p>
       )}
     </div>
@@ -457,7 +533,7 @@ const ConnectionCard: React.FC<{
     <div className="flex items-start justify-between">
       <div>
         <h4 className="font-medium text-gray-900">
-          {connection.user?.display_name || 'Anonymous Client'}
+          {connection.user?.display_name || "Anonymous Client"}
         </h4>
         <p className="text-sm text-gray-600 capitalize">
           {connection.connection_type} • {connection.status}
@@ -468,16 +544,16 @@ const ConnectionCard: React.FC<{
       </div>
 
       <div className="flex space-x-2">
-        {connection.status === 'pending' && (
+        {connection.status === "pending" && (
           <>
             <button
-              onClick={() => onUpdate(connection.id, 'active')}
+              onClick={() => onUpdate(connection.id, "active")}
               className="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
             >
               Accept
             </button>
             <button
-              onClick={() => onUpdate(connection.id, 'declined')}
+              onClick={() => onUpdate(connection.id, "declined")}
               className="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
             >
               Decline
@@ -485,9 +561,9 @@ const ConnectionCard: React.FC<{
           </>
         )}
 
-        {connection.status === 'active' && (
+        {connection.status === "active" && (
           <button
-            onClick={() => onUpdate(connection.id, 'paused')}
+            onClick={() => onUpdate(connection.id, "paused")}
             className="text-xs bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700"
           >
             Pause
@@ -503,7 +579,9 @@ const IntegrationInsightsTab: React.FC<{
 }> = ({ clientOverviews }) => (
   <div className="bg-white rounded-lg shadow-sm border p-6">
     <h3 className="text-lg font-semibold mb-4">Integration Pattern Insights</h3>
-    <p className="text-gray-600">Integration analytics and insights coming soon...</p>
+    <p className="text-gray-600">
+      Integration analytics and insights coming soon...
+    </p>
   </div>
 );
 
@@ -512,6 +590,8 @@ const ProfessionalResourcesTab: React.FC<{
 }> = ({ professionalType }) => (
   <div className="bg-white rounded-lg shadow-sm border p-6">
     <h3 className="text-lg font-semibold mb-4">Professional Resources</h3>
-    <p className="text-gray-600">Professional development resources coming soon...</p>
+    <p className="text-gray-600">
+      Professional development resources coming soon...
+    </p>
   </div>
 );

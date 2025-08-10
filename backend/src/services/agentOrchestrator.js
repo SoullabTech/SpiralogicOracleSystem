@@ -4,7 +4,9 @@ import { waterAgent } from "./waterAgent.js";
 export class AgentOrchestrator {
   async routeToAgent(input) {
     const waterKeywords = ["feel", "emotion", "heart", "hurt", "scared"];
-    const isWater = waterKeywords.some(word => input.toLowerCase().includes(word));
+    const isWater = waterKeywords.some((word) =>
+      input.toLowerCase().includes(word),
+    );
 
     const agent = isWater ? waterAgent : fireAgent;
     const response = await agent.getOracleResponse(input);
@@ -12,7 +14,7 @@ export class AgentOrchestrator {
     return {
       ...response,
       primaryAgent: isWater ? "water" : "fire",
-      orchestrated: true
+      orchestrated: true,
     };
   }
 }

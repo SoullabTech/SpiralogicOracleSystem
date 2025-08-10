@@ -8,13 +8,18 @@ export interface RetreatParticipant {
   preferredName?: string;
 
   // Onboarding Status
-  onboardingStatus: 'registered' | 'welcomed' | 'oracle_assigned' | 'intentions_set' | 'completed';
+  onboardingStatus:
+    | "registered"
+    | "welcomed"
+    | "oracle_assigned"
+    | "intentions_set"
+    | "completed";
   welcomedAt?: Date;
   oracleAssignedAt?: Date;
 
   // Personal Oracle Assignment
   personalOracleId?: string;
-  oracleElement?: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  oracleElement?: "fire" | "water" | "earth" | "air" | "aether";
   oracleArchetype?: string;
 
   // Intentions & State
@@ -59,12 +64,12 @@ export interface RetreatParticipant {
 export interface RetreatSession {
   id: string;
   name: string;
-  location: 'switzerland' | 'other';
+  location: "switzerland" | "other";
   startDate: Date;
   endDate: Date;
   maxParticipants: number;
   currentParticipants: number;
-  status: 'upcoming' | 'active' | 'completed';
+  status: "upcoming" | "active" | "completed";
 
   // Retreat Theme
   theme: string;
@@ -123,13 +128,13 @@ export interface OnboardingFlow {
 }
 
 export type OnboardingStep =
-  | 'welcome'
-  | 'retreat_overview'
-  | 'personal_info'
-  | 'current_state'
-  | 'intentions'
-  | 'oracle_assignment'
-  | 'confirmation';
+  | "welcome"
+  | "retreat_overview"
+  | "personal_info"
+  | "current_state"
+  | "intentions"
+  | "oracle_assignment"
+  | "confirmation";
 
 export interface WelcomeMessage {
   participantName: string;

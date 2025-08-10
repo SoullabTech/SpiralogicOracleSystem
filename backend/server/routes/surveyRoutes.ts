@@ -1,6 +1,9 @@
-import { Router } from 'express';
-import { surveyQuestions } from '../data/questions.js';
-import type { ElementalProfile, SurveySubmission } from '../../src/types/survey.js';
+import { Router } from "express";
+import { surveyQuestions } from "../data/questions.js";
+import type {
+  ElementalProfile,
+  SurveySubmission,
+} from "../../src/types/survey.js";
 
 const router = Router();
 
@@ -8,21 +11,21 @@ const router = Router();
 const profiles = new Map<string, ElementalProfile>();
 
 // Get survey questions
-router.get('/questions', (_req, res) => {
+router.get("/questions", (_req, res) => {
   res.json({ questions: surveyQuestions });
 });
 
 // Get user's elemental profile
-router.get('/profile/:userId', (req, res) => {
+router.get("/profile/:userId", (req, res) => {
   const profile = profiles.get(req.params.userId);
   if (!profile) {
-    return res.status(404).json({ error: 'Profile not found' });
+    return res.status(404).json({ error: "Profile not found" });
   }
   res.json({ profile });
 });
 
 // Submit survey responses
-router.post('/submit', (req, res) => {
+router.post("/submit", (req, res) => {
   try {
     const submission: SurveySubmission = req.body;
 
@@ -36,17 +39,23 @@ router.post('/submit', (req, res) => {
     };
 
     // Process each response
-    submission.responses.forEach(response => {
-      const question = surveyQuestions.find(q => q.id === response.questionId);
+    submission.responses.forEach((response) => {
+      const question = surveyQuestions.find(
+        (q) => q.id === response.questionId,
+      );
       if (question) {
         scores[question.element] += response.answer * question.weight;
       }
     });
 
     // Normalize scores to 0-100 range
-    Object.keys(scores).forEach(element => {
+    Object.keys(scores).forEach((element) => {
       const key = element as keyof typeof scores;
-      scores[key] = Math.round((scores[key] / (5 * surveyQuestions.filter(q => q.element === key).length)) * 100);
+      scores[key] = Math.round(
+        (scores[key] /
+          (5 * surveyQuestions.filter((q) => q.element === key).length)) *
+          100,
+      );
     });
 
     // Create profile
@@ -62,8 +71,8 @@ router.post('/submit', (req, res) => {
 
     res.json({ profile });
   } catch (error) {
-    console.error('Error processing survey submission:', error);
-    res.status(400).json({ error: 'Invalid submission' });
+    console.error("Error processing survey submission:", error);
+    res.status(400).json({ error: "Invalid submission" });
   }
 });
 

@@ -10,11 +10,11 @@ export interface MemoryItem {
   content: string;
   timestamp: number;
   clientId?: string;
-  type?: 'text' | 'audio';
+  type?: "text" | "audio";
 }
 
 export interface UserSettings {
-  theme: 'dark' | 'light';
+  theme: "dark" | "light";
   language: string;
   notificationsEnabled: boolean;
 }
@@ -34,5 +34,5 @@ export interface Metadata {
 export interface SystemData {
   version: string;
   uptime: number;
-  environment: 'development' | 'production' | 'staging';
+  environment: "development" | "production" | "staging";
 }

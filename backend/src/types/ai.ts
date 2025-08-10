@@ -4,15 +4,15 @@
  * Enumerates all supported AI response providers.
  */
 export type AIProvider =
-  | 'openai'
-  | 'claude'
-  | 'chatgpt-oracle'
-  | 'elemental-oracle'
-  | 'dream-agent'
-  | 'guide-agent'
-  | 'mentor-agent'
-  | 'relationship-agent'
-  | 'shadow-agent';
+  | "openai"
+  | "claude"
+  | "chatgpt-oracle"
+  | "elemental-oracle"
+  | "dream-agent"
+  | "guide-agent"
+  | "mentor-agent"
+  | "relationship-agent"
+  | "shadow-agent";
 
 /**
  * Standard AI response envelope with extended metadata for routing, analysis, and form generation.
@@ -55,7 +55,7 @@ export interface AIResponse {
     /** Where the request was routed from: 'dream', 'shadow', 'elemental', etc. */
     routedFrom?: string;
     /** Type of query, used for downstream logic */
-    queryType?: 'dream' | 'mentor' | 'relationship' | 'story' | 'default';
+    queryType?: "dream" | "mentor" | "relationship" | "story" | "default";
 
     // 📚 Embedded Payloads
     /** For story requests */
@@ -67,7 +67,7 @@ export interface AIResponse {
     };
     /** For form generation triggers */
     formRequest?: {
-      type: 'new-client' | 'transcript' | 'maintenance' | 'reading';
+      type: "new-client" | "transcript" | "maintenance" | "reading";
       clientId?: string;
       context?: Record<string, any>;
     };

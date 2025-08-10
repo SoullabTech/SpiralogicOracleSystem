@@ -6,17 +6,17 @@ export class HierarchyOrchestrator {
 
   async orchestrate(request) {
     return {
-      status: 'not_implemented',
-      message: 'HierarchyOrchestrator functionality not yet implemented',
-      request
+      status: "not_implemented",
+      message: "HierarchyOrchestrator functionality not yet implemented",
+      request,
     };
   }
 
   async processArchetypalRequest(archetype, query) {
     return {
       archetype,
-      response: 'Archetypal processing not yet implemented',
-      query
+      response: "Archetypal processing not yet implemented",
+      query,
     };
   }
 }

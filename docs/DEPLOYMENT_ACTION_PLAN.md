@@ -3,11 +3,13 @@
 ## Current Status
 
 ### ✅ What's Working:
+
 - **DNS**: All domains resolving to Vercel IPs correctly
 - **Code**: Next.js 13 app with fixed vercel.json
 - **New Project**: Created `oracle-system` project successfully
 
 ### ❌ What's Not Working:
+
 - **Domains**: Still assigned to another project
 - **Deployments**: Returning 404 (likely build issues)
 
@@ -33,6 +35,7 @@
 ### Option 2: Contact Support
 
 If you can't find the old project:
+
 - Email: support@vercel.com
 - Subject: "Transfer domains between projects"
 - Include:
@@ -76,6 +79,7 @@ curl -I https://oracle.soullab.life/
 ## 🎊 Expected Final Result
 
 All URLs returning:
+
 ```
 HTTP/2 200 OK
 content-type: text/html

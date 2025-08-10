@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
-import { IntegrationAuthService } from '../lib/auth/integrationAuth';
+import Link from "next/link";
+import React, { useState, useEffect } from "react";
+import { IntegrationAuthService } from "../lib/auth/integrationAuth";
 
 export default function HomePage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -18,7 +18,7 @@ export default function HomePage() {
       const user = await authService.getCurrentUser();
       setCurrentUser(user);
     } catch (error) {
-      console.error('Auth check error:', error);
+      console.error("Auth check error:", error);
     } finally {
       setLoading(false);
     }
@@ -38,47 +38,87 @@ export default function HomePage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 text-white">
         <div className="container mx-auto px-4 py-8">
           <header className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Welcome back to Spiralogic Oracle</h1>
+            <h1 className="text-4xl font-bold mb-4">
+              Welcome back to Spiralogic Oracle
+            </h1>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
               Continue your integration-centered development journey
             </p>
           </header>
 
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link href="/integration/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
+            <Link
+              href="/integration/dashboard"
+              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
+            >
               <div className="text-3xl mb-3">📊</div>
-              <h3 className="text-xl font-semibold mb-2">Integration Dashboard</h3>
-              <p className="text-gray-300 text-sm">Track your holistic development progress and integration milestones</p>
+              <h3 className="text-xl font-semibold mb-2">
+                Integration Dashboard
+              </h3>
+              <p className="text-gray-300 text-sm">
+                Track your holistic development progress and integration
+                milestones
+              </p>
             </Link>
 
-            <Link href="/elemental/content" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
+            <Link
+              href="/elemental/content"
+              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
+            >
               <div className="text-3xl mb-3">🌀</div>
               <h3 className="text-xl font-semibold mb-2">Elemental Content</h3>
-              <p className="text-gray-300 text-sm">Access adaptive content through Fire, Water, Earth, and Air wisdom</p>
+              <p className="text-gray-300 text-sm">
+                Access adaptive content through Fire, Water, Earth, and Air
+                wisdom
+              </p>
             </Link>
 
-            <Link href="/community/reality-check" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
+            <Link
+              href="/community/reality-check"
+              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
+            >
               <div className="text-3xl mb-3">🤝</div>
               <h3 className="text-xl font-semibold mb-2">Community Support</h3>
-              <p className="text-gray-300 text-sm">Connect with others for reality-checking and mutual support</p>
+              <p className="text-gray-300 text-sm">
+                Connect with others for reality-checking and mutual support
+              </p>
             </Link>
 
-            <Link href="/analytics/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
+            <Link
+              href="/analytics/dashboard"
+              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
+            >
               <div className="text-3xl mb-3">📈</div>
-              <h3 className="text-xl font-semibold mb-2">Development Analytics</h3>
-              <p className="text-gray-300 text-sm">Privacy-focused insights into your growth patterns</p>
+              <h3 className="text-xl font-semibold mb-2">
+                Development Analytics
+              </h3>
+              <p className="text-gray-300 text-sm">
+                Privacy-focused insights into your growth patterns
+              </p>
             </Link>
 
-            <Link href="/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
+            <Link
+              href="/dashboard"
+              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
+            >
               <div className="text-3xl mb-3">🔮</div>
               <h3 className="text-xl font-semibold mb-2">Oracle Interface</h3>
-              <p className="text-gray-300 text-sm">Access the AÍÑ Oracle for guidance and reflection</p>
+              <p className="text-gray-300 text-sm">
+                Access the AÍÑ Oracle for guidance and reflection
+              </p>
             </Link>
 
-            <Link href="/professional/dashboard" className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group">
+            <Link
+              href="/professional/dashboard"
+              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
+            >
               <div className="text-3xl mb-3">🎓</div>
-              <h3 className="text-xl font-semibold mb-2">Professional Support</h3>
-              <p className="text-gray-300 text-sm">Connect with verified practitioners and therapists</p>
+              <h3 className="text-xl font-semibold mb-2">
+                Professional Support
+              </h3>
+              <p className="text-gray-300 text-sm">
+                Connect with verified practitioners and therapists
+              </p>
             </Link>
           </div>
 
@@ -110,7 +150,8 @@ export default function HomePage() {
           </div>
           <h1 className="text-5xl font-bold mb-4">Spiralogic Oracle System</h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">
-            Integration-centered personal development platform supporting authentic growth through elemental wisdom and community grounding
+            Integration-centered personal development platform supporting
+            authentic growth through elemental wisdom and community grounding
           </p>
         </header>
 
@@ -119,35 +160,57 @@ export default function HomePage() {
             <div className="bg-white/5 backdrop-blur rounded-lg p-6">
               <div className="text-3xl mb-3">🌀</div>
               <h3 className="text-xl font-semibold mb-2">Elemental Wisdom</h3>
-              <p className="text-gray-300 text-sm">Fire, Water, Earth, and Air archetypes guide adaptive content delivery</p>
+              <p className="text-gray-300 text-sm">
+                Fire, Water, Earth, and Air archetypes guide adaptive content
+                delivery
+              </p>
             </div>
 
             <div className="bg-white/5 backdrop-blur rounded-lg p-6">
               <div className="text-3xl mb-3">🚫</div>
-              <h3 className="text-xl font-semibold mb-2">Bypassing Prevention</h3>
-              <p className="text-gray-300 text-sm">Systematic integration requirements prevent spiritual materialism</p>
+              <h3 className="text-xl font-semibold mb-2">
+                Bypassing Prevention
+              </h3>
+              <p className="text-gray-300 text-sm">
+                Systematic integration requirements prevent spiritual
+                materialism
+              </p>
             </div>
 
             <div className="bg-white/5 backdrop-blur rounded-lg p-6">
               <div className="text-3xl mb-3">🤝</div>
-              <h3 className="text-xl font-semibold mb-2">Community Grounding</h3>
-              <p className="text-gray-300 text-sm">Reality-checking and peer validation support authentic development</p>
+              <h3 className="text-xl font-semibold mb-2">
+                Community Grounding
+              </h3>
+              <p className="text-gray-300 text-sm">
+                Reality-checking and peer validation support authentic
+                development
+              </p>
             </div>
           </div>
         </div>
 
         <div className="text-center">
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-            <Link href="/auth/onboarding" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition text-lg">
+            <Link
+              href="/auth/onboarding"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition text-lg"
+            >
               🚀 Begin Integration Journey
             </Link>
-            <Link href="/oracle-demo" className="bg-white/10 text-white px-8 py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition text-lg">
+            <Link
+              href="/oracle-demo"
+              className="bg-white/10 text-white px-8 py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition text-lg"
+            >
               🔮 Try Demo
             </Link>
           </div>
 
           <div className="mb-8">
-            <Link href="/auth" className="text-gray-400 hover:text-white underline text-sm">
+            <Link
+              href="/auth"
+              className="text-gray-400 hover:text-white underline text-sm"
+            >
               Existing users sign in
             </Link>
           </div>

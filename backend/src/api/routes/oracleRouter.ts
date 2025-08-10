@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import { AgentRegistry } from '../../core/factories/AgentRegistry';
-import { getCachedPattern } from '../../services/CachedOracleService';
+import { Router } from "express";
+import { AgentRegistry } from "../../core/factories/AgentRegistry";
+import { getCachedPattern } from "../../services/CachedOracleService";
 
 const router = Router();
 const registry = new AgentRegistry();
@@ -18,13 +18,13 @@ interface OracleResponse {
   metadata: Record<string, any>;
 }
 
-router.post('/api/v1/oracle', async (req, res) => {
+router.post("/api/v1/oracle", async (req, res) => {
   try {
     const { userId, query, targetElement }: OracleRequest = req.body;
 
     if (!userId || !query || !targetElement) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: userId, query, targetElement' 
+      return res.status(400).json({
+        error: "Missing required fields: userId, query, targetElement",
       });
     }
 
@@ -35,20 +35,20 @@ router.post('/api/v1/oracle', async (req, res) => {
 
     const response: OracleResponse = {
       element: targetElement,
-      archetype: result.archetype || 'unknown',
+      archetype: result.archetype || "unknown",
       message: result.response || result.message || result,
-      metadata: { 
+      metadata: {
         timestamp: new Date().toISOString(),
-        cached: false
-      }
+        cached: false,
+      },
     };
 
     res.json(response);
   } catch (error) {
-    console.error('Oracle API error:', error);
-    res.status(500).json({ 
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+    console.error("Oracle API error:", error);
+    res.status(500).json({
+      error: "Internal server error",
+      message: error instanceof Error ? error.message : "Unknown error",
     });
   }
 });

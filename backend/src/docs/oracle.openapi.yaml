@@ -22,7 +22,7 @@ paths:
               required:
                 - input
       responses:
-        '200':
+        "200":
           description: Detected elemental facet and associated details.
           content:
             application/json:
@@ -50,7 +50,7 @@ paths:
             type: string
             example: user-abc-123
       responses:
-        '200':
+        "200":
           description: Array of stored oracle insights
           content:
             application/json:
@@ -119,7 +119,7 @@ paths:
                 - elementalTheme
                 - archetype
       responses:
-        '200':
+        "200":
           description: The generated symbolic story
           content:
             application/json:
@@ -152,9 +152,9 @@ paths:
                         items:
                           type: string
                           example: "Phoenix"
-        '400':
+        "400":
           description: Missing required fields
-        '500':
+        "500":
           description: Failed to generate story
 
   /api/notion/ingest/notion:
@@ -163,7 +163,7 @@ paths:
       tags:
         - Ingestion
       responses:
-        '200':
+        "200":
           description: Notion ingestion successful
           content:
             application/json:
@@ -184,7 +184,7 @@ paths:
                     items:
                       type: object
                       description: Detailed result for each ingested page
-        '500':
+        "500":
           description: Server error during Notion ingestion
           content:
             application/json:
@@ -200,7 +200,7 @@ paths:
       tags:
         - Ingestion
       responses:
-        '200':
+        "200":
           description: Local KB ingestion successful
           content:
             application/json:
@@ -221,7 +221,7 @@ paths:
                     items:
                       type: object
                       description: Detailed result for each file
-        '500':
+        "500":
           description: Server error during local KB ingestion
           content:
             application/json:

@@ -24,15 +24,17 @@ export class StructureAnalyzer {
   /**
    * Analyze structure of content
    */
-  async analyze(params: StructureAnalysisParams): Promise<StructureAnalysisResult> {
+  async analyze(
+    params: StructureAnalysisParams,
+  ): Promise<StructureAnalysisResult> {
     // Stub implementation - would perform structural analysis
     const stabilityScore = Math.random() * 0.3 + 0.7;
     return {
-      structure_type: 'hierarchical',
+      structure_type: "hierarchical",
       stability_score: stabilityScore,
-      recommended_improvements: ['strengthen foundation', 'balance elements'],
+      recommended_improvements: ["strengthen foundation", "balance elements"],
       foundation_strength: Math.random() * 0.2 + 0.8,
-      score: stabilityScore
+      score: stabilityScore,
     };
   }
 

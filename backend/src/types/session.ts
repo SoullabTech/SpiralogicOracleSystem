@@ -1,7 +1,7 @@
 // oracle-backend/src/types/session.ts
 
-import type { Metadata } from './metadata';
-import { supabase } from '../lib/supabaseClient';
+import type { Metadata } from "./metadata";
+import { supabase } from "../lib/supabaseClient";
 
 /**
  * Represents a symbolic tag emitted during processing
@@ -24,7 +24,7 @@ export interface Session {
   clientId: string;
   startTime: string;
   meta: Metadata;
-  status: 'active' | 'completed';
+  status: "active" | "completed";
   endTime?: string;
 }
 
@@ -42,22 +42,25 @@ export interface SessionStats {
 /**
  * Starts a new session for a user and stores session details.
  */
-export async function startSession(clientId: string, metadata: Metadata): Promise<Session> {
+export async function startSession(
+  clientId: string,
+  metadata: Metadata,
+): Promise<Session> {
   const { data, error } = await supabase
-    .from('sessions')
+    .from("sessions")
     .insert([
       {
         clientId,
         startTime: new Date().toISOString(),
         meta: metadata,
-        status: 'active',
+        status: "active",
       },
     ])
     .select()
     .single();
 
   if (error || !data) {
-    throw new Error(error?.message || 'Failed to start session');
+    throw new Error(error?.message || "Failed to start session");
   }
 
   return {
@@ -74,14 +77,14 @@ export async function startSession(clientId: string, metadata: Metadata): Promis
  */
 export async function endSession(sessionId: string): Promise<Session> {
   const { data, error } = await supabase
-    .from('sessions')
-    .update({ status: 'completed', endTime: new Date().toISOString() })
-    .eq('id', sessionId)
+    .from("sessions")
+    .update({ status: "completed", endTime: new Date().toISOString() })
+    .eq("id", sessionId)
     .select()
     .single();
 
   if (error || !data) {
-    throw new Error(error?.message || 'Failed to end session');
+    throw new Error(error?.message || "Failed to end session");
   }
 
   return {
@@ -99,18 +102,20 @@ export async function endSession(sessionId: string): Promise<Session> {
  */
 export async function getSessionStats(clientId: string): Promise<SessionStats> {
   const { data, error } = await supabase
-    .from('sessions')
-    .select('*')
-    .eq('clientId', clientId);
+    .from("sessions")
+    .select("*")
+    .eq("clientId", clientId);
 
   if (error) {
-    throw new Error(error?.message || 'Failed to retrieve session stats');
+    throw new Error(error?.message || "Failed to retrieve session stats");
   }
 
   const totalSessions = data.length;
-  const activeSessions = data.filter((session) => session.status === 'active').length;
+  const activeSessions = data.filter(
+    (session) => session.status === "active",
+  ).length;
   const completedSessions = totalSessions - activeSessions;
-  const lastSessionTime = data[totalSessions - 1]?.startTime || '';
+  const lastSessionTime = data[totalSessions - 1]?.startTime || "";
 
   return {
     totalSessions,

@@ -1,6 +1,6 @@
 // src/services/elementalOracleService.ts
 
-export type ElementalTheme = 'Fire' | 'Water' | 'Earth' | 'Air' | 'Aether';
+export type ElementalTheme = "Fire" | "Water" | "Earth" | "Air" | "Aether";
 
 export interface OracleRequest {
   theme: ElementalTheme;
@@ -19,11 +19,11 @@ export const elementalOracleService = {
     const message = `${intro} You asked: "${prompt}". Here is a symbolic response.`;
 
     const symbols = {
-      Fire: ['Phoenix', 'Candle', 'Volcano'],
-      Water: ['Moon', 'Cup', 'Ocean'],
-      Earth: ['Mountain', 'Tree', 'Stone'],
-      Air: ['Feather', 'Cloud', 'Spiral'],
-      Aether: ['Star', 'Circle', 'Portal'],
+      Fire: ["Phoenix", "Candle", "Volcano"],
+      Water: ["Moon", "Cup", "Ocean"],
+      Earth: ["Mountain", "Tree", "Stone"],
+      Air: ["Feather", "Cloud", "Spiral"],
+      Aether: ["Star", "Circle", "Portal"],
     }[theme];
 
     return {

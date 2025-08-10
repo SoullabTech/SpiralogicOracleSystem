@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { IntegrationAuthService } from '../lib/auth/integrationAuth';
+import React, { useState, useEffect } from "react";
+import { IntegrationAuthService } from "../lib/auth/integrationAuth";
 
 interface IntegrationCheckProps {
   userId: string;
@@ -19,7 +19,7 @@ interface IntegrationStatus {
 export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
   userId,
   onIntegrationReady,
-  showDetails = false
+  showDetails = false,
 }) => {
   const [status, setStatus] = useState<IntegrationStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,18 +37,18 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
 
       const statusData = {
         ...result,
-        integrationQuality: quality
+        integrationQuality: quality,
       };
 
       setStatus(statusData);
       onIntegrationReady(result.ready);
     } catch (error) {
-      console.error('Integration check error:', error);
+      console.error("Integration check error:", error);
       setStatus({
         ready: false,
-        blockers: ['Unable to verify integration status'],
-        recommendations: ['Please try again later'],
-        integrationQuality: 0
+        blockers: ["Unable to verify integration status"],
+        recommendations: ["Please try again later"],
+        integrationQuality: 0,
       });
     } finally {
       setLoading(false);
@@ -79,15 +79,15 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
   }
 
   const getStatusColor = () => {
-    if (status.ready) return 'text-green-600';
-    if (status.blockers.length > 0) return 'text-red-600';
-    return 'text-yellow-600';
+    if (status.ready) return "text-green-600";
+    if (status.blockers.length > 0) return "text-red-600";
+    return "text-yellow-600";
   };
 
   const getStatusIcon = () => {
-    if (status.ready) return '✅';
-    if (status.blockers.length > 0) return '⚠️';
-    return '⏳';
+    if (status.ready) return "✅";
+    if (status.blockers.length > 0) return "⚠️";
+    return "⏳";
   };
 
   return (
@@ -96,7 +96,7 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
         <div className="flex items-center space-x-2">
           <span className="text-lg">{getStatusIcon()}</span>
           <span className={`font-medium ${getStatusColor()}`}>
-            {status.ready ? 'Integration Ready' : 'Integration Support Needed'}
+            {status.ready ? "Integration Ready" : "Integration Support Needed"}
           </span>
         </div>
 
@@ -105,14 +105,15 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
             onClick={() => setShowFullDetails(!showFullDetails)}
             className="text-sm text-blue-600 hover:text-blue-700"
           >
-            {showFullDetails ? 'Hide Details' : 'Show Details'}
+            {showFullDetails ? "Hide Details" : "Show Details"}
           </button>
         )}
       </div>
 
       <div className="flex items-center space-x-4 mb-3">
         <div className="text-sm text-gray-600">
-          Integration Quality: <span className="font-medium">{status.integrationQuality}/10</span>
+          Integration Quality:{" "}
+          <span className="font-medium">{status.integrationQuality}/10</span>
         </div>
         <div className="flex-1 bg-gray-200 rounded-full h-2">
           <div
@@ -135,7 +136,9 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
 
       {status.recommendations.length > 0 && (
         <div className="mb-3">
-          <h4 className="text-sm font-medium text-blue-900 mb-1">Recommendations:</h4>
+          <h4 className="text-sm font-medium text-blue-900 mb-1">
+            Recommendations:
+          </h4>
           <ul className="text-sm text-blue-700 space-y-1">
             {status.recommendations.map((rec, index) => (
               <li key={index}>• {rec}</li>
@@ -148,7 +151,9 @@ export const IntegrationCheck: React.FC<IntegrationCheckProps> = ({
         <div className="border-t pt-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
-              <h5 className="font-medium text-gray-900 mb-2">Integration Support</h5>
+              <h5 className="font-medium text-gray-900 mb-2">
+                Integration Support
+              </h5>
               <ul className="text-gray-700 space-y-1">
                 <li>• Focus on real-world application</li>
                 <li>• Engage with community reality-checking</li>

@@ -1,13 +1,26 @@
-import { AstrologicalHoloflower, Planet, ZodiacSign, PlanetaryTransit, NatalPlacement } from '../core/AstrologicalHoloflower';
-import { supabase } from '../lib/supabaseClient';
-import axios from 'axios';
-import { GenerateReportFlow } from '../flows/generateReportFlow';
-import { SpiralogicReportInput, SpiralogicReportOutput, ArchetypalElement } from '../types/oracle';
-import { logger } from '../lib/logger';
+import {
+  AstrologicalHoloflower,
+  Planet,
+  ZodiacSign,
+  PlanetaryTransit,
+  NatalPlacement,
+} from "../core/AstrologicalHoloflower";
+import { supabase } from "../lib/supabaseClient";
+import axios from "axios";
+import { GenerateReportFlow } from "../flows/generateReportFlow";
+import {
+  SpiralogicReportInput,
+  SpiralogicReportOutput,
+  ArchetypalElement,
+} from "../types/oracle";
+import { logger } from "../lib/logger";
 
 interface EphemerisData {
   date: Date;
-  planets: Map<Planet, { sign: ZodiacSign; degree: number; retrograde: boolean }>;
+  planets: Map<
+    Planet,
+    { sign: ZodiacSign; degree: number; retrograde: boolean }
+  >;
 }
 
 interface UserAstrologicalData {
@@ -52,19 +65,24 @@ export class AstrologicalService {
 
       this.currentEphemeris = {
         date: now,
-        planets: positions
+        planets: positions,
       };
 
       // Update all active user holoflowers
       await this.updateAllUserTransits();
     } catch (error) {
-      console.error('Error updating ephemeris:', error);
+      console.error("Error updating ephemeris:", error);
     }
   }
 
   // Calculate current planetary positions (simplified)
-  private calculateCurrentPositions(date: Date): Map<Planet, { sign: ZodiacSign; degree: number; retrograde: boolean }> {
-    const positions = new Map<Planet, { sign: ZodiacSign; degree: number; retrograde: boolean }>();
+  private calculateCurrentPositions(
+    date: Date,
+  ): Map<Planet, { sign: ZodiacSign; degree: number; retrograde: boolean }> {
+    const positions = new Map<
+      Planet,
+      { sign: ZodiacSign; degree: number; retrograde: boolean }
+    >();
 
     // Simplified calculations - in production would use Swiss Ephemeris or similar
     const dayOfYear = this.getDayOfYear(date);
@@ -72,77 +90,77 @@ export class AstrologicalService {
 
     // Sun position (approximately 1 degree per day)
     const sunDegree = (dayOfYear - 80) % 360; // Spring equinox around day 80
-    positions.set('sun', {
+    positions.set("sun", {
       sign: this.getSignFromDegree(sunDegree),
       degree: sunDegree % 30,
-      retrograde: false
+      retrograde: false,
     });
 
     // Moon position (approximately 13 degrees per day)
     const moonDegree = (dayOfYear * 13.176) % 360;
-    positions.set('moon', {
+    positions.set("moon", {
       sign: this.getSignFromDegree(moonDegree),
       degree: moonDegree % 30,
-      retrograde: false
+      retrograde: false,
     });
 
     // Mercury (approximately 4 degrees per day when direct)
     const mercuryDegree = (dayOfYear * 4.09) % 360;
-    positions.set('mercury', {
+    positions.set("mercury", {
       sign: this.getSignFromDegree(mercuryDegree),
       degree: mercuryDegree % 30,
-      retrograde: this.isMercuryRetrograde(date)
+      retrograde: this.isMercuryRetrograde(date),
     });
 
     // Venus (approximately 1.6 degrees per day)
     const venusDegree = (dayOfYear * 1.6) % 360;
-    positions.set('venus', {
+    positions.set("venus", {
       sign: this.getSignFromDegree(venusDegree),
       degree: venusDegree % 30,
-      retrograde: false
+      retrograde: false,
     });
 
     // Mars (approximately 0.5 degrees per day)
     const marsDegree = (dayOfYear * 0.524) % 360;
-    positions.set('mars', {
+    positions.set("mars", {
       sign: this.getSignFromDegree(marsDegree),
       degree: marsDegree % 30,
-      retrograde: false
+      retrograde: false,
     });
 
     // Jupiter (approximately 0.083 degrees per day - 12 year cycle)
     const jupiterDegree = ((year - 2020) * 30 + dayOfYear * 0.083) % 360;
-    positions.set('jupiter', {
+    positions.set("jupiter", {
       sign: this.getSignFromDegree(jupiterDegree),
       degree: jupiterDegree % 30,
-      retrograde: false
+      retrograde: false,
     });
 
     // Saturn (approximately 0.033 degrees per day - 29.5 year cycle)
     const saturnDegree = ((year - 2020) * 12.2 + dayOfYear * 0.033) % 360;
-    positions.set('saturn', {
+    positions.set("saturn", {
       sign: this.getSignFromDegree(saturnDegree),
       degree: saturnDegree % 30,
-      retrograde: false
+      retrograde: false,
     });
 
     // Outer planets move very slowly
-    positions.set('uranus', {
-      sign: 'taurus',
+    positions.set("uranus", {
+      sign: "taurus",
       degree: 15 + (year - 2020) * 4.3,
-      retrograde: false
+      retrograde: false,
     });
 
-    positions.set('neptune', {
-      sign: 'pisces',
+    positions.set("neptune", {
+      sign: "pisces",
       degree: 25 + (year - 2020) * 2.1,
-      retrograde: false
+      retrograde: false,
     });
 
-    positions.set('pluto', {
-      sign: 'aquarius',
+    positions.set("pluto", {
+      sign: "aquarius",
       degree: 0 + (year - 2024) * 1.5,
-      retrograde: false
+      retrograde: false,
     });
 
     return positions;
@@ -158,8 +176,18 @@ export class AstrologicalService {
   // Get zodiac sign from absolute degree
   private getSignFromDegree(degree: number): ZodiacSign {
     const signs: ZodiacSign[] = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     const index = Math.floor((degree % 360) / 30);
     return signs[index];
@@ -170,13 +198,13 @@ export class AstrologicalService {
     // Mercury retrograde approximately 3 times per year for 3 weeks each
     const dayOfYear = this.getDayOfYear(date);
     const retroPeriods = [
-      { start: 14, end: 35 },    // Mid-Jan to early Feb
-      { start: 134, end: 155 },  // Mid-May to early June
-      { start: 254, end: 275 }   // Mid-Sept to early Oct
+      { start: 14, end: 35 }, // Mid-Jan to early Feb
+      { start: 134, end: 155 }, // Mid-May to early June
+      { start: 254, end: 275 }, // Mid-Sept to early Oct
     ];
 
-    return retroPeriods.some(period =>
-      dayOfYear >= period.start && dayOfYear <= period.end
+    return retroPeriods.some(
+      (period) => dayOfYear >= period.start && dayOfYear <= period.end,
     );
   }
 
@@ -190,23 +218,24 @@ export class AstrologicalService {
   }
 
   // Set user birth data and calculate natal chart
-  public async setUserBirthData(userId: string, birthData: {
-    date: Date;
-    time: string;
-    location: { lat: number; lng: number };
-  }) {
+  public async setUserBirthData(
+    userId: string,
+    birthData: {
+      date: Date;
+      time: string;
+      location: { lat: number; lng: number };
+    },
+  ) {
     try {
       // Save birth data
-      await supabase
-        .from('user_birth_data')
-        .upsert({
-          user_id: userId,
-          birth_date: birthData.date.toISOString(),
-          birth_time: birthData.time,
-          birth_lat: birthData.location.lat,
-          birth_lng: birthData.location.lng,
-          updated_at: new Date().toISOString()
-        });
+      await supabase.from("user_birth_data").upsert({
+        user_id: userId,
+        birth_date: birthData.date.toISOString(),
+        birth_time: birthData.time,
+        birth_lat: birthData.location.lat,
+        birth_lng: birthData.location.lng,
+        updated_at: new Date().toISOString(),
+      });
 
       // Calculate natal chart (simplified)
       const natalChart = await this.calculateNatalChart(birthData);
@@ -217,13 +246,13 @@ export class AstrologicalService {
         birthData,
         natalChart,
         currentTransits: [],
-        lastUpdate: new Date()
+        lastUpdate: new Date(),
       });
 
       // Update user's holoflower with natal data
       return natalChart;
     } catch (error) {
-      console.error('Error setting birth data:', error);
+      console.error("Error setting birth data:", error);
       throw error;
     }
   }
@@ -240,31 +269,31 @@ export class AstrologicalService {
     const natalPlanets = new Map<Planet, NatalPlacement>();
 
     // Example natal placements (would be calculated based on birth data)
-    natalPlanets.set('sun', {
-      planet: 'sun',
-      sign: 'leo',
+    natalPlanets.set("sun", {
+      planet: "sun",
+      sign: "leo",
       degree: 15,
       retrograde: false,
       strength: 0.9,
-      interpretation: 'Strong sense of self and creative expression'
+      interpretation: "Strong sense of self and creative expression",
     });
 
-    natalPlanets.set('moon', {
-      planet: 'moon',
-      sign: 'cancer',
+    natalPlanets.set("moon", {
+      planet: "moon",
+      sign: "cancer",
       degree: 22,
       retrograde: false,
       strength: 0.95,
-      interpretation: 'Deep emotional intelligence and nurturing nature'
+      interpretation: "Deep emotional intelligence and nurturing nature",
     });
 
-    natalPlanets.set('mercury', {
-      planet: 'mercury',
-      sign: 'virgo',
+    natalPlanets.set("mercury", {
+      planet: "mercury",
+      sign: "virgo",
       degree: 8,
       retrograde: false,
       strength: 0.85,
-      interpretation: 'Analytical mind with attention to detail'
+      interpretation: "Analytical mind with attention to detail",
     });
 
     // Calculate ascendant and midheaven based on birth time and location
@@ -276,17 +305,27 @@ export class AstrologicalService {
       ascendant,
       midheaven,
       planets: natalPlanets,
-      houses: this.calculateHouseCusps(ascendant)
+      houses: this.calculateHouseCusps(ascendant),
     };
   }
 
   // Calculate ascendant (simplified)
   private calculateAscendant(birthData: any): ZodiacSign {
     // Simplified calculation based on birth time
-    const hour = parseInt(birthData.time.split(':')[0]);
+    const hour = parseInt(birthData.time.split(":")[0]);
     const signs: ZodiacSign[] = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     return signs[Math.floor(hour / 2) % 12];
   }
@@ -294,12 +333,33 @@ export class AstrologicalService {
   // Calculate midheaven (simplified)
   private calculateMidheaven(birthData: any): ZodiacSign {
     // Simplified - would use actual calculations
-    const ascIndex = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-                      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
-                      .indexOf(this.calculateAscendant(birthData));
+    const ascIndex = [
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
+    ].indexOf(this.calculateAscendant(birthData));
     const signs: ZodiacSign[] = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     return signs[(ascIndex + 9) % 12]; // MC is roughly 9 signs from ASC
   }
@@ -307,9 +367,20 @@ export class AstrologicalService {
   // Calculate house cusps
   private calculateHouseCusps(ascendant: ZodiacSign): number[] {
     // Simplified equal house system
-    const ascIndex = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-                      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
-                      .indexOf(ascendant);
+    const ascIndex = [
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
+    ].indexOf(ascendant);
     const cusps: number[] = [];
 
     for (let i = 0; i < 12; i++) {
@@ -326,9 +397,9 @@ export class AstrologicalService {
     if (!userData) {
       // Load from database
       const { data: birthData } = await supabase
-        .from('user_birth_data')
-        .select('*')
-        .eq('user_id', userId)
+        .from("user_birth_data")
+        .select("*")
+        .eq("user_id", userId)
         .single();
 
       if (birthData) {
@@ -337,14 +408,16 @@ export class AstrologicalService {
           birthData: {
             date: new Date(birthData.birth_date),
             time: birthData.birth_time,
-            location: { lat: birthData.birth_lat, lng: birthData.birth_lng }
+            location: { lat: birthData.birth_lat, lng: birthData.birth_lng },
           },
           currentTransits: [],
-          lastUpdate: new Date()
+          lastUpdate: new Date(),
         };
 
         // Calculate natal chart
-        userData.natalChart = await this.calculateNatalChart(userData.birthData);
+        userData.natalChart = await this.calculateNatalChart(
+          userData.birthData,
+        );
         this.userAstroData.set(userId, userData);
       }
     }
@@ -378,7 +451,7 @@ export class AstrologicalService {
           influence: this.getTransitInterpretation(planet, houseNumber),
           startDate: new Date(), // Would calculate actual dates
           exactDate: new Date(),
-          endDate: new Date()
+          endDate: new Date(),
         });
       }
     });
@@ -387,20 +460,24 @@ export class AstrologicalService {
     userData.lastUpdate = new Date();
 
     // Save to database
-    await supabase
-      .from('user_transits')
-      .upsert({
-        user_id: userId,
-        transits,
-        updated_at: new Date().toISOString()
-      });
+    await supabase.from("user_transits").upsert({
+      user_id: userId,
+      transits,
+      updated_at: new Date().toISOString(),
+    });
   }
 
   // Get which house is being transited
-  private getTransitedHouse(position: { sign: ZodiacSign; degree: number }, natalChart: any): number | null {
+  private getTransitedHouse(
+    position: { sign: ZodiacSign; degree: number },
+    natalChart: any,
+  ): number | null {
     if (!natalChart || !natalChart.houses) return null;
 
-    const absoluteDegree = this.getAbsoluteDegree(position.sign, position.degree);
+    const absoluteDegree = this.getAbsoluteDegree(
+      position.sign,
+      position.degree,
+    );
 
     for (let i = 0; i < 12; i++) {
       const houseCusp = natalChart.houses[i];
@@ -415,7 +492,11 @@ export class AstrologicalService {
   }
 
   // Check if degree is in house
-  private isDegreeInHouse(degree: number, cuspStart: number, cuspEnd: number): boolean {
+  private isDegreeInHouse(
+    degree: number,
+    cuspStart: number,
+    cuspEnd: number,
+  ): boolean {
     if (cuspEnd < cuspStart) {
       // House crosses 0 degrees
       return degree >= cuspStart || degree < cuspEnd;
@@ -426,69 +507,85 @@ export class AstrologicalService {
   // Get absolute degree from sign and degree
   private getAbsoluteDegree(sign: ZodiacSign, degree: number): number {
     const signs: ZodiacSign[] = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     const signIndex = signs.indexOf(sign);
     return signIndex * 30 + degree;
   }
 
   // Get transit interpretation
-  private getTransitInterpretation(planet: Planet, houseNumber: number): string {
+  private getTransitInterpretation(
+    planet: Planet,
+    houseNumber: number,
+  ): string {
     const interpretations: Record<Planet, Record<number, string>> = {
       sun: {
-        1: 'Time to shine and express your authentic self',
-        2: 'Focus on building resources and self-worth',
-        3: 'Communication and learning are highlighted',
-        4: 'Attention turns to home and emotional foundations',
-        5: 'Creative self-expression and joy are emphasized',
-        6: 'Health and daily routines need attention',
-        7: 'Relationships come into focus',
-        8: 'Deep transformation and shared resources',
-        9: 'Expanding horizons through learning and travel',
-        10: 'Career and public life are illuminated',
-        11: 'Social connections and future visions',
-        12: 'Spiritual reflection and inner work'
+        1: "Time to shine and express your authentic self",
+        2: "Focus on building resources and self-worth",
+        3: "Communication and learning are highlighted",
+        4: "Attention turns to home and emotional foundations",
+        5: "Creative self-expression and joy are emphasized",
+        6: "Health and daily routines need attention",
+        7: "Relationships come into focus",
+        8: "Deep transformation and shared resources",
+        9: "Expanding horizons through learning and travel",
+        10: "Career and public life are illuminated",
+        11: "Social connections and future visions",
+        12: "Spiritual reflection and inner work",
       },
       moon: {
-        1: 'Emotional awareness of self',
-        2: 'Feelings about security and values',
-        3: 'Emotional communication',
-        4: 'Deep feelings about home and family',
-        5: 'Emotional creativity and play',
-        6: 'Feelings about health and service',
-        7: 'Emotional needs in relationships',
-        8: 'Deep emotional transformation',
-        9: 'Emotional expansion and belief',
-        10: 'Public emotional expression',
-        11: 'Emotional connections with groups',
-        12: 'Hidden emotions surface'
-      }
+        1: "Emotional awareness of self",
+        2: "Feelings about security and values",
+        3: "Emotional communication",
+        4: "Deep feelings about home and family",
+        5: "Emotional creativity and play",
+        6: "Feelings about health and service",
+        7: "Emotional needs in relationships",
+        8: "Deep emotional transformation",
+        9: "Emotional expansion and belief",
+        10: "Public emotional expression",
+        11: "Emotional connections with groups",
+        12: "Hidden emotions surface",
+      },
       // ... other planets
     };
 
-    return interpretations[planet]?.[houseNumber] ||
-           `${planet} activating house ${houseNumber}`;
+    return (
+      interpretations[planet]?.[houseNumber] ||
+      `${planet} activating house ${houseNumber}`
+    );
   }
 
   // Get current lunar phase
   public getCurrentLunarPhase(): { phase: string; percentage: number } {
     const synodicMonth = 29.53059;
-    const knownNewMoon = new Date('2024-01-11');
+    const knownNewMoon = new Date("2024-01-11");
     const now = new Date();
 
-    const daysSince = (now.getTime() - knownNewMoon.getTime()) / (1000 * 60 * 60 * 24);
+    const daysSince =
+      (now.getTime() - knownNewMoon.getTime()) / (1000 * 60 * 60 * 24);
     const phasePercentage = (daysSince % synodicMonth) / synodicMonth;
 
-    let phase = 'New Moon';
-    if (phasePercentage < 0.125) phase = 'New Moon';
-    else if (phasePercentage < 0.25) phase = 'Waxing Crescent';
-    else if (phasePercentage < 0.375) phase = 'First Quarter';
-    else if (phasePercentage < 0.5) phase = 'Waxing Gibbous';
-    else if (phasePercentage < 0.625) phase = 'Full Moon';
-    else if (phasePercentage < 0.75) phase = 'Waning Gibbous';
-    else if (phasePercentage < 0.875) phase = 'Last Quarter';
-    else phase = 'Waning Crescent';
+    let phase = "New Moon";
+    if (phasePercentage < 0.125) phase = "New Moon";
+    else if (phasePercentage < 0.25) phase = "Waxing Crescent";
+    else if (phasePercentage < 0.375) phase = "First Quarter";
+    else if (phasePercentage < 0.5) phase = "Waxing Gibbous";
+    else if (phasePercentage < 0.625) phase = "Full Moon";
+    else if (phasePercentage < 0.75) phase = "Waning Gibbous";
+    else if (phasePercentage < 0.875) phase = "Last Quarter";
+    else phase = "Waning Crescent";
 
     return { phase, percentage: phasePercentage };
   }
@@ -500,14 +597,29 @@ export class AstrologicalService {
     const day = now.getDate();
 
     // Approximate seasonal boundaries
-    if ((month === 2 && day >= 20) || month === 3 || month === 4 || (month === 5 && day < 21)) {
-      return { season: 'Spring', energy: 'New beginnings and growth' };
-    } else if ((month === 5 && day >= 21) || month === 6 || month === 7 || (month === 8 && day < 23)) {
-      return { season: 'Summer', energy: 'Full expression and abundance' };
-    } else if ((month === 8 && day >= 23) || month === 9 || month === 10 || (month === 11 && day < 21)) {
-      return { season: 'Autumn', energy: 'Harvest and reflection' };
+    if (
+      (month === 2 && day >= 20) ||
+      month === 3 ||
+      month === 4 ||
+      (month === 5 && day < 21)
+    ) {
+      return { season: "Spring", energy: "New beginnings and growth" };
+    } else if (
+      (month === 5 && day >= 21) ||
+      month === 6 ||
+      month === 7 ||
+      (month === 8 && day < 23)
+    ) {
+      return { season: "Summer", energy: "Full expression and abundance" };
+    } else if (
+      (month === 8 && day >= 23) ||
+      month === 9 ||
+      month === 10 ||
+      (month === 11 && day < 21)
+    ) {
+      return { season: "Autumn", energy: "Harvest and reflection" };
     } else {
-      return { season: 'Winter', energy: 'Rest and regeneration' };
+      return { season: "Winter", energy: "Rest and regeneration" };
     }
   }
 
@@ -520,7 +632,7 @@ export class AstrologicalService {
     // Example VOC period
     periods.push({
       start: new Date(now.getTime() + 3600000), // 1 hour from now
-      end: new Date(now.getTime() + 7200000)    // 2 hours from now
+      end: new Date(now.getTime() + 7200000), // 2 hours from now
     });
 
     return periods;
@@ -548,28 +660,33 @@ export class AstrologicalService {
   }
 
   // Generate Spiralogic Astrology Report
-  public async generateSpiralogicReport(userId: string, options?: {
-    lifeStage?: string;
-    personalityNotes?: string[];
-  }): Promise<SpiralogicReportOutput> {
+  public async generateSpiralogicReport(
+    userId: string,
+    options?: {
+      lifeStage?: string;
+      personalityNotes?: string[];
+    },
+  ): Promise<SpiralogicReportOutput> {
     try {
       logger.info(`Generating Spiralogic report for user ${userId}`);
 
       // Get user's birth data and natal chart
       const userData = await this.getUserAstrologicalData(userId);
       if (!userData || !userData.birthData || !userData.natalChart) {
-        throw new Error('User birth data not found. Please set birth information first.');
+        throw new Error(
+          "User birth data not found. Please set birth information first.",
+        );
       }
 
       // Get user's elemental profile from the database
       const { data: profileData, error } = await supabase
-        .from('user_profiles')
-        .select('name, elemental_profile, archetypes')
-        .eq('user_id', userId)
+        .from("user_profiles")
+        .select("name, elemental_profile, archetypes")
+        .eq("user_id", userId)
         .single();
 
       if (error || !profileData) {
-        throw new Error('User profile not found');
+        throw new Error("User profile not found");
       }
 
       // Calculate dominant and underactive elements
@@ -579,22 +696,22 @@ export class AstrologicalService {
       // Prepare report input
       const reportInput: SpiralogicReportInput = {
         userId,
-        name: profileData.name || 'Soul Seeker',
-        birthDate: userData.birthData.date.toISOString().split('T')[0],
+        name: profileData.name || "Soul Seeker",
+        birthDate: userData.birthData.date.toISOString().split("T")[0],
         birthTime: userData.birthData.time,
         birthLocation: `${userData.birthData.location.lat}, ${userData.birthData.location.lng}`, // Would convert to city name
         chartData: {
-          sun: this.getPlanetInfo(userData.natalChart.planets.get('sun')),
-          moon: this.getPlanetInfo(userData.natalChart.planets.get('moon')),
+          sun: this.getPlanetInfo(userData.natalChart.planets.get("sun")),
+          moon: this.getPlanetInfo(userData.natalChart.planets.get("moon")),
           rising: userData.natalChart.ascendant,
-          northNode: { sign: 'pisces', house: 12 }, // Would calculate actual nodes
-          southNode: { sign: 'virgo', house: 6 }    // Would calculate actual nodes
+          northNode: { sign: "pisces", house: 12 }, // Would calculate actual nodes
+          southNode: { sign: "virgo", house: 6 }, // Would calculate actual nodes
         },
         dominantElement: elements.dominant,
         underactiveElement: elements.underactive,
-        archetypes: profileData.archetypes || ['Mystic', 'Creator', 'Sage'],
+        archetypes: profileData.archetypes || ["Mystic", "Creator", "Sage"],
         lifeStage: options?.lifeStage,
-        personalityNotes: options?.personalityNotes
+        personalityNotes: options?.personalityNotes,
       };
 
       // Generate the report
@@ -604,7 +721,7 @@ export class AstrologicalService {
       // Enhance with rituals
       const enhancedReport = await reportFlow.enhanceWithRituals(
         reportOutput.report,
-        { dominant: elements.dominant, underactive: elements.underactive }
+        { dominant: elements.dominant, underactive: elements.underactive },
       );
 
       // Save report to database
@@ -612,11 +729,10 @@ export class AstrologicalService {
 
       return {
         ...reportOutput,
-        report: enhancedReport
+        report: enhancedReport,
       };
-
     } catch (error) {
-      logger.error('Error generating Spiralogic report:', error);
+      logger.error("Error generating Spiralogic report:", error);
       throw error;
     }
   }
@@ -631,7 +747,7 @@ export class AstrologicalService {
       water: 0,
       earth: 0,
       air: 0,
-      aether: 0
+      aether: 0,
     };
 
     // Count planets in each element
@@ -643,17 +759,17 @@ export class AstrologicalService {
     });
 
     // Find dominant and underactive
-    let dominant: ArchetypalElement = 'fire';
-    let underactive: ArchetypalElement = 'water';
+    let dominant: ArchetypalElement = "fire";
+    let underactive: ArchetypalElement = "water";
     let maxCount = 0;
     let minCount = 10;
 
     Object.entries(elementCounts).forEach(([element, count]) => {
-      if (count > maxCount && element !== 'aether') {
+      if (count > maxCount && element !== "aether") {
         maxCount = count;
         dominant = element as ArchetypalElement;
       }
-      if (count < minCount && element !== 'aether') {
+      if (count < minCount && element !== "aether") {
         minCount = count;
         underactive = element as ArchetypalElement;
       }
@@ -665,27 +781,30 @@ export class AstrologicalService {
   // Get element for zodiac sign
   private getElementForSign(sign: ZodiacSign): ArchetypalElement | null {
     const elementMap: Record<ZodiacSign, ArchetypalElement> = {
-      aries: 'fire',
-      leo: 'fire',
-      sagittarius: 'fire',
-      taurus: 'earth',
-      virgo: 'earth',
-      capricorn: 'earth',
-      gemini: 'air',
-      libra: 'air',
-      aquarius: 'air',
-      cancer: 'water',
-      scorpio: 'water',
-      pisces: 'water'
+      aries: "fire",
+      leo: "fire",
+      sagittarius: "fire",
+      taurus: "earth",
+      virgo: "earth",
+      capricorn: "earth",
+      gemini: "air",
+      libra: "air",
+      aquarius: "air",
+      cancer: "water",
+      scorpio: "water",
+      pisces: "water",
     };
 
     return elementMap[sign] || null;
   }
 
   // Convert planetary placement to report format
-  private getPlanetInfo(placement?: NatalPlacement): { sign: string; house: number } {
+  private getPlanetInfo(placement?: NatalPlacement): {
+    sign: string;
+    house: number;
+  } {
     if (!placement) {
-      return { sign: 'unknown', house: 1 };
+      return { sign: "unknown", house: 1 };
     }
 
     // Calculate house (simplified - would use actual house calculation)
@@ -693,28 +812,28 @@ export class AstrologicalService {
 
     return {
       sign: placement.sign,
-      house: house
+      house: house,
     };
   }
 
   // Save report to database
   private async saveReport(userId: string, report: any): Promise<string> {
     const { data, error } = await supabase
-      .from('spiralogic_reports')
+      .from("spiralogic_reports")
       .insert({
         user_id: userId,
-        report_type: 'astrology',
+        report_type: "astrology",
         content: report.content,
         sections: report.sections,
         metadata: report.metadata,
         generated_at: report.generatedAt,
-        version: report.version
+        version: report.version,
       })
-      .select('id')
+      .select("id")
       .single();
 
     if (error) {
-      logger.error('Error saving report:', error);
+      logger.error("Error saving report:", error);
       throw error;
     }
 
@@ -724,13 +843,13 @@ export class AstrologicalService {
   // Get user's previous reports
   public async getUserReports(userId: string): Promise<any[]> {
     const { data, error } = await supabase
-      .from('spiralogic_reports')
-      .select('*')
-      .eq('user_id', userId)
-      .order('generated_at', { ascending: false });
+      .from("spiralogic_reports")
+      .select("*")
+      .eq("user_id", userId)
+      .order("generated_at", { ascending: false });
 
     if (error) {
-      logger.error('Error fetching user reports:', error);
+      logger.error("Error fetching user reports:", error);
       throw error;
     }
 

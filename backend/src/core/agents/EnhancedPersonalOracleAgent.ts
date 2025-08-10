@@ -2,13 +2,13 @@
 // This agent serves as the primary user interface while routing to elemental agents
 // and contributing wisdom to AIN collective intelligence
 
-import { BaseAgent } from './baseAgent';
-import { FireAgent } from './fireAgent';
-import { WaterAgent } from './waterAgent';
-import { EarthAgent } from './earthAgent';
-import { AirAgent } from './airAgent';
-import { AetherAgent } from './aetherAgent';
-import { ShadowAgent } from './shadowAgents';
+import { BaseAgent } from "./baseAgent";
+import { FireAgent } from "./fireAgent";
+import { WaterAgent } from "./waterAgent";
+import { EarthAgent } from "./earthAgent";
+import { AirAgent } from "./airAgent";
+import { AetherAgent } from "./aetherAgent";
+import { ShadowAgent } from "./shadowAgents";
 import type {
   MainOracleAgentInterface,
   PatternContribution,
@@ -16,25 +16,28 @@ import type {
   TransformationEvent,
   QueryInput,
   EnhancedQueryInput,
-  ElementalType
-} from './interfaces/MainOracleAgentInterface';
-import type { AIResponse } from '../../types/ai';
-import { logger } from '../../utils/logger';
-import { getRelevantMemories, storeMemoryItem } from '../../services/memoryService';
+  ElementalType,
+} from "./interfaces/MainOracleAgentInterface";
+import type { AIResponse } from "../../types/ai";
+import { logger } from "../../utils/logger";
+import {
+  getRelevantMemories,
+  storeMemoryItem,
+} from "../../services/memoryService";
 
 export interface EnhancedPersonalOracleConfig {
   userId: string;
   oracleName: string;
-  mode?: 'daily' | 'retreat';
-  retreatPhase?: 'pre-retreat' | 'retreat-active' | 'post-retreat';
+  mode?: "daily" | "retreat";
+  retreatPhase?: "pre-retreat" | "retreat-active" | "post-retreat";
   elementalResonance?: ElementalType;
   voiceProfile?: VoiceProfile;
 }
 
 interface VoiceProfile {
   tone: ElementalType;
-  style: 'direct' | 'nurturing' | 'mystical' | 'analytical' | 'playful';
-  intimacyLevel: 'gentle' | 'deep' | 'profound';
+  style: "direct" | "nurturing" | "mystical" | "analytical" | "playful";
+  intimacyLevel: "gentle" | "deep" | "profound";
 }
 
 interface SacredRelationship {
@@ -53,7 +56,7 @@ interface SacredRelationship {
 export class EnhancedPersonalOracleAgent extends BaseAgent {
   private userId: string;
   private oracleName: string;
-  private mode: 'daily' | 'retreat';
+  private mode: "daily" | "retreat";
   private ainConnection?: MainOracleAgentInterface;
 
   // Elemental Agents - owned by PersonalOracleAgent
@@ -71,19 +74,20 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
   // Personal Context Cache
   private personalContext: any = {};
-  private lastContextUpdate: string = '';
+  private lastContextUpdate: string = "";
 
   constructor(config: EnhancedPersonalOracleConfig) {
     super({
       name: config.oracleName,
-      role: 'Sacred Mirror & Transformation Companion',
-      systemPrompt: 'You are a Sacred Mirror - reflecting truth with love, facilitating genuine transformation through elemental wisdom.',
-      model: 'gpt-4-turbo'
+      role: "Sacred Mirror & Transformation Companion",
+      systemPrompt:
+        "You are a Sacred Mirror - reflecting truth with love, facilitating genuine transformation through elemental wisdom.",
+      model: "gpt-4-turbo",
     });
 
     this.userId = config.userId;
     this.oracleName = config.oracleName;
-    this.mode = config.mode || 'daily';
+    this.mode = config.mode || "daily";
 
     // Initialize elemental agents as owned by this PersonalOracleAgent
     this.elementalAgents = {
@@ -92,7 +96,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       earth: new EarthAgent(),
       air: new AirAgent(),
       aether: new AetherAgent(),
-      shadow: new ShadowAgent()
+      shadow: new ShadowAgent(),
     };
 
     // Initialize sacred relationship
@@ -107,11 +111,13 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         water: 0,
         earth: 0,
         air: 0,
-        aether: 0
-      }
+        aether: 0,
+      },
     };
 
-    logger.info(`Enhanced PersonalOracleAgent initialized for user ${this.userId}`);
+    logger.info(
+      `Enhanced PersonalOracleAgent initialized for user ${this.userId}`,
+    );
   }
 
   /**
@@ -119,7 +125,9 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
    */
   setAINConnection(ainConnection: MainOracleAgentInterface): void {
     this.ainConnection = ainConnection;
-    logger.info(`AIN connection established for PersonalOracleAgent ${this.userId}`);
+    logger.info(
+      `AIN connection established for PersonalOracleAgent ${this.userId}`,
+    );
   }
 
   /**
@@ -141,15 +149,19 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       const personalContext = await this.gatherPersonalContext(query);
 
       // 2. Apply Sacred Mirror Protocol
-      const mirrorAnalysis = await this.applySacredMirrorProtocol(query, personalContext);
+      const mirrorAnalysis = await this.applySacredMirrorProtocol(
+        query,
+        personalContext,
+      );
 
       // 3. Request collective wisdom from AIN
       let collectiveWisdom: CollectiveWisdom | null = null;
       if (this.ainConnection) {
         try {
-          collectiveWisdom = await this.ainConnection.requestCollectiveWisdom(query);
+          collectiveWisdom =
+            await this.ainConnection.requestCollectiveWisdom(query);
         } catch (error) {
-          logger.warn('Could not access collective wisdom from AIN:', error);
+          logger.warn("Could not access collective wisdom from AIN:", error);
         }
       }
 
@@ -158,7 +170,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         query,
         personalContext,
         collectiveWisdom,
-        mirrorAnalysis
+        mirrorAnalysis,
       );
 
       // 5. Create enhanced query for elemental agent
@@ -166,18 +178,19 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         query,
         personalContext,
         collectiveWisdom,
-        mirrorAnalysis
+        mirrorAnalysis,
       );
 
       // 6. Route to appropriate elemental agent
-      const elementalResponse = await this.elementalAgents[elementalNeed].processQuery(enhancedQuery);
+      const elementalResponse =
+        await this.elementalAgents[elementalNeed].processQuery(enhancedQuery);
 
       // 7. Integrate elemental wisdom with personal context
       const personalResponse = await this.integrateElementalWisdom(
         elementalResponse,
         personalContext,
         mirrorAnalysis,
-        elementalNeed
+        elementalNeed,
       );
 
       // 8. Update sacred relationship
@@ -189,36 +202,41 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
           query,
           personalResponse,
           elementalNeed,
-          personalContext
+          personalContext,
         );
       }
 
       // 10. Store memory with enhanced metadata
-      await this.storeEnhancedMemory(query, personalResponse, elementalNeed, personalContext);
+      await this.storeEnhancedMemory(
+        query,
+        personalResponse,
+        elementalNeed,
+        personalContext,
+      );
 
-      logger.info('Query processed through enhanced hierarchy', {
+      logger.info("Query processed through enhanced hierarchy", {
         userId: this.userId,
         elementUsed: elementalNeed,
         confidence: personalResponse.confidence,
-        relationshipDepth: this.sacredRelationship.trustLevel
+        relationshipDepth: this.sacredRelationship.trustLevel,
       });
 
       return personalResponse;
-
     } catch (error) {
-      logger.error('Error in enhanced query processing:', error);
+      logger.error("Error in enhanced query processing:", error);
 
       // Graceful fallback response
       return {
-        content: "I sense a temporary disruption in our connection. Let me re-center and be present with you. What's most alive in you right now?",
-        provider: 'personal-oracle-fallback',
-        model: 'gpt-4',
+        content:
+          "I sense a temporary disruption in our connection. Let me re-center and be present with you. What's most alive in you right now?",
+        provider: "personal-oracle-fallback",
+        model: "gpt-4",
         confidence: 0.7,
         metadata: {
           error: true,
           errorHandledGracefully: true,
-          element: 'aether' // Default to integration when uncertain
-        }
+          element: "aether", // Default to integration when uncertain
+        },
       };
     }
   }
@@ -233,16 +251,19 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
       // Extract transformation history
       const transformationHistory = memories
-        .filter(m => m.metadata?.transformationIndicator)
-        .map(m => m.content);
+        .filter((m) => m.metadata?.transformationIndicator)
+        .map((m) => m.content);
 
       // Calculate elemental preferences based on history
       const elementalPreferences = this.calculateElementalPreferences(memories);
 
       // Get archetype journey from memories
       const archetypeJourney = memories
-        .filter(m => m.metadata?.archetype)
-        .map(m => ({ archetype: m.metadata.archetype, timestamp: m.timestamp }));
+        .filter((m) => m.metadata?.archetype)
+        .map((m) => ({
+          archetype: m.metadata.archetype,
+          timestamp: m.timestamp,
+        }));
 
       const context = {
         memories,
@@ -253,7 +274,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         conversationCount: this.sacredRelationship.conversationCount,
         trustLevel: this.sacredRelationship.trustLevel,
         lastElementUsed: this.getLastElementUsed(memories),
-        emergentPatterns: this.identifyEmergentPatterns(memories)
+        emergentPatterns: this.identifyEmergentPatterns(memories),
       };
 
       // Cache for performance
@@ -262,15 +283,21 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
       return context;
     } catch (error) {
-      logger.error('Error gathering personal context:', error);
+      logger.error("Error gathering personal context:", error);
       return {
         memories: [],
         sacredRelationship: this.sacredRelationship,
         transformationHistory: [],
-        elementalPreferences: { fire: 0.2, water: 0.2, earth: 0.2, air: 0.2, aether: 0.2 },
+        elementalPreferences: {
+          fire: 0.2,
+          water: 0.2,
+          earth: 0.2,
+          air: 0.2,
+          aether: 0.2,
+        },
         archetypeJourney: [],
         conversationCount: this.sacredRelationship.conversationCount,
-        trustLevel: this.sacredRelationship.trustLevel
+        trustLevel: this.sacredRelationship.trustLevel,
       };
     }
   }
@@ -278,13 +305,22 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
   /**
    * Apply Sacred Mirror Protocol - determine if comfort, truth, or challenge is needed
    */
-  private async applySacredMirrorProtocol(query: QueryInput, personalContext: any) {
+  private async applySacredMirrorProtocol(
+    query: QueryInput,
+    personalContext: any,
+  ) {
     const input = query.input.toLowerCase();
     const recentMemories = personalContext.memories.slice(0, 3);
 
     // Detect patterns that need mirroring
-    const isSeekingValidation = this.detectValidationSeeking(input, recentMemories);
-    const isInRepetitivePattern = this.detectRepetitivePattern(input, recentMemories);
+    const isSeekingValidation = this.detectValidationSeeking(
+      input,
+      recentMemories,
+    );
+    const isInRepetitivePattern = this.detectRepetitivePattern(
+      input,
+      recentMemories,
+    );
     const isAvoidingDepth = this.detectDepthAvoidance(input, personalContext);
     const isShadowMaterial = this.detectShadowMaterial(input, personalContext);
 
@@ -294,7 +330,10 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       needsShadowWork: isShadowMaterial,
       isInLoop: isInRepetitivePattern,
       reason: this.determineMirrorReason(input, personalContext),
-      mirrorIntensity: this.calculateMirrorIntensity(personalContext.trustLevel, personalContext.conversationCount)
+      mirrorIntensity: this.calculateMirrorIntensity(
+        personalContext.trustLevel,
+        personalContext.conversationCount,
+      ),
     };
   }
 
@@ -305,30 +344,34 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     query: QueryInput,
     personalContext: any,
     collectiveWisdom: CollectiveWisdom | null,
-    mirrorAnalysis: any
+    mirrorAnalysis: any,
   ): ElementalType {
     const input = query.input.toLowerCase();
 
     // Check collective wisdom recommendation first
     if (collectiveWisdom?.recommendedElement) {
-      logger.info(`Using AIN collective wisdom recommendation: ${collectiveWisdom.recommendedElement}`);
+      logger.info(
+        `Using AIN collective wisdom recommendation: ${collectiveWisdom.recommendedElement}`,
+      );
       return collectiveWisdom.recommendedElement;
     }
 
     // Shadow work takes priority
     if (mirrorAnalysis.needsShadowWork) {
-      return 'shadow' as ElementalType;
+      return "shadow" as ElementalType;
     }
 
     // Detect elemental needs from input
-    if (this.detectStagnation(input)) return 'fire';
-    if (this.detectEmotionalNeed(input)) return 'water';
-    if (this.detectOverwhelm(input)) return 'earth';
-    if (this.detectConfusion(input)) return 'air';
-    if (this.detectIntegrationNeed(input, personalContext)) return 'aether';
+    if (this.detectStagnation(input)) return "fire";
+    if (this.detectEmotionalNeed(input)) return "water";
+    if (this.detectOverwhelm(input)) return "earth";
+    if (this.detectConfusion(input)) return "air";
+    if (this.detectIntegrationNeed(input, personalContext)) return "aether";
 
     // Use elemental preferences from personal journey
-    return this.selectBasedOnElementalJourney(personalContext.elementalPreferences);
+    return this.selectBasedOnElementalJourney(
+      personalContext.elementalPreferences,
+    );
   }
 
   /**
@@ -338,22 +381,26 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     query: QueryInput,
     personalContext: any,
     collectiveWisdom: CollectiveWisdom | null,
-    mirrorAnalysis: any
+    mirrorAnalysis: any,
   ): EnhancedQueryInput {
     return {
       ...query,
       personalContext,
-      collectiveWisdom: collectiveWisdom || this.createDefaultCollectiveWisdom(),
+      collectiveWisdom:
+        collectiveWisdom || this.createDefaultCollectiveWisdom(),
       mirrorAnalysis,
-      ainGuidance: collectiveWisdom ? {
-        recommendedApproach: collectiveWisdom.collectiveInsights[0] || 'Trust the process',
-        universalPrinciples: collectiveWisdom.collectiveInsights,
-        cosmicContext: `Phase: ${collectiveWisdom.cosmicTiming.phase}, Synchronicity: ${collectiveWisdom.cosmicTiming.synchronicityDensity}`
-      } : {
-        recommendedApproach: 'Trust the process',
-        universalPrinciples: [],
-        cosmicContext: 'Individual journey focus'
-      }
+      ainGuidance: collectiveWisdom
+        ? {
+            recommendedApproach:
+              collectiveWisdom.collectiveInsights[0] || "Trust the process",
+            universalPrinciples: collectiveWisdom.collectiveInsights,
+            cosmicContext: `Phase: ${collectiveWisdom.cosmicTiming.phase}, Synchronicity: ${collectiveWisdom.cosmicTiming.synchronicityDensity}`,
+          }
+        : {
+            recommendedApproach: "Trust the process",
+            universalPrinciples: [],
+            cosmicContext: "Individual journey focus",
+          },
     };
   }
 
@@ -364,51 +411,66 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     elementalResponse: AIResponse,
     personalContext: any,
     mirrorAnalysis: any,
-    elementUsed: ElementalType
+    elementUsed: ElementalType,
   ): Promise<AIResponse> {
     let content = elementalResponse.content;
 
     // Add sacred mirror enhancement if needed
-    if (mirrorAnalysis.needsResistance && mirrorAnalysis.mirrorIntensity > 0.5) {
-      const resistancePrefix = this.getSacredResistancePrefix(mirrorAnalysis.reason);
+    if (
+      mirrorAnalysis.needsResistance &&
+      mirrorAnalysis.mirrorIntensity > 0.5
+    ) {
+      const resistancePrefix = this.getSacredResistancePrefix(
+        mirrorAnalysis.reason,
+      );
       content = `${resistancePrefix}\n\n${content}`;
     }
 
     // Add relationship context
     if (this.sacredRelationship.conversationCount > 5) {
-      const relationshipNote = this.getRelationshipNote(personalContext, elementUsed);
+      const relationshipNote = this.getRelationshipNote(
+        personalContext,
+        elementUsed,
+      );
       if (relationshipNote) {
         content = `${content}\n\n${relationshipNote}`;
       }
     }
 
     // Add integration invitation
-    const integrationInvitation = this.getIntegrationInvitation(elementUsed, personalContext);
+    const integrationInvitation = this.getIntegrationInvitation(
+      elementUsed,
+      personalContext,
+    );
     content = `${content}\n\n${integrationInvitation}`;
 
     return {
       ...elementalResponse,
       content,
-      provider: 'personal-oracle-enhanced',
+      provider: "personal-oracle-enhanced",
       metadata: {
         ...elementalResponse.metadata,
         personalOracleEnhanced: true,
         relationshipDepth: this.sacredRelationship.trustLevel,
         mirrorAnalysisApplied: mirrorAnalysis,
         elementUsed,
-        contributesToCollective: true
-      }
+        contributesToCollective: true,
+      },
     };
   }
 
   /**
    * Update sacred relationship based on interaction
    */
-  private updateSacredRelationship(query: QueryInput, response: AIResponse, elementUsed: ElementalType): void {
+  private updateSacredRelationship(
+    query: QueryInput,
+    response: AIResponse,
+    elementUsed: ElementalType,
+  ): void {
     // Increase trust level gradually
     this.sacredRelationship.trustLevel = Math.min(
       this.sacredRelationship.trustLevel + 0.02,
-      1.0
+      1.0,
     );
 
     // Track elemental journey
@@ -421,9 +483,11 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     }
 
     // Track depth reached
-    if (query.input.toLowerCase().includes('shadow') ||
-        query.input.toLowerCase().includes('fear') ||
-        query.input.toLowerCase().includes('vulnerable')) {
+    if (
+      query.input.toLowerCase().includes("shadow") ||
+      query.input.toLowerCase().includes("fear") ||
+      query.input.toLowerCase().includes("vulnerable")
+    ) {
       this.sacredRelationship.depthReached.push(`${elementUsed} depth work`);
     }
   }
@@ -435,7 +499,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     query: QueryInput,
     response: AIResponse,
     elementUsed: ElementalType,
-    personalContext: any
+    personalContext: any,
   ): Promise<void> {
     if (!this.ainConnection) return;
 
@@ -446,14 +510,17 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         queryTheme: this.categorizeQuery(query.input),
         responseEffectiveness: response.confidence || 0.8,
         userReaction: this.predictUserReaction(response, personalContext),
-        transformationIndicators: this.extractTransformationIndicators(response),
+        transformationIndicators:
+          this.extractTransformationIndicators(response),
         collectiveRelevance: this.calculateCollectiveRelevance(query, response),
         personalContext: {
-          archetypeStage: personalContext.archetypeJourney[0]?.archetype || 'explorer',
+          archetypeStage:
+            personalContext.archetypeJourney[0]?.archetype || "explorer",
           relationshipDepth: this.sacredRelationship.trustLevel,
-          transformationReadiness: this.calculateTransformationReadiness(personalContext)
+          transformationReadiness:
+            this.calculateTransformationReadiness(personalContext),
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       await this.ainConnection.contributePattern(pattern);
@@ -465,16 +532,18 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
           eventType: this.categorizeTransformationEvent(response),
           element: elementUsed,
           description: response.content.substring(0, 200),
-          significance: this.assessTransformationSignificance(response, personalContext),
+          significance: this.assessTransformationSignificance(
+            response,
+            personalContext,
+          ),
           collectiveRelevance: pattern.collectiveRelevance,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         await this.ainConnection.reportTransformation(transformation);
       }
-
     } catch (error) {
-      logger.error('Error contributing pattern to AIN:', error);
+      logger.error("Error contributing pattern to AIN:", error);
     }
   }
 
@@ -485,7 +554,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     query: QueryInput,
     response: AIResponse,
     elementUsed: ElementalType,
-    personalContext: any
+    personalContext: any,
   ): Promise<void> {
     try {
       // Store user query
@@ -493,14 +562,14 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         clientId: this.userId,
         content: query.input,
         element: elementUsed,
-        sourceAgent: 'user',
+        sourceAgent: "user",
         confidence: 0.7,
         metadata: {
-          role: 'user',
+          role: "user",
           personalOracleProcessed: true,
           relationshipDepth: this.sacredRelationship.trustLevel,
-          conversationCount: this.sacredRelationship.conversationCount
-        }
+          conversationCount: this.sacredRelationship.conversationCount,
+        },
       });
 
       // Store oracle response
@@ -508,146 +577,262 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         clientId: this.userId,
         content: response.content,
         element: elementUsed,
-        sourceAgent: 'personal-oracle-enhanced',
+        sourceAgent: "personal-oracle-enhanced",
         confidence: response.confidence,
         metadata: {
-          role: 'oracle',
+          role: "oracle",
           elementUsed,
           personalOracleEnhanced: true,
           relationshipDepth: this.sacredRelationship.trustLevel,
           contributesToCollective: true,
-          ...response.metadata
-        }
+          ...response.metadata,
+        },
       });
-
     } catch (error) {
-      logger.error('Error storing enhanced memory:', error);
+      logger.error("Error storing enhanced memory:", error);
     }
   }
 
   // Helper methods for pattern detection and analysis
   private detectStagnation(input: string): boolean {
-    const stagnationWords = ['stuck', 'same', 'boring', 'unmotivated', 'repetitive'];
-    return stagnationWords.some(word => input.includes(word));
+    const stagnationWords = [
+      "stuck",
+      "same",
+      "boring",
+      "unmotivated",
+      "repetitive",
+    ];
+    return stagnationWords.some((word) => input.includes(word));
   }
 
   private detectEmotionalNeed(input: string): boolean {
-    const emotionalWords = ['feel', 'emotion', 'heart', 'hurt', 'pain', 'sad', 'angry'];
-    return emotionalWords.some(word => input.includes(word));
+    const emotionalWords = [
+      "feel",
+      "emotion",
+      "heart",
+      "hurt",
+      "pain",
+      "sad",
+      "angry",
+    ];
+    return emotionalWords.some((word) => input.includes(word));
   }
 
   private detectOverwhelm(input: string): boolean {
-    const overwhelmWords = ['overwhelm', 'too much', 'scattered', 'chaos', 'stressed'];
-    return overwhelmWords.some(word => input.includes(word));
+    const overwhelmWords = [
+      "overwhelm",
+      "too much",
+      "scattered",
+      "chaos",
+      "stressed",
+    ];
+    return overwhelmWords.some((word) => input.includes(word));
   }
 
   private detectConfusion(input: string): boolean {
-    const confusionWords = ['confused', 'unclear', 'don\'t know', 'not sure', 'lost'];
-    return confusionWords.some(word => input.includes(word));
+    const confusionWords = [
+      "confused",
+      "unclear",
+      "don't know",
+      "not sure",
+      "lost",
+    ];
+    return confusionWords.some((word) => input.includes(word));
   }
 
   private detectIntegrationNeed(input: string, context: any): boolean {
-    const integrationWords = ['integrate', 'bring together', 'make sense', 'understand'];
-    const hasMultipleElements = context.elementalPreferences &&
-      Object.values(context.elementalPreferences).filter((v: any) => v > 0.3).length > 2;
+    const integrationWords = [
+      "integrate",
+      "bring together",
+      "make sense",
+      "understand",
+    ];
+    const hasMultipleElements =
+      context.elementalPreferences &&
+      Object.values(context.elementalPreferences).filter((v: any) => v > 0.3)
+        .length > 2;
 
-    return integrationWords.some(word => input.includes(word)) || hasMultipleElements;
+    return (
+      integrationWords.some((word) => input.includes(word)) ||
+      hasMultipleElements
+    );
   }
 
   private detectValidationSeeking(input: string, memories: any[]): boolean {
-    const validationWords = ['right thing', 'doing good', 'am i', 'should i'];
-    const recentValidation = memories.some(m =>
-      validationWords.some(word => m.content.toLowerCase().includes(word))
+    const validationWords = ["right thing", "doing good", "am i", "should i"];
+    const recentValidation = memories.some((m) =>
+      validationWords.some((word) => m.content.toLowerCase().includes(word)),
     );
 
-    return validationWords.some(word => input.includes(word)) && recentValidation;
+    return (
+      validationWords.some((word) => input.includes(word)) && recentValidation
+    );
   }
 
   private detectRepetitivePattern(input: string, memories: any[]): boolean {
     const currentTheme = this.extractTheme(input);
-    const recentThemes = memories.map(m => this.extractTheme(m.content));
+    const recentThemes = memories.map((m) => this.extractTheme(m.content));
 
-    return recentThemes.filter(theme => theme === currentTheme).length >= 2;
+    return recentThemes.filter((theme) => theme === currentTheme).length >= 2;
   }
 
   private detectDepthAvoidance(input: string, context: any): boolean {
-    const surfaceWords = ['fine', 'okay', 'just wondering', 'simple question'];
+    const surfaceWords = ["fine", "okay", "just wondering", "simple question"];
     const hasDepthHistory = context.sacredRelationship.depthReached.length > 0;
 
-    return surfaceWords.some(word => input.includes(word)) && hasDepthHistory;
+    return surfaceWords.some((word) => input.includes(word)) && hasDepthHistory;
   }
 
   private detectShadowMaterial(input: string, context: any): boolean {
-    const shadowWords = ['pattern', 'why do i', 'i always', 'i never', 'i can\'t seem to'];
-    return shadowWords.some(phrase => input.includes(phrase));
+    const shadowWords = [
+      "pattern",
+      "why do i",
+      "i always",
+      "i never",
+      "i can't seem to",
+    ];
+    return shadowWords.some((phrase) => input.includes(phrase));
   }
 
   // Additional helper methods would be implemented here...
-  private calculateElementalPreferences(memories: any[]): Record<ElementalType, number> {
-    const preferences: Record<ElementalType, number> = { fire: 0, water: 0, earth: 0, air: 0, aether: 0 };
+  private calculateElementalPreferences(
+    memories: any[],
+  ): Record<ElementalType, number> {
+    const preferences: Record<ElementalType, number> = {
+      fire: 0,
+      water: 0,
+      earth: 0,
+      air: 0,
+      aether: 0,
+    };
 
-    memories.forEach(memory => {
+    memories.forEach((memory) => {
       if (memory.element && memory.element in preferences) {
         preferences[memory.element as ElementalType] += 1;
       }
     });
 
     // Normalize to percentages
-    const total = Object.values(preferences).reduce((sum, val) => sum + val, 0) || 1;
-    Object.keys(preferences).forEach(key => {
-      preferences[key as ElementalType] = preferences[key as ElementalType] / total;
+    const total =
+      Object.values(preferences).reduce((sum, val) => sum + val, 0) || 1;
+    Object.keys(preferences).forEach((key) => {
+      preferences[key as ElementalType] =
+        preferences[key as ElementalType] / total;
     });
 
     return preferences;
   }
 
-  private selectBasedOnElementalJourney(preferences: Record<ElementalType, number>): ElementalType {
+  private selectBasedOnElementalJourney(
+    preferences: Record<ElementalType, number>,
+  ): ElementalType {
     // Find element with highest preference, or default to aether for integration
     const maxElement = Object.entries(preferences).reduce((a, b) =>
-      preferences[a[0] as ElementalType] > preferences[b[0] as ElementalType] ? a : b
+      preferences[a[0] as ElementalType] > preferences[b[0] as ElementalType]
+        ? a
+        : b,
     )[0] as ElementalType;
 
-    return maxElement || 'aether';
+    return maxElement || "aether";
   }
 
   private createDefaultCollectiveWisdom(): CollectiveWisdom {
     return {
       universalGuidance: {
         cosmicTiming: {
-          phase: 'initiation',
+          phase: "initiation",
           synchronicityDensity: 0.5,
           evolutionaryPressure: 0.5,
-          transformationWindow: false
+          transformationWindow: false,
         },
-        fieldCoherence: 0.7
+        fieldCoherence: 0.7,
       },
       relevantPatterns: [],
       recommendedElement: null,
-      collectiveInsights: ['Trust the process', 'Your journey is unique', 'Integration takes time'],
+      collectiveInsights: [
+        "Trust the process",
+        "Your journey is unique",
+        "Integration takes time",
+      ],
       cosmicTiming: {
-        phase: 'initiation',
+        phase: "initiation",
         synchronicityDensity: 0.5,
         evolutionaryPressure: 0.5,
-        transformationWindow: false
+        transformationWindow: false,
       },
-      emergentThemes: []
+      emergentThemes: [],
     };
   }
 
   // Placeholder implementations for remaining helper methods
-  private getLastElementUsed(memories: any[]): ElementalType { return 'aether'; }
-  private identifyEmergentPatterns(memories: any[]): string[] { return []; }
-  private determineMirrorReason(input: string, context: any): string { return 'growth opportunity'; }
-  private calculateMirrorIntensity(trustLevel: number, conversationCount: number): number { return Math.min(trustLevel * 0.8, 1.0); }
-  private getSacredResistancePrefix(reason: string): string { return `I notice ${reason}. `; }
-  private getRelationshipNote(context: any, element: ElementalType): string | null { return null; }
-  private getIntegrationInvitation(element: ElementalType, context: any): string { return 'How does this land with you?'; }
-  private categorizeQuery(input: string): string { return 'general_exploration'; }
-  private predictUserReaction(response: AIResponse, context: any): 'resistant' | 'receptive' | 'breakthrough' | 'integrative' | 'unknown' { return 'unknown'; }
-  private extractTransformationIndicators(response: AIResponse): string[] { return []; }
-  private calculateCollectiveRelevance(query: QueryInput, response: AIResponse): number { return 0.5; }
-  private calculateTransformationReadiness(context: any): number { return 0.5; }
-  private categorizeTransformationEvent(response: AIResponse): 'breakthrough' | 'integration' | 'resistance_dissolution' | 'shadow_integration' | 'vision_actualization' { return 'integration'; }
-  private assessTransformationSignificance(response: AIResponse, context: any): 'minor' | 'major' | 'profound' { return 'minor'; }
-  private extractTheme(text: string): string { return 'general'; }
+  private getLastElementUsed(memories: any[]): ElementalType {
+    return "aether";
+  }
+  private identifyEmergentPatterns(memories: any[]): string[] {
+    return [];
+  }
+  private determineMirrorReason(input: string, context: any): string {
+    return "growth opportunity";
+  }
+  private calculateMirrorIntensity(
+    trustLevel: number,
+    conversationCount: number,
+  ): number {
+    return Math.min(trustLevel * 0.8, 1.0);
+  }
+  private getSacredResistancePrefix(reason: string): string {
+    return `I notice ${reason}. `;
+  }
+  private getRelationshipNote(
+    context: any,
+    element: ElementalType,
+  ): string | null {
+    return null;
+  }
+  private getIntegrationInvitation(
+    element: ElementalType,
+    context: any,
+  ): string {
+    return "How does this land with you?";
+  }
+  private categorizeQuery(input: string): string {
+    return "general_exploration";
+  }
+  private predictUserReaction(
+    response: AIResponse,
+    context: any,
+  ): "resistant" | "receptive" | "breakthrough" | "integrative" | "unknown" {
+    return "unknown";
+  }
+  private extractTransformationIndicators(response: AIResponse): string[] {
+    return [];
+  }
+  private calculateCollectiveRelevance(
+    query: QueryInput,
+    response: AIResponse,
+  ): number {
+    return 0.5;
+  }
+  private calculateTransformationReadiness(context: any): number {
+    return 0.5;
+  }
+  private categorizeTransformationEvent(
+    response: AIResponse,
+  ):
+    | "breakthrough"
+    | "integration"
+    | "resistance_dissolution"
+    | "shadow_integration"
+    | "vision_actualization" {
+    return "integration";
+  }
+  private assessTransformationSignificance(
+    response: AIResponse,
+    context: any,
+  ): "minor" | "major" | "profound" {
+    return "minor";
+  }
+  private extractTheme(text: string): string {
+    return "general";
+  }
 }

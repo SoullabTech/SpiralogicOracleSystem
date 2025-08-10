@@ -1,6 +1,6 @@
-import { OracleAgent } from './oracleAgent';
-import type { AIResponse } from '../../types/ai';
-import type { AgentResponse } from '../../types/agent';
+import { OracleAgent } from "./oracleAgent";
+import type { AIResponse } from "../../types/ai";
+import type { AgentResponse } from "../../types/agent";
 
 export interface OracleIdentity {
   oracleName: string;
@@ -40,16 +40,16 @@ export abstract class ArchetypeAgent extends OracleAgent {
   public element: string;
   public energySignature: string;
   public oracleName: string;
-  public voiceProfile: OracleIdentity['voiceProfile'];
+  public voiceProfile: OracleIdentity["voiceProfile"];
   public phase: string;
-  public evolutionHistory: OracleIdentity['evolutionHistory'];
+  public evolutionHistory: OracleIdentity["evolutionHistory"];
   public lastInteraction: Date;
 
   constructor(
     element: string,
-    oracleName: string = 'Oracle',
-    voiceProfile?: OracleIdentity['voiceProfile'],
-    phase: string = 'initiation'
+    oracleName: string = "Oracle",
+    voiceProfile?: OracleIdentity["voiceProfile"],
+    phase: string = "initiation",
   ) {
     super();
     this.element = element;
@@ -64,7 +64,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
   // Override base class method to maintain compatibility
   async processQuery(query: string): Promise<AgentResponse> {
     // Convert to extended format for subclasses
-    const extendedQuery = { input: query, userId: 'anonymous' };
+    const extendedQuery = { input: query, userId: "anonymous" };
     const aiResponse = await this.processExtendedQuery(extendedQuery);
 
     // Update last interaction
@@ -75,22 +75,25 @@ export abstract class ArchetypeAgent extends OracleAgent {
       content: aiResponse.content,
       response: aiResponse.content, // Legacy compatibility
       metadata: aiResponse.metadata,
-      routingPath: [this.element.toLowerCase(), 'oracle-agent'],
+      routingPath: [this.element.toLowerCase(), "oracle-agent"],
       memoryEnhanced: true,
       confidence: aiResponse.confidence,
       provider: aiResponse.provider,
-      model: aiResponse.model
+      model: aiResponse.model,
     };
   }
 
-  abstract processExtendedQuery(query: { input: string; userId: string }): Promise<AIResponse>;
+  abstract processExtendedQuery(query: {
+    input: string;
+    userId: string;
+  }): Promise<AIResponse>;
 
   /**
    * 🎯 Process query with user personalization (Primary Oracle Method)
    */
   async processPersonalizedQuery(
     query: { input: string; userId: string },
-    personalization: UserPersonalization
+    personalization: UserPersonalization,
   ): Promise<AIResponse> {
     // Store personalization context for this query
     const enrichedQuery = {
@@ -100,7 +103,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
       energySignature: this.energySignature,
       oracleName: this.oracleName,
       voiceProfile: this.voiceProfile,
-      phase: this.phase
+      phase: this.phase,
     };
 
     // Update last interaction
@@ -119,7 +122,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
     return this.oracleName;
   }
 
-  public getVoiceProfile(): OracleIdentity['voiceProfile'] {
+  public getVoiceProfile(): OracleIdentity["voiceProfile"] {
     return this.voiceProfile;
   }
 
@@ -127,14 +130,17 @@ export abstract class ArchetypeAgent extends OracleAgent {
     return this.phase;
   }
 
-  public getEvolutionHistory(): OracleIdentity['evolutionHistory'] {
+  public getEvolutionHistory(): OracleIdentity["evolutionHistory"] {
     return this.evolutionHistory;
   }
 
   /**
    * 🌟 Oracle Evolution Methods
    */
-  public suggestEvolution(newPhase: string, newArchetype?: string): {
+  public suggestEvolution(
+    newPhase: string,
+    newArchetype?: string,
+  ): {
     suggestion: string;
     fromPhase: string;
     toPhase: string;
@@ -145,12 +151,18 @@ export abstract class ArchetypeAgent extends OracleAgent {
       suggestion: `${this.oracleName} senses you're ready to evolve from ${this.phase} to ${newPhase}`,
       fromPhase: this.phase,
       toPhase: newPhase,
-      archetypeChange: newArchetype ? `${this.element} → ${newArchetype}` : undefined,
-      benefits: this.getEvolutionBenefits(newPhase, newArchetype)
+      archetypeChange: newArchetype
+        ? `${this.element} → ${newArchetype}`
+        : undefined,
+      benefits: this.getEvolutionBenefits(newPhase, newArchetype),
     };
   }
 
-  public evolveToPhase(newPhase: string, newArchetype?: string, userInitiated: boolean = true): void {
+  public evolveToPhase(
+    newPhase: string,
+    newArchetype?: string,
+    userInitiated: boolean = true,
+  ): void {
     const oldPhase = this.phase;
     const oldArchetype = this.element;
 
@@ -159,7 +171,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
       fromPhase: oldPhase,
       toPhase: newPhase,
       timestamp: new Date(),
-      userInitiated
+      userInitiated,
     });
 
     // Update phase
@@ -172,7 +184,9 @@ export abstract class ArchetypeAgent extends OracleAgent {
     }
   }
 
-  public updateVoiceProfile(newVoiceProfile: Partial<OracleIdentity['voiceProfile']>): void {
+  public updateVoiceProfile(
+    newVoiceProfile: Partial<OracleIdentity["voiceProfile"]>,
+  ): void {
     this.voiceProfile = { ...this.voiceProfile, ...newVoiceProfile };
   }
 
@@ -183,28 +197,81 @@ export abstract class ArchetypeAgent extends OracleAgent {
   /**
    * 🎭 Oracle Personality Methods
    */
-  protected getDefaultVoiceProfile(): OracleIdentity['voiceProfile'] {
+  protected getDefaultVoiceProfile(): OracleIdentity["voiceProfile"] {
     const elementVoiceProfiles = {
-      fire: { voiceId: 'elevenlabs_fire_voice', stability: 0.7, style: 0.8, tone: 'catalytic' },
-      water: { voiceId: 'elevenlabs_water_voice', stability: 0.8, style: 0.6, tone: 'nurturing' },
-      earth: { voiceId: 'elevenlabs_earth_voice', stability: 0.9, style: 0.5, tone: 'grounding' },
-      air: { voiceId: 'elevenlabs_air_voice', stability: 0.6, style: 0.7, tone: 'clarifying' },
-      aether: { voiceId: 'elevenlabs_aether_voice', stability: 0.8, style: 0.7, tone: 'transcendent' }
+      fire: {
+        voiceId: "elevenlabs_fire_voice",
+        stability: 0.7,
+        style: 0.8,
+        tone: "catalytic",
+      },
+      water: {
+        voiceId: "elevenlabs_water_voice",
+        stability: 0.8,
+        style: 0.6,
+        tone: "nurturing",
+      },
+      earth: {
+        voiceId: "elevenlabs_earth_voice",
+        stability: 0.9,
+        style: 0.5,
+        tone: "grounding",
+      },
+      air: {
+        voiceId: "elevenlabs_air_voice",
+        stability: 0.6,
+        style: 0.7,
+        tone: "clarifying",
+      },
+      aether: {
+        voiceId: "elevenlabs_aether_voice",
+        stability: 0.8,
+        style: 0.7,
+        tone: "transcendent",
+      },
     };
 
     return elementVoiceProfiles[this.element] || elementVoiceProfiles.aether;
   }
 
-  protected getEvolutionBenefits(newPhase: string, newArchetype?: string): string[] {
+  protected getEvolutionBenefits(
+    newPhase: string,
+    newArchetype?: string,
+  ): string[] {
     const phaseBenefits = {
-      initiation: ['Ignite your purpose', 'Clarify your path', 'Activate your potential'],
-      exploration: ['Expand your horizons', 'Discover hidden aspects', 'Embrace curiosity'],
-      integration: ['Synthesize your learnings', 'Embody your wisdom', 'Create coherence'],
-      transcendence: ['Access higher perspectives', 'Dissolve limitations', 'Embrace unity'],
-      mastery: ['Become the teaching', 'Serve others\' growth', 'Embody mastery']
+      initiation: [
+        "Ignite your purpose",
+        "Clarify your path",
+        "Activate your potential",
+      ],
+      exploration: [
+        "Expand your horizons",
+        "Discover hidden aspects",
+        "Embrace curiosity",
+      ],
+      integration: [
+        "Synthesize your learnings",
+        "Embody your wisdom",
+        "Create coherence",
+      ],
+      transcendence: [
+        "Access higher perspectives",
+        "Dissolve limitations",
+        "Embrace unity",
+      ],
+      mastery: [
+        "Become the teaching",
+        "Serve others' growth",
+        "Embody mastery",
+      ],
     };
 
-    return phaseBenefits[newPhase] || ['Evolve your consciousness', 'Deepen your journey'];
+    return (
+      phaseBenefits[newPhase] || [
+        "Evolve your consciousness",
+        "Deepen your journey",
+      ]
+    );
   }
 
   /**
@@ -219,19 +286,19 @@ export abstract class ArchetypeAgent extends OracleAgent {
 
   protected getTimeOfDay(): string {
     const hour = new Date().getHours();
-    if (hour < 6) return 'The night still holds us in its mystery.';
-    if (hour < 12) return 'The morning brings new possibilities.';
-    if (hour < 18) return 'The day offers its gifts.';
-    return 'The evening invites reflection.';
+    if (hour < 6) return "The night still holds us in its mystery.";
+    if (hour < 12) return "The morning brings new possibilities.";
+    if (hour < 18) return "The day offers its gifts.";
+    return "The evening invites reflection.";
   }
 
   protected getElementalGreeting(): string {
     const greetings = {
-      fire: '🔥 I feel the spark of transformation in you.',
-      water: '💧 I sense the flow of your emotions.',
-      earth: '🌱 I ground myself in your presence.',
-      air: '🌬️ I breathe clarity into our connection.',
-      aether: '✨ I weave the threads of your soul story.'
+      fire: "🔥 I feel the spark of transformation in you.",
+      water: "💧 I sense the flow of your emotions.",
+      earth: "🌱 I ground myself in your presence.",
+      air: "🌬️ I breathe clarity into our connection.",
+      aether: "✨ I weave the threads of your soul story.",
     };
 
     return greetings[this.element] || greetings.aether;

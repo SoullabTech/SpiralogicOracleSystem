@@ -1,10 +1,15 @@
 // frontend/src/components/onboarding/BeautifulOnboarding.tsx
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { VOICE_OPTIONS, playVoiceSample, stopVoiceSample, isVoicePlaying } from '../../lib/voice';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../lib/supabase";
+import {
+  VOICE_OPTIONS,
+  playVoiceSample,
+  stopVoiceSample,
+  isVoicePlaying,
+} from "../../lib/voice";
 
 interface OraclePreferences {
   oracle_name: string;
@@ -16,16 +21,18 @@ interface BeautifulOnboardingProps {
   onComplete: (preferences: OraclePreferences) => void;
 }
 
-const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete }) => {
+const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({
+  onComplete,
+}) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    oracle_name: '',
-    oracle_voice: 'AuntAnnie',
-    reflection: ''
+    oracle_name: "",
+    oracle_voice: "AuntAnnie",
+    reflection: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -40,9 +47,9 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
 
     try {
       const { data } = await supabase
-        .from('oracle_preferences')
-        .select('*')
-        .eq('user_id', user.id)
+        .from("oracle_preferences")
+        .select("*")
+        .eq("user_id", user.id)
         .single();
 
       if (data) {
@@ -61,15 +68,15 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
     const newErrors: Record<string, string> = {};
 
     if (!formData.oracle_name.trim()) {
-      newErrors.oracle_name = 'Please choose a name for your Oracle';
+      newErrors.oracle_name = "Please choose a name for your Oracle";
     } else if (formData.oracle_name.trim().length < 2) {
-      newErrors.oracle_name = 'Oracle name must be at least 2 characters';
+      newErrors.oracle_name = "Oracle name must be at least 2 characters";
     } else if (formData.oracle_name.trim().length > 50) {
-      newErrors.oracle_name = 'Oracle name must be less than 50 characters';
+      newErrors.oracle_name = "Oracle name must be less than 50 characters";
     }
 
     if (!formData.oracle_voice) {
-      newErrors.oracle_voice = 'Please select a voice for your Oracle';
+      newErrors.oracle_voice = "Please select a voice for your Oracle";
     }
 
     setErrors(newErrors);
@@ -92,7 +99,7 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
         }, 5000);
       }
     } catch (error) {
-      console.error('Failed to play voice sample:', error);
+      console.error("Failed to play voice sample:", error);
       setPlayingVoice(null);
     }
   };
@@ -107,12 +114,12 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
 
     try {
       const { data, error } = await supabase
-        .from('oracle_preferences')
+        .from("oracle_preferences")
         .insert({
           user_id: user.id,
           oracle_name: formData.oracle_name.trim(),
           oracle_voice: formData.oracle_voice,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .select()
         .single();
@@ -121,31 +128,30 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
 
       // Log Oracle creation memory if reflection provided
       if (formData.reflection.trim()) {
-        await supabase
-          .from('memory_items')
-          .insert({
-            user_id: user.id,
-            title: 'Oracle Initialized',
-            content: `Oracle named "${formData.oracle_name}" with ${formData.oracle_voice} voice. Reflection: ${formData.reflection}`,
-            category: 'initialization',
-            metadata: {
-              oracle_name: formData.oracle_name,
-              oracle_voice: formData.oracle_voice,
-              reflection: formData.reflection,
-              event_type: 'oracle_creation'
-            }
-          });
+        await supabase.from("memory_items").insert({
+          user_id: user.id,
+          title: "Oracle Initialized",
+          content: `Oracle named "${formData.oracle_name}" with ${formData.oracle_voice} voice. Reflection: ${formData.reflection}`,
+          category: "initialization",
+          metadata: {
+            oracle_name: formData.oracle_name,
+            oracle_voice: formData.oracle_voice,
+            reflection: formData.reflection,
+            event_type: "oracle_creation",
+          },
+        });
       }
 
       onComplete({
         oracle_name: data.oracle_name,
         oracle_voice: data.oracle_voice,
-        reflection: formData.reflection || undefined
+        reflection: formData.reflection || undefined,
       });
-
     } catch (error) {
-      console.error('Failed to save Oracle preferences:', error);
-      setErrors({ submit: 'Failed to save your Oracle preferences. Please try again.' });
+      console.error("Failed to save Oracle preferences:", error);
+      setErrors({
+        submit: "Failed to save your Oracle preferences. Please try again.",
+      });
     } finally {
       setSaving(false);
     }
@@ -217,8 +223,8 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
             Name Your Oracle
           </h1>
           <p className="text-lg text-gray-300 max-w-lg mx-auto leading-relaxed">
-            Choose a name and voice for your personal guide. This creates the foundation
-            of your relationship with the Oracle System.
+            Choose a name and voice for your personal guide. This creates the
+            foundation of your relationship with the Oracle System.
           </p>
         </div>
 
@@ -236,7 +242,9 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
             <input
               type="text"
               value={formData.oracle_name}
-              onChange={(e) => setFormData({ ...formData, oracle_name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, oracle_name: e.target.value })
+              }
               placeholder="What shall we call your Oracle?"
               className="w-full px-6 py-4 bg-[#1A1C2C] border border-gray-600 text-white placeholder-gray-400 text-lg rounded-xl focus:border-[#F6E27F] focus:outline-none focus:ring-2 focus:ring-[#F6E27F]/20 transition-all duration-300"
               maxLength={50}
@@ -265,22 +273,34 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
                   key={voice.id}
                   className={`relative p-4 border rounded-xl cursor-pointer transition-all duration-300 ${
                     formData.oracle_voice === voice.id
-                      ? 'border-[#F6E27F] bg-[#F6E27F]/10'
-                      : 'border-gray-600 bg-[#1A1C2C] hover:border-gray-500'
+                      ? "border-[#F6E27F] bg-[#F6E27F]/10"
+                      : "border-gray-600 bg-[#1A1C2C] hover:border-gray-500"
                   }`}
-                  onClick={() => setFormData({ ...formData, oracle_voice: voice.id })}
+                  onClick={() =>
+                    setFormData({ ...formData, oracle_voice: voice.id })
+                  }
                 >
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-medium text-white">{voice.name}</h3>
-                    <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
-                      formData.oracle_voice === voice.id
-                        ? 'border-[#F6E27F] bg-[#F6E27F]'
-                        : 'border-gray-500'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                        formData.oracle_voice === voice.id
+                          ? "border-[#F6E27F] bg-[#F6E27F]"
+                          : "border-gray-500"
+                      }`}
+                    >
                       {formData.oracle_voice === voice.id && (
                         <div className="w-full h-full rounded-full bg-[#F6E27F] flex items-center justify-center">
-                          <svg className="w-3 h-3 text-[#0E0F1B]" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-3 h-3 text-[#0E0F1B]"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
                       )}
@@ -300,21 +320,37 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
                     disabled={saving}
                     className={`w-full py-2 px-4 text-sm border rounded-lg transition-all duration-300 ${
                       playingVoice === voice.id
-                        ? 'border-red-500 bg-red-500/10 text-red-400'
-                        : 'border-gray-600 text-gray-300 hover:border-[#F6E27F] hover:text-[#F6E27F]'
+                        ? "border-red-500 bg-red-500/10 text-red-400"
+                        : "border-gray-600 text-gray-300 hover:border-[#F6E27F] hover:text-[#F6E27F]"
                     }`}
                   >
                     {playingVoice === voice.id ? (
                       <span className="flex items-center justify-center">
-                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         Stop Preview
                       </span>
                     ) : (
                       <span className="flex items-center justify-center">
-                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         Preview Voice
                       </span>
@@ -335,11 +371,16 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
             transition={{ delay: 0.9 }}
           >
             <label className="block text-lg font-medium text-[#F6E27F] mb-3">
-              🧠 Why This Choice? <span className="text-sm text-gray-400 font-normal">(Optional)</span>
+              🧠 Why This Choice?{" "}
+              <span className="text-sm text-gray-400 font-normal">
+                (Optional)
+              </span>
             </label>
             <textarea
               value={formData.reflection}
-              onChange={(e) => setFormData({ ...formData, reflection: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, reflection: e.target.value })
+              }
               placeholder="What drew you to this name and voice? This insight will be saved as your first Oracle memory..."
               className="w-full px-6 py-4 bg-[#1A1C2C] border border-gray-600 text-white placeholder-gray-400 rounded-xl focus:border-[#F6E27F] focus:outline-none focus:ring-2 focus:ring-[#F6E27F]/20 transition-all duration-300 resize-none"
               rows={4}
@@ -375,7 +416,7 @@ const BeautifulOnboarding: React.FC<BeautifulOnboardingProps> = ({ onComplete })
                   Initializing Oracle...
                 </span>
               ) : (
-                '✨ Save & Continue to Dashboard'
+                "✨ Save & Continue to Dashboard"
               )}
             </button>
           </motion.div>

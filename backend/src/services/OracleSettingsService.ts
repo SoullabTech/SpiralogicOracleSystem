@@ -5,10 +5,10 @@
  * Respects user sovereignty - never forces changes, always offers choice.
  */
 
-import { OracleService, UserOracleSettings } from './OracleService';
-import { ArchetypeAgentFactory } from '../core/agents/ArchetypeAgentFactory';
-import { OracleIdentity } from '../core/agents/ArchetypeAgent';
-import { logger } from '../utils/logger';
+import { OracleService, UserOracleSettings } from "./OracleService";
+import { ArchetypeAgentFactory } from "../core/agents/ArchetypeAgentFactory";
+import { OracleIdentity } from "../core/agents/ArchetypeAgent";
+import { logger } from "../utils/logger";
 
 export interface VoiceCustomization {
   voiceId?: string;
@@ -31,7 +31,7 @@ export interface EvolutionProposal {
   benefits: string[];
   risks: string[];
   timestamp: Date;
-  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  status: "pending" | "accepted" | "declined" | "expired";
 }
 
 export interface OracleCustomization {
@@ -46,8 +46,8 @@ export interface OracleCustomization {
   communicationPreferences?: {
     useEmojis?: boolean;
     ceremonyMode?: boolean;
-    responseLength?: 'brief' | 'moderate' | 'detailed';
-    questionStyle?: 'direct' | 'socratic' | 'exploratory';
+    responseLength?: "brief" | "moderate" | "detailed";
+    questionStyle?: "direct" | "socratic" | "exploratory";
   };
 }
 
@@ -59,7 +59,7 @@ export class OracleSettingsService {
    */
   static async updateVoiceSettings(
     userId: string,
-    voiceCustomization: VoiceCustomization
+    voiceCustomization: VoiceCustomization,
   ): Promise<void> {
     // Validate voice settings
     this.validateVoiceSettings(voiceCustomization);
@@ -70,9 +70,9 @@ export class OracleSettingsService {
     // Clear cache to force recreation with new voice
     OracleService.clearUserCache(userId);
 
-    logger.info('Oracle Voice Settings Updated:', {
+    logger.info("Oracle Voice Settings Updated:", {
       userId,
-      voiceCustomization
+      voiceCustomization,
     });
   }
 
@@ -82,19 +82,19 @@ export class OracleSettingsService {
   static async renameOracle(userId: string, newName: string): Promise<void> {
     // Validate name
     if (!newName || newName.trim().length === 0) {
-      throw new Error('Oracle name cannot be empty');
+      throw new Error("Oracle name cannot be empty");
     }
 
     if (newName.length > 50) {
-      throw new Error('Oracle name must be 50 characters or less');
+      throw new Error("Oracle name must be 50 characters or less");
     }
 
     // Update Oracle name
     await OracleService.renameOracle(userId, newName.trim());
 
-    logger.info('Oracle Renamed:', {
+    logger.info("Oracle Renamed:", {
       userId,
-      newName: newName.trim()
+      newName: newName.trim(),
     });
   }
 
@@ -105,7 +105,7 @@ export class OracleSettingsService {
     userId: string,
     proposedPhase: string,
     proposedArchetype?: string,
-    reason: string = 'User-initiated evolution'
+    reason: string = "User-initiated evolution",
   ): Promise<EvolutionProposal> {
     const oracle = await OracleService.getUserOracle(userId);
 
@@ -120,25 +120,30 @@ export class OracleSettingsService {
       benefits: this.getEvolutionBenefits(proposedPhase, proposedArchetype),
       risks: this.getEvolutionRisks(oracle.phase, proposedPhase),
       timestamp: new Date(),
-      status: 'pending'
+      status: "pending",
     };
 
     // Store proposal
     this.evolutionProposals.set(proposal.proposalId, proposal);
 
     // Set expiration (proposals expire after 7 days)
-    setTimeout(() => {
-      const existingProposal = this.evolutionProposals.get(proposal.proposalId);
-      if (existingProposal && existingProposal.status === 'pending') {
-        existingProposal.status = 'expired';
-      }
-    }, 7 * 24 * 60 * 60 * 1000); // 7 days
+    setTimeout(
+      () => {
+        const existingProposal = this.evolutionProposals.get(
+          proposal.proposalId,
+        );
+        if (existingProposal && existingProposal.status === "pending") {
+          existingProposal.status = "expired";
+        }
+      },
+      7 * 24 * 60 * 60 * 1000,
+    ); // 7 days
 
-    logger.info('Evolution Proposal Created:', {
+    logger.info("Evolution Proposal Created:", {
       userId,
       proposalId: proposal.proposalId,
       proposedPhase,
-      proposedArchetype
+      proposedArchetype,
     });
 
     return proposal;
@@ -146,66 +151,74 @@ export class OracleSettingsService {
 
   static async acceptEvolution(
     userId: string,
-    proposalId: string
+    proposalId: string,
   ): Promise<void> {
     const proposal = this.evolutionProposals.get(proposalId);
 
     if (!proposal) {
-      throw new Error('Evolution proposal not found');
+      throw new Error("Evolution proposal not found");
     }
 
     if (proposal.userId !== userId) {
-      throw new Error('Unauthorized: Cannot accept another user\'s evolution proposal');
+      throw new Error(
+        "Unauthorized: Cannot accept another user's evolution proposal",
+      );
     }
 
-    if (proposal.status !== 'pending') {
-      throw new Error(`Evolution proposal is ${proposal.status} and cannot be accepted`);
+    if (proposal.status !== "pending") {
+      throw new Error(
+        `Evolution proposal is ${proposal.status} and cannot be accepted`,
+      );
     }
 
     // Execute evolution
     await OracleService.acceptEvolution(
       userId,
       proposal.proposedPhase,
-      proposal.proposedArchetype
+      proposal.proposedArchetype,
     );
 
     // Update proposal status
-    proposal.status = 'accepted';
+    proposal.status = "accepted";
 
-    logger.info('Evolution Accepted:', {
+    logger.info("Evolution Accepted:", {
       userId,
       proposalId,
       newPhase: proposal.proposedPhase,
-      newArchetype: proposal.proposedArchetype
+      newArchetype: proposal.proposedArchetype,
     });
   }
 
   static async declineEvolution(
     userId: string,
     proposalId: string,
-    reason?: string
+    reason?: string,
   ): Promise<void> {
     const proposal = this.evolutionProposals.get(proposalId);
 
     if (!proposal) {
-      throw new Error('Evolution proposal not found');
+      throw new Error("Evolution proposal not found");
     }
 
     if (proposal.userId !== userId) {
-      throw new Error('Unauthorized: Cannot decline another user\'s evolution proposal');
+      throw new Error(
+        "Unauthorized: Cannot decline another user's evolution proposal",
+      );
     }
 
-    if (proposal.status !== 'pending') {
-      throw new Error(`Evolution proposal is ${proposal.status} and cannot be declined`);
+    if (proposal.status !== "pending") {
+      throw new Error(
+        `Evolution proposal is ${proposal.status} and cannot be declined`,
+      );
     }
 
     // Update proposal status
-    proposal.status = 'declined';
+    proposal.status = "declined";
 
-    logger.info('Evolution Declined:', {
+    logger.info("Evolution Declined:", {
       userId,
       proposalId,
-      reason
+      reason,
     });
   }
 
@@ -214,7 +227,7 @@ export class OracleSettingsService {
    */
   static async updatePersonalitySettings(
     userId: string,
-    personalityAdjustments: OracleCustomization['personalityAdjustments']
+    personalityAdjustments: OracleCustomization["personalityAdjustments"],
   ): Promise<void> {
     // Validate personality settings
     this.validatePersonalitySettings(personalityAdjustments);
@@ -226,9 +239,9 @@ export class OracleSettingsService {
     // Clear cache to force recreation
     OracleService.clearUserCache(userId);
 
-    logger.info('Oracle Personality Settings Updated:', {
+    logger.info("Oracle Personality Settings Updated:", {
       userId,
-      personalityAdjustments
+      personalityAdjustments,
     });
   }
 
@@ -237,7 +250,7 @@ export class OracleSettingsService {
    */
   static async updateCommunicationPreferences(
     userId: string,
-    communicationPreferences: OracleCustomization['communicationPreferences']
+    communicationPreferences: OracleCustomization["communicationPreferences"],
   ): Promise<void> {
     // Store communication preferences
     await this.storeCommunicationPreferences(userId, communicationPreferences);
@@ -245,9 +258,9 @@ export class OracleSettingsService {
     // Clear cache to force recreation
     OracleService.clearUserCache(userId);
 
-    logger.info('Oracle Communication Preferences Updated:', {
+    logger.info("Oracle Communication Preferences Updated:", {
       userId,
-      communicationPreferences
+      communicationPreferences,
     });
   }
 
@@ -256,14 +269,15 @@ export class OracleSettingsService {
    */
   static async getOracleSettings(userId: string): Promise<{
     oracle: UserOracleSettings;
-    personalitySettings: OracleCustomization['personalityAdjustments'];
-    communicationPreferences: OracleCustomization['communicationPreferences'];
+    personalitySettings: OracleCustomization["personalityAdjustments"];
+    communicationPreferences: OracleCustomization["communicationPreferences"];
     evolutionHistory: EvolutionProposal[];
     pendingProposals: EvolutionProposal[];
   }> {
     const oracleProfile = await OracleService.getOracleProfile(userId);
     const personalitySettings = await this.getPersonalitySettings(userId);
-    const communicationPreferences = await this.getCommunicationPreferences(userId);
+    const communicationPreferences =
+      await this.getCommunicationPreferences(userId);
     const evolutionHistory = await this.getEvolutionHistory(userId);
     const pendingProposals = await this.getPendingProposals(userId);
 
@@ -272,7 +286,7 @@ export class OracleSettingsService {
       personalitySettings,
       communicationPreferences,
       evolutionHistory,
-      pendingProposals
+      pendingProposals,
     };
   }
 
@@ -282,7 +296,7 @@ export class OracleSettingsService {
   static async generateVoicePreview(
     userId: string,
     voiceSettings: VoiceCustomization,
-    previewText?: string
+    previewText?: string,
   ): Promise<{
     audioUrl: string;
     settings: VoiceCustomization;
@@ -297,7 +311,7 @@ export class OracleSettingsService {
     return {
       audioUrl: `https://preview.example.com/voice_${Date.now()}.mp3`,
       settings: voiceSettings,
-      duration: 3000 // 3 seconds
+      duration: 3000, // 3 seconds
     };
   }
 
@@ -320,10 +334,10 @@ export class OracleSettingsService {
     return {
       totalInteractions: 0,
       averageSessionLength: 0,
-      mostActiveTime: '00:00',
+      mostActiveTime: "00:00",
       topTopics: [],
       evolutionJourney: [],
-      satisfactionScore: 0
+      satisfactionScore: 0,
     };
   }
 
@@ -344,15 +358,15 @@ export class OracleSettingsService {
       timestamp: new Date(),
       settings: settings.oracle,
       personalityData: settings.personalitySettings,
-      communicationPreferences: settings.communicationPreferences
+      communicationPreferences: settings.communicationPreferences,
     };
 
     // Store backup
     await this.storeOracleBackup(backup);
 
-    logger.info('Oracle Backup Created:', {
+    logger.info("Oracle Backup Created:", {
       userId,
-      backupId: backup.backupId
+      backupId: backup.backupId,
     });
 
     return backup;
@@ -360,16 +374,16 @@ export class OracleSettingsService {
 
   static async restoreOracleFromBackup(
     userId: string,
-    backupId: string
+    backupId: string,
   ): Promise<void> {
     const backup = await this.getOracleBackup(backupId);
 
     if (!backup) {
-      throw new Error('Backup not found');
+      throw new Error("Backup not found");
     }
 
     if (backup.settings.userId !== userId) {
-      throw new Error('Unauthorized: Cannot restore another user\'s backup');
+      throw new Error("Unauthorized: Cannot restore another user's backup");
     }
 
     // Restore settings
@@ -378,9 +392,9 @@ export class OracleSettingsService {
     // Clear cache
     OracleService.clearUserCache(userId);
 
-    logger.info('Oracle Restored from Backup:', {
+    logger.info("Oracle Restored from Backup:", {
       userId,
-      backupId
+      backupId,
     });
   }
 
@@ -391,7 +405,7 @@ export class OracleSettingsService {
     exportId: string;
     timestamp: Date;
     dataUrl: string;
-    format: 'json' | 'csv';
+    format: "json" | "csv";
     expiresAt: Date;
   }> {
     const settings = await this.getOracleSettings(userId);
@@ -400,8 +414,8 @@ export class OracleSettingsService {
       exportId: `export_${userId}_${Date.now()}`,
       timestamp: new Date(),
       userData: settings,
-      format: 'json' as const,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+      format: "json" as const,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     };
 
     // Generate secure download URL
@@ -412,73 +426,100 @@ export class OracleSettingsService {
       timestamp: exportData.timestamp,
       dataUrl,
       format: exportData.format,
-      expiresAt: exportData.expiresAt
+      expiresAt: exportData.expiresAt,
     };
   }
 
-  static async deleteOracleData(userId: string, confirmationCode: string): Promise<void> {
+  static async deleteOracleData(
+    userId: string,
+    confirmationCode: string,
+  ): Promise<void> {
     // Verify confirmation code
     if (!this.verifyDeletionConfirmation(userId, confirmationCode)) {
-      throw new Error('Invalid confirmation code');
+      throw new Error("Invalid confirmation code");
     }
 
     // Delete all Oracle data
     await this.permanentlyDeleteOracleData(userId);
 
-    logger.info('Oracle Data Deleted:', { userId });
+    logger.info("Oracle Data Deleted:", { userId });
   }
 
   /**
    * 🔧 Validation & Utility Methods
    */
-  private static validateVoiceSettings(voiceSettings: VoiceCustomization): void {
+  private static validateVoiceSettings(
+    voiceSettings: VoiceCustomization,
+  ): void {
     if (voiceSettings.stability !== undefined) {
       if (voiceSettings.stability < 0 || voiceSettings.stability > 1) {
-        throw new Error('Voice stability must be between 0 and 1');
+        throw new Error("Voice stability must be between 0 and 1");
       }
     }
 
     if (voiceSettings.style !== undefined) {
       if (voiceSettings.style < 0 || voiceSettings.style > 1) {
-        throw new Error('Voice style must be between 0 and 1');
+        throw new Error("Voice style must be between 0 and 1");
       }
     }
   }
 
   private static validatePersonalitySettings(
-    personalitySettings: OracleCustomization['personalityAdjustments']
+    personalitySettings: OracleCustomization["personalityAdjustments"],
   ): void {
     if (!personalitySettings) return;
 
     Object.entries(personalitySettings).forEach(([key, value]) => {
-      if (typeof value === 'number' && (value < 0 || value > 1)) {
+      if (typeof value === "number" && (value < 0 || value > 1)) {
         throw new Error(`Personality setting ${key} must be between 0 and 1`);
       }
     });
   }
 
-  private static getEvolutionBenefits(phase: string, archetype?: string): string[] {
+  private static getEvolutionBenefits(
+    phase: string,
+    archetype?: string,
+  ): string[] {
     const phaseBenefits = {
-      initiation: ['Clarify your purpose', 'Activate your potential', 'Begin your journey'],
-      exploration: ['Expand your horizons', 'Discover new aspects', 'Embrace curiosity'],
-      integration: ['Synthesize learnings', 'Embody wisdom', 'Create coherence'],
-      transcendence: ['Access higher perspectives', 'Dissolve limitations', 'Embrace unity'],
-      mastery: ['Become the teaching', 'Serve others', 'Embody mastery']
+      initiation: [
+        "Clarify your purpose",
+        "Activate your potential",
+        "Begin your journey",
+      ],
+      exploration: [
+        "Expand your horizons",
+        "Discover new aspects",
+        "Embrace curiosity",
+      ],
+      integration: [
+        "Synthesize learnings",
+        "Embody wisdom",
+        "Create coherence",
+      ],
+      transcendence: [
+        "Access higher perspectives",
+        "Dissolve limitations",
+        "Embrace unity",
+      ],
+      mastery: ["Become the teaching", "Serve others", "Embody mastery"],
     };
 
-    return phaseBenefits[phase] || ['Deepen your spiritual journey'];
+    return phaseBenefits[phase] || ["Deepen your spiritual journey"];
   }
 
-  private static getEvolutionRisks(currentPhase: string, proposedPhase: string): string[] {
+  private static getEvolutionRisks(
+    currentPhase: string,
+    proposedPhase: string,
+  ): string[] {
     // Define potential risks of moving between phases
     const risks = [];
 
-    if (currentPhase === 'initiation' && proposedPhase === 'transcendence') {
-      risks.push('Skipping important foundational work');
+    if (currentPhase === "initiation" && proposedPhase === "transcendence") {
+      risks.push("Skipping important foundational work");
     }
 
-    if (currentPhase === 'integration' && proposedPhase === 'initiation') {
-      risks.push('Losing integrated wisdom');
+    if (currentPhase === "integration" && proposedPhase === "initiation") {
+      risks.push("Losing integrated wisdom");
     }
 
     return risks;
@@ -489,47 +530,52 @@ export class OracleSettingsService {
    */
   private static async storePersonalitySettings(
     userId: string,
-    settings: OracleCustomization['personalityAdjustments']
+    settings: OracleCustomization["personalityAdjustments"],
   ): Promise<void> {
     // Implementation depends on database
-    logger.info('Personality settings stored:', { userId, settings });
+    logger.info("Personality settings stored:", { userId, settings });
   }
 
   private static async storeCommunicationPreferences(
     userId: string,
-    preferences: OracleCustomization['communicationPreferences']
+    preferences: OracleCustomization["communicationPreferences"],
   ): Promise<void> {
     // Implementation depends on database
-    logger.info('Communication preferences stored:', { userId, preferences });
+    logger.info("Communication preferences stored:", { userId, preferences });
   }
 
   private static async getPersonalitySettings(
-    userId: string
-  ): Promise<OracleCustomization['personalityAdjustments']> {
+    userId: string,
+  ): Promise<OracleCustomization["personalityAdjustments"]> {
     // Implementation depends on database
     return {};
   }
 
   private static async getCommunicationPreferences(
-    userId: string
-  ): Promise<OracleCustomization['communicationPreferences']> {
+    userId: string,
+  ): Promise<OracleCustomization["communicationPreferences"]> {
     // Implementation depends on database
     return {};
   }
 
-  private static async getEvolutionHistory(userId: string): Promise<EvolutionProposal[]> {
+  private static async getEvolutionHistory(
+    userId: string,
+  ): Promise<EvolutionProposal[]> {
     // Implementation depends on database
     return [];
   }
 
-  private static async getPendingProposals(userId: string): Promise<EvolutionProposal[]> {
-    return Array.from(this.evolutionProposals.values())
-      .filter(proposal => proposal.userId === userId && proposal.status === 'pending');
+  private static async getPendingProposals(
+    userId: string,
+  ): Promise<EvolutionProposal[]> {
+    return Array.from(this.evolutionProposals.values()).filter(
+      (proposal) => proposal.userId === userId && proposal.status === "pending",
+    );
   }
 
   private static async storeOracleBackup(backup: any): Promise<void> {
     // Implementation depends on database
-    logger.info('Oracle backup stored:', { backupId: backup.backupId });
+    logger.info("Oracle backup stored:", { backupId: backup.backupId });
   }
 
   private static async getOracleBackup(backupId: string): Promise<any> {
@@ -537,23 +583,36 @@ export class OracleSettingsService {
     return null;
   }
 
-  private static async restoreOracleSettings(userId: string, backup: any): Promise<void> {
+  private static async restoreOracleSettings(
+    userId: string,
+    backup: any,
+  ): Promise<void> {
     // Implementation depends on database
-    logger.info('Oracle settings restored:', { userId, backupId: backup.backupId });
+    logger.info("Oracle settings restored:", {
+      userId,
+      backupId: backup.backupId,
+    });
   }
 
-  private static async generateSecureDownloadUrl(exportData: any): Promise<string> {
+  private static async generateSecureDownloadUrl(
+    exportData: any,
+  ): Promise<string> {
     // Implementation depends on storage service
     return `https://secure-exports.example.com/${exportData.exportId}`;
   }
 
-  private static verifyDeletionConfirmation(userId: string, confirmationCode: string): boolean {
+  private static verifyDeletionConfirmation(
+    userId: string,
+    confirmationCode: string,
+  ): boolean {
     // Implementation depends on security requirements
-    return confirmationCode === 'CONFIRM_DELETE';
+    return confirmationCode === "CONFIRM_DELETE";
   }
 
-  private static async permanentlyDeleteOracleData(userId: string): Promise<void> {
+  private static async permanentlyDeleteOracleData(
+    userId: string,
+  ): Promise<void> {
     // Implementation depends on database
-    logger.warn('Oracle data permanently deleted:', { userId });
+    logger.warn("Oracle data permanently deleted:", { userId });
   }
 }

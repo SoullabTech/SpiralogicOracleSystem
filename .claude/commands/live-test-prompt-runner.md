@@ -1,10 +1,13 @@
 # Title
+
 Create a Live Prompt Test Runner for Oracle Agent
 
 # Summary
+
 Enable live testing of Sesame CSM integration with real AIN outputs. Allows Oracle Agent to speak based on actual Spiralogic reflections.
 
 # Instructions
+
 1. Create `testPrompts.js` with sample Oracle queries like:
    - "What am I learning in this phase?"
    - "Speak to me of my shadow integration."

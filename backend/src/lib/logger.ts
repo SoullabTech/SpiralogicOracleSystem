@@ -1,11 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
-import winston from 'winston';
-import path from 'path';
+import { createClient } from "@supabase/supabase-js";
+import winston from "winston";
+import path from "path";
 
 // -- Supabase Client (Server Role) --
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 // -- Winston Logger Config --
@@ -18,35 +18,37 @@ const levels = {
 };
 
 const colors = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'green',
-  http: 'magenta',
-  debug: 'white',
+  error: "red",
+  warn: "yellow",
+  info: "green",
+  http: "magenta",
+  debug: "white",
 };
 
 winston.addColors(colors);
 
 const format = winston.format.combine(
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
   winston.format.colorize({ all: true }),
-  winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+  winston.format.printf(
+    (info) => `${info.timestamp} ${info.level}: ${info.message}`,
+  ),
 );
 
 const transports = [
   new winston.transports.Console(),
   new winston.transports.File({
-    filename: path.join(process.cwd(), 'logs', 'error.log'),
-    level: 'error',
+    filename: path.join(process.cwd(), "logs", "error.log"),
+    level: "error",
   }),
   new winston.transports.File({
-    filename: path.join(process.cwd(), 'logs', 'all.log'),
+    filename: path.join(process.cwd(), "logs", "all.log"),
   }),
 ];
 
 // -- Exported Logger --
 const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+  level: process.env.NODE_ENV === "development" ? "debug" : "info",
   levels,
   format,
   transports,
@@ -72,7 +74,7 @@ export async function logAgentInteraction({
   content: string;
   phase?: string;
 }) {
-  const { error } = await supabase.from('adjuster_logs').insert({
+  const { error } = await supabase.from("adjuster_logs").insert({
     user_id: userId,
     agent,
     message: content,
@@ -96,7 +98,7 @@ export async function logJournalEntry({
   emotionTag?: string;
   symbols?: string[];
 }) {
-  const { error } = await supabase.from('memory_items').insert({
+  const { error } = await supabase.from("memory_items").insert({
     user_id: userId,
     content,
     emotion_tag: emotionTag || null,
@@ -118,9 +120,9 @@ export async function logAdjusterInsight({
   content: string;
   phase?: string;
 }) {
-  const { error } = await supabase.from('adjuster_logs').insert({
+  const { error } = await supabase.from("adjuster_logs").insert({
     user_id: userId,
-    agent: 'AdjusterAgent',
+    agent: "AdjusterAgent",
     message: content,
     spiral_phase: phase || null,
   });

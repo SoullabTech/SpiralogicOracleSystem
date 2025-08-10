@@ -9,7 +9,11 @@ export interface AINEngineConfig {
 
 export interface CollectiveInsight {
   id: string;
-  type: 'archetypal_pattern' | 'elemental_shift' | 'consciousness_trend' | 'shadow_integration';
+  type:
+    | "archetypal_pattern"
+    | "elemental_shift"
+    | "consciousness_trend"
+    | "shadow_integration";
   title: string;
   description: string;
   elementalResonance: {
@@ -78,13 +82,17 @@ export interface APIResponse<T = any> {
 
 export interface CollectiveInsightsQuery {
   limit?: number;
-  type?: 'archetypal_pattern' | 'elemental_shift' | 'consciousness_trend' | 'shadow_integration';
-  element?: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  type?:
+    | "archetypal_pattern"
+    | "elemental_shift"
+    | "consciousness_trend"
+    | "shadow_integration";
+  element?: "fire" | "water" | "earth" | "air" | "aether";
   confidenceThreshold?: number;
 }
 
 export interface ArchetypalProcessQuery {
-  element?: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  element?: "fire" | "water" | "earth" | "air" | "aether";
   archetype?: string;
   activeOnly?: boolean;
 }
@@ -93,10 +101,10 @@ export class AINEngineError extends Error {
   constructor(
     public status: number,
     message: string,
-    public errors?: string[]
+    public errors?: string[],
   ) {
     super(message);
-    this.name = 'AINEngineError';
+    this.name = "AINEngineError";
   }
 }
 
@@ -107,25 +115,26 @@ export class AINEngineClient {
 
   constructor(config: AINEngineConfig) {
     this.apiKey = config.apiKey;
-    this.baseUrl = config.baseUrl || 'https://api.spiralogic.oracle/v1/ain-engine';
+    this.baseUrl =
+      config.baseUrl || "https://api.spiralogic.oracle/v1/ain-engine";
     this.timeout = config.timeout || 30000;
 
     if (!this.apiKey) {
-      throw new Error('API key is required');
+      throw new Error("API key is required");
     }
   }
 
   private async makeRequest<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<APIResponse<T>> {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const config: RequestInit = {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': this.apiKey,
+        "Content-Type": "application/json",
+        "X-API-Key": this.apiKey,
         ...options.headers,
       },
       signal: AbortSignal.timeout(this.timeout),
@@ -139,7 +148,7 @@ export class AINEngineClient {
         throw new AINEngineError(
           response.status,
           data.errors?.[0] || `HTTP ${response.status}`,
-          data.errors
+          data.errors,
         );
       }
 
@@ -148,15 +157,15 @@ export class AINEngineClient {
       if (error instanceof AINEngineError) {
         throw error;
       }
-      
+
       if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          throw new AINEngineError(408, 'Request timeout');
+        if (error.name === "AbortError") {
+          throw new AINEngineError(408, "Request timeout");
         }
         throw new AINEngineError(500, error.message);
       }
-      
-      throw new AINEngineError(500, 'Unknown error occurred');
+
+      throw new AINEngineError(500, "Unknown error occurred");
     }
   }
 
@@ -164,18 +173,20 @@ export class AINEngineClient {
     const filtered = Object.entries(params)
       .filter(([_, value]) => value !== undefined && value !== null)
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
-    
-    return filtered.length > 0 ? `?${filtered.join('&')}` : '';
+
+    return filtered.length > 0 ? `?${filtered.join("&")}` : "";
   }
 
   /**
    * Get anonymized collective insights from the Spiralogic Oracle network
    */
   async getCollectiveInsights(
-    query: CollectiveInsightsQuery = {}
+    query: CollectiveInsightsQuery = {},
   ): Promise<CollectiveInsight[]> {
     const queryString = this.buildQueryString(query);
-    const response = await this.makeRequest<CollectiveInsight[]>(`/collective-insights${queryString}`);
+    const response = await this.makeRequest<CollectiveInsight[]>(
+      `/collective-insights${queryString}`,
+    );
     return response.data || [];
   }
 
@@ -183,10 +194,12 @@ export class AINEngineClient {
    * Get available archetypal development processes
    */
   async getArchetypalProcesses(
-    query: ArchetypalProcessQuery = {}
+    query: ArchetypalProcessQuery = {},
   ): Promise<ArchetypalProcess[]> {
     const queryString = this.buildQueryString(query);
-    const response = await this.makeRequest<ArchetypalProcess[]>(`/archetypal-processes${queryString}`);
+    const response = await this.makeRequest<ArchetypalProcess[]>(
+      `/archetypal-processes${queryString}`,
+    );
     return response.data || [];
   }
 
@@ -194,7 +207,8 @@ export class AINEngineClient {
    * Get elemental wisdom patterns and guidance
    */
   async getElementalWisdom(): Promise<ElementalWisdom> {
-    const response = await this.makeRequest<ElementalWisdom>('/elemental-wisdom');
+    const response =
+      await this.makeRequest<ElementalWisdom>("/elemental-wisdom");
     return response.data || {};
   }
 
@@ -202,8 +216,8 @@ export class AINEngineClient {
    * Get AIN Engine system status and health metrics
    */
   async getSystemStatus(): Promise<SystemStatus> {
-    const response = await this.makeRequest<SystemStatus>('/system-status');
-    return response.data || {} as SystemStatus;
+    const response = await this.makeRequest<SystemStatus>("/system-status");
+    return response.data || ({} as SystemStatus);
   }
 
   /**
@@ -220,7 +234,9 @@ export class AINEngineClient {
 }
 
 // Export default client factory
-export function createAINEngineClient(config: AINEngineConfig): AINEngineClient {
+export function createAINEngineClient(
+  config: AINEngineConfig,
+): AINEngineClient {
   return new AINEngineClient(config);
 }
 

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'oracle-backend/**'
+      - "oracle-backend/**"
 
 jobs:
   deploy:

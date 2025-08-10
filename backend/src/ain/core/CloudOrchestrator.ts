@@ -3,9 +3,9 @@
  * Extended base agent for cloud-based services with pub/sub capabilities
  */
 
-import { EventEmitter } from 'events';
-import { BaseAgent } from '../../core/agents/baseAgent';
-import { SpiralogicEvent, ElementalService, EventHandler } from '../types';
+import { EventEmitter } from "events";
+import { BaseAgent } from "../../core/agents/baseAgent";
+import { SpiralogicEvent, ElementalService, EventHandler } from "../types";
 
 export class CloudOrchestrator extends EventEmitter {
   protected serviceId: string;
@@ -17,7 +17,7 @@ export class CloudOrchestrator extends EventEmitter {
     this.serviceId = serviceId;
     this.elementalService = elementalService;
     this.baseAgent = new BaseAgent();
-    
+
     // Set reasonable max listeners for cloud services
     this.setMaxListeners(1000);
   }
@@ -34,21 +34,21 @@ export class CloudOrchestrator extends EventEmitter {
       payload: {
         content: payload,
         metadata: {
-          processed_at: 'cloud',
-          intensity: 1.0
+          processed_at: "cloud",
+          intensity: 1.0,
         },
         elemental_signature: {
           fire: 0.2,
           water: 0.2,
           earth: 0.2,
           air: 0.2,
-          aether: 0.2
-        }
+          aether: 0.2,
+        },
       },
       routing: {
-        priority: 'medium',
-        broadcast: false
-      }
+        priority: "medium",
+        broadcast: false,
+      },
     };
 
     this.emit(eventType, event);
@@ -66,7 +66,7 @@ export class CloudOrchestrator extends EventEmitter {
    */
   subscribeToAll(pattern: string, handler: EventHandler): void {
     // Simple pattern matching - for production would use proper pattern matching
-    if (pattern === '*') {
+    if (pattern === "*") {
       this.onAny(handler);
     } else {
       this.on(pattern, handler);

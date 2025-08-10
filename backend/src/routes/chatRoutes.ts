@@ -1,9 +1,9 @@
 // src/routes/chat.routes.ts
 
-import { Router } from 'express';
-import { authenticateToken } from '../middleware/authenticateToken';
-import type { AuthenticatedRequest } from '../types';
-import logger from '../utils/logger';
+import { Router } from "express";
+import { authenticateToken } from "../middleware/authenticateToken";
+import type { AuthenticatedRequest } from "../types";
+import logger from "../utils/logger";
 
 const router = Router();
 
@@ -11,13 +11,13 @@ const router = Router();
  * POST /api/chat
  * Secured endpoint to process user chat input.
  */
-router.post('/', authenticateToken, async (req: AuthenticatedRequest, res) => {
+router.post("/", authenticateToken, async (req: AuthenticatedRequest, res) => {
   try {
     const { message } = req.body;
     const userId = req.user?.id;
 
-    if (!message || typeof message !== 'string') {
-      return res.status(400).json({ error: 'Missing or invalid message' });
+    if (!message || typeof message !== "string") {
+      return res.status(400).json({ error: "Missing or invalid message" });
     }
 
     // 🧠 Placeholder for Oracle chat agent processing logic
@@ -25,8 +25,8 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res) => {
 
     res.status(200).json({ reply, userId });
   } catch (error: any) {
-    logger.error('❌ Chat processing error', { error: error.message || error });
-    res.status(500).json({ error: 'Internal server error' });
+    logger.error("❌ Chat processing error", { error: error.message || error });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

@@ -10,9 +10,9 @@ export default {
   },
   overrides: [
     {
-      files: ["**/*.ts", "**/*.tsx"],  // Ensures TypeScript files are linted
+      files: ["**/*.ts", "**/*.tsx"], // Ensures TypeScript files are linted
       parserOptions: {
-        project: "./tsconfig.json",  // Path to your TypeScript config
+        project: "./tsconfig.json", // Path to your TypeScript config
       },
     },
   ],

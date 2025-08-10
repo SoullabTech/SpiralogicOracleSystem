@@ -1,12 +1,17 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
+import React, { useState, useEffect } from "react";
+import { IntegrationAuthService } from "../../../lib/auth/integrationAuth";
 
 interface CommunityInteraction {
   id: string;
   user_id: string;
-  interaction_type: 'reality_check' | 'integration_validation' | 'struggle_support' | 'ordinary_moment_sharing' | 'bypassing_concern';
+  interaction_type:
+    | "reality_check"
+    | "integration_validation"
+    | "struggle_support"
+    | "ordinary_moment_sharing"
+    | "bypassing_concern";
   content: string;
   context?: any;
   target_user_id?: string;
@@ -25,11 +30,15 @@ interface CommunityInteraction {
 }
 
 interface CommunityPost {
-  type: 'reality_check_request' | 'integration_share' | 'struggle_support' | 'ordinary_moment';
+  type:
+    | "reality_check_request"
+    | "integration_share"
+    | "struggle_support"
+    | "ordinary_moment";
   title: string;
   content: string;
   context?: any;
-  visibility: 'supportive' | 'open';
+  visibility: "supportive" | "open";
   tags?: string[];
 }
 
@@ -40,13 +49,13 @@ export default function CommunityRealityCheckPage() {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showPostForm, setShowPostForm] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [activeFilter, setActiveFilter] = useState<string>("all");
   const [newPost, setNewPost] = useState<CommunityPost>({
-    type: 'reality_check_request',
-    title: '',
-    content: '',
-    visibility: 'supportive',
-    tags: []
+    type: "reality_check_request",
+    title: "",
+    content: "",
+    visibility: "supportive",
+    tags: [],
   });
 
   useEffect(() => {
@@ -61,88 +70,101 @@ export default function CommunityRealityCheckPage() {
       setCurrentUser(user);
 
       // Load community interactions
-      const response = await fetch(`/api/community/interactions?filter=${activeFilter}`);
+      const response = await fetch(
+        `/api/community/interactions?filter=${activeFilter}`,
+      );
       if (response.ok) {
         const data = await response.json();
         setInteractions(data);
       }
     } catch (error) {
-      console.error('Community data loading error:', error);
+      console.error("Community data loading error:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const submitPost = async () => {
-    if (!currentUser || !newPost.title.trim() || !newPost.content.trim()) return;
+    if (!currentUser || !newPost.title.trim() || !newPost.content.trim())
+      return;
 
     try {
-      const response = await fetch('/api/community/interactions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/community/interactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: currentUser.id,
           interaction_type: newPost.type,
           content: JSON.stringify({
             title: newPost.title,
             content: newPost.content,
-            tags: newPost.tags
+            tags: newPost.tags,
           }),
           context: newPost.context,
-          group_context: 'general',
-          visibility: newPost.visibility
-        })
+          group_context: "general",
+          visibility: newPost.visibility,
+        }),
       });
 
       if (response.ok) {
         setShowPostForm(false);
         setNewPost({
-          type: 'reality_check_request',
-          title: '',
-          content: '',
-          visibility: 'supportive',
-          tags: []
+          type: "reality_check_request",
+          title: "",
+          content: "",
+          visibility: "supportive",
+          tags: [],
         });
         loadCommunityData();
       }
     } catch (error) {
-      console.error('Post submission error:', error);
+      console.error("Post submission error:", error);
     }
   };
 
-  const respondToInteraction = async (interactionId: string, responseType: string, content: string) => {
+  const respondToInteraction = async (
+    interactionId: string,
+    responseType: string,
+    content: string,
+  ) => {
     try {
-      const response = await fetch(`/api/community/interactions/${interactionId}/respond`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          response_type: responseType,
-          content,
-          user_id: currentUser.id
-        })
-      });
+      const response = await fetch(
+        `/api/community/interactions/${interactionId}/respond`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            response_type: responseType,
+            content,
+            user_id: currentUser.id,
+          }),
+        },
+      );
 
       if (response.ok) {
         loadCommunityData();
       }
     } catch (error) {
-      console.error('Response submission error:', error);
+      console.error("Response submission error:", error);
     }
   };
 
   const flagInteraction = async (interactionId: string, reason: string) => {
     try {
-      const response = await fetch(`/api/community/interactions/${interactionId}/flag`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reason })
-      });
+      const response = await fetch(
+        `/api/community/interactions/${interactionId}/flag`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reason }),
+        },
+      );
 
       if (response.ok) {
         loadCommunityData();
       }
     } catch (error) {
-      console.error('Flag submission error:', error);
+      console.error("Flag submission error:", error);
     }
   };
 
@@ -161,7 +183,9 @@ export default function CommunityRealityCheckPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">Community Reality-Checking</h1>
+              <h1 className="text-xl font-semibold text-gray-900">
+                Community Reality-Checking
+              </h1>
               <p className="text-sm text-gray-600">
                 Support each other's integration through grounded feedback
               </p>
@@ -182,19 +206,19 @@ export default function CommunityRealityCheckPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {[
-              { id: 'all', label: 'All Posts' },
-              { id: 'reality_check', label: 'Reality Checks' },
-              { id: 'integration_validation', label: 'Integration Support' },
-              { id: 'struggle_support', label: 'Struggle Support' },
-              { id: 'ordinary_moment_sharing', label: 'Ordinary Moments' }
-            ].map(filter => (
+              { id: "all", label: "All Posts" },
+              { id: "reality_check", label: "Reality Checks" },
+              { id: "integration_validation", label: "Integration Support" },
+              { id: "struggle_support", label: "Struggle Support" },
+              { id: "ordinary_moment_sharing", label: "Ordinary Moments" },
+            ].map((filter) => (
               <button
                 key={filter.id}
                 onClick={() => setActiveFilter(filter.id)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeFilter === filter.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
               >
                 {filter.label}
@@ -208,7 +232,9 @@ export default function CommunityRealityCheckPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Community Guidelines */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <h3 className="font-medium text-blue-900 mb-2">Community Guidelines</h3>
+          <h3 className="font-medium text-blue-900 mb-2">
+            Community Guidelines
+          </h3>
           <ul className="text-sm text-blue-800 space-y-1">
             <li>• Focus on reality-grounding and practical application</li>
             <li>• Celebrate ordinary moments and consistent practices</li>
@@ -231,7 +257,7 @@ export default function CommunityRealityCheckPage() {
         {/* Community Interactions */}
         <div className="space-y-6">
           {interactions.length > 0 ? (
-            interactions.map(interaction => (
+            interactions.map((interaction) => (
               <InteractionCard
                 key={interaction.id}
                 interaction={interaction}
@@ -270,25 +296,25 @@ const PostCreationForm: React.FC<{
 }> = ({ post, onChange, onSubmit, onCancel }) => {
   const postTypes = [
     {
-      value: 'reality_check_request',
-      label: 'Reality Check Request',
-      description: 'Ask for grounding perspective on an insight or experience'
+      value: "reality_check_request",
+      label: "Reality Check Request",
+      description: "Ask for grounding perspective on an insight or experience",
     },
     {
-      value: 'integration_share',
-      label: 'Integration Share',
-      description: 'Share how you\'re applying insights in daily life'
+      value: "integration_share",
+      label: "Integration Share",
+      description: "Share how you're applying insights in daily life",
     },
     {
-      value: 'struggle_support',
-      label: 'Struggle Support',
-      description: 'Share challenges and seek supportive feedback'
+      value: "struggle_support",
+      label: "Struggle Support",
+      description: "Share challenges and seek supportive feedback",
     },
     {
-      value: 'ordinary_moment',
-      label: 'Ordinary Moment',
-      description: 'Celebrate awareness in mundane daily experiences'
-    }
+      value: "ordinary_moment",
+      label: "Ordinary Moment",
+      description: "Celebrate awareness in mundane daily experiences",
+    },
   ];
 
   return (
@@ -301,19 +327,28 @@ const PostCreationForm: React.FC<{
             Post Type
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {postTypes.map(type => (
-              <label key={type.value} className="flex items-start space-x-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50">
+            {postTypes.map((type) => (
+              <label
+                key={type.value}
+                className="flex items-start space-x-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50"
+              >
                 <input
                   type="radio"
                   name="postType"
                   value={type.value}
                   checked={post.type === type.value}
-                  onChange={(e) => onChange({ ...post, type: e.target.value as any })}
+                  onChange={(e) =>
+                    onChange({ ...post, type: e.target.value as any })
+                  }
                   className="mt-1 text-blue-600 focus:ring-blue-500"
                 />
                 <div>
-                  <div className="text-sm font-medium text-gray-900">{type.label}</div>
-                  <div className="text-xs text-gray-600">{type.description}</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {type.label}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    {type.description}
+                  </div>
                 </div>
               </label>
             ))}
@@ -356,19 +391,25 @@ const PostCreationForm: React.FC<{
                 type="radio"
                 name="visibility"
                 value="supportive"
-                checked={post.visibility === 'supportive'}
-                onChange={(e) => onChange({ ...post, visibility: e.target.value as any })}
+                checked={post.visibility === "supportive"}
+                onChange={(e) =>
+                  onChange({ ...post, visibility: e.target.value as any })
+                }
                 className="text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-700">Supportive Community</span>
+              <span className="text-sm text-gray-700">
+                Supportive Community
+              </span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
                 type="radio"
                 name="visibility"
                 value="open"
-                checked={post.visibility === 'open'}
-                onChange={(e) => onChange({ ...post, visibility: e.target.value as any })}
+                checked={post.visibility === "open"}
+                onChange={(e) =>
+                  onChange({ ...post, visibility: e.target.value as any })
+                }
                 className="text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">Open Community</span>
@@ -403,42 +444,54 @@ const InteractionCard: React.FC<{
   onFlag: (id: string, reason: string) => void;
 }> = ({ interaction, currentUser, onRespond, onFlag }) => {
   const [showResponseForm, setShowResponseForm] = useState(false);
-  const [responseContent, setResponseContent] = useState('');
-  const [responseType, setResponseType] = useState('supportive');
+  const [responseContent, setResponseContent] = useState("");
+  const [responseType, setResponseType] = useState("supportive");
 
   let parsedContent;
   try {
     parsedContent = JSON.parse(interaction.content);
   } catch {
-    parsedContent = { title: 'Community Share', content: interaction.content };
+    parsedContent = { title: "Community Share", content: interaction.content };
   }
 
   const getInteractionIcon = (type: string) => {
     switch (type) {
-      case 'reality_check': return '🔍';
-      case 'integration_validation': return '🌱';
-      case 'struggle_support': return '💪';
-      case 'ordinary_moment_sharing': return '✨';
-      case 'bypassing_concern': return '⚠️';
-      default: return '💬';
+      case "reality_check":
+        return "🔍";
+      case "integration_validation":
+        return "🌱";
+      case "struggle_support":
+        return "💪";
+      case "ordinary_moment_sharing":
+        return "✨";
+      case "bypassing_concern":
+        return "⚠️";
+      default:
+        return "💬";
     }
   };
 
   const getInteractionTypeLabel = (type: string) => {
     switch (type) {
-      case 'reality_check': return 'Reality Check Request';
-      case 'integration_validation': return 'Integration Share';
-      case 'struggle_support': return 'Struggle Support';
-      case 'ordinary_moment_sharing': return 'Ordinary Moment';
-      case 'bypassing_concern': return 'Bypassing Concern';
-      default: return 'Community Share';
+      case "reality_check":
+        return "Reality Check Request";
+      case "integration_validation":
+        return "Integration Share";
+      case "struggle_support":
+        return "Struggle Support";
+      case "ordinary_moment_sharing":
+        return "Ordinary Moment";
+      case "bypassing_concern":
+        return "Bypassing Concern";
+      default:
+        return "Community Share";
     }
   };
 
   const submitResponse = () => {
     if (responseContent.trim()) {
       onRespond(interaction.id, responseType, responseContent);
-      setResponseContent('');
+      setResponseContent("");
       setShowResponseForm(false);
     }
   };
@@ -447,21 +500,29 @@ const InteractionCard: React.FC<{
     <div className="bg-white rounded-lg shadow-sm border p-6">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <span className="text-2xl">{getInteractionIcon(interaction.interaction_type)}</span>
+          <span className="text-2xl">
+            {getInteractionIcon(interaction.interaction_type)}
+          </span>
           <div>
             <h3 className="font-medium text-gray-900">{parsedContent.title}</h3>
             <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <span>{interaction.user_profiles?.display_name || 'Anonymous'}</span>
+              <span>
+                {interaction.user_profiles?.display_name || "Anonymous"}
+              </span>
               <span>•</span>
-              <span>{getInteractionTypeLabel(interaction.interaction_type)}</span>
+              <span>
+                {getInteractionTypeLabel(interaction.interaction_type)}
+              </span>
               <span>•</span>
-              <span>{new Date(interaction.created_at).toLocaleDateString()}</span>
+              <span>
+                {new Date(interaction.created_at).toLocaleDateString()}
+              </span>
             </div>
           </div>
         </div>
 
         <button
-          onClick={() => onFlag(interaction.id, 'inappropriate')}
+          onClick={() => onFlag(interaction.id, "inappropriate")}
           className="text-gray-400 hover:text-gray-600 text-sm"
         >
           Flag
@@ -477,7 +538,9 @@ const InteractionCard: React.FC<{
         <span>{interaction.helpful_count} helpful</span>
         <span>{interaction.reality_grounding_count} reality grounding</span>
         {interaction.bypassing_concern_count > 0 && (
-          <span className="text-amber-600">{interaction.bypassing_concern_count} bypassing concerns</span>
+          <span className="text-amber-600">
+            {interaction.bypassing_concern_count} bypassing concerns
+          </span>
         )}
       </div>
 
@@ -541,19 +604,25 @@ const InteractionCard: React.FC<{
       {/* Existing Responses */}
       {interaction.responses && interaction.responses.length > 0 && (
         <div className="border-t pt-4 mt-4">
-          <h4 className="text-sm font-medium text-gray-900 mb-3">Community Responses</h4>
+          <h4 className="text-sm font-medium text-gray-900 mb-3">
+            Community Responses
+          </h4>
           <div className="space-y-3">
-            {interaction.responses.slice(0, 3).map((response: any, index: number) => (
-              <div key={index} className="bg-gray-50 rounded p-3">
-                <div className="flex justify-between items-start mb-1">
-                  <span className="text-sm font-medium text-gray-900">
-                    {response.user_name || 'Anonymous'}
-                  </span>
-                  <span className="text-xs text-gray-500">{response.type}</span>
+            {interaction.responses
+              .slice(0, 3)
+              .map((response: any, index: number) => (
+                <div key={index} className="bg-gray-50 rounded p-3">
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="text-sm font-medium text-gray-900">
+                      {response.user_name || "Anonymous"}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {response.type}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-700">{response.content}</p>
                 </div>
-                <p className="text-sm text-gray-700">{response.content}</p>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       )}

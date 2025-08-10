@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   UserHolisticProfile,
   HolisticDomain,
   DevelopmentStage,
   DevelopmentGoal,
-  Milestone
-} from '../../../lib/types/holistic';
+  Milestone,
+} from "../../../lib/types/holistic";
 
 // Define missing types locally for now
 interface PersonalizedPathway {
@@ -40,22 +40,28 @@ interface Practice {
 
 interface ProgressMetric {
   domain: HolisticDomain;
-  metricType: 'quantitative' | 'qualitative';
+  metricType: "quantitative" | "qualitative";
   currentValue: number | string;
   targetValue: number | string;
-  trend: 'improving' | 'stable' | 'declining';
+  trend: "improving" | "stable" | "declining";
   lastMeasured: Date;
 }
-import { AdaptiveInterface } from './AdaptiveInterface';
+import { AdaptiveInterface } from "./AdaptiveInterface";
 
 interface HolisticDashboardProps {
   userId: string;
 }
 
-export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) => {
-  const [userProfile, setUserProfile] = useState<UserHolisticProfile | null>(null);
+export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({
+  userId,
+}) => {
+  const [userProfile, setUserProfile] = useState<UserHolisticProfile | null>(
+    null,
+  );
   const [pathway, setPathway] = useState<PersonalizedPathway | null>(null);
-  const [activeView, setActiveView] = useState<'overview' | 'pathway' | 'assessment'>('overview');
+  const [activeView, setActiveView] = useState<
+    "overview" | "pathway" | "assessment"
+  >("overview");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -66,7 +72,7 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
     try {
       const [profileResponse, pathwayResponse] = await Promise.all([
         fetch(`/api/holistic/profile/${userId}`),
-        fetch(`/api/holistic/pathway/${userId}`)
+        fetch(`/api/holistic/pathway/${userId}`),
       ]);
 
       const profileData = await profileResponse.json();
@@ -75,7 +81,7 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
       setUserProfile(profileData);
       setPathway(pathwayData);
     } catch (error) {
-      console.error('Failed to load user data:', error);
+      console.error("Failed to load user data:", error);
     } finally {
       setLoading(false);
     }
@@ -84,13 +90,13 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
   const handleProfileUpdate = async (updatedProfile: UserHolisticProfile) => {
     try {
       await fetch(`/api/holistic/profile/${userId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProfile)
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedProfile),
       });
       setUserProfile(updatedProfile);
     } catch (error) {
-      console.error('Failed to update profile:', error);
+      console.error("Failed to update profile:", error);
     }
   };
 
@@ -106,12 +112,15 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
     return (
       <div className="max-w-4xl mx-auto p-6">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">Welcome to Holistic Development</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            Welcome to Holistic Development
+          </h2>
           <p className="text-gray-600 mb-6">
-            Let's begin with an assessment to understand your current development across mind, body, spirit, and emotions.
+            Let's begin with an assessment to understand your current
+            development across mind, body, spirit, and emotions.
           </p>
           <button
-            onClick={() => setActiveView('assessment')}
+            onClick={() => setActiveView("assessment")}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Start Assessment
@@ -131,14 +140,14 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
               Holistic Development Dashboard
             </h1>
             <div className="flex space-x-4">
-              {['overview', 'pathway', 'assessment'].map((view) => (
+              {["overview", "pathway", "assessment"].map((view) => (
                 <button
                   key={view}
                   onClick={() => setActiveView(view as any)}
                   className={`px-3 py-2 text-sm font-medium rounded-md capitalize ${
                     activeView === view
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
                   {view}
@@ -151,7 +160,7 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto p-6">
-        {activeView === 'overview' && (
+        {activeView === "overview" && (
           <div className="space-y-6">
             <HolisticOverview profile={userProfile} pathway={pathway} />
             <AdaptiveInterface
@@ -161,17 +170,17 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({ userId }) 
           </div>
         )}
 
-        {activeView === 'pathway' && pathway && (
+        {activeView === "pathway" && pathway && (
           <PathwayView
             pathway={pathway}
             onStepComplete={(stepId) => {
               // Handle step completion
-              console.log('Step completed:', stepId);
+              console.log("Step completed:", stepId);
             }}
           />
         )}
 
-        {activeView === 'assessment' && (
+        {activeView === "assessment" && (
           <AssessmentView
             currentProfile={userProfile}
             onAssessmentComplete={handleProfileUpdate}
@@ -187,17 +196,22 @@ interface HolisticOverviewProps {
   pathway: PersonalizedPathway | null;
 }
 
-const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway }) => {
+const HolisticOverview: React.FC<HolisticOverviewProps> = ({
+  profile,
+  pathway,
+}) => {
   const getProgressPercentage = () => {
     if (!pathway) return 0;
-    const completed = pathway.pathwaySteps.filter(step => step.completed).length;
+    const completed = pathway.pathwaySteps.filter(
+      (step) => step.completed,
+    ).length;
     return (completed / pathway.pathwaySteps.length) * 100;
   };
 
   const getDomainColor = (level: number) => {
-    if (level >= 7) return 'bg-green-500';
-    if (level >= 5) return 'bg-yellow-500';
-    return 'bg-red-500';
+    if (level >= 7) return "bg-green-500";
+    if (level >= 5) return "bg-yellow-500";
+    return "bg-red-500";
   };
 
   return (
@@ -207,7 +221,7 @@ const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway })
         <h2 className="text-lg font-semibold mb-4">Development Overview</h2>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          {profile.domains.map(domain => (
+          {profile.domains.map((domain) => (
             <div key={domain.domain} className="text-center">
               <div className="w-16 h-16 mx-auto mb-2 rounded-full border-4 border-gray-200 flex items-center justify-center">
                 <div
@@ -225,7 +239,9 @@ const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway })
         {/* Current Phase */}
         <div className="bg-blue-50 rounded-lg p-4">
           <h3 className="font-medium text-blue-900 mb-2">Current Phase</h3>
-          <p className="text-blue-700">{pathway?.currentPhase || 'Assessment Complete'}</p>
+          <p className="text-blue-700">
+            {pathway?.currentPhase || "Assessment Complete"}
+          </p>
 
           {pathway && (
             <div className="mt-3">
@@ -251,15 +267,21 @@ const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway })
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Stress Level</span>
-              <span className="text-sm font-medium">{profile.stressLevel}/10</span>
+              <span className="text-sm font-medium">
+                {profile.stressLevel}/10
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Energy Level</span>
-              <span className="text-sm font-medium">{profile.energyLevel}/10</span>
+              <span className="text-sm font-medium">
+                {profile.energyLevel}/10
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">State</span>
-              <span className="text-sm font-medium capitalize">{profile.currentState}</span>
+              <span className="text-sm font-medium capitalize">
+                {profile.currentState}
+              </span>
             </div>
           </div>
         </div>
@@ -268,7 +290,7 @@ const HolisticOverview: React.FC<HolisticOverviewProps> = ({ profile, pathway })
           <h3 className="font-medium mb-3">Development Goals</h3>
           {profile.developmentGoals.length > 0 ? (
             <div className="space-y-2">
-              {profile.developmentGoals.slice(0, 3).map(goal => (
+              {profile.developmentGoals.slice(0, 3).map((goal) => (
                 <div key={goal.id} className="text-sm">
                   <div className="font-medium">{goal.description}</div>
                   <div className="text-gray-600 capitalize">{goal.domain}</div>
@@ -289,15 +311,21 @@ interface PathwayViewProps {
   onStepComplete: (stepId: string) => void;
 }
 
-const PathwayView: React.FC<PathwayViewProps> = ({ pathway, onStepComplete }) => {
-  const nextStep = pathway.pathwaySteps.find(step => !step.completed);
+const PathwayView: React.FC<PathwayViewProps> = ({
+  pathway,
+  onStepComplete,
+}) => {
+  const nextStep = pathway.pathwaySteps.find((step) => !step.completed);
 
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h2 className="text-lg font-semibold mb-4">Your Personalized Pathway</h2>
+        <h2 className="text-lg font-semibold mb-4">
+          Your Personalized Pathway
+        </h2>
         <p className="text-gray-600 mb-4">
-          Current Phase: <span className="font-medium">{pathway.currentPhase}</span>
+          Current Phase:{" "}
+          <span className="font-medium">{pathway.currentPhase}</span>
         </p>
 
         {nextStep && (
@@ -344,18 +372,28 @@ interface PathwayStepCardProps {
   onComplete: () => void;
 }
 
-const PathwayStepCard: React.FC<PathwayStepCardProps> = ({ step, stepNumber, onComplete }) => {
+const PathwayStepCard: React.FC<PathwayStepCardProps> = ({
+  step,
+  stepNumber,
+  onComplete,
+}) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className={`border rounded-lg p-4 ${step.completed ? 'bg-green-50 border-green-200' : 'border-gray-200'}`}>
+    <div
+      className={`border rounded-lg p-4 ${step.completed ? "bg-green-50 border-green-200" : "border-gray-200"}`}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center space-x-3 mb-2">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-              step.completed ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
-            }`}>
-              {step.completed ? '✓' : stepNumber}
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                step.completed
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              {step.completed ? "✓" : stepNumber}
             </div>
             <div>
               <h4 className="font-medium">{step.title}</h4>
@@ -368,18 +406,26 @@ const PathwayStepCard: React.FC<PathwayStepCardProps> = ({ step, stepNumber, onC
               <div>
                 <h5 className="text-sm font-medium mb-2">Practices:</h5>
                 <div className="space-y-2">
-                  {step.practices.map(practice => (
+                  {step.practices.map((practice) => (
                     <div key={practice.id} className="bg-gray-50 rounded p-3">
-                      <div className="font-medium text-sm">{practice.title}</div>
-                      <div className="text-xs text-gray-600 mt-1">{practice.instructions}</div>
-                      <div className="text-xs text-gray-500 mt-1">{practice.duration} minutes</div>
+                      <div className="font-medium text-sm">
+                        {practice.title}
+                      </div>
+                      <div className="text-xs text-gray-600 mt-1">
+                        {practice.instructions}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {practice.duration} minutes
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div>
-                <h5 className="text-sm font-medium mb-2">Completion Criteria:</h5>
+                <h5 className="text-sm font-medium mb-2">
+                  Completion Criteria:
+                </h5>
                 <ul className="text-sm text-gray-600 list-disc list-inside">
                   {step.completionCriteria.map((criteria, idx) => (
                     <li key={idx}>{criteria}</li>
@@ -395,7 +441,7 @@ const PathwayStepCard: React.FC<PathwayStepCardProps> = ({ step, stepNumber, onC
             onClick={() => setExpanded(!expanded)}
             className="text-gray-400 hover:text-gray-600"
           >
-            {expanded ? '▼' : '▶'}
+            {expanded ? "▼" : "▶"}
           </button>
           {!step.completed && (
             <button
@@ -416,9 +462,14 @@ interface AssessmentViewProps {
   onAssessmentComplete: (profile: UserHolisticProfile) => void;
 }
 
-const AssessmentView: React.FC<AssessmentViewProps> = ({ currentProfile, onAssessmentComplete }) => {
+const AssessmentView: React.FC<AssessmentViewProps> = ({
+  currentProfile,
+  onAssessmentComplete,
+}) => {
   const [assessmentData, setAssessmentData] = useState<any>({});
-  const [currentDomain, setCurrentDomain] = useState<HolisticDomain>(HolisticDomain.MIND);
+  const [currentDomain, setCurrentDomain] = useState<HolisticDomain>(
+    HolisticDomain.MIND,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const domains = Object.values(HolisticDomain);
@@ -427,7 +478,7 @@ const AssessmentView: React.FC<AssessmentViewProps> = ({ currentProfile, onAsses
   const handleDomainResponse = (responses: Record<string, string>) => {
     setAssessmentData((prev: any) => ({
       ...prev,
-      [currentDomain]: responses
+      [currentDomain]: responses,
     }));
 
     if (currentDomainIndex < domains.length - 1) {
@@ -440,24 +491,24 @@ const AssessmentView: React.FC<AssessmentViewProps> = ({ currentProfile, onAsses
   const submitAssessment = async () => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/holistic/assessment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/holistic/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: currentProfile?.userId || 'new-user',
+          userId: currentProfile?.userId || "new-user",
           assessmentData: {
             ...assessmentData,
             stressLevel: 5,
             energyLevel: 5,
-            learningStyle: 'mixed'
-          }
-        })
+            learningStyle: "mixed",
+          },
+        }),
       });
 
       const newProfile = await response.json();
       onAssessmentComplete(newProfile);
     } catch (error) {
-      console.error('Assessment submission failed:', error);
+      console.error("Assessment submission failed:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -478,7 +529,8 @@ const AssessmentView: React.FC<AssessmentViewProps> = ({ currentProfile, onAsses
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">
-              Holistic Assessment: {currentDomain.charAt(0).toUpperCase() + currentDomain.slice(1)}
+              Holistic Assessment:{" "}
+              {currentDomain.charAt(0).toUpperCase() + currentDomain.slice(1)}
             </h2>
             <span className="text-sm text-gray-600">
               {currentDomainIndex + 1} of {domains.length}
@@ -488,7 +540,9 @@ const AssessmentView: React.FC<AssessmentViewProps> = ({ currentProfile, onAsses
           <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
             <div
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentDomainIndex + 1) / domains.length) * 100}%` }}
+              style={{
+                width: `${((currentDomainIndex + 1) / domains.length) * 100}%`,
+              }}
             />
           </div>
         </div>
@@ -507,66 +561,71 @@ interface DomainAssessmentFormProps {
   onComplete: (responses: Record<string, string>) => void;
 }
 
-const DomainAssessmentForm: React.FC<DomainAssessmentFormProps> = ({ domain, onComplete }) => {
+const DomainAssessmentForm: React.FC<DomainAssessmentFormProps> = ({
+  domain,
+  onComplete,
+}) => {
   const [responses, setResponses] = useState<Record<string, string>>({});
 
   const questions = {
     [HolisticDomain.MIND]: [
       {
         question: "How clear and focused do you feel in your daily thinking?",
-        options: ["very_clear", "mostly_clear", "somewhat_foggy", "very_foggy"]
+        options: ["very_clear", "mostly_clear", "somewhat_foggy", "very_foggy"],
       },
       {
         question: "How well do you communicate your thoughts and ideas?",
-        options: ["excellently", "well", "adequately", "poorly"]
+        options: ["excellently", "well", "adequately", "poorly"],
       },
       {
-        question: "How effectively do you solve problems and learn new concepts?",
-        options: ["very_effectively", "effectively", "somewhat", "struggle"]
-      }
+        question:
+          "How effectively do you solve problems and learn new concepts?",
+        options: ["very_effectively", "effectively", "somewhat", "struggle"],
+      },
     ],
     [HolisticDomain.BODY]: [
       {
         question: "How connected do you feel to your physical body?",
-        options: ["very_connected", "connected", "somewhat", "disconnected"]
+        options: ["very_connected", "connected", "somewhat", "disconnected"],
       },
       {
         question: "How would you rate your overall physical energy levels?",
-        options: ["high", "good", "moderate", "low"]
+        options: ["high", "good", "moderate", "low"],
       },
       {
         question: "How well do you maintain physical wellness practices?",
-        options: ["consistently", "regularly", "occasionally", "rarely"]
-      }
+        options: ["consistently", "regularly", "occasionally", "rarely"],
+      },
     ],
     [HolisticDomain.SPIRIT]: [
       {
         question: "How connected do you feel to your life purpose?",
-        options: ["deeply", "connected", "searching", "lost"]
+        options: ["deeply", "connected", "searching", "lost"],
       },
       {
-        question: "How often do you experience moments of transcendence or deep meaning?",
-        options: ["frequently", "regularly", "occasionally", "rarely"]
+        question:
+          "How often do you experience moments of transcendence or deep meaning?",
+        options: ["frequently", "regularly", "occasionally", "rarely"],
       },
       {
         question: "How aligned do your actions feel with your values?",
-        options: ["fully", "mostly", "somewhat", "misaligned"]
-      }
+        options: ["fully", "mostly", "somewhat", "misaligned"],
+      },
     ],
     [HolisticDomain.EMOTIONS]: [
       {
         question: "How well do you understand and process your emotions?",
-        options: ["very_well", "well", "adequately", "poorly"]
+        options: ["very_well", "well", "adequately", "poorly"],
       },
       {
         question: "How effectively do you express emotions in healthy ways?",
-        options: ["very_effectively", "effectively", "somewhat", "struggle"]
+        options: ["very_effectively", "effectively", "somewhat", "struggle"],
       },
       {
         question: "How resilient are you in emotional challenges?",
-        options: ["very_resilient", "resilient", "somewhat", "fragile"]
-      }
-    ]
+        options: ["very_resilient", "resilient", "somewhat", "fragile"],
+      },
+    ],
   };
 
   const domainQuestions = questions[domain] || [];
@@ -578,7 +637,7 @@ const DomainAssessmentForm: React.FC<DomainAssessmentFormProps> = ({ domain, onC
   };
 
   const formatOptionLabel = (option: string) => {
-    return option.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return option.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   return (
@@ -587,17 +646,22 @@ const DomainAssessmentForm: React.FC<DomainAssessmentFormProps> = ({ domain, onC
         <div key={index}>
           <h3 className="font-medium mb-3">{q.question}</h3>
           <div className="space-y-2">
-            {q.options.map(option => (
-              <label key={option} className="flex items-center space-x-3 cursor-pointer">
+            {q.options.map((option) => (
+              <label
+                key={option}
+                className="flex items-center space-x-3 cursor-pointer"
+              >
                 <input
                   type="radio"
                   name={`q${index}`}
                   value={option}
                   checked={responses[`q${index}`] === option}
-                  onChange={(e) => setResponses(prev => ({
-                    ...prev,
-                    [`q${index}`]: e.target.value
-                  }))}
+                  onChange={(e) =>
+                    setResponses((prev) => ({
+                      ...prev,
+                      [`q${index}`]: e.target.value,
+                    }))
+                  }
                   className="text-blue-600"
                 />
                 <span className="text-sm">{formatOptionLabel(option)}</span>
@@ -612,7 +676,9 @@ const DomainAssessmentForm: React.FC<DomainAssessmentFormProps> = ({ domain, onC
         disabled={Object.keys(responses).length < domainQuestions.length}
         className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        {domain === HolisticDomain.EMOTIONS ? 'Complete Assessment' : 'Continue to Next Domain'}
+        {domain === HolisticDomain.EMOTIONS
+          ? "Complete Assessment"
+          : "Continue to Next Domain"}
       </button>
     </div>
   );

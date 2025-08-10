@@ -1,11 +1,11 @@
 // src/services/voiceService.ts
 
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
+import axios from "axios";
+import fs from "fs";
+import path from "path";
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY!;
-const BASE_URL = 'https://api.elevenlabs.io/v1';
+const BASE_URL = "https://api.elevenlabs.io/v1";
 
 export async function synthesizeVoice({
   text,
@@ -22,11 +22,11 @@ export async function synthesizeVoice({
     { text },
     {
       headers: {
-        'xi-api-key': ELEVENLABS_API_KEY,
-        'Content-Type': 'application/json',
+        "xi-api-key": ELEVENLABS_API_KEY,
+        "Content-Type": "application/json",
       },
-      responseType: 'stream',
-    }
+      responseType: "stream",
+    },
   );
 
   const fullPath = path.resolve(outputPath);
@@ -34,7 +34,7 @@ export async function synthesizeVoice({
   response.data.pipe(writer);
 
   return new Promise((resolve, reject) => {
-    writer.on('finish', () => resolve(fullPath));
-    writer.on('error', reject);
+    writer.on("finish", () => resolve(fullPath));
+    writer.on("error", reject);
   });
 }

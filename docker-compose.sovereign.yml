@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Sovereign Oracle Backend
@@ -19,7 +19,7 @@ services:
       - SNET_ENABLED=true
     ports:
       - "8080:8080"
-      - "7000:7000"  # SingularityNET gRPC
+      - "7000:7000" # SingularityNET gRPC
     depends_on:
       - mongo
       - redis
@@ -93,9 +93,9 @@ services:
       - ./ipfs/export:/export
       - ./ipfs/data:/data/ipfs
     ports:
-      - "4001:4001"  # P2P
-      - "5001:5001"  # API
-      - "8081:8080"  # Gateway
+      - "4001:4001" # P2P
+      - "5001:5001" # API
+      - "8081:8080" # Gateway
     restart: unless-stopped
     networks:
       - sovereign-network

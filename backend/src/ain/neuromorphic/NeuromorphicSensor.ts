@@ -3,7 +3,7 @@
  * Placeholder implementation for neuromorphic spike detection
  */
 
-import { NeuromorphicSpike } from '../types';
+import { NeuromorphicSpike } from "../types";
 
 export interface SensorReading {
   intensity: number;
@@ -24,7 +24,7 @@ export class NeuromorphicSensor {
         timestamp: reading.timestamp,
         intensity: reading.intensity,
         source: reading.location,
-        refractory_until: reading.timestamp + this.refractoryPeriod
+        refractory_until: reading.timestamp + this.refractoryPeriod,
       };
     }
     return null;
@@ -33,16 +33,18 @@ export class NeuromorphicSensor {
   /**
    * Process continuous sensor stream
    */
-  async processSensorStream(readings: SensorReading[]): Promise<NeuromorphicSpike[]> {
+  async processSensorStream(
+    readings: SensorReading[],
+  ): Promise<NeuromorphicSpike[]> {
     const spikes: NeuromorphicSpike[] = [];
-    
+
     for (const reading of readings) {
       const spike = this.detectSpikes(reading);
       if (spike) {
         spikes.push(spike);
       }
     }
-    
+
     return spikes;
   }
 

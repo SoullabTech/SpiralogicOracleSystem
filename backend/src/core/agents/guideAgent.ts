@@ -6,7 +6,6 @@ import * as MemoryModule from "../utils/memoryModule";
 import ModelService from "../../utils/modelService";
 import type { AgentResponse } from "../../types/ai";
 
-
 /**
  * GuideAgent: Embodies reflective mentorship and wise encouragement.
  */
@@ -15,12 +14,15 @@ export class GuideAgent extends OracleAgent {
     super({ debug: false });
   }
 
-  public async processQuery(query: { input: string; userId?: string }): Promise<AgentResponse> {
+  public async processQuery(query: {
+    input: string;
+    userId?: string;
+  }): Promise<AgentResponse> {
     const contextMemory = MemoryModule.getRecentEntries(3);
 
     const contextHeader = contextMemory.length
       ? `⟳ Insights gathered:
-${contextMemory.map(e => `- ${e.response}`).join("\n")}
+${contextMemory.map((e) => `- ${e.response}`).join("\n")}
 \n`
       : "";
 
@@ -32,7 +34,8 @@ ${contextMemory.map(e => `- ${e.response}`).join("\n")}
       input: augmentedInput,
     };
 
-    const baseResponse: AgentResponse = await ModelService.getResponse(augmentedQuery);
+    const baseResponse: AgentResponse =
+      await ModelService.getResponse(augmentedQuery);
 
     const personalityFlair = `\n\n🧭 A gentle reminder: the path unfolds as you walk it.`;
     const enhancedResponse = `${baseResponse.response}${personalityFlair}`;

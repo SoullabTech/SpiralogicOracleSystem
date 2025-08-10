@@ -1,10 +1,13 @@
 # Title
+
 Define Matrix Oracle Voice Profile for AIN and Personal Oracle Agents
 
 # Summary
-Set the default voice style for AIN's main Oracle and all Personal Oracle Agents to mirror the archetype of the Oracle from *The Matrix*—mature, warm, grounded, wise, slightly humorous.
+
+Set the default voice style for AIN's main Oracle and all Personal Oracle Agents to mirror the archetype of the Oracle from _The Matrix_—mature, warm, grounded, wise, slightly humorous.
 
 # Instructions
+
 1. In `voiceProfiles.json`, create a default profile named `oracle_matrix`.
 2. Attributes should include:
    - `element`: "aether"

@@ -8,10 +8,13 @@ export interface UserDevelopmentMetrics {
     spiralDepth: number;
     averageIntegrationTime: number;
   };
-  elementalBalance: Record<string, {
-    contentEngaged: number;
-    integrationRate: number;
-  }>;
+  elementalBalance: Record<
+    string,
+    {
+      contentEngaged: number;
+      integrationRate: number;
+    }
+  >;
   bypassingPrevention: {
     alertsTriggered: number;
     interventionsAccepted: number;
@@ -56,9 +59,9 @@ export interface AnalyticsData {
 }
 
 export enum ElementalArchetype {
-  FIRE = 'fire',
-  WATER = 'water',
-  EARTH = 'earth',
-  AIR = 'air',
-  AETHER = 'aether'
+  FIRE = "fire",
+  WATER = "water",
+  EARTH = "earth",
+  AIR = "air",
+  AETHER = "aether",
 }

@@ -38,9 +38,9 @@ export class RuleEngine {
   async execute(context: any): Promise<RuleExecutionResult> {
     // Stub implementation - would evaluate rules
     return {
-      rules_matched: ['default-rule'],
-      actions_taken: ['structure-applied'],
-      confidence: 0.8
+      rules_matched: ["default-rule"],
+      actions_taken: ["structure-applied"],
+      confidence: 0.8,
     };
   }
 

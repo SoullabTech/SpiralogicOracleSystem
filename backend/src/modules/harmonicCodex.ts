@@ -2,35 +2,38 @@
 // Maps Grant's sacred constants to elemental transitions and breath-geometry patterns
 // Generates personalized spiral evolution paths based on harmonic resonance
 
-import { PetalTransitions } from '../lib/harmonicPetalMap';
-import { ElementalBalance } from '../lib/geometryEngine';
-import { VectorEquilibrium, JitterbugPhase } from '../services/vectorEquilibrium';
+import { PetalTransitions } from "../lib/harmonicPetalMap";
+import { ElementalBalance } from "../lib/geometryEngine";
+import {
+  VectorEquilibrium,
+  JitterbugPhase,
+} from "../services/vectorEquilibrium";
 
 // Grant's Sacred Constants
 export const GRANT_CONSTANTS = {
-  SQRT_10: 3.16227766017,    // √10 - Breath foundation
-  PHI: 1.618033988749895,    // φ - Golden ratio
-  E: 2.718281828459045,      // e - Natural growth
-  PI: 3.141592653589793      // π - Circle constant
+  SQRT_10: 3.16227766017, // √10 - Breath foundation
+  PHI: 1.618033988749895, // φ - Golden ratio
+  E: 2.718281828459045, // e - Natural growth
+  PI: 3.141592653589793, // π - Circle constant
 } as const;
 
 // Harmonic ratios derived from Grant's constants
 export const HARMONIC_RATIOS = {
-  BREATH_CYCLE: GRANT_CONSTANTS.SQRT_10,                          // 3.162... Basic breath rhythm
-  GOLDEN_BREATH: GRANT_CONSTANTS.PHI * GRANT_CONSTANTS.SQRT_10,   // 5.118... Extended breath
-  NATURAL_SPIRAL: GRANT_CONSTANTS.E / GRANT_CONSTANTS.PHI,        // 1.680... Growth factor
-  CIRCLE_BREATH: GRANT_CONSTANTS.PI / GRANT_CONSTANTS.SQRT_10,    // 0.994... Return cycle
-  UNITY: GRANT_CONSTANTS.PI / GRANT_CONSTANTS.E,                  // 1.155... Integration
+  BREATH_CYCLE: GRANT_CONSTANTS.SQRT_10, // 3.162... Basic breath rhythm
+  GOLDEN_BREATH: GRANT_CONSTANTS.PHI * GRANT_CONSTANTS.SQRT_10, // 5.118... Extended breath
+  NATURAL_SPIRAL: GRANT_CONSTANTS.E / GRANT_CONSTANTS.PHI, // 1.680... Growth factor
+  CIRCLE_BREATH: GRANT_CONSTANTS.PI / GRANT_CONSTANTS.SQRT_10, // 0.994... Return cycle
+  UNITY: GRANT_CONSTANTS.PI / GRANT_CONSTANTS.E, // 1.155... Integration
 } as const;
 
 // Elemental breath patterns based on Grant's work
 export interface BreathPattern {
-  inhale: number;      // Duration in seconds
-  hold: number;        // Retention
-  exhale: number;      // Release
-  pause: number;       // Rest before next cycle
-  ratio: number;       // Harmonic constant used
-  geometry: string;    // SVG path for visualization
+  inhale: number; // Duration in seconds
+  hold: number; // Retention
+  exhale: number; // Release
+  pause: number; // Rest before next cycle
+  ratio: number; // Harmonic constant used
+  geometry: string; // SVG path for visualization
 }
 
 // Breath-geometry correspondences
@@ -41,7 +44,7 @@ export const ELEMENTAL_BREATH_PATTERNS: Record<string, BreathPattern> = {
     exhale: GRANT_CONSTANTS.SQRT_10 * 2,
     pause: 1,
     ratio: HARMONIC_RATIOS.BREATH_CYCLE,
-    geometry: 'M 0 0 L 100 -100 L 200 0' // Upward triangle
+    geometry: "M 0 0 L 100 -100 L 200 0", // Upward triangle
   },
   water: {
     inhale: GRANT_CONSTANTS.PI,
@@ -49,7 +52,7 @@ export const ELEMENTAL_BREATH_PATTERNS: Record<string, BreathPattern> = {
     exhale: GRANT_CONSTANTS.PI * GRANT_CONSTANTS.PHI,
     pause: GRANT_CONSTANTS.E,
     ratio: HARMONIC_RATIOS.CIRCLE_BREATH,
-    geometry: 'M 0 0 Q 100 100 200 0' // Wave curve
+    geometry: "M 0 0 Q 100 100 200 0", // Wave curve
   },
   earth: {
     inhale: GRANT_CONSTANTS.SQRT_10 * 2,
@@ -57,7 +60,7 @@ export const ELEMENTAL_BREATH_PATTERNS: Record<string, BreathPattern> = {
     exhale: GRANT_CONSTANTS.SQRT_10 * 2,
     pause: GRANT_CONSTANTS.SQRT_10 * 2,
     ratio: HARMONIC_RATIOS.BREATH_CYCLE,
-    geometry: 'M 0 0 L 0 -100 L 100 -100 L 100 0 Z' // Square
+    geometry: "M 0 0 L 0 -100 L 100 -100 L 100 0 Z", // Square
   },
   air: {
     inhale: GRANT_CONSTANTS.E,
@@ -65,7 +68,7 @@ export const ELEMENTAL_BREATH_PATTERNS: Record<string, BreathPattern> = {
     exhale: GRANT_CONSTANTS.E * GRANT_CONSTANTS.PHI,
     pause: GRANT_CONSTANTS.PHI,
     ratio: HARMONIC_RATIOS.NATURAL_SPIRAL,
-    geometry: 'M 0 0 A 50 50 0 1 1 100 0' // Circle arc
+    geometry: "M 0 0 A 50 50 0 1 1 100 0", // Circle arc
   },
   aether: {
     inhale: GRANT_CONSTANTS.PHI * GRANT_CONSTANTS.E,
@@ -73,8 +76,8 @@ export const ELEMENTAL_BREATH_PATTERNS: Record<string, BreathPattern> = {
     exhale: GRANT_CONSTANTS.PHI * GRANT_CONSTANTS.E,
     pause: GRANT_CONSTANTS.PI,
     ratio: HARMONIC_RATIOS.GOLDEN_BREATH,
-    geometry: 'M 0 0 L 30 -95 L 95 -30 L 65 70 L -65 70 L -95 -30 L -30 -95 Z' // Heptagon
-  }
+    geometry: "M 0 0 L 30 -95 L 95 -30 L 65 70 L -65 70 L -95 -30 L -30 -95 Z", // Heptagon
+  },
 };
 
 // Spiral evolution parameters
@@ -108,7 +111,7 @@ export class HarmonicCodex {
       expansionRate: GRANT_CONSTANTS.PHI,
       rotationAngle: 0,
       breathPhase: 0,
-      harmonicResonance: 1
+      harmonicResonance: 1,
     };
   }
 
@@ -116,7 +119,8 @@ export class HarmonicCodex {
   generateBreathGeometry(timeElapsed: number): string {
     // Update breath phase
     const totalBreathDuration = this.getTotalBreathDuration();
-    this.breathCycle = (timeElapsed % totalBreathDuration) / totalBreathDuration;
+    this.breathCycle =
+      (timeElapsed % totalBreathDuration) / totalBreathDuration;
 
     // Calculate current breath phase
     const phase = this.calculateBreathPhase();
@@ -129,7 +133,10 @@ export class HarmonicCodex {
   }
 
   // Calculate harmonic transition between elements
-  calculateHarmonicTransition(fromElement: string, toElement: string): {
+  calculateHarmonicTransition(
+    fromElement: string,
+    toElement: string,
+  ): {
     duration: number;
     harmonicPath: number[];
     breathTransition: BreathPattern[];
@@ -139,7 +146,7 @@ export class HarmonicCodex {
 
     // Find petal transition
     const petalTransition = PetalTransitions.find(
-      t => t.from === fromElement && t.to === toElement
+      (t) => t.from === fromElement && t.to === toElement,
     );
 
     // Calculate transition duration using Grant's constants
@@ -158,17 +165,29 @@ export class HarmonicCodex {
 
       // Interpolate harmonic values
       harmonicPath.push(
-        fromPattern.ratio + (toPattern.ratio - fromPattern.ratio) * harmonicT
+        fromPattern.ratio + (toPattern.ratio - fromPattern.ratio) * harmonicT,
       );
 
       // Interpolate breath patterns
       breathTransition.push({
-        inhale: this.interpolate(fromPattern.inhale, toPattern.inhale, harmonicT),
+        inhale: this.interpolate(
+          fromPattern.inhale,
+          toPattern.inhale,
+          harmonicT,
+        ),
         hold: this.interpolate(fromPattern.hold, toPattern.hold, harmonicT),
-        exhale: this.interpolate(fromPattern.exhale, toPattern.exhale, harmonicT),
+        exhale: this.interpolate(
+          fromPattern.exhale,
+          toPattern.exhale,
+          harmonicT,
+        ),
         pause: this.interpolate(fromPattern.pause, toPattern.pause, harmonicT),
         ratio: harmonicPath[i],
-        geometry: this.interpolateGeometry(fromPattern.geometry, toPattern.geometry, harmonicT)
+        geometry: this.interpolateGeometry(
+          fromPattern.geometry,
+          toPattern.geometry,
+          harmonicT,
+        ),
       });
     }
 
@@ -178,11 +197,13 @@ export class HarmonicCodex {
   // Apply Grant's harmonic constants to spiral evolution
   evolveSpiral(deltaTime: number): void {
     // Update rotation using golden angle
-    const goldenAngle = 2 * Math.PI / (GRANT_CONSTANTS.PHI * GRANT_CONSTANTS.PHI);
+    const goldenAngle =
+      (2 * Math.PI) / (GRANT_CONSTANTS.PHI * GRANT_CONSTANTS.PHI);
     this.spiralEvolution.rotationAngle += goldenAngle * deltaTime;
 
     // Update radius using natural growth
-    const growthFactor = 1 + (HARMONIC_RATIOS.NATURAL_SPIRAL - 1) * deltaTime * 0.01;
+    const growthFactor =
+      1 + (HARMONIC_RATIOS.NATURAL_SPIRAL - 1) * deltaTime * 0.01;
     this.spiralEvolution.currentRadius *= growthFactor;
 
     // Update harmonic resonance based on elemental balance
@@ -190,7 +211,8 @@ export class HarmonicCodex {
 
     // Apply breath influence to expansion
     const breathInfluence = Math.sin(this.breathCycle * 2 * Math.PI);
-    this.spiralEvolution.expansionRate = GRANT_CONSTANTS.PHI + breathInfluence * 0.1;
+    this.spiralEvolution.expansionRate =
+      GRANT_CONSTANTS.PHI + breathInfluence * 0.1;
   }
 
   // Generate Grant-encoded evolution metrics
@@ -202,12 +224,14 @@ export class HarmonicCodex {
     evolutionStage: string;
   } {
     // Calculate spiral density using √10
-    const spiralDensity = this.spiralEvolution.currentRadius /
+    const spiralDensity =
+      this.spiralEvolution.currentRadius /
       (GRANT_CONSTANTS.SQRT_10 * this.spiralEvolution.rotationAngle);
 
     // Harmonic coherence based on VE state
     const veMetrics = this.ve.getCoherence();
-    const harmonicCoherence = veMetrics * this.spiralEvolution.harmonicResonance;
+    const harmonicCoherence =
+      veMetrics * this.spiralEvolution.harmonicResonance;
 
     // Breath alignment with natural rhythm
     const breathAlignment = this.calculateBreathAlignment();
@@ -223,12 +247,15 @@ export class HarmonicCodex {
       harmonicCoherence: harmonicCoherence / 100,
       breathAlignment,
       geometricResonance,
-      evolutionStage
+      evolutionStage,
     };
   }
 
   // Create sacred geometry based on breath and Grant's constants
-  generateSacredBreathMandala(width: number = 800, height: number = 800): string {
+  generateSacredBreathMandala(
+    width: number = 800,
+    height: number = 800,
+  ): string {
     const cx = width / 2;
     const cy = height / 2;
 
@@ -239,13 +266,13 @@ export class HarmonicCodex {
 
     // Grant's constant circles
     const circles = [
-      { r: GRANT_CONSTANTS.SQRT_10 * 50, stroke: '#FF6B35', label: '√10' },
-      { r: GRANT_CONSTANTS.PHI * 50, stroke: '#2E86AB', label: 'φ' },
-      { r: GRANT_CONSTANTS.E * 50, stroke: '#7D4F39', label: 'e' },
-      { r: GRANT_CONSTANTS.PI * 50, stroke: '#B8B8D1', label: 'π' }
+      { r: GRANT_CONSTANTS.SQRT_10 * 50, stroke: "#FF6B35", label: "√10" },
+      { r: GRANT_CONSTANTS.PHI * 50, stroke: "#2E86AB", label: "φ" },
+      { r: GRANT_CONSTANTS.E * 50, stroke: "#7D4F39", label: "e" },
+      { r: GRANT_CONSTANTS.PI * 50, stroke: "#B8B8D1", label: "π" },
     ];
 
-    circles.forEach(circle => {
+    circles.forEach((circle) => {
       svg += `<circle cx="${cx}" cy="${cy}" r="${circle.r}"
               fill="none" stroke="${circle.stroke}" stroke-width="1" opacity="0.3" />`;
     });
@@ -259,13 +286,13 @@ export class HarmonicCodex {
     // Current breath phase indicator
     svg += this.createBreathPhaseIndicator(cx, cy);
 
-    svg += '</svg>';
+    svg += "</svg>";
     return svg;
   }
 
   // Private helper methods
   private getDominantElement(): string {
-    let maxElement = 'aether';
+    let maxElement = "aether";
     let maxValue = 0;
 
     Object.entries(this.elementalBalance).forEach(([element, value]) => {
@@ -283,39 +310,47 @@ export class HarmonicCodex {
     return p.inhale + p.hold + p.exhale + p.pause;
   }
 
-  private calculateBreathPhase(): 'inhale' | 'hold' | 'exhale' | 'pause' {
+  private calculateBreathPhase(): "inhale" | "hold" | "exhale" | "pause" {
     const p = this.currentBreathPattern;
     const totalDuration = this.getTotalBreathDuration();
     const currentTime = this.breathCycle * totalDuration;
 
-    if (currentTime < p.inhale) return 'inhale';
-    if (currentTime < p.inhale + p.hold) return 'hold';
-    if (currentTime < p.inhale + p.hold + p.exhale) return 'exhale';
-    return 'pause';
+    if (currentTime < p.inhale) return "inhale";
+    if (currentTime < p.inhale + p.hold) return "hold";
+    if (currentTime < p.inhale + p.hold + p.exhale) return "exhale";
+    return "pause";
   }
 
-  private calculateSpiralCoordinates(phase: string): { x: number; y: number; z: number } {
+  private calculateSpiralCoordinates(phase: string): {
+    x: number;
+    y: number;
+    z: number;
+  } {
     const angle = this.spiralEvolution.rotationAngle;
     const r = this.spiralEvolution.currentRadius;
 
     // Apply breath phase modulation
-    const phaseModulation = {
-      'inhale': 1 + 0.1 * Math.sin(this.breathCycle * Math.PI),
-      'hold': 1.1,
-      'exhale': 1 - 0.1 * Math.sin(this.breathCycle * Math.PI),
-      'pause': 0.95
-    }[phase] || 1;
+    const phaseModulation =
+      {
+        inhale: 1 + 0.1 * Math.sin(this.breathCycle * Math.PI),
+        hold: 1.1,
+        exhale: 1 - 0.1 * Math.sin(this.breathCycle * Math.PI),
+        pause: 0.95,
+      }[phase] || 1;
 
     const modR = r * phaseModulation;
 
     return {
       x: modR * Math.cos(angle),
       y: modR * Math.sin(angle),
-      z: modR * this.breathCycle * GRANT_CONSTANTS.PHI
+      z: modR * this.breathCycle * GRANT_CONSTANTS.PHI,
     };
   }
 
-  private createBreathGeometrySVG(coords: { x: number; y: number; z: number }, phase: string): string {
+  private createBreathGeometrySVG(
+    coords: { x: number; y: number; z: number },
+    phase: string,
+  ): string {
     // Project 3D to 2D using Grant's perspective
     const scale = 200 / (200 + coords.z);
     const x2d = coords.x * scale;
@@ -330,15 +365,21 @@ export class HarmonicCodex {
 
   private applyHarmonicEasing(t: number): number {
     // Use Grant's constants for easing
-    return Math.pow(t, GRANT_CONSTANTS.PHI) /
-           (Math.pow(t, GRANT_CONSTANTS.PHI) + Math.pow(1 - t, GRANT_CONSTANTS.PHI));
+    return (
+      Math.pow(t, GRANT_CONSTANTS.PHI) /
+      (Math.pow(t, GRANT_CONSTANTS.PHI) + Math.pow(1 - t, GRANT_CONSTANTS.PHI))
+    );
   }
 
   private interpolate(from: number, to: number, t: number): number {
     return from + (to - from) * t;
   }
 
-  private interpolateGeometry(fromPath: string, toPath: string, t: number): string {
+  private interpolateGeometry(
+    fromPath: string,
+    toPath: string,
+    t: number,
+  ): string {
     // Simple linear interpolation of path (would need proper path interpolation in production)
     return t < 0.5 ? fromPath : toPath;
   }
@@ -351,7 +392,7 @@ export class HarmonicCodex {
     elements.forEach(([element, value], i) => {
       if (value) {
         const grantRatio = Object.values(GRANT_CONSTANTS)[i % 4];
-        const alignment = 1 - Math.abs((value / 100) - (grantRatio / 10));
+        const alignment = 1 - Math.abs(value / 100 - grantRatio / 10);
         resonance += alignment;
       }
     });
@@ -371,43 +412,45 @@ export class HarmonicCodex {
     // Measure alignment with sacred geometry
     const angle = this.spiralEvolution.rotationAngle % (2 * Math.PI);
     const sacredAngles = [
-      0,                                    // 0°
-      Math.PI / 6,                         // 30°
-      Math.PI / 4,                         // 45°
-      Math.PI / 3,                         // 60°
-      Math.PI / 2,                         // 90°
-      2 * Math.PI / GRANT_CONSTANTS.PHI,   // Golden angle
-      Math.PI                              // 180°
+      0, // 0°
+      Math.PI / 6, // 30°
+      Math.PI / 4, // 45°
+      Math.PI / 3, // 60°
+      Math.PI / 2, // 90°
+      (2 * Math.PI) / GRANT_CONSTANTS.PHI, // Golden angle
+      Math.PI, // 180°
     ];
 
     let minDistance = Math.PI;
-    sacredAngles.forEach(sacred => {
+    sacredAngles.forEach((sacred) => {
       const distance = Math.abs(angle - sacred);
       minDistance = Math.min(minDistance, distance);
     });
 
-    return 1 - (minDistance / Math.PI);
+    return 1 - minDistance / Math.PI;
   }
 
   private determineEvolutionStage(): string {
     const radius = this.spiralEvolution.currentRadius;
     const rotations = this.spiralEvolution.rotationAngle / (2 * Math.PI);
 
-    if (rotations < GRANT_CONSTANTS.PHI) return 'initiation';
-    if (rotations < GRANT_CONSTANTS.E * GRANT_CONSTANTS.PHI) return 'expansion';
-    if (rotations < GRANT_CONSTANTS.PI * GRANT_CONSTANTS.E) return 'integration';
-    if (rotations < GRANT_CONSTANTS.SQRT_10 * GRANT_CONSTANTS.PI) return 'mastery';
-    return 'transcendence';
+    if (rotations < GRANT_CONSTANTS.PHI) return "initiation";
+    if (rotations < GRANT_CONSTANTS.E * GRANT_CONSTANTS.PHI) return "expansion";
+    if (rotations < GRANT_CONSTANTS.PI * GRANT_CONSTANTS.E)
+      return "integration";
+    if (rotations < GRANT_CONSTANTS.SQRT_10 * GRANT_CONSTANTS.PI)
+      return "mastery";
+    return "transcendence";
   }
 
   private createBreathGradient(cx: number, cy: number): string {
     const phase = this.calculateBreathPhase();
     const colors = {
-      'inhale': ['#FF6B35', '#F7931E'],
-      'hold': ['#2E86AB', '#54C6EB'],
-      'exhale': ['#7D4F39', '#AA8F66'],
-      'pause': ['#B8B8D1', '#D6D6F5']
-    }[phase] || ['#9B5DE5', '#C77DFF'];
+      inhale: ["#FF6B35", "#F7931E"],
+      hold: ["#2E86AB", "#54C6EB"],
+      exhale: ["#7D4F39", "#AA8F66"],
+      pause: ["#B8B8D1", "#D6D6F5"],
+    }[phase] || ["#9B5DE5", "#C77DFF"];
 
     return `
       <defs>
@@ -441,7 +484,7 @@ export class HarmonicCodex {
   }
 
   private createElementalMarkers(cx: number, cy: number): string {
-    let markers = '';
+    let markers = "";
     const elements = Object.keys(this.elementalBalance);
 
     elements.forEach((element, i) => {
@@ -450,7 +493,8 @@ export class HarmonicCodex {
       const x = cx + r * Math.cos(angle);
       const y = cy + r * Math.sin(angle);
 
-      const value = this.elementalBalance[element as keyof ElementalBalance] || 0;
+      const value =
+        this.elementalBalance[element as keyof ElementalBalance] || 0;
       const size = 10 + value * 0.3;
 
       markers += `<circle cx="${x}" cy="${y}" r="${size}"
@@ -482,20 +526,20 @@ export class HarmonicCodex {
 
   private getElementColor(element: string): string {
     const colors: Record<string, string> = {
-      fire: '#FF6B35',
-      water: '#2E86AB',
-      earth: '#7D4F39',
-      air: '#B8B8D1',
-      aether: '#9B5DE5'
+      fire: "#FF6B35",
+      water: "#2E86AB",
+      earth: "#7D4F39",
+      air: "#B8B8D1",
+      aether: "#9B5DE5",
     };
-    return colors[element] || '#FFFFFF';
+    return colors[element] || "#FFFFFF";
   }
 }
 
 // Utility function to generate user's harmonic signature
 export function generateHarmonicSignature(
   elementalBalance: ElementalBalance,
-  birthData?: { moonPhase?: string; season?: string; numerology?: number }
+  birthData?: { moonPhase?: string; season?: string; numerology?: number },
 ): {
   primaryHarmonic: number;
   secondaryHarmonic: number;
@@ -516,22 +560,24 @@ export function generateHarmonicSignature(
     }
   });
 
-  primaryHarmonic = totalWeight > 0 ? primaryHarmonic / totalWeight : GRANT_CONSTANTS.PHI;
+  primaryHarmonic =
+    totalWeight > 0 ? primaryHarmonic / totalWeight : GRANT_CONSTANTS.PHI;
 
   // Calculate secondary harmonic from birth data
   let secondaryHarmonic = GRANT_CONSTANTS.SQRT_10;
 
   if (birthData?.numerology) {
-    secondaryHarmonic *= (birthData.numerology / 9); // Normalize to 0-1
+    secondaryHarmonic *= birthData.numerology / 9; // Normalize to 0-1
   }
 
-  if (birthData?.moonPhase?.includes('full')) {
+  if (birthData?.moonPhase?.includes("full")) {
     secondaryHarmonic *= GRANT_CONSTANTS.PHI;
   }
 
   // Determine breath signature
-  const dominantElement = Object.entries(elementalBalance)
-    .sort(([, a], [, b]) => (b || 0) - (a || 0))[0][0];
+  const dominantElement = Object.entries(elementalBalance).sort(
+    ([, a], [, b]) => (b || 0) - (a || 0),
+  )[0][0];
   const breathSignature = ELEMENTAL_BREATH_PATTERNS[dominantElement];
 
   // Generate evolution path
@@ -541,7 +587,7 @@ export function generateHarmonicSignature(
     primaryHarmonic,
     secondaryHarmonic,
     breathSignature,
-    evolutionPath
+    evolutionPath,
   };
 }
 
@@ -552,7 +598,7 @@ function generateEvolutionPath(balance: ElementalBalance): string[] {
     .map(([element]) => element);
 
   // Start with weakest, end with strongest for balance
-  return [...elements, 'aether'];
+  return [...elements, "aether"];
 }
 
 export default HarmonicCodex;

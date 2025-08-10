@@ -3,8 +3,8 @@
  * Event-driven communication between elemental services
  */
 
-import { EventEmitter } from 'events';
-import { SpiralogicEvent, TopicConfig, ElementalService } from '../types';
+import { EventEmitter } from "events";
+import { SpiralogicEvent, TopicConfig, ElementalService } from "../types";
 
 export class PubSubManager extends EventEmitter {
   private static instance: PubSubManager;
@@ -15,7 +15,7 @@ export class PubSubManager extends EventEmitter {
     messages_published: 0,
     messages_delivered: 0,
     active_subscribers: 0,
-    topics_created: 0
+    topics_created: 0,
   };
 
   private constructor() {
@@ -35,18 +35,18 @@ export class PubSubManager extends EventEmitter {
    */
   private initializeCorePubSub(): void {
     // Create core elemental topics
-    Object.values(ElementalService).forEach(element => {
+    Object.values(ElementalService).forEach((element) => {
       this.createTopic(`${element}.channel`);
       this.createTopic(`${element}.private`);
       this.createTopic(`${element}.response`);
     });
 
     // Create system topics
-    this.createTopic('system.events');
-    this.createTopic('emergency.broadcast');
-    this.createTopic('elemental.council');
-    this.createTopic('quantum.coherence');
-    this.createTopic('collective.wisdom');
+    this.createTopic("system.events");
+    this.createTopic("emergency.broadcast");
+    this.createTopic("elemental.council");
+    this.createTopic("quantum.coherence");
+    this.createTopic("collective.wisdom");
 
     // Setup message processing
     this.startMessageProcessor();
@@ -63,9 +63,9 @@ export class PubSubManager extends EventEmitter {
 
     const defaultConfig: TopicConfig = {
       name,
-      retention_policy: 'short',
+      retention_policy: "short",
       max_subscribers: 1000,
-      delivery_guarantee: 'at_least_once'
+      delivery_guarantee: "at_least_once",
     };
 
     const finalConfig = { ...defaultConfig, ...config };
@@ -77,7 +77,7 @@ export class PubSubManager extends EventEmitter {
 
     this.metrics.topics_created++;
 
-    this.emit('topic.created', { topic: name, config: finalConfig });
+    this.emit("topic.created", { topic: name, config: finalConfig });
   }
 
   /**
@@ -86,7 +86,7 @@ export class PubSubManager extends EventEmitter {
   subscribe(
     topic: string,
     callback: (event: SpiralogicEvent) => Promise<void>,
-    options?: SubscriptionOptions
+    options?: SubscriptionOptions,
   ): Subscription {
     const topicObj = this.topics.get(topic);
     if (!topicObj) {
@@ -98,7 +98,7 @@ export class PubSubManager extends EventEmitter {
       callback,
       topic,
       created_at: Date.now(),
-      options: options || {}
+      options: options || {},
     };
 
     const subscribers = this.subscribers.get(topic)!;
@@ -114,10 +114,10 @@ export class PubSubManager extends EventEmitter {
     const subscription: Subscription = {
       id: subscriber.id,
       topic,
-      unsubscribe: () => this.unsubscribe(topic, subscriber.id)
+      unsubscribe: () => this.unsubscribe(topic, subscriber.id),
     };
 
-    this.emit('subscriber.added', { topic, subscriber: subscriber.id });
+    this.emit("subscriber.added", { topic, subscriber: subscriber.id });
 
     return subscription;
   }
@@ -129,13 +129,15 @@ export class PubSubManager extends EventEmitter {
     const subscribers = this.subscribers.get(topic);
     if (!subscribers) return false;
 
-    const subscriber = Array.from(subscribers).find(s => s.id === subscriberId);
+    const subscriber = Array.from(subscribers).find(
+      (s) => s.id === subscriberId,
+    );
     if (!subscriber) return false;
 
     subscribers.delete(subscriber);
     this.metrics.active_subscribers--;
 
-    this.emit('subscriber.removed', { topic, subscriber: subscriberId });
+    this.emit("subscriber.removed", { topic, subscriber: subscriberId });
 
     return true;
   }
@@ -157,7 +159,7 @@ export class PubSubManager extends EventEmitter {
       event,
       topic,
       published_at: Date.now(),
-      delivery_attempts: 0
+      delivery_attempts: 0,
     };
 
     const queue = this.messageQueue.get(topic)!;
@@ -172,7 +174,7 @@ export class PubSubManager extends EventEmitter {
     const deliveryResults = await this.deliverToSubscribers(
       topic,
       event,
-      Array.from(subscribers)
+      Array.from(subscribers),
     );
 
     const result: PublishResult = {
@@ -180,10 +182,10 @@ export class PubSubManager extends EventEmitter {
       topic,
       subscribers_notified: deliveryResults.successful.length,
       failed_deliveries: deliveryResults.failed,
-      delivery_guarantee: topicObj.config.delivery_guarantee
+      delivery_guarantee: topicObj.config.delivery_guarantee,
     };
 
-    this.emit('message.published', result);
+    this.emit("message.published", result);
 
     return result;
   }
@@ -194,7 +196,7 @@ export class PubSubManager extends EventEmitter {
   private async deliverToSubscribers(
     topic: string,
     event: SpiralogicEvent,
-    subscribers: Subscriber[]
+    subscribers: Subscriber[],
   ): Promise<DeliveryResult> {
     const successful: string[] = [];
     const failed: DeliveryFailure[] = [];
@@ -211,11 +213,11 @@ export class PubSubManager extends EventEmitter {
         } catch (error) {
           failed.push({
             subscriber_id: subscriber.id,
-            error: error instanceof Error ? error.message : 'Unknown error',
-            timestamp: Date.now()
+            error: error instanceof Error ? error.message : "Unknown error",
+            timestamp: Date.now(),
           });
         }
-      })
+      }),
     );
 
     return { successful, failed };
@@ -224,7 +226,10 @@ export class PubSubManager extends EventEmitter {
   /**
    * Check if message should be delivered to subscriber
    */
-  private shouldDeliver(event: SpiralogicEvent, subscriber: Subscriber): boolean {
+  private shouldDeliver(
+    event: SpiralogicEvent,
+    subscriber: Subscriber,
+  ): boolean {
     const options = subscriber.options;
 
     // Check elemental filters
@@ -266,14 +271,14 @@ export class PubSubManager extends EventEmitter {
     let retentionTime: number;
 
     switch (policy) {
-      case 'none':
+      case "none":
         // Remove immediately after delivery
         queue.splice(0, queue.length);
         return;
-      case 'short':
+      case "short":
         retentionTime = 5 * 60 * 1000; // 5 minutes
         break;
-      case 'long':
+      case "long":
         retentionTime = 24 * 60 * 60 * 1000; // 24 hours
         break;
       default:
@@ -282,7 +287,7 @@ export class PubSubManager extends EventEmitter {
 
     // Remove old messages
     const cutoffTime = now - retentionTime;
-    const filteredQueue = queue.filter(msg => msg.published_at > cutoffTime);
+    const filteredQueue = queue.filter((msg) => msg.published_at > cutoffTime);
 
     queue.splice(0, queue.length, ...filteredQueue);
   }
@@ -303,10 +308,10 @@ export class PubSubManager extends EventEmitter {
     for (const [topic, queue] of this.messageQueue.entries()) {
       const topicObj = this.topics.get(topic)!;
 
-      if (topicObj.config.delivery_guarantee === 'at_least_once') {
-        const pendingMessages = queue.filter(msg =>
-          msg.delivery_attempts < 3 &&
-          Date.now() - msg.published_at < 300000 // 5 minutes
+      if (topicObj.config.delivery_guarantee === "at_least_once") {
+        const pendingMessages = queue.filter(
+          (msg) =>
+            msg.delivery_attempts < 3 && Date.now() - msg.published_at < 300000, // 5 minutes
         );
 
         for (const message of pendingMessages) {
@@ -340,7 +345,7 @@ export class PubSubManager extends EventEmitter {
       subscriber_count: subscribers.size,
       queued_messages: queue.length,
       config: topicObj.config,
-      created_at: topicObj.created_at
+      created_at: topicObj.created_at,
     };
   }
 
@@ -368,8 +373,12 @@ export class PubSubManager extends EventEmitter {
 
     return {
       total_topics: results.length,
-      successful_broadcasts: results.filter(r => r.subscribers_notified > 0).length,
-      total_subscribers: results.reduce((sum, r) => sum + r.subscribers_notified, 0)
+      successful_broadcasts: results.filter((r) => r.subscribers_notified > 0)
+        .length,
+      total_subscribers: results.reduce(
+        (sum, r) => sum + r.subscribers_notified,
+        0,
+      ),
     };
   }
 
@@ -382,15 +391,15 @@ export class PubSubManager extends EventEmitter {
       ...event,
       routing: {
         ...event.routing,
-        priority: 'critical',
-        broadcast: true
-      }
+        priority: "critical",
+        broadcast: true,
+      },
     };
 
-    await this.publish('emergency.broadcast', emergencyEvent);
+    await this.publish("emergency.broadcast", emergencyEvent);
     await this.broadcastToElements(emergencyEvent);
 
-    this.emit('emergency.broadcast', { event: emergencyEvent });
+    this.emit("emergency.broadcast", { event: emergencyEvent });
   }
 
   /**
@@ -438,7 +447,7 @@ interface Subscriber {
 interface SubscriptionOptions {
   elemental_filter?: keyof typeof ElementalService;
   elemental_threshold?: number;
-  priority_filter?: 'critical' | 'high' | 'medium' | 'low';
+  priority_filter?: "critical" | "high" | "medium" | "low";
   content_filter?: string;
   max_delivery_attempts?: number;
 }

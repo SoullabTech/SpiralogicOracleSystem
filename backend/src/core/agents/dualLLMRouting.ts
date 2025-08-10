@@ -1,6 +1,6 @@
 // src/core/dualLLMRouting.ts
 
-export type LLMProvider = 'gpt' | 'claude';
+export type LLMProvider = "gpt" | "claude";
 
 /**
  * Selects an LLM provider based on simple keyword heuristics.
@@ -12,14 +12,16 @@ export type LLMProvider = 'gpt' | 'claude';
  */
 export function selectLLM(query: string): LLMProvider {
   const lowerQuery = query.toLowerCase();
-  if (lowerQuery.includes('feel') ||
-      lowerQuery.includes('emotion') ||
-      lowerQuery.includes('spiritual') ||
-      lowerQuery.includes('soul') ||
-      lowerQuery.includes('heart')) {
-    return 'claude';
+  if (
+    lowerQuery.includes("feel") ||
+    lowerQuery.includes("emotion") ||
+    lowerQuery.includes("spiritual") ||
+    lowerQuery.includes("soul") ||
+    lowerQuery.includes("heart")
+  ) {
+    return "claude";
   }
-  return 'gpt';
+  return "gpt";
 }
 
 /**
@@ -30,11 +32,14 @@ export function selectLLM(query: string): LLMProvider {
  * @param query The query to process.
  * @returns A simulated response string.
  */
-export async function callLLM(provider: LLMProvider, query: string): Promise<string> {
+export async function callLLM(
+  provider: LLMProvider,
+  query: string,
+): Promise<string> {
   // Simulated API call delay
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
-  if (provider === 'claude') {
+  if (provider === "claude") {
     return `Claude Response to "${query}": Embracing your emotional depth and intuitive insight.`;
   } else {
     return `GPT Response to "${query}": Here is a structured analysis and strategic advice.`;

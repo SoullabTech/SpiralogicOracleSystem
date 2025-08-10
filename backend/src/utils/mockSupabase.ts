@@ -1,23 +1,29 @@
-import type { AuthResponse } from '../types';
+import type { AuthResponse } from "../types";
 
 export const supabase = {
   auth: {
-    signInWithPassword: async ({ email, password }: { email: string; password: string }): Promise<AuthResponse> => {
+    signInWithPassword: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }): Promise<AuthResponse> => {
       console.log(`[Mock Supabase] signIn called with: ${email}, ${password}`);
       return {
         user: {
-          id: 'mock-user-id',
+          id: "mock-user-id",
           email,
-          user_metadata: { role: 'client' } as any
+          user_metadata: { role: "client" } as any,
         },
         session: {
           user: {
-            id: 'mock-user-id',
+            id: "mock-user-id",
             email,
-            user_metadata: { role: 'client' } as any
-          }
+            user_metadata: { role: "client" } as any,
+          },
         },
-        error: null
+        error: null,
       };
     },
     signOut: async () => ({ error: null }),

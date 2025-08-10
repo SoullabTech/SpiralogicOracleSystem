@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { comprehensiveAstrologicalService } from '../services/comprehensiveAstrologicalService';
-import { AstrologicalHoloflowerVisualization } from './AstrologicalHoloflowerVisualization';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { comprehensiveAstrologicalService } from "../services/comprehensiveAstrologicalService";
+import { AstrologicalHoloflowerVisualization } from "./AstrologicalHoloflowerVisualization";
 
 interface CosmicTimingDashboardProps {
   userId: string;
@@ -21,25 +21,27 @@ interface TimingData {
 
 export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
   userId,
-  birthData
+  birthData,
 }) => {
   const [timingData, setTimingData] = useState<TimingData | null>(null);
-  const [selectedView, setSelectedView] = useState<'overview' | 'monthly' | 'transits' | 'opportunities'>('overview');
+  const [selectedView, setSelectedView] = useState<
+    "overview" | "monthly" | "transits" | "opportunities"
+  >("overview");
   const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Planetary symbols
   const planetSymbols: Record<string, string> = {
-    sun: '☉',
-    moon: '☽',
-    mercury: '☿',
-    venus: '♀',
-    mars: '♂',
-    jupiter: '♃',
-    saturn: '♄',
-    uranus: '♅',
-    neptune: '♆',
-    pluto: '♇'
+    sun: "☉",
+    moon: "☽",
+    mercury: "☿",
+    venus: "♀",
+    mars: "♂",
+    jupiter: "♃",
+    saturn: "♄",
+    uranus: "♅",
+    neptune: "♆",
+    pluto: "♇",
   };
 
   // Load timing data
@@ -49,26 +51,27 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
       try {
         const [sacredTiming, transits] = await Promise.all([
           comprehensiveAstrologicalService.generateSacredTiming(userId),
-          comprehensiveAstrologicalService.trackCurrentTransits(userId)
+          comprehensiveAstrologicalService.trackCurrentTransits(userId),
         ]);
 
         // Filter transformation opportunities
         const opportunities = transits
-          .filter(t => t.intensity > 0.6)
+          .filter((t) => t.intensity > 0.6)
           .sort((a, b) => b.intensity - a.intensity);
 
         // Get current cosmic support
-        const cosmicSupport = sacredTiming.cosmicSupport
-          .filter(s => s.startDate <= new Date() && s.endDate >= new Date());
+        const cosmicSupport = sacredTiming.cosmicSupport.filter(
+          (s) => s.startDate <= new Date() && s.endDate >= new Date(),
+        );
 
         setTimingData({
           sacredTiming,
           currentTransits: transits,
           transformationOpportunities: opportunities,
-          cosmicSupport
+          cosmicSupport,
         });
       } catch (error) {
-        console.error('Error loading timing data:', error);
+        console.error("Error loading timing data:", error);
       } finally {
         setLoading(false);
       }
@@ -105,7 +108,9 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
             </div>
             <div className="lunar-info">
               <p className="phase-name">{lunarCycle.currentPhase}</p>
-              <p className="illumination">{Math.round(lunarCycle.percentIlluminated)}% illuminated</p>
+              <p className="illumination">
+                {Math.round(lunarCycle.percentIlluminated)}% illuminated
+              </p>
               <p className="moon-sign">Moon in {lunarCycle.moonSign}</p>
               <p className="moon-house">House {lunarCycle.moonHouse}</p>
             </div>
@@ -125,7 +130,9 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
               {timingData.cosmicSupport.map((support, index) => (
                 <div key={index} className="support-item">
                   <div className="support-type">{support.supportType}</div>
-                  <div className="support-description">{support.description}</div>
+                  <div className="support-description">
+                    {support.description}
+                  </div>
                   <div className="support-intensity">
                     <div
                       className="intensity-bar"
@@ -148,15 +155,19 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
           transition={{ delay: 0.3 }}
         >
           <h3>Current Retrogrades</h3>
-          {retrogradePeriods.filter(r =>
-            r.startDate <= new Date() && r.endDate >= new Date()
+          {retrogradePeriods.filter(
+            (r) => r.startDate <= new Date() && r.endDate >= new Date(),
           ).length > 0 ? (
             <div className="retrograde-list">
               {retrogradePeriods
-                .filter(r => r.startDate <= new Date() && r.endDate >= new Date())
+                .filter(
+                  (r) => r.startDate <= new Date() && r.endDate >= new Date(),
+                )
                 .map((retro, index) => (
                   <div key={index} className="retrograde-item">
-                    <span className="planet-symbol">{planetSymbols[retro.planet]}</span>
+                    <span className="planet-symbol">
+                      {planetSymbols[retro.planet]}
+                    </span>
                     <span className="planet-name">{retro.planet}</span>
                     <span className="retro-badge">℞</span>
                   </div>
@@ -177,7 +188,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
           <h3>Optimal House Work</h3>
           <div className="house-recommendations">
             {recommendations
-              .filter(r => r.quality === 'excellent' || r.quality === 'good')
+              .filter((r) => r.quality === "excellent" || r.quality === "good")
               .slice(0, 3)
               .map((rec, index) => (
                 <div
@@ -186,10 +197,12 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
                   onClick={() => setSelectedHouse(rec.houseNumber)}
                 >
                   <div className="house-number">House {rec.houseNumber}</div>
-                  <div className="rec-quality quality-{rec.quality}">{rec.quality}</div>
+                  <div className="rec-quality quality-{rec.quality}">
+                    {rec.quality}
+                  </div>
                   <div className="rec-description">{rec.description}</div>
                   <div className="rec-planets">
-                    {rec.planets.map(p => planetSymbols[p] || p).join(' ')}
+                    {rec.planets.map((p) => planetSymbols[p] || p).join(" ")}
                   </div>
                 </div>
               ))}
@@ -219,9 +232,9 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
               onClick={() => setSelectedHouse(activation.house)}
             >
               <div className="activation-date">
-                {new Date(activation.date).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric'
+                {new Date(activation.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
                 })}
               </div>
               <div className="activation-content">
@@ -257,7 +270,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
     if (!timingData) return null;
 
     const { currentTransits } = timingData;
-    const majorTransits = currentTransits.filter(t => t.intensity > 0.5);
+    const majorTransits = currentTransits.filter((t) => t.intensity > 0.5);
 
     return (
       <div className="transits-view">
@@ -274,26 +287,33 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
             >
               <div className="transit-header">
                 <span className="transit-planet">
-                  {planetSymbols[transit.transit.planet]} {transit.transit.planet}
+                  {planetSymbols[transit.transit.planet]}{" "}
+                  {transit.transit.planet}
                 </span>
-                {transit.transit.retrograde && <span className="retro-badge">℞</span>}
+                {transit.transit.retrograde && (
+                  <span className="retro-badge">℞</span>
+                )}
               </div>
               <div className="transit-details">
                 <div className="transit-sign">in {transit.transit.sign}</div>
-                <div className="transit-house">House {transit.houseActivated}</div>
+                <div className="transit-house">
+                  House {transit.houseActivated}
+                </div>
                 {transit.natalPlanetAspected && (
                   <div className="aspect-info">
                     Aspecting natal {planetSymbols[transit.natalPlanetAspected]}
                   </div>
                 )}
               </div>
-              <div className="transit-influence">{transit.transit.influence}</div>
+              <div className="transit-influence">
+                {transit.transit.influence}
+              </div>
               <div className="transit-intensity">
                 <div
                   className="intensity-bar"
                   style={{
                     width: `${transit.intensity * 100}%`,
-                    backgroundColor: getIntensityColor(transit.intensity)
+                    backgroundColor: getIntensityColor(transit.intensity),
                   }}
                 />
               </div>
@@ -335,7 +355,11 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
               </div>
               <div className="opp-timing">
                 <div className="timing-phase">
-                  {getTransitPhase(opp.transit.startDate, opp.transit.exactDate, opp.transit.endDate)}
+                  {getTransitPhase(
+                    opp.transit.startDate,
+                    opp.transit.exactDate,
+                    opp.transit.endDate,
+                  )}
                 </div>
                 <div className="exact-date">
                   Exact: {new Date(opp.transit.exactDate).toLocaleDateString()}
@@ -356,32 +380,33 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
   // Helper functions
   const getMoonPhaseIcon = (phase: string): string => {
     const icons: Record<string, string> = {
-      'New Moon': '🌑',
-      'Waxing Crescent': '🌒',
-      'First Quarter': '🌓',
-      'Waxing Gibbous': '🌔',
-      'Full Moon': '🌕',
-      'Waning Gibbous': '🌖',
-      'Last Quarter': '🌗',
-      'Waning Crescent': '🌘'
+      "New Moon": "🌑",
+      "Waxing Crescent": "🌒",
+      "First Quarter": "🌓",
+      "Waxing Gibbous": "🌔",
+      "Full Moon": "🌕",
+      "Waning Gibbous": "🌖",
+      "Last Quarter": "🌗",
+      "Waning Crescent": "🌘",
     };
-    return icons[phase] || '🌙';
+    return icons[phase] || "🌙";
   };
 
   const getIntensityColor = (intensity: number): string => {
-    if (intensity > 0.8) return '#FF6B6B';
-    if (intensity > 0.6) return '#FFD700';
-    if (intensity > 0.4) return '#87CEEB';
-    return '#98D8C8';
+    if (intensity > 0.8) return "#FF6B6B";
+    if (intensity > 0.6) return "#FFD700";
+    if (intensity > 0.4) return "#87CEEB";
+    return "#98D8C8";
   };
 
   const getTransitPhase = (start: Date, exact: Date, end: Date): string => {
     const now = new Date();
-    if (now < new Date(start)) return 'Approaching';
-    if (now > new Date(end)) return 'Separating';
-    if (Math.abs(now.getTime() - new Date(exact).getTime()) < 86400000) return 'Exact';
-    if (now < new Date(exact)) return 'Applying';
-    return 'Separating';
+    if (now < new Date(start)) return "Approaching";
+    if (now > new Date(end)) return "Separating";
+    if (Math.abs(now.getTime() - new Date(exact).getTime()) < 86400000)
+      return "Exact";
+    if (now < new Date(exact)) return "Applying";
+    return "Separating";
   };
 
   if (loading) {
@@ -399,26 +424,26 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         <h2>Cosmic Timing Dashboard</h2>
         <div className="view-tabs">
           <button
-            className={selectedView === 'overview' ? 'active' : ''}
-            onClick={() => setSelectedView('overview')}
+            className={selectedView === "overview" ? "active" : ""}
+            onClick={() => setSelectedView("overview")}
           >
             Overview
           </button>
           <button
-            className={selectedView === 'monthly' ? 'active' : ''}
-            onClick={() => setSelectedView('monthly')}
+            className={selectedView === "monthly" ? "active" : ""}
+            onClick={() => setSelectedView("monthly")}
           >
             Monthly
           </button>
           <button
-            className={selectedView === 'transits' ? 'active' : ''}
-            onClick={() => setSelectedView('transits')}
+            className={selectedView === "transits" ? "active" : ""}
+            onClick={() => setSelectedView("transits")}
           >
             Transits
           </button>
           <button
-            className={selectedView === 'opportunities' ? 'active' : ''}
-            onClick={() => setSelectedView('opportunities')}
+            className={selectedView === "opportunities" ? "active" : ""}
+            onClick={() => setSelectedView("opportunities")}
           >
             Opportunities
           </button>
@@ -427,10 +452,10 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
       <div className="dashboard-content">
         <AnimatePresence mode="wait">
-          {selectedView === 'overview' && renderOverview()}
-          {selectedView === 'monthly' && renderMonthlyView()}
-          {selectedView === 'transits' && renderTransitsView()}
-          {selectedView === 'opportunities' && renderOpportunitiesView()}
+          {selectedView === "overview" && renderOverview()}
+          {selectedView === "monthly" && renderMonthlyView()}
+          {selectedView === "transits" && renderTransitsView()}
+          {selectedView === "opportunities" && renderOpportunitiesView()}
         </AnimatePresence>
       </div>
 
@@ -461,7 +486,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
         .dashboard-header h2 {
           font-size: 32px;
-          color: #FFD700;
+          color: #ffd700;
           margin-bottom: 20px;
         }
 
@@ -474,8 +499,8 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         .view-tabs button {
           padding: 10px 20px;
           background: #2a2a3e;
-          border: 1px solid #FFD700;
-          color: #FFD700;
+          border: 1px solid #ffd700;
+          color: #ffd700;
           border-radius: 8px;
           cursor: pointer;
           transition: all 0.3s;
@@ -501,7 +526,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         }
 
         .timing-card h3 {
-          color: #FFD700;
+          color: #ffd700;
           margin-bottom: 15px;
           font-size: 18px;
         }
@@ -523,7 +548,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
         .phase-name {
           font-weight: bold;
-          color: #87CEEB;
+          color: #87ceeb;
         }
 
         .support-item {
@@ -535,7 +560,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
         .support-type {
           font-weight: bold;
-          color: #FFD700;
+          color: #ffd700;
           text-transform: capitalize;
           margin-bottom: 5px;
         }
@@ -547,7 +572,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
         .intensity-bar {
           height: 4px;
-          background: #FFD700;
+          background: #ffd700;
           border-radius: 2px;
           transition: width 0.3s;
         }
@@ -567,7 +592,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         }
 
         .retro-badge {
-          color: #FF6B6B;
+          color: #ff6b6b;
           font-weight: bold;
         }
 
@@ -587,16 +612,16 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
         .house-number {
           font-weight: bold;
-          color: #87CEEB;
+          color: #87ceeb;
           margin-bottom: 5px;
         }
 
         .quality-excellent {
-          color: #4CAF50;
+          color: #4caf50;
         }
 
         .quality-good {
-          color: #FFD700;
+          color: #ffd700;
         }
 
         .monthly-view {
@@ -627,7 +652,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
         .activation-date {
           font-weight: bold;
-          color: #FFD700;
+          color: #ffd700;
           min-width: 60px;
         }
 
@@ -637,7 +662,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
           background: #2a2a3e;
           border-radius: 4px;
           font-size: 12px;
-          color: #87CEEB;
+          color: #87ceeb;
           margin-bottom: 5px;
         }
 
@@ -666,7 +691,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
           align-items: center;
           margin-bottom: 10px;
           font-weight: bold;
-          color: #FFD700;
+          color: #ffd700;
         }
 
         .opportunity-card {
@@ -694,12 +719,12 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         .opp-planet {
           font-size: 18px;
           font-weight: bold;
-          color: #FFD700;
+          color: #ffd700;
         }
 
         .opp-intensity {
           padding: 5px 10px;
-          background: #FF6B6B;
+          background: #ff6b6b;
           border-radius: 20px;
           font-size: 14px;
           font-weight: bold;
@@ -707,7 +732,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
 
         .explore-btn {
           padding: 8px 16px;
-          background: #FFD700;
+          background: #ffd700;
           color: #0a0a0f;
           border: none;
           border-radius: 6px;
@@ -717,7 +742,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         }
 
         .explore-btn:hover {
-          background: #FFA500;
+          background: #ffa500;
           transform: scale(1.05);
         }
 
@@ -735,8 +760,12 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         }
 
         @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </div>

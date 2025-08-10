@@ -1,7 +1,7 @@
 // oracle-backend/src/services/authService.ts
 
-import { supabase } from '../lib/supabaseClient';
-import type { AuthRequest, AuthResponse } from '../types/auth';
+import { supabase } from "../lib/supabaseClient";
+import type { AuthRequest, AuthResponse } from "../types/auth";
 
 /**
  * Handles user authentication and returns access and refresh tokens.
@@ -15,7 +15,7 @@ export async function login(authRequest: AuthRequest): Promise<AuthResponse> {
   } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !user || !session) {
-    throw new Error(error?.message || 'Authentication failed');
+    throw new Error(error?.message || "Authentication failed");
   }
 
   return {
@@ -23,7 +23,7 @@ export async function login(authRequest: AuthRequest): Promise<AuthResponse> {
     refreshToken: session.refresh_token,
     user: {
       id: user.id,
-      email: user.email ?? '',
+      email: user.email ?? "",
     },
   };
 }
@@ -31,14 +31,16 @@ export async function login(authRequest: AuthRequest): Promise<AuthResponse> {
 /**
  * Refreshes the session using a refresh token.
  */
-export async function refreshSession(refreshToken: string): Promise<AuthResponse> {
+export async function refreshSession(
+  refreshToken: string,
+): Promise<AuthResponse> {
   const {
     data: { session },
     error,
   } = await supabase.auth.refreshSession({ refresh_token: refreshToken });
 
   if (error || !session || !session.user) {
-    throw new Error(error?.message || 'Invalid refresh token');
+    throw new Error(error?.message || "Invalid refresh token");
   }
 
   return {
@@ -46,7 +48,7 @@ export async function refreshSession(refreshToken: string): Promise<AuthResponse
     refreshToken: session.refresh_token,
     user: {
       id: session.user.id,
-      email: session.user.email ?? '',
+      email: session.user.email ?? "",
     },
   };
 }

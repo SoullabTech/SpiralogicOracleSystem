@@ -1,4 +1,9 @@
-export type DivinationMethod = 'tarot' | 'iching' | 'yijing' | 'astro' | 'unified';
+export type DivinationMethod =
+  | "tarot"
+  | "iching"
+  | "yijing"
+  | "astro"
+  | "unified";
 
 export interface BirthData {
   date?: string;
@@ -13,7 +18,7 @@ export interface DivinationQuery {
   birthData?: BirthData;
   focus?: string;
   spread?: string;
-  depth?: 'basic' | 'detailed' | 'comprehensive';
+  depth?: "basic" | "detailed" | "comprehensive";
 }
 
 export interface HexagramReading {
@@ -47,8 +52,8 @@ export interface TarotReading {
 
 export interface TarotCard {
   name: string;
-  arcana: 'major' | 'minor';
-  suit?: 'wands' | 'cups' | 'swords' | 'pentacles';
+  arcana: "major" | "minor";
+  suit?: "wands" | "cups" | "swords" | "pentacles";
   number?: number;
   reversed: boolean;
   position: string;
@@ -93,7 +98,7 @@ export interface DivinationInsight {
   // Metadata
   timestamp: string;
   confidence: number;
-  resonance?: 'high' | 'medium' | 'low';
+  resonance?: "high" | "medium" | "low";
 }
 
 export interface DivinationHistory {
@@ -151,14 +156,14 @@ export interface DivinationRitual {
 
 // Export types as values for runtime use if needed
 export const DivinationTypes = {
-  DivinationMethod: 'DivinationMethod',
-  DivinationQuery: 'DivinationQuery', 
-  DivinationInsight: 'DivinationInsight',
-  HexagramReading: 'HexagramReading',
-  TarotReading: 'TarotReading',
-  TarotCard: 'TarotCard',
-  AstrologyReading: 'AstrologyReading',
-  DivinationHistory: 'DivinationHistory',
-  UnifiedDivination: 'UnifiedDivination',
-  DivinationRitual: 'DivinationRitual'
+  DivinationMethod: "DivinationMethod",
+  DivinationQuery: "DivinationQuery",
+  DivinationInsight: "DivinationInsight",
+  HexagramReading: "HexagramReading",
+  TarotReading: "TarotReading",
+  TarotCard: "TarotCard",
+  AstrologyReading: "AstrologyReading",
+  DivinationHistory: "DivinationHistory",
+  UnifiedDivination: "UnifiedDivination",
+  DivinationRitual: "DivinationRitual",
 } as const;

@@ -19,7 +19,7 @@ export const runShadowWork = async (input: string, userId: string) => {
   // or return AIResponse-compatible object
   const shadowWork = new ShadowWorkClass(userId);
   shadowWork.performWork();
-  
+
   // Return null to indicate no shadow work response (will fall through to elemental routing)
   return null;
 };

@@ -1,5 +1,5 @@
-import { Request } from 'express';
-import type { Metadata } from './metadata';
+import { Request } from "express";
+import type { Metadata } from "./metadata";
 
 /**
  * Represents the authentication request payload
@@ -55,7 +55,7 @@ export interface Session {
   clientId: string;
   startTime: string;
   meta: Metadata;
-  status: 'active' | 'completed';
+  status: "active" | "completed";
 }
 
 /**
@@ -96,7 +96,7 @@ export interface AuthenticatedRequest extends Request {
 export interface AgentResponse {
   id?: string;
   content: string;
-  type?: 'oracle' | 'response' | 'insight';
+  type?: "oracle" | "response" | "insight";
   element?: string;
   phase?: string;
   metadata?: Record<string, any>;
@@ -108,6 +108,6 @@ export interface AgentResponse {
 }
 
 // Optional re-exports
-export * from './auth';
-export * from './memory';
-export * from './session';
+export * from "./auth";
+export * from "./memory";
+export * from "./session";

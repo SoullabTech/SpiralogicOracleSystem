@@ -1,8 +1,8 @@
 // src/routes/survey.routes.ts
 
-import { Router } from 'express';
-import { handleSurveySubmission } from '../controllers/survey.controller';
-import { z } from 'zod';
+import { Router } from "express";
+import { handleSurveySubmission } from "../controllers/survey.controller";
+import { z } from "zod";
 
 const router = Router();
 
@@ -10,12 +10,12 @@ const router = Router();
 const SurveySubmissionSchema = z.object({
   crystalFocus: z.object({
     type: z.enum([
-      'career',
-      'spiritual',
-      'relational',
-      'health',
-      'creative',
-      'other',
+      "career",
+      "spiritual",
+      "relational",
+      "health",
+      "creative",
+      "other",
     ]),
     customDescription: z.string().optional(),
     challenges: z.string(),
@@ -25,19 +25,19 @@ const SurveySubmissionSchema = z.object({
     z.object({
       questionId: z.string(),
       answer: z.number().min(1).max(5),
-    })
+    }),
   ),
 });
 
 // POST /api/oracle/survey
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const result = SurveySubmissionSchema.safeParse(req.body);
 
     if (!result.success) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid submission',
+        error: "Invalid submission",
         details: result.error.flatten(),
       });
     }
@@ -47,10 +47,10 @@ router.post('/', async (req, res) => {
 
     return handleSurveySubmission(req as any, res);
   } catch (err) {
-    console.error('❌ Survey processing error:', err);
+    console.error("❌ Survey processing error:", err);
     return res.status(500).json({
       success: false,
-      error: 'Unexpected server error',
+      error: "Unexpected server error",
     });
   }
 });

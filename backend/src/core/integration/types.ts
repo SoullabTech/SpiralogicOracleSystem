@@ -1,40 +1,45 @@
 export enum IntegrationStage {
-  INITIAL_INSIGHT = 'initial_insight',
-  REFLECTION_GAP = 'reflection_gap',
-  REALITY_APPLICATION = 'reality_application',
-  DAILY_INTEGRATION = 'daily_integration',
-  EMBODIED_WISDOM = 'embodied_wisdom',
-  SPIRAL_REVISIT = 'spiral_revisit'
+  INITIAL_INSIGHT = "initial_insight",
+  REFLECTION_GAP = "reflection_gap",
+  REALITY_APPLICATION = "reality_application",
+  DAILY_INTEGRATION = "daily_integration",
+  EMBODIED_WISDOM = "embodied_wisdom",
+  SPIRAL_REVISIT = "spiral_revisit",
 }
 
 export enum SpiralPhase {
-  FOUNDATION = 'foundation',
-  EXPLORATION = 'exploration',
-  INTEGRATION = 'integration',
-  DEEPENING = 'deepening',
-  SERVICE = 'service',
-  MAINTENANCE = 'maintenance'
+  FOUNDATION = "foundation",
+  EXPLORATION = "exploration",
+  INTEGRATION = "integration",
+  DEEPENING = "deepening",
+  SERVICE = "service",
+  MAINTENANCE = "maintenance",
 }
 
 export enum BypassingPattern {
-  INSIGHT_ADDICTION = 'insight_addiction',
-  EMOTIONAL_AVOIDANCE = 'emotional_avoidance',
-  SPIRITUAL_SUPERIORITY = 'spiritual_superiority',
-  TRANSCENDENCE_SEEKING = 'transcendence_seeking',
-  RESPONSIBILITY_AVOIDANCE = 'responsibility_avoidance',
-  ORDINARY_REJECTION = 'ordinary_rejection'
+  INSIGHT_ADDICTION = "insight_addiction",
+  EMOTIONAL_AVOIDANCE = "emotional_avoidance",
+  SPIRITUAL_SUPERIORITY = "spiritual_superiority",
+  TRANSCENDENCE_SEEKING = "transcendence_seeking",
+  RESPONSIBILITY_AVOIDANCE = "responsibility_avoidance",
+  ORDINARY_REJECTION = "ordinary_rejection",
 }
 
 export enum RedFlagSeverity {
-  AWARENESS = 'awareness',
-  CONCERN = 'concern',
-  INTERVENTION = 'intervention',
-  PROFESSIONAL_REFERRAL = 'professional_referral'
+  AWARENESS = "awareness",
+  CONCERN = "concern",
+  INTERVENTION = "intervention",
+  PROFESSIONAL_REFERRAL = "professional_referral",
 }
 
 export interface IntegrationRequirement {
   id: string;
-  type: 'reflection' | 'reality_check' | 'application' | 'embodiment' | 'community_validation';
+  type:
+    | "reflection"
+    | "reality_check"
+    | "application"
+    | "embodiment"
+    | "community_validation";
   description: string;
   minimumDays: number;
   validationCriteria: string[];
@@ -52,17 +57,22 @@ export interface ReflectionGap {
   reflectionPrompts: string[];
   realityCheckQuestions: string[];
   integrationEvidence: IntegrationEvidence[];
-  gateStatus: 'open' | 'processing' | 'completed';
+  gateStatus: "open" | "processing" | "completed";
   bypassAttempts: number;
 }
 
 export interface IntegrationEvidence {
   id: string;
-  type: 'daily_practice' | 'relationship_change' | 'behavior_shift' | 'ordinary_moment' | 'struggle_navigation';
+  type:
+    | "daily_practice"
+    | "relationship_change"
+    | "behavior_shift"
+    | "ordinary_moment"
+    | "struggle_navigation";
   description: string;
   date: Date;
   validated: boolean;
-  validatedBy?: 'self' | 'peer' | 'mentor';
+  validatedBy?: "self" | "peer" | "mentor";
   realWorldContext: string;
 }
 
@@ -93,7 +103,7 @@ export interface BypassingDetection {
 
 export interface GroundedMetaphysicsContext {
   elementalLanguage: {
-    presentedAs: 'metaphor' | 'framework' | 'experiential_tool';
+    presentedAs: "metaphor" | "framework" | "experiential_tool";
     disclaimers: string[];
     personalExperimentationPrompts: string[];
     realityGroundingQuestions: string[];
@@ -107,7 +117,7 @@ export interface IntegrationGate {
   id: string;
   contentToUnlock: string;
   requirements: IntegrationRequirement[];
-  gateType: 'sequential' | 'cumulative' | 'spiral_depth';
+  gateType: "sequential" | "cumulative" | "spiral_depth";
   minimumIntegrationDays: number;
   realWorldApplicationRequired: boolean;
   communityValidationRequired: boolean;
@@ -163,10 +173,10 @@ export interface OrdinaryMoment {
 
 export interface ConsistencyMetric {
   practice: string;
-  frequency: 'daily' | 'weekly' | 'monthly';
+  frequency: "daily" | "weekly" | "monthly";
   consistencyRating: number; // 1-10
   maintainedFor: number; // days
-  celebratedBy: 'self' | 'community' | 'mentor';
+  celebratedBy: "self" | "community" | "mentor";
 }
 
 export interface AntiCommodificationSafeguards {
@@ -230,7 +240,11 @@ export interface RealityGroundingPrompt {
 }
 
 export interface IntegrationValidation {
-  type: 'self_assessment' | 'peer_feedback' | 'mentor_observation' | 'real_world_evidence';
+  type:
+    | "self_assessment"
+    | "peer_feedback"
+    | "mentor_observation"
+    | "real_world_evidence";
   criteria: string[];
   evidence: string[];
   validated: boolean;

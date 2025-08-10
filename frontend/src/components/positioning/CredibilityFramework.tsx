@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 interface CredibilityFrameworkProps {
   showDetails?: boolean;
@@ -8,48 +8,59 @@ interface CredibilityFrameworkProps {
 
 const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({
   showDetails = false,
-  onToggleDetails
+  onToggleDetails,
 }) => {
   const theoreticalFoundations = [
     {
       category: "Archetypal Psychology",
       sources: ["C.G. Jung", "James Hillman", "Robert Moore"],
-      application: "Agent personality structures and symbolic interpretation patterns"
+      application:
+        "Agent personality structures and symbolic interpretation patterns",
     },
     {
       category: "Cognitive Integration",
       sources: ["Iain McGilchrist", "Daniel Siegel", "Antonio Damasio"],
-      application: "Left-right brain coherence and embodied consciousness tracking"
+      application:
+        "Left-right brain coherence and embodied consciousness tracking",
     },
     {
       category: "Developmental Astrology",
       sources: ["Rick Tarnas", "Steven Forrest", "Dane Rudhyar"],
-      application: "Elemental timing intelligence and developmental phase mapping"
+      application:
+        "Elemental timing intelligence and developmental phase mapping",
     },
     {
       category: "Process Philosophy",
-      sources: ["Alfred North Whitehead", "David Ray Griffin", "Rupert Sheldrake"],
-      application: "Pattern recognition systems and morphic resonance modeling"
-    }
+      sources: [
+        "Alfred North Whitehead",
+        "David Ray Griffin",
+        "Rupert Sheldrake",
+      ],
+      application: "Pattern recognition systems and morphic resonance modeling",
+    },
   ];
 
   const designPrinciples = [
     {
       principle: "Functional Sacred Geometry",
-      explanation: "Mathematical ratios serve interface logic, not aesthetic decoration"
+      explanation:
+        "Mathematical ratios serve interface logic, not aesthetic decoration",
     },
     {
       principle: "Traceable Insight Generation",
-      explanation: "Every response shows its symbolic and logical derivation path"
+      explanation:
+        "Every response shows its symbolic and logical derivation path",
     },
     {
       principle: "Development Over Divination",
-      explanation: "Focus on growth patterns and integration, not predictions or mystical claims"
+      explanation:
+        "Focus on growth patterns and integration, not predictions or mystical claims",
     },
     {
       principle: "Voice Without Persona",
-      explanation: "AI guidance maintains helpful neutrality, never claims spiritual authority"
-    }
+      explanation:
+        "AI guidance maintains helpful neutrality, never claims spiritual authority",
+    },
   ];
 
   return (
@@ -60,8 +71,8 @@ const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({
           Rational Metaphysics, Not Digital Mysticism
         </h2>
         <p className="text-slate-300 max-w-2xl mx-auto">
-          Built on established psychological and developmental frameworks—
-          this is consciousness technology for serious practitioners and thinkers.
+          Built on established psychological and developmental frameworks— this
+          is consciousness technology for serious practitioners and thinkers.
         </p>
       </div>
 
@@ -125,7 +136,7 @@ const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({
             onClick={onToggleDetails}
             className="px-6 py-2 border border-slate-600 text-slate-300 hover:border-amber-500 hover:text-amber-100 transition-colors text-sm"
           >
-            {showDetails ? 'Hide' : 'Show'} Theoretical Foundations
+            {showDetails ? "Hide" : "Show"} Theoretical Foundations
           </button>
         </div>
       )}
@@ -134,7 +145,7 @@ const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({
       {showDetails && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
+          animate={{ opacity: 1, height: "auto" }}
           transition={{ duration: 0.5 }}
           className="overflow-hidden"
         >
@@ -157,7 +168,7 @@ const CredibilityFramework: React.FC<CredibilityFrameworkProps> = ({
                       {foundation.category}
                     </h4>
                     <div className="text-sm text-slate-400 mb-3">
-                      {foundation.sources.join(' • ')}
+                      {foundation.sources.join(" • ")}
                     </div>
                     <p className="text-sm text-slate-300">
                       {foundation.application}

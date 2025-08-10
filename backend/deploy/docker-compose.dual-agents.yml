@@ -1,5 +1,5 @@
 # docker-compose.dual-agents.yml - Complete Fire + Water Agent Stack
-version: '3.8'
+version: "3.8"
 services:
   fire-agent:
     build:

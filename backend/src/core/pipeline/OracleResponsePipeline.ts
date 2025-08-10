@@ -5,16 +5,19 @@
  * with minimal latency through parallel processing and intelligent caching.
  */
 
-import { EventEmitter } from 'events';
-import { logger } from '../../utils/logger';
-import { PersonalizationEngine } from './PersonalizationEngine';
-import { SymbolicIntegrationEngine } from './SymbolicIntegrationEngine';
-import { OracleFailsafeManager } from './OracleFailsafeManager';
-import { StreamingOracleService } from './StreamingOracleService';
-import { SoulprintEngine } from './SoulprintEngine';
-import { RitualTimingSystem } from './RitualTimingSystem';
-import { ArchetypeAgent, ArchetypeAgentFactory } from '../agents/ArchetypeAgent';
-import { ARCHETYPE_VOICES } from '../../config/archetypalVoices';
+import { EventEmitter } from "events";
+import { logger } from "../../utils/logger";
+import { PersonalizationEngine } from "./PersonalizationEngine";
+import { SymbolicIntegrationEngine } from "./SymbolicIntegrationEngine";
+import { OracleFailsafeManager } from "./OracleFailsafeManager";
+import { StreamingOracleService } from "./StreamingOracleService";
+import { SoulprintEngine } from "./SoulprintEngine";
+import { RitualTimingSystem } from "./RitualTimingSystem";
+import {
+  ArchetypeAgent,
+  ArchetypeAgentFactory,
+} from "../agents/ArchetypeAgent";
+import { ARCHETYPE_VOICES } from "../../config/archetypalVoices";
 
 export interface OracleQuery {
   input: string;
@@ -23,7 +26,7 @@ export interface OracleQuery {
   streamingEnabled?: boolean;
   preferredElement?: string;
   ritualPacing?: boolean;
-  symbolicDepth?: 'light' | 'medium' | 'deep';
+  symbolicDepth?: "light" | "medium" | "deep";
 }
 
 export interface OracleResponse {
@@ -94,17 +97,17 @@ export class OracleResponsePipeline extends EventEmitter {
         personalizedContext,
         soulprintAnalysis,
         ritualContext,
-        cachedResponse
+        cachedResponse,
       ] = await Promise.all([
         this.personalizationEngine.analyzeUser(query.userId, query.input),
         this.soulprintEngine.analyzeQuery(query),
         this.ritualTimingSystem.analyzeContext(query),
-        this.checkResponseCache(query)
+        this.checkResponseCache(query),
       ]);
 
       // Return cached response if available and fresh
       if (cachedResponse) {
-        this.emit('cacheHit', { userId: query.userId, query: query.input });
+        this.emit("cacheHit", { userId: query.userId, query: query.input });
         return cachedResponse;
       }
 
@@ -112,25 +115,30 @@ export class OracleResponsePipeline extends EventEmitter {
       const selectedArchetype = await this.selectOptimalArchetype(
         query,
         personalizedContext,
-        soulprintAnalysis
+        soulprintAnalysis,
       );
 
       // Phase 3: Parallel Processing (800-1200ms)
-      const [
-        archetypalResponse,
-        voicePreparation,
-        symbolicInsights
-      ] = await Promise.all([
-        this.generateArchetypalResponse(selectedArchetype, query, personalizedContext),
-        this.prepareVoiceSynthesis(selectedArchetype, personalizedContext),
-        this.symbolicEngine.generateInsights(query, selectedArchetype, soulprintAnalysis)
-      ]);
+      const [archetypalResponse, voicePreparation, symbolicInsights] =
+        await Promise.all([
+          this.generateArchetypalResponse(
+            selectedArchetype,
+            query,
+            personalizedContext,
+          ),
+          this.prepareVoiceSynthesis(selectedArchetype, personalizedContext),
+          this.symbolicEngine.generateInsights(
+            query,
+            selectedArchetype,
+            soulprintAnalysis,
+          ),
+        ]);
 
       // Phase 4: Voice Synthesis & Streaming (500-800ms)
       const audioResult = await this.synthesizeVoiceWithStreaming(
         archetypalResponse.text,
         voicePreparation,
-        query.streamingEnabled
+        query.streamingEnabled,
       );
 
       // Phase 5: Response Assembly & Soulprint Update (50-100ms)
@@ -140,7 +148,7 @@ export class OracleResponsePipeline extends EventEmitter {
         symbolicInsights,
         selectedArchetype,
         startTime,
-        soulprintAnalysis
+        soulprintAnalysis,
       );
 
       // Async: Update user's soulprint and cache response
@@ -148,9 +156,8 @@ export class OracleResponsePipeline extends EventEmitter {
       this.cacheResponse(query, response);
 
       return response;
-
     } catch (error) {
-      logger.error('Oracle Pipeline Error:', error);
+      logger.error("Oracle Pipeline Error:", error);
       return await this.failsafeManager.handleFailure(query, error);
     }
   }
@@ -162,7 +169,7 @@ export class OracleResponsePipeline extends EventEmitter {
   private async selectOptimalArchetype(
     query: OracleQuery,
     personalizedContext: any,
-    soulprintAnalysis: any
+    soulprintAnalysis: any,
   ): Promise<string> {
     // Score each archetype based on multiple factors
     const scores = {
@@ -170,24 +177,24 @@ export class OracleResponsePipeline extends EventEmitter {
       water: 0,
       earth: 0,
       air: 0,
-      aether: 0
+      aether: 0,
     };
 
     // Factor 1: Query content analysis (40% weight)
     const contentScores = this.analyzeQueryContent(query.input);
-    Object.keys(scores).forEach(archetype => {
+    Object.keys(scores).forEach((archetype) => {
       scores[archetype] += contentScores[archetype] * 0.4;
     });
 
     // Factor 2: User's dominant patterns (30% weight)
     const userPatterns = personalizedContext.dominantArchetypes || {};
-    Object.keys(scores).forEach(archetype => {
+    Object.keys(scores).forEach((archetype) => {
       scores[archetype] += (userPatterns[archetype] || 0) * 0.3;
     });
 
     // Factor 3: Elemental balance needs (20% weight)
     const balanceNeeds = soulprintAnalysis.elementalImbalances || {};
-    Object.keys(scores).forEach(archetype => {
+    Object.keys(scores).forEach((archetype) => {
       scores[archetype] += (balanceNeeds[archetype] || 0) * 0.2;
     });
 
@@ -197,14 +204,15 @@ export class OracleResponsePipeline extends EventEmitter {
     }
 
     // Return highest scoring archetype
-    const selectedArchetype = Object.entries(scores)
-      .sort(([,a], [,b]) => b - a)[0][0];
+    const selectedArchetype = Object.entries(scores).sort(
+      ([, a], [, b]) => b - a,
+    )[0][0];
 
-    logger.info('Archetype Selection:', {
+    logger.info("Archetype Selection:", {
       userId: query.userId,
       selected: selectedArchetype,
       scores,
-      factors: { contentScores, userPatterns, balanceNeeds }
+      factors: { contentScores, userPatterns, balanceNeeds },
     });
 
     return selectedArchetype;
@@ -216,7 +224,7 @@ export class OracleResponsePipeline extends EventEmitter {
   private async generateArchetypalResponse(
     archetype: string,
     query: OracleQuery,
-    personalizedContext: any
+    personalizedContext: any,
   ): Promise<{ text: string; confidence: number }> {
     const agent = this.archetypeFactory.createAgent(archetype);
 
@@ -226,15 +234,15 @@ export class OracleResponsePipeline extends EventEmitter {
         ...query.context,
         personalizedContext,
         archetypalGuidance: await this.getArchetypalGuidance(archetype),
-        ritualContext: personalizedContext.ritualPreferences
-      }
+        ritualContext: personalizedContext.ritualPreferences,
+      },
     };
 
     const response = await agent.processQuery(enhancedQuery);
 
     return {
       text: response.content,
-      confidence: response.confidence || 0.8
+      confidence: response.confidence || 0.8,
     };
   }
 
@@ -244,14 +252,14 @@ export class OracleResponsePipeline extends EventEmitter {
   private async synthesizeVoiceWithStreaming(
     text: string,
     voicePreparation: any,
-    streamingEnabled: boolean = false
+    streamingEnabled: boolean = false,
   ): Promise<{ audioUrl?: string; audioStream?: ReadableStream }> {
     if (streamingEnabled) {
       // Stream audio as it's generated
       const audioStream = await this.streamingService.synthesizeStreaming(
         text,
         voicePreparation.voiceConfig,
-        voicePreparation.ritualTiming
+        voicePreparation.ritualTiming,
       );
 
       return { audioStream };
@@ -259,7 +267,7 @@ export class OracleResponsePipeline extends EventEmitter {
       // Traditional synthesis
       const audioUrl = await this.streamingService.synthesizeComplete(
         text,
-        voicePreparation.voiceConfig
+        voicePreparation.voiceConfig,
       );
 
       return { audioUrl };
@@ -275,7 +283,7 @@ export class OracleResponsePipeline extends EventEmitter {
     symbolicInsights: any,
     selectedArchetype: string,
     startTime: number,
-    soulprintAnalysis: any
+    soulprintAnalysis: any,
   ): Promise<OracleResponse> {
     const responseTime = Date.now() - startTime;
 
@@ -289,20 +297,22 @@ export class OracleResponsePipeline extends EventEmitter {
       soulprintUpdate: {
         dominantArchetype: selectedArchetype,
         elementalBalance: soulprintAnalysis.elementalBalance,
-        evolutionPhase: soulprintAnalysis.currentPhase
+        evolutionPhase: soulprintAnalysis.currentPhase,
       },
       metadata: {
         responseTime,
         voiceProfile: `${selectedArchetype}_oracle`,
-        ritualTiming: audioResult.ritualTiming
-      }
+        ritualTiming: audioResult.ritualTiming,
+      },
     };
   }
 
   /**
    * 💾 Performance Optimization Methods
    */
-  private async checkResponseCache(query: OracleQuery): Promise<OracleResponse | null> {
+  private async checkResponseCache(
+    query: OracleQuery,
+  ): Promise<OracleResponse | null> {
     const cacheKey = this.generateCacheKey(query);
     const cached = this.responseCache.get(cacheKey);
 
@@ -314,7 +324,7 @@ export class OracleResponsePipeline extends EventEmitter {
   }
 
   private generateCacheKey(query: OracleQuery): string {
-    return `${query.userId}_${query.input.substring(0, 50)}_${query.preferredElement || 'auto'}`;
+    return `${query.userId}_${query.input.substring(0, 50)}_${query.preferredElement || "auto"}`;
   }
 
   private isCacheValid(response: OracleResponse): boolean {
@@ -323,7 +333,7 @@ export class OracleResponsePipeline extends EventEmitter {
   }
 
   private async preloadCommonVoices(): Promise<void> {
-    const commonArchetypes = ['fire', 'water', 'earth', 'air', 'aether'];
+    const commonArchetypes = ["fire", "water", "earth", "air", "aether"];
 
     for (const archetype of commonArchetypes) {
       try {
@@ -337,27 +347,48 @@ export class OracleResponsePipeline extends EventEmitter {
       }
     }
 
-    logger.info('Voice preloading completed:', {
+    logger.info("Voice preloading completed:", {
       preloadedCount: this.preloadedVoices.size,
-      archetypes: Array.from(this.preloadedVoices)
+      archetypes: Array.from(this.preloadedVoices),
     });
   }
 
   // Utility methods
   private analyzeQueryContent(input: string): Record<string, number> {
     const keywords = {
-      fire: ['stuck', 'ignite', 'passion', 'create', 'vision', 'breakthrough'],
-      water: ['feel', 'emotion', 'flow', 'heal', 'heart', 'intuition'],
-      earth: ['ground', 'practical', 'stable', 'manifest', 'build', 'foundation'],
-      air: ['think', 'understand', 'clarity', 'communicate', 'perspective', 'insight'],
-      aether: ['unity', 'transcend', 'integrate', 'spiritual', 'divine', 'wholeness']
+      fire: ["stuck", "ignite", "passion", "create", "vision", "breakthrough"],
+      water: ["feel", "emotion", "flow", "heal", "heart", "intuition"],
+      earth: [
+        "ground",
+        "practical",
+        "stable",
+        "manifest",
+        "build",
+        "foundation",
+      ],
+      air: [
+        "think",
+        "understand",
+        "clarity",
+        "communicate",
+        "perspective",
+        "insight",
+      ],
+      aether: [
+        "unity",
+        "transcend",
+        "integrate",
+        "spiritual",
+        "divine",
+        "wholeness",
+      ],
     };
 
     const scores = { fire: 0, water: 0, earth: 0, air: 0, aether: 0 };
     const lowercaseInput = input.toLowerCase();
 
     Object.entries(keywords).forEach(([archetype, words]) => {
-      words.forEach(word => {
+      words.forEach((word) => {
         if (lowercaseInput.includes(word)) {
           scores[archetype] += 1;
         }
@@ -367,7 +398,7 @@ export class OracleResponsePipeline extends EventEmitter {
     // Normalize scores
     const maxScore = Math.max(...Object.values(scores));
     if (maxScore > 0) {
-      Object.keys(scores).forEach(archetype => {
+      Object.keys(scores).forEach((archetype) => {
         scores[archetype] = scores[archetype] / maxScore;
       });
     }
@@ -377,33 +408,39 @@ export class OracleResponsePipeline extends EventEmitter {
 
   private async getArchetypalGuidance(archetype: string): Promise<string> {
     const guidance = {
-      fire: 'Channel transformative energy and catalytic wisdom',
-      water: 'Flow with emotional depth and healing presence',
-      earth: 'Provide grounding wisdom and practical guidance',
-      air: 'Offer clear perspective and mental clarity',
-      aether: 'Integrate all elements with transcendent awareness'
+      fire: "Channel transformative energy and catalytic wisdom",
+      water: "Flow with emotional depth and healing presence",
+      earth: "Provide grounding wisdom and practical guidance",
+      air: "Offer clear perspective and mental clarity",
+      aether: "Integrate all elements with transcendent awareness",
     };
 
     return guidance[archetype] || guidance.aether;
   }
 
-  private async prepareVoiceSynthesis(archetype: string, context: any): Promise<any> {
+  private async prepareVoiceSynthesis(
+    archetype: string,
+    context: any,
+  ): Promise<any> {
     const voiceConfig = ARCHETYPE_VOICES[archetype];
-    const ritualTiming = context.ritualPreferences?.pacing || 'normal';
+    const ritualTiming = context.ritualPreferences?.pacing || "normal";
 
     return {
       voiceConfig,
       ritualTiming,
-      personalizedSettings: context.voicePreferences || {}
+      personalizedSettings: context.voicePreferences || {},
     };
   }
 
-  private async updateUserSoulprint(userId: string, response: OracleResponse): Promise<void> {
+  private async updateUserSoulprint(
+    userId: string,
+    response: OracleResponse,
+  ): Promise<void> {
     // Async update to not block response
     try {
       await this.soulprintEngine.updateUserProfile(userId, response);
     } catch (error) {
-      logger.error('Soulprint update failed:', error);
+      logger.error("Soulprint update failed:", error);
     }
   }
 

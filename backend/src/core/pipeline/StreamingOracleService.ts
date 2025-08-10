@@ -5,18 +5,18 @@
  * and ceremonial pacing for spiritually intelligent voice delivery.
  */
 
-import { EventEmitter } from 'events';
-import { logger } from '../../utils/logger';
-import { ElevenLabsService } from '../../services/ElevenLabsService';
-import { ArchetypalVoiceEngine } from '../../config/archetypalVoices';
-import * as fs from 'fs';
-import * as path from 'path';
+import { EventEmitter } from "events";
+import { logger } from "../../utils/logger";
+import { ElevenLabsService } from "../../services/ElevenLabsService";
+import { ArchetypalVoiceEngine } from "../../config/archetypalVoices";
+import * as fs from "fs";
+import * as path from "path";
 
 export interface StreamingConfig {
   voiceId: string;
   voiceSettings: any;
   archetype: string;
-  ritualPacing?: 'slow' | 'medium' | 'fast' | 'ceremonial';
+  ritualPacing?: "slow" | "medium" | "fast" | "ceremonial";
   enableBreathPauses?: boolean;
   chunkSize?: number;
 }
@@ -50,7 +50,7 @@ export class StreamingOracleService extends EventEmitter {
    */
   async synthesizeComplete(
     text: string,
-    config: StreamingConfig
+    config: StreamingConfig,
   ): Promise<string> {
     try {
       const startTime = Date.now();
@@ -64,9 +64,9 @@ export class StreamingOracleService extends EventEmitter {
         const cached = this.voiceCache.get(cacheKey)!;
         const audioUrl = await this.saveCachedAudio(cached);
 
-        logger.info('Voice synthesis cache hit:', {
+        logger.info("Voice synthesis cache hit:", {
           cacheKey,
-          responseTime: Date.now() - startTime
+          responseTime: Date.now() - startTime,
         });
 
         return audioUrl;
@@ -76,25 +76,27 @@ export class StreamingOracleService extends EventEmitter {
       const audioBuffer = await this.elevenLabsService.synthesizeSpeech(
         enhancedText,
         config.voiceId,
-        config.voiceSettings
+        config.voiceSettings,
       );
 
       // Save to file and cache
-      const audioUrl = await this.saveAudioBuffer(audioBuffer, config.archetype);
+      const audioUrl = await this.saveAudioBuffer(
+        audioBuffer,
+        config.archetype,
+      );
       this.voiceCache.set(cacheKey, audioBuffer);
 
       const responseTime = Date.now() - startTime;
-      logger.info('Voice synthesis completed:', {
+      logger.info("Voice synthesis completed:", {
         archetype: config.archetype,
         textLength: text.length,
         responseTime,
-        audioUrl: audioUrl.substring(0, 50) + '...'
+        audioUrl: audioUrl.substring(0, 50) + "...",
       });
 
       return audioUrl;
-
     } catch (error) {
-      logger.error('Voice synthesis error:', error);
+      logger.error("Voice synthesis error:", error);
       throw error;
     }
   }
@@ -105,15 +107,15 @@ export class StreamingOracleService extends EventEmitter {
   async synthesizeStreaming(
     text: string,
     config: StreamingConfig,
-    ritualTiming?: any
+    ritualTiming?: any,
   ): Promise<ReadableStream> {
     const streamId = this.generateStreamId();
 
-    logger.info('Starting streaming synthesis:', {
+    logger.info("Starting streaming synthesis:", {
       streamId,
       archetype: config.archetype,
       textLength: text.length,
-      ritualPacing: config.ritualPacing
+      ritualPacing: config.ritualPacing,
     });
 
     // Create readable stream
@@ -125,18 +127,18 @@ export class StreamingOracleService extends EventEmitter {
             config,
             ritualTiming,
             controller,
-            streamId
+            streamId,
           );
         } catch (error) {
-          logger.error('Streaming synthesis error:', error);
+          logger.error("Streaming synthesis error:", error);
           controller.error(error);
         }
       },
 
       cancel: () => {
         this.activeStreams.delete(streamId);
-        logger.info('Stream cancelled:', { streamId });
-      }
+        logger.info("Stream cancelled:", { streamId });
+      },
     });
 
     this.activeStreams.set(streamId, { stream, config, startTime: Date.now() });
@@ -150,7 +152,7 @@ export class StreamingOracleService extends EventEmitter {
     const preloadTexts = [
       "You already know what I'm going to say, don't you?",
       "The oracle speaks through silence and symbols.",
-      "In the sacred space between breaths, wisdom awakens."
+      "In the sacred space between breaths, wisdom awakens.",
     ];
 
     for (const text of preloadTexts) {
@@ -158,21 +160,20 @@ export class StreamingOracleService extends EventEmitter {
         const audioBuffer = await this.elevenLabsService.synthesizeSpeech(
           text,
           voiceConfig.voiceId,
-          voiceConfig.baseSettings
+          voiceConfig.baseSettings,
         );
 
         const cacheKey = this.generateCacheKey(text, {
           voiceId: voiceConfig.voiceId,
           voiceSettings: voiceConfig.baseSettings,
-          archetype: voiceConfig.element
+          archetype: voiceConfig.element,
         });
 
         this.voiceCache.set(cacheKey, audioBuffer);
-
       } catch (error) {
-        logger.warn('Voice preload failed:', {
+        logger.warn("Voice preload failed:", {
           voiceId: voiceConfig.voiceId,
-          error: error.message
+          error: error.message,
         });
       }
     }
@@ -186,10 +187,13 @@ export class StreamingOracleService extends EventEmitter {
     config: StreamingConfig,
     ritualTiming: any,
     controller: ReadableStreamDefaultController,
-    streamId: string
+    streamId: string,
   ): Promise<void> {
     // Split text into chunks for streaming
-    const textChunks = this.splitTextForStreaming(text, config.chunkSize || 100);
+    const textChunks = this.splitTextForStreaming(
+      text,
+      config.chunkSize || 100,
+    );
 
     for (let i = 0; i < textChunks.length; i++) {
       const chunk = textChunks[i];
@@ -205,7 +209,7 @@ export class StreamingOracleService extends EventEmitter {
         const audioBuffer = await this.elevenLabsService.synthesizeSpeech(
           chunk,
           config.voiceId,
-          config.voiceSettings
+          config.voiceSettings,
         );
 
         // Create audio chunk
@@ -217,25 +221,24 @@ export class StreamingOracleService extends EventEmitter {
           metadata: {
             archetype: config.archetype,
             duration: this.estimateAudioDuration(chunk),
-            energyLevel: this.calculateEnergyLevel(chunk, config.archetype)
-          }
+            energyLevel: this.calculateEnergyLevel(chunk, config.archetype),
+          },
         };
 
         // Enqueue chunk
         controller.enqueue(audioChunk);
 
         // Emit progress event
-        this.emit('streamProgress', {
+        this.emit("streamProgress", {
           streamId,
           progress: (i + 1) / textChunks.length,
-          chunk: audioChunk
+          chunk: audioChunk,
         });
-
       } catch (error) {
-        logger.error('Chunk synthesis error:', {
+        logger.error("Chunk synthesis error:", {
           streamId,
           chunkIndex: i,
-          error: error.message
+          error: error.message,
         });
 
         // Try to continue with next chunk
@@ -247,32 +250,35 @@ export class StreamingOracleService extends EventEmitter {
     controller.close();
     this.activeStreams.delete(streamId);
 
-    this.emit('streamComplete', {
+    this.emit("streamComplete", {
       streamId,
       totalChunks: textChunks.length,
-      archetype: config.archetype
+      archetype: config.archetype,
     });
   }
 
-  private enhanceTextForRitualPacing(text: string, config: StreamingConfig): string {
-    if (!config.ritualPacing || config.ritualPacing === 'medium') {
+  private enhanceTextForRitualPacing(
+    text: string,
+    config: StreamingConfig,
+  ): string {
+    if (!config.ritualPacing || config.ritualPacing === "medium") {
       return text;
     }
 
     let enhancedText = text;
 
     // Add ceremonial pauses
-    if (config.ritualPacing === 'ceremonial') {
+    if (config.ritualPacing === "ceremonial") {
       enhancedText = ArchetypalVoiceEngine.enhanceTextForRitual(
         text,
         config.archetype,
-        'deep'
+        "deep",
       );
-    } else if (config.ritualPacing === 'slow') {
+    } else if (config.ritualPacing === "slow") {
       enhancedText = ArchetypalVoiceEngine.enhanceTextForRitual(
         text,
         config.archetype,
-        'medium'
+        "medium",
       );
     }
 
@@ -287,16 +293,19 @@ export class StreamingOracleService extends EventEmitter {
   }
 
   private splitTextForStreaming(text: string, chunkSize: number): string[] {
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
     const chunks: string[] = [];
-    let currentChunk = '';
+    let currentChunk = "";
 
     for (const sentence of sentences) {
-      if (currentChunk.length + sentence.length > chunkSize && currentChunk.length > 0) {
+      if (
+        currentChunk.length + sentence.length > chunkSize &&
+        currentChunk.length > 0
+      ) {
         chunks.push(currentChunk.trim());
         currentChunk = sentence;
       } else {
-        currentChunk += (currentChunk.length > 0 ? '. ' : '') + sentence;
+        currentChunk += (currentChunk.length > 0 ? ". " : "") + sentence;
       }
     }
 
@@ -308,26 +317,29 @@ export class StreamingOracleService extends EventEmitter {
   }
 
   private async addRitualPause(
-    ritualPacing: string = 'medium',
-    ritualTiming?: any
+    ritualPacing: string = "medium",
+    ritualTiming?: any,
   ): Promise<void> {
     const pauseDurations = {
       slow: 1000,
       medium: 500,
       fast: 200,
-      ceremonial: 1500
+      ceremonial: 1500,
     };
 
     const pauseMs = pauseDurations[ritualPacing] || 500;
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       setTimeout(resolve, pauseMs);
     });
   }
 
-  private async saveAudioBuffer(audioBuffer: Buffer, archetype: string): Promise<string> {
+  private async saveAudioBuffer(
+    audioBuffer: Buffer,
+    archetype: string,
+  ): Promise<string> {
     const fileName = `oracle_${archetype}_${Date.now()}.mp3`;
-    const filePath = path.join(__dirname, '../../../public/audio', fileName);
+    const filePath = path.join(__dirname, "../../../public/audio", fileName);
 
     // Ensure directory exists
     const audioDir = path.dirname(filePath);
@@ -341,14 +353,14 @@ export class StreamingOracleService extends EventEmitter {
 
   private async saveCachedAudio(audioBuffer: Buffer): Promise<string> {
     const fileName = `cached_${Date.now()}.mp3`;
-    const filePath = path.join(__dirname, '../../../public/audio', fileName);
+    const filePath = path.join(__dirname, "../../../public/audio", fileName);
 
     fs.writeFileSync(filePath, audioBuffer);
     return `/audio/${fileName}`;
   }
 
   private generateCacheKey(text: string, config: any): string {
-    const textHash = Buffer.from(text).toString('base64').substring(0, 20);
+    const textHash = Buffer.from(text).toString("base64").substring(0, 20);
     const configHash = JSON.stringify(config).substring(0, 20);
     return `${textHash}_${configHash}`;
   }
@@ -359,24 +371,24 @@ export class StreamingOracleService extends EventEmitter {
 
   private estimateAudioDuration(text: string): number {
     // Rough estimate: 150 words per minute
-    const wordCount = text.split(' ').length;
+    const wordCount = text.split(" ").length;
     return (wordCount / 150) * 60 * 1000; // Convert to milliseconds
   }
 
   private calculateEnergyLevel(text: string, archetype: string): number {
     const energyWords = {
-      fire: ['ignite', 'passion', 'transform', 'breakthrough'],
-      water: ['flow', 'heal', 'nurture', 'gentle'],
-      earth: ['ground', 'stable', 'strong', 'foundation'],
-      air: ['clarity', 'insight', 'understanding', 'clear'],
-      aether: ['unity', 'transcend', 'sacred', 'divine']
+      fire: ["ignite", "passion", "transform", "breakthrough"],
+      water: ["flow", "heal", "nurture", "gentle"],
+      earth: ["ground", "stable", "strong", "foundation"],
+      air: ["clarity", "insight", "understanding", "clear"],
+      aether: ["unity", "transcend", "sacred", "divine"],
     };
 
     const archetypeWords = energyWords[archetype] || [];
     const lowercaseText = text.toLowerCase();
 
     let energy = 0.5; // Base energy
-    archetypeWords.forEach(word => {
+    archetypeWords.forEach((word) => {
       if (lowercaseText.includes(word)) {
         energy += 0.1;
       }
@@ -387,11 +399,26 @@ export class StreamingOracleService extends EventEmitter {
 
   private initializeVoiceFragments(): void {
     // Initialize pre-generated voice fragments for emergencies
-    this.preloadedFragments.set('fire_presence', '/audio/fragments/fire_presence.mp3');
-    this.preloadedFragments.set('water_presence', '/audio/fragments/water_presence.mp3');
-    this.preloadedFragments.set('earth_presence', '/audio/fragments/earth_presence.mp3');
-    this.preloadedFragments.set('air_presence', '/audio/fragments/air_presence.mp3');
-    this.preloadedFragments.set('aether_presence', '/audio/fragments/aether_presence.mp3');
+    this.preloadedFragments.set(
+      "fire_presence",
+      "/audio/fragments/fire_presence.mp3",
+    );
+    this.preloadedFragments.set(
+      "water_presence",
+      "/audio/fragments/water_presence.mp3",
+    );
+    this.preloadedFragments.set(
+      "earth_presence",
+      "/audio/fragments/earth_presence.mp3",
+    );
+    this.preloadedFragments.set(
+      "air_presence",
+      "/audio/fragments/air_presence.mp3",
+    );
+    this.preloadedFragments.set(
+      "aether_presence",
+      "/audio/fragments/aether_presence.mp3",
+    );
   }
 
   /**
@@ -403,12 +430,12 @@ export class StreamingOracleService extends EventEmitter {
       cacheSize: this.voiceCache.size,
       preloadedFragments: this.preloadedFragments.size,
       totalSynthesisTime: 0, // Would track in production
-      averageLatency: 0 // Would calculate from metrics
+      averageLatency: 0, // Would calculate from metrics
     };
   }
 
   clearCache(): void {
     this.voiceCache.clear();
-    logger.info('Voice cache cleared');
+    logger.info("Voice cache cleared");
   }
 }

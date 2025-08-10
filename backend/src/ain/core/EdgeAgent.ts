@@ -3,26 +3,28 @@
  * Lightweight agent for on-device processing
  */
 
-import { EventEmitter } from 'events';
-import { SpiralogicEvent, ElementalService, EventHandler, ProcessingMode } from '../types';
-import { BaseAgent } from '../../core/agents/baseAgent';
+import { EventEmitter } from "events";
+import {
+  SpiralogicEvent,
+  ElementalService,
+  EventHandler,
+  ProcessingMode,
+} from "../types";
+import { BaseAgent } from "../../core/agents/baseAgent";
 
 export class EdgeAgent extends BaseAgent {
   protected processingMode: ProcessingMode;
   protected localCache: Map<string, any> = new Map();
   protected offlineMode: boolean = false;
 
-  constructor(
-    serviceId: string,
-    elementalService?: ElementalService
-  ) {
-    super(serviceId, 'edge', elementalService);
+  constructor(serviceId: string, elementalService?: ElementalService) {
+    super(serviceId, "edge", elementalService);
 
     this.processingMode = {
       local_threshold: 0.8, // Process 80% locally
       cloud_escalation: true,
       neuromorphic_compatible: true,
-      quantum_ready: false
+      quantum_ready: false,
     };
 
     this.setupEdgeOptimizations();
@@ -79,12 +81,11 @@ export class EdgeAgent extends BaseAgent {
       await this.publish(this.generateResponseEventType(event), {
         ...result,
         processing: {
-          type: 'edge',
+          type: "edge",
           latency: processingTime,
-          cached: true
-        }
+          cached: true,
+        },
       });
-
     } catch (error) {
       await this.handleEdgeError(error, event);
     }
@@ -104,11 +105,11 @@ export class EdgeAgent extends BaseAgent {
     }
 
     try {
-      await this.publish('cloud.escalation', {
+      await this.publish("cloud.escalation", {
         original_event: event,
-        escalation_reason: 'complexity_threshold_exceeded',
+        escalation_reason: "complexity_threshold_exceeded",
         edge_service: this.serviceId,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
     } catch (error) {
       // Fallback to local processing
@@ -122,9 +123,9 @@ export class EdgeAgent extends BaseAgent {
   protected async edgeProcessingLogic(event: SpiralogicEvent): Promise<any> {
     // Default edge processing - return simplified response
     return {
-      response: 'Edge processed response',
+      response: "Edge processed response",
       confidence: 0.7,
-      elemental_influence: this.calculateElementalInfluence(event)
+      elemental_influence: this.calculateElementalInfluence(event),
     };
   }
 
@@ -139,12 +140,13 @@ export class EdgeAgent extends BaseAgent {
     complexity += Math.min(contentSize / 10000, 0.3);
 
     // Increase complexity for multi-elemental events
-    const elementalCount = Object.values(event.payload.elemental_signature)
-      .filter(val => val > 0.1).length;
+    const elementalCount = Object.values(
+      event.payload.elemental_signature,
+    ).filter((val) => val > 0.1).length;
     complexity += elementalCount * 0.1;
 
     // Increase complexity for integration events
-    if (event.type.toString().includes('integration')) {
+    if (event.type.toString().includes("integration")) {
       complexity += 0.2;
     }
 
@@ -183,12 +185,12 @@ export class EdgeAgent extends BaseAgent {
       // Try to reach cloud service
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
-      const response = await fetch('/health', {
-        method: 'HEAD',
-        signal: controller.signal
+
+      const response = await fetch("/health", {
+        method: "HEAD",
+        signal: controller.signal,
       });
-      
+
       clearTimeout(timeoutId);
 
       this.offlineMode = !response.ok;
@@ -197,7 +199,7 @@ export class EdgeAgent extends BaseAgent {
     }
 
     if (this.offlineMode) {
-      this.emit('offline-mode-activated');
+      this.emit("offline-mode-activated");
     }
   }
 
@@ -208,7 +210,7 @@ export class EdgeAgent extends BaseAgent {
     this.localCache.set(eventId, {
       result,
       timestamp: Date.now(),
-      ttl: 300000 // 5 minutes
+      ttl: 300000, // 5 minutes
     });
   }
 
@@ -216,12 +218,12 @@ export class EdgeAgent extends BaseAgent {
    * Queue event for cloud processing when online
    */
   protected queueForCloudProcessing(event: SpiralogicEvent): void {
-    const queueKey = 'cloud-queue';
+    const queueKey = "cloud-queue";
     let queue = this.localCache.get(queueKey) || [];
 
     queue.push({
       event,
-      queued_at: Date.now()
+      queued_at: Date.now(),
     });
 
     // Limit queue size
@@ -236,14 +238,14 @@ export class EdgeAgent extends BaseAgent {
    * Process queued events when connectivity returns
    */
   protected async processQueuedEvents(): Promise<void> {
-    const queueKey = 'cloud-queue';
+    const queueKey = "cloud-queue";
     const queue = this.localCache.get(queueKey) || [];
 
     for (const queuedItem of queue) {
       try {
         await this.escalateToCloud(queuedItem.event);
       } catch (error) {
-        console.warn('Failed to process queued event:', error);
+        console.warn("Failed to process queued event:", error);
       }
     }
 
@@ -254,23 +256,27 @@ export class EdgeAgent extends BaseAgent {
   /**
    * Handle edge-specific errors
    */
-  protected async handleEdgeError(error: any, event: SpiralogicEvent): Promise<void> {
+  protected async handleEdgeError(
+    error: any,
+    event: SpiralogicEvent,
+  ): Promise<void> {
     console.error(`Edge processing error in ${this.serviceId}:`, error);
 
     // Emit error event
-    await this.publish('edge.error', {
+    await this.publish("edge.error", {
       error: error.message,
       event_id: event.id,
       service: this.serviceId,
       timestamp: Date.now(),
-      recovery_strategy: 'local-fallback'
+      recovery_strategy: "local-fallback",
     });
 
     // Provide fallback response
     await this.publish(this.generateResponseEventType(event), {
-      response: 'Edge processing encountered an error - fallback response provided',
+      response:
+        "Edge processing encountered an error - fallback response provided",
       error: true,
-      confidence: 0.3
+      confidence: 0.3,
     });
   }
 
@@ -284,7 +290,7 @@ export class EdgeAgent extends BaseAgent {
     return {
       primary_element: myElement,
       influence_strength: signature[myElement!] || 0.5,
-      elemental_resonance: this.calculateResonance(signature)
+      elemental_resonance: this.calculateResonance(signature),
     };
   }
 
@@ -295,8 +301,10 @@ export class EdgeAgent extends BaseAgent {
     if (!this.elementalService) return 0.5;
 
     const myStrength = Number(signature[this.elementalService] || 0);
-    const totalStrength: number = (Object.values(signature) as any[])
-      .reduce((sum: number, val: any) => sum + (typeof val === 'number' ? val : 0), 0);
+    const totalStrength: number = (Object.values(signature) as any[]).reduce(
+      (sum: number, val: any) => sum + (typeof val === "number" ? val : 0),
+      0,
+    );
 
     return totalStrength > 0 ? myStrength / totalStrength : 0.5;
   }
@@ -330,7 +338,7 @@ export class EdgeAgent extends BaseAgent {
     this.processingMode.neuromorphic_compatible = true;
 
     // Reduce polling, increase event-driven processing
-    this.removeAllListeners('poll');
+    this.removeAllListeners("poll");
   }
 
   /**
@@ -342,7 +350,7 @@ export class EdgeAgent extends BaseAgent {
       offline_mode: this.offlineMode,
       processing_mode: this.processingMode,
       local_processing_ratio: this.calculateLocalProcessingRatio(),
-      average_latency: this.getAverageLatency()
+      average_latency: this.getAverageLatency(),
     };
   }
 

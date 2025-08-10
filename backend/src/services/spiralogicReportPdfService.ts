@@ -1,5 +1,5 @@
-import jsPDF from 'jspdf';
-import { SpiralogicReport } from './spiralogicAstrologyService';
+import jsPDF from "jspdf";
+import { SpiralogicReport } from "./spiralogicAstrologyService";
 
 export interface SoulLabStyle {
   primaryColor: string;
@@ -24,19 +24,19 @@ export interface SoulLabStyle {
 }
 
 const defaultSoulLabStyle: SoulLabStyle = {
-  primaryColor: '#2D3748', // Charcoal
-  secondaryColor: '#718096', // Slate gray
+  primaryColor: "#2D3748", // Charcoal
+  secondaryColor: "#718096", // Slate gray
   accentColors: {
-    fire: '#D69E2E',    // Muted gold
-    water: '#5B67CA',   // Soft indigo
-    earth: '#38A169',   // Moss green
-    air: '#4A5568',     // Slate blue
-    aether: '#9F7AEA'   // Soft purple
+    fire: "#D69E2E", // Muted gold
+    water: "#5B67CA", // Soft indigo
+    earth: "#38A169", // Moss green
+    air: "#4A5568", // Slate blue
+    aether: "#9F7AEA", // Soft purple
   },
   fonts: {
-    serif: 'DM Serif Text',
-    sansSerif: 'Inter'
-  }
+    serif: "DM Serif Text",
+    sansSerif: "Inter",
+  },
 };
 
 export class SpiralogicReportPdfService {
@@ -49,15 +49,18 @@ export class SpiralogicReportPdfService {
   /**
    * Generate a beautiful PDF report from Spiralogic data
    */
-  async generateReport(report: SpiralogicReport, birthData: any): Promise<Blob> {
+  async generateReport(
+    report: SpiralogicReport,
+    birthData: any,
+  ): Promise<Blob> {
     const doc = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
     });
 
     // Set up fonts
-    doc.setFont('helvetica'); // Default until custom fonts loaded
+    doc.setFont("helvetica"); // Default until custom fonts loaded
 
     // Page 1: Cover Page
     this.createCoverPage(doc, report, birthData);
@@ -83,10 +86,14 @@ export class SpiralogicReportPdfService {
     this.createChartVisualizationPage(doc, report, birthData);
 
     // Return as blob
-    return doc.output('blob');
+    return doc.output("blob");
   }
 
-  private createCoverPage(doc: jsPDF, report: SpiralogicReport, birthData: any) {
+  private createCoverPage(
+    doc: jsPDF,
+    report: SpiralogicReport,
+    birthData: any,
+  ) {
     // Background gradient effect (simulated with rectangles)
     this.addGradientBackground(doc, 0, 0, 210, 297);
 
@@ -95,33 +102,43 @@ export class SpiralogicReportPdfService {
     if (branding?.businessName) {
       doc.setFontSize(14);
       doc.setTextColor(this.style.primaryColor);
-      doc.text(branding.businessName, 105, 30, { align: 'center' });
+      doc.text(branding.businessName, 105, 30, { align: "center" });
     } else {
       doc.setFontSize(14);
       doc.setTextColor(this.style.primaryColor);
-      doc.text('Soul Lab', 105, 30, { align: 'center' });
+      doc.text("Soul Lab", 105, 30, { align: "center" });
     }
 
     // Title
     doc.setFontSize(32);
     doc.setTextColor(this.style.primaryColor);
-    doc.text('Spiralogic', 105, 80, { align: 'center' });
+    doc.text("Spiralogic", 105, 80, { align: "center" });
     doc.setFontSize(24);
-    doc.text('Evolutionary Report', 105, 95, { align: 'center' });
+    doc.text("Evolutionary Report", 105, 95, { align: "center" });
 
     // Birth info
     doc.setFontSize(16);
     doc.setTextColor(this.style.secondaryColor);
     const birthDate = new Date(birthData.date);
-    doc.text(`Born ${birthDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })}`, 105, 120, { align: 'center' });
+    doc.text(
+      `Born ${birthDate.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}`,
+      105,
+      120,
+      { align: "center" },
+    );
 
     doc.setFontSize(14);
-    doc.text(`${birthData.time} • ${birthData.location.placeName || 'Location'}`, 105, 130, { align: 'center' });
+    doc.text(
+      `${birthData.time} • ${birthData.location.placeName || "Location"}`,
+      105,
+      130,
+      { align: "center" },
+    );
 
     // Elemental symbols decoration
     this.drawElementalSymbols(doc, 105, 160);
@@ -129,22 +146,24 @@ export class SpiralogicReportPdfService {
     // Footer
     doc.setFontSize(10);
     doc.setTextColor(this.style.secondaryColor);
-    doc.text(`Generated ${new Date().toLocaleDateString()}`, 105, 280, { align: 'center' });
+    doc.text(`Generated ${new Date().toLocaleDateString()}`, 105, 280, {
+      align: "center",
+    });
   }
 
   private createPersonalOverviewPage(doc: jsPDF, report: SpiralogicReport) {
     // Header
-    this.addPageHeader(doc, 'Personal Overview');
+    this.addPageHeader(doc, "Personal Overview");
 
     // Being & Becoming Archetypes
     doc.setFontSize(18);
     doc.setTextColor(this.style.primaryColor);
-    doc.text('Your Sacred Journey', 20, 50);
+    doc.text("Your Sacred Journey", 20, 50);
 
     // Being Archetype
     doc.setFontSize(14);
     doc.setTextColor(this.style.accentColors.fire);
-    doc.text('State of Being:', 20, 65);
+    doc.text("State of Being:", 20, 65);
     doc.setFontSize(16);
     doc.setTextColor(this.style.primaryColor);
     doc.text(report.beingArchetype, 20, 75);
@@ -152,7 +171,7 @@ export class SpiralogicReportPdfService {
     // Becoming Archetype
     doc.setFontSize(14);
     doc.setTextColor(this.style.accentColors.water);
-    doc.text('State of Becoming:', 20, 90);
+    doc.text("State of Becoming:", 20, 90);
     doc.setFontSize(16);
     doc.setTextColor(this.style.primaryColor);
     doc.text(report.becomingArchetype, 20, 100);
@@ -168,10 +187,10 @@ export class SpiralogicReportPdfService {
   }
 
   private createElementalAnalysisPage(doc: jsPDF, report: SpiralogicReport) {
-    this.addPageHeader(doc, 'Elemental Wisdom');
+    this.addPageHeader(doc, "Elemental Wisdom");
 
     let yPos = 50;
-    const elements = ['fire', 'water', 'earth', 'air'] as const;
+    const elements = ["fire", "water", "earth", "air"] as const;
 
     elements.forEach((element) => {
       const insight = report.elementalInsights[element];
@@ -191,67 +210,83 @@ export class SpiralogicReportPdfService {
       const interpretLines = doc.splitTextToSize(insight.interpretation, 160);
       doc.text(interpretLines, 30, yPos + 8);
 
-      yPos += 8 + (interpretLines.length * 4) + 10;
+      yPos += 8 + interpretLines.length * 4 + 10;
 
       // Only show first two elements per page
-      if (element === 'water') {
+      if (element === "water") {
         doc.addPage();
-        this.addPageHeader(doc, 'Elemental Wisdom (continued)');
+        this.addPageHeader(doc, "Elemental Wisdom (continued)");
         yPos = 50;
       }
     });
   }
 
   private createKarmicAxisPage(doc: jsPDF, report: SpiralogicReport) {
-    this.addPageHeader(doc, 'Karmic Evolution');
+    this.addPageHeader(doc, "Karmic Evolution");
 
     // North Node
     doc.setFontSize(14);
     doc.setTextColor(this.style.accentColors.aether);
-    doc.text('North Node - Your Evolutionary Direction', 20, 50);
+    doc.text("North Node - Your Evolutionary Direction", 20, 50);
 
     doc.setFontSize(12);
     doc.setTextColor(this.style.primaryColor);
-    const nnLines = doc.splitTextToSize(report.karmicAxis.northNode.interpretation, 170);
+    const nnLines = doc.splitTextToSize(
+      report.karmicAxis.northNode.interpretation,
+      170,
+    );
     doc.text(nnLines, 20, 60);
 
     // South Node
     doc.setFontSize(14);
     doc.setTextColor(this.style.accentColors.earth);
-    doc.text('South Node - Your Innate Gifts', 20, 90);
+    doc.text("South Node - Your Innate Gifts", 20, 90);
 
     doc.setFontSize(12);
-    const snLines = doc.splitTextToSize(report.karmicAxis.southNode.interpretation, 170);
+    const snLines = doc.splitTextToSize(
+      report.karmicAxis.southNode.interpretation,
+      170,
+    );
     doc.text(snLines, 20, 100);
 
     // Saturn
     doc.setFontSize(14);
     doc.setTextColor(this.style.accentColors.earth);
-    doc.text('Saturn - Your Path of Mastery', 20, 130);
+    doc.text("Saturn - Your Path of Mastery", 20, 130);
 
     doc.setFontSize(12);
-    const saturnLines = doc.splitTextToSize(report.karmicAxis.saturn.interpretation, 170);
+    const saturnLines = doc.splitTextToSize(
+      report.karmicAxis.saturn.interpretation,
+      170,
+    );
     doc.text(saturnLines, 20, 140);
 
     // Pluto
     doc.setFontSize(14);
     doc.setTextColor(this.style.accentColors.water);
-    doc.text('Pluto - Your Deepest Transformation', 20, 170);
+    doc.text("Pluto - Your Deepest Transformation", 20, 170);
 
     doc.setFontSize(12);
-    const plutoLines = doc.splitTextToSize(report.karmicAxis.pluto.interpretation, 170);
+    const plutoLines = doc.splitTextToSize(
+      report.karmicAxis.pluto.interpretation,
+      170,
+    );
     doc.text(plutoLines, 20, 180);
   }
 
   private createReflectiveProtocolsPage(doc: jsPDF, report: SpiralogicReport) {
-    this.addPageHeader(doc, 'Sacred Practices');
+    this.addPageHeader(doc, "Sacred Practices");
 
     let yPos = 50;
 
     report.reflectiveProtocols.forEach((protocol, index) => {
       // Protocol header
       doc.setFontSize(14);
-      doc.setTextColor(this.style.accentColors[protocol.element.toLowerCase() as keyof typeof this.style.accentColors] || this.style.primaryColor);
+      doc.setTextColor(
+        this.style.accentColors[
+          protocol.element.toLowerCase() as keyof typeof this.style.accentColors
+        ] || this.style.primaryColor,
+      );
       doc.text(protocol.name, 20, yPos);
 
       // Description
@@ -260,7 +295,7 @@ export class SpiralogicReportPdfService {
       const descLines = doc.splitTextToSize(protocol.description, 170);
       doc.text(descLines, 20, yPos + 8);
 
-      yPos += 8 + (descLines.length * 4) + 5;
+      yPos += 8 + descLines.length * 4 + 5;
 
       // Steps
       doc.setFontSize(10);
@@ -280,14 +315,18 @@ export class SpiralogicReportPdfService {
       // Add new page if needed
       if (yPos > 250 && index < report.reflectiveProtocols.length - 1) {
         doc.addPage();
-        this.addPageHeader(doc, 'Sacred Practices (continued)');
+        this.addPageHeader(doc, "Sacred Practices (continued)");
         yPos = 50;
       }
     });
   }
 
-  private createChartVisualizationPage(doc: jsPDF, report: SpiralogicReport, birthData: any) {
-    this.addPageHeader(doc, 'Birth Chart Mandala');
+  private createChartVisualizationPage(
+    doc: jsPDF,
+    report: SpiralogicReport,
+    birthData: any,
+  ) {
+    this.addPageHeader(doc, "Birth Chart Mandala");
 
     // Center of the chart
     const centerX = 105;
@@ -301,7 +340,7 @@ export class SpiralogicReportPdfService {
 
     // Draw house divisions
     for (let i = 0; i < 12; i++) {
-      const angle = (i * 30 - 90) * Math.PI / 180;
+      const angle = ((i * 30 - 90) * Math.PI) / 180;
       const x2 = centerX + radius * Math.cos(angle);
       const y2 = centerY + radius * Math.sin(angle);
       doc.line(centerX, centerY, x2, y2);
@@ -312,19 +351,37 @@ export class SpiralogicReportPdfService {
     doc.circle(centerX, centerY, radius * 0.4);
 
     // Add zodiac signs (simplified)
-    const signs = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+    const signs = [
+      "♈",
+      "♉",
+      "♊",
+      "♋",
+      "♌",
+      "♍",
+      "♎",
+      "♏",
+      "♐",
+      "♑",
+      "♒",
+      "♓",
+    ];
     doc.setFontSize(12);
     for (let i = 0; i < 12; i++) {
-      const angle = (i * 30 - 75) * Math.PI / 180;
+      const angle = ((i * 30 - 75) * Math.PI) / 180;
       const x = centerX + (radius + 10) * Math.cos(angle);
       const y = centerY + (radius + 10) * Math.sin(angle);
-      doc.text(signs[i], x, y, { align: 'center' });
+      doc.text(signs[i], x, y, { align: "center" });
     }
 
     // Note about full chart
     doc.setFontSize(10);
     doc.setTextColor(this.style.secondaryColor);
-    doc.text('For detailed chart analysis, consult your practitioner', 105, 240, { align: 'center' });
+    doc.text(
+      "For detailed chart analysis, consult your practitioner",
+      105,
+      240,
+      { align: "center" },
+    );
   }
 
   // Helper methods
@@ -338,73 +395,103 @@ export class SpiralogicReportPdfService {
     // Title
     doc.setFontSize(20);
     doc.setTextColor(this.style.primaryColor);
-    doc.text(title, 105, 20, { align: 'center' });
+    doc.text(title, 105, 20, { align: "center" });
 
     // Page number
     doc.setFontSize(10);
     doc.setTextColor(this.style.secondaryColor);
-    doc.text(`${doc.getCurrentPageInfo().pageNumber}`, 190, 285, { align: 'right' });
+    doc.text(`${doc.getCurrentPageInfo().pageNumber}`, 190, 285, {
+      align: "right",
+    });
   }
 
-  private addGradientBackground(doc: jsPDF, x: number, y: number, width: number, height: number) {
+  private addGradientBackground(
+    doc: jsPDF,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) {
     // Simulate gradient with multiple rectangles
     const steps = 20;
     const stepHeight = height / steps;
 
     for (let i = 0; i < steps; i++) {
       const ratio = i / steps;
-      const gray = 253 - (ratio * 20); // From #fdfdfd to #eaeaea
+      const gray = 253 - ratio * 20; // From #fdfdfd to #eaeaea
       doc.setFillColor(gray, gray, gray);
-      doc.rect(x, y + (i * stepHeight), width, stepHeight, 'F');
+      doc.rect(x, y + i * stepHeight, width, stepHeight, "F");
     }
   }
 
   private drawElementalSymbols(doc: jsPDF, centerX: number, centerY: number) {
     const symbols = {
-      fire: '△',
-      water: '▽',
-      earth: '□',
-      air: '○'
+      fire: "△",
+      water: "▽",
+      earth: "□",
+      air: "○",
     };
 
     const positions = [
-      { x: -40, y: 0 },   // left
-      { x: 0, y: -40 },   // top
-      { x: 40, y: 0 },    // right
-      { x: 0, y: 40 }     // bottom
+      { x: -40, y: 0 }, // left
+      { x: 0, y: -40 }, // top
+      { x: 40, y: 0 }, // right
+      { x: 0, y: 40 }, // bottom
     ];
 
     Object.entries(symbols).forEach(([element, symbol], index) => {
       const pos = positions[index];
-      doc.setTextColor(this.style.accentColors[element as keyof typeof this.style.accentColors]);
+      doc.setTextColor(
+        this.style.accentColors[
+          element as keyof typeof this.style.accentColors
+        ],
+      );
       doc.setFontSize(24);
-      doc.text(symbol, centerX + pos.x, centerY + pos.y, { align: 'center' });
+      doc.text(symbol, centerX + pos.x, centerY + pos.y, { align: "center" });
     });
   }
 
-  private drawElementalDominanceChart(doc: jsPDF, x: number, y: number, insights: any) {
+  private drawElementalDominanceChart(
+    doc: jsPDF,
+    x: number,
+    y: number,
+    insights: any,
+  ) {
     const barWidth = 30;
     const maxHeight = 50;
     const spacing = 35;
 
-    Object.entries(insights).forEach(([ element, insight ]: [string, any], index) => {
-      const barHeight = (insight.strength / 100) * maxHeight;
-      const barX = x + (index * spacing);
-      const barY = y + maxHeight - barHeight;
+    Object.entries(insights).forEach(
+      ([element, insight]: [string, any], index) => {
+        const barHeight = (insight.strength / 100) * maxHeight;
+        const barX = x + index * spacing;
+        const barY = y + maxHeight - barHeight;
 
-      // Draw bar
-      doc.setFillColor(this.style.accentColors[element as keyof typeof this.style.accentColors]);
-      doc.rect(barX, barY, barWidth, barHeight, 'F');
+        // Draw bar
+        doc.setFillColor(
+          this.style.accentColors[
+            element as keyof typeof this.style.accentColors
+          ],
+        );
+        doc.rect(barX, barY, barWidth, barHeight, "F");
 
-      // Element label
-      doc.setFontSize(10);
-      doc.setTextColor(this.style.primaryColor);
-      doc.text(element.toUpperCase(), barX + barWidth/2, y + maxHeight + 10, { align: 'center' });
+        // Element label
+        doc.setFontSize(10);
+        doc.setTextColor(this.style.primaryColor);
+        doc.text(
+          element.toUpperCase(),
+          barX + barWidth / 2,
+          y + maxHeight + 10,
+          { align: "center" },
+        );
 
-      // Percentage
-      doc.setFontSize(8);
-      doc.text(`${insight.strength}%`, barX + barWidth/2, barY - 3, { align: 'center' });
-    });
+        // Percentage
+        doc.setFontSize(8);
+        doc.text(`${insight.strength}%`, barX + barWidth / 2, barY - 3, {
+          align: "center",
+        });
+      },
+    );
   }
 
   /**
@@ -525,18 +612,20 @@ export class SpiralogicReportPdfService {
 <body>
   <!-- Cover Page -->
   <div class="page cover-page">
-    ${branding?.businessName ? `<h3>${branding.businessName}</h3>` : '<h3>Soul Lab</h3>'}
+    ${branding?.businessName ? `<h3>${branding.businessName}</h3>` : "<h3>Soul Lab</h3>"}
     <h1 style="font-size: 48px; margin: 20px 0;">Spiralogic</h1>
     <h2 style="font-size: 32px; margin: 10px 0;">Evolutionary Report</h2>
 
     <div style="margin: 40px 0;">
-      <p style="font-size: 18px;">Born ${new Date(birthData.date).toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      <p style="font-size: 18px;">Born ${new Date(
+        birthData.date,
+      ).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       })}</p>
-      <p>${birthData.time} • ${birthData.location.placeName || 'Location'}</p>
+      <p>${birthData.time} • ${birthData.location.placeName || "Location"}</p>
     </div>
 
     <div class="elemental-symbols">
@@ -571,7 +660,9 @@ export class SpiralogicReportPdfService {
   </div>
 
   <!-- Elemental Analysis Pages -->
-  ${Object.entries(report.elementalInsights).map(([element, insight]: [string, any]) => `
+  ${Object.entries(report.elementalInsights)
+    .map(
+      ([element, insight]: [string, any]) => `
   <div class="page">
     <h2>Elemental Wisdom - ${insight.element}</h2>
 
@@ -581,21 +672,23 @@ export class SpiralogicReportPdfService {
 
       <h4>Gifts</h4>
       <ul>
-        ${insight.gifts.map((gift: string) => `<li>${gift}</li>`).join('')}
+        ${insight.gifts.map((gift: string) => `<li>${gift}</li>`).join("")}
       </ul>
 
       <h4>Challenges</h4>
       <ul>
-        ${insight.challenges.map((challenge: string) => `<li>${challenge}</li>`).join('')}
+        ${insight.challenges.map((challenge: string) => `<li>${challenge}</li>`).join("")}
       </ul>
 
       <h4>Practices</h4>
       <ul>
-        ${insight.practices.map((practice: string) => `<li>${practice}</li>`).join('')}
+        ${insight.practices.map((practice: string) => `<li>${practice}</li>`).join("")}
       </ul>
     </div>
   </div>
-  `).join('')}
+  `,
+    )
+    .join("")}
 
   <!-- Karmic Axis Page -->
   <div class="page">
@@ -606,7 +699,7 @@ export class SpiralogicReportPdfService {
       <p>${report.karmicAxis.northNode.interpretation}</p>
       <p><strong>Key Lessons:</strong></p>
       <ul>
-        ${report.karmicAxis.northNode.lessons.map((lesson: string) => `<li>${lesson}</li>`).join('')}
+        ${report.karmicAxis.northNode.lessons.map((lesson: string) => `<li>${lesson}</li>`).join("")}
       </ul>
     </div>
 
@@ -630,22 +723,30 @@ export class SpiralogicReportPdfService {
   <div class="page">
     <h2>Sacred Practices</h2>
 
-    ${report.reflectiveProtocols.map(protocol => `
+    ${report.reflectiveProtocols
+      .map(
+        (protocol) => `
     <div class="protocol">
       <h3 class="${protocol.element.toLowerCase()}">${protocol.name}</h3>
       <p style="font-style: italic; color: ${style.secondaryColor};">${protocol.description}</p>
 
       <h4>Steps:</h4>
       <ol class="protocol-steps">
-        ${protocol.steps.map((step: string) => `<li>${step}</li>`).join('')}
+        ${protocol.steps.map((step: string) => `<li>${step}</li>`).join("")}
       </ol>
 
       <p><strong>Best practiced:</strong> ${protocol.timing}</p>
-      ${protocol.materials ? `
-      <p><strong>Materials needed:</strong> ${protocol.materials.join(', ')}</p>
-      ` : ''}
+      ${
+        protocol.materials
+          ? `
+      <p><strong>Materials needed:</strong> ${protocol.materials.join(", ")}</p>
+      `
+          : ""
+      }
     </div>
-    `).join('')}
+    `,
+      )
+      .join("")}
   </div>
 </body>
 </html>

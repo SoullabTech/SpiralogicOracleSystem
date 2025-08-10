@@ -1,4 +1,7 @@
-import { analyzeFeedbackTrends, updatePersonalityWeights } from '../services/monitoringService';
+import {
+  analyzeFeedbackTrends,
+  updatePersonalityWeights,
+} from "../services/monitoringService";
 
 const ANALYSIS_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -16,15 +19,15 @@ export async function runScheduledAnalysis() {
         element,
         weight: metrics.elementalDistribution[element] / 100,
         confidence,
-      }))
+      })),
     );
 
-    console.log('Scheduled analysis completed:', {
+    console.log("Scheduled analysis completed:", {
       date: new Date().toISOString(),
       metrics,
     });
   } catch (error) {
-    console.error('Error in scheduled analysis:', error);
+    console.error("Error in scheduled analysis:", error);
   }
 }
 

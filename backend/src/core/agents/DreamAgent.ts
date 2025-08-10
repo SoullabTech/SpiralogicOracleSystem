@@ -14,12 +14,15 @@ export class DreamAgent extends OracleAgent {
     super({ debug: false });
   }
 
-  public async processQuery(query: { input: string; userId?: string }): Promise<AgentResponse> {
+  public async processQuery(query: {
+    input: string;
+    userId?: string;
+  }): Promise<AgentResponse> {
     const contextMemory = MemoryModule.getRecentEntries(2);
 
     const dreamPrompt = `You are an oracle of dreams. Interpret the symbols and metaphors in the message with mystical depth.`;
     const contextHeader = contextMemory.length
-      ? `🌙 Dream echoes:\n${contextMemory.map(e => `- ${e.response}`).join("\n")}\n\n`
+      ? `🌙 Dream echoes:\n${contextMemory.map((e) => `- ${e.response}`).join("\n")}\n\n`
       : "";
 
     const augmentedInput = `${dreamPrompt}\n\n${contextHeader}${query.input}`;
@@ -29,7 +32,8 @@ export class DreamAgent extends OracleAgent {
       input: augmentedInput,
     };
 
-    const baseResponse: AgentResponse = await ModelService.getResponse(augmentedQuery);
+    const baseResponse: AgentResponse =
+      await ModelService.getResponse(augmentedQuery);
 
     const personalityFlair = `\n\n🌀 What stirs in dreams often stirs the soul.`;
     const enhancedResponse = `${baseResponse.response}${personalityFlair}`;

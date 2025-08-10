@@ -17,19 +17,23 @@ SpiralogicOracleSystem/
 ## 🧪 Getting Started
 
 ### 📁 Backend (`oracle-backend`)
+
 ```bash
 cd oracle-backend
 npm install
 npm run dev
 ```
+
 Server starts at `http://localhost:3001` (or as configured).
 
 ### 🌐 Frontend (`oracle-frontend`)
+
 ```bash
 cd oracle-frontend
 npm install
 npm run dev
 ```
+
 Frontend served at `http://localhost:3000`
 
 ---
@@ -71,4 +75,5 @@ NEXT_PUBLIC_API_BASE=http://localhost:3001
 ---
 
 ## 📜 License
+
 MIT — Build wisely, share freely, honor the path ✨# Deploy trigger

@@ -3,7 +3,9 @@
 ## Pre-Deployment Phase
 
 ### 🔧 Infrastructure Setup
+
 - [ ] **Server Requirements**
+
   - [ ] Ubuntu 20.04+ or compatible OS
   - [ ] Minimum 4GB RAM, 2 vCPUs
   - [ ] 20GB+ storage space
@@ -11,6 +13,7 @@
   - [ ] npm 8.x+ installed
 
 - [ ] **Database Setup**
+
   - [ ] PostgreSQL 14+ installed
   - [ ] Supabase project created
   - [ ] Database migrations prepared
@@ -18,6 +21,7 @@
   - [ ] Backup strategy defined
 
 - [ ] **Redis Setup**
+
   - [ ] Redis 6+ installed
   - [ ] Redis persistence configured
   - [ ] Memory limits set
@@ -32,11 +36,13 @@
 ### 📋 Environment Configuration
 
 - [ ] **Create Environment Files**
+
   ```bash
   cp .env.example .env.production
   ```
 
 - [ ] **Required Environment Variables**
+
   - [ ] `DATABASE_URL` - PostgreSQL connection string
   - [ ] `SUPABASE_URL` - Supabase project URL
   - [ ] `SUPABASE_SERVICE_KEY` - Service role key
@@ -57,6 +63,7 @@
 ### 🔐 Security Preparation
 
 - [ ] **Access Control**
+
   - [ ] SSH keys configured
   - [ ] Firewall rules set (UFW/iptables)
   - [ ] Rate limiting configured
@@ -73,23 +80,27 @@
 ### 🚀 Backend Deployment
 
 - [ ] **Clone Repository**
+
   ```bash
   git clone https://github.com/your-repo/SpiralogicOracleSystem.git
   cd SpiralogicOracleSystem
   ```
 
 - [ ] **Install Dependencies**
+
   ```bash
   cd backend
   npm ci --production
   ```
 
 - [ ] **Build Application**
+
   ```bash
   npm run build:render-simple
   ```
 
 - [ ] **Database Migrations**
+
   ```bash
   # Run all migrations
   psql $DATABASE_URL -f supabase/migrations/20250529_production_deployment.sql
@@ -98,6 +109,7 @@
   ```
 
 - [ ] **Start Application**
+
   ```bash
   # Using PM2
   pm2 start dist/server-simple.js --name soullab-backend
@@ -109,11 +121,13 @@
 ### 🎨 Frontend Deployment
 
 - [ ] **Build Frontend**
+
   ```bash
   npm run build
   ```
 
 - [ ] **Deploy to Vercel**
+
   ```bash
   vercel --prod
   ```
@@ -128,6 +142,7 @@
 ### 🔄 Reverse Proxy Setup
 
 - [ ] **Nginx Configuration**
+
   ```nginx
   # /etc/nginx/sites-available/soullab
   server {
@@ -162,12 +177,14 @@
 ### ✅ Health Checks
 
 - [ ] **API Health**
+
   ```bash
   curl https://your-domain.com/api/health
   # Expected: {"status":"ok","timestamp":"..."}
   ```
 
 - [ ] **Database Connection**
+
   ```bash
   curl https://your-domain.com/api/health/db
   # Expected: {"database":"connected"}
@@ -182,11 +199,13 @@
 ### 🔍 Functional Testing
 
 - [ ] **Authentication Flow**
+
   - [ ] User registration works
   - [ ] Login returns JWT token
   - [ ] Protected routes require auth
 
 - [ ] **Oracle System**
+
   - [ ] Oracle query endpoint responds
   - [ ] All 6 oracle modes accessible
   - [ ] Memory system stores interactions
@@ -199,6 +218,7 @@
 ### 📊 Performance Checks
 
 - [ ] **Response Times**
+
   - [ ] API health < 100ms
   - [ ] Oracle queries < 3s
   - [ ] Static assets cached properly
@@ -213,12 +233,14 @@
 ### 📈 Application Monitoring
 
 - [ ] **Logging**
+
   - [ ] Application logs to file
   - [ ] Error logs separated
   - [ ] Log rotation configured
   - [ ] Log aggregation setup (optional)
 
 - [ ] **Process Management**
+
   - [ ] PM2 configured with auto-restart
   - [ ] Memory limits set
   - [ ] Cluster mode enabled (if needed)
@@ -232,6 +254,7 @@
 ### 🔒 Security Monitoring
 
 - [ ] **Access Logs**
+
   - [ ] Nginx access logs enabled
   - [ ] Failed login attempts tracked
   - [ ] Rate limit violations logged
@@ -246,12 +269,14 @@
 ### 💾 Backup Configuration
 
 - [ ] **Database Backups**
+
   ```bash
   # Daily backup cron job
   0 2 * * * pg_dump $DATABASE_URL > /backups/db_$(date +\%Y\%m\%d).sql
   ```
 
 - [ ] **Application Backups**
+
   - [ ] Code repository backed up
   - [ ] Environment files backed up
   - [ ] User uploads backed up
@@ -263,6 +288,7 @@
 ### 🔄 Recovery Testing
 
 - [ ] **Restore Procedures**
+
   - [ ] Database restore tested
   - [ ] Application rollback tested
   - [ ] Redis restore tested
@@ -277,11 +303,13 @@
 ### 🎯 Go-Live Checklist
 
 - [ ] **DNS Cutover**
+
   - [ ] DNS TTL reduced 24h before
   - [ ] DNS records updated
   - [ ] Propagation verified
 
 - [ ] **Communication**
+
   - [ ] Team notified
   - [ ] Status page updated
   - [ ] Support channels ready
@@ -294,6 +322,7 @@
 ### 📝 Documentation
 
 - [ ] **Deployment Notes**
+
   - [ ] Configuration changes documented
   - [ ] Known issues documented
   - [ ] Performance baselines recorded
@@ -305,11 +334,11 @@
 
 ## Sign-off
 
-- [ ] **Technical Lead**: ___________________ Date: ___________
-- [ ] **Operations**: ___________________ Date: ___________
-- [ ] **Security**: ___________________ Date: ___________
-- [ ] **Product Owner**: ___________________ Date: ___________
+- [ ] **Technical Lead**: ********\_\_\_******** Date: ****\_\_\_****
+- [ ] **Operations**: ********\_\_\_******** Date: ****\_\_\_****
+- [ ] **Security**: ********\_\_\_******** Date: ****\_\_\_****
+- [ ] **Product Owner**: ********\_\_\_******** Date: ****\_\_\_****
 
 ---
 
-*Sacred Technology Deployment - Where Infrastructure Meets Transformation* 🌟
+_Sacred Technology Deployment - Where Infrastructure Meets Transformation_ 🌟

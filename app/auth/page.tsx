@@ -16,7 +16,8 @@ export default function AuthPage() {
         <div className="bg-white/5 rounded-lg p-6 border border-white/10">
           <h2 className="text-xl font-semibold mb-4">Coming Soon</h2>
           <p className="opacity-90 mb-6">
-            User authentication and profile management will be available in the next update.
+            User authentication and profile management will be available in the
+            next update.
           </p>
 
           <div className="space-y-2 text-sm">

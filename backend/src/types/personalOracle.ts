@@ -1,11 +1,11 @@
 // Personal Oracle Matching and Personality System
 
 export interface ElementalAssessment {
-  fire: number;      // Vision, creativity, passion (0-100)
-  water: number;     // Emotion, intuition, flow (0-100)
-  earth: number;     // Grounding, manifestation, stability (0-100)
-  air: number;       // Communication, clarity, analysis (0-100)
-  aether: number;    // Integration, transcendence, unity (0-100)
+  fire: number; // Vision, creativity, passion (0-100)
+  water: number; // Emotion, intuition, flow (0-100)
+  earth: number; // Grounding, manifestation, stability (0-100)
+  air: number; // Communication, clarity, analysis (0-100)
+  aether: number; // Integration, transcendence, unity (0-100)
 
   // Derived metrics
   dominantElement: string;
@@ -17,22 +17,45 @@ export interface ElementalAssessment {
 
 export interface PersonalityVector {
   // Communication style
-  communicationStyle: 'direct' | 'metaphorical' | 'questioning' | 'storytelling' | 'energetic';
+  communicationStyle:
+    | "direct"
+    | "metaphorical"
+    | "questioning"
+    | "storytelling"
+    | "energetic";
 
   // Guidance approach
-  guidanceStyle: 'supportive' | 'challenging' | 'investigative' | 'visionary' | 'nurturing';
+  guidanceStyle:
+    | "supportive"
+    | "challenging"
+    | "investigative"
+    | "visionary"
+    | "nurturing";
 
   // Depth preference
-  depthPreference: 'surface' | 'moderate' | 'deep' | 'mystical';
+  depthPreference: "surface" | "moderate" | "deep" | "mystical";
 
   // Interaction tempo
-  tempo: 'slow_contemplative' | 'steady_rhythm' | 'dynamic_flow' | 'intense_bursts';
+  tempo:
+    | "slow_contemplative"
+    | "steady_rhythm"
+    | "dynamic_flow"
+    | "intense_bursts";
 
   // Shadow work approach
-  shadowApproach: 'gentle_integration' | 'direct_confrontation' | 'playful_exploration' | 'sacred_witnessing';
+  shadowApproach:
+    | "gentle_integration"
+    | "direct_confrontation"
+    | "playful_exploration"
+    | "sacred_witnessing";
 
   // Learning style preference
-  learningStyle: 'experiential' | 'conceptual' | 'embodied' | 'intuitive' | 'systematic';
+  learningStyle:
+    | "experiential"
+    | "conceptual"
+    | "embodied"
+    | "intuitive"
+    | "systematic";
 }
 
 export interface OraclePersonality {
@@ -87,7 +110,7 @@ export interface ParticipantContext {
   personalInfo: {
     preferredName: string;
     communicationPreferences: string[];
-    sensitivityLevel: 'low' | 'medium' | 'high' | 'extremely_sensitive';
+    sensitivityLevel: "low" | "medium" | "high" | "extremely_sensitive";
     traumaInformed: boolean;
   };
 

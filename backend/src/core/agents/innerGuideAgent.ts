@@ -19,7 +19,7 @@ export interface InnerGuideInsight {
 }
 
 export async function processJournalEntry(
-  input: z.infer<typeof journalEntrySchema>
+  input: z.infer<typeof journalEntrySchema>,
 ): Promise<InnerGuideInsight> {
   const { userId, entry } = input;
 
@@ -33,8 +33,10 @@ export async function processJournalEntry(
   const divination = await generateDivinatoryInsight({ userId, entry });
 
   // Step 4: Integration suggestion
-  const integrationPrompt = `Reflect on the symbol(s): ${symbols.length > 0 ? symbols.join(', ') : 'none'}${
-    dreamThemes && dreamThemes.length > 0 ? ` and dream theme(s): ${dreamThemes.join(', ')}` : ''
+  const integrationPrompt = `Reflect on the symbol(s): ${symbols.length > 0 ? symbols.join(", ") : "none"}${
+    dreamThemes && dreamThemes.length > 0
+      ? ` and dream theme(s): ${dreamThemes.join(", ")}`
+      : ""
   }. What do they reveal about your inner process?`;
 
   return {

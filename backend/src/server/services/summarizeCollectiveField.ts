@@ -1,8 +1,8 @@
 // 📁 File: src/services/summarizeCollectiveField.ts
 
-import { supabase } from '@lib/supabaseClient';
-import { parseEmotions } from '@lib/emotionParser';
-import { matchSymbols } from '@lib/symbolMatcher';
+import { supabase } from "@lib/supabaseClient";
+import { parseEmotions } from "@lib/emotionParser";
+import { matchSymbols } from "@lib/symbolMatcher";
 
 export async function summarizeCollectiveField() {
   const since = new Date();
@@ -10,17 +10,20 @@ export async function summarizeCollectiveField() {
   const sinceIso = since.toISOString();
 
   const { data: memoryItems, error } = await supabase
-    .from('memory_items')
-    .select('content, created_at, user_id')
-    .gte('created_at', sinceIso)
-    .order('created_at', { ascending: false });
+    .from("memory_items")
+    .select("content, created_at, user_id")
+    .gte("created_at", sinceIso)
+    .order("created_at", { ascending: false });
 
   if (error || !memoryItems) {
-    console.error('[summarizeCollectiveField] Error fetching memory_items:', error);
+    console.error(
+      "[summarizeCollectiveField] Error fetching memory_items:",
+      error,
+    );
     return null;
   }
 
-  const fullText = memoryItems.map(item => item.content).join('\n\n');
+  const fullText = memoryItems.map((item) => item.content).join("\n\n");
   const emotions = parseEmotions(fullText);
   const symbols = matchSymbols(fullText);
 
@@ -36,11 +39,11 @@ export async function summarizeCollectiveField() {
   // Simulate oracle echo generation
   const oracleEcho =
     symbols.length > 0
-      ? `The field speaks in symbols: ${symbols.join(', ')}. Trust what emerges.`
-      : 'The field is quiet today, listening between the lines.';
+      ? `The field speaks in symbols: ${symbols.join(", ")}. Trust what emerges.`
+      : "The field is quiet today, listening between the lines.";
 
   return {
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split("T")[0],
     topSymbols: symbols,
     elementIndex,
     emotionalPulse: emotions,

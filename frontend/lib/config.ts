@@ -1,20 +1,21 @@
 // Frontend configuration for API endpoints
-export const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://soullab-backend.onrender.com' // Replace with your actual backend URL
-  : 'http://localhost:3001'; // Local development backend
+export const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://soullab-backend.onrender.com" // Replace with your actual backend URL
+    : "http://localhost:3001"; // Local development backend
 
 // API endpoints
 export const API_ENDPOINTS = {
   analytics: {
-    dashboard: '/api/analytics/dashboard',
+    dashboard: "/api/analytics/dashboard",
   },
   elemental: {
-    recommendations: '/api/elemental/recommendations',
+    recommendations: "/api/elemental/recommendations",
   },
   integration: {
-    bypassingCheck: '/api/integration/bypassing-check',
-    gateCheck: '/api/integration/gate-check',
-    commodificationCheck: '/api/integration/commodification-check',
+    bypassingCheck: "/api/integration/bypassing-check",
+    gateCheck: "/api/integration/gate-check",
+    commodificationCheck: "/api/integration/commodification-check",
   },
 } as const;
 
@@ -35,9 +36,9 @@ export const apiClient = {
 
   post: async (endpoint: string, data?: any) => {
     const response = await fetch(createApiUrl(endpoint), {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: data ? JSON.stringify(data) : undefined,
     });

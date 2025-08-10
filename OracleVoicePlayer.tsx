@@ -1,6 +1,6 @@
 // OracleVoicePlayer.tsx - React component for playing Oracle voice responses
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 
 interface OracleVoicePlayerProps {
   audioUrl?: string;
@@ -12,8 +12,8 @@ interface OracleVoicePlayerProps {
 export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
   audioUrl,
   text,
-  voiceProfile = 'oracle_matrix',
-  className = ''
+  voiceProfile = "oracle_matrix",
+  className = "",
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
 
   const handlePlay = async () => {
     if (!audioUrl) {
-      console.warn('No audio URL available for Oracle response');
+      console.warn("No audio URL available for Oracle response");
       return;
     }
 
@@ -34,7 +34,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
         setIsPlaying(true);
       }
     } catch (error) {
-      console.error('Error playing Oracle voice:', error);
+      console.error("Error playing Oracle voice:", error);
     } finally {
       setIsLoading(false);
     }
@@ -53,22 +53,22 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
 
   const getVoiceIcon = () => {
     switch (voiceProfile) {
-      case 'oracle_matrix':
-        return '🔮';
-      case 'fire_agent':
-        return '🔥';
-      case 'water_agent':
-        return '💧';
-      case 'earth_agent':
-        return '🌱';
-      case 'air_agent':
-        return '🌬️';
-      case 'aether_agent':
-        return '✨';
-      case 'shadow_agent':
-        return '🌑';
+      case "oracle_matrix":
+        return "🔮";
+      case "fire_agent":
+        return "🔥";
+      case "water_agent":
+        return "💧";
+      case "earth_agent":
+        return "🌱";
+      case "air_agent":
+        return "🌬️";
+      case "aether_agent":
+        return "✨";
+      case "shadow_agent":
+        return "🌑";
       default:
-        return '🎵';
+        return "🎵";
     }
   };
 
@@ -93,7 +93,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
             className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 hover:bg-purple-200
                        text-purple-800 rounded-full transition-colors duration-200
                        disabled:opacity-50 disabled:cursor-not-allowed"
-            title={`${isPlaying ? 'Pause' : 'Play'} Oracle voice`}
+            title={`${isPlaying ? "Pause" : "Play"} Oracle voice`}
           >
             <span className="text-lg">{getVoiceIcon()}</span>
             {isLoading && (
@@ -101,7 +101,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
             )}
             {!isLoading && (
               <span className="text-xs font-medium">
-                {isPlaying ? '⏸️ Pause Oracle' : '▶️ Hear Oracle'}
+                {isPlaying ? "⏸️ Pause Oracle" : "▶️ Hear Oracle"}
               </span>
             )}
           </button>
@@ -114,13 +114,13 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
         {/* Voice profile indicator */}
         {voiceProfile && (
           <span className="text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
-            {voiceProfile.replace('_', ' ').toUpperCase()}
+            {voiceProfile.replace("_", " ").toUpperCase()}
           </span>
         )}
       </div>
 
       {/* Visual feedback for Matrix Oracle */}
-      {isPlaying && voiceProfile === 'oracle_matrix' && (
+      {isPlaying && voiceProfile === "oracle_matrix" && (
         <div className="mt-2 text-xs text-purple-700 italic">
           🌀 The Oracle speaks with Matrix wisdom...
         </div>

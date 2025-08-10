@@ -1,6 +1,6 @@
 // frontend/src/utils/onboardingStorage.ts
 
-import { supabase } from '../lib/supabase';
+import { supabase } from "../lib/supabase";
 
 export interface OnboardingConfig {
   step: 1 | 2 | 3;
@@ -11,14 +11,14 @@ export interface OnboardingConfig {
 }
 
 class OnboardingStorage {
-  private readonly localStorageKey = 'spiralogic-onboarding';
-  private readonly completedKey = 'spiralogic-onboarding-complete';
+  private readonly localStorageKey = "spiralogic-onboarding";
+  private readonly completedKey = "spiralogic-onboarding-complete";
 
   // LocalStorage methods (always available)
   saveToLocal(config: OnboardingConfig): void {
     localStorage.setItem(this.localStorageKey, JSON.stringify(config));
     if (config.completed) {
-      localStorage.setItem(this.completedKey, 'true');
+      localStorage.setItem(this.completedKey, "true");
     }
   }
 
@@ -27,13 +27,13 @@ class OnboardingStorage {
       const saved = localStorage.getItem(this.localStorageKey);
       return saved ? JSON.parse(saved) : null;
     } catch (error) {
-      console.warn('Failed to parse local onboarding state:', error);
+      console.warn("Failed to parse local onboarding state:", error);
       return null;
     }
   }
 
   isCompletedLocal(): boolean {
-    return localStorage.getItem(this.completedKey) === 'true';
+    return localStorage.getItem(this.completedKey) === "true";
   }
 
   clearLocal(): void {
@@ -42,25 +42,26 @@ class OnboardingStorage {
   }
 
   // Supabase methods (when user is authenticated)
-  async saveToSupabase(config: OnboardingConfig, userId: string): Promise<void> {
+  async saveToSupabase(
+    config: OnboardingConfig,
+    userId: string,
+  ): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('user_onboarding')
-        .upsert({
-          user_id: userId,
-          oracle_name: config.oracleName,
-          oracle_voice: config.oracleVoice,
-          step: config.step,
-          completed: config.completed,
-          updated_at: new Date().toISOString(),
-        });
+      const { error } = await supabase.from("user_onboarding").upsert({
+        user_id: userId,
+        oracle_name: config.oracleName,
+        oracle_voice: config.oracleVoice,
+        step: config.step,
+        completed: config.completed,
+        updated_at: new Date().toISOString(),
+      });
 
       if (error) throw error;
 
       // Also save locally as backup
       this.saveToLocal(config);
     } catch (error) {
-      console.error('Failed to save onboarding to Supabase:', error);
+      console.error("Failed to save onboarding to Supabase:", error);
       // Fallback to local storage
       this.saveToLocal(config);
       throw error;
@@ -70,13 +71,13 @@ class OnboardingStorage {
   async loadFromSupabase(userId: string): Promise<OnboardingConfig | null> {
     try {
       const { data, error } = await supabase
-        .from('user_onboarding')
-        .select('*')
-        .eq('user_id', userId)
+        .from("user_onboarding")
+        .select("*")
+        .eq("user_id", userId)
         .single();
 
       if (error) {
-        if (error.code === 'PGRST116') {
+        if (error.code === "PGRST116") {
           // No data found, return null
           return null;
         }
@@ -85,13 +86,13 @@ class OnboardingStorage {
 
       return {
         step: data.step as 1 | 2 | 3,
-        oracleName: data.oracle_name || '',
-        oracleVoice: data.oracle_voice || '',
+        oracleName: data.oracle_name || "",
+        oracleVoice: data.oracle_voice || "",
         completed: data.completed || false,
         timestamp: data.updated_at || new Date().toISOString(),
       };
     } catch (error) {
-      console.error('Failed to load onboarding from Supabase:', error);
+      console.error("Failed to load onboarding from Supabase:", error);
       // Fallback to local storage
       return this.loadFromLocal();
     }
@@ -102,7 +103,7 @@ class OnboardingStorage {
       const config = await this.loadFromSupabase(userId);
       return config?.completed || false;
     } catch (error) {
-      console.error('Failed to check completion status:', error);
+      console.error("Failed to check completion status:", error);
       return this.isCompletedLocal();
     }
   }

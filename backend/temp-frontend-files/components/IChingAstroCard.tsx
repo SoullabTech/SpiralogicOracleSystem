@@ -1,11 +1,17 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, Sparkles, Compass, Zap } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp, Sparkles, Compass, Zap } from "lucide-react";
 
 interface TrigramArchetype {
   name: string;
@@ -43,34 +49,34 @@ interface IChingAstroCardProps {
 }
 
 const elementColors = {
-  Wood: 'bg-green-100 text-green-800 border-green-200',
-  Fire: 'bg-red-100 text-red-800 border-red-200',
-  Earth: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  Metal: 'bg-gray-100 text-gray-800 border-gray-200',
-  Water: 'bg-blue-100 text-blue-800 border-blue-200'
+  Wood: "bg-green-100 text-green-800 border-green-200",
+  Fire: "bg-red-100 text-red-800 border-red-200",
+  Earth: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  Metal: "bg-gray-100 text-gray-800 border-gray-200",
+  Water: "bg-blue-100 text-blue-800 border-blue-200",
 };
 
 const symbolColors = {
-  Wood: 'text-green-600',
-  Fire: 'text-red-600',
-  Earth: 'text-yellow-600',
-  Metal: 'text-gray-600',
-  Water: 'text-blue-600'
+  Wood: "text-green-600",
+  Fire: "text-red-600",
+  Earth: "text-yellow-600",
+  Metal: "text-gray-600",
+  Water: "text-blue-600",
 };
 
 export default function IChingAstroCard({
   profile,
   birthArchetype,
   currentArchetype,
-  compatibility
+  compatibility,
 }: IChingAstroCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [showHexagrams, setShowHexagrams] = useState(false);
 
   const getCompatibilityColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50';
-    if (score >= 60) return 'text-yellow-600 bg-yellow-50';
-    return 'text-red-600 bg-red-50';
+    if (score >= 80) return "text-green-600 bg-green-50";
+    if (score >= 60) return "text-yellow-600 bg-yellow-50";
+    return "text-red-600 bg-red-50";
   };
 
   return (
@@ -94,7 +100,11 @@ export default function IChingAstroCard({
             onClick={() => setExpanded(!expanded)}
             className="text-purple-600 hover:text-purple-700"
           >
-            {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {expanded ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
           </Button>
         </div>
       </CardHeader>
@@ -111,21 +121,34 @@ export default function IChingAstroCard({
             <div className="bg-white rounded-lg p-4 border border-purple-100">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
-                  <span className={`text-3xl ${symbolColors[profile.birthElement as keyof typeof symbolColors]}`}>
-                    {birthArchetype?.symbol || '☰'}
+                  <span
+                    className={`text-3xl ${symbolColors[profile.birthElement as keyof typeof symbolColors]}`}
+                  >
+                    {birthArchetype?.symbol || "☰"}
                   </span>
                   <div>
-                    <div className="font-medium text-gray-900">{profile.birthTrigram}</div>
-                    <div className="text-sm text-gray-600">{birthArchetype?.archetype}</div>
+                    <div className="font-medium text-gray-900">
+                      {profile.birthTrigram}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {birthArchetype?.archetype}
+                    </div>
                   </div>
                 </div>
-                <Badge className={elementColors[profile.birthElement as keyof typeof elementColors]}>
+                <Badge
+                  className={
+                    elementColors[
+                      profile.birthElement as keyof typeof elementColors
+                    ]
+                  }
+                >
                   {profile.birthElement}
                 </Badge>
               </div>
 
               <div className="text-sm text-gray-600 mb-2">
-                <strong>Base Number:</strong> {profile.baseNumber} • <strong>Direction:</strong> {birthArchetype?.direction}
+                <strong>Base Number:</strong> {profile.baseNumber} •{" "}
+                <strong>Direction:</strong> {birthArchetype?.direction}
               </div>
 
               {birthArchetype && (
@@ -140,27 +163,42 @@ export default function IChingAstroCard({
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <Zap className="h-4 w-4 text-indigo-600" />
-              <h3 className="font-semibold text-gray-900">Current Year Energy</h3>
+              <h3 className="font-semibold text-gray-900">
+                Current Year Energy
+              </h3>
             </div>
 
             <div className="bg-white rounded-lg p-4 border border-indigo-100">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
-                  <span className={`text-3xl ${symbolColors[currentArchetype?.element as keyof typeof symbolColors] || 'text-gray-600'}`}>
-                    {currentArchetype?.symbol || '☰'}
+                  <span
+                    className={`text-3xl ${symbolColors[currentArchetype?.element as keyof typeof symbolColors] || "text-gray-600"}`}
+                  >
+                    {currentArchetype?.symbol || "☰"}
                   </span>
                   <div>
-                    <div className="font-medium text-gray-900">{profile.currentTrigramCycle}</div>
-                    <div className="text-sm text-gray-600">{currentArchetype?.archetype}</div>
+                    <div className="font-medium text-gray-900">
+                      {profile.currentTrigramCycle}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {currentArchetype?.archetype}
+                    </div>
                   </div>
                 </div>
-                <Badge className={elementColors[currentArchetype?.element as keyof typeof elementColors] || 'bg-gray-100'}>
-                  {currentArchetype?.element || 'Unknown'}
+                <Badge
+                  className={
+                    elementColors[
+                      currentArchetype?.element as keyof typeof elementColors
+                    ] || "bg-gray-100"
+                  }
+                >
+                  {currentArchetype?.element || "Unknown"}
                 </Badge>
               </div>
 
               <div className="text-sm text-gray-600 mb-2">
-                <strong>Year Number:</strong> {profile.currentYearNumber} • <strong>Phase:</strong> {profile.cyclePosition}
+                <strong>Year Number:</strong> {profile.currentYearNumber} •{" "}
+                <strong>Phase:</strong> {profile.cyclePosition}
               </div>
 
               <div className="text-sm text-gray-700">
@@ -173,13 +211,19 @@ export default function IChingAstroCard({
         {/* Compatibility Section */}
         {compatibility && (
           <div className="bg-white rounded-lg p-4 border border-gray-200">
-            <h4 className="font-medium text-gray-900 mb-3">Birth vs Current Year Harmony</h4>
+            <h4 className="font-medium text-gray-900 mb-3">
+              Birth vs Current Year Harmony
+            </h4>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className={`px-3 py-1 rounded-full text-sm font-medium ${getCompatibilityColor(compatibility.compatibility)}`}>
+                <div
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${getCompatibilityColor(compatibility.compatibility)}`}
+                >
                   {compatibility.compatibility}% Compatible
                 </div>
-                <span className="text-sm text-gray-600">{compatibility.description}</span>
+                <span className="text-sm text-gray-600">
+                  {compatibility.description}
+                </span>
               </div>
             </div>
           </div>
@@ -191,7 +235,9 @@ export default function IChingAstroCard({
             <Sparkles className="h-4 w-4 mr-2 text-purple-600" />
             Yearly Guidance
           </h4>
-          <p className="text-gray-700 leading-relaxed">{profile.yearlyGuidance}</p>
+          <p className="text-gray-700 leading-relaxed">
+            {profile.yearlyGuidance}
+          </p>
         </div>
 
         {expanded && (
@@ -201,7 +247,9 @@ export default function IChingAstroCard({
             {/* Keywords */}
             {birthArchetype?.keywords && (
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Core Qualities</h4>
+                <h4 className="font-medium text-gray-900 mb-3">
+                  Core Qualities
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {birthArchetype.keywords.map((keyword, index) => (
                     <Badge key={index} variant="secondary" className="text-xs">
@@ -215,14 +263,16 @@ export default function IChingAstroCard({
             {/* Hexagram Mappings */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium text-gray-900">Associated Hexagrams</h4>
+                <h4 className="font-medium text-gray-900">
+                  Associated Hexagrams
+                </h4>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowHexagrams(!showHexagrams)}
                   className="text-xs"
                 >
-                  {showHexagrams ? 'Hide' : 'Show'} Hexagrams
+                  {showHexagrams ? "Hide" : "Show"} Hexagrams
                 </Button>
               </div>
 
@@ -243,20 +293,37 @@ export default function IChingAstroCard({
             {birthArchetype && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <h5 className="font-medium text-gray-900">Trigram Attributes</h5>
+                  <h5 className="font-medium text-gray-900">
+                    Trigram Attributes
+                  </h5>
                   <div className="text-sm space-y-1">
-                    <div><strong>Attribute:</strong> {birthArchetype.attribute}</div>
-                    <div><strong>Direction:</strong> {birthArchetype.direction}</div>
-                    <div><strong>Element:</strong> {birthArchetype.element}</div>
+                    <div>
+                      <strong>Attribute:</strong> {birthArchetype.attribute}
+                    </div>
+                    <div>
+                      <strong>Direction:</strong> {birthArchetype.direction}
+                    </div>
+                    <div>
+                      <strong>Element:</strong> {birthArchetype.element}
+                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h5 className="font-medium text-gray-900">Cycle Information</h5>
+                  <h5 className="font-medium text-gray-900">
+                    Cycle Information
+                  </h5>
                   <div className="text-sm space-y-1">
-                    <div><strong>Base Number:</strong> {profile.baseNumber}/9</div>
-                    <div><strong>Position:</strong> {profile.cyclePosition}</div>
-                    <div><strong>Phase:</strong> {profile.fractalPhase.split(' -')[0]}</div>
+                    <div>
+                      <strong>Base Number:</strong> {profile.baseNumber}/9
+                    </div>
+                    <div>
+                      <strong>Position:</strong> {profile.cyclePosition}
+                    </div>
+                    <div>
+                      <strong>Phase:</strong>{" "}
+                      {profile.fractalPhase.split(" -")[0]}
+                    </div>
                   </div>
                 </div>
               </div>

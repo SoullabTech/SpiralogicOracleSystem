@@ -1,5 +1,4 @@
 packages:
-  - 'oracle-backend'
-  - 'oracle-frontend'
-  - 'oracle-fullstack'
-
+  - "oracle-backend"
+  - "oracle-frontend"
+  - "oracle-fullstack"

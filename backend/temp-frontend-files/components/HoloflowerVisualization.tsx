@@ -1,7 +1,11 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { SacredHoloflower, HoloflowerHouse, HoloflowerState } from '../core/SacredHoloflower';
-import { motion, AnimatePresence } from 'framer-motion';
-import * as d3 from 'd3';
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import {
+  SacredHoloflower,
+  HoloflowerHouse,
+  HoloflowerState,
+} from "../core/SacredHoloflower";
+import { motion, AnimatePresence } from "framer-motion";
+import * as d3 from "d3";
 
 interface HoloflowerVisualizationProps {
   userId?: string;
@@ -12,21 +16,27 @@ interface HoloflowerVisualizationProps {
   showGroupPattern?: boolean;
 }
 
-export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = ({
+export const HoloflowerVisualization: React.FC<
+  HoloflowerVisualizationProps
+> = ({
   userId,
   groupId,
   onHouseClick,
   onStateChange,
   realTimeUpdates = true,
-  showGroupPattern = false
+  showGroupPattern = false,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [holoflower] = useState(() => new SacredHoloflower());
   const [state, setState] = useState(holoflower.getState());
-  const [selectedHouse, setSelectedHouse] = useState<HoloflowerHouse | null>(null);
+  const [selectedHouse, setSelectedHouse] = useState<HoloflowerHouse | null>(
+    null,
+  );
   const [isDragging, setIsDragging] = useState(false);
   const [dragTarget, setDragTarget] = useState<HoloflowerHouse | null>(null);
-  const [hoveredHouse, setHoveredHouse] = useState<HoloflowerHouse | null>(null);
+  const [hoveredHouse, setHoveredHouse] = useState<HoloflowerHouse | null>(
+    null,
+  );
   const [showShadows, setShowShadows] = useState(true);
   const [animationSpeed, setAnimationSpeed] = useState(1);
 
@@ -41,7 +51,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
 
       ws.onmessage = (event) => {
         const update = JSON.parse(event.data);
-        if (update.type === 'state-update') {
+        if (update.type === "state-update") {
           handleExternalStateUpdate(update.state);
         }
       };
@@ -50,19 +60,25 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
     }
   }, [userId, realTimeUpdates]);
 
-  const handleExternalStateUpdate = useCallback((newState: Partial<HoloflowerState>) => {
-    Object.entries(newState).forEach(([key, value]) => {
-      if (key === 'houses' && Array.isArray(value)) {
-        value.forEach((houseUpdate: any) => {
-          holoflower.updateHouseIntensity(houseUpdate.id, houseUpdate.intensity);
-        });
-      }
-    });
+  const handleExternalStateUpdate = useCallback(
+    (newState: Partial<HoloflowerState>) => {
+      Object.entries(newState).forEach(([key, value]) => {
+        if (key === "houses" && Array.isArray(value)) {
+          value.forEach((houseUpdate: any) => {
+            holoflower.updateHouseIntensity(
+              houseUpdate.id,
+              houseUpdate.intensity,
+            );
+          });
+        }
+      });
 
-    const updatedState = holoflower.getState();
-    setState(updatedState);
-    onStateChange?.(updatedState);
-  }, [holoflower, onStateChange]);
+      const updatedState = holoflower.getState();
+      setState(updatedState);
+      onStateChange?.(updatedState);
+    },
+    [holoflower, onStateChange],
+  );
 
   const renderHouse = (house: HoloflowerHouse) => {
     const x = centerX + Math.cos(house.angle) * house.radius;
@@ -77,14 +93,14 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         key={house.id}
         initial={{ scale: 0, opacity: 0 }}
         animate={{
-          scale: isSelected ? 1.2 : (isHovered ? 1.1 : 1),
-          opacity: 1
+          scale: isSelected ? 1.2 : isHovered ? 1.1 : 1,
+          opacity: 1,
         }}
         transition={{
           duration: 0.5 * animationSpeed,
           type: "spring",
           stiffness: 260,
-          damping: 20
+          damping: 20,
         }}
       >
         {showShadows && house.shadowAspect && (
@@ -101,7 +117,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
             transition={{
               duration: 20 / animationSpeed,
               repeat: Infinity,
-              ease: "linear"
+              ease: "linear",
             }}
           />
         )}
@@ -110,9 +126,9 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           points={getPolygonPoints(x, y, size, getShapeForPhase(house.phase))}
           fill={house.color}
           fillOpacity={house.intensity}
-          stroke={isSelected ? '#FFD700' : (isHovered ? '#FFFFFF' : house.color)}
-          strokeWidth={isSelected ? 4 : (isHovered ? 3 : 2)}
-          style={{ cursor: 'pointer' }}
+          stroke={isSelected ? "#FFD700" : isHovered ? "#FFFFFF" : house.color}
+          strokeWidth={isSelected ? 4 : isHovered ? 3 : 2}
+          style={{ cursor: "pointer" }}
           onMouseEnter={() => setHoveredHouse(house)}
           onMouseLeave={() => setHoveredHouse(null)}
           onClick={() => handleHouseClick(house)}
@@ -129,7 +145,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           fill="white"
           fontSize="12"
           fontWeight="bold"
-          style={{ pointerEvents: 'none' }}
+          style={{ pointerEvents: "none" }}
         >
           {house.jungianMapping}
         </text>
@@ -154,14 +170,23 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
 
   const getShapeForPhase = (phase: string): number => {
     switch (phase) {
-      case 'cardinal': return 4; // Square
-      case 'fixed': return 6; // Hexagon
-      case 'mutable': return 3; // Triangle
-      default: return 5;
+      case "cardinal":
+        return 4; // Square
+      case "fixed":
+        return 6; // Hexagon
+      case "mutable":
+        return 3; // Triangle
+      default:
+        return 5;
     }
   };
 
-  const getPolygonPoints = (cx: number, cy: number, radius: number, sides: number): string => {
+  const getPolygonPoints = (
+    cx: number,
+    cy: number,
+    radius: number,
+    sides: number,
+  ): string => {
     const points = [];
     for (let i = 0; i < sides; i++) {
       const angle = (i * 2 * Math.PI) / sides - Math.PI / 2;
@@ -169,7 +194,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
       const y = cy + radius * Math.sin(angle);
       points.push(`${x},${y}`);
     }
-    return points.join(' ');
+    return points.join(" ");
   };
 
   const handleHouseClick = (house: HoloflowerHouse) => {
@@ -182,21 +207,24 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
     setDragTarget(house);
   };
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging || !dragTarget || !svgRef.current) return;
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isDragging || !dragTarget || !svgRef.current) return;
 
-    const rect = svgRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+      const rect = svgRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-    const dx = x - centerX;
-    const dy = y - centerY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const intensity = Math.min(1, Math.max(0, (distance - 50) / 150));
+      const dx = x - centerX;
+      const dy = y - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const intensity = Math.min(1, Math.max(0, (distance - 50) / 150));
 
-    holoflower.updateHouseIntensity(dragTarget.id, intensity);
-    setState(holoflower.getState());
-  }, [isDragging, dragTarget, holoflower, centerX, centerY]);
+      holoflower.updateHouseIntensity(dragTarget.id, intensity);
+      setState(holoflower.getState());
+    },
+    [isDragging, dragTarget, holoflower, centerX, centerY],
+  );
 
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -217,11 +245,11 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           fillOpacity={0.3}
           animate={{
             scale: [pulseScale, pulseScale + 0.1, pulseScale],
-            opacity: [0.3, 0.5, 0.3]
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
             duration: 3 / animationSpeed,
-            repeat: Infinity
+            repeat: Infinity,
           }}
         />
 
@@ -235,7 +263,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           transition={{
             duration: 60 / animationSpeed,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
         />
 
@@ -264,7 +292,11 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
     );
   };
 
-  const createSacredGeometryPath = (cx: number, cy: number, radius: number): string => {
+  const createSacredGeometryPath = (
+    cx: number,
+    cy: number,
+    radius: number,
+  ): string => {
     const points = 12;
     const path = [];
 
@@ -283,14 +315,14 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
       path.push(`L ${x2} ${y2}`);
     }
 
-    return path.join(' ') + ' Z';
+    return path.join(" ") + " Z";
   };
 
   const renderConnections = () => {
     return state.activeTransformations.map((transformation, index) => {
-      const [fromId, toId] = transformation.split('->');
-      const fromHouse = state.houses.find(h => h.id === fromId);
-      const toHouse = state.houses.find(h => h.id === toId);
+      const [fromId, toId] = transformation.split("->");
+      const fromHouse = state.houses.find((h) => h.id === fromId);
+      const toHouse = state.houses.find((h) => h.id === toId);
 
       if (!fromHouse || !toHouse) return null;
 
@@ -315,7 +347,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           transition={{
             duration: 2 * animationSpeed,
             repeat: Infinity,
-            repeatType: "reverse"
+            repeatType: "reverse",
           }}
         />
       );
@@ -326,7 +358,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
     <div className="holoflower-container">
       <div className="controls">
         <button onClick={() => setShowShadows(!showShadows)}>
-          {showShadows ? 'Hide' : 'Show'} Shadows
+          {showShadows ? "Hide" : "Show"} Shadows
         </button>
         <button onClick={() => holoflower.integrateAether()}>
           Integrate Aether
@@ -350,8 +382,9 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         style={{
-          background: 'radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)',
-          borderRadius: '50%'
+          background:
+            "radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)",
+          borderRadius: "50%",
         }}
       >
         <defs>
@@ -369,10 +402,7 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
             refY="3"
             orient="auto"
           >
-            <polygon
-              points="0 0, 10 3, 0 6"
-              fill="#FFD700"
-            />
+            <polygon points="0 0, 10 3, 0 6" fill="#FFD700" />
           </marker>
         </defs>
 
@@ -383,7 +413,9 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
 
       {selectedHouse && (
         <div className="house-details">
-          <h3>{selectedHouse.element} - {selectedHouse.phase}</h3>
+          <h3>
+            {selectedHouse.element} - {selectedHouse.phase}
+          </h3>
           <p>Function: {selectedHouse.jungianMapping}</p>
           <p>Intensity: {Math.round(selectedHouse.intensity * 100)}%</p>
           {selectedHouse.shadowAspect && (
@@ -412,8 +444,8 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
         .controls button {
           padding: 8px 16px;
           background: #2a2a3e;
-          border: 1px solid #FFD700;
-          color: #FFD700;
+          border: 1px solid #ffd700;
+          color: #ffd700;
           border-radius: 4px;
           cursor: pointer;
           transition: all 0.3s;
@@ -431,13 +463,13 @@ export const HoloflowerVisualization: React.FC<HoloflowerVisualizationProps> = (
           background: rgba(42, 42, 62, 0.9);
           padding: 20px;
           border-radius: 8px;
-          border: 1px solid #FFD700;
+          border: 1px solid #ffd700;
           min-width: 200px;
         }
 
         .house-details h3 {
           margin: 0 0 10px 0;
-          color: #FFD700;
+          color: #ffd700;
           text-transform: capitalize;
         }
 

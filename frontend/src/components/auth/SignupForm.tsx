@@ -1,32 +1,35 @@
 // frontend/src/components/auth/SignupForm.tsx
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface SignupFormProps {
   onSwitchToLogin: () => void;
   onSuccess?: () => void;
 }
 
-const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) => {
+const SignupForm: React.FC<SignupFormProps> = ({
+  onSwitchToLogin,
+  onSuccess,
+}) => {
   const { signUp } = useAuth();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
   const validateForm = () => {
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError("Password must be at least 6 characters");
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return false;
     }
     return true;
@@ -34,16 +37,19 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!validateForm()) return;
 
     setLoading(true);
 
-    const { data, error: authError } = await signUp(formData.email, formData.password);
+    const { data, error: authError } = await signUp(
+      formData.email,
+      formData.password,
+    );
 
     if (authError) {
-      setError(authError.message || 'Failed to create account');
+      setError(authError.message || "Failed to create account");
     } else if (data.user) {
       if (data.user.email_confirmed_at) {
         // User is immediately confirmed
@@ -68,8 +74,18 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
         >
           <div className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-8">
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-8 h-8 text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
 
@@ -78,8 +94,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
             </h2>
 
             <p className="text-gray-300 mb-6 leading-relaxed">
-              We've sent a confirmation link to <strong>{formData.email}</strong>.
-              Click the link to activate your account and begin your Oracle journey.
+              We've sent a confirmation link to{" "}
+              <strong>{formData.email}</strong>. Click the link to activate your
+              account and begin your Oracle journey.
             </p>
 
             <button
@@ -120,7 +137,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="your@email.com"
                 className="w-full px-4 py-3 bg-[#0E0F1B] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
                 required
@@ -134,15 +153,15 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
               <input
                 type="password"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 placeholder="Create a strong password"
                 className="w-full px-4 py-3 bg-[#0E0F1B] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
                 required
                 minLength={6}
               />
-              <p className="text-xs text-gray-500 mt-1">
-                Minimum 6 characters
-              </p>
+              <p className="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
             </div>
 
             <div>
@@ -152,7 +171,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
               <input
                 type="password"
                 value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, confirmPassword: e.target.value })
+                }
                 placeholder="Confirm your password"
                 className="w-full px-4 py-3 bg-[#0E0F1B] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
                 required
@@ -170,19 +191,20 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onSuccess }) =
               disabled={loading}
               className="w-full bg-[#F6E27F] text-[#0E0F1B] py-3 rounded-lg font-medium hover:bg-[#F6E27F]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-gray-700">
             <div className="text-xs text-gray-500 leading-relaxed mb-4">
-              By creating an account, you agree to use this system for personal development
-              and consciousness exploration in alignment with the principles of Spiralogic.
+              By creating an account, you agree to use this system for personal
+              development and consciousness exploration in alignment with the
+              principles of Spiralogic.
             </div>
 
             <div className="text-center">
               <p className="text-gray-400 text-sm">
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <button
                   onClick={onSwitchToLogin}
                   className="text-[#F6E27F] hover:underline"

@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import { isAdmin } from '../middleware/auth';
-import { supabase } from '../../src/lib/supabase';
+import { Router } from "express";
+import { isAdmin } from "../middleware/auth";
+import { supabase } from "../../src/lib/supabase";
 
 const router = Router();
 
@@ -8,7 +8,7 @@ const router = Router();
 router.use(isAdmin);
 
 // Memory endpoint with filtering and pagination
-router.get('/memory', async (req, res) => {
+router.get("/memory", async (req, res) => {
   try {
     const {
       element,
@@ -17,26 +17,24 @@ router.get('/memory', async (req, res) => {
       endDate,
       page = 1,
       limit = 10,
-      sortBy = 'created_at',
-      sortOrder = 'desc'
+      sortBy = "created_at",
+      sortOrder = "desc",
     } = req.query;
 
-    let query = supabase
-      .from('memory_items')
-      .select('*', { count: 'exact' });
+    let query = supabase.from("memory_items").select("*", { count: "exact" });
 
     // Apply filters
     if (element) {
-      query = query.eq('element', element);
+      query = query.eq("element", element);
     }
     if (facet) {
-      query = query.eq('facet', facet);
+      query = query.eq("facet", facet);
     }
     if (startDate) {
-      query = query.gte('created_at', startDate);
+      query = query.gte("created_at", startDate);
     }
     if (endDate) {
-      query = query.lte('created_at', endDate);
+      query = query.lte("created_at", endDate);
     }
 
     // Apply pagination and sorting
@@ -44,7 +42,7 @@ router.get('/memory', async (req, res) => {
     const to = from + Number(limit) - 1;
 
     query = query
-      .order(sortBy as string, { ascending: sortOrder === 'asc' })
+      .order(sortBy as string, { ascending: sortOrder === "asc" })
       .range(from, to);
 
     const { data, error, count } = await query;
@@ -63,26 +61,24 @@ router.get('/memory', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error fetching memory data:', error);
-    res.status(500).json({ error: 'Failed to fetch memory data' });
+    console.error("Error fetching memory data:", error);
+    res.status(500).json({ error: "Failed to fetch memory data" });
   }
 });
 
 // Feedback endpoint with aggregation
-router.get('/feedback', async (req, res) => {
+router.get("/feedback", async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
     // Get feedback data
-    let query = supabase
-      .from('oracle_feedback')
-      .select('*');
+    let query = supabase.from("oracle_feedback").select("*");
 
     if (startDate) {
-      query = query.gte('created_at', startDate);
+      query = query.gte("created_at", startDate);
     }
     if (endDate) {
-      query = query.lte('created_at', endDate);
+      query = query.lte("created_at", endDate);
     }
 
     const { data: feedbackData, error: feedbackError } = await query;
@@ -94,18 +90,26 @@ router.get('/feedback', async (req, res) => {
     // Calculate aggregations
     const aggregations = {
       totalFeedback: feedbackData.length,
-      averageRating: feedbackData.reduce((acc, f) => acc + f.rating, 0) / feedbackData.length,
-      elementalDistribution: feedbackData.reduce((acc, f) => {
-        const element = f.metadata?.element;
-        if (element) {
-          acc[element] = (acc[element] || 0) + 1;
-        }
-        return acc;
-      }, {} as Record<string, number>),
-      ratingDistribution: feedbackData.reduce((acc, f) => {
-        acc[f.rating] = (acc[f.rating] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
+      averageRating:
+        feedbackData.reduce((acc, f) => acc + f.rating, 0) /
+        feedbackData.length,
+      elementalDistribution: feedbackData.reduce(
+        (acc, f) => {
+          const element = f.metadata?.element;
+          if (element) {
+            acc[element] = (acc[element] || 0) + 1;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
+      ratingDistribution: feedbackData.reduce(
+        (acc, f) => {
+          acc[f.rating] = (acc[f.rating] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
     };
 
     res.json({
@@ -113,42 +117,32 @@ router.get('/feedback', async (req, res) => {
       aggregations,
     });
   } catch (error) {
-    console.error('Error fetching feedback data:', error);
-    res.status(500).json({ error: 'Failed to fetch feedback data' });
+    console.error("Error fetching feedback data:", error);
+    res.status(500).json({ error: "Failed to fetch feedback data" });
   }
 });
 
 // System logs endpoint
-router.get('/logs', async (req, res) => {
+router.get("/logs", async (req, res) => {
   try {
-    const {
-      level,
-      startDate,
-      endDate,
-      page = 1,
-      limit = 50,
-    } = req.query;
+    const { level, startDate, endDate, page = 1, limit = 50 } = req.query;
 
-    let query = supabase
-      .from('system_logs')
-      .select('*', { count: 'exact' });
+    let query = supabase.from("system_logs").select("*", { count: "exact" });
 
     if (level) {
-      query = query.eq('level', level);
+      query = query.eq("level", level);
     }
     if (startDate) {
-      query = query.gte('timestamp', startDate);
+      query = query.gte("timestamp", startDate);
     }
     if (endDate) {
-      query = query.lte('timestamp', endDate);
+      query = query.lte("timestamp", endDate);
     }
 
     const from = (Number(page) - 1) * Number(limit);
     const to = from + Number(limit) - 1;
 
-    query = query
-      .order('timestamp', { ascending: false })
-      .range(from, to);
+    query = query.order("timestamp", { ascending: false }).range(from, to);
 
     const { data, error, count } = await query;
 
@@ -166,17 +160,17 @@ router.get('/logs', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error fetching system logs:', error);
-    res.status(500).json({ error: 'Failed to fetch system logs' });
+    console.error("Error fetching system logs:", error);
+    res.status(500).json({ error: "Failed to fetch system logs" });
   }
 });
 
 // Configuration endpoints
-router.get('/config', async (_req, res) => {
+router.get("/config", async (_req, res) => {
   try {
     const { data, error } = await supabase
-      .from('system_config')
-      .select('*')
+      .from("system_config")
+      .select("*")
       .single();
 
     if (error) {
@@ -185,15 +179,15 @@ router.get('/config', async (_req, res) => {
 
     res.json(data);
   } catch (error) {
-    console.error('Error fetching system config:', error);
-    res.status(500).json({ error: 'Failed to fetch system config' });
+    console.error("Error fetching system config:", error);
+    res.status(500).json({ error: "Failed to fetch system config" });
   }
 });
 
-router.put('/config', async (req, res) => {
+router.put("/config", async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from('system_config')
+      .from("system_config")
       .upsert({
         ...req.body,
         updated_at: new Date().toISOString(),
@@ -207,8 +201,8 @@ router.put('/config', async (req, res) => {
 
     res.json(data);
   } catch (error) {
-    console.error('Error updating system config:', error);
-    res.status(500).json({ error: 'Failed to update system config' });
+    console.error("Error updating system config:", error);
+    res.status(500).json({ error: "Failed to update system config" });
   }
 });
 

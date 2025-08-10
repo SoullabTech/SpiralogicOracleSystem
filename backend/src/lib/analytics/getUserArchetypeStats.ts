@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from "@/lib/supabaseClient";
 
 export interface ArchetypeStat {
   archetype: string;
@@ -6,11 +6,13 @@ export interface ArchetypeStat {
   element: string;
 }
 
-export const getUserArchetypeStats = async (userId: string): Promise<ArchetypeStat[]> => {
+export const getUserArchetypeStats = async (
+  userId: string,
+): Promise<ArchetypeStat[]> => {
   const { data, error } = await supabase
-    .from('user_phases')
-    .select('archetype, element')
-    .eq('user_id', userId);
+    .from("user_phases")
+    .select("archetype, element")
+    .eq("user_id", userId);
 
   if (error || !data) return [];
 
@@ -25,9 +27,11 @@ export const getUserArchetypeStats = async (userId: string): Promise<ArchetypeSt
     }
   });
 
-  return Array.from(countMap.entries()).map(([archetype, { count, element }]) => ({
-    archetype,
-    count,
-    element,
-  }));
+  return Array.from(countMap.entries()).map(
+    ([archetype, { count, element }]) => ({
+      archetype,
+      count,
+      element,
+    }),
+  );
 };

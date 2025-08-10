@@ -1,7 +1,7 @@
-import type { Session, MemoryItem, SessionStats } from '../types';
-import { SessionService } from '../services/sessionService';
-import { MemoryService } from '../services/memoryService';
-import { MetaService } from '../services/metaService';
+import type { Session, MemoryItem, SessionStats } from "../types";
+import { SessionService } from "../services/sessionService";
+import { MemoryService } from "../services/memoryService";
+import { MetaService } from "../services/metaService";
 
 export class FlowManager {
   private sessionService: SessionService;
@@ -23,25 +23,25 @@ export class FlowManager {
       // Initialize with a starting memory
       const initialMemory = await this.memoryService.storeMemory({
         id: Math.random().toString(36).substring(7),
-        content: 'Learning flow initiated',
+        content: "Learning flow initiated",
         clientId,
-        metadata: MetaService.createMeta()
+        metadata: MetaService.createMeta(),
       });
 
       return {
         session,
-        initialMemory
+        initialMemory,
       };
     } catch (error) {
-      console.error('Error in learning flow:', error);
-      throw new Error('Failed to start learning flow');
+      console.error("Error in learning flow:", error);
+      throw new Error("Failed to start learning flow");
     }
   }
 
   async processInteractionFlow(
     clientId: string,
     sessionId: string,
-    content: string
+    content: string,
   ): Promise<{
     memory: MemoryItem;
     insights: string[];
@@ -52,7 +52,7 @@ export class FlowManager {
         id: Math.random().toString(36).substring(7),
         content,
         clientId,
-        metadata: MetaService.createMeta()
+        metadata: MetaService.createMeta(),
       });
 
       // Generate insights based on stored memories
@@ -60,17 +60,17 @@ export class FlowManager {
 
       return {
         memory,
-        insights
+        insights,
       };
     } catch (error) {
-      console.error('Error in interaction flow:', error);
-      throw new Error('Failed to process interaction');
+      console.error("Error in interaction flow:", error);
+      throw new Error("Failed to process interaction");
     }
   }
 
   async completeLearningFlow(
     clientId: string,
-    sessionId: string
+    sessionId: string,
   ): Promise<{
     sessionStats: SessionStats;
     finalInsights: string[];
@@ -82,16 +82,16 @@ export class FlowManager {
       // Get final statistics and insights
       const [sessionStats, finalInsights] = await Promise.all([
         this.sessionService.getSessionStats(clientId),
-        this.memoryService.getMemoryInsights(clientId)
+        this.memoryService.getMemoryInsights(clientId),
       ]);
 
       return {
         sessionStats,
-        finalInsights
+        finalInsights,
       };
     } catch (error) {
-      console.error('Error completing learning flow:', error);
-      throw new Error('Failed to complete learning flow');
+      console.error("Error completing learning flow:", error);
+      throw new Error("Failed to complete learning flow");
     }
   }
 }

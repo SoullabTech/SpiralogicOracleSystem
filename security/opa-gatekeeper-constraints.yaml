@@ -98,7 +98,7 @@ spec:
         kinds: ["Pod"]
     namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
   parameters:
-    allowedUsers: [1001, 65532, 65534]  # spiralogic, nonroot, nobody
+    allowedUsers: [1001, 65532, 65534] # spiralogic, nonroot, nobody
     allowedGroups: [1001, 65532, 65534]
     forbiddenCapabilities:
       - "SYS_ADMIN"
@@ -208,8 +208,8 @@ spec:
         kinds: ["Pod"]
     namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
   parameters:
-    maxCpu: "2000m"  # 2 CPU cores
-    maxMemory: "4Gi"  # 4GB RAM
+    maxCpu: "2000m" # 2 CPU cores
+    maxMemory: "4Gi" # 4GB RAM
     maxEphemeralStorage: "10Gi"
 
 ---
@@ -364,8 +364,8 @@ spec:
     namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
   parameters:
     requireNetworkPolicy: true
-    allowedIngressPorts: [8080, 8443, 7001, 7002, 7003, 7004, 7005]  # Oracle + elemental agents
-    allowedEgressPorts: [443, 53, 5432, 6379, 27017]  # HTTPS, DNS, DBs
+    allowedIngressPorts: [8080, 8443, 7001, 7002, 7003, 7004, 7005] # Oracle + elemental agents
+    allowedEgressPorts: [443, 53, 5432, 6379, 27017] # HTTPS, DNS, DBs
 
 ---
 # ConstraintTemplate for consciousness-specific security
@@ -470,8 +470,8 @@ spec:
   match:
     scope: Namespaced
     kinds:
-    - apiGroups: [""]
-      kinds: ["Pod"]
+      - apiGroups: [""]
+        kinds: ["Pod"]
     namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
   location: "spec.securityContext"
   parameters:
@@ -493,8 +493,8 @@ spec:
   match:
     scope: Namespaced
     kinds:
-    - apiGroups: [""]
-      kinds: ["Pod"]
+      - apiGroups: [""]
+        kinds: ["Pod"]
     namespaces: ["spiralogic", "spiralogic-prod", "spiralogic-staging"]
   location: "spec.containers[name: *].securityContext"
   parameters:

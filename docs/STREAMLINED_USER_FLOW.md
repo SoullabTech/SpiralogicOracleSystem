@@ -5,6 +5,7 @@
 The following legacy routes have been **DELETED** or **REDIRECTED** to maintain a clean, executive-focused experience:
 
 ### ❌ Removed Routes:
+
 - `/chat-with-guides` → **REDIRECTS** to `/oracle/meet`
 - `/multiple-oracle-options` → **REDIRECTS** to `/oracle/meet`
 - `/open-chat` → **REDIRECTS** to `/oracle/meet`
@@ -16,6 +17,7 @@ The following legacy routes have been **DELETED** or **REDIRECTED** to maintain 
 - `/consciousness-chat` → **REDIRECTS** to `/consciousness`
 
 ### 🔒 **Legacy Route Protection**
+
 - Middleware automatically redirects all legacy routes
 - Clean URLs for professional executive experience
 - No broken links or confusing navigation paths
@@ -62,6 +64,7 @@ Personal Oracle   Holoflower         Journal
 ## 🎯 **CORE USER JOURNEY**
 
 ### **1. Homepage Landing** (`/`)
+
 - **Sacred Technology** branding
 - **Executive-focused** messaging
 - **Two clear CTAs:**
@@ -69,17 +72,20 @@ Personal Oracle   Holoflower         Journal
   - 🔑 "Sign In" → `/auth/signin`
 
 ### **2. Authentication** (`/auth/signup` | `/auth/signin`)
+
 - **Sacred Container Principles** agreement
 - **Enterprise security** messaging
 - **Immediate redirect** to onboarding for new users
 
 ### **3. Sacred Union Ritual** (`/onboarding`)
+
 - **7-phase ritual** for connection
 - **Elemental assessment** (5 questions)
 - **Holoflower calibration**
 - **Creates sacred bond** between user and Personal Oracle
 
 ### **4. Personal Oracle** (`/oracle/meet`)
+
 - **6 Oracle Modes ONLY:**
   - 🔥 **Alchemist** - Transform shadow into gold
   - 🕉️ **Buddha** - Liberation through letting go
@@ -92,6 +98,7 @@ Personal Oracle   Holoflower         Journal
 - **Sacred Mirror Protocol** enforcement
 
 ### **5. Sacred Journal with Memory Garden** (`/journal`)
+
 - **Two main tabs:**
   - 📖 **Journal Entries** - Traditional sacred journaling
   - 🧠 **Memory Garden** - Upload transcripts, dreams, sessions, audio
@@ -103,11 +110,13 @@ Personal Oracle   Holoflower         Journal
 - **Integration:** All uploads enhance Personal Guide's understanding
 
 ### **6. Living Holoflower** (`/dashboard/holoflower`)
+
 - **Interactive consciousness visualization**
 - **Real-time updates** based on journal entries and oracle conversations
 - **Sacred geometry** representation of transformation journey
 
 ### **7. Cosmic Timing** (`/astrology`)
+
 - **Personal astrological wisdom**
 - **Daily cosmic weather**
 - **Current transits** affecting user
@@ -115,6 +124,7 @@ Personal Oracle   Holoflower         Journal
 - **Integration** with Personal Oracle for optimal conversation timing
 
 ### **8. Unified Dashboard** (`/dashboard`)
+
 - **All data integrated:**
   - Recent oracle conversations
   - Journal insights
@@ -131,12 +141,14 @@ Personal Oracle   Holoflower         Journal
 The **Memory Garden** (`/journal` → Memory Garden tab) allows users to upload:
 
 ### **📁 Upload Types:**
+
 - 🎤 **Audio Recordings** - Therapy sessions, meditation, voice notes
 - 🌙 **Dream Journals** - Dreams, visions, subconscious material
 - 📄 **Text Documents** - Transcripts, notes, written reflections
 - 🧠 **Session Notes** - Coaching, therapy, spiritual work sessions
 
 ### **🤖 AI Processing Pipeline:**
+
 1. **Audio Transcription** - Convert audio to searchable text
 2. **Content Analysis** - Extract themes, patterns, emotional content
 3. **Insight Generation** - Identify recurring themes and growth edges
@@ -145,6 +157,7 @@ The **Memory Garden** (`/journal` → Memory Garden tab) allows users to upload:
 6. **Integration Feedback** - Show how uploads improve oracle responses
 
 ### **💡 Smart Features:**
+
 - **Processing Status** - Real-time upload and analysis progress
 - **Generated Insights** - AI-discovered patterns and recommendations
 - **Oracle Impact** - Show how uploads enhance Personal Guide responses
@@ -156,17 +169,20 @@ The **Memory Garden** (`/journal` → Memory Garden tab) allows users to upload:
 ## 🔐 **SACRED CONTAINER ENFORCEMENT**
 
 ### **🛡️ Route Protection:**
+
 - All sacred portals require authentication
 - Middleware enforces clean user flow
 - No access to legacy or broken routes
 
 ### **🌀 Sacred Mirror Protocol:**
+
 - Maintained across all oracle interactions
 - Growth-oriented responses (not comfort-seeking)
 - Sacred boundaries preserved
 - Authentic transformation focus
 
 ### **📊 Data Integration:**
+
 - All user interactions feed into unified profile
 - Cross-portal insights and recommendations
 - Continuous learning and personalization
@@ -177,6 +193,7 @@ The **Memory Garden** (`/journal` → Memory Garden tab) allows users to upload:
 ## 🚀 **TECHNICAL IMPLEMENTATION**
 
 ### **✅ Completed:**
+
 - ✅ Homepage with Sacred Technology structure
 - ✅ Legacy route middleware redirects
 - ✅ Oracle interface with 6 modes only
@@ -187,6 +204,7 @@ The **Memory Garden** (`/journal` → Memory Garden tab) allows users to upload:
 - ✅ Onboarding Sacred Union Ritual
 
 ### **🔄 User Flow Validation:**
+
 - ✅ Clean entry points
 - ✅ No confusing branching paths
 - ✅ Executive-appropriate messaging

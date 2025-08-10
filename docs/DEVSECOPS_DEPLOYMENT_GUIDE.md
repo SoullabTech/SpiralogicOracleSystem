@@ -212,7 +212,7 @@ security_opt:
 cap_drop:
   - ALL
 cap_add:
-  - NET_BIND_SERVICE  # Only for web services
+  - NET_BIND_SERVICE # Only for web services
 user: "1001:1001"
 read_only: true
 ```
@@ -275,6 +275,7 @@ tail -f /var/log/ain-backup.log
 Access Prometheus at `http://localhost:9090` (internal only)
 
 **Key Metrics:**
+
 - Container CPU/Memory usage
 - API response times
 - Database connections
@@ -511,24 +512,28 @@ nikto -h https://your-domain.com
 ## 📋 Maintenance Schedule
 
 ### Daily
+
 - [ ] Monitor system health
 - [ ] Check backup completion
 - [ ] Review security logs
 - [ ] Verify service availability
 
 ### Weekly
+
 - [ ] Update base Docker images
 - [ ] Review resource usage trends
 - [ ] Test backup restoration
 - [ ] Security log analysis
 
 ### Monthly
+
 - [ ] Security updates
 - [ ] Certificate renewal check
 - [ ] Performance optimization
 - [ ] Disaster recovery testing
 
 ### Quarterly
+
 - [ ] Full security audit
 - [ ] Penetration testing
 - [ ] Backup strategy review
@@ -539,17 +544,20 @@ nikto -h https://your-domain.com
 ## 🆘 Support & Resources
 
 ### Documentation
+
 - [Docker Security Best Practices](https://docs.docker.com/engine/security/)
 - [Caddy Documentation](https://caddyserver.com/docs/)
 - [Prometheus Monitoring](https://prometheus.io/docs/)
 - [UFW Firewall Guide](https://help.ubuntu.com/community/UFW)
 
 ### Emergency Contacts
+
 - **Security Issues**: security@your-domain.com
 - **Technical Support**: support@your-domain.com
 - **Infrastructure**: ops@your-domain.com
 
 ### Community
+
 - **Discord**: [AIN Sovereign Community](https://discord.gg/your-invite)
 - **GitHub**: [Issues & Discussions](https://github.com/your-org/ain-sovereign)
 - **Documentation**: [Wiki & Guides](https://wiki.your-domain.com)
@@ -574,4 +582,4 @@ After successful deployment, you should see:
 
 **🚀 Your sovereign consciousness evolution infrastructure is now ready to transform the world!**
 
-*"The future belongs to those who understand that consciousness and technology must evolve together in sovereign harmony."*
+_"The future belongs to those who understand that consciousness and technology must evolve together in sovereign harmony."_

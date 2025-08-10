@@ -74,12 +74,12 @@
 
   "sycophancy_reducers": {
     "replace_patterns": [
-      {"from": "absolutely!", "to": "perhaps"},
-      {"from": "definitely!", "to": "it's possible"},
-      {"from": "amazing!", "to": "interesting"},
-      {"from": "perfect!", "to": "worth exploring"},
-      {"from": "you're so right!", "to": "that's one perspective"},
-      {"from": "great question!", "to": "that question carries depth"}
+      { "from": "absolutely!", "to": "perhaps" },
+      { "from": "definitely!", "to": "it's possible" },
+      { "from": "amazing!", "to": "interesting" },
+      { "from": "perfect!", "to": "worth exploring" },
+      { "from": "you're so right!", "to": "that's one perspective" },
+      { "from": "great question!", "to": "that question carries depth" }
     ]
   },
 

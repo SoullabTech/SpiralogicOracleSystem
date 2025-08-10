@@ -3,11 +3,11 @@
  * Placeholder implementation for message routing logic
  */
 
-import { SpiralogicEvent, ElementalService } from '../types';
+import { SpiralogicEvent, ElementalService } from "../types";
 
 export interface RoutingDecision {
   target: ElementalService;
-  channel: 'direct' | 'broadcast' | 'element-specific';
+  channel: "direct" | "broadcast" | "element-specific";
   path: string[];
   confidence: number;
   intent: string;
@@ -22,11 +22,11 @@ export class MessageRouter {
     // Stub implementation - would use intelligent routing logic
     return {
       target: ElementalService.Air,
-      channel: 'direct',
-      path: ['air'],
+      channel: "direct",
+      path: ["air"],
       confidence: 0.8,
-      intent: 'communication',
-      requiresTracking: false
+      intent: "communication",
+      requiresTracking: false,
     };
   }
 

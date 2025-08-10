@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 
 interface ConsciousnessProfile {
   name: string;
@@ -16,63 +16,128 @@ interface ConsciousnessProfile {
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [profile, setProfile] = useState<ConsciousnessProfile>({
-    name: '',
+    name: "",
     spiritualPath: [],
     primaryChallenges: [],
     guidanceTypes: [],
     preferredAgents: [],
-    experienceLevel: '',
-    intentions: ''
+    experienceLevel: "",
+    intentions: "",
   });
   const [completed, setCompleted] = useState(false);
 
   const totalSteps = 6;
 
   const spiritualPaths = [
-    'Buddhism', 'Christianity', 'Islam', 'Judaism', 'Hinduism', 'Taoism',
-    'Indigenous Traditions', 'New Age', 'Mysticism', 'Secular Spirituality',
-    'Shamanism', 'Paganism', 'Exploring/Uncertain'
+    "Buddhism",
+    "Christianity",
+    "Islam",
+    "Judaism",
+    "Hinduism",
+    "Taoism",
+    "Indigenous Traditions",
+    "New Age",
+    "Mysticism",
+    "Secular Spirituality",
+    "Shamanism",
+    "Paganism",
+    "Exploring/Uncertain",
   ];
 
   const challenges = [
-    'Finding life purpose', 'Emotional healing', 'Creative blocks',
-    'Relationship issues', 'Career transitions', 'Anxiety & stress',
-    'Depression & sadness', 'Spiritual awakening', 'Shadow work',
-    'Self-worth & confidence', 'Decision making', 'Communication'
+    "Finding life purpose",
+    "Emotional healing",
+    "Creative blocks",
+    "Relationship issues",
+    "Career transitions",
+    "Anxiety & stress",
+    "Depression & sadness",
+    "Spiritual awakening",
+    "Shadow work",
+    "Self-worth & confidence",
+    "Decision making",
+    "Communication",
   ];
 
   const guidanceTypes = [
-    'Practical advice', 'Spiritual wisdom', 'Emotional support',
-    'Creative inspiration', 'Relationship guidance', 'Career direction',
-    'Healing practices', 'Meditation techniques', 'Shadow integration',
-    'Life purpose clarity', 'Energy management', 'Manifestation'
+    "Practical advice",
+    "Spiritual wisdom",
+    "Emotional support",
+    "Creative inspiration",
+    "Relationship guidance",
+    "Career direction",
+    "Healing practices",
+    "Meditation techniques",
+    "Shadow integration",
+    "Life purpose clarity",
+    "Energy management",
+    "Manifestation",
   ];
 
   const agents = [
-    { key: 'fire', name: 'Fire Agent', emoji: '🔥', description: 'Vision, creativity, transformation' },
-    { key: 'water', name: 'Water Agent', emoji: '🌊', description: 'Emotional wisdom, flow' },
-    { key: 'earth', name: 'Earth Agent', emoji: '🌍', description: 'Grounding, practical guidance' },
-    { key: 'air', name: 'Air Agent', emoji: '💨', description: 'Mental clarity, communication' }
+    {
+      key: "fire",
+      name: "Fire Agent",
+      emoji: "🔥",
+      description: "Vision, creativity, transformation",
+    },
+    {
+      key: "water",
+      name: "Water Agent",
+      emoji: "🌊",
+      description: "Emotional wisdom, flow",
+    },
+    {
+      key: "earth",
+      name: "Earth Agent",
+      emoji: "🌍",
+      description: "Grounding, practical guidance",
+    },
+    {
+      key: "air",
+      name: "Air Agent",
+      emoji: "💨",
+      description: "Mental clarity, communication",
+    },
   ];
 
   const experienceLevels = [
-    { key: 'beginner', label: 'New to consciousness work', description: 'Just starting my spiritual journey' },
-    { key: 'intermediate', label: 'Some experience', description: 'Have practiced meditation, therapy, or spiritual work' },
-    { key: 'advanced', label: 'Experienced practitioner', description: 'Regular spiritual practice and inner work' },
-    { key: 'expert', label: 'Teacher/Guide', description: 'I guide others in consciousness development' }
+    {
+      key: "beginner",
+      label: "New to consciousness work",
+      description: "Just starting my spiritual journey",
+    },
+    {
+      key: "intermediate",
+      label: "Some experience",
+      description: "Have practiced meditation, therapy, or spiritual work",
+    },
+    {
+      key: "advanced",
+      label: "Experienced practitioner",
+      description: "Regular spiritual practice and inner work",
+    },
+    {
+      key: "expert",
+      label: "Teacher/Guide",
+      description: "I guide others in consciousness development",
+    },
   ];
 
-  const updateArrayField = (field: keyof ConsciousnessProfile, value: string) => {
-    setProfile(prev => ({
+  const updateArrayField = (
+    field: keyof ConsciousnessProfile,
+    value: string,
+  ) => {
+    setProfile((prev) => ({
       ...prev,
       [field]: (prev[field] as string[]).includes(value)
-        ? (prev[field] as string[]).filter(item => item !== value)
-        : [...(prev[field] as string[]), value]
+        ? (prev[field] as string[]).filter((item) => item !== value)
+        : [...(prev[field] as string[]), value],
     }));
   };
 
   const updateField = (field: keyof ConsciousnessProfile, value: string) => {
-    setProfile(prev => ({ ...prev, [field]: value }));
+    setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
   const nextStep = () => {
@@ -91,7 +156,7 @@ export default function OnboardingPage() {
 
   const handleComplete = async () => {
     // Save profile to localStorage for demo purposes
-    localStorage.setItem('consciousness-profile', JSON.stringify(profile));
+    localStorage.setItem("consciousness-profile", JSON.stringify(profile));
     setCompleted(true);
   };
 
@@ -106,10 +171,14 @@ export default function OnboardingPage() {
           </div>
           <h1 className="text-4xl font-bold mb-4">Welcome, {profile.name}!</h1>
           <p className="text-lg opacity-80 mb-8">
-            Your consciousness profile has been created. The oracle agents are now calibrated to your unique journey.
+            Your consciousness profile has been created. The oracle agents are
+            now calibrated to your unique journey.
           </p>
           <div className="space-y-4">
-            <Link href="/dashboard/oracle-beta" className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block text-lg">
+            <Link
+              href="/dashboard/oracle-beta"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block text-lg"
+            >
               🔮 Begin Oracle Experience
             </Link>
             <div className="text-sm opacity-60">
@@ -129,7 +198,9 @@ export default function OnboardingPage() {
           <div className="mb-8">
             <div className="flex justify-between text-sm mb-2">
               <span>Consciousness Profile Setup</span>
-              <span>{step} of {totalSteps}</span>
+              <span>
+                {step} of {totalSteps}
+              </span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
               <div
@@ -143,14 +214,21 @@ export default function OnboardingPage() {
             {/* Step 1: Name */}
             {step === 1 && (
               <div className="text-center">
-                <h2 className="text-2xl font-bold mb-4">Welcome to Soullab Oracle</h2>
-                <p className="opacity-80 mb-6">Let's create your consciousness profile for personalized guidance</p>
+                <h2 className="text-2xl font-bold mb-4">
+                  Welcome to Soullab Oracle
+                </h2>
+                <p className="opacity-80 mb-6">
+                  Let's create your consciousness profile for personalized
+                  guidance
+                </p>
                 <div className="text-left">
-                  <label className="block text-sm font-medium mb-2">What would you like the oracle to call you?</label>
+                  <label className="block text-sm font-medium mb-2">
+                    What would you like the oracle to call you?
+                  </label>
                   <input
                     type="text"
                     value={profile.name}
-                    onChange={(e) => updateField('name', e.target.value)}
+                    onChange={(e) => updateField("name", e.target.value)}
                     placeholder="Enter your preferred name"
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50"
                   />
@@ -162,16 +240,19 @@ export default function OnboardingPage() {
             {step === 2 && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Your Spiritual Path</h2>
-                <p className="opacity-80 mb-6">Select traditions or paths that resonate with you (choose any that apply)</p>
+                <p className="opacity-80 mb-6">
+                  Select traditions or paths that resonate with you (choose any
+                  that apply)
+                </p>
                 <div className="grid grid-cols-2 gap-3">
                   {spiritualPaths.map((path) => (
                     <button
                       key={path}
-                      onClick={() => updateArrayField('spiritualPath', path)}
+                      onClick={() => updateArrayField("spiritualPath", path)}
                       className={`p-3 rounded-lg border text-left transition ${
                         profile.spiritualPath.includes(path)
-                          ? 'bg-yellow-400/20 border-yellow-400/50'
-                          : 'bg-white/5 border-white/10 hover:bg-white/10'
+                          ? "bg-yellow-400/20 border-yellow-400/50"
+                          : "bg-white/5 border-white/10 hover:bg-white/10"
                       }`}
                     >
                       <span className="text-sm">{path}</span>
@@ -185,16 +266,20 @@ export default function OnboardingPage() {
             {step === 3 && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Areas for Guidance</h2>
-                <p className="opacity-80 mb-6">What areas of life would you most like guidance on?</p>
+                <p className="opacity-80 mb-6">
+                  What areas of life would you most like guidance on?
+                </p>
                 <div className="grid grid-cols-2 gap-3">
                   {challenges.map((challenge) => (
                     <button
                       key={challenge}
-                      onClick={() => updateArrayField('primaryChallenges', challenge)}
+                      onClick={() =>
+                        updateArrayField("primaryChallenges", challenge)
+                      }
                       className={`p-3 rounded-lg border text-left transition ${
                         profile.primaryChallenges.includes(challenge)
-                          ? 'bg-yellow-400/20 border-yellow-400/50'
-                          : 'bg-white/5 border-white/10 hover:bg-white/10'
+                          ? "bg-yellow-400/20 border-yellow-400/50"
+                          : "bg-white/5 border-white/10 hover:bg-white/10"
                       }`}
                     >
                       <span className="text-sm">{challenge}</span>
@@ -208,16 +293,18 @@ export default function OnboardingPage() {
             {step === 4 && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Types of Guidance</h2>
-                <p className="opacity-80 mb-6">What kinds of guidance do you find most helpful?</p>
+                <p className="opacity-80 mb-6">
+                  What kinds of guidance do you find most helpful?
+                </p>
                 <div className="grid grid-cols-2 gap-3">
                   {guidanceTypes.map((type) => (
                     <button
                       key={type}
-                      onClick={() => updateArrayField('guidanceTypes', type)}
+                      onClick={() => updateArrayField("guidanceTypes", type)}
                       className={`p-3 rounded-lg border text-left transition ${
                         profile.guidanceTypes.includes(type)
-                          ? 'bg-yellow-400/20 border-yellow-400/50'
-                          : 'bg-white/5 border-white/10 hover:bg-white/10'
+                          ? "bg-yellow-400/20 border-yellow-400/50"
+                          : "bg-white/5 border-white/10 hover:bg-white/10"
                       }`}
                     >
                       <span className="text-sm">{type}</span>
@@ -230,24 +317,33 @@ export default function OnboardingPage() {
             {/* Step 5: Preferred Agents */}
             {step === 5 && (
               <div>
-                <h2 className="text-2xl font-bold mb-4">Elemental Preferences</h2>
-                <p className="opacity-80 mb-6">Which elemental energies feel most aligned with your current needs?</p>
+                <h2 className="text-2xl font-bold mb-4">
+                  Elemental Preferences
+                </h2>
+                <p className="opacity-80 mb-6">
+                  Which elemental energies feel most aligned with your current
+                  needs?
+                </p>
                 <div className="space-y-3">
                   {agents.map((agent) => (
                     <button
                       key={agent.key}
-                      onClick={() => updateArrayField('preferredAgents', agent.key)}
+                      onClick={() =>
+                        updateArrayField("preferredAgents", agent.key)
+                      }
                       className={`w-full p-4 rounded-lg border text-left transition ${
                         profile.preferredAgents.includes(agent.key)
-                          ? 'bg-yellow-400/20 border-yellow-400/50'
-                          : 'bg-white/5 border-white/10 hover:bg-white/10'
+                          ? "bg-yellow-400/20 border-yellow-400/50"
+                          : "bg-white/5 border-white/10 hover:bg-white/10"
                       }`}
                     >
                       <div className="flex items-center">
                         <span className="text-2xl mr-3">{agent.emoji}</span>
                         <div>
                           <div className="font-semibold">{agent.name}</div>
-                          <div className="text-sm opacity-80">{agent.description}</div>
+                          <div className="text-sm opacity-80">
+                            {agent.description}
+                          </div>
                         </div>
                       </div>
                     </button>
@@ -259,33 +355,45 @@ export default function OnboardingPage() {
             {/* Step 6: Experience Level & Intentions */}
             {step === 6 && (
               <div>
-                <h2 className="text-2xl font-bold mb-4">Experience & Intentions</h2>
+                <h2 className="text-2xl font-bold mb-4">
+                  Experience & Intentions
+                </h2>
 
                 <div className="mb-6">
-                  <p className="opacity-80 mb-4">Your experience level with consciousness work:</p>
+                  <p className="opacity-80 mb-4">
+                    Your experience level with consciousness work:
+                  </p>
                   <div className="space-y-3">
                     {experienceLevels.map((level) => (
                       <button
                         key={level.key}
-                        onClick={() => updateField('experienceLevel', level.key)}
+                        onClick={() =>
+                          updateField("experienceLevel", level.key)
+                        }
                         className={`w-full p-3 rounded-lg border text-left transition ${
                           profile.experienceLevel === level.key
-                            ? 'bg-yellow-400/20 border-yellow-400/50'
-                            : 'bg-white/5 border-white/10 hover:bg-white/10'
+                            ? "bg-yellow-400/20 border-yellow-400/50"
+                            : "bg-white/5 border-white/10 hover:bg-white/10"
                         }`}
                       >
-                        <div className="font-semibold text-sm">{level.label}</div>
-                        <div className="text-xs opacity-80">{level.description}</div>
+                        <div className="font-semibold text-sm">
+                          {level.label}
+                        </div>
+                        <div className="text-xs opacity-80">
+                          {level.description}
+                        </div>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">What do you hope to gain from this oracle experience?</label>
+                  <label className="block text-sm font-medium mb-2">
+                    What do you hope to gain from this oracle experience?
+                  </label>
                   <textarea
                     value={profile.intentions}
-                    onChange={(e) => updateField('intentions', e.target.value)}
+                    onChange={(e) => updateField("intentions", e.target.value)}
                     placeholder="Share your intentions, goals, or what you're seeking guidance about..."
                     rows={4}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50 resize-none"
@@ -313,14 +421,17 @@ export default function OnboardingPage() {
                 }
                 className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {step === totalSteps ? 'Complete Setup' : 'Next →'}
+                {step === totalSteps ? "Complete Setup" : "Next →"}
               </button>
             </div>
           </div>
 
           {/* Skip Option */}
           <div className="text-center mt-6">
-            <Link href="/dashboard/oracle-beta" className="text-yellow-400/60 hover:text-yellow-400 underline text-sm">
+            <Link
+              href="/dashboard/oracle-beta"
+              className="text-yellow-400/60 hover:text-yellow-400 underline text-sm"
+            >
               Skip setup and explore →
             </Link>
           </div>

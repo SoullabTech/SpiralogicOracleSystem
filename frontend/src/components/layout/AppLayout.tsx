@@ -1,15 +1,19 @@
 // frontend/src/components/layout/AppLayout.tsx
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { useOraclePreferences } from '../../hooks/useOraclePreferences';
-import { BeautifulOnboarding } from '../onboarding';
-import { CoreDashboard } from '../core';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useAuth } from "../../contexts/AuthContext";
+import { useOraclePreferences } from "../../hooks/useOraclePreferences";
+import { BeautifulOnboarding } from "../onboarding";
+import { CoreDashboard } from "../core";
 
 const AppLayout: React.FC = () => {
   const { user, signOut, loading: authLoading } = useAuth();
-  const { hasPreferences, loading: configLoading, preferences } = useOraclePreferences();
+  const {
+    hasPreferences,
+    loading: configLoading,
+    preferences,
+  } = useOraclePreferences();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleSignOut = async () => {
@@ -69,8 +73,18 @@ const AppLayout: React.FC = () => {
                   </span>
                 </div>
                 <span className="text-sm">{user?.email}</span>
-                <svg className={`w-4 h-4 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  className={`w-4 h-4 transition-transform ${showUserMenu ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
 
@@ -85,7 +99,9 @@ const AppLayout: React.FC = () => {
                   <div className="py-1">
                     <div className="px-4 py-2 border-b border-gray-700">
                       <p className="text-sm text-gray-400">Signed in as</p>
-                      <p className="text-sm text-white truncate">{user?.email}</p>
+                      <p className="text-sm text-white truncate">
+                        {user?.email}
+                      </p>
                     </div>
 
                     <button
@@ -122,13 +138,13 @@ const AppLayout: React.FC = () => {
       <main className="relative">
         <CoreDashboard
           userConfig={{
-            oracleName: preferences?.oracle_name || '',
-            voiceId: preferences?.oracle_voice || '',
-            currentPhase: 'initiation',
+            oracleName: preferences?.oracle_name || "",
+            voiceId: preferences?.oracle_voice || "",
+            currentPhase: "initiation",
             coherenceLevel: 75,
           }}
           onNavigate={(route) => {
-            console.log('Navigate to:', route);
+            console.log("Navigate to:", route);
             // Handle navigation - you could use React Router here
           }}
         />

@@ -1,8 +1,8 @@
 // frontend/src/components/auth/AuthCallback.tsx
 
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { supabase } from '../../lib/supabase';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { supabase } from "../../lib/supabase";
 
 interface AuthCallbackProps {
   onSuccess?: () => void;
@@ -10,18 +10,20 @@ interface AuthCallbackProps {
 }
 
 const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState('Processing authentication...');
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
+  const [message, setMessage] = useState("Processing authentication...");
 
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
         // Get the current URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const accessToken = urlParams.get('access_token');
-        const refreshToken = urlParams.get('refresh_token');
-        const error = urlParams.get('error');
-        const errorDescription = urlParams.get('error_description');
+        const accessToken = urlParams.get("access_token");
+        const refreshToken = urlParams.get("refresh_token");
+        const error = urlParams.get("error");
+        const errorDescription = urlParams.get("error_description");
 
         if (error) {
           throw new Error(errorDescription || error);
@@ -37,38 +39,43 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
           if (sessionError) throw sessionError;
 
           if (data.user) {
-            setStatus('success');
-            setMessage('Authentication successful! Redirecting...');
+            setStatus("success");
+            setMessage("Authentication successful! Redirecting...");
 
             // Small delay before calling onSuccess
             setTimeout(() => {
               onSuccess?.();
             }, 1500);
           } else {
-            throw new Error('No user data received');
+            throw new Error("No user data received");
           }
         } else {
           // Check if there's a session in the URL hash (for some OAuth flows)
-          const { data, error: sessionError } = await supabase.auth.getSessionFromUrl();
+          const { data, error: sessionError } =
+            await supabase.auth.getSessionFromUrl();
 
           if (sessionError) throw sessionError;
 
           if (data.session) {
-            setStatus('success');
-            setMessage('Authentication successful! Redirecting...');
+            setStatus("success");
+            setMessage("Authentication successful! Redirecting...");
 
             setTimeout(() => {
               onSuccess?.();
             }, 1500);
           } else {
-            throw new Error('No authentication data found');
+            throw new Error("No authentication data found");
           }
         }
       } catch (error) {
-        console.error('Auth callback error:', error);
-        setStatus('error');
-        setMessage(error instanceof Error ? error.message : 'Authentication failed');
-        onError?.(error instanceof Error ? error.message : 'Authentication failed');
+        console.error("Auth callback error:", error);
+        setStatus("error");
+        setMessage(
+          error instanceof Error ? error.message : "Authentication failed",
+        );
+        onError?.(
+          error instanceof Error ? error.message : "Authentication failed",
+        );
       }
     };
 
@@ -84,40 +91,58 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
         className="text-center"
       >
         <div className="mb-8">
-          {status === 'loading' && (
+          {status === "loading" && (
             <div className="w-16 h-16 border-2 border-[#F6E27F] border-t-transparent rounded-full animate-spin mx-auto"></div>
           )}
 
-          {status === 'success' && (
+          {status === "success" && (
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
-              <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-8 h-8 text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
           )}
 
-          {status === 'error' && (
+          {status === "error" && (
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto">
-              <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-8 h-8 text-red-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </div>
           )}
         </div>
 
         <h2 className="text-2xl font-light text-[#F6E27F] mb-4">
-          {status === 'loading' && 'Authenticating...'}
-          {status === 'success' && 'Welcome Back!'}
-          {status === 'error' && 'Authentication Failed'}
+          {status === "loading" && "Authenticating..."}
+          {status === "success" && "Welcome Back!"}
+          {status === "error" && "Authentication Failed"}
         </h2>
 
-        <p className="text-gray-300 mb-6">
-          {message}
-        </p>
+        <p className="text-gray-300 mb-6">{message}</p>
 
-        {status === 'error' && (
+        {status === "error" && (
           <button
-            onClick={() => window.location.href = '/auth'}
+            onClick={() => (window.location.href = "/auth")}
             className="bg-[#F6E27F] text-[#0E0F1B] px-6 py-2 rounded-lg font-medium hover:bg-[#F6E27F]/90 transition-colors"
           >
             Try Again

@@ -1,12 +1,12 @@
 // src/core/agents/elementalAgent.ts
-import { FireAgent } from './fireAgent';
-import { WaterAgent } from './waterAgent';
-import { EarthAgent } from './earthAgent';
-import { AirAgent } from './airAgent';
-import { AetherAgent } from './aetherAgent';
-import { detectFacetFromInput } from '../../utils/facetUtil';
-import MemoryModule from '../utils/memoryModule';
-import type { AIResponse } from '../../types/ai';
+import { FireAgent } from "./fireAgent";
+import { WaterAgent } from "./waterAgent";
+import { EarthAgent } from "./earthAgent";
+import { AirAgent } from "./airAgent";
+import { AetherAgent } from "./aetherAgent";
+import { detectFacetFromInput } from "../../utils/facetUtil";
+import MemoryModule from "../utils/memoryModule";
+import type { AIResponse } from "../../types/ai";
 
 interface QueryInput {
   input: string;
@@ -44,17 +44,17 @@ export class ElementalAgent {
     return response;
   }
 
-  private mapFacetToElement(facet: string): keyof ElementalAgent['agents'] {
-    const facetMap: Record<string, keyof ElementalAgent['agents']> = {
-      courage: 'fire',
-      empathy: 'water',
-      structure: 'earth',
-      insight: 'air',
-      mystery: 'aether',
+  private mapFacetToElement(facet: string): keyof ElementalAgent["agents"] {
+    const facetMap: Record<string, keyof ElementalAgent["agents"]> = {
+      courage: "fire",
+      empathy: "water",
+      structure: "earth",
+      insight: "air",
+      mystery: "aether",
       // Add more facet-to-element mappings here
     };
 
-    return facetMap[facet.toLowerCase()] || 'aether';
+    return facetMap[facet.toLowerCase()] || "aether";
   }
 }
 

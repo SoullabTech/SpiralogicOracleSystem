@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface PetalState {
   id: string;
@@ -18,26 +18,40 @@ interface HoloflowerState {
 const HoloflowerCheckIn: React.FC = () => {
   const [currentState, setCurrentState] = useState<HoloflowerState>({
     petals: [
-      { id: 'fire', label: 'Fire', value: 50, color: '#dc2626', angle: 0 },
-      { id: 'water', label: 'Water', value: 50, color: '#0369a1', angle: 60 },
-      { id: 'earth', label: 'Earth', value: 50, color: '#16a34a', angle: 120 },
-      { id: 'air', label: 'Air', value: 50, color: '#7c3aed', angle: 180 },
-      { id: 'aether', label: 'Aether', value: 50, color: '#d4af37', angle: 240 },
-      { id: 'shadow', label: 'Shadow', value: 50, color: '#374151', angle: 300 }
+      { id: "fire", label: "Fire", value: 50, color: "#dc2626", angle: 0 },
+      { id: "water", label: "Water", value: 50, color: "#0369a1", angle: 60 },
+      { id: "earth", label: "Earth", value: 50, color: "#16a34a", angle: 120 },
+      { id: "air", label: "Air", value: 50, color: "#7c3aed", angle: 180 },
+      {
+        id: "aether",
+        label: "Aether",
+        value: 50,
+        color: "#d4af37",
+        angle: 240,
+      },
+      {
+        id: "shadow",
+        label: "Shadow",
+        value: 50,
+        color: "#374151",
+        angle: 300,
+      },
     ],
-    timestamp: new Date()
+    timestamp: new Date(),
   });
 
   const [activeElement, setActiveElement] = useState<string | null>(null);
-  const [reflection, setReflection] = useState('');
+  const [reflection, setReflection] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updatePetalValue = (id: string, value: number) => {
-    setCurrentState(prev => ({
+    setCurrentState((prev) => ({
       ...prev,
-      petals: prev.petals.map(petal =>
-        petal.id === id ? { ...petal, value: Math.max(0, Math.min(100, value)) } : petal
-      )
+      petals: prev.petals.map((petal) =>
+        petal.id === id
+          ? { ...petal, value: Math.max(0, Math.min(100, value)) }
+          : petal,
+      ),
     }));
   };
 
@@ -47,24 +61,24 @@ const HoloflowerCheckIn: React.FC = () => {
     const checkInData = {
       ...currentState,
       reflection: reflection.trim() || undefined,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     try {
       // Submit to backend
-      const response = await fetch('/api/holoflower/checkin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(checkInData)
+      const response = await fetch("/api/holoflower/checkin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(checkInData),
       });
 
       if (response.ok) {
         // Reset form or show success state
-        setReflection('');
+        setReflection("");
         // Could trigger a success animation or redirect
       }
     } catch (error) {
-      console.error('Check-in submission failed:', error);
+      console.error("Check-in submission failed:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -103,7 +117,9 @@ const HoloflowerCheckIn: React.FC = () => {
           transition={{ duration: 0.618 }}
           className="text-center mb-8"
         >
-          <h1 className="text-3xl font-light text-amber-100 mb-2">Holoflower State</h1>
+          <h1 className="text-3xl font-light text-amber-100 mb-2">
+            Holoflower State
+          </h1>
           <p className="text-slate-300">Attune to your elemental landscape</p>
         </motion.div>
 
@@ -134,20 +150,22 @@ const HoloflowerCheckIn: React.FC = () => {
                     strokeWidth="2"
                     className="cursor-pointer"
                     whileHover={{ scale: 1.05 }}
-                    onClick={() => setActiveElement(activeElement === petal.id ? null : petal.id)}
+                    onClick={() =>
+                      setActiveElement(
+                        activeElement === petal.id ? null : petal.id,
+                      )
+                    }
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 1, delay: 0.1 * currentState.petals.indexOf(petal) }}
+                    transition={{
+                      duration: 1,
+                      delay: 0.1 * currentState.petals.indexOf(petal),
+                    }}
                   />
                 ))}
 
                 {/* Center point */}
-                <circle
-                  cx="150"
-                  cy="150"
-                  r="4"
-                  fill="#d4af37"
-                />
+                <circle cx="150" cy="150" r="4" fill="#d4af37" />
               </svg>
 
               {/* Element labels */}
@@ -182,12 +200,16 @@ const HoloflowerCheckIn: React.FC = () => {
                 className="space-y-4"
               >
                 {(() => {
-                  const petal = currentState.petals.find(p => p.id === activeElement);
+                  const petal = currentState.petals.find(
+                    (p) => p.id === activeElement,
+                  );
                   if (!petal) return null;
 
                   return (
                     <>
-                      <h3 className="text-xl text-amber-100 font-medium">{petal.label} Element</h3>
+                      <h3 className="text-xl text-amber-100 font-medium">
+                        {petal.label} Element
+                      </h3>
                       <div className="space-y-3">
                         <div className="flex justify-between text-sm text-slate-400">
                           <span>Depletion</span>
@@ -198,13 +220,18 @@ const HoloflowerCheckIn: React.FC = () => {
                           min="0"
                           max="100"
                           value={petal.value}
-                          onChange={(e) => updatePetalValue(petal.id, parseInt(e.target.value))}
+                          onChange={(e) =>
+                            updatePetalValue(petal.id, parseInt(e.target.value))
+                          }
                           className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
                           style={{
-                            background: `linear-gradient(to right, #475569 0%, ${petal.color} ${petal.value}%, #475569 ${petal.value}%)`
+                            background: `linear-gradient(to right, #475569 0%, ${petal.color} ${petal.value}%, #475569 ${petal.value}%)`,
                           }}
                         />
-                        <div className="text-center text-lg font-medium" style={{ color: petal.color }}>
+                        <div
+                          className="text-center text-lg font-medium"
+                          style={{ color: petal.color }}
+                        >
                           {petal.value}
                         </div>
                       </div>
@@ -221,19 +248,23 @@ const HoloflowerCheckIn: React.FC = () => {
             {/* Quick preset buttons */}
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => setCurrentState(prev => ({
-                  ...prev,
-                  petals: prev.petals.map(p => ({ ...p, value: 30 }))
-                }))}
+                onClick={() =>
+                  setCurrentState((prev) => ({
+                    ...prev,
+                    petals: prev.petals.map((p) => ({ ...p, value: 30 })),
+                  }))
+                }
                 className="px-4 py-2 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600 transition-colors"
               >
                 Reset Low
               </button>
               <button
-                onClick={() => setCurrentState(prev => ({
-                  ...prev,
-                  petals: prev.petals.map(p => ({ ...p, value: 70 }))
-                }))}
+                onClick={() =>
+                  setCurrentState((prev) => ({
+                    ...prev,
+                    petals: prev.petals.map((p) => ({ ...p, value: 70 })),
+                  }))
+                }
                 className="px-4 py-2 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600 transition-colors"
               >
                 Reset High
@@ -242,7 +273,9 @@ const HoloflowerCheckIn: React.FC = () => {
 
             {/* Reflection input */}
             <div className="space-y-3">
-              <label className="block text-amber-100 font-medium">Brief Reflection</label>
+              <label className="block text-amber-100 font-medium">
+                Brief Reflection
+              </label>
               <textarea
                 value={reflection}
                 onChange={(e) => setReflection(e.target.value)}
@@ -262,7 +295,7 @@ const HoloflowerCheckIn: React.FC = () => {
               disabled={isSubmitting}
               className="w-full px-6 py-3 bg-amber-600 text-slate-900 font-medium tracking-wide hover:bg-amber-500 disabled:bg-slate-600 disabled:text-slate-400 transition-colors"
             >
-              {isSubmitting ? 'Recording State...' : 'Complete Check-In'}
+              {isSubmitting ? "Recording State..." : "Complete Check-In"}
             </button>
           </div>
         </div>

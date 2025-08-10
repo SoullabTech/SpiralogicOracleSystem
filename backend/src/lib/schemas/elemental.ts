@@ -1,8 +1,15 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Optional crystal focus schema
 export const crystalFocusSchema = z.object({
-  type: z.enum(['career', 'spiritual', 'relational', 'health', 'creative', 'other']),
+  type: z.enum([
+    "career",
+    "spiritual",
+    "relational",
+    "health",
+    "creative",
+    "other",
+  ]),
   customDescription: z.string().optional(),
   challenges: z.string(),
   aspirations: z.string(),

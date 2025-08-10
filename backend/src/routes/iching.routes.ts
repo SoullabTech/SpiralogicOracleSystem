@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   getIChingAstroProfile,
   postIChingAstroProfile,
   calculateIChingCompatibility,
   getAllTrigrams,
-  getYearlyGuidance
-} from '../api/iching/astro';
+  getYearlyGuidance,
+} from "../api/iching/astro";
 
 const router = Router();
 
@@ -19,16 +19,16 @@ const router = Router();
  */
 
 // Main astrology profile endpoints
-router.get('/astro', getIChingAstroProfile);
-router.post('/astro', postIChingAstroProfile);
+router.get("/astro", getIChingAstroProfile);
+router.post("/astro", postIChingAstroProfile);
 
 // Compatibility analysis
-router.post('/compatibility', calculateIChingCompatibility);
+router.post("/compatibility", calculateIChingCompatibility);
 
 // Reference data
-router.get('/trigrams', getAllTrigrams);
+router.get("/trigrams", getAllTrigrams);
 
 // Yearly guidance
-router.get('/yearly-guidance', getYearlyGuidance);
+router.get("/yearly-guidance", getYearlyGuidance);
 
 export default router;

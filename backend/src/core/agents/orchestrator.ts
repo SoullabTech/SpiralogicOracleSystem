@@ -19,7 +19,7 @@ export async function runLangChain(query: string): Promise<string> {
   });
 
   const prompt = PromptTemplate.fromTemplate(
-    "You are a wise oracle. Provide a poetic and thoughtful response to: {query}"
+    "You are a wise oracle. Provide a poetic and thoughtful response to: {query}",
   );
 
   const chain = new LLMChain({
@@ -39,14 +39,21 @@ export async function runLangChain(query: string): Promise<string> {
 /**
  * Triggers an external Prefect flow with the provided payload.
  */
-export async function triggerPrefectFlow(payload: Record<string, any>): Promise<any> {
-  const prefectApiUrl = process.env.PREFECT_API_URL || "https://your-prefect-server/api/flows/trigger";
+export async function triggerPrefectFlow(
+  payload: Record<string, any>,
+): Promise<any> {
+  const prefectApiUrl =
+    process.env.PREFECT_API_URL ||
+    "https://your-prefect-server/api/flows/trigger";
 
   try {
     const response = await axios.post(prefectApiUrl, payload);
     return response.data;
   } catch (error: any) {
-    console.error("❌ Error triggering Prefect flow:", error?.response?.data || error.message);
+    console.error(
+      "❌ Error triggering Prefect flow:",
+      error?.response?.data || error.message,
+    );
     throw new Error("Failed to trigger Prefect flow");
   }
 }

@@ -17,6 +17,7 @@ Our service combines ancient wisdom traditions with cutting-edge AI to deliver p
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - SingularityNET CLI installed
 - AGIX tokens for payment
 - Ethereum wallet
@@ -55,9 +56,11 @@ print(response.oracle_response)
 ## 📋 API Methods
 
 ### ProcessQuery
+
 Main consciousness analysis endpoint.
 
 **Request:**
+
 ```json
 {
   "user_id": "string",
@@ -75,6 +78,7 @@ Main consciousness analysis endpoint.
 ```
 
 **Response:**
+
 ```json
 {
   "response_id": "string",
@@ -96,21 +100,24 @@ Main consciousness analysis endpoint.
 ```
 
 ### StreamInsights
+
 Real-time consciousness insights stream.
 
 ### SynthesizeVoice
+
 Standalone archetypal voice synthesis.
 
 ## 💰 Pricing
 
-| Service | Price (AGIX) | Description |
-|---------|--------------|-------------|
-| ProcessQuery | 0.00001000 | Basic consciousness query |
-| ProcessQuery + Voice | 0.00002000 | Query with voice synthesis |
-| StreamInsights | 0.00005000 | 30-minute streaming session |
-| SynthesizeVoice | 0.00001500 | Voice synthesis only |
+| Service              | Price (AGIX) | Description                 |
+| -------------------- | ------------ | --------------------------- |
+| ProcessQuery         | 0.00001000   | Basic consciousness query   |
+| ProcessQuery + Voice | 0.00002000   | Query with voice synthesis  |
+| StreamInsights       | 0.00005000   | 30-minute streaming session |
+| SynthesizeVoice      | 0.00001500   | Voice synthesis only        |
 
 ### Package Deals
+
 - **Starter**: 100 queries + 50 voice (0.00150000 AGIX)
 - **Practitioner**: 500 queries + 250 voice + 10 streams (0.00750000 AGIX)
 - **Unlimited**: 30-day unlimited access (0.01000000 AGIX)
@@ -118,15 +125,19 @@ Standalone archetypal voice synthesis.
 ## 🔧 Advanced Features
 
 ### Elemental Balance Tracking
+
 Track your consciousness evolution across the five elements over time.
 
 ### Pattern Recognition
+
 Our AI identifies recurring patterns in your queries to provide deeper insights.
 
 ### Multi-Archetypal Integration
+
 Receive perspectives from multiple archetypes for complex questions.
 
 ### Voice Personalities
+
 Each archetype speaks with a unique voice personality powered by ElevenLabs.
 
 ## 📊 Use Cases
@@ -180,4 +191,4 @@ snet client call spiralogic archetypal-consciousness-oracle default_group Proces
 
 **Join thousands discovering their consciousness potential through the Archetypal Oracle!**
 
-*Powered by Spiralogic® and Soullab® | Built on SingularityNET*
+_Powered by Spiralogic® and Soullab® | Built on SingularityNET_

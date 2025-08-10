@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 // Dynamic import to handle client-side components
 const SoullabDeveloperPortal = dynamic(
-  () => import('../../frontend/src/components/developer/SoullabDeveloperPortal'),
-  { ssr: false }
+  () =>
+    import("../../frontend/src/components/developer/SoullabDeveloperPortal"),
+  { ssr: false },
 );
 
 function DeveloperLoadingFallback() {

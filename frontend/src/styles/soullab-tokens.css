@@ -2,46 +2,46 @@
 
 :root {
   /* Elemental Color Palette */
-  --earth: #D9C6A5;
-  --water: #A9C4D6;
-  --fire: #E5A77A;
-  --air: #ECECEC;
-  --aether: #CBB8E2;
+  --earth: #d9c6a5;
+  --water: #a9c4d6;
+  --fire: #e5a77a;
+  --air: #ececec;
+  --aether: #cbb8e2;
 
   /* Earth variants */
-  --earth-light: #E8DCC7;
-  --earth-dark: #C4A882;
+  --earth-light: #e8dcc7;
+  --earth-dark: #c4a882;
   --earth-muted: rgba(217, 198, 165, 0.1);
   --earth-subtle: rgba(217, 198, 165, 0.05);
 
   /* Water variants */
-  --water-light: #C2D6E6;
-  --water-dark: #8AADBE;
+  --water-light: #c2d6e6;
+  --water-dark: #8aadbe;
   --water-muted: rgba(169, 196, 214, 0.1);
   --water-subtle: rgba(169, 196, 214, 0.05);
 
   /* Fire variants */
-  --fire-light: #F0C19F;
-  --fire-dark: #D18D55;
+  --fire-light: #f0c19f;
+  --fire-dark: #d18d55;
   --fire-muted: rgba(229, 167, 122, 0.1);
   --fire-subtle: rgba(229, 167, 122, 0.05);
 
   /* Air variants */
-  --air-light: #F6F6F6;
-  --air-dark: #DADADA;
+  --air-light: #f6f6f6;
+  --air-dark: #dadada;
   --air-muted: rgba(236, 236, 236, 0.1);
   --air-subtle: rgba(236, 236, 236, 0.05);
 
   /* Aether variants */
-  --aether-light: #DDD0E9;
-  --aether-dark: #B29FD4;
+  --aether-light: #ddd0e9;
+  --aether-dark: #b29fd4;
   --aether-muted: rgba(203, 184, 226, 0.1);
   --aether-subtle: rgba(203, 184, 226, 0.05);
 
   /* Typography */
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
 
   /* Font Weights */
   --weight-light: 300;
@@ -51,23 +51,23 @@
   --weight-bold: 700;
 
   /* Font Sizes */
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.25rem;    /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 1.875rem;  /* 30px */
-  --text-4xl: 2.25rem;   /* 36px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
 
   /* Sacred Spacing */
-  --space-xs: 0.25rem;   /* 4px */
-  --space-sm: 0.5rem;    /* 8px */
-  --space-base: 1rem;    /* 16px */
-  --space-lg: 1.5rem;    /* 24px - minimum between unrelated elements */
-  --space-xl: 2rem;      /* 32px */
-  --space-2xl: 3rem;     /* 48px */
-  --space-3xl: 4rem;     /* 64px */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-base: 1rem; /* 16px */
+  --space-lg: 1.5rem; /* 24px - minimum between unrelated elements */
+  --space-xl: 2rem; /* 32px */
+  --space-2xl: 3rem; /* 48px */
+  --space-3xl: 4rem; /* 64px */
 
   /* Motion */
   --duration-fast: 150ms;
@@ -87,16 +87,16 @@
   --shadow-medium: 0 10px 15px rgba(0, 0, 0, 0.1);
 
   /* Backgrounds */
-  --bg-primary: #FEFEFE;
-  --bg-secondary: #F9F9F9;
-  --bg-tertiary: #F4F4F4;
+  --bg-primary: #fefefe;
+  --bg-secondary: #f9f9f9;
+  --bg-tertiary: #f4f4f4;
   --bg-overlay: rgba(255, 255, 255, 0.95);
 
   /* Text Colors */
-  --text-primary: #2D2D2D;
-  --text-secondary: #6B7280;
-  --text-tertiary: #9CA3AF;
-  --text-inverse: #FFFFFF;
+  --text-primary: #2d2d2d;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --text-inverse: #ffffff;
 
   /* Borders */
   --border-light: rgba(0, 0, 0, 0.05);

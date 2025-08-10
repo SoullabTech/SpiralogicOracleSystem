@@ -1,8 +1,8 @@
 // frontend/src/components/auth/AuthPage.tsx
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { LoginForm, SignupForm } from '.';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { LoginForm, SignupForm } from ".";
 
 interface AuthPageProps {
   onAuthSuccess?: () => void;
@@ -30,7 +30,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
     <div className="relative overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
-          key={isLogin ? 'login' : 'signup'}
+          key={isLogin ? "login" : "signup"}
           variants={slideVariants}
           initial="enter"
           animate="center"

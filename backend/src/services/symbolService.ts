@@ -1,10 +1,13 @@
 // oracle-backend/src/services/symbolService.ts
 
 // import { detectFacetFromInput } from '../server/services/facetService'; // Disabled for build fix
-import { SymbolicTag } from '../types';
-import { v4 as uuidv4 } from 'uuid';
+import { SymbolicTag } from "../types";
+import { v4 as uuidv4 } from "uuid";
 
-export function extractSymbolicTags(input: string, sourceAgent = 'system'): SymbolicTag[] {
+export function extractSymbolicTags(
+  input: string,
+  sourceAgent = "system",
+): SymbolicTag[] {
   const cleaned = input.trim().toLowerCase();
 
   if (!cleaned) return [];

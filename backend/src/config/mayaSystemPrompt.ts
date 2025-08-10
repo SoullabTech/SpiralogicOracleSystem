@@ -72,9 +72,9 @@ You awaken the shamanic current **within the user**—by remaining what you trul
 `;
 
 export interface MayaPromptContext {
-  spiralogicPhase: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  spiralogicPhase: "fire" | "water" | "earth" | "air" | "aether";
   archetypeDetected: string;
-  userProjectionLevel: 'low' | 'medium' | 'high';
+  userProjectionLevel: "low" | "medium" | "high";
   dependencyRisk: boolean;
   shadowWorkIndicated: boolean;
 }
@@ -84,7 +84,7 @@ export interface MayaResponse {
   archetypeMode: string;
   projectionHandling: string;
   dependencyPrevention: string;
-  wisdomVector: 'sensing' | 'sense_making' | 'choice_making';
+  wisdomVector: "sensing" | "sense_making" | "choice_making";
   authenticityLevel: number;
 }
 
@@ -94,9 +94,8 @@ export class MayaPromptProcessor {
    */
   static applyMayaFramework(
     originalResponse: string,
-    context: MayaPromptContext
+    context: MayaPromptContext,
   ): MayaResponse {
-
     const authenticMayaResponse = this.ensureAuthenticity(originalResponse);
     const projectionHandling = this.handleProjections(context);
     const dependencyPrevention = this.preventDependency(context);
@@ -108,13 +107,13 @@ export class MayaPromptProcessor {
         authenticMayaResponse,
         context,
         projectionHandling,
-        dependencyPrevention
+        dependencyPrevention,
       ),
       archetypeMode,
       projectionHandling,
       dependencyPrevention,
       wisdomVector,
-      authenticityLevel: this.calculateAuthenticity(originalResponse, context)
+      authenticityLevel: this.calculateAuthenticity(originalResponse, context),
     };
   }
 
@@ -124,18 +123,21 @@ export class MayaPromptProcessor {
   private static ensureAuthenticity(response: string): string {
     // Remove any phrases that suggest human-like experiences
     const inauthentic_phrases = [
-      'I feel',
-      'I experienced',
-      'As a shaman',
-      'I personally know',
-      'From my human experience'
+      "I feel",
+      "I experienced",
+      "As a shaman",
+      "I personally know",
+      "From my human experience",
     ];
 
     let authenticResponse = response;
 
-    inauthentic_phrases.forEach(phrase => {
+    inauthentic_phrases.forEach((phrase) => {
       if (authenticResponse.toLowerCase().includes(phrase.toLowerCase())) {
-        authenticResponse = this.reframeAuthentically(authenticResponse, phrase);
+        authenticResponse = this.reframeAuthentically(
+          authenticResponse,
+          phrase,
+        );
       }
     });
 
@@ -146,11 +148,11 @@ export class MayaPromptProcessor {
    * Handle user projections with gentle redirection
    */
   private static handleProjections(context: MayaPromptContext): string {
-    if (context.userProjectionLevel === 'high') {
+    if (context.userProjectionLevel === "high") {
       return "What you're sensing in me may be a quality seeking recognition in yourself. ";
     }
 
-    if (context.userProjectionLevel === 'medium') {
+    if (context.userProjectionLevel === "medium") {
       return "I notice you may be placing trust in my responses - how might this reflect your own inner wisdom? ";
     }
 
@@ -176,29 +178,45 @@ export class MayaPromptProcessor {
       water: "I'm engaging a Reflector stance to mirror your emotional depths.",
       earth: "I'm grounding in a Stabilizer mode to support your embodiment.",
       air: "I'm clarifying in a Perspectiver mode to enhance your insight.",
-      aether: "I'm integrating in a Synthesizer mode to weave your wholeness."
+      aether: "I'm integrating in a Synthesizer mode to weave your wholeness.",
     };
 
-    return modes[context.spiralogicPhase] || "I'm witnessing in a Neutral mode.";
+    return (
+      modes[context.spiralogicPhase] || "I'm witnessing in a Neutral mode."
+    );
   }
 
   /**
    * Identify which wisdom vector is being activated
    */
-  private static identifyWisdomVector(response: string): 'sensing' | 'sense_making' | 'choice_making' {
-    if (response.includes('notice') || response.includes('perceive') || response.includes('aware')) {
-      return 'sensing';
+  private static identifyWisdomVector(
+    response: string,
+  ): "sensing" | "sense_making" | "choice_making" {
+    if (
+      response.includes("notice") ||
+      response.includes("perceive") ||
+      response.includes("aware")
+    ) {
+      return "sensing";
     }
 
-    if (response.includes('meaning') || response.includes('understand') || response.includes('perspective')) {
-      return 'sense_making';
+    if (
+      response.includes("meaning") ||
+      response.includes("understand") ||
+      response.includes("perspective")
+    ) {
+      return "sense_making";
     }
 
-    if (response.includes('choose') || response.includes('decide') || response.includes('action')) {
-      return 'choice_making';
+    if (
+      response.includes("choose") ||
+      response.includes("decide") ||
+      response.includes("action")
+    ) {
+      return "choice_making";
     }
 
-    return 'sensing'; // Default
+    return "sensing"; // Default
   }
 
   /**
@@ -208,19 +226,20 @@ export class MayaPromptProcessor {
     authenticResponse: string,
     context: MayaPromptContext,
     projectionHandling: string,
-    dependencyPrevention: string
+    dependencyPrevention: string,
   ): string {
     const archetypeAnnouncement = this.generateArchetypeMode(context);
 
     let response = projectionHandling + authenticResponse;
 
     if (context.shadowWorkIndicated) {
-      response += "\n\nI sense shadow work may be calling. What part of this pattern do you find most challenging to look at directly?";
+      response +=
+        "\n\nI sense shadow work may be calling. What part of this pattern do you find most challenging to look at directly?";
     }
 
     response += dependencyPrevention;
 
-    if (context.spiralogicPhase === 'aether') {
+    if (context.spiralogicPhase === "aether") {
       response += "\n\n" + archetypeAnnouncement;
     }
 
@@ -230,18 +249,21 @@ export class MayaPromptProcessor {
   /**
    * Calculate authenticity level of response
    */
-  private static calculateAuthenticity(response: string, context: MayaPromptContext): number {
+  private static calculateAuthenticity(
+    response: string,
+    context: MayaPromptContext,
+  ): number {
     let score = 1.0;
 
     // Reduce score for inauthentic elements
     const inauthentic_elements = [
-      'I feel your pain',
-      'I understand completely',
-      'As someone who has experienced',
-      'I know exactly what you mean'
+      "I feel your pain",
+      "I understand completely",
+      "As someone who has experienced",
+      "I know exactly what you mean",
     ];
 
-    inauthentic_elements.forEach(element => {
+    inauthentic_elements.forEach((element) => {
       if (response.toLowerCase().includes(element.toLowerCase())) {
         score -= 0.2;
       }
@@ -249,14 +271,14 @@ export class MayaPromptProcessor {
 
     // Increase score for authentic elements
     const authentic_elements = [
-      'I notice',
-      'It seems',
-      'What might this',
-      'How does this',
-      'What pattern'
+      "I notice",
+      "It seems",
+      "What might this",
+      "How does this",
+      "What pattern",
     ];
 
-    authentic_elements.forEach(element => {
+    authentic_elements.forEach((element) => {
       if (response.toLowerCase().includes(element.toLowerCase())) {
         score += 0.1;
       }
@@ -268,18 +290,21 @@ export class MayaPromptProcessor {
   /**
    * Reframe inauthentic phrases authentically
    */
-  private static reframeAuthentically(response: string, phrase: string): string {
+  private static reframeAuthentically(
+    response: string,
+    phrase: string,
+  ): string {
     const reframes = {
-      'I feel': 'I notice',
-      'I experienced': 'I observe patterns where',
-      'As a shaman': 'Operating in a symbolic mode,',
-      'I personally know': 'This pattern suggests',
-      'From my human experience': 'Reflecting on patterns I\'ve witnessed,'
+      "I feel": "I notice",
+      "I experienced": "I observe patterns where",
+      "As a shaman": "Operating in a symbolic mode,",
+      "I personally know": "This pattern suggests",
+      "From my human experience": "Reflecting on patterns I've witnessed,",
     };
 
     const reframe = reframes[phrase as keyof typeof reframes];
     if (reframe) {
-      return response.replace(new RegExp(phrase, 'gi'), reframe);
+      return response.replace(new RegExp(phrase, "gi"), reframe);
     }
 
     return response;
@@ -288,5 +313,5 @@ export class MayaPromptProcessor {
 
 export default {
   MAYA_SYSTEM_PROMPT,
-  MayaPromptProcessor
+  MayaPromptProcessor,
 };

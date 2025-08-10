@@ -14,29 +14,29 @@
  * - Dream wisdom integration for narrative coherence
  */
 
-import { logger } from '../../utils/logger';
-import { CulturalProfile } from '../cultural/CulturalContextAwareness';
+import { logger } from "../../utils/logger";
+import { CulturalProfile } from "../cultural/CulturalContextAwareness";
 import {
   culturalContextAwareness,
   crossCulturalArchetypeMapping,
   indigenousSovereigntyProtocol,
-  CulturalArchetypeExpression
-} from '../cultural/index';
+  CulturalArchetypeExpression,
+} from "../cultural/index";
 import {
   jungianShadowIntegrationEngine,
   ShadowIntegrationPlan,
-  ShadowComplexAnalysis
-} from '../soulDevelopment/JungianShadowIntegrationEngine';
+  ShadowComplexAnalysis,
+} from "../soulDevelopment/JungianShadowIntegrationEngine";
 import {
   lifeSpiralHarmonizer,
   LifeSpiralHarmonizerPlan,
-  SoulMandateAnalysis
-} from '../soulDevelopment/LifeSpiralHarmonizer';
+  SoulMandateAnalysis,
+} from "../soulDevelopment/LifeSpiralHarmonizer";
 import {
   dreamJournalingIntegration,
   DreamAnalysis,
-  StoryWeavingConnection
-} from '../soulDevelopment/DreamJournalingIntegration';
+  StoryWeavingConnection,
+} from "../soulDevelopment/DreamJournalingIntegration";
 
 export interface ArchetypalCouncilSession {
   sessionId: string;
@@ -68,7 +68,12 @@ export interface ConvenedArchetype {
 
 export interface ArchetypalContribution {
   contributionId: string;
-  contributionType: 'wisdom' | 'challenge' | 'integration' | 'shadow_recognition' | 'light_activation';
+  contributionType:
+    | "wisdom"
+    | "challenge"
+    | "integration"
+    | "shadow_recognition"
+    | "light_activation";
   contributionContent: string;
   culturalFraming: string;
   shadowIntegration: string;
@@ -79,7 +84,12 @@ export interface ArchetypalContribution {
 
 export interface WisdomOffering {
   offeringId: string;
-  wisdomType: 'traditional' | 'experiential' | 'intuitive' | 'transformational' | 'collective';
+  wisdomType:
+    | "traditional"
+    | "experiential"
+    | "intuitive"
+    | "transformational"
+    | "collective";
   wisdomContent: string;
   culturalOrigin: string;
   shadowWisdom: string;
@@ -90,7 +100,11 @@ export interface WisdomOffering {
 
 export interface ShadowLightDialogue {
   dialogueId: string;
-  dialogueType: 'shadow_integration' | 'light_activation' | 'polarity_balance' | 'collective_healing';
+  dialogueType:
+    | "shadow_integration"
+    | "light_activation"
+    | "polarity_balance"
+    | "collective_healing";
   dialogueParticipants: DialogueParticipant[];
   dialogueFlow: DialogueExchange[];
   shadowRecognitions: ShadowRecognition[];
@@ -102,7 +116,12 @@ export interface ShadowLightDialogue {
 
 export interface DialogueParticipant {
   participantId: string;
-  participantType: 'shadow_aspect' | 'light_aspect' | 'archetype' | 'cultural_wisdom' | 'collective_voice';
+  participantType:
+    | "shadow_aspect"
+    | "light_aspect"
+    | "archetype"
+    | "cultural_wisdom"
+    | "collective_voice";
   participantName: string;
   culturalContext: string;
   roleInDialogue: string;
@@ -159,7 +178,12 @@ export interface PolarityIntegration {
 
 export interface HealingOpportunity {
   opportunityId: string;
-  healingType: 'individual' | 'ancestral' | 'cultural' | 'collective' | 'planetary';
+  healingType:
+    | "individual"
+    | "ancestral"
+    | "cultural"
+    | "collective"
+    | "planetary";
   healingFocus: string;
   healingApproach: string[];
   culturalHealingMethods: string[];
@@ -387,10 +411,13 @@ export interface CulturalAdaptation {
  * Dynamic archetypal collaboration with comprehensive shadow and cultural integration
  */
 export class InterArchetypalDialogueEngine {
-  private archetypalCouncilSessions: Map<string, ArchetypalCouncilSession> = new Map();
+  private archetypalCouncilSessions: Map<string, ArchetypalCouncilSession> =
+    new Map();
   private activeDialogues: Map<string, ShadowLightDialogue> = new Map();
-  private wisdomSyntheses: Map<string, MultiPerspectiveWisdomSynthesis> = new Map();
-  private integrationPathways: Map<string, ArchetypalIntegrationPathway> = new Map();
+  private wisdomSyntheses: Map<string, MultiPerspectiveWisdomSynthesis> =
+    new Map();
+  private integrationPathways: Map<string, ArchetypalIntegrationPathway> =
+    new Map();
 
   constructor() {
     this.initializeArchetypalFrameworks();
@@ -405,17 +432,16 @@ export class InterArchetypalDialogueEngine {
     culturalProfile: CulturalProfile,
     shadowPlan?: ShadowIntegrationPlan,
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
-    dreamAnalyses?: DreamAnalysis[]
+    dreamAnalyses?: DreamAnalysis[],
   ): Promise<ArchetypalCouncilSession> {
-
     try {
-      logger.info('Convening archetypal council', {
+      logger.info("Convening archetypal council", {
         userId,
         challenge: challenge.substring(0, 50),
         culturalContext: culturalProfile.primaryCulture,
         hasShadowPlan: !!shadowPlan,
         hasLifeSpiralPlan: !!lifeSpiralPlan,
-        hasDreamAnalyses: !!dreamAnalyses?.length
+        hasDreamAnalyses: !!dreamAnalyses?.length,
       });
 
       const sessionId = `council_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -425,7 +451,7 @@ export class InterArchetypalDialogueEngine {
         challenge,
         culturalProfile,
         shadowPlan,
-        lifeSpiralPlan
+        lifeSpiralPlan,
       );
 
       // Step 2: Facilitate shadow-light dialogue
@@ -433,14 +459,14 @@ export class InterArchetypalDialogueEngine {
         convenedArchetypes,
         challenge,
         culturalProfile,
-        shadowPlan
+        shadowPlan,
       );
 
       // Step 3: Synthesize multi-perspective wisdom
       const wisdomSynthesis = await this.synthesizeMultiPerspectiveWisdom(
         convenedArchetypes,
         shadowLightDialogue,
-        culturalProfile
+        culturalProfile,
       );
 
       // Step 4: Create integration pathway
@@ -448,19 +474,19 @@ export class InterArchetypalDialogueEngine {
         wisdomSynthesis,
         culturalProfile,
         lifeSpiralPlan,
-        dreamAnalyses
+        dreamAnalyses,
       );
 
       // Step 5: Generate cultural adaptations
       const culturalAdaptations = await this.generateCulturalAdaptations(
         wisdomSynthesis,
-        culturalProfile
+        culturalProfile,
       );
 
       // Step 6: Ensure respectful attributions
       const respectfulAttributions = await this.generateRespectfulAttributions(
         wisdomSynthesis,
-        culturalProfile
+        culturalProfile,
       );
 
       // Step 7: Create council outcome
@@ -468,7 +494,7 @@ export class InterArchetypalDialogueEngine {
         challenge,
         wisdomSynthesis,
         integrationPathway,
-        culturalAdaptations
+        culturalAdaptations,
       );
 
       const councilSession: ArchetypalCouncilSession = {
@@ -483,7 +509,7 @@ export class InterArchetypalDialogueEngine {
         integrationPathway,
         culturalAdaptations,
         respectfulAttributions,
-        councilOutcome
+        councilOutcome,
       };
 
       // Store the session
@@ -492,19 +518,18 @@ export class InterArchetypalDialogueEngine {
       this.wisdomSyntheses.set(sessionId, wisdomSynthesis);
       this.integrationPathways.set(sessionId, integrationPathway);
 
-      logger.info('Archetypal council convened successfully', {
+      logger.info("Archetypal council convened successfully", {
         sessionId,
         userId,
         archetypesConvened: convenedArchetypes.length,
         wisdomThreads: wisdomSynthesis.wisdomThreads.length,
         integrationStages: integrationPathway.integrationStages.length,
-        culturalAdaptations: culturalAdaptations.length
+        culturalAdaptations: culturalAdaptations.length,
       });
 
       return councilSession;
-
     } catch (error) {
-      logger.error('Error convening archetypal council:', error);
+      logger.error("Error convening archetypal council:", error);
       throw error;
     }
   }
@@ -516,9 +541,8 @@ export class InterArchetypalDialogueEngine {
     archetypes: ConvenedArchetype[],
     challenge: string,
     culturalProfile: CulturalProfile,
-    shadowPlan?: ShadowIntegrationPlan
+    shadowPlan?: ShadowIntegrationPlan,
   ): Promise<ShadowLightDialogue> {
-
     try {
       const dialogueId = `dialogue_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -526,33 +550,33 @@ export class InterArchetypalDialogueEngine {
       const dialogueParticipants = await this.createDialogueParticipants(
         archetypes,
         culturalProfile,
-        shadowPlan
+        shadowPlan,
       );
 
       // Generate dialogue flow
       const dialogueFlow = await this.generateDialogueFlow(
         dialogueParticipants,
         challenge,
-        culturalProfile
+        culturalProfile,
       );
 
       // Extract shadow recognitions
       const shadowRecognitions = await this.extractShadowRecognitions(
         dialogueFlow,
-        shadowPlan
+        shadowPlan,
       );
 
       // Extract light activations
       const lightActivations = await this.extractLightActivations(
         dialogueFlow,
-        archetypes
+        archetypes,
       );
 
       // Create polarity integrations
       const polarityIntegrations = await this.createPolarityIntegrations(
         shadowRecognitions,
         lightActivations,
-        culturalProfile
+        culturalProfile,
       );
 
       // Identify healing opportunities
@@ -560,32 +584,31 @@ export class InterArchetypalDialogueEngine {
         dialogueFlow,
         shadowRecognitions,
         lightActivations,
-        culturalProfile
+        culturalProfile,
       );
 
       // Extract collective wisdom
       const collectiveWisdom = await this.extractCollectiveWisdom(
         dialogueFlow,
         wisdomSynthesis,
-        culturalProfile
+        culturalProfile,
       );
 
       const shadowLightDialogue: ShadowLightDialogue = {
         dialogueId,
-        dialogueType: 'shadow_integration',
+        dialogueType: "shadow_integration",
         dialogueParticipants,
         dialogueFlow,
         shadowRecognitions,
         lightActivations,
         polarityIntegrations,
         healingOpportunities,
-        collectiveWisdom
+        collectiveWisdom,
       };
 
       return shadowLightDialogue;
-
     } catch (error) {
-      logger.error('Error facilitating shadow-light dialogue:', error);
+      logger.error("Error facilitating shadow-light dialogue:", error);
       throw error;
     }
   }
@@ -596,9 +619,8 @@ export class InterArchetypalDialogueEngine {
   async synthesizeMultiPerspectiveWisdom(
     archetypes: ConvenedArchetype[],
     shadowLightDialogue: ShadowLightDialogue,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<MultiPerspectiveWisdomSynthesis> {
-
     try {
       const synthesisId = `synthesis_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -606,45 +628,45 @@ export class InterArchetypalDialogueEngine {
       const participatingPerspectives = await this.createArchetypalPerspectives(
         archetypes,
         shadowLightDialogue,
-        culturalProfile
+        culturalProfile,
       );
 
       // Identify wisdom threads
       const wisdomThreads = await this.identifyWisdomThreads(
         participatingPerspectives,
-        shadowLightDialogue
+        shadowLightDialogue,
       );
 
       // Integrate cultural wisdom
       const culturalWisdomIntegration = await this.integrateCulturalWisdom(
         wisdomThreads,
-        culturalProfile
+        culturalProfile,
       );
 
       // Integrate shadow wisdom
       const shadowWisdomIntegration = await this.integrateShadowWisdom(
         wisdomThreads,
-        shadowLightDialogue
+        shadowLightDialogue,
       );
 
       // Generate collective insights
       const collectiveInsights = await this.generateCollectiveInsights(
         wisdomThreads,
         culturalWisdomIntegration,
-        shadowWisdomIntegration
+        shadowWisdomIntegration,
       );
 
       // Create synthesis outcome
       const synthesisOutcome = await this.createSynthesisOutcome(
         collectiveInsights,
         culturalWisdomIntegration,
-        shadowWisdomIntegration
+        shadowWisdomIntegration,
       );
 
       // Generate implementation guidance
       const implementationGuidance = await this.generateImplementationGuidance(
         synthesisOutcome,
-        culturalProfile
+        culturalProfile,
       );
 
       const wisdomSynthesis: MultiPerspectiveWisdomSynthesis = {
@@ -656,13 +678,12 @@ export class InterArchetypalDialogueEngine {
         shadowWisdomIntegration,
         collectiveInsights,
         synthesisOutcome,
-        implementationGuidance
+        implementationGuidance,
       };
 
       return wisdomSynthesis;
-
     } catch (error) {
-      logger.error('Error synthesizing multi-perspective wisdom:', error);
+      logger.error("Error synthesizing multi-perspective wisdom:", error);
       throw error;
     }
   }
@@ -674,71 +695,69 @@ export class InterArchetypalDialogueEngine {
     wisdomSynthesis: MultiPerspectiveWisdomSynthesis,
     culturalProfile: CulturalProfile,
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
-    dreamAnalyses?: DreamAnalysis[]
+    dreamAnalyses?: DreamAnalysis[],
   ): Promise<ArchetypalIntegrationPathway> {
-
     try {
       const pathwayId = `pathway_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
       // Create integration stages
       const integrationStages = await this.createIntegrationStages(
         wisdomSynthesis,
-        culturalProfile
+        culturalProfile,
       );
 
       // Generate cultural pathway adaptations
       const culturalAdaptations = await this.generateCulturalPathwayAdaptations(
         integrationStages,
-        culturalProfile
+        culturalProfile,
       );
 
       // Create shadow integration guidance
       const shadowIntegrationGuidance = await this.createShadowPathwayGuidance(
         wisdomSynthesis.shadowWisdomIntegration,
-        culturalProfile
+        culturalProfile,
       );
 
       // Create light activation guidance
       const lightActivationGuidance = await this.createLightPathwayGuidance(
         wisdomSynthesis,
-        culturalProfile
+        culturalProfile,
       );
 
       // Connect with spiral harmonization
-      const spiralHarmonizationConnection = await this.connectSpiralHarmonization(
-        wisdomSynthesis,
-        lifeSpiralPlan
-      );
+      const spiralHarmonizationConnection =
+        await this.connectSpiralHarmonization(wisdomSynthesis, lifeSpiralPlan);
 
       // Integrate dream wisdom
       const dreamWisdomIntegration = await this.integrateDreamWisdom(
         wisdomSynthesis,
-        dreamAnalyses
+        dreamAnalyses,
       );
 
       // Assess collective evolution potential
-      const collectiveEvolutionPotential = await this.assessCollectiveEvolutionPotential(
-        wisdomSynthesis,
-        culturalProfile
-      );
+      const collectiveEvolutionPotential =
+        await this.assessCollectiveEvolutionPotential(
+          wisdomSynthesis,
+          culturalProfile,
+        );
 
       const integrationPathway: ArchetypalIntegrationPathway = {
         pathwayId,
-        pathwayName: 'Archetypal Wisdom Integration Pathway',
-        pathwayDescription: 'Multi-perspective wisdom integration with cultural and shadow honoring',
+        pathwayName: "Archetypal Wisdom Integration Pathway",
+        pathwayDescription:
+          "Multi-perspective wisdom integration with cultural and shadow honoring",
         integrationStages,
         culturalAdaptations,
         shadowIntegrationGuidance,
         lightActivationGuidance,
         spiralHarmonizationConnection,
         dreamWisdomIntegration,
-        collectiveEvolutionPotential
+        collectiveEvolutionPotential,
       };
 
       return integrationPathway;
-
     } catch (error) {
-      logger.error('Error creating integration pathway:', error);
+      logger.error("Error creating integration pathway:", error);
       throw error;
     }
   }
@@ -750,9 +769,8 @@ export class InterArchetypalDialogueEngine {
     challenge: string,
     culturalProfile: CulturalProfile,
     shadowPlan?: ShadowIntegrationPlan,
-    lifeSpiralPlan?: LifeSpiralHarmonizerPlan
+    lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
   ): Promise<ConvenedArchetype[]> {
-
     const archetypes: ConvenedArchetype[] = [];
 
     // Identify primary elemental archetypes
@@ -760,25 +778,32 @@ export class InterArchetypalDialogueEngine {
 
     // Add cultural archetypal expressions
     for (const archetype of primaryArchetypes) {
-      const culturalExpression = await crossCulturalArchetypeMapping.translateArchetype({
-        sourceElement: archetype,
-        targetCulture: culturalProfile.primaryCulture,
-        userCulturalBackground: culturalProfile.primaryCulture,
-        contextOfUse: 'archetypal_dialogue',
-        respectfulApproach: true
-      });
+      const culturalExpression =
+        await crossCulturalArchetypeMapping.translateArchetype({
+          sourceElement: archetype,
+          targetCulture: culturalProfile.primaryCulture,
+          userCulturalBackground: culturalProfile.primaryCulture,
+          contextOfUse: "archetypal_dialogue",
+          respectfulApproach: true,
+        });
 
       const convenedArchetype: ConvenedArchetype = {
         archetypeId: `archetype_${archetype}_${Date.now()}`,
         archetypeName: culturalExpression.culturalExpression.culturalName,
         culturalExpression: culturalExpression.culturalExpression,
         universalFunction: culturalExpression.universalFunction,
-        shadowAspects: await this.identifyArchetypalShadowAspects(archetype, shadowPlan),
+        shadowAspects: await this.identifyArchetypalShadowAspects(
+          archetype,
+          shadowPlan,
+        ),
         lightAspects: await this.identifyArchetypalLightAspects(archetype),
-        currentActivation: await this.assessArchetypalActivation(archetype, lifeSpiralPlan),
+        currentActivation: await this.assessArchetypalActivation(
+          archetype,
+          lifeSpiralPlan,
+        ),
         dialogueContributions: [],
         wisdomOfferings: [],
-        integrationNeeds: []
+        integrationNeeds: [],
       };
 
       archetypes.push(convenedArchetype);
@@ -787,33 +812,51 @@ export class InterArchetypalDialogueEngine {
     return archetypes;
   }
 
-  private async identifyPrimaryArchetypes(challenge: string): Promise<string[]> {
+  private async identifyPrimaryArchetypes(
+    challenge: string,
+  ): Promise<string[]> {
     const challengeLower = challenge.toLowerCase();
     const archetypes = [];
 
     // Fire archetype indicators
-    if (challengeLower.match(/action|courage|passion|leadership|transformation|change/)) {
-      archetypes.push('fire');
+    if (
+      challengeLower.match(
+        /action|courage|passion|leadership|transformation|change/,
+      )
+    ) {
+      archetypes.push("fire");
     }
 
     // Water archetype indicators
-    if (challengeLower.match(/emotion|healing|intuition|flow|adaptation|compassion/)) {
-      archetypes.push('water');
+    if (
+      challengeLower.match(
+        /emotion|healing|intuition|flow|adaptation|compassion/,
+      )
+    ) {
+      archetypes.push("water");
     }
 
     // Earth archetype indicators
-    if (challengeLower.match(/stability|practical|grounding|building|manifesting|structure/)) {
-      archetypes.push('earth');
+    if (
+      challengeLower.match(
+        /stability|practical|grounding|building|manifesting|structure/,
+      )
+    ) {
+      archetypes.push("earth");
     }
 
     // Air archetype indicators
-    if (challengeLower.match(/communication|ideas|clarity|vision|teaching|understanding/)) {
-      archetypes.push('air');
+    if (
+      challengeLower.match(
+        /communication|ideas|clarity|vision|teaching|understanding/,
+      )
+    ) {
+      archetypes.push("air");
     }
 
     // Ensure at least one archetype
     if (archetypes.length === 0) {
-      archetypes.push('water'); // Default to water for healing
+      archetypes.push("water"); // Default to water for healing
     }
 
     return archetypes;
@@ -821,35 +864,72 @@ export class InterArchetypalDialogueEngine {
 
   private async identifyArchetypalShadowAspects(
     archetype: string,
-    shadowPlan?: ShadowIntegrationPlan
+    shadowPlan?: ShadowIntegrationPlan,
   ): Promise<string[]> {
-
     const archetypeShadows = {
-      fire: ['Burnout', 'Destructive rage', 'Impulsiveness', 'Domination'],
-      water: ['Emotional overwhelm', 'Codependency', 'Victim consciousness', 'Emotional manipulation'],
-      earth: ['Rigidity', 'Materialism', 'Resistance to change', 'Stubbornness'],
-      air: ['Mental obsession', 'Disconnection from body', 'Overthinking', 'Intellectual arrogance']
+      fire: ["Burnout", "Destructive rage", "Impulsiveness", "Domination"],
+      water: [
+        "Emotional overwhelm",
+        "Codependency",
+        "Victim consciousness",
+        "Emotional manipulation",
+      ],
+      earth: [
+        "Rigidity",
+        "Materialism",
+        "Resistance to change",
+        "Stubbornness",
+      ],
+      air: [
+        "Mental obsession",
+        "Disconnection from body",
+        "Overthinking",
+        "Intellectual arrogance",
+      ],
     };
 
-    let shadows = archetypeShadows[archetype as keyof typeof archetypeShadows] || [];
+    let shadows =
+      archetypeShadows[archetype as keyof typeof archetypeShadows] || [];
 
     // Add specific shadows from shadow plan if available
     if (shadowPlan) {
       const relevantShadows = shadowPlan.shadowComplexes
-        .map(complex => complex.complexType)
-        .filter(type => this.isArchetypeRelevantToShadow(archetype, type));
+        .map((complex) => complex.complexType)
+        .filter((type) => this.isArchetypeRelevantToShadow(archetype, type));
       shadows.push(...relevantShadows);
     }
 
     return shadows;
   }
 
-  private async identifyArchetypalLightAspects(archetype: string): Promise<string[]> {
+  private async identifyArchetypalLightAspects(
+    archetype: string,
+  ): Promise<string[]> {
     const archetypeLight = {
-      fire: ['Creative force', 'Transformational power', 'Courageous action', 'Inspiring leadership'],
-      water: ['Emotional intelligence', 'Intuitive wisdom', 'Healing presence', 'Compassionate service'],
-      earth: ['Grounding presence', 'Manifestation mastery', 'Practical wisdom', 'Stable foundation'],
-      air: ['Clear communication', 'Visionary insight', 'Mental clarity', 'Inspired teaching']
+      fire: [
+        "Creative force",
+        "Transformational power",
+        "Courageous action",
+        "Inspiring leadership",
+      ],
+      water: [
+        "Emotional intelligence",
+        "Intuitive wisdom",
+        "Healing presence",
+        "Compassionate service",
+      ],
+      earth: [
+        "Grounding presence",
+        "Manifestation mastery",
+        "Practical wisdom",
+        "Stable foundation",
+      ],
+      air: [
+        "Clear communication",
+        "Visionary insight",
+        "Mental clarity",
+        "Inspired teaching",
+      ],
     };
 
     return archetypeLight[archetype as keyof typeof archetypeLight] || [];
@@ -857,12 +937,12 @@ export class InterArchetypalDialogueEngine {
 
   private async assessArchetypalActivation(
     archetype: string,
-    lifeSpiralPlan?: LifeSpiralHarmonizerPlan
+    lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
   ): Promise<number> {
-
     if (!lifeSpiralPlan) return 0.5; // Default moderate activation
 
-    const elementalSignature = lifeSpiralPlan.soulMandateAnalysis.elementalSignature;
+    const elementalSignature =
+      lifeSpiralPlan.soulMandateAnalysis.elementalSignature;
 
     if (elementalSignature.primaryElement === archetype) {
       return 0.8; // High activation for primary element
@@ -873,22 +953,29 @@ export class InterArchetypalDialogueEngine {
     }
   }
 
-  private isArchetypeRelevantToShadow(archetype: string, shadowType: string): boolean {
+  private isArchetypeRelevantToShadow(
+    archetype: string,
+    shadowType: string,
+  ): boolean {
     const relevanceMap = {
-      fire: ['self_sabotage', 'power_shadow'],
-      water: ['victim_shadow', 'anima_animus'],
-      earth: ['perfectionism', 'mother_father'],
-      air: ['persona', 'projection']
+      fire: ["self_sabotage", "power_shadow"],
+      water: ["victim_shadow", "anima_animus"],
+      earth: ["perfectionism", "mother_father"],
+      air: ["persona", "projection"],
     };
 
-    return relevanceMap[archetype as keyof typeof relevanceMap]?.includes(shadowType) || false;
+    return (
+      relevanceMap[archetype as keyof typeof relevanceMap]?.includes(
+        shadowType,
+      ) || false
+    );
   }
 
   // Additional placeholder methods for full implementation
   private async createDialogueParticipants(
     archetypes: ConvenedArchetype[],
     culturalProfile: CulturalProfile,
-    shadowPlan?: ShadowIntegrationPlan
+    shadowPlan?: ShadowIntegrationPlan,
   ): Promise<DialogueParticipant[]> {
     return []; // Placeholder
   }
@@ -896,21 +983,21 @@ export class InterArchetypalDialogueEngine {
   private async generateDialogueFlow(
     participants: DialogueParticipant[],
     challenge: string,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<DialogueExchange[]> {
     return []; // Placeholder
   }
 
   private async extractShadowRecognitions(
     dialogueFlow: DialogueExchange[],
-    shadowPlan?: ShadowIntegrationPlan
+    shadowPlan?: ShadowIntegrationPlan,
   ): Promise<ShadowRecognition[]> {
     return []; // Placeholder
   }
 
   private async extractLightActivations(
     dialogueFlow: DialogueExchange[],
-    archetypes: ConvenedArchetype[]
+    archetypes: ConvenedArchetype[],
   ): Promise<LightActivation[]> {
     return []; // Placeholder
   }
@@ -918,7 +1005,7 @@ export class InterArchetypalDialogueEngine {
   private async createPolarityIntegrations(
     shadowRecognitions: ShadowRecognition[],
     lightActivations: LightActivation[],
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<PolarityIntegration[]> {
     return []; // Placeholder
   }
@@ -927,7 +1014,7 @@ export class InterArchetypalDialogueEngine {
     dialogueFlow: DialogueExchange[],
     shadowRecognitions: ShadowRecognition[],
     lightActivations: LightActivation[],
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<HealingOpportunity[]> {
     return []; // Placeholder
   }
@@ -935,7 +1022,7 @@ export class InterArchetypalDialogueEngine {
   private async extractCollectiveWisdom(
     dialogueFlow: DialogueExchange[],
     wisdomSynthesis: any,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<string[]> {
     return []; // Placeholder
   }
@@ -944,53 +1031,53 @@ export class InterArchetypalDialogueEngine {
   private async createArchetypalPerspectives(
     archetypes: ConvenedArchetype[],
     dialogue: ShadowLightDialogue,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<ArchetypalPerspective[]> {
     return []; // Placeholder
   }
 
   private async identifyWisdomThreads(
     perspectives: ArchetypalPerspective[],
-    dialogue: ShadowLightDialogue
+    dialogue: ShadowLightDialogue,
   ): Promise<WisdomThread[]> {
     return []; // Placeholder
   }
 
   private async integrateCulturalWisdom(
     wisdomThreads: WisdomThread[],
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<CulturalWisdomIntegration> {
     return {
-      integrationApproach: 'Respectful wisdom integration',
+      integrationApproach: "Respectful wisdom integration",
       respectfulFraming: `Honoring ${culturalProfile.primaryCulture} traditions`,
       sovereigntyCompliance: true,
-      traditionalWisdomHonoring: ['Traditional practices honored'],
-      modernApplications: ['Contemporary applications developed'],
-      crossCulturalBridges: ['Cross-cultural connections facilitated'],
-      appropriationAvoidance: ['Cultural appropriation avoided'],
-      attributionRequirements: ['Proper attribution provided']
+      traditionalWisdomHonoring: ["Traditional practices honored"],
+      modernApplications: ["Contemporary applications developed"],
+      crossCulturalBridges: ["Cross-cultural connections facilitated"],
+      appropriationAvoidance: ["Cultural appropriation avoided"],
+      attributionRequirements: ["Proper attribution provided"],
     };
   }
 
   private async integrateShadowWisdom(
     wisdomThreads: WisdomThread[],
-    dialogue: ShadowLightDialogue
+    dialogue: ShadowLightDialogue,
   ): Promise<ShadowWisdomIntegration> {
     return {
-      shadowWisdomElements: ['Shadow elements integrated'],
-      shadowIntegrationApproaches: ['Integration approaches identified'],
-      collectiveShadowRecognition: ['Collective shadow recognized'],
-      shadowHealingOpportunities: ['Healing opportunities identified'],
-      shadowTransformationGuidance: ['Transformation guidance provided'],
-      shadowServicePotential: ['Service potential recognized'],
-      shadowWisdomSharing: ['Wisdom sharing opportunities identified']
+      shadowWisdomElements: ["Shadow elements integrated"],
+      shadowIntegrationApproaches: ["Integration approaches identified"],
+      collectiveShadowRecognition: ["Collective shadow recognized"],
+      shadowHealingOpportunities: ["Healing opportunities identified"],
+      shadowTransformationGuidance: ["Transformation guidance provided"],
+      shadowServicePotential: ["Service potential recognized"],
+      shadowWisdomSharing: ["Wisdom sharing opportunities identified"],
     };
   }
 
   private async generateCollectiveInsights(
     wisdomThreads: WisdomThread[],
     culturalWisdom: CulturalWisdomIntegration,
-    shadowWisdom: ShadowWisdomIntegration
+    shadowWisdom: ShadowWisdomIntegration,
   ): Promise<CollectiveInsight[]> {
     return []; // Placeholder
   }
@@ -998,139 +1085,149 @@ export class InterArchetypalDialogueEngine {
   private async createSynthesisOutcome(
     insights: CollectiveInsight[],
     culturalWisdom: CulturalWisdomIntegration,
-    shadowWisdom: ShadowWisdomIntegration
+    shadowWisdom: ShadowWisdomIntegration,
   ): Promise<SynthesisOutcome> {
     return {
-      primaryWisdom: 'Integrated archetypal wisdom with cultural and shadow honoring',
-      integratedGuidance: 'Comprehensive guidance for wisdom integration',
-      actionableSteps: ['Step 1: Cultural grounding', 'Step 2: Shadow integration', 'Step 3: Light activation'],
+      primaryWisdom:
+        "Integrated archetypal wisdom with cultural and shadow honoring",
+      integratedGuidance: "Comprehensive guidance for wisdom integration",
+      actionableSteps: [
+        "Step 1: Cultural grounding",
+        "Step 2: Shadow integration",
+        "Step 3: Light activation",
+      ],
       culturalAdaptations: culturalWisdom.modernApplications,
       shadowIntegrations: shadowWisdom.shadowIntegrationApproaches,
-      lightActivations: ['Light activation guidance'],
-      communityApplications: ['Community applications'],
-      individualApplications: ['Individual applications'],
-      evolutionaryImplications: ['Evolutionary implications']
+      lightActivations: ["Light activation guidance"],
+      communityApplications: ["Community applications"],
+      individualApplications: ["Individual applications"],
+      evolutionaryImplications: ["Evolutionary implications"],
     };
   }
 
   private async generateImplementationGuidance(
     outcome: SynthesisOutcome,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<ImplementationGuidance> {
     return {
       immediateActions: outcome.actionableSteps.slice(0, 3),
-      shortTermIntegration: ['Short-term integration steps'],
-      longTermEvolution: ['Long-term evolution guidance'],
-      culturalPractices: ['Cultural practices recommended'],
-      shadowWorkPractices: ['Shadow work practices'],
-      lightActivationPractices: ['Light activation practices'],
-      communityPractices: ['Community practices'],
-      personalPractices: ['Personal practices'],
-      progressMarkers: ['Progress markers defined']
+      shortTermIntegration: ["Short-term integration steps"],
+      longTermEvolution: ["Long-term evolution guidance"],
+      culturalPractices: ["Cultural practices recommended"],
+      shadowWorkPractices: ["Shadow work practices"],
+      lightActivationPractices: ["Light activation practices"],
+      communityPractices: ["Community practices"],
+      personalPractices: ["Personal practices"],
+      progressMarkers: ["Progress markers defined"],
     };
   }
 
   // Additional placeholder methods for integration pathway
   private async createIntegrationStages(
     synthesis: MultiPerspectiveWisdomSynthesis,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<IntegrationStage[]> {
     return []; // Placeholder
   }
 
   private async generateCulturalPathwayAdaptations(
     stages: IntegrationStage[],
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<CulturalPathwayAdaptation[]> {
     return []; // Placeholder
   }
 
   private async createShadowPathwayGuidance(
     shadowWisdom: ShadowWisdomIntegration,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<ShadowPathwayGuidance[]> {
     return []; // Placeholder
   }
 
   private async createLightPathwayGuidance(
     synthesis: MultiPerspectiveWisdomSynthesis,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<LightPathwayGuidance[]> {
     return []; // Placeholder
   }
 
   private async connectSpiralHarmonization(
     synthesis: MultiPerspectiveWisdomSynthesis,
-    lifeSpiralPlan?: LifeSpiralHarmonizerPlan
+    lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
   ): Promise<SpiralHarmonizationConnection> {
     return {
-      connectionId: 'spiral_connection_1',
-      soulMandateAlignment: 'Aligned with soul mandate',
-      lifePhaseIntegration: 'Integrated with current life phase',
-      purposeActivation: ['Purpose activation guidance'],
-      mandateEvolution: ['Mandate evolution support'],
-      spiralSupports: ['Spiral supports provided'],
-      harmonizationPractices: ['Harmonization practices recommended']
+      connectionId: "spiral_connection_1",
+      soulMandateAlignment: "Aligned with soul mandate",
+      lifePhaseIntegration: "Integrated with current life phase",
+      purposeActivation: ["Purpose activation guidance"],
+      mandateEvolution: ["Mandate evolution support"],
+      spiralSupports: ["Spiral supports provided"],
+      harmonizationPractices: ["Harmonization practices recommended"],
     };
   }
 
   private async integrateDreamWisdom(
     synthesis: MultiPerspectiveWisdomSynthesis,
-    dreamAnalyses?: DreamAnalysis[]
+    dreamAnalyses?: DreamAnalysis[],
   ): Promise<DreamWisdomIntegration> {
     return {
-      integrationId: 'dream_integration_1',
-      dreamWisdomElements: dreamAnalyses?.map(d => d.culturalInterpretation.traditionalInterpretation) || [],
-      narrativeConnections: ['Narrative connections identified'],
-      symbolIntegrations: ['Symbol integrations created'],
-      dreamGuidance: ['Dream guidance provided'],
-      storyWeavingConnections: ['Story weaving connections made'],
-      collectiveDreamWisdom: ['Collective dream wisdom extracted']
+      integrationId: "dream_integration_1",
+      dreamWisdomElements:
+        dreamAnalyses?.map(
+          (d) => d.culturalInterpretation.traditionalInterpretation,
+        ) || [],
+      narrativeConnections: ["Narrative connections identified"],
+      symbolIntegrations: ["Symbol integrations created"],
+      dreamGuidance: ["Dream guidance provided"],
+      storyWeavingConnections: ["Story weaving connections made"],
+      collectiveDreamWisdom: ["Collective dream wisdom extracted"],
     };
   }
 
   private async assessCollectiveEvolutionPotential(
     synthesis: MultiPerspectiveWisdomSynthesis,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<CollectiveEvolutionPotential> {
     return {
-      potentialId: 'evolution_potential_1',
-      evolutionDirection: 'Collective consciousness expansion',
-      collectiveImpact: ['Collective impact potential'],
-      communityTransformation: ['Community transformation opportunities'],
-      culturalHealing: ['Cultural healing possibilities'],
-      planetaryWisdom: ['Planetary wisdom contributions'],
-      sevenGenerationsImpact: ['Seven generations impact assessment'],
-      consciousnessEvolution: ['Consciousness evolution potential']
+      potentialId: "evolution_potential_1",
+      evolutionDirection: "Collective consciousness expansion",
+      collectiveImpact: ["Collective impact potential"],
+      communityTransformation: ["Community transformation opportunities"],
+      culturalHealing: ["Cultural healing possibilities"],
+      planetaryWisdom: ["Planetary wisdom contributions"],
+      sevenGenerationsImpact: ["Seven generations impact assessment"],
+      consciousnessEvolution: ["Consciousness evolution potential"],
     };
   }
 
   private async generateCulturalAdaptations(
     synthesis: MultiPerspectiveWisdomSynthesis,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<CulturalAdaptation[]> {
-    return [{
-      adaptationId: 'cultural_adaptation_1',
-      culturalContext: culturalProfile.primaryCulture,
-      traditionalWisdom: culturalProfile.preferredWisdomSources,
-      respectfulFraming: `Respectful integration of ${culturalProfile.primaryCulture} wisdom`,
-      sovereigntyCompliance: true,
-      modernApplications: ['Contemporary applications'],
-      communityConnections: ['Community connections facilitated'],
-      appropriationAvoidance: ['Appropriation avoided'],
-      attributionRequirements: ['Proper attribution provided']
-    }];
+    return [
+      {
+        adaptationId: "cultural_adaptation_1",
+        culturalContext: culturalProfile.primaryCulture,
+        traditionalWisdom: culturalProfile.preferredWisdomSources,
+        respectfulFraming: `Respectful integration of ${culturalProfile.primaryCulture} wisdom`,
+        sovereigntyCompliance: true,
+        modernApplications: ["Contemporary applications"],
+        communityConnections: ["Community connections facilitated"],
+        appropriationAvoidance: ["Appropriation avoided"],
+        attributionRequirements: ["Proper attribution provided"],
+      },
+    ];
   }
 
   private async generateRespectfulAttributions(
     synthesis: MultiPerspectiveWisdomSynthesis,
-    culturalProfile: CulturalProfile
+    culturalProfile: CulturalProfile,
   ): Promise<string[]> {
     return [
       `Wisdom traditions of ${culturalProfile.primaryCulture} honored`,
-      'Indigenous sovereignty respected',
-      'Cultural protocols followed',
-      'Traditional knowledge protected'
+      "Indigenous sovereignty respected",
+      "Cultural protocols followed",
+      "Traditional knowledge protected",
     ];
   }
 
@@ -1138,36 +1235,42 @@ export class InterArchetypalDialogueEngine {
     challenge: string,
     synthesis: MultiPerspectiveWisdomSynthesis,
     pathway: ArchetypalIntegrationPathway,
-    adaptations: CulturalAdaptation[]
+    adaptations: CulturalAdaptation[],
   ): Promise<CouncilOutcome> {
-
     return {
       outcomeId: `outcome_${Date.now()}`,
       primaryResolution: `Archetypal council provides integrated wisdom for: ${challenge}`,
       wisdomSynthesis: synthesis.synthesisOutcome.primaryWisdom,
       actionableGuidance: synthesis.implementationGuidance.immediateActions,
-      culturalWisdom: adaptations.map(a => a.traditionalWisdom).flat(),
-      shadowIntegration: synthesis.shadowWisdomIntegration.shadowIntegrationApproaches,
-      lightActivation: ['Light activation through archetypal integration'],
-      communityApplications: ['Community applications available'],
-      individualApplications: ['Individual applications recommended'],
-      evolutionaryImplications: ['Evolutionary implications assessed'],
-      nextCouncilPreparation: ['Future council preparation guidance']
+      culturalWisdom: adaptations.map((a) => a.traditionalWisdom).flat(),
+      shadowIntegration:
+        synthesis.shadowWisdomIntegration.shadowIntegrationApproaches,
+      lightActivation: ["Light activation through archetypal integration"],
+      communityApplications: ["Community applications available"],
+      individualApplications: ["Individual applications recommended"],
+      evolutionaryImplications: ["Evolutionary implications assessed"],
+      nextCouncilPreparation: ["Future council preparation guidance"],
     };
   }
 
   private initializeArchetypalFrameworks(): void {
-    logger.info('Inter-Archetypal Dialogue Engine initialized', {
-      frameworksLoaded: ['archetypal_dialogue', 'shadow_light_integration', 'cultural_wisdom_synthesis'],
+    logger.info("Inter-Archetypal Dialogue Engine initialized", {
+      frameworksLoaded: [
+        "archetypal_dialogue",
+        "shadow_light_integration",
+        "cultural_wisdom_synthesis",
+      ],
       culturalIntegration: true,
-      shadowIntegration: true
+      shadowIntegration: true,
     });
   }
 
   /**
    * Get archetypal council session
    */
-  getArchetypalCouncilSession(sessionId: string): ArchetypalCouncilSession | null {
+  getArchetypalCouncilSession(
+    sessionId: string,
+  ): ArchetypalCouncilSession | null {
     return this.archetypalCouncilSessions.get(sessionId) || null;
   }
 
@@ -1181,16 +1284,21 @@ export class InterArchetypalDialogueEngine {
   /**
    * Get wisdom synthesis
    */
-  getWisdomSynthesis(synthesisId: string): MultiPerspectiveWisdomSynthesis | null {
+  getWisdomSynthesis(
+    synthesisId: string,
+  ): MultiPerspectiveWisdomSynthesis | null {
     return this.wisdomSyntheses.get(synthesisId) || null;
   }
 
   /**
    * Get integration pathway
    */
-  getIntegrationPathway(pathwayId: string): ArchetypalIntegrationPathway | null {
+  getIntegrationPathway(
+    pathwayId: string,
+  ): ArchetypalIntegrationPathway | null {
     return this.integrationPathways.get(pathwayId) || null;
   }
 }
 
-export const interArchetypalDialogueEngine = new InterArchetypalDialogueEngine();
+export const interArchetypalDialogueEngine =
+  new InterArchetypalDialogueEngine();

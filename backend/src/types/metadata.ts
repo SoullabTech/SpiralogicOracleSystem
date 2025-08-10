@@ -10,7 +10,7 @@ export interface Metadata {
   notes?: string;
   tags?: string[];
   language?: string;
-  sentiment?: 'positive' | 'neutral' | 'negative';
+  sentiment?: "positive" | "neutral" | "negative";
   symbols?: string[];
   [key: string]: any; // Allows for additional dynamic keys
 }

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // 🌀 SCRIPT: Ingest Elemental Alchemy Book into Founder Agent
 
-import { logger } from '../src/utils/logger';
-import fs from 'fs/promises';
-import path from 'path';
+import { logger } from "../src/utils/logger";
+import fs from "fs/promises";
+import path from "path";
 
 interface BookContent {
   title: string;
@@ -49,15 +49,16 @@ interface BookMetadata {
 
 async function ingestElementalAlchemyBook() {
   try {
-    console.log('📚 Starting Elemental Alchemy Book ingestion...\n');
+    console.log("📚 Starting Elemental Alchemy Book ingestion...\n");
 
     // Path to the book
-    const bookPath = '/Volumes/T7 Shield/Obsidian- Elemental Alchemy /Elemental Alchemy Book/Elemental Alchemy_ The Ancient Art of Living a Phenomenal Life.md';
+    const bookPath =
+      "/Volumes/T7 Shield/Obsidian- Elemental Alchemy /Elemental Alchemy Book/Elemental Alchemy_ The Ancient Art of Living a Phenomenal Life.md";
 
     console.log(`📖 Reading book from: ${bookPath}\n`);
 
     // Read the book file
-    const content = await fs.readFile(bookPath, 'utf-8');
+    const content = await fs.readFile(bookPath, "utf-8");
 
     // Parse the book structure
     const book = await parseElementalAlchemyBook(content);
@@ -71,47 +72,50 @@ async function ingestElementalAlchemyBook() {
     // Save the processed knowledge
     await saveProcessedKnowledge(knowledgeUpdate);
 
-    console.log('✅ Elemental Alchemy Book successfully processed!\n');
-    console.log('📊 Summary:');
+    console.log("✅ Elemental Alchemy Book successfully processed!\n");
+    console.log("📊 Summary:");
     console.log(`- Title: ${book.title}`);
     console.log(`- Author: ${book.author}`);
     console.log(`- Chapters: ${book.chapters.length}`);
     console.log(`- Core Teachings: ${book.coreTeachings.length}`);
-    console.log(`- Practical Applications: ${book.practicalApplications.length}\n`);
+    console.log(
+      `- Practical Applications: ${book.practicalApplications.length}\n`,
+    );
 
-    console.log('🔥💧🌍💨✨ Elemental Wisdom Extracted:');
+    console.log("🔥💧🌍💨✨ Elemental Wisdom Extracted:");
     Object.entries(elementalWisdom).forEach(([element, teaching]) => {
       console.log(`\n${element.toUpperCase()}:`);
       console.log(`- Essence: ${teaching.essence.substring(0, 100)}...`);
       console.log(`- Practices: ${teaching.practices.length} practices`);
-      console.log(`- Qualities: ${teaching.qualities.join(', ')}`);
+      console.log(`- Qualities: ${teaching.qualities.join(", ")}`);
     });
 
-    console.log('\n🎯 Core Teachings:');
+    console.log("\n🎯 Core Teachings:");
     book.coreTeachings.slice(0, 5).forEach((teaching, index) => {
       console.log(`${index + 1}. ${teaching.substring(0, 80)}...`);
     });
 
-    console.log('\n✨ The Founder Agent now has deep knowledge of:');
-    console.log('- The ancient art of Elemental Alchemy');
-    console.log('- Practical applications for each element');
-    console.log('- The Spiralogic Process integration');
-    console.log('- Healing practices and shadow work');
-    console.log('- The Torus of Change model');
-    console.log('- Living a phenomenal life through elemental balance');
+    console.log("\n✨ The Founder Agent now has deep knowledge of:");
+    console.log("- The ancient art of Elemental Alchemy");
+    console.log("- Practical applications for each element");
+    console.log("- The Spiralogic Process integration");
+    console.log("- Healing practices and shadow work");
+    console.log("- The Torus of Change model");
+    console.log("- Living a phenomenal life through elemental balance");
 
-    console.log('\n📚 Elemental Alchemy wisdom integration complete!');
+    console.log("\n📚 Elemental Alchemy wisdom integration complete!");
     process.exit(0);
-
   } catch (error) {
-    console.error('❌ Error ingesting book:', error);
-    logger.error('Book ingestion failed', error);
+    console.error("❌ Error ingesting book:", error);
+    logger.error("Book ingestion failed", error);
     process.exit(1);
   }
 }
 
-async function parseElementalAlchemyBook(content: string): Promise<BookContent> {
-  const lines = content.split('\n');
+async function parseElementalAlchemyBook(
+  content: string,
+): Promise<BookContent> {
+  const lines = content.split("\n");
   const chapters: Chapter[] = [];
   let currentChapter: Chapter | null = null;
   const coreTeachings: string[] = [];
@@ -119,11 +123,12 @@ async function parseElementalAlchemyBook(content: string): Promise<BookContent> 
 
   // Extract metadata
   const metadata: BookMetadata = {
-    author: 'Kelly Nezat',
-    publisher: 'Soullab Media',
+    author: "Kelly Nezat",
+    publisher: "Soullab Media",
     year: 2024,
     dedication: extractDedication(lines),
-    corePhilosophy: 'The ancient art of living a phenomenal life through elemental balance and alchemical transformation'
+    corePhilosophy:
+      "The ancient art of living a phenomenal life through elemental balance and alchemical transformation",
   };
 
   // Parse chapters
@@ -135,24 +140,26 @@ async function parseElementalAlchemyBook(content: string): Promise<BookContent> 
       const match = line.match(/^#?\s*Chapter\s+(\d+):\s*(.+)/);
       if (match) {
         if (currentChapter) {
-          currentChapter.keyTeachings = extractKeyTeachings(currentChapter.content);
+          currentChapter.keyTeachings = extractKeyTeachings(
+            currentChapter.content,
+          );
           chapters.push(currentChapter);
         }
         currentChapter = {
           number: parseInt(match[1]),
           title: match[2].trim(),
-          content: '',
+          content: "",
           keyTeachings: [],
-          element: detectElement(match[2])
+          element: detectElement(match[2]),
         };
       }
     } else if (currentChapter) {
-      currentChapter.content += line + '\n';
+      currentChapter.content += line + "\n";
     }
 
     // Extract core teachings (look for philosophical statements)
     if (line.includes('"') && line.length > 50 && line.length < 200) {
-      const teaching = line.replace(/["""]/g, '').trim();
+      const teaching = line.replace(/["""]/g, "").trim();
       if (teaching && !coreTeachings.includes(teaching)) {
         coreTeachings.push(teaching);
       }
@@ -171,49 +178,54 @@ async function parseElementalAlchemyBook(content: string): Promise<BookContent> 
   }
 
   return {
-    title: 'Elemental Alchemy: The Ancient Art of Living a Phenomenal Life',
+    title: "Elemental Alchemy: The Ancient Art of Living a Phenomenal Life",
     author: metadata.author,
     chapters,
     elementalWisdom: {} as ElementalWisdom, // Will be filled by extractElementalWisdom
     coreTeachings,
     practicalApplications,
-    metadata
+    metadata,
   };
 }
 
 function extractDedication(lines: string[]): string {
-  const dedStart = lines.findIndex(line => line.includes('Dedication'));
-  const dedEnd = lines.findIndex((line, index) => index > dedStart && line.includes('Acknowledgments'));
+  const dedStart = lines.findIndex((line) => line.includes("Dedication"));
+  const dedEnd = lines.findIndex(
+    (line, index) => index > dedStart && line.includes("Acknowledgments"),
+  );
 
   if (dedStart !== -1 && dedEnd !== -1) {
-    return lines.slice(dedStart + 1, dedEnd).join(' ').trim();
+    return lines
+      .slice(dedStart + 1, dedEnd)
+      .join(" ")
+      .trim();
   }
-  return '';
+  return "";
 }
 
 function detectElement(chapterTitle: string): string | undefined {
   const title = chapterTitle.toLowerCase();
-  if (title.includes('fire')) return 'fire';
-  if (title.includes('water')) return 'water';
-  if (title.includes('earth')) return 'earth';
-  if (title.includes('air')) return 'air';
-  if (title.includes('aether')) return 'aether';
+  if (title.includes("fire")) return "fire";
+  if (title.includes("water")) return "water";
+  if (title.includes("earth")) return "earth";
+  if (title.includes("air")) return "air";
+  if (title.includes("aether")) return "aether";
   return undefined;
 }
 
 function extractKeyTeachings(content: string): string[] {
   const teachings: string[] = [];
-  const lines = content.split('\n');
+  const lines = content.split("\n");
 
-  lines.forEach(line => {
+  lines.forEach((line) => {
     // Extract bullet points, key concepts, and important statements
     if (line.match(/^[\s]*[-•*]\s+(.+)/) && line.length > 30) {
-      const teaching = line.replace(/^[\s]*[-•*]\s+/, '').trim();
+      const teaching = line.replace(/^[\s]*[-•*]\s+/, "").trim();
       teachings.push(teaching);
     }
     // Extract section headers as teachings
-    if (line.match(/^#{2,4}\s+(.+)/) && !line.includes('Chapter')) {
-      const teaching = line.replace(/^#{2,4}\s+/, '').trim();
+    if (line.match(/^#{2,4}\s+(.+)/) && !line.includes("Chapter")) {
+      const teaching = line.replace(/^#{2,4}\s+/, "").trim();
       if (teaching.length > 10) {
         teachings.push(teaching);
       }
@@ -225,26 +237,29 @@ function extractKeyTeachings(content: string): string[] {
 
 function extractElementalWisdom(book: BookContent): ElementalWisdom {
   const wisdom: ElementalWisdom = {
-    fire: extractElementTeaching(book, 'fire'),
-    water: extractElementTeaching(book, 'water'),
-    earth: extractElementTeaching(book, 'earth'),
-    air: extractElementTeaching(book, 'air'),
-    aether: extractElementTeaching(book, 'aether')
+    fire: extractElementTeaching(book, "fire"),
+    water: extractElementTeaching(book, "water"),
+    earth: extractElementTeaching(book, "earth"),
+    air: extractElementTeaching(book, "air"),
+    aether: extractElementTeaching(book, "aether"),
   };
 
   return wisdom;
 }
 
-function extractElementTeaching(book: BookContent, element: string): ElementTeaching {
-  const elementChapter = book.chapters.find(ch => ch.element === element);
+function extractElementTeaching(
+  book: BookContent,
+  element: string,
+): ElementTeaching {
+  const elementChapter = book.chapters.find((ch) => ch.element === element);
 
   if (!elementChapter) {
     return {
-      essence: '',
+      essence: "",
       practices: [],
       qualities: [],
       healingApplications: [],
-      shadowAspects: []
+      shadowAspects: [],
     };
   }
 
@@ -255,7 +270,7 @@ function extractElementTeaching(book: BookContent, element: string): ElementTeac
     practices: extractPractices(content),
     qualities: extractQualities(content, element),
     healingApplications: extractHealingApplications(content),
-    shadowAspects: extractShadowAspects(content, element)
+    shadowAspects: extractShadowAspects(content, element),
   };
 }
 
@@ -264,11 +279,11 @@ function extractEssence(content: string, element: string): string {
   const essencePatterns = [
     `${element}.*?element of (.+?)[\n.]`,
     `${element}.*?represents? (.+?)[\n.]`,
-    `${element}.*?embodies (.+?)[\n.]`
+    `${element}.*?embodies (.+?)[\n.]`,
   ];
 
   for (const pattern of essencePatterns) {
-    const match = content.match(new RegExp(pattern, 'i'));
+    const match = content.match(new RegExp(pattern, "i"));
     if (match) {
       return match[1].trim();
     }
@@ -276,27 +291,30 @@ function extractEssence(content: string, element: string): string {
 
   // Fallback essences based on traditional associations
   const fallbackEssences: Record<string, string> = {
-    fire: 'Spirit, transformation, passion, and creative energy',
-    water: 'Emotional intelligence, flow, intuition, and deep transformation',
-    earth: 'Embodiment, grounding, manifestation, and practical wisdom',
-    air: 'Intellect, communication, clarity, and mental agility',
-    aether: 'Unity, transcendence, integration, and infinite potential'
+    fire: "Spirit, transformation, passion, and creative energy",
+    water: "Emotional intelligence, flow, intuition, and deep transformation",
+    earth: "Embodiment, grounding, manifestation, and practical wisdom",
+    air: "Intellect, communication, clarity, and mental agility",
+    aether: "Unity, transcendence, integration, and infinite potential",
   };
 
-  return fallbackEssences[element] || '';
+  return fallbackEssences[element] || "";
 }
 
 function extractPractices(content: string): string[] {
   const practices: string[] = [];
-  const lines = content.split('\n');
+  const lines = content.split("\n");
 
   lines.forEach((line, index) => {
     if (line.match(/^(Practice|Exercise|Try this|Application):/i)) {
       // Get the practice description (current line + next few lines)
       let practice = line;
       for (let i = 1; i <= 3 && index + i < lines.length; i++) {
-        if (lines[index + i].trim() && !lines[index + i].match(/^(Practice|Exercise|#)/)) {
-          practice += ' ' + lines[index + i].trim();
+        if (
+          lines[index + i].trim() &&
+          !lines[index + i].match(/^(Practice|Exercise|#)/)
+        ) {
+          practice += " " + lines[index + i].trim();
         } else {
           break;
         }
@@ -311,11 +329,46 @@ function extractPractices(content: string): string[] {
 function extractQualities(content: string, element: string): string[] {
   // Define qualities for each element based on the book's teachings
   const elementQualities: Record<string, string[]> = {
-    fire: ['transformation', 'passion', 'creativity', 'inspiration', 'spiritual vision', 'catalytic energy'],
-    water: ['emotional depth', 'intuition', 'flow', 'adaptability', 'healing', 'receptivity'],
-    earth: ['grounding', 'stability', 'manifestation', 'practicality', 'nurturing', 'embodiment'],
-    air: ['clarity', 'communication', 'intellect', 'perspective', 'discernment', 'synthesis'],
-    aether: ['unity', 'integration', 'transcendence', 'wholeness', 'infinite potential', 'harmony']
+    fire: [
+      "transformation",
+      "passion",
+      "creativity",
+      "inspiration",
+      "spiritual vision",
+      "catalytic energy",
+    ],
+    water: [
+      "emotional depth",
+      "intuition",
+      "flow",
+      "adaptability",
+      "healing",
+      "receptivity",
+    ],
+    earth: [
+      "grounding",
+      "stability",
+      "manifestation",
+      "practicality",
+      "nurturing",
+      "embodiment",
+    ],
+    air: [
+      "clarity",
+      "communication",
+      "intellect",
+      "perspective",
+      "discernment",
+      "synthesis",
+    ],
+    aether: [
+      "unity",
+      "integration",
+      "transcendence",
+      "wholeness",
+      "infinite potential",
+      "harmony",
+    ],
   };
 
   return elementQualities[element] || [];
@@ -323,11 +376,21 @@ function extractQualities(content: string, element: string): string[] {
 
 function extractHealingApplications(content: string): string[] {
   const applications: string[] = [];
-  const healingKeywords = ['healing', 'balance', 'restore', 'transform', 'integrate', 'harmonize'];
+  const healingKeywords = [
+    "healing",
+    "balance",
+    "restore",
+    "transform",
+    "integrate",
+    "harmonize",
+  ];
 
-  const lines = content.split('\n');
-  lines.forEach(line => {
-    if (healingKeywords.some(keyword => line.toLowerCase().includes(keyword)) && line.length > 40) {
+  const lines = content.split("\n");
+  lines.forEach((line) => {
+    if (
+      healingKeywords.some((keyword) => line.toLowerCase().includes(keyword)) &&
+      line.length > 40
+    ) {
       applications.push(line.trim());
     }
   });
@@ -338,11 +401,41 @@ function extractHealingApplications(content: string): string[] {
 function extractShadowAspects(content: string, element: string): string[] {
   // Define shadow aspects for each element
   const shadowAspects: Record<string, string[]> = {
-    fire: ['burnout', 'impulsiveness', 'aggression', 'scattered energy', 'spiritual bypassing'],
-    water: ['emotional overwhelm', 'manipulation', 'stagnation', 'victimhood', 'emotional avoidance'],
-    earth: ['rigidity', 'materialism', 'stagnation', 'resistance to change', 'over-attachment'],
-    air: ['overthinking', 'disconnection', 'analysis paralysis', 'intellectual arrogance', 'superficiality'],
-    aether: ['dissociation', 'spiritual bypassing', 'ungroundedness', 'escapism', 'false unity']
+    fire: [
+      "burnout",
+      "impulsiveness",
+      "aggression",
+      "scattered energy",
+      "spiritual bypassing",
+    ],
+    water: [
+      "emotional overwhelm",
+      "manipulation",
+      "stagnation",
+      "victimhood",
+      "emotional avoidance",
+    ],
+    earth: [
+      "rigidity",
+      "materialism",
+      "stagnation",
+      "resistance to change",
+      "over-attachment",
+    ],
+    air: [
+      "overthinking",
+      "disconnection",
+      "analysis paralysis",
+      "intellectual arrogance",
+      "superficiality",
+    ],
+    aether: [
+      "dissociation",
+      "spiritual bypassing",
+      "ungroundedness",
+      "escapism",
+      "false unity",
+    ],
   };
 
   return shadowAspects[element] || [];
@@ -350,41 +443,47 @@ function extractShadowAspects(content: string, element: string): string[] {
 
 function createKnowledgeUpdate(book: BookContent, wisdom: ElementalWisdom) {
   return {
-    type: 'book',
+    type: "book",
     title: book.title,
     author: book.author,
     content: {
-      chapters: book.chapters.map(ch => ({
+      chapters: book.chapters.map((ch) => ({
         number: ch.number,
         title: ch.title,
         element: ch.element,
-        keyTeachings: ch.keyTeachings
+        keyTeachings: ch.keyTeachings,
       })),
       elementalWisdom: wisdom,
       coreTeachings: book.coreTeachings,
-      practicalApplications: book.practicalApplications
+      practicalApplications: book.practicalApplications,
     },
     metadata: {
       ...book.metadata,
-      keywords: ['elemental alchemy', 'transformation', 'healing', 'consciousness', 'spiralogic'],
-      accessibility: 'public',
-      integrationDate: new Date().toISOString()
-    }
+      keywords: [
+        "elemental alchemy",
+        "transformation",
+        "healing",
+        "consciousness",
+        "spiralogic",
+      ],
+      accessibility: "public",
+      integrationDate: new Date().toISOString(),
+    },
   };
 }
 
 async function saveProcessedKnowledge(knowledge: any): Promise<void> {
   const knowledgePath = path.join(
     __dirname,
-    '../data/founder-knowledge/elemental-alchemy-book.json'
+    "../data/founder-knowledge/elemental-alchemy-book.json",
   );
 
   try {
     await fs.mkdir(path.dirname(knowledgePath), { recursive: true });
     await fs.writeFile(knowledgePath, JSON.stringify(knowledge, null, 2));
-    console.log('💾 Knowledge saved to:', knowledgePath);
+    console.log("💾 Knowledge saved to:", knowledgePath);
   } catch (error) {
-    console.error('Error saving knowledge:', error);
+    console.error("Error saving knowledge:", error);
   }
 }
 

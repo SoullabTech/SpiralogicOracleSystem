@@ -2,7 +2,7 @@
 import { z } from "zod";
 
 export const SymbolThreadRequestSchema = z.object({
-  symbol: z.string().min(1)
+  symbol: z.string().min(1),
 });
 
 export const SymbolThreadResponseSchema = z.object({
@@ -13,7 +13,7 @@ export const SymbolThreadResponseSchema = z.object({
       description: z.string(),
       symbols: z.array(z.string()),
       phase: z.string(),
-      archetype: z.string()
-    })
-  )
+      archetype: z.string(),
+    }),
+  ),
 });

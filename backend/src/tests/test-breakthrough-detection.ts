@@ -3,25 +3,25 @@
 // Tests the enhanced breakthrough detection
 // ===============================================
 
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
+import { PersonalOracleAgent } from "../core/agents/PersonalOracleAgent";
+import { SoulMemorySystem } from "../../memory/SoulMemorySystem";
 
 async function testBreakthroughDetection() {
-  console.log('🌟 Testing Breakthrough & Sacred Moment Detection\n');
+  console.log("🌟 Testing Breakthrough & Sacred Moment Detection\n");
 
   // Setup
-  const userId = 'test_breakthrough_' + Date.now();
+  const userId = "test_breakthrough_" + Date.now();
   const soulMemory = new SoulMemorySystem({
     userId,
-    storageType: 'sqlite',
-    databasePath: './test_breakthrough_memory.db',
-    memoryDepth: 100
+    storageType: "sqlite",
+    databasePath: "./test_breakthrough_memory.db",
+    memoryDepth: 100,
   });
 
   const oracle = new PersonalOracleAgent({
     userId,
-    oracleName: 'Aria',
-    elementalResonance: 'water'
+    oracleName: "Aria",
+    elementalResonance: "water",
   });
 
   await oracle.connectToSoulMemory(soulMemory);
@@ -32,35 +32,36 @@ async function testBreakthroughDetection() {
       message: "I'm feeling overwhelmed by all these changes",
       expectBreakthrough: false,
       expectSacred: false,
-      description: "Regular emotional expression"
+      description: "Regular emotional expression",
     },
     {
       message: "I just realized the pattern I've been stuck in for years!",
       expectBreakthrough: true,
       expectSacred: true,
-      description: "Clear breakthrough moment"
+      description: "Clear breakthrough moment",
     },
     {
       message: "Aha! I see now why I keep avoiding intimacy",
       expectBreakthrough: true,
       expectSacred: true,
-      description: "Insight about patterns"
+      description: "Insight about patterns",
     },
     {
       message: "This feels sacred... I'm touching something deep in my soul",
       expectBreakthrough: false,
       expectSacred: true,
-      description: "Sacred moment without breakthrough"
+      description: "Sacred moment without breakthrough",
     },
     {
-      message: "I finally understand why my mother's words affected me so deeply",
+      message:
+        "I finally understand why my mother's words affected me so deeply",
       expectBreakthrough: true,
       expectSacred: true,
-      description: "Emotional breakthrough"
-    }
+      description: "Emotional breakthrough",
+    },
   ];
 
-  console.log('Running test cases...\n');
+  console.log("Running test cases...\n");
 
   for (const testCase of testCases) {
     console.log(`📤 Test: "${testCase.description}"`);
@@ -71,21 +72,29 @@ async function testBreakthroughDetection() {
     console.log(`   Oracle: "${response.substring(0, 100)}..."`);
 
     // Wait for storage
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Check memory
     const memories = await soulMemory.retrieveMemories(userId, { limit: 1 });
     const latestMemory = memories[0];
 
     if (latestMemory) {
-      const isBreakthrough = latestMemory.type === 'breakthrough' || latestMemory.transformationMarker;
+      const isBreakthrough =
+        latestMemory.type === "breakthrough" ||
+        latestMemory.transformationMarker;
       const isSacred = latestMemory.sacredMoment;
 
       console.log(`   Results:`);
       console.log(`     - Type: ${latestMemory.type}`);
-      console.log(`     - Breakthrough: ${isBreakthrough ? '✅' : '❌'} (expected: ${testCase.expectBreakthrough ? '✅' : '❌'})`);
-      console.log(`     - Sacred: ${isSacred ? '✅' : '❌'} (expected: ${testCase.expectSacred ? '✅' : '❌'})`);
-      console.log(`     - Transformation Marker: ${latestMemory.transformationMarker}`);
+      console.log(
+        `     - Breakthrough: ${isBreakthrough ? "✅" : "❌"} (expected: ${testCase.expectBreakthrough ? "✅" : "❌"})`,
+      );
+      console.log(
+        `     - Sacred: ${isSacred ? "✅" : "❌"} (expected: ${testCase.expectSacred ? "✅" : "❌"})`,
+      );
+      console.log(
+        `     - Transformation Marker: ${latestMemory.transformationMarker}`,
+      );
 
       const breakthroughMatch = isBreakthrough === testCase.expectBreakthrough;
       const sacredMatch = isSacred === testCase.expectSacred;
@@ -101,16 +110,18 @@ async function testBreakthroughDetection() {
   }
 
   // Test sacred moments retrieval
-  console.log('\n📊 Testing Sacred Moments Retrieval...');
+  console.log("\n📊 Testing Sacred Moments Retrieval...");
   const sacredMoments = await soulMemory.getSacredMoments(userId);
   console.log(`Found ${sacredMoments.length} sacred moments:`);
 
   sacredMoments.forEach((moment, i) => {
-    console.log(`${i + 1}. ${moment.type}: "${moment.content.substring(0, 50)}..."`);
+    console.log(
+      `${i + 1}. ${moment.type}: "${moment.content.substring(0, 50)}..."`,
+    );
   });
 
   // Test transformation journey
-  console.log('\n🔄 Testing Transformation Journey...');
+  console.log("\n🔄 Testing Transformation Journey...");
   const journey = await soulMemory.getTransformationJourney(userId);
   console.log(`Current Phase: ${journey.currentPhase}`);
   console.log(`Milestones: ${journey.milestones.length}`);
@@ -120,12 +131,12 @@ async function testBreakthroughDetection() {
   await soulMemory.closeDatabase();
 
   // Clean up test file
-  const fs = require('fs');
-  if (fs.existsSync('./test_breakthrough_memory.db')) {
-    fs.unlinkSync('./test_breakthrough_memory.db');
+  const fs = require("fs");
+  if (fs.existsSync("./test_breakthrough_memory.db")) {
+    fs.unlinkSync("./test_breakthrough_memory.db");
   }
 
-  console.log('\n✅ Breakthrough detection test complete!');
+  console.log("\n✅ Breakthrough detection test complete!");
 }
 
 // Run the test

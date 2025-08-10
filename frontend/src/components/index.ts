@@ -1,42 +1,42 @@
 // Authentication components
-export * from './auth';
+export * from "./auth";
 
-// Layout components  
-export * from './layout';
+// Layout components
+export * from "./layout";
 
 // Core application components
-export * from './core';
+export * from "./core";
 
 // Onboarding components
-export * from './onboarding';
+export * from "./onboarding";
 
 // Dashboard components
-export * from './dashboard';
+export * from "./dashboard";
 
 // Oracle components
-export * from './oracle';
+export * from "./oracle";
 
 // Developer components
-export * from './developer';
+export * from "./developer";
 
 // Holoflower components
-export * from './holoflower';
+export * from "./holoflower";
 
 // Memory components
-export * from './memory';
+export * from "./memory";
 
 // Navigation components
-export * from './navigation';
+export * from "./navigation";
 
 // Settings components
-export * from './settings';
+export * from "./settings";
 
 // Welcome components
-export * from './welcome';
+export * from "./welcome";
 
 // Positioning components
-export * from './positioning';
+export * from "./positioning";
 
 // Individual components (to be moved to appropriate directories)
-export { OracleChatComponent } from './OracleChatComponent';
-export { OracleVoicePlayer } from './OracleVoicePlayer';
+export { OracleChatComponent } from "./OracleChatComponent";
+export { OracleVoicePlayer } from "./OracleVoicePlayer";

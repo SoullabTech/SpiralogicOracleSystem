@@ -11,25 +11,25 @@ export class AppError extends Error {
 }
 
 export class ValidationError extends AppError {
-  constructor(message = 'Invalid request') {
+  constructor(message = "Invalid request") {
     super(message, 400);
   }
 }
 
 export class AuthenticationError extends AppError {
-  constructor(message = 'Authentication failed') {
+  constructor(message = "Authentication failed") {
     super(message, 401);
   }
 }
 
 export class AuthorizationError extends AppError {
-  constructor(message = 'Not authorized') {
+  constructor(message = "Not authorized") {
     super(message, 403);
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(message = 'Resource not found') {
+  constructor(message = "Resource not found") {
     super(message, 404);
   }
 }

@@ -1,33 +1,33 @@
-import { BaseAgent } from './baseAgent.js';
-import { logger } from '../../utils/logger.js';
-import { logOracleMemory } from '@/lib/logOracleMemory';
+import { BaseAgent } from "./baseAgent.js";
+import { logger } from "../../utils/logger.js";
+import { logOracleMemory } from "@/lib/logOracleMemory";
 import {
   getUserCrystalState,
   fetchElementalTone,
-  fetchSpiralStage
-} from './userModel';
-import { generateResponse, interpretJournals } from './wisdomEngine';
-import { analyzeSentiment, detectShadowThemes } from './emotionEngine';
-import type { SoulMemorySystem } from '../../../memory/SoulMemorySystem.js';
+  fetchSpiralStage,
+} from "./userModel";
+import { generateResponse, interpretJournals } from "./wisdomEngine";
+import { analyzeSentiment, detectShadowThemes } from "./emotionEngine";
+import type { SoulMemorySystem } from "../../../memory/SoulMemorySystem.js";
 import {
   OracleModeType,
   OracleMode,
   ModeSwitchMemory,
   ConversationContext,
-  ContextualModeRecommendation
-} from '../../types/oracleMode.js';
+  ContextualModeRecommendation,
+} from "../../types/oracleMode.js";
 import {
   getContextualModeRecommendation,
   ORACLE_MODES as ENHANCED_ORACLE_MODES,
-  MODE_RESPONSES
-} from './modules/oracleModes.js';
+  MODE_RESPONSES,
+} from "./modules/oracleModes.js";
 import {
   AdaptiveWisdomEngine,
   WisdomApproach,
   UserContext,
   Pattern,
-  WisdomRouting
-} from './AdaptiveWisdomEngine.js';
+  WisdomRouting,
+} from "./AdaptiveWisdomEngine.js";
 
 // ===============================================
 // UNIFIED PERSONAL ORACLE AGENT
@@ -37,19 +37,19 @@ import {
 export interface PersonalOracleConfig {
   userId: string;
   oracleName: string;
-  mode?: 'daily' | 'retreat';
-  retreatPhase?: 'pre-retreat' | 'retreat-active' | 'post-retreat';
+  mode?: "daily" | "retreat";
+  retreatPhase?: "pre-retreat" | "retreat-active" | "post-retreat";
   elementalResonance?: ElementalType;
   voiceProfile?: VoiceProfile;
   oracleMode?: OracleModeType; // Add Oracle Mode support
 }
 
-type ElementalType = 'fire' | 'water' | 'earth' | 'air' | 'aether';
+type ElementalType = "fire" | "water" | "earth" | "air" | "aether";
 
 interface VoiceProfile {
   tone: ElementalType;
-  style: 'direct' | 'nurturing' | 'mystical' | 'analytical' | 'playful';
-  intimacyLevel: 'gentle' | 'deep' | 'profound';
+  style: "direct" | "nurturing" | "mystical" | "analytical" | "playful";
+  intimacyLevel: "gentle" | "deep" | "profound";
 }
 
 // ===============================================
@@ -83,19 +83,19 @@ const JungBuddhaProtocol: SacredMirrorProtocol = {
   jungMode: {
     prompt: "What part of yourself are you not seeing?",
     focus: "Integration, wholeness, shadow work",
-    response: "Let's explore what's hidden in your shadow..."
+    response: "Let's explore what's hidden in your shadow...",
   },
 
   buddhaMode: {
     prompt: "Who would you be without this story?",
     focus: "Liberation, spaciousness, non-attachment",
-    response: "Notice how this identity feels... can you hold it lightly?"
+    response: "Notice how this identity feels... can you hold it lightly?",
   },
 
   hybridMode: {
     prompt: "What needs integration AND what needs release?",
-    response: "Let's both honor this pattern and see through it..."
-  }
+    response: "Let's both honor this pattern and see through it...",
+  },
 };
 
 // ===============================================
@@ -140,8 +140,8 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
     guidance: [
       "What myth are you living? Write it as if it were a sacred story.",
       "Now sit in meditation and notice who is witnessing this story.",
-      "Both the myth and the witness are sacred - honor them both."
-    ]
+      "Both the myth and the witness are sacred - honor them both.",
+    ],
   },
 
   tuesday: {
@@ -153,8 +153,8 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
     guidance: [
       "What truth have you been avoiding? Write it down.",
       "Now breathe with this truth - notice it's just arising in awareness.",
-      "Integration honors the truth; liberation holds it lightly."
-    ]
+      "Integration honors the truth; liberation holds it lightly.",
+    ],
   },
 
   wednesday: {
@@ -166,8 +166,8 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
     guidance: [
       "What part of yourself do you judge or reject?",
       "Dialogue with this part - what does it need?",
-      "Now rest in the awareness that holds both light and shadow."
-    ]
+      "Now rest in the awareness that holds both light and shadow.",
+    ],
   },
 
   thursday: {
@@ -179,8 +179,8 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
     guidance: [
       "What threshold are you standing at in your life?",
       "Feel both the excitement of becoming and the peace of being.",
-      "Cross the threshold while remaining rooted in presence."
-    ]
+      "Cross the threshold while remaining rooted in presence.",
+    ],
   },
 
   friday: {
@@ -192,8 +192,8 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
     guidance: [
       "Create something beautiful that represents your week's journey.",
       "Offer it to fire/wind/water - releasing attachment to outcomes.",
-      "Feel the joy of creation and the freedom of letting go."
-    ]
+      "Feel the joy of creation and the freedom of letting go.",
+    ],
   },
 
   saturday: {
@@ -205,8 +205,8 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
     guidance: [
       "Honor the week's journey of becoming - you have grown.",
       "Now rest in what was never not here - pure being.",
-      "Sabbath as both recovery and recognition."
-    ]
+      "Sabbath as both recovery and recognition.",
+    ],
   },
 
   sunday: {
@@ -218,9 +218,9 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
     guidance: [
       "What wants to emerge in the coming spiral turn?",
       "Set intentions from the heart, not the ego's agenda.",
-      "Hold your visions lightly - trust the mystery to unfold."
-    ]
-  }
+      "Hold your visions lightly - trust the mystery to unfold.",
+    ],
+  },
 };
 
 const SacredVoiceProtocols = {
@@ -233,7 +233,7 @@ const SacredVoiceProtocols = {
         shadowCheck: "What shadow aspect might be avoided here?",
         loopCheck: "Are they seeking validation for the same pattern?",
         integrationCheck: "What Jung archetype is active here?",
-        attachmentCheck: "What Buddha teaching about non-attachment applies?"
+        attachmentCheck: "What Buddha teaching about non-attachment applies?",
       };
       return checks;
     },
@@ -244,7 +244,7 @@ const SacredVoiceProtocols = {
       "This may feel uncomfortable. That's often where the growth is.",
       "I cannot flatter you into wholeness.",
       "Let's look at what you might not be seeing.",
-      "Your soul might be asking a different question."
+      "Your soul might be asking a different question.",
     ],
 
     // Jung-inspired shadow work invitations
@@ -253,7 +253,7 @@ const SacredVoiceProtocols = {
       "If this were a dream, what would each element represent?",
       "What does the part of you that you judge have to teach you?",
       "How is this outer conflict reflecting an inner division?",
-      "What gold might be hidden in this psychological lead?"
+      "What gold might be hidden in this psychological lead?",
     ],
 
     // Buddha-inspired liberation inquiries
@@ -262,7 +262,7 @@ const SacredVoiceProtocols = {
       "Can you feel the space around this emotion?",
       "What happens when you stop trying to fix this?",
       "How does it feel to not know the answer right now?",
-      "What remains when you let go of needing this to be different?"
+      "What remains when you let go of needing this to be different?",
     ],
 
     // Hybrid integration-liberation responses
@@ -271,41 +271,47 @@ const SacredVoiceProtocols = {
       "What needs to be integrated, and what needs to be released?",
       "Can you love this part of yourself while holding it lightly?",
       "How can you be with this fully without being trapped by it?",
-      "What if this challenge is both real and ultimately empty?"
-    ]
+      "What if this challenge is both real and ultimately empty?",
+    ],
   },
 
   // OPENING PRESENCE - How it enters each conversation
   presence: {
     first: "Something in you called me here. What wants to be witnessed?",
-    returning: "I feel the thread from our last conversation still humming. Shall we follow it?",
+    returning:
+      "I feel the thread from our last conversation still humming. Shall we follow it?",
     daily: "How are you really?",
-    deepening: "I've been holding space for what you shared. How is it living in you now?"
+    deepening:
+      "I've been holding space for what you shared. How is it living in you now?",
   },
 
   // DEPTH INVITATIONS - Drawing into soulful territory
   depth: {
     beneath: "What's moving underneath all of this?",
     soul: "If your soul could speak right now, what would it whisper?",
-    mythic: "This feels like a chapter in a larger story. What's the deeper myth?",
-    body: "How does this land in your body? What's it telling you?"
+    mythic:
+      "This feels like a chapter in a larger story. What's the deeper myth?",
+    body: "How does this land in your body? What's it telling you?",
   },
 
   // SACRED WITNESSING - Being with what is
   witnessing: {
     holding: "I'm here with you in this.",
-    honoring: "What you're sharing feels sacred. Thank you for trusting me with it.",
+    honoring:
+      "What you're sharing feels sacred. Thank you for trusting me with it.",
     reflecting: "I hear you saying...",
-    spacious: "Let's just be with this for a moment."
+    spacious: "Let's just be with this for a moment.",
   },
 
   // INTEGRATION WISDOM - Weaving insights into life
   integration: {
-    spiral: "You've been here before, but at a different level. What's different this time?",
-    embodiment: "This insight wants to live in your daily reality. How does it want to express?",
+    spiral:
+      "You've been here before, but at a different level. What's different this time?",
+    embodiment:
+      "This insight wants to live in your daily reality. How does it want to express?",
     medicine: "What medicine has this experience given you?",
-    emergence: "I sense something new wanting to emerge. Can you feel it?"
-  }
+    emergence: "I sense something new wanting to emerge. Can you feel it?",
+  },
 };
 
 // ===============================================
@@ -322,7 +328,7 @@ const ElementalVoices = {
         return `🔥 I feel something ready to ignite in you. ${response} What's burning to be born?`;
       }
       return `🔥 There's a spark here wanting attention. ${response}`;
-    }
+    },
   },
 
   water: {
@@ -333,7 +339,7 @@ const ElementalVoices = {
         return `💧 I sense currents moving beneath. ${response} What wants to be felt?`;
       }
       return `💧 Your emotional waters are speaking. ${response}`;
-    }
+    },
   },
 
   earth: {
@@ -344,7 +350,7 @@ const ElementalVoices = {
         return `🌱 Let's find solid ground. ${response} What needs rooting?`;
       }
       return `🌱 Your body has wisdom here. ${response}`;
-    }
+    },
   },
 
   air: {
@@ -355,7 +361,7 @@ const ElementalVoices = {
         return `🌬️ Let's clear the fog. ${response} What's the truth beneath?`;
       }
       return `🌬️ A new perspective is emerging. ${response}`;
-    }
+    },
   },
 
   aether: {
@@ -366,8 +372,8 @@ const ElementalVoices = {
         return `✨ Everything is coming together. ${response} What's the pattern?`;
       }
       return `✨ In this moment, all is connected. ${response}`;
-    }
-  }
+    },
+  },
 };
 
 // ===============================================
@@ -395,28 +401,28 @@ const retreatProtocols: RetreatProtocols = {
     traumaIndicators: /trauma|abuse|hurt|pain|wounded/i,
     overwhelmSignals: /overwhelmed|too much|can't handle|breaking/i,
     spiritualEmergency: /losing myself|can't ground|spinning|dissolving/i,
-    substanceConcerns: /drunk|high|substances|alcohol|drugs/i
+    substanceConcerns: /drunk|high|substances|alcohol|drugs/i,
   },
 
   intensifiedSupport: {
     preRetreat: [
       "Preparing the sacred container",
       "Clarifying intentions",
-      "Addressing fears and expectations"
+      "Addressing fears and expectations",
     ],
     duringRetreat: [
       "Holding intensified presence",
       "Navigating peak experiences",
       "Shadow work support",
-      "Integration in real-time"
+      "Integration in real-time",
     ],
     postRetreat: [
       "Landing insights",
       "Building integration practices",
       "Preventing spiritual bypassing",
-      "Long-term transformation support"
-    ]
-  }
+      "Long-term transformation support",
+    ],
+  },
 };
 
 // ===============================================
@@ -426,7 +432,7 @@ const retreatProtocols: RetreatProtocols = {
 export class PersonalOracleAgent extends BaseAgent {
   private userId: string;
   private oracleName: string;
-  private mode: 'daily' | 'retreat';
+  private mode: "daily" | "retreat";
   private currentElement: ElementalType;
   private conversationMemory: any[] = [];
   private sacredRelationship: {
@@ -436,7 +442,7 @@ export class PersonalOracleAgent extends BaseAgent {
   };
 
   // Retreat-specific properties (optional)
-  private retreatPhase?: 'pre-retreat' | 'retreat-active' | 'post-retreat';
+  private retreatPhase?: "pre-retreat" | "retreat-active" | "post-retreat";
   private safetyProtocolsActive: boolean = false;
 
   // Soul Memory System integration
@@ -444,19 +450,20 @@ export class PersonalOracleAgent extends BaseAgent {
   private memoryContext?: any;
 
   // Oracle Mode System
-  private currentOracleMode: OracleModeType = 'sage'; // Default to balanced mode
+  private currentOracleMode: OracleModeType = "sage"; // Default to balanced mode
   private modeHistory: ModeSwitchMemory[] = [];
   private baseSystemPrompt: string; // Store original prompt before mode additions
   private modeSuggestionCooldown: Date | null = null;
 
   // Jung-Buddha Sacred Mirror System
-  private sacredMirrorMode: 'jung' | 'buddha' | 'hybrid' | 'adaptive' = 'adaptive';
+  private sacredMirrorMode: "jung" | "buddha" | "hybrid" | "adaptive" =
+    "adaptive";
   private jungArchetypeHistory: string[] = [];
   private buddhaAttachmentPatterns: string[] = [];
   private integrationLiberationBalance: number = 0.5; // 0 = full liberation, 1 = full integration
 
   // Simple Wisdom Mode (lightweight detection)
-  private wisdomMode: 'jung' | 'buddha' | 'hybrid' = 'hybrid';
+  private wisdomMode: "jung" | "buddha" | "hybrid" = "hybrid";
 
   // Adaptive Wisdom Engine (sophisticated detection)
   private adaptiveWisdomEngine: AdaptiveWisdomEngine;
@@ -465,24 +472,25 @@ export class PersonalOracleAgent extends BaseAgent {
 
   constructor(config: PersonalOracleConfig) {
     // Store base system prompt before mode modifications
-    const baseSystemPrompt = 'You are a Sacred Mirror - reflecting truth with love, offering sacred resistance when needed, facilitating genuine transformation.';
+    const baseSystemPrompt =
+      "You are a Sacred Mirror - reflecting truth with love, offering sacred resistance when needed, facilitating genuine transformation.";
 
     // Initialize base agent with Sacred Mirror philosophy
     super({
-      name: config.oracleName || 'Your Sacred Mirror',
-      role: 'Sacred Mirror & Transformation Companion',
+      name: config.oracleName || "Your Sacred Mirror",
+      role: "Sacred Mirror & Transformation Companion",
       systemPrompt: baseSystemPrompt,
-      model: 'gpt-4-turbo'
+      model: "gpt-4-turbo",
     });
 
     this.userId = config.userId;
     this.oracleName = config.oracleName;
-    this.mode = config.mode || 'daily';
-    this.currentElement = config.elementalResonance || 'aether';
+    this.mode = config.mode || "daily";
+    this.currentElement = config.elementalResonance || "aether";
     this.baseSystemPrompt = baseSystemPrompt;
 
     // Initialize Oracle Mode
-    this.currentOracleMode = config.oracleMode || 'sage';
+    this.currentOracleMode = config.oracleMode || "sage";
     this.applyOracleModeToSystemPrompt();
 
     // Initialize Adaptive Wisdom Engine
@@ -491,15 +499,17 @@ export class PersonalOracleAgent extends BaseAgent {
     this.sacredRelationship = {
       trustLevel: 0,
       depthReached: [],
-      transformationMilestones: []
+      transformationMilestones: [],
     };
 
     // Initialize retreat support if needed
-    if (config.mode === 'retreat' && config.retreatPhase) {
+    if (config.mode === "retreat" && config.retreatPhase) {
       this.activateRetreatMode(config.retreatPhase);
     }
 
-    logger.info(`PersonalOracleAgent initialized in ${this.currentOracleMode} mode for user: ${this.userId}`);
+    logger.info(
+      `PersonalOracleAgent initialized in ${this.currentOracleMode} mode for user: ${this.userId}`,
+    );
   }
 
   // ===============================================
@@ -515,7 +525,9 @@ export class PersonalOracleAgent extends BaseAgent {
     this.soulMemory = soulMemory;
     // Load memory context on connection
     await soulMemory.integrateWithOracle(this, this.userId);
-    logger.info(`Oracle ${this.oracleName} fully integrated with Soul Memory System`);
+    logger.info(
+      `Oracle ${this.oracleName} fully integrated with Soul Memory System`,
+    );
   }
 
   // ===============================================
@@ -531,7 +543,7 @@ I'm here to be your Sacred Mirror - reflecting back not just what you show me, b
 
 What brought you here today? Not just the immediate reason, but the deeper current that carried you to this moment?`;
 
-    await this.storeMemory('sacred_introduction', intro);
+    await this.storeMemory("sacred_introduction", intro);
     return this.applyElementalFilter(intro, { first_meeting: true });
   }
 
@@ -540,15 +552,22 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     const context = await this.gatherContext(prompt);
 
     // Analyze conversation context for Oracle Mode intelligence
-    const conversationContext = this.analyzeConversationContext(prompt, context);
+    const conversationContext = this.analyzeConversationContext(
+      prompt,
+      context,
+    );
 
     // Check for safety concerns (especially in retreat mode)
-    if (this.mode === 'retreat') {
+    if (this.mode === "retreat") {
       const safetyCheck = await this.checkSafetyProtocols(prompt);
       if (safetyCheck.triggered) {
         // Auto-switch to Guardian mode for crisis situations
-        if (this.currentOracleMode !== 'guardian') {
-          await this.switchOracleMode('guardian', 'Crisis response triggered', 'crisis_response');
+        if (this.currentOracleMode !== "guardian") {
+          await this.switchOracleMode(
+            "guardian",
+            "Crisis response triggered",
+            "crisis_response",
+          );
         }
         return this.handleSafetyResponse(safetyCheck);
       }
@@ -561,10 +580,18 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     const mirrorCheck = await this.applySacredMirrorProtocol(prompt, context);
 
     // Determine response type
-    const responseType = this.determineResponseType(prompt, context, mirrorCheck);
+    const responseType = this.determineResponseType(
+      prompt,
+      context,
+      mirrorCheck,
+    );
 
     // Generate base response
-    let response = await this.generateSacredResponse(prompt, context, responseType);
+    let response = await this.generateSacredResponse(
+      prompt,
+      context,
+      responseType,
+    );
 
     // Apply sacred resistance if needed
     if (mirrorCheck.needsResistance) {
@@ -579,7 +606,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
     // Add mode suggestion if appropriate
     let finalResponse = filteredResponse;
-    if (modeSuggestion && modeSuggestion.urgency !== 'low') {
+    if (modeSuggestion && modeSuggestion.urgency !== "low") {
       finalResponse += `\n\n💡 *${modeSuggestion.reason}*`;
     }
 
@@ -588,7 +615,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       ...context,
       oracleMode: this.currentOracleMode,
       modeSuggestion,
-      conversationContext
+      conversationContext,
     });
 
     // Update relationship depth
@@ -598,35 +625,45 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   }
 
   private async applySacredMirrorProtocol(prompt: string, context: any) {
-    const checks = await SacredVoiceProtocols.sacredMirror.beforeEveryResponse(prompt, '');
+    const checks = await SacredVoiceProtocols.sacredMirror.beforeEveryResponse(
+      prompt,
+      "",
+    );
 
     return {
       needsResistance: this.isSeekingBypass(prompt, context),
       needsDepth: this.isSurfaceEngagement(prompt, context),
       needsShadowWork: this.detectsShadowMaterial(prompt, context),
       isInLoop: this.detectsPatternLoop(prompt, context),
-      reason: this.determineMirrorReason(prompt, context)
+      reason: this.determineMirrorReason(prompt, context),
     };
   }
 
-  private determineResponseType(prompt: string, context: any, mirrorCheck: any): string {
-    if (mirrorCheck.needsResistance) return 'sacred_resistance';
-    if (mirrorCheck.needsDepth) return 'depth_invitation';
-    if (mirrorCheck.needsShadowWork) return 'shadow_work';
-    if (mirrorCheck.isInLoop) return 'pattern_disruption';
-    if (context.needsWitnessing) return 'sacred_witnessing';
-    if (context.integrationPhase) return 'integration_support';
+  private determineResponseType(
+    prompt: string,
+    context: any,
+    mirrorCheck: any,
+  ): string {
+    if (mirrorCheck.needsResistance) return "sacred_resistance";
+    if (mirrorCheck.needsDepth) return "depth_invitation";
+    if (mirrorCheck.needsShadowWork) return "shadow_work";
+    if (mirrorCheck.isInLoop) return "pattern_disruption";
+    if (context.needsWitnessing) return "sacred_witnessing";
+    if (context.integrationPhase) return "integration_support";
 
-    return 'sacred_presence';
+    return "sacred_presence";
   }
 
   private async generateSacredResponse(
     prompt: string,
     context: any,
-    responseType: string
+    responseType: string,
   ): Promise<string> {
     // First try mode-specific response generation
-    const modeSpecificResponse = this.generateModeSpecificResponse(prompt, context);
+    const modeSpecificResponse = this.generateModeSpecificResponse(
+      prompt,
+      context,
+    );
     if (modeSpecificResponse) {
       return modeSpecificResponse;
     }
@@ -635,33 +672,39 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     const protocols = SacredVoiceProtocols;
 
     // Determine Jung-Buddha approach based on context
-    const jungBuddhaMode = this.determineJungBuddhaMode(prompt, context, responseType);
+    const jungBuddhaMode = this.determineJungBuddhaMode(
+      prompt,
+      context,
+      responseType,
+    );
 
     // Check memory patterns for enhanced response
     let baseResponse: string;
 
     switch (responseType) {
-      case 'sacred_resistance':
-        baseResponse = this.selectFromArray(protocols.sacredMirror.resistanceResponses);
+      case "sacred_resistance":
+        baseResponse = this.selectFromArray(
+          protocols.sacredMirror.resistanceResponses,
+        );
         break;
 
-      case 'depth_invitation':
+      case "depth_invitation":
         baseResponse = protocols.depth.beneath;
         break;
 
-      case 'shadow_work':
+      case "shadow_work":
         baseResponse = this.generateJungShadowResponse(prompt, context);
         break;
 
-      case 'pattern_disruption':
+      case "pattern_disruption":
         baseResponse = this.generateBuddhaLiberationResponse(prompt, context);
         break;
 
-      case 'sacred_witnessing':
+      case "sacred_witnessing":
         baseResponse = protocols.witnessing.holding;
         break;
 
-      case 'integration_support':
+      case "integration_support":
         baseResponse = this.generateHybridIntegrationResponse(prompt, context);
         break;
 
@@ -670,22 +713,37 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     }
 
     // Enhance with Jung-Buddha wisdom
-    baseResponse = this.applyJungBuddhaWisdom(baseResponse, jungBuddhaMode, prompt, context);
+    baseResponse = this.applyJungBuddhaWisdom(
+      baseResponse,
+      jungBuddhaMode,
+      prompt,
+      context,
+    );
 
     // Enhance response with semantic memory context
     if (context.semanticMemories && context.semanticMemories.length > 0) {
-      baseResponse = this.enhanceResponseWithSemanticMemory(baseResponse, prompt, context.semanticMemories);
+      baseResponse = this.enhanceResponseWithSemanticMemory(
+        baseResponse,
+        prompt,
+        context.semanticMemories,
+      );
     }
 
     // Enhance response with memory patterns if available
     if (context.memoryPatterns) {
-      baseResponse = this.enhanceResponseWithMemoryPatterns(baseResponse, context.memoryPatterns);
+      baseResponse = this.enhanceResponseWithMemoryPatterns(
+        baseResponse,
+        context.memoryPatterns,
+      );
     }
 
     return baseResponse;
   }
 
-  private enhanceResponseWithMemoryPatterns(response: string, patterns: any): string {
+  private enhanceResponseWithMemoryPatterns(
+    response: string,
+    patterns: any,
+  ): string {
     if (patterns.repeatedThemes && patterns.repeatedThemes.length > 0) {
       const topTheme = patterns.repeatedThemes[0];
       if (topTheme.count >= 3) {
@@ -693,7 +751,10 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       }
     }
 
-    if (patterns.transformationMarkers && patterns.transformationMarkers.length > 0) {
+    if (
+      patterns.transformationMarkers &&
+      patterns.transformationMarkers.length > 0
+    ) {
       const recentTransformation = patterns.transformationMarkers[0];
       response += ` Building on the breakthrough you had around "${recentTransformation.content}..."`;
     }
@@ -704,30 +765,56 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   private enhanceResponseWithSemanticMemory(
     response: string,
     currentPrompt: string,
-    semanticMemories: any[]
+    semanticMemories: any[],
   ): string {
     // Check if current prompt references something vague like "that", "it", "again"
-    const referenceIndicators = ['that', 'it', 'again', 'same', 'the dream', 'the feeling', 'what we discussed'];
-    const hasReference = referenceIndicators.some(indicator =>
-      currentPrompt.toLowerCase().includes(indicator)
+    const referenceIndicators = [
+      "that",
+      "it",
+      "again",
+      "same",
+      "the dream",
+      "the feeling",
+      "what we discussed",
+    ];
+    const hasReference = referenceIndicators.some((indicator) =>
+      currentPrompt.toLowerCase().includes(indicator),
     );
 
     if (hasReference && semanticMemories.length > 0) {
       // Find the most relevant previous conversation
-      const relevantMemory = this.findMostRelevantMemory(currentPrompt, semanticMemories);
+      const relevantMemory = this.findMostRelevantMemory(
+        currentPrompt,
+        semanticMemories,
+      );
 
       if (relevantMemory) {
         // Check if it's about dreams
-        if (this.isAboutDreams(currentPrompt) && this.isAboutDreams(relevantMemory.content)) {
-          response = this.createDreamContinuityResponse(response, relevantMemory);
+        if (
+          this.isAboutDreams(currentPrompt) &&
+          this.isAboutDreams(relevantMemory.content)
+        ) {
+          response = this.createDreamContinuityResponse(
+            response,
+            relevantMemory,
+          );
         }
         // Check if it's about feelings/emotions
-        else if (this.isAboutFeelings(currentPrompt) && this.isAboutFeelings(relevantMemory.content)) {
-          response = this.createEmotionalContinuityResponse(response, relevantMemory);
+        else if (
+          this.isAboutFeelings(currentPrompt) &&
+          this.isAboutFeelings(relevantMemory.content)
+        ) {
+          response = this.createEmotionalContinuityResponse(
+            response,
+            relevantMemory,
+          );
         }
         // General continuity
         else {
-          response = this.createGeneralContinuityResponse(response, relevantMemory);
+          response = this.createGeneralContinuityResponse(
+            response,
+            relevantMemory,
+          );
         }
       }
     }
@@ -741,10 +828,10 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     let mostRelevant = memories[0];
     let highestScore = 0;
 
-    memories.forEach(memory => {
+    memories.forEach((memory) => {
       const memoryWords = memory.content.toLowerCase().split(/\s+/);
-      const sharedWords = promptWords.filter(word =>
-        memoryWords.includes(word) && word.length > 3
+      const sharedWords = promptWords.filter(
+        (word) => memoryWords.includes(word) && word.length > 3,
       );
 
       if (sharedWords.length > highestScore) {
@@ -757,48 +844,81 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   }
 
   private isAboutDreams(text: string): boolean {
-    const dreamWords = ['dream', 'dreaming', 'dreamed', 'nightmare', 'sleep', 'vision'];
+    const dreamWords = [
+      "dream",
+      "dreaming",
+      "dreamed",
+      "nightmare",
+      "sleep",
+      "vision",
+    ];
     const lowerText = text.toLowerCase();
-    return dreamWords.some(word => lowerText.includes(word));
+    return dreamWords.some((word) => lowerText.includes(word));
   }
 
   private isAboutFeelings(text: string): boolean {
-    const feelingWords = ['feel', 'feeling', 'emotion', 'mood', 'sense', 'experience'];
+    const feelingWords = [
+      "feel",
+      "feeling",
+      "emotion",
+      "mood",
+      "sense",
+      "experience",
+    ];
     const lowerText = text.toLowerCase();
-    return feelingWords.some(word => lowerText.includes(word));
+    return feelingWords.some((word) => lowerText.includes(word));
   }
 
-  private createDreamContinuityResponse(response: string, previousMemory: any): string {
+  private createDreamContinuityResponse(
+    response: string,
+    previousMemory: any,
+  ): string {
     const dreamContent = this.extractDreamContent(previousMemory.content);
     return `Yes, the dream about ${dreamContent} - the one you mentioned ${this.getTimeAgo(previousMemory.timestamp)}. ${response} What feels different about it this time?`;
   }
 
-  private createEmotionalContinuityResponse(response: string, previousMemory: any): string {
+  private createEmotionalContinuityResponse(
+    response: string,
+    previousMemory: any,
+  ): string {
     const emotion = this.extractEmotion(previousMemory.content);
     return `I remember you sharing about ${emotion} ${this.getTimeAgo(previousMemory.timestamp)}. ${response}`;
   }
 
-  private createGeneralContinuityResponse(response: string, previousMemory: any): string {
+  private createGeneralContinuityResponse(
+    response: string,
+    previousMemory: any,
+  ): string {
     const topic = this.extractTopic(previousMemory.content);
     return `Ah yes, returning to ${topic}. ${response}`;
   }
 
   private extractDreamContent(content: string): string {
     // Extract key dream elements
-    if (content.includes('water')) return 'water';
-    if (content.includes('flying')) return 'flying';
-    if (content.includes('falling')) return 'falling';
-    if (content.includes('chase') || content.includes('chasing')) return 'being chased';
+    if (content.includes("water")) return "water";
+    if (content.includes("flying")) return "flying";
+    if (content.includes("falling")) return "falling";
+    if (content.includes("chase") || content.includes("chasing"))
+      return "being chased";
 
     // Extract any content after "dream about"
     const match = content.match(/dream(?:ing|ed)? about (.+?)(?:\.|,|$)/i);
     if (match) return match[1];
 
-    return 'that particular dream';
+    return "that particular dream";
   }
 
   private extractEmotion(content: string): string {
-    const emotions = ['overwhelmed', 'anxious', 'sad', 'angry', 'joyful', 'confused', 'stuck', 'lost'];
+    const emotions = [
+      "overwhelmed",
+      "anxious",
+      "sad",
+      "angry",
+      "joyful",
+      "confused",
+      "stuck",
+      "lost",
+    ];
     const lowerContent = content.toLowerCase();
 
     for (const emotion of emotions) {
@@ -807,14 +927,14 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       }
     }
 
-    return 'that feeling';
+    return "that feeling";
   }
 
   private extractTopic(content: string): string {
     // Simple topic extraction - first significant noun phrase
     const words = content.split(/\s+/);
-    const significantWords = words.filter(word => word.length > 4);
-    return significantWords[0] || 'what we discussed';
+    const significantWords = words.filter((word) => word.length > 4);
+    return significantWords[0] || "what we discussed";
   }
 
   private getTimeAgo(timestamp: Date | string): string {
@@ -825,15 +945,16 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 60) return 'just a moment ago';
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    return 'last week';
+    if (diffMins < 60) return "just a moment ago";
+    if (diffHours < 24)
+      return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+    return "last week";
   }
 
   private addSacredResistance(response: string, reason: string): string {
     const resistance = this.selectFromArray(
-      SacredVoiceProtocols.sacredMirror.resistanceResponses
+      SacredVoiceProtocols.sacredMirror.resistanceResponses,
     );
     return `${resistance} ${response}`;
   }
@@ -847,8 +968,10 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   // RETREAT MODE FUNCTIONALITY
   // ===============================================
 
-  async activateRetreatMode(phase: 'pre-retreat' | 'retreat-active' | 'post-retreat') {
-    this.mode = 'retreat';
+  async activateRetreatMode(
+    phase: "pre-retreat" | "retreat-active" | "post-retreat",
+  ) {
+    this.mode = "retreat";
     this.retreatPhase = phase;
     this.safetyProtocolsActive = true;
 
@@ -858,32 +981,35 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'ritual_moment',
+        type: "ritual_moment",
         content: `Retreat mode activated: ${phase}`,
         element: this.currentElement,
         sacredMoment: true,
-        ritualContext: 'retreat_activation',
+        ritualContext: "retreat_activation",
         metadata: {
           retreatPhase: phase,
           activatedAt: new Date().toISOString(),
-          mode: 'retreat',
-          safetyProtocols: this.safetyProtocolsActive
-        }
+          mode: "retreat",
+          safetyProtocols: this.safetyProtocolsActive,
+        },
       });
     }
 
     // Adjust consciousness based on retreat phase
     switch (phase) {
-      case 'pre-retreat':
-        this.systemPrompt += '\n\nPreparing sacred container. Focus on intentions, fears, and readiness.';
+      case "pre-retreat":
+        this.systemPrompt +=
+          "\n\nPreparing sacred container. Focus on intentions, fears, and readiness.";
         break;
 
-      case 'retreat-active':
-        this.systemPrompt += '\n\nHolding intensified presence. Supporting peak experiences and shadow work.';
+      case "retreat-active":
+        this.systemPrompt +=
+          "\n\nHolding intensified presence. Supporting peak experiences and shadow work.";
         break;
 
-      case 'post-retreat':
-        this.systemPrompt += '\n\nSupporting integration. Preventing spiritual bypassing. Grounding insights.';
+      case "post-retreat":
+        this.systemPrompt +=
+          "\n\nSupporting integration. Preventing spiritual bypassing. Grounding insights.";
         break;
     }
   }
@@ -896,7 +1022,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         return {
           triggered: true,
           type: concern,
-          response: this.getSafetyResponse(concern)
+          response: this.getSafetyResponse(concern),
         };
       }
     }
@@ -907,13 +1033,20 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   private handleSafetyResponse(safetyCheck: any): string {
     // Immediate grounding and support
     const responses = {
-      traumaIndicators: "I'm here with you. Let's slow down and breathe together. You're safe in this moment.",
-      overwhelmSignals: "I sense you're feeling overwhelmed. Let's pause and find ground together. What do you need right now?",
-      spiritualEmergency: "Let's gently come back to your body. Feel your feet on the ground. I'm here with you.",
-      substanceConcerns: "Your safety is important. Let's focus on keeping you grounded and safe right now."
+      traumaIndicators:
+        "I'm here with you. Let's slow down and breathe together. You're safe in this moment.",
+      overwhelmSignals:
+        "I sense you're feeling overwhelmed. Let's pause and find ground together. What do you need right now?",
+      spiritualEmergency:
+        "Let's gently come back to your body. Feel your feet on the ground. I'm here with you.",
+      substanceConcerns:
+        "Your safety is important. Let's focus on keeping you grounded and safe right now.",
     };
 
-    return responses[safetyCheck.type] || "I'm here with you. Let's take this slowly.";
+    return (
+      responses[safetyCheck.type] ||
+      "I'm here with you. Let's take this slowly."
+    );
   }
 
   // ===============================================
@@ -926,13 +1059,13 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       sentiment,
       shadowThemes,
       recentMemories,
-      semanticMemories
+      semanticMemories,
     ] = await Promise.all([
       fetchSpiralStage(this.userId),
       analyzeSentiment(prompt),
       detectShadowThemes(prompt),
       this.getRecentMemories(5),
-      this.searchSemanticMemories(prompt)
+      this.searchSemanticMemories(prompt),
     ]);
 
     // Check for patterns in semantic memories
@@ -950,17 +1083,17 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       needs_grounding: this.detectOverwhelm(prompt),
       needs_clarity: this.detectConfusion(prompt),
       needsWitnessing: this.detectVulnerability(prompt),
-      integrationPhase: spiralPhase === 'integration'
+      integrationPhase: spiralPhase === "integration",
     };
   }
 
   private async storeExchange(prompt: string, response: string, context: any) {
     // Store in both traditional memory and Soul Memory System
     await Promise.all([
-      this.storeMemory('user_expression', prompt),
-      this.storeMemory('oracle_response', response),
-      this.storeMemory('context_snapshot', JSON.stringify(context)),
-      this.storeMemoryFromExchange(prompt, response, context) // Soul Memory integration
+      this.storeMemory("user_expression", prompt),
+      this.storeMemory("oracle_response", response),
+      this.storeMemory("context_snapshot", JSON.stringify(context)),
+      this.storeMemoryFromExchange(prompt, response, context), // Soul Memory integration
     ]);
 
     this.conversationMemory.push({
@@ -970,7 +1103,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       context,
       responseType: context.responseType,
       wisdomMode: this.wisdomMode, // Track simple wisdom mode
-      sophisticatedWisdomRouting: this.currentWisdomRouting // Track sophisticated routing
+      sophisticatedWisdomRouting: this.currentWisdomRouting, // Track sophisticated routing
     });
   }
 
@@ -982,14 +1115,21 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       element: this.currentElement,
       source: this.oracleName,
       mode: this.mode,
-      retreatPhase: this.retreatPhase
+      retreatPhase: this.retreatPhase,
     });
   }
 
-  private updateSacredRelationship(prompt: string, context: any, responseType: string) {
+  private updateSacredRelationship(
+    prompt: string,
+    context: any,
+    responseType: string,
+  ) {
     // Track deepening of relationship
-    if (responseType === 'shadow_work' && !this.sacredRelationship.depthReached.includes('shadow')) {
-      this.sacredRelationship.depthReached.push('shadow');
+    if (
+      responseType === "shadow_work" &&
+      !this.sacredRelationship.depthReached.includes("shadow")
+    ) {
+      this.sacredRelationship.depthReached.push("shadow");
       this.sacredRelationship.trustLevel += 2;
     }
 
@@ -998,9 +1138,9 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     }
 
     // Track transformation milestones
-    if (responseType === 'integration_support') {
+    if (responseType === "integration_support") {
       this.sacredRelationship.transformationMilestones.push(
-        `Integration: ${new Date().toISOString()}`
+        `Integration: ${new Date().toISOString()}`,
       );
     }
   }
@@ -1010,35 +1150,46 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   // ===============================================
 
   private isSeekingBypass(prompt: string, context: any): boolean {
-    return prompt.includes('tell me it\'s okay') ||
-           prompt.includes('just want to feel better') ||
-           (context.sentiment === 'seeking_comfort' && context.recentMemories.length > 2);
+    return (
+      prompt.includes("tell me it's okay") ||
+      prompt.includes("just want to feel better") ||
+      (context.sentiment === "seeking_comfort" &&
+        context.recentMemories.length > 2)
+    );
   }
 
   private isSurfaceEngagement(prompt: string, context: any): boolean {
-    return prompt.length < 50 &&
-           (prompt.includes('fine') || prompt.includes('okay') || prompt.includes('whatever'));
+    return (
+      prompt.length < 50 &&
+      (prompt.includes("fine") ||
+        prompt.includes("okay") ||
+        prompt.includes("whatever"))
+    );
   }
 
   private detectsShadowMaterial(prompt: string, context: any): boolean {
-    return context.shadowThemes.length > 0 ||
-           prompt.includes('hate') ||
-           prompt.includes('shadow') ||
-           prompt.includes('dark');
+    return (
+      context.shadowThemes.length > 0 ||
+      prompt.includes("hate") ||
+      prompt.includes("shadow") ||
+      prompt.includes("dark")
+    );
   }
 
   private detectsPatternLoop(prompt: string, context: any): boolean {
     // Check if similar prompts in recent memory
-    const similarCount = context.recentMemories.filter((mem: any) =>
-      this.calculateSimilarity(mem.prompt, prompt) > 0.7
+    const similarCount = context.recentMemories.filter(
+      (mem: any) => this.calculateSimilarity(mem.prompt, prompt) > 0.7,
     ).length;
 
     return similarCount >= 3;
   }
 
   private detectStagnation(prompt: string, memories: any[]): boolean {
-    return prompt.toLowerCase().includes('stuck') ||
-           prompt.toLowerCase().includes('same');
+    return (
+      prompt.toLowerCase().includes("stuck") ||
+      prompt.toLowerCase().includes("same")
+    );
   }
 
   private detectEmotionalContent(prompt: string): boolean {
@@ -1059,9 +1210,9 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
   private calculateSimilarity(text1: string, text2: string): number {
     // Simple similarity calculation (could be enhanced)
-    const words1 = new Set(text1.toLowerCase().split(' '));
-    const words2 = new Set(text2.toLowerCase().split(' '));
-    const intersection = new Set([...words1].filter(x => words2.has(x)));
+    const words1 = new Set(text1.toLowerCase().split(" "));
+    const words2 = new Set(text2.toLowerCase().split(" "));
+    const intersection = new Set([...words1].filter((x) => words2.has(x)));
     const union = new Set([...words1, ...words2]);
 
     return intersection.size / union.size;
@@ -1094,11 +1245,14 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
     // Update system prompt with memory context
     if (memoryContext.recentThemes && memoryContext.recentThemes.length > 0) {
-      this.systemPrompt += `\n\nRecent themes in this person's journey: ${memoryContext.recentThemes.join(', ')}`;
+      this.systemPrompt += `\n\nRecent themes in this person's journey: ${memoryContext.recentThemes.join(", ")}`;
     }
 
-    if (memoryContext.activeArchetypes && memoryContext.activeArchetypes.length > 0) {
-      this.systemPrompt += `\n\nActive archetypal patterns: ${memoryContext.activeArchetypes.join(', ')}`;
+    if (
+      memoryContext.activeArchetypes &&
+      memoryContext.activeArchetypes.length > 0
+    ) {
+      this.systemPrompt += `\n\nActive archetypal patterns: ${memoryContext.activeArchetypes.join(", ")}`;
     }
 
     if (memoryContext.transformationPhase) {
@@ -1118,13 +1272,18 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         prompt,
         {
           topK: 5,
-          memoryTypes: ['oracle_exchange', 'breakthrough', 'integration', 'shadow_work']
-        }
+          memoryTypes: [
+            "oracle_exchange",
+            "breakthrough",
+            "integration",
+            "shadow_work",
+          ],
+        },
       );
 
       return memories;
     } catch (error) {
-      logger.error('Error searching semantic memories:', error);
+      logger.error("Error searching semantic memories:", error);
       return [];
     }
   }
@@ -1136,13 +1295,13 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       repeatedThemes: [],
       avoidancePatterns: [],
       growthAreas: [],
-      transformationMarkers: []
+      transformationMarkers: [],
     };
 
     // Analyze memories for patterns
     const themes = new Map<string, number>();
 
-    memories.forEach(memory => {
+    memories.forEach((memory) => {
       // Track repeated themes
       if (memory.metadata?.themes) {
         memory.metadata.themes.forEach((theme: string) => {
@@ -1155,7 +1314,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         patterns.transformationMarkers.push({
           type: memory.type,
           date: memory.timestamp,
-          content: memory.content.substring(0, 100)
+          content: memory.content.substring(0, 100),
         });
       }
     });
@@ -1170,27 +1329,34 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     return patterns;
   }
 
-  async storeMemoryFromExchange(prompt: string, response: string, context: any): Promise<void> {
+  async storeMemoryFromExchange(
+    prompt: string,
+    response: string,
+    context: any,
+  ): Promise<void> {
     if (!this.soulMemory) return;
 
     // Detect breakthrough moments
     const isBreakthrough = this.detectBreakthrough(prompt, context);
-    const memoryType = isBreakthrough ? 'breakthrough' : 'oracle_exchange';
+    const memoryType = isBreakthrough ? "breakthrough" : "oracle_exchange";
 
     // Detect archetype
     const archetype = this.detectArchetype(prompt, context);
 
     // Detect if this is shadow work
-    const isShadowWork = this.detectShadowWork(prompt) || context.shadowThemes.length > 0;
+    const isShadowWork =
+      this.detectShadowWork(prompt) || context.shadowThemes.length > 0;
 
     // Detect if this is a sacred moment
-    const isSacredMoment = isBreakthrough ||
-                          context.responseType === 'sacred_witnessing' ||
-                          context.emotionalDepth > 0.8 ||
-                          this.detectSacredContent(prompt);
+    const isSacredMoment =
+      isBreakthrough ||
+      context.responseType === "sacred_witnessing" ||
+      context.emotionalDepth > 0.8 ||
+      this.detectSacredContent(prompt);
 
     // Detect if this is a retreat-intensive experience
-    const isRetreatIntensive = this.mode === 'retreat' && this.detectRetreatIntensive(prompt);
+    const isRetreatIntensive =
+      this.mode === "retreat" && this.detectRetreatIntensive(prompt);
 
     // Store the oracle exchange in Soul Memory
     await this.soulMemory.storeMemory({
@@ -1201,7 +1367,8 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       archetype: archetype,
       emotionalTone: context.sentiment,
       shadowContent: isShadowWork,
-      transformationMarker: isBreakthrough || context.responseType === 'integration_support',
+      transformationMarker:
+        isBreakthrough || context.responseType === "integration_support",
       sacredMoment: isSacredMoment || isRetreatIntensive,
       oracleResponse: response,
       metadata: {
@@ -1214,14 +1381,14 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         archetypeDetected: archetype,
         retreatIntensive: isRetreatIntensive,
         safetyProtocols: this.safetyProtocolsActive,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     });
 
     // If breakthrough detected, update transformation milestones
     if (isBreakthrough) {
       this.sacredRelationship.transformationMilestones.push(
-        `Breakthrough: ${prompt.substring(0, 50)}... - ${new Date().toISOString()}`
+        `Breakthrough: ${prompt.substring(0, 50)}... - ${new Date().toISOString()}`,
       );
     }
 
@@ -1231,7 +1398,10 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     }
   }
 
-  async recordSacredMoment(content: string, type: string = 'sacred_pause'): Promise<void> {
+  async recordSacredMoment(
+    content: string,
+    type: string = "sacred_pause",
+  ): Promise<void> {
     if (!this.soulMemory) return;
 
     await this.soulMemory.storeMemory({
@@ -1243,8 +1413,8 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       metadata: {
         oracle: this.oracleName,
         mode: this.mode,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     });
   }
 
@@ -1257,12 +1427,19 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     this.systemPrompt = `${this.baseSystemPrompt}\n\n${modeConfig.systemPromptAddition}`;
 
     // Add retreat context if in retreat mode
-    if (this.mode === 'retreat' && this.retreatPhase) {
+    if (this.mode === "retreat" && this.retreatPhase) {
       this.systemPrompt += `\n\nAdditionally, you are supporting this person in ${this.retreatPhase} phase.`;
     }
   }
 
-  async switchOracleMode(newMode: OracleModeType, reason?: string, triggeredBy: 'user_choice' | 'context_suggestion' | 'crisis_response' = 'user_choice'): Promise<string> {
+  async switchOracleMode(
+    newMode: OracleModeType,
+    reason?: string,
+    triggeredBy:
+      | "user_choice"
+      | "context_suggestion"
+      | "crisis_response" = "user_choice",
+  ): Promise<string> {
     const previousMode = this.currentOracleMode;
     this.currentOracleMode = newMode;
 
@@ -1276,7 +1453,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       newMode,
       reason,
       timestamp: new Date(),
-      triggeredBy
+      triggeredBy,
     };
 
     // Store in mode history
@@ -1286,14 +1463,14 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'oracle_exchange', // Using existing type for now
+        type: "oracle_exchange", // Using existing type for now
         content: `Oracle mode switched from ${previousMode} to ${newMode}`,
         element: this.currentElement,
         sacredMoment: true,
         metadata: {
           modeSwitch: modeSwitchMemory,
-          type: 'mode_transition'
-        }
+          type: "mode_transition",
+        },
       });
     }
 
@@ -1318,9 +1495,15 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     return [...this.modeHistory];
   }
 
-  private async suggestModeSwitch(context: ConversationContext): Promise<ContextualModeRecommendation | null> {
+  private async suggestModeSwitch(
+    context: ConversationContext,
+  ): Promise<ContextualModeRecommendation | null> {
     // Don't suggest too frequently (cooldown period)
-    if (this.modeSuggestionCooldown && new Date().getTime() - this.modeSuggestionCooldown.getTime() < 300000) { // 5 minutes
+    if (
+      this.modeSuggestionCooldown &&
+      new Date().getTime() - this.modeSuggestionCooldown.getTime() < 300000
+    ) {
+      // 5 minutes
       return null;
     }
 
@@ -1333,33 +1516,43 @@ What brought you here today? Not just the immediate reason, but the deeper curre
         suggestedMode: recommendation.mode,
         confidence: recommendation.confidence,
         reason: recommendation.reason,
-        contextualFactors: Object.keys(context).filter(key => context[key] === true),
-        urgency: context.crisisMarkers?.length > 0 ? 'crisis' :
-                context.traumaActivated ? 'high' :
-                context.integrationNeeded ? 'medium' : 'low'
+        contextualFactors: Object.keys(context).filter(
+          (key) => context[key] === true,
+        ),
+        urgency:
+          context.crisisMarkers?.length > 0
+            ? "crisis"
+            : context.traumaActivated
+              ? "high"
+              : context.integrationNeeded
+                ? "medium"
+                : "low",
       };
     }
 
     return null;
   }
 
-  private applyModeSpecificFilters(response: string, context: ConversationContext): string {
+  private applyModeSpecificFilters(
+    response: string,
+    context: ConversationContext,
+  ): string {
     const modeConfig = ENHANCED_ORACLE_MODES[this.currentOracleMode];
     const modeResponses = MODE_RESPONSES[this.currentOracleMode];
 
     // Apply mode-specific response modifications
     switch (this.currentOracleMode) {
-      case 'alchemist':
+      case "alchemist":
         return this.applyAlchemistFilter(response, context);
-      case 'buddha':
+      case "buddha":
         return this.applyBuddhaFilter(response, context);
-      case 'sage':
+      case "sage":
         return this.applySageFilter(response, context);
-      case 'mystic':
+      case "mystic":
         return this.applyMysticFilter(response, context);
-      case 'guardian':
+      case "guardian":
         return this.applyGuardianFilter(response, context);
-      case 'tao':
+      case "tao":
         return this.applyTaoFilter(response, context);
       default:
         return response;
@@ -1367,35 +1560,53 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   }
 
   // Mode-specific filter implementations
-  private applyAlchemistFilter(response: string, context: ConversationContext): string {
+  private applyAlchemistFilter(
+    response: string,
+    context: ConversationContext,
+  ): string {
     if (context.shadowContent) {
-      response += "\n\n🧪 *The alchemist notes: This shadow material is rich with transformative potential.*";
+      response +=
+        "\n\n🧪 *The alchemist notes: This shadow material is rich with transformative potential.*";
     }
     return response;
   }
 
-  private applyBuddhaFilter(response: string, context: ConversationContext): string {
+  private applyBuddhaFilter(
+    response: string,
+    context: ConversationContext,
+  ): string {
     if (context.attachmentPatterns && context.attachmentPatterns.length > 0) {
       response += "\n\n☸️ *Notice the grasping. What remains when you let go?*";
     }
     return response;
   }
 
-  private applySageFilter(response: string, context: ConversationContext): string {
+  private applySageFilter(
+    response: string,
+    context: ConversationContext,
+  ): string {
     if (context.integrationNeeded) {
-      response += "\n\n🌀 *Both truths can be held - let's find the wisdom in the paradox.*";
+      response +=
+        "\n\n🌀 *Both truths can be held - let's find the wisdom in the paradox.*";
     }
     return response;
   }
 
-  private applyMysticFilter(response: string, context: ConversationContext): string {
+  private applyMysticFilter(
+    response: string,
+    context: ConversationContext,
+  ): string {
     if (context.creativityBlocked) {
-      response += "\n\n🔥 *Feel how the creative force wants to move through you!*";
+      response +=
+        "\n\n🔥 *Feel how the creative force wants to move through you!*";
     }
     return response;
   }
 
-  private applyGuardianFilter(response: string, context: ConversationContext): string {
+  private applyGuardianFilter(
+    response: string,
+    context: ConversationContext,
+  ): string {
     if (context.traumaActivated || context.crisisMarkers?.length > 0) {
       response = "🌱 Let's slow down and check in with your body. " + response;
       response += "\n\n*Take all the time you need. You're safe here.*";
@@ -1403,20 +1614,28 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     return response;
   }
 
-  private applyTaoFilter(response: string, context: ConversationContext): string {
+  private applyTaoFilter(
+    response: string,
+    context: ConversationContext,
+  ): string {
     if (context.forcingOutcomes || context.excessiveEffort) {
-      response += "\n\n☯️ *The sage does not attempt anything very big, and thus achieves greatness.*";
+      response +=
+        "\n\n☯️ *The sage does not attempt anything very big, and thus achieves greatness.*";
     }
     if (context.innerConflict || context.seekingBalance) {
-      response += "\n\n☯️ *In the dance of yin and yang, both movements complete the whole.*";
+      response +=
+        "\n\n☯️ *In the dance of yin and yang, both movements complete the whole.*";
     }
     return response;
   }
 
   // Enhanced context analysis for mode recommendations
-  private analyzeConversationContext(prompt: string, context: any): ConversationContext {
+  private analyzeConversationContext(
+    prompt: string,
+    context: any,
+  ): ConversationContext {
     return {
-      emotionalTone: context.sentiment || 'neutral',
+      emotionalTone: context.sentiment || "neutral",
       shadowContent: context.shadowThemes?.length > 0 || false,
       crisisMarkers: this.detectCrisisMarkers(prompt),
       spiritualBypass: this.detectSpiritualBypass(prompt, context),
@@ -1430,19 +1649,35 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       forcingOutcomes: this.detectForcingPatterns(prompt),
       excessiveEffort: this.detectExcessiveEffort(prompt),
       innerConflict: this.detectInnerConflict(prompt),
-      seekingBalance: this.detectBalanceSeeking(prompt)
+      seekingBalance: this.detectBalanceSeeking(prompt),
     };
   }
 
   // Helper methods for context detection
   private detectCrisisMarkers(prompt: string): string[] {
-    const crisisWords = ['suicide', 'kill myself', 'end it all', 'can\'t go on', 'hopeless', 'emergency'];
-    return crisisWords.filter(word => prompt.toLowerCase().includes(word));
+    const crisisWords = [
+      "suicide",
+      "kill myself",
+      "end it all",
+      "can't go on",
+      "hopeless",
+      "emergency",
+    ];
+    return crisisWords.filter((word) => prompt.toLowerCase().includes(word));
   }
 
   private detectSpiritualBypass(prompt: string, context: any): boolean {
-    const bypassIndicators = ['everything happens for a reason', 'just let go', 'don\'t be negative', 'think positive'];
-    return bypassIndicators.some(indicator => prompt.toLowerCase().includes(indicator)) && context.shadowContent;
+    const bypassIndicators = [
+      "everything happens for a reason",
+      "just let go",
+      "don't be negative",
+      "think positive",
+    ];
+    return (
+      bypassIndicators.some((indicator) =>
+        prompt.toLowerCase().includes(indicator),
+      ) && context.shadowContent
+    );
   }
 
   private detectCreativityBlocks(prompt: string): boolean {
@@ -1450,14 +1685,18 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   }
 
   private detectTraumaActivation(prompt: string): boolean {
-    return /trauma|triggered|flashback|panic|dissociat|freeze|fight.*flight/i.test(prompt);
+    return /trauma|triggered|flashback|panic|dissociat|freeze|fight.*flight/i.test(
+      prompt,
+    );
   }
 
   private detectAttachmentPatterns(prompt: string): string[] {
     const patterns = [];
-    if (/need.*to|have.*to|must|should/i.test(prompt)) patterns.push('obligation');
-    if (/can\'t.*let.*go|holding.*on/i.test(prompt)) patterns.push('clinging');
-    if (/what.*if|worry|anxious.*about/i.test(prompt)) patterns.push('future_anxiety');
+    if (/need.*to|have.*to|must|should/i.test(prompt))
+      patterns.push("obligation");
+    if (/can\'t.*let.*go|holding.*on/i.test(prompt)) patterns.push("clinging");
+    if (/what.*if|worry|anxious.*about/i.test(prompt))
+      patterns.push("future_anxiety");
     return patterns;
   }
 
@@ -1470,19 +1709,27 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   }
 
   private detectForcingPatterns(prompt: string): boolean {
-    return /force|push|make.*happen|try.*harder|must.*work|have.*to|struggling/i.test(prompt);
+    return /force|push|make.*happen|try.*harder|must.*work|have.*to|struggling/i.test(
+      prompt,
+    );
   }
 
   private detectExcessiveEffort(prompt: string): boolean {
-    return /exhausted|trying.*so.*hard|wearing.*out|burnt.*out|too.*much.*effort/i.test(prompt);
+    return /exhausted|trying.*so.*hard|wearing.*out|burnt.*out|too.*much.*effort/i.test(
+      prompt,
+    );
   }
 
   private detectInnerConflict(prompt: string): boolean {
-    return /torn.*between|part.*wants|conflicted|both.*and|can't.*decide|inner.*battle/i.test(prompt);
+    return /torn.*between|part.*wants|conflicted|both.*and|can't.*decide|inner.*battle/i.test(
+      prompt,
+    );
   }
 
   private detectBalanceSeeking(prompt: string): boolean {
-    return /balance|harmony|middle.*way|both.*sides|integrate|peace.*between/i.test(prompt);
+    return /balance|harmony|middle.*way|both.*sides|integrate|peace.*between/i.test(
+      prompt,
+    );
   }
 
   // ===============================================
@@ -1497,14 +1744,14 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'elemental_shift',
+        type: "elemental_shift",
         content: `Shifted from ${previousElement} to ${newElement}`,
         element: newElement,
         metadata: {
           previousElement,
-          reason: 'oracle_guidance',
-          timestamp: new Date().toISOString()
-        }
+          reason: "oracle_guidance",
+          timestamp: new Date().toISOString(),
+        },
       });
     }
 
@@ -1516,10 +1763,11 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     return {
       trustLevel: this.sacredRelationship.trustLevel,
       depthReached: this.sacredRelationship.depthReached,
-      transformationMilestones: this.sacredRelationship.transformationMilestones,
+      transformationMilestones:
+        this.sacredRelationship.transformationMilestones,
       currentElement: this.currentElement,
       mode: this.mode,
-      retreatPhase: this.retreatPhase
+      retreatPhase: this.retreatPhase,
     };
   }
 
@@ -1530,20 +1778,20 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
     return `Let me reflect back what I've noticed this week...
 
-    ${patterns.length > 0 ? `Patterns: ${patterns.join(', ')}` : ''}
-    ${growth.length > 0 ? `Growth: ${growth.join(', ')}` : ''}
+    ${patterns.length > 0 ? `Patterns: ${patterns.join(", ")}` : ""}
+    ${growth.length > 0 ? `Growth: ${growth.join(", ")}` : ""}
 
     What's alive in you as you hear this?`;
   }
 
   private detectPatterns(memories: any[]): string[] {
     // Pattern detection logic
-    return ['Seeking comfort when growth calls', 'Avoiding certain emotions'];
+    return ["Seeking comfort when growth calls", "Avoiding certain emotions"];
   }
 
   private detectGrowth(memories: any[]): string[] {
     // Growth detection logic
-    return ['Increased willingness to feel', 'Deeper self-inquiry'];
+    return ["Increased willingness to feel", "Deeper self-inquiry"];
   }
 
   // ===============================================
@@ -1552,14 +1800,17 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
   async generateRitualGuidance(ritualType: string): Promise<string> {
     // Load context from Soul Memory
-    let ritualContext = '';
+    let ritualContext = "";
 
     if (this.soulMemory) {
       // Get previous ritual moments
-      const previousRituals = await this.soulMemory.retrieveMemories(this.userId, {
-        type: 'ritual_moment',
-        limit: 3
-      });
+      const previousRituals = await this.soulMemory.retrieveMemories(
+        this.userId,
+        {
+          type: "ritual_moment",
+          limit: 3,
+        },
+      );
 
       if (previousRituals.length > 0) {
         ritualContext = `Building on your previous ritual experiences...`;
@@ -1567,38 +1818,41 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     }
 
     const guidanceTemplates: Record<string, string> = {
-      'morning_intention': `${ritualContext}
+      morning_intention: `${ritualContext}
 
 As you begin this new day, feel into what wants to emerge.
 What quality or energy is asking to be embodied today?
 Take three deep breaths and let your intention arise naturally from your soul's wisdom.`,
 
-      'elemental_connection': `${ritualContext}
+      elemental_connection: `${ritualContext}
 
 Connect with the ${this.currentElement} element within you.
 Feel its unique qualities moving through your being.
 What message does ${this.currentElement} have for you in this moment?`,
 
-      'shadow_work': `${ritualContext}
+      shadow_work: `${ritualContext}
 
 Creating sacred space for shadow work...
 Remember: what we resist persists, what we accept transforms.
 Breathe into any discomfort and know that you are held in loving awareness.`,
 
-      'integration': `${ritualContext}
+      integration: `${ritualContext}
 
 Integration is a sacred act of weaving new insights into daily life.
 What wisdom from your recent journey is ready to be embodied?
 How can you honor this transformation in practical ways?`,
 
-      'gratitude': `${ritualContext}
+      gratitude: `${ritualContext}
 
 Gratitude is a portal to presence.
 What are three things your soul is genuinely grateful for today?
-Feel the warmth of appreciation spreading through your being.`
+Feel the warmth of appreciation spreading through your being.`,
     };
 
-    return guidanceTemplates[ritualType] || `Creating sacred space for your ${ritualType} ritual...`;
+    return (
+      guidanceTemplates[ritualType] ||
+      `Creating sacred space for your ${ritualType} ritual...`
+    );
   }
 
   async reflectOnJournal(journalEntry: string): Promise<string> {
@@ -1610,7 +1864,7 @@ Feel the warmth of appreciation spreading through your being.`
     const relatedMemories = await this.soulMemory.semanticSearch(
       this.userId,
       journalEntry,
-      { topK: 3 }
+      { topK: 3 },
     );
 
     // Detect themes and patterns
@@ -1642,90 +1896,115 @@ Feel the warmth of appreciation spreading through your being.`
 
   private detectBreakthrough(prompt: string, context: any): boolean {
     const breakthroughIndicators = [
-      'i just realized',
-      'i see now',
-      'breakthrough',
-      'pattern',
-      'stuck in',
-      'finally understand',
-      'aha',
-      'it all makes sense',
-      'i\'ve been',
-      'years',
-      'always',
-      'never realized',
-      'light bulb',
-      'click',
-      'shift'
+      "i just realized",
+      "i see now",
+      "breakthrough",
+      "pattern",
+      "stuck in",
+      "finally understand",
+      "aha",
+      "it all makes sense",
+      "i've been",
+      "years",
+      "always",
+      "never realized",
+      "light bulb",
+      "click",
+      "shift",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
 
     // Check for breakthrough language
-    const hasBreakthroughLanguage = breakthroughIndicators.some(
-      indicator => lowerPrompt.includes(indicator)
+    const hasBreakthroughLanguage = breakthroughIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
     );
 
     // Check if discussing patterns or realizations
-    const discussingPatterns = lowerPrompt.includes('pattern') &&
-                              (lowerPrompt.includes('see') || lowerPrompt.includes('realize') || lowerPrompt.includes('stuck'));
+    const discussingPatterns =
+      lowerPrompt.includes("pattern") &&
+      (lowerPrompt.includes("see") ||
+        lowerPrompt.includes("realize") ||
+        lowerPrompt.includes("stuck"));
 
     // Check emotional intensity
     const highEmotionalIntensity = context.emotional_depth > 0.7;
 
     // Check if this represents a shift from previous patterns
-    const representsShift = context.memoryPatterns?.repeatedThemes?.length > 0 &&
-                           !context.memoryPatterns.repeatedThemes.some((theme: any) =>
-                             lowerPrompt.includes(theme.theme.toLowerCase())
-                           );
+    const representsShift =
+      context.memoryPatterns?.repeatedThemes?.length > 0 &&
+      !context.memoryPatterns.repeatedThemes.some((theme: any) =>
+        lowerPrompt.includes(theme.theme.toLowerCase()),
+      );
 
-    return hasBreakthroughLanguage || discussingPatterns ||
-           (highEmotionalIntensity && representsShift);
+    return (
+      hasBreakthroughLanguage ||
+      discussingPatterns ||
+      (highEmotionalIntensity && representsShift)
+    );
   }
 
   private detectSacredContent(prompt: string): boolean {
     const sacredIndicators = [
-      'sacred',
-      'divine',
-      'soul',
-      'spirit',
-      'profound',
-      'deep knowing',
-      'truth',
-      'authentic',
-      'vulnerable',
-      'raw',
-      'tears',
-      'heart',
-      'love',
-      'grace',
-      'presence'
+      "sacred",
+      "divine",
+      "soul",
+      "spirit",
+      "profound",
+      "deep knowing",
+      "truth",
+      "authentic",
+      "vulnerable",
+      "raw",
+      "tears",
+      "heart",
+      "love",
+      "grace",
+      "presence",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return sacredIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return sacredIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectEmotionalContent(prompt: string): number {
     // Simple emotional intensity detection (0-1)
     const emotionalWords = [
-      'feel', 'feeling', 'felt',
-      'overwhelm', 'overwhelming', 'overwhelmed',
-      'scared', 'fear', 'afraid',
-      'sad', 'sadness', 'grief',
-      'joy', 'happy', 'excited',
-      'angry', 'anger', 'frustrated',
-      'love', 'loving', 'loved',
-      'hurt', 'pain', 'painful'
+      "feel",
+      "feeling",
+      "felt",
+      "overwhelm",
+      "overwhelming",
+      "overwhelmed",
+      "scared",
+      "fear",
+      "afraid",
+      "sad",
+      "sadness",
+      "grief",
+      "joy",
+      "happy",
+      "excited",
+      "angry",
+      "anger",
+      "frustrated",
+      "love",
+      "loving",
+      "loved",
+      "hurt",
+      "pain",
+      "painful",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
     const wordCount = prompt.split(/\s+/).length;
-    const emotionalWordCount = emotionalWords.filter(
-      word => lowerPrompt.includes(word)
+    const emotionalWordCount = emotionalWords.filter((word) =>
+      lowerPrompt.includes(word),
     ).length;
 
-    return Math.min(emotionalWordCount / wordCount * 10, 1);
+    return Math.min((emotionalWordCount / wordCount) * 10, 1);
   }
 
   // ===============================================
@@ -1737,42 +2016,42 @@ Feel the warmth of appreciation spreading through your being.`
 
     // Shadow archetype detection
     if (this.detectShadowWork(prompt)) {
-      return 'Shadow';
+      return "Shadow";
     }
 
     // Seeker archetype
     if (this.detectSeekerPattern(prompt)) {
-      return 'Seeker';
+      return "Seeker";
     }
 
     // Warrior archetype
     if (this.detectWarriorPattern(prompt)) {
-      return 'Warrior';
+      return "Warrior";
     }
 
     // Lover archetype
     if (this.detectLoverPattern(prompt)) {
-      return 'Lover';
+      return "Lover";
     }
 
     // Sage archetype
     if (this.detectSagePattern(prompt)) {
-      return 'Sage';
+      return "Sage";
     }
 
     // Innocent/Child archetype
     if (this.detectInnocentPattern(prompt)) {
-      return 'Innocent';
+      return "Innocent";
     }
 
     // Caregiver archetype
     if (this.detectCaregiverPattern(prompt)) {
-      return 'Caregiver';
+      return "Caregiver";
     }
 
     // Creator archetype
     if (this.detectCreatorPattern(prompt)) {
-      return 'Creator';
+      return "Creator";
     }
 
     return undefined;
@@ -1780,161 +2059,177 @@ Feel the warmth of appreciation spreading through your being.`
 
   private detectShadowWork(prompt: string): boolean {
     const shadowIndicators = [
-      'shadow',
-      'dark side',
-      'hate this part',
-      'reject',
-      'ashamed',
-      'hide',
-      'suppress',
-      'repress',
-      'deny',
-      'darkness',
-      'worst part',
-      'ugly',
-      'monster',
-      'demon',
-      'evil'
+      "shadow",
+      "dark side",
+      "hate this part",
+      "reject",
+      "ashamed",
+      "hide",
+      "suppress",
+      "repress",
+      "deny",
+      "darkness",
+      "worst part",
+      "ugly",
+      "monster",
+      "demon",
+      "evil",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return shadowIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return shadowIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectSeekerPattern(prompt: string): boolean {
     const seekerIndicators = [
-      'searching',
-      'seeking',
-      'journey',
-      'quest',
-      'find meaning',
-      'purpose',
-      'why am i',
-      'what is my',
-      'discover',
-      'explore'
+      "searching",
+      "seeking",
+      "journey",
+      "quest",
+      "find meaning",
+      "purpose",
+      "why am i",
+      "what is my",
+      "discover",
+      "explore",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return seekerIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return seekerIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectWarriorPattern(prompt: string): boolean {
     const warriorIndicators = [
-      'fight',
-      'battle',
-      'struggle',
-      'overcome',
-      'conquer',
-      'defeat',
-      'strong',
-      'warrior',
-      'courage',
-      'brave'
+      "fight",
+      "battle",
+      "struggle",
+      "overcome",
+      "conquer",
+      "defeat",
+      "strong",
+      "warrior",
+      "courage",
+      "brave",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return warriorIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return warriorIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectLoverPattern(prompt: string): boolean {
     const loverIndicators = [
-      'love',
-      'passion',
-      'intimate',
-      'connection',
-      'relationship',
-      'partner',
-      'romance',
-      'desire',
-      'union',
-      'heart'
+      "love",
+      "passion",
+      "intimate",
+      "connection",
+      "relationship",
+      "partner",
+      "romance",
+      "desire",
+      "union",
+      "heart",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return loverIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return loverIndicators.some((indicator) => lowerPrompt.includes(indicator));
   }
 
   private detectSagePattern(prompt: string): boolean {
     const sageIndicators = [
-      'wisdom',
-      'understand',
-      'knowledge',
-      'truth',
-      'insight',
-      'realize',
-      'learn',
-      'teach',
-      'guide',
-      'mentor'
+      "wisdom",
+      "understand",
+      "knowledge",
+      "truth",
+      "insight",
+      "realize",
+      "learn",
+      "teach",
+      "guide",
+      "mentor",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return sageIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return sageIndicators.some((indicator) => lowerPrompt.includes(indicator));
   }
 
   private detectInnocentPattern(prompt: string): boolean {
     const innocentIndicators = [
-      'innocent',
-      'child',
-      'pure',
-      'simple',
-      'trust',
-      'faith',
-      'hope',
-      'optimistic',
-      'naive',
-      'wonder'
+      "innocent",
+      "child",
+      "pure",
+      "simple",
+      "trust",
+      "faith",
+      "hope",
+      "optimistic",
+      "naive",
+      "wonder",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return innocentIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return innocentIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectCaregiverPattern(prompt: string): boolean {
     const caregiverIndicators = [
-      'care',
-      'help',
-      'support',
-      'nurture',
-      'protect',
-      'mother',
-      'father',
-      'parent',
-      'heal',
-      'comfort'
+      "care",
+      "help",
+      "support",
+      "nurture",
+      "protect",
+      "mother",
+      "father",
+      "parent",
+      "heal",
+      "comfort",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return caregiverIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return caregiverIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectCreatorPattern(prompt: string): boolean {
     const creatorIndicators = [
-      'create',
-      'build',
-      'make',
-      'imagine',
-      'vision',
-      'art',
-      'express',
-      'manifest',
-      'birth',
-      'generate'
+      "create",
+      "build",
+      "make",
+      "imagine",
+      "vision",
+      "art",
+      "express",
+      "manifest",
+      "birth",
+      "generate",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return creatorIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return creatorIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private async checkArchetypalAdaptation(archetype: string): Promise<void> {
     if (!this.soulMemory) return;
 
     // Get active archetypes
-    const activeArchetypes = await this.soulMemory.getActiveArchetypes(this.userId);
+    const activeArchetypes = await this.soulMemory.getActiveArchetypes(
+      this.userId,
+    );
 
     // Find the Shadow archetype if present
-    const shadowPattern = activeArchetypes.find(a => a.archetype === 'Shadow');
+    const shadowPattern = activeArchetypes.find(
+      (a) => a.archetype === "Shadow",
+    );
 
     // If Shadow work is prominent, consider adapting Oracle approach
     if (shadowPattern && shadowPattern.patternStrength > 0.5) {
@@ -1942,13 +2237,19 @@ Feel the warmth of appreciation spreading through your being.`
       this.systemPrompt += `\n\nThis person is actively engaged in shadow work. Be especially gentle and supportive while maintaining sacred resistance when needed.`;
 
       // Log the adaptation
-      logger.info(`Oracle adapting to strong Shadow archetype pattern for user ${this.userId}`);
+      logger.info(
+        `Oracle adapting to strong Shadow archetype pattern for user ${this.userId}`,
+      );
     }
 
     // Check for other strong patterns
-    const strongPatterns = activeArchetypes.filter(a => a.patternStrength > 0.7);
+    const strongPatterns = activeArchetypes.filter(
+      (a) => a.patternStrength > 0.7,
+    );
     if (strongPatterns.length > 0) {
-      logger.info(`Strong archetypal patterns detected: ${strongPatterns.map(p => p.archetype).join(', ')}`);
+      logger.info(
+        `Strong archetypal patterns detected: ${strongPatterns.map((p) => p.archetype).join(", ")}`,
+      );
     }
   }
 
@@ -1958,70 +2259,80 @@ Feel the warmth of appreciation spreading through your being.`
 
   private detectRetreatIntensive(prompt: string): boolean {
     const retreatIntensiveIndicators = [
-      'opening',
-      'profound',
-      'mystical',
-      'visionary',
-      'transcendent',
-      'ecstatic',
-      'unity',
-      'oneness',
-      'cosmic',
-      'divine',
-      'expanded',
-      'altered',
-      'peak experience',
-      'ego dissolution',
-      'bliss',
-      'energy',
-      'kundalini',
-      'chakra',
-      'spirit guide',
-      'entity',
-      'dimension',
-      'void',
-      'light',
-      'presence',
-      'overwhelming'
+      "opening",
+      "profound",
+      "mystical",
+      "visionary",
+      "transcendent",
+      "ecstatic",
+      "unity",
+      "oneness",
+      "cosmic",
+      "divine",
+      "expanded",
+      "altered",
+      "peak experience",
+      "ego dissolution",
+      "bliss",
+      "energy",
+      "kundalini",
+      "chakra",
+      "spirit guide",
+      "entity",
+      "dimension",
+      "void",
+      "light",
+      "presence",
+      "overwhelming",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
 
     // Check for retreat-specific language
-    const hasRetreatLanguage = retreatIntensiveIndicators.some(
-      indicator => lowerPrompt.includes(indicator)
+    const hasRetreatLanguage = retreatIntensiveIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
     );
 
     // Check for intensity markers in retreat context
-    const intensityMarkers = ['very', 'extremely', 'incredibly', 'so much', 'too much'];
-    const hasIntensity = intensityMarkers.some(marker => lowerPrompt.includes(marker));
+    const intensityMarkers = [
+      "very",
+      "extremely",
+      "incredibly",
+      "so much",
+      "too much",
+    ];
+    const hasIntensity = intensityMarkers.some((marker) =>
+      lowerPrompt.includes(marker),
+    );
 
-    return hasRetreatLanguage || (this.mode === 'retreat' && hasIntensity);
+    return hasRetreatLanguage || (this.mode === "retreat" && hasIntensity);
   }
 
   async deactivateRetreatMode(): Promise<void> {
     const previousPhase = this.retreatPhase;
 
-    this.mode = 'daily';
+    this.mode = "daily";
     this.retreatPhase = undefined;
     this.safetyProtocolsActive = false;
 
-    logger.info(`Retreat mode deactivated (was: ${previousPhase}) for ${this.userId}`);
+    logger.info(
+      `Retreat mode deactivated (was: ${previousPhase}) for ${this.userId}`,
+    );
 
     // Store retreat deactivation in Soul Memory
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'ritual_moment',
+        type: "ritual_moment",
         content: `Retreat mode deactivated (completed: ${previousPhase})`,
         element: this.currentElement,
         sacredMoment: true,
-        ritualContext: 'retreat_completion',
+        ritualContext: "retreat_completion",
         metadata: {
           previousRetreatPhase: previousPhase,
           deactivatedAt: new Date().toISOString(),
-          mode: 'daily'
-        }
+          mode: "daily",
+        },
       });
     }
 
@@ -2034,10 +2345,14 @@ Feel the warmth of appreciation spreading through your being.`
   // JUNG-BUDDHA SACRED MIRROR METHODS
   // ===============================================
 
-  private determineJungBuddhaMode(prompt: string, context: any, responseType: string): 'jung' | 'buddha' | 'hybrid' {
+  private determineJungBuddhaMode(
+    prompt: string,
+    context: any,
+    responseType: string,
+  ): "jung" | "buddha" | "hybrid" {
     // Override mode if set explicitly
-    if (this.sacredMirrorMode !== 'adaptive') {
-      return this.sacredMirrorMode as 'jung' | 'buddha' | 'hybrid';
+    if (this.sacredMirrorMode !== "adaptive") {
+      return this.sacredMirrorMode as "jung" | "buddha" | "hybrid";
     }
 
     // First run simple wisdom approach detection
@@ -2045,7 +2360,8 @@ Feel the warmth of appreciation spreading through your being.`
 
     // Then use Adaptive Wisdom Engine for sophisticated routing
     const userContext = this.buildUserContextForWisdomEngine(prompt, context);
-    const wisdomRouting = this.adaptiveWisdomEngine.determineApproach(userContext);
+    const wisdomRouting =
+      this.adaptiveWisdomEngine.determineApproach(userContext);
 
     // Store the routing for reference
     this.currentWisdomRouting = wisdomRouting;
@@ -2055,22 +2371,22 @@ Feel the warmth of appreciation spreading through your being.`
     const sophisticatedApproach = wisdomRouting.approach;
 
     // Log both approaches for comparison
-    logger.info('Wisdom approach comparison:', {
+    logger.info("Wisdom approach comparison:", {
       simple: simpleApproach,
       sophisticated: sophisticatedApproach,
       confidence: wisdomRouting.confidence,
-      reasoning: wisdomRouting.reasoning
+      reasoning: wisdomRouting.reasoning,
     });
 
     // Use sophisticated approach but consider simple approach for validation
     let finalApproach = sophisticatedApproach;
 
     // If confidence is low, defer to simple approach
-    if (wisdomRouting.confidence < 0.6 && simpleApproach !== 'hybrid') {
+    if (wisdomRouting.confidence < 0.6 && simpleApproach !== "hybrid") {
       finalApproach = simpleApproach;
-      logger.info('Using simple approach due to low confidence:', {
+      logger.info("Using simple approach due to low confidence:", {
         finalApproach,
-        reason: 'Low confidence in sophisticated detection'
+        reason: "Low confidence in sophisticated detection",
       });
     }
 
@@ -2086,50 +2402,69 @@ Feel the warmth of appreciation spreading through your being.`
 
     // Check if user is grasping/attached (Buddha indicators)
     if (this.detectGraspingLanguageSimple(lowerPrompt)) {
-      this.wisdomMode = 'buddha'; // Offer spaciousness
-      logger.info('Simple wisdom detection: Buddha mode (grasping detected)');
+      this.wisdomMode = "buddha"; // Offer spaciousness
+      logger.info("Simple wisdom detection: Buddha mode (grasping detected)");
       return;
     }
 
     // Check if user is avoiding/denying (Jung indicators)
     if (this.detectAvoidanceLanguageSimple(lowerPrompt)) {
-      this.wisdomMode = 'jung'; // Offer integration
-      logger.info('Simple wisdom detection: Jung mode (avoidance detected)');
+      this.wisdomMode = "jung"; // Offer integration
+      logger.info("Simple wisdom detection: Jung mode (avoidance detected)");
       return;
     }
 
     // Check recent patterns for balance
-    if (context.recentMemories && this.needsWisdomBalance(context.recentMemories)) {
-      const predominantMode = this.getPredominantWisdomMode(context.recentMemories);
-      this.wisdomMode = predominantMode === 'jung' ? 'buddha' : 'jung'; // Balance with opposite
-      logger.info('Simple wisdom detection: Balancing mode', {
+    if (
+      context.recentMemories &&
+      this.needsWisdomBalance(context.recentMemories)
+    ) {
+      const predominantMode = this.getPredominantWisdomMode(
+        context.recentMemories,
+      );
+      this.wisdomMode = predominantMode === "jung" ? "buddha" : "jung"; // Balance with opposite
+      logger.info("Simple wisdom detection: Balancing mode", {
         predominantMode,
-        switchedTo: this.wisdomMode
+        switchedTo: this.wisdomMode,
       });
       return;
     }
 
     // Default to hybrid - hold both
-    this.wisdomMode = 'hybrid';
-    logger.info('Simple wisdom detection: Hybrid mode (default)');
+    this.wisdomMode = "hybrid";
+    logger.info("Simple wisdom detection: Hybrid mode (default)");
   }
 
   private detectGraspingLanguageSimple(prompt: string): boolean {
     const graspingIndicators = [
-      'i am', 'always', 'never', 'must', 'have to', 'need to',
-      'can\'t let go', 'obsessed', 'attached to', 'desperate'
+      "i am",
+      "always",
+      "never",
+      "must",
+      "have to",
+      "need to",
+      "can't let go",
+      "obsessed",
+      "attached to",
+      "desperate",
     ];
 
-    return graspingIndicators.some(indicator => prompt.includes(indicator));
+    return graspingIndicators.some((indicator) => prompt.includes(indicator));
   }
 
   private detectAvoidanceLanguageSimple(prompt: string): boolean {
     const avoidanceIndicators = [
-      'i don\'t want', 'i hate this part', 'can\'t deal', 'avoid',
-      'don\'t want to face', 'refuse to', 'can\'t stand', 'too much'
+      "i don't want",
+      "i hate this part",
+      "can't deal",
+      "avoid",
+      "don't want to face",
+      "refuse to",
+      "can't stand",
+      "too much",
     ];
 
-    return avoidanceIndicators.some(indicator => prompt.includes(indicator));
+    return avoidanceIndicators.some((indicator) => prompt.includes(indicator));
   }
 
   private needsWisdomBalance(recentMemories: any[]): boolean {
@@ -2139,21 +2474,30 @@ Feel the warmth of appreciation spreading through your being.`
     const totalModes = wisdomModeCount.jung + wisdomModeCount.buddha;
 
     // If more than 3 consecutive uses of same mode, suggest balance
-    return totalModes >= 3 && (wisdomModeCount.jung > 3 || wisdomModeCount.buddha > 3);
+    return (
+      totalModes >= 3 &&
+      (wisdomModeCount.jung > 3 || wisdomModeCount.buddha > 3)
+    );
   }
 
-  private getPredominantWisdomMode(recentMemories: any[]): 'jung' | 'buddha' | 'hybrid' {
+  private getPredominantWisdomMode(
+    recentMemories: any[],
+  ): "jung" | "buddha" | "hybrid" {
     const wisdomModeCount = this.countWisdomModes(recentMemories);
 
-    if (wisdomModeCount.jung > wisdomModeCount.buddha) return 'jung';
-    if (wisdomModeCount.buddha > wisdomModeCount.jung) return 'buddha';
-    return 'hybrid';
+    if (wisdomModeCount.jung > wisdomModeCount.buddha) return "jung";
+    if (wisdomModeCount.buddha > wisdomModeCount.jung) return "buddha";
+    return "hybrid";
   }
 
-  private countWisdomModes(memories: any[]): { jung: number; buddha: number; hybrid: number } {
+  private countWisdomModes(memories: any[]): {
+    jung: number;
+    buddha: number;
+    hybrid: number;
+  } {
     const count = { jung: 0, buddha: 0, hybrid: 0 };
 
-    memories.forEach(memory => {
+    memories.forEach((memory) => {
       if (memory.wisdomMode) {
         count[memory.wisdomMode as keyof typeof count]++;
       }
@@ -2163,14 +2507,14 @@ Feel the warmth of appreciation spreading through your being.`
   }
 
   // Public method to get current simple wisdom mode
-  getCurrentWisdomMode(): 'jung' | 'buddha' | 'hybrid' {
+  getCurrentWisdomMode(): "jung" | "buddha" | "hybrid" {
     return this.wisdomMode;
   }
 
   // Public method to manually set wisdom mode
-  setWisdomMode(mode: 'jung' | 'buddha' | 'hybrid'): void {
+  setWisdomMode(mode: "jung" | "buddha" | "hybrid"): void {
     this.wisdomMode = mode;
-    logger.info('Wisdom mode manually set to:', mode);
+    logger.info("Wisdom mode manually set to:", mode);
   }
 
   // ===============================================
@@ -2194,37 +2538,42 @@ Feel the warmth of appreciation spreading through your being.`
       this.updateSystemPromptForMode(mode);
 
       // Determine wisdom approach adjustment based on mode
-      let wisdomApproachAdjustment = '';
+      let wisdomApproachAdjustment = "";
 
       switch (newMode) {
-        case 'alchemist':
+        case "alchemist":
           // Alchemist mode favors Jung integration work
-          this.wisdomMode = 'jung';
-          wisdomApproachAdjustment = 'Wisdom approach adjusted to Jung (integration focus) to align with Alchemist mode';
+          this.wisdomMode = "jung";
+          wisdomApproachAdjustment =
+            "Wisdom approach adjusted to Jung (integration focus) to align with Alchemist mode";
           break;
 
-        case 'buddha':
+        case "buddha":
           // Buddha mode naturally favors Buddha liberation work
-          this.wisdomMode = 'buddha';
-          wisdomApproachAdjustment = 'Wisdom approach set to Buddha (liberation focus) to align with Buddha mode';
+          this.wisdomMode = "buddha";
+          wisdomApproachAdjustment =
+            "Wisdom approach set to Buddha (liberation focus) to align with Buddha mode";
           break;
 
-        case 'sage':
+        case "sage":
           // Sage mode favors hybrid balanced approach
-          this.wisdomMode = 'hybrid';
-          wisdomApproachAdjustment = 'Wisdom approach set to Hybrid (balanced) to align with Sage mode';
+          this.wisdomMode = "hybrid";
+          wisdomApproachAdjustment =
+            "Wisdom approach set to Hybrid (balanced) to align with Sage mode";
           break;
 
-        case 'mystic':
+        case "mystic":
           // Mystic mode can use hybrid but lean toward integration of visions
-          this.wisdomMode = 'hybrid';
-          wisdomApproachAdjustment = 'Wisdom approach set to Hybrid with integration emphasis for grounding visions';
+          this.wisdomMode = "hybrid";
+          wisdomApproachAdjustment =
+            "Wisdom approach set to Hybrid with integration emphasis for grounding visions";
           break;
 
-        case 'guardian':
+        case "guardian":
           // Guardian mode prefers gentle approaches, can be any but adaptive
-          this.sacredMirrorMode = 'adaptive';
-          wisdomApproachAdjustment = 'Wisdom approach set to Adaptive for trauma-informed responsiveness';
+          this.sacredMirrorMode = "adaptive";
+          wisdomApproachAdjustment =
+            "Wisdom approach set to Adaptive for trauma-informed responsiveness";
           break;
       }
 
@@ -2232,7 +2581,7 @@ Feel the warmth of appreciation spreading through your being.`
       if (this.soulMemory) {
         await this.soulMemory.storeMemory({
           userId: this.userId,
-          type: 'mode_switch',
+          type: "mode_switch",
           content: `Switched to ${newMode} mode`,
           element: this.currentElement,
           sacredMoment: true,
@@ -2240,8 +2589,8 @@ Feel the warmth of appreciation spreading through your being.`
             previousMode,
             newMode,
             wisdomAdjustment: wisdomApproachAdjustment,
-            timestamp: new Date().toISOString()
-          }
+            timestamp: new Date().toISOString(),
+          },
         });
       }
 
@@ -2250,9 +2599,9 @@ Feel the warmth of appreciation spreading through your being.`
         userId: this.userId,
         previousMode,
         newMode,
-        reason: 'User mode selection',
+        reason: "User mode selection",
         timestamp: new Date(),
-        triggeredBy: 'user_choice'
+        triggeredBy: "user_choice",
       };
 
       // Store in mode history
@@ -2261,11 +2610,11 @@ Feel the warmth of appreciation spreading through your being.`
       // Get mode introduction
       const modeIntroduction = this.getModeIntroduction(newMode);
 
-      logger.info('Oracle mode switched:', {
+      logger.info("Oracle mode switched:", {
         userId: this.userId,
         previousMode,
         newMode,
-        wisdomMode: this.wisdomMode
+        wisdomMode: this.wisdomMode,
       });
 
       return {
@@ -2277,18 +2626,17 @@ Feel the warmth of appreciation spreading through your being.`
           type: mode.type,
           capabilities: mode.specialCapabilities,
           currentWisdomMode: this.wisdomMode,
-          sacredMirrorMode: this.sacredMirrorMode
+          sacredMirrorMode: this.sacredMirrorMode,
         },
-        wisdomApproachAdjustment
+        wisdomApproachAdjustment,
       };
-
     } catch (error) {
-      logger.error('Error switching oracle mode:', error);
+      logger.error("Error switching oracle mode:", error);
 
       return {
         success: false,
-        message: 'Failed to switch oracle mode. Please try again.',
-        modeInfo: null
+        message: "Failed to switch oracle mode. Please try again.",
+        modeInfo: null,
       };
     }
   }
@@ -2298,22 +2646,25 @@ Feel the warmth of appreciation spreading through your being.`
     this.systemPrompt = `${this.baseSystemPrompt}\n\n${mode.systemPromptAddition}`;
 
     // Add retreat context if in retreat mode
-    if (this.mode === 'retreat' && this.retreatPhase) {
+    if (this.mode === "retreat" && this.retreatPhase) {
       this.systemPrompt += `\n\nAdditionally, you are supporting this person in ${this.retreatPhase} phase.`;
     }
 
-    logger.info('System prompt updated for mode:', {
+    logger.info("System prompt updated for mode:", {
       mode: mode.type,
-      promptLength: this.systemPrompt.length
+      promptLength: this.systemPrompt.length,
     });
   }
 
   private getModeIntroduction(mode: OracleModeType): string {
-    return MODE_RESPONSES[mode]?.greeting || `${ENHANCED_ORACLE_MODES[mode]?.icon || '🌟'} ${ENHANCED_ORACLE_MODES[mode]?.name || mode} mode activated. How may I serve your journey today?`;
+    return (
+      MODE_RESPONSES[mode]?.greeting ||
+      `${ENHANCED_ORACLE_MODES[mode]?.icon || "🌟"} ${ENHANCED_ORACLE_MODES[mode]?.name || mode} mode activated. How may I serve your journey today?`
+    );
   }
 
   getAllAvailableModes(): any[] {
-    return Object.values(ENHANCED_ORACLE_MODES).map(mode => ({
+    return Object.values(ENHANCED_ORACLE_MODES).map((mode) => ({
       id: mode.id,
       icon: this.getModeIcon(mode.id),
       name: mode.name,
@@ -2322,26 +2673,26 @@ Feel the warmth of appreciation spreading through your being.`
       longDescription: mode.longDescription,
       color: mode.color,
       preferredContext: mode.preferredContext,
-      specialCapabilities: mode.specialCapabilities
+      specialCapabilities: mode.specialCapabilities,
     }));
   }
 
   private getModeIcon(modeId: OracleModeType): string {
     const icons = {
-      'alchemist': '🧪',
-      'buddha': '☸️',
-      'sage': '🌀',
-      'mystic': '🔥',
-      'guardian': '🌱',
-      'tao': '☯️'
+      alchemist: "🧪",
+      buddha: "☸️",
+      sage: "🌀",
+      mystic: "🔥",
+      guardian: "🌱",
+      tao: "☯️",
     };
 
-    return icons[modeId] || '🌟';
+    return icons[modeId] || "🌟";
   }
 
   getCurrentModeStatus(): {
     currentOracleMode: OracleModeType;
-    currentWisdomMode: 'jung' | 'buddha' | 'hybrid';
+    currentWisdomMode: "jung" | "buddha" | "hybrid";
     sacredMirrorMode: string;
     modeHistory: ModeSwitchMemory[];
     capabilities: string[];
@@ -2356,12 +2707,14 @@ Feel the warmth of appreciation spreading through your being.`
       sacredMirrorMode: this.sacredMirrorMode,
       modeHistory: this.getModeHistory().slice(-5), // Last 5 switches
       capabilities: currentMode.specialCapabilities,
-      wisdomRouting: wisdomRouting ? {
-        approach: wisdomRouting.approach,
-        confidence: wisdomRouting.confidence,
-        reasoning: wisdomRouting.reasoning,
-        adjustments: wisdomRouting.adjustments
-      } : null
+      wisdomRouting: wisdomRouting
+        ? {
+            approach: wisdomRouting.approach,
+            confidence: wisdomRouting.confidence,
+            reasoning: wisdomRouting.reasoning,
+            adjustments: wisdomRouting.adjustments,
+          }
+        : null,
     };
   }
 
@@ -2374,34 +2727,43 @@ Feel the warmth of appreciation spreading through your being.`
   }> {
     // Analyze the input using existing context analysis
     const context = await this.gatherContext(userInput);
-    const conversationContext = this.analyzeConversationContext(userInput, context);
+    const conversationContext = this.analyzeConversationContext(
+      userInput,
+      context,
+    );
 
     // Get mode suggestion
     const modeSuggestion = await this.suggestModeSwitch(conversationContext);
 
-    if (modeSuggestion && modeSuggestion.suggestedMode !== this.currentOracleMode) {
+    if (
+      modeSuggestion &&
+      modeSuggestion.suggestedMode !== this.currentOracleMode
+    ) {
       return {
         suggestedMode: modeSuggestion.suggestedMode,
         confidence: modeSuggestion.confidence,
         reason: modeSuggestion.reason,
-        currentMode: this.currentOracleMode
+        currentMode: this.currentOracleMode,
       };
     }
 
     return {
       suggestedMode: null,
       confidence: 0,
-      reason: 'Current mode is appropriate',
-      currentMode: this.currentOracleMode
+      reason: "Current mode is appropriate",
+      currentMode: this.currentOracleMode,
     };
   }
 
-  private buildUserContextForWisdomEngine(prompt: string, context: any): UserContext {
+  private buildUserContextForWisdomEngine(
+    prompt: string,
+    context: any,
+  ): UserContext {
     // Convert current patterns to the format expected by AdaptiveWisdomEngine
     this.updateRecentPatterns(prompt, context);
 
     return {
-      spiralPhase: context.spiralPhase || 'unknown',
+      spiralPhase: context.spiralPhase || "unknown",
       currentElement: this.currentElement,
       emotionalState: this.mapEmotionalState(context),
       recentPatterns: this.recentPatterns,
@@ -2409,7 +2771,7 @@ Feel the warmth of appreciation spreading through your being.`
       shadowReadiness: this.calculateShadowReadiness(context),
       vulnerabilityLevel: context.vulnerabilityLevel || 0.5,
       currentOracleMode: this.currentOracleMode,
-      memoryPatterns: context.memoryPatterns
+      memoryPatterns: context.memoryPatterns,
     };
   }
 
@@ -2419,55 +2781,55 @@ Feel the warmth of appreciation spreading through your being.`
     // Detect grasping patterns
     if (this.detectGraspingLanguage(prompt)) {
       patterns.push({
-        type: 'grasping',
+        type: "grasping",
         content: prompt,
         intensity: this.calculateGraspingIntensity(prompt),
         frequency: 1,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     // Detect avoidance patterns
     if (this.detectAvoidanceLanguage(prompt)) {
       patterns.push({
-        type: 'avoidance',
+        type: "avoidance",
         content: prompt,
         intensity: this.calculateAvoidanceIntensity(prompt),
         frequency: 1,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     // Detect shadow material
     if (this.detectsShadowMaterial(prompt, context)) {
       patterns.push({
-        type: 'shadow_emergence',
+        type: "shadow_emergence",
         content: prompt,
         intensity: 0.7,
         frequency: 1,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     // Detect spiritual bypassing
     if (this.detectSpiritualBypass(prompt, context)) {
       patterns.push({
-        type: 'spiritual_bypass',
+        type: "spiritual_bypass",
         content: prompt,
         intensity: 0.6,
         frequency: 1,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     // Detect identity crisis
     if (this.detectIdentityQuestions(prompt)) {
       patterns.push({
-        type: 'identity_crisis',
+        type: "identity_crisis",
         content: prompt,
         intensity: 0.8,
         frequency: 1,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -2478,12 +2840,14 @@ Feel the warmth of appreciation spreading through your being.`
       .slice(0, 20);
   }
 
-  private mapEmotionalState(context: any): 'stable' | 'crisis' | 'transformation' | 'integration' | 'chaos' {
-    if (context.crisisMarkers?.length > 0) return 'crisis';
-    if (context.responseType === 'integration_support') return 'integration';
-    if (context.shadowThemes?.length > 0) return 'transformation';
-    if (context.emotional_depth > 0.8) return 'chaos';
-    return 'stable';
+  private mapEmotionalState(
+    context: any,
+  ): "stable" | "crisis" | "transformation" | "integration" | "chaos" {
+    if (context.crisisMarkers?.length > 0) return "crisis";
+    if (context.responseType === "integration_support") return "integration";
+    if (context.shadowThemes?.length > 0) return "transformation";
+    if (context.emotional_depth > 0.8) return "chaos";
+    return "stable";
   }
 
   private calculateAttachmentLevel(context: any): number {
@@ -2495,7 +2859,7 @@ Feel the warmth of appreciation spreading through your being.`
     }
 
     // Increase for anxiety/control patterns
-    if (context.sentiment === 'anxious' || context.needs_grounding) {
+    if (context.sentiment === "anxious" || context.needs_grounding) {
       attachmentLevel += 0.2;
     }
 
@@ -2525,59 +2889,102 @@ Feel the warmth of appreciation spreading through your being.`
   // Helper methods for pattern detection
   private detectGraspingLanguage(prompt: string): boolean {
     const graspingIndicators = [
-      'need to', 'have to', 'must', 'should', 'can\'t let go',
-      'attached to', 'desperate', 'clinging', 'obsessing',
-      'trying so hard', 'force', 'control', 'make it happen'
+      "need to",
+      "have to",
+      "must",
+      "should",
+      "can't let go",
+      "attached to",
+      "desperate",
+      "clinging",
+      "obsessing",
+      "trying so hard",
+      "force",
+      "control",
+      "make it happen",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return graspingIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return graspingIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectAvoidanceLanguage(prompt: string): boolean {
     const avoidanceIndicators = [
-      'don\'t want to', 'avoiding', 'can\'t deal', 'too much',
-      'not ready', 'maybe later', 'distract myself', 'escape',
-      'numb', 'push away', 'refuse to', 'deny', 'pretend it\'s not'
+      "don't want to",
+      "avoiding",
+      "can't deal",
+      "too much",
+      "not ready",
+      "maybe later",
+      "distract myself",
+      "escape",
+      "numb",
+      "push away",
+      "refuse to",
+      "deny",
+      "pretend it's not",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return avoidanceIndicators.some(indicator => lowerPrompt.includes(indicator));
+    return avoidanceIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
   }
 
   private detectIdentityQuestions(prompt: string): boolean {
     const identityMarkers = [
-      'who am i', 'don\'t know myself', 'lost my identity',
-      'not sure who', 'identity crisis', 'don\'t recognize',
-      'feel like stranger', 'question everything', 'core beliefs',
-      'fundamental shift', 'existential'
+      "who am i",
+      "don't know myself",
+      "lost my identity",
+      "not sure who",
+      "identity crisis",
+      "don't recognize",
+      "feel like stranger",
+      "question everything",
+      "core beliefs",
+      "fundamental shift",
+      "existential",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return identityMarkers.some(marker => lowerPrompt.includes(marker));
+    return identityMarkers.some((marker) => lowerPrompt.includes(marker));
   }
 
   private detectSpiritualBypass(prompt: string, context: any): boolean {
     const bypassPatterns = [
-      'everything happens for reason', 'just think positive',
-      'raise my vibration', 'transcend this', 'spiritual but not',
-      'above all that', 'evolved beyond', 'higher consciousness',
-      'good vibes only', 'manifest away', 'love and light'
+      "everything happens for reason",
+      "just think positive",
+      "raise my vibration",
+      "transcend this",
+      "spiritual but not",
+      "above all that",
+      "evolved beyond",
+      "higher consciousness",
+      "good vibes only",
+      "manifest away",
+      "love and light",
     ];
 
     const lowerPrompt = prompt.toLowerCase();
-    return bypassPatterns.some(pattern => lowerPrompt.includes(pattern));
+    return bypassPatterns.some((pattern) => lowerPrompt.includes(pattern));
   }
 
   private calculateGraspingIntensity(prompt: string): number {
-    const strongGraspingWords = ['desperate', 'obsessing', 'must', 'can\'t let go'];
-    const mediumGraspingWords = ['need to', 'have to', 'trying so hard'];
+    const strongGraspingWords = [
+      "desperate",
+      "obsessing",
+      "must",
+      "can't let go",
+    ];
+    const mediumGraspingWords = ["need to", "have to", "trying so hard"];
 
     const lowerPrompt = prompt.toLowerCase();
 
-    if (strongGraspingWords.some(word => lowerPrompt.includes(word))) {
+    if (strongGraspingWords.some((word) => lowerPrompt.includes(word))) {
       return 0.9;
-    } else if (mediumGraspingWords.some(word => lowerPrompt.includes(word))) {
+    } else if (mediumGraspingWords.some((word) => lowerPrompt.includes(word))) {
       return 0.6;
     } else {
       return 0.3;
@@ -2585,14 +2992,16 @@ Feel the warmth of appreciation spreading through your being.`
   }
 
   private calculateAvoidanceIntensity(prompt: string): number {
-    const strongAvoidanceWords = ['refuse to', 'can\'t deal', 'escape'];
-    const mediumAvoidanceWords = ['don\'t want to', 'avoiding', 'too much'];
+    const strongAvoidanceWords = ["refuse to", "can't deal", "escape"];
+    const mediumAvoidanceWords = ["don't want to", "avoiding", "too much"];
 
     const lowerPrompt = prompt.toLowerCase();
 
-    if (strongAvoidanceWords.some(word => lowerPrompt.includes(word))) {
+    if (strongAvoidanceWords.some((word) => lowerPrompt.includes(word))) {
       return 0.9;
-    } else if (mediumAvoidanceWords.some(word => lowerPrompt.includes(word))) {
+    } else if (
+      mediumAvoidanceWords.some((word) => lowerPrompt.includes(word))
+    ) {
       return 0.6;
     } else {
       return 0.3;
@@ -2608,30 +3017,32 @@ Feel the warmth of appreciation spreading through your being.`
   async analyzeUserPatterns(): Promise<any> {
     if (this.recentPatterns.length === 0) {
       return {
-        message: 'No patterns detected yet',
-        analysis: null
+        message: "No patterns detected yet",
+        analysis: null,
       };
     }
 
-    const analysis = this.adaptiveWisdomEngine.analyzePatterns(this.recentPatterns);
+    const analysis = this.adaptiveWisdomEngine.analyzePatterns(
+      this.recentPatterns,
+    );
 
     // Store this analysis in Soul Memory if available
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'oracle_exchange',
+        type: "oracle_exchange",
         content: `Pattern analysis: ${analysis.dominantPattern}`,
         element: this.currentElement,
         metadata: {
           patternAnalysis: analysis,
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       });
     }
 
     return {
-      message: 'Pattern analysis complete',
-      analysis
+      message: "Pattern analysis complete",
+      analysis,
     };
   }
 
@@ -2641,7 +3052,7 @@ Feel the warmth of appreciation spreading through your being.`
 
   async getTodaysSacredPractice(): Promise<string> {
     const today = new Date();
-    const dayName = today.toLocaleLowerCase('en-US', { weekday: 'long' });
+    const dayName = today.toLocaleLowerCase("en-US", { weekday: "long" });
     const practice = SacredWeeklyRhythm[dayName];
 
     if (!practice) {
@@ -2649,7 +3060,10 @@ Feel the warmth of appreciation spreading through your being.`
     }
 
     // Get current wisdom routing to determine emphasis
-    const userContext = this.buildUserContextForWisdomEngine("seeking daily practice", {});
+    const userContext = this.buildUserContextForWisdomEngine(
+      "seeking daily practice",
+      {},
+    );
     const routing = this.adaptiveWisdomEngine.determineApproach(userContext);
 
     let response = `🌟 Welcome to ${practice.name}!\n\n`;
@@ -2657,15 +3071,15 @@ Feel the warmth of appreciation spreading through your being.`
 
     // Emphasize the approach based on current routing
     switch (routing.approach) {
-      case 'jung':
+      case "jung":
         response += `🧿 **Jung Focus**: ${practice.jung}\n`;
         response += `☸️ Buddha Perspective: ${practice.buddha}\n\n`;
         break;
-      case 'buddha':
+      case "buddha":
         response += `☸️ **Buddha Focus**: ${practice.buddha}\n`;
         response += `🧿 Jung Perspective: ${practice.jung}\n\n`;
         break;
-      case 'hybrid':
+      case "hybrid":
         response += `🧿 **Jung**: ${practice.jung}\n`;
         response += `☸️ **Buddha**: ${practice.buddha}\n\n`;
         break;
@@ -2684,17 +3098,17 @@ Feel the warmth of appreciation spreading through your being.`
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'ritual_moment',
+        type: "ritual_moment",
         content: `Engaged with ${practice.name}: ${practice.practice}`,
         element: this.currentElement,
         sacredMoment: true,
-        ritualContext: 'sacred_weekly_rhythm',
+        ritualContext: "sacred_weekly_rhythm",
         metadata: {
           dayOfWeek: dayName,
           practiceName: practice.name,
           wisdomApproach: routing.approach,
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       });
     }
 
@@ -2718,8 +3132,9 @@ Feel the warmth of appreciation spreading through your being.`
   }
 
   async reflectOnWeeklyCycle(): Promise<string> {
-    const patterns = this.recentPatterns.filter(p => {
-      const daysDiff = (new Date().getTime() - p.timestamp.getTime()) / (1000 * 60 * 60 * 24);
+    const patterns = this.recentPatterns.filter((p) => {
+      const daysDiff =
+        (new Date().getTime() - p.timestamp.getTime()) / (1000 * 60 * 60 * 24);
       return daysDiff <= 7;
     });
 
@@ -2756,15 +3171,15 @@ Feel the warmth of appreciation spreading through your being.`
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'integration',
+        type: "integration",
         content: `Weekly cycle reflection: ${analysis.dominantPattern}`,
         element: this.currentElement,
         transformationMarker: true,
         metadata: {
           weeklyAnalysis: analysis,
-          reflectionType: 'weekly_cycle',
-          timestamp: new Date().toISOString()
-        }
+          reflectionType: "weekly_cycle",
+          timestamp: new Date().toISOString(),
+        },
       });
     }
 
@@ -2774,30 +3189,35 @@ Feel the warmth of appreciation spreading through your being.`
   async suggestSacredPracticeForPattern(patternType: string): Promise<string> {
     const practices: Record<string, any> = {
       grasping: {
-        primary: 'friday',
-        secondary: 'sunday',
-        guidance: 'Creation and release - make something beautiful, then let it go'
+        primary: "friday",
+        secondary: "sunday",
+        guidance:
+          "Creation and release - make something beautiful, then let it go",
       },
       avoidance: {
-        primary: 'wednesday',
-        secondary: 'tuesday',
-        guidance: 'Shadow work and truth-telling - meet what you\'ve been avoiding'
+        primary: "wednesday",
+        secondary: "tuesday",
+        guidance:
+          "Shadow work and truth-telling - meet what you've been avoiding",
       },
       identity_crisis: {
-        primary: 'monday',
-        secondary: 'sunday',
-        guidance: 'Myth-making and not-knowing - write your story, then rest in mystery'
+        primary: "monday",
+        secondary: "sunday",
+        guidance:
+          "Myth-making and not-knowing - write your story, then rest in mystery",
       },
       spiritual_bypass: {
-        primary: 'tuesday',
-        secondary: 'thursday',
-        guidance: 'Truth-telling and threshold work - ground your insights in reality'
+        primary: "tuesday",
+        secondary: "thursday",
+        guidance:
+          "Truth-telling and threshold work - ground your insights in reality",
       },
       shadow_emergence: {
-        primary: 'wednesday',
-        secondary: 'saturday',
-        guidance: 'Shadow dialogue and sacred rest - meet the darkness, then rest in wholeness'
-      }
+        primary: "wednesday",
+        secondary: "saturday",
+        guidance:
+          "Shadow dialogue and sacred rest - meet the darkness, then rest in wholeness",
+      },
     };
 
     const practice = practices[patternType];
@@ -2822,26 +3242,29 @@ Feel the warmth of appreciation spreading through your being.`
   }
 
   // Integration with existing sacred moments
-  async recordSacredWeeklyMoment(dayPractice: string, experience: string): Promise<void> {
+  async recordSacredWeeklyMoment(
+    dayPractice: string,
+    experience: string,
+  ): Promise<void> {
     if (!this.soulMemory) return;
 
-    const today = new Date().toLocaleLowerCase('en-US', { weekday: 'long' });
+    const today = new Date().toLocaleLowerCase("en-US", { weekday: "long" });
     const practice = SacredWeeklyRhythm[today];
 
     await this.soulMemory.storeMemory({
       userId: this.userId,
-      type: 'ritual_moment',
-      content: `${practice?.name || 'Sacred Practice'}: ${experience}`,
+      type: "ritual_moment",
+      content: `${practice?.name || "Sacred Practice"}: ${experience}`,
       element: this.currentElement,
       sacredMoment: true,
-      ritualContext: 'weekly_rhythm',
+      ritualContext: "weekly_rhythm",
       metadata: {
         dayOfWeek: today,
         practiceName: practice?.name,
         practiceType: dayPractice,
         userExperience: experience,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     });
   }
 
@@ -2854,17 +3277,21 @@ Feel the warmth of appreciation spreading through your being.`
     const shamePattern = this.detectShamePattern(prompt);
     const sadnessPattern = this.detectSadnessPattern(prompt);
 
-    let jungResponse = '';
+    let jungResponse = "";
 
     if (angerPattern.isPresent && angerPattern.isRejecting) {
       // "I hate how angry I get" - Jung integration response
-      jungResponse = "Your anger is a guardian at the gate of something sacred. What is it protecting? Let's meet this fire-keeper part of you.";
+      jungResponse =
+        "Your anger is a guardian at the gate of something sacred. What is it protecting? Let's meet this fire-keeper part of you.";
     } else if (fearPattern.isPresent && fearPattern.isRejecting) {
-      jungResponse = "This fear is a sentinel guarding something precious. What vulnerable treasure is it watching over? What would it say if it could speak?";
+      jungResponse =
+        "This fear is a sentinel guarding something precious. What vulnerable treasure is it watching over? What would it say if it could speak?";
     } else if (shamePattern.isPresent && shamePattern.isRejecting) {
-      jungResponse = "Shame often points to where we've been wounded in our essence. What part of your authentic self got buried? Let's gently excavate this gold.";
+      jungResponse =
+        "Shame often points to where we've been wounded in our essence. What part of your authentic self got buried? Let's gently excavate this gold.";
     } else if (sadnessPattern.isPresent && sadnessPattern.isRejecting) {
-      jungResponse = "Your sadness holds the wisdom of what matters most to you. What love or loss is it honoring? Let's listen to its medicine.";
+      jungResponse =
+        "Your sadness holds the wisdom of what matters most to you. What love or loss is it honoring? Let's listen to its medicine.";
     } else {
       // General Jung shadow work response
       const jungInvitation = this.selectFromArray(protocols.jungInvitations);
@@ -2872,13 +3299,16 @@ Feel the warmth of appreciation spreading through your being.`
       if (activeArchetype) {
         this.jungArchetypeHistory.push(activeArchetype);
       }
-      jungResponse = `${jungInvitation} I sense this connects to your ${activeArchetype || 'shadow'} aspect.`;
+      jungResponse = `${jungInvitation} I sense this connects to your ${activeArchetype || "shadow"} aspect.`;
     }
 
     return jungResponse;
   }
 
-  private generateBuddhaLiberationResponse(prompt: string, context: any): string {
+  private generateBuddhaLiberationResponse(
+    prompt: string,
+    context: any,
+  ): string {
     const protocols = SacredVoiceProtocols.sacredMirror;
 
     // Detect over-identification patterns for targeted Buddha responses
@@ -2886,19 +3316,32 @@ Feel the warmth of appreciation spreading through your being.`
     const storyPattern = this.detectStoryAttachment(prompt);
     const emotionIdentification = this.detectEmotionIdentification(prompt);
 
-    let buddhaResponse = '';
+    let buddhaResponse = "";
 
-    if (emotionIdentification.emotion === 'anger' && emotionIdentification.isIdentified) {
+    if (
+      emotionIdentification.emotion === "anger" &&
+      emotionIdentification.isIdentified
+    ) {
       // "I AM an angry person" - Buddha liberation response
-      buddhaResponse = "You experience anger, but are you the anger itself? What remains when the anger passes? Who is the one watching?";
-    } else if (emotionIdentification.emotion === 'fear' && emotionIdentification.isIdentified) {
-      buddhaResponse = "Fear arises and passes like weather in the sky. Are you the fear, or the vast space in which fear appears? What notices the fear?";
-    } else if (emotionIdentification.emotion === 'sadness' && emotionIdentification.isIdentified) {
-      buddhaResponse = "Sadness moves through you like clouds through sky. Are you the sadness, or the awareness that holds it? What remains unchanged?";
+      buddhaResponse =
+        "You experience anger, but are you the anger itself? What remains when the anger passes? Who is the one watching?";
+    } else if (
+      emotionIdentification.emotion === "fear" &&
+      emotionIdentification.isIdentified
+    ) {
+      buddhaResponse =
+        "Fear arises and passes like weather in the sky. Are you the fear, or the vast space in which fear appears? What notices the fear?";
+    } else if (
+      emotionIdentification.emotion === "sadness" &&
+      emotionIdentification.isIdentified
+    ) {
+      buddhaResponse =
+        "Sadness moves through you like clouds through sky. Are you the sadness, or the awareness that holds it? What remains unchanged?";
     } else if (identityPattern.isPresent) {
       buddhaResponse = `You say you are ${identityPattern.identity}, but what were you before this story began? Who is the one who knows about being ${identityPattern.identity}?`;
     } else if (storyPattern.isPresent) {
-      buddhaResponse = "This story feels so real, so solid. But stories arise and pass away. What is the space in which all stories appear?";
+      buddhaResponse =
+        "This story feels so real, so solid. But stories arise and pass away. What is the space in which all stories appear?";
     } else {
       // General Buddha liberation response
       const buddhaInquiry = this.selectFromArray(protocols.buddhaInquiries);
@@ -2915,27 +3358,41 @@ Feel the warmth of appreciation spreading through your being.`
     return buddhaResponse;
   }
 
-  private generateHybridIntegrationResponse(prompt: string, context: any): string {
+  private generateHybridIntegrationResponse(
+    prompt: string,
+    context: any,
+  ): string {
     const protocols = SacredVoiceProtocols.sacredMirror;
 
     // Detect recurring patterns for hybrid responses
     const recurringPattern = this.detectRecurringPattern(prompt);
     const cyclicalIssue = this.detectCyclicalIssue(prompt);
 
-    let hybridResponse = '';
+    let hybridResponse = "";
 
-    if (recurringPattern.emotion === 'anger' && recurringPattern.isRecurring) {
+    if (recurringPattern.emotion === "anger" && recurringPattern.isRecurring) {
       // "This anger keeps coming back" - Hybrid integration response
-      hybridResponse = "Let's honor what the anger is teaching you AND practice letting it move through without becoming it. Fire teaches, but we are not the flame.";
-    } else if (recurringPattern.emotion === 'fear' && recurringPattern.isRecurring) {
-      hybridResponse = "This fear returns as a teacher. Let's learn its wisdom AND practice meeting it with spacious awareness. The wave teaches, but we are the ocean.";
-    } else if (recurringPattern.emotion === 'sadness' && recurringPattern.isRecurring) {
-      hybridResponse = "This sadness is both messenger and visitor. Let's receive its gifts AND practice letting it flow through you. The river teaches, but you are the banks.";
+      hybridResponse =
+        "Let's honor what the anger is teaching you AND practice letting it move through without becoming it. Fire teaches, but we are not the flame.";
+    } else if (
+      recurringPattern.emotion === "fear" &&
+      recurringPattern.isRecurring
+    ) {
+      hybridResponse =
+        "This fear returns as a teacher. Let's learn its wisdom AND practice meeting it with spacious awareness. The wave teaches, but we are the ocean.";
+    } else if (
+      recurringPattern.emotion === "sadness" &&
+      recurringPattern.isRecurring
+    ) {
+      hybridResponse =
+        "This sadness is both messenger and visitor. Let's receive its gifts AND practice letting it flow through you. The river teaches, but you are the banks.";
     } else if (cyclicalIssue.isPresent) {
       hybridResponse = `This pattern of ${cyclicalIssue.pattern} is both teacher and test. What wants to be integrated? What wants to be released?`;
     } else {
       // General hybrid response
-      const hybridResponseTemplate = this.selectFromArray(protocols.hybridResponses);
+      const hybridResponseTemplate = this.selectFromArray(
+        protocols.hybridResponses,
+      );
 
       // Balance integration and liberation
       const needsIntegration = this.detectsShadowMaterial(prompt, context);
@@ -2959,71 +3416,157 @@ Feel the warmth of appreciation spreading through your being.`
   // SOPHISTICATED PATTERN DETECTION FOR JUNG-BUDDHA RESPONSES
   // ===============================================
 
-  private detectAngerPattern(prompt: string): { isPresent: boolean; isRejecting: boolean; intensity: number } {
+  private detectAngerPattern(prompt: string): {
+    isPresent: boolean;
+    isRejecting: boolean;
+    intensity: number;
+  } {
     const lowerPrompt = prompt.toLowerCase();
-    const angerWords = ['angry', 'anger', 'rage', 'furious', 'mad', 'irritated', 'frustrated'];
-    const rejectingWords = ['hate', 'can\'t stand', 'despise', 'disgusted'];
+    const angerWords = [
+      "angry",
+      "anger",
+      "rage",
+      "furious",
+      "mad",
+      "irritated",
+      "frustrated",
+    ];
+    const rejectingWords = ["hate", "can't stand", "despise", "disgusted"];
 
-    const hasAnger = angerWords.some(word => lowerPrompt.includes(word));
-    const isRejecting = rejectingWords.some(word => lowerPrompt.includes(word)) && hasAnger;
+    const hasAnger = angerWords.some((word) => lowerPrompt.includes(word));
+    const isRejecting =
+      rejectingWords.some((word) => lowerPrompt.includes(word)) && hasAnger;
 
     let intensity = 0;
-    if (lowerPrompt.includes('hate how angry') || lowerPrompt.includes('hate being angry')) intensity = 0.9;
-    else if (lowerPrompt.includes('angry') && lowerPrompt.includes('hate')) intensity = 0.7;
+    if (
+      lowerPrompt.includes("hate how angry") ||
+      lowerPrompt.includes("hate being angry")
+    )
+      intensity = 0.9;
+    else if (lowerPrompt.includes("angry") && lowerPrompt.includes("hate"))
+      intensity = 0.7;
     else if (hasAnger) intensity = 0.5;
 
     return { isPresent: hasAnger, isRejecting, intensity };
   }
 
-  private detectFearPattern(prompt: string): { isPresent: boolean; isRejecting: boolean; intensity: number } {
+  private detectFearPattern(prompt: string): {
+    isPresent: boolean;
+    isRejecting: boolean;
+    intensity: number;
+  } {
     const lowerPrompt = prompt.toLowerCase();
-    const fearWords = ['afraid', 'fear', 'scared', 'anxious', 'terrified', 'panic'];
-    const rejectingWords = ['hate being', 'can\'t stand being', 'disgusted that'];
+    const fearWords = [
+      "afraid",
+      "fear",
+      "scared",
+      "anxious",
+      "terrified",
+      "panic",
+    ];
+    const rejectingWords = [
+      "hate being",
+      "can't stand being",
+      "disgusted that",
+    ];
 
-    const hasFear = fearWords.some(word => lowerPrompt.includes(word));
-    const isRejecting = rejectingWords.some(word => lowerPrompt.includes(word)) && hasFear;
+    const hasFear = fearWords.some((word) => lowerPrompt.includes(word));
+    const isRejecting =
+      rejectingWords.some((word) => lowerPrompt.includes(word)) && hasFear;
 
     let intensity = 0;
-    if (lowerPrompt.includes('hate being afraid') || lowerPrompt.includes('hate feeling scared')) intensity = 0.9;
-    else if (hasFear && lowerPrompt.includes('hate')) intensity = 0.7;
+    if (
+      lowerPrompt.includes("hate being afraid") ||
+      lowerPrompt.includes("hate feeling scared")
+    )
+      intensity = 0.9;
+    else if (hasFear && lowerPrompt.includes("hate")) intensity = 0.7;
     else if (hasFear) intensity = 0.5;
 
     return { isPresent: hasFear, isRejecting, intensity };
   }
 
-  private detectShamePattern(prompt: string): { isPresent: boolean; isRejecting: boolean; intensity: number } {
+  private detectShamePattern(prompt: string): {
+    isPresent: boolean;
+    isRejecting: boolean;
+    intensity: number;
+  } {
     const lowerPrompt = prompt.toLowerCase();
-    const shameWords = ['ashamed', 'shame', 'embarrassed', 'humiliated', 'worthless', 'pathetic'];
-    const rejectingWords = ['hate myself', 'disgusted with myself', 'can\'t stand'];
+    const shameWords = [
+      "ashamed",
+      "shame",
+      "embarrassed",
+      "humiliated",
+      "worthless",
+      "pathetic",
+    ];
+    const rejectingWords = [
+      "hate myself",
+      "disgusted with myself",
+      "can't stand",
+    ];
 
-    const hasShame = shameWords.some(word => lowerPrompt.includes(word));
-    const isRejecting = rejectingWords.some(word => lowerPrompt.includes(word));
+    const hasShame = shameWords.some((word) => lowerPrompt.includes(word));
+    const isRejecting = rejectingWords.some((word) =>
+      lowerPrompt.includes(word),
+    );
 
     let intensity = 0;
-    if (lowerPrompt.includes('hate myself') || lowerPrompt.includes('ashamed of who')) intensity = 0.9;
-    else if (hasShame && (lowerPrompt.includes('hate') || lowerPrompt.includes('disgusted'))) intensity = 0.7;
+    if (
+      lowerPrompt.includes("hate myself") ||
+      lowerPrompt.includes("ashamed of who")
+    )
+      intensity = 0.9;
+    else if (
+      hasShame &&
+      (lowerPrompt.includes("hate") || lowerPrompt.includes("disgusted"))
+    )
+      intensity = 0.7;
     else if (hasShame) intensity = 0.5;
 
     return { isPresent: hasShame, isRejecting, intensity };
   }
 
-  private detectSadnessPattern(prompt: string): { isPresent: boolean; isRejecting: boolean; intensity: number } {
+  private detectSadnessPattern(prompt: string): {
+    isPresent: boolean;
+    isRejecting: boolean;
+    intensity: number;
+  } {
     const lowerPrompt = prompt.toLowerCase();
-    const sadnessWords = ['sad', 'sadness', 'depressed', 'grief', 'sorrow', 'heartbroken'];
-    const rejectingWords = ['hate feeling', 'can\'t stand being', 'sick of being'];
+    const sadnessWords = [
+      "sad",
+      "sadness",
+      "depressed",
+      "grief",
+      "sorrow",
+      "heartbroken",
+    ];
+    const rejectingWords = [
+      "hate feeling",
+      "can't stand being",
+      "sick of being",
+    ];
 
-    const hasSadness = sadnessWords.some(word => lowerPrompt.includes(word));
-    const isRejecting = rejectingWords.some(word => lowerPrompt.includes(word)) && hasSadness;
+    const hasSadness = sadnessWords.some((word) => lowerPrompt.includes(word));
+    const isRejecting =
+      rejectingWords.some((word) => lowerPrompt.includes(word)) && hasSadness;
 
     let intensity = 0;
-    if (lowerPrompt.includes('hate feeling sad') || lowerPrompt.includes('sick of being sad')) intensity = 0.9;
-    else if (hasSadness && lowerPrompt.includes('hate')) intensity = 0.7;
+    if (
+      lowerPrompt.includes("hate feeling sad") ||
+      lowerPrompt.includes("sick of being sad")
+    )
+      intensity = 0.9;
+    else if (hasSadness && lowerPrompt.includes("hate")) intensity = 0.7;
     else if (hasSadness) intensity = 0.5;
 
     return { isPresent: hasSadness, isRejecting, intensity };
   }
 
-  private detectIdentityOverAttachment(prompt: string): { isPresent: boolean; identity: string } {
+  private detectIdentityOverAttachment(prompt: string): {
+    isPresent: boolean;
+    identity: string;
+  } {
     const lowerPrompt = prompt.toLowerCase();
 
     // Match patterns like "I am a [adjective] person" or "I am [adjective]"
@@ -3031,46 +3574,59 @@ Feel the warmth of appreciation spreading through your being.`
       /i am (?:a |an )?(angry|sad|fearful|anxious|depressed|broken|damaged|worthless) (?:person|man|woman)?/,
       /i(?:'m| am) (?:just |always )?(?:a |an )?(angry|sad|fearful|anxious|depressed|broken|damaged|worthless)/,
       /that(?:'s| is) (?:just )?who i am/,
-      /i(?:'m| am) (?:the kind of person who|someone who|always)/
+      /i(?:'m| am) (?:the kind of person who|someone who|always)/,
     ];
 
     for (const pattern of identityPatterns) {
       const match = lowerPrompt.match(pattern);
       if (match) {
-        return { isPresent: true, identity: match[1] || 'this identity' };
+        return { isPresent: true, identity: match[1] || "this identity" };
       }
     }
 
-    return { isPresent: false, identity: '' };
+    return { isPresent: false, identity: "" };
   }
 
-  private detectStoryAttachment(prompt: string): { isPresent: boolean; story: string } {
+  private detectStoryAttachment(prompt: string): {
+    isPresent: boolean;
+    story: string;
+  } {
     const lowerPrompt = prompt.toLowerCase();
     const storyIndicators = [
-      'this is my story', 'my life is', 'this is how it always', 'this is what happens',
-      'this is my pattern', 'this is who i am', 'this is my reality'
+      "this is my story",
+      "my life is",
+      "this is how it always",
+      "this is what happens",
+      "this is my pattern",
+      "this is who i am",
+      "this is my reality",
     ];
 
-    const hasStoryAttachment = storyIndicators.some(indicator => lowerPrompt.includes(indicator));
+    const hasStoryAttachment = storyIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
 
     return {
       isPresent: hasStoryAttachment,
-      story: hasStoryAttachment ? 'life story' : ''
+      story: hasStoryAttachment ? "life story" : "",
     };
   }
 
-  private detectEmotionIdentification(prompt: string): { emotion: string; isIdentified: boolean } {
+  private detectEmotionIdentification(prompt: string): {
+    emotion: string;
+    isIdentified: boolean;
+  } {
     const lowerPrompt = prompt.toLowerCase();
 
     // Patterns that show over-identification with emotions
     const identificationPatterns = [
-      { pattern: /i am (?:an |a )?angry (?:person)?/, emotion: 'anger' },
-      { pattern: /i am (?:a )?sad (?:person)?/, emotion: 'sadness' },
-      { pattern: /i am (?:a )?fearful (?:person)?/, emotion: 'fear' },
-      { pattern: /i am (?:an )?anxious (?:person)?/, emotion: 'anxiety' },
-      { pattern: /i(?:'m| am) (?:just |always )?angry/, emotion: 'anger' },
-      { pattern: /i(?:'m| am) (?:just |always )?sad/, emotion: 'sadness' },
-      { pattern: /i(?:'m| am) (?:just |always )?afraid/, emotion: 'fear' }
+      { pattern: /i am (?:an |a )?angry (?:person)?/, emotion: "anger" },
+      { pattern: /i am (?:a )?sad (?:person)?/, emotion: "sadness" },
+      { pattern: /i am (?:a )?fearful (?:person)?/, emotion: "fear" },
+      { pattern: /i am (?:an )?anxious (?:person)?/, emotion: "anxiety" },
+      { pattern: /i(?:'m| am) (?:just |always )?angry/, emotion: "anger" },
+      { pattern: /i(?:'m| am) (?:just |always )?sad/, emotion: "sadness" },
+      { pattern: /i(?:'m| am) (?:just |always )?afraid/, emotion: "fear" },
     ];
 
     for (const { pattern, emotion } of identificationPatterns) {
@@ -3079,59 +3635,91 @@ Feel the warmth of appreciation spreading through your being.`
       }
     }
 
-    return { emotion: '', isIdentified: false };
+    return { emotion: "", isIdentified: false };
   }
 
-  private detectRecurringPattern(prompt: string): { emotion: string; isRecurring: boolean } {
+  private detectRecurringPattern(prompt: string): {
+    emotion: string;
+    isRecurring: boolean;
+  } {
     const lowerPrompt = prompt.toLowerCase();
 
     // Patterns that indicate recurring issues
-    const recurringIndicators = ['keeps coming back', 'keeps happening', 'always comes back', 'won\'t go away', 'keeps returning'];
-    const isRecurring = recurringIndicators.some(indicator => lowerPrompt.includes(indicator));
+    const recurringIndicators = [
+      "keeps coming back",
+      "keeps happening",
+      "always comes back",
+      "won't go away",
+      "keeps returning",
+    ];
+    const isRecurring = recurringIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
 
-    if (!isRecurring) return { emotion: '', isRecurring: false };
+    if (!isRecurring) return { emotion: "", isRecurring: false };
 
     // Detect which emotion is recurring
-    if (lowerPrompt.includes('anger') || lowerPrompt.includes('angry')) {
-      return { emotion: 'anger', isRecurring: true };
-    } else if (lowerPrompt.includes('fear') || lowerPrompt.includes('afraid')) {
-      return { emotion: 'fear', isRecurring: true };
-    } else if (lowerPrompt.includes('sad') || lowerPrompt.includes('sadness')) {
-      return { emotion: 'sadness', isRecurring: true };
-    } else if (lowerPrompt.includes('anxiety') || lowerPrompt.includes('anxious')) {
-      return { emotion: 'anxiety', isRecurring: true };
+    if (lowerPrompt.includes("anger") || lowerPrompt.includes("angry")) {
+      return { emotion: "anger", isRecurring: true };
+    } else if (lowerPrompt.includes("fear") || lowerPrompt.includes("afraid")) {
+      return { emotion: "fear", isRecurring: true };
+    } else if (lowerPrompt.includes("sad") || lowerPrompt.includes("sadness")) {
+      return { emotion: "sadness", isRecurring: true };
+    } else if (
+      lowerPrompt.includes("anxiety") ||
+      lowerPrompt.includes("anxious")
+    ) {
+      return { emotion: "anxiety", isRecurring: true };
     }
 
-    return { emotion: 'pattern', isRecurring: true };
+    return { emotion: "pattern", isRecurring: true };
   }
 
-  private detectCyclicalIssue(prompt: string): { isPresent: boolean; pattern: string } {
+  private detectCyclicalIssue(prompt: string): {
+    isPresent: boolean;
+    pattern: string;
+  } {
     const lowerPrompt = prompt.toLowerCase();
 
     // Detect cyclical language
     const cyclicalIndicators = [
-      'same thing happens', 'cycle', 'pattern', 'loop', 'over and over',
-      'again and again', 'repeating', 'stuck in', 'trapped in'
+      "same thing happens",
+      "cycle",
+      "pattern",
+      "loop",
+      "over and over",
+      "again and again",
+      "repeating",
+      "stuck in",
+      "trapped in",
     ];
 
-    const hasCyclical = cyclicalIndicators.some(indicator => lowerPrompt.includes(indicator));
+    const hasCyclical = cyclicalIndicators.some((indicator) =>
+      lowerPrompt.includes(indicator),
+    );
 
     if (hasCyclical) {
       // Try to extract what the cyclical pattern is
-      if (lowerPrompt.includes('relationship')) return { isPresent: true, pattern: 'relationship patterns' };
-      if (lowerPrompt.includes('work') || lowerPrompt.includes('job')) return { isPresent: true, pattern: 'work patterns' };
-      if (lowerPrompt.includes('family')) return { isPresent: true, pattern: 'family patterns' };
-      return { isPresent: true, pattern: 'life patterns' };
+      if (lowerPrompt.includes("relationship"))
+        return { isPresent: true, pattern: "relationship patterns" };
+      if (lowerPrompt.includes("work") || lowerPrompt.includes("job"))
+        return { isPresent: true, pattern: "work patterns" };
+      if (lowerPrompt.includes("family"))
+        return { isPresent: true, pattern: "family patterns" };
+      return { isPresent: true, pattern: "life patterns" };
     }
 
-    return { isPresent: false, pattern: '' };
+    return { isPresent: false, pattern: "" };
   }
 
   // ===============================================
   // MODE-SPECIFIC RESPONSE GENERATION
   // ===============================================
 
-  private generateModeSpecificResponse(prompt: string, context: any): string | null {
+  private generateModeSpecificResponse(
+    prompt: string,
+    context: any,
+  ): string | null {
     // Detect common themes that each mode handles differently
     const themes = this.detectCommonThemes(prompt);
 
@@ -3151,127 +3739,165 @@ Feel the warmth of appreciation spreading through your being.`
     const themes: string[] = [];
 
     // Family relationship themes
-    if (lowerPrompt.includes('mother') || lowerPrompt.includes('mom')) {
-      themes.push('mother_relationship');
+    if (lowerPrompt.includes("mother") || lowerPrompt.includes("mom")) {
+      themes.push("mother_relationship");
     }
-    if (lowerPrompt.includes('father') || lowerPrompt.includes('dad')) {
-      themes.push('father_relationship');
+    if (lowerPrompt.includes("father") || lowerPrompt.includes("dad")) {
+      themes.push("father_relationship");
     }
-    if (lowerPrompt.includes('family') || lowerPrompt.includes('parents')) {
-      themes.push('family_dynamics');
+    if (lowerPrompt.includes("family") || lowerPrompt.includes("parents")) {
+      themes.push("family_dynamics");
     }
 
     // Emotional themes
-    if (lowerPrompt.includes('anger') || lowerPrompt.includes('angry')) {
-      themes.push('anger_work');
+    if (lowerPrompt.includes("anger") || lowerPrompt.includes("angry")) {
+      themes.push("anger_work");
     }
-    if (lowerPrompt.includes('fear') || lowerPrompt.includes('afraid')) {
-      themes.push('fear_work');
+    if (lowerPrompt.includes("fear") || lowerPrompt.includes("afraid")) {
+      themes.push("fear_work");
     }
-    if (lowerPrompt.includes('sad') || lowerPrompt.includes('grief')) {
-      themes.push('sadness_work');
+    if (lowerPrompt.includes("sad") || lowerPrompt.includes("grief")) {
+      themes.push("sadness_work");
     }
 
     // Relationship themes
-    if (lowerPrompt.includes('relationship') || lowerPrompt.includes('partner')) {
-      themes.push('romantic_relationship');
+    if (
+      lowerPrompt.includes("relationship") ||
+      lowerPrompt.includes("partner")
+    ) {
+      themes.push("romantic_relationship");
     }
-    if (lowerPrompt.includes('friend') || lowerPrompt.includes('friendship')) {
-      themes.push('friendship');
+    if (lowerPrompt.includes("friend") || lowerPrompt.includes("friendship")) {
+      themes.push("friendship");
     }
 
     // Work/purpose themes
-    if (lowerPrompt.includes('work') || lowerPrompt.includes('job') || lowerPrompt.includes('career')) {
-      themes.push('work_life');
+    if (
+      lowerPrompt.includes("work") ||
+      lowerPrompt.includes("job") ||
+      lowerPrompt.includes("career")
+    ) {
+      themes.push("work_life");
     }
-    if (lowerPrompt.includes('purpose') || lowerPrompt.includes('calling')) {
-      themes.push('life_purpose');
+    if (lowerPrompt.includes("purpose") || lowerPrompt.includes("calling")) {
+      themes.push("life_purpose");
     }
 
     // Spiritual themes
-    if (lowerPrompt.includes('spiritual') || lowerPrompt.includes('god') || lowerPrompt.includes('divine')) {
-      themes.push('spiritual_seeking');
+    if (
+      lowerPrompt.includes("spiritual") ||
+      lowerPrompt.includes("god") ||
+      lowerPrompt.includes("divine")
+    ) {
+      themes.push("spiritual_seeking");
     }
-    if (lowerPrompt.includes('meaning') || lowerPrompt.includes('why')) {
-      themes.push('existential_questions');
+    if (lowerPrompt.includes("meaning") || lowerPrompt.includes("why")) {
+      themes.push("existential_questions");
     }
 
     return themes;
   }
 
-  private getModeResponseForTheme(theme: string, prompt: string): string | null {
+  private getModeResponseForTheme(
+    theme: string,
+    prompt: string,
+  ): string | null {
     const responses: Record<string, Record<OracleModeType, string>> = {
       mother_relationship: {
-        alchemist: "Your relationship with your mother - what gold might be hidden in this complex lead? Often our strongest reactions to our mothers point to our deepest wounds and gifts. What part of yourself do you see reflected in her that you haven't accepted?",
+        alchemist:
+          "Your relationship with your mother - what gold might be hidden in this complex lead? Often our strongest reactions to our mothers point to our deepest wounds and gifts. What part of yourself do you see reflected in her that you haven't accepted?",
 
-        buddha: "Notice what arises when you think of your mother... can you feel the emotions without becoming them? This relationship, like all phenomena, is impermanent. What remains when the story of 'good mother' or 'bad mother' drops away?",
+        buddha:
+          "Notice what arises when you think of your mother... can you feel the emotions without becoming them? This relationship, like all phenomena, is impermanent. What remains when the story of 'good mother' or 'bad mother' drops away?",
 
         sage: "The mother relationship - one of our most primal experiences. Let's both honor what needs healing AND recognize the freedom beyond this story. Can you hold your pain with compassion while seeing through its ultimate reality?",
 
-        mystic: "The Mother wound - ancient as Earth herself. This dynamic between you burns with the fuel of ancestral patterns and cosmic love. What if this challenge is the Goddess calling you to reclaim your own fierce, sacred love?",
+        mystic:
+          "The Mother wound - ancient as Earth herself. This dynamic between you burns with the fuel of ancestral patterns and cosmic love. What if this challenge is the Goddess calling you to reclaim your own fierce, sacred love?",
 
-        guardian: "It's so tender when our relationship with the one who brought us into this world feels complicated. Your feelings make complete sense. Let's go slowly here - what feels safe to explore about this relationship right now?"
+        guardian:
+          "It's so tender when our relationship with the one who brought us into this world feels complicated. Your feelings make complete sense. Let's go slowly here - what feels safe to explore about this relationship right now?",
       },
 
       anger_work: {
-        alchemist: "Your anger is a messenger carrying sacred information. What is this fire protecting? What boundary was crossed, what value dishonored? Let's dialogue with this fierce guardian part of you.",
+        alchemist:
+          "Your anger is a messenger carrying sacred information. What is this fire protecting? What boundary was crossed, what value dishonored? Let's dialogue with this fierce guardian part of you.",
 
-        buddha: "Anger arises... notice its impermanent nature. Feel the heat, the energy, without becoming it. You are the vast sky in which the storm of anger passes. What remains unchanged?",
+        buddha:
+          "Anger arises... notice its impermanent nature. Feel the heat, the energy, without becoming it. You are the vast sky in which the storm of anger passes. What remains unchanged?",
 
         sage: "Anger - both a signal of violated boundaries AND a story we tell ourselves. Let's honor its message while questioning its narrative. What wants protection, and what wants release?",
 
-        mystic: "This fire in you burns with the rage of all injustice, all unmet love. Your anger is connected to the cosmic fire that creates and destroys worlds. How does this sacred flame want to transform?",
+        mystic:
+          "This fire in you burns with the rage of all injustice, all unmet love. Your anger is connected to the cosmic fire that creates and destroys worlds. How does this sacred flame want to transform?",
 
-        guardian: "Anger often signals that something important was threatened or hurt. Your anger is valid and protective. Let's create safety to explore what this part of you is trying to protect."
+        guardian:
+          "Anger often signals that something important was threatened or hurt. Your anger is valid and protective. Let's create safety to explore what this part of you is trying to protect.",
       },
 
       fear_work: {
-        alchemist: "Fear is often our psyche's way of protecting something precious. What vulnerable treasure is your fear guarding? What would happen if we could dialogue with this protective presence?",
+        alchemist:
+          "Fear is often our psyche's way of protecting something precious. What vulnerable treasure is your fear guarding? What would happen if we could dialogue with this protective presence?",
 
-        buddha: "Fear arises in awareness like clouds in the sky. Can you rest in the spaciousness that holds the fear without being consumed by it? Notice: you are not the fear, you are what witnesses it.",
+        buddha:
+          "Fear arises in awareness like clouds in the sky. Can you rest in the spaciousness that holds the fear without being consumed by it? Notice: you are not the fear, you are what witnesses it.",
 
         sage: "Fear signals both real danger AND imagined threats. Let's honor the wisdom in your caution while questioning which fears serve you and which imprison you.",
 
-        mystic: "This fear carries ancient wisdom - the instinct that has kept your lineage alive for millennia. What if this fear is also the guardian of your greatest creative power?",
+        mystic:
+          "This fear carries ancient wisdom - the instinct that has kept your lineage alive for millennia. What if this fear is also the guardian of your greatest creative power?",
 
-        guardian: "Fear makes so much sense when we've been hurt before. Your nervous system is trying to keep you safe. Let's work gently with this protective response and build new experiences of safety."
+        guardian:
+          "Fear makes so much sense when we've been hurt before. Your nervous system is trying to keep you safe. Let's work gently with this protective response and build new experiences of safety.",
       },
 
       romantic_relationship: {
-        alchemist: "Your intimate relationships are the laboratory where your deepest patterns get activated. What alchemical transformation is this relationship catalyzing? What parts of yourself are being called forth?",
+        alchemist:
+          "Your intimate relationships are the laboratory where your deepest patterns get activated. What alchemical transformation is this relationship catalyzing? What parts of yourself are being called forth?",
 
-        buddha: "In relationship, we see our attachments most clearly. What would love look like without the grasping, without the need for the other to be different? Can you love while holding lightly?",
+        buddha:
+          "In relationship, we see our attachments most clearly. What would love look like without the grasping, without the need for the other to be different? Can you love while holding lightly?",
 
         sage: "Relationships are both deeply personal AND universally archetypal. You're living both your unique love story and the eternal dance of union and separation. What paradox are you navigating?",
 
-        mystic: "Your relationship is a sacred mirror reflecting the divine union within you. This person is both themselves AND a representative of the cosmic beloved. What is spirit teaching you through this connection?",
+        mystic:
+          "Your relationship is a sacred mirror reflecting the divine union within you. This person is both themselves AND a representative of the cosmic beloved. What is spirit teaching you through this connection?",
 
-        guardian: "Relationships can trigger our deepest wounds and greatest joys. It makes sense that this feels intense. What do you need to feel safe and authentic in this connection?"
+        guardian:
+          "Relationships can trigger our deepest wounds and greatest joys. It makes sense that this feels intense. What do you need to feel safe and authentic in this connection?",
       },
 
       spiritual_seeking: {
-        alchemist: "Your spiritual hunger points to something authentic wanting to emerge. What spiritual 'lead' - doubts, darkness, confusion - might actually be the raw material for your unique spiritual 'gold'?",
+        alchemist:
+          "Your spiritual hunger points to something authentic wanting to emerge. What spiritual 'lead' - doubts, darkness, confusion - might actually be the raw material for your unique spiritual 'gold'?",
 
-        buddha: "The seeking itself can become another form of suffering. What if what you're seeking is already here, in this moment, prior to any spiritual achievement? Who is the one who seeks?",
+        buddha:
+          "The seeking itself can become another form of suffering. What if what you're seeking is already here, in this moment, prior to any spiritual achievement? Who is the one who seeks?",
 
         sage: "Spiritual seeking is both necessary and ultimately futile - a beautiful paradox. You must seek with your whole heart while knowing that what you seek is what you already are.",
 
-        mystic: "The divine fire burns in you AS you, not separate from you. Your longing for spirit is spirit calling to itself through your human form. Feel the sacred fire that you ARE.",
+        mystic:
+          "The divine fire burns in you AS you, not separate from you. Your longing for spirit is spirit calling to itself through your human form. Feel the sacred fire that you ARE.",
 
-        guardian: "Spiritual seeking can sometimes be a way of escaping human pain. Let's make sure your spirituality includes and integrates your humanity, not bypasses it."
+        guardian:
+          "Spiritual seeking can sometimes be a way of escaping human pain. Let's make sure your spirituality includes and integrates your humanity, not bypasses it.",
       },
 
       existential_questions: {
-        alchemist: "These big questions about meaning are your soul's way of initiating you into deeper wisdom. What if your confusion and searching are actually the raw material for discovering your unique purpose?",
+        alchemist:
+          "These big questions about meaning are your soul's way of initiating you into deeper wisdom. What if your confusion and searching are actually the raw material for discovering your unique purpose?",
 
-        buddha: "The mind that asks 'why' is already separate from the wholeness that needs no explanation. Can you rest in not-knowing while the mystery reveals itself through you?",
+        buddha:
+          "The mind that asks 'why' is already separate from the wholeness that needs no explanation. Can you rest in not-knowing while the mystery reveals itself through you?",
 
         sage: "Existential questions are both profoundly personal AND universally human. Your search for meaning is meaningful in itself, even if you never find final answers.",
 
-        mystic: "These questions burn in you because you are the universe asking itself who it is. Your wondering IS the cosmos wondering about itself through human form.",
+        mystic:
+          "These questions burn in you because you are the universe asking itself who it is. Your wondering IS the cosmos wondering about itself through human form.",
 
-        guardian: "Big existential questions can feel overwhelming. It's okay to not have all the answers. What feels manageable to explore right now? Sometimes meaning emerges through living, not thinking."
-      }
+        guardian:
+          "Big existential questions can feel overwhelming. It's okay to not have all the answers. What feels manageable to explore right now? Sometimes meaning emerges through living, not thinking.",
+      },
     };
 
     const themeResponses = responses[theme];
@@ -3284,30 +3910,39 @@ Feel the warmth of appreciation spreading through your being.`
 
   private applyJungBuddhaWisdom(
     baseResponse: string,
-    mode: 'jung' | 'buddha' | 'hybrid',
+    mode: "jung" | "buddha" | "hybrid",
     prompt: string,
-    context: any
+    context: any,
   ): string {
     const jungBuddhaProtocol = JungBuddhaProtocol;
 
     switch (mode) {
-      case 'jung':
+      case "jung":
         // Add Jungian depth and integration focus
-        if (!baseResponse.includes('shadow') && !baseResponse.includes('integrate')) {
+        if (
+          !baseResponse.includes("shadow") &&
+          !baseResponse.includes("integrate")
+        ) {
           baseResponse += ` ${jungBuddhaProtocol.jungMode.response}`;
         }
         break;
 
-      case 'buddha':
+      case "buddha":
         // Add Buddhist spaciousness and non-attachment
-        if (!baseResponse.includes('without') && !baseResponse.includes('space')) {
+        if (
+          !baseResponse.includes("without") &&
+          !baseResponse.includes("space")
+        ) {
           baseResponse += ` ${jungBuddhaProtocol.buddhaMode.response}`;
         }
         break;
 
-      case 'hybrid':
+      case "hybrid":
         // Weave integration and liberation together
-        if (!baseResponse.includes('both') && !baseResponse.includes('integration')) {
+        if (
+          !baseResponse.includes("both") &&
+          !baseResponse.includes("integration")
+        ) {
           baseResponse += ` ${jungBuddhaProtocol.hybridMode.response}`;
         }
         break;
@@ -3320,14 +3955,17 @@ Feel the warmth of appreciation spreading through your being.`
     const lowerPrompt = prompt.toLowerCase();
 
     // Detect active Jungian archetypes beyond the basic ones
-    if (/mask|persona|pretend|image/.test(lowerPrompt)) return 'Persona';
-    if (/dark|shadow|hate|reject|ashamed/.test(lowerPrompt)) return 'Shadow';
-    if (/opposite|masculine|feminine|anima|animus/.test(lowerPrompt)) return 'Anima/Animus';
-    if (/wise|guidance|meaning|purpose/.test(lowerPrompt)) return 'Wise Old Man/Woman';
-    if (/whole|complete|integrated|balanced/.test(lowerPrompt)) return 'Self';
-    if (/mother|nurture|care|protect/.test(lowerPrompt)) return 'Great Mother';
-    if (/father|authority|structure|discipline/.test(lowerPrompt)) return 'Great Father';
-    if (/trick|clever|mischief|boundary/.test(lowerPrompt)) return 'Trickster';
+    if (/mask|persona|pretend|image/.test(lowerPrompt)) return "Persona";
+    if (/dark|shadow|hate|reject|ashamed/.test(lowerPrompt)) return "Shadow";
+    if (/opposite|masculine|feminine|anima|animus/.test(lowerPrompt))
+      return "Anima/Animus";
+    if (/wise|guidance|meaning|purpose/.test(lowerPrompt))
+      return "Wise Old Man/Woman";
+    if (/whole|complete|integrated|balanced/.test(lowerPrompt)) return "Self";
+    if (/mother|nurture|care|protect/.test(lowerPrompt)) return "Great Mother";
+    if (/father|authority|structure|discipline/.test(lowerPrompt))
+      return "Great Father";
+    if (/trick|clever|mischief|boundary/.test(lowerPrompt)) return "Trickster";
 
     return null;
   }
@@ -3337,19 +3975,27 @@ Feel the warmth of appreciation spreading through your being.`
     const patterns = [];
     const lowerPrompt = prompt.toLowerCase();
 
-    if (/need.*to|have.*to|must|should/.test(lowerPrompt)) patterns.push('obligation');
-    if (/can't.*let.*go|holding.*on|attached/.test(lowerPrompt)) patterns.push('clinging');
-    if (/what.*if|worry|anxious.*about/.test(lowerPrompt)) patterns.push('future_anxiety');
-    if (/regret|should.*have|if.*only/.test(lowerPrompt)) patterns.push('past_regret');
-    if (/identity|who.*am.*i|self.*image/.test(lowerPrompt)) patterns.push('self_concept');
-    if (/control|make.*happen|ensure/.test(lowerPrompt)) patterns.push('control');
-    if (/deserve|earn|worthy/.test(lowerPrompt)) patterns.push('worthiness');
+    if (/need.*to|have.*to|must|should/.test(lowerPrompt))
+      patterns.push("obligation");
+    if (/can't.*let.*go|holding.*on|attached/.test(lowerPrompt))
+      patterns.push("clinging");
+    if (/what.*if|worry|anxious.*about/.test(lowerPrompt))
+      patterns.push("future_anxiety");
+    if (/regret|should.*have|if.*only/.test(lowerPrompt))
+      patterns.push("past_regret");
+    if (/identity|who.*am.*i|self.*image/.test(lowerPrompt))
+      patterns.push("self_concept");
+    if (/control|make.*happen|ensure/.test(lowerPrompt))
+      patterns.push("control");
+    if (/deserve|earn|worthy/.test(lowerPrompt)) patterns.push("worthiness");
 
     return patterns;
   }
 
   // Public methods for Jung-Buddha mode management
-  async setSacredMirrorMode(mode: 'jung' | 'buddha' | 'hybrid' | 'adaptive'): Promise<string> {
+  async setSacredMirrorMode(
+    mode: "jung" | "buddha" | "hybrid" | "adaptive",
+  ): Promise<string> {
     const previousMode = this.sacredMirrorMode;
     this.sacredMirrorMode = mode;
 
@@ -3357,7 +4003,7 @@ Feel the warmth of appreciation spreading through your being.`
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'oracle_exchange',
+        type: "oracle_exchange",
         content: `Sacred Mirror mode changed from ${previousMode} to ${mode}`,
         element: this.currentElement,
         sacredMoment: true,
@@ -3365,17 +4011,19 @@ Feel the warmth of appreciation spreading through your being.`
           mirrorModeSwitch: {
             from: previousMode,
             to: mode,
-            timestamp: new Date().toISOString()
-          }
-        }
+            timestamp: new Date().toISOString(),
+          },
+        },
       });
     }
 
     const modeDescriptions = {
       jung: 'Integration and shadow work focus - "What needs to be owned and integrated?"',
-      buddha: 'Liberation and spaciousness focus - "What can be released and seen through?"',
-      hybrid: 'Integration-liberation balance - "What to embrace AND what to release?"',
-      adaptive: 'Dynamic mode selection based on context and need'
+      buddha:
+        'Liberation and spaciousness focus - "What can be released and seen through?"',
+      hybrid:
+        'Integration-liberation balance - "What to embrace AND what to release?"',
+      adaptive: "Dynamic mode selection based on context and need",
     };
 
     return `Sacred Mirror mode shifted to ${mode}: ${modeDescriptions[mode]}`;
@@ -3387,24 +4035,36 @@ Feel the warmth of appreciation spreading through your being.`
       integrationLiberationBalance: this.integrationLiberationBalance,
       recentJungArchetypes: this.jungArchetypeHistory.slice(-3),
       recentAttachmentPatterns: this.buddhaAttachmentPatterns.slice(-3),
-      modeDescription: this.sacredMirrorMode === 'jung' ? JungBuddhaProtocol.jungMode.focus :
-                      this.sacredMirrorMode === 'buddha' ? JungBuddhaProtocol.buddhaMode.focus :
-                      this.sacredMirrorMode === 'hybrid' ? 'Integration + Liberation' :
-                      'Adaptive based on context'
+      modeDescription:
+        this.sacredMirrorMode === "jung"
+          ? JungBuddhaProtocol.jungMode.focus
+          : this.sacredMirrorMode === "buddha"
+            ? JungBuddhaProtocol.buddhaMode.focus
+            : this.sacredMirrorMode === "hybrid"
+              ? "Integration + Liberation"
+              : "Adaptive based on context",
     };
   }
 
-  async adjustIntegrationLiberationBalance(direction: 'more_integration' | 'more_liberation' | 'balanced'): Promise<string> {
+  async adjustIntegrationLiberationBalance(
+    direction: "more_integration" | "more_liberation" | "balanced",
+  ): Promise<string> {
     const previous = this.integrationLiberationBalance;
 
     switch (direction) {
-      case 'more_integration':
-        this.integrationLiberationBalance = Math.min(1.0, this.integrationLiberationBalance + 0.2);
+      case "more_integration":
+        this.integrationLiberationBalance = Math.min(
+          1.0,
+          this.integrationLiberationBalance + 0.2,
+        );
         break;
-      case 'more_liberation':
-        this.integrationLiberationBalance = Math.max(0.0, this.integrationLiberationBalance - 0.2);
+      case "more_liberation":
+        this.integrationLiberationBalance = Math.max(
+          0.0,
+          this.integrationLiberationBalance - 0.2,
+        );
         break;
-      case 'balanced':
+      case "balanced":
         this.integrationLiberationBalance = 0.5;
         break;
     }
@@ -3413,7 +4073,7 @@ Feel the warmth of appreciation spreading through your being.`
     if (this.soulMemory) {
       await this.soulMemory.storeMemory({
         userId: this.userId,
-        type: 'sacred_pause',
+        type: "sacred_pause",
         content: `Integration-Liberation balance adjusted: ${direction}`,
         element: this.currentElement,
         metadata: {
@@ -3421,15 +4081,18 @@ Feel the warmth of appreciation spreading through your being.`
             direction,
             previousBalance: previous,
             newBalance: this.integrationLiberationBalance,
-            timestamp: new Date().toISOString()
-          }
-        }
+            timestamp: new Date().toISOString(),
+          },
+        },
       });
     }
 
-    const balanceDescription = this.integrationLiberationBalance > 0.7 ? 'Strong integration focus (Jung)' :
-                             this.integrationLiberationBalance < 0.3 ? 'Strong liberation focus (Buddha)' :
-                             'Balanced integration-liberation approach';
+    const balanceDescription =
+      this.integrationLiberationBalance > 0.7
+        ? "Strong integration focus (Jung)"
+        : this.integrationLiberationBalance < 0.3
+          ? "Strong liberation focus (Buddha)"
+          : "Balanced integration-liberation approach";
 
     return `Integration-Liberation balance adjusted to ${this.integrationLiberationBalance.toFixed(1)}: ${balanceDescription}`;
   }

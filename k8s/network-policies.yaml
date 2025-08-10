@@ -11,8 +11,8 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
 
 ---
 # Spiralogic Oracle Main Service Network Policy
@@ -28,118 +28,118 @@ spec:
     matchLabels:
       app: spiralogic-oracle
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow ingress from NGINX/Load Balancer
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    - podSelector:
-        matchLabels:
-          app: nginx
-    ports:
-    - protocol: TCP
-      port: 8080
-  # Allow health checks from monitoring
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    - podSelector:
-        matchLabels:
-          app: prometheus
-    ports:
-    - protocol: TCP
-      port: 8080
-  # Allow inter-pod communication within namespace
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 8080
+    # Allow ingress from NGINX/Load Balancer
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Allow health checks from monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+        - podSelector:
+            matchLabels:
+              app: prometheus
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Allow inter-pod communication within namespace
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 8080
   egress:
-  # Allow DNS resolution
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  # Allow HTTPS to external APIs (OpenAI, ElevenLabs)
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  # Allow database connections
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: redis
-    ports:
-    - protocol: TCP
-      port: 6379
-  - to:
-    - podSelector:
-        matchLabels:
-          app: mongodb
-    ports:
-    - protocol: TCP
-      port: 27017
-  # Allow Vault communication
-  - to:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-  # Allow elemental agent communication
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.type: fire
-    ports:
-    - protocol: TCP
-      port: 7001
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.type: water
-    ports:
-    - protocol: TCP
-      port: 7002
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.type: earth
-    ports:
-    - protocol: TCP
-      port: 7003
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.type: air
-    ports:
-    - protocol: TCP
-      port: 7004
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.type: aether
-    ports:
-    - protocol: TCP
-      port: 7005
+    # Allow DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow HTTPS to external APIs (OpenAI, ElevenLabs)
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    # Allow database connections
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mongodb
+      ports:
+        - protocol: TCP
+          port: 27017
+    # Allow Vault communication
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+    # Allow elemental agent communication
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.type: fire
+      ports:
+        - protocol: TCP
+          port: 7001
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.type: water
+      ports:
+        - protocol: TCP
+          port: 7002
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.type: earth
+      ports:
+        - protocol: TCP
+          port: 7003
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.type: air
+      ports:
+        - protocol: TCP
+          port: 7004
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.type: aether
+      ports:
+        - protocol: TCP
+          port: 7005
 
 ---
 # Fire Agent Network Policy
@@ -155,83 +155,83 @@ spec:
     matchLabels:
       elemental.type: fire
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow connections from Oracle service
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 7001
-  # Allow connections from other elemental agents (for orchestration)
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7001
-  # Allow monitoring
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090  # metrics
+    # Allow connections from Oracle service
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 7001
+    # Allow connections from other elemental agents (for orchestration)
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7001
+    # Allow monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090 # metrics
   egress:
-  # DNS resolution
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  # HTTPS for external APIs
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  # Communication with other elemental agents
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7002  # Water
-    - protocol: TCP
-      port: 7003  # Earth
-    - protocol: TCP
-      port: 7004  # Air
-    - protocol: TCP
-      port: 7005  # Aether
-  # Vault communication
-  - to:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-  # Database access (shared consciousness data)
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: redis
-    ports:
-    - protocol: TCP
-      port: 6379
+    # DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # HTTPS for external APIs
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    # Communication with other elemental agents
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7002 # Water
+        - protocol: TCP
+          port: 7003 # Earth
+        - protocol: TCP
+          port: 7004 # Air
+        - protocol: TCP
+          port: 7005 # Aether
+    # Vault communication
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+    # Database access (shared consciousness data)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
 
 ---
 # Water Agent Network Policy
@@ -247,75 +247,75 @@ spec:
     matchLabels:
       elemental.type: water
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 7002
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7002
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 7002
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7002
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7001  # Fire
-    - protocol: TCP
-      port: 7003  # Earth
-    - protocol: TCP
-      port: 7004  # Air
-    - protocol: TCP
-      port: 7005  # Aether
-  - to:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: redis
-    ports:
-    - protocol: TCP
-      port: 6379
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7001 # Fire
+        - protocol: TCP
+          port: 7003 # Earth
+        - protocol: TCP
+          port: 7004 # Air
+        - protocol: TCP
+          port: 7005 # Aether
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
 
 ---
 # Earth Agent Network Policy
@@ -331,75 +331,75 @@ spec:
     matchLabels:
       elemental.type: earth
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 7003
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7003
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 7003
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7003
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7001  # Fire
-    - protocol: TCP
-      port: 7002  # Water
-    - protocol: TCP
-      port: 7004  # Air
-    - protocol: TCP
-      port: 7005  # Aether
-  - to:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: redis
-    ports:
-    - protocol: TCP
-      port: 6379
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7001 # Fire
+        - protocol: TCP
+          port: 7002 # Water
+        - protocol: TCP
+          port: 7004 # Air
+        - protocol: TCP
+          port: 7005 # Aether
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
 
 ---
 # Air Agent Network Policy
@@ -415,75 +415,75 @@ spec:
     matchLabels:
       elemental.type: air
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 7004
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7004
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 7004
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7004
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7001  # Fire
-    - protocol: TCP
-      port: 7002  # Water
-    - protocol: TCP
-      port: 7003  # Earth
-    - protocol: TCP
-      port: 7005  # Aether
-  - to:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: redis
-    ports:
-    - protocol: TCP
-      port: 6379
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7001 # Fire
+        - protocol: TCP
+          port: 7002 # Water
+        - protocol: TCP
+          port: 7003 # Earth
+        - protocol: TCP
+          port: 7005 # Aether
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
 
 ---
 # Aether Agent Network Policy
@@ -499,75 +499,75 @@ spec:
     matchLabels:
       elemental.type: aether
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 7005
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7005
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 7005
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7005
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  - to:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 7001  # Fire
-    - protocol: TCP
-      port: 7002  # Water
-    - protocol: TCP
-      port: 7003  # Earth
-    - protocol: TCP
-      port: 7004  # Air
-  - to:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: redis
-    ports:
-    - protocol: TCP
-      port: 6379
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 7001 # Fire
+        - protocol: TCP
+          port: 7002 # Water
+        - protocol: TCP
+          port: 7003 # Earth
+        - protocol: TCP
+          port: 7004 # Air
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
 
 ---
 # Database Network Policies
@@ -583,48 +583,48 @@ spec:
     matchLabels:
       app: postgres
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow connections from Oracle and agents
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 5432
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 5432
-  # Allow monitoring
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9187  # postgres_exporter
-  # Allow backup service
-  - from:
-    - podSelector:
-        matchLabels:
-          app: backup-service
-    ports:
-    - protocol: TCP
-      port: 5432
+    # Allow connections from Oracle and agents
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 5432
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Allow monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9187 # postgres_exporter
+    # Allow backup service
+    - from:
+        - podSelector:
+            matchLabels:
+              app: backup-service
+      ports:
+        - protocol: TCP
+          port: 5432
   egress:
-  # DNS only
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
+    # DNS only
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
 
 ---
 # Redis Network Policy
@@ -640,37 +640,37 @@ spec:
     matchLabels:
       app: redis
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 6379
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 6379
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9121  # redis_exporter
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 6379
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 6379
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9121 # redis_exporter
   egress:
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
 
 ---
 # Vault Network Policy
@@ -686,73 +686,73 @@ spec:
     matchLabels:
       app: vault
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow connections from Oracle and agents
-  - from:
-    - podSelector:
-        matchLabels:
-          app: spiralogic-oracle
-    ports:
-    - protocol: TCP
-      port: 8200
-  - from:
-    - podSelector:
-        matchLabels:
-          elemental.agent: "true"
-    ports:
-    - protocol: TCP
-      port: 8200
-  # Allow external secrets operator
-  - from:
-    - podSelector:
-        matchLabels:
-          app: external-secrets
-    ports:
-    - protocol: TCP
-      port: 8200
-  # Allow vault-to-vault communication (clustering)
-  - from:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-    - protocol: TCP
-      port: 8201
-  # Allow monitoring
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 8200  # metrics endpoint
+    # Allow connections from Oracle and agents
+    - from:
+        - podSelector:
+            matchLabels:
+              app: spiralogic-oracle
+      ports:
+        - protocol: TCP
+          port: 8200
+    - from:
+        - podSelector:
+            matchLabels:
+              elemental.agent: "true"
+      ports:
+        - protocol: TCP
+          port: 8200
+    # Allow external secrets operator
+    - from:
+        - podSelector:
+            matchLabels:
+              app: external-secrets
+      ports:
+        - protocol: TCP
+          port: 8200
+    # Allow vault-to-vault communication (clustering)
+    - from:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+        - protocol: TCP
+          port: 8201
+    # Allow monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 8200 # metrics endpoint
   egress:
-  # DNS resolution
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  # AWS KMS for auto-unseal
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  # Vault clustering
-  - to:
-    - podSelector:
-        matchLabels:
-          app: vault
-    ports:
-    - protocol: TCP
-      port: 8200
-    - protocol: TCP
-      port: 8201
+    # DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # AWS KMS for auto-unseal
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    # Vault clustering
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+        - protocol: TCP
+          port: 8201
 
 ---
 # Monitoring Network Policy
@@ -766,49 +766,49 @@ spec:
     matchLabels:
       app: prometheus
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow access from Grafana
-  - from:
-    - podSelector:
-        matchLabels:
-          app: grafana
-    ports:
-    - protocol: TCP
-      port: 9090
-  # Allow access from load balancer (for admin interface)
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 9090
+    # Allow access from Grafana
+    - from:
+        - podSelector:
+            matchLabels:
+              app: grafana
+      ports:
+        - protocol: TCP
+          port: 9090
+    # Allow access from load balancer (for admin interface)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  # DNS resolution
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  # Scrape metrics from spiralogic namespace
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: spiralogic
-    ports:
-    - protocol: TCP
-      port: 8080   # Oracle metrics
-    - protocol: TCP
-      port: 9090   # Agent metrics
-    - protocol: TCP
-      port: 8200   # Vault metrics
-    - protocol: TCP
-      port: 9187   # Postgres metrics
-    - protocol: TCP
-      port: 9121   # Redis metrics
+    # DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Scrape metrics from spiralogic namespace
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: spiralogic
+      ports:
+        - protocol: TCP
+          port: 8080 # Oracle metrics
+        - protocol: TCP
+          port: 9090 # Agent metrics
+        - protocol: TCP
+          port: 8200 # Vault metrics
+        - protocol: TCP
+          port: 9187 # Postgres metrics
+        - protocol: TCP
+          port: 9121 # Redis metrics
 
 ---
 # NGINX Ingress Network Policy
@@ -822,47 +822,47 @@ spec:
     matchLabels:
       app: nginx
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow all ingress traffic (public facing)
-  - {}
+    # Allow all ingress traffic (public facing)
+    - {}
   egress:
-  # DNS resolution
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  # Forward to spiralogic services
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: spiralogic
-    ports:
-    - protocol: TCP
-      port: 8080   # Oracle
-    - protocol: TCP
-      port: 7001   # Fire
-    - protocol: TCP
-      port: 7002   # Water
-    - protocol: TCP
-      port: 7003   # Earth
-    - protocol: TCP
-      port: 7004   # Air
-    - protocol: TCP
-      port: 7005   # Aether
-  # Forward to monitoring
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090   # Prometheus
-    - protocol: TCP
-      port: 3000   # Grafana
+    # DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Forward to spiralogic services
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: spiralogic
+      ports:
+        - protocol: TCP
+          port: 8080 # Oracle
+        - protocol: TCP
+          port: 7001 # Fire
+        - protocol: TCP
+          port: 7002 # Water
+        - protocol: TCP
+          port: 7003 # Earth
+        - protocol: TCP
+          port: 7004 # Air
+        - protocol: TCP
+          port: 7005 # Aether
+    # Forward to monitoring
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090 # Prometheus
+        - protocol: TCP
+          port: 3000 # Grafana
 
 ---
 # Emergency Access Policy (for troubleshooting)
@@ -878,20 +878,20 @@ spec:
     matchLabels:
       emergency-access: "true"
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow access from admin pods only
-  - from:
-    - podSelector:
-        matchLabels:
-          role: admin
-    ports:
-    - protocol: TCP
-      port: 22  # SSH
+    # Allow access from admin pods only
+    - from:
+        - podSelector:
+            matchLabels:
+              role: admin
+      ports:
+        - protocol: TCP
+          port: 22 # SSH
   egress:
-  # Allow all egress for emergency debugging
-  - {}
+    # Allow all egress for emergency debugging
+    - {}
 
 ---
 # Network Policy for External Dependencies
@@ -905,19 +905,19 @@ spec:
     matchLabels:
       external-access: "required"
   policyTypes:
-  - Egress
+    - Egress
   egress:
-  # DNS resolution
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  # HTTPS to trusted external services
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
+    # DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # HTTPS to trusted external services
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
   # Specific external service IPs/domains can be added here
   # for more restrictive policies

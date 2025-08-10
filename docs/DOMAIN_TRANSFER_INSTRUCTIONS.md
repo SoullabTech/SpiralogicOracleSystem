@@ -1,14 +1,18 @@
 # Domain Transfer Instructions
 
 ## 🎯 Current Status
+
 ✅ **DNS Records**: Correctly configured
+
 - `soullab.life` → `76.76.21.21` (Vercel A-record)
 - `oracle.soullab.life` → `cname.vercel-dns.com` (Vercel CNAME)
 
 ✅ **Production App**: Working perfectly
+
 - https://spiralogic-oracle-system.vercel.app/ (HTTP/2 200)
 
 ❌ **Domain Assignment**: Domains assigned to different Vercel project
+
 - Error: "Cannot add soullab.life since it's already assigned to another project"
 
 ## 🔧 Resolution Steps
@@ -16,6 +20,7 @@
 ### Option 1: Transfer Domains (Recommended)
 
 1. **Find the current project**:
+
    - Go to: https://vercel.com/dashboard
    - Check all teams/accounts in dropdown:
      - soullab's projects
@@ -24,10 +29,12 @@
      - Spiralogic Oracle System
 
 2. **Locate domains in old project**:
+
    - Search each team for projects containing `soullab.life`
    - Go to Project → Settings → Domains
 
 3. **Remove from old project**:
+
    - Click the domain → Remove/Delete
    - Confirm removal
 
@@ -55,7 +62,9 @@ npx vercel domains add oracle.soullab.life
 ```
 
 ### Option 3: Contact Support
+
 If you can't access the old project:
+
 - Email: support@vercel.com
 - Subject: "Transfer domains between projects"
 - Include: Domain names and both project URLs
@@ -84,7 +93,9 @@ curl -I https://oracle.soullab.life/
 - [ ] 🎉 Celebrate complete deployment!
 
 ## 🚀 Once Complete
+
 All three URLs will serve your SpiralogicOracleSystem:
+
 - Production: https://spiralogic-oracle-system.vercel.app/
 - Primary: https://soullab.life/
 - Oracle: https://oracle.soullab.life/

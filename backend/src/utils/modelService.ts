@@ -24,7 +24,8 @@ class ModelService {
         messages: [
           {
             role: "system",
-            content: "You are an insightful Oracle. Offer reflective and transformative guidance.",
+            content:
+              "You are an insightful Oracle. Offer reflective and transformative guidance.",
           },
           {
             role: "user",

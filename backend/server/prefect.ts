@@ -1,6 +1,6 @@
 // oracle-backend/server/tasks/prefect.ts
 
-import axios from 'axios';
+import axios from "axios";
 
 const PREFECT_API_URL = process.env.PREFECT_API_URL!;
 const PREFECT_API_KEY = process.env.PREFECT_API_KEY!;
@@ -26,25 +26,25 @@ export async function triggerDailyJournalProcessing({
       {
         headers: {
           Authorization: `Bearer ${PREFECT_API_KEY}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (response.status === 200 || response.status === 201) {
       return {
-        status: 'success',
+        status: "success",
         run_id: response.data.id,
       };
     }
 
     return {
-      status: 'error',
+      status: "error",
     };
   } catch (err) {
-    console.error('Error triggering Prefect flow:', err);
+    console.error("Error triggering Prefect flow:", err);
     return {
-      status: 'error',
+      status: "error",
     };
   }
 }

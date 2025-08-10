@@ -45,7 +45,7 @@ export class PersonalOracleAgent extends BaseAgent {
       earth: new EarthAgent(),
       air: new AirAgent(),
       aether: new AetherAgent(),
-      shadow: new ShadowAgent()
+      shadow: new ShadowAgent(),
     };
 
     // Initialize connection to AIN collective intelligence
@@ -96,14 +96,15 @@ class PersonalOracleAgent extends BaseAgent {
     const personalContext = await this.gatherPersonalContext(query.userId);
 
     // 3. Request AIN Collective Wisdom
-    const collectiveWisdom = await this.ainConnection.requestCollectiveWisdom(query);
+    const collectiveWisdom =
+      await this.ainConnection.requestCollectiveWisdom(query);
 
     // 4. Determine Elemental Need (individual + collective wisdom)
     const elementalNeed = this.determineElementalNeed(
       query,
       personalContext,
       collectiveWisdom,
-      mirrorAnalysis
+      mirrorAnalysis,
     );
 
     // 5. Route to Appropriate Elemental Agent
@@ -111,16 +112,17 @@ class PersonalOracleAgent extends BaseAgent {
       personal: personalContext,
       collective: collectiveWisdom,
       mirror: mirrorAnalysis,
-      relationship: this.sacredRelationship
+      relationship: this.sacredRelationship,
     });
 
-    const elementalResponse = await this.elementalAgents[elementalNeed].processQuery(enhancedQuery);
+    const elementalResponse =
+      await this.elementalAgents[elementalNeed].processQuery(enhancedQuery);
 
     // 6. Integrate Elemental Wisdom with Personal Journey
     const personalResponse = await this.integrateElementalWisdom(
       elementalResponse,
       personalContext,
-      mirrorAnalysis
+      mirrorAnalysis,
     );
 
     // 7. Update Sacred Relationship
@@ -133,8 +135,9 @@ class PersonalOracleAgent extends BaseAgent {
       queryTheme: this.categorizeQuery(query.input),
       responseEffectiveness: personalResponse.confidence || 0.8,
       userReaction: await this.predictUserReaction(personalResponse),
-      transformationIndicators: this.extractTransformationIndicators(personalResponse),
-      collectiveRelevance: this.calculateCollectiveRelevance(elementalResponse)
+      transformationIndicators:
+        this.extractTransformationIndicators(personalResponse),
+      collectiveRelevance: this.calculateCollectiveRelevance(elementalResponse),
     });
 
     return personalResponse;
@@ -155,12 +158,15 @@ export class MainOracleAgent {
   // Remove direct elemental agent instantiation
   // Focus on collective intelligence functions
 
-  async receivePatternContribution(contribution: PatternContribution): Promise<void> {
+  async receivePatternContribution(
+    contribution: PatternContribution,
+  ): Promise<void> {
     // Store in collective memory
     await this.collectiveMemory.storePattern(contribution);
 
     // Analyze for emergent patterns
-    const emergentPatterns = await this.emergentWisdomEngine.analyzeNewPattern(contribution);
+    const emergentPatterns =
+      await this.emergentWisdomEngine.analyzeNewPattern(contribution);
 
     // Update agent evolution tracking
     await this.agentEvolutionTracking.trackElementalEffectiveness(contribution);
@@ -177,15 +183,19 @@ export class MainOracleAgent {
     const universalGuidance = await this.accessUniversalField(query);
 
     // Find relevant collective patterns
-    const relevantPatterns = await this.collectiveMemory.findRelevantPatterns(query);
+    const relevantPatterns =
+      await this.collectiveMemory.findRelevantPatterns(query);
 
     // Generate collective wisdom synthesis
     return {
       universalGuidance,
       relevantPatterns,
-      recommendedElement: this.recommendElementBasedOnCollective(query, relevantPatterns),
+      recommendedElement: this.recommendElementBasedOnCollective(
+        query,
+        relevantPatterns,
+      ),
       collectiveInsights: this.synthesizeCollectiveInsights(relevantPatterns),
-      cosmicTiming: universalGuidance.cosmicTiming
+      cosmicTiming: universalGuidance.cosmicTiming,
     };
   }
 }
@@ -197,14 +207,21 @@ export class MainOracleAgent {
 // Elemental agents enhanced to work through PersonalOracleAgent
 export class FireAgent extends OracleAgent {
   async processQuery(query: EnhancedQueryInput): Promise<AIResponse> {
-    const { input, userId, personalContext, collectiveWisdom, relationshipContext } = query;
+    const {
+      input,
+      userId,
+      personalContext,
+      collectiveWisdom,
+      relationshipContext,
+    } = query;
 
     // Use personal context to customize fire response
     const fireType = this.detectFireType(input, personalContext.memories);
 
     // Incorporate collective wisdom about fire effectiveness
-    const collectiveFireWisdom = collectiveWisdom.relevantPatterns
-      .filter(p => p.element === 'fire');
+    const collectiveFireWisdom = collectiveWisdom.relevantPatterns.filter(
+      (p) => p.element === "fire",
+    );
 
     // Craft response that serves both individual and collective evolution
     const fireResponse = this.craftFireResponse(
@@ -212,24 +229,30 @@ export class FireAgent extends OracleAgent {
       fireType,
       personalContext,
       collectiveFireWisdom,
-      relationshipContext
+      relationshipContext,
     );
 
     // Include relationship-aware signature
-    const signature = this.selectFireSignature(fireType, relationshipContext.trustLevel);
+    const signature = this.selectFireSignature(
+      fireType,
+      relationshipContext.trustLevel,
+    );
 
     return {
-      content: fireResponse + '\n\n' + signature,
-      provider: 'fire-agent-via-personal-oracle',
-      confidence: this.calculateConfidence(personalContext, collectiveFireWisdom),
+      content: fireResponse + "\n\n" + signature,
+      provider: "fire-agent-via-personal-oracle",
+      confidence: this.calculateConfidence(
+        personalContext,
+        collectiveFireWisdom,
+      ),
       metadata: {
-        element: 'fire',
+        element: "fire",
         fireType,
         personalContextUsed: true,
         collectiveWisdomIntegrated: collectiveFireWisdom.length > 0,
         relationshipAware: true,
-        contributesToCollective: true
-      }
+        contributesToCollective: true,
+      },
     };
   }
 }
@@ -240,30 +263,35 @@ export class FireAgent extends OracleAgent {
 ## 📋 **MIGRATION CHECKLIST**
 
 ### **Phase 1: Infrastructure** ✅
+
 - [ ] Create `MainOracleAgentInterface` for PersonalOracleAgent communication
 - [ ] Define `PatternContribution` and `CollectiveWisdom` interfaces
 - [ ] Create `EnhancedQueryInput` for elemental agents
 - [ ] Set up collective memory storage system
 
 ### **Phase 2: PersonalOracleAgent Enhancement** 🔄
+
 - [ ] Add AIN connection to PersonalOracleAgent constructor
 - [ ] Implement elemental routing through PersonalOracleAgent
 - [ ] Add collective wisdom integration to query processing
 - [ ] Implement pattern contribution after each interaction
 
 ### **Phase 3: MainOracleAgent Refactor** 🔄
+
 - [ ] Remove direct elemental agent instantiation from MainOracleAgent
 - [ ] Focus MainOracleAgent on collective intelligence functions
 - [ ] Implement pattern reception and analysis
 - [ ] Add emergent wisdom generation capabilities
 
 ### **Phase 4: Elemental Agent Updates** ⏳
+
 - [ ] Update elemental agents to accept enhanced queries
 - [ ] Add personal context integration to elemental responses
 - [ ] Include collective wisdom in elemental decision-making
 - [ ] Add relationship-aware response customization
 
 ### **Phase 5: Testing & Validation** ⏳
+
 - [ ] Test PersonalOracleAgent → Elemental Agent → PersonalOracleAgent flow
 - [ ] Validate pattern contribution to AIN collective intelligence
 - [ ] Verify collective wisdom influences individual guidance
@@ -274,18 +302,21 @@ export class FireAgent extends OracleAgent {
 ## 🎯 **SUCCESS METRICS**
 
 ### **Hierarchy Clarity**
+
 - [ ] Users always interact with PersonalOracleAgent first
 - [ ] Elemental agents only accessed through PersonalOracleAgent
 - [ ] AIN operates as background collective intelligence
 - [ ] Clear pattern contribution flow after each interaction
 
 ### **Wisdom Integration**
+
 - [ ] Collective patterns influence individual guidance
 - [ ] Individual insights contribute to collective wisdom
 - [ ] Universal field guidance integrates with personal context
 - [ ] Sacred relationship depth increases over time
 
 ### **System Evolution**
+
 - [ ] Agent effectiveness improves over time
 - [ ] Collective salons emerge naturally from patterns
 - [ ] System protocols evolve based on user outcomes

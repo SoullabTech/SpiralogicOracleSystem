@@ -1,10 +1,10 @@
-import { Router, Request, Response } from 'express';
-import { oracle } from '@/core/agents/mainOracleAgent';
+import { Router, Request, Response } from "express";
+import { oracle } from "@/core/agents/mainOracleAgent";
 
 const router = Router();
 
 // POST /api/oracle/respond
-router.post('/respond', async (req: Request, res: Response) => {
+router.post("/respond", async (req: Request, res: Response) => {
   const {
     input,
     userId,
@@ -12,11 +12,13 @@ router.post('/respond', async (req: Request, res: Response) => {
     preferredElement,
     requestShadowWork,
     collectiveInsight,
-    harmonicResonance
+    harmonicResonance,
   } = req.body;
 
   if (!input || !userId) {
-    return res.status(400).json({ error: 'Missing required fields: input and userId' });
+    return res
+      .status(400)
+      .json({ error: "Missing required fields: input and userId" });
   }
 
   try {
@@ -27,13 +29,13 @@ router.post('/respond', async (req: Request, res: Response) => {
       preferredElement,
       requestShadowWork,
       collectiveInsight,
-      harmonicResonance
+      harmonicResonance,
     });
 
     res.status(200).json(response);
   } catch (error: any) {
-    console.error('AIN Respond Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("AIN Respond Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

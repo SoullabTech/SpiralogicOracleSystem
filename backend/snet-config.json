@@ -35,9 +35,7 @@
             "description": "30-minute streaming insight session"
           }
         ],
-        "endpoints": [
-          "https://oracle.spiralogic.ai:7000"
-        ]
+        "endpoints": ["https://oracle.spiralogic.ai:7000"]
       }
     ],
     "service_type": "grpc",

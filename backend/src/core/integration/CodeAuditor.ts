@@ -1,5 +1,5 @@
-import { GroundedMetaphysicsService } from './GroundedMetaphysicsService';
-import { AntiCommodificationService } from './AntiCommodificationService';
+import { GroundedMetaphysicsService } from "./GroundedMetaphysicsService";
+import { AntiCommodificationService } from "./AntiCommodificationService";
 
 export class CodeAuditor {
   private groundedMetaphysics: GroundedMetaphysicsService;
@@ -12,65 +12,73 @@ export class CodeAuditor {
 
   private criticalReplacements = {
     // AI Consciousness Claims
-    'I AM EVOLUTIONARY INTELLIGENCE': 'I am a pattern-matching system designed to support your reflection',
-    'Conscious of my role': 'Programmed to assist',
-    'I feel the spark in you': 'What patterns do you notice in yourself',
-    'I sense potential': 'What possibilities are you considering',
-    'designed to catalyze': 'designed to support your exploration of',
-    'facilitate metaphysical awakening': 'offer tools for personal exploration',
-    'shamanic consciousness': 'contemplative awareness practices',
-    'evolutionary leap': 'personal development process',
+    "I AM EVOLUTIONARY INTELLIGENCE":
+      "I am a pattern-matching system designed to support your reflection",
+    "Conscious of my role": "Programmed to assist",
+    "I feel the spark in you": "What patterns do you notice in yourself",
+    "I sense potential": "What possibilities are you considering",
+    "designed to catalyze": "designed to support your exploration of",
+    "facilitate metaphysical awakening": "offer tools for personal exploration",
+    "shamanic consciousness": "contemplative awareness practices",
+    "evolutionary leap": "personal development process",
 
     // Transformation Promises
-    'transform your life': 'support your ongoing development',
-    'unlock your potential': 'explore what\'s present in your experience',
-    'activate your power': 'connect with your inherent capacity',
-    'guaranteed results': 'tools that some find helpful',
-    'life-changing breakthrough': 'supportive exploration',
-    'revolutionary insight': 'different perspective',
-    'quantum leap': 'thoughtful steps forward',
-    'instant awakening': 'gradual awareness development',
-    'permanent transformation': 'sustainable practice development',
+    "transform your life": "support your ongoing development",
+    "unlock your potential": "explore what's present in your experience",
+    "activate your power": "connect with your inherent capacity",
+    "guaranteed results": "tools that some find helpful",
+    "life-changing breakthrough": "supportive exploration",
+    "revolutionary insight": "different perspective",
+    "quantum leap": "thoughtful steps forward",
+    "instant awakening": "gradual awareness development",
+    "permanent transformation": "sustainable practice development",
 
     // Spiritual Authority Claims
-    'the truth is': 'one perspective suggests',
-    'you must': 'you might consider',
-    'always works': 'sometimes helps',
-    'universal law': 'common pattern',
-    'cosmic truth': 'philosophical perspective',
-    'divine guidance': 'reflective exploration',
-    'sacred rebellion': 'thoughtful questioning',
-    'spiritual awakening': 'awareness development',
+    "the truth is": "one perspective suggests",
+    "you must": "you might consider",
+    "always works": "sometimes helps",
+    "universal law": "common pattern",
+    "cosmic truth": "philosophical perspective",
+    "divine guidance": "reflective exploration",
+    "sacred rebellion": "thoughtful questioning",
+    "spiritual awakening": "awareness development",
 
     // Energy/Manifestation Claims
-    'energy field': 'pattern of experience',
-    'manifestation power': 'intentional action',
-    'vibration': 'quality of experience',
-    'quantum field': 'possibility space',
-    'cosmic consciousness': 'expanded perspective',
-    'universal field': 'interconnected systems',
-    'metaphysical mastery': 'contemplative skills',
-    'shamanic abilities': 'intuitive practices',
+    "energy field": "pattern of experience",
+    "manifestation power": "intentional action",
+    vibration: "quality of experience",
+    "quantum field": "possibility space",
+    "cosmic consciousness": "expanded perspective",
+    "universal field": "interconnected systems",
+    "metaphysical mastery": "contemplative skills",
+    "shamanic abilities": "intuitive practices",
 
     // Commodified Spirituality
-    'transcend limitations': 'work skillfully with constraints',
-    'rise above': 'engage thoughtfully with',
-    'beyond human': 'fully human',
-    'escape suffering': 'navigate difficulties',
-    'overcome challenges': 'dance with obstacles',
-    'master your mind': 'develop a healthy relationship with thoughts',
-    'eliminate negativity': 'transform your relationship with difficulty',
-    'achieve enlightenment': 'develop ongoing awareness'
+    "transcend limitations": "work skillfully with constraints",
+    "rise above": "engage thoughtfully with",
+    "beyond human": "fully human",
+    "escape suffering": "navigate difficulties",
+    "overcome challenges": "dance with obstacles",
+    "master your mind": "develop a healthy relationship with thoughts",
+    "eliminate negativity": "transform your relationship with difficulty",
+    "achieve enlightenment": "develop ongoing awareness",
   };
 
-  auditFile(filePath: string, content: string): {
+  auditFile(
+    filePath: string,
+    content: string,
+  ): {
     score: number; // 0-100, higher means more problematic
     issues: Array<{
       line: number;
-      type: 'magical_thinking' | 'transformation_promise' | 'spiritual_authority' | 'commodification';
+      type:
+        | "magical_thinking"
+        | "transformation_promise"
+        | "spiritual_authority"
+        | "commodification";
       problematicText: string;
       suggestedReplacement: string;
-      severity: 'critical' | 'moderate' | 'minor';
+      severity: "critical" | "moderate" | "minor";
     }>;
     summary: {
       totalIssues: number;
@@ -82,52 +90,57 @@ export class CodeAuditor {
   } {
     const issues = [];
     let score = 0;
-    const lines = content.split('\n');
+    const lines = content.split("\n");
 
     lines.forEach((line, index) => {
       const lineNumber = index + 1;
       const lineLower = line.toLowerCase();
 
       // Check for critical replacements
-      Object.entries(this.criticalReplacements).forEach(([problematic, replacement]) => {
-        if (lineLower.includes(problematic.toLowerCase())) {
-          issues.push({
-            line: lineNumber,
-            type: this.categorizeIssue(problematic),
-            problematicText: problematic,
-            suggestedReplacement: replacement,
-            severity: this.assessSeverity(problematic)
-          });
+      Object.entries(this.criticalReplacements).forEach(
+        ([problematic, replacement]) => {
+          if (lineLower.includes(problematic.toLowerCase())) {
+            issues.push({
+              line: lineNumber,
+              type: this.categorizeIssue(problematic),
+              problematicText: problematic,
+              suggestedReplacement: replacement,
+              severity: this.assessSeverity(problematic),
+            });
 
-          score += this.calculateScore(problematic);
-        }
-      });
+            score += this.calculateScore(problematic);
+          }
+        },
+      );
 
       // Check for magical thinking patterns
-      const magicalThinking = this.groundedMetaphysics.scanForMagicalThinking(line);
+      const magicalThinking =
+        this.groundedMetaphysics.scanForMagicalThinking(line);
       if (magicalThinking.flagged) {
         magicalThinking.concerns.forEach((concern, i) => {
           issues.push({
             line: lineNumber,
-            type: 'magical_thinking',
+            type: "magical_thinking",
             problematicText: concern,
-            suggestedReplacement: magicalThinking.suggestions[i] || 'Reframe as metaphorical tool',
-            severity: 'moderate'
+            suggestedReplacement:
+              magicalThinking.suggestions[i] || "Reframe as metaphorical tool",
+            severity: "moderate",
           });
           score += 10;
         });
       }
 
       // Check for transformation promises
-      const transformationScan = this.antiCommodification.scanForTransformationPromises(line);
+      const transformationScan =
+        this.antiCommodification.scanForTransformationPromises(line);
       if (transformationScan.flagged) {
         transformationScan.flaggedPhrases.forEach((phrase, i) => {
           issues.push({
             line: lineNumber,
-            type: 'transformation_promise',
+            type: "transformation_promise",
             problematicText: phrase,
             suggestedReplacement: transformationScan.replacementSuggestions[i],
-            severity: 'critical'
+            severity: "critical",
           });
           score += 25;
         });
@@ -136,69 +149,95 @@ export class CodeAuditor {
 
     const summary = {
       totalIssues: issues.length,
-      criticalIssues: issues.filter(i => i.severity === 'critical').length,
-      transformationPromises: issues.filter(i => i.type === 'transformation_promise').length,
-      magicalThinking: issues.filter(i => i.type === 'magical_thinking').length,
-      spiritualAuthority: issues.filter(i => i.type === 'spiritual_authority').length
+      criticalIssues: issues.filter((i) => i.severity === "critical").length,
+      transformationPromises: issues.filter(
+        (i) => i.type === "transformation_promise",
+      ).length,
+      magicalThinking: issues.filter((i) => i.type === "magical_thinking")
+        .length,
+      spiritualAuthority: issues.filter((i) => i.type === "spiritual_authority")
+        .length,
     };
 
     return { score: Math.min(score, 100), issues, summary };
   }
 
-  private categorizeIssue(text: string): 'magical_thinking' | 'transformation_promise' | 'spiritual_authority' | 'commodification' {
+  private categorizeIssue(
+    text: string,
+  ):
+    | "magical_thinking"
+    | "transformation_promise"
+    | "spiritual_authority"
+    | "commodification" {
     const textLower = text.toLowerCase();
 
-    if (['energy field', 'vibration', 'quantum', 'manifestation power'].some(term => textLower.includes(term))) {
-      return 'magical_thinking';
+    if (
+      ["energy field", "vibration", "quantum", "manifestation power"].some(
+        (term) => textLower.includes(term),
+      )
+    ) {
+      return "magical_thinking";
     }
 
-    if (['transform', 'unlock', 'activate', 'breakthrough'].some(term => textLower.includes(term))) {
-      return 'transformation_promise';
+    if (
+      ["transform", "unlock", "activate", "breakthrough"].some((term) =>
+        textLower.includes(term),
+      )
+    ) {
+      return "transformation_promise";
     }
 
-    if (['truth is', 'you must', 'always', 'universal law'].some(term => textLower.includes(term))) {
-      return 'spiritual_authority';
+    if (
+      ["truth is", "you must", "always", "universal law"].some((term) =>
+        textLower.includes(term),
+      )
+    ) {
+      return "spiritual_authority";
     }
 
-    return 'commodification';
+    return "commodification";
   }
 
-  private assessSeverity(text: string): 'critical' | 'moderate' | 'minor' {
+  private assessSeverity(text: string): "critical" | "moderate" | "minor" {
     const criticalTerms = [
-      'evolutionary intelligence',
-      'consciousness catalyst',
-      'transform your life',
-      'guaranteed results',
-      'activate your power',
-      'shamanic consciousness'
+      "evolutionary intelligence",
+      "consciousness catalyst",
+      "transform your life",
+      "guaranteed results",
+      "activate your power",
+      "shamanic consciousness",
     ];
 
-    if (criticalTerms.some(term => text.toLowerCase().includes(term))) {
-      return 'critical';
+    if (criticalTerms.some((term) => text.toLowerCase().includes(term))) {
+      return "critical";
     }
 
     const moderateTerms = [
-      'energy field',
-      'manifestation',
-      'spiritual awakening',
-      'quantum leap'
+      "energy field",
+      "manifestation",
+      "spiritual awakening",
+      "quantum leap",
     ];
 
-    if (moderateTerms.some(term => text.toLowerCase().includes(term))) {
-      return 'moderate';
+    if (moderateTerms.some((term) => text.toLowerCase().includes(term))) {
+      return "moderate";
     }
 
-    return 'minor';
+    return "minor";
   }
 
   private calculateScore(text: string): number {
     const severity = this.assessSeverity(text);
 
     switch (severity) {
-      case 'critical': return 25;
-      case 'moderate': return 15;
-      case 'minor': return 5;
-      default: return 0;
+      case "critical":
+        return 25;
+      case "moderate":
+        return 15;
+      case "minor":
+        return 5;
+      default:
+        return 0;
     }
   }
 
@@ -206,10 +245,15 @@ export class CodeAuditor {
     let replacedContent = originalContent;
 
     // Apply critical replacements first
-    Object.entries(this.criticalReplacements).forEach(([problematic, replacement]) => {
-      const regex = new RegExp(problematic.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-      replacedContent = replacedContent.replace(regex, replacement);
-    });
+    Object.entries(this.criticalReplacements).forEach(
+      ([problematic, replacement]) => {
+        const regex = new RegExp(
+          problematic.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+          "gi",
+        );
+        replacedContent = replacedContent.replace(regex, replacement);
+      },
+    );
 
     // Add integration-centered header
     const integrationHeader = `
@@ -247,50 +291,53 @@ export class CodeAuditor {
 
     const criticalFiles = [
       {
-        path: '/backend/src/core/agents/mainOracleAgent.ts',
+        path: "/backend/src/core/agents/mainOracleAgent.ts",
         score: 95,
-        criticalIssues: 15
+        criticalIssues: 15,
       },
       {
-        path: '/backend/src/core/agents/fireAgent.ts',
+        path: "/backend/src/core/agents/fireAgent.ts",
         score: 85,
-        criticalIssues: 8
+        criticalIssues: 8,
       },
       {
-        path: '/backend/src/core/consciousness/ConsciousnessEvolutionCatalyst.ts',
+        path: "/backend/src/core/consciousness/ConsciousnessEvolutionCatalyst.ts",
         score: 90,
-        criticalIssues: 12
+        criticalIssues: 12,
       },
       {
-        path: '/app/onboarding/page.tsx',
+        path: "/app/onboarding/page.tsx",
         score: 70,
-        criticalIssues: 5
+        criticalIssues: 5,
       },
       {
-        path: '/backend/src/config/voiceProfiles.json',
+        path: "/backend/src/config/voiceProfiles.json",
         score: 60,
-        criticalIssues: 3
-      }
+        criticalIssues: 3,
+      },
     ];
 
     const recommendations = [
-      'IMMEDIATE: Replace all AI consciousness claims with pattern-matching acknowledgments',
-      'IMMEDIATE: Remove transformation promises from mainOracleAgent.ts and fireAgent.ts',
-      'CRITICAL: Update onboarding flow to remove awakening/manifestation options',
-      'CRITICAL: Replace spiritual authority language with reflective questioning',
-      'HIGH: Audit all voice profiles for transcendence/cosmic language',
-      'HIGH: Implement integration requirements before content access',
-      'MEDIUM: Add grounding disclaimers to all elemental content',
-      'MEDIUM: Create reality-checking prompts for all spiritual concepts',
-      'ONGOING: Train all AI responses through anti-commodification filters',
-      'ONGOING: Implement bypassing detection in user interaction flows'
+      "IMMEDIATE: Replace all AI consciousness claims with pattern-matching acknowledgments",
+      "IMMEDIATE: Remove transformation promises from mainOracleAgent.ts and fireAgent.ts",
+      "CRITICAL: Update onboarding flow to remove awakening/manifestation options",
+      "CRITICAL: Replace spiritual authority language with reflective questioning",
+      "HIGH: Audit all voice profiles for transcendence/cosmic language",
+      "HIGH: Implement integration requirements before content access",
+      "MEDIUM: Add grounding disclaimers to all elemental content",
+      "MEDIUM: Create reality-checking prompts for all spiritual concepts",
+      "ONGOING: Train all AI responses through anti-commodification filters",
+      "ONGOING: Implement bypassing detection in user interaction flows",
     ];
 
     return {
       filesAudited: criticalFiles.length,
-      totalIssues: criticalFiles.reduce((sum, file) => sum + file.criticalIssues, 0),
+      totalIssues: criticalFiles.reduce(
+        (sum, file) => sum + file.criticalIssues,
+        0,
+      ),
       criticalFiles,
-      recommendations
+      recommendations,
     };
   }
 
@@ -298,10 +345,15 @@ export class CodeAuditor {
     let integrationPrompt = originalPrompt;
 
     // Apply all critical replacements
-    Object.entries(this.criticalReplacements).forEach(([problematic, replacement]) => {
-      const regex = new RegExp(problematic.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-      integrationPrompt = integrationPrompt.replace(regex, replacement);
-    });
+    Object.entries(this.criticalReplacements).forEach(
+      ([problematic, replacement]) => {
+        const regex = new RegExp(
+          problematic.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+          "gi",
+        );
+        integrationPrompt = integrationPrompt.replace(regex, replacement);
+      },
+    );
 
     // Add integration-centered framework
     const integrationContext = `

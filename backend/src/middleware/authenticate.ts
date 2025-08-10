@@ -1,11 +1,11 @@
 // 📄 FILE: oracle-backend/src/middleware/authenticate.ts
 
-import { Response, NextFunction } from 'express';
-import { createClient } from '@supabase/supabase-js';
-import { config } from '../config/index';
-import { AuthenticationError } from '../utils/errors';
-import type { AuthenticatedRequest } from '../types/index';
-import { logger } from '../utils/logger';
+import { Response, NextFunction } from "express";
+import { createClient } from "@supabase/supabase-js";
+import { config } from "../config/index";
+import { AuthenticationError } from "../utils/errors";
+import type { AuthenticatedRequest } from "../types/index";
+import { logger } from "../utils/logger";
 
 const supabase = createClient(config.supabase.url, config.supabase.anonKey);
 
@@ -15,16 +15,16 @@ const supabase = createClient(config.supabase.url, config.supabase.anonKey);
 export async function authenticateToken(
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.startsWith('Bearer ')
+    const token = authHeader?.startsWith("Bearer ")
       ? authHeader.slice(7)
       : undefined;
 
     if (!token) {
-      throw new AuthenticationError('No authorization token provided');
+      throw new AuthenticationError("No authorization token provided");
     }
 
     const {
@@ -33,7 +33,7 @@ export async function authenticateToken(
     } = await supabase.auth.getUser(token);
 
     if (error || !user) {
-      throw new AuthenticationError('Invalid or expired token');
+      throw new AuthenticationError("Invalid or expired token");
     }
 
     req.user = {
@@ -44,11 +44,9 @@ export async function authenticateToken(
 
     next();
   } catch (err: any) {
-    logger.error('🔐 Authentication failed', { error: err });
+    logger.error("🔐 Authentication failed", { error: err });
     const message =
-      err instanceof AuthenticationError
-        ? err.message
-        : 'Authentication error';
+      err instanceof AuthenticationError ? err.message : "Authentication error";
     res.status(401).json({ error: message });
   }
 }

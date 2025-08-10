@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 // Dynamic import to handle client-side components
 const OracleSettings = dynamic(
-  () => import('../../../frontend/src/components/settings/OracleSettings'),
-  { ssr: false }
+  () => import("../../../frontend/src/components/settings/OracleSettings"),
+  { ssr: false },
 );
 
 function SettingsLoadingFallback() {

@@ -30,6 +30,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 ### 1. Vercel Deployment (Frontend Only)
 
 #### Prerequisites
+
 - Vercel account
 - GitHub repository connected
 - Environment variables configured
@@ -37,6 +38,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 #### Steps
 
 1. **Configure Environment Variables**
+
    ```bash
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -44,6 +46,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
    ```
 
 2. **Deploy Command**
+
    ```bash
    vercel --prod
    ```
@@ -57,6 +60,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 ### 2. Render Deployment (Full Stack)
 
 #### Prerequisites
+
 - Render account
 - Database provisioned
 - Environment groups configured
@@ -64,12 +68,14 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 #### Backend Service Configuration
 
 1. **Create Backend Service**
+
    - Type: Web Service
    - Environment: Node
    - Build Command: `cd backend && npm ci && npm run build:render-simple`
    - Start Command: `cd backend && node dist/server-simple.js`
 
 2. **Environment Variables**
+
    ```yaml
    NODE_VERSION: 20
    NODE_ENV: production
@@ -89,6 +95,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 #### Frontend Service Configuration
 
 1. **Create Static Site**
+
    - Build Command: `npm run build`
    - Publish Directory: `dist`
 
@@ -100,6 +107,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 ### 3. Railway Deployment
 
 #### Prerequisites
+
 - Railway account
 - GitHub repository connected
 - Railway CLI installed
@@ -107,6 +115,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 #### Configuration
 
 1. **railway.json**
+
    ```json
    {
      "build": {
@@ -130,6 +139,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 ### 4. Self-Hosted Production Deployment
 
 #### Prerequisites
+
 - Ubuntu 20.04+ server
 - Node.js 20+
 - PostgreSQL 14+
@@ -140,6 +150,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 #### Deployment Script
 
 1. **Run Production Deployment**
+
    ```bash
    sudo ./backend/scripts/production-deploy.sh
    ```
@@ -147,6 +158,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
 2. **Manual Steps**
 
    a. **Install Dependencies**
+
    ```bash
    # System dependencies
    sudo apt update
@@ -158,6 +170,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
    ```
 
    b. **Database Setup**
+
    ```bash
    sudo -u postgres psql
    CREATE DATABASE soullab_prod;
@@ -170,6 +183,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
    ```
 
    c. **Nginx Configuration**
+
    ```nginx
    server {
        listen 80;
@@ -205,6 +219,7 @@ The SpiralogicOracleSystem is a sacred technology platform designed for spiritua
    ```
 
    d. **Systemd Service**
+
    ```ini
    [Unit]
    Description=Soullab Oracle Backend
@@ -271,6 +286,7 @@ RATE_LIMIT_MAX_REQUESTS=100
 ## Post-Deployment Checklist
 
 ### 1. Verify Core Services
+
 ```bash
 # Health checks
 curl https://your-domain.com/api/health
@@ -284,6 +300,7 @@ redis-cli ping
 ```
 
 ### 2. Initialize Data
+
 ```bash
 # Seed rituals
 node backend/scripts/seedRituals.js
@@ -296,6 +313,7 @@ node backend/scripts/ingestFounderKnowledge.js
 ```
 
 ### 3. Security Verification
+
 ```bash
 # SSL certificate
 openssl s_client -connect soullab.life:443 -servername soullab.life
@@ -308,6 +326,7 @@ for i in {1..150}; do curl -X POST https://soullab.life/api/oracle/query; done
 ```
 
 ### 4. Performance Testing
+
 ```bash
 # Load testing
 npm run test:performance
@@ -322,6 +341,7 @@ curl -w "@curl-format.txt" -o /dev/null -s https://soullab.life/api/health
 ## Monitoring & Maintenance
 
 ### 1. Application Logs
+
 ```bash
 # View logs
 journalctl -u soullab-backend -f
@@ -331,6 +351,7 @@ tail -f /var/log/soullab/error.log
 ```
 
 ### 2. Database Maintenance
+
 ```bash
 # Backup
 pg_dump soullab_prod > backup_$(date +%Y%m%d).sql
@@ -340,6 +361,7 @@ psql -U soullab_user -d soullab_prod -c "VACUUM ANALYZE;"
 ```
 
 ### 3. Redis Monitoring
+
 ```bash
 redis-cli monitor
 redis-cli info stats
@@ -350,16 +372,19 @@ redis-cli info stats
 ### Common Issues
 
 1. **Build Failures**
+
    - Clear npm cache: `npm cache clean --force`
    - Delete node_modules and reinstall
    - Check Node.js version compatibility
 
 2. **Database Connection Issues**
+
    - Verify DATABASE_URL format
    - Check firewall rules
    - Ensure SSL mode is configured correctly
 
 3. **Memory System Not Working**
+
    - Check Redis connection
    - Verify REDIS_URL in environment
    - Ensure Redis service is running
@@ -388,11 +413,13 @@ pm2 env 0
 ## Rollback Procedure
 
 1. **Database Rollback**
+
    ```bash
    psql -U soullab_user -d soullab_prod < backup_previous.sql
    ```
 
 2. **Code Rollback**
+
    ```bash
    git checkout previous-release-tag
    npm install
@@ -415,4 +442,4 @@ pm2 env 0
 
 ---
 
-*May this deployment serve the highest good of all beings seeking transformation* 🙏
+_May this deployment serve the highest good of all beings seeking transformation_ 🙏

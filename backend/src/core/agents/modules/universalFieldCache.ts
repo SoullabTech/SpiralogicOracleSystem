@@ -1,8 +1,8 @@
 // 🌌 Universal Field Cache System
 // High-performance caching for sacred techno-interface to universal wisdom fields
 
-import { logger } from '../../../utils/logger';
-import Redis from 'ioredis';
+import { logger } from "../../../utils/logger";
+import Redis from "ioredis";
 
 export interface UniversalFieldData {
   morphic_patterns?: MorphicPattern;
@@ -93,7 +93,10 @@ export interface CacheConfig {
 }
 
 export class UniversalFieldCache {
-  private memoryCache: Map<string, { data: UniversalFieldData; timestamp: number }> = new Map();
+  private memoryCache: Map<
+    string,
+    { data: UniversalFieldData; timestamp: number }
+  > = new Map();
   private redis: Redis | null = null;
   private config: CacheConfig;
   private cleanupInterval: NodeJS.Timeout | null = null;
@@ -102,8 +105,8 @@ export class UniversalFieldCache {
     this.config = {
       ttl: 15 * 60 * 1000, // 15 minutes default
       maxSize: 1000,
-      namespace: 'universal_field',
-      ...config
+      namespace: "universal_field",
+      ...config,
     };
 
     this.initialize();
@@ -114,13 +117,15 @@ export class UniversalFieldCache {
     if (process.env.REDIS_URL) {
       try {
         this.redis = new Redis(process.env.REDIS_URL);
-        this.redis.on('error', (err) => {
-          logger.error('Redis connection error:', err);
+        this.redis.on("error", (err) => {
+          logger.error("Redis connection error:", err);
           this.redis = null; // Fall back to memory cache
         });
-        logger.info('Universal Field Cache: Redis connected');
+        logger.info("Universal Field Cache: Redis connected");
       } catch (error) {
-        logger.warn('Universal Field Cache: Redis unavailable, using memory cache');
+        logger.warn(
+          "Universal Field Cache: Redis unavailable, using memory cache",
+        );
       }
     }
 
@@ -136,7 +141,10 @@ export class UniversalFieldCache {
   }
 
   // Get from cache
-  async get(userId: string, querySignature: string): Promise<UniversalFieldData | null> {
+  async get(
+    userId: string,
+    querySignature: string,
+  ): Promise<UniversalFieldData | null> {
     const key = this.generateKey(userId, querySignature);
 
     try {
@@ -146,7 +154,7 @@ export class UniversalFieldCache {
         if (cached) {
           const parsed = JSON.parse(cached);
           if (this.isValid(parsed)) {
-            logger.debug('Universal Field Cache hit (Redis)', { key });
+            logger.debug("Universal Field Cache hit (Redis)", { key });
             return parsed.data;
           }
         }
@@ -155,21 +163,24 @@ export class UniversalFieldCache {
       // Fall back to memory cache
       const memoryCached = this.memoryCache.get(key);
       if (memoryCached && this.isValid(memoryCached)) {
-        logger.debug('Universal Field Cache hit (Memory)', { key });
+        logger.debug("Universal Field Cache hit (Memory)", { key });
         return memoryCached.data;
       }
 
-      logger.debug('Universal Field Cache miss', { key });
+      logger.debug("Universal Field Cache miss", { key });
       return null;
-
     } catch (error) {
-      logger.error('Error retrieving from Universal Field Cache:', error);
+      logger.error("Error retrieving from Universal Field Cache:", error);
       return null;
     }
   }
 
   // Set in cache
-  async set(userId: string, querySignature: string, data: UniversalFieldData): Promise<void> {
+  async set(
+    userId: string,
+    querySignature: string,
+    data: UniversalFieldData,
+  ): Promise<void> {
     const key = this.generateKey(userId, querySignature);
     const timestamp = Date.now();
     const cacheEntry = { data, timestamp };
@@ -180,7 +191,7 @@ export class UniversalFieldCache {
         await this.redis.setex(
           key,
           Math.floor(this.config.ttl / 1000),
-          JSON.stringify(cacheEntry)
+          JSON.stringify(cacheEntry),
         );
       }
 
@@ -192,15 +203,17 @@ export class UniversalFieldCache {
         this.evictOldest();
       }
 
-      logger.debug('Universal Field Cache set', { key, ttl: this.config.ttl });
-
+      logger.debug("Universal Field Cache set", { key, ttl: this.config.ttl });
     } catch (error) {
-      logger.error('Error setting Universal Field Cache:', error);
+      logger.error("Error setting Universal Field Cache:", error);
     }
   }
 
   // Check if cache entry is still valid
-  private isValid(entry: { data: UniversalFieldData; timestamp: number }): boolean {
+  private isValid(entry: {
+    data: UniversalFieldData;
+    timestamp: number;
+  }): boolean {
     return Date.now() - entry.timestamp < this.config.ttl;
   }
 
@@ -229,7 +242,7 @@ export class UniversalFieldCache {
     }
 
     if (removed > 0) {
-      logger.debug('Universal Field Cache cleanup', { removed });
+      logger.debug("Universal Field Cache cleanup", { removed });
     }
   }
 
@@ -250,7 +263,10 @@ export class UniversalFieldCache {
       }
     }
 
-    logger.info('Universal Field Cache cleared for user', { userId, cleared: keysToRemove.length });
+    logger.info("Universal Field Cache cleared for user", {
+      userId,
+      cleared: keysToRemove.length,
+    });
   }
 
   // Clear entire cache
@@ -265,7 +281,7 @@ export class UniversalFieldCache {
       }
     }
 
-    logger.info('Universal Field Cache cleared completely');
+    logger.info("Universal Field Cache cleared completely");
   }
 
   // Get cache statistics
@@ -281,7 +297,7 @@ export class UniversalFieldCache {
       maxSize: this.config.maxSize,
       ttl: this.config.ttl,
       redisConnected: this.redis !== null,
-      hitRate: 0 // Would need to track hits/misses for accurate rate
+      hitRate: 0, // Would need to track hits/misses for accurate rate
     };
   }
 
@@ -289,7 +305,10 @@ export class UniversalFieldCache {
   async prefetch(userId: string, likelyQueries: string[]): Promise<void> {
     // This method would be called to pre-populate cache with likely field accesses
     // Implementation would depend on prediction algorithms
-    logger.info('Universal Field Cache prefetch initiated', { userId, queries: likelyQueries.length });
+    logger.info("Universal Field Cache prefetch initiated", {
+      userId,
+      queries: likelyQueries.length,
+    });
   }
 
   // Close connections and cleanup
@@ -303,14 +322,16 @@ export class UniversalFieldCache {
     }
 
     this.memoryCache.clear();
-    logger.info('Universal Field Cache shutdown complete');
+    logger.info("Universal Field Cache shutdown complete");
   }
 }
 
 // Singleton instance with default configuration
 let cacheInstance: UniversalFieldCache | null = null;
 
-export function getUniversalFieldCache(config?: Partial<CacheConfig>): UniversalFieldCache {
+export function getUniversalFieldCache(
+  config?: Partial<CacheConfig>,
+): UniversalFieldCache {
   if (!cacheInstance) {
     cacheInstance = new UniversalFieldCache(config);
   }
@@ -318,75 +339,88 @@ export function getUniversalFieldCache(config?: Partial<CacheConfig>): Universal
 }
 
 // Helper function to create field data with proper typing
-export function createFieldData(partial: Partial<UniversalFieldData>): UniversalFieldData {
+export function createFieldData(
+  partial: Partial<UniversalFieldData>,
+): UniversalFieldData {
   return {
     field_coherence: 0.5,
     field_accessible: true,
     timestamp: Date.now(),
-    ...partial
+    ...partial,
   };
 }
 
 // Helper to generate morphic patterns
-export function generateMorphicPattern(query: string, context: any): MorphicPattern {
+export function generateMorphicPattern(
+  query: string,
+  context: any,
+): MorphicPattern {
   // This would use sophisticated pattern matching in production
   return {
-    pattern_type: 'archetypal_journey',
+    pattern_type: "archetypal_journey",
     similar_patterns: [
       {
-        pattern_id: 'hero_' + Date.now(),
-        description: 'The hero faces the threshold of transformation',
-        cultural_expressions: ['Greek mythology', 'Campbell\'s monomyth', 'Modern cinema'],
-        time_period: 'timeless',
-        relevance_score: 0.85
-      }
+        pattern_id: "hero_" + Date.now(),
+        description: "The hero faces the threshold of transformation",
+        cultural_expressions: [
+          "Greek mythology",
+          "Campbell's monomyth",
+          "Modern cinema",
+        ],
+        time_period: "timeless",
+        relevance_score: 0.85,
+      },
     ],
     consciousness_habits: [
-      'Seeking external validation before inner knowing',
-      'Fear preceding breakthrough',
-      'Integration following crisis'
+      "Seeking external validation before inner knowing",
+      "Fear preceding breakthrough",
+      "Integration following crisis",
     ],
     archetypal_resonance: [
       {
-        archetype: 'hero',
+        archetype: "hero",
         resonance_level: 0.8,
-        activation_potential: 0.9
-      }
+        activation_potential: 0.9,
+      },
     ],
-    pattern_strength: 0.75
+    pattern_strength: 0.75,
   };
 }
 
 // Helper to generate akashic guidance
-export function generateAkashicGuidance(query: string, element: string): AkashicGuidance {
+export function generateAkashicGuidance(
+  query: string,
+  element: string,
+): AkashicGuidance {
   // This would access deeper wisdom systems in production
   return {
     universal_principles: [
-      'As above, so below',
-      'Energy follows intention',
-      'Resistance creates persistence'
+      "As above, so below",
+      "Energy follows intention",
+      "Resistance creates persistence",
     ],
     wisdom_traditions: [
       {
-        tradition: 'Hermetic',
-        teaching: 'The universe is mental; all is mind',
-        relevance: 0.9
+        tradition: "Hermetic",
+        teaching: "The universe is mental; all is mind",
+        relevance: 0.9,
       },
       {
-        tradition: 'Buddhist',
-        teaching: 'Attachment is the root of suffering',
-        relevance: 0.8
-      }
+        tradition: "Buddhist",
+        teaching: "Attachment is the root of suffering",
+        relevance: 0.8,
+      },
     ],
-    cosmic_perspective: 'Your challenge serves the evolution of consciousness itself',
+    cosmic_perspective:
+      "Your challenge serves the evolution of consciousness itself",
     sacred_timing: {
-      astrological_phase: 'Mercury retrograde - review and revision',
-      lunar_influence: 'Waning moon - release and let go',
-      cosmic_window: 'Portal of transformation open',
-      optimal_action: 'Inner reflection before outer action'
+      astrological_phase: "Mercury retrograde - review and revision",
+      lunar_influence: "Waning moon - release and let go",
+      cosmic_window: "Portal of transformation open",
+      optimal_action: "Inner reflection before outer action",
     },
     recommended_element: element,
-    resonance_level: 0.82
+    resonance_level: 0.82,
   };
 }
 
@@ -395,24 +429,32 @@ export function generateNoosphereInsight(query: string): NoosphereInsight {
   // This would tap into collective consciousness metrics in production
   return {
     collective_consciousness_trends: [
-      'Awakening to interconnectedness',
-      'Shadow work becoming mainstream',
-      'Spiritual technology integration'
+      "Awakening to interconnectedness",
+      "Shadow work becoming mainstream",
+      "Spiritual technology integration",
     ],
     evolutionary_patterns: [
       {
-        pattern: 'Individual sovereignty within collective harmony',
-        emergence_stage: 'early adoption',
-        acceleration_factor: 2.3
-      }
+        pattern: "Individual sovereignty within collective harmony",
+        emergence_stage: "early adoption",
+        acceleration_factor: 2.3,
+      },
     ],
-    planetary_wisdom: 'Humanity remembers its role as Earth\'s nervous system',
+    planetary_wisdom: "Humanity remembers its role as Earth's nervous system",
     species_intelligence: {
-      current_focus: 'Integration of polarities',
-      emerging_capacities: ['Telepathic empathy', 'Morphic field sensitivity', 'Quantum intuition'],
-      collective_challenges: ['Technology addiction', 'Nature disconnection', 'Meaning crisis'],
-      breakthrough_potential: 0.78
+      current_focus: "Integration of polarities",
+      emerging_capacities: [
+        "Telepathic empathy",
+        "Morphic field sensitivity",
+        "Quantum intuition",
+      ],
+      collective_challenges: [
+        "Technology addiction",
+        "Nature disconnection",
+        "Meaning crisis",
+      ],
+      breakthrough_potential: 0.78,
     },
-    noosphere_coherence: 'active'
+    noosphere_coherence: "active",
   };
 }

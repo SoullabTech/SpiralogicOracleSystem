@@ -11,8 +11,11 @@
  * - Cross-cultural wisdom translation
  */
 
-import { logger } from '../../utils/logger';
-import { indigenousSovereigntyProtocol, IndigenousWisdomRequest } from './IndigenousSovereigntyProtocol';
+import { logger } from "../../utils/logger";
+import {
+  indigenousSovereigntyProtocol,
+  IndigenousWisdomRequest,
+} from "./IndigenousSovereigntyProtocol";
 
 export interface CulturalProfile {
   primaryCulture: string;
@@ -60,10 +63,18 @@ export interface CulturalArchetype {
 }
 
 export interface CommunicationStyleAdaptation {
-  directnessLevel: 'direct' | 'indirect' | 'contextual';
-  storytellingPreference: 'mythological' | 'ancestral' | 'contemporary' | 'mixed';
-  authorityStructure: 'egalitarian' | 'hierarchical' | 'elder_based' | 'consensus';
-  emotionalExpression: 'open' | 'reserved' | 'ceremonial' | 'contextual';
+  directnessLevel: "direct" | "indirect" | "contextual";
+  storytellingPreference:
+    | "mythological"
+    | "ancestral"
+    | "contemporary"
+    | "mixed";
+  authorityStructure:
+    | "egalitarian"
+    | "hierarchical"
+    | "elder_based"
+    | "consensus";
+  emotionalExpression: "open" | "reserved" | "ceremonial" | "contextual";
 }
 
 export interface CulturalHealingGuidance {
@@ -79,9 +90,14 @@ export interface CulturalHealingGuidance {
  * Central system for cultural adaptation and sensitivity
  */
 export class CulturalContextAwareness {
-  private culturalArchetypeRegistry: Map<string, ArchetypalCulturalMapping> = new Map();
-  private culturalHealingRegistry: Map<string, CulturalHealingGuidance> = new Map();
-  private culturalCommunicationStyles: Map<string, CommunicationStyleAdaptation> = new Map();
+  private culturalArchetypeRegistry: Map<string, ArchetypalCulturalMapping> =
+    new Map();
+  private culturalHealingRegistry: Map<string, CulturalHealingGuidance> =
+    new Map();
+  private culturalCommunicationStyles: Map<
+    string,
+    CommunicationStyleAdaptation
+  > = new Map();
 
   constructor() {
     this.initializeCulturalArchetypes();
@@ -95,39 +111,47 @@ export class CulturalContextAwareness {
   async detectCulturalContext(
     userInput: string,
     userProfile?: any,
-    previousInteractions?: any[]
+    previousInteractions?: any[],
   ): Promise<CulturalProfile> {
     try {
       const culturalIndicators = this.extractCulturalIndicators(userInput);
       const profileCulture = this.extractProfileCulture(userProfile);
-      const interactionPatterns = this.analyzeCulturalPatterns(previousInteractions);
+      const interactionPatterns =
+        this.analyzeCulturalPatterns(previousInteractions);
 
       const culturalProfile: CulturalProfile = {
-        primaryCulture: profileCulture.primary || culturalIndicators.primary || 'universal',
-        culturalIdentities: [...new Set([
-          ...profileCulture.identities,
-          ...culturalIndicators.identities,
-          ...interactionPatterns.identities
-        ])],
-        languagePreferences: profileCulture.languages || ['english'],
+        primaryCulture:
+          profileCulture.primary || culturalIndicators.primary || "universal",
+        culturalIdentities: [
+          ...new Set([
+            ...profileCulture.identities,
+            ...culturalIndicators.identities,
+            ...interactionPatterns.identities,
+          ]),
+        ],
+        languagePreferences: profileCulture.languages || ["english"],
         traditionalPractices: culturalIndicators.practices,
-        spiritualFramework: culturalIndicators.spiritualFramework || 'universal',
+        spiritualFramework:
+          culturalIndicators.spiritualFramework || "universal",
         ancestralLineages: profileCulture.lineages || [],
-        culturalTrauma: await this.assessCulturalTrauma(culturalIndicators, profileCulture),
+        culturalTrauma: await this.assessCulturalTrauma(
+          culturalIndicators,
+          profileCulture,
+        ),
         culturalStrengths: this.identifyCulturalStrengths(culturalIndicators),
-        preferredWisdomSources: this.identifyWisdomPreferences(culturalIndicators)
+        preferredWisdomSources:
+          this.identifyWisdomPreferences(culturalIndicators),
       };
 
-      logger.info('Cultural context detected', {
+      logger.info("Cultural context detected", {
         primaryCulture: culturalProfile.primaryCulture,
         identitiesCount: culturalProfile.culturalIdentities.length,
-        spiritualFramework: culturalProfile.spiritualFramework
+        spiritualFramework: culturalProfile.spiritualFramework,
       });
 
       return culturalProfile;
-
     } catch (error) {
-      logger.error('Error detecting cultural context:', error);
+      logger.error("Error detecting cultural context:", error);
       return this.getUniversalCulturalProfile();
     }
   }
@@ -138,17 +162,23 @@ export class CulturalContextAwareness {
   async adaptToCulturalContext(
     originalGuidance: string,
     culturalProfile: CulturalProfile,
-    requestedElement: string
-  ): Promise<{adaptedGuidance: string; culturalAdaptation: CulturalAdaptation}> {
-
-    const culturalAdaptation = await this.createCulturalAdaptation(culturalProfile);
-    const elementArchetype = this.getElementalArchetype(requestedElement, culturalProfile.primaryCulture);
+    requestedElement: string,
+  ): Promise<{
+    adaptedGuidance: string;
+    culturalAdaptation: CulturalAdaptation;
+  }> {
+    const culturalAdaptation =
+      await this.createCulturalAdaptation(culturalProfile);
+    const elementArchetype = this.getElementalArchetype(
+      requestedElement,
+      culturalProfile.primaryCulture,
+    );
 
     const adaptedGuidance = await this.adaptGuidanceLanguage(
       originalGuidance,
       culturalProfile,
       elementArchetype,
-      culturalAdaptation
+      culturalAdaptation,
     );
 
     return { adaptedGuidance, culturalAdaptation };
@@ -160,54 +190,69 @@ export class CulturalContextAwareness {
   async validateCulturalWisdomSharing(
     tradition: string,
     content: string,
-    userProfile: CulturalProfile
-  ): Promise<{permitted: boolean; guidance?: string; adaptedContent?: string}> {
-
+    userProfile: CulturalProfile,
+  ): Promise<{
+    permitted: boolean;
+    guidance?: string;
+    adaptedContent?: string;
+  }> {
     // Check indigenous sovereignty protocols
     const wisdomRequest: IndigenousWisdomRequest = {
       tradition,
       userCulturalBackground: userProfile.primaryCulture,
-      intentionForUse: 'spiritual_growth'
+      intentionForUse: "spiritual_growth",
     };
 
-    const protocolResult = await indigenousSovereigntyProtocol.evaluateWisdomRequest(wisdomRequest);
+    const protocolResult =
+      await indigenousSovereigntyProtocol.evaluateWisdomRequest(wisdomRequest);
 
     if (!protocolResult.permitted) {
       return {
         permitted: false,
-        guidance: protocolResult.culturalGuidance || 'This wisdom requires cultural protocols.'
+        guidance:
+          protocolResult.culturalGuidance ||
+          "This wisdom requires cultural protocols.",
       };
     }
 
     // Adapt content for cultural context
-    const adaptedContent = await this.adaptWisdomContent(content, userProfile, tradition);
+    const adaptedContent = await this.adaptWisdomContent(
+      content,
+      userProfile,
+      tradition,
+    );
 
     return {
       permitted: true,
       guidance: protocolResult.culturalGuidance,
-      adaptedContent
+      adaptedContent,
     };
   }
 
   /**
    * Create comprehensive cultural adaptation
    */
-  private async createCulturalAdaptation(culturalProfile: CulturalProfile): Promise<CulturalAdaptation> {
-    const archetypalMapping = this.culturalArchetypeRegistry.get(culturalProfile.primaryCulture) ||
-                             this.getUniversalArchetypalMapping();
+  private async createCulturalAdaptation(
+    culturalProfile: CulturalProfile,
+  ): Promise<CulturalAdaptation> {
+    const archetypalMapping =
+      this.culturalArchetypeRegistry.get(culturalProfile.primaryCulture) ||
+      this.getUniversalArchetypalMapping();
 
-    const healingGuidance = this.culturalHealingRegistry.get(culturalProfile.primaryCulture) ||
-                           this.getUniversalHealingGuidance();
+    const healingGuidance =
+      this.culturalHealingRegistry.get(culturalProfile.primaryCulture) ||
+      this.getUniversalHealingGuidance();
 
-    const communicationStyle = this.culturalCommunicationStyles.get(culturalProfile.primaryCulture) ||
-                              this.getUniversalCommunicationStyle();
+    const communicationStyle =
+      this.culturalCommunicationStyles.get(culturalProfile.primaryCulture) ||
+      this.getUniversalCommunicationStyle();
 
     return {
       archetypalMapping,
       wisdomSourcePreferences: culturalProfile.preferredWisdomSources,
       communicationStyle,
       practiceRecommendations: this.generateCulturalPractices(culturalProfile),
-      culturalHealing: healingGuidance
+      culturalHealing: healingGuidance,
     };
   }
 
@@ -218,22 +263,75 @@ export class CulturalContextAwareness {
     const lowerInput = userInput.toLowerCase();
 
     const culturalKeywords = {
-      native_american: ['medicine wheel', 'four directions', 'eagle', 'sage', 'ceremony', 'tribal', 'nation'],
-      african: ['ancestors', 'ubuntu', 'orisha', 'ancestral', 'community', 'elder'],
-      celtic: ['druid', 'celtic', 'irish', 'scottish', 'nature spirits', 'tree of life'],
-      asian: ['qi', 'chi', 'yin yang', 'balance', 'harmony', 'meditation', 'mindfulness'],
-      hindu: ['dharma', 'karma', 'chakra', 'om', 'yoga', 'vedic', 'sanskrit'],
-      buddhist: ['meditation', 'mindfulness', 'compassion', 'buddha', 'dharma', 'sangha'],
-      islamic: ['allah', 'peace', 'submission', 'prayer', 'community', 'brotherhood'],
-      judaic: ['tikkun olam', 'community', 'study', 'tradition', 'wisdom', 'covenant']
+      native_american: [
+        "medicine wheel",
+        "four directions",
+        "eagle",
+        "sage",
+        "ceremony",
+        "tribal",
+        "nation",
+      ],
+      african: [
+        "ancestors",
+        "ubuntu",
+        "orisha",
+        "ancestral",
+        "community",
+        "elder",
+      ],
+      celtic: [
+        "druid",
+        "celtic",
+        "irish",
+        "scottish",
+        "nature spirits",
+        "tree of life",
+      ],
+      asian: [
+        "qi",
+        "chi",
+        "yin yang",
+        "balance",
+        "harmony",
+        "meditation",
+        "mindfulness",
+      ],
+      hindu: ["dharma", "karma", "chakra", "om", "yoga", "vedic", "sanskrit"],
+      buddhist: [
+        "meditation",
+        "mindfulness",
+        "compassion",
+        "buddha",
+        "dharma",
+        "sangha",
+      ],
+      islamic: [
+        "allah",
+        "peace",
+        "submission",
+        "prayer",
+        "community",
+        "brotherhood",
+      ],
+      judaic: [
+        "tikkun olam",
+        "community",
+        "study",
+        "tradition",
+        "wisdom",
+        "covenant",
+      ],
     };
 
     const detectedCultures = [];
     const detectedPractices = [];
-    let spiritualFramework = 'universal';
+    let spiritualFramework = "universal";
 
     for (const [culture, keywords] of Object.entries(culturalKeywords)) {
-      const matches = keywords.filter(keyword => lowerInput.includes(keyword));
+      const matches = keywords.filter((keyword) =>
+        lowerInput.includes(keyword),
+      );
       if (matches.length > 0) {
         detectedCultures.push(culture);
         detectedPractices.push(...matches);
@@ -247,7 +345,7 @@ export class CulturalContextAwareness {
       primary: detectedCultures[0],
       identities: detectedCultures,
       practices: detectedPractices,
-      spiritualFramework
+      spiritualFramework,
     };
   }
 
@@ -256,14 +354,19 @@ export class CulturalContextAwareness {
    */
   private extractProfileCulture(userProfile?: any): any {
     if (!userProfile) {
-      return { primary: null, identities: [], languages: ['english'], lineages: [] };
+      return {
+        primary: null,
+        identities: [],
+        languages: ["english"],
+        lineages: [],
+      };
     }
 
     return {
       primary: userProfile.culturalBackground || userProfile.ethnicity,
       identities: userProfile.culturalIdentities || [],
-      languages: userProfile.preferredLanguages || ['english'],
-      lineages: userProfile.ancestralLineages || []
+      languages: userProfile.preferredLanguages || ["english"],
+      lineages: userProfile.ancestralLineages || [],
     };
   }
 
@@ -282,27 +385,73 @@ export class CulturalContextAwareness {
   /**
    * Assess potential cultural trauma context
    */
-  private async assessCulturalTrauma(culturalIndicators: any, profileCulture: any): Promise<CulturalTraumaContext | undefined> {
+  private async assessCulturalTrauma(
+    culturalIndicators: any,
+    profileCulture: any,
+  ): Promise<CulturalTraumaContext | undefined> {
     const culturalTraumaPatterns = {
       native_american: {
-        historicalTrauma: ['boarding schools', 'land dispossession', 'cultural suppression'],
-        intergenerationalPatterns: ['disconnection from tradition', 'language loss', 'spiritual suppression'],
-        culturalSuppression: ['ceremony prohibition', 'language prohibition', 'traditional practice suppression'],
-        identityReclamationNeeds: ['cultural reconnection', 'language reclamation', 'traditional practice revival'],
-        healingApproaches: ['ceremony', 'community healing', 'cultural education', 'land connection']
+        historicalTrauma: [
+          "boarding schools",
+          "land dispossession",
+          "cultural suppression",
+        ],
+        intergenerationalPatterns: [
+          "disconnection from tradition",
+          "language loss",
+          "spiritual suppression",
+        ],
+        culturalSuppression: [
+          "ceremony prohibition",
+          "language prohibition",
+          "traditional practice suppression",
+        ],
+        identityReclamationNeeds: [
+          "cultural reconnection",
+          "language reclamation",
+          "traditional practice revival",
+        ],
+        healingApproaches: [
+          "ceremony",
+          "community healing",
+          "cultural education",
+          "land connection",
+        ],
       },
       african_american: {
-        historicalTrauma: ['slavery', 'segregation', 'systemic oppression'],
-        intergenerationalPatterns: ['cultural disconnection', 'ancestral knowledge loss', 'community fragmentation'],
-        culturalSuppression: ['spiritual practice suppression', 'cultural identity denial', 'ancestral connection loss'],
-        identityReclamationNeeds: ['ancestral connection', 'cultural pride', 'community healing'],
-        healingApproaches: ['community gathering', 'ancestral honoring', 'cultural celebration', 'storytelling']
-      }
+        historicalTrauma: ["slavery", "segregation", "systemic oppression"],
+        intergenerationalPatterns: [
+          "cultural disconnection",
+          "ancestral knowledge loss",
+          "community fragmentation",
+        ],
+        culturalSuppression: [
+          "spiritual practice suppression",
+          "cultural identity denial",
+          "ancestral connection loss",
+        ],
+        identityReclamationNeeds: [
+          "ancestral connection",
+          "cultural pride",
+          "community healing",
+        ],
+        healingApproaches: [
+          "community gathering",
+          "ancestral honoring",
+          "cultural celebration",
+          "storytelling",
+        ],
+      },
     };
 
     const primary = culturalIndicators.primary || profileCulture.primary;
-    if (primary && culturalTraumaPatterns[primary as keyof typeof culturalTraumaPatterns]) {
-      return culturalTraumaPatterns[primary as keyof typeof culturalTraumaPatterns];
+    if (
+      primary &&
+      culturalTraumaPatterns[primary as keyof typeof culturalTraumaPatterns]
+    ) {
+      return culturalTraumaPatterns[
+        primary as keyof typeof culturalTraumaPatterns
+      ];
     }
 
     return undefined;
@@ -313,16 +462,48 @@ export class CulturalContextAwareness {
    */
   private identifyCulturalStrengths(culturalIndicators: any): string[] {
     const culturalStrengths = {
-      native_american: ['connection to nature', 'community wisdom', 'ceremonial healing', 'ancestral guidance'],
-      african: ['community support', 'ancestral wisdom', 'rhythmic healing', 'collective strength'],
-      celtic: ['nature connection', 'storytelling wisdom', 'seasonal awareness', 'mystical insight'],
-      asian: ['balance philosophy', 'mindfulness practice', 'harmony seeking', 'elder respect'],
-      hindu: ['spiritual discipline', 'cosmic perspective', 'ethical framework', 'devotional practice'],
-      buddhist: ['compassion cultivation', 'mindfulness mastery', 'suffering transformation', 'wisdom seeking']
+      native_american: [
+        "connection to nature",
+        "community wisdom",
+        "ceremonial healing",
+        "ancestral guidance",
+      ],
+      african: [
+        "community support",
+        "ancestral wisdom",
+        "rhythmic healing",
+        "collective strength",
+      ],
+      celtic: [
+        "nature connection",
+        "storytelling wisdom",
+        "seasonal awareness",
+        "mystical insight",
+      ],
+      asian: [
+        "balance philosophy",
+        "mindfulness practice",
+        "harmony seeking",
+        "elder respect",
+      ],
+      hindu: [
+        "spiritual discipline",
+        "cosmic perspective",
+        "ethical framework",
+        "devotional practice",
+      ],
+      buddhist: [
+        "compassion cultivation",
+        "mindfulness mastery",
+        "suffering transformation",
+        "wisdom seeking",
+      ],
     };
 
     const primary = culturalIndicators.primary;
-    return primary ? (culturalStrengths[primary as keyof typeof culturalStrengths] || []) : [];
+    return primary
+      ? culturalStrengths[primary as keyof typeof culturalStrengths] || []
+      : [];
   }
 
   /**
@@ -332,17 +513,25 @@ export class CulturalContextAwareness {
     originalGuidance: string,
     culturalProfile: CulturalProfile,
     elementArchetype: CulturalArchetype,
-    culturalAdaptation: CulturalAdaptation
+    culturalAdaptation: CulturalAdaptation,
   ): Promise<string> {
-
     let adaptedGuidance = originalGuidance;
 
     // Replace archetypal references with cultural equivalents
-    adaptedGuidance = adaptedGuidance.replace(/fire energy/gi, `${elementArchetype.traditionalRole} energy`);
-    adaptedGuidance = adaptedGuidance.replace(/fire archetype/gi, elementArchetype.culturalName);
+    adaptedGuidance = adaptedGuidance.replace(
+      /fire energy/gi,
+      `${elementArchetype.traditionalRole} energy`,
+    );
+    adaptedGuidance = adaptedGuidance.replace(
+      /fire archetype/gi,
+      elementArchetype.culturalName,
+    );
 
     // Adapt communication style
-    if (culturalAdaptation.communicationStyle.storytellingPreference === 'ancestral') {
+    if (
+      culturalAdaptation.communicationStyle.storytellingPreference ===
+      "ancestral"
+    ) {
       adaptedGuidance = `Your ancestors knew this wisdom: ${adaptedGuidance}`;
     }
 
@@ -359,52 +548,74 @@ export class CulturalContextAwareness {
    */
   private initializeCulturalArchetypes(): void {
     // Native American archetypal mapping
-    this.culturalArchetypeRegistry.set('native_american', {
+    this.culturalArchetypeRegistry.set("native_american", {
       fireElement: {
-        culturalName: 'Thunder Being',
-        traditionalRole: 'Vision Keeper',
-        attributes: ['catalytic power', 'sacred fire', 'lightning medicine', 'transformation'],
-        modernExpression: 'Visionary leader who brings necessary change',
-        shadowAspects: ['destructive anger', 'burnout from fighting'],
-        healingGifts: ['breakthrough medicine', 'illumination', 'courage']
+        culturalName: "Thunder Being",
+        traditionalRole: "Vision Keeper",
+        attributes: [
+          "catalytic power",
+          "sacred fire",
+          "lightning medicine",
+          "transformation",
+        ],
+        modernExpression: "Visionary leader who brings necessary change",
+        shadowAspects: ["destructive anger", "burnout from fighting"],
+        healingGifts: ["breakthrough medicine", "illumination", "courage"],
       },
       waterElement: {
-        culturalName: 'Water Spirit',
-        traditionalRole: 'Healer',
-        attributes: ['emotional flow', 'healing waters', 'intuitive wisdom', 'cleansing'],
-        modernExpression: 'Emotional healer who brings flowing wisdom',
-        shadowAspects: ['overwhelming emotions', 'drowning in feelings'],
-        healingGifts: ['emotional healing', 'intuitive guidance', 'cleansing ritual']
+        culturalName: "Water Spirit",
+        traditionalRole: "Healer",
+        attributes: [
+          "emotional flow",
+          "healing waters",
+          "intuitive wisdom",
+          "cleansing",
+        ],
+        modernExpression: "Emotional healer who brings flowing wisdom",
+        shadowAspects: ["overwhelming emotions", "drowning in feelings"],
+        healingGifts: [
+          "emotional healing",
+          "intuitive guidance",
+          "cleansing ritual",
+        ],
       },
       earthElement: {
-        culturalName: 'Earth Keeper',
-        traditionalRole: 'Provider',
-        attributes: ['grounding', 'abundance', 'practical wisdom', 'stability'],
-        modernExpression: 'Practical wisdom keeper who manifests abundance',
-        shadowAspects: ['stubbornness', 'material attachment'],
-        healingGifts: ['grounding medicine', 'abundance creation', 'stability']
+        culturalName: "Earth Keeper",
+        traditionalRole: "Provider",
+        attributes: ["grounding", "abundance", "practical wisdom", "stability"],
+        modernExpression: "Practical wisdom keeper who manifests abundance",
+        shadowAspects: ["stubbornness", "material attachment"],
+        healingGifts: ["grounding medicine", "abundance creation", "stability"],
       },
       airElement: {
-        culturalName: 'Wind Walker',
-        traditionalRole: 'Messenger',
-        attributes: ['communication', 'clarity', 'perspective', 'movement'],
-        modernExpression: 'Clear communicator who brings new perspective',
-        shadowAspects: ['scattered thinking', 'gossip'],
-        healingGifts: ['clear communication', 'perspective medicine', 'mental clarity']
+        culturalName: "Wind Walker",
+        traditionalRole: "Messenger",
+        attributes: ["communication", "clarity", "perspective", "movement"],
+        modernExpression: "Clear communicator who brings new perspective",
+        shadowAspects: ["scattered thinking", "gossip"],
+        healingGifts: [
+          "clear communication",
+          "perspective medicine",
+          "mental clarity",
+        ],
       },
       aetherElement: {
-        culturalName: 'Sacred Hoop',
-        traditionalRole: 'Medicine Keeper',
-        attributes: ['unity', 'wholeness', 'sacred circle', 'integration'],
-        modernExpression: 'Sacred integration that honors all relations',
-        shadowAspects: ['spiritual bypassing', 'disconnection'],
-        healingGifts: ['sacred integration', 'wholeness medicine', 'unity consciousness']
-      }
+        culturalName: "Sacred Hoop",
+        traditionalRole: "Medicine Keeper",
+        attributes: ["unity", "wholeness", "sacred circle", "integration"],
+        modernExpression: "Sacred integration that honors all relations",
+        shadowAspects: ["spiritual bypassing", "disconnection"],
+        healingGifts: [
+          "sacred integration",
+          "wholeness medicine",
+          "unity consciousness",
+        ],
+      },
     });
 
     // Add more cultural mappings...
-    logger.info('Cultural archetype registry initialized', {
-      cultures: this.culturalArchetypeRegistry.size
+    logger.info("Cultural archetype registry initialized", {
+      cultures: this.culturalArchetypeRegistry.size,
     });
   }
 
@@ -412,35 +623,55 @@ export class CulturalContextAwareness {
    * Initialize cultural healing modalities
    */
   private initializeCulturalHealing(): void {
-    this.culturalHealingRegistry.set('native_american', {
-      traditionalModalities: ['smudging', 'sweat lodge', 'vision quest', 'talking circle'],
-      modernIntegrations: ['nature therapy', 'community healing', 'cultural reclamation'],
-      communityApproaches: ['healing circles', 'elder guidance', 'ceremony'],
-      individualPractices: ['daily gratitude', 'nature connection', 'ancestor honoring'],
-      tabooAreas: ['sacred medicine names', 'closed ceremonies', 'protected teachings']
+    this.culturalHealingRegistry.set("native_american", {
+      traditionalModalities: [
+        "smudging",
+        "sweat lodge",
+        "vision quest",
+        "talking circle",
+      ],
+      modernIntegrations: [
+        "nature therapy",
+        "community healing",
+        "cultural reclamation",
+      ],
+      communityApproaches: ["healing circles", "elder guidance", "ceremony"],
+      individualPractices: [
+        "daily gratitude",
+        "nature connection",
+        "ancestor honoring",
+      ],
+      tabooAreas: [
+        "sacred medicine names",
+        "closed ceremonies",
+        "protected teachings",
+      ],
     });
 
-    logger.info('Cultural healing registry initialized');
+    logger.info("Cultural healing registry initialized");
   }
 
   /**
    * Initialize communication styles
    */
   private initializeCommunicationStyles(): void {
-    this.culturalCommunicationStyles.set('native_american', {
-      directnessLevel: 'indirect',
-      storytellingPreference: 'ancestral',
-      authorityStructure: 'elder_based',
-      emotionalExpression: 'ceremonial'
+    this.culturalCommunicationStyles.set("native_american", {
+      directnessLevel: "indirect",
+      storytellingPreference: "ancestral",
+      authorityStructure: "elder_based",
+      emotionalExpression: "ceremonial",
     });
 
-    logger.info('Cultural communication styles initialized');
+    logger.info("Cultural communication styles initialized");
   }
 
   /**
    * Get elemental archetype for culture
    */
-  private getElementalArchetype(element: string, culture: string): CulturalArchetype {
+  private getElementalArchetype(
+    element: string,
+    culture: string,
+  ): CulturalArchetype {
     const mapping = this.culturalArchetypeRegistry.get(culture);
     if (!mapping) return this.getUniversalArchetype(element);
 
@@ -454,16 +685,19 @@ export class CulturalContextAwareness {
   private getUniversalArchetype(element: string): CulturalArchetype {
     const universalArchetypes = {
       fire: {
-        culturalName: 'Fire Spirit',
-        traditionalRole: 'Catalyst',
-        attributes: ['transformation', 'energy', 'inspiration', 'action'],
-        modernExpression: 'Transformational leader',
-        shadowAspects: ['burnout', 'aggression'],
-        healingGifts: ['inspiration', 'breakthrough', 'energy']
-      }
+        culturalName: "Fire Spirit",
+        traditionalRole: "Catalyst",
+        attributes: ["transformation", "energy", "inspiration", "action"],
+        modernExpression: "Transformational leader",
+        shadowAspects: ["burnout", "aggression"],
+        healingGifts: ["inspiration", "breakthrough", "energy"],
+      },
     };
 
-    return universalArchetypes[element as keyof typeof universalArchetypes] || universalArchetypes.fire;
+    return (
+      universalArchetypes[element as keyof typeof universalArchetypes] ||
+      universalArchetypes.fire
+    );
   }
 
   /**
@@ -471,56 +705,71 @@ export class CulturalContextAwareness {
    */
   private getUniversalCulturalProfile(): CulturalProfile {
     return {
-      primaryCulture: 'universal',
-      culturalIdentities: ['universal'],
-      languagePreferences: ['english'],
+      primaryCulture: "universal",
+      culturalIdentities: ["universal"],
+      languagePreferences: ["english"],
       traditionalPractices: [],
-      spiritualFramework: 'universal',
+      spiritualFramework: "universal",
       ancestralLineages: [],
-      culturalStrengths: ['adaptability', 'openness', 'integration'],
-      preferredWisdomSources: ['universal wisdom', 'personal experience']
+      culturalStrengths: ["adaptability", "openness", "integration"],
+      preferredWisdomSources: ["universal wisdom", "personal experience"],
     };
   }
 
   private getUniversalArchetypalMapping(): ArchetypalCulturalMapping {
     return {
-      fireElement: this.getUniversalArchetype('fire'),
-      waterElement: this.getUniversalArchetype('water'),
-      earthElement: this.getUniversalArchetype('earth'),
-      airElement: this.getUniversalArchetype('air'),
-      aetherElement: this.getUniversalArchetype('aether')
+      fireElement: this.getUniversalArchetype("fire"),
+      waterElement: this.getUniversalArchetype("water"),
+      earthElement: this.getUniversalArchetype("earth"),
+      airElement: this.getUniversalArchetype("air"),
+      aetherElement: this.getUniversalArchetype("aether"),
     };
   }
 
   private getUniversalHealingGuidance(): CulturalHealingGuidance {
     return {
-      traditionalModalities: ['meditation', 'breathing', 'journaling', 'nature connection'],
-      modernIntegrations: ['therapy', 'coaching', 'support groups'],
-      communityApproaches: ['group sharing', 'peer support'],
-      individualPractices: ['self-reflection', 'mindfulness', 'personal ritual'],
-      tabooAreas: []
+      traditionalModalities: [
+        "meditation",
+        "breathing",
+        "journaling",
+        "nature connection",
+      ],
+      modernIntegrations: ["therapy", "coaching", "support groups"],
+      communityApproaches: ["group sharing", "peer support"],
+      individualPractices: [
+        "self-reflection",
+        "mindfulness",
+        "personal ritual",
+      ],
+      tabooAreas: [],
     };
   }
 
   private getUniversalCommunicationStyle(): CommunicationStyleAdaptation {
     return {
-      directnessLevel: 'direct',
-      storytellingPreference: 'contemporary',
-      authorityStructure: 'egalitarian',
-      emotionalExpression: 'open'
+      directnessLevel: "direct",
+      storytellingPreference: "contemporary",
+      authorityStructure: "egalitarian",
+      emotionalExpression: "open",
     };
   }
 
-  private generateCulturalPractices(culturalProfile: CulturalProfile): string[] {
+  private generateCulturalPractices(
+    culturalProfile: CulturalProfile,
+  ): string[] {
     // Generate culturally appropriate practices
-    return ['daily reflection', 'gratitude practice', 'nature connection'];
+    return ["daily reflection", "gratitude practice", "nature connection"];
   }
 
   private identifyWisdomPreferences(culturalIndicators: any): string[] {
-    return ['personal experience', 'community wisdom', 'traditional teachings'];
+    return ["personal experience", "community wisdom", "traditional teachings"];
   }
 
-  private async adaptWisdomContent(content: string, userProfile: CulturalProfile, tradition: string): Promise<string> {
+  private async adaptWisdomContent(
+    content: string,
+    userProfile: CulturalProfile,
+    tradition: string,
+  ): Promise<string> {
     // Adapt wisdom content for cultural appropriateness
     return content;
   }

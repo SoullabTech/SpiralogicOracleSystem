@@ -1,19 +1,19 @@
 // 🌐 Agent-to-Agent Communication Protocol
 // Enables collective intelligence through inter-agent wisdom sharing
 
-import { logger } from '../../../utils/logger';
-import { supabase } from '../../../services/supabaseClient';
+import { logger } from "../../../utils/logger";
+import { supabase } from "../../../services/supabaseClient";
 
 export interface AgentMessage {
   from: string;
   to: string;
-  type: 'wisdom' | 'pattern' | 'request' | 'update' | 'broadcast';
+  type: "wisdom" | "pattern" | "request" | "update" | "broadcast";
   content: string;
   context?: {
     userId?: string;
     element?: string;
     pattern?: string;
-    urgency?: 'low' | 'medium' | 'high';
+    urgency?: "low" | "medium" | "high";
     [key: string]: any;
   };
   timestamp: string;
@@ -33,7 +33,11 @@ export interface AgentWisdomExchange {
 
 export interface AgentLearning {
   agent_name: string;
-  learning_type: 'pattern_recognition' | 'wisdom_integration' | 'user_feedback' | 'collective_insight';
+  learning_type:
+    | "pattern_recognition"
+    | "wisdom_integration"
+    | "user_feedback"
+    | "collective_insight";
   content: string;
   integration_successful: boolean;
   impact_metrics: {
@@ -53,8 +57,16 @@ export class AgentCommunicationProtocol {
 
   private constructor() {
     // Initialize message queues for each agent
-    const agents = ['FireAgent', 'WaterAgent', 'EarthAgent', 'AirAgent', 'AetherAgent', 'ShadowAgent', 'MainOracleAgent'];
-    agents.forEach(agent => {
+    const agents = [
+      "FireAgent",
+      "WaterAgent",
+      "EarthAgent",
+      "AirAgent",
+      "AetherAgent",
+      "ShadowAgent",
+      "MainOracleAgent",
+    ];
+    agents.forEach((agent) => {
       this.messageQueue.set(agent, []);
       this.wisdomRepository.set(agent, []);
     });
@@ -86,24 +98,23 @@ export class AgentCommunicationProtocol {
       this.messageQueue.set(message.to, queue);
 
       // If it's a wisdom exchange, store it
-      if (message.type === 'wisdom' || message.type === 'pattern') {
+      if (message.type === "wisdom" || message.type === "pattern") {
         await this.storeWisdomExchange(message);
       }
 
       // If it's a broadcast, add to broadcast channel
-      if (message.type === 'broadcast') {
+      if (message.type === "broadcast") {
         this.addToBroadcastChannel(message);
       }
 
-      logger.info('Agent message sent', {
+      logger.info("Agent message sent", {
         from: message.from,
         to: message.to,
         type: message.type,
-        timestamp: message.timestamp
+        timestamp: message.timestamp,
       });
-
     } catch (error) {
-      logger.error('Error sending agent message:', error);
+      logger.error("Error sending agent message:", error);
       throw error;
     }
   }
@@ -117,14 +128,16 @@ export class AgentCommunicationProtocol {
   }
 
   // Broadcast a message to all agents
-  async broadcast(message: Omit<AgentMessage, 'to'>): Promise<void> {
-    const agents = Array.from(this.messageQueue.keys()).filter(agent => agent !== message.from);
+  async broadcast(message: Omit<AgentMessage, "to">): Promise<void> {
+    const agents = Array.from(this.messageQueue.keys()).filter(
+      (agent) => agent !== message.from,
+    );
 
     for (const agent of agents) {
       await this.sendMessage({
         ...message,
         to: agent,
-        type: 'broadcast'
+        type: "broadcast",
       });
     }
   }
@@ -142,7 +155,7 @@ export class AgentCommunicationProtocol {
       };
 
       const { error } = await supabase
-        .from('agent_wisdom_exchanges')
+        .from("agent_wisdom_exchanges")
         .insert(exchange);
 
       if (error) throw error;
@@ -151,39 +164,44 @@ export class AgentCommunicationProtocol {
       const repo = this.wisdomRepository.get(message.to) || [];
       repo.push(exchange);
       this.wisdomRepository.set(message.to, repo);
-
     } catch (error) {
-      logger.error('Error storing wisdom exchange:', error);
+      logger.error("Error storing wisdom exchange:", error);
     }
   }
 
   // Get relevant wisdom for an agent based on context
-  async getRelevantWisdom(agentName: string, context: any): Promise<AgentWisdomExchange[]> {
+  async getRelevantWisdom(
+    agentName: string,
+    context: any,
+  ): Promise<AgentWisdomExchange[]> {
     try {
       // Query from database for persistent wisdom
       const { data, error } = await supabase
-        .from('agent_wisdom_exchanges')
-        .select('*')
-        .eq('to_agent', agentName)
-        .gte('relevance_score', this.learningThreshold)
-        .order('relevance_score', { ascending: false })
+        .from("agent_wisdom_exchanges")
+        .select("*")
+        .eq("to_agent", agentName)
+        .gte("relevance_score", this.learningThreshold)
+        .order("relevance_score", { ascending: false })
         .limit(10);
 
       if (error) throw error;
 
       // Filter based on context relevance
-      const relevantWisdom = data?.filter(wisdom => {
-        // Context matching logic
-        if (context.element && wisdom.context.element === context.element) return true;
-        if (context.pattern && wisdom.context.pattern === context.pattern) return true;
-        if (context.userId && wisdom.context.userId === context.userId) return true;
-        return wisdom.relevance_score > 0.8; // High general relevance
-      }) || [];
+      const relevantWisdom =
+        data?.filter((wisdom) => {
+          // Context matching logic
+          if (context.element && wisdom.context.element === context.element)
+            return true;
+          if (context.pattern && wisdom.context.pattern === context.pattern)
+            return true;
+          if (context.userId && wisdom.context.userId === context.userId)
+            return true;
+          return wisdom.relevance_score > 0.8; // High general relevance
+        }) || [];
 
       return relevantWisdom;
-
     } catch (error) {
-      logger.error('Error retrieving relevant wisdom:', error);
+      logger.error("Error retrieving relevant wisdom:", error);
       return [];
     }
   }
@@ -191,31 +209,31 @@ export class AgentCommunicationProtocol {
   // Log agent learning for evolution tracking
   async logLearning(learning: AgentLearning): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('agent_learning_log')
-        .insert({
-          agent_name: learning.agent_name,
-          learning_type: learning.learning_type,
-          content: learning.content,
-          integration_successful: learning.integration_successful,
-          impact_metrics: learning.impact_metrics
-        });
+      const { error } = await supabase.from("agent_learning_log").insert({
+        agent_name: learning.agent_name,
+        learning_type: learning.learning_type,
+        content: learning.content,
+        integration_successful: learning.integration_successful,
+        impact_metrics: learning.impact_metrics,
+      });
 
       if (error) throw error;
 
-      logger.info('Agent learning logged', {
+      logger.info("Agent learning logged", {
         agent: learning.agent_name,
         type: learning.learning_type,
-        success: learning.integration_successful
+        success: learning.integration_successful,
       });
-
     } catch (error) {
-      logger.error('Error logging agent learning:', error);
+      logger.error("Error logging agent learning:", error);
     }
   }
 
   // Calculate relevance score for wisdom exchange
-  calculateRelevanceScore(message: AgentMessage, recipientContext: any): number {
+  calculateRelevanceScore(
+    message: AgentMessage,
+    recipientContext: any,
+  ): number {
     let score = 0.5; // Base score
 
     // Element match
@@ -224,12 +242,15 @@ export class AgentCommunicationProtocol {
     }
 
     // Pattern similarity
-    if (message.context?.pattern && recipientContext.patterns?.includes(message.context.pattern)) {
+    if (
+      message.context?.pattern &&
+      recipientContext.patterns?.includes(message.context.pattern)
+    ) {
       score += 0.2;
     }
 
     // Urgency factor
-    if (message.context?.urgency === 'high') {
+    if (message.context?.urgency === "high") {
       score += 0.1;
     }
 
@@ -259,7 +280,9 @@ export class AgentCommunicationProtocol {
 
     // Maintain size limit
     if (this.broadcastChannel.length > this.maxBroadcastSize) {
-      this.broadcastChannel = this.broadcastChannel.slice(-this.maxBroadcastSize);
+      this.broadcastChannel = this.broadcastChannel.slice(
+        -this.maxBroadcastSize,
+      );
     }
   }
 
@@ -278,15 +301,15 @@ export class AgentCommunicationProtocol {
       await this.sendMessage({
         from: pattern.discoveredBy,
         to: agent,
-        type: 'pattern',
+        type: "pattern",
         content: `New pattern discovered: ${pattern.wisdom}`,
         context: {
           pattern_id: pattern.pattern_id,
           elements: pattern.elements,
           strength: pattern.strength,
-          urgency: pattern.strength > 0.8 ? 'high' : 'medium'
+          urgency: pattern.strength > 0.8 ? "high" : "medium",
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
 
@@ -294,14 +317,14 @@ export class AgentCommunicationProtocol {
     if (pattern.strength > 0.85) {
       await this.broadcast({
         from: pattern.discoveredBy,
-        type: 'broadcast',
+        type: "broadcast",
         content: `Significant pattern discovered: ${pattern.wisdom}`,
         context: {
           pattern_id: pattern.pattern_id,
           elements: pattern.elements,
-          strength: pattern.strength
+          strength: pattern.strength,
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
@@ -309,71 +332,78 @@ export class AgentCommunicationProtocol {
   // Determine which agents are interested in specific elements
   private determineInterestedAgents(elements: string[]): string[] {
     const elementAgentMap: Record<string, string> = {
-      fire: 'FireAgent',
-      water: 'WaterAgent',
-      earth: 'EarthAgent',
-      air: 'AirAgent',
-      aether: 'AetherAgent',
-      shadow: 'ShadowAgent'
+      fire: "FireAgent",
+      water: "WaterAgent",
+      earth: "EarthAgent",
+      air: "AirAgent",
+      aether: "AetherAgent",
+      shadow: "ShadowAgent",
     };
 
     const agents = new Set<string>();
 
     // Add elemental agents
-    elements.forEach(element => {
+    elements.forEach((element) => {
       const agent = elementAgentMap[element];
       if (agent) agents.add(agent);
     });
 
     // Always include MainOracleAgent for oversight
-    agents.add('MainOracleAgent');
+    agents.add("MainOracleAgent");
 
     // Include AetherAgent for multi-element patterns
     if (elements.length > 1) {
-      agents.add('AetherAgent');
+      agents.add("AetherAgent");
     }
 
     // Include ShadowAgent for complex patterns
     if (elements.length > 2) {
-      agents.add('ShadowAgent');
+      agents.add("ShadowAgent");
     }
 
     return Array.from(agents);
   }
 
   // Request wisdom from other agents
-  async requestWisdom(requestingAgent: string, topic: string, context: any): Promise<AgentWisdomExchange[]> {
+  async requestWisdom(
+    requestingAgent: string,
+    topic: string,
+    context: any,
+  ): Promise<AgentWisdomExchange[]> {
     // Send request to all agents
     await this.broadcast({
       from: requestingAgent,
-      type: 'request',
+      type: "request",
       content: `Requesting wisdom on: ${topic}`,
       context: {
         ...context,
         topic,
-        urgency: 'medium'
+        urgency: "medium",
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // Wait a moment for responses
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Collect relevant wisdom from repository
     return this.getRelevantWisdom(requestingAgent, { ...context, topic });
   }
 
   // Update agent capabilities based on learning
-  async updateAgentCapabilities(agentName: string, newCapability: string): Promise<void> {
+  async updateAgentCapabilities(
+    agentName: string,
+    newCapability: string,
+  ): Promise<void> {
     await this.broadcast({
       from: agentName,
-      type: 'update',
+      type: "update",
       content: `Agent ${agentName} has learned: ${newCapability}`,
       context: {
         capability: newCapability,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }

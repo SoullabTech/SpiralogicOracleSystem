@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { SoulMemoryService } from './soulMemoryService';
+import axios from "axios";
+import { SoulMemoryService } from "./soulMemoryService";
 
 // ===============================================
 // AUTOMATION TRIGGER SERVICE
@@ -24,8 +24,8 @@ interface PatternDetection {
 }
 
 export class AutomationTriggers {
-
-  private static N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || 'http://localhost:5678/webhook';
+  private static N8N_WEBHOOK_URL =
+    process.env.N8N_WEBHOOK_URL || "http://localhost:5678/webhook";
   private static WEBHOOK_SECRET = process.env.N8N_WEBHOOK_SECRET;
 
   /**
@@ -41,24 +41,28 @@ export class AutomationTriggers {
     emotionalResonance?: string;
   }) {
     try {
-      const { userId, conversationId, userMessage, oracleResponse } = conversationData;
+      const { userId, conversationId, userMessage, oracleResponse } =
+        conversationData;
 
       // AI-powered breakthrough detection
-      const breakthroughAnalysis = await this.detectBreakthrough(userMessage, oracleResponse);
+      const breakthroughAnalysis = await this.detectBreakthrough(
+        userMessage,
+        oracleResponse,
+      );
 
       if (breakthroughAnalysis.isBreakthrough) {
         // Store breakthrough in Soul Memory
         await SoulMemoryService.store({
           userId,
-          type: 'breakthrough_detected',
+          type: "breakthrough_detected",
           content: `Breakthrough: ${breakthroughAnalysis.type}`,
           metadata: {
             breakthroughAnalysis,
             conversationId,
             timestamp: new Date().toISOString(),
             sacred: true,
-            transformationMarker: true
-          }
+            transformationMarker: true,
+          },
         });
 
         // Trigger n8n breakthrough workflow
@@ -68,14 +72,15 @@ export class AutomationTriggers {
           confidenceScore: breakthroughAnalysis.confidence,
           conversationId,
           breakthroughMarkers: breakthroughAnalysis.markers,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
-        console.log(`🌟 Breakthrough detected for user ${userId}: ${breakthroughAnalysis.type}`);
+        console.log(
+          `🌟 Breakthrough detected for user ${userId}: ${breakthroughAnalysis.type}`,
+        );
       }
-
     } catch (error) {
-      console.error('Error analyzing breakthrough:', error);
+      console.error("Error analyzing breakthrough:", error);
     }
   }
 
@@ -89,7 +94,7 @@ export class AutomationTriggers {
       const recentMemories = await SoulMemoryService.retrieve({
         userId,
         limit: 20,
-        type: 'oracle_conversation'
+        type: "oracle_conversation",
       });
 
       // Analyze for patterns
@@ -100,13 +105,13 @@ export class AutomationTriggers {
           // Store pattern recognition
           await SoulMemoryService.store({
             userId,
-            type: 'stuck_pattern_detected',
+            type: "stuck_pattern_detected",
             content: `Recurring pattern: ${pattern.type}`,
             metadata: {
               pattern,
               timestamp: new Date().toISOString(),
-              supportNeeded: pattern.occurrenceCount >= 5
-            }
+              supportNeeded: pattern.occurrenceCount >= 5,
+            },
           });
 
           // Trigger support workflow
@@ -115,15 +120,16 @@ export class AutomationTriggers {
             patternType: pattern.type,
             occurrenceCount: pattern.occurrenceCount,
             suggestedIntervention: pattern.suggestedIntervention,
-            lastOccurrences: pattern.lastOccurrences
+            lastOccurrences: pattern.lastOccurrences,
           });
 
-          console.log(`🔄 Stuck pattern detected for user ${userId}: ${pattern.type} (${pattern.occurrenceCount}x)`);
+          console.log(
+            `🔄 Stuck pattern detected for user ${userId}: ${pattern.type} (${pattern.occurrenceCount}x)`,
+          );
         }
       }
-
     } catch (error) {
-      console.error('Error analyzing stuck patterns:', error);
+      console.error("Error analyzing stuck patterns:", error);
     }
   }
 
@@ -137,21 +143,22 @@ export class AutomationTriggers {
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
       // Get users inactive for 7+ days
-      const inactiveUsers = await SoulMemoryService.getInactiveUsers(sevenDaysAgo);
+      const inactiveUsers =
+        await SoulMemoryService.getInactiveUsers(sevenDaysAgo);
 
       for (const user of inactiveUsers) {
         await this.triggerInactiveUserWorkflow(user);
       }
 
       // Get users with unresolved stuck patterns
-      const usersWithPatterns = await SoulMemoryService.getUsersWithUnresolvedPatterns();
+      const usersWithPatterns =
+        await SoulMemoryService.getUsersWithUnresolvedPatterns();
 
       for (const user of usersWithPatterns) {
         await this.triggerStuckUserWorkflow(user);
       }
-
     } catch (error) {
-      console.error('Error checking users needing attention:', error);
+      console.error("Error checking users needing attention:", error);
     }
   }
 
@@ -168,19 +175,22 @@ export class AutomationTriggers {
       const { userId, userMessage, emotionalResonance } = conversationData;
 
       // Detect sacred moments
-      const sacredMoments = await this.detectSacredMoments(userMessage, emotionalResonance);
+      const sacredMoments = await this.detectSacredMoments(
+        userMessage,
+        emotionalResonance,
+      );
 
       for (const moment of sacredMoments) {
         // Store sacred moment
         await SoulMemoryService.store({
           userId,
-          type: 'sacred_moment_detected',
+          type: "sacred_moment_detected",
           content: `Sacred moment: ${moment.type}`,
           metadata: {
             moment,
             timestamp: new Date().toISOString(),
-            sacred: true
-          }
+            sacred: true,
+          },
         });
 
         // Trigger sacred moment workflow
@@ -189,12 +199,11 @@ export class AutomationTriggers {
           momentType: moment.type,
           content: moment.description,
           emotionalResonance: moment.resonance,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
-
     } catch (error) {
-      console.error('Error analyzing sacred moments:', error);
+      console.error("Error analyzing sacred moments:", error);
     }
   }
 
@@ -202,70 +211,106 @@ export class AutomationTriggers {
   // BREAKTHROUGH DETECTION AI
   // ===============================================
 
-  private static async detectBreakthrough(userMessage: string, oracleResponse: string) {
+  private static async detectBreakthrough(
+    userMessage: string,
+    oracleResponse: string,
+  ) {
     // AI analysis for breakthrough markers
     const breakthroughMarkers = [
-      'sudden clarity', 'aha moment', 'finally understand',
-      'makes sense now', 'click', 'revelation', 'realize',
-      'pattern', 'connection', 'shift', 'different perspective',
-      'release', 'let go', 'acceptance', 'peace with',
-      'integration', 'wholeness', 'authentic', 'true self'
+      "sudden clarity",
+      "aha moment",
+      "finally understand",
+      "makes sense now",
+      "click",
+      "revelation",
+      "realize",
+      "pattern",
+      "connection",
+      "shift",
+      "different perspective",
+      "release",
+      "let go",
+      "acceptance",
+      "peace with",
+      "integration",
+      "wholeness",
+      "authentic",
+      "true self",
     ];
 
     const emotionalReleaseMarkers = [
-      'cry', 'tears', 'emotional', 'feel lighter',
-      'weight lifted', 'relief', 'release', 'healing'
+      "cry",
+      "tears",
+      "emotional",
+      "feel lighter",
+      "weight lifted",
+      "relief",
+      "release",
+      "healing",
     ];
 
     const selfAcceptanceMarkers = [
-      'accept myself', 'love myself', 'okay with',
-      'forgive', 'compassion', 'gentle with myself',
-      'human', 'imperfect', 'enough'
+      "accept myself",
+      "love myself",
+      "okay with",
+      "forgive",
+      "compassion",
+      "gentle with myself",
+      "human",
+      "imperfect",
+      "enough",
     ];
 
     const message = userMessage.toLowerCase();
 
-    let breakthroughType = '';
+    let breakthroughType = "";
     let confidence = 0;
     let markers: string[] = [];
 
     // Check for pattern recognition
-    const patternMarkers = breakthroughMarkers.filter(marker => message.includes(marker));
+    const patternMarkers = breakthroughMarkers.filter((marker) =>
+      message.includes(marker),
+    );
     if (patternMarkers.length >= 2) {
-      breakthroughType = 'pattern_recognition';
+      breakthroughType = "pattern_recognition";
       confidence += 0.4;
       markers = [...markers, ...patternMarkers];
     }
 
     // Check for emotional release
-    const releaseMarkers = emotionalReleaseMarkers.filter(marker => message.includes(marker));
+    const releaseMarkers = emotionalReleaseMarkers.filter((marker) =>
+      message.includes(marker),
+    );
     if (releaseMarkers.length >= 1) {
-      breakthroughType = 'emotional_release';
+      breakthroughType = "emotional_release";
       confidence += 0.3;
       markers = [...markers, ...releaseMarkers];
     }
 
     // Check for self-acceptance
-    const acceptanceMarkers = selfAcceptanceMarkers.filter(marker => message.includes(marker));
+    const acceptanceMarkers = selfAcceptanceMarkers.filter((marker) =>
+      message.includes(marker),
+    );
     if (acceptanceMarkers.length >= 1) {
-      breakthroughType = 'self_acceptance';
+      breakthroughType = "self_acceptance";
       confidence += 0.3;
       markers = [...markers, ...acceptanceMarkers];
     }
 
     // Message length and depth indicators
     if (message.length > 200) confidence += 0.1; // Longer, more thoughtful responses
-    if (message.includes('thank you')) confidence += 0.1; // Gratitude often follows breakthroughs
-    if (message.includes('profound') || message.includes('deep')) confidence += 0.1;
+    if (message.includes("thank you")) confidence += 0.1; // Gratitude often follows breakthroughs
+    if (message.includes("profound") || message.includes("deep"))
+      confidence += 0.1;
 
     const isBreakthrough = confidence >= 0.8 && markers.length >= 2;
 
     return {
       isBreakthrough,
-      type: breakthroughType || 'clarity_moment',
+      type: breakthroughType || "clarity_moment",
       confidence,
       markers,
-      analysis: `Detected ${markers.length} breakthrough markers with ${confidence} confidence`
+      analysis: `Detected ${markers.length} breakthrough markers with ${confidence} confidence`,
     };
   }
 
@@ -278,30 +323,42 @@ export class AutomationTriggers {
 
     // Common stuck patterns
     const patternTypes = {
-      'relationship_conflict': ['relationship', 'partner', 'conflict', 'argue', 'fight'],
-      'decision_paralysis': ['decide', 'choice', 'stuck', 'don\'t know', 'confused'],
-      'self_doubt': ['doubt', 'confidence', 'not good enough', 'impostor'],
-      'anxiety_loops': ['anxious', 'worry', 'fear', 'panic', 'overwhelm'],
-      'creative_block': ['creative', 'stuck', 'inspiration', 'block', 'flow'],
-      'work_stress': ['work', 'job', 'stress', 'boss', 'career'],
-      'family_dynamics': ['family', 'parents', 'mother', 'father', 'siblings']
+      relationship_conflict: [
+        "relationship",
+        "partner",
+        "conflict",
+        "argue",
+        "fight",
+      ],
+      decision_paralysis: [
+        "decide",
+        "choice",
+        "stuck",
+        "don't know",
+        "confused",
+      ],
+      self_doubt: ["doubt", "confidence", "not good enough", "impostor"],
+      anxiety_loops: ["anxious", "worry", "fear", "panic", "overwhelm"],
+      creative_block: ["creative", "stuck", "inspiration", "block", "flow"],
+      work_stress: ["work", "job", "stress", "boss", "career"],
+      family_dynamics: ["family", "parents", "mother", "father", "siblings"],
     };
 
     for (const [patternType, keywords] of Object.entries(patternTypes)) {
-      const matchingMemories = memories.filter(memory => {
+      const matchingMemories = memories.filter((memory) => {
         const content = memory.content.toLowerCase();
-        return keywords.some(keyword => content.includes(keyword));
+        return keywords.some((keyword) => content.includes(keyword));
       });
 
       if (matchingMemories.length >= 3) {
         patterns.push({
           type: patternType,
           occurrenceCount: matchingMemories.length,
-          lastOccurrences: matchingMemories.slice(0, 3).map(m => m.timestamp),
+          lastOccurrences: matchingMemories.slice(0, 3).map((m) => m.timestamp),
           suggestedIntervention: this.getSuggestedIntervention(patternType),
-          keywords: keywords.filter(k =>
-            matchingMemories.some(m => m.content.toLowerCase().includes(k))
-          )
+          keywords: keywords.filter((k) =>
+            matchingMemories.some((m) => m.content.toLowerCase().includes(k)),
+          ),
         });
       }
     }
@@ -311,50 +368,64 @@ export class AutomationTriggers {
 
   private static getSuggestedIntervention(patternType: string): string {
     const interventions = {
-      'relationship_conflict': 'oracle_mode_guardian',
-      'decision_paralysis': 'oracle_mode_sage',
-      'self_doubt': 'oracle_mode_alchemist',
-      'anxiety_loops': 'oracle_mode_buddha',
-      'creative_block': 'oracle_mode_mystic',
-      'work_stress': 'oracle_mode_tao',
-      'family_dynamics': 'oracle_mode_guardian'
+      relationship_conflict: "oracle_mode_guardian",
+      decision_paralysis: "oracle_mode_sage",
+      self_doubt: "oracle_mode_alchemist",
+      anxiety_loops: "oracle_mode_buddha",
+      creative_block: "oracle_mode_mystic",
+      work_stress: "oracle_mode_tao",
+      family_dynamics: "oracle_mode_guardian",
     };
 
-    return interventions[patternType as keyof typeof interventions] || 'oracle_mode_sage';
+    return (
+      interventions[patternType as keyof typeof interventions] ||
+      "oracle_mode_sage"
+    );
   }
 
   // ===============================================
   // SACRED MOMENT DETECTION
   // ===============================================
 
-  private static async detectSacredMoments(userMessage: string, emotionalResonance?: string) {
+  private static async detectSacredMoments(
+    userMessage: string,
+    emotionalResonance?: string,
+  ) {
     const sacredMoments: any[] = [];
     const message = userMessage.toLowerCase();
 
     // Gratitude moments
-    if (message.includes('grateful') || message.includes('thankful') || message.includes('blessed')) {
+    if (
+      message.includes("grateful") ||
+      message.includes("thankful") ||
+      message.includes("blessed")
+    ) {
       sacredMoments.push({
-        type: 'gratitude',
-        description: 'Deep gratitude expressed',
-        resonance: 'high'
+        type: "gratitude",
+        description: "Deep gratitude expressed",
+        resonance: "high",
       });
     }
 
     // Love and connection
-    if (message.includes('love') && !message.includes('don\'t love')) {
+    if (message.includes("love") && !message.includes("don't love")) {
       sacredMoments.push({
-        type: 'love_recognition',
-        description: 'Love acknowledged or felt',
-        resonance: 'high'
+        type: "love_recognition",
+        description: "Love acknowledged or felt",
+        resonance: "high",
       });
     }
 
     // Presence and mindfulness
-    if (message.includes('present') || message.includes('mindful') || message.includes('aware')) {
+    if (
+      message.includes("present") ||
+      message.includes("mindful") ||
+      message.includes("aware")
+    ) {
       sacredMoments.push({
-        type: 'presence',
-        description: 'Moment of presence and awareness',
-        resonance: 'medium'
+        type: "presence",
+        description: "Moment of presence and awareness",
+        resonance: "medium",
       });
     }
 
@@ -365,24 +436,26 @@ export class AutomationTriggers {
   // N8N WEBHOOK TRIGGERS
   // ===============================================
 
-  private static async triggerBreakthroughWorkflow(data: BreakthroughDetection) {
-    return this.sendWebhook('/breakthrough', data);
+  private static async triggerBreakthroughWorkflow(
+    data: BreakthroughDetection,
+  ) {
+    return this.sendWebhook("/breakthrough", data);
   }
 
   private static async triggerStuckPatternWorkflow(data: PatternDetection) {
-    return this.sendWebhook('/stuck-pattern', data);
+    return this.sendWebhook("/stuck-pattern", data);
   }
 
   private static async triggerSacredMomentWorkflow(data: any) {
-    return this.sendWebhook('/sacred-moment', data);
+    return this.sendWebhook("/sacred-moment", data);
   }
 
   private static async triggerInactiveUserWorkflow(userData: any) {
-    return this.sendWebhook('/inactive-user', userData);
+    return this.sendWebhook("/inactive-user", userData);
   }
 
   private static async triggerStuckUserWorkflow(userData: any) {
-    return this.sendWebhook('/stuck-user', userData);
+    return this.sendWebhook("/stuck-user", userData);
   }
 
   private static async sendWebhook(endpoint: string, data: any) {
@@ -393,7 +466,7 @@ export class AutomationTriggers {
       const payload = {
         ...data,
         timestamp: new Date().toISOString(),
-        source: 'soullab_automation_triggers'
+        source: "soullab_automation_triggers",
       };
 
       // Sign webhook payload
@@ -401,16 +474,15 @@ export class AutomationTriggers {
 
       const response = await axios.post(url, payload, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-Webhook-Signature': signature,
-          'User-Agent': 'Soullab-AutomationTrigger/1.0'
+          "Content-Type": "application/json",
+          "X-Webhook-Signature": signature,
+          "User-Agent": "Soullab-AutomationTrigger/1.0",
         },
-        timeout: 10000
+        timeout: 10000,
       });
 
       console.log(`✅ Webhook sent to ${endpoint}:`, response.status);
       return response.data;
-
     } catch (error) {
       console.error(`❌ Failed to send webhook to ${endpoint}:`, error);
       // Don't throw - we don't want automation failures to break core functionality
@@ -419,13 +491,15 @@ export class AutomationTriggers {
 
   private static signWebhookPayload(payload: any): string {
     if (!this.WEBHOOK_SECRET) {
-      console.warn('N8N_WEBHOOK_SECRET not configured - webhook signing disabled');
-      return '';
+      console.warn(
+        "N8N_WEBHOOK_SECRET not configured - webhook signing disabled",
+      );
+      return "";
     }
 
-    const crypto = require('crypto');
+    const crypto = require("crypto");
     const payloadString = JSON.stringify(payload);
-    return `sha256=${crypto.createHmac('sha256', this.WEBHOOK_SECRET).update(payloadString).digest('hex')}`;
+    return `sha256=${crypto.createHmac("sha256", this.WEBHOOK_SECRET).update(payloadString).digest("hex")}`;
   }
 }
 
@@ -450,9 +524,9 @@ export const analyzeConversationForAutomation = async (conversationData: {
   Promise.all([
     AutomationTriggers.analyzeForBreakthrough(conversationData),
     AutomationTriggers.analyzeForSacredMoments(conversationData),
-    AutomationTriggers.analyzeForStuckPatterns(conversationData.userId)
-  ]).catch(error => {
-    console.error('Automation analysis error:', error);
+    AutomationTriggers.analyzeForStuckPatterns(conversationData.userId),
+  ]).catch((error) => {
+    console.error("Automation analysis error:", error);
     // Log but don't break the main conversation flow
   });
 };
@@ -468,17 +542,22 @@ export const triggerUserSignupAutomation = async (userData: {
   signupSource?: string;
 }) => {
   try {
-    const response = await axios.post(`${process.env.API_URL}/api/automation/webhook/user-signup`, {
-      ...userData,
-      timestamp: new Date().toISOString()
-    }, {
-      headers: {
-        'X-Webhook-Signature': AutomationTriggers['signWebhookPayload'](userData)
-      }
-    });
+    const response = await axios.post(
+      `${process.env.API_URL}/api/automation/webhook/user-signup`,
+      {
+        ...userData,
+        timestamp: new Date().toISOString(),
+      },
+      {
+        headers: {
+          "X-Webhook-Signature":
+            AutomationTriggers["signWebhookPayload"](userData),
+        },
+      },
+    );
 
-    console.log('✅ User signup automation triggered:', response.status);
+    console.log("✅ User signup automation triggered:", response.status);
   } catch (error) {
-    console.error('❌ Failed to trigger signup automation:', error);
+    console.error("❌ Failed to trigger signup automation:", error);
   }
 };

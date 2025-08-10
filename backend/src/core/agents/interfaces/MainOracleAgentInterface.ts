@@ -1,15 +1,20 @@
 // Interface for PersonalOracleAgent to communicate with AIN (MainOracleAgent)
 // This ensures proper hierarchy: PersonalOracleAgent -> AIN for collective intelligence
 
-import type { ElementalType } from '../types';
-import type { AIResponse } from '../../../types/ai';
+import type { ElementalType } from "../types";
+import type { AIResponse } from "../../../types/ai";
 
 export interface PatternContribution {
   userId: string;
   elementUsed: ElementalType;
   queryTheme: string;
   responseEffectiveness: number;
-  userReaction: 'resistant' | 'receptive' | 'breakthrough' | 'integrative' | 'unknown';
+  userReaction:
+    | "resistant"
+    | "receptive"
+    | "breakthrough"
+    | "integrative"
+    | "unknown";
   transformationIndicators: string[];
   collectiveRelevance: number; // 0-1 scale
   personalContext: {
@@ -49,7 +54,13 @@ export interface CollectivePattern {
 }
 
 export interface CosmicAlignment {
-  phase: 'initiation' | 'ordeal' | 'revelation' | 'atonement' | 'return' | 'mastery';
+  phase:
+    | "initiation"
+    | "ordeal"
+    | "revelation"
+    | "atonement"
+    | "return"
+    | "mastery";
   synchronicityDensity: number;
   evolutionaryPressure: number;
   transformationWindow: boolean;
@@ -57,10 +68,15 @@ export interface CosmicAlignment {
 
 export interface TransformationEvent {
   userId: string;
-  eventType: 'breakthrough' | 'integration' | 'resistance_dissolution' | 'shadow_integration' | 'vision_actualization';
+  eventType:
+    | "breakthrough"
+    | "integration"
+    | "resistance_dissolution"
+    | "shadow_integration"
+    | "vision_actualization";
   element: ElementalType;
   description: string;
-  significance: 'minor' | 'major' | 'profound';
+  significance: "minor" | "major" | "profound";
   collectiveRelevance: number;
   archetypalShift?: string;
   timestamp: string;
@@ -104,7 +120,9 @@ export interface MainOracleAgentInterface {
   /**
    * Check if collective salons are available for this user
    */
-  checkCollectiveSalonAvailability(userId: string): Promise<CollectiveSalonInfo[]>;
+  checkCollectiveSalonAvailability(
+    userId: string,
+  ): Promise<CollectiveSalonInfo[]>;
 
   /**
    * Report on the effectiveness of elemental routing decisions
@@ -112,14 +130,18 @@ export interface MainOracleAgentInterface {
   reportElementalEffectiveness(
     element: ElementalType,
     effectiveness: number,
-    context: any
+    context: any,
   ): Promise<void>;
 }
 
 export interface CollectiveSalonInfo {
   salonId: string;
   theme: string;
-  type: 'world_cafe' | 'council_of_elders' | 'elemental_salon' | 'wisdom_circle';
+  type:
+    | "world_cafe"
+    | "council_of_elders"
+    | "elemental_salon"
+    | "wisdom_circle";
   participantCount: number;
   focusElement?: ElementalType;
   readinessScore: number;

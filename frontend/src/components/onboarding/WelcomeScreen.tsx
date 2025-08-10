@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 interface WelcomeScreenProps {
   onContinue: () => void;
@@ -90,8 +90,10 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onContinue }) => {
               <span className="relative z-10">Continue</span>
 
               {/* Glow effect */}
-              <div className="absolute inset-0 rounded-sm bg-[#F6E27F] opacity-0 group-hover:opacity-10
-                              transition-opacity duration-500"></div>
+              <div
+                className="absolute inset-0 rounded-sm bg-[#F6E27F] opacity-0 group-hover:opacity-10
+                              transition-opacity duration-500"
+              ></div>
             </button>
           </motion.div>
 

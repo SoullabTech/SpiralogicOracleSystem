@@ -24,11 +24,13 @@
 ## 🚀 **Quick Start**
 
 ### Prerequisites
+
 - Node.js 20+
 - Redis server
 - Supabase account
 
 ### Installation
+
 ```bash
 # Clone and install dependencies
 npm install
@@ -54,11 +56,13 @@ npm run dev
 ```
 
 ### 🧼 Dev Scripts
+
 - `npm run dev` – Start dev server with nodemon
 - `npm run lint` – Lint backend code
 - `npm run test` – Run tests
 
 ### ⚙️ Requirements
+
 - Node.js >=20.0.0
 - Supabase Key + URL in .env
 

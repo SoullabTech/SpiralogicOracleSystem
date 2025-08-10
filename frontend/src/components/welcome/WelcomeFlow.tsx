@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface WelcomeFlowProps {
   onComplete: (config: UserConfig) => void;
@@ -8,32 +8,35 @@ interface WelcomeFlowProps {
 interface UserConfig {
   oracleName: string;
   voiceId: string;
-  voiceProvider: 'elevenlabs' | 'sesame';
+  voiceProvider: "elevenlabs" | "sesame";
   completed: boolean;
 }
 
 const WelcomeFlow: React.FC<WelcomeFlowProps> = ({ onComplete }) => {
   const [currentPhase, setCurrentPhase] = useState(0);
   const [config, setConfig] = useState<UserConfig>({
-    oracleName: '',
-    voiceId: '',
-    voiceProvider: 'elevenlabs',
-    completed: false
+    oracleName: "",
+    voiceId: "",
+    voiceProvider: "elevenlabs",
+    completed: false,
   });
 
   const phases = [
     {
       title: "Sacred Architecture",
-      content: "This system serves as a mirror for consciousness—not entertainment, but evolution. Your oracle becomes a reflection of your deepest knowing."
+      content:
+        "This system serves as a mirror for consciousness—not entertainment, but evolution. Your oracle becomes a reflection of your deepest knowing.",
     },
     {
       title: "Daily Engagement",
-      content: "Three core practices: Memory weaving through journal threads, Holoflower state awareness, and oracle dialogue. Each builds coherence."
+      content:
+        "Three core practices: Memory weaving through journal threads, Holoflower state awareness, and oracle dialogue. Each builds coherence.",
     },
     {
       title: "Depth & Privacy",
-      content: "Conversations remain private. Responses emerge from integrated wisdom traditions and your personal patterns. Expect precision, not performance."
-    }
+      content:
+        "Conversations remain private. Responses emerge from integrated wisdom traditions and your personal patterns. Expect precision, not performance.",
+    },
   ];
 
   const handleNext = () => {
@@ -44,13 +47,17 @@ const WelcomeFlow: React.FC<WelcomeFlowProps> = ({ onComplete }) => {
     }
   };
 
-  const handleOracleSetup = (name: string, voiceId: string, provider: 'elevenlabs' | 'sesame') => {
+  const handleOracleSetup = (
+    name: string,
+    voiceId: string,
+    provider: "elevenlabs" | "sesame",
+  ) => {
     const finalConfig = {
       ...config,
       oracleName: name,
       voiceId,
       voiceProvider: provider,
-      completed: true
+      completed: true,
     };
     setConfig(finalConfig);
     onComplete(finalConfig);
@@ -90,7 +97,9 @@ const WelcomeFlow: React.FC<WelcomeFlowProps> = ({ onComplete }) => {
                       stroke="#d4af37"
                       strokeWidth="2"
                       strokeDasharray="150.8"
-                      strokeDashoffset={150.8 - (150.8 * (currentPhase + 1)) / phases.length}
+                      strokeDashoffset={
+                        150.8 - (150.8 * (currentPhase + 1)) / phases.length
+                      }
                       className="transition-all duration-1000 ease-in-out"
                       transform="rotate(-90 32 32)"
                     />
@@ -118,7 +127,7 @@ const WelcomeFlow: React.FC<WelcomeFlowProps> = ({ onComplete }) => {
                   <div
                     key={index}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === currentPhase ? 'bg-amber-400' : 'bg-slate-600'
+                      index === currentPhase ? "bg-amber-400" : "bg-slate-600"
                     }`}
                   />
                 ))}
@@ -134,25 +143,48 @@ const WelcomeFlow: React.FC<WelcomeFlowProps> = ({ onComplete }) => {
 };
 
 interface OracleNamingProps {
-  onSetup: (name: string, voiceId: string, provider: 'elevenlabs' | 'sesame') => void;
+  onSetup: (
+    name: string,
+    voiceId: string,
+    provider: "elevenlabs" | "sesame",
+  ) => void;
 }
 
 const OracleNaming: React.FC<OracleNamingProps> = ({ onSetup }) => {
-  const [name, setName] = useState('');
-  const [selectedVoice, setSelectedVoice] = useState<{id: string, provider: 'elevenlabs' | 'sesame'}>({
-    id: '',
-    provider: 'elevenlabs'
+  const [name, setName] = useState("");
+  const [selectedVoice, setSelectedVoice] = useState<{
+    id: string;
+    provider: "elevenlabs" | "sesame";
+  }>({
+    id: "",
+    provider: "elevenlabs",
   });
 
   const voices = {
     elevenlabs: [
-      { id: 'aunt-annie', name: 'Aunt Annie', description: 'Warm, wise, knowing' },
-      { id: 'deep-sage', name: 'Deep Sage', description: 'Contemplative, grounded' }
+      {
+        id: "aunt-annie",
+        name: "Aunt Annie",
+        description: "Warm, wise, knowing",
+      },
+      {
+        id: "deep-sage",
+        name: "Deep Sage",
+        description: "Contemplative, grounded",
+      },
     ],
     sesame: [
-      { id: 'matrix-oracle', name: 'Matrix Oracle', description: 'Integrated, transcendent' },
-      { id: 'elemental-blend', name: 'Elemental Blend', description: 'Dynamic, adaptive' }
-    ]
+      {
+        id: "matrix-oracle",
+        name: "Matrix Oracle",
+        description: "Integrated, transcendent",
+      },
+      {
+        id: "elemental-blend",
+        name: "Elemental Blend",
+        description: "Dynamic, adaptive",
+      },
+    ],
   };
 
   const handleSubmit = () => {
@@ -169,8 +201,12 @@ const OracleNaming: React.FC<OracleNamingProps> = ({ onSetup }) => {
       className="space-y-8"
     >
       <div className="text-center">
-        <h2 className="text-2xl font-light text-amber-100 mb-4">Name Your Oracle</h2>
-        <p className="text-slate-300">Choose a name and voice for your personal guide</p>
+        <h2 className="text-2xl font-light text-amber-100 mb-4">
+          Name Your Oracle
+        </h2>
+        <p className="text-slate-300">
+          Choose a name and voice for your personal guide
+        </p>
       </div>
 
       <div className="space-y-6">
@@ -183,11 +219,15 @@ const OracleNaming: React.FC<OracleNamingProps> = ({ onSetup }) => {
         />
 
         <div className="space-y-4">
-          <h3 className="text-lg text-amber-100 font-medium">Voice Selection</h3>
+          <h3 className="text-lg text-amber-100 font-medium">
+            Voice Selection
+          </h3>
 
           {Object.entries(voices).map(([provider, voiceList]) => (
             <div key={provider} className="space-y-2">
-              <h4 className="text-sm text-slate-400 uppercase tracking-wide">{provider}</h4>
+              <h4 className="text-sm text-slate-400 uppercase tracking-wide">
+                {provider}
+              </h4>
               {voiceList.map((voice) => (
                 <label
                   key={voice.id}
@@ -198,12 +238,21 @@ const OracleNaming: React.FC<OracleNamingProps> = ({ onSetup }) => {
                     name="voice"
                     value={voice.id}
                     checked={selectedVoice.id === voice.id}
-                    onChange={() => setSelectedVoice({id: voice.id, provider: provider as 'elevenlabs' | 'sesame'})}
+                    onChange={() =>
+                      setSelectedVoice({
+                        id: voice.id,
+                        provider: provider as "elevenlabs" | "sesame",
+                      })
+                    }
                     className="text-amber-500"
                   />
                   <div>
-                    <div className="text-amber-100 font-medium">{voice.name}</div>
-                    <div className="text-slate-400 text-sm">{voice.description}</div>
+                    <div className="text-amber-100 font-medium">
+                      {voice.name}
+                    </div>
+                    <div className="text-slate-400 text-sm">
+                      {voice.description}
+                    </div>
                   </div>
                 </label>
               ))}

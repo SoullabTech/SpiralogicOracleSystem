@@ -1,9 +1,9 @@
 // Event Sourcing Service for Soul Memory System
 // Handles domain events and event streaming
 
-import { EventEmitter } from 'events';
-import { supabase } from '../../lib/supabaseClient';
-import { logger } from '../../utils/logger';
+import { EventEmitter } from "events";
+import { supabase } from "../../lib/supabaseClient";
+import { logger } from "../../utils/logger";
 
 export interface DomainEvent {
   id: string;
@@ -32,8 +32,8 @@ export class EventService extends EventEmitter {
         metadata: {
           timestamp: new Date().toISOString(),
           userId: data.userId,
-          version: await this.getNextVersion(data.id || data.userId)
-        }
+          version: await this.getNextVersion(data.id || data.userId),
+        },
       };
 
       // Store in event log table
@@ -46,14 +46,17 @@ export class EventService extends EventEmitter {
 
       // Emit for real-time subscribers
       super.emit(eventType, event);
-      super.emit('*', event); // Global listener
+      super.emit("*", event); // Global listener
 
-      logger.info('Domain event emitted', { eventType, aggregateId: event.aggregateId });
+      logger.info("Domain event emitted", {
+        eventType,
+        aggregateId: event.aggregateId,
+      });
 
       // Apply event to read model
       await this.applyEventToReadModel(event);
     } catch (error) {
-      logger.error('Failed to emit event', { error, eventType, data });
+      logger.error("Failed to emit event", { error, eventType, data });
       throw error;
     }
   }
@@ -68,10 +71,10 @@ export class EventService extends EventEmitter {
 
       // Fallback to database
       const { data, error } = await supabase
-        .from('event_log')
-        .select('*')
-        .eq('aggregate_id', aggregateId)
-        .order('metadata->version', { ascending: true });
+        .from("event_log")
+        .select("*")
+        .eq("aggregate_id", aggregateId)
+        .order("metadata->version", { ascending: true });
 
       if (error) {
         throw new Error(`Failed to load events: ${error.message}`);
@@ -81,29 +84,30 @@ export class EventService extends EventEmitter {
       this.eventStore.set(aggregateId, events);
       return events;
     } catch (error) {
-      logger.error('Failed to get events for aggregate', { error, aggregateId });
+      logger.error("Failed to get events for aggregate", {
+        error,
+        aggregateId,
+      });
       throw error;
     }
   }
 
   private async persistEvent(event: DomainEvent): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('event_log')
-        .insert({
-          id: event.id,
-          type: event.type,
-          aggregate_id: event.aggregateId,
-          aggregate_type: event.aggregateType,
-          data: event.data,
-          metadata: event.metadata
-        });
+      const { error } = await supabase.from("event_log").insert({
+        id: event.id,
+        type: event.type,
+        aggregate_id: event.aggregateId,
+        aggregate_type: event.aggregateType,
+        data: event.data,
+        metadata: event.metadata,
+      });
 
       if (error) {
         throw new Error(`Event persistence failed: ${error.message}`);
       }
     } catch (error) {
-      logger.error('Failed to persist event', { error, event });
+      logger.error("Failed to persist event", { error, event });
       throw error;
     }
   }
@@ -111,27 +115,27 @@ export class EventService extends EventEmitter {
   private async applyEventToReadModel(event: DomainEvent): Promise<void> {
     try {
       switch (event.type) {
-        case 'memory.created':
+        case "memory.created":
           await this.handleMemoryCreated(event);
           break;
-        case 'memory.updated':
+        case "memory.updated":
           await this.handleMemoryUpdated(event);
           break;
-        case 'memory.deleted':
+        case "memory.deleted":
           await this.handleMemoryDeleted(event);
           break;
         default:
-          logger.warn('Unknown event type', { eventType: event.type });
+          logger.warn("Unknown event type", { eventType: event.type });
       }
     } catch (error) {
-      logger.error('Failed to apply event to read model', { error, event });
+      logger.error("Failed to apply event to read model", { error, event });
       // Don't throw - event was persisted successfully
     }
   }
 
   private async handleMemoryCreated(event: DomainEvent): Promise<void> {
     const { data } = event;
-    await supabase.from('memories').insert({
+    await supabase.from("memories").insert({
       id: data.id,
       user_id: data.userId,
       content: data.content,
@@ -141,29 +145,29 @@ export class EventService extends EventEmitter {
       metadata: data.metadata,
       symbols: data.symbols || [],
       created_at: event.metadata.timestamp,
-      updated_at: event.metadata.timestamp
+      updated_at: event.metadata.timestamp,
     });
   }
 
   private async handleMemoryUpdated(event: DomainEvent): Promise<void> {
     const { data } = event;
     await supabase
-      .from('memories')
+      .from("memories")
       .update({
         ...data.updates,
-        updated_at: event.metadata.timestamp
+        updated_at: event.metadata.timestamp,
       })
-      .eq('id', data.id)
-      .eq('user_id', data.userId);
+      .eq("id", data.id)
+      .eq("user_id", data.userId);
   }
 
   private async handleMemoryDeleted(event: DomainEvent): Promise<void> {
     const { data } = event;
     await supabase
-      .from('memories')
+      .from("memories")
       .delete()
-      .eq('id', data.id)
-      .eq('user_id', data.userId);
+      .eq("id", data.id)
+      .eq("user_id", data.userId);
   }
 
   private async getNextVersion(aggregateId: string): Promise<number> {
@@ -172,8 +176,8 @@ export class EventService extends EventEmitter {
   }
 
   private getAggregateType(eventType: string): string {
-    if (eventType.startsWith('memory.')) return 'Memory';
-    return 'Unknown';
+    if (eventType.startsWith("memory.")) return "Memory";
+    return "Unknown";
   }
 
   private generateEventId(): string {

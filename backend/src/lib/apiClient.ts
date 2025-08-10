@@ -1,10 +1,10 @@
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
-  const token = localStorage.getItem('token'); // or use your auth context/state
+  const token = localStorage.getItem("token"); // or use your auth context/state
 
   const headers = {
     ...options.headers,
-    'Content-Type': 'application/json',
-    Authorization: token ? `Bearer ${token}` : '',
+    "Content-Type": "application/json",
+    Authorization: token ? `Bearer ${token}` : "",
   };
 
   const res = await fetch(url, { ...options, headers });

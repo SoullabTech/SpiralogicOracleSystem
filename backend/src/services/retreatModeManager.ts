@@ -1,13 +1,13 @@
-import { PersonalizedOracleAgent } from '../core/agents/personalizedOracleAgent.js';
-import { PersonalOracleMatch } from '../types/personalOracle.js';
-import { RetreatParticipant, RetreatSession } from '../types/retreat.js';
-import { logger } from '../utils/logger.js';
-import { supabase } from '../lib/supabaseClient.js';
+import { PersonalizedOracleAgent } from "../core/agents/personalizedOracleAgent.js";
+import { PersonalOracleMatch } from "../types/personalOracle.js";
+import { RetreatParticipant, RetreatSession } from "../types/retreat.js";
+import { logger } from "../utils/logger.js";
+import { supabase } from "../lib/supabaseClient.js";
 
 export interface RetreatModeActivation {
   participantId: string;
   oracleId: string;
-  mode: 'pre-retreat' | 'retreat-active' | 'post-retreat';
+  mode: "pre-retreat" | "retreat-active" | "post-retreat";
   activatedAt: Date;
   activatedBy: string;
   sessionContext?: {
@@ -20,7 +20,7 @@ export interface RetreatModeActivation {
 
 export interface RetreatModeStatus {
   participantId: string;
-  currentMode: 'pre-retreat' | 'retreat-active' | 'post-retreat' | 'inactive';
+  currentMode: "pre-retreat" | "retreat-active" | "post-retreat" | "inactive";
   oracleAgent?: PersonalizedOracleAgent;
   activeSessions: RetreatSession[];
   lastActivation?: Date;
@@ -35,9 +35,9 @@ export class RetreatModeManager {
   async activateRetreatMode(
     participant: RetreatParticipant,
     oracleMatch: PersonalOracleMatch,
-    mode: 'pre-retreat' | 'retreat-active' | 'post-retreat',
+    mode: "pre-retreat" | "retreat-active" | "post-retreat",
     activatedBy: string,
-    sessionContext?: any
+    sessionContext?: any,
   ): Promise<PersonalizedOracleAgent> {
     try {
       // Create or retrieve Oracle agent
@@ -48,7 +48,7 @@ export class RetreatModeManager {
           match: oracleMatch,
           participant,
           retreatMode: mode,
-          sessionContext
+          sessionContext,
         });
 
         this.activeOracles.set(participant.id, oracleAgent);
@@ -64,29 +64,36 @@ export class RetreatModeManager {
         mode,
         activatedAt: new Date(),
         activatedBy,
-        sessionContext
+        sessionContext,
       };
 
       await this.recordModeActivation(activation);
 
       // Update status tracking
-      await this.updateModeStatus(participant.id, mode, oracleAgent, activation);
+      await this.updateModeStatus(
+        participant.id,
+        mode,
+        oracleAgent,
+        activation,
+      );
 
       // Log successful activation
-      logger.info(`Retreat mode ${mode} activated for ${participant.firstName}`, {
-        participantId: participant.id,
-        oracleName: oracleMatch.oraclePersonality.name,
-        activatedBy,
-        sessionContext
-      });
+      logger.info(
+        `Retreat mode ${mode} activated for ${participant.firstName}`,
+        {
+          participantId: participant.id,
+          oracleName: oracleMatch.oraclePersonality.name,
+          activatedBy,
+          sessionContext,
+        },
+      );
 
       return oracleAgent;
-
     } catch (error) {
-      logger.error('Failed to activate retreat mode', {
+      logger.error("Failed to activate retreat mode", {
         participantId: participant.id,
         mode,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       });
       throw error;
     }
@@ -105,7 +112,7 @@ export class RetreatModeManager {
       // Update status
       const status = this.modeStatuses.get(participantId);
       if (status) {
-        status.currentMode = 'inactive';
+        status.currentMode = "inactive";
         status.oracleAgent = undefined;
       }
 
@@ -115,13 +122,15 @@ export class RetreatModeManager {
 
   async transitionMode(
     participantId: string,
-    newMode: 'pre-retreat' | 'retreat-active' | 'post-retreat',
-    transitionedBy: string
+    newMode: "pre-retreat" | "retreat-active" | "post-retreat",
+    transitionedBy: string,
   ): Promise<void> {
     const oracleAgent = this.activeOracles.get(participantId);
 
     if (!oracleAgent) {
-      throw new Error(`No active Oracle found for participant ${participantId}`);
+      throw new Error(
+        `No active Oracle found for participant ${participantId}`,
+      );
     }
 
     const currentStatus = this.modeStatuses.get(participantId);
@@ -136,43 +145,54 @@ export class RetreatModeManager {
       oracleId: (await oracleAgent.getPersonalizationInsights()).primaryElement,
       mode: newMode,
       activatedAt: new Date(),
-      activatedBy: transitionedBy
+      activatedBy: transitionedBy,
     };
 
     await this.recordModeActivation(activation);
-    await this.updateModeStatus(participantId, newMode, oracleAgent, activation);
+    await this.updateModeStatus(
+      participantId,
+      newMode,
+      oracleAgent,
+      activation,
+    );
 
     logger.info(`Mode transition completed`, {
       participantId,
       previousMode,
       newMode,
-      transitionedBy
+      transitionedBy,
     });
   }
 
-  async getActiveOracleAgent(participantId: string): Promise<PersonalizedOracleAgent | null> {
+  async getActiveOracleAgent(
+    participantId: string,
+  ): Promise<PersonalizedOracleAgent | null> {
     return this.activeOracles.get(participantId) || null;
   }
 
-  async getModeStatus(participantId: string): Promise<RetreatModeStatus | null> {
+  async getModeStatus(
+    participantId: string,
+  ): Promise<RetreatModeStatus | null> {
     return this.modeStatuses.get(participantId) || null;
   }
 
   async getAllActiveModes(): Promise<RetreatModeStatus[]> {
-    return Array.from(this.modeStatuses.values()).filter(status =>
-      status.currentMode !== 'inactive'
+    return Array.from(this.modeStatuses.values()).filter(
+      (status) => status.currentMode !== "inactive",
     );
   }
 
   async processOracleInteraction(
     participantId: string,
     query: string,
-    sessionContext?: any
+    sessionContext?: any,
   ): Promise<string> {
     const oracleAgent = this.activeOracles.get(participantId);
 
     if (!oracleAgent) {
-      throw new Error(`No active Oracle found for participant ${participantId}`);
+      throw new Error(
+        `No active Oracle found for participant ${participantId}`,
+      );
     }
 
     // Process the query through personalized Oracle
@@ -189,7 +209,7 @@ export class RetreatModeManager {
 
   async updateParticipantContext(
     participantId: string,
-    contextUpdates: any
+    contextUpdates: any,
   ): Promise<void> {
     const oracleAgent = this.activeOracles.get(participantId);
 
@@ -198,7 +218,7 @@ export class RetreatModeManager {
 
       logger.info(`Participant context updated`, {
         participantId,
-        updates: Object.keys(contextUpdates)
+        updates: Object.keys(contextUpdates),
       });
     }
   }
@@ -206,7 +226,7 @@ export class RetreatModeManager {
   async emergencyDeactivation(
     participantId: string,
     reason: string,
-    deactivatedBy: string
+    deactivatedBy: string,
   ): Promise<void> {
     const oracleAgent = this.activeOracles.get(participantId);
 
@@ -217,7 +237,7 @@ export class RetreatModeManager {
       // Update status with emergency flag
       const status = this.modeStatuses.get(participantId);
       if (status) {
-        status.currentMode = 'inactive';
+        status.currentMode = "inactive";
         status.oracleAgent = undefined;
       }
 
@@ -227,7 +247,7 @@ export class RetreatModeManager {
       logger.warn(`Emergency deactivation completed`, {
         participantId,
         reason,
-        deactivatedBy
+        deactivatedBy,
       });
     }
   }
@@ -244,24 +264,24 @@ export class RetreatModeManager {
     }
   }
 
-  private async recordModeActivation(activation: RetreatModeActivation): Promise<void> {
+  private async recordModeActivation(
+    activation: RetreatModeActivation,
+  ): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('retreat_mode_activations')
-        .insert({
-          participant_id: activation.participantId,
-          oracle_id: activation.oracleId,
-          mode: activation.mode,
-          activated_at: activation.activatedAt.toISOString(),
-          activated_by: activation.activatedBy,
-          session_context: activation.sessionContext || {}
-        });
+      const { error } = await supabase.from("retreat_mode_activations").insert({
+        participant_id: activation.participantId,
+        oracle_id: activation.oracleId,
+        mode: activation.mode,
+        activated_at: activation.activatedAt.toISOString(),
+        activated_by: activation.activatedBy,
+        session_context: activation.sessionContext || {},
+      });
 
       if (error) {
-        logger.error('Failed to record mode activation', error);
+        logger.error("Failed to record mode activation", error);
       }
     } catch (error) {
-      logger.error('Database error recording mode activation', error);
+      logger.error("Database error recording mode activation", error);
     }
   }
 
@@ -269,14 +289,14 @@ export class RetreatModeManager {
     participantId: string,
     mode: string,
     oracleAgent: PersonalizedOracleAgent,
-    activation: RetreatModeActivation
+    activation: RetreatModeActivation,
   ): Promise<void> {
     const currentStatus = this.modeStatuses.get(participantId) || {
       participantId,
-      currentMode: 'inactive' as const,
+      currentMode: "inactive" as const,
       activeSessions: [],
       totalInteractions: 0,
-      modeHistory: []
+      modeHistory: [],
     };
 
     currentStatus.currentMode = mode as any;
@@ -289,58 +309,63 @@ export class RetreatModeManager {
 
   private async performGracefulShutdown(
     participantId: string,
-    oracleAgent: PersonalizedOracleAgent
+    oracleAgent: PersonalizedOracleAgent,
   ): Promise<void> {
     try {
       // Allow final interaction or closing message
       const insights = await oracleAgent.getPersonalizationInsights();
 
-      logger.info(`Graceful shutdown completed for Oracle ${insights.primaryElement}`, {
-        participantId,
-        finalPhase: insights.currentPhase
-      });
+      logger.info(
+        `Graceful shutdown completed for Oracle ${insights.primaryElement}`,
+        {
+          participantId,
+          finalPhase: insights.currentPhase,
+        },
+      );
     } catch (error) {
-      logger.error('Error during graceful shutdown', error);
+      logger.error("Error during graceful shutdown", error);
     }
   }
 
   private async logEmergencyDeactivation(
     participantId: string,
     reason: string,
-    deactivatedBy: string
+    deactivatedBy: string,
   ): Promise<void> {
     try {
       const { error } = await supabase
-        .from('retreat_emergency_deactivations')
+        .from("retreat_emergency_deactivations")
         .insert({
           participant_id: participantId,
           reason,
           deactivated_by: deactivatedBy,
-          deactivated_at: new Date().toISOString()
+          deactivated_at: new Date().toISOString(),
         });
 
       if (error) {
-        logger.error('Failed to log emergency deactivation', error);
+        logger.error("Failed to log emergency deactivation", error);
       }
     } catch (error) {
-      logger.error('Database error logging emergency deactivation', error);
+      logger.error("Database error logging emergency deactivation", error);
     }
   }
 
-  private async checkAndPerformScheduledTransitions(status: RetreatModeStatus): Promise<void> {
+  private async checkAndPerformScheduledTransitions(
+    status: RetreatModeStatus,
+  ): Promise<void> {
     // Implementation for automatic transitions based on retreat schedule
     // This would integrate with retreat scheduling system
 
     const now = new Date();
 
     // Example logic - would need actual retreat dates
-    if (status.currentMode === 'pre-retreat') {
+    if (status.currentMode === "pre-retreat") {
       // Check if retreat has started
       // await this.transitionMode(status.participantId, 'retreat-active', 'system');
-    } else if (status.currentMode === 'retreat-active') {
+    } else if (status.currentMode === "retreat-active") {
       // Check if retreat has ended
       // await this.transitionMode(status.participantId, 'post-retreat', 'system');
-    } else if (status.currentMode === 'post-retreat') {
+    } else if (status.currentMode === "post-retreat") {
       // Check if integration period has ended
       // await this.deactivateRetreatMode(status.participantId);
     }
@@ -361,7 +386,9 @@ export class RetreatModeManager {
       throw new Error(`No mode status found for participant ${participantId}`);
     }
 
-    const oracleInsights = oracleAgent ? await oracleAgent.getPersonalizationInsights() : undefined;
+    const oracleInsights = oracleAgent
+      ? await oracleAgent.getPersonalizationInsights()
+      : undefined;
 
     return {
       participant: participantId,
@@ -369,7 +396,7 @@ export class RetreatModeManager {
       totalActivations: status.modeHistory.length,
       totalInteractions: status.totalInteractions,
       modeHistory: status.modeHistory,
-      oracleInsights
+      oracleInsights,
     };
   }
 }

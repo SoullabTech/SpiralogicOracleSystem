@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from "../lib/supabaseClient";
 
 export interface UserProfile {
   personal_guide_name: string;
@@ -10,28 +10,33 @@ export interface UserProfile {
 
 export async function getUserProfile(userId: string): Promise<UserProfile> {
   const { data, error } = await supabase
-    .from('user_profiles')
-    .select('personal_guide_name, guide_gender, voice_id, guide_language')
-    .eq('user_id', userId)
+    .from("user_profiles")
+    .select("personal_guide_name, guide_gender, voice_id, guide_language")
+    .eq("user_id", userId)
     .single();
 
   if (error) {
     throw new Error(`Failed to get user profile: ${error.message}`);
   }
 
-  return data || {
-    personal_guide_name: 'Oracle',
-    guide_gender: 'neutral',
-    voice_id: 'default',
-    guide_language: 'en'
-  };
+  return (
+    data || {
+      personal_guide_name: "Oracle",
+      guide_gender: "neutral",
+      voice_id: "default",
+      guide_language: "en",
+    }
+  );
 }
 
-export async function updateUserProfile(userId: string, updates: Partial<UserProfile>): Promise<UserProfile> {
+export async function updateUserProfile(
+  userId: string,
+  updates: Partial<UserProfile>,
+): Promise<UserProfile> {
   const { data, error } = await supabase
-    .from('user_profiles')
+    .from("user_profiles")
     .update(updates)
-    .eq('user_id', userId)
+    .eq("user_id", userId)
     .single();
 
   if (error) {

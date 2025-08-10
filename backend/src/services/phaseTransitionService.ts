@@ -2,25 +2,34 @@
 // Manages elemental phase transitions using Vector Equilibrium geometry
 // Integrates with oracle agents for consciousness state transitions
 
-import { VectorEquilibrium, JitterbugPhase, Water2Process, calculateVEMetrics } from './vectorEquilibrium';
-import { getRelevantMemories, storeMemoryItem, getSpiritualPatternInsights } from './memoryService';
-import { ElementalBalance } from '../lib/geometryEngine';
+import {
+  VectorEquilibrium,
+  JitterbugPhase,
+  Water2Process,
+  calculateVEMetrics,
+} from "./vectorEquilibrium";
+import {
+  getRelevantMemories,
+  storeMemoryItem,
+  getSpiritualPatternInsights,
+} from "./memoryService";
+import { ElementalBalance } from "../lib/geometryEngine";
 
 // Phase transition types based on Spiralogic principles
 export enum TransitionType {
-  NATURAL_FLOW = 'natural_flow',           // Smooth elemental progression
-  CATALYTIC_LEAP = 'catalytic_leap',       // Fire-driven rapid transformation
-  DISSOLUTION = 'dissolution',              // Water 2 death process
-  CRYSTALLIZATION = 'crystallization',     // Earth manifestation
-  EXPANSION = 'expansion',                  // Air consciousness expansion
-  INTEGRATION = 'integration',              // Aether unification
-  CRISIS = 'crisis',                       // Forced transformation
-  AWAKENING = 'awakening'                  // Spontaneous enlightenment
+  NATURAL_FLOW = "natural_flow", // Smooth elemental progression
+  CATALYTIC_LEAP = "catalytic_leap", // Fire-driven rapid transformation
+  DISSOLUTION = "dissolution", // Water 2 death process
+  CRYSTALLIZATION = "crystallization", // Earth manifestation
+  EXPANSION = "expansion", // Air consciousness expansion
+  INTEGRATION = "integration", // Aether unification
+  CRISIS = "crisis", // Forced transformation
+  AWAKENING = "awakening", // Spontaneous enlightenment
 }
 
 // Transition triggers from user patterns
 interface TransitionTrigger {
-  type: 'pattern' | 'threshold' | 'synchronicity' | 'crisis' | 'completion';
+  type: "pattern" | "threshold" | "synchronicity" | "crisis" | "completion";
   data: any;
   strength: number; // 0-1
 }
@@ -52,37 +61,42 @@ export class PhaseTransitionService {
     // Check for Water 2 death/rebirth patterns
     if (this.detectWater2Pattern(patterns, memories)) {
       triggers.push({
-        type: 'pattern',
-        data: { phase: 'water2', theme: 'death_rebirth' },
-        strength: 0.9
+        type: "pattern",
+        data: { phase: "water2", theme: "death_rebirth" },
+        strength: 0.9,
       });
     }
 
     // Check elemental imbalance
-    const imbalance = this.calculateElementalImbalance(patterns.elementalBalance);
+    const imbalance = this.calculateElementalImbalance(
+      patterns.elementalBalance,
+    );
     if (imbalance > 0.7) {
       triggers.push({
-        type: 'threshold',
-        data: { imbalance, dominant: this.getDominantElement(patterns.elementalBalance) },
-        strength: imbalance
+        type: "threshold",
+        data: {
+          imbalance,
+          dominant: this.getDominantElement(patterns.elementalBalance),
+        },
+        strength: imbalance,
       });
     }
 
     // Check for synchronicities indicating transition
     if (patterns.currentSynchronicities.length >= 3) {
       triggers.push({
-        type: 'synchronicity',
+        type: "synchronicity",
         data: { synchronicities: patterns.currentSynchronicities },
-        strength: Math.min(patterns.currentSynchronicities.length / 5, 1)
+        strength: Math.min(patterns.currentSynchronicities.length / 5, 1),
       });
     }
 
     // Check for completion patterns
     if (this.detectCompletionPattern(memories)) {
       triggers.push({
-        type: 'completion',
-        data: { cycle: 'elemental_journey' },
-        strength: 0.8
+        type: "completion",
+        data: { cycle: "elemental_journey" },
+        strength: 0.8,
       });
     }
 
@@ -98,14 +112,14 @@ export class PhaseTransitionService {
     await storeMemoryItem({
       clientId: this.userId,
       content: `Phase transition initiated: ${transitionType}`,
-      element: 'aether',
-      sourceAgent: 'vector-equilibrium',
+      element: "aether",
+      sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType,
         trigger,
         startingBalance: currentBalance,
-        veMetrics: calculateVEMetrics(this.ve)
-      }
+        veMetrics: calculateVEMetrics(this.ve),
+      },
     });
 
     // Execute transition based on type
@@ -145,7 +159,7 @@ export class PhaseTransitionService {
       startTime: Date.now(),
       duration: 10000, // 10 seconds for full cycle
       fromState: this.ve.getElementalBalance(),
-      toState: { water: 80, aether: 20 } // Target state
+      toState: { water: 80, aether: 20 }, // Target state
     };
 
     // Execute the death/rebirth process
@@ -155,14 +169,14 @@ export class PhaseTransitionService {
     await storeMemoryItem({
       clientId: this.userId,
       content: `Water 2 death/rebirth cycle completed. ${water2Process.getArchetypalMessage()}`,
-      element: 'water',
-      sourceAgent: 'vector-equilibrium',
+      element: "water",
+      sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType: TransitionType.DISSOLUTION,
-        stage: 'completed',
+        stage: "completed",
         newBalance: this.ve.getElementalBalance(),
-        coherence: this.ve.getCoherence()
-      }
+        coherence: this.ve.getCoherence(),
+      },
     });
   }
 
@@ -178,13 +192,14 @@ export class PhaseTransitionService {
 
     await storeMemoryItem({
       clientId: this.userId,
-      content: 'Manifestation crystallized into form. Earth element anchors vision into reality.',
-      element: 'earth',
-      sourceAgent: 'vector-equilibrium',
+      content:
+        "Manifestation crystallized into form. Earth element anchors vision into reality.",
+      element: "earth",
+      sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType: TransitionType.CRYSTALLIZATION,
-        newBalance: this.ve.getElementalBalance()
-      }
+        newBalance: this.ve.getElementalBalance(),
+      },
     });
   }
 
@@ -202,13 +217,14 @@ export class PhaseTransitionService {
 
     await storeMemoryItem({
       clientId: this.userId,
-      content: 'Consciousness expands into new perspectives. Air element brings clarity and vision.',
-      element: 'air',
-      sourceAgent: 'vector-equilibrium',
+      content:
+        "Consciousness expands into new perspectives. Air element brings clarity and vision.",
+      element: "air",
+      sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType: TransitionType.EXPANSION,
-        newBalance: this.ve.getElementalBalance()
-      }
+        newBalance: this.ve.getElementalBalance(),
+      },
     });
   }
 
@@ -218,7 +234,7 @@ export class PhaseTransitionService {
     const phases = [
       JitterbugPhase.OCTAHEDRON,
       JitterbugPhase.ICOSAHEDRON,
-      JitterbugPhase.VECTOR_EQUILIBRIUM
+      JitterbugPhase.VECTOR_EQUILIBRIUM,
     ];
 
     for (let i = 0; i < 3; i++) {
@@ -230,13 +246,14 @@ export class PhaseTransitionService {
 
     await storeMemoryItem({
       clientId: this.userId,
-      content: 'Catalytic fire transformation complete. Old patterns transmuted into new potential.',
-      element: 'fire',
-      sourceAgent: 'vector-equilibrium',
+      content:
+        "Catalytic fire transformation complete. Old patterns transmuted into new potential.",
+      element: "fire",
+      sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType: TransitionType.CATALYTIC_LEAP,
-        newBalance: this.ve.getElementalBalance()
-      }
+        newBalance: this.ve.getElementalBalance(),
+      },
     });
   }
 
@@ -249,14 +266,15 @@ export class PhaseTransitionService {
 
     await storeMemoryItem({
       clientId: this.userId,
-      content: 'All elements unified in perfect balance. Aether consciousness achieved.',
-      element: 'aether',
-      sourceAgent: 'vector-equilibrium',
+      content:
+        "All elements unified in perfect balance. Aether consciousness achieved.",
+      element: "aether",
+      sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType: TransitionType.INTEGRATION,
         newBalance: this.ve.getElementalBalance(),
-        coherence: this.ve.getCoherence()
-      }
+        coherence: this.ve.getCoherence(),
+      },
     });
   }
 
@@ -273,32 +291,37 @@ export class PhaseTransitionService {
   // Helper methods
   private detectWater2Pattern(patterns: any, memories: any[]): boolean {
     // Look for death/rebirth themes
-    const deathThemes = ['death_rebirth', 'void_work', 'dark_night'];
+    const deathThemes = ["death_rebirth", "void_work", "dark_night"];
     const hasDeathTheme = patterns.activeThemes.some((theme: string) =>
-      deathThemes.includes(theme)
+      deathThemes.includes(theme),
     );
 
     // Check recent memories for water + shadow
-    const recentWaterShadow = memories
-      .slice(0, 10)
-      .filter(m => m.element === 'water' &&
-        (m.content.toLowerCase().includes('shadow') ||
-         m.content.toLowerCase().includes('death') ||
-         m.content.toLowerCase().includes('void')))
-      .length >= 2;
+    const recentWaterShadow =
+      memories
+        .slice(0, 10)
+        .filter(
+          (m) =>
+            m.element === "water" &&
+            (m.content.toLowerCase().includes("shadow") ||
+              m.content.toLowerCase().includes("death") ||
+              m.content.toLowerCase().includes("void")),
+        ).length >= 2;
 
     return hasDeathTheme || recentWaterShadow;
   }
 
   private calculateElementalImbalance(balance: ElementalBalance): number {
-    const values = Object.values(balance).filter(v => v !== undefined) as number[];
+    const values = Object.values(balance).filter(
+      (v) => v !== undefined,
+    ) as number[];
     const max = Math.max(...values);
     const avg = values.reduce((a, b) => a + b, 0) / values.length;
     return (max - avg) / 100;
   }
 
   private getDominantElement(balance: ElementalBalance): string {
-    let maxElement = 'aether';
+    let maxElement = "aether";
     let maxValue = 0;
 
     Object.entries(balance).forEach(([element, value]) => {
@@ -314,7 +337,10 @@ export class PhaseTransitionService {
   private detectCompletionPattern(memories: any[]): boolean {
     // Check if user has experienced all elements recently
     const recentElements = new Set(
-      memories.slice(0, 20).map(m => m.element).filter(e => e)
+      memories
+        .slice(0, 20)
+        .map((m) => m.element)
+        .filter((e) => e),
     );
 
     return recentElements.size >= 5; // All 5 elements
@@ -322,29 +348,29 @@ export class PhaseTransitionService {
 
   private determineTransitionType(trigger: TransitionTrigger): TransitionType {
     switch (trigger.type) {
-      case 'pattern':
-        if (trigger.data.phase === 'water2') {
+      case "pattern":
+        if (trigger.data.phase === "water2") {
           return TransitionType.DISSOLUTION;
         }
         break;
 
-      case 'threshold':
-        if (trigger.data.dominant === 'earth') {
+      case "threshold":
+        if (trigger.data.dominant === "earth") {
           return TransitionType.CRYSTALLIZATION;
-        } else if (trigger.data.dominant === 'air') {
+        } else if (trigger.data.dominant === "air") {
           return TransitionType.EXPANSION;
-        } else if (trigger.data.dominant === 'fire') {
+        } else if (trigger.data.dominant === "fire") {
           return TransitionType.CATALYTIC_LEAP;
         }
         break;
 
-      case 'synchronicity':
+      case "synchronicity":
         return TransitionType.AWAKENING;
 
-      case 'completion':
+      case "completion":
         return TransitionType.INTEGRATION;
 
-      case 'crisis':
+      case "crisis":
         return TransitionType.CRISIS;
     }
 
@@ -352,7 +378,7 @@ export class PhaseTransitionService {
   }
 
   private animatePhaseTransition(duration: number): Promise<void> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const startTime = Date.now();
       const animate = () => {
         const elapsed = Date.now() - startTime;
@@ -379,7 +405,7 @@ export class PhaseTransitionService {
     return {
       svg: this.ve.generateSVG(400, 400),
       metrics: calculateVEMetrics(this.ve),
-      transition: this.currentTransition
+      transition: this.currentTransition,
     };
   }
 }
@@ -387,7 +413,9 @@ export class PhaseTransitionService {
 // Singleton instance per user
 const transitionServices = new Map<string, PhaseTransitionService>();
 
-export function getPhaseTransitionService(userId: string): PhaseTransitionService {
+export function getPhaseTransitionService(
+  userId: string,
+): PhaseTransitionService {
   if (!transitionServices.has(userId)) {
     transitionServices.set(userId, new PhaseTransitionService(userId));
   }
@@ -398,15 +426,15 @@ export function getPhaseTransitionService(userId: string): PhaseTransitionServic
 export async function checkForPhaseTransition(userId: string): Promise<{
   shouldTransition: boolean;
   triggers: TransitionTrigger[];
-  currentState: ReturnType<PhaseTransitionService['getCurrentState']>;
+  currentState: ReturnType<PhaseTransitionService["getCurrentState"]>;
 }> {
   const service = getPhaseTransitionService(userId);
   const triggers = await service.analyzeTransitionPotential();
-  const shouldTransition = triggers.some(t => t.strength > 0.7);
+  const shouldTransition = triggers.some((t) => t.strength > 0.7);
 
   return {
     shouldTransition,
     triggers,
-    currentState: service.getCurrentState()
+    currentState: service.getCurrentState(),
   };
 }

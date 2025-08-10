@@ -1,6 +1,12 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const elementalThemeSchema = z.enum(['fire', 'water', 'earth', 'air', 'aether']);
+export const elementalThemeSchema = z.enum([
+  "fire",
+  "water",
+  "earth",
+  "air",
+  "aether",
+]);
 export type ElementalTheme = z.infer<typeof elementalThemeSchema>;
 
 export interface StoryRequest {
@@ -43,10 +49,10 @@ export interface ChartData {
   southNode: { sign: string; house: number };
 }
 
-export type ArchetypalElement = 'fire' | 'water' | 'earth' | 'air' | 'aether';
+export type ArchetypalElement = "fire" | "water" | "earth" | "air" | "aether";
 
 // I Ching Astrology Types
-export type IChingElement = 'Wood' | 'Fire' | 'Earth' | 'Metal' | 'Water';
+export type IChingElement = "Wood" | "Fire" | "Earth" | "Metal" | "Water";
 
 export interface TrigramArchetype {
   name: string;

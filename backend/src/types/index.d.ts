@@ -1,6 +1,6 @@
 // src/types/express.d.ts
 
-import { User } from '@supabase/supabase-js';
+import { User } from "@supabase/supabase-js";
 
 declare global {
   namespace Express {

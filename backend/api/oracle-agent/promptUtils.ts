@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 import { SpiralogicPhase } from "./phaseRecognition";
 import { PromptLoggingService } from "./promptLoggingService";
 
@@ -10,7 +10,7 @@ interface PromptWithMetadata {
   phase: SpiralogicPhase;
   elemental_voice?: string;
   context_tags?: string[];
-  source?: 'file' | 'database';
+  source?: "file" | "database";
 }
 
 export class PromptManager {
@@ -35,13 +35,21 @@ export class PromptManager {
       includeMetadata?: boolean;
       userId?: string;
       avoidRecent?: boolean;
-    }
+    },
   ): Promise<PromptWithMetadata[]> {
-    const { preferDatabase = true, includeMetadata = true, userId, avoidRecent = false } = options || {};
+    const {
+      preferDatabase = true,
+      includeMetadata = true,
+      userId,
+      avoidRecent = false,
+    } = options || {};
 
     // Check cache first
     const cacheKey = `${phase}-${preferDatabase}`;
-    if (this.cache.has(cacheKey) && Date.now() - this.lastCacheUpdate < this.cacheExpiry) {
+    if (
+      this.cache.has(cacheKey) &&
+      Date.now() - this.lastCacheUpdate < this.cacheExpiry
+    ) {
       return this.cache.get(cacheKey)!;
     }
 
@@ -59,43 +67,50 @@ export class PromptManager {
 
     // Filter out recently seen prompts if requested
     if (userId && avoidRecent) {
-      const unseenPrompts = await this.loggingService.getUnseenPrompts(userId, phase);
-      prompts = prompts.filter(p => unseenPrompts.includes(p.prompt));
+      const unseenPrompts = await this.loggingService.getUnseenPrompts(
+        userId,
+        phase,
+      );
+      prompts = prompts.filter((p) => unseenPrompts.includes(p.prompt));
     }
 
     // Update cache
     this.cache.set(cacheKey, prompts);
     this.lastCacheUpdate = Date.now();
 
-    return includeMetadata ? prompts : prompts.map(p => ({ prompt: p.prompt, phase, source: p.source }));
+    return includeMetadata
+      ? prompts
+      : prompts.map((p) => ({ prompt: p.prompt, phase, source: p.source }));
   }
 
   /**
    * Get prompts from Supabase database
    */
-  private async getPromptsFromDatabase(phase: SpiralogicPhase): Promise<PromptWithMetadata[]> {
+  private async getPromptsFromDatabase(
+    phase: SpiralogicPhase,
+  ): Promise<PromptWithMetadata[]> {
     try {
       const { data, error } = await this.supabase
-        .from('spiralogic_prompts')
-        .select('*')
-        .eq('phase', phase)
-        .order('created_at', { ascending: false });
+        .from("spiralogic_prompts")
+        .select("*")
+        .eq("phase", phase)
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.error('Failed to fetch prompts from database:', error);
+        console.error("Failed to fetch prompts from database:", error);
         return [];
       }
 
-      return (data || []).map(item => ({
+      return (data || []).map((item) => ({
         id: item.id,
         prompt: item.prompt,
         phase: item.phase,
         elemental_voice: item.elemental_voice,
         context_tags: item.context_tags,
-        source: 'database' as const
+        source: "database" as const,
       }));
     } catch (error) {
-      console.error('Error fetching from database:', error);
+      console.error("Error fetching from database:", error);
       return [];
     }
   }
@@ -103,19 +118,28 @@ export class PromptManager {
   /**
    * Get prompts from JSON file
    */
-  private async getPromptsFromFile(phase: SpiralogicPhase): Promise<PromptWithMetadata[]> {
+  private async getPromptsFromFile(
+    phase: SpiralogicPhase,
+  ): Promise<PromptWithMetadata[]> {
     try {
-      const filePath = path.resolve(__dirname, "prompts", `${phase.toLowerCase()}.json`);
+      const filePath = path.resolve(
+        __dirname,
+        "prompts",
+        `${phase.toLowerCase()}.json`,
+      );
       const data = await fs.readFile(filePath, "utf-8");
       const prompts = JSON.parse(data);
 
       return prompts.map((prompt: string) => ({
         prompt,
         phase,
-        source: 'file' as const
+        source: "file" as const,
       }));
     } catch (error) {
-      console.error(`Failed to read prompts from file for phase ${phase}:`, error);
+      console.error(
+        `Failed to read prompts from file for phase ${phase}:`,
+        error,
+      );
       return [];
     }
   }
@@ -131,11 +155,11 @@ export class PromptManager {
       avoidRecent?: boolean;
       elementalVoice?: string;
       contextTags?: string[];
-    }
+    },
   ): Promise<PromptWithMetadata | null> {
     const prompts = await this.getPromptsForPhase(phase, {
       userId,
-      avoidRecent: options?.avoidRecent
+      avoidRecent: options?.avoidRecent,
     });
 
     if (prompts.length === 0) return null;
@@ -143,11 +167,13 @@ export class PromptManager {
     // Filter by elemental voice or tags if specified
     let filteredPrompts = prompts;
     if (options?.elementalVoice) {
-      filteredPrompts = prompts.filter(p => p.elemental_voice === options.elementalVoice);
+      filteredPrompts = prompts.filter(
+        (p) => p.elemental_voice === options.elementalVoice,
+      );
     }
     if (options?.contextTags && options.contextTags.length > 0) {
-      filteredPrompts = filteredPrompts.filter(p =>
-        p.context_tags?.some(tag => options.contextTags!.includes(tag))
+      filteredPrompts = filteredPrompts.filter((p) =>
+        p.context_tags?.some((tag) => options.contextTags!.includes(tag)),
       );
     }
 
@@ -157,7 +183,8 @@ export class PromptManager {
     }
 
     // Select random prompt
-    const selectedPrompt = filteredPrompts[Math.floor(Math.random() * filteredPrompts.length)];
+    const selectedPrompt =
+      filteredPrompts[Math.floor(Math.random() * filteredPrompts.length)];
 
     // Log the usage
     await this.loggingService.logPromptUsage({
@@ -165,9 +192,10 @@ export class PromptManager {
       prompt_id: selectedPrompt.id,
       prompt_text: selectedPrompt.prompt,
       phase,
-      elemental_voice: selectedPrompt.elemental_voice || options?.elementalVoice,
+      elemental_voice:
+        selectedPrompt.elemental_voice || options?.elementalVoice,
       session_id: sessionId,
-      context_tags: selectedPrompt.context_tags || options?.contextTags
+      context_tags: selectedPrompt.context_tags || options?.contextTags,
     });
 
     return selectedPrompt;
@@ -176,32 +204,33 @@ export class PromptManager {
   /**
    * Search prompts by keywords or tags
    */
-  async searchPrompts(query: string, phase?: SpiralogicPhase): Promise<PromptWithMetadata[]> {
-    let dbQuery = this.supabase
-      .from('spiralogic_prompts')
-      .select('*');
+  async searchPrompts(
+    query: string,
+    phase?: SpiralogicPhase,
+  ): Promise<PromptWithMetadata[]> {
+    let dbQuery = this.supabase.from("spiralogic_prompts").select("*");
 
     // Search in prompt text
-    dbQuery = dbQuery.textSearch('prompt', query);
+    dbQuery = dbQuery.textSearch("prompt", query);
 
     if (phase) {
-      dbQuery = dbQuery.eq('phase', phase);
+      dbQuery = dbQuery.eq("phase", phase);
     }
 
     const { data, error } = await dbQuery;
 
     if (error) {
-      console.error('Failed to search prompts:', error);
+      console.error("Failed to search prompts:", error);
       return [];
     }
 
-    return (data || []).map(item => ({
+    return (data || []).map((item) => ({
       id: item.id,
       prompt: item.prompt,
       phase: item.phase,
       elemental_voice: item.elemental_voice,
       context_tags: item.context_tags,
-      source: 'database' as const
+      source: "database" as const,
     }));
   }
 
@@ -221,9 +250,14 @@ export class PromptManager {
 }
 
 // Legacy function for backward compatibility
-export async function getPromptForPhase(phase: SpiralogicPhase): Promise<string[]> {
-  const filePath = path.resolve(__dirname, "prompts", `${phase.toLowerCase()}.json`);
+export async function getPromptForPhase(
+  phase: SpiralogicPhase,
+): Promise<string[]> {
+  const filePath = path.resolve(
+    __dirname,
+    "prompts",
+    `${phase.toLowerCase()}.json`,
+  );
   const data = await fs.readFile(filePath, "utf-8");
   return JSON.parse(data);
 }
-

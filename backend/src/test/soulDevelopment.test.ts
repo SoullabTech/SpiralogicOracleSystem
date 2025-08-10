@@ -13,35 +13,34 @@ import {
   enhancedSoulDevelopmentIntegration,
   processShadowWorkWithCulture,
   processLifePurposeWithCulture,
-  generatePersonalizedPractices
-} from '../core/soulDevelopment';
+  generatePersonalizedPractices,
+} from "../core/soulDevelopment";
 
-import { CulturalProfile } from '../core/cultural/CulturalContextAwareness';
+import { CulturalProfile } from "../core/cultural/CulturalContextAwareness";
 
-describe('Soul Development Integration Tests', () => {
-
+describe("Soul Development Integration Tests", () => {
   const testCulturalProfile: CulturalProfile = {
-    primaryCulture: 'native_american',
-    culturalIdentities: ['native_american', 'universal'],
-    languagePreferences: ['english'],
-    traditionalPractices: ['ceremony', 'medicine_wheel'],
-    spiritualFramework: 'indigenous_wisdom',
-    ancestralLineages: ['ojibwe'],
-    culturalStrengths: ['community_connection', 'earth_wisdom'],
-    preferredWisdomSources: ['elder_teachings', 'nature_wisdom']
+    primaryCulture: "native_american",
+    culturalIdentities: ["native_american", "universal"],
+    languagePreferences: ["english"],
+    traditionalPractices: ["ceremony", "medicine_wheel"],
+    spiritualFramework: "indigenous_wisdom",
+    ancestralLineages: ["ojibwe"],
+    culturalStrengths: ["community_connection", "earth_wisdom"],
+    preferredWisdomSources: ["elder_teachings", "nature_wisdom"],
   };
 
-  const testUserId = 'test_user_123';
+  const testUserId = "test_user_123";
 
-  describe('Jungian Shadow Integration Engine', () => {
-
-    test('should analyze shadow work with cultural integration', async () => {
-      const userInput = 'I always sabotage my success when things start going well';
+  describe("Jungian Shadow Integration Engine", () => {
+    test("should analyze shadow work with cultural integration", async () => {
+      const userInput =
+        "I always sabotage my success when things start going well";
 
       const shadowPlan = await jungianShadowIntegrationEngine.assessShadowWork(
         userInput,
         testUserId,
-        testCulturalProfile
+        testCulturalProfile,
       );
 
       expect(shadowPlan).toBeDefined();
@@ -52,14 +51,15 @@ describe('Soul Development Integration Tests', () => {
       expect(Array.isArray(shadowPlan.culturalHealingModalities)).toBe(true);
     });
 
-    test('should facilitate active imagination session', async () => {
-      const sessionType = 'inner_critic';
+    test("should facilitate active imagination session", async () => {
+      const sessionType = "inner_critic";
 
-      const session = await jungianShadowIntegrationEngine.facilitateActiveImaginationSession(
-        testUserId,
-        sessionType,
-        testCulturalProfile
-      );
+      const session =
+        await jungianShadowIntegrationEngine.facilitateActiveImaginationSession(
+          testUserId,
+          sessionType,
+          testCulturalProfile,
+        );
 
       expect(session).toBeDefined();
       expect(session.sessionId).toBeDefined();
@@ -69,16 +69,17 @@ describe('Soul Development Integration Tests', () => {
       expect(Array.isArray(session.integrationTasks)).toBe(true);
     });
 
-    test('should process projection withdrawal', async () => {
-      const projectionTarget = 'authority figures';
-      const projectedQualities = ['controlling', 'judgmental'];
+    test("should process projection withdrawal", async () => {
+      const projectionTarget = "authority figures";
+      const projectedQualities = ["controlling", "judgmental"];
 
-      const withdrawalProcess = await jungianShadowIntegrationEngine.processProjectionWithdrawal(
-        testUserId,
-        projectionTarget,
-        projectedQualities,
-        testCulturalProfile
-      );
+      const withdrawalProcess =
+        await jungianShadowIntegrationEngine.processProjectionWithdrawal(
+          testUserId,
+          projectionTarget,
+          projectedQualities,
+          testCulturalProfile,
+        );
 
       expect(withdrawalProcess).toBeDefined();
       expect(withdrawalProcess.projectionTarget).toBe(projectionTarget);
@@ -88,41 +89,51 @@ describe('Soul Development Integration Tests', () => {
       expect(Array.isArray(withdrawalProcess.withdrawalSteps)).toBe(true);
     });
 
-    test('should retrieve stored shadow integration plan', () => {
-      const storedPlan = jungianShadowIntegrationEngine.getShadowIntegrationPlan(testUserId);
+    test("should retrieve stored shadow integration plan", () => {
+      const storedPlan =
+        jungianShadowIntegrationEngine.getShadowIntegrationPlan(testUserId);
       expect(storedPlan).toBeDefined();
     });
   });
 
-  describe('Life Spiral Harmonizer', () => {
-
-    test('should analyze soul mandate with cultural integration', async () => {
-      const userInput = 'I feel called to heal and serve my community but don\'t know how';
+  describe("Life Spiral Harmonizer", () => {
+    test("should analyze soul mandate with cultural integration", async () => {
+      const userInput =
+        "I feel called to heal and serve my community but don't know how";
 
       const lifeSpiralPlan = await lifeSpiralHarmonizer.analyzeSoulMandate(
         userInput,
         testUserId,
-        testCulturalProfile
+        testCulturalProfile,
       );
 
       expect(lifeSpiralPlan).toBeDefined();
       expect(lifeSpiralPlan.userId).toBe(testUserId);
       expect(lifeSpiralPlan.soulMandateAnalysis).toBeDefined();
       expect(lifeSpiralPlan.soulMandateAnalysis.corePurpose).toBeDefined();
-      expect(lifeSpiralPlan.soulMandateAnalysis.elementalSignature).toBeDefined();
+      expect(
+        lifeSpiralPlan.soulMandateAnalysis.elementalSignature,
+      ).toBeDefined();
       expect(lifeSpiralPlan.harmonizationPractices).toBeDefined();
       expect(Array.isArray(lifeSpiralPlan.harmonizationPractices)).toBe(true);
     });
 
-    test('should provide soul mandate evolution guidance', async () => {
-      const currentChallenges = ['uncertainty about direction', 'fear of failure'];
-      const recentExperiences = ['spiritual awakening', 'community service opportunity'];
+    test("should provide soul mandate evolution guidance", async () => {
+      const currentChallenges = [
+        "uncertainty about direction",
+        "fear of failure",
+      ];
+      const recentExperiences = [
+        "spiritual awakening",
+        "community service opportunity",
+      ];
 
-      const evolutionGuidance = await lifeSpiralHarmonizer.getSoulMandateEvolutionGuidance(
-        testUserId,
-        currentChallenges,
-        recentExperiences
-      );
+      const evolutionGuidance =
+        await lifeSpiralHarmonizer.getSoulMandateEvolutionGuidance(
+          testUserId,
+          currentChallenges,
+          recentExperiences,
+        );
 
       expect(evolutionGuidance).toBeDefined();
       expect(evolutionGuidance.evolutionGuidance).toBeDefined();
@@ -132,17 +143,22 @@ describe('Soul Development Integration Tests', () => {
       expect(evolutionGuidance.evolutionPractices).toBeDefined();
     });
 
-    test('should harmonize life transition', async () => {
-      const transitionType = 'career';
-      const transitionContext = 'leaving corporate job to start healing practice';
-      const transitionChallenges = ['financial uncertainty', 'family expectations'];
+    test("should harmonize life transition", async () => {
+      const transitionType = "career";
+      const transitionContext =
+        "leaving corporate job to start healing practice";
+      const transitionChallenges = [
+        "financial uncertainty",
+        "family expectations",
+      ];
 
-      const transitionHarmony = await lifeSpiralHarmonizer.harmonizeLifeTransition(
-        testUserId,
-        transitionType,
-        transitionContext,
-        transitionChallenges
-      );
+      const transitionHarmony =
+        await lifeSpiralHarmonizer.harmonizeLifeTransition(
+          testUserId,
+          transitionType,
+          transitionContext,
+          transitionChallenges,
+        );
 
       expect(transitionHarmony).toBeDefined();
       expect(transitionHarmony.transitionHarmony).toBeDefined();
@@ -151,49 +167,56 @@ describe('Soul Development Integration Tests', () => {
       expect(Array.isArray(transitionHarmony.transitionPractices)).toBe(true);
     });
 
-    test('should retrieve stored life spiral plan', () => {
+    test("should retrieve stored life spiral plan", () => {
       const storedPlan = lifeSpiralHarmonizer.getLifeSpiralPlan(testUserId);
       expect(storedPlan).toBeDefined();
     });
   });
 
-  describe('Dream Journaling Integration', () => {
-
+  describe("Dream Journaling Integration", () => {
     const testDreamEntry = {
-      dreamId: 'dream_test_123',
+      dreamId: "dream_test_123",
       userId: testUserId,
       dreamDate: new Date().toISOString(),
-      dreamTitle: 'The Medicine Wheel Vision',
-      dreamNarrative: 'I stood in the center of a great medicine wheel. Four animals approached from each direction - an eagle from the east, a bear from the west, a wolf from the north, and a deer from the south. Each animal spoke words of wisdom about my path.',
-      dreamEmotions: ['awe', 'reverence', 'clarity'],
-      dreamSymbols: ['medicine wheel', 'eagle', 'bear', 'wolf', 'deer', 'four directions'],
+      dreamTitle: "The Medicine Wheel Vision",
+      dreamNarrative:
+        "I stood in the center of a great medicine wheel. Four animals approached from each direction - an eagle from the east, a bear from the west, a wolf from the north, and a deer from the south. Each animal spoke words of wisdom about my path.",
+      dreamEmotions: ["awe", "reverence", "clarity"],
+      dreamSymbols: [
+        "medicine wheel",
+        "eagle",
+        "bear",
+        "wolf",
+        "deer",
+        "four directions",
+      ],
       dreamCharacters: [
         {
-          characterName: 'Eagle',
-          characterRole: 'wisdom keeper',
-          characterRelation: 'spirit guide',
-          characterActions: ['spoke wisdom', 'spread wings'],
-          characterSymbolism: 'vision and clarity'
-        }
+          characterName: "Eagle",
+          characterRole: "wisdom keeper",
+          characterRelation: "spirit guide",
+          characterActions: ["spoke wisdom", "spread wings"],
+          characterSymbolism: "vision and clarity",
+        },
       ],
       dreamSettings: [
         {
-          settingName: 'Medicine Wheel',
-          settingDescription: 'Sacred circle with four directions marked',
-          settingSymbolism: 'wholeness and balance'
-        }
+          settingName: "Medicine Wheel",
+          settingDescription: "Sacred circle with four directions marked",
+          settingSymbolism: "wholeness and balance",
+        },
       ],
-      dreamThemes: ['spiritual guidance', 'direction seeking', 'animal wisdom'],
-      culturalElements: ['medicine wheel', 'animal spirits', 'four directions'],
+      dreamThemes: ["spiritual guidance", "direction seeking", "animal wisdom"],
+      culturalElements: ["medicine wheel", "animal spirits", "four directions"],
       lucidityLevel: 0.3,
       vividnessLevel: 0.9,
-      emotionalIntensity: 0.8
+      emotionalIntensity: 0.8,
     };
 
-    test('should process dream entry with cultural integration', async () => {
+    test("should process dream entry with cultural integration", async () => {
       const dreamAnalysis = await dreamJournalingIntegration.processDreamEntry(
         testDreamEntry,
-        testCulturalProfile
+        testCulturalProfile,
       );
 
       expect(dreamAnalysis).toBeDefined();
@@ -202,14 +225,17 @@ describe('Soul Development Integration Tests', () => {
       expect(dreamAnalysis.narrativeAnalysis).toBeDefined();
       expect(dreamAnalysis.symbolAnalysis).toBeDefined();
       expect(dreamAnalysis.culturalInterpretation).toBeDefined();
-      expect(dreamAnalysis.culturalInterpretation.culturalContext).toBe('native_american');
+      expect(dreamAnalysis.culturalInterpretation.culturalContext).toBe(
+        "native_american",
+      );
     });
 
-    test('should analyze dream patterns', async () => {
-      const patternAnalysis = await dreamJournalingIntegration.analyzeDreamPatterns(
-        testUserId,
-        'month'
-      );
+    test("should analyze dream patterns", async () => {
+      const patternAnalysis =
+        await dreamJournalingIntegration.analyzeDreamPatterns(
+          testUserId,
+          "month",
+        );
 
       expect(patternAnalysis).toBeDefined();
       expect(patternAnalysis.patterns).toBeDefined();
@@ -219,10 +245,11 @@ describe('Soul Development Integration Tests', () => {
       expect(patternAnalysis.integrationOpportunities).toBeDefined();
     });
 
-    test('should create story weaving visualization', async () => {
-      const visualization = await dreamJournalingIntegration.createStoryWeavingVisualization(
-        testUserId
-      );
+    test("should create story weaving visualization", async () => {
+      const visualization =
+        await dreamJournalingIntegration.createStoryWeavingVisualization(
+          testUserId,
+        );
 
       expect(visualization).toBeDefined();
       expect(visualization.networkStructure).toBeDefined();
@@ -231,18 +258,19 @@ describe('Soul Development Integration Tests', () => {
       expect(visualization.connectionStrengths).toBeDefined();
     });
 
-    test('should generate dream integration practices', async () => {
+    test("should generate dream integration practices", async () => {
       // First process a dream to have analysis available
       const dreamAnalysis = await dreamJournalingIntegration.processDreamEntry(
         testDreamEntry,
-        testCulturalProfile
+        testCulturalProfile,
       );
 
-      const practices = await dreamJournalingIntegration.generateDreamIntegrationPractices(
-        testUserId,
-        dreamAnalysis,
-        testCulturalProfile
-      );
+      const practices =
+        await dreamJournalingIntegration.generateDreamIntegrationPractices(
+          testUserId,
+          dreamAnalysis,
+          testCulturalProfile,
+        );
 
       expect(practices).toBeDefined();
       expect(practices.dailyPractices).toBeDefined();
@@ -251,30 +279,32 @@ describe('Soul Development Integration Tests', () => {
       expect(practices.shadowWorkPractices).toBeDefined();
     });
 
-    test('should retrieve stored dream data', () => {
-      const dreamEntries = dreamJournalingIntegration.getUserDreamEntries(testUserId);
+    test("should retrieve stored dream data", () => {
+      const dreamEntries =
+        dreamJournalingIntegration.getUserDreamEntries(testUserId);
       expect(Array.isArray(dreamEntries)).toBe(true);
 
-      const dreamAnalyses = dreamJournalingIntegration.getUserDreamAnalyses(testUserId);
+      const dreamAnalyses =
+        dreamJournalingIntegration.getUserDreamAnalyses(testUserId);
       expect(Array.isArray(dreamAnalyses)).toBe(true);
     });
   });
 
-  describe('Integration Practice Generator', () => {
-
-    test('should generate practice ecosystem', async () => {
-      const practiceEcosystem = await integrationPracticeGenerator.generatePracticeEcosystem(
-        testUserId,
-        testCulturalProfile,
-        undefined, // shadowPlan
-        undefined, // lifeSpiralPlan
-        undefined, // dreamPlan
-        {
-          intensity: 'moderate',
-          duration: 'medium',
-          frequency: 'daily'
-        }
-      );
+  describe("Integration Practice Generator", () => {
+    test("should generate practice ecosystem", async () => {
+      const practiceEcosystem =
+        await integrationPracticeGenerator.generatePracticeEcosystem(
+          testUserId,
+          testCulturalProfile,
+          undefined, // shadowPlan
+          undefined, // lifeSpiralPlan
+          undefined, // dreamPlan
+          {
+            intensity: "moderate",
+            duration: "medium",
+            frequency: "daily",
+          },
+        );
 
       expect(practiceEcosystem).toBeDefined();
       expect(practiceEcosystem.userId).toBe(testUserId);
@@ -284,34 +314,36 @@ describe('Soul Development Integration Tests', () => {
       expect(practiceEcosystem.culturalIntegration).toBeDefined();
     });
 
-    test('should adapt practice ecosystem', async () => {
+    test("should adapt practice ecosystem", async () => {
       const adaptationTriggers = {
         progressFeedback: { completed: 5, effectiveness: 0.8 },
-        challengeEncountered: ['time constraints'],
-        preferencesChanged: { intensity: 'gentle' }
+        challengeEncountered: ["time constraints"],
+        preferencesChanged: { intensity: "gentle" },
       };
 
-      const adaptedEcosystem = await integrationPracticeGenerator.adaptPracticeEcosystem(
-        testUserId,
-        adaptationTriggers
-      );
+      const adaptedEcosystem =
+        await integrationPracticeGenerator.adaptPracticeEcosystem(
+          testUserId,
+          adaptationTriggers,
+        );
 
       expect(adaptedEcosystem).toBeDefined();
       expect(adaptedEcosystem.userId).toBe(testUserId);
     });
 
-    test('should generate practice recommendations', async () => {
+    test("should generate practice recommendations", async () => {
       const context = {
-        currentMood: 'contemplative',
+        currentMood: "contemplative",
         availableTime: 20,
-        currentChallenges: ['decision paralysis'],
-        environmentContext: 'home'
+        currentChallenges: ["decision paralysis"],
+        environmentContext: "home",
       };
 
-      const recommendations = await integrationPracticeGenerator.generatePracticeRecommendations(
-        testUserId,
-        context
-      );
+      const recommendations =
+        await integrationPracticeGenerator.generatePracticeRecommendations(
+          testUserId,
+          context,
+        );
 
       expect(recommendations).toBeDefined();
       expect(recommendations.recommendedPractices).toBeDefined();
@@ -320,22 +352,23 @@ describe('Soul Development Integration Tests', () => {
       expect(recommendations.culturalRelevance).toBeDefined();
     });
 
-    test('should track practice completion', async () => {
-      const practiceId = 'test_practice_123';
+    test("should track practice completion", async () => {
+      const practiceId = "test_practice_123";
       const completionData = {
         duration: 25,
         intensity: 0.7,
         effectiveness: 0.8,
-        insights: ['increased clarity', 'emotional release'],
-        challenges: ['initial resistance'],
-        culturalElements: ['smudging', 'four directions']
+        insights: ["increased clarity", "emotional release"],
+        challenges: ["initial resistance"],
+        culturalElements: ["smudging", "four directions"],
       };
 
-      const trackingResult = await integrationPracticeGenerator.trackPracticeCompletion(
-        testUserId,
-        practiceId,
-        completionData
-      );
+      const trackingResult =
+        await integrationPracticeGenerator.trackPracticeCompletion(
+          testUserId,
+          practiceId,
+          completionData,
+        );
 
       expect(trackingResult).toBeDefined();
       expect(trackingResult.updatedEcosystem).toBeDefined();
@@ -344,40 +377,42 @@ describe('Soul Development Integration Tests', () => {
       expect(trackingResult.nextRecommendations).toBeDefined();
     });
 
-    test('should retrieve stored practice data', () => {
-      const practiceEcosystem = integrationPracticeGenerator.getPracticeEcosystem(testUserId);
+    test("should retrieve stored practice data", () => {
+      const practiceEcosystem =
+        integrationPracticeGenerator.getPracticeEcosystem(testUserId);
       expect(practiceEcosystem).toBeDefined();
 
-      const practiceProfile = integrationPracticeGenerator.getPracticeProfile(testUserId);
+      const practiceProfile =
+        integrationPracticeGenerator.getPracticeProfile(testUserId);
       expect(practiceProfile).toBeDefined();
     });
   });
 
-  describe('Enhanced Soul Development Integration', () => {
-
-    test('should check system readiness', () => {
+  describe("Enhanced Soul Development Integration", () => {
+    test("should check system readiness", () => {
       const isReady = enhancedSoulDevelopmentIntegration.isSystemReady();
       expect(isReady).toBe(true);
     });
 
-    test('should provide system status', () => {
+    test("should provide system status", () => {
       const status = enhancedSoulDevelopmentIntegration.getSystemStatus();
       expect(status).toBeDefined();
       expect(status.initialized).toBe(true);
       expect(status.culturalIntegration).toBe(true);
-      expect(status.version).toBe('2.0.0');
+      expect(status.version).toBe("2.0.0");
       expect(Array.isArray(status.modules)).toBe(true);
     });
 
-    test('should process shadow work query with cultural integration', async () => {
-      const userInput = 'I keep attracting the same toxic relationships';
+    test("should process shadow work query with cultural integration", async () => {
+      const userInput = "I keep attracting the same toxic relationships";
 
-      const response = await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
-        userInput,
-        testUserId,
-        'shadow_work',
-        { culturalBackground: 'native_american' }
-      );
+      const response =
+        await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
+          userInput,
+          testUserId,
+          "shadow_work",
+          { culturalBackground: "native_american" },
+        );
 
       expect(response).toBeDefined();
       expect(response.soulDevelopmentResponse).toBeDefined();
@@ -387,15 +422,16 @@ describe('Soul Development Integration Tests', () => {
       expect(Array.isArray(response.nextStepsGuidance)).toBe(true);
     });
 
-    test('should process life purpose query with cultural integration', async () => {
-      const userInput = 'I want to serve my people but don\'t know my gifts';
+    test("should process life purpose query with cultural integration", async () => {
+      const userInput = "I want to serve my people but don't know my gifts";
 
-      const response = await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
-        userInput,
-        testUserId,
-        'life_purpose',
-        { culturalBackground: 'native_american' }
-      );
+      const response =
+        await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
+          userInput,
+          testUserId,
+          "life_purpose",
+          { culturalBackground: "native_american" },
+        );
 
       expect(response).toBeDefined();
       expect(response.soulDevelopmentResponse).toBeDefined();
@@ -404,15 +440,16 @@ describe('Soul Development Integration Tests', () => {
       expect(response.integrationOpportunities).toBeDefined();
     });
 
-    test('should process practice generation query', async () => {
-      const userInput = 'I need daily practices for spiritual growth';
+    test("should process practice generation query", async () => {
+      const userInput = "I need daily practices for spiritual growth";
 
-      const response = await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
-        userInput,
-        testUserId,
-        'practice_generation',
-        { culturalBackground: 'native_american' }
-      );
+      const response =
+        await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
+          userInput,
+          testUserId,
+          "practice_generation",
+          { culturalBackground: "native_american" },
+        );
 
       expect(response).toBeDefined();
       expect(response.soulDevelopmentResponse).toBeDefined();
@@ -420,15 +457,16 @@ describe('Soul Development Integration Tests', () => {
       expect(response.nextStepsGuidance).toBeDefined();
     });
 
-    test('should process comprehensive soul development query', async () => {
-      const userInput = 'I feel lost and need guidance on my spiritual path';
+    test("should process comprehensive soul development query", async () => {
+      const userInput = "I feel lost and need guidance on my spiritual path";
 
-      const response = await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
-        userInput,
-        testUserId,
-        'comprehensive',
-        { culturalBackground: 'native_american' }
-      );
+      const response =
+        await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
+          userInput,
+          testUserId,
+          "comprehensive",
+          { culturalBackground: "native_american" },
+        );
 
       expect(response).toBeDefined();
       expect(response.soulDevelopmentResponse).toBeDefined();
@@ -439,16 +477,15 @@ describe('Soul Development Integration Tests', () => {
     });
   });
 
-  describe('Helper Functions', () => {
-
-    test('should process shadow work with culture helper', async () => {
-      const userInput = 'I struggle with self-worth issues';
-      const userProfile = { culturalBackground: 'native_american' };
+  describe("Helper Functions", () => {
+    test("should process shadow work with culture helper", async () => {
+      const userInput = "I struggle with self-worth issues";
+      const userProfile = { culturalBackground: "native_american" };
 
       const response = await processShadowWorkWithCulture(
         userInput,
         testUserId,
-        userProfile
+        userProfile,
       );
 
       expect(response).toBeDefined();
@@ -456,14 +493,14 @@ describe('Soul Development Integration Tests', () => {
       expect(response.shadowIntegrationGuidance).toBeDefined();
     });
 
-    test('should process life purpose with culture helper', async () => {
-      const userInput = 'What is my calling in this lifetime?';
-      const userProfile = { culturalBackground: 'native_american' };
+    test("should process life purpose with culture helper", async () => {
+      const userInput = "What is my calling in this lifetime?";
+      const userProfile = { culturalBackground: "native_american" };
 
       const response = await processLifePurposeWithCulture(
         userInput,
         testUserId,
-        userProfile
+        userProfile,
       );
 
       expect(response).toBeDefined();
@@ -471,17 +508,17 @@ describe('Soul Development Integration Tests', () => {
       expect(response.lifePurposeGuidance).toBeDefined();
     });
 
-    test('should generate personalized practices helper', async () => {
-      const userInput = 'I want practices for healing and growth';
+    test("should generate personalized practices helper", async () => {
+      const userInput = "I want practices for healing and growth";
       const userProfile = {
-        culturalBackground: 'native_american',
-        practicePreferences: { intensity: 'moderate' }
+        culturalBackground: "native_american",
+        practicePreferences: { intensity: "moderate" },
       };
 
       const response = await generatePersonalizedPractices(
         userInput,
         testUserId,
-        userProfile
+        userProfile,
       );
 
       expect(response).toBeDefined();
@@ -490,83 +527,83 @@ describe('Soul Development Integration Tests', () => {
     });
   });
 
-  describe('Error Handling', () => {
-
-    test('should handle invalid user ID gracefully', async () => {
-      const invalidUserId = '';
+  describe("Error Handling", () => {
+    test("should handle invalid user ID gracefully", async () => {
+      const invalidUserId = "";
 
       try {
         await jungianShadowIntegrationEngine.assessShadowWork(
-          'test input',
+          "test input",
           invalidUserId,
-          testCulturalProfile
+          testCulturalProfile,
         );
       } catch (error) {
         expect(error).toBeDefined();
       }
     });
 
-    test('should handle missing cultural profile gracefully', async () => {
+    test("should handle missing cultural profile gracefully", async () => {
       const emptyCulturalProfile: CulturalProfile = {
-        primaryCulture: 'universal',
+        primaryCulture: "universal",
         culturalIdentities: [],
-        languagePreferences: ['english'],
+        languagePreferences: ["english"],
         traditionalPractices: [],
-        spiritualFramework: 'universal',
+        spiritualFramework: "universal",
         ancestralLineages: [],
         culturalStrengths: [],
-        preferredWisdomSources: []
+        preferredWisdomSources: [],
       };
 
-      const response = await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
-        'test input',
-        testUserId,
-        'shadow_work',
-        undefined
-      );
+      const response =
+        await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
+          "test input",
+          testUserId,
+          "shadow_work",
+          undefined,
+        );
 
       expect(response).toBeDefined();
       expect(response.soulDevelopmentResponse).toBeDefined();
     });
 
-    test('should handle unknown query type gracefully', async () => {
+    test("should handle unknown query type gracefully", async () => {
       try {
         await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
-          'test input',
+          "test input",
           testUserId,
-          'unknown_type' as any,
-          {}
+          "unknown_type" as any,
+          {},
         );
       } catch (error) {
         expect(error).toBeDefined();
-        expect(error.message).toContain('Unknown query type');
+        expect(error.message).toContain("Unknown query type");
       }
     });
   });
 
-  describe('Integration with Cultural Foundation', () => {
+  describe("Integration with Cultural Foundation", () => {
+    test("should integrate with cultural context awareness", async () => {
+      const userInput = "I need healing practices from my ancestors";
 
-    test('should integrate with cultural context awareness', async () => {
-      const userInput = 'I need healing practices from my ancestors';
-
-      const response = await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
-        userInput,
-        testUserId,
-        'comprehensive',
-        { culturalBackground: 'native_american' }
-      );
+      const response =
+        await enhancedSoulDevelopmentIntegration.processSoulDevelopmentQuery(
+          userInput,
+          testUserId,
+          "comprehensive",
+          { culturalBackground: "native_american" },
+        );
 
       expect(response.culturalWisdomIntegration).toBeDefined();
-      expect(response.culturalWisdomIntegration).toContain('native_american');
+      expect(response.culturalWisdomIntegration).toContain("native_american");
     });
 
-    test('should respect indigenous sovereignty protocols', async () => {
-      const userInput = 'I want to learn traditional healing methods';
+    test("should respect indigenous sovereignty protocols", async () => {
+      const userInput = "I want to learn traditional healing methods";
 
       const response = await processShadowWorkWithCulture(
         userInput,
         testUserId,
-        { culturalBackground: 'native_american' }
+        { culturalBackground: "native_american" },
       );
 
       expect(response).toBeDefined();
@@ -574,13 +611,13 @@ describe('Soul Development Integration Tests', () => {
       expect(response.soulDevelopmentResponse).toBeDefined();
     });
 
-    test('should provide cross-cultural archetype mapping', async () => {
-      const userInput = 'Help me understand my warrior energy';
+    test("should provide cross-cultural archetype mapping", async () => {
+      const userInput = "Help me understand my warrior energy";
 
       const response = await processLifePurposeWithCulture(
         userInput,
         testUserId,
-        { culturalBackground: 'native_american' }
+        { culturalBackground: "native_american" },
       );
 
       expect(response).toBeDefined();
@@ -592,5 +629,5 @@ describe('Soul Development Integration Tests', () => {
 // Test data cleanup
 afterAll(() => {
   // Clean up any test data if needed
-  console.log('Soul Development tests completed');
+  console.log("Soul Development tests completed");
 });

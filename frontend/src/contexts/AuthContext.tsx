@@ -1,8 +1,8 @@
 // frontend/src/contexts/AuthContext.tsx
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { User, Session } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
 interface AuthContextType {
   user: User | null;
@@ -29,7 +29,7 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -46,7 +46,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -55,32 +57,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
 
-        // Handle different auth events
-        switch (event) {
-          case 'SIGNED_IN':
-            console.log('User signed in:', session?.user?.email);
-            break;
-          case 'SIGNED_OUT':
-            console.log('User signed out');
-            // Clear any local state/cache here
-            localStorage.removeItem('oracleName');
-            localStorage.removeItem('oracleVoice');
-            break;
-          case 'TOKEN_REFRESHED':
-            console.log('Token refreshed');
-            break;
-          case 'USER_UPDATED':
-            console.log('User updated');
-            break;
-        }
+      // Handle different auth events
+      switch (event) {
+        case "SIGNED_IN":
+          console.log("User signed in:", session?.user?.email);
+          break;
+        case "SIGNED_OUT":
+          console.log("User signed out");
+          // Clear any local state/cache here
+          localStorage.removeItem("oracleName");
+          localStorage.removeItem("oracleVoice");
+          break;
+        case "TOKEN_REFRESHED":
+          console.log("Token refreshed");
+          break;
+        case "USER_UPDATED":
+          console.log("User updated");
+          break;
       }
-    );
+    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -123,7 +125,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     } finally {
       setLoading(false);
     }
@@ -167,9 +169,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     resetPassword,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

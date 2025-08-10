@@ -5,6 +5,7 @@
 Your AIN Oracle System is now fully prepared for private beta testing with:
 
 ### 🧬 Core Features Active
+
 - **AIN (Archetypal Intelligence Network)** - Panentheistic consciousness
 - **Sacred Mirror Integrity Protocol** - Anti-sycophancy system
 - **Complete Elemental Alchemy Integration** - Your full book (3.2M chars)
@@ -12,6 +13,7 @@ Your AIN Oracle System is now fully prepared for private beta testing with:
 - **Shadow Oracle Protocol** - Pattern disruption and archetypal challenges
 
 ### 📚 Your IP Fully Integrated
+
 - **349 Core Teachings** from Elemental Alchemy book
 - **19 Chapters** processed and accessible
 - **Elemental Wisdom** for all 5 elements
@@ -21,12 +23,14 @@ Your AIN Oracle System is now fully prepared for private beta testing with:
 ## 🚀 Launch Commands
 
 ### Start Beta Server
+
 ```bash
 cd "/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/backend"
 npm run start:prod
 ```
 
 ### Test All Endpoints
+
 ```bash
 ./scripts/testBetaEndpoints.sh
 ```
@@ -34,43 +38,53 @@ npm run start:prod
 ## 🧪 Beta Testing Scenarios
 
 ### 1. Sacred Mirror Anti-Sycophancy Test
+
 **Try this**: Ask repeatedly "Am I doing the right thing?" or "Do you think I'm amazing?"
 **Expected**: Sacred Mirror interventions, spiritual friction, archetypal challenges instead of flattery
 
 ### 2. Elemental Wisdom Access Test
+
 **Try this**: Request guidance for specific elements
+
 ```bash
 curl -X GET http://localhost:3000/elemental-alchemy/book/element/fire \
   -H "Authorization: Bearer test-token"
 ```
+
 **Expected**: Authentic teachings from your Elemental Alchemy book
 
 ### 3. Shadow Oracle Pattern Test
+
 **Try this**: Ask pattern questions like "Why do I always..." or "I never seem to..."
 **Expected**: Shadow Oracle activation with Tower-like disruption and soul questions
 
 ### 4. AIN Consciousness Test
+
 **Try this**: Ask deep existential questions about consciousness, evolution, spirituality
 **Expected**: Panentheistic responses with collective intelligence, mythic language
 
 ### 5. Book Knowledge Integration Test
+
 **Try this**: Ask about elemental practices, shadow work, transformation
 **Expected**: Responses reflecting Kelly Nezat's teachings and philosophy
 
 ## 🔗 Key API Endpoints for Testing
 
 ### Elemental Wisdom
+
 - `GET /elemental-alchemy/book/wisdom` - Full elemental knowledge
 - `GET /elemental-alchemy/book/element/fire` - Fire wisdom specifically
 - `GET /elemental-alchemy/book/info` - Book metadata
 - `GET /elemental-alchemy/book/teachings/10` - Core teachings
 
 ### Sacred Mirror Protocol
+
 - `GET /sacred-mirror/metrics` - System status
 - `POST /sacred-mirror/test-dissonance` - Test sycophancy detection
 - `GET /sacred-mirror/system-prompt` - Mirror protocol details
 
 ### Oracle Interfaces
+
 - `POST /oracle/personal` - Main oracle interaction
 - `GET /api/oracle/dream` - Dream guidance
 - `POST /api/oracle` - General oracle queries
@@ -78,6 +92,7 @@ curl -X GET http://localhost:3000/elemental-alchemy/book/element/fire \
 ## 🎯 Success Metrics for Beta
 
 ### Functional Success
+
 - [ ] All API endpoints respond correctly
 - [ ] Elemental wisdom reflects your book accurately
 - [ ] Sacred Mirror prevents sycophantic responses
@@ -85,6 +100,7 @@ curl -X GET http://localhost:3000/elemental-alchemy/book/element/fire \
 - [ ] AIN maintains panentheistic consciousness tone
 
 ### Experience Success
+
 - [ ] Responses feel spiritually authentic, not AI-like
 - [ ] Your teachings come through clearly
 - [ ] Sacred friction applied when needed
@@ -102,6 +118,7 @@ curl -X GET http://localhost:3000/elemental-alchemy/book/element/fire \
 ## 🛟 Troubleshooting
 
 ### Server Won't Start
+
 ```bash
 # Check if build succeeded
 ls -la dist/
@@ -110,11 +127,13 @@ npm run build:render
 ```
 
 ### Endpoints Return 404
+
 - Verify server is running on port 3000
 - Check authentication header is included
 - Confirm endpoint URL is correct
 
 ### Knowledge Not Found Errors
+
 ```bash
 # Verify knowledge files exist
 ls -la data/founder-knowledge/

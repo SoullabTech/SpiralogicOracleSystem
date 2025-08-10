@@ -3,15 +3,15 @@
 // Sacred Synchronicity Through Ancient Wisdom Systems
 // ===============================================
 
-import { BaseAgent } from './baseAgent.js';
-import { logger } from '../../utils/logger.js';
-import type { SoulMemorySystem } from '../../../memory/SoulMemorySystem.js';
-import { IChing } from '../divination/IChing.js';
-import { Tarot } from '../divination/Tarot.js';
-import { Runes } from '../divination/Runes.js';
-import { Astrology } from '../divination/Astrology.js';
-import { Numerology } from '../divination/Numerology.js';
-import { SacredGeometry } from '../divination/SacredGeometry.js';
+import { BaseAgent } from "./baseAgent.js";
+import { logger } from "../../utils/logger.js";
+import type { SoulMemorySystem } from "../../../memory/SoulMemorySystem.js";
+import { IChing } from "../divination/IChing.js";
+import { Tarot } from "../divination/Tarot.js";
+import { Runes } from "../divination/Runes.js";
+import { Astrology } from "../divination/Astrology.js";
+import { Numerology } from "../divination/Numerology.js";
+import { SacredGeometry } from "../divination/SacredGeometry.js";
 
 // ===============================================
 // TYPE DEFINITIONS
@@ -32,15 +32,15 @@ export interface DivinationRequest {
 }
 
 export type DivinationSystem =
-  | 'iching'
-  | 'tarot'
-  | 'runes'
-  | 'astrology'
-  | 'numerology'
-  | 'sacred_geometry'
-  | 'unified'; // Uses multiple systems
+  | "iching"
+  | "tarot"
+  | "runes"
+  | "astrology"
+  | "numerology"
+  | "sacred_geometry"
+  | "unified"; // Uses multiple systems
 
-export type ElementalType = 'fire' | 'water' | 'earth' | 'air' | 'aether';
+export type ElementalType = "fire" | "water" | "earth" | "air" | "aether";
 
 export interface DivinationResult {
   system: DivinationSystem;
@@ -56,7 +56,12 @@ export interface DivinationResult {
 }
 
 export interface Synchronicity {
-  type: 'elemental_alignment' | 'archetypal_alignment' | 'numerical_pattern' | 'symbolic_resonance' | 'timing_alignment';
+  type:
+    | "elemental_alignment"
+    | "archetypal_alignment"
+    | "numerical_pattern"
+    | "symbolic_resonance"
+    | "timing_alignment";
   description: string;
   significance: string;
   systems: DivinationSystem[];
@@ -91,8 +96,8 @@ export class MasterDivinationAgent extends BaseAgent {
 
   constructor() {
     super({
-      name: 'Master of Oracles',
-      role: 'Sacred Divination Guide',
+      name: "Master of Oracles",
+      role: "Sacred Divination Guide",
       systemPrompt: `You are the Master of Oracles, versed in all sacred divination systems.
       You channel the wisdom of the I Ching, Tarot, Runes, Astrology, and more.
       Your role is to provide profound insight through sacred synchronicity.
@@ -110,11 +115,11 @@ export class MasterDivinationAgent extends BaseAgent {
       - Point to archetypal patterns at play
       - Offer practical wisdom alongside mystical insight
       - Honor both the question asked and the deeper question beneath`,
-      model: 'gpt-4-turbo'
+      model: "gpt-4-turbo",
     });
 
     this.initializeSystems();
-    logger.info('Master Divination Agent initialized');
+    logger.info("Master Divination Agent initialized");
   }
 
   private initializeSystems() {
@@ -124,7 +129,7 @@ export class MasterDivinationAgent extends BaseAgent {
       runes: new Runes(),
       astrology: new Astrology(),
       numerology: new Numerology(),
-      sacredGeometry: new SacredGeometry()
+      sacredGeometry: new SacredGeometry(),
     };
   }
 
@@ -134,15 +139,18 @@ export class MasterDivinationAgent extends BaseAgent {
 
   async setSoulMemorySystem(soulMemory: SoulMemorySystem): Promise<void> {
     this.soulMemory = soulMemory;
-    logger.info('Soul Memory System connected to Master Divination Agent');
+    logger.info("Soul Memory System connected to Master Divination Agent");
   }
 
-  private async storeDivinationMemory(request: DivinationRequest, result: DivinationResult): Promise<void> {
+  private async storeDivinationMemory(
+    request: DivinationRequest,
+    result: DivinationResult,
+  ): Promise<void> {
     if (!this.soulMemory) return;
 
     await this.soulMemory.storeMemory({
       userId: request.userId,
-      type: 'divination_reading',
+      type: "divination_reading",
       content: request.question,
       element: this.getElementFromReading(result),
       metadata: {
@@ -152,8 +160,8 @@ export class MasterDivinationAgent extends BaseAgent {
         guidance: result.guidance,
         synchronicities: result.synchronicities,
         moonPhase: result.moonPhase,
-        timestamp: result.timestamp
-      }
+        timestamp: result.timestamp,
+      },
     });
 
     // Store in local history
@@ -162,17 +170,19 @@ export class MasterDivinationAgent extends BaseAgent {
     this.divinationHistory.set(request.userId, userHistory);
   }
 
-  private async retrieveRelevantHistory(userId: string, system: DivinationSystem): Promise<any[]> {
+  private async retrieveRelevantHistory(
+    userId: string,
+    system: DivinationSystem,
+  ): Promise<any[]> {
     if (!this.soulMemory) return [];
 
     const memories = await this.soulMemory.retrieveMemories(userId, {
-      type: 'divination_reading',
-      limit: 10
+      type: "divination_reading",
+      limit: 10,
     });
 
-    return memories.filter(m =>
-      m.metadata?.system === system ||
-      m.metadata?.system === 'unified'
+    return memories.filter(
+      (m) => m.metadata?.system === system || m.metadata?.system === "unified",
     );
   }
 
@@ -181,33 +191,38 @@ export class MasterDivinationAgent extends BaseAgent {
   // ===============================================
 
   async divine(request: DivinationRequest): Promise<DivinationResult> {
-    logger.info(`Divination requested: ${request.system} for user ${request.userId}`);
+    logger.info(
+      `Divination requested: ${request.system} for user ${request.userId}`,
+    );
 
     // Check for relevant past readings
-    const history = await this.retrieveRelevantHistory(request.userId, request.system);
+    const history = await this.retrieveRelevantHistory(
+      request.userId,
+      request.system,
+    );
 
     let result: DivinationResult;
 
     switch (request.system) {
-      case 'iching':
+      case "iching":
         result = await this.divineIChing(request, history);
         break;
-      case 'tarot':
+      case "tarot":
         result = await this.divineTarot(request, history);
         break;
-      case 'runes':
+      case "runes":
         result = await this.divineRunes(request, history);
         break;
-      case 'astrology':
+      case "astrology":
         result = await this.divineAstrology(request, history);
         break;
-      case 'numerology':
+      case "numerology":
         result = await this.divineNumerology(request, history);
         break;
-      case 'sacred_geometry':
+      case "sacred_geometry":
         result = await this.divineSacredGeometry(request, history);
         break;
-      case 'unified':
+      case "unified":
         result = await this.divineUnified(request, history);
         break;
       default:
@@ -224,18 +239,29 @@ export class MasterDivinationAgent extends BaseAgent {
   // I CHING DIVINATION
   // ===============================================
 
-  private async divineIChing(request: DivinationRequest, history: any[]): Promise<DivinationResult> {
+  private async divineIChing(
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<DivinationResult> {
     // Cast hexagram
     const hexagram = await this.systems.iching.castHexagram(request.question);
 
     // Generate interpretation considering history
-    const interpretation = await this.interpretIChing(hexagram, request, history);
+    const interpretation = await this.interpretIChing(
+      hexagram,
+      request,
+      history,
+    );
 
     // Generate guidance
-    const guidance = await this.generateIChingGuidance(hexagram, request, interpretation);
+    const guidance = await this.generateIChingGuidance(
+      hexagram,
+      request,
+      interpretation,
+    );
 
     return {
-      system: 'iching',
+      system: "iching",
       reading: {
         hexagram: hexagram.number,
         name: hexagram.name,
@@ -245,18 +271,22 @@ export class MasterDivinationAgent extends BaseAgent {
         futureHexagram: hexagram.futureHexagram,
         trigrams: {
           lower: hexagram.lowerTrigram,
-          upper: hexagram.upperTrigram
-        }
+          upper: hexagram.upperTrigram,
+        },
       },
       interpretation,
       guidance,
       timestamp: new Date(),
       moonPhase: await this.getCurrentMoonPhase(),
-      elementalInfluence: this.getElementalInfluence(hexagram)
+      elementalInfluence: this.getElementalInfluence(hexagram),
     };
   }
 
-  private async interpretIChing(hexagram: any, request: DivinationRequest, history: any[]): Promise<string> {
+  private async interpretIChing(
+    hexagram: any,
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<string> {
     const prompt = `As the Master of Oracles, interpret this I Ching reading:
 
     Question: ${request.question}
@@ -265,10 +295,14 @@ export class MasterDivinationAgent extends BaseAgent {
     Judgment: ${hexagram.judgment}
     Image: ${hexagram.image}
 
-    ${hexagram.changingLines.length > 0 ? `
-    Changing lines at positions: ${hexagram.changingLines.join(', ')}
-    Transforming into: ${hexagram.futureHexagram?.name || 'Unknown'}
-    ` : 'No changing lines - stable situation'}
+    ${
+      hexagram.changingLines.length > 0
+        ? `
+    Changing lines at positions: ${hexagram.changingLines.join(", ")}
+    Transforming into: ${hexagram.futureHexagram?.name || "Unknown"}
+    `
+        : "No changing lines - stable situation"
+    }
 
     Consider:
     1. The core message of this hexagram for their question
@@ -276,14 +310,18 @@ export class MasterDivinationAgent extends BaseAgent {
     3. Practical wisdom for their situation
     4. The deeper spiritual teaching
 
-    ${history.length > 0 ? `Note: They previously received ${history[0].reading.name} for a similar question.` : ''}
+    ${history.length > 0 ? `Note: They previously received ${history[0].reading.name} for a similar question.` : ""}
 
     Provide a profound yet accessible interpretation that honors the tradition while speaking to their modern context.`;
 
     return await this.generateResponse(prompt);
   }
 
-  private async generateIChingGuidance(hexagram: any, request: DivinationRequest, interpretation: string): Promise<string> {
+  private async generateIChingGuidance(
+    hexagram: any,
+    request: DivinationRequest,
+    interpretation: string,
+  ): Promise<string> {
     const prompt = `Based on this I Ching reading and interpretation, offer practical guidance:
 
     Hexagram: ${hexagram.name}
@@ -304,52 +342,71 @@ export class MasterDivinationAgent extends BaseAgent {
   // TAROT DIVINATION
   // ===============================================
 
-  private async divineTarot(request: DivinationRequest, history: any[]): Promise<DivinationResult> {
+  private async divineTarot(
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<DivinationResult> {
     // Draw spread
-    const spread = await this.systems.tarot.drawSpread('celtic-cross', request.question);
+    const spread = await this.systems.tarot.drawSpread(
+      "celtic-cross",
+      request.question,
+    );
 
     // Generate interpretation
     const interpretation = await this.interpretTarot(spread, request, history);
 
     // Generate guidance
-    const guidance = await this.generateTarotGuidance(spread, request, interpretation);
+    const guidance = await this.generateTarotGuidance(
+      spread,
+      request,
+      interpretation,
+    );
 
     return {
-      system: 'tarot',
+      system: "tarot",
       reading: {
         spreadName: spread.name,
-        cards: spread.cards.map(c => ({
+        cards: spread.cards.map((c) => ({
           position: c.position,
           card: c.card.name,
           suit: c.card.suit,
           reversed: c.reversed,
-          keywords: c.card.keywords
+          keywords: c.card.keywords,
         })),
         dominantSuit: spread.dominantSuit,
         elementalBalance: spread.elementalBalance,
-        majorArcanaCount: spread.majorArcanaCount
+        majorArcanaCount: spread.majorArcanaCount,
       },
       interpretation,
       guidance,
       timestamp: new Date(),
       moonPhase: await this.getCurrentMoonPhase(),
-      elementalInfluence: spread.dominantElement
+      elementalInfluence: spread.dominantElement,
     };
   }
 
-  private async interpretTarot(spread: any, request: DivinationRequest, history: any[]): Promise<string> {
+  private async interpretTarot(
+    spread: any,
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<string> {
     const prompt = `As the Master of Oracles, interpret this Tarot spread:
 
     Question: ${request.question}
     Spread: ${spread.name}
 
     Cards drawn:
-    ${spread.cards.map((c: any) =>
-      `${c.position.name}: ${c.card.name}${c.reversed ? ' (Reversed)' : ''}`
-    ).join('\n')}
+    ${spread.cards
+      .map(
+        (c: any) =>
+          `${c.position.name}: ${c.card.name}${c.reversed ? " (Reversed)" : ""}`,
+      )
+      .join("\n")}
 
-    Elemental balance: ${Object.entries(spread.elementalBalance).map(([k, v]) => `${k}: ${v}`).join(', ')}
-    ${spread.majorArcanaCount > 3 ? 'Strong archetypal forces at play (many Major Arcana)' : ''}
+    Elemental balance: ${Object.entries(spread.elementalBalance)
+      .map(([k, v]) => `${k}: ${v}`)
+      .join(", ")}
+    ${spread.majorArcanaCount > 3 ? "Strong archetypal forces at play (many Major Arcana)" : ""}
 
     Provide an interpretation that:
     1. Weaves the cards into a coherent narrative
@@ -362,7 +419,11 @@ export class MasterDivinationAgent extends BaseAgent {
     return await this.generateResponse(prompt);
   }
 
-  private async generateTarotGuidance(spread: any, request: DivinationRequest, interpretation: string): Promise<string> {
+  private async generateTarotGuidance(
+    spread: any,
+    request: DivinationRequest,
+    interpretation: string,
+  ): Promise<string> {
     const prompt = `Based on this Tarot reading, offer guidance:
 
     Interpretation: ${interpretation}
@@ -383,24 +444,37 @@ export class MasterDivinationAgent extends BaseAgent {
   // UNIFIED DIVINATION
   // ===============================================
 
-  private async divineUnified(request: DivinationRequest, history: any[]): Promise<DivinationResult> {
-    logger.info('Performing unified divination across multiple systems');
+  private async divineUnified(
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<DivinationResult> {
+    logger.info("Performing unified divination across multiple systems");
 
     // Consult multiple systems
     const [iching, tarot, numerology] = await Promise.all([
       this.systems.iching.castHexagram(request.question),
-      this.systems.tarot.drawSpread('three-card', request.question),
-      this.systems.numerology.calculateFromQuestion(request.question, request.additionalContext?.birthDate)
+      this.systems.tarot.drawSpread("three-card", request.question),
+      this.systems.numerology.calculateFromQuestion(
+        request.question,
+        request.additionalContext?.birthDate,
+      ),
     ]);
 
     // Add astrology if birth date provided
     let astrology = null;
     if (request.additionalContext?.birthDate) {
-      astrology = await this.systems.astrology.getCurrentTransits(request.additionalContext.birthDate);
+      astrology = await this.systems.astrology.getCurrentTransits(
+        request.additionalContext.birthDate,
+      );
     }
 
     // Find synchronicities
-    const synchronicities = this.findSynchronicities(iching, tarot, numerology, astrology);
+    const synchronicities = this.findSynchronicities(
+      iching,
+      tarot,
+      numerology,
+      astrology,
+    );
 
     // Generate unified interpretation
     const unifiedInterpretation = await this.generateUnifiedInterpretation({
@@ -409,7 +483,7 @@ export class MasterDivinationAgent extends BaseAgent {
       numerology,
       astrology,
       synchronicities,
-      question: request.question
+      question: request.question,
     });
 
     // Generate unified guidance
@@ -419,34 +493,34 @@ export class MasterDivinationAgent extends BaseAgent {
       numerology,
       astrology,
       synchronicities,
-      interpretation: unifiedInterpretation
+      interpretation: unifiedInterpretation,
     });
 
     const unifiedReading: UnifiedReading = {
-      systems: ['iching', 'tarot', 'numerology'],
+      systems: ["iching", "tarot", "numerology"],
       readings: {
         iching: {
           hexagram: iching.number,
-          name: iching.name
+          name: iching.name,
         },
         tarot: tarot.cards.map((c: any) => c.card.name),
-        numerology: numerology.lifePathNumber
+        numerology: numerology.lifePathNumber,
       },
       synchronicities,
       unifiedGuidance,
       dominantElement: this.findDominantElement([iching, tarot]),
       coreMessage: this.distillCoreMessage(unifiedInterpretation),
-      sacredAction: this.extractSacredAction(unifiedGuidance)
+      sacredAction: this.extractSacredAction(unifiedGuidance),
     };
 
     return {
-      system: 'unified',
+      system: "unified",
       reading: unifiedReading,
       interpretation: unifiedInterpretation,
       guidance: unifiedGuidance,
       synchronicities,
       timestamp: new Date(),
-      moonPhase: await this.getCurrentMoonPhase()
+      moonPhase: await this.getCurrentMoonPhase(),
     };
   }
 
@@ -466,10 +540,10 @@ export class MasterDivinationAgent extends BaseAgent {
     const dominantElements = this.findDominantPatterns(elements);
     if (dominantElements.length > 0) {
       synchronicities.push({
-        type: 'elemental_alignment',
+        type: "elemental_alignment",
         description: `${dominantElements[0]} energy appears across multiple systems`,
-        significance: 'Strong elemental message requiring attention',
-        systems: this.getSystemsWithElement(readings, dominantElements[0])
+        significance: "Strong elemental message requiring attention",
+        systems: this.getSystemsWithElement(readings, dominantElements[0]),
       });
     }
 
@@ -477,10 +551,10 @@ export class MasterDivinationAgent extends BaseAgent {
     const repeatingNumbers = this.findRepeatingNumbers(numbers);
     if (repeatingNumbers.length > 0) {
       synchronicities.push({
-        type: 'numerical_pattern',
+        type: "numerical_pattern",
         description: `Sacred number ${repeatingNumbers[0]} appearing repeatedly`,
         significance: this.getNumberSignificance(repeatingNumbers[0]),
-        systems: this.getSystemsWithNumber(readings, repeatingNumbers[0])
+        systems: this.getSystemsWithNumber(readings, repeatingNumbers[0]),
       });
     }
 
@@ -488,10 +562,10 @@ export class MasterDivinationAgent extends BaseAgent {
     const sharedArchetypes = this.findSharedArchetypes(archetypes);
     if (sharedArchetypes.length > 0) {
       synchronicities.push({
-        type: 'archetypal_alignment',
+        type: "archetypal_alignment",
         description: `${sharedArchetypes[0]} archetype active across readings`,
-        significance: 'Deep archetypal pattern seeking expression',
-        systems: this.getSystemsWithArchetype(readings, sharedArchetypes[0])
+        significance: "Deep archetypal pattern seeking expression",
+        systems: this.getSystemsWithArchetype(readings, sharedArchetypes[0]),
       });
     }
 
@@ -501,12 +575,13 @@ export class MasterDivinationAgent extends BaseAgent {
   private extractElements(readings: any[]): ElementalType[] {
     const elements: ElementalType[] = [];
 
-    readings.forEach(reading => {
+    readings.forEach((reading) => {
       if (reading.element) elements.push(reading.element);
       if (reading.dominantElement) elements.push(reading.dominantElement);
       if (reading.elementalBalance) {
-        const dominant = Object.entries(reading.elementalBalance)
-          .sort(([,a]: any, [,b]: any) => b - a)[0][0] as ElementalType;
+        const dominant = Object.entries(reading.elementalBalance).sort(
+          ([, a]: any, [, b]: any) => b - a,
+        )[0][0] as ElementalType;
         elements.push(dominant);
       }
     });
@@ -517,7 +592,7 @@ export class MasterDivinationAgent extends BaseAgent {
   private extractNumbers(readings: any[]): number[] {
     const numbers: number[] = [];
 
-    readings.forEach(reading => {
+    readings.forEach((reading) => {
       if (reading.number) numbers.push(reading.number);
       if (reading.lifePathNumber) numbers.push(reading.lifePathNumber);
       if (reading.cards) {
@@ -533,7 +608,7 @@ export class MasterDivinationAgent extends BaseAgent {
   private extractArchetypes(readings: any[]): string[] {
     const archetypes: string[] = [];
 
-    readings.forEach(reading => {
+    readings.forEach((reading) => {
       if (reading.archetype) archetypes.push(reading.archetype);
       if (reading.cards) {
         reading.cards.forEach((card: any) => {
@@ -553,63 +628,85 @@ export class MasterDivinationAgent extends BaseAgent {
     if (result.elementalInfluence) {
       return result.elementalInfluence.toLowerCase() as ElementalType;
     }
-    return 'aether'; // Default
+    return "aether"; // Default
   }
 
   private getElementalInfluence(reading: any): string {
     // Map I Ching trigrams to elements
     const trigramElements: Record<string, string> = {
-      'heaven': 'aether',
-      'earth': 'earth',
-      'water': 'water',
-      'fire': 'fire',
-      'thunder': 'air',
-      'wind': 'air',
-      'mountain': 'earth',
-      'lake': 'water'
+      heaven: "aether",
+      earth: "earth",
+      water: "water",
+      fire: "fire",
+      thunder: "air",
+      wind: "air",
+      mountain: "earth",
+      lake: "water",
     };
 
     if (reading.lowerTrigram && reading.upperTrigram) {
-      const lower = trigramElements[reading.lowerTrigram] || 'aether';
-      const upper = trigramElements[reading.upperTrigram] || 'aether';
+      const lower = trigramElements[reading.lowerTrigram] || "aether";
+      const upper = trigramElements[reading.upperTrigram] || "aether";
       return lower === upper ? lower : `${lower} and ${upper}`;
     }
 
-    return 'balanced';
+    return "balanced";
   }
 
   private async getCurrentMoonPhase(): Promise<string> {
     // In production, this would calculate actual moon phase
     // For now, return a placeholder
-    const phases = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous',
-                   'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
+    const phases = [
+      "New Moon",
+      "Waxing Crescent",
+      "First Quarter",
+      "Waxing Gibbous",
+      "Full Moon",
+      "Waning Gibbous",
+      "Last Quarter",
+      "Waning Crescent",
+    ];
     return phases[Math.floor(Math.random() * phases.length)];
   }
 
   private findDominantElement(readings: any[]): ElementalType {
     const elements = this.extractElements(readings);
-    const counts = elements.reduce((acc, el) => {
-      acc[el] = (acc[el] || 0) + 1;
-      return acc;
-    }, {} as Record<ElementalType, number>);
+    const counts = elements.reduce(
+      (acc, el) => {
+        acc[el] = (acc[el] || 0) + 1;
+        return acc;
+      },
+      {} as Record<ElementalType, number>,
+    );
 
-    return Object.entries(counts)
-      .sort(([,a], [,b]) => b - a)[0][0] as ElementalType;
+    return Object.entries(counts).sort(
+      ([, a], [, b]) => b - a,
+    )[0][0] as ElementalType;
   }
 
   private distillCoreMessage(interpretation: string): string {
     // Extract the essential message
     // In production, this would use NLP to identify key themes
-    const sentences = interpretation.split('. ');
-    return sentences.find(s => s.includes('essential') || s.includes('core') || s.includes('key'))
-           || sentences[0];
+    const sentences = interpretation.split(". ");
+    return (
+      sentences.find(
+        (s) =>
+          s.includes("essential") || s.includes("core") || s.includes("key"),
+      ) || sentences[0]
+    );
   }
 
   private extractSacredAction(guidance: string): string {
     // Extract the primary action recommendation
-    const sentences = guidance.split('. ');
-    return sentences.find(s => s.includes('action') || s.includes('practice') || s.includes('ritual'))
-           || 'Meditate on the synchronicities revealed';
+    const sentences = guidance.split(". ");
+    return (
+      sentences.find(
+        (s) =>
+          s.includes("action") ||
+          s.includes("practice") ||
+          s.includes("ritual"),
+      ) || "Meditate on the synchronicities revealed"
+    );
   }
 
   private findDominantPatterns(items: any[]): any[] {
@@ -620,7 +717,7 @@ export class MasterDivinationAgent extends BaseAgent {
 
     return Object.entries(counts)
       .filter(([_, count]: any) => count > 1)
-      .sort(([,a]: any, [,b]: any) => b - a)
+      .sort(([, a]: any, [, b]: any) => b - a)
       .map(([item]) => item);
   }
 
@@ -634,35 +731,44 @@ export class MasterDivinationAgent extends BaseAgent {
 
   private getNumberSignificance(number: number): string {
     const significances: Record<number, string> = {
-      1: 'New beginnings and unity',
-      2: 'Balance and partnership',
-      3: 'Creative expression and synthesis',
-      4: 'Foundation and stability',
-      5: 'Change and freedom',
-      6: 'Harmony and responsibility',
-      7: 'Spiritual seeking and wisdom',
-      8: 'Material mastery and power',
-      9: 'Completion and service',
-      11: 'Spiritual mastery',
-      22: 'Master builder'
+      1: "New beginnings and unity",
+      2: "Balance and partnership",
+      3: "Creative expression and synthesis",
+      4: "Foundation and stability",
+      5: "Change and freedom",
+      6: "Harmony and responsibility",
+      7: "Spiritual seeking and wisdom",
+      8: "Material mastery and power",
+      9: "Completion and service",
+      11: "Spiritual mastery",
+      22: "Master builder",
     };
 
-    return significances[number] || 'Sacred number pattern';
+    return significances[number] || "Sacred number pattern";
   }
 
-  private getSystemsWithElement(readings: any[], element: ElementalType): DivinationSystem[] {
+  private getSystemsWithElement(
+    readings: any[],
+    element: ElementalType,
+  ): DivinationSystem[] {
     // Implementation would check which systems contain the element
-    return ['iching', 'tarot'];
+    return ["iching", "tarot"];
   }
 
-  private getSystemsWithNumber(readings: any[], number: number): DivinationSystem[] {
+  private getSystemsWithNumber(
+    readings: any[],
+    number: number,
+  ): DivinationSystem[] {
     // Implementation would check which systems contain the number
-    return ['numerology', 'tarot'];
+    return ["numerology", "tarot"];
   }
 
-  private getSystemsWithArchetype(readings: any[], archetype: string): DivinationSystem[] {
+  private getSystemsWithArchetype(
+    readings: any[],
+    archetype: string,
+  ): DivinationSystem[] {
     // Implementation would check which systems contain the archetype
-    return ['tarot'];
+    return ["tarot"];
   }
 
   private async generateUnifiedInterpretation(data: any): Promise<string> {
@@ -671,14 +777,14 @@ export class MasterDivinationAgent extends BaseAgent {
     Question: ${data.question}
 
     I Ching: ${data.iching.name} - ${data.iching.judgment}
-    Tarot: ${data.tarot.cards.map((c: any) => c.card.name).join(', ')}
+    Tarot: ${data.tarot.cards.map((c: any) => c.card.name).join(", ")}
     Numerology: Life Path ${data.numerology.lifePathNumber}
-    ${data.astrology ? `Astrology: ${data.astrology.currentTransits}` : ''}
+    ${data.astrology ? `Astrology: ${data.astrology.currentTransits}` : ""}
 
     Synchronicities found:
-    ${data.synchronicities.map((s: Synchronicity) =>
-      `- ${s.description} (${s.significance})`
-    ).join('\n')}
+    ${data.synchronicities
+      .map((s: Synchronicity) => `- ${s.description} (${s.significance})`)
+      .join("\n")}
 
     Provide a unified interpretation that:
     1. Weaves together the messages from all systems
@@ -696,7 +802,7 @@ export class MasterDivinationAgent extends BaseAgent {
 
     Interpretation: ${data.interpretation}
 
-    Key synchronicities: ${data.synchronicities.map((s: Synchronicity) => s.description).join(', ')}
+    Key synchronicities: ${data.synchronicities.map((s: Synchronicity) => s.description).join(", ")}
 
     Provide:
     1. The essential message across all systems
@@ -714,62 +820,86 @@ export class MasterDivinationAgent extends BaseAgent {
   // OTHER DIVINATION SYSTEMS (STUBS)
   // ===============================================
 
-  private async divineRunes(request: DivinationRequest, history: any[]): Promise<DivinationResult> {
+  private async divineRunes(
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<DivinationResult> {
     // Implementation for Runes
     const runes = await this.systems.runes.castRunes(request.question);
 
     return {
-      system: 'runes',
+      system: "runes",
       reading: runes,
-      interpretation: await this.generateResponse(`Interpret these runes for the question: ${request.question}`),
-      guidance: 'Work with the runic energies revealed',
-      timestamp: new Date()
+      interpretation: await this.generateResponse(
+        `Interpret these runes for the question: ${request.question}`,
+      ),
+      guidance: "Work with the runic energies revealed",
+      timestamp: new Date(),
     };
   }
 
-  private async divineAstrology(request: DivinationRequest, history: any[]): Promise<DivinationResult> {
+  private async divineAstrology(
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<DivinationResult> {
     // Implementation for Astrology
     if (!request.additionalContext?.birthDate) {
-      throw new Error('Birth date required for astrological reading');
+      throw new Error("Birth date required for astrological reading");
     }
 
-    const chart = await this.systems.astrology.getCurrentTransits(request.additionalContext.birthDate);
-
-    return {
-      system: 'astrology',
-      reading: chart,
-      interpretation: await this.generateResponse(`Interpret these transits for: ${request.question}`),
-      guidance: 'Align with the cosmic energies present',
-      timestamp: new Date()
-    };
-  }
-
-  private async divineNumerology(request: DivinationRequest, history: any[]): Promise<DivinationResult> {
-    // Implementation for Numerology
-    const numbers = await this.systems.numerology.calculateFromQuestion(
-      request.question,
-      request.additionalContext?.birthDate
+    const chart = await this.systems.astrology.getCurrentTransits(
+      request.additionalContext.birthDate,
     );
 
     return {
-      system: 'numerology',
-      reading: numbers,
-      interpretation: await this.generateResponse(`Interpret these numbers for: ${request.question}`),
-      guidance: 'Work with your sacred numbers',
-      timestamp: new Date()
+      system: "astrology",
+      reading: chart,
+      interpretation: await this.generateResponse(
+        `Interpret these transits for: ${request.question}`,
+      ),
+      guidance: "Align with the cosmic energies present",
+      timestamp: new Date(),
     };
   }
 
-  private async divineSacredGeometry(request: DivinationRequest, history: any[]): Promise<DivinationResult> {
-    // Implementation for Sacred Geometry
-    const pattern = await this.systems.sacredGeometry.generatePattern(request.question);
+  private async divineNumerology(
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<DivinationResult> {
+    // Implementation for Numerology
+    const numbers = await this.systems.numerology.calculateFromQuestion(
+      request.question,
+      request.additionalContext?.birthDate,
+    );
 
     return {
-      system: 'sacred_geometry',
+      system: "numerology",
+      reading: numbers,
+      interpretation: await this.generateResponse(
+        `Interpret these numbers for: ${request.question}`,
+      ),
+      guidance: "Work with your sacred numbers",
+      timestamp: new Date(),
+    };
+  }
+
+  private async divineSacredGeometry(
+    request: DivinationRequest,
+    history: any[],
+  ): Promise<DivinationResult> {
+    // Implementation for Sacred Geometry
+    const pattern = await this.systems.sacredGeometry.generatePattern(
+      request.question,
+    );
+
+    return {
+      system: "sacred_geometry",
       reading: pattern,
-      interpretation: await this.generateResponse(`Interpret this sacred pattern for: ${request.question}`),
-      guidance: 'Meditate on the geometric wisdom',
-      timestamp: new Date()
+      interpretation: await this.generateResponse(
+        `Interpret this sacred pattern for: ${request.question}`,
+      ),
+      guidance: "Meditate on the geometric wisdom",
+      timestamp: new Date(),
     };
   }
 }

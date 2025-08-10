@@ -3,7 +3,13 @@
 // Sacred Agency Through Wisdom Choice
 // ===============================================
 
-export type OracleModeType = 'alchemist' | 'buddha' | 'sage' | 'mystic' | 'guardian' | 'tao';
+export type OracleModeType =
+  | "alchemist"
+  | "buddha"
+  | "sage"
+  | "mystic"
+  | "guardian"
+  | "tao";
 
 export interface OracleMode {
   id: OracleModeType;
@@ -28,7 +34,11 @@ export interface ModeSwitchMemory {
   newMode: OracleModeType;
   reason?: string;
   timestamp: Date;
-  triggeredBy: 'user_choice' | 'context_suggestion' | 'crisis_response' | 'pattern_detection';
+  triggeredBy:
+    | "user_choice"
+    | "context_suggestion"
+    | "crisis_response"
+    | "pattern_detection";
 }
 
 export interface ModePreference {
@@ -53,23 +63,29 @@ export interface ModePreference {
 
 export interface ModeAnalytics {
   userId: string;
-  modeUsage: Record<OracleModeType, {
-    totalTime: number;
-    sessionCount: number;
-    lastUsed: Date;
-    averageSessionLength: number;
-    userSatisfaction: number;
-  }>;
+  modeUsage: Record<
+    OracleModeType,
+    {
+      totalTime: number;
+      sessionCount: number;
+      lastUsed: Date;
+      averageSessionLength: number;
+      userSatisfaction: number;
+    }
+  >;
   modeTransitions: {
     from: OracleModeType;
     to: OracleModeType;
     frequency: number;
     reasons: string[];
   }[];
-  contextualEffectiveness: Record<string, {
-    mostEffectiveMode: OracleModeType;
-    successRate: number;
-  }>;
+  contextualEffectiveness: Record<
+    string,
+    {
+      mostEffectiveMode: OracleModeType;
+      successRate: number;
+    }
+  >;
 }
 
 export interface ContextualModeRecommendation {
@@ -77,7 +93,7 @@ export interface ContextualModeRecommendation {
   confidence: number;
   reason: string;
   contextualFactors: string[];
-  urgency: 'low' | 'medium' | 'high' | 'crisis';
+  urgency: "low" | "medium" | "high" | "crisis";
 }
 
 export interface ModeCapability {
@@ -126,22 +142,22 @@ export interface ConversationContext {
 export interface ModeEffectiveness {
   mode: OracleModeType;
   context: string;
-  userResponse: 'helpful' | 'neutral' | 'unhelpful';
+  userResponse: "helpful" | "neutral" | "unhelpful";
   transformationMarker: boolean;
-  sessionOutcome: 'breakthrough' | 'integration' | 'resistance' | 'neutral';
+  sessionOutcome: "breakthrough" | "integration" | "resistance" | "neutral";
   timestamp: Date;
 }
 
 // Export types as values for runtime use if needed
 export const OracleModeTypes = {
-  OracleModeType: 'OracleModeType',
-  OracleMode: 'OracleMode',
-  ModeSwitchMemory: 'ModeSwitchMemory',
-  ModePreference: 'ModePreference',
-  ModeAnalytics: 'ModeAnalytics',
-  ContextualModeRecommendation: 'ContextualModeRecommendation',
-  ModeCapability: 'ModeCapability',
-  ModeResponseTemplate: 'ModeResponseTemplate',
-  ConversationContext: 'ConversationContext',
-  ModeEffectiveness: 'ModeEffectiveness'
+  OracleModeType: "OracleModeType",
+  OracleMode: "OracleMode",
+  ModeSwitchMemory: "ModeSwitchMemory",
+  ModePreference: "ModePreference",
+  ModeAnalytics: "ModeAnalytics",
+  ContextualModeRecommendation: "ContextualModeRecommendation",
+  ModeCapability: "ModeCapability",
+  ModeResponseTemplate: "ModeResponseTemplate",
+  ConversationContext: "ConversationContext",
+  ModeEffectiveness: "ModeEffectiveness",
 } as const;

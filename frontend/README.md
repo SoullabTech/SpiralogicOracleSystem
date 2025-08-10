@@ -10,12 +10,14 @@ npm run dev
 ```
 
 ### 🧼 Dev Scripts
+
 - `npm run dev` – Start dev server
 - `npm run build` – Production build
 - `npm run lint` – Lint code
 - `npm run preview` – Preview prod build
 
 ### ⚙️ Requirements
+
 - Node.js >=20.0.0
 - npm >=9
 

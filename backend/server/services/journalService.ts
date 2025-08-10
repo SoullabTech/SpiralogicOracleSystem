@@ -1,5 +1,5 @@
 // backend/server/services/journalService.ts
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase";
 
 export async function saveJournalEntry({
   userId,
@@ -10,17 +10,17 @@ export async function saveJournalEntry({
   elementalTag,
   ritual,
   phase,
-  metadata = {}
+  metadata = {},
 }: {
-  userId: string
-  content: string
-  mood?: string
-  petalData?: Record<string, number>
-  archetypeTag?: string
-  elementalTag?: string
-  ritual?: string
-  phase?: string
-  metadata?: any
+  userId: string;
+  content: string;
+  mood?: string;
+  petalData?: Record<string, number>;
+  archetypeTag?: string;
+  elementalTag?: string;
+  ritual?: string;
+  phase?: string;
+  metadata?: any;
 }) {
   const { data, error } = await supabase.from("journal_entries").insert([
     {
@@ -33,9 +33,9 @@ export async function saveJournalEntry({
       phase,
       progression_in: petalData,
       metadata,
-    }
-  ])
+    },
+  ]);
 
-  if (error) throw error
-  return data?.[0]
+  if (error) throw error;
+  return data?.[0];
 }

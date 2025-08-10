@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import {
   UserHolisticProfile,
   HolisticDomain,
@@ -8,16 +8,21 @@ import {
   SpiralProgressPoint,
   BypassingDetection,
   IntegrationGate,
-  EmbodiedWisdomTracking
-} from '../core/integration/types';
+  EmbodiedWisdomTracking,
+} from "../core/integration/types";
 
 interface SupabaseUserProfile {
   id: string;
   user_id: string;
   display_name?: string;
   bio?: string;
-  account_type: 'user' | 'professional' | 'mentor' | 'researcher' | 'admin';
-  professional_type?: 'therapist' | 'coach' | 'spiritual_director' | 'counselor' | 'somatic_practitioner';
+  account_type: "user" | "professional" | "mentor" | "researcher" | "admin";
+  professional_type?:
+    | "therapist"
+    | "coach"
+    | "spiritual_director"
+    | "counselor"
+    | "somatic_practitioner";
   current_state: UserState;
   stress_level: number;
   energy_level: number;
@@ -55,28 +60,33 @@ export class SupabaseIntegrationService {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error('Missing Supabase configuration');
+      throw new Error("Missing Supabase configuration");
     }
 
     this.supabase = createClient(supabaseUrl, supabaseServiceKey);
   }
 
   // User Profile Management
-  async createUserProfile(userId: string, profileData: Partial<SupabaseUserProfile>): Promise<SupabaseUserProfile> {
+  async createUserProfile(
+    userId: string,
+    profileData: Partial<SupabaseUserProfile>,
+  ): Promise<SupabaseUserProfile> {
     const { data, error } = await this.supabase
-      .from('user_profiles')
+      .from("user_profiles")
       .insert({
         user_id: userId,
         display_name: profileData.display_name,
         bio: profileData.bio,
-        account_type: profileData.account_type || 'user',
+        account_type: profileData.account_type || "user",
         professional_type: profileData.professional_type,
-        current_state: profileData.current_state || 'balanced',
+        current_state: profileData.current_state || "balanced",
         stress_level: profileData.stress_level || 5,
         energy_level: profileData.energy_level || 5,
-        community_visibility: profileData.community_visibility || 'supportive',
-        professional_support_consent: profileData.professional_support_consent || false,
-        research_participation_consent: profileData.research_participation_consent || false
+        community_visibility: profileData.community_visibility || "supportive",
+        professional_support_consent:
+          profileData.professional_support_consent || false,
+        research_participation_consent:
+          profileData.research_participation_consent || false,
       })
       .select()
       .single();
@@ -87,20 +97,23 @@ export class SupabaseIntegrationService {
 
   async getUserProfile(userId: string): Promise<SupabaseUserProfile | null> {
     const { data, error } = await this.supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('user_id', userId)
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", userId)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== "PGRST116") throw error;
     return data;
   }
 
-  async updateUserProfile(userId: string, updates: Partial<SupabaseUserProfile>): Promise<SupabaseUserProfile> {
+  async updateUserProfile(
+    userId: string,
+    updates: Partial<SupabaseUserProfile>,
+  ): Promise<SupabaseUserProfile> {
     const { data, error } = await this.supabase
-      .from('user_profiles')
+      .from("user_profiles")
       .update(updates)
-      .eq('user_id', userId)
+      .eq("user_id", userId)
       .select()
       .single();
 
@@ -109,9 +122,13 @@ export class SupabaseIntegrationService {
   }
 
   // Domain Profile Management
-  async createDomainProfile(userId: string, domain: HolisticDomain, profileData: any): Promise<SupabaseDomainProfile> {
+  async createDomainProfile(
+    userId: string,
+    domain: HolisticDomain,
+    profileData: any,
+  ): Promise<SupabaseDomainProfile> {
     const { data, error } = await this.supabase
-      .from('domain_profiles')
+      .from("domain_profiles")
       .insert({
         user_id: userId,
         domain,
@@ -120,7 +137,7 @@ export class SupabaseIntegrationService {
         strengths: profileData.strengths,
         growth_edges: profileData.growthEdges,
         practices_engaged: profileData.practicesEngaged,
-        assessment_responses: profileData.assessmentResponses
+        assessment_responses: profileData.assessmentResponses,
       })
       .select()
       .single();
@@ -131,20 +148,24 @@ export class SupabaseIntegrationService {
 
   async getDomainProfiles(userId: string): Promise<SupabaseDomainProfile[]> {
     const { data, error } = await this.supabase
-      .from('domain_profiles')
-      .select('*')
-      .eq('user_id', userId);
+      .from("domain_profiles")
+      .select("*")
+      .eq("user_id", userId);
 
     if (error) throw error;
     return data || [];
   }
 
-  async updateDomainProfile(userId: string, domain: HolisticDomain, updates: any): Promise<SupabaseDomainProfile> {
+  async updateDomainProfile(
+    userId: string,
+    domain: HolisticDomain,
+    updates: any,
+  ): Promise<SupabaseDomainProfile> {
     const { data, error } = await this.supabase
-      .from('domain_profiles')
+      .from("domain_profiles")
       .update(updates)
-      .eq('user_id', userId)
-      .eq('domain', domain)
+      .eq("user_id", userId)
+      .eq("domain", domain)
       .select()
       .single();
 
@@ -155,7 +176,7 @@ export class SupabaseIntegrationService {
   // Spiral Progress Tracking
   async createSpiralProgress(userId: string, progressData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from('spiral_progress')
+      .from("spiral_progress")
       .insert({
         user_id: userId,
         theme: progressData.theme,
@@ -166,7 +187,7 @@ export class SupabaseIntegrationService {
         integration_quality: progressData.integrationQuality,
         real_world_application: progressData.realWorldApplication,
         struggles_encountered: progressData.strugglesEncountered,
-        ordinary_moments: progressData.ordinaryMoments
+        ordinary_moments: progressData.ordinaryMoments,
       })
       .select()
       .single();
@@ -177,24 +198,27 @@ export class SupabaseIntegrationService {
 
   async getSpiralProgress(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from('spiral_progress')
-      .select('*')
-      .eq('user_id', userId)
-      .order('visit_date', { ascending: false });
+      .from("spiral_progress")
+      .select("*")
+      .eq("user_id", userId)
+      .order("visit_date", { ascending: false });
 
     if (error) throw error;
     return data || [];
   }
 
-  async validateSpiralProgress(spiralId: string, validatorId: string): Promise<any> {
+  async validateSpiralProgress(
+    spiralId: string,
+    validatorId: string,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('spiral_progress')
+      .from("spiral_progress")
       .update({
         community_validated: true,
         validated_by: validatorId,
-        validation_date: new Date().toISOString()
+        validation_date: new Date().toISOString(),
       })
-      .eq('id', spiralId)
+      .eq("id", spiralId)
       .select()
       .single();
 
@@ -203,9 +227,12 @@ export class SupabaseIntegrationService {
   }
 
   // Integration Journey Tracking
-  async createIntegrationJourney(userId: string, journeyData: any): Promise<any> {
+  async createIntegrationJourney(
+    userId: string,
+    journeyData: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('integration_journeys')
+      .from("integration_journeys")
       .insert({
         user_id: userId,
         insight_content: journeyData.insightContent,
@@ -215,7 +242,7 @@ export class SupabaseIntegrationService {
         adaptations_made: journeyData.adaptationsMade,
         timeframe: journeyData.timeframe,
         ongoing_practice: journeyData.ongoingPractice,
-        integration_evidence: journeyData.integrationEvidence
+        integration_evidence: journeyData.integrationEvidence,
       })
       .select()
       .single();
@@ -226,20 +253,23 @@ export class SupabaseIntegrationService {
 
   async getIntegrationJourneys(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from('integration_journeys')
-      .select('*')
-      .eq('user_id', userId)
-      .order('journey_start_date', { ascending: false });
+      .from("integration_journeys")
+      .select("*")
+      .eq("user_id", userId)
+      .order("journey_start_date", { ascending: false });
 
     if (error) throw error;
     return data || [];
   }
 
-  async updateIntegrationJourney(journeyId: string, updates: any): Promise<any> {
+  async updateIntegrationJourney(
+    journeyId: string,
+    updates: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('integration_journeys')
+      .from("integration_journeys")
       .update(updates)
-      .eq('id', journeyId)
+      .eq("id", journeyId)
       .select()
       .single();
 
@@ -250,7 +280,7 @@ export class SupabaseIntegrationService {
   // Embodied Wisdom Tracking
   async createEmbodiedWisdom(userId: string, wisdomData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from('embodied_wisdom')
+      .from("embodied_wisdom")
       .insert({
         user_id: userId,
         type: wisdomData.type,
@@ -271,7 +301,7 @@ export class SupabaseIntegrationService {
         frequency: wisdomData.frequency,
         consistency_rating: wisdomData.consistencyRating,
         maintained_days: wisdomData.maintainedDays,
-        embodiment_quality: wisdomData.embodimentQuality
+        embodiment_quality: wisdomData.embodimentQuality,
       })
       .select()
       .single();
@@ -282,28 +312,33 @@ export class SupabaseIntegrationService {
 
   async getEmbodiedWisdom(userId: string, type?: string): Promise<any[]> {
     let query = this.supabase
-      .from('embodied_wisdom')
-      .select('*')
-      .eq('user_id', userId);
+      .from("embodied_wisdom")
+      .select("*")
+      .eq("user_id", userId);
 
     if (type) {
-      query = query.eq('type', type);
+      query = query.eq("type", type);
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
   }
 
-  async validateEmbodiedWisdom(wisdomId: string, validationNotes: string): Promise<any> {
+  async validateEmbodiedWisdom(
+    wisdomId: string,
+    validationNotes: string,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('embodied_wisdom')
+      .from("embodied_wisdom")
       .update({
         validated: true,
-        validation_notes: validationNotes
+        validation_notes: validationNotes,
       })
-      .eq('id', wisdomId)
+      .eq("id", wisdomId)
       .select()
       .single();
 
@@ -312,9 +347,12 @@ export class SupabaseIntegrationService {
   }
 
   // Spiritual Bypassing Detection
-  async createBypassingDetection(userId: string, detectionData: any): Promise<any> {
+  async createBypassingDetection(
+    userId: string,
+    detectionData: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('bypassing_detections')
+      .from("bypassing_detections")
       .insert({
         user_id: userId,
         pattern: detectionData.pattern,
@@ -323,7 +361,8 @@ export class SupabaseIntegrationService {
         behavior_indicators: detectionData.behaviorIndicators,
         pattern_frequency: detectionData.patternFrequency,
         intervention_recommended: detectionData.interventionRecommended,
-        professional_referral_suggested: detectionData.professionalReferralSuggested
+        professional_referral_suggested:
+          detectionData.professionalReferralSuggested,
       })
       .select()
       .single();
@@ -332,31 +371,39 @@ export class SupabaseIntegrationService {
     return data;
   }
 
-  async getBypassingDetections(userId: string, unaddressedOnly: boolean = false): Promise<any[]> {
+  async getBypassingDetections(
+    userId: string,
+    unaddressedOnly: boolean = false,
+  ): Promise<any[]> {
     let query = this.supabase
-      .from('bypassing_detections')
-      .select('*')
-      .eq('user_id', userId);
+      .from("bypassing_detections")
+      .select("*")
+      .eq("user_id", userId);
 
     if (unaddressedOnly) {
-      query = query.eq('addressed', false);
+      query = query.eq("addressed", false);
     }
 
-    const { data, error } = await query.order('detected_date', { ascending: false });
+    const { data, error } = await query.order("detected_date", {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
   }
 
-  async addressBypassingDetection(detectionId: string, resolutionNotes: string): Promise<any> {
+  async addressBypassingDetection(
+    detectionId: string,
+    resolutionNotes: string,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('bypassing_detections')
+      .from("bypassing_detections")
       .update({
         addressed: true,
         addressed_date: new Date().toISOString(),
-        resolution_notes: resolutionNotes
+        resolution_notes: resolutionNotes,
       })
-      .eq('id', detectionId)
+      .eq("id", detectionId)
       .select()
       .single();
 
@@ -367,7 +414,7 @@ export class SupabaseIntegrationService {
   // Integration Gates Management
   async createIntegrationGate(userId: string, gateData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from('integration_gates')
+      .from("integration_gates")
       .insert({
         user_id: userId,
         content_to_unlock: gateData.contentToUnlock,
@@ -375,7 +422,7 @@ export class SupabaseIntegrationService {
         minimum_integration_days: gateData.minimumIntegrationDays,
         requirements: gateData.requirements,
         real_world_application_required: gateData.realWorldApplicationRequired,
-        community_validation_required: gateData.communityValidationRequired
+        community_validation_required: gateData.communityValidationRequired,
       })
       .select()
       .single();
@@ -384,17 +431,22 @@ export class SupabaseIntegrationService {
     return data;
   }
 
-  async getIntegrationGates(userId: string, unlockedOnly: boolean = false): Promise<any[]> {
+  async getIntegrationGates(
+    userId: string,
+    unlockedOnly: boolean = false,
+  ): Promise<any[]> {
     let query = this.supabase
-      .from('integration_gates')
-      .select('*')
-      .eq('user_id', userId);
+      .from("integration_gates")
+      .select("*")
+      .eq("user_id", userId);
 
     if (unlockedOnly) {
-      query = query.eq('unlocked', false);
+      query = query.eq("unlocked", false);
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -402,12 +454,12 @@ export class SupabaseIntegrationService {
 
   async unlockIntegrationGate(gateId: string): Promise<any> {
     const { data, error } = await this.supabase
-      .from('integration_gates')
+      .from("integration_gates")
       .update({
         unlocked: true,
-        unlocked_date: new Date().toISOString()
+        unlocked_date: new Date().toISOString(),
       })
-      .eq('id', gateId)
+      .eq("id", gateId)
       .select()
       .single();
 
@@ -417,12 +469,14 @@ export class SupabaseIntegrationService {
 
   async recordBypassAttempt(gateId: string): Promise<any> {
     const { data, error } = await this.supabase
-      .from('integration_gates')
+      .from("integration_gates")
       .update({
-        bypass_attempts: this.supabase.rpc('increment_bypass_attempts', { gate_id: gateId }),
-        last_bypass_attempt: new Date().toISOString()
+        bypass_attempts: this.supabase.rpc("increment_bypass_attempts", {
+          gate_id: gateId,
+        }),
+        last_bypass_attempt: new Date().toISOString(),
       })
-      .eq('id', gateId)
+      .eq("id", gateId)
       .select()
       .single();
 
@@ -433,13 +487,13 @@ export class SupabaseIntegrationService {
   // Reflection Gaps Management
   async createReflectionGap(userId: string, gapData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from('reflection_gaps')
+      .from("reflection_gaps")
       .insert({
         user_id: userId,
         content_id: gapData.contentId,
         minimum_duration_hours: gapData.minimumDurationHours,
         reflection_prompts: gapData.reflectionPrompts,
-        reality_check_questions: gapData.realityCheckQuestions
+        reality_check_questions: gapData.realityCheckQuestions,
       })
       .select()
       .single();
@@ -450,11 +504,11 @@ export class SupabaseIntegrationService {
 
   async getActiveReflectionGaps(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from('reflection_gaps')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('status', 'processing')
-      .order('start_date', { ascending: false });
+      .from("reflection_gaps")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("status", "processing")
+      .order("start_date", { ascending: false });
 
     if (error) throw error;
     return data || [];
@@ -462,9 +516,9 @@ export class SupabaseIntegrationService {
 
   async updateReflectionGap(gapId: string, updates: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from('reflection_gaps')
+      .from("reflection_gaps")
       .update(updates)
-      .eq('id', gapId)
+      .eq("id", gapId)
       .select()
       .single();
 
@@ -473,9 +527,12 @@ export class SupabaseIntegrationService {
   }
 
   // Community Interactions
-  async createCommunityInteraction(userId: string, interactionData: any): Promise<any> {
+  async createCommunityInteraction(
+    userId: string,
+    interactionData: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('community_interactions')
+      .from("community_interactions")
       .insert({
         user_id: userId,
         interaction_type: interactionData.interactionType,
@@ -483,7 +540,7 @@ export class SupabaseIntegrationService {
         context: interactionData.context,
         target_user_id: interactionData.targetUserId,
         group_context: interactionData.groupContext,
-        visibility: interactionData.visibility || 'supportive'
+        visibility: interactionData.visibility || "supportive",
       })
       .select()
       .single();
@@ -492,36 +549,44 @@ export class SupabaseIntegrationService {
     return data;
   }
 
-  async getCommunityInteractions(userId?: string, interactionType?: string): Promise<any[]> {
-    let query = this.supabase
-      .from('community_interactions')
-      .select(`
+  async getCommunityInteractions(
+    userId?: string,
+    interactionType?: string,
+  ): Promise<any[]> {
+    let query = this.supabase.from("community_interactions").select(`
         *,
         user_profiles!community_interactions_user_id_fkey(display_name, community_visibility)
       `);
 
     if (userId) {
-      query = query.eq('user_id', userId);
+      query = query.eq("user_id", userId);
     }
 
     if (interactionType) {
-      query = query.eq('interaction_type', interactionType);
+      query = query.eq("interaction_type", interactionType);
     }
 
     // Filter by visibility and ensure proper access
-    query = query.or(`visibility.eq.open,and(visibility.eq.supportive,user_profiles.community_visibility.in.("supportive","open"))`);
+    query = query.or(
+      `visibility.eq.open,and(visibility.eq.supportive,user_profiles.community_visibility.in.("supportive","open"))`,
+    );
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
   }
 
-  async updateCommunityInteraction(interactionId: string, updates: any): Promise<any> {
+  async updateCommunityInteraction(
+    interactionId: string,
+    updates: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('community_interactions')
+      .from("community_interactions")
       .update(updates)
-      .eq('id', interactionId)
+      .eq("id", interactionId)
       .select()
       .single();
 
@@ -530,17 +595,22 @@ export class SupabaseIntegrationService {
   }
 
   // Professional Connections
-  async createProfessionalConnection(userId: string, professionalId: string, connectionData: any): Promise<any> {
+  async createProfessionalConnection(
+    userId: string,
+    professionalId: string,
+    connectionData: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('professional_connections')
+      .from("professional_connections")
       .insert({
         user_id: userId,
         professional_id: professionalId,
         connection_type: connectionData.connectionType,
         initiated_by: connectionData.initiatedBy,
         connection_reason: connectionData.connectionReason,
-        platform_integration_consent: connectionData.platformIntegrationConsent || false,
-        data_sharing_level: connectionData.dataSharingLevel || 'minimal'
+        platform_integration_consent:
+          connectionData.platformIntegrationConsent || false,
+        data_sharing_level: connectionData.dataSharingLevel || "minimal",
       })
       .select()
       .single();
@@ -551,23 +621,28 @@ export class SupabaseIntegrationService {
 
   async getProfessionalConnections(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from('professional_connections')
-      .select(`
+      .from("professional_connections")
+      .select(
+        `
         *,
         professional:user_profiles!professional_connections_professional_id_fkey(display_name, professional_type, verified_professional),
         user:user_profiles!professional_connections_user_id_fkey(display_name)
-      `)
+      `,
+      )
       .or(`user_id.eq.${userId},professional_id.eq.${userId}`);
 
     if (error) throw error;
     return data || [];
   }
 
-  async updateProfessionalConnection(connectionId: string, updates: any): Promise<any> {
+  async updateProfessionalConnection(
+    connectionId: string,
+    updates: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('professional_connections')
+      .from("professional_connections")
       .update(updates)
-      .eq('id', connectionId)
+      .eq("id", connectionId)
       .select()
       .single();
 
@@ -576,9 +651,12 @@ export class SupabaseIntegrationService {
   }
 
   // Content Interaction Tracking
-  async trackContentInteraction(userId: string, interactionData: any): Promise<any> {
+  async trackContentInteraction(
+    userId: string,
+    interactionData: any,
+  ): Promise<any> {
     const { data, error } = await this.supabase
-      .from('content_interactions')
+      .from("content_interactions")
       .insert({
         user_id: userId,
         content_id: interactionData.contentId,
@@ -587,12 +665,13 @@ export class SupabaseIntegrationService {
         elemental_association: interactionData.elementalAssociation,
         access_granted: interactionData.accessGranted,
         access_denied_reason: interactionData.accessDeniedReason,
-        integration_requirements_met: interactionData.integrationRequirementsMet,
+        integration_requirements_met:
+          interactionData.integrationRequirementsMet,
         time_spent_minutes: interactionData.timeSpentMinutes,
         completion_percentage: interactionData.completionPercentage,
         grounding_prompts_delivered: interactionData.groundingPromptsDelivered,
         bypassing_warnings_given: interactionData.bypassingWarningsGiven,
-        reality_checks_prompted: interactionData.realityChecksPrompted
+        reality_checks_prompted: interactionData.realityChecksPrompted,
       })
       .select()
       .single();
@@ -601,17 +680,22 @@ export class SupabaseIntegrationService {
     return data;
   }
 
-  async getContentInteractions(userId: string, contentType?: string): Promise<any[]> {
+  async getContentInteractions(
+    userId: string,
+    contentType?: string,
+  ): Promise<any[]> {
     let query = this.supabase
-      .from('content_interactions')
-      .select('*')
-      .eq('user_id', userId);
+      .from("content_interactions")
+      .select("*")
+      .eq("user_id", userId);
 
     if (contentType) {
-      query = query.eq('content_type', contentType);
+      query = query.eq("content_type", contentType);
     }
 
-    const { data, error } = await query.order('accessed_at', { ascending: false });
+    const { data, error } = await query.order("accessed_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -620,22 +704,28 @@ export class SupabaseIntegrationService {
   // Analytics (Anonymized)
   async recordAnalytics(userHash: string, analyticsData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from('platform_analytics')
+      .from("platform_analytics")
       .insert({
         user_hash: userHash,
         cohort_identifier: analyticsData.cohortIdentifier,
-        integration_effectiveness_score: analyticsData.integrationEffectivenessScore,
+        integration_effectiveness_score:
+          analyticsData.integrationEffectivenessScore,
         bypassing_reduction_score: analyticsData.bypassingReductionScore,
-        community_health_contribution: analyticsData.communityHealthContribution,
+        community_health_contribution:
+          analyticsData.communityHealthContribution,
         long_term_development_trend: analyticsData.longTermDevelopmentTrend,
         session_data: analyticsData.sessionData,
         content_interaction_patterns: analyticsData.contentInteractionPatterns,
-        community_participation_patterns: analyticsData.communityParticipationPatterns,
-        professional_support_utilization: analyticsData.professionalSupportUtilization,
-        self_reported_wellbeing_change: analyticsData.selfReportedWellbeingChange,
-        integration_quality_improvement: analyticsData.integrationQualityImprovement,
+        community_participation_patterns:
+          analyticsData.communityParticipationPatterns,
+        professional_support_utilization:
+          analyticsData.professionalSupportUtilization,
+        self_reported_wellbeing_change:
+          analyticsData.selfReportedWellbeingChange,
+        integration_quality_improvement:
+          analyticsData.integrationQualityImprovement,
         research_consent: analyticsData.researchConsent,
-        data_retention_end_date: analyticsData.dataRetentionEndDate
+        data_retention_end_date: analyticsData.dataRetentionEndDate,
       })
       .select()
       .single();
@@ -647,26 +737,28 @@ export class SupabaseIntegrationService {
   // Utility functions for data conversion
   convertToUserHolisticProfile(
     userProfile: SupabaseUserProfile,
-    domainProfiles: SupabaseDomainProfile[]
+    domainProfiles: SupabaseDomainProfile[],
   ): UserHolisticProfile {
     return {
       userId: userProfile.user_id,
-      domains: domainProfiles.map(dp => ({
+      domains: domainProfiles.map((dp) => ({
         domain: dp.domain,
         currentLevel: dp.current_level,
         developmentStage: dp.development_stage,
         strengths: dp.strengths,
         growthEdges: dp.growth_edges,
         practicesEngaged: dp.practices_engaged,
-        lastAssessment: dp.last_assessment_date ? new Date(dp.last_assessment_date) : new Date()
+        lastAssessment: dp.last_assessment_date
+          ? new Date(dp.last_assessment_date)
+          : new Date(),
       })),
       currentState: userProfile.current_state,
       stressLevel: userProfile.stress_level,
       energyLevel: userProfile.energy_level,
       lifeCircumstances: [], // Would need additional table
-      preferredLearningStyle: 'mixed', // Would need to add to schema
+      preferredLearningStyle: "mixed", // Would need to add to schema
       developmentGoals: [], // Would need additional table
-      lastUpdated: new Date(userProfile.updated_at)
+      lastUpdated: new Date(userProfile.updated_at),
     };
   }
 
@@ -674,8 +766,10 @@ export class SupabaseIntegrationService {
   async hashUserId(userId: string): Promise<string> {
     const encoder = new TextEncoder();
     const data = encoder.encode(userId);
-    const hashBuffer = await globalThis.crypto?.subtle?.digest('SHA-256', data) || new ArrayBuffer(32);
+    const hashBuffer =
+      (await globalThis.crypto?.subtle?.digest("SHA-256", data)) ||
+      new ArrayBuffer(32);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 }

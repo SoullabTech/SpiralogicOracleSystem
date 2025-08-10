@@ -1,17 +1,17 @@
 // Update Soul Memory Database Schema
-const Database = require('better-sqlite3');
+const Database = require("better-sqlite3");
 
-console.log('🛠️ Updating Soul Memory Database Schema...\n');
+console.log("🛠️ Updating Soul Memory Database Schema...\n");
 
 try {
-  const db = new Database('./soul_memory.db');
+  const db = new Database("./soul_memory.db");
 
   // Drop existing table if it exists with wrong schema
-  console.log('1️⃣ Dropping old table...');
-  db.exec('DROP TABLE IF EXISTS soul_memory');
+  console.log("1️⃣ Dropping old table...");
+  db.exec("DROP TABLE IF EXISTS soul_memory");
 
   // Create new memories table with correct schema
-  console.log('2️⃣ Creating new memories table...');
+  console.log("2️⃣ Creating new memories table...");
   db.exec(`
     CREATE TABLE memories (
       id VARCHAR PRIMARY KEY,
@@ -34,7 +34,7 @@ try {
   `);
 
   // Create memory threads table
-  console.log('3️⃣ Creating memory_threads table...');
+  console.log("3️⃣ Creating memory_threads table...");
   db.exec(`
     CREATE TABLE memory_threads (
       id VARCHAR PRIMARY KEY,
@@ -50,7 +50,7 @@ try {
   `);
 
   // Create archetypal patterns table
-  console.log('4️⃣ Creating archetypal_patterns table...');
+  console.log("4️⃣ Creating archetypal_patterns table...");
   db.exec(`
     CREATE TABLE archetypal_patterns (
       id VARCHAR PRIMARY KEY,
@@ -65,26 +65,29 @@ try {
   `);
 
   // Create indexes for performance
-  console.log('5️⃣ Creating performance indexes...');
-  db.exec('CREATE INDEX idx_memories_user_id ON memories(user_id)');
-  db.exec('CREATE INDEX idx_memories_type ON memories(type)');
-  db.exec('CREATE INDEX idx_memories_timestamp ON memories(timestamp)');
-  db.exec('CREATE INDEX idx_memories_sacred ON memories(sacred_moment)');
-  db.exec('CREATE INDEX idx_threads_user_id ON memory_threads(user_id)');
-  db.exec('CREATE INDEX idx_patterns_user_id ON archetypal_patterns(user_id)');
+  console.log("5️⃣ Creating performance indexes...");
+  db.exec("CREATE INDEX idx_memories_user_id ON memories(user_id)");
+  db.exec("CREATE INDEX idx_memories_type ON memories(type)");
+  db.exec("CREATE INDEX idx_memories_timestamp ON memories(timestamp)");
+  db.exec("CREATE INDEX idx_memories_sacred ON memories(sacred_moment)");
+  db.exec("CREATE INDEX idx_threads_user_id ON memory_threads(user_id)");
+  db.exec("CREATE INDEX idx_patterns_user_id ON archetypal_patterns(user_id)");
 
   // Verify tables
-  console.log('6️⃣ Verifying schema...');
-  const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all();
-  console.log('📋 Created tables:', tables.map(t => t.name).join(', '));
+  console.log("6️⃣ Verifying schema...");
+  const tables = db
+    .prepare("SELECT name FROM sqlite_master WHERE type='table'")
+    .all();
+  console.log("📋 Created tables:", tables.map((t) => t.name).join(", "));
 
-  const memoriesSchema = db.prepare('PRAGMA table_info(memories)').all();
-  console.log('✅ Memories table columns:');
-  memoriesSchema.forEach(col => console.log(`   - ${col.name} (${col.type})`));
+  const memoriesSchema = db.prepare("PRAGMA table_info(memories)").all();
+  console.log("✅ Memories table columns:");
+  memoriesSchema.forEach((col) =>
+    console.log(`   - ${col.name} (${col.type})`),
+  );
 
   db.close();
-  console.log('\n✅ Database schema updated successfully!');
-
+  console.log("\n✅ Database schema updated successfully!");
 } catch (error) {
-  console.error('❌ Error updating schema:', error.message);
+  console.error("❌ Error updating schema:", error.message);
 }

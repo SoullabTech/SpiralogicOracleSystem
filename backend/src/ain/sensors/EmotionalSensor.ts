@@ -30,7 +30,7 @@ export class EmotionalSensor {
   async detectEmotion(input: any): Promise<EmotionalReading> {
     // Stub implementation - would use emotional analysis
     const intensity = Math.random() * 0.5 + 0.5;
-    const emotion = 'calm';
+    const emotion = "calm";
     return {
       emotion,
       intensity,
@@ -41,7 +41,7 @@ export class EmotionalSensor {
       depth: intensity,
       flow: Math.random(),
       clarity: Math.random() * 0.3 + 0.7,
-      magnitude: intensity
+      magnitude: intensity,
     };
   }
 
@@ -51,10 +51,10 @@ export class EmotionalSensor {
   analyzePatterns(readings: EmotionalReading[]): EmotionalPattern {
     // Stub implementation - would analyze emotional patterns
     return {
-      dominant_emotion: 'balanced',
-      emotional_flow: ['calm', 'peaceful', 'centered'],
+      dominant_emotion: "balanced",
+      emotional_flow: ["calm", "peaceful", "centered"],
       stability: 0.8,
-      coherence: 0.7
+      coherence: 0.7,
     };
   }
 
@@ -62,7 +62,7 @@ export class EmotionalSensor {
    * Read current emotional state
    */
   async readCurrent(event?: any): Promise<EmotionalReading> {
-    return this.detectEmotion(event || 'current-state');
+    return this.detectEmotion(event || "current-state");
   }
 
   /**

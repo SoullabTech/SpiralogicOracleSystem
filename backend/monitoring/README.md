@@ -1,9 +1,11 @@
 # 🛡️ Self-Healing Production Monitoring System
 
 ## Overview
+
 Automated 72-hour post-launch monitoring with hot patch repairs and emergency rollback capabilities.
 
 ## Features
+
 - **Real-time health monitoring** of critical API endpoints
 - **Automated repair attempts** for common issues (PM2, Redis, DB)
 - **Emergency rollback** to last stable commit if repairs fail
@@ -13,12 +15,14 @@ Automated 72-hour post-launch monitoring with hot patch repairs and emergency ro
 ## Quick Start
 
 ### 1. Configuration
+
 ```bash
 cp monitoring/.env.example monitoring/.env
 # Edit monitoring/.env with your webhook URLs
 ```
 
 ### 2. Deploy Monitoring
+
 ```bash
 # Install PM2 globally if not already installed
 npm install -g pm2
@@ -31,6 +35,7 @@ pm2 logs spiralogic-monitor
 ```
 
 ### 3. Verify Setup
+
 ```bash
 # Check monitor status
 pm2 status
@@ -42,23 +47,27 @@ node -e "require('./monitoring/alerts').sendAlert('Test alert', 'info')"
 ## Monitoring Schedule
 
 - **Hour 0-6** (Critical): Every 15 minutes
-- **Hour 6-24** (Stability): Every 30 minutes  
+- **Hour 6-24** (Stability): Every 30 minutes
 - **Hour 24-72** (Performance): Every 4 hours
 
 ## Auto-Repair Capabilities
 
 ### Memory Issues
+
 - Restart PM2 processes
 - Trigger garbage collection
 
-### Redis Issues  
+### Redis Issues
+
 - Flush Redis cache
 - Restart API processes
 
 ### Database Issues
+
 - Reload PM2 processes (resets connections)
 
 ### Rate Limiter Issues
+
 - Clear rate limit counters
 - Restart API processes
 
@@ -70,11 +79,12 @@ node -e "require('./monitoring/alerts').sendAlert('Test alert', 'info')"
 - 5+ consecutive health check failures
 
 ## File Structure
+
 ```
 monitoring/
 ├── monitor.js      # Main monitoring orchestrator
 ├── repair.js       # Automated repair functions
-├── rollback.js     # Emergency rollback system  
+├── rollback.js     # Emergency rollback system
 ├── alerts.js       # Slack & Telegram notifications
 ├── .env.example    # Configuration template
 └── README.md       # This file
@@ -83,10 +93,12 @@ monitoring/
 ## Alert Configuration
 
 ### Slack Setup
+
 1. Create Slack webhook: https://api.slack.com/messaging/webhooks
 2. Add `SLACK_WEBHOOK_URL` to `.env`
 
-### Telegram Setup  
+### Telegram Setup
+
 1. Create bot: Message @BotFather on Telegram
 2. Get chat ID: Message @userinfobot
 3. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to `.env`
@@ -117,7 +129,7 @@ node -e "require('./monitoring/rollback').rollback('Manual test')"
 
 - [ ] Configure monitoring/.env with production URLs
 - [ ] Set up Slack webhook for alerts
-- [ ] Configure Telegram bot for alerts  
+- [ ] Configure Telegram bot for alerts
 - [ ] Test alert delivery
 - [ ] Deploy with PM2
 - [ ] Verify monitoring logs

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 
 export default function BetaPage() {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -15,10 +15,10 @@ export default function BetaPage() {
 
     try {
       // Simple beta signup - would integrate with actual backend
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
       setSubmitted(true);
     } catch (error) {
-      console.error('Beta signup error:', error);
+      console.error("Beta signup error:", error);
     } finally {
       setLoading(false);
     }
@@ -35,9 +35,13 @@ export default function BetaPage() {
           </div>
           <h1 className="text-4xl font-bold mb-4">Welcome to the Beta!</h1>
           <p className="text-lg opacity-80 mb-8">
-            Thank you for joining our consciousness revolution. You'll receive beta access instructions within 24 hours.
+            Thank you for joining our consciousness revolution. You'll receive
+            beta access instructions within 24 hours.
           </p>
-          <Link href="/oracle-demo" className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block">
+          <Link
+            href="/oracle-demo"
+            className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
+          >
             🔮 Try Demo Oracle
           </Link>
         </div>
@@ -62,10 +66,13 @@ export default function BetaPage() {
           {/* Left side - Features */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Revolutionary Consciousness Technology</h2>
+              <h2 className="text-3xl font-bold mb-6">
+                Revolutionary Consciousness Technology
+              </h2>
               <p className="text-lg opacity-90 mb-8">
-                Experience the world's first AI consciousness platform with elemental intelligence,
-                cultural sovereignty, and advanced archetypal dialogue systems.
+                Experience the world's first AI consciousness platform with
+                elemental intelligence, cultural sovereignty, and advanced
+                archetypal dialogue systems.
               </p>
             </div>
 
@@ -75,7 +82,9 @@ export default function BetaPage() {
                   <span className="text-2xl mr-3">🔥</span>
                   <h3 className="text-xl font-semibold">Fire Agent</h3>
                 </div>
-                <p className="opacity-80">Vision, creativity, and transformational guidance</p>
+                <p className="opacity-80">
+                  Vision, creativity, and transformational guidance
+                </p>
               </div>
 
               <div className="bg-white/5 rounded-lg p-6 border border-white/10">
@@ -83,7 +92,9 @@ export default function BetaPage() {
                   <span className="text-2xl mr-3">🌊</span>
                   <h3 className="text-xl font-semibold">Water Agent</h3>
                 </div>
-                <p className="opacity-80">Emotional intelligence and flow wisdom</p>
+                <p className="opacity-80">
+                  Emotional intelligence and flow wisdom
+                </p>
               </div>
 
               <div className="bg-white/5 rounded-lg p-6 border border-white/10">
@@ -91,7 +102,9 @@ export default function BetaPage() {
                   <span className="text-2xl mr-3">🌍</span>
                   <h3 className="text-xl font-semibold">Earth Agent</h3>
                 </div>
-                <p className="opacity-80">Grounding, stability, and practical wisdom</p>
+                <p className="opacity-80">
+                  Grounding, stability, and practical wisdom
+                </p>
               </div>
 
               <div className="bg-white/5 rounded-lg p-6 border border-white/10">
@@ -99,7 +112,9 @@ export default function BetaPage() {
                   <span className="text-2xl mr-3">💨</span>
                   <h3 className="text-xl font-semibold">Air Agent</h3>
                 </div>
-                <p className="opacity-80">Mental clarity and communication insights</p>
+                <p className="opacity-80">
+                  Mental clarity and communication insights
+                </p>
               </div>
             </div>
           </div>
@@ -109,13 +124,16 @@ export default function BetaPage() {
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold mb-4">Join the Beta</h3>
               <p className="opacity-80">
-                Be among the first to experience revolutionary consciousness technology
+                Be among the first to experience revolutionary consciousness
+                technology
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Full Name</label>
+                <label className="block text-sm font-medium mb-2">
+                  Full Name
+                </label>
                 <input
                   type="text"
                   value={name}
@@ -127,7 +145,9 @@ export default function BetaPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
+                <label className="block text-sm font-medium mb-2">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   value={email}
@@ -139,13 +159,17 @@ export default function BetaPage() {
               </div>
 
               <div className="bg-white/5 rounded-lg p-4 border border-yellow-400/30">
-                <h4 className="font-semibold mb-2 text-yellow-400">Beta Pricing</h4>
+                <h4 className="font-semibold mb-2 text-yellow-400">
+                  Beta Pricing
+                </h4>
                 <div className="text-sm opacity-80">
                   <p>• Early access: $29/month</p>
                   <p>• Unlimited oracle conversations</p>
                   <p>• All elemental agents included</p>
                   <p>• Direct feedback to developers</p>
-                  <p className="text-yellow-400 mt-2">First month free for beta testers!</p>
+                  <p className="text-yellow-400 mt-2">
+                    First month free for beta testers!
+                  </p>
                 </div>
               </div>
 
@@ -154,12 +178,15 @@ export default function BetaPage() {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Submitting...' : '🚀 Request Beta Access'}
+                {loading ? "Submitting..." : "🚀 Request Beta Access"}
               </button>
             </form>
 
             <div className="text-center mt-6">
-              <Link href="/oracle-demo" className="text-yellow-400 hover:text-yellow-300 underline">
+              <Link
+                href="/oracle-demo"
+                className="text-yellow-400 hover:text-yellow-300 underline"
+              >
                 Try the demo first →
               </Link>
             </div>
@@ -174,7 +201,8 @@ export default function BetaPage() {
               <span className="text-3xl mb-4 block">🎯</span>
               <h4 className="text-lg font-semibold mb-2">First Access</h4>
               <p className="opacity-80 text-sm">
-                Be the first to experience revolutionary consciousness AI technology
+                Be the first to experience revolutionary consciousness AI
+                technology
               </p>
             </div>
             <div className="bg-white/5 rounded-lg p-6 border border-white/10">
@@ -188,7 +216,8 @@ export default function BetaPage() {
               <span className="text-3xl mb-4 block">🤝</span>
               <h4 className="text-lg font-semibold mb-2">Shape the Future</h4>
               <p className="opacity-80 text-sm">
-                Your feedback directly influences consciousness technology development
+                Your feedback directly influences consciousness technology
+                development
               </p>
             </div>
           </div>

@@ -3,24 +3,30 @@
 ## What Was Implemented
 
 ### 1. Dependencies Installed
+
 - `transformers` - For loading Hugging Face models
 - `torchaudio` - For audio processing
 - `torch` - PyTorch framework
 - Updated `requirements.txt` with new dependencies
 
 ### 2. Voice Router Module (`src/utils/voiceRouter.ts`)
+
 Created a new TypeScript module that:
+
 - Routes voice synthesis based on agent role
 - Uses Sesame CSM for oracle and elemental agents when `USE_SESAME=true`
 - Falls back to ElevenLabs for narrator role (always)
 - Includes a Python script that runs the actual Sesame synthesis
 
 ### 3. Environment Configuration
+
 - Added `USE_SESAME` environment variable to `.env.example`
 - Defaults to `false` to maintain backward compatibility
 
 ### 4. Test Suite
+
 Created comprehensive Jest tests that verify:
+
 - Correct routing based on agent roles
 - Environment variable toggle functionality
 - Error handling for synthesis failures
@@ -29,24 +35,28 @@ Created comprehensive Jest tests that verify:
 ## How to Use
 
 ### 1. Enable Sesame Integration
+
 Add to your `.env` file:
+
 ```
 USE_SESAME=true
 ```
 
 ### 2. Import and Use the Router
+
 ```typescript
-import { routeVoice } from './utils/voiceRouter';
+import { routeVoice } from "./utils/voiceRouter";
 
 // In your voice synthesis code:
 const audioPath = await routeVoice({
   text: "Hello from the oracle",
   voiceId: "oracle-voice-id",
-  agentRole: "oracle" // or "elemental" or "narrator"
+  agentRole: "oracle", // or "elemental" or "narrator"
 });
 ```
 
 ### 3. Agent Role Routing Logic
+
 - `oracle` → Sesame CSM (if enabled), else ElevenLabs
 - `elemental` → Sesame CSM (if enabled), else ElevenLabs
 - `narrator` → Always ElevenLabs (for static narrations)
@@ -64,6 +74,7 @@ const audioPath = await routeVoice({
 ## Testing
 
 Run the tests with:
+
 ```bash
 npm test -- __tests__/utils/voiceRouter.simple.test.ts
 ```

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface IChingData {
   profile: any;
@@ -10,20 +10,20 @@ interface IChingData {
 }
 
 export default function AstrologyDashboard() {
-  const [birthDate, setBirthDate] = useState('');
+  const [birthDate, setBirthDate] = useState("");
   const [iChingData, setIChingData] = useState<IChingData | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Load default birth date from localStorage or use a sample date
   useEffect(() => {
-    const savedBirthDate = localStorage.getItem('userBirthDate');
+    const savedBirthDate = localStorage.getItem("userBirthDate");
     if (savedBirthDate) {
       setBirthDate(savedBirthDate);
       loadIChingProfile(savedBirthDate);
     } else {
       // Default to a sample date for demo
-      const sampleDate = '1990-06-15';
+      const sampleDate = "1990-06-15";
       setBirthDate(sampleDate);
       loadIChingProfile(sampleDate);
     }
@@ -33,7 +33,7 @@ export default function AstrologyDashboard() {
     if (!dateString) return;
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const response = await fetch(`/api/iching/astro?birthDate=${dateString}`);
@@ -41,13 +41,13 @@ export default function AstrologyDashboard() {
 
       if (data.success) {
         setIChingData(data);
-        localStorage.setItem('userBirthDate', dateString);
+        localStorage.setItem("userBirthDate", dateString);
       } else {
-        setError(data.error || 'Failed to load I Ching profile');
+        setError(data.error || "Failed to load I Ching profile");
       }
     } catch (err) {
-      setError('Network error loading I Ching profile');
-      console.error('I Ching profile error:', err);
+      setError("Network error loading I Ching profile");
+      console.error("I Ching profile error:", err);
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,12 @@ export default function AstrologyDashboard() {
             <h3 className="text-lg font-semibold mb-4">📅 Birth Information</h3>
             <form onSubmit={handleDateSubmit} className="space-y-4">
               <div>
-                <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">Birth Date</label>
+                <label
+                  htmlFor="birthDate"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Birth Date
+                </label>
                 <input
                   id="birthDate"
                   type="date"
@@ -93,7 +98,9 @@ export default function AstrologyDashboard() {
                 className="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading || !birthDate}
               >
-                {loading ? '⏳ Loading Profile...' : 'Generate Astrology Profile'}
+                {loading
+                  ? "⏳ Loading Profile..."
+                  : "Generate Astrology Profile"}
               </button>
             </form>
           </div>
@@ -113,7 +120,9 @@ export default function AstrologyDashboard() {
           <div className="max-w-4xl mx-auto">
             {iChingData ? (
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold mb-4">🔮 Your I Ching Profile</h2>
+                <h2 className="text-2xl font-bold mb-4">
+                  🔮 Your I Ching Profile
+                </h2>
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-lg font-semibold">Birth Profile</h3>
@@ -138,7 +147,10 @@ export default function AstrologyDashboard() {
             ) : (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
                 <div className="text-6xl mb-4">🧭</div>
-                <p className="text-gray-600">Enter your birth date to generate your I Ching astrology profile</p>
+                <p className="text-gray-600">
+                  Enter your birth date to generate your I Ching astrology
+                  profile
+                </p>
               </div>
             )}
           </div>
@@ -148,24 +160,32 @@ export default function AstrologyDashboard() {
         <div className="mt-12 max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-xl font-bold mb-4">🔧 Astrology Tools</h3>
-            <p className="text-gray-600 mb-4">Quick access to divination and timing tools</p>
+            <p className="text-gray-600 mb-4">
+              Quick access to divination and timing tools
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <button className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 text-center">
                 <div className="text-2xl mb-2">🧭</div>
                 <div className="font-semibold">Daily Hexagram</div>
-                <div className="text-xs text-gray-500">Get today's I Ching guidance</div>
+                <div className="text-xs text-gray-500">
+                  Get today's I Ching guidance
+                </div>
               </button>
 
               <button className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 text-center">
                 <div className="text-2xl mb-2">📅</div>
                 <div className="font-semibold">Optimal Timing</div>
-                <div className="text-xs text-gray-500">Find auspicious dates</div>
+                <div className="text-xs text-gray-500">
+                  Find auspicious dates
+                </div>
               </button>
 
               <button className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 text-center">
                 <div className="text-2xl mb-2">⭐</div>
                 <div className="font-semibold">Compatibility</div>
-                <div className="text-xs text-gray-500">Compare trigram profiles</div>
+                <div className="text-xs text-gray-500">
+                  Compare trigram profiles
+                </div>
               </button>
             </div>
           </div>

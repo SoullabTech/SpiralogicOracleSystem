@@ -1,8 +1,8 @@
 // Rate Limiting Middleware with Redis Backend - Emergency Fix
-import rateLimit from 'express-rate-limit';
-import { redis } from '../config/redis';
-import { logger } from '../utils/logger';
-import { Request, Response, NextFunction } from 'express';
+import rateLimit from "express-rate-limit";
+import { redis } from "../config/redis";
+import { logger } from "../utils/logger";
+import { Request, Response, NextFunction } from "express";
 
 interface RateLimitConfig {
   windowMs: number;
@@ -15,19 +15,21 @@ interface RateLimitConfig {
 }
 
 class RedisStore {
-  async increment(key: string): Promise<{ totalHits: number; resetTime?: Date }> {
+  async increment(
+    key: string,
+  ): Promise<{ totalHits: number; resetTime?: Date }> {
     try {
       const multi = redis.multi();
       multi.incr(key);
       multi.expire(key, Math.floor(15 * 60)); // 15 minutes TTL
       const results = await multi.exec();
-      
+
       return {
-        totalHits: results?.[0]?.[1] as number || 1,
-        resetTime: new Date(Date.now() + 15 * 60 * 1000)
+        totalHits: (results?.[0]?.[1] as number) || 1,
+        resetTime: new Date(Date.now() + 15 * 60 * 1000),
       };
     } catch (error) {
-      logger.error('Redis rate limit error:', error);
+      logger.error("Redis rate limit error:", error);
       return { totalHits: 1 };
     }
   }
@@ -36,7 +38,7 @@ class RedisStore {
     try {
       await redis.decr(key);
     } catch (error) {
-      logger.error('Redis decrement error:', error);
+      logger.error("Redis decrement error:", error);
     }
   }
 
@@ -44,14 +46,14 @@ class RedisStore {
     try {
       await redis.del(key);
     } catch (error) {
-      logger.error('Redis reset error:', error);
+      logger.error("Redis reset error:", error);
     }
   }
 }
 
 function createRateLimiter(config: RateLimitConfig) {
   const store = new RedisStore();
-  
+
   return rateLimit({
     ...config,
     store: {
@@ -68,85 +70,94 @@ function createRateLimiter(config: RateLimitConfig) {
       },
       resetKey: async (key: string) => {
         await store.resetKey(key);
-      }
-    }
+      },
+    },
   });
 }
 
 export const defaultRateLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: 'Too many requests. Please try again later.',
+  message: "Too many requests. Please try again later.",
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
 export const authRateLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  message: 'Too many authentication attempts. Please try again later.',
+  message: "Too many authentication attempts. Please try again later.",
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
 export const oracleRateLimiter = createRateLimiter({
   windowMs: 60 * 1000,
   max: 20,
-  message: 'Oracle queries limited. Please pause for sacred reflection.',
+  message: "Oracle queries limited. Please pause for sacred reflection.",
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
 export const ainEngineRateLimiter = createRateLimiter({
   windowMs: 60 * 1000,
   max: 60,
-  message: 'AIN Engine rate limit reached. Please try again later.',
+  message: "AIN Engine rate limit reached. Please try again later.",
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
-export function bypassRateLimit(req: Request, res: Response, next: NextFunction) {
-  const bypassHeader = req.headers['x-bypass-rate-limit'];
+export function bypassRateLimit(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const bypassHeader = req.headers["x-bypass-rate-limit"];
   const bypassSecret = process.env.RATE_LIMIT_BYPASS_SECRET;
-  
+
   if (bypassSecret && bypassHeader === bypassSecret) {
     next();
     return;
   }
-  
-  const healthEndpoints = ['/health', '/ready', '/live', '/metrics'];
-  if (healthEndpoints.some(endpoint => req.path.startsWith(endpoint))) {
+
+  const healthEndpoints = ["/health", "/ready", "/live", "/metrics"];
+  if (healthEndpoints.some((endpoint) => req.path.startsWith(endpoint))) {
     next();
     return;
   }
-  
+
   defaultRateLimiter(req, res, next);
 }
 
-export function dynamicRateLimiter(req: Request, res: Response, next: NextFunction) {
+export function dynamicRateLimiter(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const user = (req as any).user;
-  
+
   if (!user) {
     return defaultRateLimiter(req, res, next);
   }
-  
-  const userTier = user.subscription_tier || 'free';
-  
+
+  const userTier = user.subscription_tier || "free";
+
   const tierLimits = {
     free: { windowMs: 60 * 1000, max: 10 },
     basic: { windowMs: 60 * 1000, max: 30 },
     premium: { windowMs: 60 * 1000, max: 100 },
-    enterprise: { windowMs: 60 * 1000, max: 500 }
+    enterprise: { windowMs: 60 * 1000, max: 500 },
   };
-  
-  const limits = tierLimits[userTier as keyof typeof tierLimits] || tierLimits.free;
-  
+
+  const limits =
+    tierLimits[userTier as keyof typeof tierLimits] || tierLimits.free;
+
   const tierLimiter = createRateLimiter({
     ...limits,
     message: `You have reached your ${userTier} tier rate limit. Please upgrade for higher limits.`,
-    keyGenerator: (req: Request) => `user:${user.id}:${userTier}`
+    keyGenerator: (req: Request) => `user:${user.id}:${userTier}`,
   });
-  
+
   return tierLimiter(req, res, next);
 }
 
@@ -156,5 +167,5 @@ export default {
   oracle: oracleRateLimiter,
   ainEngine: ainEngineRateLimiter,
   bypass: bypassRateLimit,
-  dynamic: dynamicRateLimiter
+  dynamic: dynamicRateLimiter,
 };

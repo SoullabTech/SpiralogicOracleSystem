@@ -1,36 +1,42 @@
 // frontend/src/components/auth/LoginForm.tsx
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface LoginFormProps {
   onSwitchToSignup: () => void;
   onSuccess?: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) => {
+const LoginForm: React.FC<LoginFormProps> = ({
+  onSwitchToSignup,
+  onSuccess,
+}) => {
   const { signIn, signInWithMagicLink, resetPassword } = useAuth();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [showMagicLink, setShowMagicLink] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
-    const { data, error: authError } = await signIn(formData.email, formData.password);
+    const { data, error: authError } = await signIn(
+      formData.email,
+      formData.password,
+    );
 
     if (authError) {
-      setError(authError.message || 'Failed to sign in');
+      setError(authError.message || "Failed to sign in");
     } else if (data.user) {
-      setMessage('Successfully signed in!');
+      setMessage("Successfully signed in!");
       onSuccess?.();
     }
 
@@ -40,19 +46,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email) {
-      setError('Please enter your email address');
+      setError("Please enter your email address");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
-    const { data, error: authError } = await signInWithMagicLink(formData.email);
+    const { data, error: authError } = await signInWithMagicLink(
+      formData.email,
+    );
 
     if (authError) {
-      setError(authError.message || 'Failed to send magic link');
+      setError(authError.message || "Failed to send magic link");
     } else {
-      setMessage('Magic link sent! Check your email.');
+      setMessage("Magic link sent! Check your email.");
     }
 
     setLoading(false);
@@ -60,19 +68,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
 
   const handlePasswordReset = async () => {
     if (!formData.email) {
-      setError('Please enter your email address');
+      setError("Please enter your email address");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     const { data, error: authError } = await resetPassword(formData.email);
 
     if (authError) {
-      setError(authError.message || 'Failed to send reset email');
+      setError(authError.message || "Failed to send reset email");
     } else {
-      setMessage('Password reset email sent! Check your inbox.');
+      setMessage("Password reset email sent! Check your inbox.");
     }
 
     setLoading(false);
@@ -102,8 +110,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
               onClick={() => setShowMagicLink(false)}
               className={`flex-1 py-2 px-4 text-sm rounded-md transition-colors ${
                 !showMagicLink
-                  ? 'bg-[#F6E27F] text-[#0E0F1B]'
-                  : 'text-gray-400 hover:text-white'
+                  ? "bg-[#F6E27F] text-[#0E0F1B]"
+                  : "text-gray-400 hover:text-white"
               }`}
             >
               Password
@@ -112,23 +120,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
               onClick={() => setShowMagicLink(true)}
               className={`flex-1 py-2 px-4 text-sm rounded-md transition-colors ${
                 showMagicLink
-                  ? 'bg-[#F6E27F] text-[#0E0F1B]'
-                  : 'text-gray-400 hover:text-white'
+                  ? "bg-[#F6E27F] text-[#0E0F1B]"
+                  : "text-gray-400 hover:text-white"
               }`}
             >
               Magic Link
             </button>
           </div>
 
-          <form onSubmit={showMagicLink ? handleMagicLink : handleSubmit} className="space-y-4">
+          <form
+            onSubmit={showMagicLink ? handleMagicLink : handleSubmit}
+            className="space-y-4"
+          >
             <div>
-              <label className="block text-sm text-gray-400 mb-2">
-                Email
-              </label>
+              <label className="block text-sm text-gray-400 mb-2">Email</label>
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="your@email.com"
                 className="w-full px-4 py-3 bg-[#0E0F1B] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
                 required
@@ -143,7 +154,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
                 <input
                   type="password"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   placeholder="Your password"
                   className="w-full px-4 py-3 bg-[#0E0F1B] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
                   required
@@ -168,7 +181,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
               disabled={loading}
               className="w-full bg-[#F6E27F] text-[#0E0F1B] py-3 rounded-lg font-medium hover:bg-[#F6E27F]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Please wait...' : showMagicLink ? 'Send Magic Link' : 'Sign In'}
+              {loading
+                ? "Please wait..."
+                : showMagicLink
+                  ? "Send Magic Link"
+                  : "Sign In"}
             </button>
           </form>
 
@@ -186,7 +203,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, onSuccess }) =>
 
           <div className="mt-6 pt-6 border-t border-gray-700 text-center">
             <p className="text-gray-400 text-sm">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <button
                 onClick={onSwitchToSignup}
                 className="text-[#F6E27F] hover:underline"

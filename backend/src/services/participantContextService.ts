@@ -1,7 +1,11 @@
-import { ParticipantContext, ElementalAssessment, PersonalOracleMatch } from '../types/personalOracle.js';
-import { RetreatParticipant } from '../types/retreat.js';
-import { supabase } from '../lib/supabaseClient.js';
-import { logger } from '../utils/logger.js';
+import {
+  ParticipantContext,
+  ElementalAssessment,
+  PersonalOracleMatch,
+} from "../types/personalOracle.js";
+import { RetreatParticipant } from "../types/retreat.js";
+import { supabase } from "../lib/supabaseClient.js";
+import { logger } from "../utils/logger.js";
 
 export interface ContextStorageResult {
   success: boolean;
@@ -23,22 +27,29 @@ export interface ContextUpdateTracker {
   newValue: any;
   updatedAt: Date;
   updatedBy?: string;
-  source: 'user_input' | 'oracle_interaction' | 'assessment_update' | 'retreat_progression';
+  source:
+    | "user_input"
+    | "oracle_interaction"
+    | "assessment_update"
+    | "retreat_progression";
 }
 
 export class ParticipantContextService {
-  private contextCache: Map<string, {
-    context: ParticipantContext;
-    lastFetched: Date;
-    isDirty: boolean;
-  }> = new Map();
+  private contextCache: Map<
+    string,
+    {
+      context: ParticipantContext;
+      lastFetched: Date;
+      isDirty: boolean;
+    }
+  > = new Map();
 
   private readonly CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
   async storeParticipantContext(
     participantId: string,
     context: ParticipantContext,
-    source: string = 'user_input'
+    source: string = "user_input",
   ): Promise<ContextStorageResult> {
     try {
       const contextData = {
@@ -50,20 +61,23 @@ export class ParticipantContextService {
         preferences: context.preferences,
         retreat_specific: context.retreatSpecific,
         stored_at: new Date().toISOString(),
-        source
+        source,
       };
 
       const { data, error } = await supabase
-        .from('participant_contexts')
+        .from("participant_contexts")
         .upsert(contextData, {
-          onConflict: 'participant_id',
-          ignoreDuplicates: false
+          onConflict: "participant_id",
+          ignoreDuplicates: false,
         })
-        .select('id')
+        .select("id")
         .single();
 
       if (error) {
-        logger.error('Failed to store participant context', { participantId, error });
+        logger.error("Failed to store participant context", {
+          participantId,
+          error,
+        });
         return { success: false, error: error.message };
       }
 
@@ -71,24 +85,35 @@ export class ParticipantContextService {
       this.updateCache(participantId, context);
 
       // Log context storage
-      await this.logContextUpdate(participantId, 'full_context_stored', null, context, source);
+      await this.logContextUpdate(
+        participantId,
+        "full_context_stored",
+        null,
+        context,
+        source,
+      );
 
       logger.info(`Participant context stored successfully`, {
         participantId,
         contextId: data.id,
-        source
+        source,
       });
 
       return { success: true, contextId: data.id };
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      logger.error('Error storing participant context', { participantId, error: errorMessage });
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      logger.error("Error storing participant context", {
+        participantId,
+        error: errorMessage,
+      });
       return { success: false, error: errorMessage };
     }
   }
 
-  async retrieveParticipantContext(participantId: string): Promise<ContextRetrievalResult> {
+  async retrieveParticipantContext(
+    participantId: string,
+  ): Promise<ContextRetrievalResult> {
     try {
       // Check cache first
       const cached = this.getCachedContext(participantId);
@@ -96,25 +121,28 @@ export class ParticipantContextService {
         return {
           success: true,
           context: cached.context,
-          lastUpdated: cached.lastFetched
+          lastUpdated: cached.lastFetched,
         };
       }
 
       // Fetch from database
       const { data, error } = await supabase
-        .from('participant_contexts')
-        .select('*')
-        .eq('participant_id', participantId)
-        .order('stored_at', { ascending: false })
+        .from("participant_contexts")
+        .select("*")
+        .eq("participant_id", participantId)
+        .order("stored_at", { ascending: false })
         .limit(1)
         .single();
 
       if (error) {
-        if (error.code === 'PGRST116') {
+        if (error.code === "PGRST116") {
           // No context found
-          return { success: false, error: 'No context found for participant' };
+          return { success: false, error: "No context found for participant" };
         }
-        logger.error('Failed to retrieve participant context', { participantId, error });
+        logger.error("Failed to retrieve participant context", {
+          participantId,
+          error,
+        });
         return { success: false, error: error.message };
       }
 
@@ -124,7 +152,7 @@ export class ParticipantContextService {
         intentions: data.intentions,
         background: data.background,
         preferences: data.preferences,
-        retreatSpecific: data.retreat_specific
+        retreatSpecific: data.retreat_specific,
       };
 
       // Update cache
@@ -133,12 +161,15 @@ export class ParticipantContextService {
       return {
         success: true,
         context,
-        lastUpdated: new Date(data.stored_at)
+        lastUpdated: new Date(data.stored_at),
       };
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      logger.error('Error retrieving participant context', { participantId, error: errorMessage });
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      logger.error("Error retrieving participant context", {
+        participantId,
+        error: errorMessage,
+      });
       return { success: false, error: errorMessage };
     }
   }
@@ -147,13 +178,14 @@ export class ParticipantContextService {
     participantId: string,
     updates: Partial<ParticipantContext>,
     updatedBy?: string,
-    source: string = 'oracle_interaction'
+    source: string = "oracle_interaction",
   ): Promise<ContextStorageResult> {
     try {
       // Get current context
-      const currentResult = await this.retrieveParticipantContext(participantId);
+      const currentResult =
+        await this.retrieveParticipantContext(participantId);
       if (!currentResult.success || !currentResult.context) {
-        return { success: false, error: 'Current context not found' };
+        return { success: false, error: "Current context not found" };
       }
 
       const currentContext = currentResult.context;
@@ -163,32 +195,56 @@ export class ParticipantContextService {
         ...currentContext,
         ...updates,
         // Deep merge for nested objects
-        personalInfo: { ...currentContext.personalInfo, ...updates.personalInfo },
-        currentState: { ...currentContext.currentState, ...updates.currentState },
+        personalInfo: {
+          ...currentContext.personalInfo,
+          ...updates.personalInfo,
+        },
+        currentState: {
+          ...currentContext.currentState,
+          ...updates.currentState,
+        },
         intentions: { ...currentContext.intentions, ...updates.intentions },
         background: { ...currentContext.background, ...updates.background },
         preferences: { ...currentContext.preferences, ...updates.preferences },
-        retreatSpecific: { ...currentContext.retreatSpecific, ...updates.retreatSpecific }
+        retreatSpecific: {
+          ...currentContext.retreatSpecific,
+          ...updates.retreatSpecific,
+        },
       };
 
       // Store updated context
-      const storeResult = await this.storeParticipantContext(participantId, updatedContext, source);
+      const storeResult = await this.storeParticipantContext(
+        participantId,
+        updatedContext,
+        source,
+      );
 
       if (storeResult.success) {
         // Log individual field updates
-        await this.trackFieldUpdates(participantId, currentContext, updatedContext, updatedBy, source);
+        await this.trackFieldUpdates(
+          participantId,
+          currentContext,
+          updatedContext,
+          updatedBy,
+          source,
+        );
       }
 
       return storeResult;
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      logger.error('Error updating participant context', { participantId, error: errorMessage });
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      logger.error("Error updating participant context", {
+        participantId,
+        error: errorMessage,
+      });
       return { success: false, error: errorMessage };
     }
   }
 
-  async buildContextFromParticipant(participant: RetreatParticipant): Promise<ParticipantContext> {
+  async buildContextFromParticipant(
+    participant: RetreatParticipant,
+  ): Promise<ParticipantContext> {
     return {
       personalInfo: {
         firstName: participant.firstName,
@@ -196,34 +252,38 @@ export class ParticipantContextService {
         email: participant.email,
         birthDate: participant.birthDate,
         location: participant.location,
-        timezone: participant.timezone || 'UTC'
+        timezone: participant.timezone || "UTC",
       },
       currentState: {
-        lifePhase: participant.currentLifePhase || 'unknown',
+        lifePhase: participant.currentLifePhase || "unknown",
         primaryChallenges: participant.primaryChallenges || [],
-        energyLevel: participant.energyLevel || 'medium',
-        emotionalState: participant.emotionalState || 'neutral',
+        energyLevel: participant.energyLevel || "medium",
+        emotionalState: participant.emotionalState || "neutral",
         spiritualPractices: participant.spiritualPractices || [],
-        recentLifeEvents: participant.recentLifeEvents || []
+        recentLifeEvents: participant.recentLifeEvents || [],
       },
       intentions: {
-        primary: participant.retreatIntentions?.primary || '',
+        primary: participant.retreatIntentions?.primary || "",
         secondary: participant.retreatIntentions?.secondary || [],
         healingGoals: participant.retreatIntentions?.healingGoals || [],
-        growthAreas: participant.retreatIntentions?.growthAreas || []
+        growthAreas: participant.retreatIntentions?.growthAreas || [],
       },
       background: {
-        spiritualBackground: participant.spiritualBackground || '',
-        therapeuticExperience: participant.therapeuticExperience || '',
-        traumaHistory: participant.traumaHistory || '',
-        substanceHistory: participant.substanceHistory || '',
-        previousRetreats: participant.previousRetreats || []
+        spiritualBackground: participant.spiritualBackground || "",
+        therapeuticExperience: participant.therapeuticExperience || "",
+        traumaHistory: participant.traumaHistory || "",
+        substanceHistory: participant.substanceHistory || "",
+        previousRetreats: participant.previousRetreats || [],
       },
       preferences: {
-        communicationStyle: participant.communicationPreferences?.style || 'balanced',
-        guidanceIntensity: participant.communicationPreferences?.intensity || 'medium',
-        boundaryPreferences: participant.communicationPreferences?.boundaries || [],
-        triggerWarnings: participant.communicationPreferences?.triggerWarnings || []
+        communicationStyle:
+          participant.communicationPreferences?.style || "balanced",
+        guidanceIntensity:
+          participant.communicationPreferences?.intensity || "medium",
+        boundaryPreferences:
+          participant.communicationPreferences?.boundaries || [],
+        triggerWarnings:
+          participant.communicationPreferences?.triggerWarnings || [],
       },
       retreatSpecific: {
         arrivalDate: participant.arrivalDate,
@@ -231,14 +291,14 @@ export class ParticipantContextService {
         roomingPreferences: participant.roomingPreferences,
         dietaryRestrictions: participant.dietaryRestrictions || [],
         emergencyContact: participant.emergencyContact,
-        specialNeeds: participant.specialNeeds || []
-      }
+        specialNeeds: participant.specialNeeds || [],
+      },
     };
   }
 
   async enrichContextFromInteractions(
     participantId: string,
-    oracleInteractions: any[]
+    oracleInteractions: any[],
   ): Promise<void> {
     try {
       const insights = this.extractInsightsFromInteractions(oracleInteractions);
@@ -247,17 +307,23 @@ export class ParticipantContextService {
         await this.updateParticipantContext(
           participantId,
           insights,
-          'system',
-          'oracle_interaction'
+          "system",
+          "oracle_interaction",
         );
 
-        logger.info(`Context enriched from ${oracleInteractions.length} interactions`, {
-          participantId,
-          insights: Object.keys(insights)
-        });
+        logger.info(
+          `Context enriched from ${oracleInteractions.length} interactions`,
+          {
+            participantId,
+            insights: Object.keys(insights),
+          },
+        );
       }
     } catch (error) {
-      logger.error('Error enriching context from interactions', { participantId, error });
+      logger.error("Error enriching context from interactions", {
+        participantId,
+        error,
+      });
     }
   }
 
@@ -272,7 +338,7 @@ export class ParticipantContextService {
     const contextResult = await this.retrieveParticipantContext(participantId);
 
     if (!contextResult.success || !contextResult.context) {
-      throw new Error('Context not found');
+      throw new Error("Context not found");
     }
 
     const context = contextResult.context;
@@ -282,9 +348,9 @@ export class ParticipantContextService {
 
     // Get update history count
     const { count } = await supabase
-      .from('context_update_tracking')
-      .select('*', { count: 'exact', head: true })
-      .eq('participant_id', participantId);
+      .from("context_update_tracking")
+      .select("*", { count: "exact", head: true })
+      .eq("participant_id", participantId);
 
     return {
       participant: participantId,
@@ -292,30 +358,35 @@ export class ParticipantContextService {
       lastUpdated: contextResult.lastUpdated || new Date(),
       keyInsights,
       missingFields,
-      updateHistory: count || 0
+      updateHistory: count || 0,
     };
   }
 
-  async getContextUpdateHistory(participantId: string): Promise<ContextUpdateTracker[]> {
+  async getContextUpdateHistory(
+    participantId: string,
+  ): Promise<ContextUpdateTracker[]> {
     const { data, error } = await supabase
-      .from('context_update_tracking')
-      .select('*')
-      .eq('participant_id', participantId)
-      .order('updated_at', { ascending: false });
+      .from("context_update_tracking")
+      .select("*")
+      .eq("participant_id", participantId)
+      .order("updated_at", { ascending: false });
 
     if (error) {
-      logger.error('Failed to retrieve context update history', { participantId, error });
+      logger.error("Failed to retrieve context update history", {
+        participantId,
+        error,
+      });
       return [];
     }
 
-    return data.map(record => ({
+    return data.map((record) => ({
       participantId: record.participant_id,
       fieldUpdated: record.field_updated,
       previousValue: record.previous_value,
       newValue: record.new_value,
       updatedAt: new Date(record.updated_at),
       updatedBy: record.updated_by,
-      source: record.source
+      source: record.source,
     }));
   }
 
@@ -325,14 +396,16 @@ export class ParticipantContextService {
 
     // Archive in database (don't delete, for audit trail)
     await supabase
-      .from('participant_contexts')
+      .from("participant_contexts")
       .update({ archived: true, archived_at: new Date().toISOString() })
-      .eq('participant_id', participantId);
+      .eq("participant_id", participantId);
 
     logger.info(`Participant context cleared`, { participantId });
   }
 
-  private getCachedContext(participantId: string): { context: ParticipantContext; lastFetched: Date } | null {
+  private getCachedContext(
+    participantId: string,
+  ): { context: ParticipantContext; lastFetched: Date } | null {
     const cached = this.contextCache.get(participantId);
 
     if (!cached) return null;
@@ -346,33 +419,42 @@ export class ParticipantContextService {
     return { context: cached.context, lastFetched: cached.lastFetched };
   }
 
-  private updateCache(participantId: string, context: ParticipantContext): void {
+  private updateCache(
+    participantId: string,
+    context: ParticipantContext,
+  ): void {
     this.contextCache.set(participantId, {
       context,
       lastFetched: new Date(),
-      isDirty: false
+      isDirty: false,
     });
   }
 
-  private extractInsightsFromInteractions(interactions: any[]): Partial<ParticipantContext> {
+  private extractInsightsFromInteractions(
+    interactions: any[],
+  ): Partial<ParticipantContext> {
     const insights: Partial<ParticipantContext> = {};
 
     // Analyze interactions for patterns
-    interactions.forEach(interaction => {
+    interactions.forEach((interaction) => {
       // Extract emotional state patterns
-      if (interaction.query?.toLowerCase().includes('feeling')) {
+      if (interaction.query?.toLowerCase().includes("feeling")) {
         // Update emotional state based on recent expressions
       }
 
       // Extract growth areas from questions asked
-      if (interaction.query?.toLowerCase().includes('help') ||
-          interaction.query?.toLowerCase().includes('struggle')) {
+      if (
+        interaction.query?.toLowerCase().includes("help") ||
+        interaction.query?.toLowerCase().includes("struggle")
+      ) {
         // Update current challenges
       }
 
       // Extract spiritual interests from topics explored
-      if (interaction.query?.toLowerCase().includes('spiritual') ||
-          interaction.query?.toLowerCase().includes('meditation')) {
+      if (
+        interaction.query?.toLowerCase().includes("spiritual") ||
+        interaction.query?.toLowerCase().includes("meditation")
+      ) {
         // Update spiritual practices
       }
     });
@@ -387,10 +469,12 @@ export class ParticipantContextService {
       context.currentState.lifePhase,
       context.intentions.primary,
       context.background.spiritualBackground,
-      context.preferences.communicationStyle
+      context.preferences.communicationStyle,
     ];
 
-    const filledFields = fields.filter(field => field && field.toString().trim() !== '').length;
+    const filledFields = fields.filter(
+      (field) => field && field.toString().trim() !== "",
+    ).length;
     return Math.round((filledFields / fields.length) * 100);
   }
 
@@ -402,11 +486,15 @@ export class ParticipantContextService {
     }
 
     if (context.currentState.primaryChallenges?.length) {
-      insights.push(`Key challenges: ${context.currentState.primaryChallenges.join(', ')}`);
+      insights.push(
+        `Key challenges: ${context.currentState.primaryChallenges.join(", ")}`,
+      );
     }
 
     if (context.background.spiritualBackground) {
-      insights.push(`Spiritual background: ${context.background.spiritualBackground}`);
+      insights.push(
+        `Spiritual background: ${context.background.spiritualBackground}`,
+      );
     }
 
     return insights;
@@ -415,10 +503,12 @@ export class ParticipantContextService {
   private identifyMissingFields(context: ParticipantContext): string[] {
     const missing: string[] = [];
 
-    if (!context.personalInfo.birthDate) missing.push('birthDate');
-    if (!context.currentState.energyLevel) missing.push('energyLevel');
-    if (!context.intentions.secondary?.length) missing.push('secondaryIntentions');
-    if (!context.background.therapeuticExperience) missing.push('therapeuticExperience');
+    if (!context.personalInfo.birthDate) missing.push("birthDate");
+    if (!context.currentState.energyLevel) missing.push("energyLevel");
+    if (!context.intentions.secondary?.length)
+      missing.push("secondaryIntentions");
+    if (!context.background.therapeuticExperience)
+      missing.push("therapeuticExperience");
 
     return missing;
   }
@@ -428,31 +518,58 @@ export class ParticipantContextService {
     previous: ParticipantContext,
     updated: ParticipantContext,
     updatedBy?: string,
-    source: string = 'oracle_interaction'
+    source: string = "oracle_interaction",
   ): Promise<void> {
     const updates: ContextUpdateTracker[] = [];
 
     // Compare and track changes
-    this.compareAndTrack(updates, participantId, 'personalInfo', previous.personalInfo, updated.personalInfo, updatedBy, source);
-    this.compareAndTrack(updates, participantId, 'currentState', previous.currentState, updated.currentState, updatedBy, source);
-    this.compareAndTrack(updates, participantId, 'intentions', previous.intentions, updated.intentions, updatedBy, source);
+    this.compareAndTrack(
+      updates,
+      participantId,
+      "personalInfo",
+      previous.personalInfo,
+      updated.personalInfo,
+      updatedBy,
+      source,
+    );
+    this.compareAndTrack(
+      updates,
+      participantId,
+      "currentState",
+      previous.currentState,
+      updated.currentState,
+      updatedBy,
+      source,
+    );
+    this.compareAndTrack(
+      updates,
+      participantId,
+      "intentions",
+      previous.intentions,
+      updated.intentions,
+      updatedBy,
+      source,
+    );
 
     // Store updates
     if (updates.length > 0) {
-      const { error } = await supabase
-        .from('context_update_tracking')
-        .insert(updates.map(update => ({
+      const { error } = await supabase.from("context_update_tracking").insert(
+        updates.map((update) => ({
           participant_id: update.participantId,
           field_updated: update.fieldUpdated,
           previous_value: update.previousValue,
           new_value: update.newValue,
           updated_at: update.updatedAt.toISOString(),
           updated_by: update.updatedBy,
-          source: update.source
-        })));
+          source: update.source,
+        })),
+      );
 
       if (error) {
-        logger.error('Failed to track context updates', { participantId, error });
+        logger.error("Failed to track context updates", {
+          participantId,
+          error,
+        });
       }
     }
   }
@@ -464,9 +581,9 @@ export class ParticipantContextService {
     previous: any,
     updated: any,
     updatedBy?: string,
-    source: string = 'oracle_interaction'
+    source: string = "oracle_interaction",
   ): void {
-    Object.keys(updated).forEach(key => {
+    Object.keys(updated).forEach((key) => {
       if (previous[key] !== updated[key]) {
         updates.push({
           participantId,
@@ -475,7 +592,7 @@ export class ParticipantContextService {
           newValue: updated[key],
           updatedAt: new Date(),
           updatedBy,
-          source: source as any
+          source: source as any,
         });
       }
     });
@@ -486,13 +603,13 @@ export class ParticipantContextService {
     updateType: string,
     previousValue: any,
     newValue: any,
-    source: string
+    source: string,
   ): Promise<void> {
-    logger.info('Context update logged', {
+    logger.info("Context update logged", {
       participantId,
       updateType,
       source,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }

@@ -3,6 +3,7 @@
 ## Quick Diagnostics
 
 ### 🚨 System Health Check
+
 ```bash
 # Run comprehensive health check
 curl https://your-domain.com/api/health/full
@@ -19,11 +20,13 @@ curl https://your-domain.com/api/health/oracle   # Oracle system
 ### 1. Build & Deployment Issues
 
 #### ❌ **Problem**: TypeScript compilation fails
+
 ```
 Error: Cannot find module '@/lib/supabase'
 ```
 
 **Solution**:
+
 ```bash
 # Clear TypeScript cache
 rm -rf backend/dist
@@ -39,11 +42,13 @@ npm run build:render-simple
 ```
 
 #### ❌ **Problem**: Module resolution errors
+
 ```
 Error: Cannot find module 'express'
 ```
 
 **Solution**:
+
 ```bash
 # Check Node version
 node --version  # Should be 20.x
@@ -56,11 +61,13 @@ npm ci --production
 ```
 
 #### ❌ **Problem**: Memory issues during build
+
 ```
 FATAL ERROR: Reached heap limit
 ```
 
 **Solution**:
+
 ```bash
 # Increase Node memory limit
 export NODE_OPTIONS="--max-old-space-size=4096"
@@ -73,11 +80,13 @@ npm run build:minimal
 ### 2. Database Connection Issues
 
 #### ❌ **Problem**: Database connection timeout
+
 ```
 Error: Connection terminated unexpectedly
 ```
 
 **Solution**:
+
 ```bash
 # Test direct connection
 psql $DATABASE_URL -c "SELECT 1;"
@@ -93,11 +102,13 @@ DATABASE_URL="postgresql://user:pass@host:5432/db?sslmode=require"
 ```
 
 #### ❌ **Problem**: Migration failures
+
 ```
 Error: relation "users" already exists
 ```
 
 **Solution**:
+
 ```bash
 # Check migration status
 psql $DATABASE_URL -c "SELECT * FROM schema_migrations;"
@@ -112,11 +123,13 @@ psql $DATABASE_URL -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 ### 3. Redis & Memory System Issues
 
 #### ❌ **Problem**: Redis connection refused
+
 ```
 Error: Redis connection to localhost:6379 failed
 ```
 
 **Solution**:
+
 ```bash
 # Check Redis status
 sudo systemctl status redis
@@ -134,11 +147,13 @@ redis-cli -u $REDIS_URL ping
 ```
 
 #### ❌ **Problem**: Memory system not persisting
+
 ```
 Soul memories disappearing after restart
 ```
 
 **Solution**:
+
 ```bash
 # Enable Redis persistence
 redis-cli CONFIG SET save "900 1 300 10 60 10000"
@@ -154,11 +169,13 @@ redis-cli FLUSHDB  # CAUTION: Clears all data
 ### 4. Oracle & AI Service Issues
 
 #### ❌ **Problem**: Oracle responses timing out
+
 ```
 Error: OpenAI API request timed out
 ```
 
 **Solution**:
+
 ```bash
 # Check API key validity
 curl https://api.openai.com/v1/models \
@@ -176,11 +193,13 @@ OPENAI_MODEL=gpt-3.5-turbo  # Instead of gpt-4
 ```
 
 #### ❌ **Problem**: Rate limiting errors
+
 ```
 Error: Rate limit reached for requests
 ```
 
 **Solution**:
+
 ```bash
 # Implement exponential backoff
 # Add to .env:
@@ -194,11 +213,13 @@ npm install rate-limiter-flexible
 ### 5. Authentication Issues
 
 #### ❌ **Problem**: JWT token validation fails
+
 ```
 Error: Invalid token signature
 ```
 
 **Solution**:
+
 ```bash
 # Regenerate JWT secret
 openssl rand -base64 32
@@ -214,29 +235,35 @@ pm2 restart soullab-backend
 ```
 
 #### ❌ **Problem**: CORS errors
+
 ```
 Access to fetch at 'api' from origin 'https://app.com' has been blocked
 ```
 
 **Solution**:
+
 ```javascript
 // backend/src/app.ts
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 ```
 
 ### 6. Performance Issues
 
 #### ❌ **Problem**: Slow API responses
+
 ```
 Oracle queries taking > 10 seconds
 ```
 
 **Solution**:
+
 ```bash
 # Enable query logging
 # In PostgreSQL:
@@ -255,11 +282,13 @@ CACHE_TTL_SECONDS=3600
 ```
 
 #### ❌ **Problem**: Memory leaks
+
 ```
 Node process consuming increasing memory
 ```
 
 **Solution**:
+
 ```bash
 # Monitor memory usage
 pm2 monit
@@ -280,11 +309,13 @@ process.on('warning', (warning) => {
 ### 7. Frontend Issues
 
 #### ❌ **Problem**: Blank page after deployment
+
 ```
 Console: Failed to load resource: 404
 ```
 
 **Solution**:
+
 ```bash
 # Check build output
 ls -la .next/
@@ -303,20 +334,21 @@ vercel logs
 ```
 
 #### ❌ **Problem**: Hydration mismatch
+
 ```
 Error: Text content does not match server-rendered HTML
 ```
 
 **Solution**:
+
 ```javascript
 // Use dynamic imports for client-only components
-const OracleChat = dynamic(
-  () => import('@/components/OracleChat'),
-  { ssr: false }
-);
+const OracleChat = dynamic(() => import("@/components/OracleChat"), {
+  ssr: false,
+});
 
 // Check for browser-only code
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // Browser-only code
 }
 ```
@@ -475,4 +507,4 @@ grep "duration:" /var/log/postgresql/*.log | awk '$NF > 1000'
 
 ---
 
-*Sacred Technology Support - Transforming Errors into Wisdom* 🔮
+_Sacred Technology Support - Transforming Errors into Wisdom_ 🔮

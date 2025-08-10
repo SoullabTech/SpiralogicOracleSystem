@@ -3,40 +3,40 @@
 // Tests the retreat mode functionality and memory tagging
 // ===============================================
 
-import { PersonalOracleAgent } from '../core/agents/PersonalOracleAgent';
-import { SoulMemorySystem } from '../../memory/SoulMemorySystem';
+import { PersonalOracleAgent } from "../core/agents/PersonalOracleAgent";
+import { SoulMemorySystem } from "../../memory/SoulMemorySystem";
 
 async function testRetreatMode() {
-  console.log('🏔️ Testing Retreat Mode Functionality...\n');
+  console.log("🏔️ Testing Retreat Mode Functionality...\n");
 
   // Setup
-  const userId = 'test_retreat_' + Date.now();
+  const userId = "test_retreat_" + Date.now();
   const soulMemory = new SoulMemorySystem({
     userId,
-    storageType: 'sqlite',
-    databasePath: './test_retreat_memory.db',
-    memoryDepth: 100
+    storageType: "sqlite",
+    databasePath: "./test_retreat_memory.db",
+    memoryDepth: 100,
   });
 
   const oracle = new PersonalOracleAgent({
     userId,
-    oracleName: 'Aria',
-    elementalResonance: 'water'
+    oracleName: "Aria",
+    elementalResonance: "water",
   });
 
   await oracle.connectToSoulMemory(soulMemory);
 
   // Test 1: Activate retreat mode
-  console.log('1️⃣ Activating retreat mode...\n');
+  console.log("1️⃣ Activating retreat mode...\n");
 
-  await oracle.activateRetreatMode('retreat-active');
-  console.log('✅ Retreat mode activated: retreat-active\n');
+  await oracle.activateRetreatMode("retreat-active");
+  console.log("✅ Retreat mode activated: retreat-active\n");
 
   // Wait for memory storage
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   // Test 2: Send intensive message
-  console.log('2️⃣ Sending profound opening experience...\n');
+  console.log("2️⃣ Sending profound opening experience...\n");
 
   const intensiveMessage = "I'm having a profound opening experience";
   console.log(`User: "${intensiveMessage}"`);
@@ -44,34 +44,36 @@ async function testRetreatMode() {
   const response = await oracle.respondToPrompt(intensiveMessage);
   console.log(`Oracle: "${response}"\n`);
 
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   // Test 3: Send another retreat-intensive message
-  console.log('3️⃣ Sending another intensive experience...\n');
+  console.log("3️⃣ Sending another intensive experience...\n");
 
-  const mysticMessage = "I'm experiencing unity consciousness and ego dissolution";
+  const mysticMessage =
+    "I'm experiencing unity consciousness and ego dissolution";
   console.log(`User: "${mysticMessage}"`);
 
   const mysticResponse = await oracle.respondToPrompt(mysticMessage);
   console.log(`Oracle: "${mysticResponse}"\n`);
 
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   // Test 4: Check retreat memories
-  console.log('4️⃣ Checking retreat-tagged memories...\n');
+  console.log("4️⃣ Checking retreat-tagged memories...\n");
 
   const allMemories = await soulMemory.retrieveMemories(userId);
-  const retreatMemories = allMemories.filter(memory =>
-    memory.metadata?.mode === 'retreat' ||
-    memory.metadata?.retreatPhase ||
-    memory.metadata?.retreatIntensive ||
-    memory.ritualContext?.includes('retreat')
+  const retreatMemories = allMemories.filter(
+    (memory) =>
+      memory.metadata?.mode === "retreat" ||
+      memory.metadata?.retreatPhase ||
+      memory.metadata?.retreatIntensive ||
+      memory.ritualContext?.includes("retreat"),
   );
 
   console.log(`Total memories: ${allMemories.length}`);
   console.log(`Retreat memories: ${retreatMemories.length}\n`);
 
-  console.log('🏔️ Retreat Memory Details:');
+  console.log("🏔️ Retreat Memory Details:");
   retreatMemories.forEach((memory, i) => {
     console.log(`\n${i + 1}. ${memory.type}`);
     console.log(`   Content: "${memory.content.substring(0, 60)}..."`);
@@ -83,50 +85,56 @@ async function testRetreatMode() {
   });
 
   // Test 5: Test different retreat phases
-  console.log('\n5️⃣ Testing different retreat phases...\n');
+  console.log("\n5️⃣ Testing different retreat phases...\n");
 
   // Switch to post-retreat
-  await oracle.activateRetreatMode('post-retreat');
-  console.log('Switched to post-retreat phase');
+  await oracle.activateRetreatMode("post-retreat");
+  console.log("Switched to post-retreat phase");
 
-  const integrationMessage = "I'm trying to integrate these profound experiences";
+  const integrationMessage =
+    "I'm trying to integrate these profound experiences";
   const integrationResponse = await oracle.respondToPrompt(integrationMessage);
-  console.log(`Integration response: "${integrationResponse.substring(0, 80)}..."\n`);
-
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  // Test 6: Deactivate retreat mode
-  console.log('6️⃣ Deactivating retreat mode...\n');
-
-  await oracle.deactivateRetreatMode();
-  console.log('✅ Retreat mode deactivated\n');
-
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  // Test 7: Final memory check
-  console.log('7️⃣ Final retreat memory summary...\n');
-
-  const finalMemories = await soulMemory.retrieveMemories(userId);
-  const finalRetreatMemories = finalMemories.filter(memory =>
-    memory.metadata?.mode === 'retreat' ||
-    memory.metadata?.retreatPhase ||
-    memory.metadata?.retreatIntensive ||
-    memory.ritualContext?.includes('retreat')
+  console.log(
+    `Integration response: "${integrationResponse.substring(0, 80)}..."\n`,
   );
 
-  console.log('📊 Retreat Summary:');
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Test 6: Deactivate retreat mode
+  console.log("6️⃣ Deactivating retreat mode...\n");
+
+  await oracle.deactivateRetreatMode();
+  console.log("✅ Retreat mode deactivated\n");
+
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Test 7: Final memory check
+  console.log("7️⃣ Final retreat memory summary...\n");
+
+  const finalMemories = await soulMemory.retrieveMemories(userId);
+  const finalRetreatMemories = finalMemories.filter(
+    (memory) =>
+      memory.metadata?.mode === "retreat" ||
+      memory.metadata?.retreatPhase ||
+      memory.metadata?.retreatIntensive ||
+      memory.ritualContext?.includes("retreat"),
+  );
+
+  console.log("📊 Retreat Summary:");
   console.log(`- Total memories created: ${finalMemories.length}`);
   console.log(`- Retreat-related memories: ${finalRetreatMemories.length}`);
-  console.log(`- Sacred moments: ${finalMemories.filter(m => m.sacredMoment).length}`);
+  console.log(
+    `- Sacred moments: ${finalMemories.filter((m) => m.sacredMoment).length}`,
+  );
 
   // Group by retreat phase
   const phaseGroups: Record<string, number> = {};
-  finalRetreatMemories.forEach(memory => {
-    const phase = memory.metadata?.retreatPhase || 'activation';
+  finalRetreatMemories.forEach((memory) => {
+    const phase = memory.metadata?.retreatPhase || "activation";
     phaseGroups[phase] = (phaseGroups[phase] || 0) + 1;
   });
 
-  console.log('\nMemories by retreat phase:');
+  console.log("\nMemories by retreat phase:");
   Object.entries(phaseGroups).forEach(([phase, count]) => {
     console.log(`- ${phase}: ${count} memories`);
   });
@@ -135,12 +143,12 @@ async function testRetreatMode() {
   await soulMemory.closeDatabase();
 
   // Clean up test file
-  const fs = require('fs');
-  if (fs.existsSync('./test_retreat_memory.db')) {
-    fs.unlinkSync('./test_retreat_memory.db');
+  const fs = require("fs");
+  if (fs.existsSync("./test_retreat_memory.db")) {
+    fs.unlinkSync("./test_retreat_memory.db");
   }
 
-  console.log('\n✅ Retreat mode test complete!');
+  console.log("\n✅ Retreat mode test complete!");
 }
 
 // Run the test

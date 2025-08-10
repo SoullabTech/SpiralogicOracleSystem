@@ -1,8 +1,8 @@
 // Developer Portal - Frontend Step 3 Part 1 Implementation
 // API key management, usage stats, and quick-start guides
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface APIKey {
   id: string;
@@ -38,9 +38,9 @@ interface UsageStats {
 
 interface QuickStartGuides {
   guides: {
-    nodejs: { title: string; description: string; code: string; };
-    wordpress: { title: string; description: string; code: string; };
-    reactNative: { title: string; description: string; code: string; };
+    nodejs: { title: string; description: string; code: string };
+    wordpress: { title: string; description: string; code: string };
+    reactNative: { title: string; description: string; code: string };
   };
   resources: {
     documentation: string;
@@ -53,14 +53,17 @@ interface QuickStartGuides {
 const DeveloperPortal: React.FC = () => {
   const [apiKeys, setApiKeys] = useState<APIKey[]>([]);
   const [usageStats, setUsageStats] = useState<UsageStats | null>(null);
-  const [quickStartGuides, setQuickStartGuides] = useState<QuickStartGuides | null>(null);
+  const [quickStartGuides, setQuickStartGuides] =
+    useState<QuickStartGuides | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'keys' | 'usage' | 'guides'>('keys');
-  
+  const [activeTab, setActiveTab] = useState<"keys" | "usage" | "guides">(
+    "keys",
+  );
+
   // Create new key form
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newKeyName, setNewKeyName] = useState('');
+  const [newKeyName, setNewKeyName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [newlyCreatedKey, setNewlyCreatedKey] = useState<APIKey | null>(null);
 
@@ -73,23 +76,23 @@ const DeveloperPortal: React.FC = () => {
   }, []);
 
   const getAuthToken = () => {
-    return localStorage.getItem('auth_token') || 'demo_token_123';
+    return localStorage.getItem("auth_token") || "demo_token_123";
   };
 
   const makeAPICall = async (endpoint: string, options: RequestInit = {}) => {
     const response = await fetch(endpoint, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAuthToken()}`,
         ...options.headers,
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
-    
+
     return await response.json();
   };
 
@@ -99,17 +102,18 @@ const DeveloperPortal: React.FC = () => {
       setError(null);
 
       const [keysResponse, usageResponse, guidesResponse] = await Promise.all([
-        makeAPICall('/api/v1/developer/keys'),
-        makeAPICall('/api/v1/developer/usage'),
-        makeAPICall('/api/v1/developer/quickstart'),
+        makeAPICall("/api/v1/developer/keys"),
+        makeAPICall("/api/v1/developer/usage"),
+        makeAPICall("/api/v1/developer/quickstart"),
       ]);
 
       if (keysResponse.success) setApiKeys(keysResponse.data);
       if (usageResponse.success) setUsageStats(usageResponse.data);
       if (guidesResponse.success) setQuickStartGuides(guidesResponse.data);
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load developer data');
+      setError(
+        err instanceof Error ? err.message : "Failed to load developer data",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -120,19 +124,19 @@ const DeveloperPortal: React.FC = () => {
 
     try {
       setIsCreating(true);
-      const response = await makeAPICall('/api/v1/developer/keys', {
-        method: 'POST',
+      const response = await makeAPICall("/api/v1/developer/keys", {
+        method: "POST",
         body: JSON.stringify({ name: newKeyName.trim() }),
       });
 
       if (response.success) {
         setNewlyCreatedKey(response.data);
-        setNewKeyName('');
+        setNewKeyName("");
         setShowCreateForm(false);
         loadAllData(); // Refresh data
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create API key');
+      setError(err instanceof Error ? err.message : "Failed to create API key");
     } finally {
       setIsCreating(false);
     }
@@ -142,7 +146,7 @@ const DeveloperPortal: React.FC = () => {
     try {
       setIsDeleting(true);
       const response = await makeAPICall(`/api/v1/developer/keys/${key.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (response.success) {
@@ -150,7 +154,7 @@ const DeveloperPortal: React.FC = () => {
         loadAllData(); // Refresh data
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete API key');
+      setError(err instanceof Error ? err.message : "Failed to delete API key");
     } finally {
       setIsDeleting(false);
     }
@@ -162,12 +166,12 @@ const DeveloperPortal: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -203,7 +207,9 @@ const DeveloperPortal: React.FC = () => {
       <div className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Developer Portal</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Developer Portal
+            </h1>
             <p className="text-gray-400">
               Manage your AIN Engine API keys and integration resources
             </p>
@@ -219,17 +225,17 @@ const DeveloperPortal: React.FC = () => {
       <div className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-1">
         <div className="flex space-x-1">
           {[
-            { id: 'keys', label: 'API Keys', icon: '🔑' },
-            { id: 'usage', label: 'Usage Stats', icon: '📊' },
-            { id: 'guides', label: 'Quick Start', icon: '📚' }
+            { id: "keys", label: "API Keys", icon: "🔑" },
+            { id: "usage", label: "Usage Stats", icon: "📊" },
+            { id: "guides", label: "Quick Start", icon: "📚" },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-[#F6E27F] text-[#0E0F1B]'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                  ? "bg-[#F6E27F] text-[#0E0F1B]"
+                  : "text-gray-400 hover:text-white hover:bg-gray-700/50"
               }`}
             >
               <span>{tab.icon}</span>
@@ -254,7 +260,7 @@ const DeveloperPortal: React.FC = () => {
 
       {/* Tab Content */}
       <AnimatePresence mode="wait">
-        {activeTab === 'keys' && (
+        {activeTab === "keys" && (
           <motion.div
             key="keys"
             initial={{ opacity: 0, x: -20 }}
@@ -277,7 +283,9 @@ const DeveloperPortal: React.FC = () => {
 
               {showCreateForm && (
                 <div className="mb-6 p-4 bg-[#0E0F1B] border border-gray-600 rounded-lg">
-                  <h3 className="text-lg font-medium text-white mb-4">Create New API Key</h3>
+                  <h3 className="text-lg font-medium text-white mb-4">
+                    Create New API Key
+                  </h3>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -298,7 +306,7 @@ const DeveloperPortal: React.FC = () => {
                         disabled={isCreating || !newKeyName.trim()}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50"
                       >
-                        {isCreating ? 'Creating...' : 'Create Key'}
+                        {isCreating ? "Creating..." : "Create Key"}
                       </button>
                       <button
                         onClick={() => setShowCreateForm(false)}
@@ -320,7 +328,9 @@ const DeveloperPortal: React.FC = () => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <h3 className="text-lg font-medium text-white">{key.name}</h3>
+                        <h3 className="text-lg font-medium text-white">
+                          {key.name}
+                        </h3>
                         <div className="flex items-center space-x-4 mt-2">
                           <div className="font-mono text-sm text-gray-400 bg-gray-800 px-3 py-1 rounded">
                             {key.key}
@@ -334,12 +344,16 @@ const DeveloperPortal: React.FC = () => {
                         </div>
                         <div className="flex items-center space-x-6 mt-3 text-sm text-gray-400">
                           <span>Created: {formatDate(key.createdAt)}</span>
-                          {key.lastUsed && <span>Last used: {formatDate(key.lastUsed)}</span>}
+                          {key.lastUsed && (
+                            <span>Last used: {formatDate(key.lastUsed)}</span>
+                          )}
                           <span className="flex items-center">
-                            Status: 
-                            <span className={`ml-1 w-2 h-2 rounded-full ${
-                              key.isActive ? 'bg-green-400' : 'bg-red-400'
-                            }`}></span>
+                            Status:
+                            <span
+                              className={`ml-1 w-2 h-2 rounded-full ${
+                                key.isActive ? "bg-green-400" : "bg-red-400"
+                              }`}
+                            ></span>
                           </span>
                         </div>
                       </div>
@@ -364,7 +378,9 @@ const DeveloperPortal: React.FC = () => {
                 {apiKeys.length === 0 && (
                   <div className="text-center py-8 text-gray-400">
                     <p>No API keys created yet.</p>
-                    <p className="text-sm mt-1">Create your first key to get started.</p>
+                    <p className="text-sm mt-1">
+                      Create your first key to get started.
+                    </p>
                   </div>
                 )}
               </div>
@@ -372,7 +388,7 @@ const DeveloperPortal: React.FC = () => {
           </motion.div>
         )}
 
-        {activeTab === 'usage' && usageStats && (
+        {activeTab === "usage" && usageStats && (
           <motion.div
             key="usage"
             initial={{ opacity: 0, x: -20 }}
@@ -382,8 +398,10 @@ const DeveloperPortal: React.FC = () => {
           >
             {/* Usage Overview */}
             <div className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">Usage Statistics</h2>
-              
+              <h2 className="text-xl font-semibold text-white mb-6">
+                Usage Statistics
+              </h2>
+
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#F6E27F]">
@@ -414,7 +432,9 @@ const DeveloperPortal: React.FC = () => {
               {/* Usage Meter */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-white font-medium">Rate Limit Usage</span>
+                  <span className="text-white font-medium">
+                    Rate Limit Usage
+                  </span>
                   <span className="text-gray-400 text-sm">
                     Resets: {formatDate(usageStats.resetTime)}
                   </span>
@@ -423,7 +443,7 @@ const DeveloperPortal: React.FC = () => {
                   <div
                     className="bg-gradient-to-r from-green-400 to-yellow-400 h-3 rounded-full transition-all duration-500"
                     style={{
-                      width: `${getUsagePercentage(usageStats.currentPeriodRequests, usageStats.rateLimit)}%`
+                      width: `${getUsagePercentage(usageStats.currentPeriodRequests, usageStats.rateLimit)}%`,
                     }}
                   ></div>
                 </div>
@@ -435,7 +455,9 @@ const DeveloperPortal: React.FC = () => {
 
               {/* Per-Key Usage */}
               <div>
-                <h3 className="text-lg font-medium text-white mb-4">Usage by Key</h3>
+                <h3 className="text-lg font-medium text-white mb-4">
+                  Usage by Key
+                </h3>
                 <div className="space-y-3">
                   {usageStats.keyUsage.map((keyUsage) => (
                     <div
@@ -443,7 +465,9 @@ const DeveloperPortal: React.FC = () => {
                       className="flex items-center justify-between p-3 bg-[#0E0F1B] border border-gray-600 rounded-lg"
                     >
                       <div>
-                        <div className="text-white font-medium">{keyUsage.keyName}</div>
+                        <div className="text-white font-medium">
+                          {keyUsage.keyName}
+                        </div>
                         {keyUsage.lastUsed && (
                           <div className="text-sm text-gray-400">
                             Last used: {formatDate(keyUsage.lastUsed)}
@@ -466,7 +490,7 @@ const DeveloperPortal: React.FC = () => {
           </motion.div>
         )}
 
-        {activeTab === 'guides' && quickStartGuides && (
+        {activeTab === "guides" && quickStartGuides && (
           <motion.div
             key="guides"
             initial={{ opacity: 0, x: -20 }}
@@ -476,16 +500,22 @@ const DeveloperPortal: React.FC = () => {
           >
             {/* Quick Start Guides */}
             <div className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">Quick Start Guides</h2>
-              
+              <h2 className="text-xl font-semibold text-white mb-6">
+                Quick Start Guides
+              </h2>
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {Object.entries(quickStartGuides.guides).map(([key, guide]) => (
                   <div
                     key={key}
                     className="p-4 bg-[#0E0F1B] border border-gray-600 rounded-lg"
                   >
-                    <h3 className="text-lg font-medium text-white mb-2">{guide.title}</h3>
-                    <p className="text-gray-400 text-sm mb-4">{guide.description}</p>
+                    <h3 className="text-lg font-medium text-white mb-2">
+                      {guide.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm mb-4">
+                      {guide.description}
+                    </p>
                     <div className="relative">
                       <pre className="text-xs text-gray-300 bg-gray-800 p-3 rounded-lg overflow-x-auto">
                         <code>{guide.code}</code>
@@ -504,27 +534,31 @@ const DeveloperPortal: React.FC = () => {
 
             {/* Resources */}
             <div className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">Resources</h2>
+              <h2 className="text-xl font-semibold text-white mb-6">
+                Resources
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(quickStartGuides.resources).map(([key, url]) => (
-                  <a
-                    key={key}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-[#0E0F1B] border border-gray-600 rounded-lg hover:border-[#F6E27F] transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-medium capitalize">
-                          {key.replace(/([A-Z])/g, ' $1')}
+                {Object.entries(quickStartGuides.resources).map(
+                  ([key, url]) => (
+                    <a
+                      key={key}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-4 bg-[#0E0F1B] border border-gray-600 rounded-lg hover:border-[#F6E27F] transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-white font-medium capitalize">
+                            {key.replace(/([A-Z])/g, " $1")}
+                          </div>
+                          <div className="text-gray-400 text-sm">{url}</div>
                         </div>
-                        <div className="text-gray-400 text-sm">{url}</div>
+                        <span className="text-[#F6E27F]">→</span>
                       </div>
-                      <span className="text-[#F6E27F]">→</span>
-                    </div>
-                  </a>
-                ))}
+                    </a>
+                  ),
+                )}
               </div>
             </div>
           </motion.div>
@@ -539,10 +573,13 @@ const DeveloperPortal: React.FC = () => {
             animate={{ scale: 1, opacity: 1 }}
             className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-6 max-w-lg mx-4"
           >
-            <h3 className="text-xl font-semibold text-white mb-4">API Key Created!</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">
+              API Key Created!
+            </h3>
             <div className="mb-4">
               <p className="text-gray-400 mb-2">
-                Your new API key has been created. Copy it now - you won't be able to see the full key again.
+                Your new API key has been created. Copy it now - you won't be
+                able to see the full key again.
               </p>
               <div className="p-3 bg-[#0E0F1B] border border-gray-600 rounded-lg">
                 <div className="font-mono text-sm text-[#F6E27F] break-all">
@@ -576,9 +613,12 @@ const DeveloperPortal: React.FC = () => {
             animate={{ scale: 1, opacity: 1 }}
             className="bg-[#1A1C2C] border border-gray-600 rounded-xl p-6 max-w-lg mx-4"
           >
-            <h3 className="text-xl font-semibold text-white mb-4">Delete API Key</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Delete API Key
+            </h3>
             <p className="text-gray-400 mb-6">
-              Are you sure you want to delete the API key "{keyToDelete.name}"? This action cannot be undone and will immediately revoke access.
+              Are you sure you want to delete the API key "{keyToDelete.name}"?
+              This action cannot be undone and will immediately revoke access.
             </p>
             <div className="flex space-x-3">
               <button
@@ -586,7 +626,7 @@ const DeveloperPortal: React.FC = () => {
                 disabled={isDeleting}
                 className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50"
               >
-                {isDeleting ? 'Deleting...' : 'Delete Key'}
+                {isDeleting ? "Deleting..." : "Delete Key"}
               </button>
               <button
                 onClick={() => setKeyToDelete(null)}

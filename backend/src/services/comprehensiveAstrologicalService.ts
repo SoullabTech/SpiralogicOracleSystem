@@ -1,6 +1,13 @@
-import { AstrologicalHoloflower, Planet, ZodiacSign, AspectType, PlanetaryTransit, NatalPlacement } from '../core/AstrologicalHoloflower';
-import { supabase } from '../lib/supabaseClient';
-import { WebSocketServer } from 'ws';
+import {
+  AstrologicalHoloflower,
+  Planet,
+  ZodiacSign,
+  AspectType,
+  PlanetaryTransit,
+  NatalPlacement,
+} from "../core/AstrologicalHoloflower";
+import { supabase } from "../lib/supabaseClient";
+import { WebSocketServer } from "ws";
 
 interface ComprehensiveBirthChart {
   userId: string;
@@ -9,16 +16,19 @@ interface ComprehensiveBirthChart {
     time: string;
     location: { lat: number; lng: number; timezone: string };
   };
-  planets: Map<Planet, {
-    sign: ZodiacSign;
-    degree: number;
-    house: number;
-    retrograde: boolean;
-    dignity: string; // domicile, exaltation, detriment, fall, peregrine
-  }>;
+  planets: Map<
+    Planet,
+    {
+      sign: ZodiacSign;
+      degree: number;
+      house: number;
+      retrograde: boolean;
+      dignity: string; // domicile, exaltation, detriment, fall, peregrine
+    }
+  >;
   houses: {
     cusps: number[]; // 12 house cusps in degrees
-    system: 'placidus' | 'whole' | 'equal';
+    system: "placidus" | "whole" | "equal";
   };
   aspects: ChartAspect[];
   patterns: ChartPattern[];
@@ -38,7 +48,13 @@ interface ChartAspect {
 }
 
 interface ChartPattern {
-  type: 'grand-trine' | 'grand-cross' | 't-square' | 'yod' | 'stellium' | 'mystic-rectangle';
+  type:
+    | "grand-trine"
+    | "grand-cross"
+    | "t-square"
+    | "yod"
+    | "stellium"
+    | "mystic-rectangle";
   planets: Planet[];
   element?: string;
   interpretation: string;
@@ -49,7 +65,7 @@ interface TransitEvent {
   id: string;
   userId: string;
   transit: PlanetaryTransit;
-  type: 'ingress' | 'exact' | 'station' | 'eclipse' | 'lunation';
+  type: "ingress" | "exact" | "station" | "eclipse" | "lunation";
   timestamp: Date;
   duration: number; // days
   intensity: number; // 0-1
@@ -71,7 +87,7 @@ interface TimingRecommendation {
   houseNumber: number;
   startDate: Date;
   endDate: Date;
-  quality: 'excellent' | 'good' | 'neutral' | 'challenging';
+  quality: "excellent" | "good" | "neutral" | "challenging";
   planets: Planet[];
   description: string;
   transformationType: string;
@@ -81,7 +97,7 @@ interface TimingRecommendation {
 interface CosmicSupportPeriod {
   startDate: Date;
   endDate: Date;
-  supportType: 'breakthrough' | 'integration' | 'release' | 'initiation';
+  supportType: "breakthrough" | "integration" | "release" | "initiation";
   intensity: number; // 0-1
   description: string;
   supportedHouses: number[];
@@ -99,7 +115,7 @@ interface LunarPhaseInfo {
 
 interface EclipseWindow {
   date: Date;
-  type: 'solar' | 'lunar';
+  type: "solar" | "lunar";
   degree: number;
   sign: ZodiacSign;
   housesImpacted: number[];
@@ -150,7 +166,7 @@ interface CollectiveTransit {
 }
 
 interface GroupDynamic {
-  type: 'harmony' | 'tension' | 'catalyst' | 'support';
+  type: "harmony" | "tension" | "catalyst" | "support";
   participants: string[];
   description: string;
   transformationPotential: number;
@@ -159,7 +175,7 @@ interface GroupDynamic {
 interface GroupTimingWindow {
   startDate: Date;
   endDate: Date;
-  quality: 'optimal' | 'supportive' | 'neutral' | 'challenging';
+  quality: "optimal" | "supportive" | "neutral" | "challenging";
   theme: string;
   practices: string[];
 }
@@ -180,11 +196,11 @@ export class ComprehensiveAstrologicalService {
   private initializeWebSocketServer() {
     this.wsServer = new WebSocketServer({ port: 5004 });
 
-    this.wsServer.on('connection', (ws, req) => {
-      const userId = req.url?.split('/').pop();
+    this.wsServer.on("connection", (ws, req) => {
+      const userId = req.url?.split("/").pop();
       if (!userId) return;
 
-      ws.on('message', async (message) => {
+      ws.on("message", async (message) => {
         const data = JSON.parse(message.toString());
         await this.handleAstrologicalMessage(userId, data);
       });
@@ -196,30 +212,36 @@ export class ComprehensiveAstrologicalService {
 
   private async handleAstrologicalMessage(userId: string, data: any) {
     switch (data.type) {
-      case 'set-birth-data':
+      case "set-birth-data":
         await this.calculateComprehensiveBirthChart(userId, data.birthData);
         break;
 
-      case 'request-timing':
+      case "request-timing":
         await this.generateSacredTiming(userId);
         break;
 
-      case 'request-group-analysis':
+      case "request-group-analysis":
         await this.analyzeGroupAstrology(data.groupId, data.participantIds);
         break;
 
-      case 'track-transformation':
-        await this.trackTransformationWithAstrology(userId, data.transformation);
+      case "track-transformation":
+        await this.trackTransformationWithAstrology(
+          userId,
+          data.transformation,
+        );
         break;
     }
   }
 
   // Calculate comprehensive birth chart with all details
-  public async calculateComprehensiveBirthChart(userId: string, birthData: {
-    date: Date;
-    time: string;
-    location: { lat: number; lng: number; timezone: string };
-  }): Promise<ComprehensiveBirthChart> {
+  public async calculateComprehensiveBirthChart(
+    userId: string,
+    birthData: {
+      date: Date;
+      time: string;
+      location: { lat: number; lng: number; timezone: string };
+    },
+  ): Promise<ComprehensiveBirthChart> {
     // In production, use Swiss Ephemeris or professional astrology API
     // This is a comprehensive structure for the data
 
@@ -236,7 +258,7 @@ export class ComprehensiveAstrologicalService {
       aspects,
       patterns,
       dominantElements: this.calculateElementBalance(planets),
-      dominantModalities: this.calculateModalityBalance(planets)
+      dominantModalities: this.calculateModalityBalance(planets),
     };
 
     this.birthCharts.set(userId, chart);
@@ -251,11 +273,24 @@ export class ComprehensiveAstrologicalService {
   }
 
   // Calculate planetary positions at birth
-  private async calculatePlanetaryPositions(birthData: any): Promise<Map<Planet, any>> {
+  private async calculatePlanetaryPositions(
+    birthData: any,
+  ): Promise<Map<Planet, any>> {
     const positions = new Map<Planet, any>();
 
     // Example calculation (would use ephemeris)
-    const planets: Planet[] = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
+    const planets: Planet[] = [
+      "sun",
+      "moon",
+      "mercury",
+      "venus",
+      "mars",
+      "jupiter",
+      "saturn",
+      "uranus",
+      "neptune",
+      "pluto",
+    ];
 
     planets.forEach((planet, index) => {
       positions.set(planet, {
@@ -263,7 +298,10 @@ export class ComprehensiveAstrologicalService {
         degree: Math.random() * 30, // Would calculate actual degree
         house: this.calculatePlanetHouse(planet, birthData),
         retrograde: this.isPlanetRetrograde(planet, birthData.date),
-        dignity: this.calculateDignity(planet, this.calculatePlanetSign(planet, birthData))
+        dignity: this.calculateDignity(
+          planet,
+          this.calculatePlanetSign(planet, birthData),
+        ),
       });
     });
 
@@ -283,7 +321,7 @@ export class ComprehensiveAstrologicalService {
 
     return {
       cusps,
-      system: 'equal' as const
+      system: "equal" as const,
     };
   }
 
@@ -298,7 +336,7 @@ export class ComprehensiveAstrologicalService {
           planetList[i],
           planets.get(planetList[i])!,
           planetList[j],
-          planets.get(planetList[j])!
+          planets.get(planetList[j])!,
         );
 
         if (aspect) {
@@ -315,26 +353,29 @@ export class ComprehensiveAstrologicalService {
     planet1: Planet,
     pos1: any,
     planet2: Planet,
-    pos2: any
+    pos2: any,
   ): ChartAspect | null {
-    const angle = Math.abs(this.getAbsoluteDegree(pos1.sign, pos1.degree) -
-                          this.getAbsoluteDegree(pos2.sign, pos2.degree));
+    const angle = Math.abs(
+      this.getAbsoluteDegree(pos1.sign, pos1.degree) -
+        this.getAbsoluteDegree(pos2.sign, pos2.degree),
+    );
 
     const aspectTypes: { angle: number; type: AspectType; orb: number }[] = [
-      { angle: 0, type: 'conjunction', orb: 8 },
-      { angle: 60, type: 'sextile', orb: 6 },
-      { angle: 90, type: 'square', orb: 8 },
-      { angle: 120, type: 'trine', orb: 8 },
-      { angle: 180, type: 'opposition', orb: 8 }
+      { angle: 0, type: "conjunction", orb: 8 },
+      { angle: 60, type: "sextile", orb: 6 },
+      { angle: 90, type: "square", orb: 8 },
+      { angle: 120, type: "trine", orb: 8 },
+      { angle: 180, type: "opposition", orb: 8 },
     ];
 
     for (const aspectDef of aspectTypes) {
-      if (Math.abs(angle - aspectDef.angle) <= aspectDef.orb ||
-          Math.abs(360 - angle - aspectDef.angle) <= aspectDef.orb) {
-
+      if (
+        Math.abs(angle - aspectDef.angle) <= aspectDef.orb ||
+        Math.abs(360 - angle - aspectDef.angle) <= aspectDef.orb
+      ) {
         const orb = Math.min(
           Math.abs(angle - aspectDef.angle),
-          Math.abs(360 - angle - aspectDef.angle)
+          Math.abs(360 - angle - aspectDef.angle),
         );
 
         return {
@@ -344,8 +385,12 @@ export class ComprehensiveAstrologicalService {
           orb,
           exact: orb < 1,
           applying: this.isAspectApplying(pos1, pos2),
-          strength: 1 - (orb / aspectDef.orb),
-          interpretation: this.interpretAspect(planet1, planet2, aspectDef.type)
+          strength: 1 - orb / aspectDef.orb,
+          interpretation: this.interpretAspect(
+            planet1,
+            planet2,
+            aspectDef.type,
+          ),
         };
       }
     }
@@ -354,7 +399,10 @@ export class ComprehensiveAstrologicalService {
   }
 
   // Identify chart patterns
-  private identifyChartPatterns(planets: Map<Planet, any>, aspects: ChartAspect[]): ChartPattern[] {
+  private identifyChartPatterns(
+    planets: Map<Planet, any>,
+    aspects: ChartAspect[],
+  ): ChartPattern[] {
     const patterns: ChartPattern[] = [];
 
     // Check for Grand Trine
@@ -391,7 +439,10 @@ export class ComprehensiveAstrologicalService {
     // Check each transiting planet
     currentPositions.forEach((transitPos, transitPlanet) => {
       // Check house transits
-      const transitedHouse = this.getTransitedHouse(transitPos, birthChart.houses);
+      const transitedHouse = this.getTransitedHouse(
+        transitPos,
+        birthChart.houses,
+      );
 
       if (transitedHouse) {
         const event: TransitEvent = {
@@ -403,17 +454,27 @@ export class ComprehensiveAstrologicalService {
             degree: transitPos.degree,
             retrograde: transitPos.retrograde,
             orb: 0,
-            influence: this.getTransitInfluence(transitPlanet, transitedHouse, birthChart),
+            influence: this.getTransitInfluence(
+              transitPlanet,
+              transitedHouse,
+              birthChart,
+            ),
             startDate: new Date(),
             exactDate: new Date(),
-            endDate: new Date()
+            endDate: new Date(),
           },
-          type: 'ingress',
+          type: "ingress",
           timestamp: new Date(),
           duration: this.calculateTransitDuration(transitPlanet),
-          intensity: this.calculateTransitIntensity(transitPlanet, transitedHouse),
-          transformationOpportunity: this.getTransformationOpportunity(transitPlanet, transitedHouse),
-          houseActivated: transitedHouse
+          intensity: this.calculateTransitIntensity(
+            transitPlanet,
+            transitedHouse,
+          ),
+          transformationOpportunity: this.getTransformationOpportunity(
+            transitPlanet,
+            transitedHouse,
+          ),
+          houseActivated: transitedHouse,
         };
 
         transitEvents.push(event);
@@ -422,8 +483,10 @@ export class ComprehensiveAstrologicalService {
       // Check natal planet aspects
       birthChart.planets.forEach((natalPos, natalPlanet) => {
         const aspect = this.calculateAspectBetweenPlanets(
-          transitPlanet, transitPos,
-          natalPlanet, natalPos
+          transitPlanet,
+          transitPos,
+          natalPlanet,
+          natalPos,
         );
 
         if (aspect && aspect.orb < 3) {
@@ -439,17 +502,19 @@ export class ComprehensiveAstrologicalService {
               influence: aspect.interpretation,
               startDate: new Date(),
               exactDate: new Date(),
-              endDate: new Date()
+              endDate: new Date(),
             },
-            type: 'exact',
+            type: "exact",
             timestamp: new Date(),
             duration: this.calculateAspectDuration(transitPlanet, aspect.type),
             intensity: aspect.strength,
             transformationOpportunity: this.getAspectTransformationOpportunity(
-              transitPlanet, natalPlanet, aspect.type
+              transitPlanet,
+              natalPlanet,
+              aspect.type,
             ),
             houseActivated: natalPos.house,
-            natalPlanetAspected: natalPlanet
+            natalPlanetAspected: natalPlanet,
           };
 
           transitEvents.push(event);
@@ -464,7 +529,7 @@ export class ComprehensiveAstrologicalService {
   // Generate sacred timing recommendations
   public async generateSacredTiming(userId: string): Promise<SacredTiming> {
     const birthChart = this.birthCharts.get(userId);
-    if (!birthChart) throw new Error('Birth chart not found');
+    if (!birthChart) throw new Error("Birth chart not found");
 
     const recommendations = await this.calculateTimingRecommendations(userId);
     const cosmicSupport = await this.identifyCosmicSupportPeriods(userId);
@@ -478,7 +543,7 @@ export class ComprehensiveAstrologicalService {
       cosmicSupport,
       lunarCycle,
       eclipseWindows,
-      retrogradePeriods
+      retrogradePeriods,
     };
 
     this.sacredTimings.set(userId, sacredTiming);
@@ -490,7 +555,9 @@ export class ComprehensiveAstrologicalService {
   }
 
   // Calculate timing recommendations for each house
-  private async calculateTimingRecommendations(userId: string): Promise<TimingRecommendation[]> {
+  private async calculateTimingRecommendations(
+    userId: string,
+  ): Promise<TimingRecommendation[]> {
     const birthChart = this.birthCharts.get(userId);
     if (!birthChart) return [];
 
@@ -500,15 +567,24 @@ export class ComprehensiveAstrologicalService {
 
     // Analyze each house
     for (let house = 1; house <= 12; house++) {
-      const houseTransits = currentTransits.filter(t => t.houseActivated === house);
-      const upcomingHouseTransits = upcomingTransits.filter(t => t.houseActivated === house);
+      const houseTransits = currentTransits.filter(
+        (t) => t.houseActivated === house,
+      );
+      const upcomingHouseTransits = upcomingTransits.filter(
+        (t) => t.houseActivated === house,
+      );
 
       if (houseTransits.length > 0 || upcomingHouseTransits.length > 0) {
-        const quality = this.assessTimingQuality(houseTransits, upcomingHouseTransits);
-        const planets = [...new Set([
-          ...houseTransits.map(t => t.transit.planet),
-          ...upcomingHouseTransits.map(t => t.transit.planet)
-        ])];
+        const quality = this.assessTimingQuality(
+          houseTransits,
+          upcomingHouseTransits,
+        );
+        const planets = [
+          ...new Set([
+            ...houseTransits.map((t) => t.transit.planet),
+            ...upcomingHouseTransits.map((t) => t.transit.planet),
+          ]),
+        ];
 
         recommendations.push({
           houseNumber: house,
@@ -518,7 +594,7 @@ export class ComprehensiveAstrologicalService {
           planets,
           description: this.generateTimingDescription(house, planets, quality),
           transformationType: this.getHouseTransformationType(house),
-          practices: this.getRecommendedPractices(house, planets, quality)
+          practices: this.getRecommendedPractices(house, planets, quality),
         });
       }
     }
@@ -527,7 +603,9 @@ export class ComprehensiveAstrologicalService {
   }
 
   // Identify cosmic support periods
-  private async identifyCosmicSupportPeriods(userId: string): Promise<CosmicSupportPeriod[]> {
+  private async identifyCosmicSupportPeriods(
+    userId: string,
+  ): Promise<CosmicSupportPeriod[]> {
     const periods: CosmicSupportPeriod[] = [];
     const birthChart = this.birthCharts.get(userId);
     if (!birthChart) return periods;
@@ -536,39 +614,41 @@ export class ComprehensiveAstrologicalService {
     const currentPositions = await this.getCurrentPlanetaryPositions();
 
     // Jupiter transits
-    const jupiterPos = currentPositions.get('jupiter');
+    const jupiterPos = currentPositions.get("jupiter");
     if (jupiterPos) {
       birthChart.planets.forEach((natalPos, natalPlanet) => {
         const aspect = this.calculateAspectBetweenPlanets(
-          'jupiter', jupiterPos,
-          natalPlanet, natalPos
+          "jupiter",
+          jupiterPos,
+          natalPlanet,
+          natalPos,
         );
 
-        if (aspect && (aspect.type === 'trine' || aspect.type === 'sextile')) {
+        if (aspect && (aspect.type === "trine" || aspect.type === "sextile")) {
           periods.push({
             startDate: new Date(),
             endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            supportType: 'breakthrough',
+            supportType: "breakthrough",
             intensity: aspect.strength,
             description: `Jupiter blessing your natal ${natalPlanet} - excellent for expansion`,
-            supportedHouses: [natalPos.house]
+            supportedHouses: [natalPos.house],
           });
         }
       });
     }
 
     // Venus transits for integration
-    const venusPos = currentPositions.get('venus');
+    const venusPos = currentPositions.get("venus");
     if (venusPos) {
       const venusHouse = this.getTransitedHouse(venusPos, birthChart.houses);
       if (venusHouse) {
         periods.push({
           startDate: new Date(),
           endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-          supportType: 'integration',
+          supportType: "integration",
           intensity: 0.7,
           description: `Venus in your ${this.getHouseOrdinal(venusHouse)} house - harmonizing energies`,
-          supportedHouses: [venusHouse]
+          supportedHouses: [venusHouse],
         });
       }
     }
@@ -579,24 +659,33 @@ export class ComprehensiveAstrologicalService {
   // Get current lunar cycle information
   private async getCurrentLunarCycle(userId: string): Promise<LunarPhaseInfo> {
     const birthChart = this.birthCharts.get(userId);
-    if (!birthChart) throw new Error('Birth chart not found');
+    if (!birthChart) throw new Error("Birth chart not found");
 
     const currentMoonPos = await this.getCurrentMoonPosition();
     const lunarPhase = this.calculateLunarPhase();
     const moonHouse = this.getTransitedHouse(currentMoonPos, birthChart.houses);
 
     // Calculate monthly house activations
-    const monthlyActivations: { date: Date; house: number; theme: string }[] = [];
+    const monthlyActivations: { date: Date; house: number; theme: string }[] =
+      [];
     for (let i = 0; i < 30; i++) {
       const futureDate = new Date(Date.now() + i * 24 * 60 * 60 * 1000);
       const futureMoonPos = await this.getMoonPositionForDate(futureDate);
-      const futureHouse = this.getTransitedHouse(futureMoonPos, birthChart.houses);
+      const futureHouse = this.getTransitedHouse(
+        futureMoonPos,
+        birthChart.houses,
+      );
 
-      if (futureHouse && (i === 0 || futureHouse !== monthlyActivations[monthlyActivations.length - 1]?.house)) {
+      if (
+        futureHouse &&
+        (i === 0 ||
+          futureHouse !==
+            monthlyActivations[monthlyActivations.length - 1]?.house)
+      ) {
         monthlyActivations.push({
           date: futureDate,
           house: futureHouse,
-          theme: this.getLunarHouseTheme(futureHouse)
+          theme: this.getLunarHouseTheme(futureHouse),
         });
       }
     }
@@ -608,14 +697,14 @@ export class ComprehensiveAstrologicalService {
       nextFullMoon: this.getNextFullMoon(),
       moonSign: currentMoonPos.sign,
       moonHouse: moonHouse || 1,
-      monthlyActivations
+      monthlyActivations,
     };
   }
 
   // Group astrology analysis
   public async analyzeGroupAstrology(
     groupId: string,
-    participantIds: string[]
+    participantIds: string[],
   ): Promise<GroupAstrologyData> {
     // Ensure all participants have birth charts
     const participantCharts: ComprehensiveBirthChart[] = [];
@@ -627,13 +716,17 @@ export class ComprehensiveAstrologicalService {
     }
 
     if (participantCharts.length < 2) {
-      throw new Error('Need at least 2 participants with birth data');
+      throw new Error("Need at least 2 participants with birth data");
     }
 
     const compositeChart = this.calculateCompositeChart(participantCharts);
     const synastryPatterns = this.calculateSynastryPatterns(participantCharts);
-    const collectiveTransits = await this.analyzeCollectiveTransits(participantIds);
-    const groupDynamics = this.identifyGroupDynamics(participantCharts, synastryPatterns);
+    const collectiveTransits =
+      await this.analyzeCollectiveTransits(participantIds);
+    const groupDynamics = this.identifyGroupDynamics(
+      participantCharts,
+      synastryPatterns,
+    );
     const optimalTiming = await this.calculateGroupTiming(participantIds);
 
     const groupData: GroupAstrologyData = {
@@ -643,7 +736,7 @@ export class ComprehensiveAstrologicalService {
       synastryPatterns,
       collectiveTransits,
       groupDynamics,
-      optimalTiming
+      optimalTiming,
     };
 
     this.groupData.set(groupId, groupData);
@@ -655,23 +748,34 @@ export class ComprehensiveAstrologicalService {
   }
 
   // Calculate composite chart for group
-  private calculateCompositeChart(charts: ComprehensiveBirthChart[]): CompositeChartData {
+  private calculateCompositeChart(
+    charts: ComprehensiveBirthChart[],
+  ): CompositeChartData {
     const compositePlanets = new Map<Planet, any>();
-    const planets: Planet[] = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn'];
+    const planets: Planet[] = [
+      "sun",
+      "moon",
+      "mercury",
+      "venus",
+      "mars",
+      "jupiter",
+      "saturn",
+    ];
 
     // Calculate midpoints for each planet
-    planets.forEach(planet => {
-      const positions = charts.map(chart => {
+    planets.forEach((planet) => {
+      const positions = charts.map((chart) => {
         const pos = chart.planets.get(planet);
         return pos ? this.getAbsoluteDegree(pos.sign, pos.degree) : 0;
       });
 
-      const avgDegree = positions.reduce((sum, deg) => sum + deg, 0) / positions.length;
+      const avgDegree =
+        positions.reduce((sum, deg) => sum + deg, 0) / positions.length;
 
       compositePlanets.set(planet, {
         sign: this.getSignFromDegree(avgDegree),
         degree: avgDegree % 30,
-        house: Math.floor(avgDegree / 30) + 1
+        house: Math.floor(avgDegree / 30) + 1,
       });
     });
 
@@ -679,12 +783,14 @@ export class ComprehensiveAstrologicalService {
       planets: compositePlanets,
       dominantThemes: this.identifyCompositeThemes(compositePlanets),
       challengeAreas: this.identifyCompositeChallenges(compositePlanets),
-      harmonyPoints: this.identifyCompositeHarmony(compositePlanets)
+      harmonyPoints: this.identifyCompositeHarmony(compositePlanets),
     };
   }
 
   // Calculate synastry patterns between participants
-  private calculateSynastryPatterns(charts: ComprehensiveBirthChart[]): SynastryPattern[] {
+  private calculateSynastryPatterns(
+    charts: ComprehensiveBirthChart[],
+  ): SynastryPattern[] {
     const patterns: SynastryPattern[] = [];
 
     for (let i = 0; i < charts.length; i++) {
@@ -700,7 +806,7 @@ export class ComprehensiveAstrologicalService {
   // Calculate synastry between two charts
   private calculatePairSynastry(
     chart1: ComprehensiveBirthChart,
-    chart2: ComprehensiveBirthChart
+    chart2: ComprehensiveBirthChart,
   ): SynastryPattern {
     const aspects: ChartAspect[] = [];
 
@@ -708,8 +814,10 @@ export class ComprehensiveAstrologicalService {
     chart1.planets.forEach((pos1, planet1) => {
       chart2.planets.forEach((pos2, planet2) => {
         const aspect = this.calculateAspectBetweenPlanets(
-          planet1, pos1,
-          planet2, pos2
+          planet1,
+          pos1,
+          planet2,
+          pos2,
         );
 
         if (aspect) {
@@ -726,38 +834,68 @@ export class ComprehensiveAstrologicalService {
       aspects,
       compatibility,
       growthAreas: this.identifyGrowthAreas(aspects),
-      supportAreas: this.identifySupportAreas(aspects)
+      supportAreas: this.identifySupportAreas(aspects),
     };
   }
 
   // Helper methods
   private getAbsoluteDegree(sign: ZodiacSign, degree: number): number {
     const signs: ZodiacSign[] = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     return signs.indexOf(sign) * 30 + degree;
   }
 
   private getSignFromDegree(absoluteDegree: number): ZodiacSign {
     const signs: ZodiacSign[] = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     return signs[Math.floor((absoluteDegree % 360) / 30)];
   }
 
   private calculateAscendant(birthData: any): number {
     // Simplified calculation - would use proper formula
-    const hour = parseInt(birthData.time.split(':')[0]);
+    const hour = parseInt(birthData.time.split(":")[0]);
     return (hour * 15) % 360;
   }
 
   private calculatePlanetSign(planet: Planet, birthData: any): ZodiacSign {
     // Simplified - would use ephemeris
     const signs: ZodiacSign[] = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpio",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces",
     ];
     return signs[Math.floor(Math.random() * 12)];
   }
@@ -776,29 +914,29 @@ export class ComprehensiveAstrologicalService {
     // Planetary dignities
     const dignities: Record<Planet, Record<string, ZodiacSign[]>> = {
       sun: {
-        domicile: ['leo'],
-        exaltation: ['aries'],
-        detriment: ['aquarius'],
-        fall: ['libra']
+        domicile: ["leo"],
+        exaltation: ["aries"],
+        detriment: ["aquarius"],
+        fall: ["libra"],
       },
       moon: {
-        domicile: ['cancer'],
-        exaltation: ['taurus'],
-        detriment: ['capricorn'],
-        fall: ['scorpio']
+        domicile: ["cancer"],
+        exaltation: ["taurus"],
+        detriment: ["capricorn"],
+        fall: ["scorpio"],
       },
       // ... other planets
     };
 
     const planetDignities = dignities[planet];
-    if (!planetDignities) return 'peregrine';
+    if (!planetDignities) return "peregrine";
 
-    if (planetDignities.domicile?.includes(sign)) return 'domicile';
-    if (planetDignities.exaltation?.includes(sign)) return 'exaltation';
-    if (planetDignities.detriment?.includes(sign)) return 'detriment';
-    if (planetDignities.fall?.includes(sign)) return 'fall';
+    if (planetDignities.domicile?.includes(sign)) return "domicile";
+    if (planetDignities.exaltation?.includes(sign)) return "exaltation";
+    if (planetDignities.detriment?.includes(sign)) return "detriment";
+    if (planetDignities.fall?.includes(sign)) return "fall";
 
-    return 'peregrine';
+    return "peregrine";
   }
 
   // Broadcast methods
@@ -806,13 +944,13 @@ export class ComprehensiveAstrologicalService {
     if (!this.wsServer) return;
 
     const message = JSON.stringify({
-      type: 'sacred-timing-update',
+      type: "sacred-timing-update",
       userId,
       timing,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
-    this.wsServer.clients.forEach(client => {
+    this.wsServer.clients.forEach((client) => {
       if (client.readyState === 1) {
         client.send(message);
       }
@@ -823,13 +961,13 @@ export class ComprehensiveAstrologicalService {
     if (!this.wsServer) return;
 
     const message = JSON.stringify({
-      type: 'group-astrology-update',
+      type: "group-astrology-update",
       groupId,
       data,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
-    this.wsServer.clients.forEach(client => {
+    this.wsServer.clients.forEach((client) => {
       if (client.readyState === 1) {
         client.send(message);
       }
@@ -860,16 +998,23 @@ export class ComprehensiveAstrologicalService {
     if (!birthChart) return;
 
     // Look for powerful configurations
-    const triggers = transits.filter(t => {
+    const triggers = transits.filter((t) => {
       // Outer planet transits to personal planets
-      if (['saturn', 'uranus', 'neptune', 'pluto'].includes(t.transit.planet) &&
-          t.natalPlanetAspected &&
-          ['sun', 'moon', 'mercury', 'venus', 'mars'].includes(t.natalPlanetAspected)) {
+      if (
+        ["saturn", "uranus", "neptune", "pluto"].includes(t.transit.planet) &&
+        t.natalPlanetAspected &&
+        ["sun", "moon", "mercury", "venus", "mars"].includes(
+          t.natalPlanetAspected,
+        )
+      ) {
         return true;
       }
 
       // Transits to natal Sun or Moon
-      if (t.natalPlanetAspected && ['sun', 'moon'].includes(t.natalPlanetAspected)) {
+      if (
+        t.natalPlanetAspected &&
+        ["sun", "moon"].includes(t.natalPlanetAspected)
+      ) {
         return true;
       }
 
@@ -886,17 +1031,20 @@ export class ComprehensiveAstrologicalService {
     }
   }
 
-  private broadcastTransformationTriggers(userId: string, triggers: TransitEvent[]) {
+  private broadcastTransformationTriggers(
+    userId: string,
+    triggers: TransitEvent[],
+  ) {
     if (!this.wsServer) return;
 
     const message = JSON.stringify({
-      type: 'transformation-triggers',
+      type: "transformation-triggers",
       userId,
       triggers,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
-    this.wsServer.clients.forEach(client => {
+    this.wsServer.clients.forEach((client) => {
       if (client.readyState === 1) {
         client.send(message);
       }
@@ -916,4 +1064,5 @@ export class ComprehensiveAstrologicalService {
   }
 }
 
-export const comprehensiveAstrologicalService = new ComprehensiveAstrologicalService();
+export const comprehensiveAstrologicalService =
+  new ComprehensiveAstrologicalService();

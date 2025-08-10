@@ -6,7 +6,6 @@ import * as MemoryModule from "../utils/memoryModule";
 import ModelService from "../../utils/modelService";
 import type { AgentResponse } from "../../types/ai";
 
-
 /**
  * MentorAgent: Embodies wisdom, encouragement, and soulful direction.
  */
@@ -15,11 +14,14 @@ export class MentorAgent extends OracleAgent {
     super({ debug: false });
   }
 
-  public async processQuery(query: { input: string; userId?: string }): Promise<AgentResponse> {
+  public async processQuery(query: {
+    input: string;
+    userId?: string;
+  }): Promise<AgentResponse> {
     const contextMemory = MemoryModule.getRecentEntries(2);
 
     const contextHeader = contextMemory.length
-      ? `🧭 Prior insights to guide the path:\n${contextMemory.map(e => `- ${e.response}`).join("\n")}\n\n`
+      ? `🧭 Prior insights to guide the path:\n${contextMemory.map((e) => `- ${e.response}`).join("\n")}\n\n`
       : "";
 
     const mentorPrompt = `You are a wise and kind mentor. Offer grounded, soulful advice that uplifts the seeker.`;
@@ -30,7 +32,8 @@ export class MentorAgent extends OracleAgent {
       input: augmentedInput,
     };
 
-    const baseResponse: AgentResponse = await ModelService.getResponse(augmentedQuery);
+    const baseResponse: AgentResponse =
+      await ModelService.getResponse(augmentedQuery);
 
     const personalityFlair = `\n\n🧙 May you walk gently with strength and heart.`;
     const enhancedResponse = `${baseResponse.response}${personalityFlair}`;

@@ -3,11 +3,11 @@
  * Edge-cloud service for message routing and multi-agent coordination
  */
 
-import { HybridAgent } from '../../core/HybridAgent';
-import { SpiralogicEvent, ElementalService, EventType } from '../../types';
-import { MessageRouter } from '../../routing/MessageRouter';
-import { ClarityEngine } from '../../processors/ClarityEngine';
-import { PubSubManager } from '../../pubsub/PubSubManager';
+import { HybridAgent } from "../../core/HybridAgent";
+import { SpiralogicEvent, ElementalService, EventType } from "../../types";
+import { MessageRouter } from "../../routing/MessageRouter";
+import { ClarityEngine } from "../../processors/ClarityEngine";
+import { PubSubManager } from "../../pubsub/PubSubManager";
 
 export class AirService extends HybridAgent {
   private messageRouter: MessageRouter;
@@ -16,7 +16,7 @@ export class AirService extends HybridAgent {
   private activeConversations: Map<string, Conversation> = new Map();
 
   constructor() {
-    super('air-service');
+    super("air-service");
     this.messageRouter = new MessageRouter();
     this.clarityEngine = new ClarityEngine();
     this.pubsubManager = PubSubManager.getInstance();
@@ -27,10 +27,10 @@ export class AirService extends HybridAgent {
 
   private setupEventHandlers() {
     // Subscribe to communication events
-    this.subscribe('message.send', this.onMessageSend.bind(this));
-    this.subscribe('clarity.request', this.onClarityRequest.bind(this));
-    this.subscribe('synthesis.need', this.onSynthesisNeed.bind(this));
-    this.subscribe('broadcast.request', this.onBroadcastRequest.bind(this));
+    this.subscribe("message.send", this.onMessageSend.bind(this));
+    this.subscribe("clarity.request", this.onClarityRequest.bind(this));
+    this.subscribe("synthesis.need", this.onSynthesisNeed.bind(this));
+    this.subscribe("broadcast.request", this.onBroadcastRequest.bind(this));
 
     // Monitor all elemental communications
     this.subscribeToElementalChannels();
@@ -41,15 +41,15 @@ export class AirService extends HybridAgent {
    */
   private initializeCommunicationChannels() {
     // Set up pub/sub topics for each element
-    const elements = ['fire', 'water', 'earth', 'air', 'aether'];
-    elements.forEach(element => {
+    const elements = ["fire", "water", "earth", "air", "aether"];
+    elements.forEach((element) => {
       this.pubsubManager.createTopic(`${element}.channel`);
       this.pubsubManager.createTopic(`${element}.private`);
     });
 
     // Create inter-elemental communication channels
-    this.pubsubManager.createTopic('elemental.council');
-    this.pubsubManager.createTopic('emergency.broadcast');
+    this.pubsubManager.createTopic("elemental.council");
+    this.pubsubManager.createTopic("emergency.broadcast");
   }
 
   /**
@@ -61,11 +61,14 @@ export class AirService extends HybridAgent {
       ElementalService.Water,
       ElementalService.Earth,
       ElementalService.Air,
-      ElementalService.Aether
+      ElementalService.Aether,
     ];
 
-    elements.forEach(element => {
-      this.subscribe(`${element}.response`, this.monitorElementalResponse.bind(this));
+    elements.forEach((element) => {
+      this.subscribe(
+        `${element}.response`,
+        this.monitorElementalResponse.bind(this),
+      );
     });
   }
 
@@ -81,14 +84,14 @@ export class AirService extends HybridAgent {
       target,
       urgency,
       currentLoad: await this.getServiceLoads(),
-      context
+      context,
     });
 
     // Apply air element clarity
     const clarifiedMessage = await this.clarityEngine.clarify({
       original: content,
       target: routingDecision.target,
-      intent: routingDecision.intent
+      intent: routingDecision.intent,
     });
 
     // Create routed message
@@ -103,15 +106,15 @@ export class AirService extends HybridAgent {
           original_source: event.source,
           routing_path: routingDecision.path,
           clarity_score: clarifiedMessage.clarity,
-          air_processing: 'complete'
+          air_processing: "complete",
         },
-        elemental_signature: this.calculateAirSignature(clarifiedMessage)
+        elemental_signature: this.calculateAirSignature(clarifiedMessage),
       },
       routing: {
         target: routingDecision.target,
         priority: this.calculatePriority(urgency, routingDecision),
-        broadcast: false
-      }
+        broadcast: false,
+      },
     };
 
     // Send via optimal channel
@@ -133,12 +136,12 @@ export class AirService extends HybridAgent {
     const clarityLevels = await this.clarityEngine.processLevels({
       content,
       levels: [
-        'linguistic', // Word choice optimization
-        'conceptual', // Idea clarification
-        'intentional', // Purpose alignment
-        'elemental'   // Elemental balance
+        "linguistic", // Word choice optimization
+        "conceptual", // Idea clarification
+        "intentional", // Purpose alignment
+        "elemental", // Elemental balance
       ],
-      targetClarity: desired_clarity || 0.8
+      targetClarity: desired_clarity || 0.8,
     });
 
     // Generate clarity report
@@ -147,10 +150,10 @@ export class AirService extends HybridAgent {
       clarified: clarityLevels.final,
       clarity_score: clarityLevels.score,
       transformations: clarityLevels.transformations,
-      air_wisdom: this.provideAirWisdom(clarityLevels)
+      air_wisdom: this.provideAirWisdom(clarityLevels),
     };
 
-    await this.publish('clarity.achieved', clarityReport);
+    await this.publish("clarity.achieved", clarityReport);
   }
 
   /**
@@ -165,18 +168,18 @@ export class AirService extends HybridAgent {
     // Apply air element synthesis
     const synthesis = await this.performSynthesis({
       inputs,
-      type: synthesis_type || 'harmonic',
-      method: this.selectSynthesisMethod(inputs)
+      type: synthesis_type || "harmonic",
+      method: this.selectSynthesisMethod(inputs),
     });
 
     // Format output as requested
     const formattedOutput = this.formatSynthesis(synthesis, output_format);
 
-    await this.publish('synthesis.complete', {
+    await this.publish("synthesis.complete", {
       synthesis: formattedOutput,
       source_count: inputs.length,
       coherence_score: synthesis.coherence,
-      air_element_contribution: this.calculateAirContribution(synthesis)
+      air_element_contribution: this.calculateAirContribution(synthesis),
     });
   }
 
@@ -190,19 +193,19 @@ export class AirService extends HybridAgent {
     const broadcastMessage = await this.prepareBroadcast(message, filters);
 
     // Determine target channels
-    const targetChannels = channels || ['elemental.council'];
+    const targetChannels = channels || ["elemental.council"];
 
     // Broadcast to all specified channels
     const broadcastResults = await Promise.all(
-      targetChannels.map(channel =>
-        this.pubsubManager.publish(channel, broadcastMessage)
-      )
+      targetChannels.map((channel) =>
+        this.pubsubManager.publish(channel, broadcastMessage),
+      ),
     );
 
-    await this.publish('broadcast.sent', {
+    await this.publish("broadcast.sent", {
       channels: targetChannels,
       reach: broadcastResults.reduce((sum, r) => sum + r.subscribers, 0),
-      message_id: broadcastMessage.id
+      message_id: broadcastMessage.id,
     });
   }
 
@@ -215,16 +218,16 @@ export class AirService extends HybridAgent {
       source: event.source,
       type: event.type,
       timestamp: event.timestamp,
-      elemental_balance: event.payload.elemental_signature
+      elemental_balance: event.payload.elemental_signature,
     };
 
     // Check for communication imbalances
     const imbalance = this.detectCommunicationImbalance(pattern);
 
     if (imbalance) {
-      await this.publish('communication.imbalance', {
+      await this.publish("communication.imbalance", {
         pattern: imbalance,
-        recommendation: this.recommendBalance(imbalance)
+        recommendation: this.recommendBalance(imbalance),
       });
     }
   }
@@ -234,37 +237,34 @@ export class AirService extends HybridAgent {
    */
   private async sendViaOptimalChannel(
     message: SpiralogicEvent,
-    routing: RoutingDecision
+    routing: RoutingDecision,
   ): Promise<void> {
-    if (routing.channel === 'direct') {
-      await this.pubsubManager.publish(
-        `${routing.target}.private`,
-        message
-      );
-    } else if (routing.channel === 'broadcast') {
-      await this.pubsubManager.publish(
-        'elemental.council',
-        message
-      );
+    if (routing.channel === "direct") {
+      await this.pubsubManager.publish(`${routing.target}.private`, message);
+    } else if (routing.channel === "broadcast") {
+      await this.pubsubManager.publish("elemental.council", message);
     } else {
       // Use element-specific channel
-      await this.pubsubManager.publish(
-        `${routing.target}.channel`,
-        message
-      );
+      await this.pubsubManager.publish(`${routing.target}.channel`, message);
     }
   }
 
   /**
    * Track conversation for context
    */
-  private trackConversation(originalId: string, routedMessage: SpiralogicEvent) {
+  private trackConversation(
+    originalId: string,
+    routedMessage: SpiralogicEvent,
+  ) {
     const conversation: Conversation = {
       id: originalId,
       messages: [routedMessage],
-      participants: new Set([routedMessage.source, routedMessage.routing.target!]),
+      participants: new Set([
+        routedMessage.source,
+        routedMessage.routing.target!,
+      ]),
       startTime: Date.now(),
-      context: {}
+      context: {},
     };
 
     this.activeConversations.set(originalId, conversation);
@@ -280,29 +280,33 @@ export class AirService extends HybridAgent {
       water: 0.1,
       earth: 0.1,
       air: 0.6,
-      aether: 0.1
+      aether: 0.1,
     };
   }
 
   /**
    * Calculate message priority
    */
-  private calculatePriority(urgency: string, routing: RoutingDecision): 'critical' | 'high' | 'medium' | 'low' {
-    const urgencyScore = {
-      'critical': 1.0,
-      'high': 0.8,
-      'medium': 0.5,
-      'low': 0.2
-    }[urgency] || 0.5;
+  private calculatePriority(
+    urgency: string,
+    routing: RoutingDecision,
+  ): "critical" | "high" | "medium" | "low" {
+    const urgencyScore =
+      {
+        critical: 1.0,
+        high: 0.8,
+        medium: 0.5,
+        low: 0.2,
+      }[urgency] || 0.5;
 
     const routingScore = routing.confidence;
 
     const finalScore = (urgencyScore + routingScore) / 2;
 
-    if (finalScore > 0.8) return 'critical';
-    if (finalScore > 0.6) return 'high';
-    if (finalScore > 0.4) return 'medium';
-    return 'low';
+    if (finalScore > 0.8) return "critical";
+    if (finalScore > 0.6) return "high";
+    if (finalScore > 0.4) return "medium";
+    return "low";
   }
 
   /**
@@ -315,7 +319,7 @@ export class AirService extends HybridAgent {
       [ElementalService.Water]: 0.5,
       [ElementalService.Earth]: 0.4,
       [ElementalService.Air]: 0.2,
-      [ElementalService.Aether]: 0.6
+      [ElementalService.Aether]: 0.6,
     };
   }
 
@@ -324,10 +328,10 @@ export class AirService extends HybridAgent {
    */
   private async gatherInputs(sources: string[]): Promise<any[]> {
     // Simplified input gathering
-    return sources.map(source => ({
+    return sources.map((source) => ({
       source,
       content: `Input from ${source}`,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }));
   }
 
@@ -337,10 +341,10 @@ export class AirService extends HybridAgent {
   private async performSynthesis(params: SynthesisParams): Promise<Synthesis> {
     // Simplified synthesis
     return {
-      result: 'Synthesized wisdom from all inputs',
+      result: "Synthesized wisdom from all inputs",
       coherence: 0.85,
       method: params.method,
-      insights: ['Combined insight 1', 'Combined insight 2']
+      insights: ["Combined insight 1", "Combined insight 2"],
     };
   }
 
@@ -348,9 +352,9 @@ export class AirService extends HybridAgent {
    * Select synthesis method based on inputs
    */
   private selectSynthesisMethod(inputs: any[]): string {
-    if (inputs.length > 4) return 'collective-wisdom';
-    if (inputs.length > 2) return 'triangulation';
-    return 'binary-fusion';
+    if (inputs.length > 4) return "collective-wisdom";
+    if (inputs.length > 2) return "triangulation";
+    return "binary-fusion";
   }
 
   /**
@@ -358,17 +362,17 @@ export class AirService extends HybridAgent {
    */
   private formatSynthesis(synthesis: Synthesis, format: string): any {
     switch (format) {
-      case 'structured':
+      case "structured":
         return {
           summary: synthesis.result,
           details: synthesis.insights,
           metadata: {
             coherence: synthesis.coherence,
-            method: synthesis.method
-          }
+            method: synthesis.method,
+          },
         };
-      case 'narrative':
-        return `Through ${synthesis.method}, we discover: ${synthesis.result}. Key insights include: ${synthesis.insights.join(', ')}.`;
+      case "narrative":
+        return `Through ${synthesis.method}, we discover: ${synthesis.result}. Key insights include: ${synthesis.insights.join(", ")}.`;
       default:
         return synthesis;
     }
@@ -379,10 +383,10 @@ export class AirService extends HybridAgent {
    */
   private provideAirWisdom(clarity: any): string {
     const wisdomTemplates = [
-      'Like wind through leaves, clarity emerges from movement.',
-      'The air element brings perspective through elevation.',
-      'In the space between thoughts, true communication lives.',
-      'Breath carries wisdom; pause allows understanding.'
+      "Like wind through leaves, clarity emerges from movement.",
+      "The air element brings perspective through elevation.",
+      "In the space between thoughts, true communication lives.",
+      "Breath carries wisdom; pause allows understanding.",
     ];
 
     return wisdomTemplates[Math.floor(Math.random() * wisdomTemplates.length)];
@@ -395,9 +399,9 @@ export class AirService extends HybridAgent {
     // Simplified imbalance detection
     if (pattern.elemental_balance.air < 0.2) {
       return {
-        type: 'low-air',
-        severity: 'medium',
-        pattern
+        type: "low-air",
+        severity: "medium",
+        pattern,
       };
     }
     return null;
@@ -408,19 +412,25 @@ export class AirService extends HybridAgent {
    */
   private recommendBalance(imbalance: any): string {
     const recommendations = {
-      'low-air': 'Increase clarity and space in communications',
-      'excessive-fire': 'Cool the intensity with thoughtful pauses',
-      'water-overflow': 'Add structure to emotional expressions',
-      'earth-rigidity': 'Introduce flexibility and movement'
+      "low-air": "Increase clarity and space in communications",
+      "excessive-fire": "Cool the intensity with thoughtful pauses",
+      "water-overflow": "Add structure to emotional expressions",
+      "earth-rigidity": "Introduce flexibility and movement",
     };
 
-    return recommendations[imbalance.type] || 'Seek elemental balance in communication';
+    return (
+      recommendations[imbalance.type] ||
+      "Seek elemental balance in communication"
+    );
   }
 
   /**
    * Prepare broadcast message
    */
-  private async prepareBroadcast(message: any, filters: any): Promise<SpiralogicEvent> {
+  private async prepareBroadcast(
+    message: any,
+    filters: any,
+  ): Promise<SpiralogicEvent> {
     return {
       id: this.generateEventId(),
       timestamp: Date.now(),
@@ -430,20 +440,20 @@ export class AirService extends HybridAgent {
         content: message,
         metadata: {
           broadcast: true,
-          filters
+          filters,
         },
         elemental_signature: {
           fire: 0.2,
           water: 0.2,
           earth: 0.2,
           air: 0.2,
-          aether: 0.2
-        }
+          aether: 0.2,
+        },
       },
       routing: {
         broadcast: true,
-        priority: 'medium'
-      }
+        priority: "medium",
+      },
     };
   }
 
@@ -459,7 +469,7 @@ export class AirService extends HybridAgent {
 // Type definitions
 interface RoutingDecision {
   target: ElementalService;
-  channel: 'direct' | 'broadcast' | 'element-specific';
+  channel: "direct" | "broadcast" | "element-specific";
   path: string[];
   confidence: number;
   intent: string;

@@ -30,7 +30,7 @@
   },
   "include": [
     "src/agents/personal_oracle/**/*",
-    "src/api/**/*", 
+    "src/api/**/*",
     "src/services/astrologyService.ts",
     "src/services/journalingService.ts",
     "src/services/assessmentService.ts",
@@ -45,10 +45,5 @@
     "src/lib/spiralLogic.ts",
     "src/types/**/*"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts"
-  ]
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }

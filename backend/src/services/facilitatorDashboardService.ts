@@ -3,9 +3,9 @@
  * The ADHD-Friendly Consciousness Facilitator's Dream Dashboard Backend
  */
 
-import { supabase } from '../lib/supabaseClient';
-import { WebSocketServer } from 'ws';
-import { ElementType } from '../types';
+import { supabase } from "../lib/supabaseClient";
+import { WebSocketServer } from "ws";
+import { ElementType } from "../types";
 
 // Core Types
 export interface SacredFacilitator {
@@ -15,7 +15,7 @@ export interface SacredFacilitator {
   settings: FacilitatorSettings;
   calendarIntegrations: CalendarIntegration[];
   communicationPreferences: CommunicationPreferences;
-  adhd_support_level: 'high' | 'medium' | 'low';
+  adhd_support_level: "high" | "medium" | "low";
 }
 
 export interface FacilitatorSettings {
@@ -33,7 +33,7 @@ export interface FacilitatorSettings {
 }
 
 export interface CalendarIntegration {
-  type: 'calendly' | 'google' | 'microsoft' | 'apple';
+  type: "calendly" | "google" | "microsoft" | "apple";
   connected: boolean;
   syncEnabled: boolean;
   credentials?: any; // Encrypted
@@ -44,7 +44,7 @@ export interface CommunicationPreferences {
   autoFollowUp: boolean;
   breakthroughAlerts: boolean;
   sacredTimingMessages: boolean;
-  priorityNotifications: 'all' | 'urgent' | 'custom';
+  priorityNotifications: "all" | "urgent" | "custom";
 }
 
 // Event Management Types
@@ -52,7 +52,7 @@ export interface SacredEvent {
   id: string;
   facilitatorId: string;
   name: string;
-  type: 'one-day' | 'three-day' | 'weekly-series' | 'custom';
+  type: "one-day" | "three-day" | "weekly-series" | "custom";
   startDate: Date;
   endDate: Date;
   location: EventLocation;
@@ -65,7 +65,7 @@ export interface SacredEvent {
 }
 
 export interface EventLocation {
-  type: 'in-person' | 'virtual' | 'hybrid';
+  type: "in-person" | "virtual" | "hybrid";
   venue?: string;
   address?: string;
   virtualLink?: string;
@@ -74,7 +74,12 @@ export interface EventLocation {
 
 export interface SacredContainer {
   primaryElement: ElementType;
-  transformationFocus: 'leadership' | 'healing' | 'vision' | 'integration' | 'custom';
+  transformationFocus:
+    | "leadership"
+    | "healing"
+    | "vision"
+    | "integration"
+    | "custom";
   groupSizeRange: { min: number; max: number };
   sacredIntention: string;
   energyQuality: string;
@@ -83,7 +88,7 @@ export interface SacredContainer {
 export interface EventParticipant {
   userId: string;
   registrationDate: Date;
-  onboardingStatus: 'pending' | 'in-progress' | 'completed';
+  onboardingStatus: "pending" | "in-progress" | "completed";
   oracleGuideAssigned: boolean;
   preEventSurveyCompleted: boolean;
   specialNeeds?: string;
@@ -94,7 +99,12 @@ export interface EventParticipant {
 }
 
 export interface EventAutomation {
-  type: 'welcome-email' | 'reminder' | 'follow-up' | 'oracle-assignment' | 'survey';
+  type:
+    | "welcome-email"
+    | "reminder"
+    | "follow-up"
+    | "oracle-assignment"
+    | "survey";
   scheduled: Date;
   completed: boolean;
   template?: string;
@@ -115,16 +125,16 @@ export interface PrepTask {
   task: string;
   dueDate: Date;
   completed: boolean;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   reminder?: Date;
 }
 
 export interface EventMaterial {
   id: string;
   name: string;
-  type: 'document' | 'audio' | 'video' | 'image';
+  type: "document" | "audio" | "video" | "image";
   url: string;
-  category: 'prep' | 'handout' | 'reference' | 'post-event';
+  category: "prep" | "handout" | "reference" | "post-event";
 }
 
 // Participant CRM Types
@@ -150,8 +160,8 @@ export interface ParticipantProfile {
   tags: string[];
   notes: string;
   preferences: {
-    communicationChannel: 'email' | 'sms' | 'both';
-    sessionFrequency: 'weekly' | 'biweekly' | 'monthly' | 'as-needed';
+    communicationChannel: "email" | "sms" | "both";
+    sessionFrequency: "weekly" | "biweekly" | "monthly" | "as-needed";
   };
 }
 
@@ -161,7 +171,11 @@ export interface SacredJourney {
   recentBreakthroughs: Breakthrough[];
   integrationPhase: boolean;
   challenges: string[];
-  transformationStage: 'initiation' | 'deepening' | 'integration' | 'embodiment';
+  transformationStage:
+    | "initiation"
+    | "deepening"
+    | "integration"
+    | "embodiment";
 }
 
 export interface Breakthrough {
@@ -176,7 +190,7 @@ export interface SessionRecord {
   id: string;
   date: Date;
   duration: number; // minutes
-  type: 'individual' | 'group' | 'workshop';
+  type: "individual" | "group" | "workshop";
   notes: string;
   recording?: string;
   transcript?: string;
@@ -208,13 +222,13 @@ export interface BreakthroughMoment {
 export interface CommunicationRecord {
   id: string;
   date: Date;
-  type: 'email' | 'sms' | 'session-note' | 'voice-note';
-  direction: 'sent' | 'received';
+  type: "email" | "sms" | "session-note" | "voice-note";
+  direction: "sent" | "received";
   subject?: string;
   content: string;
   responseNeeded: boolean;
   responseDeadline?: Date;
-  category: 'urgent' | 'important' | 'update' | 'acknowledgment';
+  category: "urgent" | "important" | "update" | "acknowledgment";
 }
 
 // Session & Recording Types
@@ -230,7 +244,7 @@ export interface ScheduledSession {
   participantId: string;
   scheduledTime: Date;
   duration: number;
-  type: 'individual' | 'group';
+  type: "individual" | "group";
   prepNotes?: string;
   meetingLink?: string;
   remindersSent: boolean;
@@ -244,7 +258,7 @@ export interface SessionRecording {
   participantId: string;
   recordingUrl: string;
   duration: number;
-  transcriptionStatus: 'pending' | 'processing' | 'completed' | 'failed';
+  transcriptionStatus: "pending" | "processing" | "completed" | "failed";
   transcriptUrl?: string;
   summaryGenerated: boolean;
 }
@@ -252,10 +266,10 @@ export interface SessionRecording {
 export interface TranscriptionJob {
   id: string;
   recordingId: string;
-  status: 'queued' | 'processing' | 'completed' | 'failed';
+  status: "queued" | "processing" | "completed" | "failed";
   startedAt?: Date;
   completedAt?: Date;
-  service: 'assembly-ai' | 'whisper' | 'custom';
+  service: "assembly-ai" | "whisper" | "custom";
 }
 
 export interface SummaryTemplate {
@@ -284,21 +298,21 @@ export interface InboxItem {
   subject: string;
   preview: string;
   receivedAt: Date;
-  category: 'urgent' | 'important' | 'update';
-  responseStatus: 'needed' | 'drafted' | 'sent' | 'not-needed';
+  category: "urgent" | "important" | "update";
+  responseStatus: "needed" | "drafted" | "sent" | "not-needed";
   suggestedResponse?: string;
-  sentiment?: 'crisis' | 'breakthrough' | 'neutral' | 'gratitude';
+  sentiment?: "crisis" | "breakthrough" | "neutral" | "gratitude";
 }
 
 export interface MessageTemplate {
   id: string;
   name: string;
   element: ElementType;
-  category: 'follow-up' | 'check-in' | 'breakthrough' | 'support' | 'logistics';
+  category: "follow-up" | "check-in" | "breakthrough" | "support" | "logistics";
   subject: string;
   content: string;
   variables: string[]; // e.g., {{name}}, {{lastSession}}, {{element}}
-  tone: 'supportive' | 'celebratory' | 'informative' | 'urgent';
+  tone: "supportive" | "celebratory" | "informative" | "urgent";
 }
 
 export interface CommunicationAutomation {
@@ -311,12 +325,12 @@ export interface CommunicationAutomation {
 }
 
 export interface AutomationTrigger {
-  type: 'time-based' | 'event-based' | 'condition-based';
+  type: "time-based" | "event-based" | "condition-based";
   config: any; // Specific to trigger type
 }
 
 export interface AutomationAction {
-  type: 'send-email' | 'send-sms' | 'create-task' | 'notify-facilitator';
+  type: "send-email" | "send-sms" | "create-task" | "notify-facilitator";
   template?: string;
   delay?: number; // minutes
   config: any;
@@ -333,7 +347,7 @@ export interface ADHDCommandCenter {
 export interface DailyPriority {
   id: string;
   task: string;
-  category: 'must-do' | 'can-wait' | 'delegated';
+  category: "must-do" | "can-wait" | "delegated";
   deadline?: Date;
   completed: boolean;
   participant?: string;
@@ -345,8 +359,8 @@ export interface SmartReminder {
   id: string;
   taskId: string;
   scheduledTime: Date;
-  type: 'visual' | 'audio' | 'notification' | 'all';
-  priority: 'interrupt' | 'gentle' | 'ambient';
+  type: "visual" | "audio" | "notification" | "all";
+  priority: "interrupt" | "gentle" | "ambient";
   snoozedUntil?: Date;
   adaptiveTiming: boolean; // Learns best times
 }
@@ -354,9 +368,9 @@ export interface SmartReminder {
 export interface DelegatedTask {
   id: string;
   task: string;
-  delegatedTo: 'system' | 'assistant' | 'participant';
+  delegatedTo: "system" | "assistant" | "participant";
   automationType?: string;
-  status: 'active' | 'completed' | 'paused';
+  status: "active" | "completed" | "paused";
   lastRun?: Date;
 }
 
@@ -364,7 +378,7 @@ export interface FocusMode {
   enabled: boolean;
   startTime?: Date;
   duration?: number; // minutes
-  allowedInterruptions: 'none' | 'urgent-only' | 'participant-crisis';
+  allowedInterruptions: "none" | "urgent-only" | "participant-crisis";
   currentTask?: string;
 }
 
@@ -382,11 +396,11 @@ export class FacilitatorDashboardService {
   private initializeWebSocketServer() {
     this.wsServer = new WebSocketServer({ port: 5005 });
 
-    this.wsServer.on('connection', (ws, req) => {
-      const facilitatorId = req.url?.split('/').pop();
+    this.wsServer.on("connection", (ws, req) => {
+      const facilitatorId = req.url?.split("/").pop();
       if (!facilitatorId) return;
 
-      ws.on('message', async (message) => {
+      ws.on("message", async (message) => {
         const data = JSON.parse(message.toString());
         await this.handleDashboardMessage(facilitatorId, data);
       });
@@ -398,30 +412,33 @@ export class FacilitatorDashboardService {
 
   private async handleDashboardMessage(facilitatorId: string, data: any) {
     switch (data.type) {
-      case 'create-event':
+      case "create-event":
         await this.createSacredEvent(facilitatorId, data.event);
         break;
 
-      case 'update-participant':
+      case "update-participant":
         await this.updateParticipant(facilitatorId, data.participant);
         break;
 
-      case 'process-recording':
+      case "process-recording":
         await this.processSessionRecording(data.recording);
         break;
 
-      case 'send-communication':
+      case "send-communication":
         await this.sendCommunication(facilitatorId, data.message);
         break;
 
-      case 'update-priorities':
+      case "update-priorities":
         await this.updateDailyPriorities(facilitatorId, data.priorities);
         break;
     }
   }
 
   // Create Sacred Event with full automation setup
-  public async createSacredEvent(facilitatorId: string, eventData: any): Promise<SacredEvent> {
+  public async createSacredEvent(
+    facilitatorId: string,
+    eventData: any,
+  ): Promise<SacredEvent> {
     const event: SacredEvent = {
       id: `event-${Date.now()}`,
       facilitatorId,
@@ -434,11 +451,11 @@ export class FacilitatorDashboardService {
       participants: [],
       automations: this.setupEventAutomations(eventData),
       prepStatus: this.initializePrepStatus(),
-      materials: []
+      materials: [],
     };
 
     // Save to database
-    await supabase.from('sacred_events').insert(event);
+    await supabase.from("sacred_events").insert(event);
 
     // Create group holoflower
     if (eventData.createGroupHoloflower) {
@@ -450,8 +467,8 @@ export class FacilitatorDashboardService {
 
     // Broadcast update
     this.broadcastDashboardUpdate(facilitatorId, {
-      type: 'event-created',
-      event
+      type: "event-created",
+      event,
     });
 
     return event;
@@ -464,31 +481,31 @@ export class FacilitatorDashboardService {
 
     // Welcome email automation
     automations.push({
-      type: 'welcome-email',
+      type: "welcome-email",
       scheduled: new Date(), // Immediate
       completed: false,
-      template: 'sacred-welcome'
+      template: "sacred-welcome",
     });
 
     // Reminder sequence
     const reminderDays = [30, 14, 7, 3, 1];
-    reminderDays.forEach(days => {
+    reminderDays.forEach((days) => {
       const reminderDate = new Date(startDate);
       reminderDate.setDate(reminderDate.getDate() - days);
 
       automations.push({
-        type: 'reminder',
+        type: "reminder",
         scheduled: reminderDate,
         completed: false,
-        template: `reminder-${days}day`
+        template: `reminder-${days}day`,
       });
     });
 
     // Oracle Guide assignment
     automations.push({
-      type: 'oracle-assignment',
+      type: "oracle-assignment",
       scheduled: new Date(startDate.getTime() - 7 * 24 * 60 * 60 * 1000), // 7 days before
-      completed: false
+      completed: false,
     });
 
     // Post-event follow-up
@@ -496,10 +513,10 @@ export class FacilitatorDashboardService {
     followUpDate.setDate(followUpDate.getDate() + 1);
 
     automations.push({
-      type: 'follow-up',
+      type: "follow-up",
       scheduled: followUpDate,
       completed: false,
-      template: 'post-event-integration'
+      template: "post-event-integration",
     });
 
     return automations;
@@ -515,27 +532,32 @@ export class FacilitatorDashboardService {
     const job: TranscriptionJob = {
       id: `job-${Date.now()}`,
       recordingId: recordingData.sessionId,
-      status: 'queued',
-      service: 'assembly-ai'
+      status: "queued",
+      service: "assembly-ai",
     };
 
-    await supabase.from('transcription_jobs').insert(job);
+    await supabase.from("transcription_jobs").insert(job);
 
     // Start transcription (would integrate with Assembly AI)
-    const transcript = await this.transcribeRecording(recordingData.recordingUrl);
+    const transcript = await this.transcribeRecording(
+      recordingData.recordingUrl,
+    );
 
     // Generate sacred summary
-    const summary = await this.generateSacredSummary(transcript, recordingData.participantId);
+    const summary = await this.generateSacredSummary(
+      transcript,
+      recordingData.participantId,
+    );
 
     // Update session record
     await supabase
-      .from('session_records')
+      .from("session_records")
       .update({
         transcript,
         aiSummary: summary,
-        breakthroughMoments: summary.keyMoments
+        breakthroughMoments: summary.keyMoments,
       })
-      .eq('id', recordingData.sessionId);
+      .eq("id", recordingData.sessionId);
 
     // Check for breakthrough moments
     await this.checkForBreakthroughs(summary, recordingData.participantId);
@@ -544,28 +566,47 @@ export class FacilitatorDashboardService {
   }
 
   // Generate sacred summary with elemental breakdown
-  private async generateSacredSummary(transcript: string, participantId: string): Promise<SessionSummary> {
+  private async generateSacredSummary(
+    transcript: string,
+    participantId: string,
+  ): Promise<SessionSummary> {
     // This would use AI to analyze transcript
     // For now, returning example structure
 
     return {
       elements: {
-        fire: ['Expressed vision for new project', 'Breakthrough moment at 14:32'],
-        water: ['Emotional release around mother relationship', 'Tears of joy at realization'],
-        earth: ['Committed to daily practice', 'Set concrete action steps'],
-        air: ['New perspective on old pattern', 'Clear communication with partner']
+        fire: [
+          "Expressed vision for new project",
+          "Breakthrough moment at 14:32",
+        ],
+        water: [
+          "Emotional release around mother relationship",
+          "Tears of joy at realization",
+        ],
+        earth: ["Committed to daily practice", "Set concrete action steps"],
+        air: [
+          "New perspective on old pattern",
+          "Clear communication with partner",
+        ],
       },
       keyMoments: [
-        { timestamp: '14:32', description: 'Major realization about repeating pattern' },
-        { timestamp: '27:45', description: 'Commitment to new way of being' }
+        {
+          timestamp: "14:32",
+          description: "Major realization about repeating pattern",
+        },
+        { timestamp: "27:45", description: "Commitment to new way of being" },
       ],
       suggestedFollowUp: [
-        'Check on mother relationship progress',
-        'Support new project manifestation',
-        'Celebrate breakthrough in next session'
+        "Check on mother relationship progress",
+        "Support new project manifestation",
+        "Celebrate breakthrough in next session",
       ],
-      emotionalTone: 'Breakthrough and integration',
-      transformationIndicators: ['Pattern recognition', 'Emotional release', 'Clear commitment']
+      emotionalTone: "Breakthrough and integration",
+      transformationIndicators: [
+        "Pattern recognition",
+        "Emotional release",
+        "Clear commitment",
+      ],
     };
   }
 
@@ -583,24 +624,24 @@ export class FacilitatorDashboardService {
       preview: email.content.substring(0, 100),
       receivedAt: new Date(),
       category,
-      responseStatus: category === 'urgent' ? 'needed' : 'not-needed',
-      sentiment
+      responseStatus: category === "urgent" ? "needed" : "not-needed",
+      sentiment,
     };
 
     // Generate suggested response if needed
-    if (inboxItem.responseStatus === 'needed') {
+    if (inboxItem.responseStatus === "needed") {
       inboxItem.suggestedResponse = await this.generateSuggestedResponse(
         email,
         participantId,
-        sentiment
+        sentiment,
       );
     }
 
     // Save to inbox
-    await supabase.from('facilitator_inbox').insert(inboxItem);
+    await supabase.from("facilitator_inbox").insert(inboxItem);
 
     // Alert facilitator if urgent
-    if (category === 'urgent') {
+    if (category === "urgent") {
       await this.sendUrgentAlert(inboxItem);
     }
 
@@ -608,7 +649,9 @@ export class FacilitatorDashboardService {
   }
 
   // ADHD-friendly daily priority management
-  public async generateDailyPriorities(facilitatorId: string): Promise<DailyPriority[]> {
+  public async generateDailyPriorities(
+    facilitatorId: string,
+  ): Promise<DailyPriority[]> {
     const facilitator = await this.getFacilitator(facilitatorId);
 
     // Get all tasks from various sources
@@ -621,41 +664,41 @@ export class FacilitatorDashboardService {
     const priorities: DailyPriority[] = [];
 
     // Must do today
-    [...sessionPrep, ...emailReplies].forEach(task => {
+    [...sessionPrep, ...emailReplies].forEach((task) => {
       priorities.push({
         id: `priority-${Date.now()}-${Math.random()}`,
         task: task.description,
-        category: 'must-do',
+        category: "must-do",
         deadline: task.deadline,
         completed: false,
         participant: task.participant,
         estimatedTime: task.estimatedTime,
-        sacredTiming: this.getSacredTiming(task)
+        sacredTiming: this.getSacredTiming(task),
       });
     });
 
     // Can wait
-    eventTasks.forEach(task => {
+    eventTasks.forEach((task) => {
       if (!this.isUrgent(task)) {
         priorities.push({
           id: `priority-${Date.now()}-${Math.random()}`,
           task: task.description,
-          category: 'can-wait',
+          category: "can-wait",
           deadline: task.deadline,
           completed: false,
-          estimatedTime: task.estimatedTime
+          estimatedTime: task.estimatedTime,
         });
       }
     });
 
     // Delegated to system
     const automatedTasks = await this.getAutomatedTasks(facilitatorId);
-    automatedTasks.forEach(task => {
+    automatedTasks.forEach((task) => {
       priorities.push({
         id: `priority-${Date.now()}-${Math.random()}`,
         task: task.description,
-        category: 'delegated',
-        completed: task.completed
+        category: "delegated",
+        completed: task.completed,
       });
     });
 
@@ -670,7 +713,9 @@ export class FacilitatorDashboardService {
 
       for (const participant of allParticipants) {
         // Check holoflower for concerning patterns
-        const holoflowerAlert = await this.checkHoloflowerPatterns(participant.id);
+        const holoflowerAlert = await this.checkHoloflowerPatterns(
+          participant.id,
+        );
 
         // Check journal entries for support needs
         const journalAlert = await this.checkJournalSentiment(participant.id);
@@ -682,7 +727,7 @@ export class FacilitatorDashboardService {
           await this.createSupportAlert(participant, {
             holoflowerAlert,
             journalAlert,
-            engagementAlert
+            engagementAlert,
           });
         }
       }
@@ -710,23 +755,25 @@ export class FacilitatorDashboardService {
 
   private async sendDashboardState(facilitatorId: string, ws: any) {
     const dashboard = await this.getDashboardState(facilitatorId);
-    ws.send(JSON.stringify({
-      type: 'dashboard-state',
-      data: dashboard
-    }));
+    ws.send(
+      JSON.stringify({
+        type: "dashboard-state",
+        data: dashboard,
+      }),
+    );
   }
 
   private broadcastDashboardUpdate(facilitatorId: string, update: any) {
     if (!this.wsServer) return;
 
     const message = JSON.stringify({
-      type: 'dashboard-update',
+      type: "dashboard-update",
       facilitatorId,
       update,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
-    this.wsServer.clients.forEach(client => {
+    this.wsServer.clients.forEach((client) => {
       if (client.readyState === 1) {
         client.send(message);
       }
@@ -748,7 +795,7 @@ export class FacilitatorDashboardService {
     }
 
     // Clear all active reminders
-    this.activeReminders.forEach(timeout => clearTimeout(timeout));
+    this.activeReminders.forEach((timeout) => clearTimeout(timeout));
     this.activeReminders.clear();
   }
 }

@@ -17,13 +17,13 @@ export class KnowledgeBase {
   /**
    * Store knowledge entry
    */
-  store(id: string, content: any, category: string = 'general'): void {
+  store(id: string, content: any, category: string = "general"): void {
     this.knowledge.set(id, {
       id,
       content,
       category,
       confidence: 0.8,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -38,7 +38,8 @@ export class KnowledgeBase {
    * Query knowledge by category
    */
   query(category: string): KnowledgeEntry[] {
-    return Array.from(this.knowledge.values())
-      .filter(entry => entry.category === category);
+    return Array.from(this.knowledge.values()).filter(
+      (entry) => entry.category === category,
+    );
   }
 }

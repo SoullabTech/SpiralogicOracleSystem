@@ -1,37 +1,39 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 
 export default function BetaPaymentPage() {
-  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'quarterly'>('monthly');
+  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "quarterly">(
+    "monthly",
+  );
   const [processing, setProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
 
   const plans = {
     monthly: {
       price: 29,
-      description: 'Monthly Beta Access',
+      description: "Monthly Beta Access",
       features: [
-        'Unlimited oracle conversations',
-        'All 4 elemental agents (Fire, Water, Earth, Air)',
-        'Consciousness profile creation',
-        'Direct feedback channel to developers',
-        'First month free for early adopters'
-      ]
+        "Unlimited oracle conversations",
+        "All 4 elemental agents (Fire, Water, Earth, Air)",
+        "Consciousness profile creation",
+        "Direct feedback channel to developers",
+        "First month free for early adopters",
+      ],
     },
     quarterly: {
       price: 69,
-      description: '3-Month Beta Access',
+      description: "3-Month Beta Access",
       savings: 18,
       features: [
-        'Everything in monthly plan',
-        '3 months of unlimited access',
-        'Save $18 compared to monthly',
-        'Priority feature requests',
-        'Extended beta period guarantee'
-      ]
-    }
+        "Everything in monthly plan",
+        "3 months of unlimited access",
+        "Save $18 compared to monthly",
+        "Priority feature requests",
+        "Extended beta period guarantee",
+      ],
+    },
   };
 
   const handlePayment = async () => {
@@ -40,10 +42,10 @@ export default function BetaPaymentPage() {
     try {
       // Simulate payment processing
       // In production, this would integrate with Stripe
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setPaymentComplete(true);
     } catch (error) {
-      console.error('Payment error:', error);
+      console.error("Payment error:", error);
     } finally {
       setProcessing(false);
     }
@@ -58,16 +60,25 @@ export default function BetaPaymentPage() {
               <span className="text-4xl">🎉</span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4">Welcome to Soullab Oracle!</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            Welcome to Soullab Oracle!
+          </h1>
           <p className="text-lg opacity-80 mb-8">
-            Your beta access is now active. Begin your consciousness journey with our elemental agents.
+            Your beta access is now active. Begin your consciousness journey
+            with our elemental agents.
           </p>
           <div className="space-y-4">
-            <Link href="/dashboard" className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block">
+            <Link
+              href="/dashboard"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
+            >
               🌌 Enter Your Oracle Dashboard
             </Link>
             <div className="text-sm opacity-60">
-              <p>Check your email for login credentials and getting started guide.</p>
+              <p>
+                Check your email for login credentials and getting started
+                guide.
+              </p>
             </div>
           </div>
         </div>
@@ -81,9 +92,12 @@ export default function BetaPaymentPage() {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Join the Consciousness Revolution</h1>
+            <h1 className="text-4xl font-bold mb-4">
+              Join the Consciousness Revolution
+            </h1>
             <p className="text-lg opacity-80">
-              Choose your beta access plan and start your journey with Soullab Oracle
+              Choose your beta access plan and start your journey with Soullab
+              Oracle
             </p>
           </div>
 
@@ -92,22 +106,24 @@ export default function BetaPaymentPage() {
             {Object.entries(plans).map(([key, plan]) => (
               <div
                 key={key}
-                onClick={() => setSelectedPlan(key as 'monthly' | 'quarterly')}
+                onClick={() => setSelectedPlan(key as "monthly" | "quarterly")}
                 className={`cursor-pointer p-8 rounded-lg border-2 transition-all ${
                   selectedPlan === key
-                    ? 'bg-yellow-400/10 border-yellow-400 scale-105'
-                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                    ? "bg-yellow-400/10 border-yellow-400 scale-105"
+                    : "bg-white/5 border-white/10 hover:bg-white/10"
                 }`}
               >
                 <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold mb-2">{plan.description}</h3>
+                  <h3 className="text-2xl font-bold mb-2">
+                    {plan.description}
+                  </h3>
                   <div className="text-4xl font-bold text-yellow-400 mb-2">
                     ${plan.price}
                     <span className="text-lg opacity-80">
-                      {key === 'monthly' ? '/month' : '/3 months'}
+                      {key === "monthly" ? "/month" : "/3 months"}
                     </span>
                   </div>
-                  {'savings' in plan && (
+                  {"savings" in plan && (
                     <div className="text-green-400 font-semibold">
                       Save ${plan.savings}!
                     </div>
@@ -117,7 +133,9 @@ export default function BetaPaymentPage() {
                 <ul className="space-y-3">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-green-400 mr-2 flex-shrink-0">✓</span>
+                      <span className="text-green-400 mr-2 flex-shrink-0">
+                        ✓
+                      </span>
                       <span className="text-sm">{feature}</span>
                     </li>
                   ))}
@@ -136,22 +154,28 @@ export default function BetaPaymentPage() {
 
           {/* Payment Form */}
           <div className="max-w-md mx-auto bg-white/5 rounded-lg p-8 border border-white/10">
-            <h3 className="text-xl font-bold mb-6 text-center">Complete Your Purchase</h3>
+            <h3 className="text-xl font-bold mb-6 text-center">
+              Complete Your Purchase
+            </h3>
 
             <div className="mb-6 p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <span>{plans[selectedPlan].description}</span>
                 <span className="font-bold">${plans[selectedPlan].price}</span>
               </div>
-              {selectedPlan === 'monthly' && (
-                <div className="text-sm text-green-400">First month free for beta testers!</div>
+              {selectedPlan === "monthly" && (
+                <div className="text-sm text-green-400">
+                  First month free for beta testers!
+                </div>
               )}
             </div>
 
             {/* Simulated Payment Form */}
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
+                <label className="block text-sm font-medium mb-2">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50"
@@ -160,7 +184,9 @@ export default function BetaPaymentPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Card Number</label>
+                <label className="block text-sm font-medium mb-2">
+                  Card Number
+                </label>
                 <input
                   type="text"
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50"
@@ -170,7 +196,9 @@ export default function BetaPaymentPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Expiry</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Expiry
+                  </label>
                   <input
                     type="text"
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50"
@@ -215,12 +243,16 @@ export default function BetaPaymentPage() {
 
           {/* Beta Benefits Reminder */}
           <div className="mt-12 text-center">
-            <h3 className="text-xl font-semibold mb-4">What You Get With Beta Access</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              What You Get With Beta Access
+            </h3>
             <div className="grid md:grid-cols-4 gap-6">
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                 <span className="text-2xl mb-2 block">🔥</span>
                 <h4 className="font-semibold mb-1">Fire Agent</h4>
-                <p className="text-xs opacity-80">Vision & creative transformation</p>
+                <p className="text-xs opacity-80">
+                  Vision & creative transformation
+                </p>
               </div>
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                 <span className="text-2xl mb-2 block">🌊</span>
@@ -230,19 +262,26 @@ export default function BetaPaymentPage() {
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                 <span className="text-2xl mb-2 block">🌍</span>
                 <h4 className="font-semibold mb-1">Earth Agent</h4>
-                <p className="text-xs opacity-80">Grounding & practical guidance</p>
+                <p className="text-xs opacity-80">
+                  Grounding & practical guidance
+                </p>
               </div>
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                 <span className="text-2xl mb-2 block">💨</span>
                 <h4 className="font-semibold mb-1">Air Agent</h4>
-                <p className="text-xs opacity-80">Mental clarity & communication</p>
+                <p className="text-xs opacity-80">
+                  Mental clarity & communication
+                </p>
               </div>
             </div>
           </div>
 
           {/* Back to Demo */}
           <div className="text-center mt-8">
-            <Link href="/oracle-demo" className="text-yellow-400 hover:text-yellow-300 underline">
+            <Link
+              href="/oracle-demo"
+              className="text-yellow-400 hover:text-yellow-300 underline"
+            >
               ← Want to try the demo first?
             </Link>
           </div>

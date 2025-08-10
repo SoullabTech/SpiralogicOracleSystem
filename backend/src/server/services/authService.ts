@@ -1,7 +1,7 @@
 // src/services/authService.ts
 export const authService = {
   validateToken: (token: string): boolean => {
-    return token === 'valid-token';
+    return token === "valid-token";
   },
 };
 
@@ -15,14 +15,14 @@ export const chatService = {
 // src/services/facetMapService.ts
 export const facetMapService = {
   getMap: () => {
-    return { 'Fire 1': 'Visionary', 'Water 2': 'Alchemist' };
+    return { "Fire 1": "Visionary", "Water 2": "Alchemist" };
   },
 };
 
 // src/services/facilitatorService.ts
 export const facilitatorService = {
   getFacilitatorTools: () => {
-    return ['Circle Process', 'Check-in Protocol', 'Conflict Resolution'];
+    return ["Circle Process", "Check-in Protocol", "Conflict Resolution"];
   },
 };
 
@@ -65,7 +65,7 @@ export const insightHistoryService = {
     insightLog.push(insight);
   },
   getHistory: (userId: string): Insight[] => {
-    return insightLog.filter(i => i.userId === userId);
+    return insightLog.filter((i) => i.userId === userId);
   },
 };
 
@@ -96,7 +96,7 @@ export const surveyService = {
 // src/services/symbolicTrendsService.ts
 export const symbolicTrendsService = {
   analyzeSymbols: (symbols: string[]): string => {
-    return `Trends show increased presence of: ${symbols.join(', ')}`;
+    return `Trends show increased presence of: ${symbols.join(", ")}`;
   },
 };
 
@@ -106,7 +106,7 @@ export const oracleService = {
     return `The Oracle hears your question: "${question}"... and responds in silence.`;
   },
   interpretSymbols: (symbols: string[]): string => {
-    return `These symbols—${symbols.join(', ')}—hold keys to your current transformation.`;
+    return `These symbols—${symbols.join(", ")}—hold keys to your current transformation.`;
   },
 };
 
@@ -114,11 +114,11 @@ export const oracleService = {
 export interface User {
   id: string;
   name: string;
-  role?: 'admin' | 'user' | 'oracle';
+  role?: "admin" | "user" | "oracle";
 }
 
 const users: Record<string, User> = {
-  'u1': { id: 'u1', name: 'Aria Spiral', role: 'oracle' },
+  u1: { id: "u1", name: "Aria Spiral", role: "oracle" },
 };
 
 export const userService = {
@@ -126,7 +126,7 @@ export const userService = {
     return users[id] || null;
   },
   isAdmin: (id: string): boolean => {
-    return users[id]?.role === 'admin';
+    return users[id]?.role === "admin";
   },
 };
 
@@ -142,12 +142,17 @@ const mockSessions: Session[] = [];
 
 export const sessionService = {
   startSession: (userId: string, context?: string): Session => {
-    const session = { id: `${Date.now()}`, userId, startedAt: new Date(), context };
+    const session = {
+      id: `${Date.now()}`,
+      userId,
+      startedAt: new Date(),
+      context,
+    };
     mockSessions.push(session);
     return session;
   },
   listSessions: (userId: string): Session[] => {
-    return mockSessions.filter(s => s.userId === userId);
+    return mockSessions.filter((s) => s.userId === userId);
   },
 };
 
@@ -167,7 +172,7 @@ export const memoryService = {
     return item;
   },
   recall: (userId: string): MemoryItem[] => {
-    return memories.filter(m => m.userId === userId);
+    return memories.filter((m) => m.userId === userId);
   },
 };
 
@@ -187,6 +192,6 @@ export const dreamService = {
     return dream;
   },
   interpret: (dream: Dream): string => {
-    return `The dream contains ${dream.symbols?.join(', ') || 'no symbols'}, revealing hidden archetypes.`;
+    return `The dream contains ${dream.symbols?.join(", ") || "no symbols"}, revealing hidden archetypes.`;
   },
 };

@@ -1,25 +1,25 @@
 // lib/types/elemental.ts
 export enum ElementalArchetype {
-  FIRE = 'fire',
-  WATER = 'water',
-  EARTH = 'earth',
-  AIR = 'air'
+  FIRE = "fire",
+  WATER = "water",
+  EARTH = "earth",
+  AIR = "air",
 }
 
 export enum ContentComplexity {
-  FOUNDATIONAL = 'foundational',
-  INTERMEDIATE = 'intermediate',
-  ADVANCED = 'advanced',
-  INTEGRATION_FOCUSED = 'integration_focused'
+  FOUNDATIONAL = "foundational",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
+  INTEGRATION_FOCUSED = "integration_focused",
 }
 
 export enum ContentType {
-  INSIGHT = 'insight',
-  PRACTICE = 'practice',
-  REFLECTION = 'reflection',
-  INTEGRATION_EXERCISE = 'integration_exercise',
-  REALITY_CHECK = 'reality_check',
-  COMMUNITY_PROMPT = 'community_prompt'
+  INSIGHT = "insight",
+  PRACTICE = "practice",
+  REFLECTION = "reflection",
+  INTEGRATION_EXERCISE = "integration_exercise",
+  REALITY_CHECK = "reality_check",
+  COMMUNITY_PROMPT = "community_prompt",
 }
 
 export interface ElementalState {

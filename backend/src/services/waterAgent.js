@@ -3,7 +3,7 @@ export class WaterAgent {
     return {
       archetype: "Water",
       message: `I sense the emotions in "${input}". The deepest wisdom flows through feeling fully.`,
-      metadata: { voice_profile: "water_archetype" }
+      metadata: { voice_profile: "water_archetype" },
     };
   }
 }

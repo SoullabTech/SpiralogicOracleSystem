@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express';
-import { AgentRegistry } from '../core/factories/AgentRegistry';
+import { Router, Request, Response } from "express";
+import { AgentRegistry } from "../core/factories/AgentRegistry";
 
 const router = Router();
 const registry = new AgentRegistry();
@@ -18,22 +18,28 @@ interface OracleResponse {
   metadata: Record<string, any>;
 }
 
-router.post('/api/v1/oracle', async (req: Request, res: Response) => {
+router.post("/api/v1/oracle", async (req: Request, res: Response) => {
   try {
-    const { userId, query, targetElement, context = {} }: OracleRequest = req.body;
+    const {
+      userId,
+      query,
+      targetElement,
+      context = {},
+    }: OracleRequest = req.body;
 
     // Validation
     if (!userId || !query || !targetElement) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: userId, query, and targetElement' 
+      return res.status(400).json({
+        error: "Missing required fields: userId, query, and targetElement",
       });
     }
 
     // Validate targetElement
-    const validElements = ['fire', 'water', 'earth', 'air', 'aether'];
+    const validElements = ["fire", "water", "earth", "air", "aether"];
     if (!validElements.includes(targetElement.toLowerCase())) {
-      return res.status(400).json({ 
-        error: 'Invalid targetElement. Must be one of: fire, water, earth, air, aether' 
+      return res.status(400).json({
+        error:
+          "Invalid targetElement. Must be one of: fire, water, earth, air, aether",
       });
     }
 
@@ -42,33 +48,38 @@ router.post('/api/v1/oracle', async (req: Request, res: Response) => {
 
     // Process query (need to handle the method signature)
     let message: string;
-    if (typeof agent.processQuery === 'function') {
+    if (typeof agent.processQuery === "function") {
       const result = await agent.processQuery(query);
-      message = typeof result === 'string' ? result : (result as any).message || 'No response';
+      message =
+        typeof result === "string"
+          ? result
+          : (result as any).message || "No response";
     } else {
       message = `${targetElement} agent processing: ${query}`;
     }
 
     // Get archetype info
-    const archetype = (agent as any).getArchetype ? (agent as any).getArchetype() : targetElement;
+    const archetype = (agent as any).getArchetype
+      ? (agent as any).getArchetype()
+      : targetElement;
 
     const response: OracleResponse = {
       element: targetElement,
       archetype,
       message,
-      metadata: { 
+      metadata: {
         timestamp: new Date().toISOString(),
         userId,
-        context
-      }
+        context,
+      },
     };
 
     res.json(response);
   } catch (error: any) {
-    console.error('Oracle Gateway Error:', error);
-    res.status(500).json({ 
-      error: 'Internal Server Error',
-      message: error.message 
+    console.error("Oracle Gateway Error:", error);
+    res.status(500).json({
+      error: "Internal Server Error",
+      message: error.message,
     });
   }
 });

@@ -1,19 +1,21 @@
 // voiceRouter.test.ts - Test cases for voice routing logic
 
-import { routeVoice, getVoiceConfig } from './voiceRouter';
-import { synthesizeVoice } from './voiceService';
-import { spawn } from 'child_process';
+import { routeVoice, getVoiceConfig } from "./voiceRouter";
+import { synthesizeVoice } from "./voiceService";
+import { spawn } from "child_process";
 
 // Mock dependencies
-jest.mock('./voiceService');
-jest.mock('child_process');
-jest.mock('fs');
-jest.mock('path');
+jest.mock("./voiceService");
+jest.mock("child_process");
+jest.mock("fs");
+jest.mock("path");
 
-const mockedSynthesizeVoice = synthesizeVoice as jest.MockedFunction<typeof synthesizeVoice>;
+const mockedSynthesizeVoice = synthesizeVoice as jest.MockedFunction<
+  typeof synthesizeVoice
+>;
 const mockedSpawn = spawn as jest.MockedFunction<typeof spawn>;
 
-describe('Voice Router', () => {
+describe("Voice Router", () => {
   // Store original env value
   const originalUseSesame = process.env.USE_SESAME;
 
@@ -24,14 +26,14 @@ describe('Voice Router', () => {
     process.env.USE_SESAME = originalUseSesame;
   });
 
-  describe('routeVoice', () => {
-    it('should route oracle agent to Sesame when USE_SESAME is true', async () => {
-      process.env.USE_SESAME = 'true';
+  describe("routeVoice", () => {
+    it("should route oracle agent to Sesame when USE_SESAME is true", async () => {
+      process.env.USE_SESAME = "true";
 
       const mockParams = {
-        text: 'Test oracle message',
-        voiceId: 'oracle-voice-id',
-        agentRole: 'oracle'
+        text: "Test oracle message",
+        voiceId: "oracle-voice-id",
+        agentRole: "oracle",
       };
 
       // Mock Sesame synthesis
@@ -39,180 +41,186 @@ describe('Voice Router', () => {
         stdout: { on: jest.fn() },
         stderr: { on: jest.fn() },
         on: jest.fn((event, callback) => {
-          if (event === 'close') {
+          if (event === "close") {
             // Simulate successful completion
-            mockSpawn.stdout.on.mock.calls[0][1]('{"success": true, "path": "/audio/test.wav"}');
+            mockSpawn.stdout.on.mock.calls[0][1](
+              '{"success": true, "path": "/audio/test.wav"}',
+            );
             callback(0);
           }
-        })
+        }),
       };
       mockedSpawn.mockReturnValue(mockSpawn as any);
 
       await routeVoice(mockParams);
 
-      expect(mockedSpawn).toHaveBeenCalledWith('python3', expect.any(Array));
+      expect(mockedSpawn).toHaveBeenCalledWith("python3", expect.any(Array));
       expect(mockedSynthesizeVoice).not.toHaveBeenCalled();
     });
 
-    it('should route elemental agent to Sesame when USE_SESAME is true', async () => {
-      process.env.USE_SESAME = 'true';
+    it("should route elemental agent to Sesame when USE_SESAME is true", async () => {
+      process.env.USE_SESAME = "true";
 
       const mockParams = {
-        text: 'Test elemental message',
-        voiceId: 'elemental-voice-id',
-        agentRole: 'elemental'
+        text: "Test elemental message",
+        voiceId: "elemental-voice-id",
+        agentRole: "elemental",
       };
 
       const mockSpawn = {
         stdout: { on: jest.fn() },
         stderr: { on: jest.fn() },
         on: jest.fn((event, callback) => {
-          if (event === 'close') {
-            mockSpawn.stdout.on.mock.calls[0][1]('{"success": true, "path": "/audio/test.wav"}');
+          if (event === "close") {
+            mockSpawn.stdout.on.mock.calls[0][1](
+              '{"success": true, "path": "/audio/test.wav"}',
+            );
             callback(0);
           }
-        })
+        }),
       };
       mockedSpawn.mockReturnValue(mockSpawn as any);
 
       await routeVoice(mockParams);
 
-      expect(mockedSpawn).toHaveBeenCalledWith('python3', expect.any(Array));
+      expect(mockedSpawn).toHaveBeenCalledWith("python3", expect.any(Array));
       expect(mockedSynthesizeVoice).not.toHaveBeenCalled();
     });
 
-    it('should route narrator to ElevenLabs even when USE_SESAME is true', async () => {
-      process.env.USE_SESAME = 'true';
-      mockedSynthesizeVoice.mockResolvedValue('/audio/narrator.mp3');
+    it("should route narrator to ElevenLabs even when USE_SESAME is true", async () => {
+      process.env.USE_SESAME = "true";
+      mockedSynthesizeVoice.mockResolvedValue("/audio/narrator.mp3");
 
       const mockParams = {
-        text: 'Test narrator message',
-        voiceId: 'narrator-voice-id',
-        agentRole: 'narrator'
+        text: "Test narrator message",
+        voiceId: "narrator-voice-id",
+        agentRole: "narrator",
       };
 
       const result = await routeVoice(mockParams);
 
       expect(synthesizeVoice).toHaveBeenCalledWith({
-        text: 'Test narrator message',
-        voiceId: 'narrator-voice-id'
+        text: "Test narrator message",
+        voiceId: "narrator-voice-id",
       });
-      expect(result).toBe('/audio/narrator.mp3');
+      expect(result).toBe("/audio/narrator.mp3");
     });
 
-    it('should route all agents to ElevenLabs when USE_SESAME is false', async () => {
-      process.env.USE_SESAME = 'false';
-      mockedSynthesizeVoice.mockResolvedValue('/audio/elevenlabs.mp3');
+    it("should route all agents to ElevenLabs when USE_SESAME is false", async () => {
+      process.env.USE_SESAME = "false";
+      mockedSynthesizeVoice.mockResolvedValue("/audio/elevenlabs.mp3");
 
-      const agentRoles = ['oracle', 'elemental', 'narrator'];
+      const agentRoles = ["oracle", "elemental", "narrator"];
 
       for (const agentRole of agentRoles) {
         const mockParams = {
           text: `Test ${agentRole} message`,
           voiceId: `${agentRole}-voice-id`,
-          agentRole
+          agentRole,
         };
 
         const result = await routeVoice(mockParams);
 
         expect(mockedSynthesizeVoice).toHaveBeenCalledWith({
           text: `Test ${agentRole} message`,
-          voiceId: `${agentRole}-voice-id`
+          voiceId: `${agentRole}-voice-id`,
         });
-        expect(result).toBe('/audio/elevenlabs.mp3');
+        expect(result).toBe("/audio/elevenlabs.mp3");
       }
     });
 
-    it('should handle Sesame synthesis errors gracefully', async () => {
-      process.env.USE_SESAME = 'true';
+    it("should handle Sesame synthesis errors gracefully", async () => {
+      process.env.USE_SESAME = "true";
 
       const mockParams = {
-        text: 'Test oracle message',
-        voiceId: 'oracle-voice-id',
-        agentRole: 'oracle'
+        text: "Test oracle message",
+        voiceId: "oracle-voice-id",
+        agentRole: "oracle",
       };
 
       const mockSpawn = {
         stdout: { on: jest.fn() },
         stderr: { on: jest.fn() },
         on: jest.fn((event, callback) => {
-          if (event === 'close') {
+          if (event === "close") {
             // Simulate error
-            mockSpawn.stderr.on.mock.calls[0][1]('Python error occurred');
+            mockSpawn.stderr.on.mock.calls[0][1]("Python error occurred");
             callback(1);
           }
-        })
+        }),
       };
       mockedSpawn.mockReturnValue(mockSpawn as any);
 
-      await expect(routeVoice(mockParams)).rejects.toThrow('Sesame synthesis failed');
+      await expect(routeVoice(mockParams)).rejects.toThrow(
+        "Sesame synthesis failed",
+      );
     });
   });
 
-  describe('getVoiceConfig', () => {
-    it('should return oracle configuration', () => {
-      process.env.USE_SESAME = 'true';
-      const config = getVoiceConfig('oracle');
+  describe("getVoiceConfig", () => {
+    it("should return oracle configuration", () => {
+      process.env.USE_SESAME = "true";
+      const config = getVoiceConfig("oracle");
 
       expect(config).toEqual({
-        service: 'sesame',
-        voiceId: 'oracle-voice-id',
+        service: "sesame",
+        voiceId: "oracle-voice-id",
         settings: {
           stability: 0.5,
-          similarity_boost: 0.8
-        }
+          similarity_boost: 0.8,
+        },
       });
     });
 
-    it('should return elemental configuration', () => {
-      process.env.USE_SESAME = 'true';
-      const config = getVoiceConfig('elemental');
+    it("should return elemental configuration", () => {
+      process.env.USE_SESAME = "true";
+      const config = getVoiceConfig("elemental");
 
       expect(config).toEqual({
-        service: 'sesame',
-        voiceId: 'elemental-voice-id',
+        service: "sesame",
+        voiceId: "elemental-voice-id",
         settings: {
           stability: 0.6,
-          similarity_boost: 0.7
-        }
+          similarity_boost: 0.7,
+        },
       });
     });
 
-    it('should return narrator configuration (always ElevenLabs)', () => {
-      process.env.USE_SESAME = 'true';
-      const config = getVoiceConfig('narrator');
+    it("should return narrator configuration (always ElevenLabs)", () => {
+      process.env.USE_SESAME = "true";
+      const config = getVoiceConfig("narrator");
 
       expect(config).toEqual({
-        service: 'elevenlabs',
-        voiceId: 'narrator-voice-id',
+        service: "elevenlabs",
+        voiceId: "narrator-voice-id",
         settings: {
           stability: 0.7,
-          similarity_boost: 0.9
-        }
+          similarity_boost: 0.9,
+        },
       });
     });
 
-    it('should default to narrator config for unknown roles', () => {
-      const config = getVoiceConfig('unknown-role');
+    it("should default to narrator config for unknown roles", () => {
+      const config = getVoiceConfig("unknown-role");
 
       expect(config).toEqual({
-        service: 'elevenlabs',
-        voiceId: 'narrator-voice-id',
+        service: "elevenlabs",
+        voiceId: "narrator-voice-id",
         settings: {
           stability: 0.7,
-          similarity_boost: 0.9
-        }
+          similarity_boost: 0.9,
+        },
       });
     });
 
-    it('should use elevenlabs for all roles when USE_SESAME is false', () => {
-      process.env.USE_SESAME = 'false';
+    it("should use elevenlabs for all roles when USE_SESAME is false", () => {
+      process.env.USE_SESAME = "false";
 
-      const oracleConfig = getVoiceConfig('oracle');
-      const elementalConfig = getVoiceConfig('elemental');
+      const oracleConfig = getVoiceConfig("oracle");
+      const elementalConfig = getVoiceConfig("elemental");
 
-      expect(oracleConfig.service).toBe('elevenlabs');
-      expect(elementalConfig.service).toBe('elevenlabs');
+      expect(oracleConfig.service).toBe("elevenlabs");
+      expect(elementalConfig.service).toBe("elevenlabs");
     });
   });
 });

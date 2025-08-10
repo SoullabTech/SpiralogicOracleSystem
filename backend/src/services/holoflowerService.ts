@@ -1,7 +1,11 @@
-import { SacredHoloflower, HoloflowerState, HoloflowerHouse } from '../core/SacredHoloflower';
-import { supabase } from '../lib/supabaseClient';
-import { WebSocketServer } from 'ws';
-import { ElementType, PhaseType } from '../types';
+import {
+  SacredHoloflower,
+  HoloflowerState,
+  HoloflowerHouse,
+} from "../core/SacredHoloflower";
+import { supabase } from "../lib/supabaseClient";
+import { WebSocketServer } from "ws";
+import { ElementType, PhaseType } from "../types";
 
 interface UserHoloflowerState {
   userId: string;
@@ -12,7 +16,7 @@ interface UserHoloflowerState {
 
 interface TransformationEvent {
   timestamp: Date;
-  type: 'intensity' | 'transformation' | 'integration' | 'lunar';
+  type: "intensity" | "transformation" | "integration" | "lunar";
   details: any;
 }
 
@@ -38,20 +42,22 @@ export class HoloflowerService {
   private initializeWebSocketServer() {
     this.wsServer = new WebSocketServer({ port: 5002 });
 
-    this.wsServer.on('connection', (ws, req) => {
-      const userId = req.url?.split('/').pop();
+    this.wsServer.on("connection", (ws, req) => {
+      const userId = req.url?.split("/").pop();
       if (!userId) return;
 
-      ws.on('message', (message) => {
+      ws.on("message", (message) => {
         const data = JSON.parse(message.toString());
         this.handleClientMessage(userId, data);
       });
 
       const userState = this.getUserState(userId);
-      ws.send(JSON.stringify({
-        type: 'initial-state',
-        state: userState.holoflower.getState()
-      }));
+      ws.send(
+        JSON.stringify({
+          type: "initial-state",
+          state: userState.holoflower.getState(),
+        }),
+      );
     });
   }
 
@@ -59,16 +65,16 @@ export class HoloflowerService {
     const userState = this.getUserState(userId);
 
     switch (data.type) {
-      case 'update-intensity':
+      case "update-intensity":
         this.updateHouseIntensity(userId, data.houseId, data.intensity);
         break;
-      case 'activate-transformation':
+      case "activate-transformation":
         this.activateTransformation(userId, data.fromHouseId, data.toHouseId);
         break;
-      case 'integrate-aether':
+      case "integrate-aether":
         this.integrateAether(userId);
         break;
-      case 'request-group-pattern':
+      case "request-group-pattern":
         this.sendGroupPattern(data.groupId);
         break;
     }
@@ -86,18 +92,20 @@ export class HoloflowerService {
       userId,
       holoflower,
       lastUpdate: new Date(),
-      transformationHistory: []
+      transformationHistory: [],
     };
 
     this.userStates.set(userId, userState);
     return userState;
   }
 
-  private async loadUserState(userId: string): Promise<Partial<HoloflowerState> | undefined> {
+  private async loadUserState(
+    userId: string,
+  ): Promise<Partial<HoloflowerState> | undefined> {
     const { data, error } = await supabase
-      .from('holoflower_states')
-      .select('state')
-      .eq('user_id', userId)
+      .from("holoflower_states")
+      .select("state")
+      .eq("user_id", userId)
       .single();
 
     return data?.state;
@@ -107,24 +115,26 @@ export class HoloflowerService {
     const userState = await this.getUserState(userId);
     const state = userState.holoflower.getState();
 
-    await supabase
-      .from('holoflower_states')
-      .upsert({
-        user_id: userId,
-        state,
-        updated_at: new Date().toISOString()
-      });
+    await supabase.from("holoflower_states").upsert({
+      user_id: userId,
+      state,
+      updated_at: new Date().toISOString(),
+    });
   }
 
-  public async updateHouseIntensity(userId: string, houseId: string, intensity: number) {
+  public async updateHouseIntensity(
+    userId: string,
+    houseId: string,
+    intensity: number,
+  ) {
     const userState = await this.getUserState(userId);
     userState.holoflower.updateHouseIntensity(houseId, intensity);
     userState.lastUpdate = new Date();
 
     userState.transformationHistory.push({
       timestamp: new Date(),
-      type: 'intensity',
-      details: { houseId, intensity }
+      type: "intensity",
+      details: { houseId, intensity },
     });
 
     this.broadcastUpdate(userId, userState.holoflower.getState());
@@ -133,14 +143,18 @@ export class HoloflowerService {
     await this.checkForEmergentPatterns(userId);
   }
 
-  public async activateTransformation(userId: string, fromHouseId: string, toHouseId: string) {
+  public async activateTransformation(
+    userId: string,
+    fromHouseId: string,
+    toHouseId: string,
+  ) {
     const userState = await this.getUserState(userId);
     userState.holoflower.activateTransformation(fromHouseId, toHouseId);
 
     userState.transformationHistory.push({
       timestamp: new Date(),
-      type: 'transformation',
-      details: { fromHouseId, toHouseId }
+      type: "transformation",
+      details: { fromHouseId, toHouseId },
     });
 
     this.broadcastUpdate(userId, userState.holoflower.getState());
@@ -155,8 +169,10 @@ export class HoloflowerService {
 
     userState.transformationHistory.push({
       timestamp: new Date(),
-      type: 'integration',
-      details: { centerIntegration: userState.holoflower.getState().centerIntegration }
+      type: "integration",
+      details: {
+        centerIntegration: userState.holoflower.getState().centerIntegration,
+      },
     });
 
     this.broadcastUpdate(userId, userState.holoflower.getState());
@@ -167,11 +183,11 @@ export class HoloflowerService {
     if (!this.wsServer) return;
 
     const message = JSON.stringify({
-      type: 'state-update',
-      state
+      type: "state-update",
+      state,
     });
 
-    this.wsServer.clients.forEach(client => {
+    this.wsServer.clients.forEach((client) => {
       if (client.readyState === 1) {
         client.send(message);
       }
@@ -185,32 +201,35 @@ export class HoloflowerService {
     const patterns = [];
 
     const elementIntensities = new Map<ElementType, number>();
-    state.houses.forEach(house => {
+    state.houses.forEach((house) => {
       const current = elementIntensities.get(house.element) || 0;
       elementIntensities.set(house.element, current + house.intensity);
     });
 
-    const dominantElement = Array.from(elementIntensities.entries())
-      .sort((a, b) => b[1] - a[1])[0][0];
+    const dominantElement = Array.from(elementIntensities.entries()).sort(
+      (a, b) => b[1] - a[1],
+    )[0][0];
 
     if (elementIntensities.get(dominantElement)! > 2.5) {
       patterns.push(`${dominantElement}-dominant`);
     }
 
     if (state.centerIntegration > 0.8) {
-      patterns.push('high-integration');
+      patterns.push("high-integration");
     }
 
     if (state.overallBalance > 0.85) {
-      patterns.push('elemental-harmony');
+      patterns.push("elemental-harmony");
     }
 
-    const recentTransformations = userState.transformationHistory
-      .filter(t => t.type === 'transformation' &&
-        new Date().getTime() - t.timestamp.getTime() < 3600000);
+    const recentTransformations = userState.transformationHistory.filter(
+      (t) =>
+        t.type === "transformation" &&
+        new Date().getTime() - t.timestamp.getTime() < 3600000,
+    );
 
     if (recentTransformations.length > 5) {
-      patterns.push('rapid-transformation');
+      patterns.push("rapid-transformation");
     }
 
     if (patterns.length > 0) {
@@ -219,53 +238,62 @@ export class HoloflowerService {
   }
 
   private async recordEmergentPattern(userId: string, patterns: string[]) {
-    await supabase
-      .from('holoflower_patterns')
-      .insert({
-        user_id: userId,
-        patterns,
-        timestamp: new Date().toISOString()
-      });
+    await supabase.from("holoflower_patterns").insert({
+      user_id: userId,
+      patterns,
+      timestamp: new Date().toISOString(),
+    });
   }
 
-  private async logTransformationInsight(userId: string, fromHouseId: string, toHouseId: string) {
+  private async logTransformationInsight(
+    userId: string,
+    fromHouseId: string,
+    toHouseId: string,
+  ) {
     const insights = this.generateTransformationInsight(fromHouseId, toHouseId);
 
-    await supabase
-      .from('transformation_insights')
-      .insert({
-        user_id: userId,
-        from_house: fromHouseId,
-        to_house: toHouseId,
-        insight: insights,
-        timestamp: new Date().toISOString()
-      });
+    await supabase.from("transformation_insights").insert({
+      user_id: userId,
+      from_house: fromHouseId,
+      to_house: toHouseId,
+      insight: insights,
+      timestamp: new Date().toISOString(),
+    });
   }
 
-  private generateTransformationInsight(fromHouseId: string, toHouseId: string): string {
-    const [fromElement, fromPhase] = fromHouseId.split('-');
-    const [toElement, toPhase] = toHouseId.split('-');
+  private generateTransformationInsight(
+    fromHouseId: string,
+    toHouseId: string,
+  ): string {
+    const [fromElement, fromPhase] = fromHouseId.split("-");
+    const [toElement, toPhase] = toHouseId.split("-");
 
     const insights: Record<string, string> = {
-      'fire-cardinal->fire-fixed': 'Channeling initial spark into sustained will',
-      'fire-fixed->fire-mutable': 'Releasing rigid control for inspired flow',
-      'earth-cardinal->earth-fixed': 'Grounding ambition into stable foundation',
-      'earth-fixed->earth-mutable': 'Softening structure for adaptive growth',
-      'air-cardinal->air-fixed': 'Crystallizing ideas into clear concepts',
-      'air-fixed->air-mutable': 'Opening fixed thoughts to new perspectives',
-      'water-cardinal->water-fixed': 'Deepening emotional currents',
-      'water-fixed->water-mutable': 'Releasing emotional attachments for flow',
-      'fire->earth': 'Manifesting vision into form',
-      'earth->water': 'Softening material focus with feeling',
-      'water->air': 'Lifting emotions into understanding',
-      'air->fire': 'Igniting ideas with passionate action'
+      "fire-cardinal->fire-fixed":
+        "Channeling initial spark into sustained will",
+      "fire-fixed->fire-mutable": "Releasing rigid control for inspired flow",
+      "earth-cardinal->earth-fixed":
+        "Grounding ambition into stable foundation",
+      "earth-fixed->earth-mutable": "Softening structure for adaptive growth",
+      "air-cardinal->air-fixed": "Crystallizing ideas into clear concepts",
+      "air-fixed->air-mutable": "Opening fixed thoughts to new perspectives",
+      "water-cardinal->water-fixed": "Deepening emotional currents",
+      "water-fixed->water-mutable": "Releasing emotional attachments for flow",
+      "fire->earth": "Manifesting vision into form",
+      "earth->water": "Softening material focus with feeling",
+      "water->air": "Lifting emotions into understanding",
+      "air->fire": "Igniting ideas with passionate action",
     };
 
-    const key = fromElement === toElement ?
-      `${fromHouseId}->${toHouseId}` :
-      `${fromElement}->${toElement}`;
+    const key =
+      fromElement === toElement
+        ? `${fromHouseId}->${toHouseId}`
+        : `${fromElement}->${toElement}`;
 
-    return insights[key] || `Transforming ${fromElement} ${fromPhase} to ${toElement} ${toPhase}`;
+    return (
+      insights[key] ||
+      `Transforming ${fromElement} ${fromPhase} to ${toElement} ${toPhase}`
+    );
   }
 
   public async createGroupPattern(groupId: string, participantIds: string[]) {
@@ -275,48 +303,55 @@ export class HoloflowerService {
       const userState = await this.getUserState(userId);
       const state = userState.holoflower.getState();
 
-      state.houses.forEach(house => {
+      state.houses.forEach((house) => {
         const current = collectiveHouses.get(house.id) || 0;
         collectiveHouses.set(house.id, current + house.intensity);
       });
     }
 
-    const averagedHouses = Array.from(collectiveHouses.entries()).map(([id, totalIntensity]) => {
-      const house = (await this.getUserState(participantIds[0])).holoflower.getState()
-        .houses.find(h => h.id === id)!;
+    const averagedHouses = Array.from(collectiveHouses.entries()).map(
+      ([id, totalIntensity]) => {
+        const house = (await this.getUserState(participantIds[0])).holoflower
+          .getState()
+          .houses.find((h) => h.id === id)!;
 
-      return {
-        ...house,
-        intensity: totalIntensity / participantIds.length
-      };
-    });
+        return {
+          ...house,
+          intensity: totalIntensity / participantIds.length,
+        };
+      },
+    );
 
     const collectiveHoloflower = new SacredHoloflower();
-    averagedHouses.forEach(house => {
+    averagedHouses.forEach((house) => {
       collectiveHoloflower.updateHouseIntensity(house.id, house.intensity);
     });
 
     const resonancePatterns = this.calculateResonancePatterns(participantIds);
-    const emergentQualities = this.identifyEmergentQualities(collectiveHoloflower.getState());
+    const emergentQualities = this.identifyEmergentQualities(
+      collectiveHoloflower.getState(),
+    );
 
     const groupPattern: GroupPattern = {
       groupId,
       participants: participantIds,
       collectiveState: collectiveHoloflower.getState(),
       resonancePatterns,
-      emergentQualities
+      emergentQualities,
     };
 
     this.groupPatterns.set(groupId, groupPattern);
     return groupPattern;
   }
 
-  private calculateResonancePatterns(participantIds: string[]): Map<string, number> {
+  private calculateResonancePatterns(
+    participantIds: string[],
+  ): Map<string, number> {
     const resonances = new Map<string, number>();
 
-    resonances.set('harmony', Math.random() * 0.5 + 0.5);
-    resonances.set('synergy', Math.random() * 0.5 + 0.5);
-    resonances.set('coherence', Math.random() * 0.5 + 0.5);
+    resonances.set("harmony", Math.random() * 0.5 + 0.5);
+    resonances.set("synergy", Math.random() * 0.5 + 0.5);
+    resonances.set("coherence", Math.random() * 0.5 + 0.5);
 
     return resonances;
   }
@@ -325,20 +360,20 @@ export class HoloflowerService {
     const qualities = [];
 
     if (state.overallBalance > 0.8) {
-      qualities.push('Collective Harmony');
+      qualities.push("Collective Harmony");
     }
 
     if (state.centerIntegration > 0.7) {
-      qualities.push('Unified Field');
+      qualities.push("Unified Field");
     }
 
     const activeElements = state.houses
-      .filter(h => h.intensity > 0.6)
-      .map(h => h.element);
+      .filter((h) => h.intensity > 0.6)
+      .map((h) => h.element);
 
     const uniqueElements = new Set(activeElements);
     if (uniqueElements.size === 4) {
-      qualities.push('Full Spectrum Activation');
+      qualities.push("Full Spectrum Activation");
     }
 
     return qualities;
@@ -349,11 +384,11 @@ export class HoloflowerService {
     if (!pattern || !this.wsServer) return;
 
     const message = JSON.stringify({
-      type: 'group-pattern',
-      pattern
+      type: "group-pattern",
+      pattern,
     });
 
-    this.wsServer.clients.forEach(client => {
+    this.wsServer.clients.forEach((client) => {
       if (client.readyState === 1) {
         client.send(message);
       }
@@ -373,16 +408,19 @@ export class HoloflowerService {
 
   private calculateLunarPhase(): number {
     const synodicMonth = 29.53059;
-    const knownNewMoon = new Date('2024-01-11');
+    const knownNewMoon = new Date("2024-01-11");
     const now = new Date();
 
-    const daysSince = (now.getTime() - knownNewMoon.getTime()) / (1000 * 60 * 60 * 24);
+    const daysSince =
+      (now.getTime() - knownNewMoon.getTime()) / (1000 * 60 * 60 * 24);
     const phase = (daysSince % synodicMonth) / synodicMonth;
 
     return phase;
   }
 
-  public async getTransformationHistory(userId: string): Promise<TransformationEvent[]> {
+  public async getTransformationHistory(
+    userId: string,
+  ): Promise<TransformationEvent[]> {
     const userState = await this.getUserState(userId);
     return userState.transformationHistory;
   }
@@ -390,13 +428,16 @@ export class HoloflowerService {
   public async getCollectiveField(): Promise<any> {
     const allStates = Array.from(this.userStates.values());
 
-    const fieldIntensity = allStates.reduce((sum, state) =>
-      sum + state.holoflower.getState().centerIntegration, 0) / allStates.length;
+    const fieldIntensity =
+      allStates.reduce(
+        (sum, state) => sum + state.holoflower.getState().centerIntegration,
+        0,
+      ) / allStates.length;
 
     const dominantElements = new Map<ElementType, number>();
 
-    allStates.forEach(state => {
-      state.holoflower.getState().houses.forEach(house => {
+    allStates.forEach((state) => {
+      state.holoflower.getState().houses.forEach((house) => {
         const current = dominantElements.get(house.element) || 0;
         dominantElements.set(house.element, current + house.intensity);
       });
@@ -406,7 +447,7 @@ export class HoloflowerService {
       participants: allStates.length,
       fieldIntensity,
       elementalBalance: Object.fromEntries(dominantElements),
-      timestamp: new Date()
+      timestamp: new Date(),
     };
   }
 

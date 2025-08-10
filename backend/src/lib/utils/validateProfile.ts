@@ -1,4 +1,4 @@
-import { elementalProfileSchema } from '../schemas/elemental';
+import { elementalProfileSchema } from "../schemas/elemental";
 
 export function validateProfile(input: unknown) {
   const parsed = elementalProfileSchema.safeParse(input);

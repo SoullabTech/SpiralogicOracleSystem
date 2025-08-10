@@ -1,9 +1,9 @@
 // frontend/src/components/auth/ProtectedRoute.tsx
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import AuthPage from './AuthPage';
+import React from "react";
+import { motion } from "framer-motion";
+import { useAuth } from "../../contexts/AuthContext";
+import AuthPage from "./AuthPage";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   fallback,
-  requireAuth = true
+  requireAuth = true,
 }) => {
   const { user, loading } = useAuth();
 

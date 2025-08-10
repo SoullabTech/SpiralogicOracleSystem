@@ -1,25 +1,25 @@
 // lib/types/holistic.ts
 export enum HolisticDomain {
-  MIND = 'mind',
-  BODY = 'body',
-  SPIRIT = 'spirit',
-  EMOTIONS = 'emotions'
+  MIND = "mind",
+  BODY = "body",
+  SPIRIT = "spirit",
+  EMOTIONS = "emotions",
 }
 
 export enum DevelopmentStage {
-  BEGINNER = 'beginner',
-  INTERMEDIATE = 'intermediate',
-  ADVANCED = 'advanced'
+  BEGINNER = "beginner",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
 }
 
 export enum UserState {
-  STRESSED = 'stressed',
-  SEEKING_CLARITY = 'seeking_clarity',
-  DISCONNECTED = 'disconnected',
-  PHYSICAL_CONCERNS = 'physical_concerns',
-  BALANCED = 'balanced',
-  ENERGIZED = 'energized',
-  REFLECTIVE = 'reflective'
+  STRESSED = "stressed",
+  SEEKING_CLARITY = "seeking_clarity",
+  DISCONNECTED = "disconnected",
+  PHYSICAL_CONCERNS = "physical_concerns",
+  BALANCED = "balanced",
+  ENERGIZED = "energized",
+  REFLECTIVE = "reflective",
 }
 
 export interface HolisticState {
@@ -92,7 +92,7 @@ export interface DevelopmentGoal {
   description: string;
   targetDate?: Date;
   milestones: Milestone[];
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
 }
 
 export interface Milestone {

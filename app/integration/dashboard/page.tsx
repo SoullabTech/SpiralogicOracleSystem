@@ -1,18 +1,25 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { IntegrationArchitecture, IntegrationStage, SpiralProgressPoint } from '../../../lib/types/integration';
-import { IntegrationAuthService } from '../../../lib/auth/integrationAuth';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  IntegrationArchitecture,
+  IntegrationStage,
+  SpiralProgressPoint,
+} from "../../../lib/types/integration";
+import { IntegrationAuthService } from "../../../lib/auth/integrationAuth";
 
 export default function IntegrationDashboard() {
   const router = useRouter();
   const authService = new IntegrationAuthService();
 
-  const [architecture, setArchitecture] = useState<IntegrationArchitecture | null>(null);
+  const [architecture, setArchitecture] =
+    useState<IntegrationArchitecture | null>(null);
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'journey' | 'community' | 'insights'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "journey" | "community" | "insights"
+  >("overview");
 
   useEffect(() => {
     loadDashboardData();
@@ -22,14 +29,14 @@ export default function IntegrationDashboard() {
     try {
       const user = await authService.getCurrentUser();
       if (!user) {
-        router.push('/auth/signin');
+        router.push("/auth/signin");
         return;
       }
 
       // Load integration architecture and dashboard data
       const [architectureResponse, dashboardResponse] = await Promise.all([
         fetch(`/api/integration/architecture/${user.id}`),
-        fetch(`/api/integration/dashboard/${user.id}`)
+        fetch(`/api/integration/dashboard/${user.id}`),
       ]);
 
       if (architectureResponse.ok && dashboardResponse.ok) {
@@ -40,7 +47,7 @@ export default function IntegrationDashboard() {
         setDashboardData(dashboardData);
       }
     } catch (error) {
-      console.error('Dashboard loading error:', error);
+      console.error("Dashboard loading error:", error);
     } finally {
       setLoading(false);
     }
@@ -58,10 +65,14 @@ export default function IntegrationDashboard() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">Integration Architecture Not Found</h2>
-          <p className="text-gray-600 mb-6">Let's initialize your integration-centered development journey.</p>
+          <h2 className="text-xl font-semibold mb-4">
+            Integration Architecture Not Found
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Let's initialize your integration-centered development journey.
+          </p>
           <button
-            onClick={() => router.push('/auth/onboarding')}
+            onClick={() => router.push("/auth/onboarding")}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
           >
             Start Integration Journey
@@ -78,7 +89,9 @@ export default function IntegrationDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">Integration Dashboard</h1>
+              <h1 className="text-xl font-semibold text-gray-900">
+                Integration Dashboard
+              </h1>
               <p className="text-sm text-gray-600">
                 Phase: {dashboardData.integrationProgress.currentPhase}
               </p>
@@ -87,7 +100,7 @@ export default function IntegrationDashboard() {
             <div className="flex items-center space-x-4">
               <IntegrationStatusIndicator stage={architecture.currentStage} />
               <button
-                onClick={() => router.push('/profile/settings')}
+                onClick={() => router.push("/profile/settings")}
                 className="text-gray-500 hover:text-gray-700"
               >
                 Settings
@@ -102,18 +115,18 @@ export default function IntegrationDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'journey', label: 'Integration Journey' },
-              { id: 'community', label: 'Community' },
-              { id: 'insights', label: 'Spiral Insights' }
-            ].map(tab => (
+              { id: "overview", label: "Overview" },
+              { id: "journey", label: "Integration Journey" },
+              { id: "community", label: "Community" },
+              { id: "insights", label: "Spiral Insights" },
+            ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
               >
                 {tab.label}
@@ -125,7 +138,7 @@ export default function IntegrationDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {activeTab === 'overview' && (
+        {activeTab === "overview" && (
           <OverviewTab
             architecture={architecture}
             dashboardData={dashboardData}
@@ -133,21 +146,21 @@ export default function IntegrationDashboard() {
           />
         )}
 
-        {activeTab === 'journey' && (
+        {activeTab === "journey" && (
           <JourneyTab
             architecture={architecture}
             onUpdate={loadDashboardData}
           />
         )}
 
-        {activeTab === 'community' && (
+        {activeTab === "community" && (
           <CommunityTab
             architecture={architecture}
             onUpdate={loadDashboardData}
           />
         )}
 
-        {activeTab === 'insights' && (
+        {activeTab === "insights" && (
           <InsightsTab
             spiralProgress={architecture.spiralProgress}
             spiralInsights={dashboardData.spiralInsights}
@@ -158,30 +171,34 @@ export default function IntegrationDashboard() {
   );
 }
 
-const IntegrationStatusIndicator: React.FC<{ stage: IntegrationStage }> = ({ stage }) => {
+const IntegrationStatusIndicator: React.FC<{ stage: IntegrationStage }> = ({
+  stage,
+}) => {
   const getStatusInfo = (stage: IntegrationStage) => {
     switch (stage) {
-      case 'initial_insight':
-        return { color: 'bg-blue-100 text-blue-800', label: 'Exploring' };
-      case 'reflection_gap':
-        return { color: 'bg-yellow-100 text-yellow-800', label: 'Reflecting' };
-      case 'reality_application':
-        return { color: 'bg-orange-100 text-orange-800', label: 'Applying' };
-      case 'daily_integration':
-        return { color: 'bg-green-100 text-green-800', label: 'Integrating' };
-      case 'embodied_wisdom':
-        return { color: 'bg-purple-100 text-purple-800', label: 'Embodying' };
-      case 'spiral_revisit':
-        return { color: 'bg-indigo-100 text-indigo-800', label: 'Deepening' };
+      case "initial_insight":
+        return { color: "bg-blue-100 text-blue-800", label: "Exploring" };
+      case "reflection_gap":
+        return { color: "bg-yellow-100 text-yellow-800", label: "Reflecting" };
+      case "reality_application":
+        return { color: "bg-orange-100 text-orange-800", label: "Applying" };
+      case "daily_integration":
+        return { color: "bg-green-100 text-green-800", label: "Integrating" };
+      case "embodied_wisdom":
+        return { color: "bg-purple-100 text-purple-800", label: "Embodying" };
+      case "spiral_revisit":
+        return { color: "bg-indigo-100 text-indigo-800", label: "Deepening" };
       default:
-        return { color: 'bg-gray-100 text-gray-800', label: 'Unknown' };
+        return { color: "bg-gray-100 text-gray-800", label: "Unknown" };
     }
   };
 
   const statusInfo = getStatusInfo(stage);
 
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusInfo.color}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium ${statusInfo.color}`}
+    >
       {statusInfo.label}
     </span>
   );
@@ -202,7 +219,8 @@ const OverviewTab: React.FC<{
         <div className="space-y-2">
           {dashboardData.bypassingAlerts.map((alert: any, index: number) => (
             <div key={index} className="text-sm text-amber-800">
-              <strong>{alert.pattern.replace('_', ' ')}</strong>: {alert.interventionRecommended}
+              <strong>{alert.pattern.replace("_", " ")}</strong>:{" "}
+              {alert.interventionRecommended}
             </div>
           ))}
         </div>
@@ -232,9 +250,7 @@ const OverviewTab: React.FC<{
         spiralProgress={architecture.spiralProgress.slice(0, 3)}
       />
 
-      <EmbodiedWisdomSummary
-        embodiedWisdom={architecture.embodiedWisdom}
-      />
+      <EmbodiedWisdomSummary embodiedWisdom={architecture.embodiedWisdom} />
     </div>
   </div>
 );
@@ -250,7 +266,9 @@ const IntegrationProgressCard: React.FC<{
       <div>
         <div className="flex justify-between text-sm text-gray-600 mb-1">
           <span>Integration Gates</span>
-          <span>{progress.gatesUnlocked} / {progress.totalGates}</span>
+          <span>
+            {progress.gatesUnlocked} / {progress.totalGates}
+          </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
@@ -279,11 +297,17 @@ const IntegrationProgressCard: React.FC<{
       {/* Consistency Celebrations */}
       {consistencyMetrics.celebrations.length > 0 && (
         <div className="bg-green-50 rounded-lg p-4">
-          <h4 className="font-medium text-green-900 mb-2">🌱 Celebrating Your Consistency</h4>
+          <h4 className="font-medium text-green-900 mb-2">
+            🌱 Celebrating Your Consistency
+          </h4>
           <div className="space-y-1">
-            {consistencyMetrics.celebrations.slice(0, 2).map((celebration: string, index: number) => (
-              <p key={index} className="text-sm text-green-800">{celebration}</p>
-            ))}
+            {consistencyMetrics.celebrations
+              .slice(0, 2)
+              .map((celebration: string, index: number) => (
+                <p key={index} className="text-sm text-green-800">
+                  {celebration}
+                </p>
+              ))}
           </div>
         </div>
       )}
@@ -291,11 +315,17 @@ const IntegrationProgressCard: React.FC<{
       {/* Reality Checks */}
       {consistencyMetrics.realityChecks.length > 0 && (
         <div className="bg-blue-50 rounded-lg p-4">
-          <h4 className="font-medium text-blue-900 mb-2">💫 Gentle Reminders</h4>
+          <h4 className="font-medium text-blue-900 mb-2">
+            💫 Gentle Reminders
+          </h4>
           <div className="space-y-1">
-            {consistencyMetrics.realityChecks.slice(0, 1).map((check: string, index: number) => (
-              <p key={index} className="text-sm text-blue-800">{check}</p>
-            ))}
+            {consistencyMetrics.realityChecks
+              .slice(0, 1)
+              .map((check: string, index: number) => (
+                <p key={index} className="text-sm text-blue-800">
+                  {check}
+                </p>
+              ))}
           </div>
         </div>
       )}
@@ -314,7 +344,9 @@ const NextActionsCard: React.FC<{
       {actions.map((action, index) => (
         <div key={index} className="flex items-start space-x-3">
           <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-            <span className="text-xs font-medium text-blue-600">{index + 1}</span>
+            <span className="text-xs font-medium text-blue-600">
+              {index + 1}
+            </span>
           </div>
           <p className="text-sm text-gray-700">{action}</p>
         </div>
@@ -342,13 +374,16 @@ const RecentSpiralProgress: React.FC<{
           <div key={progress.id} className="border-l-4 border-blue-200 pl-4">
             <div className="flex items-center justify-between mb-1">
               <h4 className="font-medium text-gray-900">{progress.theme}</h4>
-              <span className="text-xs text-gray-500">Depth {progress.depth}</span>
+              <span className="text-xs text-gray-500">
+                Depth {progress.depth}
+              </span>
             </div>
             <p className="text-sm text-gray-600 mb-2">{progress.phase}</p>
             {progress.realWorldApplication.length > 0 && (
               <p className="text-xs text-gray-500">
-                Applications: {progress.realWorldApplication.slice(0, 2).join(', ')}
-                {progress.realWorldApplication.length > 2 && '...'}
+                Applications:{" "}
+                {progress.realWorldApplication.slice(0, 2).join(", ")}
+                {progress.realWorldApplication.length > 2 && "..."}
               </p>
             )}
           </div>
@@ -356,7 +391,8 @@ const RecentSpiralProgress: React.FC<{
       </div>
     ) : (
       <p className="text-gray-500 text-sm">
-        No spiral progress recorded yet. Start by reflecting on a recent insight or challenge.
+        No spiral progress recorded yet. Start by reflecting on a recent insight
+        or challenge.
       </p>
     )}
   </div>

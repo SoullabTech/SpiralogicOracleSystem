@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { HoloflowerVisualization } from './HoloflowerVisualization';
-import { motion } from 'framer-motion';
-import * as d3 from 'd3';
+import React, { useEffect, useState } from "react";
+import { HoloflowerVisualization } from "./HoloflowerVisualization";
+import { motion } from "framer-motion";
+import * as d3 from "d3";
 
 interface GroupHoloflowerVisualizationProps {
   groupId: string;
@@ -18,29 +18,37 @@ interface GroupPattern {
   emergentQualities: string[];
 }
 
-export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualizationProps> = ({
+export const GroupHoloflowerVisualization: React.FC<
+  GroupHoloflowerVisualizationProps
+> = ({
   groupId,
   participantIds,
   showIndividuals = true,
-  showResonance = true
+  showResonance = true,
 }) => {
   const [groupPattern, setGroupPattern] = useState<GroupPattern | null>(null);
-  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null);
-  const [resonanceView, setResonanceView] = useState<'grid' | 'circle' | 'spiral'>('circle');
+  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(
+    null,
+  );
+  const [resonanceView, setResonanceView] = useState<
+    "grid" | "circle" | "spiral"
+  >("circle");
 
   useEffect(() => {
     const ws = new WebSocket(`ws://localhost:5002`);
 
     ws.onopen = () => {
-      ws.send(JSON.stringify({
-        type: 'request-group-pattern',
-        groupId
-      }));
+      ws.send(
+        JSON.stringify({
+          type: "request-group-pattern",
+          groupId,
+        }),
+      );
     };
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.type === 'group-pattern' && data.pattern.groupId === groupId) {
+      if (data.type === "group-pattern" && data.pattern.groupId === groupId) {
         setGroupPattern(data.pattern);
       }
     };
@@ -64,16 +72,16 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
               key={userId}
               className="participant-cell"
               style={{
-                position: 'absolute',
+                position: "absolute",
                 left: col * (cellSize + 20),
                 top: row * (cellSize + 20),
                 width: cellSize,
-                height: cellSize
+                height: cellSize,
               }}
               initial={{ scale: 0, opacity: 0 }}
               animate={{
                 scale: isSelected ? 1.1 : 0.3,
-                opacity: isSelected ? 1 : 0.6
+                opacity: isSelected ? 1 : 0.6,
               }}
               whileHover={{ scale: 0.35 }}
               onClick={() => setSelectedParticipant(userId)}
@@ -83,9 +91,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
                 realTimeUpdates={true}
                 onStateChange={() => {}}
               />
-              <div className="participant-label">
-                Participant {index + 1}
-              </div>
+              <div className="participant-label">Participant {index + 1}</div>
             </motion.div>
           );
         })}
@@ -131,9 +137,9 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
                 y={-60}
                 width={120}
                 height={120}
-                style={{ overflow: 'visible' }}
+                style={{ overflow: "visible" }}
               >
-                <div style={{ transform: 'scale(0.15)' }}>
+                <div style={{ transform: "scale(0.15)" }}>
                   <HoloflowerVisualization
                     userId={userId}
                     realTimeUpdates={true}
@@ -146,14 +152,24 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
                 <motion.line
                   x1={0}
                   y1={0}
-                  x2={Math.cos(angle + 2 * Math.PI / participantIds.length) * radius}
-                  y2={Math.sin(angle + 2 * Math.PI / participantIds.length) * radius}
+                  x2={
+                    Math.cos(angle + (2 * Math.PI) / participantIds.length) *
+                    radius
+                  }
+                  y2={
+                    Math.sin(angle + (2 * Math.PI) / participantIds.length) *
+                    radius
+                  }
                   stroke="#FFD700"
                   strokeWidth={2}
                   strokeOpacity={0.3}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
                 />
               )}
             </g>
@@ -166,8 +182,20 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
               <h3>Collective Field</h3>
               {groupPattern && (
                 <div className="field-metrics">
-                  <div>Integration: {Math.round(groupPattern.collectiveState.centerIntegration * 100)}%</div>
-                  <div>Balance: {Math.round(groupPattern.collectiveState.overallBalance * 100)}%</div>
+                  <div>
+                    Integration:{" "}
+                    {Math.round(
+                      groupPattern.collectiveState.centerIntegration * 100,
+                    )}
+                    %
+                  </div>
+                  <div>
+                    Balance:{" "}
+                    {Math.round(
+                      groupPattern.collectiveState.overallBalance * 100,
+                    )}
+                    %
+                  </div>
                 </div>
               )}
             </div>
@@ -205,7 +233,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
                 y={-60 * scale}
                 width={120 * scale}
                 height={120 * scale}
-                style={{ overflow: 'visible' }}
+                style={{ overflow: "visible" }}
               >
                 <div style={{ transform: `scale(${scale * 0.15})` }}>
                   <HoloflowerVisualization
@@ -220,7 +248,12 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
         })}
 
         <motion.path
-          d={generateSpiralPath(centerX, centerY, spiralTurns, participantIds.length)}
+          d={generateSpiralPath(
+            centerX,
+            centerY,
+            spiralTurns,
+            participantIds.length,
+          )}
           fill="none"
           stroke="#FFD700"
           strokeWidth={2}
@@ -233,7 +266,12 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
     );
   };
 
-  const generateSpiralPath = (cx: number, cy: number, turns: number, points: number): string => {
+  const generateSpiralPath = (
+    cx: number,
+    cy: number,
+    turns: number,
+    points: number,
+  ): string => {
     const path = [];
     for (let i = 0; i <= points; i++) {
       const t = i / points;
@@ -248,7 +286,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
         path.push(`L ${x} ${y}`);
       }
     }
-    return path.join(' ');
+    return path.join(" ");
   };
 
   const renderResonanceMetrics = () => {
@@ -258,21 +296,23 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
       <div className="resonance-metrics">
         <h3>Collective Resonance</h3>
         <div className="metrics-grid">
-          {Array.from(groupPattern.resonancePatterns.entries()).map(([key, value]) => (
-            <div key={key} className="metric">
-              <div className="metric-label">{key}</div>
-              <div className="metric-bar">
-                <motion.div
-                  className="metric-fill"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${value * 100}%` }}
-                  transition={{ duration: 1 }}
-                  style={{ backgroundColor: getColorForMetric(key) }}
-                />
+          {Array.from(groupPattern.resonancePatterns.entries()).map(
+            ([key, value]) => (
+              <div key={key} className="metric">
+                <div className="metric-label">{key}</div>
+                <div className="metric-bar">
+                  <motion.div
+                    className="metric-fill"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${value * 100}%` }}
+                    transition={{ duration: 1 }}
+                    style={{ backgroundColor: getColorForMetric(key) }}
+                  />
+                </div>
+                <div className="metric-value">{Math.round(value * 100)}%</div>
               </div>
-              <div className="metric-value">{Math.round(value * 100)}%</div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
 
         {groupPattern.emergentQualities.length > 0 && (
@@ -299,40 +339,40 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
 
   const getColorForMetric = (metric: string): string => {
     const colors: Record<string, string> = {
-      harmony: '#87CEEB',
-      synergy: '#FFD700',
-      coherence: '#FF6B6B'
+      harmony: "#87CEEB",
+      synergy: "#FFD700",
+      coherence: "#FF6B6B",
     };
-    return colors[metric] || '#FFFFFF';
+    return colors[metric] || "#FFFFFF";
   };
 
   return (
     <div className="group-holoflower-container">
       <div className="view-controls">
         <button
-          className={resonanceView === 'grid' ? 'active' : ''}
-          onClick={() => setResonanceView('grid')}
+          className={resonanceView === "grid" ? "active" : ""}
+          onClick={() => setResonanceView("grid")}
         >
           Grid View
         </button>
         <button
-          className={resonanceView === 'circle' ? 'active' : ''}
-          onClick={() => setResonanceView('circle')}
+          className={resonanceView === "circle" ? "active" : ""}
+          onClick={() => setResonanceView("circle")}
         >
           Circle View
         </button>
         <button
-          className={resonanceView === 'spiral' ? 'active' : ''}
-          onClick={() => setResonanceView('spiral')}
+          className={resonanceView === "spiral" ? "active" : ""}
+          onClick={() => setResonanceView("spiral")}
         >
           Spiral View
         </button>
       </div>
 
       <div className="visualization-area">
-        {resonanceView === 'grid' && renderParticipantGrid()}
-        {resonanceView === 'circle' && renderCircularArrangement()}
-        {resonanceView === 'spiral' && renderSpiralArrangement()}
+        {resonanceView === "grid" && renderParticipantGrid()}
+        {resonanceView === "circle" && renderCircularArrangement()}
+        {resonanceView === "spiral" && renderSpiralArrangement()}
       </div>
 
       {renderResonanceMetrics()}
@@ -357,8 +397,8 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
         .view-controls button {
           padding: 10px 20px;
           background: #2a2a3e;
-          border: 1px solid #FFD700;
-          color: #FFD700;
+          border: 1px solid #ffd700;
+          color: #ffd700;
           border-radius: 4px;
           cursor: pointer;
           transition: all 0.3s;
@@ -392,7 +432,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           text-align: center;
           margin-top: 5px;
           font-size: 12px;
-          color: #FFD700;
+          color: #ffd700;
         }
 
         .collective-center {
@@ -404,13 +444,13 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           height: 200px;
           background: rgba(42, 42, 62, 0.9);
           border-radius: 50%;
-          border: 2px solid #FFD700;
+          border: 2px solid #ffd700;
           text-align: center;
         }
 
         .collective-center h3 {
           margin: 0 0 10px 0;
-          color: #FFD700;
+          color: #ffd700;
           font-size: 16px;
         }
 
@@ -425,12 +465,12 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
           background: rgba(42, 42, 62, 0.9);
           padding: 20px;
           border-radius: 8px;
-          border: 1px solid #FFD700;
+          border: 1px solid #ffd700;
         }
 
         .resonance-metrics h3 {
           margin: 0 0 20px 0;
-          color: #FFD700;
+          color: #ffd700;
           text-align: center;
         }
 
@@ -472,7 +512,7 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
 
         .emergent-qualities h4 {
           margin: 0 0 10px 0;
-          color: #FFD700;
+          color: #ffd700;
         }
 
         .qualities-list {
@@ -484,10 +524,10 @@ export const GroupHoloflowerVisualization: React.FC<GroupHoloflowerVisualization
         .quality-badge {
           padding: 5px 15px;
           background: #3a3a4e;
-          border: 1px solid #FFD700;
+          border: 1px solid #ffd700;
           border-radius: 20px;
           font-size: 14px;
-          color: #FFD700;
+          color: #ffd700;
         }
       `}</style>
     </div>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface UserConfig {
   oracleName: string;
@@ -13,7 +13,10 @@ interface CoreDashboardProps {
   onNavigate: (route: string) => void;
 }
 
-const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate }) => {
+const CoreDashboard: React.FC<CoreDashboardProps> = ({
+  userConfig,
+  onNavigate,
+}) => {
   const [spiralogicPattern, setSpiralogicPattern] = useState<number[]>([]);
 
   // Generate phi-based spiral pattern for background
@@ -27,59 +30,59 @@ const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate })
 
   const coreModules = [
     {
-      id: 'oracle',
-      title: 'Personal Oracle',
-      subtitle: userConfig.oracleName || 'Configure Guide',
-      icon: '🧬',
-      route: '/oracle',
-      description: 'Voice-guided insight interface',
-      priority: 'primary'
+      id: "oracle",
+      title: "Personal Oracle",
+      subtitle: userConfig.oracleName || "Configure Guide",
+      icon: "🧬",
+      route: "/oracle",
+      description: "Voice-guided insight interface",
+      priority: "primary",
     },
     {
-      id: 'holoflower',
-      title: 'Holoflower Check-In',
-      subtitle: 'Elemental state mapping',
-      icon: '🌸',
-      route: '/holoflower',
-      description: 'Current coherence snapshot',
-      priority: 'primary'
+      id: "holoflower",
+      title: "Holoflower Check-In",
+      subtitle: "Elemental state mapping",
+      icon: "🌸",
+      route: "/holoflower",
+      description: "Current coherence snapshot",
+      priority: "primary",
     },
     {
-      id: 'memory',
-      title: 'Memory Portal',
-      subtitle: 'Insight threading & journal',
-      icon: '📝',
-      route: '/memory',
-      description: 'Pattern recognition system',
-      priority: 'primary'
+      id: "memory",
+      title: "Memory Portal",
+      subtitle: "Insight threading & journal",
+      icon: "📝",
+      route: "/memory",
+      description: "Pattern recognition system",
+      priority: "primary",
     },
     {
-      id: 'astrology',
-      title: 'Spiralogic Astrology',
-      subtitle: 'Elemental timing intelligence',
-      icon: '🧭',
-      route: '/astrology',
-      description: 'Powered by Spiralogic™',
-      priority: 'primary'
+      id: "astrology",
+      title: "Spiralogic Astrology",
+      subtitle: "Elemental timing intelligence",
+      icon: "🧭",
+      route: "/astrology",
+      description: "Powered by Spiralogic™",
+      priority: "primary",
     },
     {
-      id: 'agents',
-      title: 'Archetypal Agents',
-      subtitle: 'Developmental companions',
-      icon: '🤝',
-      route: '/agents',
-      description: 'Process-specific guidance',
-      priority: 'secondary'
+      id: "agents",
+      title: "Archetypal Agents",
+      subtitle: "Developmental companions",
+      icon: "🤝",
+      route: "/agents",
+      description: "Process-specific guidance",
+      priority: "secondary",
     },
     {
-      id: 'expansion',
-      title: 'Build With Spiralogic',
-      subtitle: 'Integration & licensing',
-      icon: '🌐',
-      route: '/expansion',
-      description: 'For creators & organizations',
-      priority: 'secondary'
-    }
+      id: "expansion",
+      title: "Build With Spiralogic",
+      subtitle: "Integration & licensing",
+      icon: "🌐",
+      route: "/expansion",
+      description: "For creators & organizations",
+      priority: "secondary",
+    },
   ];
 
   return (
@@ -88,15 +91,24 @@ const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate })
       <div className="absolute inset-0 opacity-5">
         <svg width="100%" height="100%" className="absolute inset-0">
           <defs>
-            <pattern id="spiralogic" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+            <pattern
+              id="spiralogic"
+              x="0"
+              y="0"
+              width="200"
+              height="200"
+              patternUnits="userSpaceOnUse"
+            >
               <path
-                d={`M 100 100 ${spiralogicPattern.map((val, i) => {
-                  const angle = (i * 30) * Math.PI / 180;
-                  const radius = 20 + Math.abs(val);
-                  const x = 100 + radius * Math.cos(angle);
-                  const y = 100 + radius * Math.sin(angle);
-                  return `L ${x} ${y}`;
-                }).join(' ')}`}
+                d={`M 100 100 ${spiralogicPattern
+                  .map((val, i) => {
+                    const angle = (i * 30 * Math.PI) / 180;
+                    const radius = 20 + Math.abs(val);
+                    const x = 100 + radius * Math.cos(angle);
+                    const y = 100 + radius * Math.sin(angle);
+                    return `L ${x} ${y}`;
+                  })
+                  .join(" ")}`}
                 stroke="#d4af37"
                 strokeWidth="1"
                 fill="none"
@@ -131,7 +143,9 @@ const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate })
             {/* Coherence Indicator */}
             {userConfig.coherenceLevel && (
               <div className="text-right">
-                <div className="text-slate-400 text-sm mb-1">Current Coherence</div>
+                <div className="text-slate-400 text-sm mb-1">
+                  Current Coherence
+                </div>
                 <div className="text-2xl font-light text-amber-100">
                   {userConfig.coherenceLevel}%
                 </div>
@@ -155,13 +169,15 @@ const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate })
                   duration: 0.618,
                   delay: index * 0.1,
                   type: "spring",
-                  stiffness: 100
+                  stiffness: 100,
                 }}
                 className={`
                   group cursor-pointer p-6 bg-slate-800/60 backdrop-blur-sm border transition-all duration-300
-                  ${module.priority === 'primary'
-                    ? 'border-slate-600 hover:border-amber-500 hover:bg-slate-800/80'
-                    : 'border-slate-700 hover:border-slate-500 hover:bg-slate-800/70'}
+                  ${
+                    module.priority === "primary"
+                      ? "border-slate-600 hover:border-amber-500 hover:bg-slate-800/80"
+                      : "border-slate-700 hover:border-slate-500 hover:bg-slate-800/70"
+                  }
                 `}
                 onClick={() => onNavigate(module.route)}
               >
@@ -169,7 +185,7 @@ const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate })
                   <div className="text-4xl group-hover:scale-110 transition-transform duration-300">
                     {module.icon}
                   </div>
-                  {module.id === 'astrology' && (
+                  {module.id === "astrology" && (
                     <div className="text-xs text-amber-400 font-medium px-2 py-1 bg-amber-400/10 border border-amber-400/20">
                       SPIRALOGIC™
                     </div>
@@ -201,10 +217,12 @@ const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate })
         >
           <div className="text-center text-slate-500 text-sm">
             <p className="mb-2">
-              Built on Jungian archetypal frameworks and elemental developmental psychology
+              Built on Jungian archetypal frameworks and elemental developmental
+              psychology
             </p>
             <p>
-              This is not AI mysticism—it's consciousness engineering for rational seekers
+              This is not AI mysticism—it's consciousness engineering for
+              rational seekers
             </p>
           </div>
         </motion.div>

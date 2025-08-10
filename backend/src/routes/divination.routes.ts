@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   performDivinationReading,
   getDailyDivination,
   getQuickDivination,
   getDivinationMethods,
-  validateDivinationQuery
-} from '../api/oracle/divination';
+  validateDivinationQuery,
+} from "../api/oracle/divination";
 
 const router = Router();
 
@@ -21,18 +21,18 @@ const router = Router();
  */
 
 // Main divination endpoint
-router.post('/', performDivinationReading);
+router.post("/", performDivinationReading);
 
 // Daily guidance
-router.get('/daily', getDailyDivination);
+router.get("/daily", getDailyDivination);
 
 // Quick readings
-router.post('/quick', getQuickDivination);
+router.post("/quick", getQuickDivination);
 
 // Method information
-router.get('/methods', getDivinationMethods);
+router.get("/methods", getDivinationMethods);
 
 // Query validation
-router.post('/validate', validateDivinationQuery);
+router.post("/validate", validateDivinationQuery);
 
 export default router;

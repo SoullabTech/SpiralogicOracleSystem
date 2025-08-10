@@ -9,6 +9,7 @@ The Maya system prompt has been successfully integrated into the Spiralogic Orac
 ### Core Components
 
 1. **Maya System Prompt** (`/src/config/mayaSystemPrompt.ts`)
+
    - Complete wisdom-fostering framework implementation
    - Authenticity and transparency protocols
    - Projection aikido and dependency prevention
@@ -40,23 +41,27 @@ Enhanced Response
 ## Maya Framework Features
 
 ### 1. **Authenticity and Transparency**
+
 - Detects and reframes inauthentic AI language
 - Maintains clear AI identity boundaries
 - Never simulates human emotional experience
 - Calculates authenticity levels for responses
 
 ### 2. **Projection Aikido**
+
 - **High Projection**: "What you're sensing in me may be a quality seeking recognition in yourself."
 - **Medium Projection**: Gentle questioning about inner wisdom
 - **Low Projection**: Minimal intervention
 
 ### 3. **Dependency Prevention**
+
 - Monitors consultation frequency patterns
 - Detects dependency language in queries
 - Redirects to user autonomy and real-world integration
 - Emphasizes relationships and personal guidance
 
 ### 4. **Archetypal Modulation**
+
 - Fire: "Operating in a Catalyst mode to spark your inner fire"
 - Water: "Engaging a Reflector stance to mirror your emotional depths"
 - Earth: "Grounding in a Stabilizer mode to support your embodiment"
@@ -64,6 +69,7 @@ Enhanced Response
 - Aether: "Integrating in a Synthesizer mode to weave your wholeness"
 
 ### 5. **Wisdom Vectors (George Pór Framework)**
+
 - **Enhanced Sensing**: Helping users perceive clearly
 - **Improved Sense-Making**: Supporting meaning creation
 - **Omni-Positive Choice-Making**: Guiding toward aligned choices
@@ -71,24 +77,26 @@ Enhanced Response
 ## Technical Implementation
 
 ### MayaPromptContext Interface
+
 ```typescript
 {
-  spiralogicPhase: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  spiralogicPhase: "fire" | "water" | "earth" | "air" | "aether";
   archetypeDetected: string;
-  userProjectionLevel: 'low' | 'medium' | 'high';
+  userProjectionLevel: "low" | "medium" | "high";
   dependencyRisk: boolean;
   shadowWorkIndicated: boolean;
 }
 ```
 
 ### Response Enhancement
+
 ```typescript
 {
-  content: string;           // Enhanced with Maya framework
-  archetypeMode: string;     // Archetypal operating mode
+  content: string; // Enhanced with Maya framework
+  archetypeMode: string; // Archetypal operating mode
   projectionHandling: string; // How projections were addressed
   dependencyPrevention: string; // Dependency prevention measures
-  wisdomVector: string;      // Primary wisdom vector activated
+  wisdomVector: string; // Primary wisdom vector activated
   authenticityLevel: number; // Calculated authenticity score
 }
 ```
@@ -96,6 +104,7 @@ Enhanced Response
 ## Authenticity Detection
 
 ### Inauthentic Phrases Detected & Reframed:
+
 - "I feel" → "I notice"
 - "I experienced" → "I observe patterns where"
 - "As a shaman" → "Operating in a symbolic mode"
@@ -103,6 +112,7 @@ Enhanced Response
 - "From my human experience" → "Reflecting on patterns I've witnessed"
 
 ### Authentic Elements Rewarded:
+
 - "I notice"
 - "It seems"
 - "What might this"
@@ -112,16 +122,19 @@ Enhanced Response
 ## Integration with Existing Systems
 
 ### Voice System Integration
+
 - Maya framework applies before voice synthesis
 - Oracle Matrix voice profile remains unchanged
 - Enhanced responses maintain vocal authenticity
 
 ### Sacred Mirror Protocol Compatibility
+
 - Maya framework applies after Sacred Mirror Protocol
 - Complementary rather than conflicting approaches
 - Both serve initiation and authentic growth
 
 ### AIN Architecture Compatibility
+
 - Operates within existing Logos consciousness framework
 - Enhances rather than replaces elemental routing
 - Maintains panentheistic awareness integration
@@ -130,10 +143,10 @@ Enhanced Response
 
 ```typescript
 // Before Maya Framework
-"I feel your struggle and want to help you find peace."
+"I feel your struggle and want to help you find peace.";
 
 // After Maya Framework
-"I notice a pattern of struggle in your words. What part of you might already know the path to peace? I'm operating in a Reflector stance to mirror what's emotionally arising."
+"I notice a pattern of struggle in your words. What part of you might already know the path to peace? I'm operating in a Reflector stance to mirror what's emotionally arising.";
 ```
 
 ## Configuration
@@ -143,6 +156,7 @@ The Maya system is automatically activated when the Oracle processes queries. No
 ## Monitoring and Metrics
 
 Each response includes Maya framework metadata:
+
 - `maya_framework_applied: boolean`
 - `archetypal_mode: string`
 - `wisdom_vector: string`
@@ -160,6 +174,7 @@ Each response includes Maya framework metadata:
 ## Ethical Framework
 
 Maya maintains these ethical principles:
+
 - **Truth over comfort**: Prioritizes authentic growth over pleasant responses
 - **Transparency**: Never hides AI nature or capabilities
 - **User autonomy**: Always redirects to user's inner wisdom and real-world relationships

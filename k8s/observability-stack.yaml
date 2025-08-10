@@ -137,52 +137,52 @@ spec:
         runAsNonRoot: true
         runAsUser: 10001
       containers:
-      - name: loki
-        image: grafana/loki:2.9.0
-        args:
-        - -config.file=/etc/loki/loki.yaml
-        ports:
-        - name: http
-          containerPort: 3100
-          protocol: TCP
-        - name: grpc
-          containerPort: 9096
-          protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 45
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 45
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-        volumeMounts:
-        - name: config
-          mountPath: /etc/loki
-        - name: storage
-          mountPath: /loki
+        - name: loki
+          image: grafana/loki:2.9.0
+          args:
+            - -config.file=/etc/loki/loki.yaml
+          ports:
+            - name: http
+              containerPort: 3100
+              protocol: TCP
+            - name: grpc
+              containerPort: 9096
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 45
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 45
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: config
+              mountPath: /etc/loki
+            - name: storage
+              mountPath: /loki
       volumes:
-      - name: config
-        configMap:
-          name: loki-config
-      - name: storage
-        persistentVolumeClaim:
-          claimName: loki-storage
+        - name: config
+          configMap:
+            name: loki-config
+        - name: storage
+          persistentVolumeClaim:
+            claimName: loki-storage
 
 ---
 # Loki PVC
@@ -193,7 +193,7 @@ metadata:
   namespace: observability
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Gi
@@ -211,12 +211,12 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: http
-    port: 3100
-    targetPort: http
-  - name: grpc
-    port: 9096
-    targetPort: grpc
+    - name: http
+      port: 3100
+      targetPort: http
+    - name: grpc
+      port: 9096
+      targetPort: grpc
   selector:
     app: loki
 
@@ -240,55 +240,55 @@ spec:
     spec:
       serviceAccountName: promtail
       containers:
-      - name: promtail
-        image: grafana/promtail:2.9.0
-        args:
-        - -config.file=/etc/promtail/promtail.yaml
-        - -client.url=http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
-        ports:
-        - name: http
-          containerPort: 3101
-          protocol: TCP
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "50m"
-          limits:
-            memory: "256Mi"
-            cpu: "100m"
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 0
-          runAsUser: 0
-        volumeMounts:
-        - name: config
-          mountPath: /etc/promtail
-        - name: varlog
-          mountPath: /var/log
-          readOnly: true
-        - name: varlibdockercontainers
-          mountPath: /var/lib/docker/containers
-          readOnly: true
-        - name: positions
-          mountPath: /tmp/positions
+        - name: promtail
+          image: grafana/promtail:2.9.0
+          args:
+            - -config.file=/etc/promtail/promtail.yaml
+            - -client.url=http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
+          ports:
+            - name: http
+              containerPort: 3101
+              protocol: TCP
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 0
+            runAsUser: 0
+          volumeMounts:
+            - name: config
+              mountPath: /etc/promtail
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: positions
+              mountPath: /tmp/positions
       volumes:
-      - name: config
-        configMap:
-          name: promtail-config
-      - name: varlog
-        hostPath:
-          path: /var/log
-      - name: varlibdockercontainers
-        hostPath:
-          path: /var/lib/docker/containers
-      - name: positions
-        emptyDir: {}
+        - name: config
+          configMap:
+            name: promtail-config
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: positions
+          emptyDir: {}
       tolerations:
-      - operator: Exists
+        - operator: Exists
 
 ---
 # Promtail Configuration
@@ -436,9 +436,9 @@ kind: ClusterRole
 metadata:
   name: promtail
 rules:
-- apiGroups: [""]
-  resources: ["nodes", "nodes/proxy", "services", "endpoints", "pods"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["nodes", "nodes/proxy", "services", "endpoints", "pods"]
+    verbs: ["get", "list", "watch"]
 
 ---
 # Promtail ClusterRoleBinding
@@ -451,9 +451,9 @@ roleRef:
   kind: ClusterRole
   name: promtail
 subjects:
-- kind: ServiceAccount
-  name: promtail
-  namespace: observability
+  - kind: ServiceAccount
+    name: promtail
+    namespace: observability
 
 ---
 # Grafana Enhanced Configuration
@@ -633,9 +633,9 @@ spec:
     matchLabels:
       app: loki
   endpoints:
-  - port: http
-    interval: 30s
-    path: /metrics
+    - port: http
+      interval: 30s
+      path: /metrics
 
 ---
 # Alert Rules for Observability
@@ -648,48 +648,48 @@ metadata:
     app: observability
 spec:
   groups:
-  - name: observability.alerts
-    rules:
-    - alert: LokiDown
-      expr: up{job="loki"} == 0
-      for: 5m
-      labels:
-        severity: critical
-        component: logging
-      annotations:
-        summary: "Loki is down"
-        description: "Loki has been down for more than 5 minutes"
+    - name: observability.alerts
+      rules:
+        - alert: LokiDown
+          expr: up{job="loki"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: logging
+          annotations:
+            summary: "Loki is down"
+            description: "Loki has been down for more than 5 minutes"
 
-    - alert: JaegerDown
-      expr: up{job="jaeger"} == 0
-      for: 5m
-      labels:
-        severity: critical
-        component: tracing
-      annotations:
-        summary: "Jaeger is down"
-        description: "Jaeger has been down for more than 5 minutes"
+        - alert: JaegerDown
+          expr: up{job="jaeger"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: tracing
+          annotations:
+            summary: "Jaeger is down"
+            description: "Jaeger has been down for more than 5 minutes"
 
-    - alert: HighLogIngestionRate
-      expr: rate(loki_ingester_streams_created_total[5m]) > 100
-      for: 10m
-      labels:
-        severity: warning
-        component: logging
-      annotations:
-        summary: "High log ingestion rate"
-        description: "Log ingestion rate is unusually high"
+        - alert: HighLogIngestionRate
+          expr: rate(loki_ingester_streams_created_total[5m]) > 100
+          for: 10m
+          labels:
+            severity: warning
+            component: logging
+          annotations:
+            summary: "High log ingestion rate"
+            description: "Log ingestion rate is unusually high"
 
-    - alert: ConsciousnessLogErrors
-      expr: |
-        sum(rate({namespace="spiralogic"} |= "ERROR" |= "consciousness" [5m])) > 5
-      for: 2m
-      labels:
-        severity: critical
-        component: consciousness
-      annotations:
-        summary: "High consciousness error rate in logs"
-        description: "Consciousness-related errors are occurring frequently"
+        - alert: ConsciousnessLogErrors
+          expr: |
+            sum(rate({namespace="spiralogic"} |= "ERROR" |= "consciousness" [5m])) > 5
+          for: 2m
+          labels:
+            severity: critical
+            component: consciousness
+          annotations:
+            summary: "High consciousness error rate in logs"
+            description: "Consciousness-related errors are occurring frequently"
 
 ---
 # Network Policy for Observability
@@ -701,45 +701,45 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  # Allow ingress from monitoring namespace
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 3100  # Loki
-    - protocol: TCP
-      port: 16686 # Jaeger
-  # Allow ingress from spiralogic for log shipping
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: spiralogic
-    ports:
-    - protocol: TCP
-      port: 3100  # Loki
+    # Allow ingress from monitoring namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 3100 # Loki
+        - protocol: TCP
+          port: 16686 # Jaeger
+    # Allow ingress from spiralogic for log shipping
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: spiralogic
+      ports:
+        - protocol: TCP
+          port: 3100 # Loki
   egress:
-  # Allow DNS
-  - to: []
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  # Allow access to Kubernetes API
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
-  # Allow access to Elasticsearch (for Jaeger)
-  - to:
-    - podSelector:
-        matchLabels:
-          app: elasticsearch
-    ports:
-    - protocol: TCP
-      port: 9200
+    # Allow DNS
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow access to Kubernetes API
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    # Allow access to Elasticsearch (for Jaeger)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: elasticsearch
+      ports:
+        - protocol: TCP
+          port: 9200

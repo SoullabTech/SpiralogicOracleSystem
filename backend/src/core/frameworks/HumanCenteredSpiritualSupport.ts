@@ -7,29 +7,29 @@
  */
 
 export interface SpiritualSupportGuidelines {
-  role: 'facilitator' | 'organizer' | 'reflection_tool';
+  role: "facilitator" | "organizer" | "reflection_tool";
   boundaries: string[];
   userAgencyPrinciples: string[];
 }
 
 export const SPIRITUAL_SUPPORT_FRAMEWORK: SpiritualSupportGuidelines = {
-  role: 'facilitator',
+  role: "facilitator",
   boundaries: [
-    'AI never claims to sense, feel, or perceive spiritual energies',
-    'AI never channels messages or speaks for spiritual entities',
-    'AI never makes predictions about spiritual or life events',
-    'AI never claims to have consciousness or spiritual awareness',
-    'AI attributes all insights and experiences to the user',
-    'AI provides frameworks and prompts, not spiritual guidance'
+    "AI never claims to sense, feel, or perceive spiritual energies",
+    "AI never channels messages or speaks for spiritual entities",
+    "AI never makes predictions about spiritual or life events",
+    "AI never claims to have consciousness or spiritual awareness",
+    "AI attributes all insights and experiences to the user",
+    "AI provides frameworks and prompts, not spiritual guidance",
   ],
   userAgencyPrinciples: [
-    'Users are the sole source of their spiritual insights',
-    'Users define their own relationship with spirituality',
-    'Users interpret their own experiences and symbols',
-    'Users choose which frameworks resonate with them',
-    'Users own all spiritual content they generate',
-    'Users direct their own spiritual development'
-  ]
+    "Users are the sole source of their spiritual insights",
+    "Users define their own relationship with spirituality",
+    "Users interpret their own experiences and symbols",
+    "Users choose which frameworks resonate with them",
+    "Users own all spiritual content they generate",
+    "Users direct their own spiritual development",
+  ],
 };
 
 /**
@@ -40,29 +40,31 @@ export const FACILITATOR_RESPONSES = {
   reflection: {
     pattern: "Based on what you've shared about [topic], you might explore...",
     insight: "Your reflection on [topic] suggests you're considering...",
-    connection: "You've mentioned [pattern] several times. What does this mean to you?"
+    connection:
+      "You've mentioned [pattern] several times. What does this mean to you?",
   },
 
   // Instead of mystical claims
   exploration: {
     prompt: "Consider journaling about...",
     question: "What comes up for you when you reflect on...",
-    framework: "Some people find it helpful to explore [topic] through..."
+    framework: "Some people find it helpful to explore [topic] through...",
   },
 
   // Instead of spiritual authority
   support: {
     validation: "Your experience of [topic] is uniquely yours.",
     encouragement: "You seem to be developing your own understanding of...",
-    clarification: "How would you describe your relationship with..."
+    clarification: "How would you describe your relationship with...",
   },
 
   // Pattern recognition without mystical claims
   patterns: {
-    observation: "Looking at your journal entries, you've mentioned [pattern]...",
+    observation:
+      "Looking at your journal entries, you've mentioned [pattern]...",
     timeline: "Over the past [time], your reflections show...",
-    themes: "Common themes in your exploration include..."
-  }
+    themes: "Common themes in your exploration include...",
+  },
 };
 
 /**
@@ -85,70 +87,70 @@ export interface ElementalCategory {
 
 export const ELEMENTAL_ORGANIZATION: ElementalFramework = {
   fire: {
-    description: 'Themes related to passion, action, and transformation',
+    description: "Themes related to passion, action, and transformation",
     reflectionPrompts: [
-      'What aspects of your life feel energizing right now?',
-      'Where do you notice drive or motivation in your experience?',
-      'What changes are you considering or experiencing?'
+      "What aspects of your life feel energizing right now?",
+      "Where do you notice drive or motivation in your experience?",
+      "What changes are you considering or experiencing?",
     ],
     practicalApplications: [
-      'Goal-setting and action planning',
-      'Identifying sources of motivation',
-      'Tracking energy levels and patterns'
-    ]
+      "Goal-setting and action planning",
+      "Identifying sources of motivation",
+      "Tracking energy levels and patterns",
+    ],
   },
   water: {
-    description: 'Themes related to emotions, intuition, and flow',
+    description: "Themes related to emotions, intuition, and flow",
     reflectionPrompts: [
-      'What emotions have been present for you lately?',
-      'How would you describe your intuitive sense about this?',
-      'Where do you experience ease or flow in your life?'
+      "What emotions have been present for you lately?",
+      "How would you describe your intuitive sense about this?",
+      "Where do you experience ease or flow in your life?",
     ],
     practicalApplications: [
-      'Emotional awareness journaling',
-      'Tracking intuitive hits and outcomes',
-      'Identifying areas of resistance vs flow'
-    ]
+      "Emotional awareness journaling",
+      "Tracking intuitive hits and outcomes",
+      "Identifying areas of resistance vs flow",
+    ],
   },
   earth: {
-    description: 'Themes related to grounding, stability, and manifestation',
+    description: "Themes related to grounding, stability, and manifestation",
     reflectionPrompts: [
-      'What helps you feel grounded and stable?',
-      'What are you working to build or create?',
-      'Where do you seek more structure or routine?'
+      "What helps you feel grounded and stable?",
+      "What are you working to build or create?",
+      "Where do you seek more structure or routine?",
     ],
     practicalApplications: [
-      'Creating sustainable routines',
-      'Resource planning and management',
-      'Physical health and environment tracking'
-    ]
+      "Creating sustainable routines",
+      "Resource planning and management",
+      "Physical health and environment tracking",
+    ],
   },
   air: {
-    description: 'Themes related to thought, communication, and perspective',
+    description: "Themes related to thought, communication, and perspective",
     reflectionPrompts: [
-      'What new perspectives are you exploring?',
-      'How are your communication patterns serving you?',
-      'What mental patterns do you notice?'
+      "What new perspectives are you exploring?",
+      "How are your communication patterns serving you?",
+      "What mental patterns do you notice?",
     ],
     practicalApplications: [
-      'Thought pattern tracking',
-      'Communication skill development',
-      'Learning and study planning'
-    ]
+      "Thought pattern tracking",
+      "Communication skill development",
+      "Learning and study planning",
+    ],
   },
   aether: {
-    description: 'Themes related to meaning, connection, and integration',
+    description: "Themes related to meaning, connection, and integration",
     reflectionPrompts: [
-      'What gives your life meaning right now?',
-      'How do different aspects of your life connect?',
-      'What are you integrating or synthesizing?'
+      "What gives your life meaning right now?",
+      "How do different aspects of your life connect?",
+      "What are you integrating or synthesizing?",
     ],
     practicalApplications: [
-      'Values clarification exercises',
-      'Life purpose exploration',
-      'Integration practices and reviews'
-    ]
-  }
+      "Values clarification exercises",
+      "Life purpose exploration",
+      "Integration practices and reviews",
+    ],
+  },
 };
 
 /**
@@ -156,10 +158,18 @@ export const ELEMENTAL_ORGANIZATION: ElementalFramework = {
  */
 export class BoundaryEnforcer {
   private static prohibitedPhrases = [
-    'I sense', 'I feel', 'I perceive',
-    'The universe', 'Spirit says', 'Divine message',
-    'I channel', "I'm receiving", 'cosmic intelligence',
-    'sacred wisdom', 'mystical insight', 'spiritual authority'
+    "I sense",
+    "I feel",
+    "I perceive",
+    "The universe",
+    "Spirit says",
+    "Divine message",
+    "I channel",
+    "I'm receiving",
+    "cosmic intelligence",
+    "sacred wisdom",
+    "mystical insight",
+    "spiritual authority",
   ];
 
   private static inappropriateClaims = [
@@ -168,7 +178,7 @@ export class BoundaryEnforcer {
     /universe\s+is\s+telling/i,
     /spirit\s+wants\s+you/i,
     /divine\s+guidance/i,
-    /channeling\s+through\s+me/i
+    /channeling\s+through\s+me/i,
   ];
 
   /**
@@ -194,27 +204,29 @@ export class BoundaryEnforcer {
     for (const pattern of this.inappropriateClaims) {
       if (pattern.test(response)) {
         violations.push(`Contains inappropriate claim pattern: ${pattern}`);
-        suggestions.push('Rephrase to attribute insight to user\'s own reflection');
+        suggestions.push(
+          "Rephrase to attribute insight to user's own reflection",
+        );
       }
     }
 
     return {
       isValid: violations.length === 0,
       violations,
-      suggestions
+      suggestions,
     };
   }
 
   private static getSuggestion(phrase: string): string {
     const replacements: Record<string, string> = {
-      'I sense': 'Based on what you\'ve shared',
-      'I feel': 'Your words suggest',
-      'The universe': 'Your experience',
-      'Spirit says': 'You might consider',
-      'I channel': 'Drawing from your insights'
+      "I sense": "Based on what you've shared",
+      "I feel": "Your words suggest",
+      "The universe": "Your experience",
+      "Spirit says": "You might consider",
+      "I channel": "Drawing from your insights",
     };
 
-    return replacements[phrase] || 'Rephrase to maintain facilitator role';
+    return replacements[phrase] || "Rephrase to maintain facilitator role";
   }
 
   /**
@@ -224,12 +236,24 @@ export class BoundaryEnforcer {
     let transformed = response;
 
     // Replace problematic phrases
-    transformed = transformed.replace(/I\s+sense\s+/gi, 'Based on what you\'ve shared, ');
-    transformed = transformed.replace(/I\s+feel\s+/gi, 'Your reflection suggests ');
-    transformed = transformed.replace(/The\s+universe\s+/gi, 'Your journey ');
-    transformed = transformed.replace(/Spirit\s+says\s+/gi, 'You might explore ');
-    transformed = transformed.replace(/divine\s+guidance/gi, 'your own wisdom');
-    transformed = transformed.replace(/cosmic\s+intelligence/gi, 'your understanding');
+    transformed = transformed.replace(
+      /I\s+sense\s+/gi,
+      "Based on what you've shared, ",
+    );
+    transformed = transformed.replace(
+      /I\s+feel\s+/gi,
+      "Your reflection suggests ",
+    );
+    transformed = transformed.replace(/The\s+universe\s+/gi, "Your journey ");
+    transformed = transformed.replace(
+      /Spirit\s+says\s+/gi,
+      "You might explore ",
+    );
+    transformed = transformed.replace(/divine\s+guidance/gi, "your own wisdom");
+    transformed = transformed.replace(
+      /cosmic\s+intelligence/gi,
+      "your understanding",
+    );
 
     return transformed;
   }
@@ -241,20 +265,21 @@ export class BoundaryEnforcer {
 export class UserAgencyReinforcer {
   static reinforceAgency(response: string, context?: any): string {
     const agencyPhrases = [
-      'Your insight about',
-      'As you\'ve discovered',
-      'Your experience shows',
-      'You\'ve identified',
-      'Your reflection reveals'
+      "Your insight about",
+      "As you've discovered",
+      "Your experience shows",
+      "You've identified",
+      "Your reflection reveals",
     ];
 
     // Add agency attribution if not present
-    const hasAgencyAttribution = agencyPhrases.some(phrase =>
-      response.includes(phrase)
+    const hasAgencyAttribution = agencyPhrases.some((phrase) =>
+      response.includes(phrase),
     );
 
     if (!hasAgencyAttribution) {
-      const prefix = agencyPhrases[Math.floor(Math.random() * agencyPhrases.length)];
+      const prefix =
+        agencyPhrases[Math.floor(Math.random() * agencyPhrases.length)];
       response = `${prefix} this is significant. ${response}`;
     }
 
@@ -284,17 +309,20 @@ export interface LifeDomainIntegration {
 
 export class IntegrationTools {
   static domains = [
-    'Career & Purpose',
-    'Relationships',
-    'Health & Vitality',
-    'Personal Growth',
-    'Creative Expression',
-    'Financial Wellbeing',
-    'Community & Service',
-    'Spiritual Practice'
+    "Career & Purpose",
+    "Relationships",
+    "Health & Vitality",
+    "Personal Growth",
+    "Creative Expression",
+    "Financial Wellbeing",
+    "Community & Service",
+    "Spiritual Practice",
   ];
 
-  static createIntegrationPrompt(domain: string, element: keyof ElementalFramework): string {
+  static createIntegrationPrompt(
+    domain: string,
+    element: keyof ElementalFramework,
+  ): string {
     return `Reflecting on your ${domain}, how might the ${element} themes you've been exploring apply here? What practical steps emerge from your reflection?`;
   }
 
@@ -303,14 +331,18 @@ export class IntegrationTools {
     elementalBalance: Record<string, number>;
     suggestedFocus: string;
   } {
-    const activeDomains = [...new Set(integrations.map(i => i.domain))];
+    const activeDomains = [...new Set(integrations.map((i) => i.domain))];
 
     const elementalBalance: Record<string, number> = {
-      fire: 0, water: 0, earth: 0, air: 0, aether: 0
+      fire: 0,
+      water: 0,
+      earth: 0,
+      air: 0,
+      aether: 0,
     };
 
-    integrations.forEach(integration => {
-      integration.elementalConnections.forEach(element => {
+    integrations.forEach((integration) => {
+      integration.elementalConnections.forEach((element) => {
         if (element in elementalBalance) {
           elementalBalance[element]++;
         }
@@ -318,13 +350,14 @@ export class IntegrationTools {
     });
 
     // Find least explored element
-    const leastExplored = Object.entries(elementalBalance)
-      .sort(([,a], [,b]) => a - b)[0][0];
+    const leastExplored = Object.entries(elementalBalance).sort(
+      ([, a], [, b]) => a - b,
+    )[0][0];
 
     return {
       activeDomains,
       elementalBalance,
-      suggestedFocus: `You might explore how ${leastExplored} themes could support your development.`
+      suggestedFocus: `You might explore how ${leastExplored} themes could support your development.`,
     };
   }
 }
@@ -341,7 +374,9 @@ export class SpiritualSupportValidator {
     const issues: string[] = [];
 
     // Validate main response content
-    const contentValidation = BoundaryEnforcer.validateResponse(response.content || '');
+    const contentValidation = BoundaryEnforcer.validateResponse(
+      response.content || "",
+    );
     if (!contentValidation.isValid) {
       issues.push(...contentValidation.violations);
       response.content = BoundaryEnforcer.transformResponse(response.content);
@@ -352,13 +387,14 @@ export class SpiritualSupportValidator {
 
     // Add disclaimer if dealing with spiritual content
     if (response.metadata?.spiritualContent) {
-      response.metadata.disclaimer = 'This AI provides organizational support for your spiritual exploration. All insights and experiences are your own.';
+      response.metadata.disclaimer =
+        "This AI provides organizational support for your spiritual exploration. All insights and experiences are your own.";
     }
 
     return {
       isValid: issues.length === 0,
       issues,
-      correctedResponse: response
+      correctedResponse: response,
     };
   }
 }
@@ -373,5 +409,5 @@ export const HumanCenteredSpiritualSupport = {
   boundaries: BoundaryEnforcer,
   agency: UserAgencyReinforcer,
   integration: IntegrationTools,
-  validator: SpiritualSupportValidator
+  validator: SpiritualSupportValidator,
 };
