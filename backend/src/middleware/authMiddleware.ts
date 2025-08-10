@@ -39,14 +39,14 @@ export function generateAccessToken(user: Omit<AuthenticatedUser, 'permissions'>
     permissions: user.permissions || getDefaultPermissions(user.role)
   };
 
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return (jwt as any).sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 /**
  * Generate refresh token
  */
 export function generateRefreshToken(userId: string): string {
-  return jwt.sign({ userId, type: 'refresh' }, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRES_IN });
+  return (jwt as any).sign({ userId, type: 'refresh' }, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRES_IN });
 }
 
 /**

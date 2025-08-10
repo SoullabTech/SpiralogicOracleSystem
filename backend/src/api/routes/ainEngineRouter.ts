@@ -157,7 +157,7 @@ router.get('/collective-insights',
           requestId: `ain_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           totalResults: publicInsights.length,
           filtersApplied: { type, element, confidenceThreshold },
-        }
+        } as any
       };
 
       res.json(apiResponse);
@@ -222,7 +222,7 @@ router.get('/archetypal-processes',
           requestId: `ain_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           totalResults: processes.length,
           filtersApplied: { element, archetype, activeOnly },
-        }
+        } as any
       };
 
       res.json(apiResponse);
@@ -303,7 +303,7 @@ router.get('/elemental-wisdom',
           version: '1.0',
           requestId: `ain_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           description: 'Current elemental wisdom patterns from the Spiralogic Oracle network'
-        }
+        } as any
       };
 
       res.json(apiResponse);

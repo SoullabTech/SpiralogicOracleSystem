@@ -215,9 +215,9 @@ router.get('/metrics', async (req: Request, res: Response) => {
         environment: process.env.NODE_ENV || 'development'
       },
       system: {
-        loadAverage: process.loadavg(),
-        freemem: process.freemem ? process.freemem() : null,
-        totalmem: process.totalmem ? process.totalmem() : null
+        loadAverage: (process as any).loadavg(),
+        freemem: (process as any).freemem ? (process as any).freemem() : null,
+        totalmem: (process as any).totalmem ? (process as any).totalmem() : null
       }
     };
 

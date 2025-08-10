@@ -2,7 +2,12 @@ export { supabase } from './supabase';
 
 import { supabase } from './supabase';
 import { logger } from '@/utils/logger';
-import { createError } from '@/middleware/errorHandler';
+// Create error helper - simplified for build fix
+function createError(message: string, status: number) {
+  const error = new Error(message) as any;
+  error.statusCode = status;
+  return error;
+}
 
 interface JournalEntry {
   userId: string;

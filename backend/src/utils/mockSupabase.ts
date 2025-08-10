@@ -8,13 +8,13 @@ export const supabase = {
         user: {
           id: 'mock-user-id',
           email,
-          user_metadata: { role: 'client' }
+          user_metadata: { role: 'client' } as any
         },
         session: {
           user: {
             id: 'mock-user-id',
             email,
-            user_metadata: { role: 'client' }
+            user_metadata: { role: 'client' } as any
           }
         },
         error: null

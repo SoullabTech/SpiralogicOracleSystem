@@ -1,84 +1,61 @@
-// Rate Limiting Middleware with Redis Backend
+// Rate Limiting Middleware with Redis Backend - Emergency Fix
 import rateLimit from 'express-rate-limit';
 import { redis } from '../config/redis';
 import { logger } from '../utils/logger';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 interface RateLimitConfig {
   windowMs: number;
   max: number;
   message?: string;
+  keyGenerator?: (req: Request) => string;
+  skip?: (req: Request) => boolean;
   standardHeaders?: boolean;
   legacyHeaders?: boolean;
-  skipSuccessfulRequests?: boolean;
-  skipFailedRequests?: boolean;
-  keyGenerator?: (req: Request) => string;
 }
 
-/**
- * Redis-based store for rate limiting
- */
 class RedisStore {
-  prefix: string;
-
-  constructor(prefix = 'rl:') {
-    this.prefix = prefix;
-  }
-
   async increment(key: string): Promise<{ totalHits: number; resetTime?: Date }> {
-    const redisKey = `${this.prefix}${key}`;
-    
     try {
-      const current = await redis.incr(redisKey);
-      
-      if (current === 1) {
-        // First request in window, set expiration
-        await redis.expire(redisKey, Math.ceil(60000 / 1000)); // 1 minute default
-      }
-      
-      const ttl = await redis.ttl(redisKey);
-      const resetTime = new Date(Date.now() + ttl * 1000);
+      const multi = redis.multi();
+      multi.incr(key);
+      multi.expire(key, Math.floor(15 * 60)); // 15 minutes TTL
+      const results = await multi.exec();
       
       return {
-        totalHits: current,
-        resetTime
+        totalHits: results?.[0]?.[1] as number || 1,
+        resetTime: new Date(Date.now() + 15 * 60 * 1000)
       };
     } catch (error) {
-      logger.error('Redis rate limit store error', { error, key });
-      // Fallback to allowing request if Redis is down
+      logger.error('Redis rate limit error:', error);
       return { totalHits: 1 };
     }
   }
 
   async decrement(key: string): Promise<void> {
-    const redisKey = `${this.prefix}${key}`;
     try {
-      await redis.decr(redisKey);
+      await redis.decr(key);
     } catch (error) {
-      logger.error('Redis rate limit decrement error', { error, key });
+      logger.error('Redis decrement error:', error);
     }
   }
 
   async resetKey(key: string): Promise<void> {
-    const redisKey = `${this.prefix}${key}`;
     try {
-      await redis.del(redisKey);
+      await redis.del(key);
     } catch (error) {
-      logger.error('Redis rate limit reset error', { error, key });
+      logger.error('Redis reset error:', error);
     }
   }
 }
 
-/**
- * Create rate limiter with Redis store
- */
 function createRateLimiter(config: RateLimitConfig) {
   const store = new RedisStore();
   
   return rateLimit({
     ...config,
     store: {
-      incr: async (key: string, cb: (error: any, result?: { totalHits: number; resetTime?: Date }) => void) => {
+      incr: async (key: string, cb: any) => {
         try {
           const result = await store.increment(key);
           cb(null, result);
@@ -96,125 +73,63 @@ function createRateLimiter(config: RateLimitConfig) {
   });
 }
 
-/**
- * Default rate limiter for general API endpoints
- */
 export const defaultRateLimiter = createRateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too Many Requests',
-    message: 'You have exceeded the rate limit. Please try again later.',
-    retryAfter: '15 minutes'
-  },
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests. Please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false
 });
 
-/**
- * Strict rate limiter for sensitive operations like authentication
- */
 export const authRateLimiter = createRateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 auth attempts per windowMs
-  message: {
-    error: 'Too Many Authentication Attempts',
-    message: 'You have made too many authentication attempts. Please try again later.',
-    retryAfter: '15 minutes'
-  },
-  skipSuccessfulRequests: true, // Don't count successful requests
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: 'Too many authentication attempts. Please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false
 });
 
-/**
- * Oracle-specific rate limiter - more generous for paying users
- */
 export const oracleRateLimiter = createRateLimiter({
-  windowMs: 60 * 1000, // 1 minute
-  max: 20, // limit each user to 20 oracle requests per minute
-  message: {
-    error: 'Oracle Rate Limit Exceeded',
-    message: 'You have reached the oracle consultation limit. Please wait before making another request.',
-    retryAfter: '1 minute'
-  },
-  keyGenerator: (req: Request) => {
-    // Use user ID if authenticated, otherwise fall back to IP
-    const user = (req as any).user;
-    return user ? `user:${user.id}` : `ip:${req.ip}`;
-  },
+  windowMs: 60 * 1000,
+  max: 20,
+  message: 'Oracle queries limited. Please pause for sacred reflection.',
+  standardHeaders: true,
+  legacyHeaders: false
 });
 
-/**
- * Administrative rate limiter - very strict for admin operations
- */
-export const adminRateLimiter = createRateLimiter({
-  windowMs: 60 * 1000, // 1 minute
-  max: 10, // limit each admin to 10 requests per minute
-  message: {
-    error: 'Administrative Rate Limit Exceeded',
-    message: 'You have exceeded the administrative rate limit.',
-    retryAfter: '1 minute'
-  },
-  keyGenerator: (req: Request) => {
-    const user = (req as any).user;
-    return user ? `admin:${user.id}` : `ip:${req.ip}`;
-  },
+export const ainEngineRateLimiter = createRateLimiter({
+  windowMs: 60 * 1000,
+  max: 60,
+  message: 'AIN Engine rate limit reached. Please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false
 });
 
-/**
- * Create a custom rate limiter for specific endpoints
- */
-export function createCustomRateLimiter(
-  windowMinutes: number, 
-  maxRequests: number, 
-  identifier: string = 'custom'
-) {
-  return createRateLimiter({
-    windowMs: windowMinutes * 60 * 1000,
-    max: maxRequests,
-    message: {
-      error: 'Rate Limit Exceeded',
-      message: `You have exceeded the rate limit for ${identifier}. Please try again later.`,
-      retryAfter: `${windowMinutes} minutes`
-    }
-  });
-}
-
-/**
- * Rate limit bypass for internal services or health checks
- */
-export function bypassRateLimit(req: Request, res: Response, next: Function) {
+export function bypassRateLimit(req: Request, res: Response, next: NextFunction) {
   const bypassHeader = req.headers['x-bypass-rate-limit'];
   const bypassSecret = process.env.RATE_LIMIT_BYPASS_SECRET;
   
   if (bypassSecret && bypassHeader === bypassSecret) {
-    logger.info('Rate limit bypassed', { ip: req.ip, path: req.path });
     next();
     return;
   }
   
-  // Check for health check endpoints
   const healthEndpoints = ['/health', '/ready', '/live', '/metrics'];
   if (healthEndpoints.some(endpoint => req.path.startsWith(endpoint))) {
     next();
     return;
   }
   
-  // Apply default rate limiting
   defaultRateLimiter(req, res, next);
 }
 
-/**
- * Dynamic rate limiter based on user subscription tier
- */
-export function dynamicRateLimiter(req: Request, res: Response, next: Function) {
+export function dynamicRateLimiter(req: Request, res: Response, next: NextFunction) {
   const user = (req as any).user;
   
   if (!user) {
-    // Non-authenticated users get basic rate limiting
     return defaultRateLimiter(req, res, next);
   }
   
-  // Adjust rate limits based on user role/subscription
   const userTier = user.subscription_tier || 'free';
   
   const tierLimits = {
@@ -228,11 +143,7 @@ export function dynamicRateLimiter(req: Request, res: Response, next: Function) 
   
   const tierLimiter = createRateLimiter({
     ...limits,
-    message: {
-      error: 'Rate Limit Exceeded',
-      message: `You have reached your ${userTier} tier rate limit. Please upgrade for higher limits.`,
-      retryAfter: '1 minute'
-    },
+    message: `You have reached your ${userTier} tier rate limit. Please upgrade for higher limits.`,
     keyGenerator: (req: Request) => `user:${user.id}:${userTier}`
   });
   
@@ -243,8 +154,7 @@ export default {
   default: defaultRateLimiter,
   auth: authRateLimiter,
   oracle: oracleRateLimiter,
-  admin: adminRateLimiter,
+  ainEngine: ainEngineRateLimiter,
   bypass: bypassRateLimit,
-  dynamic: dynamicRateLimiter,
-  custom: createCustomRateLimiter
+  dynamic: dynamicRateLimiter
 };

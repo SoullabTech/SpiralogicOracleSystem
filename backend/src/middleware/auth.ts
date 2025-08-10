@@ -1,9 +1,14 @@
 // oracle-backend/src/middleware/auth.ts
 
 import { Request, Response, NextFunction } from 'express';
-import { supabase } from '../server';
+import { supabase } from '../lib/supabase';
 import { logger } from '../utils/logger';
-import { createError } from './errorHandler';
+// Create error helper - simplified for build fix
+function createError(message: string, status: number) {
+  const error = new Error(message) as any;
+  error.statusCode = status;
+  return error;
+}
 
 /**
  * Middleware to check if the request is authenticated via Supabase JWT

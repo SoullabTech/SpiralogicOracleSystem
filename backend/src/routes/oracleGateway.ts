@@ -44,13 +44,13 @@ router.post('/api/v1/oracle', async (req: Request, res: Response) => {
     let message: string;
     if (typeof agent.processQuery === 'function') {
       const result = await agent.processQuery(query);
-      message = typeof result === 'string' ? result : result.message || 'No response';
+      message = typeof result === 'string' ? result : (result as any).message || 'No response';
     } else {
       message = `${targetElement} agent processing: ${query}`;
     }
 
     // Get archetype info
-    const archetype = agent.getArchetype ? agent.getArchetype() : targetElement;
+    const archetype = (agent as any).getArchetype ? (agent as any).getArchetype() : targetElement;
 
     const response: OracleResponse = {
       element: targetElement,

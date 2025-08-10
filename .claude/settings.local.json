@@ -122,7 +122,8 @@
       "Bash(open:*)",
       "Bash(docker:*)",
       "Bash(sed:*)",
-      "Bash(xattr:*)"
+      "Bash(xattr:*)",
+      "Bash(git reset:*)"
     ],
     "deny": []
   },

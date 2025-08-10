@@ -469,6 +469,8 @@ export class AssessmentService {
     const insights = this.generateInsights(elementalBalance, archetypalProfile, growthStage);
     
     return {
+      dominantTraits: [],
+      challenges: [],
       id: resultId,
       userId,
       assessmentId: assessment.id,

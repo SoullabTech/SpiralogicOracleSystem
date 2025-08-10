@@ -40,13 +40,12 @@ class ModelService {
 
       const response: AgentResponse = {
         response: responseText,
-        provider: "openai",
         model: "gpt-4",
         confidence: 0.9,
         metadata: {
           timestamp: new Date().toISOString(),
           context,
-        },
+        } as any,
       };
 
       logger.info("✅ Model response received", {
