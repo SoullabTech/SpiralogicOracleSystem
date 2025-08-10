@@ -398,36 +398,36 @@ function generateCardInterpretation(
   reversed: boolean,
   position: string,
 ): string {
-  const interpretations: Record<string, Record<boolean, string>> = {
+  const interpretations: Record<string, Record<string, string>> = {
     "The Fool": {
-      false:
+      "false":
         "New beginnings and fresh opportunities await. Trust your instincts and take that leap of faith.",
-      true: "Recklessness or poor judgment may be holding you back. Consider your choices more carefully.",
+      "true": "Recklessness or poor judgment may be holding you back. Consider your choices more carefully.",
     },
     "The Magician": {
-      false:
+      "false":
         "You have all the tools you need to manifest your desires. Focus your will and take action.",
-      true: "Manipulation or misuse of power may be at play. Examine your motivations honestly.",
+      "true": "Manipulation or misuse of power may be at play. Examine your motivations honestly.",
     },
     "The High Priestess": {
-      false:
+      "false":
         "Trust your intuition and inner wisdom. The answers you seek lie within your subconscious.",
-      true: "You may be disconnected from your intuition or ignoring important inner messages.",
+      "true": "You may be disconnected from your intuition or ignoring important inner messages.",
     },
     "The Tower": {
-      false:
+      "false":
         "Sudden change brings liberation from limiting structures. Embrace the transformation.",
-      true: "Avoiding necessary change may lead to greater upheaval. Accept what must fall away.",
+      "true": "Avoiding necessary change may lead to greater upheaval. Accept what must fall away.",
     },
     "The Star": {
-      false:
+      "false":
         "Hope, healing, and spiritual guidance illuminate your path forward. Stay inspired.",
-      true: "Loss of faith or direction may be clouding your vision. Reconnect with your higher purpose.",
+      "true": "Loss of faith or direction may be clouding your vision. Reconnect with your higher purpose.",
     },
   };
 
   return (
-    interpretations[card.name]?.[reversed] ||
+    interpretations[card.name]?.[String(reversed)] ||
     `The energy of ${card.name} ${reversed ? "in reverse" : ""} brings ${card.keywords[0]} to your ${position.toLowerCase()}.`
   );
 }

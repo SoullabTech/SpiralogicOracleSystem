@@ -11,19 +11,12 @@ export const supabase = {
     }): Promise<AuthResponse> => {
       console.log(`[Mock Supabase] signIn called with: ${email}, ${password}`);
       return {
+        accessToken: "mock-access-token",
+        refreshToken: "mock-refresh-token",
         user: {
           id: "mock-user-id",
           email,
-          user_metadata: { role: "client" } as any,
         },
-        session: {
-          user: {
-            id: "mock-user-id",
-            email,
-            user_metadata: { role: "client" } as any,
-          },
-        },
-        error: null,
       };
     },
     signOut: async () => ({ error: null }),

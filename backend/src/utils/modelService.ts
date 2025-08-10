@@ -41,7 +41,6 @@ class ModelService {
 
       const response: AgentResponse = {
         response: responseText,
-        model: "gpt-4",
         confidence: 0.9,
         metadata: {
           timestamp: new Date().toISOString(),

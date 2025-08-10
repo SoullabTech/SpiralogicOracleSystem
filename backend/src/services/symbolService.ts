@@ -1,6 +1,6 @@
 // oracle-backend/src/services/symbolService.ts
 
-// import { detectFacetFromInput } from '../server/services/facetService'; // Disabled for build fix
+import { detectFacetFromInput } from '../utils/facetUtil';
 import { SymbolicTag } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
