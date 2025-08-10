@@ -29,21 +29,26 @@
     "noUnusedParameters": false
   },
   "include": [
-    "src/**/*"
+    "src/agents/personal_oracle/**/*",
+    "src/api/**/*", 
+    "src/services/astrologyService.ts",
+    "src/services/journalingService.ts",
+    "src/services/assessmentService.ts",
+    "src/services/memoryService.ts",
+    "src/core/factories/**/*",
+    "src/core/agents/oracleAgent.ts",
+    "src/utils/**/*",
+    "src/middleware/**/*",
+    "src/server.ts",
+    "src/app.ts",
+    "src/lib/ritualEngine.ts",
+    "src/lib/spiralLogic.ts",
+    "src/types/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "src/tests/**/*",
-    "src/__tests__/**/*",
-    "src/components/**/*",
-    "src/main.tsx",
-    "src/main.js",
-    "src/App.css",
-    "src/index.css",
-    "src/vite-env.d.ts",
-    "src/ain/**/*"
+    "src/**/*.spec.ts"
   ]
 }

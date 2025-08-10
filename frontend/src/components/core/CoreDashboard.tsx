@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-interface CoreDashboard {
-  userConfig: {
-    oracleName: string;
-    voiceId: string;
-    currentPhase?: string;
-    coherenceLevel?: number;
-  };
+interface UserConfig {
+  oracleName: string;
+  voiceId: string;
+  currentPhase?: string;
+  coherenceLevel?: number;
+}
+
+interface CoreDashboardProps {
+  userConfig: UserConfig;
   onNavigate: (route: string) => void;
 }
 
-const CoreDashboard: React.FC<CoreDashboard> = ({ userConfig, onNavigate }) => {
+const CoreDashboard: React.FC<CoreDashboardProps> = ({ userConfig, onNavigate }) => {
   const [spiralogicPattern, setSpiralogicPattern] = useState<number[]>([]);
 
   // Generate phi-based spiral pattern for background
@@ -211,4 +213,4 @@ const CoreDashboard: React.FC<CoreDashboard> = ({ userConfig, onNavigate }) => {
   );
 };
 
-export default CoreDashboard;
+export { CoreDashboard };

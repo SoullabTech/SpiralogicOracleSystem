@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import LoginForm from './LoginForm';
-import SignupForm from './SignupForm';
+import { LoginForm, SignupForm } from '.';
 
 interface AuthPageProps {
   onAuthSuccess?: () => void;
@@ -58,4 +57,4 @@ const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
   );
 };
 
-export default AuthPage;
+export { AuthPage };

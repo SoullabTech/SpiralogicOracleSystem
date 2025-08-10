@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOraclePreferences } from '../../hooks/useOraclePreferences';
-import BeautifulOnboarding from '../onboarding/BeautifulOnboarding';
-import CoreDashboard from '../core/CoreDashboard';
+import { BeautifulOnboarding } from '../onboarding';
+import { CoreDashboard } from '../core';
 
 const AppLayout: React.FC = () => {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -145,4 +145,4 @@ const AppLayout: React.FC = () => {
   );
 };
 
-export default AppLayout;
+export { AppLayout };
