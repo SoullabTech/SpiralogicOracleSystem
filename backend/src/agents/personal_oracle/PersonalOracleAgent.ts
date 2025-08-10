@@ -3,11 +3,10 @@
 
 import { logger } from "../../utils/logger";
 import { successResponse, errorResponse, asyncErrorHandler, generateRequestId } from "../../utils/sharedUtilities";
-import { FireAgent } from "../elemental/FireAgent";
-import { WaterAgent } from "../elemental/WaterAgent";
-import { EarthAgent } from "../elemental/EarthAgent";
-import { AirAgent } from "../elemental/AirAgent";
-import { AetherAgent } from "../elemental/AetherAgent";
+import { AgentRegistry } from "../../core/factories/AgentRegistry";
+import { astrologyService } from "../../services/astrologyService";
+import { journalingService } from "../../services/journalingService";
+import { assessmentService } from "../../services/assessmentService";
 import { getRelevantMemories, storeMemoryItem } from "../../services/memoryService";
 import { logOracleInsight } from "../../utils/oracleLogger";
 import type { StandardAPIResponse } from "../../utils/sharedUtilities";
@@ -51,23 +50,15 @@ export interface PersonalOracleSettings {
  * Orchestrates all elemental agents and provides personalized guidance
  */
 export class PersonalOracleAgent {
-  private fire: FireAgent;
-  private water: WaterAgent;
-  private earth: EarthAgent;
-  private air: AirAgent;
-  private aether: AetherAgent;
+  private agentRegistry: AgentRegistry;
   
   // User settings cache
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
 
   constructor() {
-    this.fire = new FireAgent();
-    this.water = new WaterAgent();
-    this.earth = new EarthAgent();
-    this.air = new AirAgent();
-    this.aether = new AetherAgent();
+    this.agentRegistry = new AgentRegistry();
     
-    logger.info('Personal Oracle Agent initialized');
+    logger.info('Personal Oracle Agent initialized with AgentRegistry');
   }
 
   /**
@@ -238,24 +229,11 @@ export class PersonalOracleAgent {
     query: PersonalOracleQuery, 
     memories: any[]
   ): Promise<PersonalOracleResponse> {
-    const agents = {
-      fire: this.fire,
-      water: this.water,
-      earth: this.earth,
-      air: this.air,
-      aether: this.aether
-    };
-
-    const agent = agents[element as keyof typeof agents];
-    if (!agent) {
-      throw new Error(`Unknown element: ${element}`);
-    }
-
+    // Get agent from registry
+    const agent = this.agentRegistry.createAgent(element);
+    
     // Call the elemental agent
-    const response = await agent.processExtendedQuery({
-      input: query.input,
-      userId: query.userId
-    });
+    const response = await agent.processQuery(query.input);
 
     return {
       message: response.content,
@@ -311,21 +289,21 @@ export class PersonalOracleAgent {
     requestId: string
   ): Promise<void> {
     try {
-      await storeMemoryItem({
-        userId: query.userId,
-        content: response.message,
-        element: response.element,
-        sourceAgent: 'personal-oracle-agent',
-        confidence: response.confidence,
-        metadata: {
+      await storeMemoryItem(
+        query.userId,
+        response.message,
+        {
           query: query.input,
+          element: response.element,
           archetype: response.archetype,
           sessionId: query.sessionId,
           requestId,
           symbols: response.metadata.symbols,
-          phase: response.metadata.phase
+          phase: response.metadata.phase,
+          sourceAgent: 'personal-oracle-agent',
+          confidence: response.confidence
         }
-      });
+      );
 
       await logOracleInsight({
         anon_id: query.userId,
@@ -422,6 +400,20 @@ export class PersonalOracleAgent {
   private async expandResponse(message: string, element: string): Promise<string> {
     // Add element-specific wisdom or additional context
     return message + `\n\nAs we explore this ${element} energy together, remember that growth comes from embracing both the light and shadow aspects of your journey.`;
+  }
+
+  // Integration Service Methods for Step 2 API Gateway
+  
+  public async getAstrologyReading(query: any): Promise<StandardAPIResponse<any>> {
+    return await astrologyService.getAstrologyReading(query);
+  }
+
+  public async processJournalRequest(query: any): Promise<StandardAPIResponse<any>> {
+    return await journalingService.processJournalRequest(query);
+  }
+
+  public async processAssessment(query: any): Promise<StandardAPIResponse<any>> {
+    return await assessmentService.processAssessment(query);
   }
 }
 

@@ -16,7 +16,7 @@ export class OracleAgent {
     }
 
     const detectedElement = this.detectElement(query);
-    const ritual = getRitualForPhase(detectedElement);
+    const ritual = getRitualForPhase(detectedElement as any); // Type assertion for Step 2
 
     const simulatedResponse = `Processed query: ${query}`;
     const metadata: Metadata = {
@@ -35,7 +35,7 @@ export class OracleAgent {
       response: simulatedResponse, // Legacy compatibility
       confidence: 0.9,
       metadata,
-      routingPath: [detectedElement.toLowerCase(), "oracle-agent"],
+      // routingPath: [detectedElement.toLowerCase(), "oracle-agent"], // Temporarily removed for Step 2
     };
   }
 
