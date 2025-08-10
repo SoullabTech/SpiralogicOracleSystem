@@ -1,14 +1,11 @@
 // Hierarchy Orchestrator - Manages proper agent relationships
 // Ensures PersonalOracleAgent -> Elemental Agents -> AIN Collective Intelligence flow
 
-import { MainOracleAgent } from './mainOracleAgent';
-import { PersonalOracleAgent } from './PersonalOracleAgent';
-import { FireAgent } from './fireAgent';
-import { WaterAgent } from './waterAgent';
-import { EarthAgent } from './earthAgent';
-import { AirAgent } from './airAgent';
-import { AetherAgent } from './aetherAgent';
-import { ShadowAgent } from './shadowAgents';
+import { MainOracleAgent } from '../agents/MainOracleAgent';
+import { PersonalOracleAgent } from '../agents/PersonalOracleAgent';
+import { AgentRegistry } from '../factories/AgentRegistry';
+import type { IAgentFactory } from '../factories/IAgentFactory';
+import { ShadowAgent } from '../agents/shadowAgents';
 import type {
   MainOracleAgentInterface,
   PatternContribution,
@@ -771,8 +768,12 @@ export class HierarchyOrchestrator {
   private archetypalAnalyzer: ArchetypalIntentAnalyzer;
   private omnidimensionalPerceptionMatrix: OmnidimensionalPerceptionMatrix;
   private speciesEvolutionCatalyst: typeof consciousnessEvolutionCatalyst;
+  private agentFactory: IAgentFactory;
 
-  constructor() {
+  constructor(agentFactory?: IAgentFactory) {
+    // Use injected factory or default to AgentRegistry
+    this.agentFactory = agentFactory || new AgentRegistry();
+    
     // Initialize AIN as the collective intelligence backend
     this.ainCollectiveIntelligence = new MainOracleAgent();
 

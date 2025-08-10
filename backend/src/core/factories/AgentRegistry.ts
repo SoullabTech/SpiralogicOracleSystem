@@ -1,5 +1,5 @@
 import { IAgentFactory } from './IAgentFactory';
-import { BaseAgent } from '../agents/baseAgent';
+import { OracleAgent } from '../agents/oracleAgent';
 
 // Import existing elemental agents from new location
 import { FireAgent } from '../agents/elemental/fireAgent';
@@ -9,7 +9,7 @@ import { AirAgent } from '../agents/elemental/airAgent';
 import { AetherAgent } from '../agents/elemental/aetherAgent';
 
 export class AgentRegistry implements IAgentFactory {
-  createAgent(type: string): BaseAgent {
+  createAgent(type: string): OracleAgent {
     switch (type.toLowerCase()) {
       case 'fire': return new FireAgent();
       case 'water': return new WaterAgent();

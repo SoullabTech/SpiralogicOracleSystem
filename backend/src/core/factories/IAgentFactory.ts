@@ -1,3 +1,5 @@
+import { OracleAgent } from '../agents/oracleAgent';
+
 export interface IAgentFactory {
-  createAgent(type: string): BaseAgent;
+  createAgent(type: string): OracleAgent;
 }
