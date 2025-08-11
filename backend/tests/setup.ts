@@ -1,11 +1,16 @@
-import { jest } from '@jest/globals';
+import { 
+  jest, 
+  expect, 
+  beforeAll, 
+  beforeEach, 
+  afterEach, 
+  afterAll 
+} from '@jest/globals';
 
 // ===============================================
 // JEST TEST SETUP
 // Global test configuration and utilities
 // ===============================================
-
-import { jest } from "@jest/globals";
 
 // Extend Jest matchers
 declare global {

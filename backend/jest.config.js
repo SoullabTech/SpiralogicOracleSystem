@@ -7,10 +7,7 @@ module.exports = {
     '**/?(*.)+(spec|test).ts'
   ],
   transform: {
-    '^.+\.tsx?$': ['ts-jest', {
-      isolatedModules: true,
-      useESM: false
-    }]
+    '^.+\.(ts|tsx)$': ['ts-jest', { tsconfig: 'tsconfig.json' }],
   },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
