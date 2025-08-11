@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "lib": ["es2020"],
-    "module": "esnext",
+    "target": "ES2020",
+    "lib": [
+      "es2020"
+    ],
+    "module": "CommonJS",
     "moduleResolution": "node",
     "allowJs": true,
     "esModuleInterop": true,
@@ -14,18 +16,35 @@
     "declaration": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@lib/*": ["src/lib/*"],
-      "@utils/*": ["src/utils/*"],
-      "@core/*": ["src/core/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@lib/*": [
+        "src/lib/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ]
     },
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": ["src/**/*", "server/**/*", "memory/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*",
+    "server/**/*",
+    "memory/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

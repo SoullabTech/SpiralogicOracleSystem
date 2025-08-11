@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+
 // ===============================================
 // JEST TEST SETUP
 // Global test configuration and utilities
