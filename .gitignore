@@ -46,3 +46,6 @@ __pycache__/
 # OS generated files
 ehthumbs.db
 Desktop.ini
+# Dev archive quarantine
+dev-archive/
+
