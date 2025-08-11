@@ -127,7 +127,13 @@
       "Bash(npx depcheck:*)",
       "Bash(npx eslint:*)",
       "Bash(npx prettier:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(npm -w backend run clean)",
+      "Bash(npm -w backend run build)",
+      "Bash(npm -w backend test -- -i)",
+      "Bash(npx husky init:*)",
+      "Bash(npx husky:*)",
+      "Bash(bash:*)"
     ],
     "deny": []
   },

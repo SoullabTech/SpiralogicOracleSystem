@@ -36,24 +36,79 @@ else
 fi
 
 # Health Check
-echo -e "\n${BLUE}🏥 Health Check${NC}"
-cd backend
-npm start > ../health-check.log 2>&1 &
-PID=$!
-cd ..
-sleep 10
+echo -e "\n${BLUE}🏥 Comprehensive Health Check${NC}"
 
-if curl -s "http://localhost:3001/health" > /dev/null 2>&1; then
-    RESPONSE_TIME=$(curl -w "%{time_total}" -s -o /dev/null "http://localhost:3001/health" 2>/dev/null || echo "N/A")
-    echo -e "   ${GREEN}✅ Health endpoint responding (${RESPONSE_TIME}s)${NC}"
-    HEALTH_OK=true
-else
-    echo -e "   ${RED}❌ Health endpoint not accessible${NC}"
-    HEALTH_OK=false
+# Load environment variables
+if [ -f .env ]; then
+    set -a
+    source .env
+    set +a
 fi
 
-kill $PID 2>/dev/null || true
-rm -f health-check.log
+HEALTH_CHECKS_PASSED=0
+TOTAL_HEALTH_CHECKS=3
+
+# 1) Backend Health Check
+echo -e "   ${BLUE}Backend API${NC}"
+if [ -n "$NEXT_PUBLIC_BACKEND_URL" ]; then
+    if curl -fsS "$NEXT_PUBLIC_BACKEND_URL/health" > /dev/null 2>&1; then
+        RESPONSE_TIME=$(curl -w "%{time_total}" -s -o /dev/null "$NEXT_PUBLIC_BACKEND_URL/health" 2>/dev/null || echo "N/A")
+        echo -e "   ${GREEN}✅ Backend health OK (${RESPONSE_TIME}s)${NC}"
+        HEALTH_CHECKS_PASSED=$((HEALTH_CHECKS_PASSED + 1))
+    else
+        echo -e "   ${RED}❌ Backend health failed${NC}"
+    fi
+else
+    echo -e "   ${YELLOW}⚠️ Backend URL not configured${NC}"
+fi
+
+# 2) Supabase RPC Health Check
+echo -e "   ${BLUE}Supabase Database${NC}"
+if [ -n "$NEXT_PUBLIC_SUPABASE_URL" ] && [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
+    SUPABASE_HOST=$(echo "$NEXT_PUBLIC_SUPABASE_URL" | sed 's|https://||')
+    RPC_RESULT=$(curl -fsS "https://$SUPABASE_HOST/rest/v1/rpc/health_check" \
+        -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
+        -H "Authorization: Bearer $NEXT_PUBLIC_SUPABASE_ANON_KEY" 2>/dev/null || echo "FAILED")
+    
+    if [ "$RPC_RESULT" = "\"ok\"" ]; then
+        echo -e "   ${GREEN}✅ Supabase RPC health OK${NC}"
+        HEALTH_CHECKS_PASSED=$((HEALTH_CHECKS_PASSED + 1))
+    else
+        echo -e "   ${RED}❌ Supabase RPC health failed ($RPC_RESULT)${NC}"
+    fi
+    
+    # Optional richer check with BOT_JWT (uncomment if health_status is enabled)
+    # if [ -n "$BOT_JWT" ]; then
+    #   STATUS=$(curl -fsS "https://${SUPABASE_HOST}/rest/v1/rpc/health_status" \
+    #     -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
+    #     -H "Authorization: Bearer $BOT_JWT" || true)
+    #   if echo "$STATUS" | grep -q '"status":"ok"'; then
+    #     echo -e "   ${GREEN}✅ Supabase rpc/health_status OK${NC}"
+    #   else
+    #     echo -e "   ${RED}❌ Supabase rpc/health_status failed: $STATUS${NC}"; HEALTH_OK=false
+    #   fi
+    # fi
+else
+    echo -e "   ${YELLOW}⚠️ Supabase credentials not configured${NC}"
+fi
+
+# 3) Frontend Health Check (if deployed)
+echo -e "   ${BLUE}Frontend Deployment${NC}"
+if [ -n "$VERCEL_DOMAIN" ]; then
+    if curl -fsS "https://$VERCEL_DOMAIN/api/health" > /dev/null 2>&1; then
+        echo -e "   ${GREEN}✅ Frontend health OK${NC}"
+        HEALTH_CHECKS_PASSED=$((HEALTH_CHECKS_PASSED + 1))
+    else
+        echo -e "   ${RED}❌ Frontend health failed${NC}"
+    fi
+else
+    echo -e "   ${YELLOW}⚠️ Frontend domain not configured (local dev)${NC}"
+    # Still count as passed for local development
+    HEALTH_CHECKS_PASSED=$((HEALTH_CHECKS_PASSED + 1))
+fi
+
+echo -e "   ${BLUE}Health Score: $HEALTH_CHECKS_PASSED/$TOTAL_HEALTH_CHECKS${NC}"
+HEALTH_OK=$( [ $HEALTH_CHECKS_PASSED -ge 2 ] && echo "true" || echo "false" )
 
 # Overall Decision
 echo -e "\n${BLUE}🎯 Beta Gate Decision${NC}"

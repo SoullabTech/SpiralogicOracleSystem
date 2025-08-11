@@ -2,17 +2,30 @@
 export {};
 
 // ===============================================
-// JEST TEST SETUP
+// JEST TEST SETUP  
 // Global test configuration and utilities
 // ===============================================
 
-// Jest globals are available through @types/jest
-declare const expect: jest.Expect;
-declare const jest: jest.Jest;
-declare const beforeAll: jest.LifecycleFunction;
-declare const beforeEach: jest.LifecycleFunction;
-declare const afterEach: jest.LifecycleFunction;
-declare const afterAll: jest.LifecycleFunction;
+// Import Jest globals to ensure they are available
+import { expect, beforeAll, beforeEach, afterEach, afterAll, jest } from '@jest/globals';
+
+// Make Jest globals available globally
+declare global {
+  var expect: typeof import('@jest/globals').expect;
+  var beforeAll: typeof import('@jest/globals').beforeAll;
+  var beforeEach: typeof import('@jest/globals').beforeEach;
+  var afterEach: typeof import('@jest/globals').afterEach;
+  var afterAll: typeof import('@jest/globals').afterAll;
+  var jest: typeof import('@jest/globals').jest;
+}
+
+// Assign to global
+(globalThis as any).expect = expect;
+(globalThis as any).beforeAll = beforeAll;
+(globalThis as any).beforeEach = beforeEach;
+(globalThis as any).afterEach = afterEach;
+(globalThis as any).afterAll = afterAll;
+(globalThis as any).jest = jest;
 
 // Custom matchers for Sacred Technology Platform testing
 expect.extend({
@@ -161,7 +174,12 @@ export const testUtils = {
     expect(response).toBeDefined();
     expect(typeof response).toBe("string");
     expect(response.length).toBeGreaterThan(10);
-    expect(response).toBeValidOracleResponse();
+    // Check oracle response structure manually since custom matcher may not be available yet
+    if (response && typeof response.content === "string" && typeof response.provider === "string" && typeof response.model === "string") {
+      // Valid oracle response structure
+    } else {
+      throw new Error(`Expected valid oracle response structure, got: ${JSON.stringify(response)}`);
+    }
   },
 
   // Create test conversation flow
@@ -188,7 +206,7 @@ export const testUtils = {
     return { result, duration };
   },
 
-  // Helper for typed mocks  
+  // Typed mock helper to avoid 'never' assignment errors
   mock: <T extends (...args: any[]) => any = (...args: any[]) => any>() => 
     (jest.fn() as unknown) as jest.MockedFunction<T>,
 
