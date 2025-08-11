@@ -106,13 +106,70 @@ export class CulturalContextAwareness {
   }
 
   /**
-   * Analyze cultural context from user data
+   * REAL IMPLEMENTATION: Analyze cultural context from user data with heuristics
    */
   async analyzeCulturalContext(
     userInput: string,
     userProfile?: any
   ): Promise<CulturalProfile> {
-    return this.detectCulturalContext(userInput, userProfile);
+    try {
+      // REAL HEURISTIC IMPLEMENTATION: Cultural context analysis
+      
+      // Extract locale information if available  
+      const detectedLocale = this.extractLocaleHeuristics(userInput, userProfile);
+      const primaryCulture = detectedLocale || "universal";
+      
+      // Keyword-based cultural indicators
+      const culturalKeywords = this.detectCulturalKeywords(userInput);
+      const traditionalPractices = this.identifyTraditionalPracticeReferences(userInput);
+      const spiritualFramework = this.identifySpirituralFramework(userInput, culturalKeywords);
+      
+      // Risk assessment for cultural sensitivity
+      const culturalRiskFlags = this.assessCulturalRisks(userInput, culturalKeywords);
+      
+      // Generate cultural profile based on detected indicators
+      const culturalProfile: CulturalProfile = {
+        primaryCulture,
+        culturalIdentities: culturalKeywords.identityIndicators,
+        languagePreferences: culturalKeywords.languageHints || ["en"],
+        traditionalPractices,
+        spiritualFramework,
+        ancestralLineages: culturalKeywords.ancestralReferences || [],
+        culturalTrauma: culturalRiskFlags.traumaRisk > 0.5 ? {
+          historicalTrauma: culturalRiskFlags.traumaIndicators,
+          intergenerationalPatterns: [],
+          culturalSuppression: culturalRiskFlags.suppressionIndicators,
+          identityReclamationNeeds: culturalRiskFlags.identityNeeds,
+          healingApproaches: this.suggestCulturalHealingApproaches(primaryCulture)
+        } : undefined,
+        culturalStrengths: this.identifyCulturalStrengths(culturalKeywords),
+        preferredWisdomSources: this.mapWisdomSources(spiritualFramework, primaryCulture)
+      };
+
+      logger.info("Cultural context analyzed", {
+        primaryCulture: culturalProfile.primaryCulture,
+        practicesFound: culturalProfile.traditionalPractices.length,
+        spiritualFramework: culturalProfile.spiritualFramework,
+        culturalRisk: culturalRiskFlags.overallRisk
+      });
+      
+      return culturalProfile;
+      
+    } catch (error) {
+      logger.error("Cultural context analysis failed", { error, userInput: userInput.substring(0, 100) });
+      
+      // Fallback to universal cultural profile
+      return {
+        primaryCulture: "universal",
+        culturalIdentities: [],
+        languagePreferences: ["en"],
+        traditionalPractices: [],
+        spiritualFramework: "universal_wisdom",
+        ancestralLineages: [],
+        culturalStrengths: ["resilience", "adaptability"],
+        preferredWisdomSources: ["universal_principles", "nature_wisdom"]
+      };
+    }
   }
 
   /**
@@ -782,6 +839,239 @@ export class CulturalContextAwareness {
   ): Promise<string> {
     // Adapt wisdom content for cultural appropriateness
     return content;
+  }
+
+  // ===============================================
+  // REAL HEURISTIC HELPER METHODS
+  // ===============================================
+
+  private extractLocaleHeuristics(userInput: string, userProfile?: any): string | null {
+    // Check user profile for explicit locale
+    if (userProfile?.locale) return userProfile.locale;
+    if (userProfile?.country) return userProfile.country.toLowerCase();
+    
+    // Simple language detection based on common phrases
+    const spanishPatterns = /\b(gracias|hola|amor|familia|corazón|sanación|espíritu)\b/i;
+    const frenchPatterns = /\b(merci|bonjour|amour|famille|cœur|guérison|esprit)\b/i;
+    const germanPatterns = /\b(danke|hallo|liebe|familie|herz|heilung|geist)\b/i;
+    const portuguesePatterns = /\b(obrigad[oa]|olá|amor|família|coração|cura|espírito)\b/i;
+    
+    if (spanishPatterns.test(userInput)) return "es";
+    if (frenchPatterns.test(userInput)) return "fr";
+    if (germanPatterns.test(userInput)) return "de";
+    if (portuguesePatterns.test(userInput)) return "pt";
+    
+    return "en"; // Default to English
+  }
+
+  private detectCulturalKeywords(userInput: string): any {
+    const input = userInput.toLowerCase();
+    
+    // Cultural identity indicators
+    const identityIndicators = [];
+    const ancestralReferences = [];
+    const languageHints = [];
+    
+    // Indigenous/First Nations
+    if (/\b(indigenous|native|first nations|aboriginal|tribal|ancestors|ceremony|sacred pipe|medicine wheel)\b/.test(input)) {
+      identityIndicators.push("indigenous");
+      ancestralReferences.push("indigenous_ancestors");
+    }
+    
+    // African diaspora
+    if (/\b(african|diaspora|ancestors|motherland|ubuntu|ashe|yoruba|ifa|ancestral wisdom)\b/.test(input)) {
+      identityIndicators.push("african_diaspora");
+      ancestralReferences.push("african_ancestors");
+    }
+    
+    // Asian traditions
+    if (/\b(asian|chinese|japanese|korean|thai|buddhist|tao|qi|chi|dao|meditation|mindfulness)\b/.test(input)) {
+      identityIndicators.push("asian");
+    }
+    
+    // Latin American
+    if (/\b(latino|latina|hispanic|curanderismo|brujería|santería|día de los muertos|ancestors)\b/.test(input)) {
+      identityIndicators.push("latin_american");
+      ancestralReferences.push("latin_ancestors");
+    }
+    
+    // European traditions
+    if (/\b(celtic|norse|germanic|slavic|pagan|druid|wiccan|european)\b/.test(input)) {
+      identityIndicators.push("european_traditional");
+    }
+    
+    return {
+      identityIndicators,
+      ancestralReferences,
+      languageHints: languageHints.length > 0 ? languageHints : ["en"]
+    };
+  }
+
+  private identifyTraditionalPracticeReferences(userInput: string): string[] {
+    const input = userInput.toLowerCase();
+    const practices = [];
+    
+    // Meditation and mindfulness
+    if (/\b(meditat|mindful|breathwork|pranayama|zazen)\b/.test(input)) {
+      practices.push("meditation");
+    }
+    
+    // Ceremony and ritual
+    if (/\b(ceremony|ritual|sacred|blessing|prayer|smudge|incense)\b/.test(input)) {
+      practices.push("ceremony");
+    }
+    
+    // Healing practices
+    if (/\b(healing|medicine|herbs|acupuncture|reiki|energy work|massage)\b/.test(input)) {
+      practices.push("traditional_healing");
+    }
+    
+    // Divination
+    if (/\b(divination|tarot|oracle|i-ching|runes|astrology)\b/.test(input)) {
+      practices.push("divination");
+    }
+    
+    // Dance and movement
+    if (/\b(dance|movement|yoga|tai chi|qigong|martial arts)\b/.test(input)) {
+      practices.push("sacred_movement");
+    }
+    
+    return practices;
+  }
+
+  private identifySpirituralFramework(userInput: string, culturalKeywords: any): string {
+    const input = userInput.toLowerCase();
+    
+    // Buddhism
+    if (/\b(buddha|buddhist|dharma|sangha|nirvana|karma|meditation|mindfulness)\b/.test(input)) {
+      return "buddhist";
+    }
+    
+    // Christianity
+    if (/\b(christian|christ|jesus|god|prayer|bible|church|faith)\b/.test(input)) {
+      return "christian";
+    }
+    
+    // Islam
+    if (/\b(islam|muslim|allah|quran|prayer|mosque|faith)\b/.test(input)) {
+      return "islamic";
+    }
+    
+    // Hinduism
+    if (/\b(hindu|yoga|karma|dharma|moksha|meditation|guru|ashram)\b/.test(input)) {
+      return "hindu";
+    }
+    
+    // Indigenous/Shamanic
+    if (/\b(shaman|medicine|ceremony|spirit|ancestor|sacred|ritual)\b/.test(input)) {
+      return "shamanic";
+    }
+    
+    // New Age/Spiritual but not religious
+    if (/\b(spiritual|consciousness|awakening|enlightenment|energy|chakra|crystal)\b/.test(input)) {
+      return "spiritual_but_not_religious";
+    }
+    
+    // Universal/Non-specific
+    return "universal_wisdom";
+  }
+
+  private assessCulturalRisks(userInput: string, culturalKeywords: any): any {
+    const input = userInput.toLowerCase();
+    let traumaRisk = 0;
+    let overallRisk = 0;
+    
+    const traumaIndicators = [];
+    const suppressionIndicators = [];
+    const identityNeeds = [];
+    
+    // Historical trauma indicators
+    if (/\b(colonization|slavery|genocide|residential school|forced|stolen|oppressed)\b/.test(input)) {
+      traumaRisk += 0.3;
+      traumaIndicators.push("historical_trauma");
+    }
+    
+    // Cultural suppression indicators
+    if (/\b(forbidden|banned|lost|forgotten|hidden|secret|shame)\b/.test(input)) {
+      traumaRisk += 0.2;
+      suppressionIndicators.push("cultural_suppression");
+    }
+    
+    // Identity reclamation needs
+    if (/\b(reclaim|remember|reconnect|heritage|roots|identity|authentic)\b/.test(input)) {
+      identityNeeds.push("identity_reclamation");
+    }
+    
+    // Appropriation risk assessment
+    if (culturalKeywords.identityIndicators.length > 2) {
+      overallRisk += 0.1; // Multiple cultural references may need careful handling
+    }
+    
+    return {
+      traumaRisk,
+      overallRisk: Math.min(traumaRisk + overallRisk, 1.0),
+      traumaIndicators,
+      suppressionIndicators,
+      identityNeeds
+    };
+  }
+
+  private identifyCulturalStrengths(culturalKeywords: any): string[] {
+    const strengths = ["resilience", "wisdom_keeping"];
+    
+    if (culturalKeywords.identityIndicators.includes("indigenous")) {
+      strengths.push("earth_connection", "ceremony_holding", "ancestral_wisdom");
+    }
+    
+    if (culturalKeywords.identityIndicators.includes("african_diaspora")) {
+      strengths.push("community_healing", "rhythm_medicine", "ancestral_connection");
+    }
+    
+    if (culturalKeywords.identityIndicators.includes("asian")) {
+      strengths.push("meditation_mastery", "energy_cultivation", "philosophical_depth");
+    }
+    
+    return strengths;
+  }
+
+  private suggestCulturalHealingApproaches(primaryCulture: string): string[] {
+    const approaches = ["trauma_informed_dialogue", "safe_space_creation"];
+    
+    switch (primaryCulture) {
+      case "indigenous":
+        approaches.push("ceremony_healing", "land_connection", "elder_wisdom");
+        break;
+      case "african_diaspora":
+        approaches.push("community_circles", "music_medicine", "ancestral_honoring");
+        break;
+      case "asian":
+        approaches.push("mind_body_integration", "energy_healing", "contemplative_practice");
+        break;
+      default:
+        approaches.push("holistic_integration", "cultural_bridge_building");
+    }
+    
+    return approaches;
+  }
+
+  private mapWisdomSources(spiritualFramework: string, primaryCulture: string): string[] {
+    const sources = ["personal_experience", "nature_wisdom"];
+    
+    switch (spiritualFramework) {
+      case "buddhist":
+        sources.push("buddhist_teachings", "meditation_masters", "dharma_texts");
+        break;
+      case "shamanic":
+        sources.push("indigenous_elders", "plant_medicine", "ceremony_teachings");
+        break;
+      case "spiritual_but_not_religious":
+        sources.push("consciousness_research", "mystical_experiences", "energy_healing");
+        break;
+      default:
+        sources.push("universal_principles", "cross_cultural_wisdom");
+    }
+    
+    return sources;
   }
 }
 

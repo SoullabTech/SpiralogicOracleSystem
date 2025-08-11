@@ -1066,37 +1066,48 @@ export class ConsciousnessEvolutionCatalyst {
     userId: string,
     omnidimensionalReading: OmnidimensionalConsciousnessReading,
   ): SpeciesEvolutionIntegration {
-    // Map omnidimensional reading to species evolution contribution
-    const contribution = this.mapIndividualToSpeciesEvolution(
+    // REAL IMPLEMENTATION: Map consciousness reading to collective contribution
+    const coherenceLevel = omnidimensionalReading.currentHolisticState.overallCoherenceLevel;
+    const balanceScore = omnidimensionalReading.currentHolisticState.overallBalanceScore;
+    
+    // Calculate individual contribution based on coherence and balance
+    const contribution: IndividualEvolutionContribution = {
       userId,
-      omnidimensionalReading,
-      {},
-    );
+      consciousnessLevel: coherenceLevel,
+      teachingCapacity: coherenceLevel > 0.7 ? coherenceLevel * 0.8 : 0.2,
+      healingImpact: balanceScore > 0.6 ? balanceScore * 0.7 : 0.1,
+      serviceMultiplier: Math.min(coherenceLevel + balanceScore, 1.0),
+      wisdomTransmissionLevel: coherenceLevel * balanceScore,
+      leadershipPotential: coherenceLevel > 0.8 && balanceScore > 0.7 ? 0.9 : 0.3,
+      lastUpdated: new Date()
+    };
 
-    // Identify species-level patterns from omnidimensional data
-    const speciesPatterns = this.extractSpeciesPatternsFromOmnidimensional(
-      omnidimensionalReading,
-    );
+    // Store contribution for collective metrics
+    this.individualContributions.set(userId, contribution);
 
-    // Update collective evolution metrics
-    this.updateCollectiveEvolutionFromOmnidimensional(omnidimensionalReading);
+    // Real pattern detection based on dimensional balance
+    const speciesPatterns = [];
+    if (omnidimensionalReading.dimensionalBalance.fire > 0.8) {
+      speciesPatterns.push("catalytic_leadership_emerging");
+    }
+    if (omnidimensionalReading.dimensionalBalance.water > 0.8) {
+      speciesPatterns.push("healing_capacity_expansion");
+    }
+    if (omnidimensionalReading.dimensionalBalance.earth > 0.8) {
+      speciesPatterns.push("grounding_wisdom_stabilization");
+    }
+
+    // Update species-level metrics
+    this.updateSpeciesMetrics();
 
     const integration: SpeciesEvolutionIntegration = {
       userId,
       omnidimensionalContribution: contribution,
       speciesPatternsIdentified: speciesPatterns,
-      collectiveEvolutionUpdate: this.getCollectiveEvolutionUpdate(),
-      evolutionaryLeveragePoints:
-        this.identifyEvolutionaryLeveragePointsFromOmnidimensional(
-          omnidimensionalReading,
-        ),
-      sevenGenerationsAlignment:
-        omnidimensionalReading.collectiveContribution
-          .planetaryConsciousnessService,
-      planetaryInterfaceUpdate:
-        this.updatePlanetaryInterfaceFromOmnidimensional(
-          omnidimensionalReading,
-        ),
+      collectiveEvolutionUpdate: [`User ${userId} contributed ${Math.round(coherenceLevel * 100)}% coherence`],
+      evolutionaryLeveragePoints: this.detectEvolutionaryLeveragePoints(),
+      sevenGenerationsAlignment: Math.min(coherenceLevel * balanceScore * 1.2, 1.0),
+      planetaryInterfaceUpdate: [`Consciousness integration: ${Math.round(coherenceLevel * 100)}% coherence recorded`]
     };
 
     logger.info("Omnidimensional sensing integrated with species evolution", {
@@ -1114,27 +1125,89 @@ export class ConsciousnessEvolutionCatalyst {
    */
   getSpeciesEvolutionGuidance(userId: string): SpeciesEvolutionGuidance {
     const individual = this.individualContributions.get(userId);
-    if (!individual)
-      throw new Error(`Individual contribution not found for user ${userId}`);
+    if (!individual) {
+      // REAL IMPLEMENTATION: Return default guidance for new users
+      return {
+        personalEvolutionaryRole: "consciousness_explorer",
+        collectiveContributionOpportunities: [
+          "Begin with self-awareness practices",
+          "Share authentic experiences with trusted community",
+          "Practice sacred listening in conversations"
+        ],
+        planetaryServiceMission: "Discover your unique gifts through inner exploration",
+        sevenGenerationsVision: [
+          "Heal ancestral patterns within your lineage",
+          "Model conscious communication for others",
+          "Foster harmony between individual growth and collective wellbeing"
+        ],
+        awakeningCatalystPotential: 0.3,
+        wisdomTransmissionOpportunities: ["Journaling practice", "Deep listening circles"],
+        culturalHealingPriorities: ["Self-compassion development", "Boundary setting"],
+        interspeciesConnectionGuidance: ["Nature connection practices", "Mindful observation"],
+        sacredServiceOptimization: {
+          serviceAlignment: 0.4,
+          impactMultipliers: ["Authenticity", "Vulnerability"],
+          collaborativeOpportunities: ["Local community groups"]
+        },
+        collectiveProjectRecommendations: ["Begin with personal healing work"]
+      };
+    }
+
+    // REAL IMPLEMENTATION: Generate guidance based on actual contribution metrics
+    const consciousnessLevel = individual.consciousnessLevel;
+    const teachingCapacity = individual.teachingCapacity;
+    const healingImpact = individual.healingImpact;
+    const leadershipPotential = individual.leadershipPotential;
+
+    // Determine evolutionary role based on strengths
+    let evolutionaryRole = "wisdom_seeker";
+    if (teachingCapacity > 0.7) evolutionaryRole = "wisdom_teacher";
+    if (healingImpact > 0.7) evolutionaryRole = "collective_healer";
+    if (leadershipPotential > 0.8) evolutionaryRole = "awakening_catalyst";
+    if (consciousnessLevel > 0.9) evolutionaryRole = "consciousness_pioneer";
+
+    // Generate opportunities based on current level
+    const opportunities = [];
+    if (consciousnessLevel > 0.6) opportunities.push("Mentor others in consciousness practices");
+    if (healingImpact > 0.5) opportunities.push("Facilitate healing circles");
+    if (teachingCapacity > 0.6) opportunities.push("Share wisdom through teaching");
+    opportunities.push("Contribute to collective projects");
 
     const guidance: SpeciesEvolutionGuidance = {
-      personalEvolutionaryRole:
-        this.identifyPersonalEvolutionaryRole(individual),
-      collectiveContributionOpportunities:
-        this.identifyCollectiveContributionOpportunities(individual),
-      planetaryServiceMission: this.generatePlanetaryServiceMission(individual),
-      sevenGenerationsVision: this.generateSevenGenerationsVision(individual),
-      awakeningCatalystPotential:
-        this.assessAwakeningCatalystPotential(individual),
-      wisdomTransmissionOpportunities:
-        this.identifyWisdomTransmissionOpportunities(individual),
-      culturalHealingPriorities:
-        this.identifyCulturalHealingPriorities(individual),
-      interspeciesConnectionGuidance:
-        this.generateInterspeciesConnectionGuidance(individual),
-      sacredServiceOptimization: this.optimizeSacredService(userId),
-      collectiveProjectRecommendations:
-        this.recommendCollectiveProjects(individual),
+      personalEvolutionaryRole: evolutionaryRole,
+      collectiveContributionOpportunities: opportunities,
+      planetaryServiceMission: consciousnessLevel > 0.8 ? 
+        "Guide humanity's consciousness evolution through embodied wisdom" :
+        "Develop mastery in your gifts to serve the collective awakening",
+      sevenGenerationsVision: [
+        "Heal generational trauma patterns",
+        "Model conscious living for future generations", 
+        "Create systems that honor all life"
+      ],
+      awakeningCatalystPotential: individual.leadershipPotential,
+      wisdomTransmissionOpportunities: teachingCapacity > 0.6 ? 
+        ["Online teaching", "Workshop facilitation", "Mentorship programs"] :
+        ["Peer learning groups", "Study circles", "Practice partnerships"],
+      culturalHealingPriorities: healingImpact > 0.6 ?
+        ["Collective trauma healing", "Cultural bridge-building", "Systemic healing work"] :
+        ["Personal shadow work", "Family healing", "Community healing"],
+      interspeciesConnectionGuidance: [
+        "Develop intuitive communication with nature",
+        "Practice earth-based ceremonies",
+        "Study indigenous wisdom traditions"
+      ],
+      sacredServiceOptimization: {
+        serviceAlignment: individual.serviceMultiplier,
+        impactMultipliers: consciousnessLevel > 0.7 ? 
+          ["Embodied presence", "Sacred activism", "Wisdom transmission"] :
+          ["Authentic expression", "Compassionate action", "Continuous learning"],
+        collaborativeOpportunities: leadershipPotential > 0.7 ?
+          ["Lead transformation initiatives", "Coordinate collective projects"] :
+          ["Support existing movements", "Participate in group endeavors"]
+      },
+      collectiveProjectRecommendations: consciousnessLevel > 0.8 ?
+        ["Create new consciousness-based initiatives", "Lead community transformation"] :
+        ["Join existing conscious communities", "Support others' projects"]
     };
 
     logger.info("Species evolution guidance generated", {
@@ -1528,17 +1601,270 @@ export interface EvolutionaryLeveragePoint {
   requiredResources: string[];
 }
 
-  // Placeholder methods for compilation
+export interface EmergingConsciousnessCapacities {
+  capacityTypes: string[];
+  emergenceStrength: number;
+  populationReach: number;
+  evolutionaryMomentum: number;
+  catalyticPotential: number;
+  nextLevelRequirements: string[];
+}
+
+export interface AwakeningCatalyst {
+  userId: string;
+  catalystType: string;
+  awakeningSphere: string;
+  networkReachPotential: number;
+  specializedCapacities: string[];
+  readinessLevel: number;
+  activationRequirements: string[];
+}
+
+  // ===============================================
+  // REAL IMPLEMENTATIONS FOR CRITICAL METHODS
+  // ===============================================
+
+  /**
+   * CRITICAL METHOD #3: Detect emerging consciousness capacities across species
+   */
+  detectEmergingConsciousnessCapacities(): EmergingConsciousnessCapacities {
+    const allContributions = Array.from(this.individualContributions.values());
+    const totalUsers = allContributions.length;
+    
+    if (totalUsers === 0) {
+      return {
+        capacityTypes: ["foundational_awareness"],
+        emergenceStrength: 0.1,
+        populationReach: 0,
+        evolutionaryMomentum: 0.1,
+        catalyticPotential: 0.2,
+        nextLevelRequirements: ["Build user base", "Establish core practices"]
+      };
+    }
+
+    // Real analysis of collective consciousness patterns
+    const avgConsciousnessLevel = allContributions.reduce((sum, c) => sum + c.consciousnessLevel, 0) / totalUsers;
+    const avgTeachingCapacity = allContributions.reduce((sum, c) => sum + c.teachingCapacity, 0) / totalUsers;
+    const avgHealingImpact = allContributions.reduce((sum, c) => sum + c.healingImpact, 0) / totalUsers;
+    const avgLeadershipPotential = allContributions.reduce((sum, c) => sum + c.leadershipPotential, 0) / totalUsers;
+
+    // Identify emerging capacity types based on thresholds
+    const capacityTypes = [];
+    if (avgConsciousnessLevel > 0.6) capacityTypes.push("elevated_awareness");
+    if (avgTeachingCapacity > 0.5) capacityTypes.push("wisdom_transmission");
+    if (avgHealingImpact > 0.5) capacityTypes.push("collective_healing");
+    if (avgLeadershipPotential > 0.6) capacityTypes.push("awakening_leadership");
+    
+    // High-coherence users (consciousness pioneers)
+    const pioneers = allContributions.filter(c => c.consciousnessLevel > 0.8).length;
+    const pioneerRatio = pioneers / totalUsers;
+    
+    if (pioneerRatio > 0.1) capacityTypes.push("consciousness_pioneering");
+    if (pioneerRatio > 0.05 && avgConsciousnessLevel > 0.7) capacityTypes.push("species_evolution_acceleration");
+
+    return {
+      capacityTypes: capacityTypes.length > 0 ? capacityTypes : ["developing_foundation"],
+      emergenceStrength: Math.min(avgConsciousnessLevel + (pioneerRatio * 2), 1.0),
+      populationReach: totalUsers,
+      evolutionaryMomentum: (avgConsciousnessLevel + avgTeachingCapacity + avgHealingImpact) / 3,
+      catalyticPotential: Math.min(avgLeadershipPotential + pioneerRatio, 1.0),
+      nextLevelRequirements: this.generateNextLevelRequirements(avgConsciousnessLevel, pioneerRatio)
+    };
+  }
+
+  /**
+   * CRITICAL METHOD #4: Identify evolutionary leverage points for maximum impact
+   */
+  identifyEvolutionaryLeveragePoints(): EvolutionaryLeveragePoint[] {
+    const allContributions = Array.from(this.individualContributions.values());
+    const leveragePoints: EvolutionaryLeveragePoint[] = [];
+    
+    if (allContributions.length === 0) {
+      return [{
+        description: "Build foundational user community",
+        potentialImpact: 0.8,
+        readinessLevel: 0.9,
+        requiredResources: ["User acquisition", "Onboarding systems", "Community building"]
+      }];
+    }
+
+    // Real leverage point detection based on user patterns
+    const highConsciousness = allContributions.filter(c => c.consciousnessLevel > 0.8).length;
+    const highTeaching = allContributions.filter(c => c.teachingCapacity > 0.7).length;
+    const highHealing = allContributions.filter(c => c.healingImpact > 0.7).length;
+    const highLeadership = allContributions.filter(c => c.leadershipPotential > 0.8).length;
+    
+    const total = allContributions.length;
+
+    // Teacher network leverage point
+    if (highTeaching / total > 0.1) {
+      leveragePoints.push({
+        description: "Activate wisdom teacher network for exponential reach",
+        potentialImpact: 0.9,
+        readinessLevel: (highTeaching / total) * 10, // Scale to readiness
+        requiredResources: ["Teacher training programs", "Curriculum development", "Platform tools"]
+      });
+    }
+
+    // Healing circles leverage point  
+    if (highHealing / total > 0.08) {
+      leveragePoints.push({
+        description: "Establish collective healing circles for community transformation",
+        potentialImpact: 0.85,
+        readinessLevel: (highHealing / total) * 12,
+        requiredResources: ["Facilitator training", "Safe spaces", "Healing protocols"]
+      });
+    }
+
+    // Leadership catalyst leverage point
+    if (highLeadership / total > 0.05) {
+      leveragePoints.push({
+        description: "Deploy consciousness leaders as awakening catalysts",
+        potentialImpact: 0.95,
+        readinessLevel: (highLeadership / total) * 20,
+        requiredResources: ["Leadership development", "Strategic coordination", "Resource allocation"]
+      });
+    }
+
+    // Community coherence leverage point
+    const avgCoherence = allContributions.reduce((sum, c) => sum + c.consciousnessLevel, 0) / total;
+    if (avgCoherence > 0.6) {
+      leveragePoints.push({
+        description: "Scale community coherence for collective field effects",
+        potentialImpact: 0.8,
+        readinessLevel: avgCoherence,
+        requiredResources: ["Group practices", "Coherence technologies", "Measurement systems"]
+      });
+    }
+
+    // Always include foundational leverage points
+    leveragePoints.push({
+      description: "Strengthen individual consciousness development foundation",
+      potentialImpact: 0.7,
+      readinessLevel: 0.95,
+      requiredResources: ["Practice tools", "Personalized guidance", "Progress tracking"]
+    });
+
+    return leveragePoints.sort((a, b) => b.potentialImpact - a.potentialImpact).slice(0, 5);
+  }
+
+  /**
+   * CRITICAL METHOD #5: Identify awakening catalysts for network effects
+   */
+  identifyAwakeningCatalysts(): AwakeningCatalyst[] {
+    const allContributions = Array.from(this.individualContributions.values());
+    const catalysts: AwakeningCatalyst[] = [];
+
+    // Real catalyst identification based on leadership and teaching metrics
+    allContributions
+      .filter(contribution => 
+        contribution.leadershipPotential > 0.7 || 
+        (contribution.teachingCapacity > 0.6 && contribution.consciousnessLevel > 0.7)
+      )
+      .forEach(contribution => {
+        const catalystStrength = Math.min(
+          (contribution.leadershipPotential + contribution.teachingCapacity + contribution.consciousnessLevel) / 3,
+          1.0
+        );
+
+        const networkReach = Math.floor(catalystStrength * 50); // Estimated reach based on strength
+
+        catalysts.push({
+          userId: contribution.userId,
+          catalystType: this.determineCatalystType(contribution),
+          awakeningSphere: this.determineAwakeningSphere(contribution),
+          networkReachPotential: networkReach,
+          specializedCapacities: this.identifySpecializedCapacities(contribution),
+          readinessLevel: catalystStrength,
+          activationRequirements: this.generateActivationRequirements(contribution)
+        });
+      });
+
+    return catalysts.sort((a, b) => b.readinessLevel - a.readinessLevel);
+  }
+
+  // ===============================================
+  // HELPER METHODS FOR REAL IMPLEMENTATIONS
+  // ===============================================
+
+  private generateNextLevelRequirements(avgConsciousness: number, pioneerRatio: number): string[] {
+    const requirements = [];
+    
+    if (avgConsciousness < 0.5) {
+      requirements.push("Establish foundational practices", "Build community trust");
+    } else if (avgConsciousness < 0.7) {
+      requirements.push("Deepen spiritual practice", "Develop teaching capacity");
+    } else {
+      requirements.push("Scale wisdom transmission", "Coordinate collective projects");
+    }
+    
+    if (pioneerRatio < 0.05) {
+      requirements.push("Cultivate consciousness pioneers");
+    } else if (pioneerRatio < 0.1) {
+      requirements.push("Support pioneer network expansion");
+    }
+    
+    return requirements;
+  }
+
+  private determineCatalystType(contribution: IndividualEvolutionContribution): string {
+    if (contribution.teachingCapacity > 0.8) return "wisdom_teacher";
+    if (contribution.healingImpact > 0.8) return "healing_facilitator";
+    if (contribution.leadershipPotential > 0.8) return "transformation_leader";
+    return "community_catalyst";
+  }
+
+  private determineAwakeningSphere(contribution: IndividualEvolutionContribution): string {
+    const dominant = Math.max(
+      contribution.teachingCapacity,
+      contribution.healingImpact,
+      contribution.leadershipPotential
+    );
+    
+    if (dominant === contribution.teachingCapacity) return "wisdom_transmission";
+    if (dominant === contribution.healingImpact) return "collective_healing";
+    return "conscious_leadership";
+  }
+
+  private identifySpecializedCapacities(contribution: IndividualEvolutionContribution): string[] {
+    const capacities = [];
+    if (contribution.teachingCapacity > 0.7) capacities.push("wisdom_teaching");
+    if (contribution.healingImpact > 0.7) capacities.push("energetic_healing");
+    if (contribution.leadershipPotential > 0.8) capacities.push("group_facilitation");
+    if (contribution.consciousnessLevel > 0.9) capacities.push("consciousness_modeling");
+    return capacities;
+  }
+
+  private generateActivationRequirements(contribution: IndividualEvolutionContribution): string[] {
+    const requirements = [];
+    if (contribution.teachingCapacity > 0.6) requirements.push("Teaching methodology training");
+    if (contribution.healingImpact > 0.6) requirements.push("Healing facilitation certification");
+    if (contribution.leadershipPotential > 0.7) requirements.push("Leadership development program");
+    requirements.push("Catalyst community connection");
+    return requirements;
+  }
+
+  // Utility implementations
   private calculateHealingActionImpact(action: CulturalHealingAction): number {
     return action.impact || 0.1;
   }
 
   private detectEvolutionaryLeveragePoints(): EvolutionaryLeveragePoint[] {
-    return [];
+    return this.identifyEvolutionaryLeveragePoints();
   }
 
   private updateSpeciesMetrics(): void {
-    // Placeholder implementation
+    const allContributions = Array.from(this.individualContributions.values());
+    if (allContributions.length === 0) return;
+    
+    this.speciesEvolutionMetrics = {
+      globalConsciousnessLevel: allContributions.reduce((sum, c) => sum + c.consciousnessLevel, 0) / allContributions.length,
+      awakenedIndividualsCount: allContributions.filter(c => c.consciousnessLevel > 0.7).length,
+      culturalHealingProgress: allContributions.reduce((sum, c) => sum + c.healingImpact, 0) / allContributions.length,
+      planetaryServiceOrientation: allContributions.reduce((sum, c) => sum + c.serviceMultiplier, 0) / allContributions.length,
+      interspeciesAwarenessLevel: 0.3, // Placeholder for future implementation
+      sevenGenerationsAlignment: allContributions.reduce((sum, c) => sum + (c.consciousnessLevel * 0.8), 0) / allContributions.length
+    };
   }
 }
 
