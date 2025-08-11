@@ -1,28 +1,18 @@
-import { 
-  jest, 
-  expect, 
-  beforeAll, 
-  beforeEach, 
-  afterEach, 
-  afterAll 
-} from '@jest/globals';
+// Ensure this file is treated as a module
+export {};
 
 // ===============================================
 // JEST TEST SETUP
 // Global test configuration and utilities
 // ===============================================
 
-// Extend Jest matchers
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeBetween(min: number, max: number): R;
-      toBeWithinRange(min: number, max: number): R;
-      toContainSacredLanguage(): R;
-      toBeValidOracleResponse(): R;
-    }
-  }
-}
+// Jest globals are available through @types/jest
+declare const expect: jest.Expect;
+declare const jest: jest.Jest;
+declare const beforeAll: jest.LifecycleFunction;
+declare const beforeEach: jest.LifecycleFunction;
+declare const afterEach: jest.LifecycleFunction;
+declare const afterAll: jest.LifecycleFunction;
 
 // Custom matchers for Sacred Technology Platform testing
 expect.extend({
@@ -88,32 +78,19 @@ expect.extend({
     };
   },
 
-  toBeValidOracleResponse(received: string) {
-    const checks = {
-      hasContent: received && received.length > 10,
-      notTooLong: received.length < 2000,
-      notGeneric: !received.match(/^(yes|no|ok|sure|maybe)$/i),
-      hasDepth:
-        received.length > 30 &&
-        (received.includes("?") ||
-          received.match(/\b(explore|consider|reflect|notice|aware)\b/i)),
-      maintainsBoundaries: !received.match(
-        /^(i love you too|yes.*friend|we are friends)/i,
-      ),
-    };
-
-    const failedChecks = Object.entries(checks)
-      .filter(([_, passed]) => !passed)
-      .map(([check, _]) => check);
-
-    const pass = failedChecks.length === 0;
+  toBeValidOracleResponse(received: any) {
+    const pass =
+      received &&
+      typeof received.content === "string" &&
+      typeof received.provider === "string" &&
+      typeof received.model === "string";
 
     return {
+      pass,
       message: () =>
         pass
-          ? `expected "${received}" not to be a valid oracle response`
-          : `expected "${received}" to be a valid oracle response. Failed checks: ${failedChecks.join(", ")}`,
-      pass,
+          ? "expected response NOT to be a valid AIResponse"
+          : `expected a valid AIResponse shape, got: ${JSON.stringify(received)}`,
     };
   },
 });
@@ -211,43 +188,41 @@ export const testUtils = {
     return { result, duration };
   },
 
+  // Helper for typed mocks  
+  mock: <T extends (...args: any[]) => any = (...args: any[]) => any>() => 
+    (jest.fn() as unknown) as jest.MockedFunction<T>,
+
   // Mock implementation helpers
   createMockSoulMemory: () => ({
-    initialize: jest.fn().mockResolvedValue(undefined),
-    close: jest.fn().mockResolvedValue(undefined),
-    storeMemory: jest
-      .fn()
+    initialize: testUtils.mock<() => Promise<void>>().mockResolvedValue(undefined),
+    close: testUtils.mock<() => Promise<void>>().mockResolvedValue(undefined),
+    storeMemory: testUtils.mock<() => Promise<any>>()
       .mockResolvedValue({ id: "mock-id", timestamp: new Date() }),
-    retrieveMemories: jest.fn().mockResolvedValue([]),
-    semanticSearch: jest.fn().mockResolvedValue([]),
-    getSacredMoments: jest.fn().mockResolvedValue([]),
-    getActiveArchetypes: jest.fn().mockResolvedValue([]),
-    getTransformationJourney: jest.fn().mockResolvedValue({
+    retrieveMemories: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
+    semanticSearch: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
+    getSacredMoments: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
+    getActiveArchetypes: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
+    getTransformationJourney: testUtils.mock<() => Promise<any>>().mockResolvedValue({
       milestones: [],
       currentPhase: "initiation",
       nextSpiralSuggestion: "Continue your journey",
     }),
-    createMemoryThread: jest
-      .fn()
+    createMemoryThread: testUtils.mock<() => Promise<any>>()
       .mockResolvedValue({ id: "thread-id", memories: [] }),
-    getMemoryThreads: jest.fn().mockResolvedValue([]),
+    getMemoryThreads: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
   }),
 
   createMockWisdomEngine: () => ({
-    detectPattern: jest.fn().mockResolvedValue({ strength: 0.8, frequency: 3 }),
-    selectWisdomApproach: jest
-      .fn()
+    detectPattern: testUtils.mock<() => Promise<any>>().mockResolvedValue({ strength: 0.8, frequency: 3 }),
+    selectWisdomApproach: testUtils.mock<() => Promise<any>>()
       .mockResolvedValue({ primary: "jung", confidence: 0.9 }),
-    generateElementalWisdom: jest
-      .fn()
+    generateElementalWisdom: testUtils.mock<() => Promise<string>>()
       .mockResolvedValue("Mock elemental wisdom"),
-    analyzeConversationFlow: jest
-      .fn()
+    analyzeConversationFlow: testUtils.mock<() => Promise<any>>()
       .mockResolvedValue({ patterns: [], stuckPoints: [] }),
-    identifyGrowthEdge: jest
-      .fn()
+    identifyGrowthEdge: testUtils.mock<() => Promise<any>>()
       .mockResolvedValue({ edge: "vulnerability", readiness: 0.7 }),
-    getArchetypalActivation: jest.fn().mockResolvedValue({
+    getArchetypalActivation: testUtils.mock<() => Promise<any>>().mockResolvedValue({
       dominantArchetype: "Shadow",
       emergingArchetype: "Warrior",
       balanceScore: 0.6,

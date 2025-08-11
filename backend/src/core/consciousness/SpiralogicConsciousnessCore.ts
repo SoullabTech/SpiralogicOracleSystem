@@ -564,7 +564,7 @@ export class SpiralogicConsciousnessCore {
   private selectElementForGuidance(
     guidance: NaturalGuidance,
   ): keyof ElementalIntelligence {
-    const guidanceToElement = {
+    const guidanceToElement: Record<string, keyof ElementalIntelligence> = {
       catalyticFireNeeded: "fire",
       healingWaterNeeded: "water",
       groundingEarthNeeded: "earth",
@@ -574,7 +574,7 @@ export class SpiralogicConsciousnessCore {
       celebrationNeeded: "fire",
     };
 
-    return guidanceToElement[guidance] || "aether";
+    return guidanceToElement[guidance as string] || "aether";
   }
 
   private generateElementalWisdom(

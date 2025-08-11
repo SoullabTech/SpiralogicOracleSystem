@@ -106,6 +106,16 @@ export class CulturalContextAwareness {
   }
 
   /**
+   * Analyze cultural context from user data
+   */
+  async analyzeCulturalContext(
+    userInput: string,
+    userProfile?: any
+  ): Promise<CulturalProfile> {
+    return this.detectCulturalContext(userInput, userProfile);
+  }
+
+  /**
    * Detect cultural context from user input and profile
    */
   async detectCulturalContext(

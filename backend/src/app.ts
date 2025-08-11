@@ -11,6 +11,7 @@ import {
 import { defaultRateLimiter } from "./middleware/rateLimiter";
 import { validateContentSecurity } from "./middleware/inputValidation";
 import { logger } from "./utils/logger";
+import { healthRouter } from "./server/health";
 
 const app = express();
 
@@ -57,6 +58,9 @@ app.use(defaultRateLimiter);
 // Request ID and response formatting
 app.use(addRequestId);
 app.use(responseFormatter);
+
+// Health endpoints (must be before API routes)
+app.use("/", healthRouter);
 
 // Health check route (before API routes for monitoring)
 app.get("/health", (req, res) => {

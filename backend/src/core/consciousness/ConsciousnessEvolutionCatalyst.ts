@@ -1508,6 +1508,40 @@ export interface SpeciesEvolutionGuidance {
   collectiveProjectRecommendations: string[];
 }
 
+export interface SacredServiceOptimization {
+  serviceAlignment: number;
+  impactMultipliers: string[];
+  collaborativeOpportunities: string[];
+}
+
+export interface CulturalHealingAction {
+  type: string;
+  scope: string;
+  impact: number;
+  description: string;
+}
+
+export interface EvolutionaryLeveragePoint {
+  description: string;
+  potentialImpact: number;
+  readinessLevel: number;
+  requiredResources: string[];
+}
+
+  // Placeholder methods for compilation
+  private calculateHealingActionImpact(action: CulturalHealingAction): number {
+    return action.impact || 0.1;
+  }
+
+  private detectEvolutionaryLeveragePoints(): EvolutionaryLeveragePoint[] {
+    return [];
+  }
+
+  private updateSpeciesMetrics(): void {
+    // Placeholder implementation
+  }
+}
+
 // Export singleton instance
 export const consciousnessEvolutionCatalyst =
   new ConsciousnessEvolutionCatalyst();
