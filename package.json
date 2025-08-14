@@ -1,24 +1,26 @@
 {
-  "name": "spiralogic-oracle-monorepo",
+  "name": "spiralogic-oracle-system",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "scripts": {
-    "dev": "cd frontend && npm run dev",
-    "build": "npm run build:backend",
-    "build:frontend": "echo 'Frontend build skipped - no package.json found'",
-    "build:backend": "cd backend && npm run build",
-    "start": "cd frontend && npm run start",
-    "test": "cd backend && npm test",
-    "lint": "cd frontend && npm run lint && cd ../backend && npm run lint",
-    "lint:fix": "cd frontend && npm run lint:fix; cd ../backend && npm run lint:fix",
-    "deploy": "echo 'Deploy step - implement based on your deployment strategy'",
-    "prepare": "[ -d .git ] && husky install || true"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.55.0",
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "husky": "^8.0.3"
+    "@types/node": "^20.19.10",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.5",
+    "husky": "^8.0.3",
+    "typescript": "^5.9.2"
   }
 }
