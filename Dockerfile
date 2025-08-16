@@ -20,6 +20,9 @@ COPY . .
 # Build frontend
 RUN npm run build
 
+# Build backend
+RUN cd backend && npm run build
+
 # Production stage
 FROM node:20-alpine
 
