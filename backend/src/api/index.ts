@@ -8,6 +8,7 @@ import ainEngineRouter from "./routes/ainEngineRouter";
 import developerRouter from "./routes/developerRouter";
 import oracleGatewayRouter from "../routes/oracleGateway";
 import healthRouter from "../routes/health.routes";
+import psiRouter from "./routes/psi.routes";
 import { logger } from "../utils/logger";
 
 const router = Router();
@@ -43,6 +44,11 @@ router.use(`/${API_VERSION}/developer`, developerRouter);
  * Health and monitoring endpoints
  */
 router.use(`/${API_VERSION}/health`, healthRouter);
+
+/**
+ * PSI-lite motivation system - Experimental feature
+ */
+router.use("/", psiRouter);
 
 /**
  * API root endpoint - provides API information
