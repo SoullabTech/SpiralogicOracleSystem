@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "../styles/soullab-tokens.css";
+import "../../styles/soullab-tokens.css";
 
 interface CollectiveInsight {
   id: string;

@@ -133,7 +133,12 @@
       "Bash(npm -w backend test -- -i)",
       "Bash(npx husky init:*)",
       "Bash(npx husky:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm remove:*)",
+      "Bash(PORT=3002 PSI_LITE_ENABLED=true PSI_LEARNING_ENABLED=true PSI_LEARNING_RATE=0.08 PSI_MEMORY_ENABLED=true npm start)",
+      "Bash(npx next build:*)",
+      "Bash(cd:*)"
     ],
     "deny": []
   },
