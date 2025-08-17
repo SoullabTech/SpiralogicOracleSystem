@@ -1,7 +1,6 @@
 # Build output
 dist/
-
-# Prevent compiled junk in src from being tracked
+.tsbuildinfo
 src/**/*.js
 src/**/*.js.map
 

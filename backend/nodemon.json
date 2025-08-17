@@ -1,9 +1,20 @@
 {
-  "watch": ["src"],
-  "ext": "ts,json",
-  "ignore": ["src/**/*.test.ts", "src/**/*.spec.ts"],
-  "exec": "ts-node -r tsconfig-paths/register --transpile-only src/server-simple.ts",
+  "watch": ["dist"],
+  "ext": "js",
+  "exec": "node dist/server.js",
+  "ignore": [
+    ".git",
+    "node_modules",
+    "dist/**/*.map",
+    "dist/**/*.d.ts",
+    ".tsbuildinfo",
+    "*.log",
+    ".env",
+    "src/**"
+  ],
   "env": {
-    "NODE_ENV": "development"
-  }
+    "NODE_ENV": "development",
+    "NODE_OPTIONS": "--enable-source-maps"
+  },
+  "legacyWatch": true
 }
