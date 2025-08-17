@@ -78,7 +78,7 @@ export function BottomNav() {
   const { textClass, borderClass } = useElementTheme();
   
   // Extract the first segment to determine active tab
-  const activeTab = pathname.split('/')[1] || 'now';
+  const activeTab = pathname?.split('/')[1] || 'now';
 
   return (
     <nav 

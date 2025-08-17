@@ -1,0 +1,7 @@
+                    backup_info                     
+----------------------------------------------------
+ RLS Backup Summary - 2025-08-17 22:15:57.232723+00
+ Tables with RLS: 24
+ Total policies: 109
+(3 rows)
+

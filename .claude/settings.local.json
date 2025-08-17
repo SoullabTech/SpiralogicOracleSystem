@@ -149,7 +149,13 @@
       "Bash(if grep -q \"NEXT_PUBLIC_SUPABASE_URL\" .env*)",
       "Bash(then echo \"NEXT_PUBLIC_SUPABASE_URL found in env files\")",
       "Bash(else echo \"NEXT_PUBLIC_SUPABASE_URL not found in env files - skipping RPC test\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(echo $DEPLOY_TARGET)",
+      "Bash(NODE_ENV=development npm run dev -- --port 3001)",
+      "Bash(cd:*)",
+      "Bash(npx next dev:*)",
+      "Bash(cd:*)",
+      "Bash(claude --version)"
     ],
     "deny": []
   },
