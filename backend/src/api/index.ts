@@ -4,6 +4,7 @@
 import { Router } from "express";
 import { errorResponse } from "../utils/sharedUtilities";
 import { logger } from "../utils/logger";
+import onboardingRouter from "./onboarding";
 
 const router = Router();
 
@@ -42,6 +43,11 @@ router.get(`/${API_VERSION}/health`, (req, res) => {
     errors: []
   });
 });
+
+/**
+ * Active routers
+ */
+router.use(`/${API_VERSION}/onboarding`, onboardingRouter);
 
 /**
  * Placeholder routers for missing modules
