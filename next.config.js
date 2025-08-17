@@ -4,8 +4,8 @@ const isIPFS = process.env.DEPLOY_TARGET === "ipfs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Static export configuration for IPFS
-  output: isIPFS ? "export" : undefined,
+  // Static export configuration for IPFS, standalone for Docker
+  output: isIPFS ? "export" : "standalone",
   trailingSlash: isIPFS ? true : false,
   skipTrailingSlashRedirect: isIPFS ? true : false,
   distDir: isIPFS ? "dist" : ".next",

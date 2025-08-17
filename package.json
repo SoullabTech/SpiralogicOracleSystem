@@ -13,9 +13,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "start:all": "npm run build && npm start && cd backend && npm run build && npm start"  
+    "start:all": "npm run build && npm start && cd backend && npm run build && npm start",
+    "docker:build": "docker build -f Dockerfile.fallback -t spiralogic-web .",
+    "docker:run": "docker run --rm -p 3000:3000 --env-file .env.local --add-host=host.docker.internal:host-gateway spiralogic-web",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up --build"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.55.0",
     "@tailwindcss/forms": "^0.5.10",

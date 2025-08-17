@@ -13,7 +13,7 @@ grant execute on function public.health_check() to anon;
 -- Optional richer health (DISABLED by default)
 -- Uncomment only if you want Beta Gate to verify a harmless table count.
 -- Requires an authenticated token (e.g., BOT_JWT) and a safe public table.
---[[
+/*
 create or replace function public.health_status()
 returns jsonb
 language plpgsql
@@ -33,4 +33,4 @@ $fn$;
 
 revoke all on function public.health_status() from public;
 grant execute on function public.health_status() to authenticated;
-]]
+*/

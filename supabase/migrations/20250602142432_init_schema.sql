@@ -11,7 +11,7 @@ create table if not exists ritual_entries (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users,
   ritual_type text,
-  linked_dream_id uuid references journal_entries(id),
+  linked_dream_id uuid, -- Will add FK when journal_entries exists
   notes text,
   created_at timestamptz default now()
 );

@@ -1,32 +1,8 @@
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    container_name: spiralogic-backend-dev
-    ports:
-      - "8080:8080"
-    env_file:
-      - ./backend/.env
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - PORT=8080
-      - PSI_LITE_ENABLED=true
-      - PSI_LEARNING_ENABLED=true
-      - PSI_LEARNING_RATE=0.08
-      - PSI_MEMORY_ENABLED=true
-    depends_on:
-      - postgres
-      - redis
-
-  frontend:
+  web:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: spiralogic-frontend-dev
     ports:
       - "3000:3000"
     env_file:
@@ -34,35 +10,5 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - /app/.next
-    environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://backend:8080
-      - NEXT_PUBLIC_API_BASE_URL=http://backend:8080/api
-    depends_on:
-      - backend
-
-  postgres:
-    image: postgres:16
-    container_name: spiralogic-postgres-dev
-    environment:
-      POSTGRES_USER: spiralogic
-      POSTGRES_PASSWORD: spiralogic_dev
-      POSTGRES_DB: spiralogic_oracle
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./backend/supabase/migrations:/docker-entrypoint-initdb.d
-
-  redis:
-    image: redis:7-alpine
-    container_name: spiralogic-redis-dev
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
-volumes:
-  postgres_data:
-  redis_data:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

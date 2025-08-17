@@ -141,7 +141,15 @@
       "Bash(cd:*)",
       "Bash(PORT=3001 npm start)",
       "Bash(make:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(supabase start:*)",
+      "Bash(supabase db reset:*)",
+      "Bash(supabase status:*)",
+      "Bash(psql:*)",
+      "Bash(if grep -q \"NEXT_PUBLIC_SUPABASE_URL\" .env*)",
+      "Bash(then echo \"NEXT_PUBLIC_SUPABASE_URL found in env files\")",
+      "Bash(else echo \"NEXT_PUBLIC_SUPABASE_URL not found in env files - skipping RPC test\")",
+      "Bash(fi)"
     ],
     "deny": []
   },

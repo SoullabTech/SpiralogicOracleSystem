@@ -1,31 +1,6 @@
-# syntax=docker/dockerfile:1.7
-FROM node:20-bookworm
-
+FROM node:20-alpine
 WORKDIR /app
-
-# Use OS-level deps for native modules
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 build-essential git ca-certificates && rm -rf /var/lib/apt/lists/*
-
-# Install dependencies separately for better caching
-COPY package.json package-lock.json* ./
+ENV NODE_ENV=development
+COPY package*.json ./
 RUN npm ci
-
-# Copy only necessary frontend files (excluding backend and heavy directories)
-COPY app ./app
-COPY components ./components
-COPY lib ./lib
-COPY public ./public
-COPY frontend/src/styles ./frontend/src/styles
-COPY middleware* ./
-COPY next.config.js ./
-COPY tailwind.config.ts ./
-COPY tsconfig.json ./
-COPY postcss.config.js ./
-COPY next-env.d.ts ./
-
-# Expose frontend port
-EXPOSE 3000
-
-# Default dev command for Next.js
-CMD ["npm", "run", "dev"]
+CMD ["npm","run","dev"]
