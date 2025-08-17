@@ -22,3 +22,23 @@ backend/node_modules
 backend/dist
 backend/logs
 backend/uploads
+# Additional optimizations
+.cache
+build
+npm-debug.log
+pnpm-lock.yaml
+yarn.lock
+docs/
+deprecated/
+htmlcov/
+soul_memory.db
+temp-frontend-files/
+dev-archive/
+launch_reports/
+monitoring/
+prometheus/
+security/
+# macOS specific
+._*
+.AppleDouble
+.LSOverride

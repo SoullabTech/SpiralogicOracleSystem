@@ -1,51 +1,44 @@
-# 📁 .gitignore for Spiralogic Oracle System (Frontend & Backend)
-
-# macOS clutter
-.DS_Store
-._*
-__MACOSX
-
-# Node
-node_modules/
-dist/
-.next/
-.cache/
-
 # Build output
-out/
-build/
-coverage/
+dist/
 
-# Env files
-.env
-.env.*
+# Prevent compiled junk in src from being tracked
+src/**/*.js
+src/**/*.js.map
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env.local
+.env.*.local
 
 # Logs
+logs/
+*.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# TypeScript
-*.tsbuildinfo
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# VSCode
-.vscode/
+# Coverage directory used by tools like istanbul
+coverage/
 
-# System
-Thumbs.db
-Desktop.ini
+# macOS cruft
+.DS_Store
+._*
 
-# Backup
+# Backup files
+*.backup
 *.bak
-*.orig
 
-# IDE
+# Test artifacts
+.nyc_output
+
+# IDE files
+.vscode/
 .idea/
 *.swp
 *.swo
-legacy-backups.zip
-*.zip
-node_modules/
-dist/
-.env
-*.log
