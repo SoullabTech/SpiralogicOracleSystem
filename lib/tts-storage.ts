@@ -34,7 +34,7 @@ export function cleanupExpiredResults() {
   for (const [turnId, result] of Array.from(ttsResults.entries())) {
     if (now - result.timestamp > EXPIRY_TIME) {
       // Clean up blob URLs
-      if (result.audioUrl && result.audioUrl !== 'web-speech-synthesis') {
+      if (result.audioUrl && result.audioUrl !== 'web-speech-synthesis' && result.audioUrl.startsWith('blob:')) {
         try {
           URL.revokeObjectURL(result.audioUrl);
         } catch (e) {

@@ -33,9 +33,20 @@ export default function ConnectivityDashboard() {
   const ENV = (process.env.NEXT_PUBLIC_ENV_NAME as string | undefined) ?? "unknown";
   const FRONTEND_ORIGIN = (typeof window !== "undefined" && window.location.origin) || undefined;
 
+  // Safe URL validation helper
+  const isHttpUrl = (u?: string | null): boolean => {
+    if (!u) return false;
+    return /^https?:\/\//i.test(u.trim());
+  };
+
   const supabase: SupabaseClient | null = useMemo(() => {
-    if (!SUPABASE_URL || !SUPABASE_KEY) return null;
-    return createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
+    if (!SUPABASE_URL || !SUPABASE_KEY || !isHttpUrl(SUPABASE_URL)) return null;
+    try {
+      return createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
+    } catch (error) {
+      console.warn('Failed to create Supabase client:', error);
+      return null;
+    }
   }, [SUPABASE_URL, SUPABASE_KEY]);
 
   const runChecks = async () => {
@@ -84,7 +95,7 @@ export default function ConnectivityDashboard() {
     }
 
     // 1) Backend health
-    if (BACKEND_URL) {
+    if (BACKEND_URL && isHttpUrl(BACKEND_URL)) {
       const { value, error, ms } = await timer(async () => {
         const res = await fetch(new URL("/health", BACKEND_URL).toString(), { cache: "no-store" });
         const text = await res.text();

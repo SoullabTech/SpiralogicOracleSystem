@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
+import psiRoutes from "./api/routes/psi.routes";
 
 // Load environment variables
 config();
@@ -12,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 // Essential middleware only
 app.use(cors());
 app.use(express.json());
+
+// Mount PSI routes
+app.use("/api", psiRoutes);
 
 // Health check endpoint
 app.get("/health", (_req, res) => {
