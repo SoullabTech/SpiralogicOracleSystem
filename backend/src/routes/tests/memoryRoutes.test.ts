@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../../server"; // your express app instance
+import app from "../../app"; // your express app instance
 
 describe("Memory API Routes", () => {
   let token = "valid-jwt-token-for-test-user"; // Use a valid JWT or mock auth
