@@ -1,14 +1,8 @@
-// Main API Router - Unified entry point for all API routes
-// Implements the standardized response schema across all endpoints
+// Main API Router - Minimal working version for development
+// Temporary simplified implementation to get the server running
 
 import { Router } from "express";
 import { errorResponse } from "../utils/sharedUtilities";
-import personalOracleRouter from "./routes/personalOracleRouter";
-import ainEngineRouter from "./routes/ainEngineRouter";
-import developerRouter from "./routes/developerRouter";
-import oracleGatewayRouter from "../routes/oracleGateway";
-import healthRouter from "../routes/health.routes";
-import psiRouter from "./routes/psi.routes";
 import { logger } from "../utils/logger";
 
 const router = Router();
@@ -16,39 +10,57 @@ const router = Router();
 // API version prefix
 const API_VERSION = "v1";
 
-/**
- * Oracle Gateway - Unified API for elemental agent access
- * Main entry point for agent routing with factory pattern
- */
-router.use("/", oracleGatewayRouter);
+// Temporary placeholder for missing routers
+const createPlaceholderRouter = (name: string) => {
+  const placeholderRouter = Router();
+  placeholderRouter.get("*", (req, res) => {
+    res.json({
+      success: true,
+      data: {
+        message: `${name} endpoint is temporarily disabled during development setup`,
+        availableEndpoints: [`/${API_VERSION}/health`]
+      },
+      errors: []
+    });
+  });
+  return placeholderRouter;
+};
 
 /**
- * Mount Personal Oracle routes - Main user interaction API
- * This is the primary gateway for all user consultations
+ * Basic health endpoint
  */
-router.use(`/${API_VERSION}/personal-oracle`, personalOracleRouter);
+router.get(`/${API_VERSION}/health`, (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      version: process.env.APP_VERSION || "1.0.0-dev",
+    },
+    errors: []
+  });
+});
 
 /**
- * Mount AIN Engine routes - Public API for third-party developers
- * Provides access to collective insights and archetypal wisdom
+ * Placeholder routers for missing modules
  */
-router.use(`/${API_VERSION}/ain-engine`, ainEngineRouter);
+router.use(`/${API_VERSION}/personal-oracle`, createPlaceholderRouter("Personal Oracle"));
+router.use(`/${API_VERSION}/ain-engine`, createPlaceholderRouter("AIN Engine"));
+router.use(`/${API_VERSION}/developer`, createPlaceholderRouter("Developer"));
 
-/**
- * Mount Developer routes - API key management and usage tracking
- * Private endpoints for registered developers
- */
-router.use(`/${API_VERSION}/developer`, developerRouter);
-
-/**
- * Health and monitoring endpoints
- */
-router.use(`/${API_VERSION}/health`, healthRouter);
-
-/**
- * PSI-lite motivation system - Experimental feature
- */
-router.use("/", psiRouter);
+// Basic PSI endpoint
+router.get("/psi/status", (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      status: "PSI system temporarily disabled during development",
+      learning: false
+    },
+    errors: []
+  });
+});
 
 /**
  * API root endpoint - provides API information

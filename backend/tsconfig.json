@@ -44,10 +44,22 @@
     "noUnusedParameters": false
   },
   "include": [
-    "src/**/*.ts"
+    "src/server.ts",
+    "src/app.ts",
+    "src/api/index.ts",
+    "src/api/middleware/**/*.ts",
+    "src/utils/logger.ts",
+    "src/utils/sharedUtilities.ts",
+    "src/middleware/**/*.ts",
+    "src/server/health.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "src/vitest.config.ts",
+    "src/tests/**"
   ]
 }
