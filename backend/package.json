@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "build:watch": "tsc -p tsconfig.json -w",
+    "build:watch": "tsc -p tsconfig.json -w --preserveWatchOutput",
     "build:app": "tsc --project tsconfig.app.json",
     "build:all": "tsc --noEmitOnError false",
     "build:check": "tsc --project tsconfig.app.json --noEmit",
@@ -13,7 +13,7 @@
     "test:agents": "node test-dual-agents.js",
     "test": "jest --passWithNoTests --coverage --detectOpenHandles",
     "start": "node dist/server.js",
-    "dev": "concurrently -n TSC,NODE -c auto \"npm run build:watch\" \"wait-on dist/server.js && nodemon --watch dist --ext js --exec \\\"node dist/server.js\\\"\""
+    "dev": "concurrently -n TSC,NODE -c auto \"npm run build:watch\" \"wait-on dist/server.js && nodemon\""
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.0",

@@ -8,6 +8,10 @@
     "moduleResolution": "node",
     "rootDir": "src",
     "outDir": "dist",
+    "sourceMap": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "noEmit": false,
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -16,8 +20,6 @@
     "strict": false,
     "forceConsistentCasingInFileNames": false,
     "declaration": false,
-    "noEmit": false,
-    "emitDeclarationOnly": false,
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -34,7 +36,6 @@
       ]
     },
     "types": [
-      "jest",
       "node"
     ],
     "noImplicitAny": false,
@@ -45,7 +46,7 @@
   },
   "include": [
     "src/server.ts",
-    "src/app.ts",
+    "src/app.ts", 
     "src/api/index.ts",
     "src/api/middleware/**/*.ts",
     "src/utils/logger.ts",
@@ -56,10 +57,12 @@
   "exclude": [
     "node_modules",
     "dist",
-    "**/__tests__/**",
     "**/*.test.ts",
     "**/*.spec.ts",
-    "src/vitest.config.ts",
-    "src/tests/**"
+    "**/__tests__/**",
+    "**/*.snap",
+    "**/*.mock.ts",
+    "src/tests/**",
+    "src/vitest.config.ts"
   ]
 }
