@@ -6,6 +6,8 @@
     ],
     "module": "CommonJS",
     "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist",
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -14,6 +16,8 @@
     "strict": false,
     "forceConsistentCasingInFileNames": false,
     "declaration": false,
+    "noEmit": false,
+    "emitDeclarationOnly": false,
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -40,9 +44,7 @@
     "noUnusedParameters": false
   },
   "include": [
-    "src/**/*",
-    "server/**/*",
-    "memory/**/*"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
