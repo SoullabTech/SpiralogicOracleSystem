@@ -50,9 +50,10 @@
     "src/api/index.ts",
     "src/api/middleware/**/*.ts",
     "src/utils/logger.ts",
-    "src/utils/sharedUtilities.ts",
+    "src/utils/sharedUtilities.ts", 
     "src/middleware/**/*.ts",
-    "src/server/health.ts"
+    "src/server/health.ts",
+    "src/types/express.d.ts"
   ],
   "exclude": [
     "node_modules",
