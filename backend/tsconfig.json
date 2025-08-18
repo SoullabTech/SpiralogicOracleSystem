@@ -6,6 +6,12 @@
     ],
     "module": "CommonJS",
     "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "noEmit": false,
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -30,7 +36,6 @@
       ]
     },
     "types": [
-      "jest",
       "node"
     ],
     "noImplicitAny": false,
@@ -40,12 +45,25 @@
     "noUnusedParameters": false
   },
   "include": [
-    "src/**/*",
-    "server/**/*",
-    "memory/**/*"
+    "src/server.ts",
+    "src/app.ts", 
+    "src/api/index.ts",
+    "src/api/middleware/**/*.ts",
+    "src/utils/logger.ts",
+    "src/utils/sharedUtilities.ts", 
+    "src/middleware/**/*.ts",
+    "src/server/health.ts",
+    "src/types/express.d.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__tests__/**",
+    "**/*.snap",
+    "**/*.mock.ts",
+    "src/tests/**",
+    "src/vitest.config.ts"
   ]
 }

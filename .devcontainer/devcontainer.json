@@ -1,0 +1,41 @@
+{
+  "name": "Spiralogic Oracle Dev",
+  "dockerComposeFile": "../docker-compose.dev.yml",
+  "service": "frontend",
+  "workspaceFolder": "/app",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-azuretools.vscode-docker",
+        "bradlc.vscode-tailwindcss",
+        "ms-typescript.typescript"
+      ]
+    }
+  },
+  "remoteEnv": {
+    "FORCE_COLOR": "1"
+  },
+  "postCreateCommand": "npm install",
+  "forwardPorts": [3000, 8080, 5432, 6379],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (Next.js)"
+    },
+    "8080": {
+      "label": "Backend API"
+    },
+    "5432": {
+      "label": "PostgreSQL"
+    },
+    "6379": {
+      "label": "Redis"
+    }
+  }
+}

@@ -8,12 +8,15 @@ import {
   responseFormatter,
   addRequestId,
 } from "./api/middleware/responseFormatter";
-import { defaultRateLimiter } from "./middleware/rateLimiter";
+import { apiLimiter, authLimiter } from "./middleware/rateLimiter";
 import { validateContentSecurity } from "./middleware/inputValidation";
 import { logger } from "./utils/logger";
 import { healthRouter } from "./server/health";
 
 const app = express();
+
+// Behind proxy (Render/Vercel/NGINX), keep correct IP for rate limiting
+app.set("trust proxy", 1);
 
 // Security middleware
 app.use(
@@ -52,8 +55,9 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(validateContentSecurity);
 
-// Rate limiting
-app.use(defaultRateLimiter);
+// Rate limiting - BEFORE routes  
+app.use("/api", apiLimiter);
+app.use("/auth", authLimiter);
 
 // Request ID and response formatting
 app.use(addRequestId);

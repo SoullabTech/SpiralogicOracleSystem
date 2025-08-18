@@ -3,12 +3,26 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "cross-env NODE_ENV=development DEPLOY_TARGET=local next dev -p 3001",
+    "dev:frontend": "cross-env NODE_ENV=development DEPLOY_TARGET=local next dev -p 3001",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:all": "concurrently -n FRONTEND,BACKEND -c auto \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "clean:src": "bash -lc \"find backend/src -type f -name '._*' -delete && find backend/src -type f \\( -name '*.js' -o -name '*.js.map' \\) -delete\"",
+    "clean:dist": "bash -lc \"rm -rf backend/dist\"",
+    "clean": "npm run clean:dist && npm run clean:src",
+    "build": "cross-env NODE_ENV=production DEPLOY_TARGET=vercel next build",
+    "start": "cross-env NODE_ENV=production DEPLOY_TARGET=vercel next start -p 3000",
+    "build:render": "cross-env NODE_ENV=production DEPLOY_TARGET=render next build",
+    "start:render": "cross-env NODE_ENV=production DEPLOY_TARGET=render next start -p 3000",
+    "build:ipfs": "cross-env NODE_ENV=production DEPLOY_TARGET=ipfs next build",
+    "lint": "next lint",
+    "start:all": "npm run build && npm start && cd backend && npm run build && npm start",
+    "docker:build": "docker build -f Dockerfile.fallback -t spiralogic-web .",
+    "docker:run": "docker run --rm -p 3000:3000 --env-file .env.local --add-host=host.docker.internal:host-gateway spiralogic-web",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up --build"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.55.0",
     "@tailwindcss/forms": "^0.5.10",
@@ -26,9 +40,12 @@
     "@types/node": "^20.19.10",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
+    "concurrently": "^9.2.0",
+    "cross-env": "^10.0.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.5",
     "husky": "^8.0.3",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "wait-on": "^8.0.4"
   }
 }

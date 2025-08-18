@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS elemental_patterns (
         "follow_up_success": "pending"
     }'::jsonb,
     integration_wisdom TEXT,
-    discovered_by_user UUID REFERENCES profiles(id),
+    discovered_by_user UUID REFERENCES auth.users(id),
     verified_by_others INTEGER DEFAULT 0,
     pattern_strength FLOAT DEFAULT 0.0 CHECK (pattern_strength >= 0 AND pattern_strength <= 1),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -79,7 +79,7 @@ CREATE INDEX idx_salons_created ON collective_salons(created_at DESC);
 -- Tracks individual contributions to collective patterns
 CREATE TABLE IF NOT EXISTS pattern_contributions (
     contribution_id VARCHAR PRIMARY KEY DEFAULT 'contrib_' || extract(epoch from now())::text || '_' || substr(md5(random()::text), 1, 9),
-    user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     pattern_id VARCHAR REFERENCES elemental_patterns(pattern_id) ON DELETE CASCADE,
     contribution_type VARCHAR(50) DEFAULT 'validation',
     content TEXT,
@@ -97,7 +97,7 @@ CREATE INDEX idx_contributions_impact ON pattern_contributions(impact_score DESC
 -- Stores all user interactions for pattern analysis
 CREATE TABLE IF NOT EXISTS collective_observations (
     observation_id VARCHAR PRIMARY KEY DEFAULT 'obs_' || extract(epoch from now())::text || '_' || substr(md5(random()::text), 1, 9),
-    user_id UUID REFERENCES profiles(id),
+    user_id UUID REFERENCES auth.users(id),
     query_text TEXT NOT NULL,
     query_type VARCHAR(100),
     preferred_element VARCHAR(20),

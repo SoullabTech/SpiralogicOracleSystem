@@ -1,49 +1,34 @@
-# ==========================
-# SpiralogicOracleSystem Makefile
-# ==========================
+# ---- Spiralogic Oracle Dev Shortcuts ----
 
-.PHONY: help install run clean format lint freeze reset-env test coverage
+.PHONY: dev frontend backend stop help
+
+dev:
+	@npm run dev:all
+
+frontend:
+	@npm run dev:frontend
+
+backend:
+	@npm run dev:backend
+
+stop:
+	@pkill -f "next dev" || true
+	@pkill -f "node dist/server.js" || true
+	@pkill -f "concurrently" || true
+	@echo "Stopped dev processes (if any)."
 
 help:
 	@echo ""
-	@echo "Available targets:"
-	@echo "  make install       - Install dependencies from requirements.txt"
-	@echo "  make run           - Run the soul reflection flow"
-	@echo "  make test          - Run unit tests with pytest"
-	@echo "  make coverage      - Run tests with coverage reporting"
-	@echo "  make format        - Auto-format code with black"
-	@echo "  make lint          - Check code style with flake8"
-	@echo "  make clean         - Remove __pycache__ files"
-	@echo "  make freeze        - Export current environment to requirements.txt"
-	@echo "  make reset-env     - Rebuild the Python virtual environment"
+	@echo "🔮 Spiralogic Oracle Development Commands:"
 	@echo ""
-
-install:
-	pip install -r requirements.txt
-
-run:
-	PYTHONPATH=oracle-backend python oracle-backend/run_soul_reflection.py
-
-test:
-	PYTHONPATH=oracle-backend pytest tests
-
-coverage:
-	PYTHONPATH=oracle-backend pytest --cov=oracle-backend --cov-report=html
-
-format:
-	black .
-
-lint:
-	flake8 .
-
-clean:
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-
-freeze:
-	pip freeze > requirements.txt
-
-reset-env:
-	rm -rf .venv
-	python3 -m venv .venv
-	source .venv/bin/activate && pip install -r requirements.txt
+	@echo "  make dev        - Start frontend + backend together"
+	@echo "  make frontend   - Start only Next.js frontend"
+	@echo "  make backend    - Start only Express backend"
+	@echo "  make stop       - Stop all development processes"
+	@echo ""
+	@echo "🐳 Docker commands:"
+	@echo ""
+	@echo "  docker compose -f docker-compose.dev.yml up postgres redis"
+	@echo "  npm run dev:all"
+	@echo ""
 
