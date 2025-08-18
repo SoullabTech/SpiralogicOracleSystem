@@ -15,7 +15,7 @@ validateEnvironmentVariables([
   "REDIS_URL",
 ]);
 
-const PORT = parseInt(process.env.PORT || "3001", 10);
+const PORT = parseInt(process.env.PORT || "3003", 10);
 
 // Mount unified API router
 app.use("/api", apiRouter);
@@ -32,7 +32,7 @@ app.use("/api/oracle", (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   logger.info("🔮 Spiralogic Oracle Backend Server Started", {
     port: PORT,
     environment: process.env.NODE_ENV || "development",
@@ -40,7 +40,7 @@ app.listen(PORT, () => {
     apiVersion: "v1",
   });
 
-  console.log(`🔮 Spiralogic Oracle running at http://localhost:${PORT}`);
-  console.log(`📡 API endpoints available at http://localhost:${PORT}/api/v1`);
-  console.log(`🏥 Health check: http://localhost:${PORT}/api/v1/health`);
+  console.log(`🔮 Spiralogic Oracle running at http://0.0.0.0:${PORT}`);
+  console.log(`📡 API endpoints available at http://0.0.0.0:${PORT}/api/v1`);
+  console.log(`🏥 Health check: http://0.0.0.0:${PORT}/api/v1/health`);
 });
