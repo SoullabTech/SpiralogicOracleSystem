@@ -1,6 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getServicesByGroup, getFlag } from "@/lib/config/services.registry";
+import { 
+  getServicesBySection, 
+  getVisibleServicesForUser, 
+  SERVICES,
+  ServiceEntry,
+  SECTION_INFO 
+} from "@/lib/config/services.catalog";
+import { loadFeatureFlagsSync } from "@/lib/config/flags.runtime";
 
 type TogglePayload = { key: string; enabled: boolean; percentage?: number; };
 
@@ -40,12 +47,14 @@ function FeatureFlagHistory({ flagKey }: { flagKey: string }) {
 }
 
 export default function AdminServicesPage() {
-  const [groups, setGroups] = useState(getServicesByGroup());
+  const [servicesBySection, setServicesBySection] = useState<Record<string, ServiceEntry[]>>({});
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string|undefined>();
   const [showHistory, setShowHistory] = useState<string | null>(null);
 
-  useEffect(() => { setGroups(getServicesByGroup()); }, []);
+  useEffect(() => { 
+    setServicesBySection(getServicesBySection()); 
+  }, []);
 
   async function onToggle(p: TogglePayload) {
     setSaving(true); setError(undefined);
@@ -56,7 +65,7 @@ export default function AdminServicesPage() {
       });
       if (!res.ok) throw new Error(await res.text());
       // simple optimistic refresh
-      setGroups(getServicesByGroup());
+      setServicesBySection(getServicesBySection());
     } catch(e:any) {
       setError(e?.message || "Toggle failed");
     } finally { setSaving(false); }
@@ -69,64 +78,98 @@ export default function AdminServicesPage() {
         {saving && <span className="text-sm opacity-70">Saving…</span>}
       </div>
       {error && <div className="text-sm text-red-400">{error}</div>}
-      {Object.entries(groups).map(([group, services]) => (
-        <section key={group} className="space-y-3">
-          <h2 className="text-lg font-medium">{group}</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {services.map(s => (
-              <article key={s.key} className="rounded-xl border border-white/10 p-4 bg-black/20 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="font-medium">{s.label}</div>
-                  <label className="flex items-center gap-2 text-sm">
-                    <span className={s.rollout.enabled ? "text-emerald-400" : "text-zinc-400"}>
-                      {s.rollout.enabled ? "On" : "Off"}
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={s.rollout.enabled}
-                      onChange={e => onToggle({ key:s.key, enabled:e.target.checked })}
-                    />
-                  </label>
-                </div>
+      {Object.entries(servicesBySection).map(([section, services]) => {
+        const sectionInfo = SECTION_INFO[section as keyof typeof SECTION_INFO];
+        const flags = loadFeatureFlagsSync();
+        
+        return (
+          <section key={section} className="space-y-3">
+            <h2 className="text-lg font-medium">{sectionInfo?.name || section}</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              {services.map(service => {
+                // Get the actual flag data for this service
+                const mainFlag = service.flags?.[0] ? flags[service.flags[0]] : null;
+                const isEnabled = mainFlag?.rollout.enabled || false;
+                const percentage = mainFlag?.rollout.percentage || 0;
                 
-                {s.description && <p className="text-sm opacity-80">{s.description}</p>}
-                
-                {s.dependsOn.length > 0 && (
-                  <p className="text-xs opacity-60">
-                    Depends on: {s.dependsOn.map(d => getFlag(d)?.label ?? d).join(", ")}
-                  </p>
-                )}
-                
-                <div className="flex items-center gap-3 text-xs">
-                  <span className="opacity-70">Rollout:</span>
-                  <input
-                    type="range" min={0} max={100} defaultValue={s.rollout.percentage}
-                    className="flex-1"
-                    onMouseUp={(e:any) => onToggle({ key:s.key, enabled:true, percentage: Number(e.target.value) })}
-                  />
-                  <span className="tabular-nums w-8">{s.rollout.percentage}%</span>
-                </div>
-                
-                <div className="flex items-center justify-between text-xs opacity-70">
-                  <div>Perf: CPU {s.perfCost.cpu} · MEM {s.perfCost.memory} · ~{s.perfCost.latencyHintMs}ms</div>
-                  <button 
-                    className="text-blue-400 hover:text-blue-300 underline"
-                    onClick={() => setShowHistory(s.key === showHistory ? null : s.key)}
-                  >
-                    History
-                  </button>
-                </div>
-                
-                {showHistory === s.key && (
-                  <div className="border-t border-white/10 pt-3">
-                    <FeatureFlagHistory flagKey={s.key} />
+                return (
+                  <article key={service.key} className="rounded-xl border border-white/10 p-4 bg-black/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="font-medium">{service.name}</div>
+                    <label className="flex items-center gap-2 text-sm">
+                      <span className={isEnabled ? "text-emerald-400" : "text-zinc-400"}>
+                        {isEnabled ? "On" : "Off"}
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={isEnabled}
+                        onChange={e => service.flags?.[0] && onToggle({ 
+                          key: service.flags[0], 
+                          enabled: e.target.checked 
+                        })}
+                        disabled={!service.flags?.[0]}
+                      />
+                    </label>
                   </div>
-                )}
-              </article>
-            ))}
-          </div>
-        </section>
-      ))}
+                  
+                  {service.description && <p className="text-sm opacity-80">{service.description}</p>}
+                  
+                  {service.dependsOn && service.dependsOn.length > 0 && (
+                    <p className="text-xs opacity-60">
+                      Depends on: {service.dependsOn.map(depKey => {
+                        const depService = SERVICES.find(s => s.key === depKey);
+                        return depService?.name || depKey;
+                      }).join(", ")}
+                    </p>
+                  )}
+                  
+                  {service.flags?.[0] && (
+                    <div className="flex items-center gap-3 text-xs">
+                      <span className="opacity-70">Rollout:</span>
+                      <input
+                        type="range" min={0} max={100} defaultValue={percentage}
+                        className="flex-1"
+                        onMouseUp={(e:any) => service.flags?.[0] && onToggle({ 
+                          key: service.flags[0], 
+                          enabled: true, 
+                          percentage: Number(e.target.value) 
+                        })}
+                      />
+                      <span className="tabular-nums w-8">{percentage}%</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center justify-between text-xs opacity-70">
+                    <div>
+                      {service.perfCost && `Perf: ${service.perfCost.toUpperCase()}`}
+                      {service.audience === 'admin' && (
+                        <span className="ml-2 px-2 py-1 rounded bg-purple-500/20 text-purple-400">
+                          ADMIN
+                        </span>
+                      )}
+                    </div>
+                    {service.flags?.[0] && (
+                      <button 
+                        className="text-blue-400 hover:text-blue-300 underline"
+                        onClick={() => service.flags?.[0] && setShowHistory(service.flags[0] === showHistory ? null : service.flags[0])}
+                      >
+                        History
+                      </button>
+                    )}
+                  </div>
+                  
+                  {service.flags?.[0] && showHistory === service.flags[0] && (
+                    <div className="border-t border-white/10 pt-3">
+                      <FeatureFlagHistory flagKey={service.flags[0]} />
+                    </div>
+                  )}
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
