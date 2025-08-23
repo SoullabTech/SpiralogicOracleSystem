@@ -134,6 +134,11 @@ export function VoicePlayer({
         setIsPlaying(true);
         onPlay?.();
       };
+      
+      // Adjust rate for natural greeting flow (don't clip first 500ms)
+      if (text.match(/^(Hi|Hey|Hello|Welcome)/i)) {
+        utterance.rate = 0.95; // Slightly slower for greetings
+      }
 
       utterance.onend = () => {
         setIsPlaying(false);

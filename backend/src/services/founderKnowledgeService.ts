@@ -2,7 +2,8 @@
 // Processes and integrates organizational wisdom documents
 
 import { logger } from "../utils/logger";
-import { SoullabFounderAgent } from "../core/agents/soullabFounderAgent";
+import { ISoullabFounderAgent } from "../../../lib/shared/interfaces/IAgents";
+import { agentContainer } from "../core/composition/AgentContainer";
 import fs from "fs/promises";
 import path from "path";
 

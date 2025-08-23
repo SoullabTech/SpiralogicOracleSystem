@@ -1,4 +1,7 @@
-export async function GET(request: Request) {
+import { NextRequest } from 'next/server';
+import { withTraceNext } from '../_middleware/traceNext';
+
+async function healthHandler(request: NextRequest) {
   // Echo back a few useful headers from Vercel's edge/platform
   const vercelId = (request.headers.get("x-vercel-id") ?? "").toString();
   return new Response(
@@ -14,3 +17,5 @@ export async function GET(request: Request) {
     }
   );
 }
+
+export const GET = withTraceNext(healthHandler, 'GET /api/health');

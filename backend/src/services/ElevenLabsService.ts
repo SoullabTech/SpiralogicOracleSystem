@@ -1,20 +1,23 @@
 /**
- * Eleven Labs Voice Synthesis Service
- * Handles archetypal voice generation for consciousness responses
+ * DEPRECATED: ElevenLabsService
+ * This service has been moved to infrastructure/adapters/ElevenLabsAdapter.ts
+ * Please use the adapter instead for proper architectural separation
  */
 
-import axios from "axios";
-import FormData from "form-data";
+import { ElevenLabsAdapter } from "../infrastructure/adapters/ElevenLabsAdapter";
 
+// Create adapter instance for backward compatibility
+const elevenLabsAdapter = new ElevenLabsAdapter();
+
+/**
+ * @deprecated Use ElevenLabsAdapter directly
+ */
 export class ElevenLabsService {
-  private apiKey: string;
-  private baseUrl: string = "https://api.elevenlabs.io/v1";
+  private adapter: ElevenLabsAdapter;
 
   constructor() {
-    this.apiKey = process.env.ELEVENLABS_API_KEY || "";
-    if (!this.apiKey) {
-      console.warn("⚠️  ELEVENLABS_API_KEY not found in environment");
-    }
+    this.adapter = elevenLabsAdapter;
+    console.warn("⚠️  ElevenLabsService is deprecated. Use ElevenLabsAdapter directly.");
   }
 
   /**

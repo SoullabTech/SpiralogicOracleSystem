@@ -1,0 +1,37 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    environment:
+      # Conversational flags
+      DEMO_PIPELINE_DISABLED: "true"
+      USE_CLAUDE: "true"
+      ATTENDING_ENFORCEMENT_MODE: "relaxed"
+      MAYA_GREETING_ENABLED: "true"
+      MAYA_MODE_DEFAULT: "conversational"
+      START_SERVER: "full"
+      NEXT_PUBLIC_VOICE_AUTOSEND: "true"
+      # Local services
+      SUPABASE_URL: "http://127.0.0.1:54321"
+      SUPABASE_SERVICE_ROLE_KEY: "local-dev-only"
+      SUPABASE_SERVICE_KEY: "local-dev-only"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile.dev
+    environment:
+      PORT: "8080"
+      SUPABASE_URL: "http://127.0.0.1:54321"
+      SUPABASE_SERVICE_ROLE_KEY: "local-dev-only"
+      SUPABASE_SERVICE_KEY: "local-dev-only"
+    ports:
+      - "8080:8080"
+
+  redis:
+    image: redis:7-alpine

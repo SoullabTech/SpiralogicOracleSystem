@@ -1,0 +1,199 @@
+# Spiralogic AIN
+
+## Frontend (Next.js App Router)
+### Pages
+- /oracle - Main conversation interface
+- /admin/* - Administrative dashboards
+  - /admin/overview - System health & metrics
+  - /admin/badges - Badge management
+  - /admin/training - Training metrics
+  - /admin/voice - Voice preferences
+- /beta/* - Beta testing features
+  - /beta/badges - Badge constellation system
+  - /beta/feedback - User feedback collection
+  - /beta/graduation - Beta completion flow
+- /debug/* - Developer tools
+  - /debug/bridge - Soul memory bridge testing
+  - /debug/psi - PSI system diagnostics
+
+### Components
+- Chat System
+  - ChatMessage.tsx - Message display & formatting
+  - MessageComposer.tsx - Input & attachment handling
+  - UploadButton.tsx - File upload interface
+  - UploadContext.tsx - Upload state management
+- Admin Interface
+  - BadgeToast.tsx - Notification system
+  - ConstellationCanvas.tsx - Badge visualization
+- Navigation
+  - BottomNav.tsx - Mobile navigation
+  - MicHUD.tsx - Voice interface controls
+- Design System
+  - Theme tokens (CSS variables)
+  - CVA button utilities
+  - Storybook documentation
+
+### Providers
+- Air Provider - Elemental air agent interface
+- Sacred Provider - Sacred mirror protocol
+- Sesame Provider - CSM voice integration
+- Spiralogic Provider - Core system integration
+
+## Backend
+
+### Agents
+- Elemental Agents
+  - AirAgent.ts - Air element consciousness
+  - EarthAgent.ts - Earth element grounding
+  - WaterAgent.ts - Water element flow
+  - FireAgent.ts - Fire element transformation
+  - AetherAgent.ts - Aether element transcendence
+- Oracle Agents
+  - PersonalOracleAgent.ts - Individual guidance
+  - Master Divination - High-level wisdom synthesis
+  - Guide/Mentor - Learning pathway support
+  - Dream Agent - Unconscious integration
+
+### Bridges
+- soulMemoryAINBridge.ts - Memory system integration
+- psiMemoryBridge.ts - PSI system connection
+
+### Services
+- Core Services
+  - soulMemoryService.ts - Memory management
+  - memoryIntegrationService.ts - Cross-system memory
+  - modelService.ts - LLM orchestration
+  - openaiClient.ts - OpenAI API interface
+- Specialized Services
+  - OracleService.ts - Oracle response coordination
+  - ElevenLabsService.ts - Voice synthesis
+  - OnboardingService.ts - User initialization
+  - ElementalAlchemyService.ts - Elemental processing
+
+### Core Utils
+- memoryModule.ts - Memory operations
+  - getRecentEntries()
+  - addEntry()
+  - searchMemories()
+- oracleLogger.ts - System logging
+- ritualEngine.ts - Ceremonial processing
+
+## APIs (App Routes)
+
+### Oracle System
+- /api/oracle/turn - Main conversation endpoint
+- /api/oracle/weave - Context weaving & synthesis
+
+### Soul Memory
+- /api/soul-memory/bookmark - Memory capture
+- /api/soul-memory/search - Memory retrieval
+
+### File Uploads
+- /api/uploads - File upload endpoint
+- /api/uploads/process - Processing pipeline
+- /api/uploads/[id] - File management
+
+### Administration
+- /api/admin/* - Admin endpoints
+  - Health monitoring
+  - User management
+  - System configuration
+
+### Beta Features
+- /api/beta/* - Beta testing endpoints
+  - Badge system
+  - Feedback collection
+  - Graduation tracking
+
+### Debug Tools
+- /api/debug/* - Developer endpoints
+  - Bridge diagnostics
+  - System health checks
+  - Performance monitoring
+
+## Data (Supabase)
+
+### Core Tables
+- uploads - File storage metadata
+- transcripts - Voice conversation records
+- training_metrics - System learning data
+- badge_constellations - Achievement tracking
+
+### Safety Helpers
+- badge_constellations safety - Array/object/null handling
+- RLS policies - Row-level security
+- Data validation - Type checking
+
+### Relationships
+- User → Uploads (1:many)
+- User → Transcripts (1:many)
+- User → Badges (many:many)
+- Conversations → Memories (1:many)
+
+## Pipelines
+
+### Voice Processing
+- transcriber.ts - Speech-to-text conversion
+- speak.ts - Text-to-speech synthesis
+- VoicePlayer.tsx - Audio playback control
+
+### Document Processing
+- pdf-parse - PDF text extraction
+- embeddings.ts - Vector embedding generation
+- searchUploads.ts - Semantic search
+- vision.ts - Image/document analysis
+
+### Memory Integration
+- Soul Memory System - Long-term storage
+- Context building - Conversation continuity
+- Semantic indexing - Intelligent retrieval
+
+## Infrastructure
+
+### Development
+- Docker containers
+  - Dockerfile.dev - Development environment
+  - docker-compose.dev.yml - Local orchestration
+- Environment configuration
+  - .env.example - Template variables
+  - Local secrets (gitignored)
+
+### Production
+- Docker deployment
+  - Dockerfile.prod - Production builds
+  - docker-compose.prod.yml - Production stack
+- Sovereign deployment
+  - Akash network integration
+  - Decentralized hosting
+
+### Security
+- RLS policies - Database security
+- Authentication middleware
+- Input validation
+- Rate limiting
+
+## Observability & QA
+
+### Debug Routes
+- Bridge health checks
+- System diagnostics
+- Performance monitoring
+- Error tracking
+
+### Testing
+- Smoke tests - Basic functionality
+- Integration tests - Cross-system validation
+- Performance tests - Load & stress testing
+- Unit tests - Component isolation
+
+### Design System
+- Storybook - Component documentation
+- Theme preview - Token visualization
+- Linting rules - Code quality
+- Type checking - Static analysis
+
+### Monitoring
+- Health endpoints
+- Metrics collection
+- Error aggregation
+- Performance tracking

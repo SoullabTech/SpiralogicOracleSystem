@@ -6,7 +6,7 @@ import {
   personalOracleAgent,
   PersonalOracleQuery,
   PersonalOracleSettings,
-} from "../../agents/personal_oracle/PersonalOracleAgent";
+} from "../../core/agents/PersonalOracleAgent";
 import {
   successResponse,
   errorResponse,

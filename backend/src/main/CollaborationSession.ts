@@ -1,7 +1,7 @@
 // /src/main/CollaborationSession.ts
 
-import { AgentCollaboration } from "../agents/AgentCollaboration";
-import { SpiralogicAgent } from "../agents/SpiralogicAgent";
+import { AgentCollaboration } from "../core/agents/AgentCollaboration";
+import { SpiralogicAgent } from "../core/agents/SpiralogicAgent";
 
 // Create multiple agents for the collaboration session
 const agent1 = new SpiralogicAgent(agentContext1, userProfile);

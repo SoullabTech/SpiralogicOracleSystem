@@ -1,6 +1,6 @@
 // Audio status endpoint for TTS polling
 import { NextRequest, NextResponse } from 'next/server';
-import { getTTSResult, deleteTTSResult } from '../../../../../../lib/tts-storage';
+import { getTTSResult, deleteTTSResult } from '@/lib/tts-storage';
 
 export async function GET(
   request: NextRequest,

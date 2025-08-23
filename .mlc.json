@@ -1,0 +1,4 @@
+{ 
+  "aliveStatusCodes": [200, 203, 206, 302, 307, 308], 
+  "ignorePatterns": [{ "pattern": "^sandbox:" }] 
+}

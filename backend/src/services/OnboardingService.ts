@@ -5,7 +5,8 @@
  * ensuring every user begins their journey with a personalized spiritual guide.
  */
 
-import { ArchetypeAgentFactory } from "../core/agents/ArchetypeAgentFactory";
+import { IArchetypeAgentFactory } from "../../../lib/shared/interfaces/IAgents";
+import { agentContainer } from "../core/composition/AgentContainer";
 import { OracleService, UserOracleSettings } from "./OracleService";
 import { logger } from "../utils/logger";
 

@@ -3,10 +3,7 @@
 
 import { OracleAgent } from "./oracleAgent";
 import { logger } from "../../utils/logger";
-import {
-  storeMemoryItem,
-  getRelevantMemories,
-} from "../../services/memoryService";
+import type { IMemoryService } from "@/lib/shared/interfaces/IMemoryService";
 import type { AIResponse } from "../../types/ai";
 import type { MemoryItem } from "../../types/memory";
 import type { RetreatParticipant, WelcomeMessage } from "../../types/retreat";
@@ -491,6 +488,24 @@ Through me, you access:
     },
   };
 
+  constructor(private memoryService: IMemoryService) {
+    super();
+  }
+
+  private async getRelevantMemories(userId: string, limit: number = 10): Promise<any[]> {
+    const memories = await this.memoryService.read<any[]>(`memories:${userId}:recent:${limit}`) || [];
+    return memories.slice(0, limit);
+  }
+
+  private async storeMemory(userId: string, content: string, metadata?: any): Promise<void> {
+    await this.memoryService.write(`memory:${userId}:${Date.now()}`, {
+      content,
+      metadata,
+      timestamp: new Date().toISOString(),
+      userId
+    });
+  }
+
   async processQuery(query: {
     input: string;
     userId: string;
@@ -511,7 +526,7 @@ Through me, you access:
       );
 
       // Get relevant organizational memories
-      const memories = await getRelevantMemories(query.userId, 10);
+      const memories = await this.getRelevantMemories(query.userId, 10);
       const context = this.buildFounderContext(
         query,
         memories,
@@ -1084,27 +1099,19 @@ The full transmission requires preparation and appropriate container. Our facili
     response: AIResponse,
   ): Promise<void> {
     try {
-      await storeMemoryItem({
-        clientId: query.userId,
-        content: query.input,
+      await this.storeMemory(query.userId, query.input, {
         element: "aether",
         sourceAgent: "user",
-        metadata: {
-          queryType: "founder_wisdom",
-          timestamp: new Date().toISOString(),
-        },
+        queryType: "founder_wisdom",
+        timestamp: new Date().toISOString(),
       });
 
-      await storeMemoryItem({
-        clientId: query.userId,
-        content: response.content,
+      await this.storeMemory(query.userId, response.content, {
         element: "aether",
         sourceAgent: "soullab-founder",
         confidence: response.confidence,
-        metadata: {
-          ...response.metadata,
-          responseType: "organizational_wisdom",
-        },
+        ...response.metadata,
+        responseType: "organizational_wisdom",
       });
     } catch (error) {
       logger.error("SoullabFounder: Error storing exchange", error);

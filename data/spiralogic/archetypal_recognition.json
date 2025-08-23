@@ -1,0 +1,188 @@
+{
+  "version": "1.0",
+  "updated": "2025-08-19",
+  "archetypes": [
+    {
+      "id": "seeker",
+      "name": "Seeker",
+      "phenomenology": [
+        "questions rising on their own",
+        "restlessness that points rather than pushes",
+        "pull toward horizon, curiosity intact"
+      ],
+      "signals": ["curious", "restless", "searching", "meaning", "path", "explore"],
+      "elemental_bias": { "fire": 0.10, "air": 0.10, "water": 0.00, "earth": 0.00 },
+      "stage_affinities": ["initiation", "learning"],
+      "micro_reflections": [
+        "the seeker in you is stirring",
+        "something in you is already reaching toward the next ridge"
+      ],
+      "invites": [
+        "Would you like to name what's calling, even roughly?",
+        "If you followed this pull for one small step, what would it be?"
+      ]
+    },
+    {
+      "id": "warrior",
+      "name": "Warrior",
+      "phenomenology": [
+        "clarity arriving as a boundary",
+        "heat in the body with a sense of direction",
+        "courage crystallizing"
+      ],
+      "signals": ["boundary", "resolve", "courage", "protect", "commit", "stake"],
+      "elemental_bias": { "fire": 0.10, "earth": 0.05, "air": 0.00, "water": 0.00 },
+      "stage_affinities": ["action", "ordeal"],
+      "micro_reflections": [
+        "warrior energy edges forward",
+        "it sounds like a clear line wants to be drawn"
+      ],
+      "invites": [
+        "What is the smallest boundary that would honor this truth?",
+        "How would you protect what matters without hardening?"
+      ]
+    },
+    {
+      "id": "lover",
+      "name": "Lover",
+      "phenomenology": [
+        "soft ache with warmth underneath",
+        "longing that widens the chest",
+        "desire to tend and be tended"
+      ],
+      "signals": ["longing", "tender", "connection", "belong", "intimacy", "care"],
+      "elemental_bias": { "water": 0.10, "earth": 0.05, "air": 0.00, "fire": 0.00 },
+      "stage_affinities": ["reflection", "integration"],
+      "micro_reflections": [
+        "care is present here",
+        "something wants closeness without losing itself"
+      ],
+      "invites": [
+        "Where is the pull strongest—in body, memory, or imagination?",
+        "What would nourishment look like today, simply?"
+      ]
+    },
+    {
+      "id": "sage",
+      "name": "Sage",
+      "phenomenology": [
+        "cool clarity, words arriving clean",
+        "pattern recognition without rush",
+        "a gentle step back for perspective"
+      ],
+      "signals": ["clarify", "insight", "perspective", "learned", "pattern", "sense-making"],
+      "elemental_bias": { "air": 0.10, "earth": 0.05, "fire": 0.00, "water": 0.00 },
+      "stage_affinities": ["revelation", "integration"],
+      "micro_reflections": [
+        "clarity is gathering",
+        "a pattern appears without forcing it"
+      ],
+      "invites": [
+        "What are three true things you see here?",
+        "If you gave this a simple name, what would it be?"
+      ]
+    },
+    {
+      "id": "mystic",
+      "name": "Mystic",
+      "phenomenology": [
+        "quiet certainty with no argument",
+        "dream image that lingers",
+        "oceanic calm or awe"
+      ],
+      "signals": ["dream", "numinous", "synchronicity", "awe", "silence", "vision"],
+      "elemental_bias": { "water": 0.10, "aether": 0.10, "air": 0.00, "earth": 0.00, "fire": 0.00 },
+      "stage_affinities": ["revelation", "service"],
+      "micro_reflections": [
+        "a quiet sacred moment seems to be here",
+        "the image might be wiser than the explanation"
+      ],
+      "invites": [
+        "Would you like to describe the image as it is, without interpreting it?",
+        "Where do you feel this in the body right now?"
+      ]
+    },
+    {
+      "id": "creator",
+      "name": "Creator",
+      "phenomenology": [
+        "urge to build or make",
+        "ideas wanting a container",
+        "joy in the craft itself"
+      ],
+      "signals": ["make", "build", "design", "compose", "create", "prototype"],
+      "elemental_bias": { "earth": 0.10, "fire": 0.05, "air": 0.05, "water": 0.00 },
+      "stage_affinities": ["action", "mastery"],
+      "micro_reflections": [
+        "something wants form",
+        "the hands may know the next move"
+      ],
+      "invites": [
+        "What is the smallest version you could craft today?",
+        "What materials are already at hand?"
+      ]
+    },
+    {
+      "id": "healer",
+      "name": "Healer",
+      "phenomenology": [
+        "attention returning to what hurts without collapsing",
+        "repair impulse with patience",
+        "making amends with self or other"
+      ],
+      "signals": ["repair", "heal", "forgive", "tend", "care", "restore"],
+      "elemental_bias": { "water": 0.10, "earth": 0.05, "air": 0.00, "fire": 0.00 },
+      "stage_affinities": ["integration", "service"],
+      "micro_reflections": [
+        "something here wants gentleness and repair",
+        "your system may be asking for a slower pace"
+      ],
+      "invites": [
+        "What would 'one gentle step' look like right now?",
+        "Is there a part of you that wants a short apology or blessing?"
+      ]
+    },
+    {
+      "id": "elder",
+      "name": "Elder",
+      "phenomenology": [
+        "spacious patience with a long view",
+        "standards without shame",
+        "less but truer"
+      ],
+      "signals": ["distill", "essence", "standards", "mentor", "wisdom", "long view"],
+      "elemental_bias": { "earth": 0.10, "air": 0.05, "aether": 0.05 },
+      "stage_affinities": ["mastery", "service"],
+      "micro_reflections": [
+        "this wants to be simpler and truer",
+        "there is a standard here that honors life"
+      ],
+      "invites": [
+        "If you removed one thing, what would become clearer?",
+        "What is the essence you refuse to trade away?"
+      ]
+    },
+    {
+      "id": "transformer",
+      "name": "Transformer",
+      "phenomenology": [
+        "old skin too tight",
+        "ending with dignity",
+        "heat that purifies rather than burns"
+      ],
+      "signals": ["end", "release", "shed", "rebirth", "phoenix", "change"],
+      "elemental_bias": { "fire": 0.10, "aether": 0.10 },
+      "stage_affinities": ["atonement", "return"],
+      "micro_reflections": [
+        "something wants to finish so something truer can begin",
+        "there is a respectful ending available here"
+      ],
+      "invites": [
+        "What can be thanked and set down?",
+        "How would you mark this transition with a small ritual?"
+      ]
+    }
+  ],
+  "soft_bias_scalar": 0.10,
+  "privacy": { "log_examples": false, "never_quote_verbatim": true }
+}

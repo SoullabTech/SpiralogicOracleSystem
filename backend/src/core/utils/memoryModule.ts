@@ -1,6 +1,6 @@
 // src/utils/memoryModule.ts
 
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 import type { AIResponse } from "../types/ai";
 
 export interface SymbolicMemoryTag {
@@ -115,4 +115,33 @@ class MemoryModule {
 }
 
 const memoryModule = new MemoryModule();
+
+// Additional exports for backward compatibility
+export async function getRecentEntries(limit: number = 10): Promise<SymbolicMemoryTag[]> {
+  // TODO: Replace with actual user context - using placeholder for now
+  const userId = "placeholder-user";
+  const tags = await memoryModule.getAllSymbolicTags(userId);
+  return tags.slice(0, limit);
+}
+
+export async function addEntry(entry: any): Promise<{ success: boolean; entry: any }> {
+  // Convert generic entry to SymbolicMemoryTag format
+  const tag: SymbolicMemoryTag = {
+    userId: entry.userId || "placeholder-user",
+    symbol: entry.symbol || "general",
+    agent: entry.agent || "system",
+    timestamp: entry.timestamp || new Date().toISOString(),
+    metadata: entry.metadata || entry,
+    aiResponse: entry.aiResponse
+  };
+  
+  try {
+    await memoryModule.storeTag(tag);
+    return { success: true, entry: tag };
+  } catch (error) {
+    console.error("Failed to add entry:", error);
+    return { success: false, entry: tag };
+  }
+}
+
 export default memoryModule;

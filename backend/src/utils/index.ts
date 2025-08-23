@@ -1,3 +1,3 @@
 export * from "./logger";
 export * from "./mockSupabase";
-export * from "../core/agent/memoryManager";
+// Removed cross-directory export - import directly from core/agent/memoryManager when needed

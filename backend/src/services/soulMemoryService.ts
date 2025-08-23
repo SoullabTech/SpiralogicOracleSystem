@@ -8,15 +8,15 @@ import {
   Memory,
   MemoryType,
   ElementalType,
-} from "../../memory/SoulMemorySystem.js";
-import { PersonalOracleAgent } from "../core/agents/adjusterAgent";
-import { logger } from "../utils/logger.js";
+} from "../memory/SoulMemorySystem";
+import { IPersonalOracleAgent } from "../../../lib/shared/interfaces/IAgents";
+import { logger } from "../utils/logger";
 
 export class SoulMemoryService {
   private memorySystems: Map<string, SoulMemorySystem> = new Map();
-  private oracles: Map<string, PersonalOracleAgent> = new Map();
+  private oracles: Map<string, IPersonalOracleAgent> = new Map();
 
-  constructor() {
+  constructor(private agentContainer: { getPersonalOracleAgent(): IPersonalOracleAgent }) {
     logger.info("Soul Memory Service initialized");
   }
 
@@ -43,13 +43,9 @@ export class SoulMemoryService {
   async getOrCreateOracle(
     userId: string,
     oracleName?: string,
-  ): Promise<PersonalOracleAgent> {
+  ): Promise<IPersonalOracleAgent> {
     if (!this.oracles.has(userId)) {
-      const oracle = new PersonalOracleAgent({
-        userId,
-        oracleName: oracleName || "Sacred Mirror",
-        elementalResonance: "aether",
-      });
+      const oracle = this.agentContainer.getPersonalOracleAgent();
 
       // Connect oracle to memory system
       const memorySystem = await this.getOrCreateMemorySystem(userId);
@@ -394,6 +390,106 @@ export class SoulMemoryService {
   }
 
   // ===============================================
+  // ENRICHMENT METHODS
+  // ===============================================
+
+  async isEnriched(soulMemoryId: string): Promise<boolean> {
+    // For now, check if any memory system has this ID enriched
+    // In a real implementation, this would query the SQLite DB directly
+    for (const [userId, memorySystem] of this.memorySystems) {
+      try {
+        const memories = await memorySystem.retrieveMemories(userId);
+        const memory = memories.find(m => m.id === soulMemoryId);
+        if (memory && memory.metadata?.enriched_at) {
+          return true;
+        }
+      } catch (error) {
+        // Continue checking other memory systems
+      }
+    }
+    return false;
+  }
+
+  async attachEnrichment(params: {
+    soulMemoryId: string;
+    archetypes: Array<{ name: string; strength: number }>;
+    shadowScore: number;
+    sacredMoment: boolean;
+  }): Promise<void> {
+    // Find the memory system containing this memory ID
+    for (const [userId, memorySystem] of this.memorySystems) {
+      try {
+        const memories = await memorySystem.retrieveMemories(userId);
+        const memory = memories.find(m => m.id === params.soulMemoryId);
+        if (memory) {
+          // Update memory with enrichment data
+          memory.metadata = {
+            ...memory.metadata,
+            enriched_at: new Date().toISOString(),
+            sacred_moment: params.sacredMoment,
+            shadow_score: params.shadowScore,
+            archetypes_json: JSON.stringify(params.archetypes),
+          };
+          
+          // If it's a sacred moment, mark it appropriately
+          if (params.sacredMoment) {
+            memory.sacredMoment = true;
+          }
+          
+          logger.info(`Enriched memory ${params.soulMemoryId} with archetypes and sacred detection`);
+          return;
+        }
+      } catch (error) {
+        logger.warn(`Failed to enrich memory in system for user ${userId}:`, error);
+      }
+    }
+    
+    logger.warn(`Memory ${params.soulMemoryId} not found for enrichment`);
+  }
+
+  async recordExchange(params: {
+    userId: string;
+    conversationId: string;
+    ainId?: string;
+    text: string;
+    metadata?: any;
+    privacy?: { never_quote?: boolean; redacted?: boolean };
+  }): Promise<{ id: string } | null> {
+    try {
+      // Uniqueness guard: check if ain_id already exists
+      if (params.ainId) {
+        const memorySystem = await this.getOrCreateMemorySystem(params.userId);
+        const existingMemories = await memorySystem.retrieveMemories(params.userId);
+        const existingWithAinId = existingMemories.find(m => 
+          m.metadata?.ain_id === params.ainId
+        );
+        
+        if (existingWithAinId) {
+          logger.info(`Soul Memory record with ain_id ${params.ainId} already exists, skipping duplicate`);
+          return { id: existingWithAinId.id };
+        }
+      }
+
+      const memory = await this.storeOracleExchange(
+        params.userId,
+        params.text,
+        '', // Empty response for now
+        {
+          sessionId: params.conversationId,
+          ain_id: params.ainId, // Add cross-reference
+          ...params.metadata,
+        }
+      );
+      
+      logger.info(`Created Soul Memory record ${memory.id} linked to AIN ${params.ainId}`);
+      return { id: memory.id };
+    } catch (error) {
+      logger.error('Failed to record exchange:', error);
+      return null;
+    }
+  }
+
+  // ===============================================
   // HELPER METHODS
   // ===============================================
 
@@ -449,6 +545,55 @@ export class SoulMemoryService {
   }
 }
 
-// Export singleton instance
-export const soulMemoryService = new SoulMemoryService();
-export default soulMemoryService;
+// Create singleton instance
+const soulMemoryServiceInstance = new SoulMemoryService();
+
+// Export with additional static methods for bridge compatibility
+export const SoulMemory = {
+  ...soulMemoryServiceInstance,
+  
+  // Static methods for bridge usage
+  isEnriched: (soulMemoryId: string) => soulMemoryServiceInstance.isEnriched(soulMemoryId),
+  
+  attachEnrichment: (params: {
+    soulMemoryId: string;
+    archetypes: Array<{ name: string; strength: number }>;
+    shadowScore: number;
+    sacredMoment: boolean;
+  }) => soulMemoryServiceInstance.attachEnrichment(params),
+  
+  recordExchange: (params: {
+    userId: string;
+    conversationId: string;
+    ainId?: string;
+    text: string;
+    metadata?: any;
+    privacy?: { never_quote?: boolean; redacted?: boolean };
+  }) => soulMemoryServiceInstance.recordExchange(params),
+
+  // Placeholder methods for archetypal detection
+  detectArchetypalPatterns: async (params: {
+    userId: string;
+    soulMemoryId: string;
+    text: string;
+  }) => {
+    // Placeholder implementation - returns empty for now
+    return { top: [], shadowScore: 0 };
+  },
+
+  detectSacredMoment: async (params: {
+    userId: string;
+    soulMemoryId: string;
+    text: string;
+  }) => {
+    // Placeholder implementation - basic detection
+    const sacredKeywords = ['sacred', 'divine', 'spiritual', 'breakthrough', 'profound'];
+    const lowerText = params.text.toLowerCase();
+    const matches = sacredKeywords.filter(keyword => lowerText.includes(keyword)).length;
+    return { isSacred: matches >= 2 };
+  },
+};
+
+// Export singleton instance for backward compatibility
+export const soulMemoryService = soulMemoryServiceInstance;
+export default soulMemoryServiceInstance;

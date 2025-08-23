@@ -1,5 +1,8 @@
 // Sesame Provider - Core conversation processing and intent analysis
 // Handles natural language understanding and conversation flow
+// Integrates with Spiralogic archetype and soul phase detection
+
+import { inferArchetypeHints } from '../spiralogic/heuristics';
 
 export interface SesameInput {
   text: string;
@@ -26,6 +29,9 @@ export interface SesameResponse {
     urgency: 'low' | 'medium' | 'high';
   };
   confidence: number;
+  spiralogic?: {
+    archetypeHints: Array<{ name: string; bias: string[] }>;
+  };
 }
 
 // Intent patterns for conversation routing
@@ -77,6 +83,16 @@ const PAGE_MAPPING: Record<string, string> = {
 export async function processSesameInput(input: SesameInput): Promise<SesameResponse> {
   const { text, context } = input;
   const normalizedText = text.toLowerCase().trim();
+  
+  // Spiralogic archetype analysis (runs in parallel with intent detection)
+  const spiralogicPromise = Promise.resolve().then(() => {
+    try {
+      return inferArchetypeHints(text);
+    } catch (error) {
+      console.warn('Spiralogic analysis failed:', error);
+      return [];
+    }
+  });
   
   // Intent detection
   let detectedIntent = 'general';
@@ -150,6 +166,9 @@ export async function processSesameInput(input: SesameInput): Promise<SesameResp
   const urgency = analyzeUrgency(normalizedText);
   const topic = extractTopic(normalizedText, detectedIntent);
   
+  // Wait for Spiralogic analysis
+  const archetypeHints = await spiralogicPromise;
+  
   return {
     intent: detectedIntent,
     entities,
@@ -161,6 +180,9 @@ export async function processSesameInput(input: SesameInput): Promise<SesameResp
       urgency,
     },
     confidence,
+    spiralogic: archetypeHints.length > 0 ? {
+      archetypeHints,
+    } : undefined,
   };
 }
 

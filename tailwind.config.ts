@@ -1,37 +1,46 @@
-// Tailwind config with Apple-minimal design tokens for Spiralogic Oracle System
-// Voice-first, elemental theming with 5-element accent system
+// Tailwind config with Spiralogic dark + gold design tokens
 import type { Config } from "tailwindcss";
 import forms from "@tailwindcss/forms";
 
 const config: Config = {
+  darkMode: ['class'],
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
-    "./hooks/**/*.{js,ts,jsx,tsx,mdx}",
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './lib/**/*.{ts,tsx}',
+    './pages/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+    './stories/**/*.{ts,tsx}'
   ],
-  darkMode: "class",
   theme: {
     extend: {
-      // Core Apple-minimal color scheme
       colors: {
-        // Base app colors
+        // Spiralogic tokens (using CSS variables)
+        bg: { 900: 'var(--bg-900)', 800: 'var(--bg-800)' },
+        ink: { 100: 'var(--ink-100)', 300: 'var(--ink-300)' },
+        edge: { 600: 'var(--edge-600)', 700: 'var(--edge-700)' },
+        gold: { 400: 'var(--gold-400)', 500: 'var(--gold-500)' },
+        state: {
+          green: 'var(--state-green)',
+          amber: 'var(--state-amber)',
+          red: 'var(--state-red)'
+        },
+        
+        // Legacy colors (preserve for compatibility)
         app: {
-          bg: "#0b1220",      // Deep cosmic blue base
-          surface: "#1a2333", // Elevated surface
-          border: "#2a3441",  // Subtle borders
-          text: "#ffffff",    // Primary text
-          muted: "#94a3b8",   // Secondary text
+          bg: "#0b1220",
+          surface: "#1a2333",
+          border: "#2a3441",
+          text: "#ffffff",
+          muted: "#94a3b8",
         },
-        // Elemental accent system
         elemental: {
-          fire: "#FF5A3C",    // Warm energetic red-orange
-          water: "#3CB9FF",   // Flowing blue
-          earth: "#30C384",   // Grounding green
-          air: "#C9D3E6",     // Light airy blue-gray
-          aether: "#A88BFF",  // Mystical purple
+          fire: "#FF5A3C",
+          water: "#3CB9FF",
+          earth: "#30C384",
+          air: "#C9D3E6",
+          aether: "#A88BFF",
         },
-        // Legacy oracle colors (preserve existing)
         oracle: {
           50: "#f0f9ff",
           100: "#e0f2fe",
@@ -45,26 +54,36 @@ const config: Config = {
           900: "#0c4a6e",
         },
       },
-      // Typography scale
+      borderRadius: {
+        xl: 'var(--radius-xl)',
+        // Legacy Apple-style radii
+        'apple-sm': '16px',
+        'apple': '20px',
+        'apple-lg': '24px',
+      },
+      boxShadow: {
+        soft: 'var(--shadow-soft)',
+        lift: 'var(--shadow-lift)',
+        // Legacy shadows
+        'apple': '0 4px 20px rgba(0, 0, 0, 0.15)',
+        'apple-lg': '0 8px 32px rgba(0, 0, 0, 0.2)',
+        'voice': '0 0 20px rgba(255, 255, 255, 0.1)',
+      },
+      fontFamily: {
+        display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['"Cormorant Garamond"', 'serif']
+      },
+      transitionTimingFunction: {
+        'ease-out-soft': 'var(--ease-out-soft)'
+      },
+      // Legacy typography scale
       fontSize: {
         'headline': ['32px', { lineHeight: '1.2', fontWeight: '600' }],
         'headline-sm': ['28px', { lineHeight: '1.2', fontWeight: '600' }],
         'body': ['16px', { lineHeight: '1.5', fontWeight: '400' }],
         'caption': ['13px', { lineHeight: '1.4', fontWeight: '400' }],
       },
-      // Apple-style radii
-      borderRadius: {
-        'apple-sm': '16px',
-        'apple': '20px',
-        'apple-lg': '24px',
-      },
-      // Soft shadows
-      boxShadow: {
-        'apple': '0 4px 20px rgba(0, 0, 0, 0.15)',
-        'apple-lg': '0 8px 32px rgba(0, 0, 0, 0.2)',
-        'voice': '0 0 20px rgba(255, 255, 255, 0.1)',
-      },
-      // Smooth transitions
+      // Legacy transitions
       transitionDuration: {
         'apple': '150ms',
         'apple-slow': '220ms',

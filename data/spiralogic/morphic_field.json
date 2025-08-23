@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "resonance_heuristics": {
+    "features": [
+      "recurring_images",
+      "shared_language_fragments",
+      "synchronous_timings",
+      "cross_context_similarity"
+    ],
+    "weights": {
+      "recurring_images": 0.35,
+      "shared_language_fragments": 0.25,
+      "synchronous_timings": 0.20,
+      "cross_context_similarity": 0.20
+    },
+    "thresholds": {
+      "emerging": 0.65,
+      "strong": 0.80
+    }
+  },
+  "cultural_mappings": [
+    { "culture": "western", "notes": "mythic-psychological framing favored" },
+    { "culture": "vedic", "notes": "dharma/karma framing; devotional language" },
+    { "culture": "indigenous_var", "notes": "place-spirits; kinship metaphors; ceremony-first" }
+  ],
+  "privacy": {
+    "store_only_abstracts": true,
+    "strip_pii": true,
+    "never_quote_verbatim": true
+  }
+}

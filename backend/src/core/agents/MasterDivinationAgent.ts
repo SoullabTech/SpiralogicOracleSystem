@@ -5,7 +5,7 @@
 
 import { BaseAgent } from "./baseAgent.js";
 import { logger } from "../../utils/logger.js";
-import type { SoulMemorySystem } from "../../../memory/SoulMemorySystem.js";
+import type { SoulMemorySystem } from "../../memory/SoulMemorySystem";
 import { IChing } from "../divination/IChing.js";
 import { Tarot } from "../divination/Tarot.js";
 import { Runes } from "../divination/Runes.js";

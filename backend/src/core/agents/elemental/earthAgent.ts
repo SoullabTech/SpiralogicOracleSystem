@@ -5,11 +5,8 @@
 
 import { ArchetypeAgent } from "../ArchetypeAgent";
 import { logOracleInsight } from "../../utils/oracleLogger";
-import {
-  getRelevantMemories,
-  storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../utils/modelService";
+import type { IMemoryService } from "@/lib/shared/interfaces/IMemoryService";
+import ModelService from "../../../utils/modelService";
 import type { AIResponse } from "../../../types/ai";
 
 // Sacred Earth Voice Protocols - Embodying Grounding & Manifestation Intelligence
@@ -235,15 +232,30 @@ What in your life feels most solid and trustworthy right now? Let's start there 
 };
 
 export class EarthAgent extends ArchetypeAgent {
+  private readonly memory: IMemoryService;
+
   constructor(
+    memory: IMemoryService,
     oracleName: string = "Terra",
     voiceProfile?: any,
     phase: string = "initiation",
   ) {
     super("earth", oracleName, voiceProfile, phase);
+    this.memory = memory;
   }
-  constructor() {
-    super({ debug: false });
+
+  private async getRelevantMemories(userId: string, limit: number = 10): Promise<any[]> {
+    const memories = await this.memory.read<any[]>(`memories:${userId}:recent:${limit}`) || [];
+    return memories.slice(0, limit);
+  }
+
+  private async storeMemory(userId: string, content: string, metadata?: any): Promise<void> {
+    await this.memory.write(`memory:${userId}:${Date.now()}`, {
+      content,
+      metadata,
+      timestamp: new Date().toISOString(),
+      userId
+    });
   }
 
   public async processExtendedQuery(query: {
@@ -253,7 +265,7 @@ export class EarthAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - grounding patterns from past conversations
-    const contextMemory = await getRelevantMemories(userId, 3);
+    const contextMemory = await this.getRelevantMemories(userId, 3);
     const earthType = EarthIntelligence.detectEarthType(input, contextMemory);
 
     // Create context that preserves grounding wisdom from past conversations
@@ -298,21 +310,17 @@ ${modelResponse.response}`;
     );
 
     // Store memory with earth-specific manifestation metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await this.storeMemory(userId, content, {
       element: "earth",
       sourceAgent: "earth-agent",
       confidence: 0.89,
-      metadata: {
-        role: "oracle",
-        phase: "earth",
-        archetype: "Earth",
-        earthType,
-        groundingWisdom: true,
-        manifestationEnergy: true,
-        embodimentFocus: true,
-      },
+      role: "oracle",
+      phase: "earth",
+      archetype: "Earth",
+      earthType,
+      groundingWisdom: true,
+      manifestationEnergy: true,
+      embodimentFocus: true,
     });
 
     // Log with earth-specific manifestation insights

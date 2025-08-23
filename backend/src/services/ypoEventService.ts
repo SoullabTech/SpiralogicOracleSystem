@@ -1,6 +1,7 @@
 // YPO Event Service for Stephanie's June 10th Event
 import { supabase } from "../lib/supabaseClient";
-import { SoullabFounderAgent } from "../core/agents/soullabFounderAgent";
+import { ISoullabFounderAgent } from "../../../lib/shared/interfaces/IAgents";
+import { agentContainer } from "../core/composition/AgentContainer";
 import { logger } from "../utils/logger";
 
 export class YPOEventService {

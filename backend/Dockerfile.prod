@@ -1,0 +1,23 @@
+# --- build stage ---
+FROM node:20-alpine AS build
+WORKDIR /app
+ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+# add dev deps only for build if needed
+RUN npm install -D typescript ts-node @types/node
+COPY . .
+RUN npm run build
+
+# --- run stage ---
+FROM node:20-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+# copy only what we need
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+EXPOSE 3003
+HEALTHCHECK --interval=20s --timeout=3s --retries=5 \
+  CMD wget -qO- http://localhost:3003/api/v1/health || exit 1
+CMD ["node","dist/server.js"]

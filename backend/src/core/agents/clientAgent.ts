@@ -1,7 +1,7 @@
 "use strict";
 
 import { OracleAgent } from "./oracleAgent";
-import { oracle } from "../core/agents/MainOracleAgent";
+import { oracle } from "./MainOracleAgent";
 import type { AgentResponse, Metadata } from "./types";
 
 export class ClientAgent extends OracleAgent {

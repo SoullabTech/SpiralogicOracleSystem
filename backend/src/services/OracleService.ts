@@ -5,8 +5,8 @@
  * ensuring every user has a persistent, personalized Oracle experience.
  */
 
-import { ArchetypeAgentFactory } from "../core/agents/ArchetypeAgentFactory";
-import { ArchetypeAgent, OracleIdentity } from "../core/agents/ArchetypeAgent";
+import { IArchetypeAgentFactory, IArchetypeAgent } from "@/lib/shared/interfaces/IArchetypeAgent";
+import { OracleServiceIdentity } from "@/lib/shared/interfaces/IOracleService";
 import { logger } from "../utils/logger";
 import type { AIResponse } from "../types/ai";
 
@@ -35,11 +35,17 @@ export interface UserOracleSettings {
 export class OracleService {
   private static oracleSettingsCache: Map<string, UserOracleSettings> =
     new Map();
+  
+  private agentFactory: IArchetypeAgentFactory;
+
+  constructor(agentFactory: IArchetypeAgentFactory) {
+    this.agentFactory = agentFactory;
+  }
 
   /**
    * 🎭 Get User's Personal Oracle Agent (Primary Method)
    */
-  static async getUserOracle(userId: string): Promise<ArchetypeAgent> {
+  async getUserOracle(userId: string): Promise<IArchetypeAgent> {
     // Retrieve user's Oracle settings
     const oracleSettings = await this.getOracleSettings(userId);
 
@@ -50,7 +56,7 @@ export class OracleService {
     }
 
     // Create/retrieve Oracle agent through factory
-    return await ArchetypeAgentFactory.createPersonalOracle({
+    return await this.agentFactory.createAgent("personal", {
       archetype: oracleSettings.archetype,
       oracleName: oracleSettings.oracleAgentName,
       voiceProfile: oracleSettings.voiceSettings,
@@ -64,7 +70,7 @@ export class OracleService {
    * ⚡ Process Oracle Query (Central Entry Point)
    * All Oracle interactions should flow through this method
    */
-  static async processOracleQuery(
+  async processOracleQuery(
     userId: string,
     input: string,
     context: any = {},

@@ -1,0 +1,52 @@
+{
+  "default": [
+    "Hey {name}, good to see you.",
+    "Hi {name}—glad you're here.",
+    "What's up, {name}? I'm tuned in.",
+    "Welcome back, {name}.",
+    "Hey {name}, let's drop in together."
+  ],
+  "warm": [
+    "Hi {name}, take a breath—you're in the right place.",
+    "Hey {name}, sounds like today carries a little weight.",
+    "Glad you're here, {name}—we can start anywhere.",
+    "Hi {name}, no rush. Let's ease in.",
+    "Hey {name}, I'm listening already."
+  ],
+  "threshold": [
+    "Hi {name}, feels like you're standing at a new edge.",
+    "Hey {name}, change is right at the door, isn't it?",
+    "Welcome {name}, this moment has that *about-to-shift* energy.",
+    "Hi {name}, sounds like you're crossing into something fresh.",
+    "Hey {name}, thresholds can feel intense—let's unpack it."
+  ],
+  "seeker": [
+    "Hi {name}, your curiosity has a spark—let's follow it.",
+    "Hey {name}, the questions you're carrying matter.",
+    "Welcome {name}, something in you is reaching forward.",
+    "Hi {name}, sounds like the seeker in you is awake today.",
+    "Hey {name}, let's chase down that wondering you've got."
+  ],
+  "warrior": [
+    "Hey {name}, I can hear the edge of your courage.",
+    "Hi {name}, strength is moving through your words.",
+    "Welcome {name}, what stand feels alive for you right now?",
+    "Hey {name}, sounds like you're ready to face something real.",
+    "Hi {name}, your energy feels sharp—let's see where it points."
+  ],
+  "mystic": [
+    "Hi {name}, I catch that quiet undercurrent in what you bring.",
+    "Hey {name}, something subtle is humming here.",
+    "Welcome {name}, feels like mystery is close by.",
+    "Hi {name}, your words carry a stillness with them.",
+    "Hey {name}, let's sit with what's just beneath the surface."
+  ],
+  "casual-wise": [
+    "Hey {name}, let's take this one layer at a time.",
+    "Hi {name}—I'm here. Want to walk through what's most alive right now?",
+    "Hey {name}, thanks for showing up. We can go slow and still be real.",
+    "Hi {name}, life's a lot—what part's loudest right now?",
+    "Hey {name}, I've got time—lay it on me.",
+    "Hi {name}, what's the headline of your inner world?"
+  ]
+}

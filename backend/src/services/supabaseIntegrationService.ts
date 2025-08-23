@@ -1,5 +1,10 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import {
+/**
+ * Supabase Integration Service - Application Layer
+ * Uses infrastructure adapters for Supabase operations
+ */
+
+import { SupabaseAdapter } from "../infrastructure/adapters/SupabaseAdapter";
+import type {
   UserHolisticProfile,
   HolisticDomain,
   DevelopmentStage,
@@ -9,7 +14,7 @@ import {
   BypassingDetection,
   IntegrationGate,
   EmbodiedWisdomTracking,
-} from "../core/integration/types";
+} from "../domain/types/integration";
 
 interface SupabaseUserProfile {
   id: string;
@@ -53,17 +58,10 @@ interface SupabaseDomainProfile {
 }
 
 export class SupabaseIntegrationService {
-  private supabase: SupabaseClient;
+  private supabaseAdapter: SupabaseAdapter;
 
   constructor() {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error("Missing Supabase configuration");
-    }
-
-    this.supabase = createClient(supabaseUrl, supabaseServiceKey);
+    this.supabaseAdapter = new SupabaseAdapter();
   }
 
   // User Profile Management
@@ -71,28 +69,7 @@ export class SupabaseIntegrationService {
     userId: string,
     profileData: Partial<SupabaseUserProfile>,
   ): Promise<SupabaseUserProfile> {
-    const { data, error } = await this.supabase
-      .from("user_profiles")
-      .insert({
-        user_id: userId,
-        display_name: profileData.display_name,
-        bio: profileData.bio,
-        account_type: profileData.account_type || "user",
-        professional_type: profileData.professional_type,
-        current_state: profileData.current_state || "balanced",
-        stress_level: profileData.stress_level || 5,
-        energy_level: profileData.energy_level || 5,
-        community_visibility: profileData.community_visibility || "supportive",
-        professional_support_consent:
-          profileData.professional_support_consent || false,
-        research_participation_consent:
-          profileData.research_participation_consent || false,
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
+    return await this.supabaseAdapter.createUserProfile(userId, profileData);
   }
 
   async getUserProfile(userId: string): Promise<SupabaseUserProfile | null> {

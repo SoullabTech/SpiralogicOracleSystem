@@ -6,6 +6,7 @@ const IS_DEV = process.env.NODE_ENV !== "production";
 const base = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'standalone',
   experimental: {
     // Keep dev simple; enable prod-only opts below
     optimizeCss: true,

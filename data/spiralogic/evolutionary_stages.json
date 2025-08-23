@@ -1,0 +1,10 @@
+{
+  "stages": [
+    { "key": "initiation", "signals": ["threshold","begin","calling"], "invites": ["name the call","one step"] },
+    { "key": "ordeal",     "signals": ["trial","resistance","fear"],   "invites": ["ground body","ask for help"] },
+    { "key": "revelation", "signals": ["insight","pattern click"],     "invites": ["write it once","share with one"] },
+    { "key": "atonement",  "signals": ["mend","reconcile","accept"],   "invites": ["forgive small","repair a thread"] },
+    { "key": "return",     "signals": ["bring it home","apply"],       "invites": ["one simple application"] },
+    { "key": "mastery",    "signals": ["teach","standards","service"], "invites": ["steward practice","mentor one"] }
+  ]
+}

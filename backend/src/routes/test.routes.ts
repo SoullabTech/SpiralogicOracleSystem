@@ -4,7 +4,7 @@
 // ===============================================
 
 import express from "express";
-import { PersonalOracleAgent } from "../core/agents/adjusterAgent";
+import { personalOracleAgent } from "../core/orchestration/wiring";
 import { SoulMemorySystem } from "../../memory/SoulMemorySystem";
 import { asyncHandler } from "../middleware/errorHandler";
 

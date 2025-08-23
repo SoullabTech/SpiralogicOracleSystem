@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { personalOracle } from "../core/agents/adjusterAgent";
+import { personalOracleAgent as personalOracle } from "../core/orchestration/wiring";
 import { getUserProfile } from "../services/profileService";
 
 export async function getGuideInfo(req: Request, res: Response) {

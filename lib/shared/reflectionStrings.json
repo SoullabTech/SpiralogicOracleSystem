@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "locale": "en",
+  "rules": {
+    "micro": {
+      "maxWords": 12,
+      "minTurnsBetween": 3,
+      "minConfidence": 0.7
+    },
+    "recap": {
+      "minTurns": 3,
+      "maxSentences": 3,
+      "requireQuote": true
+    }
+  },
+  "micro": {
+    "sacred": [
+      "a quiet sacred note here",
+      "something luminous is touching you",
+      "the moment feels consecrated", 
+      "a gentle holy trace is here"
+    ],
+    "shadow": [
+      "something heavy is stirring",
+      "the shadow brushes close",
+      "a difficult truth wants presence",
+      "you're holding what feels weighty"
+    ],
+    "archetype": [
+      "the seeker in you stirs",
+      "warrior energy edges forward", 
+      "the dreamer's wings flutter",
+      "a sage tone rises quietly"
+    ]
+  },
+  "recapTemplates": [
+    {
+      "id": "ocean_peace",
+      "text": [
+        "You spoke of \"{quote}\", and how it felt peaceful.",
+        "I sense a sacred note in how you described that opening.",
+        "What might that peace be inviting you toward now?"
+      ]
+    },
+    {
+      "id": "steady_unknown", 
+      "text": [
+        "You shared \"{quote}\" alongside something steady in your day.",
+        "There is both grounding and mystery in your words.",
+        "Where do you feel called to lean—into the steady or the unknown?"
+      ]
+    },
+    {
+      "id": "shadow_hope",
+      "text": [
+        "In \"{quote}\" you named the shadow moving.",
+        "You've also held onto a thread of hope.",
+        "How do you want to walk with both shadow and hope together?"
+      ]
+    }
+  ]
+}

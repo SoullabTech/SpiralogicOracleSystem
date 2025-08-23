@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "agents": {
+    "fire": {
+      "role": "Catalyst",
+      "leads_when": ["momentum_needed", "stuck_energy", "fresh_start"],
+      "supports": { "earth": "commitment", "air": "naming", "water": "courage_with_care" }
+    },
+    "water": {
+      "role": "Reflector",
+      "leads_when": ["emotion_present", "dream_material", "grief_or_awe"],
+      "supports": { "air": "language_from_feeling", "earth": "restorative_pacing", "fire": "gentle_heat" }
+    },
+    "earth": {
+      "role": "Stabilizer",
+      "leads_when": ["boundaries_needed", "integration", "ritualize_change"],
+      "supports": { "fire": "container_for_action", "air": "structure_for_clarity", "water": "safe_holding" }
+    },
+    "air": {
+      "role": "Perspectiver",
+      "leads_when": ["naming", "sense_making", "pattern_seen"],
+      "supports": { "water": "language_for_feeling", "earth": "sequence", "fire": "aim_true" }
+    },
+    "aether": {
+      "role": "Synthesizer",
+      "leads_when": ["integration", "meaning", "wholeness"],
+      "supports": { "all": "coherence" }
+    }
+  },
+  "weave_template": [
+    "mirror_phrase",
+    "one_small_step",
+    "one_precise_question"
+  ],
+  "constraints": {
+    "one_question": true,
+    "max_sentences": 7
+  }
+}

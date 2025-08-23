@@ -1,4 +1,4 @@
-import { PersonalOracleAgent } from "../core/agents/adjusterAgent";
+import { PersonalOracleAgent } from "../core/agents/PersonalOracleAgent";
 import { OracleModeType } from "../types/oracleMode";
 
 // Test themes that will be used across all modes

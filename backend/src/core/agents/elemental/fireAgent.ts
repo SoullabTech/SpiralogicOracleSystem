@@ -5,10 +5,7 @@
 
 import { ArchetypeAgent } from "../ArchetypeAgent";
 import { logOracleInsight } from "../../utils/oracleLogger";
-import {
-  getRelevantMemories,
-  storeMemoryItem,
-} from "../../../services/memoryService";
+import type { IMemoryService } from "@/lib/shared/interfaces/IMemoryService";
 import ModelService from "../../../utils/modelService";
 import type { AIResponse } from "../../../types/ai";
 
@@ -192,12 +189,30 @@ What's alive in you right now that hasn't found its voice yet? What wants to eme
 };
 
 export class FireAgent extends ArchetypeAgent {
+  private readonly memory: IMemoryService;
+
   constructor(
+    memory: IMemoryService,
     oracleName: string = "Ignis",
     voiceProfile?: any,
     phase: string = "initiation",
   ) {
     super("fire", oracleName, voiceProfile, phase);
+    this.memory = memory;
+  }
+
+  private async getRelevantMemories(userId: string, limit: number = 10): Promise<any[]> {
+    const memories = await this.memory.read<any[]>(`memories:${userId}:recent:${limit}`) || [];
+    return memories.slice(0, limit);
+  }
+
+  private async storeMemory(userId: string, content: string, metadata?: any): Promise<void> {
+    await this.memory.write(`memory:${userId}:${Date.now()}`, {
+      content,
+      metadata,
+      timestamp: new Date().toISOString(),
+      userId
+    });
   }
   public async processExtendedQuery(query: {
     input: string;
@@ -206,7 +221,7 @@ export class FireAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - not just recent memories but fire-specific insights
-    const contextMemory = await getRelevantMemories(userId, 3);
+    const contextMemory = await this.getRelevantMemories(userId, 3);
     const fireType = FireIntelligence.detectFireType(input, contextMemory);
 
     // Create context that preserves fire wisdom from past conversations
@@ -248,20 +263,16 @@ ${modelResponse.response}`;
     const content = FireIntelligence.addFireSignature(weavedWisdom, fireType);
 
     // Store memory with fire-specific metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await this.storeMemory(userId, content, {
       element: "fire",
       sourceAgent: "fire-agent",
       confidence: 0.95,
-      metadata: {
-        role: "oracle",
-        phase: "ignition",
-        archetype: "Fire",
-        fireType,
-        catalyticEnergy: true,
-        sacredMirror: true,
-      },
+      role: "oracle",
+      phase: "ignition",
+      archetype: "Fire",
+      fireType,
+      catalyticEnergy: true,
+      sacredMirror: true,
     });
 
     // Log with fire-specific insights

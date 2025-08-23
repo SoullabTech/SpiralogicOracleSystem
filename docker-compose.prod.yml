@@ -1,0 +1,77 @@
+version: "3.9"
+
+x-common-env: &common_env
+  NODE_ENV: production
+  # Supabase: use your real hosted project here (no host.docker.internal)
+  SUPABASE_URL: ${SUPABASE_URL}
+  SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+  SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+  # DB/Redis: change or remove if using managed services
+  DATABASE_URL: ${DATABASE_URL}
+  REDIS_URL: ${REDIS_URL}
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    image: spiralogic/backend:prod
+    restart: unless-stopped
+    environment:
+      <<: *common_env
+      PORT: "3003"
+      JWT_SECRET: ${JWT_SECRET}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY}
+      PSI_LITE_ENABLED: ${PSI_LITE_ENABLED:-true}
+      PSI_LEARNING_ENABLED: ${PSI_LEARNING_ENABLED:-true}
+      PSI_LEARNING_RATE: ${PSI_LEARNING_RATE:-0.08}
+      PSI_MEMORY_ENABLED: ${PSI_MEMORY_ENABLED:-true}
+    ports:
+      - "3003:3003"
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3003/api/v1/health"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: spiralogic/frontend:prod
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+      DEPLOY_TARGET: docker
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:3003}
+      NEXT_PUBLIC_SUPABASE_URL: ${SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:3003}
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+
+  # Use managed Postgres in prod if possible. Keep Redis if you rely on it.
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server","--appendonly","yes"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks: {}
+volumes: {}

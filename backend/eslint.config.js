@@ -23,6 +23,14 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
+      "no-restricted-properties": [
+        "warn",
+        { 
+          "object": "ceremony.badge_constellations", 
+          "property": "name", 
+          "message": "Use getConstellationName() helper instead of direct .name access" 
+        }
+      ],
     },
   },
 );

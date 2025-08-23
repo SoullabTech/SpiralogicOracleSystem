@@ -1,0 +1,58 @@
+{
+  "archetypes": [
+    {
+      "name": "Seeker",
+      "element_bias": ["fire","air"],
+      "signals": ["starting again","searching","itch to move","what's next"],
+      "shadow_signals": ["restless","burnout","chasing novelty"]
+    },
+    {
+      "name": "Sage",
+      "element_bias": ["air","aether"],
+      "signals": ["seeing patterns","naming clearly","connecting ideas"],
+      "shadow_signals": ["overthinking","detached","talking instead of doing"]
+    },
+    {
+      "name": "Lover",
+      "element_bias": ["water","earth"],
+      "signals": ["longing","bonding","beauty","tenderness"],
+      "shadow_signals": ["fusion","people-pleasing","jealousy"]
+    },
+    {
+      "name": "Warrior",
+      "element_bias": ["fire","earth"],
+      "signals": ["boundaries","courage","decisive action"],
+      "shadow_signals": ["reactivity","control","arguing"]
+    },
+    {
+      "name": "Magician",
+      "element_bias": ["aether","air"],
+      "signals": ["synchronicity","symbol play","reframe"],
+      "shadow_signals": ["spiritual bypass","cleverness over truth"]
+    },
+    {
+      "name": "Sovereign",
+      "element_bias": ["earth","aether"],
+      "signals": ["standards","stewardship","holding the field"],
+      "shadow_signals": ["rigidity","entitlement","grandiosity"]
+    },
+    {
+      "name": "Mystic",
+      "element_bias": ["water","aether"],
+      "signals": ["wordless knowing","silence","numinous"],
+      "shadow_signals": ["dissociation","escapism","inflation"]
+    },
+    {
+      "name": "Fool",
+      "element_bias": ["air","fire"],
+      "signals": ["play","fresh start","lightness"],
+      "shadow_signals": ["avoidance","performance","flippancy"]
+    },
+    {
+      "name": "Shadow",
+      "element_bias": ["water","earth"],
+      "signals": ["shame","projection","repeating pattern"],
+      "shadow_signals": ["self-attack","other-blame","collapse"]
+    }
+  ]
+}

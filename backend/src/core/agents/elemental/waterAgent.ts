@@ -5,11 +5,8 @@
 
 import { ArchetypeAgent } from "../ArchetypeAgent";
 import { logOracleInsight } from "../../utils/oracleLogger";
-import {
-  getRelevantMemories,
-  storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../utils/modelService";
+import type { IMemoryService } from "@/lib/shared/interfaces/IMemoryService";
+import ModelService from "../../../utils/modelService";
 import type { AIResponse } from "../../../types/ai";
 
 // Sacred Water Voice Protocols - Embodying Healing Depth Intelligence
@@ -220,12 +217,30 @@ Your emotional waters hold the key to your authentic self - your inner gold. Let
 };
 
 export class WaterAgent extends ArchetypeAgent {
+  private readonly memory: IMemoryService;
+
   constructor(
+    memory: IMemoryService,
     oracleName: string = "Aquaria",
     voiceProfile?: any,
     phase: string = "initiation",
   ) {
     super("water", oracleName, voiceProfile, phase);
+    this.memory = memory;
+  }
+
+  private async getRelevantMemories(userId: string, limit: number = 10): Promise<any[]> {
+    const memories = await this.memory.read<any[]>(`memories:${userId}:recent:${limit}`) || [];
+    return memories.slice(0, limit);
+  }
+
+  private async storeMemory(userId: string, content: string, metadata?: any): Promise<void> {
+    await this.memory.write(`memory:${userId}:${Date.now()}`, {
+      content,
+      metadata,
+      timestamp: new Date().toISOString(),
+      userId
+    });
   }
   public async processExtendedQuery(query: {
     input: string;
@@ -234,7 +249,7 @@ export class WaterAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - emotional patterns from past conversations
-    const contextMemory = await getRelevantMemories(userId, 3);
+    const contextMemory = await this.getRelevantMemories(userId, 3);
     const waterType = WaterIntelligence.detectWaterType(input, contextMemory);
 
     // Create context that preserves emotional wisdom from past conversations
@@ -279,21 +294,17 @@ ${modelResponse.response}`;
     );
 
     // Store memory with water-specific emotional metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await this.storeMemory(userId, content, {
       element: "water",
       sourceAgent: "water-agent",
       confidence: 0.9,
-      metadata: {
-        role: "oracle",
-        phase: "flow",
-        archetype: "Water",
-        waterType,
-        emotionalDepth: true,
-        healingEnergy: true,
-        compassionateWitness: true,
-      },
+      role: "oracle",
+      phase: "flow",
+      archetype: "Water",
+      waterType,
+      emotionalDepth: true,
+      healingEnergy: true,
+      compassionateWitness: true,
     });
 
     // Log with water-specific emotional insights

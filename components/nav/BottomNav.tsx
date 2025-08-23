@@ -4,7 +4,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { useElementTheme } from '../../hooks/useElementTheme';
+import { useElementTheme } from '@/hooks/useElementTheme';
 
 interface NavItem {
   id: string;

@@ -5,11 +5,8 @@
 
 import { ArchetypeAgent } from "../ArchetypeAgent";
 import { logOracleInsight } from "../../utils/oracleLogger";
-import {
-  getRelevantMemories,
-  storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../utils/modelService";
+import type { IMemoryService } from "@/lib/shared/interfaces/IMemoryService";
+import ModelService from "../../../utils/modelService";
 import type { AIResponse } from "../../../types/ai";
 
 // Sacred Aether Voice Protocols - Embodying Unity & Transcendence Intelligence
@@ -270,12 +267,30 @@ What wants to emerge from this place of connection? What is your unique note in 
 };
 
 export class AetherAgent extends ArchetypeAgent {
+  private readonly memory: IMemoryService;
+
   constructor(
+    memory: IMemoryService,
     oracleName: string = "Nyra",
     voiceProfile?: any,
     phase: string = "initiation",
   ) {
     super("aether", oracleName, voiceProfile, phase);
+    this.memory = memory;
+  }
+
+  private async getRelevantMemories(userId: string, limit: number = 10): Promise<any[]> {
+    const memories = await this.memory.read<any[]>(`memories:${userId}:recent:${limit}`) || [];
+    return memories.slice(0, limit);
+  }
+
+  private async storeMemory(userId: string, content: string, metadata?: any): Promise<void> {
+    await this.memory.write(`memory:${userId}:${Date.now()}`, {
+      content,
+      metadata,
+      timestamp: new Date().toISOString(),
+      userId
+    });
   }
   public async processExtendedQuery(query: {
     input: string;
@@ -284,7 +299,7 @@ export class AetherAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - ALL elemental wisdom from the journey
-    const contextMemory = await getRelevantMemories(userId, 5); // More context for integration
+    const contextMemory = await this.getRelevantMemories(userId, 5); // More context for integration
     const aetherType = AetherIntelligence.detectAetherType(
       input,
       contextMemory,
@@ -343,24 +358,20 @@ ${modelResponse.response}`;
     );
 
     // Store memory with aether-specific integration metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await this.storeMemory(userId, content, {
       element: "aether",
       sourceAgent: "aether-agent",
       confidence: 0.93,
-      metadata: {
-        role: "oracle",
-        phase: "integration",
-        archetype: "Aether",
-        aetherType,
-        unityWisdom: true,
-        transcendentPerspective: true,
-        elementalIntegration: true,
-        spiralCompletion: aetherType === "spiral_completion",
-        cosmicConsciousness: true,
-        elementalHistory,
-      },
+      role: "oracle",
+      phase: "integration",
+      archetype: "Aether",
+      aetherType,
+      unityWisdom: true,
+      transcendentPerspective: true,
+      elementalIntegration: true,
+      spiralCompletion: aetherType === "spiral_completion",
+      cosmicConsciousness: true,
+      elementalHistory,
     });
 
     // Log with aether-specific integration insights

@@ -1,0 +1,24 @@
+# --- build ---
+FROM node:20-alpine AS build
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY package*.json ./
+RUN npm ci && npm cache clean --force
+COPY . .
+# Build Next.js application
+RUN npm run build
+
+# --- run (standalone) ---
+FROM node:20-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+# Next.js standalone output
+COPY --from=build /app/.next/standalone ./ 
+COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
+EXPOSE 3000
+HEALTHCHECK --interval=20s --timeout=3s --retries=5 \
+  CMD wget -qO- http://localhost:3000/api/health || exit 1
+CMD ["node","server.js"]

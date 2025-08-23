@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useElementTheme } from '../../hooks/useElementTheme';
+import { useElementTheme } from '@/hooks/useElementTheme';
 
 export type VoiceState = 'idle' | 'listening' | 'confirm';
 

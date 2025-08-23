@@ -1,6 +1,15 @@
-._*
-**/._*
+# macOS
 .DS_Store
 **/.DS_Store
-.git
+._*
+**/._*
+
+# build/cache
 node_modules
+.next
+dist
+.vercel
+
+# vcs & env
+.git
+.env*

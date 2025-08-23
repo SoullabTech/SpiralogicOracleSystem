@@ -1,0 +1,10 @@
+{
+  "elements": ["fire", "water", "earth", "air", "aether"],
+  "associations": {
+    "fire":   { "planets": ["Sun","Mars"],     "tones": ["catalyst","vitality","will"] },
+    "water":  { "planets": ["Moon","Neptune"], "tones": ["feeling","dream","depth"] },
+    "earth":  { "planets": ["Saturn","Venus"], "tones": ["structure","value","practice"] },
+    "air":    { "planets": ["Mercury","Uranus"],"tones": ["clarity","pattern","voice"] },
+    "aether": { "planets": ["Jupiter","Pluto"], "tones": ["integration","meaning","transformation"] }
+  }
+}

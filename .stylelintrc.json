@@ -1,0 +1,15 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-recommended"],
+  "plugins": ["stylelint-declaration-strict-value"],
+  "rules": {
+    "scale-unlimited/declaration-strict-value": [
+      ["/color$/", "fill", "stroke", "background", "border-color"],
+      {
+        "ignoreValues": ["transparent", "currentColor", "inherit", "unset", "initial"],
+        "disableFix": true,
+        "message": "Use Tailwind classes or theme tokens for colors (no raw hex)."
+      }
+    ],
+    "color-no-hex": true
+  }
+}

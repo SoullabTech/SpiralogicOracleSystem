@@ -4,7 +4,7 @@ import { OracleAgent } from "./oracleAgent";
 import { logOracleInsight } from "../utils/oracleLogger";
 import * as MemoryModule from "../utils/memoryModule";
 import ModelService from "../../utils/modelService";
-import { getUserProfile } from "../../services/profileService";
+import type { IProfileService } from "@/lib/shared/interfaces/IProfileService";
 import logger from "../../utils/logger";
 import type { AgentResponse } from "../../types/ai";
 
@@ -14,14 +14,14 @@ import type { AgentResponse } from "../../types/ai";
 export class FacilitatorAgent extends OracleAgent {
   agentId: string;
 
-  constructor(agentId: string) {
+  constructor(agentId: string, private profileService: IProfileService) {
     super({ debug: false });
     this.agentId = agentId;
   }
 
   public async proposeIntervention(userId: string): Promise<string> {
     try {
-      const profile = await getUserProfile(userId);
+      const profile = await this.profileService.getUserProfile(userId);
 
       if (!profile) {
         throw new Error("User profile not found for intervention.");

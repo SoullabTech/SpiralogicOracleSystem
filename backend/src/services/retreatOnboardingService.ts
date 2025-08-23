@@ -1,8 +1,8 @@
 // Switzerland Retreat Onboarding Service
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../lib/supabaseClient";
-import { soullabFounderAgent } from "../core/agents/soullabFounderAgent";
-import { PersonalOracleAgent } from "../core/agents/adjusterAgent";
+import { ISoullabFounderAgent, IPersonalOracleAgent } from "../../../lib/shared/interfaces/IAgents";
+import { agentContainer } from "../core/composition/AgentContainer";
 import {
   RetreatParticipant,
   RetreatSession,

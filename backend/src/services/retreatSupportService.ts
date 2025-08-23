@@ -2,8 +2,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../lib/supabaseClient";
 import { logger } from "../utils/logger";
-import { soullabFounderAgent } from "../core/agents/soullabFounderAgent";
-import { PersonalOracleAgent } from "../core/agents/adjusterAgent";
+import { ISoullabFounderAgent } from "../../../lib/shared/interfaces/IAgents";
+import { agentContainer } from "../core/composition/AgentContainer";
+import type { IPersonalOracleAgent } from "@/lib/shared/interfaces/IPersonalOracleAgent";
+import { personalOracleAgent } from "../core/orchestration/wiring";
 
 interface DailyCheckIn {
   participantId: string;

@@ -3,7 +3,7 @@
 // Bridges existing memory modules with Soul Memory System
 // ===============================================
 
-import { SoulMemorySystem } from "../../memory/SoulMemorySystem.js";
+import { SoulMemorySystem } from "../../memory/SoulMemorySystem";
 import {
   storeJournalEntry,
   retrieveJournalEntries,

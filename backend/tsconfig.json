@@ -4,8 +4,8 @@
     "lib": [
       "es2020"
     ],
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "rootDir": "src",
     "outDir": "dist",
     "sourceMap": true,
@@ -33,6 +33,9 @@
       ],
       "@core/*": [
         "src/core/*"
+      ],
+      "@shared/*": [
+        "../shared/*"
       ]
     },
     "types": [

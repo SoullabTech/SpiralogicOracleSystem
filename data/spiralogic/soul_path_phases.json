@@ -1,0 +1,99 @@
+{
+  "phases": [
+    {
+      "key": "fire.spark",
+      "label": "Spark",
+      "element": "fire",
+      "phenomenology": ["fresh energy","impulse","'I could…'"],
+      "nudges": ["name one small ignition","protect rest"]
+    },
+    {
+      "key": "fire.flare",
+      "label": "Flare",
+      "element": "fire",
+      "phenomenology": ["surge","commitment","visibility"],
+      "nudges": ["channel heat into one act","avoid over-promising"]
+    },
+    {
+      "key": "fire.arc",
+      "label": "Arc",
+      "element": "fire",
+      "phenomenology": ["momentum","voyage","courage"],
+      "nudges": ["pace yourself","keep sight of why"]
+    },
+
+    {
+      "key": "water.eddy",
+      "label": "Eddy",
+      "element": "water",
+      "phenomenology": ["looping feelings","old themes surface"],
+      "nudges": ["stay with one feeling","journal a dream"]
+    },
+    {
+      "key": "water.current",
+      "label": "Current",
+      "element": "water",
+      "phenomenology": ["flow returns","soft certainty"],
+      "nudges": ["let the body answer","walk by water"]
+    },
+    {
+      "key": "water.confluence",
+      "label": "Confluence",
+      "element": "water",
+      "phenomenology": ["threads meet","belonging"],
+      "nudges": ["name who/what supports you","receive help"]
+    },
+
+    {
+      "key": "earth.footing",
+      "label": "Footing",
+      "element": "earth",
+      "phenomenology": ["ground check","limits","resources"],
+      "nudges": ["clarify one boundary","one practical next step"]
+    },
+    {
+      "key": "earth.structure",
+      "label": "Structure",
+      "element": "earth",
+      "phenomenology": ["container","cadence","standards"],
+      "nudges": ["calendar it","define done"]
+    },
+    {
+      "key": "earth.build",
+      "label": "Build",
+      "element": "earth",
+      "phenomenology": ["steady work","craft","integration"],
+      "nudges": ["ship something small","honor rest cycles"]
+    },
+
+    {
+      "key": "air.name",
+      "label": "Name",
+      "element": "air",
+      "phenomenology": ["words arrive","concept snaps in"],
+      "nudges": ["say it plainly","mirror once"]
+    },
+    {
+      "key": "air.form",
+      "label": "Form",
+      "element": "air",
+      "phenomenology": ["outline","mapping","interfaces"],
+      "nudges": ["sketch the frame","remove one jargon word"]
+    },
+    {
+      "key": "air.weave",
+      "label": "Weave",
+      "element": "air",
+      "phenomenology": ["synthesis","bridge people/ideas"],
+      "nudges": ["invite one perspective","write a 3-line thread"]
+    },
+
+    {
+      "key": "aether.center",
+      "label": "Center",
+      "element": "aether",
+      "phenomenology": ["quiet coherence","felt rightness"],
+      "nudges": ["two breaths before choice","let it be simple"]
+    }
+  ]
+}

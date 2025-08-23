@@ -12,11 +12,16 @@ import { apiLimiter, authLimiter } from "./middleware/rateLimiter";
 import { validateContentSecurity } from "./middleware/inputValidation";
 import { logger } from "./utils/logger";
 import { healthRouter } from "./server/health";
+import { traceExpress } from "./interfaces/middleware/traceExpress";
+import metricsRouter from "./interfaces/routes/metrics";
 
 const app = express();
 
 // Behind proxy (Render/Vercel/NGINX), keep correct IP for rate limiting
 app.set("trust proxy", 1);
+
+// Tracing middleware (must be early in the stack)
+app.use(traceExpress);
 
 // Security middleware
 app.use(
@@ -65,6 +70,9 @@ app.use(responseFormatter);
 
 // Health endpoints (must be before API routes)
 app.use("/", healthRouter);
+
+// Metrics endpoint (Prometheus exposition format)
+app.use("/", metricsRouter);
 
 // Health check route (before API routes for monitoring)
 app.get("/health", (req, res) => {

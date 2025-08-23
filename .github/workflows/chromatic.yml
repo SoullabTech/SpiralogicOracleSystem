@@ -1,0 +1,39 @@
+name: Visual Regression Testing (Chromatic)
+
+on:
+  push:
+    branches: [ main, ian-fix/builds ]
+  pull_request:
+    branches: [ main, ian-fix/builds ]
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for Chromatic
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Run Chromatic
+        uses: chromaui/action@v11
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: storybook-static
+          onlyChanged: true
+          exitOnceUploaded: true
+        env:
+          NODE_ENV: production

@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { IntegrationAuthService } from "../../../lib/auth/integrationAuth";
+import { IntegrationAuthService } from "@/lib/auth/integrationAuth";
 import {
   UserDevelopmentMetrics,
   PlatformAnalytics,

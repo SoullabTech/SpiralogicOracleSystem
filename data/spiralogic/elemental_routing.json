@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "rules": {
+    "by_soul_phase": {
+      "fire.spark":   { "fire": 0.20, "air": 0.05 },
+      "fire.flare":   { "fire": 0.20, "earth": 0.05 },
+      "fire.arc":     { "fire": 0.15, "air": 0.10 },
+      "water.eddy":   { "water": 0.20, "earth": 0.05 },
+      "water.current":{ "water": 0.20, "aether": 0.05 },
+      "water.confluence": { "water": 0.15, "air": 0.10 },
+      "earth.footing": { "earth": 0.20, "water": 0.05 },
+      "earth.structure": { "earth": 0.20, "air": 0.05 },
+      "earth.build":  { "earth": 0.15, "fire": 0.10 },
+      "air.name":     { "air": 0.20, "earth": 0.05 },
+      "air.form":     { "air": 0.20, "water": 0.05 },
+      "air.weave":    { "air": 0.15, "aether": 0.10 },
+      "aether.integrate": { "aether": 0.20, "water": 0.05 }
+    },
+    "by_intent_hint": {
+      "go_deeper":   { "water": 0.10, "air": 0.05 },
+      "clarify":     { "air": 0.15, "earth": 0.05 },
+      "ground":      { "earth": 0.15, "water": 0.05 },
+      "imagine":     { "fire": 0.10, "air": 0.10 },
+      "integrate":   { "aether": 0.15, "earth": 0.05 },
+      "weave":       { "air": 0.10, "aether": 0.10 }
+    },
+    "planetary": {
+      "fire": ["Sun", "Mars"],
+      "water": ["Moon", "Neptune"],
+      "earth": ["Saturn", "Venus"],
+      "air": ["Mercury", "Uranus"],
+      "aether": ["Jupiter", "Pluto"]
+    }
+  },
+  "soft_cap": 0.25,
+  "notes": "All adjustments are soft biases; never override user language or consent."
+}

@@ -1,6 +1,44 @@
-FROM node:20-alpine
+# -------- base ----------
+FROM node:20-bullseye-slim AS base
 WORKDIR /app
+ENV NODE_ENV=production
+
+# Required by some libs (e.g. sharp/png) if you add them later
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ca-certificates tini && \
+  rm -rf /var/lib/apt/lists/*
+
+# -------- deps ----------
+FROM base AS deps
+COPY package.json package-lock.json ./
+# Use CI for reproducible installs (expects lockfile in sync)
+RUN npm ci --omit=dev
+
+# -------- builder ----------
+FROM base AS builder
 ENV NODE_ENV=development
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
-CMD ["npm","run","dev"]
+COPY . .
+# If you use Next.js 13+/App Router, this will build the prod app
+RUN npm run build
+
+# -------- runner ----------
+FROM base AS runner
+ENV NODE_ENV=production
+# non-root
+RUN useradd -m -u 1001 nodeuser
+COPY --from=deps /app/node_modules /app/node_modules
+COPY --from=builder /app/.next /app/.next
+COPY --from=builder /app/public /app/public
+COPY --from=builder /app/package.json /app/package.json
+
+# Next.js needs this for runtime
+ENV PORT=3000
+EXPOSE 3000
+HEALTHCHECK --interval=15s --timeout=3s --retries=10 \
+  CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["npm","start"]
+# Ensure package.json has: "start": "next start -p ${PORT:-3000}"

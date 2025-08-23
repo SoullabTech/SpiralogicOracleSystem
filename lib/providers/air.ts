@@ -9,12 +9,19 @@ export interface ClaudeInput {
     currentPage?: string;
     elementFocus?: string;
     conversationId?: string;
+    contextBlocks?: string;
   };
   sesameAnalysis?: SesameResponse;
   psiAnalysis?: any;
   ainContext?: any;
   oracle2Response?: any;
   conversationId: string;
+  // Enhanced conversational parameters
+  maxTokens?: number;
+  temperature?: number;
+  topP?: number;
+  conversationalMode?: boolean;
+  micropsiModulation?: any;
 }
 
 export interface ClaudeResponse {

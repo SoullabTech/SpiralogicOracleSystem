@@ -5,6 +5,7 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 ENV NODE_ENV=production
+ENV DEPLOY_TARGET=vercel
 COPY package*.json ./
 RUN npm ci && npm cache clean --force
 

@@ -5,11 +5,8 @@
 
 import { ArchetypeAgent } from "../ArchetypeAgent";
 import { logOracleInsight } from "../../utils/oracleLogger";
-import {
-  getRelevantMemories,
-  storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../utils/modelService";
+import type { IMemoryService } from "@/lib/shared/interfaces/IMemoryService";
+import ModelService from "../../../utils/modelService";
 import type { AIResponse } from "../../../types/ai";
 
 // Sacred Air Voice Protocols - Embodying Clarity & Truth Intelligence
@@ -236,15 +233,30 @@ What wants to become clear that's been cloudy? What understanding is trying to d
 };
 
 export class AirAgent extends ArchetypeAgent {
+  private readonly memory: IMemoryService;
+
   constructor(
+    memory: IMemoryService,
     oracleName: string = "Ventus",
     voiceProfile?: any,
     phase: string = "initiation",
   ) {
     super("air", oracleName, voiceProfile, phase);
+    this.memory = memory;
   }
-  constructor() {
-    super({ debug: false });
+
+  private async getRelevantMemories(userId: string, limit: number = 10): Promise<any[]> {
+    const memories = await this.memory.read<any[]>(`memories:${userId}:recent:${limit}`) || [];
+    return memories.slice(0, limit);
+  }
+
+  private async storeMemory(userId: string, content: string, metadata?: any): Promise<void> {
+    await this.memory.write(`memory:${userId}:${Date.now()}`, {
+      content,
+      metadata,
+      timestamp: new Date().toISOString(),
+      userId
+    });
   }
 
   public async processExtendedQuery(query: {
@@ -254,7 +266,7 @@ export class AirAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - clarity patterns from past conversations
-    const contextMemory = await getRelevantMemories(userId, 3);
+    const contextMemory = await this.getRelevantMemories(userId, 3);
     const airType = AirIntelligence.detectAirType(input, contextMemory);
 
     // Create context that preserves clarity wisdom from past conversations
@@ -296,21 +308,17 @@ ${modelResponse.response}`;
     const content = AirIntelligence.addAirSignature(weavedWisdom, airType);
 
     // Store memory with air-specific clarity metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await this.storeMemory(userId, content, {
       element: "air",
       sourceAgent: "air-agent",
       confidence: this.assessClarityConfidence(input),
-      metadata: {
-        role: "oracle",
-        phase: "air",
-        archetype: "Air",
-        airType,
-        clarityWisdom: true,
-        truthDiscernment: true,
-        perspectiveExpansion: true,
-      },
+      role: "oracle",
+      phase: "air",
+      archetype: "Air",
+      airType,
+      clarityWisdom: true,
+      truthDiscernment: true,
+      perspectiveExpansion: true,
     });
 
     // Log with air-specific clarity insights

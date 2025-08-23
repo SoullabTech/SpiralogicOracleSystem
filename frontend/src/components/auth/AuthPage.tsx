@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LoginForm, SignupForm } from ".";
+import { LoginForm } from "./LoginForm";
+import { SignupForm } from "./SignupForm";
 
 interface AuthPageProps {
   onAuthSuccess?: () => void;

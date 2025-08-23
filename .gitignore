@@ -1,7 +1,14 @@
 node_modules/
 .pnpm-store/
 .DS_Store
-.env*
+# Ignore environment variable files with secrets
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Keep the example env file (safe to commit)
+!.env.example
 .next/
 .venv/
 dist/
@@ -49,3 +56,77 @@ Desktop.ini
 # Dev archive quarantine
 dev-archive/
 
+# Builds & caches
+out/
+build/
+coverage/
+.turbo/
+.cache/
+.vite/
+vite-cache/
+pnpm-store/
+*.tsbuildinfo
+
+# Local env & editor - keep only .env.example
+!.env.example
+
+# Reports and audit files
+reports/
+htmlcov/
+
+# --- OS cruft ---
+.DS_Store
+._*
+.AppleDouble
+.Spotlight-V100
+.Trashes
+
+# --- Env files with secrets ---
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+.env.prod
+.env.prod.local
+.env.beta-launch
+.env.deployment
+.env
+env/.env.*
+backend/.env
+backend/.env.local
+backend/.env.test
+backend/src/services/**/.env
+!.env.example
+!backend/.env.example
+!*/.env.example
+!**/.env.*.example
+!**/.env.*.template
+
+# --- Node/Next build outputs ---
+node_modules/
+.next/
+dist/
+.turbo/
+.cache/
+npm-debug.log*
+
+# --- Local tooling
+.claude/
+.claude/**
+
+# --- Generated mindmap HTML files ---
+docs/mindmap/*.html
+# Allow the main mindmap HTML to be committed for Pages
+!docs/mindmap/spiralogic.html
+
+# --- Generated design tokens ---
+design-tokens.json
+
+
+# extra envs & local secrets (safety)
+.env
+.env.*
+env/.env.*
+backend/.env
+backend/.env.*
+backend/src/services/**/.env

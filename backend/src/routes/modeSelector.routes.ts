@@ -5,7 +5,7 @@
 
 import { Router, Request, Response } from "express";
 import { logger } from "../../utils/logger.js";
-import { PersonalOracleAgent } from "../../core/agents/adjusterAgent";
+import { personalOracleAgent } from "../../core/orchestration/wiring";
 import { authenticateToken } from "../../middleware/authenticateToken.js";
 
 const router = Router();

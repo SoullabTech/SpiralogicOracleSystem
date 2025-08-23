@@ -69,9 +69,31 @@ export default function BetaFeedbackPage() {
     setSubmitting(true);
 
     try {
-      // Simulate API call - in production, this would send to backend
+      // Submit feedback and emit beta event
       await new Promise((resolve) => setTimeout(resolve, 1500));
       console.log("Beta Feedback Submitted:", feedback);
+      
+      // Emit beta feedback event (new beta system)
+      try {
+        await fetch('/api/beta/event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            kind: 'admin_feedback',
+            details: {
+              type: feedback.overallRating >= 4 ? 'positive' : 
+                    feedback.overallRating >= 3 ? 'neutral' : 'negative',
+              sentiment: feedback.overallRating >= 4 ? 'positive' : 
+                        feedback.overallRating >= 3 ? 'neutral' : 'negative',
+              overall_rating: feedback.overallRating,
+              feature_ratings: feedback.features
+            }
+          })
+        });
+      } catch (eventError) {
+        console.warn('Failed to emit feedback event:', eventError);
+      }
+      
       setSubmitted(true);
     } catch (error) {
       console.error("Feedback submission error:", error);

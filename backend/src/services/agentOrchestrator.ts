@@ -1,6 +1,5 @@
 // services/agentOrchestrator.ts - Dual Agent Orchestration System
-import { FireAgent } from "../core/agents/elemental/fireAgent";
-import { WaterAgent } from "../core/agents/elemental/waterAgent";
+import { IFireAgent, IWaterAgent, IElementalOrchestrator } from "@/lib/shared/interfaces/IElementalAgent";
 import {
   MayaPromptProcessor,
   MayaPromptContext,
@@ -42,19 +41,19 @@ interface UserContext {
   archetypalHistory?: ArchetypalIntent[];
 }
 
-export class AgentOrchestrator {
+export class AgentOrchestrator implements IElementalOrchestrator {
   private archetypalIntentAnalyzer: ArchetypalIntentAnalyzer;
   private responseSynthesizer: ResponseSynthesizer;
   private collectiveMemory: Map<string, any>;
-  private fireAgent: FireAgent;
-  private waterAgent: WaterAgent;
+  private fireAgent: IFireAgent;
+  private waterAgent: IWaterAgent;
 
-  constructor() {
+  constructor(fireAgent: IFireAgent, waterAgent: IWaterAgent) {
     this.archetypalIntentAnalyzer = new ArchetypalIntentAnalyzer();
     this.responseSynthesizer = new ResponseSynthesizer();
     this.collectiveMemory = new Map();
-    this.fireAgent = new FireAgent();
-    this.waterAgent = new WaterAgent();
+    this.fireAgent = fireAgent;
+    this.waterAgent = waterAgent;
   }
 
   async processQuery(
@@ -86,6 +85,26 @@ export class AgentOrchestrator {
     this.updateCollectiveMemory(input, responses, synthesis, userContext);
 
     return synthesis;
+  }
+
+  // Interface methods
+  async routeToElement(element: string, query: any): Promise<any> {
+    if (element === "fire") {
+      return await this.fireAgent.process(query);
+    }
+    if (element === "water") {
+      return await this.waterAgent.process(query);
+    }
+    throw new Error(`Unsupported element: ${element}`);
+  }
+
+  async detectElementalNeed(input: string, context?: any): Promise<string> {
+    const intent = this.archetypalIntentAnalyzer.analyze(input);
+    return intent.primary;
+  }
+
+  getAvailableElements(): string[] {
+    return ["fire", "water"];
   }
 
   private determineOrchestrationStrategy(
@@ -137,7 +156,7 @@ export class AgentOrchestrator {
     // Always get primary agent response
     if (intent.primary === "fire" || strategy?.includes("fire")) {
       try {
-        responses.fire = await this.fireAgent.processQuery(input);
+        responses.fire = await this.fireAgent.process({ input });
       } catch (error) {
         console.error("Fire agent error:", error);
       }
@@ -145,7 +164,7 @@ export class AgentOrchestrator {
 
     if (intent.primary === "water" || strategy?.includes("water")) {
       try {
-        responses.water = await this.waterAgent.processQuery(input);
+        responses.water = await this.waterAgent.process({ input });
       } catch (error) {
         console.error("Water agent error:", error);
       }
@@ -155,14 +174,14 @@ export class AgentOrchestrator {
     if (strategy?.includes("synthesis") || strategy?.includes("balance")) {
       if (!responses.fire) {
         try {
-          responses.fire = await this.fireAgent.processQuery(input);
+          responses.fire = await this.fireAgent.process({ input });
         } catch (error) {
           console.error("Fire agent secondary error:", error);
         }
       }
       if (!responses.water) {
         try {
-          responses.water = await this.waterAgent.processQuery(input);
+          responses.water = await this.waterAgent.process({ input });
         } catch (error) {
           console.error("Water agent secondary error:", error);
         }

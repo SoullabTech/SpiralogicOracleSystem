@@ -3,16 +3,9 @@ import {
   DivinationInsight,
   UnifiedDivination,
 } from "../../types/divination";
-import { getTarotReading, getDailyTarot } from "../../services/tarotService";
-import {
-  castIChingHexagram,
-  castYiJingReading,
-  getDailyIChing,
-} from "../../services/ichingService";
-import {
-  generateAstroOracle,
-  getDailyAstroGuidance,
-} from "../../services/astroOracleService";
+import type { ITarotService } from "@/lib/shared/interfaces/ITarotService";
+import type { IIChingService } from "@/lib/shared/interfaces/IIChingService";
+import type { IAstrologyService } from "@/lib/shared/interfaces/IAstrologyService";
 
 /**
  * DivinationAgent - Sacred Symbolic Guidance System
@@ -26,6 +19,12 @@ import {
  */
 
 export class DivinationAgent {
+  constructor(
+    private tarotService: ITarotService,
+    private ichingService: IIChingService,
+    private astrologyService: IAstrologyService,
+  ) {}
+
   /**
    * Primary divination method - routes to appropriate service
    */
@@ -67,7 +66,7 @@ export class DivinationAgent {
    */
   private performTarotReading(query: DivinationQuery): DivinationInsight {
     const spreadType = query.spread || "three-card";
-    const insight = getTarotReading(query.query, spreadType);
+    const insight = this.tarotService.getTarotReading(query.query, spreadType);
 
     // Enhance with focus area if provided
     if (query.focus) {
@@ -81,7 +80,7 @@ export class DivinationAgent {
    * Traditional I Ching hexagram casting
    */
   private performIChingReading(query: DivinationQuery): DivinationInsight {
-    const insight = castIChingHexagram(query.query);
+    const insight = this.ichingService.castIChingHexagram(query.query);
 
     // Add depth level enhancement
     if (query.depth === "comprehensive") {
@@ -97,7 +96,7 @@ export class DivinationAgent {
    * Spiritual Yi Jing reading for soul journey
    */
   private performYiJingReading(query: DivinationQuery): DivinationInsight {
-    const insight = castYiJingReading(query.query);
+    const insight = this.ichingService.castYiJingReading(query.query);
 
     // Enhance with birth data if available
     if (query.birthData) {
@@ -111,7 +110,7 @@ export class DivinationAgent {
    * Astrological oracle reading
    */
   private performAstroReading(query: DivinationQuery): DivinationInsight {
-    const insight = generateAstroOracle(query.birthData);
+    const insight = this.astrologyService.generateAstroOracle(query.birthData);
 
     // Adapt the astrological guidance to the specific query
     if (query.query) {
@@ -129,9 +128,9 @@ export class DivinationAgent {
   ): Promise<DivinationInsight> {
     try {
       // Perform multiple readings
-      const tarotInsight = getTarotReading(query.query, "three-card");
-      const ichingInsight = castIChingHexagram(query.query);
-      const astroInsight = generateAstroOracle(query.birthData);
+      const tarotInsight = this.tarotService.getTarotReading(query.query, "three-card");
+      const ichingInsight = this.ichingService.castIChingHexagram(query.query);
+      const astroInsight = this.astrologyService.generateAstroOracle(query.birthData);
 
       // Synthesize the insights
       const unifiedInsight = this.synthesizeInsights(
@@ -376,25 +375,19 @@ ${guidanceElements.join("\n\n")}
 
     switch (method) {
       case "tarot":
-        return getDailyTarot();
+        return this.tarotService.getDailyTarot();
       case "iching":
-        return getDailyIChing();
+        return this.ichingService.getDailyIChing();
       case "astro":
-        return getDailyAstroGuidance();
+        return this.astrologyService.getDailyAstroGuidance();
       default:
-        return getDailyTarot();
+        return this.tarotService.getDailyTarot();
     }
   }
 }
 
-// Export singleton instance
-export const divinationAgent = new DivinationAgent();
+// Export class for dependency injection
+export { DivinationAgent };
 
-// Export convenience function
-export async function performDivination(
-  query: DivinationQuery,
-): Promise<DivinationInsight> {
-  return divinationAgent.performDivination(query);
-}
-
-export default divinationAgent;
+// Note: Singleton instance now created in wiring.ts with proper dependency injection
+// Export convenience function will be updated to use wired instance

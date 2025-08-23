@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;600&display=swap');
+
+:root {
+  color-scheme: dark;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  @apply bg-bg-900 text-ink-100 antialiased;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+a {
+  @apply text-gold-400 hover:text-gold-500 transition-colors;
+}
+
+.btn-focus {
+  /* accessible focus ring in our gold accent */
+  box-shadow: 0 0 0 3px rgba(241,218,148,0.35);
+}

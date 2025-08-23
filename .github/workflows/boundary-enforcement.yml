@@ -1,0 +1,70 @@
+name: Module Boundary Enforcement
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  boundary-checks:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Graphviz (for dependency graphs)
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+        
+      - name: Run ESLint boundary checks
+        run: npm run lint
+        
+      - name: Check for dependency violations
+        run: npm run doctor:deps
+        
+      - name: Generate dependency graph artifact
+        if: failure()
+        run: npm run audit:graph
+        
+      - name: Upload dependency graph on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-graph
+          path: dependency-graph.svg
+          
+      - name: Comment on PR with violations
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🚨 Module Boundary Violations Detected
+              
+              This PR introduces module boundary violations. Please review the failing checks above.
+              
+              **Quick fixes:**
+              1. Run \`npm run doctor:deps\` locally to see violations
+              2. Run \`npm run audit:graph\` to generate a visual dependency graph
+              3. Use Claude Code with the "Analyze violations" prompt to get automated fixes
+              
+              **Common violations:**
+              - Frontend importing backend modules
+              - Circular dependencies between services and agents
+              - Core modules importing routes
+              
+              The dependency graph artifact has been uploaded to help debug the issues.`
+            })

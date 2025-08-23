@@ -1,21 +1,38 @@
-# syntax=docker/dockerfile:1.7
-FROM node:20-bookworm
-
+# -------- base ----------
+FROM node:20-bullseye-slim AS base
 WORKDIR /app
-
-# Use OS-level deps for native modules
+ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 build-essential git ca-certificates && rm -rf /var/lib/apt/lists/*
+  ca-certificates tini && \
+  rm -rf /var/lib/apt/lists/*
 
-# Install dependencies separately for better caching
-COPY package.json package-lock.json* ./
+# -------- deps ----------
+FROM base AS deps
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+# -------- builder ----------
+FROM base AS builder
+ENV NODE_ENV=development
+COPY package.json package-lock.json ./
 RUN npm ci
-
-# App files
 COPY . .
+# If the backend has a build step (tsc, vite, etc.), enable it:
+RUN npm run build
 
-# Expose backend port
-EXPOSE 3003
+# -------- runner ----------
+FROM base AS runner
+ENV NODE_ENV=production
+RUN useradd -m -u 1001 nodeuser
+COPY --from=deps /app/node_modules /app/node_modules
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/package.json /app/package.json
 
-# Start with development script
-CMD ["npm", "run", "dev"]
+ENV PORT=8080
+EXPOSE 8080
+HEALTHCHECK --interval=15s --timeout=3s --retries=10 \
+  CMD node -e "fetch('http://127.0.0.1:8080/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["npm","start"]
+# Ensure backend/package.json has: "start": "node dist/server.js" (or your real entry)
