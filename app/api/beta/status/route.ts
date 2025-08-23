@@ -65,9 +65,9 @@ export async function GET() {
       starter_pack_complete: starterComplete,
       badges: badges?.map(b => ({
         id: b.badge_id,
-        name: b.beta_badges_catalog?.name,
-        emoji: b.beta_badges_catalog?.emoji,
-        description: b.beta_badges_catalog?.description,
+        name: (b.beta_badges_catalog as any)?.name,
+        emoji: (b.beta_badges_catalog as any)?.emoji,
+        description: (b.beta_badges_catalog as any)?.description,
         awarded_at: b.awarded_at,
         source: b.source
       })) ?? [],

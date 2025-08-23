@@ -237,7 +237,17 @@
       "Bash(echo \"Working from: $PWD\")",
       "Bash(COMPOSE_DOCKER_CLI_BUILD=0 DOCKER_BUILDKIT=0 docker compose -f docker-compose.yml build --no-cache)",
       "Bash(git grep:*)",
-      "Bash(HUSKY=0 git add .github/workflows/mindmap-pages.yml .gitignore .secretlintrc.json)"
+      "Bash(HUSKY=0 git add .github/workflows/mindmap-pages.yml .gitignore .secretlintrc.json)",
+      "Bash(npm config delete:*)",
+      "Bash(brew unlink:*)",
+      "Bash(hash -r)",
+      "Bash(~/bin/node-doctor.sh:*)",
+      "Bash(supabase db:*)",
+      "Bash(supabase projects:*)",
+      "Bash(supabase link:*)",
+      "Bash(supabase migration:*)",
+      "Bash(brew:*)",
+      "Bash(brew upgrade:*)"
     ],
     "deny": []
   },

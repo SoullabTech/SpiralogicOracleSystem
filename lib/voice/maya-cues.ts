@@ -59,3 +59,15 @@ export async function speakMayaPostRecap(): Promise<void> {
     console.warn('Maya post-recap cue failed:', error);
   }
 }
+
+/**
+ * Generate ADHD-friendly Maya cues
+ */
+export function mayaAdhdCue(kind: "saved"|"recall_set"|"digest") { 
+  const lines = {
+    saved:  "I've tucked that away. Want me to bring it back when your energy is steadier?",
+    recall_set: "Perfect. I'll resurface this a bit later—one gentle nudge.",
+    digest: "Here's your daily pulse. One tiny step is enough."
+  };
+  return { context: "adhd_mode", text: lines[kind], speak: true };
+}

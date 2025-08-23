@@ -33,6 +33,13 @@ export const flags = {
   BETA_ADVANCED_MEMORY: process.env.NEXT_PUBLIC_BETA_MEMORY === 'true',
   BETA_SOUL_ANALYTICS: process.env.NEXT_PUBLIC_BETA_ANALYTICS === 'true',
   
+  // Neurodivergent / ADHD Features
+  ND_ENABLED: process.env.NEXT_PUBLIC_ND_ENABLED === 'true',
+  ND_ADHD_DEFAULT: process.env.NEXT_PUBLIC_ND_ADHD_DEFAULT === 'true',
+  ND_ENERGY: process.env.NEXT_PUBLIC_ND_ENERGY === 'true',
+  ND_RECALL: process.env.NEXT_PUBLIC_ND_RECALL === 'true',
+  ND_DIGESTS: process.env.NEXT_PUBLIC_ND_DIGESTS === 'true',
+  
   // Developer Tools
   DEV_TOOLS_ENABLED: process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_DEV_TOOLS === 'true',
   DEV_PERFORMANCE_MONITOR: process.env.NEXT_PUBLIC_DEV_PERF === 'true',
@@ -79,6 +86,21 @@ export const features = {
     constellationView: flags.BETA_CONSTELLATION_VIEW,
     advancedMemory: flags.BETA_ADVANCED_MEMORY,
     soulAnalytics: flags.BETA_SOUL_ANALYTICS,
+  },
+  
+  neurodivergent: {
+    enabled: flags.ND_ENABLED,
+    adhdModeDefault: flags.ND_ADHD_DEFAULT,
+    energyCheckins: flags.ND_ENERGY,
+    contextualRecall: flags.ND_RECALL,
+    adhdDigests: flags.ND_DIGESTS,
+  },
+  
+  whispers: {
+    enabled: process.env.NEXT_PUBLIC_WHISPERS_ENABLED === "true",
+    contextRanking: process.env.NEXT_PUBLIC_WHISPERS_CONTEXT_RANKING !== "false", // default on
+    maxItems: Number(process.env.NEXT_PUBLIC_WHISPERS_MAX ?? 6),
+    rankingTimeoutMs: Number(process.env.NEXT_PUBLIC_WHISPERS_RANKING_TIMEOUT_MS ?? 200),
   },
   
   dev: {

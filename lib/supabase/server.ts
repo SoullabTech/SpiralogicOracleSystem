@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 export function supabaseServer() {
   const url =
@@ -8,8 +8,11 @@ export function supabaseServer() {
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
     'local-dev-only';
 
-  return createClient(url, key, { auth: { persistSession: false } });
+  return createSupabaseClient(url, key, { auth: { persistSession: false } });
 }
+
+// Alias for compatibility with admin pages
+export const createClient = supabaseServer;
 
 export type SupabaseServer = ReturnType<typeof supabaseServer>;
 export default supabaseServer;

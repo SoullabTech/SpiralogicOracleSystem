@@ -59,8 +59,8 @@ export async function GET() {
         total_participants: totalParticipants,
         active_beta_users: activeBetaUsers,
         graduated_users: graduatedUsers,
-        active_24h,
-        active_7d,
+        active_24h: 0, // TODO: implement active_24h calculation
+        active_7d: 0, // TODO: implement active_7d calculation
         starter_pack_completion_rate: starterPackCompletionRate
       });
     }

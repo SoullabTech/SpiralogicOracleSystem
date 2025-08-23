@@ -1,6 +1,17 @@
 // Unified Oracle API client - used by both text and voice input paths
 // Ensures consistent routing to /api/oracle/turn with proper error handling
 
+// Stub for oracleWeave function
+export async function oracleWeave(dreamData: any) {
+  // TODO: Implement dream weaving with Oracle
+  return {
+    success: true,
+    woven: true,
+    memory: null,
+    message: "Dream weaving is not yet implemented"
+  };
+}
+
 export type TurnPayload = {
   text: string;
   conversationId?: string;

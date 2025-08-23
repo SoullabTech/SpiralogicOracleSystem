@@ -53,7 +53,7 @@ export async function GET() {
         let avgHoursToEarn = 0;
         if (awards && participants && awards.length > 0) {
           const hoursToEarn = awards.map(award => {
-            const participant = participants.find(p => p.user_id === award.user_id);
+            const participant = participants.find((p: any) => p.user_id === award.user_id);
             if (participant) {
               const joinTime = new Date(participant.joined_at);
               const awardTime = new Date(award.awarded_at);

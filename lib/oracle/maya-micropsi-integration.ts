@@ -450,10 +450,10 @@ export class MayaMicropsiIntegration {
   private applyArchetypalWisdom(response: string, archetype: ArchetypeMatch): string {
     // Subtle archetypal coloring based on primary archetype
     const archetypalPhrases = {
-      wise_elder: ['In my experience...', 'As I've come to understand...', 'Through years of witnessing...'],
+      wise_elder: ['In my experience...', 'As I have come to understand...', 'Through years of witnessing...'],
       compassionate_friend: ['I hear you...', 'What I sense is...', 'With gentle curiosity...'],
-      creative_catalyst: ['What if we explored...', 'I wonder what might emerge if...', 'Let\'s experiment with...'],
-      grounded_guide: ['Let\'s take this step by step...', 'What feels most solid here is...', 'Building from where you are...']
+      creative_catalyst: ['What if we explored...', 'I wonder what might emerge if...', 'Let us experiment with...'],
+      grounded_guide: ['Let us take this step by step...', 'What feels most solid here is...', 'Building from where you are...']
     };
 
     const phrases = archetypalPhrases[archetype.name.toLowerCase().replace(' ', '_')] || [];

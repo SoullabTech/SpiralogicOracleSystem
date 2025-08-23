@@ -1,7 +1,10 @@
 'use client';
+import { useRef, useEffect } from 'react';
 import { recapMeta, RecapKey } from '@/lib/recap/map';
 import type { RecapBuckets, RecapSource } from '@/lib/recap/types';
+import type { Whisper } from '@/lib/micro/whispers';
 import { useRecap } from '@/hooks/useRecap';
+import { maybeSpeakMayaCue } from '@/lib/voice/maya-cues';
 
 function Section({ k, items }: { k: RecapKey; items: string[] }) {
   if (!items?.length) return null;
@@ -41,8 +44,72 @@ function Header({ recap }: { recap: RecapBuckets }) {
   );
 }
 
-export function RecapView({ source }: { source: RecapSource }) {
+function WhispersSection({ whispers }: { whispers?: Whisper[] }) {
+  if (!whispers?.length) return null;
+  
+  return (
+    <section className="border border-edge-700 rounded-xl bg-bg-800/60 p-4 shadow-soft">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-ink-100 font-medium">Whispers</h3>
+        <span className="text-ink-300 text-xs">{whispers.length} recent captures</span>
+      </div>
+      <ul className="space-y-3">
+        {whispers.map((w) => (
+          <li key={w.id} className="flex items-start gap-3">
+            <span
+              className="mt-1 h-2 w-2 rounded-full flex-shrink-0"
+              aria-hidden
+              style={{
+                backgroundColor:
+                  w.element === "fire" ? "#ef4444" :
+                  w.element === "water" ? "#3b82f6" :
+                  w.element === "earth" ? "#10b981" :
+                  w.element === "air" ? "#a78bfa" : "#f59e0b"
+              }}
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-ink-200 text-sm leading-relaxed">{w.content}</p>
+              <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-ink-400">
+                {w.tags?.slice(0, 3).map((t) => (
+                  <span key={t} className="px-1.5 py-0.5 rounded-full border border-edge-600 text-ink-300">{t}</span>
+                ))}
+                <span>{new Date(w.created_at).toLocaleString()}</span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-ink-400 text-xs">
+        These quick captures are gently woven into today's synthesis.
+      </p>
+    </section>
+  );
+}
+
+export function RecapView({ source, whispers }: { source: RecapSource; whispers?: Whisper[] }) {
   const { recap, loading, error } = useRecap(source);
+  const whisperedOnceRef = useRef(false);
+  
+  // Gentle Maya cue on first whispers surface (with device-level cooldown)
+  useEffect(() => {
+    if (!whisperedOnceRef.current && whispers && whispers.length > 0) {
+      const lastCueKey = "whispersCueSeen";
+      const lastCue = localStorage.getItem(lastCueKey);
+      const now = Date.now();
+      
+      // 3-day cooldown (259200000ms = 3 days)
+      if (!lastCue || (now - parseInt(lastCue)) > 259200000) {
+        whisperedOnceRef.current = true;
+        localStorage.setItem(lastCueKey, now.toString());
+        
+        maybeSpeakMayaCue({
+          id: "whispers_surfaced",
+          text: "I've surfaced a few gentle notes that seem connected. Want to take a look?",
+          context: { source: "whispers", count: whispers.length },
+        });
+      }
+    }
+  }, [whispers]);
 
   if (loading) {
     return <div className="border border-edge-700 rounded-xl bg-bg-900 p-6 text-ink-300">Weaving your recap…</div>;
@@ -64,6 +131,8 @@ export function RecapView({ source }: { source: RecapSource }) {
         <Section k="ideas"    items={recap.ideas} />
         <Section k="energy"   items={recap.energy} />
       </div>
+      
+      {whispers && <WhispersSection whispers={whispers} />}
 
       <footer className="flex items-center justify-end">
         <button
