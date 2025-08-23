@@ -3,18 +3,23 @@ _Generated: 2025-08-23_
 
 ## Source of Truth for Feature Flags
 
-### Production Feature Flags
+### Canonical Services Registry (flags.runtime.ts)
 
-| Flag | Current Value | Affects | Rollout % | Default | Override Path | Dependencies |
-|------|---------------|---------|-----------|---------|---------------|--------------|
-| `NEXT_PUBLIC_WHISPERS_ENABLED` | `true` | Contextual memory surfacing | 100% | `false` | Admin panel | `NEXT_PUBLIC_ND_ENABLED` |
-| `NEXT_PUBLIC_WHISPERS_CONTEXT_RANKING` | `true` | Smart whisper ordering | 85% | `false` | Admin panel | `NEXT_PUBLIC_WHISPERS_ENABLED` |
-| `NEXT_PUBLIC_ND_ENABLED` | `true` | ADHD/ND mode access | 100% | `false` | User settings | - |
-| `NEXT_PUBLIC_ND_ADHD_DEFAULT` | `false` | Auto-enable for new users | 0% | `false` | Admin panel | `NEXT_PUBLIC_ND_ENABLED` |
-| `NEXT_PUBLIC_ORACLE_MAYA_VOICE` | `true` | Maya voice personality | 100% | `true` | User settings | `NEXT_PUBLIC_ORACLE_VOICE_ENABLED` |
-| `NEXT_PUBLIC_ORACLE_VOICE_ENABLED` | `true` | Voice chat feature | 100% | `true` | User settings | - |
-| `NEXT_PUBLIC_ORACLE_WEAVE_ENABLED` | `true` | Memory weaving | 100% | `true` | System only | - |
-| `BETA_INVITE_REQUIRED` | `false` | Beta gating | 0% | `true` | Admin panel | - |
+| Service Key | Label | Category | Current | Rollout % | Dependencies | Perf Cost |
+|-------------|-------|----------|---------|-----------|--------------|-----------|
+| `dreams` | Dream Journaling | UserFacing | `false` | 0% | - | med/low/10ms |
+| `whispers` | Contextual Whispers | UserFacing | `false` | 0% | micro_memories | med/low/12ms |
+| `micro_memories` | Quick Capture | UserFacing | `false` | 0% | - | low/low/6ms |
+| `adhd_mode` | ADHD / Neurodivergent Mode | UserFacing | `false` | 0% | micro_memories, voice_maya | low/low/8ms |
+| `voice_maya` | Maya Voice | Core | `false` | 0% | - | med/med/25ms |
+| `retreat_facilitator` | Facilitator Tools | Facilitator | `false` | 0% | owner_console | med/med/20ms |
+| `owner_console` | Owner Console | Core | `false` | 0% | - | low/low/5ms |
+| `uploads` | Multimodal Uploads | Core | `false` | 0% | - | med/med/18ms |
+| `beta_badges` | Beta Badges & Ceremonies | Experimental | `false` | 0% | - | low/low/5ms |
+| `admin_docs` | Admin Docs | Debug | `true` | 100% | - | low/low/2ms |
+| `weave_pipeline` | Oracle Weaving | Core | `true` | 100% | - | med/low/15ms |
+
+### Legacy Environment Flags (being migrated)
 
 ### Development & Debug Flags
 

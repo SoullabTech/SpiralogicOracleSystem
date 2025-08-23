@@ -100,7 +100,13 @@ graph LR
     MW --> Auth{Email Check}
     Auth --> Layout[AdminLayout]
     
-    Layout --> Flags[FeatureFlagPanel]
+    Layout --> Services[ServicesPanel]
+    Services --> Toggle[/api/admin/features/toggle]
+    Toggle --> Registry[services.registry.ts]
+    Registry --> Runtime[flags.runtime.ts]
+    Runtime --> ENV[Environment Vars]
+    
+    Layout --> Flags[FeatureFlagPanel - Legacy]
     Flags --> API1[/api/admin/features]
     
     Layout --> Health[SystemHealthDashboard]
@@ -109,14 +115,38 @@ graph LR
     Layout --> Whispers[WhispersAdminPanel]
     Whispers --> API3[/api/admin/whispers/metrics]
     
-    API1 --> Log[Audit Log]
+    Layout --> Docs[DocsPanel]
+    Docs --> API4[/api/admin/docs]
+    
+    Toggle --> Log[Audit Log]
     API2 --> Metrics[Performance Metrics]
     API3 --> Analytics[Usage Analytics]
+```
+
+## Services Registry Flow
+
+```mermaid
+graph LR
+    Code[flags.runtime.ts] --> Registry[services.registry.ts]
+    Registry --> Groups[Group by Category]
+    Groups --> UI[Admin Services UI]
+    
+    UI --> Toggle[Toggle Request]
+    Toggle --> API[/api/admin/features/toggle]
+    API --> Update[Update ENV]
+    Update --> Reload[Reload Flags]
+    Reload --> Refresh[UI Refresh]
+    
+    ENV --> Override[Runtime Override]
+    Override --> Validate[Schema Validation]
+    Validate --> Apply[Apply to App]
 ```
 
 **Missing States**:
 - ✅ Loading states
 - ✅ Error states
+- ✅ Progressive disclosure by category
+- ✅ Dependency awareness
 - ❌ Real-time updates (WebSocket)
 - ❌ Export functionality
 

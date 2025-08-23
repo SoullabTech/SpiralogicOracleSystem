@@ -1,8 +1,5 @@
-[
-  {
-    "route": "/api/admin/badges/awards/",
-    "methods": "GET",
-    "file": "app/api/admin/badges/awards/route.ts"
+Wrote ROUTES.json to /Volumes/T7 Shield/Projects/SpiralogicOracleSystem/docs/admin/review/2025-08-23
+es/awards/route.ts"
   },
   {
     "route": "/api/admin/badges/ceremonies/",
@@ -38,6 +35,26 @@
     "route": "/api/admin/beta/tuning/",
     "methods": "GET, POST",
     "file": "app/api/admin/beta/tuning/route.ts"
+  },
+  {
+    "route": "/api/admin/docs/._",
+    "methods": "unknown",
+    "file": "app/api/admin/docs/._route.ts"
+  },
+  {
+    "route": "/api/admin/docs/raw/._",
+    "methods": "unknown",
+    "file": "app/api/admin/docs/raw/._route.ts"
+  },
+  {
+    "route": "/api/admin/docs/raw/",
+    "methods": "GET",
+    "file": "app/api/admin/docs/raw/route.ts"
+  },
+  {
+    "route": "/api/admin/docs/",
+    "methods": "GET",
+    "file": "app/api/admin/docs/route.ts"
   },
   {
     "route": "/api/admin/features/._",
@@ -173,6 +190,11 @@
     "route": "/api/elemental/recommendations/",
     "methods": "GET, POST",
     "file": "app/api/elemental/recommendations/route.ts"
+  },
+  {
+    "route": "/api/health/events/._",
+    "methods": "unknown",
+    "file": "app/api/health/events/._route.ts"
   },
   {
     "route": "/api/health/events/",

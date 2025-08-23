@@ -1,10 +1,5 @@
-{
-  "featureKeys": [
-    "X-Content-Type-Options",
-    "X-IPFS-Path",
-    "advanced",
-    "air",
-    "beginner",
+Wrote FEATURE_SCAN.json to /Volumes/T7 Shield/Projects/SpiralogicOracleSystem/docs/admin/review/2025-08-23
+ner",
     "beta.advancedMemory",
     "beta.constellationView",
     "communityAccountabilityConsent",
@@ -300,6 +295,10 @@
     "app/api/admin/beta/badges/route.ts",
     "app/api/admin/beta/invites/route.ts",
     "app/api/admin/beta/tuning/route.ts",
+    "app/api/admin/docs/._route.ts",
+    "app/api/admin/docs/raw/._route.ts",
+    "app/api/admin/docs/raw/route.ts",
+    "app/api/admin/docs/route.ts",
     "app/api/admin/features/._route.ts",
     "app/api/admin/features/route.ts",
     "app/api/admin/metrics/route.ts",
@@ -327,6 +326,7 @@
     "app/api/dreams/[id]/weave/._route.ts",
     "app/api/dreams/[id]/weave/route.ts",
     "app/api/elemental/recommendations/route.ts",
+    "app/api/health/events/._route.ts",
     "app/api/health/events/route.ts",
     "app/api/health/providers/route.ts",
     "app/api/health/route.ts",
