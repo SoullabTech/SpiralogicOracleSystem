@@ -130,3 +130,4 @@ env/.env.*
 backend/.env
 backend/.env.*
 backend/src/services/**/.env
+.npm-cache
