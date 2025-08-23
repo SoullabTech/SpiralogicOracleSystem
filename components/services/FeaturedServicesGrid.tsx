@@ -74,8 +74,37 @@ function FeaturedServiceCard({ service }: { service: ServiceEntry }) {
   const isDisabled = !service.defaultEnabled;
   
   const handleClick = () => {
+    // Track usage
+    fetch('/api/services/usage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        serviceKey: service.key, 
+        action: 'click',
+        metadata: { source: 'featured_grid' }
+      })
+    }).catch(() => {}); // Silent fail for analytics
+
     if (service.routes?.primary && !isDisabled) {
       window.location.href = service.routes.primary;
+    }
+  };
+
+  const handleRequestAccess = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await fetch('/api/services/request-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          serviceKey: service.key,
+          serviceName: service.name 
+        })
+      });
+      // Could show toast notification here
+      console.log(`Access requested for ${service.name}`);
+    } catch (error) {
+      console.error('Failed to request access:', error);
     }
   };
 
@@ -120,10 +149,18 @@ function FeaturedServiceCard({ service }: { service: ServiceEntry }) {
       </p>
       
       {isDisabled && (
-        <div className="mt-3 pt-3 border-t border-edge-700">
+        <div className="mt-3 pt-3 border-t border-edge-700 flex items-center justify-between">
           <p className="text-xs text-ink-500">
             Service disabled
           </p>
+          {service.visibilityHint === 'experimental' && (
+            <button
+              onClick={handleRequestAccess}
+              className="text-xs text-gold-400 hover:text-gold-300 underline"
+            >
+              Request Access
+            </button>
+          )}
         </div>
       )}
     </div>
