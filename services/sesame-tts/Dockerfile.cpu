@@ -1,0 +1,32 @@
+# CPU-friendly base for Mac/local development
+FROM python:3.10-slim
+
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install system deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git curl ffmpeg libsndfile1 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python deps with CPU-only torch
+COPY requirements.txt .
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Cache models to a volume (optional but recommended)
+ENV HF_HOME=/root/.cache/huggingface
+
+# App code
+COPY app ./app
+
+# Default env vars for CPU
+ENV SESAME_MODEL=sesame/csm-1b \
+    SESAME_VOICE=maya \
+    SESAME_FP16=0 \
+    TORCH_DTYPE=float32 \
+    PORT=8081
+
+EXPOSE 8081
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8081"]

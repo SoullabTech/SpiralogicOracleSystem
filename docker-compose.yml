@@ -1,5 +1,22 @@
 
 services:
+  # Sesame TTS microservice (FastAPI) - CPU version for Mac
+  sesame-tts:
+    build:
+      context: ./services/sesame-tts
+      dockerfile: Dockerfile.cpu
+    image: spiralogic/sesame-tts:local-cpu
+    container_name: sesame-tts
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./services/sesame-tts/.env
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    restart: unless-stopped
+    networks:
+      - oracle-network
+
   # Main Spiralogic Oracle System
   oracle-system:
     build: .
@@ -73,5 +90,6 @@ networks:
     driver: bridge
 
 volumes:
+  hf-cache:
   mongo-data:
   redis-data:
