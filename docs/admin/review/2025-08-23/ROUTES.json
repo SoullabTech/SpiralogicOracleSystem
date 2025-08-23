@@ -1,0 +1,362 @@
+[
+  {
+    "route": "/api/admin/badges/awards/",
+    "methods": "GET",
+    "file": "app/api/admin/badges/awards/route.ts"
+  },
+  {
+    "route": "/api/admin/badges/ceremonies/",
+    "methods": "GET",
+    "file": "app/api/admin/badges/ceremonies/route.ts"
+  },
+  {
+    "route": "/api/admin/badges/stats/",
+    "methods": "GET",
+    "file": "app/api/admin/badges/stats/route.ts"
+  },
+  {
+    "route": "/api/admin/beta/activity/",
+    "methods": "GET",
+    "file": "app/api/admin/beta/activity/route.ts"
+  },
+  {
+    "route": "/api/admin/beta/analytics/",
+    "methods": "GET",
+    "file": "app/api/admin/beta/analytics/route.ts"
+  },
+  {
+    "route": "/api/admin/beta/badges/",
+    "methods": "GET",
+    "file": "app/api/admin/beta/badges/route.ts"
+  },
+  {
+    "route": "/api/admin/beta/invites/",
+    "methods": "POST",
+    "file": "app/api/admin/beta/invites/route.ts"
+  },
+  {
+    "route": "/api/admin/beta/tuning/",
+    "methods": "GET, POST",
+    "file": "app/api/admin/beta/tuning/route.ts"
+  },
+  {
+    "route": "/api/admin/features/._",
+    "methods": "unknown",
+    "file": "app/api/admin/features/._route.ts"
+  },
+  {
+    "route": "/api/admin/features/",
+    "methods": "GET, POST",
+    "file": "app/api/admin/features/route.ts"
+  },
+  {
+    "route": "/api/admin/metrics/",
+    "methods": "GET",
+    "file": "app/api/admin/metrics/route.ts"
+  },
+  {
+    "route": "/api/admin/metrics/training/",
+    "methods": "GET, POST",
+    "file": "app/api/admin/metrics/training/route.ts"
+  },
+  {
+    "route": "/api/admin/system/health/._",
+    "methods": "unknown",
+    "file": "app/api/admin/system/health/._route.ts"
+  },
+  {
+    "route": "/api/admin/system/health/",
+    "methods": "GET",
+    "file": "app/api/admin/system/health/route.ts"
+  },
+  {
+    "route": "/api/admin/whispers/metrics/._",
+    "methods": "unknown",
+    "file": "app/api/admin/whispers/metrics/._route.ts"
+  },
+  {
+    "route": "/api/admin/whispers/metrics/",
+    "methods": "GET",
+    "file": "app/api/admin/whispers/metrics/route.ts"
+  },
+  {
+    "route": "/api/analytics/dashboard/",
+    "methods": "GET, PUT",
+    "file": "app/api/analytics/dashboard/route.ts"
+  },
+  {
+    "route": "/api/beta/badges/",
+    "methods": "GET, POST",
+    "file": "app/api/beta/badges/route.ts"
+  },
+  {
+    "route": "/api/beta/constellation/commit/",
+    "methods": "POST",
+    "file": "app/api/beta/constellation/commit/route.ts"
+  },
+  {
+    "route": "/api/beta/constellation/complete/",
+    "methods": "POST",
+    "file": "app/api/beta/constellation/complete/route.ts"
+  },
+  {
+    "route": "/api/beta/constellation/preview/",
+    "methods": "GET",
+    "file": "app/api/beta/constellation/preview/route.ts"
+  },
+  {
+    "route": "/api/beta/event/",
+    "methods": "POST",
+    "file": "app/api/beta/event/route.ts"
+  },
+  {
+    "route": "/api/beta/graduate/",
+    "methods": "POST, GET",
+    "file": "app/api/beta/graduate/route.ts"
+  },
+  {
+    "route": "/api/beta/join/",
+    "methods": "POST",
+    "file": "app/api/beta/join/route.ts"
+  },
+  {
+    "route": "/api/beta/status/",
+    "methods": "GET",
+    "file": "app/api/beta/status/route.ts"
+  },
+  {
+    "route": "/api/captures/._",
+    "methods": "unknown",
+    "file": "app/api/captures/._route.ts"
+  },
+  {
+    "route": "/api/captures/",
+    "methods": "POST, GET",
+    "file": "app/api/captures/route.ts"
+  },
+  {
+    "route": "/api/debug/bridge/summary/",
+    "methods": "GET, POST",
+    "file": "app/api/debug/bridge/summary/route.ts"
+  },
+  {
+    "route": "/api/debug/context/",
+    "methods": "POST, GET",
+    "file": "app/api/debug/context/route.ts"
+  },
+  {
+    "route": "/api/debug/flags/",
+    "methods": "GET",
+    "file": "app/api/debug/flags/route.ts"
+  },
+  {
+    "route": "/api/digests/daily/._",
+    "methods": "unknown",
+    "file": "app/api/digests/daily/._route.ts"
+  },
+  {
+    "route": "/api/digests/daily/",
+    "methods": "GET",
+    "file": "app/api/digests/daily/route.ts"
+  },
+  {
+    "route": "/api/dreams/[id]/weave/._",
+    "methods": "unknown",
+    "file": "app/api/dreams/[id]/weave/._route.ts"
+  },
+  {
+    "route": "/api/dreams/[id]/weave/",
+    "methods": "POST",
+    "file": "app/api/dreams/[id]/weave/route.ts"
+  },
+  {
+    "route": "/api/elemental/recommendations/",
+    "methods": "GET, POST",
+    "file": "app/api/elemental/recommendations/route.ts"
+  },
+  {
+    "route": "/api/health/events/",
+    "methods": "GET",
+    "file": "app/api/health/events/route.ts"
+  },
+  {
+    "route": "/api/health/providers/",
+    "methods": "GET",
+    "file": "app/api/health/providers/route.ts"
+  },
+  {
+    "route": "/api/health/",
+    "methods": "unknown",
+    "file": "app/api/health/route.ts"
+  },
+  {
+    "route": "/api/micro-memories/._",
+    "methods": "unknown",
+    "file": "app/api/micro-memories/._route.ts"
+  },
+  {
+    "route": "/api/micro-memories/",
+    "methods": "POST",
+    "file": "app/api/micro-memories/route.ts"
+  },
+  {
+    "route": "/api/onboarding/",
+    "methods": "POST",
+    "file": "app/api/onboarding/route.ts"
+  },
+  {
+    "route": "/api/oracle/greeting/._",
+    "methods": "unknown",
+    "file": "app/api/oracle/greeting/._route.ts"
+  },
+  {
+    "route": "/api/oracle/greeting/",
+    "methods": "POST",
+    "file": "app/api/oracle/greeting/route.ts"
+  },
+  {
+    "route": "/api/oracle/turn/audio/[turnId]/",
+    "methods": "GET",
+    "file": "app/api/oracle/turn/audio/[turnId]/route.ts"
+  },
+  {
+    "route": "/api/oracle/turn/",
+    "methods": "GET",
+    "file": "app/api/oracle/turn/route.ts"
+  },
+  {
+    "route": "/api/oracle/voice/._",
+    "methods": "unknown",
+    "file": "app/api/oracle/voice/._route.ts"
+  },
+  {
+    "route": "/api/oracle/voice/",
+    "methods": "unknown",
+    "file": "app/api/oracle/voice/route.ts"
+  },
+  {
+    "route": "/api/oracle/weave/",
+    "methods": "unknown",
+    "file": "app/api/oracle/weave/route.ts"
+  },
+  {
+    "route": "/api/recalls/._",
+    "methods": "unknown",
+    "file": "app/api/recalls/._route.ts"
+  },
+  {
+    "route": "/api/recalls/",
+    "methods": "POST",
+    "file": "app/api/recalls/route.ts"
+  },
+  {
+    "route": "/api/settings/voice-agent/",
+    "methods": "GET, PUT",
+    "file": "app/api/settings/voice-agent/route.ts"
+  },
+  {
+    "route": "/api/soul-memory/bookmark/",
+    "methods": "POST",
+    "file": "app/api/soul-memory/bookmark/route.ts"
+  },
+  {
+    "route": "/api/soul-memory/search/",
+    "methods": "POST",
+    "file": "app/api/soul-memory/search/route.ts"
+  },
+  {
+    "route": "/api/telemetry/weights/fallback/._",
+    "methods": "unknown",
+    "file": "app/api/telemetry/weights/fallback/._route.ts"
+  },
+  {
+    "route": "/api/telemetry/weights/fallback/",
+    "methods": "POST",
+    "file": "app/api/telemetry/weights/fallback/route.ts"
+  },
+  {
+    "route": "/api/telemetry/whispers/shown/._",
+    "methods": "unknown",
+    "file": "app/api/telemetry/whispers/shown/._route.ts"
+  },
+  {
+    "route": "/api/telemetry/whispers/shown/",
+    "methods": "POST",
+    "file": "app/api/telemetry/whispers/shown/route.ts"
+  },
+  {
+    "route": "/api/telemetry/whispers/used/._",
+    "methods": "unknown",
+    "file": "app/api/telemetry/whispers/used/._route.ts"
+  },
+  {
+    "route": "/api/telemetry/whispers/used/",
+    "methods": "POST",
+    "file": "app/api/telemetry/whispers/used/route.ts"
+  },
+  {
+    "route": "/api/training/evaluate/",
+    "methods": "POST, GET",
+    "file": "app/api/training/evaluate/route.ts"
+  },
+  {
+    "route": "/api/uploads/[id]/",
+    "methods": "GET, PUT, DELETE",
+    "file": "app/api/uploads/[id]/route.ts"
+  },
+  {
+    "route": "/api/uploads/process/._",
+    "methods": "unknown",
+    "file": "app/api/uploads/process/._route.ts"
+  },
+  {
+    "route": "/api/uploads/process/",
+    "methods": "POST",
+    "file": "app/api/uploads/process/route.ts"
+  },
+  {
+    "route": "/api/uploads/",
+    "methods": "GET, POST, DELETE",
+    "file": "app/api/uploads/route.ts"
+  },
+  {
+    "route": "/api/whispers/._",
+    "methods": "unknown",
+    "file": "app/api/whispers/._route.ts"
+  },
+  {
+    "route": "/api/whispers/context/._",
+    "methods": "unknown",
+    "file": "app/api/whispers/context/._route.ts"
+  },
+  {
+    "route": "/api/whispers/context/",
+    "methods": "POST",
+    "file": "app/api/whispers/context/route.ts"
+  },
+  {
+    "route": "/api/whispers/",
+    "methods": "POST, GET",
+    "file": "app/api/whispers/route.ts"
+  },
+  {
+    "route": "/api/whispers/seen/._",
+    "methods": "unknown",
+    "file": "app/api/whispers/seen/._route.ts"
+  },
+  {
+    "route": "/api/whispers/seen/",
+    "methods": "POST",
+    "file": "app/api/whispers/seen/route.ts"
+  },
+  {
+    "route": "/api/whispers/weights/._",
+    "methods": "unknown",
+    "file": "app/api/whispers/weights/._route.ts"
+  },
+  {
+    "route": "/api/whispers/weights/",
+    "methods": "GET, POST",
+    "file": "app/api/whispers/weights/route.ts"
+  }
+]
