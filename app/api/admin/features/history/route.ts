@@ -30,27 +30,24 @@ export async function GET(req: Request) {
     // Get audit history for this flag
     const { data: history } = await supabase
       .from('admin_audit_log')
-      .select(`
-        operation,
-        old_values,
-        new_values,
-        created_at,
-        user_id,
-        auth.users!inner(email)
-      `)
+      .select('operation, old_values, new_values, created_at, user_id')
       .eq('table_name', 'feature_flags')
       .eq('row_id', flagKey)
       .order('created_at', { ascending: false })
       .limit(10);
 
-    // Format history with user emails
-    const formattedHistory = (history || []).map(entry => ({
-      operation: entry.operation,
-      old_values: entry.old_values,
-      new_values: entry.new_values,
-      created_at: entry.created_at,
-      user_email: (entry as any).users?.email || 'unknown'
-    }));
+    // Get user emails separately to avoid join complexity
+    const formattedHistory = [];
+    for (const entry of history || []) {
+      const { data: user } = await supabase.auth.admin.getUserById(entry.user_id);
+      formattedHistory.push({
+        operation: entry.operation,
+        old_values: entry.old_values,
+        new_values: entry.new_values,
+        created_at: entry.created_at,
+        user_email: user?.user?.email || 'unknown'
+      });
+    }
 
     return NextResponse.json({ 
       history: formattedHistory 
