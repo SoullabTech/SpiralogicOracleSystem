@@ -174,7 +174,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-export const POST = withTraceNext('oracle/turn', postHandler);
+export const POST = withTraceNext(postHandler);
 
 // Health check endpoint  
 export async function GET() {

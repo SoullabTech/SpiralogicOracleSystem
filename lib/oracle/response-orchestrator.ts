@@ -129,7 +129,7 @@ export function assembleResponse(
     conversationId: string;
     actions?: any[];
     audioPending?: boolean;
-    turnId?: string;
+    turnId?: string | null;
   },
   turnMeta?: any,
   debug?: any

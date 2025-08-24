@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=development DEPLOY_TARGET=local next dev -p 3001",
     "dev:frontend": "cross-env NODE_ENV=development DEPLOY_TARGET=local next dev -p 3001",
     "dev:backend": "npm --prefix backend run dev",
-    "dev:all": "concurrently -n FRONTEND,BACKEND -c auto \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:all": "npm run build && concurrently -n FRONTEND,BACKEND -c auto \"npm run dev:frontend\" \"npm run dev:backend\"",
     "clean:src": "bash -lc \"find backend/src -type f -name '._*' -delete && find backend/src -type f \\( -name '*.js' -o -name '*.js.map' \\) -delete\"",
     "clean:dist": "bash -lc \"rm -rf backend/dist\"",
     "clean": "npm run clean:dist && npm run clean:src",

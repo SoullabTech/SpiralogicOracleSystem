@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { getSupabaseConfig } from "@/lib/config/supabase";
+import { API_ENDPOINTS, apiClient } from "@/frontend/lib/config";
 
 // Type definitions for elemental content
 interface ContentDeliveryContext {
