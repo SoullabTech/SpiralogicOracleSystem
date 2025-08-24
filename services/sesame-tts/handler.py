@@ -13,7 +13,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 USE_FP16 = os.getenv("SESAME_FP16", "1") == "1" and DEVICE == "cuda"
 DTYPE = torch.float16 if USE_FP16 else torch.float32
 
-print(f"📦 Model: {MODEL_ID} | Device: {DEVICE} | FP16: {USE_FP16}", flush=True)
+print("📦 Model:", MODEL_ID, "| Device:", DEVICE, "| FP16:", USE_FP16, flush=True)
 
 # Lazy-load model
 _tokenizer = None
@@ -40,7 +40,7 @@ def handler(event):
     try:
         # Extract text from event
         text = ((event or {}).get("input") or {}).get("text", "Hello from Sesame")
-        print(f"🎤 Synthesizing: {text[:50]}...", flush=True)
+        print("🎤 Synthesizing:", text[:50] + "...", flush=True)
         
         # Load model and generate
         tokenizer, model = load_model()
@@ -63,8 +63,9 @@ def handler(event):
             "ok": True
         }
     except Exception as e:
-        print(f"❌ Error: {str(e)}", flush=True)
-        return {"ok": False, "error": str(e)}
+        error_msg = str(e)
+        print("❌ Error:", error_msg, flush=True)
+        return {"ok": False, "error": error_msg}
 
 # Start the RunPod loop
 serverless.start({"handler": handler})
