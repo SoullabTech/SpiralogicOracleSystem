@@ -128,7 +128,6 @@ def sine_fallback(duration_sec=0.5, freq=880, sr=16000):
     buf.seek(0)
     return buf.read()
 
-@serverless.handler()
 def handler(event):
     try:
         text = ((event or {}).get("input") or {}).get("text", "Hello from Sesame")
@@ -162,4 +161,5 @@ def handler(event):
         print(f"❌ Error: {str(e)}", flush=True)
         return {"ok": False, "error": str(e)}
 
-serverless.start({"handler": handler})
+if __name__ == "__main__":
+    serverless.start({"handler": handler})
