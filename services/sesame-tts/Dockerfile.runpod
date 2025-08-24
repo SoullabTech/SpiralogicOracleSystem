@@ -45,5 +45,4 @@ PY
 # ensure we're in /app
 WORKDIR /app
 
-# very important: use bash -lc so PATH/env is correct and we capture output
 CMD ["/bin/bash","-lc","/app/boot.sh"]
