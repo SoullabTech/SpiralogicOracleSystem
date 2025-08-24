@@ -28,12 +28,12 @@ RUN python3 -m pip install --upgrade pip \
       --extra-index-url https://download.pytorch.org/whl/cu121 \
       torch==2.1.2+cu121 torchvision==0.16.2+cu121 torchaudio==2.1.2+cu121 \
  && pip3 install \
-      runpod \
       transformers==4.41.2 \
       "accelerate<0.31" \
       soundfile \
       sentencepiece \
-      "protobuf<5"
+      "protobuf<5" \
+      runpod
 
 # ---- Run (direct execution for clearer boot logs) ----
 CMD ["python3", "/app/handler.py"]
