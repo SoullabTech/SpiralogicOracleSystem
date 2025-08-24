@@ -17,23 +17,17 @@ RUN apt-get update \
 # ---- App code ----
 COPY services/sesame-tts/handler.py /app/handler.py
 
-# ---- Python deps (pinned & compatible) ----
-# - Torch 2.1.2 cu121 (works on L4, has stable ABI expected by our stack)
-# - transformers 4.41.x + accelerate <0.31 (avoids device_mesh import)
-# - numpy 1.26.x (prevents _ARRAY_API warning)
-# - extras commonly required by HF TTS models
-RUN python3 -m pip install --upgrade pip \
- && pip3 install \
-      numpy==1.26.4 \
-      --extra-index-url https://download.pytorch.org/whl/cu121 \
-      torch==2.1.2+cu121 torchvision==0.16.2+cu121 torchaudio==2.1.2+cu121 \
- && pip3 install \
-      transformers==4.41.2 \
-      "accelerate<0.31" \
-      soundfile \
-      sentencepiece \
-      "protobuf<5" \
-      runpod
+# ---- Python deps (known-good version set) ----
+# PyTorch CUDA 12.1 wheels
+RUN pip3 install --no-cache-dir \
+  torch==2.1.2+cu121 torchvision==0.16.2+cu121 torchaudio==2.1.2+cu121 \
+  --index-url https://download.pytorch.org/whl/cu121
+
+# Match HF stack to torch 2.1.x
+RUN pip3 install --no-cache-dir \
+  transformers==4.39.3 accelerate==0.24.1 \
+  sentencepiece==0.1.99 safetensors==0.4.3 numpy==1.26.4 \
+  soundfile==0.12.1 runpod==1.7.13
 
 # Sanity check: ensure deps import cleanly inside image
 RUN python3 - <<'PY'
@@ -41,8 +35,10 @@ import sys
 print("SMOKE: python", sys.version)
 import torch, numpy, runpod, transformers, accelerate
 print("SMOKE: torch", torch.__version__)
+print("SMOKE: transformers", transformers.__version__)
+print("SMOKE: accelerate", accelerate.__version__)
 print("SMOKE: imports OK")
 PY
 
-# ---- Run (direct execution for clearer boot logs) ----
+# ---- Run handler directly (so boot logs show) ----
 CMD ["python3", "/app/handler.py"]
