@@ -42,7 +42,8 @@ print("SMOKE: accelerate", accelerate.__version__)
 print("SMOKE: imports OK")
 PY
 
-# ensure we're in /app
+# ensure we're in /app  
 WORKDIR /app
+# Force rebuild - fix decorator issue
 
 CMD ["/bin/bash","-lc","/app/boot.sh"]
