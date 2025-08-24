@@ -1,29 +1,27 @@
-# services/sesame-tts/handler.py
-import base64, io, struct
+# Minimal RunPod worker: returns 300ms of silence (WAV)
+import base64
+import io
+import wave
 from runpod import serverless
 
-def _tiny_wav_silence(duration_ms=200):
-    sr = 16000
-    n = int(sr * duration_ms / 1000)
-    # 16-bit PCM mono silence
-    with io.BytesIO() as b:
-        # RIFF header
-        b.write(b"RIFF")
-        b.write(struct.pack("<I", 36 + n * 2))
-        b.write(b"WAVEfmt ")
-        b.write(struct.pack("<IHHIIHH", 16, 1, 1, sr, sr * 2, 2, 16))
-        b.write(b"data")
-        b.write(struct.pack("<I", n * 2))
-        b.write(b"\x00\x00" * n)
-        return b.getvalue()
+def _silence_wav_bytes(ms=300, rate=16000):
+    n_samples = int(rate * ms / 1000)
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(2)      # 16-bit PCM
+        wf.setframerate(rate)
+        wf.writeframes(b"\x00\x00" * n_samples)
+    return buf.getvalue()
 
 @serverless.handler()
 def handler(event):
-    text = ((event or {}).get("input") or {}).get("text", "hello")
-    wav = _tiny_wav_silence(300)  # 300 ms silence just to validate pipeline
+    # event: {"input": {"text": "..."}}  (text is ignored in stub)
+    audio = _silence_wav_bytes()
     return {
-        "ok": True,
-        "echo": text,
-        "mime_type": "audio/wav",
-        "audio_base64": base64.b64encode(wav).decode("utf-8"),
+        "audio_base64": base64.b64encode(audio).decode("utf-8"),
+        "mime_type": "audio/wav"
     }
+
+# start the RunPod loop
+serverless.start({"handler": handler})

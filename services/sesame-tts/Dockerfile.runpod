@@ -1,17 +1,17 @@
-# services/sesame-tts/Dockerfile.runpod
-FROM python:3.11-slim
+# Minimal, GPU-agnostic image that just runs the RunPod worker loop
+FROM python:3.10-slim
 
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates && rm -rf /var/lib/apt/lists/*
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
 
-WORKDIR /workspace
+# tiny layer set
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
-# Minimal deps to start the RunPod worker
-RUN pip install --no-cache-dir runpod
+COPY services/sesame-tts/handler.py /app/handler.py
 
-# Add handler
-COPY services/sesame-tts/handler.py /workspace/handler.py
+# only what we need to start the worker + wav writer
+RUN pip install --no-cache-dir runpod==1.6.0
 
-# Start the RunPod serverless runtime (looks for @serverless.handler)
-CMD ["python", "-m", "runpod"]
+# this is critical: the RunPod serverless process
+CMD ["python","-m","runpod"]
