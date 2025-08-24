@@ -1,27 +1,25 @@
-# Minimal RunPod worker: returns 300ms of silence (WAV)
-import base64
-import io
-import wave
+import io, base64, wave, os
 from runpod import serverless
 
-def _silence_wav_bytes(ms=300, rate=16000):
-    n_samples = int(rate * ms / 1000)
+def _silent_wav_bytes(duration_ms=300, sr=16000):
+    frames = int(sr * (duration_ms / 1000))
     buf = io.BytesIO()
-    with wave.open(buf, "wb") as wf:
-        wf.setnchannels(1)
-        wf.setsampwidth(2)      # 16-bit PCM
-        wf.setframerate(rate)
-        wf.writeframes(b"\x00\x00" * n_samples)
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)  # 16-bit PCM
+        w.setframerate(sr)
+        w.writeframes(b"\x00\x00" * frames)
     return buf.getvalue()
 
 @serverless.handler()
 def handler(event):
-    # event: {"input": {"text": "..."}}  (text is ignored in stub)
-    audio = _silence_wav_bytes()
+    # TODO: replace with real Sesame synth once the pipeline is green
+    audio = _silent_wav_bytes()
     return {
         "audio_base64": base64.b64encode(audio).decode("utf-8"),
-        "mime_type": "audio/wav"
+        "mime_type": "audio/wav",
+        "ok": True
     }
 
-# start the RunPod loop
+# Start the RunPod loop (this was the missing line)
 serverless.start({"handler": handler})
