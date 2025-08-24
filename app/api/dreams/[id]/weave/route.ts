@@ -10,7 +10,7 @@ const paramsSchema = z.object({
 });
 
 export async function POST(
-  req: NextRequest,
+  _: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -18,7 +18,7 @@ export async function POST(
     const { id } = paramsSchema.parse(params);
 
     // 2. Authenticated supabase client
-    const supabase = createClient({ req });
+    const supabase = createClient();
     const {
       data: { user },
       error: userError,
@@ -65,12 +65,12 @@ export async function POST(
     const weaveResult = await oracleWeave(withCtx);
 
     // 6. Bucketize recap (server-side)
-    const buckets = bucketize(weaveResult.text);
+    const buckets = bucketize(weaveResult.message);
 
     // 7. Return response
     return NextResponse.json({
-      text: weaveResult.text,
-      userQuote: weaveResult.userQuote,
+      text: weaveResult.message,
+      userQuote: weaveResult.message,
       buckets,
       maya_voice_cue: {
         context: "dream-weave",

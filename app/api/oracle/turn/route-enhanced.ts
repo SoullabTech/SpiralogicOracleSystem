@@ -114,7 +114,6 @@ export async function POST(request: NextRequest) {
           context: {
             ...input.context,
             contextBlocks,
-            userName: userDisplayName || process.env.MAYA_FORCE_NAME || 'friend'
           },
           conversationId,
           temperature,
@@ -122,7 +121,6 @@ export async function POST(request: NextRequest) {
           topP: 0.95,
           conversationalMode: true,
           // Pass intelligence insights
-          sesameAnalysis: pack.nlu,
           psiAnalysis: pack.psi,
           micropsiModulation: pack.micropsi
         });
@@ -142,7 +140,6 @@ export async function POST(request: NextRequest) {
           draft: draftResponse,
           nlu: pack.nlu,
           psi: pack.psi,
-          drives: pack.micropsi?.driveVector,
           conversational: true,
           context: input.context
         });
@@ -165,7 +162,6 @@ export async function POST(request: NextRequest) {
           userId,
           conversationId,
           archetypeHint: pack.facetHints ? Object.entries(pack.facetHints).sort((a,b) => b[1] - a[1])[0]?.[0] : undefined,
-          sentiment: pack.nlu?.sentiment,
           userInput: input.text
         });
         
@@ -183,11 +179,7 @@ export async function POST(request: NextRequest) {
     const invitesAllowed = pack.micropsi?.modulation?.inviteCount ?? 1;
     try {
       const { createConversationalValidator } = await import('@/lib/validators/conversational');
-      const validator = createConversationalValidator({
-        minSentences: Number(process.env.TURN_MIN_SENTENCES) || 4,
-        maxSentences: Number(process.env.TURN_MAX_SENTENCES) || 12,
-        maxInvites: invitesAllowed
-      });
+      const validator = createConversationalValidator();
       
       const validation = await validator.validate(finalResponse, input.text);
       if (validation.valid || process.env.ATTENDING_ENFORCEMENT_MODE === 'relaxed') {
@@ -209,9 +201,7 @@ export async function POST(request: NextRequest) {
         response: finalResponse,
         meta: {
           element: pack.psi?.elementRecommendation,
-          nlu: pack.nlu,
-          drives: pack.micropsi?.driveVector,
-          affect: pack.micropsi?.affect
+          emotionalTone: pack.psi?.mood,
         },
         privacy: { 
           never_quote: false,

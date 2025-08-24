@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MayaVoiceInterface } from '@/lib/oracle/maya-voice-interface';
 import { processVoiceWithConsciousness } from '@/lib/oracle/maya-micropsi-integration';
 import { getUserInfo } from '@/lib/oracle/user-manager';
-import { logger } from '@/lib/shared/observability/logger';
+import { logError, logInfo } from '@/lib/shared/observability/logger';
 
 // Global voice interface instance for session management
 const voiceInterfaces = new Map<string, MayaVoiceInterface>();
@@ -36,13 +36,13 @@ async function postHandler(request: NextRequest) {
     const userId = userInfo.userId;
     const interfaceKey = `${userId}_${conversationId || 'default'}`;
 
-    logger.info('Voice API request', {
+    logInfo({
       action,
       userId,
       conversationId,
       hasAudio: !!audioMetadata,
       textLength: text?.length || 0
-    });
+    }, 'Voice API request',);
 
     switch (action) {
       case 'initialize':
@@ -65,7 +65,7 @@ async function postHandler(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Voice API error', { error });
+    logError({ error }, 'Voice API error');
     return NextResponse.json(
       { error: 'Voice processing failed' },
       { status: 500 }
@@ -80,11 +80,11 @@ async function handleInitialize(interfaceKey: string, conversationId?: string) {
     
     voiceInterfaces.set(interfaceKey, voiceInterface);
 
-    logger.info('Voice session initialized', {
+    logInfo({
       interfaceKey,
       sessionId: session.sessionId,
       voiceProfile: session.voiceProfile?.archeType
-    });
+    },'Voice session initialized');
 
     return NextResponse.json({
       success: true,
@@ -97,9 +97,9 @@ async function handleInitialize(interfaceKey: string, conversationId?: string) {
     });
 
   } catch (error) {
-    logger.error('Voice initialization failed', { error, interfaceKey });
+    logError({ error, interfaceKey }, 'Voice initialization failed');
     return NextResponse.json(
-      { error: `Initialization failed: ${error.message}` },
+      { error: `Initialization failed: ${error}` },
       { status: 500 }
     );
   }
@@ -145,12 +145,12 @@ async function handleProcess(
     const { modulatedResponse, voiceParams, consciousnessInsights } = 
       await processor.generateConsciousResponse(voiceOutput.response, consciousnessState);
 
-    logger.info('Voice processing completed', {
+    logInfo({
       interfaceKey,
       confidence: voiceOutput.confidence,
       consciousnessInsights: consciousnessInsights.length,
       audioGenerated: !!voiceOutput.audioUrl
-    });
+    }, 'Voice processing completed');
 
     return NextResponse.json({
       success: true,
@@ -173,9 +173,9 @@ async function handleProcess(
     });
 
   } catch (error) {
-    logger.error('Voice processing failed', { error, interfaceKey });
+    logError({ error, interfaceKey }, 'Voice processing failed');
     return NextResponse.json(
-      { error: `Processing failed: ${error.message}` },
+      { error: `Processing failed: ${error}` },
       { status: 500 }
     );
   }
@@ -193,11 +193,11 @@ async function handleAdapt(interfaceKey: string, adaptations: any) {
 
     const updatedProfile = await voiceInterface.adaptVoiceProfile(adaptations);
 
-    logger.info('Voice profile adapted', {
+    logInfo({
       interfaceKey,
       adaptations,
       newArchetype: updatedProfile.archeType
-    });
+    }, 'Voice profile adapted');
 
     return NextResponse.json({
       success: true,
@@ -205,9 +205,9 @@ async function handleAdapt(interfaceKey: string, adaptations: any) {
     });
 
   } catch (error) {
-    logger.error('Voice adaptation failed', { error, interfaceKey });
+    logError({ error, interfaceKey }, 'Voice adaptation failed', );
     return NextResponse.json(
-      { error: `Adaptation failed: ${error.message}` },
+      { error: `Adaptation failed: ${error}` },
       { status: 500 }
     );
   }
@@ -223,14 +223,14 @@ async function handleEnd(interfaceKey: string) {
     await voiceInterface.endVoiceSession();
     voiceInterfaces.delete(interfaceKey);
 
-    logger.info('Voice session ended', { interfaceKey });
+    logInfo({ interfaceKey }, 'Voice session ended');
 
     return NextResponse.json({ success: true });
 
   } catch (error) {
-    logger.error('Voice session end failed', { error, interfaceKey });
+    logError({ error, interfaceKey }, 'Voice session end failed');
     return NextResponse.json(
-      { error: `Session end failed: ${error.message}` },
+      { error: `Session end failed: ${error}` },
       { status: 500 }
     );
   }
@@ -240,7 +240,7 @@ export const POST = postHandler;
 
 // Cleanup function to prevent memory leaks
 setInterval(() => {
-  logger.info(`Active voice sessions: ${voiceInterfaces.size}`);
+  logInfo({}, `Active voice sessions: ${voiceInterfaces.size}`);
   
   // In production, implement session timeout cleanup here
   // For now, log session count for monitoring

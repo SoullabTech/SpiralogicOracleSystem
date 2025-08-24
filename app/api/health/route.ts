@@ -18,4 +18,4 @@ async function healthHandler(request: NextRequest) {
   );
 }
 
-export const GET = withTraceNext(healthHandler, 'GET /api/health');
+export const GET = withTraceNext('GET /api/health', healthHandler);
