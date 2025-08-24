@@ -162,4 +162,5 @@ def handler(event):
         return {"ok": False, "error": str(e)}
 
 if __name__ == "__main__":
+    print("BOOT: launching handler.py", flush=True)
     serverless.start({"handler": handler})

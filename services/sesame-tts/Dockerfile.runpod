@@ -1,49 +1,26 @@
-# CUDA 12.1 runtime + cuDNN8
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
 ENV PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    HF_HUB_ENABLE_HF_TRANSFER=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 WORKDIR /app
 
-# ---- System deps ----
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-      python3 python3-pip libsndfile1 \
- && rm -rf /var/lib/apt/lists/*
+# System deps for audio
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip libsndfile1 && \
+    rm -rf /var/lib/apt/lists/*
 
-# ---- App code ----
+# Copy the handler into /app
 COPY services/sesame-tts/handler.py /app/handler.py
-COPY services/sesame-tts/boot.sh /app/boot.sh
-RUN chmod +x /app/boot.sh
 
-# ---- Python deps (known-good version set) ----
-# PyTorch CUDA 12.1 wheels
-RUN pip3 install --no-cache-dir \
-  torch==2.1.2+cu121 torchvision==0.16.2+cu121 torchaudio==2.1.2+cu121 \
-  --index-url https://download.pytorch.org/whl/cu121
+# Pin known-good versions
+RUN python3 -m pip install --no-cache-dir \
+    runpod==1.7.13 \
+    torch==2.1.2+cu121 \
+    transformers==4.39.3 \
+    accelerate==0.24.1 \
+    numpy==1.26.4 \
+    soundfile
 
-# Match HF stack to torch 2.1.x
-RUN pip3 install --no-cache-dir \
-  transformers==4.39.3 accelerate==0.24.1 \
-  sentencepiece==0.1.99 safetensors==0.4.3 numpy==1.26.4 \
-  soundfile==0.12.1 runpod==1.7.13
-
-# Sanity check: ensure deps import cleanly inside image
-RUN python3 - <<'PY'
-import sys
-print("SMOKE: python", sys.version)
-import torch, numpy, runpod, transformers, accelerate
-print("SMOKE: torch", torch.__version__)
-print("SMOKE: transformers", transformers.__version__)
-print("SMOKE: accelerate", accelerate.__version__)
-print("SMOKE: imports OK")
-PY
-
-# ensure we're in /app  
-WORKDIR /app
-# Force rebuild - fix decorator issue
-
-CMD ["/bin/bash","-lc","/app/boot.sh"]
+# Run the handler directly (NOT `-m runpod`)
+CMD ["python3","/app/handler.py"]
