@@ -1,33 +1,59 @@
-import os, io, base64, time
-import torch
-import numpy as np
-import soundfile as sf
-from runpod import serverless
+# --- BOOTSTRAP (crash-proof worker) ---
+import os, sys, time, traceback
 
-MODEL_ID = os.getenv("SESAME_MODEL", "sesame/csm-1b")
-HF_TOKEN = os.getenv("HF_TOKEN", "")
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-USE_FP16 = os.getenv("SESAME_FP16", "1") == "1" and DEVICE == "cuda"
-DTYPE = torch.float16 if USE_FP16 else torch.float32
+print("BOOT[0] starting python", sys.version, flush=True)
 
-_model = None
-_tokenizer = None
+def fatal(e, stage):
+    print(f"FATAL[{stage}]: {type(e).__name__}: {e}", flush=True)
+    traceback.print_exc()
+    # keep worker alive so logs are visible
+    print("HALT: entering debug sleep loop; worker stays alive for logs.", flush=True)
+    while True:
+        time.sleep(30)
 
-print("🔊 Booting Sesame RunPod worker...", flush=True)
-print("📦 Model:", MODEL_ID, "| Device:", DEVICE, "| FP16:", str(USE_FP16), flush=True)
+try:
+    print("BOOT[1] importing deps...", flush=True)
+    import io, base64
+    import numpy as np
+    import torch
+    import soundfile as sf
+    from runpod import serverless
+    from transformers import __version__ as hf_version
+    print("BOOT[1] OK torch", torch.__version__, "| hf", hf_version, flush=True)
+except Exception as e:
+    fatal(e, "import")
+
+try:
+    print("BOOT[2] prep device...", flush=True)
+    MODEL_ID = os.getenv("SESAME_MODEL", "sesame/csm-1b")
+    HF_TOKEN = os.getenv("HF_TOKEN", "")
+    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+    USE_FP16 = os.getenv("SESAME_FP16", "1") == "1" and DEVICE == "cuda"
+    DTYPE = torch.float16 if USE_FP16 else torch.float32
+
+    _model = None
+    _tokenizer = None
+
+    print("🔊 Booting Sesame RunPod worker...", flush=True)
+    print("📦 Model:", MODEL_ID, "| Device:", DEVICE, "| FP16:", str(USE_FP16), flush=True)
+    print("BOOT[2] device setup OK", flush=True)
+except Exception as e:
+    fatal(e, "device_setup")
 
 def load_model():
     global _model, _tokenizer
     if _model is not None:
         return _model, _tokenizer
 
-    if not HF_TOKEN:
-        raise RuntimeError("HF_TOKEN missing")
-
-    print("🔄 Loading Sesame TTS model...", flush=True)
-    start = time.time()
-    
     try:
+        print("BOOT[3] loading model...", flush=True)
+        
+        if not HF_TOKEN:
+            raise RuntimeError("HF_TOKEN missing")
+
+        print("🔄 Loading Sesame TTS model...", flush=True)
+        start = time.time()
+        
         from transformers import AutoTokenizer, AutoModel
         
         _tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, use_auth_token=HF_TOKEN)
@@ -39,11 +65,11 @@ def load_model():
         
         _model.eval()
         print(f"✅ Model loaded successfully in {time.time() - start:.1f}s", flush=True)
+        print("BOOT[3] model loaded.", flush=True)
         return _model, _tokenizer
         
     except Exception as e:
-        print(f"❌ Failed to load model: {str(e)}", flush=True)
-        raise
+        fatal(e, "model_load")
 
 def synthesize_wav_bytes(text: str) -> bytes:
     """Generate audio - will fall back to tone if model fails"""

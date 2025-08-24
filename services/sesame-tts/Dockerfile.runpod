@@ -35,5 +35,14 @@ RUN python3 -m pip install --upgrade pip \
       "protobuf<5" \
       runpod
 
+# Sanity check: ensure deps import cleanly inside image
+RUN python3 - <<'PY'
+import sys
+print("SMOKE: python", sys.version)
+import torch, numpy, runpod, transformers, accelerate
+print("SMOKE: torch", torch.__version__)
+print("SMOKE: imports OK")
+PY
+
 # ---- Run (direct execution for clearer boot logs) ----
 CMD ["python3", "/app/handler.py"]
