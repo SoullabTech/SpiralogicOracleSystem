@@ -11,15 +11,15 @@ USE_FP16 = os.getenv("SESAME_FP16", "1") == "1" and DEVICE == "cuda"
 DTYPE = torch.float16 if USE_FP16 else torch.float32
 
 _model = None
-_processor = None
+_tokenizer = None
+
+print("🔊 Booting Sesame RunPod worker...", flush=True)
+print("📦 Model:", MODEL_ID, "| Device:", DEVICE, "| FP16:", str(USE_FP16), flush=True)
 
 def load_model():
-    global _model, _processor
+    global _model, _tokenizer
     if _model is not None:
-        return _model, _processor
-
-    print("🔊 Booting Sesame RunPod worker...", flush=True)
-    print("📦 Model:", MODEL_ID, "| Device:", DEVICE, "| FP16:", str(USE_FP16), flush=True)
+        return _model, _tokenizer
 
     if not HF_TOKEN:
         raise RuntimeError("HF_TOKEN missing")
@@ -28,126 +28,74 @@ def load_model():
     start = time.time()
     
     try:
-        # Try loading as a speech model first
-        from transformers import SpeechT5Processor, SpeechT5ForTextToSpeech, SpeechT5HifiGan
+        from transformers import AutoTokenizer, AutoModel
         
-        _processor = SpeechT5Processor.from_pretrained(MODEL_ID, use_auth_token=HF_TOKEN)
-        _model = SpeechT5ForTextToSpeech.from_pretrained(
-            MODEL_ID, 
+        _tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, use_auth_token=HF_TOKEN)
+        _model = AutoModel.from_pretrained(
+            MODEL_ID,
             torch_dtype=DTYPE,
             use_auth_token=HF_TOKEN
         ).to(DEVICE)
         
-        # Also load vocoder if needed
-        vocoder = SpeechT5HifiGan.from_pretrained(
-            "microsoft/speecht5_hifigan",
-            torch_dtype=DTYPE,
-            use_auth_token=HF_TOKEN
-        ).to(DEVICE)
+        _model.eval()
+        print(f"✅ Model loaded successfully in {time.time() - start:.1f}s", flush=True)
+        return _model, _tokenizer
         
-        print(f"✅ Loaded as SpeechT5 model in {time.time() - start:.1f}s", flush=True)
-        return _model, _processor, vocoder
-        
-    except Exception as e1:
-        print(f"Not a SpeechT5 model: {e1}", flush=True)
-        
-        try:
-            # Try as a general seq2seq model
-            from transformers import AutoProcessor, AutoModelForTextToWaveform
-            
-            _processor = AutoProcessor.from_pretrained(MODEL_ID, use_auth_token=HF_TOKEN)
-            _model = AutoModelForTextToWaveform.from_pretrained(
-                MODEL_ID,
-                torch_dtype=DTYPE,
-                use_auth_token=HF_TOKEN
-            ).to(DEVICE)
-            
-            print(f"✅ Loaded as TextToWaveform model in {time.time() - start:.1f}s", flush=True)
-            return _model, _processor, None
-            
-        except Exception as e2:
-            print(f"Not a TextToWaveform model: {e2}", flush=True)
-            
-            # Try as a generic model
-            from transformers import AutoTokenizer, AutoModel
-            
-            _processor = AutoTokenizer.from_pretrained(MODEL_ID, use_auth_token=HF_TOKEN)
-            _model = AutoModel.from_pretrained(
-                MODEL_ID,
-                torch_dtype=DTYPE,
-                use_auth_token=HF_TOKEN
-            ).to(DEVICE)
-            
-            print(f"✅ Loaded as generic model in {time.time() - start:.1f}s", flush=True)
-            return _model, _processor, None
+    except Exception as e:
+        print(f"❌ Failed to load model: {str(e)}", flush=True)
+        raise
 
 def synthesize_wav_bytes(text: str) -> bytes:
-    """Generate audio using the loaded model"""
-    result = load_model()
+    """Generate audio - will fall back to tone if model fails"""
+    model, tokenizer = load_model()
     
-    if len(result) == 3:
-        model, processor, vocoder = result
-        
-        # SpeechT5 style
-        inputs = processor(text=text, return_tensors="pt").to(DEVICE)
-        
-        # You might need speaker embeddings
-        # speaker_embeddings = torch.zeros((1, 512)).to(DEVICE)
-        
-        with torch.no_grad():
-            speech = model.generate(**inputs)
-            if vocoder:
-                speech = vocoder(speech)
-        
-        audio = speech.squeeze().cpu().numpy()
-        
-    else:
-        model, processor = result
-        
-        # Generic TTS model
-        inputs = processor(text, return_tensors="pt").to(DEVICE)
-        
-        with torch.no_grad():
-            # Try different output methods
-            if hasattr(model, 'generate'):
-                outputs = model.generate(**inputs)
-            elif hasattr(model, 'forward'):
-                outputs = model(**inputs)
-            else:
-                raise RuntimeError("Model has no generate or forward method")
-            
-            # Extract audio from outputs
-            if hasattr(outputs, 'waveform'):
-                audio = outputs.waveform
-            elif hasattr(outputs, 'audio'):
-                audio = outputs.audio
-            elif hasattr(outputs, 'logits'):
-                # Some models return mel spectrograms that need vocoding
-                raise RuntimeError("Model returns logits/spectrograms - needs vocoder")
-            elif torch.is_tensor(outputs):
-                audio = outputs
-            else:
-                raise RuntimeError(f"Unknown output type: {type(outputs)}")
-        
-        if torch.is_tensor(audio):
-            audio = audio.squeeze().cpu().numpy()
+    # Basic tokenization
+    inputs = tokenizer(text, return_tensors="pt").to(DEVICE)
     
-    # Normalize and convert to WAV
-    if audio.dtype == np.int16:
-        audio = audio.astype(np.float32) / 32768.0
-    elif audio.max() > 1.0 or audio.min() < -1.0:
-        audio = np.clip(audio / np.abs(audio).max(), -1.0, 1.0)
+    with torch.no_grad():
+        # Try to get audio output from the model
+        outputs = model(**inputs)
+        
+        # This is where we'd need to know the exact Sesame model output format
+        # For now, let's see what the model actually returns
+        print(f"🔍 Model output type: {type(outputs)}", flush=True)
+        if hasattr(outputs, '__dict__'):
+            print(f"🔍 Output attributes: {list(outputs.__dict__.keys())}", flush=True)
+        
+        # Try common audio output patterns
+        audio = None
+        if hasattr(outputs, 'waveform'):
+            audio = outputs.waveform
+        elif hasattr(outputs, 'audio'):
+            audio = outputs.audio
+        elif hasattr(outputs, 'last_hidden_state'):
+            # Some models need additional processing
+            raise RuntimeError("Model returns hidden states - needs vocoder/post-processing")
+        else:
+            raise RuntimeError(f"Unknown model output format: {type(outputs)}")
     
+    # Process audio tensor to WAV bytes
+    if torch.is_tensor(audio):
+        audio = audio.squeeze().cpu().numpy()
+    
+    # Ensure proper audio format
+    if audio.dtype != np.float32:
+        audio = audio.astype(np.float32)
+    
+    # Normalize if needed
+    if np.abs(audio).max() > 1.0:
+        audio = audio / np.abs(audio).max()
+    
+    # Convert to WAV
     buf = io.BytesIO()
     sf.write(buf, audio, 16000, format="WAV", subtype="PCM_16")
     buf.seek(0)
     return buf.read()
 
-def sine_fallback(duration_sec=0.30, freq=880, sr=16000):
-    """Generate a tone to indicate fallback mode"""
-    import math
+def sine_fallback(duration_sec=0.5, freq=880, sr=16000):
+    """Generate fallback tone"""
     t = np.arange(int(duration_sec * sr)) / sr
-    audio = 0.3 * np.sin(2 * np.pi * freq * t)
+    audio = 0.3 * np.sin(2 * np.pi * freq * t).astype(np.float32)
     
     buf = io.BytesIO()
     sf.write(buf, audio, sr, format="WAV", subtype="PCM_16")
