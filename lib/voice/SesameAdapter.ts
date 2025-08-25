@@ -42,6 +42,8 @@ export async function synthesizeViaRunpod(text: string): Promise<Buffer> {
   const endpoint = process.env.RUNPOD_SESAME_ENDPOINT_ID;
   if (!endpoint) throw new Error("RUNPOD_SESAME_ENDPOINT_ID missing");
 
+  console.log(`[SesameAdapter] Synthesizing text: "${text.substring(0, 50)}..."`);
+
   // 1) Kick off job
   const runRes = await fetch(`${RUNPOD_BASE}/${endpoint}/run`, {
     method: "POST",
@@ -72,9 +74,16 @@ export async function synthesizeViaRunpod(text: string): Promise<Buffer> {
     const data = (await st.json()) as RunpodStatusResp;
 
     if (data.status === "COMPLETED") {
+      console.log(`[SesameAdapter] Job completed, output keys:`, Object.keys(data.output || {}));
       const b64 = pickBase64Audio(data.output);
-      if (!b64) throw new Error("RunPod completed but no audio in output");
-      return Buffer.from(b64, "base64");
+      if (!b64) {
+        console.error(`[SesameAdapter] No audio found in output:`, JSON.stringify(data.output).substring(0, 200));
+        throw new Error("RunPod completed but no audio in output");
+      }
+      console.log(`[SesameAdapter] Found base64 audio, length: ${b64.length} chars`);
+      const buffer = Buffer.from(b64, "base64");
+      console.log(`[SesameAdapter] Decoded to buffer, size: ${buffer.length} bytes (${(buffer.length / 1024).toFixed(2)} KB)`);
+      return buffer;
     }
     if (["FAILED", "CANCELLED", "TIMED_OUT"].includes(data.status)) {
       throw new Error(`RunPod job ${data.status}: ${data.error ?? ""}`);

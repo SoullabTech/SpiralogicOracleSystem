@@ -1,9 +1,5 @@
-// app/api/voice/sesame/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { synthesizeViaRunpod, respondWithWav } from "@/lib/voice/SesameAdapter";
-
-// optional: your existing ElevenLabs fallback
-import { synthesizeWithElevenLabs } from "@/lib/voice";
+import { synthesizeToWav } from "@/lib/runpodSesame";
 
 export const runtime = "nodejs";
 
@@ -11,34 +7,14 @@ export async function POST(req: NextRequest) {
   try {
     const { text } = await req.json();
     if (!text || typeof text !== "string") {
-      return NextResponse.json({ error: "text required" }, { status: 400 });
+      return NextResponse.json({ error: "Missing text" }, { status: 400 });
     }
-
-    // Primary: RunPod Sesame
-    try {
-      const wav = await synthesizeViaRunpod(text);
-      return respondWithWav(wav);
-    } catch (e) {
-      // Fallback: ElevenLabs if configured
-      if (process.env.ELEVENLABS_API_KEY) {
-        const audioUrl = await synthesizeWithElevenLabs({
-          voiceId: "calm",
-          text,
-        });
-        // synthesizeWithElevenLabs returns a blob URL, we need to fetch it
-        const response = await fetch(audioUrl);
-        const audioBuffer = await response.arrayBuffer();
-        return new NextResponse(audioBuffer, {
-          status: 200,
-          headers: { "Content-Type": "audio/mpeg" },
-        });
-      }
-      throw e;
-    }
+    const wav = await synthesizeToWav(text);
+    return new NextResponse(wav, {
+      status: 200,
+      headers: { "content-type": "audio/wav" },
+    });
   } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message ?? "synthesis failed" },
-      { status: 502 }
-    );
+    return NextResponse.json({ error: String(err?.message || err) }, { status: 500 });
   }
 }

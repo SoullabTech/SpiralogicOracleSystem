@@ -131,3 +131,6 @@ backend/.env
 backend/.env.*
 backend/src/services/**/.env
 .npm-cache
+sesame_csm_openai/
+docs/deployment/RLS_AUTO_PROBE_CONFIG.md
+docs/deployment/SECRETS_MANAGEMENT.md

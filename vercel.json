@@ -1,6 +1,15 @@
 {
-  "version": 2,
   "functions": {
-    "api/**": { "runtime": "nodejs20.x" }
-  }
+    "app/api/**/*.ts": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 30
+    }
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_ORACLE_VOICE_ENABLED": "true",
+      "NEXT_PUBLIC_ORACLE_MAYA_VOICE": "true"
+    }
+  },
+  "regions": ["iad1"]
 }

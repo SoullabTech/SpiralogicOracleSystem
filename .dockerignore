@@ -13,3 +13,47 @@ dist
 # vcs & env
 .git
 .env*
+
+# Development files
+*.md
+docs/
+README.md
+backend/
+sesame_csm_openai/
+services/
+*.wav
+*.sh
+RUNPOD-ENV-TEMPLATE.md
+SESAME-DEPLOYMENT-CHECKLIST.md
+SESAME-TROUBLESHOOTING.md
+
+# IDE & editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs & debug
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing
+/coverage
+.nyc_output
+
+# Runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+tmp/
+temp/

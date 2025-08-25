@@ -2,21 +2,24 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install dependencies for Apple Silicon compatibility
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat curl
+
+# Install pnpm
+RUN npm install -g pnpm
 
 ENV NODE_ENV=production
-ENV DEPLOY_TARGET=vercel
-COPY package*.json ./
-RUN npm ci && npm cache clean --force
+ENV DEPLOY_TARGET=docker
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN npm run build
+RUN pnpm build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Install dependencies for Apple Silicon compatibility
-RUN apk add --no-cache libc6-compat
+# Install dependencies for Apple Silicon compatibility and health checks
+RUN apk add --no-cache libc6-compat curl
 
 ENV NODE_ENV=production
 
@@ -35,5 +38,9 @@ USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+
+# Health check for Maya Voice system
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:3000/api/health || exit 1
 
 CMD ["node","server.js"]

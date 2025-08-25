@@ -247,7 +247,9 @@
       "Bash(supabase link:*)",
       "Bash(supabase migration:*)",
       "Bash(brew:*)",
-      "Bash(brew upgrade:*)"
+      "Bash(brew upgrade:*)",
+      "Bash(cd:*)",
+      "Bash(cd:*)"
     ],
     "deny": []
   },

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, ArrowRight, Settings, Bell } from 'lucide-react';
 import FeaturedServicesGrid from '@/components/services/FeaturedServicesGrid';
+import MayaVoiceButton from '@/components/MayaVoiceButton';
 
 export default function HomePage() {
   const [greeting, setGreeting] = useState('');
@@ -34,6 +35,12 @@ export default function HomePage() {
               <p className="text-ink-300">
                 What wisdom would you like to explore today?
               </p>
+              <div className="mt-3">
+                <MayaVoiceButton 
+                  text={`${greeting}. Welcome to your Spiralogic Oracle home. I am Maya, ready to guide you through your journey of wisdom and transformation.`}
+                  className="text-sm"
+                />
+              </div>
             </div>
             
             <div className="flex items-center gap-3">
@@ -57,10 +64,10 @@ export default function HomePage() {
         <div className="mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <QuickActionCard
-              title="Start Oracle Session"
-              description="Begin a conversation with deep wisdom"
-              icon="💬"
-              href="/oracle"
+              title="Maya Voice Oracle"
+              description="Speak with Maya through elemental wisdom"
+              icon="🎤"
+              href="/voice/demo"
               primary
             />
             <QuickActionCard
