@@ -1,7 +1,8 @@
 // app/api/voice/sesame/route.ts
-import { synthesizeToWav } from '@/lib/runpodSesame';
+// import { synthesizeToWav } from '@/lib/runpodSesame';
 
 export const runtime = 'nodejs';
+export const maxDuration = 60; // Allow up to 60 seconds
 
 export async function POST(req: Request) {
   try {
@@ -13,28 +14,16 @@ export async function POST(req: Request) {
       });
     }
 
-    // Check environment variables
-    if (!process.env.RUNPOD_ENDPOINT_ID || !process.env.RUNPOD_API_KEY) {
-      console.error('Missing RunPod environment variables');
-      // Fallback to beep for testing
-      const beepBlob = makeBeepWav(800, 1);
-      const beepBuffer = await beepBlob.arrayBuffer();
-      return new Response(beepBuffer, {
-        status: 200,
-        headers: {
-          'content-type': 'audio/wav',
-          'cache-control': 'no-store',
-        }
-      });
-    }
-
-    // RUNPOD: Maya voice enabled!
-    console.log('Attempting RunPod synthesis for:', text.substring(0, 50));
-    const wavBuffer = await synthesizeToWav(text, {
-      endpointId: process.env.RUNPOD_ENDPOINT_ID!,
-      apiKey: process.env.RUNPOD_API_KEY!,
-      timeout: 30000,
+    // TEMPORARY: Skip RunPod and return beep for debugging
+    console.log('Voice API called with text:', text.substring(0, 50));
+    console.log('RunPod env vars present:', {
+      endpoint: !!process.env.RUNPOD_ENDPOINT_ID,
+      apiKey: !!process.env.RUNPOD_API_KEY
     });
+    
+    // Always return beep for now to isolate timeout issue
+    const beepBlob = makeBeepWav(800, 1);
+    const wavBuffer = await beepBlob.arrayBuffer();
 
     return new Response(wavBuffer, {
       status: 200,
