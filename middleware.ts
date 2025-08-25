@@ -66,10 +66,21 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
 
-    // Skip onboarding check if env flag is set (for testing)
+    // Handle onboarding skip behavior
     if (process.env.SKIP_ONBOARDING === 'true') {
+      // Force redirect to Oracle for testing, unless already there
+      if (path !== '/oracle' && !path.startsWith('/oracle/')) {
+        return NextResponse.redirect(new URL("/oracle", request.url));
+      }
       return NextResponse.next();
     }
+
+    // Normal flow: check onboarding completion
+    // TODO: Add onboarding completion check here when ready
+    // const user = await getUser(token);
+    // if (!user.onboarding_completed && !path.startsWith('/auth/onboarding')) {
+    //   return NextResponse.redirect(new URL("/auth/onboarding", request.url));
+    // }
   }
 
   // Apply bypassing prevention middleware to monitored routes
