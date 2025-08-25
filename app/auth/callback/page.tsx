@@ -4,14 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IntegrationAuthService } from "@/lib/auth/integrationAuth";
 
-// Safe error message helper - CACHE BUST 2025-08-25
-const toErrorMessage = (e: unknown): string => {
+// Robust error message helper - fixes TypeScript never type issue
+function getErrorMessage(e: unknown): string {
+  if (e instanceof Error) return e.message;
   if (typeof e === 'string') return e;
-  if (e && typeof e === 'object' && 'message' in e) {
-    return String((e as { message?: unknown }).message ?? 'Unknown error');
-  }
   try { return JSON.stringify(e); } catch { return 'Unknown error'; }
-};
+}
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -31,7 +29,7 @@ export default function AuthCallbackPage() {
       
       if (error) {
         setStatus("error");
-        setMessage(`Authentication failed: ${toErrorMessage(error)}`);
+        setMessage(`Authentication failed: ${getErrorMessage(error)}`);
         return;
       }
 
@@ -60,7 +58,7 @@ export default function AuthCallbackPage() {
       }
     } catch (err: unknown) {
       setStatus("error");
-      setMessage(`Authentication failed: ${toErrorMessage(err)}`);
+      setMessage(`Authentication failed: ${getErrorMessage(err)}`);
     }
   };
 
