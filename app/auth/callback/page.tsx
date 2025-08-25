@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IntegrationAuthService } from "@/lib/auth/integrationAuth";
 
-// Safe error message helper
+// Safe error message helper - CACHE BUST 2025-08-25
 const toErrorMessage = (e: unknown): string => {
   if (typeof e === 'string') return e;
   if (e && typeof e === 'object' && 'message' in e) {
