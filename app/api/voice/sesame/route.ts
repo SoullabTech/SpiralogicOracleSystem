@@ -3,10 +3,18 @@ import { synthesizeToWav } from '@/lib/runpodSesame';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 300; // TEMP: allow cold start & model pull
 
 export async function POST(req: Request) {
   try {
+    // Warm-up endpoint for keeping RunPod alive
+    const url = new URL(req.url);
+    if (url.searchParams.get('warm') === '1') {
+      return new Response(JSON.stringify({ ok: true, status: 'warm' }), {
+        headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
+      });
+    }
+
     const { text } = await req.json();
     if (!text || typeof text !== 'string') {
       return new Response(JSON.stringify({ ok: false, error: 'Missing text' }), {
