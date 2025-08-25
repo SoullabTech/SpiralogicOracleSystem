@@ -53,6 +53,10 @@ export default function OraclePage() {
           {status}
         </p>
       )}
+      
+      <footer className="text-xs text-center mt-8 opacity-60">
+        BUILD MARKER: maya-voice-live
+      </footer>
     </main>
   );
 }
