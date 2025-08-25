@@ -1,8 +1,9 @@
 // app/api/voice/sesame/route.ts
 import { synthesizeToWav } from '@/lib/runpodSesame';
 
-export const runtime = 'nodejs';
-export const maxDuration = 300; // Allow up to 5 minutes for RunPod cold starts
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
@@ -36,11 +37,11 @@ export async function POST(req: Request) {
     });
     
     try {
-      // Try sync first with longer timeout
+      // Try sync first with optimized timeout
       const wavBuffer = await synthesizeToWav(text, {
         endpointId: process.env.RUNPOD_ENDPOINT_ID!,
         apiKey: process.env.RUNPOD_API_KEY!,
-        timeout: 45000, // Increased to 45 seconds
+        timeout: 50000, // 50 seconds to fit within 60s function limit
       });
       console.log('RunPod synthesis successful, audio size:', wavBuffer.byteLength);
       return new Response(wavBuffer, {
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
       const wavBuffer = await synthesizeToWavAsync(text, {
         endpointId: process.env.RUNPOD_ENDPOINT_ID!,
         apiKey: process.env.RUNPOD_API_KEY!,
-        timeout: 60000, // 1 minute for async
+        timeout: 55000, // 55 seconds for async fallback
       });
       console.log('RunPod async synthesis successful, audio size:', wavBuffer.byteLength);
       return new Response(wavBuffer, {
