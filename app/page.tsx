@@ -46,6 +46,16 @@ export default function HomePage() {
             </p>
           </header>
 
+          {/* Prominent Maya Oracle Test Button */}
+          <div className="text-center mb-8">
+            <Link
+              href="/oracle"
+              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition text-lg shadow-lg transform hover:scale-105"
+            >
+              🔮 Test Maya Oracle
+            </Link>
+          </div>
+
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Link
               href="/integration/dashboard"

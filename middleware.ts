@@ -23,8 +23,16 @@ const protectedRoutes = [
   "/community",
   "/analytics",
   "/oracle",
-  "/onboarding",
   "/beta",
+];
+
+// Public paths that should never be protected
+const PUBLIC_PATHS = [
+  "/auth/signin",
+  "/auth/callback", 
+  "/auth/onboarding",
+  "/api/voice/sesame", // Keep voice route callable
+  "/",
 ];
 
 // API routes that need bypassing prevention
@@ -39,8 +47,11 @@ const monitoredApiRoutes = [
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // Check if it's a protected route
-  const isProtectedRoute = protectedRoutes.some((route) =>
+  // Check if it's a protected route (but not a public path)
+  const isPublicPath = PUBLIC_PATHS.some((publicPath) =>
+    path === publicPath || path.startsWith(publicPath)
+  );
+  const isProtectedRoute = !isPublicPath && protectedRoutes.some((route) =>
     path.startsWith(route),
   );
   const isMonitoredApi = monitoredApiRoutes.some((route) =>
