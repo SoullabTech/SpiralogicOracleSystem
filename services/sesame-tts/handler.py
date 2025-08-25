@@ -37,7 +37,7 @@ try:
     DTYPE = torch.float16 if USE_FP16 else torch.float32
 
     _model = None
-    _tokenizer = None
+    _processor = None
 
     print("🔊 Booting Sesame RunPod worker...", flush=True)
     print("📦 Model:", MODEL_ID, "| Device:", DEVICE, "| FP16:", str(USE_FP16), flush=True)
@@ -46,126 +46,101 @@ except Exception as e:
     fatal(e, "device_setup")
 
 def load_model():
-    global _model, _tokenizer
+    global _model, _processor
     if _model is not None:
-        return _model, _tokenizer
-
+        return _model, _processor
+    
+    print("🚀 Loading Sesame TTS model...", flush=True)
+    
     try:
-        print("BOOT[3] loading model...", flush=True)
-        
         if not HF_TOKEN:
             raise RuntimeError("HF_TOKEN missing")
-
-        print("🔄 Loading Sesame TTS model...", flush=True)
+        
         start = time.time()
         
-        from transformers import AutoTokenizer, AutoModel
+        # Use the correct imports for Sesame CSM
+        from transformers import CsmForConditionalGeneration, AutoProcessor
         
-        _tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, token=HF_TOKEN)
-        _model = AutoModel.from_pretrained(
+        _processor = AutoProcessor.from_pretrained(MODEL_ID, token=HF_TOKEN)
+        _model = CsmForConditionalGeneration.from_pretrained(
             MODEL_ID,
-            torch_dtype=DTYPE,
-            token=HF_TOKEN
-        ).to(DEVICE)
+            token=HF_TOKEN,
+            device_map="auto" if DEVICE == "cuda" else None,
+            torch_dtype=DTYPE
+        )
+        
+        if DEVICE == "cuda" and not hasattr(_model, 'device_map'):
+            _model = _model.to(DEVICE)
         
         _model.eval()
         print(f"✅ Model loaded successfully in {time.time() - start:.1f}s", flush=True)
         print("BOOT[3] model loaded.", flush=True)
-        return _model, _tokenizer
+        return _model, _processor
         
     except Exception as e:
         fatal(e, "model_load")
 
 def synthesize_wav_bytes(text: str) -> bytes:
-    """Generate audio - will fall back to tone if model fails"""
-    model, tokenizer = load_model()
+    model, processor = load_model()
     
-    # Basic tokenization
-    inputs = tokenizer(text, return_tensors="pt").to(DEVICE)
+    # CSM expects "[0]" prefix for voice ID
+    text_with_voice = f"[0]{text}"
     
+    # Process text
+    inputs = processor(
+        text_with_voice,
+        add_special_tokens=True,
+        return_tensors="pt"
+    )
+    
+    # Move to device
+    if hasattr(model, 'device'):
+        inputs = {k: v.to(model.device) for k, v in inputs.items()}
+    else:
+        inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
+    
+    # Generate audio
     with torch.no_grad():
-        # Try to get audio output from the model
-        outputs = model(**inputs)
-        
-        # This is where we'd need to know the exact Sesame model output format
-        # For now, let's see what the model actually returns
-        print(f"🔍 Model output type: {type(outputs)}", flush=True)
-        if hasattr(outputs, '__dict__'):
-            print(f"🔍 Output attributes: {list(outputs.__dict__.keys())}", flush=True)
-        
-        # Try common audio output patterns
-        audio = None
-        if hasattr(outputs, 'waveform'):
-            audio = outputs.waveform
-        elif hasattr(outputs, 'audio'):
-            audio = outputs.audio
-        elif hasattr(outputs, 'last_hidden_state'):
-            # Some models need additional processing
-            raise RuntimeError("Model returns hidden states - needs vocoder/post-processing")
-        else:
-            raise RuntimeError(f"Unknown model output format: {type(outputs)}")
+        outputs = model.generate(**inputs, output_audio=True)
     
-    # Process audio tensor to WAV bytes
-    if torch.is_tensor(audio):
-        audio = audio.squeeze().cpu().numpy()
+    # Extract audio array
+    audio_array = outputs["audios"][0]  # shape: (samples,)
     
-    # Ensure proper audio format
-    if audio.dtype != np.float32:
-        audio = audio.astype(np.float32)
-    
-    # Normalize if needed
-    if np.abs(audio).max() > 1.0:
-        audio = audio / np.abs(audio).max()
-    
-    # Convert to WAV
-    buf = io.BytesIO()
-    sf.write(buf, audio, 16000, format="WAV", subtype="PCM_16")
-    buf.seek(0)
-    return buf.read()
+    # Convert to WAV bytes
+    buffer = io.BytesIO()
+    # Sesame CSM outputs at 24kHz
+    sf.write(buffer, audio_array, samplerate=24000, subtype='PCM_16', format='WAV')
+    buffer.seek(0)
+    return buffer.read()
 
-def sine_fallback(duration_sec=0.5, freq=880, sr=16000):
-    """Generate fallback tone"""
-    t = np.arange(int(duration_sec * sr)) / sr
-    audio = 0.3 * np.sin(2 * np.pi * freq * t).astype(np.float32)
+def handler(job):
+    """RunPod handler function"""
+    job_input = job.get("input", {})
+    text = job_input.get("text", "").strip()
     
-    buf = io.BytesIO()
-    sf.write(buf, audio, sr, format="WAV", subtype="PCM_16")
-    buf.seek(0)
-    return buf.read()
-
-def handler(event):
+    if not text:
+        return {"ok": False, "error": "No text provided"}
+    
+    print(f"🎤 Synthesizing: {text[:50]}...", flush=True)
+    
     try:
-        text = ((event or {}).get("input") or {}).get("text", "Hello from Sesame")
-        text = (text or "").strip() or "Hello from Sesame"
-
-        print(f"🎤 Synthesizing: {text[:80]}{'...' if len(text) > 80 else ''}", flush=True)
-
-        try:
-            wav_bytes = synthesize_wav_bytes(text)
-            print(f"✅ Generated {len(wav_bytes)} bytes of audio", flush=True)
-            
-            return {
-                "ok": True,
-                "mime_type": "audio/wav",
-                "audio_base64": base64.b64encode(wav_bytes).decode("utf-8"),
-                "length": len(wav_bytes)
-            }
-        except Exception as model_err:
-            print(f"⚠️ Model failed, returning fallback tone: {str(model_err)}", flush=True)
-            fb = sine_fallback()
-            
-            return {
-                "ok": False,
-                "mime_type": "audio/wav",
-                "audio_base64": base64.b64encode(fb).decode("utf-8"),
-                "length": len(fb),
-                "error": str(model_err)
-            }
-
+        audio_bytes = synthesize_wav_bytes(text)
+        audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
+        
+        print(f"✅ Generated {len(audio_bytes)} bytes of audio", flush=True)
+        
+        return {
+            "ok": True,
+            "audio_base64": audio_b64,
+            "sample_rate": 24000,
+            "format": "wav"
+        }
+    
     except Exception as e:
-        print(f"❌ Error: {str(e)}", flush=True)
-        return {"ok": False, "error": str(e)}
+        error_msg = f"{type(e).__name__}: {str(e)}"
+        print(f"❌ Generation failed: {error_msg}", flush=True)
+        traceback.print_exc()
+        return {"ok": False, "error": error_msg}
 
-if __name__ == "__main__":
-    print("Starting Serverless Worker", flush=True)
-    serverless.start({"handler": handler})
+# Start the serverless worker
+serverless.start({"handler": handler})

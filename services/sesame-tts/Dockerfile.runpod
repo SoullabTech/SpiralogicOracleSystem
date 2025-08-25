@@ -1,7 +1,7 @@
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
 # Bust cache every rebuild (bump this ARG to force fresh copy)
-ARG BUILD_BUSTER=force-4
+ARG BUILD_BUSTER=force-5
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
@@ -24,9 +24,11 @@ RUN md5sum /app/handler.py || true
 # Install stable deps
 RUN python3 -m pip install --no-cache-dir \
     runpod==1.7.13 \
-    torch==2.1.2+cu121 \
-    transformers==4.39.3 \
-    accelerate==0.24.1 \
+    torch==2.1.2+cu121 --extra-index-url https://download.pytorch.org/whl/cu121 \
+    transformers==4.52.1 \
+    tokenizers>=0.20.0 \
+    accelerate>=0.33.0 \
+    huggingface_hub>=0.24 \
     numpy==1.26.4 \
     soundfile
 
