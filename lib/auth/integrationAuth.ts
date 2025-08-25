@@ -133,15 +133,6 @@ export class IntegrationAuthService {
     }
   }
 
-  async signOut() {
-    try {
-      const { error } = await this.supabase.auth.signOut();
-      if (error) throw error;
-    } catch (error) {
-      console.error("Signout error:", error);
-      throw error;
-    }
-  }
 
   private async createUserProfile(
     userId: string,
