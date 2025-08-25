@@ -287,7 +287,7 @@ const PersonalInfoStep: React.FC<{
           type="text"
           value={data.displayName}
           onChange={(e) => onChange({ displayName: e.target.value })}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-500 dark:border-gray-700"
           placeholder="How would you like to be known in the community?"
         />
         <p className="text-xs text-gray-500 mt-1">
@@ -304,7 +304,7 @@ const PersonalInfoStep: React.FC<{
           value={data.bio}
           onChange={(e) => onChange({ bio: e.target.value })}
           rows={3}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-500 dark:border-gray-700"
           placeholder="Share anything you'd like others to know about your journey or interests..."
         />
       </div>
@@ -317,7 +317,7 @@ const PersonalInfoStep: React.FC<{
           type="text"
           value={data.professionalBackground}
           onChange={(e) => onChange({ professionalBackground: e.target.value })}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-500 dark:border-gray-700"
           placeholder="If you're a professional in related fields..."
         />
         <p className="text-xs text-gray-500 mt-1">
@@ -656,7 +656,7 @@ const PrivacySettingsStep: React.FC<{
         onChange={(e) =>
           onChange({ dataRetentionPreference: Number(e.target.value) })
         }
-        className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700"
       >
         <option value={1}>1 year</option>
         <option value={3}>3 years</option>

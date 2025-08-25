@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure inputs are always readable - prevents white text on white background */
+@layer base {
+  input, textarea, select {
+    @apply text-gray-900 bg-white;
+  }
+  
+  :root.dark input, :root.dark textarea, :root.dark select,
+  html.dark input, html.dark textarea, html.dark select {
+    @apply text-gray-100 bg-gray-900;
+  }
+}
