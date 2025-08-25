@@ -1,20 +1,12 @@
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
-# Any change here forces Docker to invalidate cache
-ARG BUILD_BUSTER=dc3b83d2
-
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
-
-WORKDIR /app
 
 # System deps for audio
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-pip libsndfile1 && \
     rm -rf /var/lib/apt/lists/*
-
-# Copy the handler into /app (rebuild: no decorator)
-COPY services/sesame-tts/handler.py /app/handler.py
 
 # Pin known-good versions
 RUN python3 -m pip install --no-cache-dir \
@@ -25,5 +17,12 @@ RUN python3 -m pip install --no-cache-dir \
     numpy==1.26.4 \
     soundfile
 
-# Run the handler directly (NOT `-m runpod`)
-CMD ["python3","/app/handler.py"]
+# --- cache buster must appear before the COPY lines
+ARG BUILD_BUSTER=force-3
+RUN echo "BUILD_BUSTER=$BUILD_BUSTER (pre-copy)"
+
+WORKDIR /app
+# copy only the handler we need (avoid earlier bulk COPY that might overwrite it)
+COPY services/sesame-tts/handler.py /app/handler.py
+RUN md5sum /app/handler.py || true
+CMD ["python3", "/app/handler.py"]
