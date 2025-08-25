@@ -1,5 +1,8 @@
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
+# Any change here forces Docker to invalidate cache
+ARG BUILD_BUSTER=dc3b83d2
+
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 

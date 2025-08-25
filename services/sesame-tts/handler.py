@@ -1,6 +1,9 @@
 # --- BOOTSTRAP (crash-proof worker) ---
 import os, sys, time, traceback
+import hashlib, pathlib
 
+_fp = hashlib.md5(pathlib.Path(__file__).read_bytes()).hexdigest()[:12]
+print(f"BOOT: handler.py md5 {_fp}", flush=True)
 print("BOOT[0] starting python", sys.version, flush=True)
 
 def fatal(e, stage):
