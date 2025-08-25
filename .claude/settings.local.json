@@ -140,7 +140,8 @@
       "Bash(npx next build:*)",
       "Bash(cd:*)",
       "Bash(PORT=3001 npm start)",
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "WebFetch(domain:supabase.com)"
     ],
     "deny": []
   },
