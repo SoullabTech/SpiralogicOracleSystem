@@ -1,35 +1,21 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
-
-// Dynamic import to handle client-side components
-const PersonalOracleHome = dynamic(
-  () => import("../../frontend/src/components/oracle/PersonalOracleHome"),
-  { ssr: false },
-);
-
-function OracleLoadingFallback() {
-  return (
-    <div className="min-h-screen bg-[#0E0F1B] flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-16 h-16 bg-[#F6E27F] rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-          <span className="text-2xl">🔮</span>
-        </div>
-        <p className="text-[#F6E27F] text-lg">
-          Connecting to your Personal Oracle...
-        </p>
-      </div>
-    </div>
-  );
-}
+export const runtime = "nodejs"; // ensure Node runtime on Vercel
 
 export default function OraclePage() {
   return (
-    <div className="min-h-screen bg-[#0E0F1B]">
-      <Suspense fallback={<OracleLoadingFallback />}>
-        <PersonalOracleHome />
-      </Suspense>
-    </div>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-8">
+      <h1 className="text-3xl font-bold mb-6">🔮 Maya Oracle Testing</h1>
+      <p className="mb-8 text-lg text-gray-300">
+        This page lets you test Maya's voice via Sesame TTS.
+      </p>
+      <form method="POST" action="/api/voice/sesame">
+        <input type="hidden" name="text" value="Hello from Maya" />
+        <button
+          type="submit"
+          className="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
+        >
+          ▶️ Test Maya Voice
+        </button>
+      </form>
+    </main>
   );
 }

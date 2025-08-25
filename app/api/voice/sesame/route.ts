@@ -1,5 +1,5 @@
 // app/api/voice/sesame/route.ts
-import { synthesizeToWav } from '@/lib/runpodSesame';
+import { synthesizeToWav } from '../../../../lib/runpodSesame';
 
 export const runtime = 'nodejs';
 

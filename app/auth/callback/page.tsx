@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IntegrationAuthService } from "@/lib/auth/integrationAuth";
+import { IntegrationAuthService } from "../../../lib/auth/integrationAuth";
 
 export default function AuthCallbackPage() {
   const router = useRouter();

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { IntegrationAuthService } from "@/lib/auth/integrationAuth";
+import { IntegrationAuthService } from "../../../lib/auth/integrationAuth";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
