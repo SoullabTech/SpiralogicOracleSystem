@@ -2,7 +2,7 @@
 import { synthesizeToWav } from '@/lib/runpodSesame';
 
 export const runtime = 'nodejs';
-export const maxDuration = 60; // Allow up to 60 seconds
+export const maxDuration = 300; // Allow up to 5 minutes for RunPod cold starts
 
 export async function POST(req: Request) {
   try {
@@ -30,19 +30,45 @@ export async function POST(req: Request) {
 
     // RUNPOD: Maya voice enabled!
     console.log('Attempting RunPod synthesis for:', text.substring(0, 50));
-    const wavBuffer = await synthesizeToWav(text, {
-      endpointId: process.env.RUNPOD_ENDPOINT_ID!,
-      apiKey: process.env.RUNPOD_API_KEY!,
-      timeout: 30000,
+    console.log('RunPod config:', {
+      endpoint: process.env.RUNPOD_ENDPOINT_ID?.substring(0, 8) + '...',
+      hasApiKey: !!process.env.RUNPOD_API_KEY
     });
-
-    return new Response(wavBuffer, {
-      status: 200,
-      headers: {
-        'content-type': 'audio/wav',
-        'cache-control': 'no-store',
-      }
-    });
+    
+    try {
+      // Try sync first with longer timeout
+      const wavBuffer = await synthesizeToWav(text, {
+        endpointId: process.env.RUNPOD_ENDPOINT_ID!,
+        apiKey: process.env.RUNPOD_API_KEY!,
+        timeout: 45000, // Increased to 45 seconds
+      });
+      console.log('RunPod synthesis successful, audio size:', wavBuffer.byteLength);
+      return new Response(wavBuffer, {
+        status: 200,
+        headers: {
+          'content-type': 'audio/wav',
+          'cache-control': 'no-store',
+        }
+      });
+    } catch (syncError: any) {
+      console.log('Sync synthesis failed, trying async method:', syncError.message);
+      
+      // Fallback to async method
+      const { synthesizeToWavAsync } = await import('@/lib/runpodSesame');
+      const wavBuffer = await synthesizeToWavAsync(text, {
+        endpointId: process.env.RUNPOD_ENDPOINT_ID!,
+        apiKey: process.env.RUNPOD_API_KEY!,
+        timeout: 60000, // 1 minute for async
+      });
+      console.log('RunPod async synthesis successful, audio size:', wavBuffer.byteLength);
+      return new Response(wavBuffer, {
+        status: 200,
+        headers: {
+          'content-type': 'audio/wav',
+          'cache-control': 'no-store',
+        }
+      });
+    }
   } catch (e: any) {
     console.error('Voice synthesis error:', e?.message, e?.stack);
     
