@@ -4,6 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IntegrationAuthService } from "@/lib/auth/integrationAuth";
 
+// Safe error message helper
+const toErrorMessage = (e: unknown): string => {
+  if (typeof e === 'string') return e;
+  if (e && typeof e === 'object' && 'message' in e) {
+    return String((e as { message?: unknown }).message ?? 'Unknown error');
+  }
+  try { return JSON.stringify(e); } catch { return 'Unknown error'; }
+};
+
 export default function AuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -22,7 +31,7 @@ export default function AuthCallbackPage() {
       
       if (error) {
         setStatus("error");
-        setMessage(`Authentication failed: ${error?.message || 'Unknown error'}`);
+        setMessage(`Authentication failed: ${toErrorMessage(error)}`);
         return;
       }
 
@@ -49,9 +58,9 @@ export default function AuthCallbackPage() {
         setStatus("error");
         setMessage("No user data received");
       }
-    } catch (error: any) {
+    } catch (err: unknown) {
       setStatus("error");
-      setMessage(`Error: ${error?.message || "Something went wrong"}`);
+      setMessage(`Authentication failed: ${toErrorMessage(err)}`);
     }
   };
 

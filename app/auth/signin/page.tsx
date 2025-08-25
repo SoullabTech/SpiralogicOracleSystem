@@ -4,6 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IntegrationAuthService } from "@/lib/auth/integrationAuth";
 
+// Safe error message helper
+const toErrorMessage = (e: unknown): string => {
+  if (typeof e === 'string') return e;
+  if (e && typeof e === 'object' && 'message' in e) {
+    return String((e as { message?: unknown }).message ?? 'Unknown error');
+  }
+  try { return JSON.stringify(e); } catch { return 'Unknown error'; }
+};
+
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,12 +32,12 @@ export default function SignInPage() {
       const { error } = await authService.signInWithEmail(email);
       
       if (error) {
-        setMessage(`Error: ${error?.message || 'Authentication failed'}`);
+        setMessage(`Error: ${toErrorMessage(error)}`);
       } else {
         setMessage("Check your email for the magic link!");
       }
-    } catch (error: any) {
-      setMessage(`Error: ${error?.message || 'Something went wrong'}`);
+    } catch (err: unknown) {
+      setMessage(`Error: ${toErrorMessage(err)}`);
     } finally {
       setLoading(false);
     }
