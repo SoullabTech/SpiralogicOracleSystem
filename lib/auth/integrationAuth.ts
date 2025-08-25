@@ -101,9 +101,9 @@ export class IntegrationAuthService {
           password,
           options: {
             data: {
-              display_name: onboardingData.personalInfo.displayName,
-              onboarding_completed: false,
-              integration_consent: true,
+              displayName: onboardingData.personalInfo.displayName,
+              onboardingCompleted: false,
+              integrationConsent: true,
             },
           },
         });
@@ -357,10 +357,10 @@ export class IntegrationAuthService {
       // Update user metadata
       const { data, error } = await this.supabase.auth.updateUser({
         data: { 
-          onboarding_completed: true,
-          display_name: onboardingData.personalInfo.displayName,
+          onboardingCompleted: true,
+          displayName: onboardingData.personalInfo.displayName,
           bio: onboardingData.personalInfo.bio,
-          professional_background: onboardingData.personalInfo.professionalBackground,
+          professionalBackground: onboardingData.personalInfo.professionalBackground,
         },
       });
 
