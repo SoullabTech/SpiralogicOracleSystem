@@ -42,6 +42,22 @@ export interface OnboardingData {
   };
 }
 
+// Type for profile creation/update with camelCase keys
+type ProfileUpsertInput = {
+  displayName: string;
+  bio?: string;
+  professionalBackground?: string;
+  currentChallenges?: string[];
+  supportSought?: string[];
+  experienceLevel?: string;
+  professionalSupportHistory?: boolean;
+  communityVisibility?: "private" | "supportive" | "open";
+  professionalSupportConsent?: boolean;
+  researchParticipation?: boolean;
+  dataRetentionPreference?: number;
+  onboardingCompleted?: boolean;
+};
+
 export class IntegrationAuthService {
   private _supabase: any = null;
   private _config: any = null;
@@ -96,7 +112,20 @@ export class IntegrationAuthService {
 
       if (authData.user) {
         // Create user profile with integration-centered data
-        await this.createUserProfile(authData.user.id, onboardingData);
+        await this.createUserProfile(authData.user.id, {
+          displayName: onboardingData.personalInfo.displayName,
+          bio: onboardingData.personalInfo.bio,
+          professionalBackground: onboardingData.personalInfo.professionalBackground,
+          currentChallenges: onboardingData.developmentAssessment.currentChallenges,
+          supportSought: onboardingData.developmentAssessment.supportSought,
+          experienceLevel: onboardingData.developmentAssessment.experienceLevel,
+          professionalSupportHistory: onboardingData.developmentAssessment.professionalSupportHistory,
+          communityVisibility: onboardingData.privacySettings.communityVisibility,
+          professionalSupportConsent: onboardingData.privacySettings.professionalSupportConsent,
+          researchParticipation: onboardingData.privacySettings.researchParticipation,
+          dataRetentionPreference: onboardingData.privacySettings.dataRetentionPreference,
+          onboardingCompleted: false,
+        });
 
         // Initialize domain assessments
         await this.initializeDomainAssessments(authData.user.id);
@@ -136,22 +165,33 @@ export class IntegrationAuthService {
 
   private async createUserProfile(
     userId: string,
-    onboardingData: OnboardingData,
+    profile: ProfileUpsertInput,
   ) {
-    const { data, error } = await this.supabase.from("user_profiles").insert({
+    // Map camelCase -> snake_case for Supabase
+    const row = {
       user_id: userId,
-      display_name: onboardingData.personalInfo.displayName,
-      bio: onboardingData.personalInfo.bio,
+      display_name: profile.displayName,
+      bio: profile.bio ?? "",
+      professional_background: profile.professionalBackground ?? "",
       account_type: "user",
-      current_state: this.assessInitialState(onboardingData),
+      current_challenges: profile.currentChallenges ?? [],
+      support_sought: profile.supportSought ?? [],
+      experience_level: profile.experienceLevel ?? "beginner",
+      professional_support_history: profile.professionalSupportHistory ?? false,
+      community_visibility: profile.communityVisibility ?? "private",
+      professional_support_consent: profile.professionalSupportConsent ?? false,
+      research_participation_consent: profile.researchParticipation ?? false,
+      data_retention_preference: profile.dataRetentionPreference ?? 5,
+      onboarding_completed: profile.onboardingCompleted ?? true,
       stress_level: 5, // Will be updated through assessment
       energy_level: 5, // Will be updated through assessment
       integration_stage: "initial_insight",
-      community_visibility: onboardingData.privacySettings.communityVisibility,
-      professional_support_consent:
-        onboardingData.privacySettings.professionalSupportConsent,
-      research_participation_consent:
-        onboardingData.privacySettings.researchParticipation,
+      current_state: "balanced", // Default, will be assessed later
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await this.supabase.from("user_profiles").upsert(row, { 
+      onConflict: "user_id" 
     });
 
     if (error) throw error;
@@ -326,8 +366,21 @@ export class IntegrationAuthService {
 
       if (error) throw error;
 
-      // Create/update user profile
-      await this.createUserProfile(user.id, onboardingData);
+      // Create/update user profile with camelCase keys
+      await this.createUserProfile(user.id, {
+        displayName: onboardingData.personalInfo.displayName,
+        bio: onboardingData.personalInfo.bio || "",
+        professionalBackground: onboardingData.personalInfo.professionalBackground || "",
+        currentChallenges: onboardingData.developmentAssessment.currentChallenges,
+        supportSought: onboardingData.developmentAssessment.supportSought,
+        experienceLevel: onboardingData.developmentAssessment.experienceLevel,
+        professionalSupportHistory: onboardingData.developmentAssessment.professionalSupportHistory,
+        communityVisibility: onboardingData.privacySettings.communityVisibility,
+        professionalSupportConsent: onboardingData.privacySettings.professionalSupportConsent,
+        researchParticipation: onboardingData.privacySettings.researchParticipation,
+        dataRetentionPreference: onboardingData.privacySettings.dataRetentionPreference,
+        onboardingCompleted: true,
+      });
 
       return data;
     } catch (error) {
