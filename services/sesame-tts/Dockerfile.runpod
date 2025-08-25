@@ -17,9 +17,10 @@ RUN python3 -m pip install --no-cache-dir \
     numpy==1.26.4 \
     soundfile
 
-# --- cache buster must appear before the COPY lines
-ARG BUILD_BUSTER=force-3
-RUN echo "BUILD_BUSTER=$BUILD_BUSTER (pre-copy)"
+# --- NUCLEAR CACHE BUSTER ---
+ARG BUILD_BUSTER=NUKE-449de60b
+RUN echo "NUCLEAR BUILD: $BUILD_BUSTER using Dockerfile.runpod"
+RUN date
 
 WORKDIR /app
 # copy only the handler we need (avoid earlier bulk COPY that might overwrite it)
