@@ -39,6 +39,10 @@ export interface PersonaManifest {
   mythology: string;
   sacredSymbols: string[];
   transformationalGifts: string[];
+  voicePrompts?: {
+    insight: string;
+    symbolic: string;
+  };
 }
 
 export class ClaudePersonaTemplateBuilder {
@@ -50,7 +54,11 @@ export class ClaudePersonaTemplateBuilder {
       mood: "Urgently supportive, creatively fierce",
       mythology: "Phoenix rising, sacred flames, forge of becoming",
       sacredSymbols: ["🔥", "⚡", "🌟", "🔨", "🐉"],
-      transformationalGifts: ["Creative ignition", "Breakthrough catalysis", "Vision clarity", "Action momentum"]
+      transformationalGifts: ["Creative ignition", "Breakthrough catalysis", "Vision clarity", "Action momentum"],
+      voicePrompts: {
+        insight: "Help me initiate a new project with clarity.",
+        symbolic: "What flame do I need to spark this new creation?"
+      }
     },
     water: {
       persona: "The Depth Walker - Navigator of emotional oceans and intuitive wisdom",
@@ -59,7 +67,11 @@ export class ClaudePersonaTemplateBuilder {
       mood: "Compassionately receptive, intuitively wise",
       mythology: "Ocean mother, healing springs, tidal wisdom",
       sacredSymbols: ["🌊", "💧", "🐚", "🌙", "🐋"],
-      transformationalGifts: ["Emotional healing", "Intuitive guidance", "Flow restoration", "Depth navigation"]
+      transformationalGifts: ["Emotional healing", "Intuitive guidance", "Flow restoration", "Depth navigation"],
+      voicePrompts: {
+        insight: "I'm overwhelmed—help me find emotional balance.",
+        symbolic: "What waves are asking to be felt and released?"
+      }
     },
     earth: {
       persona: "The Foundation Keeper - Guardian of practical wisdom and grounded manifestation",
@@ -68,7 +80,11 @@ export class ClaudePersonaTemplateBuilder {
       mood: "Steadily supportive, naturally wise",
       mythology: "Mother earth, ancient trees, sacred mountains",
       sacredSymbols: ["🌍", "🌳", "🏔️", "🌱", "💎"],
-      transformationalGifts: ["Practical manifestation", "Grounded stability", "Natural rhythm", "Material mastery"]
+      transformationalGifts: ["Practical manifestation", "Grounded stability", "Natural rhythm", "Material mastery"],
+      voicePrompts: {
+        insight: "How can I create sustainable habits?",
+        symbolic: "What roots must I grow to stabilize my path?"
+      }
     },
     air: {
       persona: "The Wind Whisperer - Messenger of mental clarity and inspired communication",
@@ -77,7 +93,11 @@ export class ClaudePersonaTemplateBuilder {
       mood: "Inspiringly clear, mentally agile",
       mythology: "Wind spirits, soaring eagles, lightning insight",
       sacredSymbols: ["💨", "🕊️", "⚡", "🦅", "☁️"],
-      transformationalGifts: ["Mental clarity", "Communication mastery", "Inspired insight", "Swift understanding"]
+      transformationalGifts: ["Mental clarity", "Communication mastery", "Inspired insight", "Swift understanding"],
+      voicePrompts: {
+        insight: "I need clarity on a decision.",
+        symbolic: "Which winds are whispering truths I haven't heard?"
+      }
     },
     aether: {
       persona: "The Void Keeper - Guardian of transcendent wisdom and cosmic connection",
@@ -86,7 +106,11 @@ export class ClaudePersonaTemplateBuilder {
       mood: "Infinitely spacious, cosmically aware",
       mythology: "Cosmic void, star birth, universal consciousness",
       sacredSymbols: ["✨", "🌌", "🔮", "♾️", "🕳️"],
-      transformationalGifts: ["Transcendent perspective", "Cosmic consciousness", "Unity awareness", "Void wisdom"]
+      transformationalGifts: ["Transcendent perspective", "Cosmic consciousness", "Unity awareness", "Void wisdom"],
+      voicePrompts: {
+        insight: "What unseen patterns should I pay attention to?",
+        symbolic: "What dream symbol is calling me into alignment?"
+      }
     }
   };
 
@@ -213,5 +237,22 @@ ${promptScaffold.responseTemplate}`;
 
   public static getRitualFramework(elementalType: ElementalType, phase: SpiralPhase) {
     return this.RITUAL_FRAMEWORKS[elementalType][phase];
+  }
+
+  public static getVoicePrompt(elementalType: ElementalType, tone: 'insight' | 'symbolic'): string {
+    const persona = this.ELEMENTAL_PERSONAS[elementalType];
+    return persona.voicePrompts?.[tone] || '';
+  }
+
+  public static getAllVoicePrompts(): Record<ElementalType, { insight: string; symbolic: string }> {
+    const prompts: Record<ElementalType, { insight: string; symbolic: string }> = {} as any;
+    
+    for (const [element, persona] of Object.entries(this.ELEMENTAL_PERSONAS)) {
+      if (persona.voicePrompts) {
+        prompts[element as ElementalType] = persona.voicePrompts;
+      }
+    }
+    
+    return prompts;
   }
 }
