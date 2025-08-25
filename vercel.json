@@ -1,18 +1,1 @@
-{
-  "version": 2,
-  "framework": "nextjs",
-  "functions": {
-    "app/api/**": {
-      "runtime": "nodejs20.x",
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_ORACLE_VOICE_ENABLED": "true",
-      "NEXT_PUBLIC_ORACLE_MAYA_VOICE": "true"
-    }
-  },
-  "regions": ["iad1"]
-}
+{}
