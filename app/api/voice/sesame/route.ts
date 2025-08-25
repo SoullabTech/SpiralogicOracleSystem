@@ -13,7 +13,23 @@ export async function POST(req: Request) {
       });
     }
 
+    // Check environment variables
+    if (!process.env.RUNPOD_ENDPOINT_ID || !process.env.RUNPOD_API_KEY) {
+      console.error('Missing RunPod environment variables');
+      // Fallback to beep for testing
+      const beepBlob = makeBeepWav(800, 1);
+      const beepBuffer = await beepBlob.arrayBuffer();
+      return new Response(beepBuffer, {
+        status: 200,
+        headers: {
+          'content-type': 'audio/wav',
+          'cache-control': 'no-store',
+        }
+      });
+    }
+
     // RUNPOD: Maya voice enabled!
+    console.log('Attempting RunPod synthesis for:', text.substring(0, 50));
     const wavBuffer = await synthesizeToWav(text, {
       endpointId: process.env.RUNPOD_ENDPOINT_ID!,
       apiKey: process.env.RUNPOD_API_KEY!,
@@ -28,7 +44,14 @@ export async function POST(req: Request) {
       }
     });
   } catch (e: any) {
-    return new Response(JSON.stringify({ ok: false, error: e?.message || 'Error' }), {
+    console.error('Voice synthesis error:', e?.message, e?.stack);
+    
+    // Return detailed error for debugging
+    return new Response(JSON.stringify({ 
+      ok: false, 
+      error: e?.message || 'Unknown error',
+      details: e?.toString?.() || 'No details available'
+    }), {
       status: 500,
       headers: { 'content-type': 'application/json' },
     });
