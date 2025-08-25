@@ -327,20 +327,7 @@ export class IntegrationAuthService {
       if (error) throw error;
 
       // Create/update user profile
-      await this.createUserProfile(user.id, {
-        display_name: onboardingData.personalInfo.displayName,
-        bio: onboardingData.personalInfo.bio || "",
-        professional_background: onboardingData.personalInfo.professionalBackground || "",
-        current_challenges: onboardingData.developmentAssessment.currentChallenges,
-        support_sought: onboardingData.developmentAssessment.supportSought,
-        experience_level: onboardingData.developmentAssessment.experienceLevel,
-        professional_support_history: onboardingData.developmentAssessment.professionalSupportHistory,
-        community_visibility: onboardingData.privacySettings.communityVisibility,
-        professional_support_consent: onboardingData.privacySettings.professionalSupportConsent,
-        research_participation: onboardingData.privacySettings.researchParticipation,
-        data_retention_preference: onboardingData.privacySettings.dataRetentionPreference,
-        onboarding_completed: true,
-      });
+      await this.createUserProfile(user.id, onboardingData);
 
       return data;
     } catch (error) {
