@@ -23,9 +23,29 @@ export async function POST(req: Request) {
       });
     }
 
-    // Check environment variables and fallback to beep if missing
-    if (!process.env.RUNPOD_ENDPOINT_ID || !process.env.RUNPOD_API_KEY) {
-      console.log('Missing RunPod env vars, falling back to beep');
+    // Check voice provider configuration
+    const voiceProvider = process.env.VOICE_PROVIDER || 'sesame';
+    const sesameProvider = process.env.SESAME_PROVIDER || 'runpod';
+    
+    console.log('Voice configuration:', { voiceProvider, sesameProvider });
+
+    // Check if we should use RunPod (sesame + runpod)
+    if (voiceProvider === 'sesame' && sesameProvider === 'runpod') {
+      if (!process.env.RUNPOD_ENDPOINT_ID || !process.env.RUNPOD_API_KEY) {
+        console.log('Missing RunPod env vars, falling back to beep');
+        const beepBlob = makeBeepWav(800, 1);
+        const wavBuffer = await beepBlob.arrayBuffer();
+        return new Response(wavBuffer, {
+          status: 200,
+          headers: {
+            'content-type': 'audio/wav',
+            'cache-control': 'no-store',
+          }
+        });
+      }
+    } else {
+      // Other providers not implemented yet, use beep
+      console.log(`Provider ${voiceProvider}/${sesameProvider} not implemented, using beep`);
       const beepBlob = makeBeepWav(800, 1);
       const wavBuffer = await beepBlob.arrayBuffer();
       return new Response(wavBuffer, {
