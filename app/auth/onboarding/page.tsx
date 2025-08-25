@@ -98,9 +98,11 @@ export default function OnboardingPage() {
 
   const completeOnboarding = async () => {
     try {
-      // In a real implementation, this would complete the onboarding process
-      // and redirect to the main platform
-      router.push("/dashboard");
+      // Complete the onboarding process with auth service
+      await authService.completeOnboarding(onboardingData);
+      
+      // Redirect to home page (not protected by middleware)
+      router.push("/");
     } catch (error) {
       console.error("Onboarding completion error:", error);
     }

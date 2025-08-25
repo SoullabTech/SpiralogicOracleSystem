@@ -317,13 +317,45 @@ export class IntegrationAuthService {
       .eq("user_id", userId);
   }
 
-  async completeOnboarding(userId: string) {
-    const { data, error } = await this.supabase.auth.updateUser({
-      data: { onboarding_completed: true },
-    });
+  async completeOnboarding(onboardingData: OnboardingData) {
+    try {
+      // Get current user
+      const user = await this.getCurrentUser();
+      if (!user) throw new Error("No authenticated user");
 
-    if (error) throw error;
-    return data;
+      // Update user metadata
+      const { data, error } = await this.supabase.auth.updateUser({
+        data: { 
+          onboarding_completed: true,
+          display_name: onboardingData.personalInfo.displayName,
+          bio: onboardingData.personalInfo.bio,
+          professional_background: onboardingData.personalInfo.professionalBackground,
+        },
+      });
+
+      if (error) throw error;
+
+      // Create/update user profile
+      await this.createUserProfile(user.id, {
+        display_name: onboardingData.personalInfo.displayName,
+        bio: onboardingData.personalInfo.bio || "",
+        professional_background: onboardingData.personalInfo.professionalBackground || "",
+        current_challenges: onboardingData.developmentAssessment.currentChallenges,
+        support_sought: onboardingData.developmentAssessment.supportSought,
+        experience_level: onboardingData.developmentAssessment.experienceLevel,
+        professional_support_history: onboardingData.developmentAssessment.professionalSupportHistory,
+        community_visibility: onboardingData.privacySettings.communityVisibility,
+        professional_support_consent: onboardingData.privacySettings.professionalSupportConsent,
+        research_participation: onboardingData.privacySettings.researchParticipation,
+        data_retention_preference: onboardingData.privacySettings.dataRetentionPreference,
+        onboarding_completed: true,
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Onboarding completion error:", error);
+      throw error;
+    }
   }
 
   async getCurrentUser(): Promise<User | null> {
