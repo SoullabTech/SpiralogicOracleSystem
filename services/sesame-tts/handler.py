@@ -29,7 +29,9 @@ except Exception as e:
 try:
     print("BOOT[2] prep device...", flush=True)
     MODEL_ID = os.getenv("SESAME_MODEL", "sesame/csm-1b")
-    HF_TOKEN = os.getenv("HF_TOKEN", "")
+    # Modern HF auth: prefer HUGGINGFACE_HUB_TOKEN, fallback to HF_TOKEN
+    HF_TOKEN = os.getenv("HUGGINGFACE_HUB_TOKEN") or os.getenv("HF_TOKEN") or ""
+    print(f"HF token present: {bool(HF_TOKEN)}", flush=True)
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     USE_FP16 = os.getenv("SESAME_FP16", "1") == "1" and DEVICE == "cuda"
     DTYPE = torch.float16 if USE_FP16 else torch.float32
@@ -59,11 +61,11 @@ def load_model():
         
         from transformers import AutoTokenizer, AutoModel
         
-        _tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, use_auth_token=HF_TOKEN)
+        _tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, token=HF_TOKEN)
         _model = AutoModel.from_pretrained(
             MODEL_ID,
             torch_dtype=DTYPE,
-            use_auth_token=HF_TOKEN
+            token=HF_TOKEN
         ).to(DEVICE)
         
         _model.eval()
