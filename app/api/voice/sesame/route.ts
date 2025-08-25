@@ -13,29 +13,20 @@ export async function POST(req: Request) {
       });
     }
 
-    // TEMP: Using beep stub for testing - uncomment RunPod code below when ready
-    const wav = makeBeepWav(440, 0.2);
-    return new Response(wav, {
-      status: 200,
-      headers: { 'content-type': 'audio/wav' }
-    });
-
-    /* 
-    // RUNPOD: Uncomment this block when ready to go live
+    // RUNPOD: Maya voice enabled!
     const wavBuffer = await synthesizeToWav(text, {
       endpointId: process.env.RUNPOD_ENDPOINT_ID!,
       apiKey: process.env.RUNPOD_API_KEY!,
-      timeout: 30000, // 30s timeout
+      timeout: 30000,
     });
 
     return new Response(wavBuffer, {
       status: 200,
-      headers: { 
+      headers: {
         'content-type': 'audio/wav',
         'cache-control': 'no-store',
       }
     });
-    */
   } catch (e: any) {
     return new Response(JSON.stringify({ ok: false, error: e?.message || 'Error' }), {
       status: 500,
