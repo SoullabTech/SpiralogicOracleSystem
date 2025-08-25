@@ -1,7 +1,7 @@
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
 # Bust cache every rebuild (bump this ARG to force fresh copy)
-ARG BUILD_BUSTER=force-5
+ARG BUILD_BUSTER=force-6
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
