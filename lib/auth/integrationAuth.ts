@@ -369,6 +369,42 @@ export class IntegrationAuthService {
     return user;
   }
 
+  async signInWithEmail(email: string) {
+    if (!this.isSupabaseAvailable()) {
+      throw new Error("Authentication not available in demo mode");
+    }
+
+    return await this.supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  }
+
+  async handleAuthCallback() {
+    if (!this.isSupabaseAvailable()) {
+      throw new Error("Authentication not available in demo mode");
+    }
+
+    // Get the session from the URL hash
+    const { data, error } = await this.supabase.auth.getSession();
+    
+    if (error) {
+      throw error;
+    }
+
+    return { data, error: null };
+  }
+
+  async signOut() {
+    if (!this.isSupabaseAvailable()) {
+      return { error: null };
+    }
+
+    return await this.supabase.auth.signOut();
+  }
+
   async getSession() {
     if (!this.isSupabaseAvailable()) {
       return null;
