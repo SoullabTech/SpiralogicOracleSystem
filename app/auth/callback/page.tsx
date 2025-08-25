@@ -36,8 +36,11 @@ export default function AuthCallbackPage() {
 
         // Redirect after a short delay
         setTimeout(() => {
-          if (hasCompletedOnboarding) {
-            router.push("/dashboard");
+          // Check if onboarding is skipped via env var (client-side check)
+          const skipOnboarding = process.env.NEXT_PUBLIC_SKIP_ONBOARDING === 'true';
+          
+          if (skipOnboarding || hasCompletedOnboarding) {
+            router.push("/oracle"); // Go straight to Oracle for testing
           } else {
             router.push("/auth/onboarding");
           }

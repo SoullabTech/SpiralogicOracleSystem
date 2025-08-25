@@ -101,10 +101,12 @@ export default function OnboardingPage() {
       // Complete the onboarding process with auth service
       await authService.completeOnboarding(onboardingData);
       
-      // Redirect to home page (not protected by middleware)
-      router.push("/");
+      // Redirect to Oracle test page for immediate voice testing
+      router.push("/oracle");
     } catch (error) {
       console.error("Onboarding completion error:", error);
+      // Fallback to Oracle page even if onboarding save fails
+      router.push("/oracle");
     }
   };
 

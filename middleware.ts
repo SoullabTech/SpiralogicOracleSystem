@@ -54,6 +54,11 @@ export async function middleware(request: NextRequest) {
     if (!token) {
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
+
+    // Skip onboarding check if env flag is set (for testing)
+    if (process.env.SKIP_ONBOARDING === 'true') {
+      return NextResponse.next();
+    }
   }
 
   // Apply bypassing prevention middleware to monitored routes
