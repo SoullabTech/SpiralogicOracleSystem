@@ -22,7 +22,7 @@ export default function AuthCallbackPage() {
       
       if (error) {
         setStatus("error");
-        setMessage(`Authentication failed: ${error.message}`);
+        setMessage(`Authentication failed: ${error?.message || 'Unknown error'}`);
         return;
       }
 
@@ -51,7 +51,7 @@ export default function AuthCallbackPage() {
       }
     } catch (error: any) {
       setStatus("error");
-      setMessage(`Error: ${error.message || "Something went wrong"}`);
+      setMessage(`Error: ${error?.message || "Something went wrong"}`);
     }
   };
 

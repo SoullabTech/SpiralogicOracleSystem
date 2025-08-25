@@ -23,12 +23,12 @@ export default function SignInPage() {
       const { error } = await authService.signInWithEmail(email);
       
       if (error) {
-        setMessage(`Error: ${error.message}`);
+        setMessage(`Error: ${error?.message || 'Authentication failed'}`);
       } else {
         setMessage("Check your email for the magic link!");
       }
     } catch (error: any) {
-      setMessage(`Error: ${error.message || 'Something went wrong'}`);
+      setMessage(`Error: ${error?.message || 'Something went wrong'}`);
     } finally {
       setLoading(false);
     }
