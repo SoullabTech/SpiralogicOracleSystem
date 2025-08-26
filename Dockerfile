@@ -37,14 +37,16 @@ RUN echo 'print("=== FINAL VIBE CHECK ===")' > vibe_check.py && \
     echo 'print(f"CUDA: {torch.cuda.is_available()}")' >> vibe_check.py && \
     echo 'print("=== READY FOR HANDLER ===")' >> vibe_check.py
 
-# Create a simple test server for port 8888
-RUN echo 'from http.server import HTTPServer, SimpleHTTPRequestHandler' > test_server.py && \
-    echo 'import socketserver' >> test_server.py && \
-    echo 'PORT = 8888' >> test_server.py && \
-    echo 'Handler = SimpleHTTPRequestHandler' >> test_server.py && \
-    echo 'with socketserver.TCPServer(("", PORT), Handler) as httpd:' >> test_server.py && \
-    echo '    print(f"Server running on port {PORT}")' >> test_server.py && \
-    echo '    httpd.serve_forever()' >> test_server.py
+# Create ultra-simple test that just keeps running and logs
+RUN echo 'import time' > simple_test.py && \
+    echo 'import sys' >> simple_test.py && \
+    echo 'print("=== CONTAINER STARTED ===", flush=True)' >> simple_test.py && \
+    echo 'print("Container is running and will keep printing...", flush=True)' >> simple_test.py && \
+    echo 'counter = 0' >> simple_test.py && \
+    echo 'while True:' >> simple_test.py && \
+    echo '    counter += 1' >> simple_test.py && \
+    echo '    print(f"Still alive... {counter}", flush=True)' >> simple_test.py && \
+    echo '    time.sleep(10)' >> simple_test.py
 
-# Run the test server instead of handler.py for now
-CMD ["python", "test_server.py"]
+# Run the simple test to verify container starts
+CMD ["python", "simple_test.py"]
