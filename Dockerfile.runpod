@@ -1,7 +1,7 @@
 # services/sesame-tts/Dockerfile.runpod
 
 # ---- cache bust so RunPod pulls a fresh image each time ----
-ARG CACHE_BREAKER=2025-08-26b
+ARG CACHE_BREAKER=2025-08-26c
 ENV CACHE_BREAKER=${CACHE_BREAKER}
 
 # -------------------------
