@@ -1,6 +1,6 @@
 # Multi-stage build for authenticated model downloads
 # Cache bust argument to force fresh builds
-ARG CACHE_BREAKER=20250826a
+ARG CACHE_BREAKER=20250826b
 
 FROM python:3.10-slim AS model-downloader
 # Install huggingface-cli
