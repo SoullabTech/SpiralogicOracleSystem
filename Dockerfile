@@ -1,126 +1,41 @@
-# RunPod Sesame TTS Dockerfile (nuclear clean)
+# Minimal smoke-test Dockerfile for RunPod (verify correct GPU stack only)
 
-# ---- Cache bust: bump to force a fresh image ----
-ARG CACHE_BREAKER=2025-08-26Nuclear
-ENV CACHE_BREAKER=${CACHE_BREAKER}
-
-# -------------------------
-# Stage 1: Model downloader
-# -------------------------
-FROM python:3.10-slim AS model-downloader
-
-RUN pip install --no-cache-dir huggingface_hub
-
-WORKDIR /model-downloader
-RUN mkdir -p /model-downloader/models/csm-1b /model-downloader/models/dia-1.6b
-
-ARG HUGGINGFACE_HUB_TOKEN
-ARG TTS_ENGINE=csm
-ENV HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN}
-
-RUN if [ -n "$HUGGINGFACE_HUB_TOKEN" ]; then \
-      huggingface-cli login --token "${HUGGINGFACE_HUB_TOKEN}"; \
-    fi
-
-# CSM-1B (default)
-RUN if [ "$TTS_ENGINE" = "csm" ] || [ -n "$HUGGINGFACE_HUB_TOKEN" ]; then \
-      echo "Downloading CSM-1B…"; \
-      huggingface-cli download sesame/csm-1b ckpt.pt --local-dir /model-downloader/models/csm-1b; \
-    else \
-      echo "Skipping CSM-1B download"; \
-    fi
-
-# Dia-1.6B (optional)
-RUN if [ "$TTS_ENGINE" = "dia" ] || [ -n "$HUGGINGFACE_HUB_TOKEN" ]; then \
-      echo "Downloading Dia-1.6B…"; \
-      huggingface-cli download nari-labs/Dia-1.6B config.json --local-dir /model-downloader/models/dia-1.6b && \
-      huggingface-cli download nari-labs/Dia-1.6B dia-v0_1.pth --local-dir /model-downloader/models/dia-1.6b; \
-    else \
-      echo "Skipping Dia-1.6B download"; \
-    fi
-
-# -------------------------
-# Stage 2: Runtime
-# -------------------------
+# Match your worker logs (CUDA 12.1 runtime)
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONFAULTHANDLER=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONHASHSEED=random \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DEFAULT_TIMEOUT=100 \
-    NVIDIA_VISIBLE_DEVICES=all \
-    NVIDIA_DRIVER_CAPABILITIES=compute,utility \
-    TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6" \
-    TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
-    RUNPOD=1 \
-    HF_HUB_ENABLE_HF_TRANSFER=1
+    PYTHONUNBUFFERED=1
 
 # System deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      python3 python3-pip python3-dev \
-      git ffmpeg curl ca-certificates build-essential \
-    && ln -sf /usr/bin/python3 /usr/bin/python \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    python3 python3-pip python3-dev git ffmpeg curl ca-certificates && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-
-# Static assets (ok if folder absent, COPY will fail build otherwise)
-COPY sesame_csm_openai/static /app/static
-
-# Runtime dirs
-RUN mkdir -p /app/models/csm-1b /app/models/dia-1.6b \
-    /app/voice_memories /app/voice_references /app/voice_profiles \
-    /app/cloned_voices /app/audio_cache /app/tokenizers /app/logs \
- && chmod -R 777 /app
-
-# ---- Pin the GPU stack first (cannot be overridden later) ----
+# Exact GPU stack (DO NOT let anything else re-install these)
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install --index-url https://download.pytorch.org/whl/cu121 \
       torch==2.4.0+cu121 torchvision==0.19.0+cu121 torchaudio==2.4.0+cu121 && \
-    python3 -m pip install --no-deps transformers==4.52.1 accelerate==0.33.0 "numpy<2"
+    python3 -m pip install --no-deps \
+      transformers==4.52.1 accelerate==0.33.0 "numpy<2" runpod
 
-# Quick proof (visible in build logs)
-RUN python3 - <<'PY'\n\
-import torch, transformers, accelerate\n\
-print('VERSIONS:', 'torch', torch.__version__, '| transformers', transformers.__version__, '| accelerate', accelerate.__version__)\n\
-import importlib; importlib.import_module('torch.distributed'); print('torch.distributed OK')\n\
+# Prove versions at build time (will also appear in build logs)
+RUN python3 - <<'PY'
+import torch, transformers, accelerate
+print("BUILD VERSIONS:", "torch", torch.__version__, "| transformers", transformers.__version__, "| accelerate", accelerate.__version__)
+import torch.distributed as _; print("torch.distributed OK")
 PY
 
-# Remaining deps (MUST NOT include torch/transformers/accelerate)
-COPY requirements-runpod.txt /app/requirements-runpod.txt
-COPY sesame_csm_openai/requirements-dia.txt /app/requirements-dia.txt
-RUN pip install --no-cache-dir -r /app/requirements-runpod.txt
+# Simple runtime: print versions to worker logs and keep container alive
+RUN printf '%s\n' \
+  '#!/usr/bin/env bash' \
+  'set -e' \
+  'python3 - <<PY' \
+  'import torch, transformers, accelerate' \
+  'print("BOOT VERSIONS:", "torch", torch.__version__, "| transformers", transformers.__version__, "| accelerate", accelerate.__version__)' \
+  'import torch.distributed as _; print("torch.distributed OK")' \
+  'PY' \
+  'exec tail -f /dev/null' > /start.sh && chmod +x /start.sh
 
-# Optional extras
-ENV CUDA_HOME=/usr/local/cuda
-RUN pip install --no-cache-dir git+https://github.com/pytorch/ao.git && \
-    git clone https://github.com/pytorch/torchtune.git /tmp/torchtune && \
-    cd /tmp/torchtune && git checkout main && pip install -e . && \
-    pip install --no-cache-dir runpod yt-dlp openai-whisper
-
-# Dia deps if selected
-ARG TTS_ENGINE=csm
-RUN if [ "$TTS_ENGINE" = "dia" ]; then \
-      pip install --no-cache-dir -r /app/requirements-dia.txt; \
-    fi
-
-# App code
-COPY sesame_csm_openai/app /app/app
-COPY handler.py /app/handler.py
-
-# Bring in pre-downloaded models
-COPY --from=model-downloader /model-downloader/models/csm-1b /app/models/csm-1b
-COPY --from=model-downloader /model-downloader/models/dia-1.6b /app/models/dia-1.6b
-
-# Show torchtune presence (non-fatal)
-RUN python3 -c "import importlib; \
-try:\n import torchtune.models as m; print('Torchtune models (sample):', [x for x in dir(m) if not x.startswith('_')][:12])\n\
-except Exception as e:\n print('Torchtune check skipped:', e)"
-
-# Entrypoint
-RUN printf '#!/bin/bash\nset -e\necho \"Starting RunPod Sesame TTS handler...\"\npython3 /app/handler.py\n' > /app/start.sh && chmod +x /app/start.sh
-WORKDIR /
-CMD ["/app/start.sh"]
+CMD ["/bin/bash", "/start.sh"]
