@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1
+FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
+
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-venv git curl ca-certificates && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy project (adjust if your repo structure differs)
+COPY . /app
+
+# -------- RunPod build cache breaker + pip no cache
+ARG CACHE_BREAKER=2025-08-26a
+ENV CACHE_BREAKER=${CACHE_BREAKER}
+ENV PIP_NO_CACHE_DIR=1
+
+# -------- Install pinned runtime deps for sesame-tts
+COPY services/sesame-tts/requirements-runpod.txt /app/requirements-runpod.txt
+RUN pip install --upgrade -r /app/requirements-runpod.txt
+
+# -------- quick version check for logs
+RUN python - <<'PY'
+import torch, transformers, accelerate
+print("VERSIONS:", "torch", torch.__version__, "| transformers", transformers.__version__, "| accelerate", accelerate.__version__)
+PY
+
+# If you have an existing handler/entrypoint, keep it. Typical RunPod handler:
+CMD ["python", "-u", "handler.py"]
