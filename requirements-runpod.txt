@@ -1,14 +1,14 @@
 # RunPod-compatible requirements with pinned versions for CSM-1B support
-# Install torch first with proper CUDA support
---index-url https://download.pytorch.org/whl/cu121
-torch==2.1.2+cu121
-torchaudio==2.1.2+cu121
-
-# Core dependencies with exact pins to avoid import errors
-transformers==4.40.2
-accelerate==0.24.1
-huggingface_hub==0.22.2
+# Core stack (installed explicitly in Dockerfile)
+torch==2.4.0+cu121
+transformers==4.52.1
+accelerate==0.33.0
 numpy<2
+
+# Supporting dependencies
+--index-url https://download.pytorch.org/whl/cu121
+torchaudio==2.4.0+cu121
+huggingface_hub>=0.23,<1.0
 protobuf<5
 
 # TTS / audio helpers

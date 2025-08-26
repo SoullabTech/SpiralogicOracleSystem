@@ -1,6 +1,7 @@
 # Multi-stage build for authenticated model downloads
-# Cache bust argument to force fresh builds
-ARG CACHE_BREAKER=2025-08-25d
+# ---- cache bust so RunPod pulls a fresh image each time ----
+ARG CACHE_BREAKER=2025-08-26a
+ENV CACHE_BREAKER=${CACHE_BREAKER}
 
 FROM python:3.10-slim AS model-downloader
 # Install huggingface-cli
@@ -51,7 +52,8 @@ ENV PYTHONFAULTHANDLER=1 \
     TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
     RUNPOD=1 \
     HF_HUB_ENABLE_HF_TRANSFER=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -88,14 +90,23 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
 
 RUN python3 -m pip install --upgrade pip
 
-# install torch with CUDA 12.1 wheels FIRST
-RUN python3 -m pip install --no-cache-dir \
-    --index-url https://download.pytorch.org/whl/cu121 \
-    torch==2.1.2+cu121
+# Install the exact, compatible stack
+RUN pip install --upgrade --no-cache-dir \
+    torch==2.4.0+cu121 --index-url https://download.pytorch.org/whl/cu121 && \
+    pip install --upgrade --no-cache-dir \
+    transformers==4.52.1 \
+    accelerate==0.33.0 \
+    numpy\<2
 
-# then force-reinstall the exact HF stack so it overrides anything in the base image
+# Optional but helpful for proof
+RUN python3 - <<'PY'
+import torch, transformers, accelerate
+print("VERSIONS:", "torch", torch.__version__, "| transformers", transformers.__version__, "| accelerate", accelerate.__version__)
+PY
+
+# Install remaining requirements
 COPY requirements-runpod.txt /app/requirements-runpod.txt
-RUN python3 -m pip install --no-cache-dir --upgrade --force-reinstall --ignore-installed \
+RUN python3 -m pip install --no-cache-dir --upgrade \
     -r /app/requirements-runpod.txt
 
 # Install torchao from source
