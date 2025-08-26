@@ -4,9 +4,9 @@
 torch==2.1.2+cu121
 torchaudio==2.1.2+cu121
 
-# Core dependencies with exact pins to avoid import errors
-transformers==4.40.2
-accelerate==0.24.1
+# Core dependencies with exact pins to avoid import errors - downgraded to avoid device_mesh
+transformers==4.35.2
+accelerate==0.20.3
 safetensors>=0.4.3
 sentencepiece>=0.1.99
 huggingface_hub>=0.24.0
