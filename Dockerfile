@@ -13,22 +13,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Upgrade pip
 RUN python3 -m pip install --upgrade pip
 
-# Install ONLY PyTorch to test
+# Install PyTorch first
 RUN python3 -m pip install torch==2.4.0+cu121 --index-url https://download.pytorch.org/whl/cu121
 
-# Create test script
-RUN echo 'import torch' > /test.py && \
-    echo 'print("=== VIBE CHECK ===")' >> /test.py && \
-    echo 'print(f"PyTorch version: {torch.__version__}")' >> /test.py && \
-    echo 'print(f"CUDA available: {torch.cuda.is_available()}")' >> /test.py && \
-    echo 'if torch.cuda.is_available():' >> /test.py && \
-    echo '    print(f"GPU: {torch.cuda.get_device_name(0)}")' >> /test.py && \
-    echo 'print("=== VIBE CHECK PASSED ===")' >> /test.py && \
-    echo 'while True:' >> /test.py && \
-    echo '    import time' >> /test.py && \
-    echo '    time.sleep(60)' >> /test.py
+# Test PyTorch installation
+RUN python3 -c "import torch; print(f'PyTorch {torch.__version__}, CUDA: {torch.cuda.is_available()}')"
 
-# Test during build
-RUN python /test.py &
+# Copy and install requirements
+COPY requirements-runpod.txt .
+RUN pip3 install -r requirements-runpod.txt
 
-CMD ["python", "/test.py"]
+# Copy application code
+WORKDIR /app
+COPY handler.py .
+
+# Create directories that your handler might need
+RUN mkdir -p models audio_cache logs
+
+# Final test before starting
+RUN echo 'print("=== FINAL VIBE CHECK ===")' > vibe_check.py && \
+    echo 'import torch' >> vibe_check.py && \
+    echo 'print(f"PyTorch: {torch.__version__}")' >> vibe_check.py && \
+    echo 'print(f"CUDA: {torch.cuda.is_available()}")' >> vibe_check.py && \
+    echo 'print("=== READY FOR HANDLER ===")' >> vibe_check.py
+
+CMD ["python", "handler.py"]
