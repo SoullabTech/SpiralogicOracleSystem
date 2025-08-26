@@ -1,8 +1,11 @@
 # services/sesame-tts/Dockerfile.runpod
 
 # ---- cache bust so RunPod pulls a fresh image each time ----
-ARG CACHE_BREAKER=2025-08-26f
+ARG CACHE_BREAKER=2025-08-26g-FORCE-NEW-BUILD
 ENV CACHE_BREAKER=${CACHE_BREAKER}
+
+# Force rebuild indicator
+RUN echo "===== BUILDING WITH CACHE BREAKER: 2025-08-26g-FORCE-NEW-BUILD ====="
 
 # -------------------------
 # Stage 1: Model downloader
@@ -77,12 +80,14 @@ RUN mkdir -p /app/models/csm-1b /app/models/dia-1.6b \
 COPY requirements-runpod.txt /app/requirements-runpod.txt
 COPY sesame_csm_openai/requirements-dia.txt /app/requirements-dia.txt
 
-RUN python3 -m pip install --upgrade pip && \
+RUN echo "===== INSTALLING TORCH 2.4.0 AND DEPS =====" && \
+    python3 -m pip install --upgrade pip && \
     pip install --upgrade --no-cache-dir \
       --index-url https://download.pytorch.org/whl/cu121 torch==2.4.0+cu121 && \
     pip install --upgrade --no-cache-dir \
       transformers==4.52.1 accelerate==0.33.0 "numpy<2" && \
-    pip install --no-cache-dir -r /app/requirements-runpod.txt
+    pip install --no-cache-dir -r /app/requirements-runpod.txt && \
+    echo "===== INSTALLATION COMPLETE ====="
 
 # Optional extras
 ENV CUDA_HOME=/usr/local/cuda
