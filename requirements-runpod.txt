@@ -1,35 +1,15 @@
-# RunPod-compatible requirements with pinned versions for CSM-1B support
-# Core stack (installed explicitly in Dockerfile)
-torch==2.4.0+cu121
-transformers==4.52.1
-accelerate==0.33.0
 numpy<2
-
-# Supporting dependencies
---index-url https://download.pytorch.org/whl/cu121
-torchaudio==2.4.0+cu121
-huggingface_hub>=0.23,<1.0
-protobuf<5
-
-# TTS / audio helpers
+huggingface_hub>=0.23
+soundfile
+scipy
+numba
+einops
 safetensors
 sentencepiece
-soundfile
-librosa==0.10.1
+protobuf<5
 pydub
-
-# API and audio processing
-fastapi==0.104.1
-uvicorn==0.24.0.post1
-pydantic==2.5.3
-python-multipart==0.0.6
-ffmpeg-python==0.2.0
-scipy
-tokenizers>=0.19.1
-
-# Additional tools
-yt-dlp==2023.12.30
-openai-whisper==20231117
-runpod==1.6.0
-
-# Note: torchao and torchtune will be installed from source in Dockerfile
+tqdm
+ffmpeg-python
+uvicorn
+fastapi
+runpod
