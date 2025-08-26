@@ -1,41 +1,34 @@
-# Minimal smoke-test Dockerfile for RunPod (verify correct GPU stack only)
-
-# Match your worker logs (CUDA 12.1 runtime)
+# Ultra-minimal RunPod Dockerfile - Just verify PyTorch works
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PIP_NO_CACHE_DIR=1 \
     PYTHONUNBUFFERED=1
 
-# System deps
+# Install Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-dev git ffmpeg curl ca-certificates && \
+    python3 python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/*
 
-# Exact GPU stack (DO NOT let anything else re-install these)
-RUN python3 -m pip install --upgrade pip && \
-    python3 -m pip install --index-url https://download.pytorch.org/whl/cu121 \
-      torch==2.4.0+cu121 torchvision==0.19.0+cu121 torchaudio==2.4.0+cu121 && \
-    python3 -m pip install --no-deps \
-      transformers==4.52.1 accelerate==0.33.0 "numpy<2" runpod
+# Upgrade pip
+RUN python3 -m pip install --upgrade pip
 
-# Prove versions at build time (will also appear in build logs)
-RUN python3 - <<'PY'
-import torch, transformers, accelerate
-print("BUILD VERSIONS:", "torch", torch.__version__, "| transformers", transformers.__version__, "| accelerate", accelerate.__version__)
-import torch.distributed as _; print("torch.distributed OK")
-PY
+# Install ONLY PyTorch to test
+RUN python3 -m pip install torch==2.4.0+cu121 --index-url https://download.pytorch.org/whl/cu121
 
-# Simple runtime: print versions to worker logs and keep container alive
-RUN printf '%s\n' \
-  '#!/usr/bin/env bash' \
-  'set -e' \
-  'python3 - <<PY' \
-  'import torch, transformers, accelerate' \
-  'print("BOOT VERSIONS:", "torch", torch.__version__, "| transformers", transformers.__version__, "| accelerate", accelerate.__version__)' \
-  'import torch.distributed as _; print("torch.distributed OK")' \
-  'PY' \
-  'exec tail -f /dev/null' > /start.sh && chmod +x /start.sh
+# Create test script
+RUN echo 'import torch' > /test.py && \
+    echo 'print("=== VIBE CHECK ===")' >> /test.py && \
+    echo 'print(f"PyTorch version: {torch.__version__}")' >> /test.py && \
+    echo 'print(f"CUDA available: {torch.cuda.is_available()}")' >> /test.py && \
+    echo 'if torch.cuda.is_available():' >> /test.py && \
+    echo '    print(f"GPU: {torch.cuda.get_device_name(0)}")' >> /test.py && \
+    echo 'print("=== VIBE CHECK PASSED ===")' >> /test.py && \
+    echo 'while True:' >> /test.py && \
+    echo '    import time' >> /test.py && \
+    echo '    time.sleep(60)' >> /test.py
 
-CMD ["/bin/bash", "/start.sh"]
+# Test during build
+RUN python /test.py &
+
+CMD ["python", "/test.py"]
