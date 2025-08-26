@@ -1,6 +1,6 @@
 # Multi-stage build for authenticated model downloads
 # Cache bust argument to force fresh builds
-ARG CACHE_BREAKER=2025-08-25c
+ARG CACHE_BREAKER=2025-08-25d
 
 FROM python:3.10-slim AS model-downloader
 # Install huggingface-cli
@@ -82,8 +82,21 @@ RUN mkdir -p /app/static /app/models /app/models/csm-1b /app/models/dia-1.6b \
 # Copy static files
 COPY sesame_csm_openai/static /app/static
 
-# Install Python dependencies
-RUN pip3 install --no-cache-dir --upgrade pip
+# Install Python dependencies with forced exact versions
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONUNBUFFERED=1
+
+RUN python3 -m pip install --upgrade pip
+
+# install torch with CUDA 12.1 wheels FIRST
+RUN python3 -m pip install --no-cache-dir \
+    --index-url https://download.pytorch.org/whl/cu121 \
+    torch==2.1.2+cu121
+
+# then force-reinstall the exact HF stack so it overrides anything in the base image
+COPY requirements-runpod.txt /app/requirements-runpod.txt
+RUN python3 -m pip install --no-cache-dir --upgrade --force-reinstall --ignore-installed \
+    -r /app/requirements-runpod.txt
 
 # Install torchao from source
 ENV CUDA_HOME=/usr/local/cuda
@@ -95,8 +108,7 @@ RUN git clone https://github.com/pytorch/torchtune.git /tmp/torchtune && \
     git checkout main && \
     pip install -e .
 
-# Install base requirements with pinned versions (do not upgrade later!)
-RUN pip3 install --no-cache-dir -r requirements-runpod.txt
+# Requirements already installed above with force-reinstall
 
 # Install Dia model dependencies if TTS_ENGINE is set to dia
 ARG TTS_ENGINE=csm
