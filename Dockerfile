@@ -1,54 +1,126 @@
-# Multi-stage build for Spiralogic Oracle System
-FROM node:20-alpine AS builder
+# RunPod Sesame TTS Dockerfile
 
-# Install dependencies for native modules
-RUN apk add --no-cache python3 make g++
+# ---- NUCLEAR cache bust - guaranteed fresh build ----
+ARG CACHE_BREAKER=2025-08-26Nuclear
+ENV CACHE_BREAKER=${CACHE_BREAKER}
+
+# Force rebuild indicator
+RUN echo "===== NUCLEAR BUILD: CACHE BREAKER 2025-08-26Nuclear ====="
+RUN echo "===== EXPECT: torch 2.4.0+cu121 | transformers 4.52.1 | accelerate 0.33.0 ====="
+
+# -------------------------
+# Stage 1: Model downloader
+# -------------------------
+FROM python:3.10-slim AS model-downloader
+
+RUN pip install --no-cache-dir huggingface_hub
+
+WORKDIR /model-downloader
+RUN mkdir -p /model-downloader/models/csm-1b /model-downloader/models/dia-1.6b
+
+ARG HUGGINGFACE_HUB_TOKEN
+ENV HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN}
+ARG TTS_ENGINE=csm
+
+RUN if [ -n "$HUGGINGFACE_HUB_TOKEN" ]; then \
+      huggingface-cli login --token "${HUGGINGFACE_HUB_TOKEN}"; \
+    fi
+
+# CSM-1B
+RUN if [ "$TTS_ENGINE" = "csm" ] || [ -n "$HUGGINGFACE_HUB_TOKEN" ]; then \
+      echo "Downloading CSM-1B…"; \
+      huggingface-cli download sesame/csm-1b ckpt.pt --local-dir /model-downloader/models/csm-1b; \
+    else \
+      echo "Skipping CSM-1B download"; \
+    fi
+
+# Dia-1.6B (optional)
+RUN if [ "$TTS_ENGINE" = "dia" ] || [ -n "$HUGGINGFACE_HUB_TOKEN" ]; then \
+      echo "Downloading Dia-1.6B…"; \
+      huggingface-cli download nari-labs/Dia-1.6B config.json --local-dir /model-downloader/models/dia-1.6b && \
+      huggingface-cli download nari-labs/Dia-1.6B dia-v0_1.pth --local-dir /model-downloader/models/dia-1.6b; \
+    else \
+      echo "Skipping Dia-1.6B download"; \
+    fi
+
+# -------------------------
+# Stage 2: Runtime
+# -------------------------
+FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
+
+ENV PYTHONFAULTHANDLER=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=random \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DEFAULT_TIMEOUT=100 \
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+    TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6" \
+    TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
+    RUNPOD=1 \
+    HF_HUB_ENABLE_HF_TRANSFER=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      python3.10 python3-pip python3-dev ffmpeg git build-essential curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && ln -s /usr/bin/python3 /usr/bin/python
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY backend/package*.json ./backend/
+# Static assets
+COPY sesame_csm_openai/static /app/static
 
-# Install dependencies
-RUN npm ci --only=production
-RUN cd backend && npm ci --only=production
+# Create runtime dirs
+RUN mkdir -p /app/models/csm-1b /app/models/dia-1.6b \
+    /app/voice_memories /app/voice_references /app/voice_profiles \
+    /app/cloned_voices /app/audio_cache /app/tokenizers /app/logs \
+ && chmod -R 777 /app
 
-# Copy source code
-COPY . .
+# ---- Requirements installation (single block) ----
+COPY requirements-runpod.txt /app/requirements-runpod.txt
+COPY sesame_csm_openai/requirements-dia.txt /app/requirements-dia.txt
 
-# Build frontend
-RUN npm run build
+RUN echo "===== NUCLEAR: INSTALLING TORCH 2.4.0+cu121 (NOT 2.1.2!) =====" && \
+    python3 -m pip install --upgrade pip && \
+    pip install --upgrade --no-cache-dir \
+      --index-url https://download.pytorch.org/whl/cu121 torch==2.4.0+cu121 && \
+    pip install --upgrade --no-cache-dir \
+      transformers==4.52.1 accelerate==0.33.0 "numpy<2" && \
+    pip install --no-cache-dir -r /app/requirements-runpod.txt && \
+    echo "===== NUCLEAR BUILD COMPLETE - TORCH 2.4.0 INSTALLED ====="
 
-# Production stage
-FROM node:20-alpine
+# Optional extras
+ENV CUDA_HOME=/usr/local/cuda
+RUN pip3 install --no-cache-dir git+https://github.com/pytorch/ao.git && \
+    git clone https://github.com/pytorch/torchtune.git /tmp/torchtune && \
+    cd /tmp/torchtune && git checkout main && pip install -e . && \
+    pip3 install --no-cache-dir runpod yt-dlp openai-whisper
 
-RUN apk add --no-cache tini
+# Dia dependencies if needed
+ARG TTS_ENGINE=csm
+RUN if [ "$TTS_ENGINE" = "dia" ]; then \
+      pip3 install --no-cache-dir -r /app/requirements-dia.txt; \
+    fi
 
-WORKDIR /app
+# Version print (visible in boot logs)
+RUN python3 - <<'PY'\n\
+import torch, transformers, accelerate\n\
+print('VERSIONS:', 'torch', torch.__version__, '| transformers', transformers.__version__, '| accelerate', accelerate.__version__)\n\
+PY
 
-# Copy built application
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/backend ./backend
+# App code
+COPY sesame_csm_openai/app /app/app
+COPY handler.py /app/handler.py
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
+# Bring in pre-downloaded models
+COPY --from=model-downloader /model-downloader/models/csm-1b /app/models/csm-1b
+COPY --from=model-downloader /model-downloader/models/dia-1.6b /app/models/dia-1.6b
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-USER nextjs
+# Helpful check
+RUN python3 -c "import torchtune.models as m; print('Torchtune models:', [x for x in dir(m) if not x.startswith('_')][:12])"
 
-# Expose ports
-EXPOSE 3000
-EXPOSE 8080
-
-# Use tini for proper signal handling
-ENTRYPOINT ["/sbin/tini", "--"]
-
-# Start both frontend and backend
-CMD ["sh", "-c", "npm start & cd backend && npm start"]
+# Entrypoint
+RUN printf '#!/bin/bash\nset -e\necho \"Starting RunPod Sesame TTS handler...\"\npython3 /app/handler.py\n' > /app/start.sh && chmod +x /app/start.sh
+WORKDIR /
+CMD ["/app/start.sh"]
