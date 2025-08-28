@@ -67,8 +67,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
 
-    // Handle onboarding skip behavior
-    if (process.env.SKIP_ONBOARDING === 'true') {
+    // Handle onboarding skip behavior (only for development)
+    if (process.env.SKIP_ONBOARDING === 'true' && process.env.NODE_ENV === 'development') {
       // Force redirect to Oracle for testing, unless already there
       if (path !== '/oracle' && !path.startsWith('/oracle/')) {
         return NextResponse.redirect(new URL("/oracle", request.url));
@@ -76,12 +76,15 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Normal flow: check onboarding completion
-    // TODO: Add onboarding completion check here when ready
-    // const user = await getUser(token);
-    // if (!user.onboarding_completed && !path.startsWith('/auth/onboarding')) {
-    //   return NextResponse.redirect(new URL("/auth/onboarding", request.url));
-    // }
+    // Beta test: Simplified onboarding check
+    // For now, check if the onboarding cookie exists
+    const onboardingCookie = request.cookies.get('onboarding-completed');
+    const onboardingCompleted = onboardingCookie?.value === 'true';
+    
+    // Redirect to onboarding if not completed and not already there
+    if (!onboardingCompleted && !path.startsWith('/auth/onboarding')) {
+      return NextResponse.redirect(new URL("/auth/onboarding", request.url));
+    }
   }
 
   // Apply bypassing prevention middleware to monitored routes

@@ -1,15 +1,27 @@
 // app/api/voice/sesame/route.ts
-import { synthesizeToWav } from '@/lib/runpodSesame';
+import { synthesizeToWav, checkHealth } from '@/lib/northflankSesame';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 300; // TEMP: allow cold start & model pull
+export const maxDuration = 60; // Standard timeout for Northflank
 
 export async function POST(req: Request) {
   try {
-    // Warm-up endpoint for keeping RunPod alive
+    // Development mock mode for testing
+    if (process.env.NODE_ENV === 'development' && !process.env.NORTHFLANK_SESAME_URL?.includes('northflank.app')) {
+      console.log('[Dev Mode] Using beep fallback - Northflank not configured');
+    }
+    
+    // Warm-up endpoint for keeping service alive
     const url = new URL(req.url);
     if (url.searchParams.get('warm') === '1') {
+      const serviceUrl = process.env.NORTHFLANK_SESAME_URL;
+      if (serviceUrl) {
+        const healthy = await checkHealth({ serviceUrl });
+        return new Response(JSON.stringify({ ok: true, status: 'warm', healthy }), {
+          headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
+        });
+      }
       return new Response(JSON.stringify({ ok: true, status: 'warm' }), {
         headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
       });
@@ -25,14 +37,14 @@ export async function POST(req: Request) {
 
     // Check voice provider configuration
     const voiceProvider = process.env.VOICE_PROVIDER || 'sesame';
-    const sesameProvider = process.env.SESAME_PROVIDER || 'runpod';
+    const sesameProvider = process.env.SESAME_PROVIDER || 'northflank';
     
     console.log('Voice configuration:', { voiceProvider, sesameProvider });
 
-    // Check if we should use RunPod (sesame + runpod)
-    if (voiceProvider === 'sesame' && sesameProvider === 'runpod') {
-      if (!process.env.RUNPOD_ENDPOINT_ID || !process.env.RUNPOD_API_KEY) {
-        console.log('Missing RunPod env vars, falling back to beep');
+    // Check if we should use Northflank Sesame
+    if (voiceProvider === 'sesame' && sesameProvider === 'northflank') {
+      if (!process.env.NORTHFLANK_SESAME_URL) {
+        console.log('Missing Northflank Sesame URL, falling back to beep');
         const beepBlob = makeBeepWav(800, 1);
         const wavBuffer = await beepBlob.arrayBuffer();
         return new Response(wavBuffer, {
@@ -57,21 +69,20 @@ export async function POST(req: Request) {
       });
     }
 
-    // RUNPOD: Maya voice enabled!
-    console.log('Attempting RunPod synthesis for:', text.substring(0, 50));
-    console.log('RunPod config:', {
-      endpoint: process.env.RUNPOD_ENDPOINT_ID?.substring(0, 8) + '...',
-      hasApiKey: !!process.env.RUNPOD_API_KEY
+    // NORTHFLANK: Maya voice enabled!
+    console.log('Attempting Northflank Sesame synthesis for:', text.substring(0, 50));
+    console.log('Northflank config:', {
+      serviceUrl: process.env.NORTHFLANK_SESAME_URL,
+      hasApiKey: !!process.env.NORTHFLANK_SESAME_API_KEY
     });
     
     try {
-      // Try sync first with optimized timeout
       const wavBuffer = await synthesizeToWav(text, {
-        endpointId: process.env.RUNPOD_ENDPOINT_ID!,
-        apiKey: process.env.RUNPOD_API_KEY!,
-        timeout: 50000, // 50 seconds to fit within 60s function limit
+        serviceUrl: process.env.NORTHFLANK_SESAME_URL!,
+        apiKey: process.env.NORTHFLANK_SESAME_API_KEY,
+        timeout: 30000, // 30 seconds timeout
       });
-      console.log('RunPod synthesis successful, audio size:', wavBuffer.byteLength);
+      console.log('Northflank Sesame synthesis successful, audio size:', wavBuffer.byteLength);
       return new Response(wavBuffer, {
         status: 200,
         headers: {
@@ -79,24 +90,9 @@ export async function POST(req: Request) {
           'cache-control': 'no-store',
         }
       });
-    } catch (syncError: any) {
-      console.log('Sync synthesis failed, trying async method:', syncError.message);
-      
-      // Fallback to async method
-      const { synthesizeToWavAsync } = await import('@/lib/runpodSesame');
-      const wavBuffer = await synthesizeToWavAsync(text, {
-        endpointId: process.env.RUNPOD_ENDPOINT_ID!,
-        apiKey: process.env.RUNPOD_API_KEY!,
-        timeout: 55000, // 55 seconds for async fallback
-      });
-      console.log('RunPod async synthesis successful, audio size:', wavBuffer.byteLength);
-      return new Response(wavBuffer, {
-        status: 200,
-        headers: {
-          'content-type': 'audio/wav',
-          'cache-control': 'no-store',
-        }
-      });
+    } catch (error: any) {
+      console.error('Northflank synthesis failed:', error.message);
+      throw error;
     }
   } catch (e: any) {
     console.error('Voice synthesis error:', e?.message, e?.stack);
