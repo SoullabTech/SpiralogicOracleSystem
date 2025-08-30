@@ -141,7 +141,18 @@
       "Bash(cd:*)",
       "Bash(PORT=3001 npm start)",
       "Bash(make:*)",
-      "WebFetch(domain:supabase.com)"
+      "WebFetch(domain:supabase.com)",
+      "Bash(./test-maya.sh:*)",
+      "Bash(./test-maya-async.sh:*)",
+      "Bash(./test-maya-sync.sh:*)",
+      "Bash(./test-both-endpoints.sh:*)",
+      "Bash(./warmup-runpod.sh:*)",
+      "Bash(ssh:*)",
+      "Bash(npm --prefix backend run build:all)",
+      "Bash(security delete-generic-password:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(./build_and_push.sh)",
+      "Bash(colima start:*)"
     ],
     "deny": []
   },

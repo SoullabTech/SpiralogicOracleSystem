@@ -39,7 +39,7 @@ export default function BetaPage() {
             beta access instructions within 24 hours.
           </p>
           <Link
-            href="/oracle-demo"
+            href="/oracle"
             className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
           >
             🔮 Try Demo Oracle
@@ -184,7 +184,7 @@ export default function BetaPage() {
 
             <div className="text-center mt-6">
               <Link
-                href="/oracle-demo"
+                href="/oracle"
                 className="text-yellow-400 hover:text-yellow-300 underline"
               >
                 Try the demo first →

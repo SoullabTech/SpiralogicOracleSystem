@@ -32,8 +32,12 @@ const PUBLIC_PATHS = [
   "/auth/callback", 
   "/auth/onboarding",
   "/api/voice/sesame", // Keep voice route callable
+  "/api/health",
+  "/api/debug", // For debugging endpoints
+  "/not-found",
+  "/loading",
+  "/error",
   "/",
-  "/oracle", // TEMP: Make oracle public for voice testing
 ];
 
 // API routes that need bypassing prevention

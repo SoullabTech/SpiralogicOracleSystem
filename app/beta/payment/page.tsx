@@ -279,7 +279,7 @@ export default function BetaPaymentPage() {
           {/* Back to Demo */}
           <div className="text-center mt-8">
             <Link
-              href="/oracle-demo"
+              href="/oracle"
               className="text-yellow-400 hover:text-yellow-300 underline"
             >
               ← Want to try the demo first?

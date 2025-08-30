@@ -209,10 +209,10 @@ export default function HomePage() {
               🚀 Begin Integration Journey
             </Link>
             <Link
-              href="/oracle-demo"
+              href="/oracle"
               className="bg-white/10 text-white px-8 py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition text-lg"
             >
-              🔮 Try Demo
+              🔮 Try Oracle
             </Link>
           </div>
 

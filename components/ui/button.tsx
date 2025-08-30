@@ -1,13 +1,27 @@
 import * as React from "react"
+import { useFeatureFlag } from "@/lib/feature-flags"
+import { ButtonV2, ButtonPropsV2 } from "./button-v2"
 
-export interface ButtonProps
+// Original Button props (preserved for compatibility)
+export interface ButtonPropsV1
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
   size?: 'default' | 'sm' | 'lg' | 'icon'
+  asChild?: boolean
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className = "", variant = 'default', size = 'default', ...props }, ref) => {
+// Union type supporting both versions
+export interface ButtonProps extends ButtonPropsV1 {
+  // V2 optional props (when uizard_buttons flag is enabled)
+  elevation?: 'none' | 'low' | 'medium' | 'high'
+  rounded?: 'default' | 'full' | 'none'
+  animation?: 'none' | 'subtle' | 'bounce' | 'glow'
+  gradient?: boolean
+}
+
+// Original Button implementation (preserved exactly)
+const ButtonV1 = React.forwardRef<HTMLButtonElement, ButtonPropsV1>(
+  ({ className = "", variant = 'default', size = 'default', asChild = false, ...props }, ref) => {
     const variants = {
       default: "bg-primary text-primary-foreground hover:bg-primary/90",
       destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
@@ -24,15 +38,43 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon: "h-10 w-10",
     }
 
+    const baseClasses = `inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`;
+
+    if (asChild) {
+      const child = React.Children.only(props.children);
+      return React.cloneElement(child as React.ReactElement, {
+        className: baseClasses,
+        ...props
+      });
+    }
+
     return (
       <button
-        className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`}
+        className={baseClasses}
         ref={ref}
         {...props}
       />
     )
   }
 )
+
+// Smart Button Router - chooses between V1 and V2 based on feature flags
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+  const useUizardButtons = useFeatureFlag('uizard_buttons');
+  const useEnhancedUI = useFeatureFlag('enhanced_ui_v2');
+  
+  // Use V2 if either Uizard or enhanced UI flags are enabled
+  const useV2 = useUizardButtons || useEnhancedUI;
+  
+  if (useV2) {
+    // Cast to V2 props and render enhanced version
+    return <ButtonV2 ref={ref} {...props as ButtonPropsV2} />;
+  }
+  
+  // Default to V1 for compatibility
+  const { elevation, rounded, animation, gradient, ...v1Props } = props;
+  return <ButtonV1 ref={ref} {...v1Props} />;
+})
 Button.displayName = "Button"
 
 export { Button }

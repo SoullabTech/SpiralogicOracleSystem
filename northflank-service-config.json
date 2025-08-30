@@ -1,0 +1,53 @@
+{
+  "name": "maya-voice-agent",
+  "description": "Sesame CSM voice agent with Maya voice for personal oracle",
+  "external": {
+    "imagePath": "andreanezat/voice-agent:latest"
+  },
+  "docker": {
+    "configType": "default"
+  },
+  "deployment": {
+    "instances": 1,
+    "docker": {
+      "configType": "default"
+    },
+    "storage": {
+      "ephemeralStorage": {
+        "storageSize": 2048
+      }
+    }
+  },
+  "billing": {
+    "deploymentPlan": "nf-compute-200"
+  },
+  "healthChecks": [
+    {
+      "path": "/health",
+      "port": 8000,
+      "protocol": "HTTP"
+    }
+  ],
+  "networking": {
+    "ports": [
+      {
+        "name": "http",
+        "internalPort": 8000,
+        "public": true,
+        "protocol": "HTTP"
+      }
+    ]
+  },
+  "runtimeEnvironment": {
+    "HF_TOKEN": "${HF_TOKEN}",
+    "HUGGINGFACE_TOKEN": "${HUGGINGFACE_TOKEN}",
+    "SESAME_MODEL": "sesame/csm-1b",
+    "SESAME_VOICE": "maya",
+    "SESAME_FP16": "1",
+    "DEV_MODE": "false",
+    "HOST": "0.0.0.0",
+    "PORT": "8000",
+    "NVIDIA_VISIBLE_DEVICES": "all",
+    "CUDA_VISIBLE_DEVICES": "0"
+  }
+}

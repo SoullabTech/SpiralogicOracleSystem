@@ -43,29 +43,66 @@ export async function POST(req: Request) {
 
     // Check if we should use Northflank Sesame
     if (voiceProvider === 'sesame' && sesameProvider === 'northflank') {
-      if (!process.env.NORTHFLANK_SESAME_URL) {
-        console.log('Missing Northflank Sesame URL, falling back to beep');
-        const beepBlob = makeBeepWav(800, 1);
-        const wavBuffer = await beepBlob.arrayBuffer();
-        return new Response(wavBuffer, {
-          status: 200,
-          headers: {
-            'content-type': 'audio/wav',
-            'cache-control': 'no-store',
+      if (!process.env.NORTHFLANK_SESAME_URL || process.env.NORTHFLANK_SESAME_URL.includes('your-voice-agent-service')) {
+        console.log('Northflank Sesame not configured, trying ElevenLabs Maya fallback...');
+        // Try ElevenLabs as fallback for Maya's voice
+        if (process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID) {
+          try {
+            const elevenLabsResponse = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + process.env.ELEVENLABS_VOICE_ID, {
+              method: 'POST',
+              headers: {
+                'Accept': 'audio/mpeg',
+                'Content-Type': 'application/json',
+                'xi-api-key': process.env.ELEVENLABS_API_KEY
+              },
+              body: JSON.stringify({
+                text: text,
+                model_id: process.env.ELEVENLABS_MODEL_ID || 'eleven_multilingual_v2',
+                voice_settings: {
+                  stability: 0.5,
+                  similarity_boost: 0.8
+                }
+              })
+            });
+            
+            if (elevenLabsResponse.ok) {
+              console.log('✅ ElevenLabs Maya voice synthesis successful');
+              const audioBuffer = await elevenLabsResponse.arrayBuffer();
+              return new Response(audioBuffer, {
+                status: 200,
+                headers: {
+                  'content-type': 'audio/mpeg',
+                  'cache-control': 'no-store',
+                }
+              });
+            }
+          } catch (elevenLabsError) {
+            console.log('ElevenLabs fallback failed:', elevenLabsError);
           }
+        }
+        
+        console.log('All voice providers failed, client should use Web Speech API fallback');
+        return new Response(JSON.stringify({ 
+          ok: false, 
+          error: 'Voice synthesis unavailable',
+          fallback: 'web_speech_api',
+          message: 'Use browser Web Speech API for voice synthesis'
+        }), {
+          status: 503,
+          headers: { 'content-type': 'application/json' },
         });
       }
     } else {
-      // Other providers not implemented yet, use beep
-      console.log(`Provider ${voiceProvider}/${sesameProvider} not implemented, using beep`);
-      const beepBlob = makeBeepWav(800, 1);
-      const wavBuffer = await beepBlob.arrayBuffer();
-      return new Response(wavBuffer, {
-        status: 200,
-        headers: {
-          'content-type': 'audio/wav',
-          'cache-control': 'no-store',
-        }
+      // Other providers not implemented yet
+      console.log(`Provider ${voiceProvider}/${sesameProvider} not implemented, fallback to Web Speech API`);
+      return new Response(JSON.stringify({ 
+        ok: false, 
+        error: 'Provider not implemented',
+        fallback: 'web_speech_api',
+        message: 'Use browser Web Speech API for voice synthesis'
+      }), {
+        status: 503,
+        headers: { 'content-type': 'application/json' },
       });
     }
 

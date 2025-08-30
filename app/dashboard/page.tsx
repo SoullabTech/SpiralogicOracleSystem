@@ -1,184 +1,297 @@
-import Link from "next/link";
+"use client";
 
-const dashboards = [
-  {
-    title: "🔥 Oracle Beta Testing",
-    description:
-      "Test real Fire/Water/Earth/Air agents with consciousness technology.",
-    href: "/dashboard/oracle-beta",
-    badge: "BETA",
-  },
-  {
-    title: "🌀 Personal Oracle Agent",
-    description:
-      "Track insights, messages, and actions from your dynamic guide.",
-    href: "/dashboard/agent",
-  },
-  {
-    title: "🌌 Astrology Dashboard",
-    description:
-      "Explore astrological influences, transits, and energetic timing.",
-    href: "/dashboard/astrology",
-  },
-  {
-    title: "🪷 Taoist Elemental Alchemy",
-    description: "Discover your Five-Element chart and Taoist practice path.",
-    href: "/dashboard/taoist-elements",
-  },
-  {
-    title: "🌸 Holoflower Insights",
-    description: "View and interact with your petal state history over time.",
-    href: "/dashboard/holoflower",
-  },
-  {
-    title: "📓 Journal & Memory",
-    description:
-      "Access journal entries, reflections, dreams, and memory uploads.",
-    href: "/dashboard/journal",
-  },
-  {
-    title: "🧪 Experimental & Future Interfaces",
-    description: "Preview experimental features and upcoming expansions.",
-    href: "/dashboard/experimental",
-  },
-];
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { 
+  Crown, 
+  MessageCircle, 
+  BarChart3, 
+  Calendar, 
+  Sparkles,
+  TrendingUp,
+  Clock,
+  Target,
+  Settings,
+  User
+} from 'lucide-react';
+
+interface DashboardStats {
+  conversations: number;
+  insights: number;
+  growth: string;
+  sessions: number;
+}
+
+interface RecentActivity {
+  time: string;
+  action: string;
+  type: 'chat' | 'astrology' | 'journal' | 'voice';
+}
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState<DashboardStats>({
+    conversations: 0,
+    insights: 0,
+    growth: '+0%',
+    sessions: 0
+  });
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading dashboard data
+    setTimeout(() => {
+      setStats({
+        conversations: 42,
+        insights: 127,
+        growth: '+23%',
+        sessions: 18
+      });
+      setRecentActivity([
+        { time: '2 hours ago', action: 'Oracle conversation about life direction', type: 'chat' },
+        { time: '1 day ago', action: 'Completed astrology reading', type: 'astrology' },
+        { time: '2 days ago', action: 'Journal entry: Morning reflections', type: 'journal' },
+        { time: '3 days ago', action: 'Voice session with Maya', type: 'voice' }
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 bg-gradient-to-br from-purple-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <Crown className="w-8 h-8 text-white" />
+          </motion.div>
+          <p className="text-white">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
-      <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+      <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            🔮 Sacred Technology Dashboard
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Access your personalized oracle interfaces, elemental insights, and
-            consciousness exploration tools
-          </p>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
+              <p className="text-muted-foreground">Your Oracle journey overview</p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Link href="/oracle/settings">
+                <Button variant="outline" size="sm" className="border-purple-500/20 hover:bg-purple-500/10">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </Button>
+              </Link>
+              <Link href="/profile">
+                <Button variant="outline" size="sm" className="border-orange-500/20 hover:bg-orange-500/10">
+                  <User className="w-4 h-4 mr-2" />
+                  Profile
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {dashboards.map((dashboard, index) => (
-            <Link
-              key={index}
-              href={dashboard.href}
-              className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden relative"
-            >
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                    {dashboard.title}
-                  </h3>
-                  {"badge" in dashboard && (
-                    <span className="bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">
-                      {dashboard.badge}
-                    </span>
-                  )}
-                </div>
-                <p className="text-gray-600 leading-relaxed">
-                  {dashboard.description}
-                </p>
-
-                {/* Hover indicator */}
-                <div className="mt-4 flex items-center text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-sm font-medium">Explore</span>
-                  <svg
-                    className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+        {/* Quick Stats */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+        >
+          <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Conversations</p>
+                  <motion.p 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                    className="text-2xl font-bold text-white"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
+                    {stats.conversations}
+                  </motion.p>
                 </div>
+                <MessageCircle className="w-8 h-8 text-purple-400" />
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Gradient border effect */}
-              <div className="h-1 bg-gradient-to-r from-purple-400 via-blue-400 to-indigo-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mt-16 bg-white rounded-xl shadow-md p-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
-            ⚡ Quick Actions
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <button className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105">
-              🎯 Daily Check-in
-            </button>
-
-            <button className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105">
-              🌙 Dream Journal
-            </button>
-
-            <button className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all transform hover:scale-105">
-              🔮 Oracle Reading
-            </button>
-
-            <button className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
-              🧘 Start Ritual
-            </button>
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div className="mt-12 bg-white rounded-xl shadow-md p-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-            📈 Recent Activity
-          </h2>
-
-          <div className="space-y-4">
-            <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-4">
-                <span className="text-purple-600">🌀</span>
+          <Card className="bg-background/80 backdrop-blur-xl border-orange-500/20">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Insights</p>
+                  <motion.p 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.4, type: "spring" }}
+                    className="text-2xl font-bold text-white"
+                  >
+                    {stats.insights}
+                  </motion.p>
+                </div>
+                <Sparkles className="w-8 h-8 text-orange-400" />
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-gray-900">
-                  Oracle Reading Completed
-                </p>
-                <p className="text-sm text-gray-600">
-                  Received guidance on creative projects • 2 hours ago
-                </p>
-              </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                <span className="text-blue-600">🪷</span>
+          <Card className="bg-background/80 backdrop-blur-xl border-green-500/20">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Growth</p>
+                  <motion.p 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.5, type: "spring" }}
+                    className="text-2xl font-bold text-white"
+                  >
+                    {stats.growth}
+                  </motion.p>
+                </div>
+                <TrendingUp className="w-8 h-8 text-green-400" />
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-gray-900">
-                  Taoist Practice Session
-                </p>
-                <p className="text-sm text-gray-600">
-                  15-minute Water element meditation • Yesterday
-                </p>
-              </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                <span className="text-indigo-600">📓</span>
+          <Card className="bg-background/80 backdrop-blur-xl border-blue-500/20">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Sessions</p>
+                  <motion.p 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6, type: "spring" }}
+                    className="text-2xl font-bold text-white"
+                  >
+                    {stats.sessions}
+                  </motion.p>
+                </div>
+                <Clock className="w-8 h-8 text-blue-400" />
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-gray-900">Journal Entry Added</p>
-                <p className="text-sm text-gray-600">
-                  Morning reflection on creative flow • 2 days ago
-                </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Main Content Grid */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
+          {/* Recent Activity */}
+          <Card className="lg:col-span-2 bg-background/80 backdrop-blur-xl border-purple-500/20">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Clock className="w-5 h-5 text-purple-400" />
+                <span>Recent Activity</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentActivity.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="flex items-center space-x-3 p-3 rounded-lg bg-background/50 hover:bg-background/70 transition-colors"
+                  >
+                    <div className={`w-2 h-2 rounded-full ${
+                      item.type === 'chat' ? 'bg-purple-400' :
+                      item.type === 'astrology' ? 'bg-orange-400' :
+                      item.type === 'journal' ? 'bg-green-400' :
+                      'bg-blue-400'
+                    }`} />
+                    <div className="flex-1">
+                      <p className="text-sm text-white">{item.action}</p>
+                      <p className="text-xs text-muted-foreground">{item.time}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            </div>
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Target className="w-5 h-5 text-purple-400" />
+                <span>Quick Actions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link href="/oracle">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600">
+                    <Crown className="w-4 h-4 mr-2" />
+                    Chat with Oracle
+                  </Button>
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link href="/dashboard/astrology">
+                  <Button variant="outline" className="w-full border-orange-500/20 hover:bg-orange-500/10">
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Astrology Reading
+                  </Button>
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link href="/journal">
+                  <Button variant="outline" className="w-full border-green-500/20 hover:bg-green-500/10">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Write Journal
+                  </Button>
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link href="/dashboard/analytics">
+                  <Button variant="outline" className="w-full border-blue-500/20 hover:bg-blue-500/10">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    View Analytics
+                  </Button>
+                </Link>
+              </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
