@@ -40,4 +40,7 @@ coverage/
 .vscode/
 .idea/
 *.swp
-*.swo
+*.swo.env
+backend/.env
+.env
+backend/.env
