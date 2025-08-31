@@ -20,6 +20,20 @@ import orchestratorRoutes from './routes/orchestrator.routes';
 import voiceJournalingRoutes from './routes/voiceJournaling.routes';
 import semanticJournalingRoutes from './routes/semanticJournaling.routes';
 import conversationalRoutes from './routes/conversational.routes';
+import { sseGuard, initSSEShutdown } from './utils/sseRegistry';
+
+// Redis setup for production rate limiting
+let redis: any = null;
+if (process.env.REDIS_URL) {
+  try {
+    const { createClient } = require('redis');
+    redis = createClient({ url: process.env.REDIS_URL });
+    redis.connect().catch(console.error);
+    console.log('[boot] Redis connected for production rate limiting');
+  } catch (err) {
+    console.warn('[boot] Redis optional dependency not found, using in-memory rate limiting');
+  }
+}
 
 const app = express();
 // Use APP_PORT first, then PORT, then default
@@ -145,6 +159,9 @@ app.get('/api', (req, res) => {
   });
 });
 
+// Graceful SSE shutdown guard
+app.use('/api/v1/converse', sseGuard);
+
 // Mount main API router (includes /api/v1)
 app.use('/api', apiRouter);
 
@@ -197,7 +214,12 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log('✅ Semantic Pattern Recognition');
   console.log('✅ Safety & Crisis Moderation');
   console.log('✅ Sesame/Maya Conversational Pipeline');
+  if (redis) console.log('✅ Redis Rate Limiting');
+  console.log('✅ Graceful SSE Shutdown');
   console.log('');
+  
+  // Initialize graceful shutdown handling
+  initSSEShutdown();
 });
 
 export default app;

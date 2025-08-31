@@ -43,6 +43,7 @@
     "multer": "^2.0.2",
     "openai": "^4.20.0",
     "rate-limit-redis": "^4.2.2",
+    "redis": "^4.6.0",
     "sqlite3": "^5.1.7",
     "swagger-jsdoc": "^6.2.0",
     "uuid": "^9.0.0",

@@ -2,6 +2,8 @@
 // Inserts elemental tone, gentle punctuation, breath markers, and
 // optional safety softening without blocking the stream.
 
+import { cringeFilterService } from '../utils/cringeFilterService';
+
 export type Element = 'air' | 'fire' | 'water' | 'earth' | 'aether';
 
 export interface RefinerOptions {
@@ -11,11 +13,13 @@ export interface RefinerOptions {
   safetySoften?: boolean;        // keep content but soften phrasing
   styleTightening?: boolean;     // trim filler, tighten hedges
   addClosers?: boolean;          // ensure responses end complete
+  cringeFilter?: boolean;        // apply modern language filtering
+  userStyle?: 'casual' | 'formal' | 'spiritual'; // adaptive communication style
 }
 
 export class SesameMayaRefiner {
   private buf = '';
-  private opts: Required<RefinerOptions>;
+  private opts: Required<RefinerOptions> & { userStyle: 'casual' | 'formal' | 'spiritual' };
 
   constructor(opts: RefinerOptions) {
     this.opts = {
@@ -24,6 +28,8 @@ export class SesameMayaRefiner {
       safetySoften: opts.safetySoften ?? true,
       styleTightening: opts.styleTightening ?? true,
       addClosers: opts.addClosers ?? true,
+      cringeFilter: opts.cringeFilter ?? true,
+      userStyle: opts.userStyle ?? 'casual',
       tts: {
         breathMarks: opts.tts?.breathMarks ?? true,
         phraseMinChars: Math.max(24, opts.tts?.phraseMinChars ?? 36),
@@ -35,6 +41,7 @@ export class SesameMayaRefiner {
   /** Single-pass, non-stream refinement (for /message POST path) */
   refineText(full: string): string {
     let t = full;
+    if (this.opts.cringeFilter) t = cringeFilterService.adaptiveFilter(t, this.opts.userStyle);
     t = this.applyElementalTone(t);
     if (this.opts.styleTightening) t = this.tightenStyle(t);
     if (this.opts.safetySoften)   t = this.softenEdges(t);
@@ -57,6 +64,7 @@ export class SesameMayaRefiner {
         let phrase = this.buf.slice(0, cutIdx + 1);
         this.buf = this.buf.slice(cutIdx + 1);
 
+        if (this.opts.cringeFilter) phrase = cringeFilterService.adaptiveFilter(phrase, this.opts.userStyle);
         phrase = this.applyElementalTone(phrase);
         if (this.opts.styleTightening) phrase = this.tightenStyle(phrase);
         if (this.opts.safetySoften)   phrase = this.softenEdges(phrase);
@@ -70,7 +78,9 @@ export class SesameMayaRefiner {
       if (this.buf.length > this.opts.tts.phraseMaxChars) {
         const slice = this.buf.slice(0, this.opts.tts.phraseMaxChars);
         this.buf = this.buf.slice(this.opts.tts.phraseMaxChars);
-        let phrase = this.applyElementalTone(slice);
+        let phrase = slice;
+        if (this.opts.cringeFilter) phrase = cringeFilterService.adaptiveFilter(phrase, this.opts.userStyle);
+        phrase = this.applyElementalTone(phrase);
         if (this.opts.styleTightening) phrase = this.tightenStyle(phrase);
         if (this.opts.safetySoften)   phrase = this.softenEdges(phrase);
         if (this.opts.tts.breathMarks) phrase = this.addBreaths(phrase);
@@ -81,6 +91,7 @@ export class SesameMayaRefiner {
     // flush tail
     if (this.buf.trim()) {
       let tail = this.buf;
+      if (this.opts.cringeFilter) tail = cringeFilterService.adaptiveFilter(tail, this.opts.userStyle);
       if (this.opts.addClosers) tail = this.ensureClosure(tail);
       if (this.opts.styleTightening) tail = this.tightenStyle(tail);
       if (this.opts.safetySoften)   tail = this.softenEdges(tail);
@@ -128,23 +139,28 @@ export class SesameMayaRefiner {
     const swaps: Record<Element, Array<[RegExp, string]>> = {
       air: [
         [/\b(I think|maybe|perhaps)\b/gi, "let's clarify"],
-        [/\bvery\b/gi, ''],
+        [/\bvery\s+([a-z]+)\b/gi, '$1'],  // "very good" -> "good"
+        [/\bquite\b/gi, ''],
       ],
       fire: [
-        [/\btry\b/gi, 'ignite'],
-        [/\bmaybe\b/gi, 'now'],
+        [/\btry to\b/gi, 'go ahead and'],  // More natural than "ignite"
+        [/\bmaybe we could\b/gi, "let's"],
+        [/\bperhaps\b/gi, 'definitely'],
       ],
       water: [
-        [/\bshould\b/gi, 'might gently'],
+        [/\bshould consider\b/gi, 'might explore'],
         [/\bmust\b/gi, 'can'],
+        [/\bhave to\b/gi, 'get to'],
       ],
       earth: [
-        [/\bmaybe\b/gi, "let's do"],
-        [/\btry\b/gi, 'practice'],
+        [/\bmaybe try\b/gi, "let's practice"],
+        [/\btry\s+(\w+ing)\b/gi, 'practice $1'],  // "try meditating" -> "practice meditating"
+        [/\bpossibly\b/gi, 'practically'],
       ],
       aether: [
         [/\bproblem\b/gi, 'pattern'],
-        [/\bfix\b/gi, 'integrate'],
+        [/\bfix\s+this\b/gi, 'integrate this'],
+        [/\bissue\b/gi, 'dynamic'],
       ],
     };
     let t = s;
@@ -158,21 +174,27 @@ export class SesameMayaRefiner {
   }
 
   private tightenStyle(s: string) {
-    // remove double spaces, collapse hedges/repeats
+    // remove modern filler words and hedge language for crisp communication
     return s
-      .replace(/\b(kind of|sort of|a bit|just|really)\b/gi, '')
+      .replace(/\b(kind of|sort of|a bit|just|really|like,|you know,)\b/gi, '')
       .replace(/\bI\s+think\s+that\b/gi, 'I think')
+      .replace(/\bthat\s+being\s+said\b/gi, '')
       .replace(/\byou\s+can\s+you\s+can\b/gi, 'you can')
+      .replace(/\bat\s+the\s+end\s+of\s+the\s+day\b/gi, 'ultimately')
+      .replace(/\bbasically\b/gi, '')
+      .replace(/\bobviously\b/gi, '')
       .replace(/\s{2,}/g, ' ')
       .replace(/ ,/g, ',');
   }
 
   private softenEdges(s: string) {
-    // gentle softener without altering meaning
+    // gentle but confident phrasing - modern and supportive
     return s
-      .replace(/\b(you need to|you have to)\b/gi, 'you might')
-      .replace(/\b(don't)\b/gi, "let's avoid")
-      .replace(/\b(always|never)\b/gi, 'often');
+      .replace(/\b(you need to|you have to)\b/gi, 'you can')
+      .replace(/\byou should\b/gi, 'you might')
+      .replace(/\bdon\'t\s+([a-z]+)\b/gi, 'consider not $1ing')  // "don't worry" -> "consider not worrying"
+      .replace(/\b(always|never)\s+([a-z]+)\b/gi, 'often $2')  // More nuanced
+      .replace(/\byou must\b/gi, 'it helps to');
   }
 
   private addBreaths(s: string) {

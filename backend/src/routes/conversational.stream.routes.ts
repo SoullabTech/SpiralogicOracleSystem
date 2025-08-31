@@ -4,6 +4,7 @@ import { safetyService } from "../services/SafetyModerationService";
 import { logger } from "../utils/logger";
 import { SesameMayaRefiner } from "../services/SesameMayaRefiner";
 import { rateLimit } from "../middleware/rateLimit";
+import { attachSSE } from "../utils/sseRegistry";
 
 const router = Router();
 
@@ -44,6 +45,14 @@ router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
   // Disable compression for SSE to prevent buffering
   res.setHeader("Content-Encoding", "identity");
   res.flushHeaders?.();
+  
+  // Register for graceful shutdown
+  attachSSE(res);
+  
+  // Handle client disconnect
+  req.on("close", () => {
+    try { res.end(); } catch {}
+  });
 
   const send = (type: string, payload: any) =>
     res.write(`event: ${type}\n` + `data: ${JSON.stringify(payload)}\n\n`);

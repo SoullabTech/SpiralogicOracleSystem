@@ -24,8 +24,8 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
   {
     fire: {
       voiceId: "EXAVITQu4vr4xnSDxMaL", // Sarah - Bold, inspiring voice
-      personality: "Bold, inspiring, catalytic",
-      energySignature: "Fierce compassion with transformational power",
+      personality: "Bold, inspiring, action-oriented",
+      energySignature: "Dynamic energy with focused intensity",
       voiceSettings: {
         stability: 0.3, // More dynamic for fire energy
         similarity_boost: 0.9,
@@ -41,8 +41,8 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
 
     water: {
       voiceId: "XrExE9yKIg1WjnnlVkGX", // Matilda - Soft, flowing voice
-      personality: "Soft, flowing, nurturing",
-      energySignature: "Deep emotional wisdom with healing presence",
+      personality: "Gentle, intuitive, emotionally intelligent",
+      energySignature: "Flowing wisdom with empathetic presence",
       voiceSettings: {
         stability: 0.8, // More stable for water's flowing nature
         similarity_boost: 0.7,
@@ -58,8 +58,8 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
 
     earth: {
       voiceId: "pNInz6obpgDQGcFmaJgB", // Adam - Grounded, steady voice
-      personality: "Grounded, steady, wise",
-      energySignature: "Stable wisdom with practical compassion",
+      personality: "Grounded, practical, steadying",
+      energySignature: "Stable foundation with pragmatic insight",
       voiceSettings: {
         stability: 0.9, // Very stable for earth energy
         similarity_boost: 0.8,
@@ -75,8 +75,8 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
 
     air: {
       voiceId: "XB0fDUnXU5powFXDhCwa", // Charlotte - Light, clear voice
-      personality: "Light, clear, communicative",
-      energySignature: "Mental clarity with uplifting perspective",
+      personality: "Clear, articulate, intellectually curious",
+      energySignature: "Sharp mental clarity with expansive thinking",
       voiceSettings: {
         stability: 0.5, // Balanced for air's adaptability
         similarity_boost: 0.8,
@@ -91,9 +91,9 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
     },
 
     aether: {
-      voiceId: "ThT5KcBeYPX3keUQqHPh", // Dorothy - Transcendent, mystical voice
-      personality: "Transcendent, mystical, unified",
-      energySignature: "Divine wisdom with cosmic consciousness",
+      voiceId: "ThT5KcBeYPX3keUQqHPh", // Dorothy - Integrative, holistic voice
+      personality: "Integrative, holistic, synthesizing",
+      energySignature: "Unified perspective with pattern recognition",
       voiceSettings: {
         stability: 0.7, // Stable but with mystical quality
         similarity_boost: 0.6,
@@ -102,8 +102,8 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
       },
       speakingStyle: {
         pace: "slow",
-        tone: "Mystical and profound",
-        emphasis: "Spiritual concepts and unity consciousness",
+        tone: "Thoughtful and synthesizing",
+        emphasis: "Integration and holistic understanding",
       },
     },
   };
@@ -160,7 +160,7 @@ export class ArchetypalVoiceSelector {
       ...primaryProfile,
       voiceSettings: blendedSettings,
       personality: `${primaryProfile.personality} with ${secondary} integration`,
-      energySignature: `Blended ${primary}-${secondary} consciousness`,
+      energySignature: `Blended ${primary}-${secondary} perspective`,
     };
   }
 
@@ -216,16 +216,16 @@ export class ArchetypalVoiceSelector {
           );
 
       case "aether":
-        // Add mystical emphasis and transcendent pauses
+        // Add integrative emphasis and thoughtful pauses
         return text
-          .replace(/sacred/gi, '<emphasis level="strong">sacred</emphasis>')
-          .replace(/divine/gi, '<emphasis level="strong">divine</emphasis>')
+          .replace(/pattern/gi, '<emphasis level="moderate">pattern</emphasis>')
+          .replace(/integrate/gi, '<emphasis level="moderate">integrate</emphasis>')
           .replace(
-            /consciousness/gi,
-            '<emphasis level="moderate">consciousness</emphasis>',
+            /perspective/gi,
+            '<emphasis level="moderate">perspective</emphasis>',
           )
-          .replace(/unity/gi, '<emphasis level="moderate">unity</emphasis>')
-          .replace(/\./g, '.<break time="800ms"/>'); // Longer mystical pauses
+          .replace(/synthesis/gi, '<emphasis level="moderate">synthesis</emphasis>')
+          .replace(/\./g, '.<break time="600ms"/>'); // Thoughtful pauses
 
       default:
         return text;
