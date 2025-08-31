@@ -16,16 +16,16 @@ const router = Router();
 const messageLimiter = rateLimit({ windowMs: 60_000, max: 60 });
 
 /**
- * @route GET /api/v1/health
- * @description Health check for conversational service
+ * @route GET /api/v1/ops/ping  
+ * @description Lightweight uptime endpoint for external monitors
  */
-router.get('/health', (req: Request, res: Response) => {
+router.get('/ops/ping', (req: Request, res: Response) => {
+  const uptimeSeconds = Math.floor(process.uptime());
   res.json({
-    success: true,
-    service: 'conversational',
-    status: 'healthy',
-    version: '1.0.0',
-    features: ['sesame-maya-pipeline', 'voice-synthesis', 'elemental-routing']
+    ok: true,
+    uptime: uptimeSeconds,
+    timestamp: Date.now(),
+    service: 'maya'
   });
 });
 
