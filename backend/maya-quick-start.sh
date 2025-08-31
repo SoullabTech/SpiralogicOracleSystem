@@ -20,10 +20,23 @@ echo -e "${PURPLE}🔮 Maya Quick Start${NC}"
 echo "=================="
 echo ""
 
-echo -e "${BLUE}1. Cleaning up existing processes...${NC}"
+echo -e "${BLUE}1. Pre-flight API key check...${NC}"
+if [ -f "../scripts/check-keys.sh" ]; then
+    if ! ../scripts/check-keys.sh; then
+        echo -e "${RED}❌ Pre-flight check failed: API keys missing${NC}"
+        echo "Fix API keys before starting Maya server."
+        exit 1
+    fi
+    echo -e "${GREEN}✅ API keys validated${NC}"
+    echo ""
+else
+    echo -e "${YELLOW}⚠️ check-keys.sh not found, skipping API validation${NC}"
+fi
+
+echo -e "${BLUE}2. Cleaning up existing processes...${NC}"
 lsof -ti:3002 | xargs kill -9 2>/dev/null || true
 
-echo -e "${BLUE}2. Starting Sesame/Maya server...${NC}"
+echo -e "${BLUE}3. Starting Sesame/Maya server...${NC}"
 export APP_PORT=3002
 unset PORT
 nohup sh -c 'SAFE_MODE=1 NODE_ENV=development npx ts-node --transpile-only -r tsconfig-paths/register src/server-minimal.ts' > maya-server.log 2>&1 &
@@ -31,7 +44,7 @@ nohup sh -c 'SAFE_MODE=1 NODE_ENV=development npx ts-node --transpile-only -r ts
 echo "Waiting for server startup..."
 sleep 5
 
-echo -e "${BLUE}3. Validating pipeline...${NC}"
+echo -e "${BLUE}4. Validating pipeline...${NC}"
 if lsof -iTCP:3002 -sTCP:LISTEN >/dev/null 2>&1; then
     echo -e "${GREEN}✅ Server running on port 3002${NC}"
     
