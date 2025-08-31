@@ -6,17 +6,15 @@
 
 ### 1. Rotate All Exposed API Keys IMMEDIATELY
 
-**OpenAI API Key**: `[REDACTED-OPENAI-KEY]`
-- ❌ **REVOKE THIS KEY**: Go to https://platform.openai.com/api-keys
-- ✅ **GENERATE NEW KEY**: Create replacement immediately
+**Exposed API Keys** (patterns found in git history):
+- **OpenAI**: `sk-proj-[REDACTED-FOR-SECURITY]`
+- **Anthropic**: `sk-ant-api03-[REDACTED-FOR-SECURITY]`  
+- **ElevenLabs**: `sk_[REDACTED-FOR-SECURITY]`
 
-**Anthropic API Key**: `[REDACTED-ANTHROPIC-KEY]`
-- ❌ **REVOKE THIS KEY**: Go to https://console.anthropic.com/
-- ✅ **GENERATE NEW KEY**: Create replacement immediately
-
-**ElevenLabs API Key**: `[REDACTED-ELEVENLABS-KEY]`
-- ❌ **REVOKE THIS KEY**: Go to https://elevenlabs.io/app/settings/api-keys
-- ✅ **GENERATE NEW KEY**: Create replacement immediately
+**ACTION REQUIRED**:
+- ❌ **REVOKE ALL KEYS**: Check your API dashboards immediately
+- ✅ **GENERATE NEW KEYS**: Create replacements for all services
+- ✅ **UPDATE .env.local**: Use only new rotated keys
 
 ### 2. Update Configuration Files
 

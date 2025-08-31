@@ -185,7 +185,8 @@
       "Bash(cd:*)",
       "Bash(cd:*)",
       "Bash(./scripts/verify-production.sh:*)",
-      "Bash(/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/scripts/quick-test.sh:*)"
+      "Bash(/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/scripts/quick-test.sh:*)",
+      "Bash(APP_PORT=3002 ./maya-quick-start.sh)"
     ],
     "deny": []
   },
