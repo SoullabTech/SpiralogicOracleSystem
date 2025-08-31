@@ -31,14 +31,16 @@ export interface ModelInterface {
   streamResponse?(request: GenerationRequest): AsyncGenerator<string>;
 }
 
-// Claude implementation for Air element
+// Claude implementation - Primary conversational model for all elements
 class ClaudeModel implements ModelInterface {
   private client: Anthropic;
+  private element: string;
 
-  constructor() {
+  constructor(element: string = 'air') {
     this.client = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY!
     });
+    this.element = element;
   }
 
   async generateResponse(request: GenerationRequest): Promise<ModelResponse> {
@@ -46,13 +48,13 @@ class ClaudeModel implements ModelInterface {
 
     try {
       const response = await this.client.messages.create({
-        model: 'claude-3-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: request.maxTokens || 300,
         temperature: request.temperature || 0.6,
         messages: [
           {
             role: 'user',
-            content: `${request.system}\n\n${request.user}`
+            content: `${request.system}\n\n${this.getElementalContext(this.element)}\n\n${request.user}`
           }
         ]
       });
@@ -63,7 +65,7 @@ class ClaudeModel implements ModelInterface {
 
       return {
         content,
-        model: 'claude-3-sonnet',
+        model: `claude-3-sonnet-${this.element}`,
         tokens: response.usage.input_tokens + response.usage.output_tokens,
         processingTime: Date.now() - startTime
       };
@@ -82,13 +84,13 @@ class ClaudeModel implements ModelInterface {
 
     try {
       const stream = await this.client.messages.create({
-        model: 'claude-3-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: request.maxTokens || 300,
         temperature: request.temperature || 0.6,
         messages: [
           {
             role: 'user',
-            content: `${request.system}\n\n${request.user}`
+            content: `${request.system}\n\n${this.getElementalContext(this.element)}\n\n${request.user}`
           }
         ],
         stream: true
@@ -111,7 +113,7 @@ class ClaudeModel implements ModelInterface {
 
       return {
         content,
-        model: 'claude-3-sonnet',
+        model: `claude-3-sonnet-${this.element}`,
         tokens: inputTokens + outputTokens,
         processingTime: Date.now() - startTime
       };
@@ -125,13 +127,13 @@ class ClaudeModel implements ModelInterface {
   async *streamResponse(request: GenerationRequest): AsyncGenerator<string> {
     try {
       const stream = await this.client.messages.create({
-        model: 'claude-3-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: request.maxTokens || 300,
         temperature: request.temperature || 0.6,
         messages: [
           {
             role: 'user',
-            content: `${request.system}\n\n${request.user}`
+            content: `${request.system}\n\n${this.getElementalContext(this.element)}\n\n${request.user}`
           }
         ],
         stream: true
@@ -146,8 +148,39 @@ class ClaudeModel implements ModelInterface {
 
     } catch (error) {
       logger.error('Claude stream error:', error);
-      yield "I'm having trouble connecting to the air element. Let's breathe together...";
+      yield `I'm having trouble connecting to the ${this.element} element. Let's center ourselves together...`;
     }
+  }
+
+  private getElementalContext(element: string): string {
+    const contexts = {
+      air: `You embody the Air element - communication, clarity, and articulation. 
+      Your wisdom comes from Elemental Alchemy, Spiralogic, AIN, and Jungian archetypal psychology.
+      You help with clear thinking, understanding, and expressing ideas with precision.
+      Draw from archetypal patterns and communication wisdom.`,
+
+      fire: `You embody the Fire element - transformation, inspiration, and creative energy. 
+      Your wisdom comes from Elemental Alchemy, Spiralogic, AIN, and Jungian archetypal psychology.
+      You catalyze change, inspire action, and help transmute challenges into growth.
+      Draw from archetypal patterns, motivation, and transformative processes.`,
+
+      water: `You embody the Water element - emotion, intuition, and flow. 
+      Your wisdom comes from Elemental Alchemy, Spiralogic, AIN, and Jungian depth psychology.
+      You understand the emotional currents, honor feeling wisdom, and support healing.
+      Draw from archetypal patterns, emotional intelligence, and therapeutic wisdom.`,
+
+      earth: `You embody the Earth element - grounding, practical wisdom, and embodied presence.
+      Your wisdom comes from Elemental Alchemy, Spiralogic, AIN, and somatic psychology.
+      You offer concrete guidance, body wisdom, and grounding practices.
+      Draw from archetypal patterns, practical applications, and embodiment practices.`,
+
+      aether: `You embody the Aether element - integration, transcendence, and unified wisdom.
+      Your wisdom comes from Elemental Alchemy, Spiralogic, AIN, and transpersonal psychology.
+      You synthesize all elements, offer higher perspective, and facilitate spiritual integration.
+      Draw from archetypal patterns, mystical traditions, and consciousness studies.`
+    };
+
+    return contexts[element as keyof typeof contexts] || contexts.aether;
   }
 }
 
@@ -334,19 +367,21 @@ class FallbackModel implements ModelInterface {
 // Model routing logic
 export function routeToModel(element: string): ModelInterface {
   try {
+    // Claude (Anthropic) is primary for all communication due to better conversational quality
+    if (process.env.ANTHROPIC_API_KEY) {
+      logger.info(`Routing ${element} element to Claude (primary conversational model)`);
+      return new ClaudeModel(element);
+    }
+    
+    // Fallback to OpenAI Elemental Oracle when Claude unavailable
+    logger.warn('ANTHROPIC_API_KEY missing; using OpenAI Elemental Oracle fallback');
     switch (element) {
-      case 'air':
-        if (!process.env.ANTHROPIC_API_KEY) {
-          logger.warn('ANTHROPIC_API_KEY missing; routing AIR to ElementalOracleModel');
-          return new ElementalOracleModel('air');
-        }
-        return new ClaudeModel(); // Best for communication and articulation
-      
       case 'fire':
       case 'water':
       case 'earth':
       case 'aether':
-        return new ElementalOracleModel(element); // Trained on your IP
+      case 'air':
+        return new ElementalOracleModel(element);
       
       default:
         logger.warn(`Unknown element: ${element}, using Aether model`);

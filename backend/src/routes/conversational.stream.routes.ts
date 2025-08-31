@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { routeToModel } from "../services/ElementalIntelligenceRouter";
 import { safetyService } from "../services/SafetyModerationService";
 import { logger } from "../utils/logger";
+import { SesameMayaRefiner } from "../services/SesameMayaRefiner";
 
 const router = Router();
 
@@ -53,12 +54,26 @@ router.get("/stream", async (req: Request, res: Response) => {
     // Let the client prep voice pipeline
     send("meta", { element, lang, model: element === 'air' ? 'claude-3-sonnet' : 'elemental-oracle-2.0' });
 
-    // Route to the right upstream (Claude for air, Oracle/OpenAI for others)
+    // Route to the right upstream (Claude primary, fallback to OpenAI)
     const model = routeToModel(element);
 
-    // Check if model supports streaming
-    if (!model.generateStreamingResponse) {
-      // Fallback to regular response
+    // Initialize Sesame/Maya refiner with feature flags
+    const refiner = new SesameMayaRefiner({
+      element: element as any,
+      userId,
+      styleTightening: process.env.MAYA_STYLE_TIGHT !== '0',
+      safetySoften: process.env.MAYA_SOFTEN_SAFETY !== '0', 
+      addClosers: true,
+      tts: {
+        breathMarks: process.env.MAYA_BREATH_MARKS !== '0',
+        phraseMinChars: 36,
+        phraseMaxChars: 120
+      }
+    });
+
+    // Check if model supports AsyncGenerator streaming
+    if (!model.streamResponse) {
+      // Fallback to regular response with refiner
       const response = await model.generateResponse({
         system: `You are Maya, a mystical oracle guide embodying the ${element} element. Provide wisdom that helps with personal transformation and spiritual growth.`,
         user: userText,
@@ -66,14 +81,17 @@ router.get("/stream", async (req: Request, res: Response) => {
         maxTokens: 300
       });
       
+      // Apply Sesame/Maya refinement
+      const refined = refiner.refineText(response.content);
+      
       // Send as single chunk
-      send("delta", { text: response.content });
+      send("delta", { text: refined });
       send("done", { reason: "complete", metadata: { model: response.model, tokens: response.tokens } });
       res.end();
       return;
     }
 
-    // Stream from the model with token-by-token delivery
+    // Stream from Claude → Sesame/Maya refiner → client
     let totalText = '';
     let tokenCount = 0;
 
@@ -81,28 +99,31 @@ router.get("/stream", async (req: Request, res: Response) => {
     const heartbeat = setInterval(() => send("heartbeat", { t: Date.now() }), 15000);
 
     try {
-      const streamResponse = await model.generateStreamingResponse({
+      // Get raw stream from upstream model
+      const upstream = model.streamResponse({
         system: `You are Maya, a mystical oracle guide embodying the ${element} element. 
                  Provide wisdom that helps with personal transformation and spiritual growth.
                  Keep responses natural, humane, and specific to their situation.`,
         user: userText,
         temperature: 0.7,
         maxTokens: 300
-      }, (token: string) => {
-        // Send each token as it arrives
-        totalText += token;
-        tokenCount++;
-        send("delta", { text: token });
       });
+
+      // Pass through Sesame/Maya refiner for real-time enhancement
+      for await (const refinedPhrase of refiner.refineStream(upstream)) {
+        totalText += refinedPhrase;
+        tokenCount++;
+        send("delta", { text: refinedPhrase });
+      }
 
       clearInterval(heartbeat);
       send("done", { 
         reason: "complete", 
         metadata: { 
-          model: streamResponse.model, 
-          tokens: streamResponse.tokens,
-          processingTime: streamResponse.processingTime,
-          totalText: totalText.length
+          model: `claude-${element}-maya-refined`, 
+          tokens: tokenCount,
+          totalText: totalText.length,
+          refined: true
         } 
       });
 

@@ -174,7 +174,14 @@
       "Bash(APP_PORT=3002 npm run start:minimal)",
       "Bash(APP_PORT=3002 node src/server-minimal.js)",
       "Bash(APP_PORT=3002 ./start-backend.sh)",
-      "Bash(./start-backend.sh:*)"
+      "Bash(./start-backend.sh:*)",
+      "Bash(./maya-quick-start.sh)",
+      "Bash(cd:*)",
+      "Bash(cd:*)",
+      "Bash(cd:*)",
+      "Bash(cd:*)",
+      "Bash(cd:*)",
+      "Bash(cd:*)"
     ],
     "deny": []
   },

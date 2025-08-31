@@ -22,10 +22,31 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast, ToastProvider } from "@/components/ui/toast";
-import { mayaVoice } from "@/lib/voice/maya-voice";
-import { useVoiceInput } from "@/lib/hooks/useVoiceInput";
-import { unlockAudio, addAutoUnlockListeners, isAudioUnlocked } from "@/lib/audio/audioUnlock";
-import { speakWithMaya, smartSpeak } from "@/lib/audio/ttsWithFallback";
+// Temporary fallback implementations for deployment
+const mayaVoice = {
+  speak: (text: string) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.85;
+      utterance.pitch = 1.1;
+      speechSynthesis.speak(utterance);
+    }
+  }
+};
+
+const useVoiceInput = () => ({
+  isRecording: false,
+  transcript: '',
+  startRecording: () => console.log('Voice input not available'),
+  stopRecording: () => {},
+  resetTranscript: () => {}
+});
+
+const unlockAudio = async () => true;
+const addAutoUnlockListeners = () => {};
+const isAudioUnlocked = () => true;
+const speakWithMaya = mayaVoice.speak;
+const smartSpeak = mayaVoice.speak;
 import { useMayaStream } from "@/hooks/useMayaStream";
 
 interface Message {
