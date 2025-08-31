@@ -120,7 +120,7 @@ export function useMayaStream() {
       
       buffer = "";
       setIsStreaming(false);
-      setMetadata(prev => ({ ...prev, ...doneData }));
+      setMetadata((prev: any) => ({ ...prev, ...doneData }));
       
       eventSource.close();
       currentEventSource.current = null;
