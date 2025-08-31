@@ -3,15 +3,19 @@ import { routeToModel } from "../services/ElementalIntelligenceRouter";
 import { safetyService } from "../services/SafetyModerationService";
 import { logger } from "../utils/logger";
 import { SesameMayaRefiner } from "../services/SesameMayaRefiner";
+import { rateLimit } from "../middleware/rateLimit";
 
 const router = Router();
+
+// ~30 streams per minute per IP for SSE endpoints
+const streamLimiter = rateLimit({ windowMs: 60_000, max: 30 });
 
 /**
  * GET /api/v1/converse/stream
  * Query: ?element=air|fire|water|earth|aether&userId=...&lang=en-US&q=userText
  * Header: Accept: text/event-stream
  */
-router.get("/stream", async (req: Request, res: Response) => {
+router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
   // Feature flag to disable streaming in prod if needed
   if (process.env.STREAMING_ENABLED === '0') {
     return res.status(503).json({ success: false, error: 'Streaming disabled' });

@@ -7,8 +7,13 @@ import { Router, Request, Response } from 'express';
 import { conversationalPipeline, ConversationalContext } from '../services/ConversationalPipeline';
 import { safetyService } from '../services/SafetyModerationService';
 import { logger } from '../utils/logger';
+import { rateLimit } from '../middleware/rateLimit';
 
 const router = Router();
+
+// Rate limiters for production protection
+// ~60 POSTs per minute per IP for text requests
+const messageLimiter = rateLimit({ windowMs: 60_000, max: 60 });
 
 /**
  * @route GET /api/v1/health
@@ -173,7 +178,7 @@ router.post('/stream', async (req: Request, res: Response) => {
  * @route POST /api/v1/converse/message
  * @description Main conversational endpoint - Sesame/Maya pipeline (non-streaming)
  */
-router.post('/message', async (req: Request, res: Response) => {
+router.post('/message', messageLimiter, async (req: Request, res: Response) => {
   try {
     const {
       userText,
