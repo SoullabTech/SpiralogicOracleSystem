@@ -1,6 +1,6 @@
 // oracle-backend/routes/oracle/reflection.ts
 import express from "express";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 const router = express.Router();
 

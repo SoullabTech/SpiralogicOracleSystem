@@ -10,9 +10,9 @@ import {
   AuthenticationError,
   AuthorizationError,
   NotFoundError,
-} from "@/utils/errors";
-import { logger } from "@/utils/logger";
-import { config } from "@/config";
+} from "../utils/errors";
+import { logger } from "../utils/logger";
+import { config } from "../config";
 
 // ===============================================
 // ENHANCED ERROR TYPES

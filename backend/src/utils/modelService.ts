@@ -17,6 +17,20 @@ class ModelService {
     const { input, userId, context = {} } = query;
 
     try {
+      // Check if OpenAI API key is available
+      if (!process.env.OPENAI_API_KEY) {
+        logger.warn("⚠️ OpenAI API key not set, returning fallback response");
+        return {
+          response: "The oracle channels are realigning. Please ensure your configuration is complete.",
+          confidence: 0.5,
+          metadata: {
+            timestamp: new Date().toISOString(),
+            context,
+            fallback: true,
+          } as any,
+        };
+      }
+
       logger.info("🔮 Sending query to model", { userId, input });
 
       const completion = await openai.chat.completions.create({
@@ -60,7 +74,17 @@ class ModelService {
         userId,
         input,
       });
-      throw error;
+      
+      // Return fallback response instead of throwing
+      return {
+        response: "The oracle channels are temporarily disrupted. Please try again.",
+        confidence: 0.3,
+        metadata: {
+          timestamp: new Date().toISOString(),
+          context,
+          error: error instanceof Error ? error.message : "Unknown error",
+        } as any,
+      };
     }
   }
 }

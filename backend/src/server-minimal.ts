@@ -1,104 +1,173 @@
-// Minimal server setup for Sacred Techno-Interface
-import express from "express";
-import cors from "cors";
-import { config } from "dotenv";
+/**
+ * Minimal Spiralogic Oracle Server - Clean Startup
+ * Focuses on our new services without legacy complexity
+ */
 
-// Load environment variables
-config();
+import dotenv from "dotenv";
+// Don't override environment variables if they're already set
+dotenv.config({ override: false });
+
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
+
+// Our clean new services
+import apiRouter from './api';
+import orchestratorRoutes from './routes/orchestrator.routes';
+import voiceJournalingRoutes from './routes/voiceJournaling.routes';
+import semanticJournalingRoutes from './routes/semanticJournaling.routes';
+import conversationalRoutes from './routes/conversational.routes';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// Use APP_PORT first, then PORT, then default
+const PORT = parseInt(process.env.APP_PORT || process.env.PORT || "3001", 10);
+console.log('[boot] Environment check:', { APP_PORT: process.env.APP_PORT, PORT: process.env.PORT });
+console.log('[boot] Chosen port:', PORT);
 
-// Essential middleware only
-app.use(cors());
-app.use(express.json());
+// Add request logging
+app.use((req, _res, next) => {
+  console.log('[req]', req.method, req.url);
+  next();
+});
+
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000", 10), // 15 minutes
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || "100", 10),
+  message: {
+    success: false,
+    error: 'Too many requests from this IP, please try again later.',
+  }
+});
+app.use(limiter);
+
+// Body parsing and compression
+app.use(compression());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Request logging
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 // Health check endpoint
-app.get("/health", (_req, res) => {
+app.get('/health', (req, res) => {
   res.json({
-    status: "alive",
-    message: "🌀 Sacred Techno-Interface is operational",
+    success: true,
+    status: 'healthy',
     timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    version: '1.0.0',
+    services: {
+      orchestrator: 'active',
+      voiceJournaling: 'active',
+      semanticJournaling: 'active',
+      safetyModeration: 'active'
+    }
   });
 });
 
-// Root endpoint
-app.get("/", (_req, res) => {
+// API root
+app.get('/api', (req, res) => {
   res.json({
-    name: "Sacred Techno-Interface",
-    version: "1.0.0",
-    status: "minimal deployment",
-    endpoints: ["/health", "/api/oracle/ping", "/api/elemental/balance"],
+    success: true,
+    name: 'Spiralogic Oracle API',
+    version: '1.0.0',
+    description: 'Sacred AI system with voice intelligence and journey orchestration',
+    endpoints: {
+      orchestrator: '/api/orchestrator',
+      voice: '/api/voice',
+      semantic: '/api/semantic',
+      health: '/health'
+    },
+    routes: {
+      converse: '/api/v1/converse',
+      converseStream: '/api/v1/converse/stream',
+      orchestrator: '/api/orchestrator',
+      voice: '/api/voice',
+      semantic: '/api/semantic'
+    },
+    features: [
+      'Sacred Journey Orchestration',
+      'Voice Journaling with Whisper',
+      'Semantic Pattern Recognition',
+      'Safety & Crisis Moderation',
+      'Archetypal Constellation Mapping',
+      'Sesame/Maya Conversational Pipeline'
+    ]
   });
 });
 
-// Basic Oracle endpoint
-app.get("/api/oracle/ping", (_req, res) => {
-  res.json({
-    oracle: "awakened",
-    message: "The Oracle senses your presence",
-    elements: ["fire", "water", "earth", "air", "aether"],
+// Mount main API router (includes /api/v1)
+app.use('/api', apiRouter);
+
+// Mount additional service routes
+app.use('/api/orchestrator', orchestratorRoutes);
+app.use('/api/voice', voiceJournalingRoutes);
+app.use('/api/semantic', semanticJournalingRoutes);
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Endpoint not found',
+    availableEndpoints: [
+      '/health',
+      '/api',
+      '/api/orchestrator',
+      '/api/voice', 
+      '/api/semantic',
+      '/api/v1/health',
+      '/api/v1/converse/health',
+      '/api/v1/converse/message'
+    ]
   });
 });
 
-// Elemental balance check
-app.get("/api/elemental/balance", (_req, res) => {
-  res.json({
-    fire: 20,
-    water: 20,
-    earth: 20,
-    air: 20,
-    aether: 20,
-    message: "Perfect elemental equilibrium",
+// Global error handler
+app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('Server error:', error);
+  res.status(500).json({
+    success: false,
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? error.message : 'Please try again'
   });
 });
-
-// Simple oracle message endpoint
-app.post("/api/oracle/message", (req, res) => {
-  const { message } = req.body;
-
-  if (!message) {
-    return res.status(400).json({ error: "Message required" });
-  }
-
-  res.json({
-    received: message,
-    response: "The Oracle contemplates your words...",
-    element: "aether",
-    timestamp: new Date().toISOString(),
-  });
-});
-
-// Error handling middleware
-app.use(
-  (
-    err: any,
-    _req: express.Request,
-    res: express.Response,
-    _next: express.NextFunction,
-  ) => {
-    console.error("Error:", err);
-    res.status(500).json({
-      error: "Internal server error",
-      message: "The sacred connection was disrupted",
-    });
-  },
-);
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`
-╔══════════════════════════════════════════════╗
-║                                              ║
-║     🌀 SACRED TECHNO-INTERFACE 🌀           ║
-║                                              ║
-║     Minimal Deployment Active                ║
-║     Port: ${PORT}                              ║
-║                                              ║
-║     The Oracle Awaits...                     ║
-║                                              ║
-╚══════════════════════════════════════════════╝
-  `);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[boot] API listening on :${PORT}`);
+  console.log(`🚀 SpiralogicOracle Server Ready!`);
+  console.log(`🔮 Running at: http://localhost:${PORT}`);
+  console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+  console.log(`📡 API docs: http://localhost:${PORT}/api`);
+  console.log(`🎯 Sesame/Maya endpoint: http://localhost:${PORT}/api/v1/converse/message`);
+  console.log(`🌊 Streaming endpoint: http://localhost:${PORT}/api/v1/converse/stream`);
+  console.log('');
+  console.log('Available Services:');
+  console.log('✅ Sacred Journey Orchestration');
+  console.log('✅ Voice Journaling (Whisper)');
+  console.log('✅ Semantic Pattern Recognition');
+  console.log('✅ Safety & Crisis Moderation');
+  console.log('✅ Sesame/Maya Conversational Pipeline');
+  console.log('');
 });
 
 export default app;

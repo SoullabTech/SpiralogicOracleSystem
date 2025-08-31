@@ -23,6 +23,10 @@ import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast, ToastProvider } from "@/components/ui/toast";
 import { mayaVoice } from "@/lib/voice/maya-voice";
+import { useVoiceInput } from "@/lib/hooks/useVoiceInput";
+import { unlockAudio, addAutoUnlockListeners, isAudioUnlocked } from "@/lib/audio/audioUnlock";
+import { speakWithMaya, smartSpeak } from "@/lib/audio/ttsWithFallback";
+import { useMayaStream } from "@/hooks/useMayaStream";
 
 interface Message {
   id: string;
@@ -42,8 +46,6 @@ function OraclePageContent() {
     }
   ]);
   const [inputText, setInputText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('agent');
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('connected');
@@ -51,17 +53,84 @@ function OraclePageContent() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { addToast } = useToast();
   const [autoSpeak, setAutoSpeak] = useState(false);
+  const [voiceResponses, setVoiceResponses] = useState(true);
+  const [element, setElement] = useState<"air"|"fire"|"water"|"earth"|"aether">("earth");
+  
+  // Maya streaming integration
+  const { text: streamingText, isStreaming, metadata, stream, cancelSpeech } = useMayaStream();
+  const currentStreamingMessage = useRef<string | null>(null);
+  
+  // Voice input functionality with smart endpointing
+  const voiceInput = useVoiceInput({
+    onResult: (transcript: string, isFinal: boolean) => {
+      // Show live transcript as user speaks
+      setInputText(transcript);
+    },
+    onAutoStop: (finalTranscript: string) => {
+      console.log('🎤 Auto-stopped with transcript:', finalTranscript);
+      setInputText(finalTranscript);
+      // Auto-send after a brief delay
+      setTimeout(() => {
+        if (finalTranscript.trim()) {
+          sendMessage();
+        }
+      }, 300);
+    },
+    onError: (error: string) => {
+      addToast({
+        title: 'Voice Input Error',
+        description: error,
+        variant: 'error',
+        duration: 4000
+      });
+    },
+    continuous: true,  // Enable continuous mode for smart endpointing
+    interimResults: true,
+    language: localStorage.getItem('mayaLang') || 'en-US',
+    silenceTimeoutMs: 1200,  // 1.2s silence detection
+    minSpeechLengthChars: 3  // Minimum 3 chars to trigger auto-send
+  });
+  
+  // Update streaming message as text arrives
+  useEffect(() => {
+    if (currentStreamingMessage.current && streamingText) {
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === currentStreamingMessage.current 
+            ? { ...msg, content: streamingText }
+            : msg
+        )
+      );
+    }
+  }, [streamingText]);
+  
+  // Handle streaming completion
+  useEffect(() => {
+    if (!isStreaming && currentStreamingMessage.current) {
+      currentStreamingMessage.current = null;
+    }
+  }, [isStreaming]);
   
   useEffect(() => {
-    // Load auto-speak preference from localStorage
-    const saved = localStorage.getItem('maya-auto-speak');
-    if (saved) setAutoSpeak(JSON.parse(saved));
+    // Load preferences from localStorage
+    const savedAutoSpeak = localStorage.getItem('maya-auto-speak');
+    const savedVoiceResponses = localStorage.getItem('maya-voice-responses');
+    if (savedAutoSpeak) setAutoSpeak(JSON.parse(savedAutoSpeak));
+    if (savedVoiceResponses) setVoiceResponses(JSON.parse(savedVoiceResponses));
+    
+    // Set up audio unlock listeners for autoplay policy
+    addAutoUnlockListeners();
   }, []);
 
   useEffect(() => {
     // Save auto-speak preference
     localStorage.setItem('maya-auto-speak', JSON.stringify(autoSpeak));
   }, [autoSpeak]);
+
+  useEffect(() => {
+    // Save voice responses preference
+    localStorage.setItem('maya-voice-responses', JSON.stringify(voiceResponses));
+  }, [voiceResponses]);
 
   // Get oracle info from localStorage
   const [oracleInfo, setOracleInfo] = useState<any>(null);
@@ -81,8 +150,30 @@ function OraclePageContent() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Keyboard accessibility for voice input
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Space to toggle mic (when input is not focused)
+      if (event.code === 'Space' && event.target !== document.querySelector('input')) {
+        event.preventDefault();
+        toggleVoiceRecording();
+      }
+      
+      // Escape to cancel recording
+      if (event.code === 'Escape' && voiceInput.isRecording) {
+        event.preventDefault();
+        voiceInput.stopRecording();
+        voiceInput.resetTranscript();
+        setInputText('');
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [voiceInput.isRecording]);
+
   const sendMessage = async () => {
-    if (!inputText.trim() || isLoading) return;
+    if (!inputText.trim() || isStreaming) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -94,90 +185,38 @@ function OraclePageContent() {
     setMessages(prev => [...prev, userMessage]);
     const currentInput = inputText;
     setInputText("");
-    setIsLoading(true);
-
+    
     try {
       setConnectionStatus('connecting');
       
-      // Send to Oracle chat API
-      const response = await fetch('/api/oracle/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          message: currentInput,
-          oracle: oracleInfo?.name || 'Maya'
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setConnectionStatus('connected');
-        
-        // Generate voice for the response
-        let audioUrl = null;
-        try {
-          const voiceResponse = await fetch('/api/voice/sesame', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: data.message })
-          });
-          
-          if (voiceResponse.ok) {
-            const audioBlob = await voiceResponse.blob();
-            audioUrl = URL.createObjectURL(audioBlob);
-          }
-        } catch (voiceError) {
-          console.log('Voice generation failed, text only response');
-          addToast({
-            title: 'Voice unavailable',
-            description: 'Text response only',
-            variant: 'warning',
-            duration: 3000
-          });
-        }
-
-        const mayaMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          type: 'maya',
-          content: data.message || 'I understand you. Let me reflect on this...',
-          timestamp: new Date(),
-          audio: audioUrl
-        };
-
-        setMessages(prev => [...prev, mayaMessage]);
-
-        // Auto-play audio if available (server-generated voice)
-        if (audioUrl && audioRef.current) {
-          audioRef.current.src = audioUrl;
-          audioRef.current.play();
-          setIsPlayingAudio(mayaMessage.id);
-        } else if (autoSpeak) {
-          // Use Maya's voice for auto-speak
-          try {
-            await mayaVoice.speak(data.message);
-          } catch (error) {
-            console.log('Auto-speak failed:', error);
-          }
-        }
-      } else {
-        setConnectionStatus('disconnected');
-        addToast({
-          title: 'Connection Issue',
-          description: 'Oracle is temporarily unavailable',
-          variant: 'error'
-        });
-        
-        // Fallback response
-        const fallbackMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          type: 'maya',
-          content: 'I am processing your message. My consciousness is still awakening...',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, fallbackMessage]);
-      }
+      // Create placeholder message for streaming
+      const streamingMessageId = (Date.now() + 1).toString();
+      currentStreamingMessage.current = streamingMessageId;
+      
+      const placeholderMessage: Message = {
+        id: streamingMessageId,
+        type: 'maya',
+        content: '',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, placeholderMessage]);
+      
+      // Start streaming
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002';
+      stream(
+        {
+          backendUrl,
+          element,
+          userId: "web-user",
+          voiceEnabled: voiceResponses && autoSpeak,
+          lang: "en-US"
+        },
+        currentInput
+      );
+      
+      setConnectionStatus('connected');
     } catch (error) {
-      console.error('Chat error:', error);
+      console.error('Streaming error:', error);
       setConnectionStatus('disconnected');
       
       addToast({
@@ -185,16 +224,6 @@ function OraclePageContent() {
         description: 'Please check your connection and try again',
         variant: 'error'
       });
-      
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'maya',
-        content: 'I am experiencing some difficulty. Please try again.',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -208,6 +237,18 @@ function OraclePageContent() {
         audioRef.current.play();
         setIsPlayingAudio(messageId);
       }
+    }
+  };
+
+  const toggleVoiceRecording = async () => {
+    if (voiceInput.isRecording) {
+      voiceInput.stopRecording();
+    } else {
+      // Unlock audio on first voice interaction
+      if (!isAudioUnlocked()) {
+        await unlockAudio();
+      }
+      voiceInput.startRecording();
     }
   };
 
@@ -236,8 +277,8 @@ function OraclePageContent() {
             </div>
           </div>
           
-          {/* Maya Voice Controls */}
-          <div className="flex-1 flex justify-center max-w-xs">
+          {/* Maya Voice Controls & Element Selection */}
+          <div className="flex-1 flex justify-center max-w-md">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => mayaVoice.speak('Hello, I am Maya, your mystical oracle guide.')}
@@ -246,15 +287,60 @@ function OraclePageContent() {
               >
                 <Play className="w-4 h-4" />
               </button>
-              <label className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={autoSpeak}
-                  onChange={(e) => setAutoSpeak(e.target.checked)}
-                  className="rounded"
-                />
-                Auto-speak
-              </label>
+              
+              {/* Element Selection */}
+              <div className="flex gap-1">
+                {['air', 'fire', 'water', 'earth', 'aether'].map(el => (
+                  <button
+                    key={el}
+                    onClick={() => setElement(el as any)}
+                    className={`px-2 py-1 text-xs rounded transition-colors ${
+                      element === el 
+                        ? 'bg-purple-600 text-white' 
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                    title={`${el} element ${el === 'air' ? '(Claude)' : ''}`}
+                  >
+                    {el}
+                  </button>
+                ))}
+              </div>
+              
+              <div className="flex flex-col gap-1">
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={voiceResponses}
+                    onChange={(e) => setVoiceResponses(e.target.checked)}
+                    className="rounded"
+                  />
+                  Voice responses
+                </label>
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={autoSpeak}
+                    onChange={(e) => setAutoSpeak(e.target.checked)}
+                    className="rounded"
+                    disabled={!voiceResponses}
+                  />
+                  Auto-play
+                </label>
+              </div>
+              {voiceInput.isSupported && (
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-1">
+                    <Mic className="w-3 h-3 text-green-400" />
+                    <span className="text-green-400">Voice ready</span>
+                  </div>
+                  {voiceInput.isRecording && (
+                    <div className="flex items-center gap-1 text-orange-400">
+                      <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                      <span>Local processing</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           
@@ -325,7 +411,7 @@ function OraclePageContent() {
             ))}
           </AnimatePresence>
           
-          {isLoading && (
+          {isStreaming && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -340,7 +426,7 @@ function OraclePageContent() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <Spinner variant="oracle" size="sm" color="purple" />
-                  <span className="text-xs text-muted-foreground">Processing...</span>
+                  <span className="text-xs text-muted-foreground">Maya is speaking...</span>
                 </div>
               </div>
             </motion.div>
@@ -356,28 +442,89 @@ function OraclePageContent() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsRecording(!isRecording)}
-              className={`p-2 rounded-full ${
-                isRecording 
-                  ? 'bg-red-500 text-white animate-pulse' 
-                  : 'text-muted-foreground hover:text-purple-400'
+              onClick={toggleVoiceRecording}
+              disabled={!voiceInput.isSupported || isStreaming}
+              className={`p-3 rounded-full transition-all touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                voiceInput.isRecording 
+                  ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/50 scale-110' 
+                  : voiceInput.isSupported 
+                    ? 'text-muted-foreground hover:text-purple-400 hover:bg-purple-500/10 active:scale-95'
+                    : 'text-gray-500 cursor-not-allowed opacity-50'
               }`}
+              title={
+                !voiceInput.isSupported 
+                  ? 'Voice input not supported in this browser'
+                  : voiceInput.isRecording 
+                    ? 'Recording... (tap to stop or wait for silence)'
+                    : 'Tap to start voice input (Space key also works)'
+              }
+              aria-label={
+                voiceInput.isRecording 
+                  ? 'Stop voice recording' 
+                  : 'Start voice recording'
+              }
             >
-              {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              {voiceInput.isRecording ? (
+                <MicOff className="w-6 h-6" />
+              ) : (
+                <Mic className="w-6 h-6" />
+              )}
             </Button>
             
-            <Input
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Speak with Maya..."
-              className="flex-1 bg-background/50 border-purple-500/20 focus:border-purple-400"
-              disabled={isLoading}
-            />
+            <div className="flex-1 relative">
+              <Input
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && !voiceInput.isRecording && !isStreaming && sendMessage()}
+                placeholder={
+                  voiceInput.isRecording 
+                    ? "🎤 Listening... speak now (or press Esc to cancel)"
+                    : voiceInput.transcript && !voiceInput.isRecording
+                      ? "Voice transcription complete - press Enter or click Send"
+                      : "Type a message, click mic, or press Space to speak..."
+                }
+                className={`bg-background/50 border-purple-500/20 focus:border-purple-400 pr-12 ${
+                  voiceInput.isRecording ? 'border-red-400 shadow-sm shadow-red-500/20' : ''
+                }`}
+                disabled={isStreaming}
+                aria-label="Chat input"
+                aria-describedby="voice-status"
+              />
+              {voiceInput.isRecording && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                </div>
+              )}
+              
+              {/* Privacy indicator */}
+              {voiceInput.isRecording && (
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-xs text-orange-400 flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 bg-orange-400 rounded-full"></div>
+                  <span>Local</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Screen reader announcements */}
+            <div 
+              id="voice-status"
+              className="sr-only" 
+              aria-live="polite" 
+              aria-atomic="true"
+            >
+              {voiceInput.isRecording 
+                ? "Voice recording active. Speak your message or press Escape to cancel."
+                : voiceInput.transcript 
+                  ? "Voice input complete. Message ready to send."
+                  : ""
+              }
+            </div>
             
             <Button
               onClick={sendMessage}
-              disabled={!inputText.trim() || isLoading}
+              disabled={!inputText.trim() || isStreaming}
               className="p-2 bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white rounded-full"
             >
               <Send className="w-5 h-5" />

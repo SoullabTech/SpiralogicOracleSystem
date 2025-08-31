@@ -1,7 +1,7 @@
 export { supabase } from "./supabase";
 
 import { supabase } from "./supabase";
-import { logger } from "@/utils/logger";
+import { logger } from "../utils/logger";
 // Create error helper - simplified for build fix
 function createError(message: string, status: number) {
   const error = new Error(message) as any;

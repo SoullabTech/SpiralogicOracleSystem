@@ -1,5 +1,5 @@
 import express from "express";
-import { dreamOracle } from "@/core/agents/dreamOracleAgent";
+// import { dreamOracle } from "@/core/agents/dreamOracleAgent"; // Temporarily disabled - module deleted
 
 const router = express.Router();
 
@@ -14,11 +14,16 @@ router.post("/query", async (req, res) => {
   }
 
   try {
-    const result = await dreamOracle.process({
-      userId,
-      dreamDescription,
-      context,
-    });
+    // Temporary placeholder response since dreamOracle module is deleted
+    const result = {
+      success: true,
+      message: "Dream Oracle service temporarily disabled during development setup",
+      data: {
+        userId,
+        dreamDescription,
+        placeholder: true
+      }
+    };
     res.status(200).json(result);
   } catch (err) {
     console.error("[DreamOracle Route Error]", err);

@@ -1,16 +1,40 @@
 // src/lib/openaiClient.ts
 import OpenAI from "openai";
 
-const openaiInstance = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy-load OpenAI client to prevent build failures
+let openaiInstance: OpenAI | null = null;
 
-export const openai = openaiInstance;
+function getOpenAIClient(): OpenAI {
+  if (!openaiInstance) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY environment variable is not set");
+    }
+    openaiInstance = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiInstance;
+}
+
+// Export a getter for backward compatibility
+export const openai = new Proxy({} as OpenAI, {
+  get(target, prop) {
+    const client = getOpenAIClient();
+    return client[prop as keyof OpenAI];
+  }
+});
 
 export const openaiClient = {
   async generateResponse(prompt: string) {
     try {
-      const response = await openaiInstance.chat.completions.create({
+      // Only instantiate when actually needed
+      if (!process.env.OPENAI_API_KEY) {
+        console.warn("OpenAI API key not set, returning fallback response");
+        return { content: `[Limited mode] Response for: ${prompt}` };
+      }
+      
+      const client = getOpenAIClient();
+      const response = await client.chat.completions.create({
         model: "gpt-4",
         messages: [{ role: "user", content: prompt }],
       });

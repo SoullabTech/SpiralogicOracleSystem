@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { oracle } from "@/core/agents/mainOracleAgent";
+// import { oracle } from "@/core/agents/mainOracleAgent"; // Temporarily disabled - module deleted
 
 const router = Router();
 
@@ -22,15 +22,16 @@ router.post("/respond", async (req: Request, res: Response) => {
   }
 
   try {
-    const response = await oracle.processQuery({
-      input,
-      userId,
-      context,
-      preferredElement,
-      requestShadowWork,
-      collectiveInsight,
-      harmonicResonance,
-    });
+    // Temporary placeholder response since oracle module is deleted
+    const response = {
+      success: true,
+      message: "Oracle service temporarily disabled during development setup",
+      data: {
+        input,
+        userId,
+        placeholder: true
+      }
+    };
 
     res.status(200).json(response);
   } catch (error: any) {

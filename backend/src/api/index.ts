@@ -5,6 +5,13 @@ import { Router } from "express";
 import { errorResponse } from "../utils/sharedUtilities";
 import { logger } from "../utils/logger";
 
+// Import our new route services
+import orchestratorRoutes from '../routes/orchestrator.routes';
+import voiceJournalingRoutes from '../routes/voiceJournaling.routes';
+import semanticJournalingRoutes from '../routes/semanticJournaling.routes';
+import conversationalRoutes from '../routes/conversational.routes';
+import conversationalStreamRoutes from '../routes/conversational.stream.routes';
+
 const router = Router();
 
 // API version prefix
@@ -44,6 +51,15 @@ router.get(`/${API_VERSION}/health`, (req, res) => {
 });
 
 /**
+ * Mount our new service routes
+ */
+router.use(`/${API_VERSION}/orchestrator`, orchestratorRoutes);
+router.use(`/${API_VERSION}/voice`, voiceJournalingRoutes);
+router.use(`/${API_VERSION}/semantic`, semanticJournalingRoutes);
+router.use(`/${API_VERSION}/converse`, conversationalRoutes);
+router.use(`/${API_VERSION}/converse`, conversationalStreamRoutes);
+
+/**
  * Placeholder routers for missing modules
  */
 router.use(`/${API_VERSION}/personal-oracle`, createPlaceholderRouter("Personal Oracle"));
@@ -74,6 +90,10 @@ router.get("/", (req, res) => {
       description:
         "Production-ready API for Personal Oracle Agent consultations",
       endpoints: {
+        orchestrator: `/${API_VERSION}/orchestrator`,
+        voice: `/${API_VERSION}/voice`,
+        semantic: `/${API_VERSION}/semantic`,
+        converse: `/${API_VERSION}/converse`,
         oracle: `/${API_VERSION}/oracle`,
         personalOracle: `/${API_VERSION}/personal-oracle`,
         ainEngine: `/${API_VERSION}/ain-engine`,
@@ -98,14 +118,16 @@ router.get(`/${API_VERSION}`, (req, res) => {
       buildVersion: process.env.BUILD_VERSION || "unknown",
       environment: process.env.NODE_ENV || "development",
       features: [
+        "Sacred Journey Orchestration",
+        "Voice Journaling with Whisper",
+        "Semantic Pattern Recognition",
+        "Safety & Crisis Moderation",
+        "Archetypal Constellation Mapping",
         "Personal Oracle Agent",
         "AIN Engine Public API",
         "Collective Intelligence",
         "Archetypal Processes",
         "Elemental Routing",
-        "Astrology Integration",
-        "Journal Integration",
-        "Assessment Integration",
         "Rate Limiting",
         "Authentication",
         "Developer SDK",
