@@ -26,22 +26,43 @@ router.get('/health', (req: Request, res: Response) => {
 
 /**
  * @route GET /api/v1/converse/health
- * @description Specific health check for converse endpoint
+ * @description Comprehensive health check for production monitoring
  */
 router.get('/health', (req: Request, res: Response) => {
-  res.json({
+  const healthStatus = {
     success: true,
-    endpoint: 'converse',
+    service: 'conversational',
     status: 'ready',
     pipeline: 'sesame-maya',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    features: {
+      streaming: process.env.STREAMING_ENABLED !== '0',
+      voiceSynthesis: true,
+      elementalRouting: true,
+      sesamaRefinement: process.env.MAYA_REFINE_STREAM === '1',
+      breathMarkers: process.env.MAYA_BREATH_MARKS === '1',
+      safetyModeration: process.env.SAFETY_BYPASS_TEST !== '1'
+    },
     models: {
-      air: 'claude-3-sonnet',
-      fire: 'elemental-oracle-2.0',
+      air: 'claude-3-5-sonnet',
+      fire: 'elemental-oracle-2.0', 
       water: 'elemental-oracle-2.0',
       earth: 'elemental-oracle-2.0',
       aether: 'elemental-oracle-2.0'
+    },
+    apiKeys: {
+      anthropic: !!process.env.ANTHROPIC_API_KEY,
+      openai: !!process.env.OPENAI_API_KEY,
+      elevenlabs: !!process.env.ELEVENLABS_API_KEY
+    },
+    environment: {
+      node: process.env.NODE_ENV || 'development',
+      port: process.env.APP_PORT || process.env.PORT || '3001'
     }
-  });
+  };
+
+  res.json(healthStatus);
 });
 
 /**

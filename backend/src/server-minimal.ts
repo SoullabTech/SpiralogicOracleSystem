@@ -39,12 +39,42 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration
+// CORS configuration - Production ready
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [
+  'http://localhost:3000',
+  'http://localhost:3001', 
+  'https://spiralogic-oracle-system.vercel.app',
+  'https://soullab-frontend.onrender.com'
+];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Allow any vercel.app subdomain in production
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    
+    console.warn('CORS rejected origin:', origin);
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With',
+    'Accept',
+    'Cache-Control',
+    'x-user-id',
+    'x-session-id'
+  ]
 }));
 
 // Rate limiting

@@ -28,11 +28,17 @@ router.get("/stream", async (req: Request, res: Response) => {
     return;
   }
 
-  // SSE headers
+  // SSE headers - Production optimized
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache, no-transform");
   res.setHeader("Connection", "keep-alive");
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("X-Accel-Buffering", "no"); // Disable nginx buffering
+  res.setHeader("Transfer-Encoding", "chunked");
+  
+  // Disable compression for SSE to prevent buffering
+  res.setHeader("Content-Encoding", "identity");
   res.flushHeaders?.();
 
   const send = (type: string, payload: any) =>
