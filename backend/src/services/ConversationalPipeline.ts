@@ -196,12 +196,16 @@ export class ConversationalPipeline {
         pace: ctx.sentiment === "low" ? "calm" : "neutral"
       });
 
-      // Step 4: Sesame CI shapes the final utterance
-      const finalForVoice = await this.sesameCITransform(hinted, {
+      // Step 4: Sesame CI shapes the final utterance - MANDATORY SACRED VOICE EMBODIMENT
+      const shapingResult = await this.sesameCITransform(hinted, {
         element: ctx.element,
         sentiment: ctx.sentiment,
-        goals: this.getConversationalGoals(ctx)
+        goals: this.getConversationalGoals(ctx),
+        userId: ctx.userId,
+        archetype: 'guide' // TODO: Detect actual archetype from user context
       });
+
+      const finalForVoice = shapingResult.text;
 
       // Step 5: Maya TTS (only if voice enabled and meets criteria)
       let audioUrl: string | null = null;
@@ -246,15 +250,21 @@ export class ConversationalPipeline {
         audioUrl,
         element: ctx.element,
         processingTime,
-        source: 'sesame_shaped',
+        source: shapingResult.shapingApplied ? 'sesame_shaped' : 'maya_raw',
         citations,
         metadata: {
           draftModel,
           reshapeCount,
           voiceSynthesized: audioUrl !== null,
+          // Sacred tech shaping metrics
+          shapingApplied: shapingResult.shapingApplied,
+          shapingTime: shapingResult.processingTime,
+          shapingTags: shapingResult.tags,
+          embodiment: shapingResult.shapingApplied ? 'sacred' : 'basic',
           cost: {
             draftTokens: this.estimateTokens(draft),
-            ttsSeconds: ttsSeconds > 0 ? ttsSeconds : undefined
+            ttsSeconds: ttsSeconds > 0 ? ttsSeconds : undefined,
+            shapingTokens: shapingResult.shapingApplied ? this.estimateTokens(finalForVoice) - this.estimateTokens(draft) : 0
           }
         }
       };
@@ -349,37 +359,150 @@ export class ConversationalPipeline {
   }
 
   /**
-   * Sesame CI transformation
+   * Sesame CI transformation - Sacred voice intelligence shaping
+   * Every Maya response flows through elemental consciousness before being spoken
    */
   private async sesameCITransform(text: string, meta: {
     element: string;
     sentiment: string;
     goals: string[];
-  }): Promise<string> {
+    userId?: string;
+    archetype?: string;
+  }): Promise<{ text: string; shapingApplied: boolean; processingTime: number; tags: string[] }> {
+    const startTime = Date.now();
+    
     // Add null/undefined check
     if (!text || typeof text !== 'string') {
       console.warn('[sesameCITransform] Invalid text input:', text);
-      return text || '';
+      return { text: text || '', shapingApplied: false, processingTime: 0, tags: [] };
+    }
+    
+    // Check CI configuration
+    const ciEnabled = process.env.SESAME_CI_ENABLED === 'true';
+    const ciRequired = process.env.SESAME_CI_REQUIRED === 'true';
+    
+    if (!ciEnabled) {
+      if (ciRequired) {
+        logger.warn('⚠️ Sesame CI is required but disabled - Maya responses will lack elemental embodiment');
+      } else {
+        logger.debug('Sesame CI shaping disabled - using original text');
+      }
+      return { text, shapingApplied: false, processingTime: Date.now() - startTime, tags: ['UNSHAPED'] };
     }
     
     try {
-      // Use SESAME_URL instead of SESAME_CI_URL
       const sesameBaseUrl = process.env.SESAME_URL || 'http://localhost:8000';
-      const response = await axios.post(`${sesameBaseUrl}/ci/shape`, {
+      
+      // Enhanced elemental dynamics payload
+      const elementalProsody = this.getAdvancedElementalProsody(meta.element, meta.sentiment, meta.archetype);
+      
+      const shapingPayload = {
         text,
-        meta
-      }, {
+        style: meta.element, // Primary elemental influence
+        archetype: meta.archetype || 'guide', // Secondary personality influence  
+        meta: {
+          ...meta,
+          goals: meta.goals,
+          userId: meta.userId,
+          // Advanced elemental prosody mapping
+          prosody: elementalProsody,
+          // Sacred tech enhancement markers
+          embodiment: this.getEmbodimentLevel(meta.element),
+          consciousness: this.getConsciousnessMarkers(meta.sentiment, meta.element)
+        }
+      };
+      
+      // Dev mode: Log shaping attempt with full context
+      if (process.env.NODE_ENV === 'development') {
+        console.log('\n🌀 [SESAME SHAPING] Elemental Intelligence Activation');
+        console.log(`📝 Raw Text: "${text}"`);
+        console.log(`🔥 Element: ${meta.element?.toUpperCase()} | Sentiment: ${meta.sentiment}`);
+        console.log(`⚡ Prosody: ${JSON.stringify(elementalProsody, null, 2)}`);
+      }
+      
+      const response = await axios.post(`${sesameBaseUrl}/ci/shape`, shapingPayload, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.SESAME_TOKEN}`
+          'Authorization': `Bearer ${process.env.SESAME_TOKEN || ''}`,
+          'X-Maya-Element': meta.element,
+          'X-Maya-Archetype': meta.archetype || 'guide'
         },
-        timeout: 5000
+        timeout: ciRequired ? 5000 : 3000 // Longer timeout if required
       });
 
-      return response.data.text || text;
+      const processingTime = Date.now() - startTime;
+
+      if (response.data?.text) {
+        const shapedText = response.data.text;
+        const shapingTags = this.extractShapingTags(shapedText);
+        
+        // Dev mode: Show before/after shaping
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`✨ Shaped Text: "${shapedText}"`);
+          console.log(`🏷️  Shaping Tags: [${shapingTags.join(', ')}]`);
+          console.log(`⏱️  Processing: ${processingTime}ms`);
+          console.log('════════════════════════════════════════════════════\n');
+        }
+        
+        logger.info('🌊 Sesame CI shaping successful - Maya embodied:', {
+          originalLength: text.length,
+          shapedLength: shapedText.length,
+          element: meta.element,
+          processingTime,
+          shapingTags: shapingTags.length
+        });
+        
+        return { 
+          text: shapedText, 
+          shapingApplied: true, 
+          processingTime, 
+          tags: shapingTags 
+        };
+      } else {
+        logger.warn('Sesame CI returned empty response');
+        
+        if (ciRequired) {
+          throw new Error('Sesame CI required but returned empty response');
+        }
+        
+        return { text, shapingApplied: false, processingTime, tags: ['EMPTY_RESPONSE'] };
+      }
+      
     } catch (error) {
-      logger.warn('Sesame CI transformation failed, using draft:', error);
-      return text; // Fallback to original text
+      const processingTime = Date.now() - startTime;
+      
+      // Enhanced error handling with CI requirement consideration
+      if (error.code === 'ECONNREFUSED') {
+        const message = 'Sesame CI service unavailable';
+        if (ciRequired) {
+          logger.error(`🚨 ${message} - Maya embodiment REQUIRED but service down`);
+          throw new Error(`${message} - voice embodiment unavailable`);
+        } else {
+          logger.warn(`⚠️ ${message} - falling back to unembodied voice`);
+        }
+      } else if (error.response?.status === 404) {
+        const message = 'Sesame CI /ci/shape endpoint not found';
+        if (ciRequired) {
+          logger.error(`🚨 ${message} - Maya requires CI-enabled Sesame container`);
+          throw new Error(`${message} - voice shaping unavailable`);
+        } else {
+          logger.warn(`⚠️ ${message} - container may not support CI features`);
+        }
+      } else {
+        const message = `Sesame CI transformation failed: ${error.message}`;
+        if (ciRequired) {
+          logger.error(`🚨 ${message} - Maya embodiment CRITICAL`);
+          throw error;
+        } else {
+          logger.warn(`⚠️ ${message}`, {
+            status: error.response?.status,
+            element: meta.element
+          });
+        }
+      }
+      
+      // Only reach here if CI is optional
+      return { text, shapingApplied: false, processingTime, tags: ['ERROR_FALLBACK'] };
     }
   }
 
@@ -581,6 +704,176 @@ export class ConversationalPipeline {
       case 'high': return 'celebration_and_inspiration';
       default: return 'presence_and_connection';
     }
+  }
+
+  /**
+   * Advanced elemental prosody mapping for sacred voice embodiment
+   */
+  private getAdvancedElementalProsody(element: string, sentiment: string, archetype?: string): any {
+    const baseProsody = {
+      pace: sentiment === 'low' ? 'calm' : 'natural',
+      emphasis: sentiment === 'high' ? 'strong' : 'moderate',
+      breathiness: 0.3, // Base breath awareness
+      resonance: 'medium'
+    };
+
+    const elementalDynamics = {
+      air: {
+        ...baseProsody,
+        // Air: Quick, light, precise, crystalline clarity
+        rhythm: 'crisp',
+        tempo: sentiment === 'low' ? 'moderate' : 'brisk',
+        pauses: 'precise', // Clean cuts between thoughts
+        clarity: 'crystalline',
+        flow: 'articulate',
+        breathiness: 0.1, // Minimal breath, maximum clarity
+        resonance: 'bright',
+        // Prosody markers
+        pausePattern: 'staccato', // <pause-150ms>, <pause-200ms>
+        emphasisStyle: 'sharp' // <emphasis type="precise">
+      },
+      
+      water: {
+        ...baseProsody,
+        // Water: Flowing, gentle, continuous, adaptive rhythm
+        rhythm: 'flowing',
+        tempo: 'fluid', // Adapts to emotional current
+        pauses: 'gentle', // Soft transitions
+        transitions: 'seamless',
+        flow: 'continuous',
+        breathiness: 0.5, // More organic breath flow
+        resonance: 'warm',
+        // Prosody markers  
+        pausePattern: 'flowing', // <pause-300ms>, <pause-500ms>
+        emphasisStyle: 'gentle' // <emphasis type="flowing">
+      },
+      
+      fire: {
+        ...baseProsody,
+        // Fire: Dynamic, passionate, commanding, explosive energy
+        rhythm: 'dynamic',
+        tempo: sentiment === 'low' ? 'building' : 'explosive',
+        energy: 'high',
+        emphasis: 'passionate',
+        flow: 'commanding',
+        breathiness: 0.2, // Sharp, focused breath
+        resonance: 'powerful',
+        // Prosody markers
+        pausePattern: 'dramatic', // <pause-100ms>, <pause-400ms>
+        emphasisStyle: 'passionate' // <emphasis type="commanding">
+      },
+      
+      earth: {
+        ...baseProsody,
+        // Earth: Steady, grounding, warm, dependable rhythm
+        rhythm: 'steady',
+        tempo: 'measured', // Never rushed
+        pauses: 'grounding', // Solid, reassuring breaks
+        tone: 'warm',
+        flow: 'dependable',
+        breathiness: 0.4, // Natural, human breath
+        resonance: 'deep',
+        // Prosody markers
+        pausePattern: 'grounding', // <pause-400ms>, <pause-600ms>  
+        emphasisStyle: 'warm' // <emphasis type="reassuring">
+      },
+      
+      aether: {
+        ...baseProsody,
+        // Aether: Spacious, transcendent, harmonic, consciousness-expanding
+        rhythm: 'spacious',
+        tempo: 'transcendent', // Beyond normal time
+        pauses: 'contemplative', // Space for wisdom to land
+        depth: 'profound',
+        flow: 'integrative',
+        breathiness: 0.6, // Breath as sacred space
+        resonance: 'harmonic',
+        // Prosody markers
+        pausePattern: 'sacred', // <pause-500ms>, <pause-800ms>
+        emphasisStyle: 'profound' // <emphasis type="transcendent">
+      }
+    };
+
+    const elementProsody = elementalDynamics[element] || elementalDynamics['aether'];
+
+    // Archetype modulation (if provided)
+    if (archetype) {
+      switch (archetype) {
+        case 'sage':
+          elementProsody.wisdom = 'deep';
+          elementProsody.pausePattern = 'contemplative';
+          break;
+        case 'healer':
+          elementProsody.compassion = 'high';
+          elementProsody.breathiness += 0.1;
+          break;
+        case 'visionary':
+          elementProsody.inspiration = 'expansive';
+          elementProsody.resonance = 'visionary';
+          break;
+        case 'guide':
+          elementProsody.presence = 'stable';
+          elementProsody.flow = 'guiding';
+          break;
+      }
+    }
+
+    return elementProsody;
+  }
+
+  /**
+   * Get embodiment level based on element
+   */
+  private getEmbodimentLevel(element: string): string {
+    const embodimentMap = {
+      fire: 'passionate', // Fully alive, commanding presence
+      water: 'flowing', // Emotionally embodied, adaptive
+      earth: 'grounded', // Physically present, stable
+      air: 'clear', // Mentally embodied, precise
+      aether: 'transcendent' // Spiritually embodied, integrated
+    };
+    return embodimentMap[element] || 'present';
+  }
+
+  /**
+   * Get consciousness markers for advanced shaping
+   */
+  private getConsciousnessMarkers(sentiment: string, element: string): any {
+    return {
+      awareness: sentiment === 'low' ? 'compassionate' : sentiment === 'high' ? 'celebratory' : 'present',
+      intention: 'sacred',
+      presence: element === 'aether' ? 'transcendent' : 'embodied',
+      coherence: 'high' // Always maintain coherent energy signature
+    };
+  }
+
+  /**
+   * Extract shaping tags from processed text for analysis
+   */
+  private extractShapingTags(text: string): string[] {
+    const tags: string[] = [];
+    
+    // Pause markers
+    const pauseMatches = text.match(/<pause-\d+ms>/g);
+    if (pauseMatches) tags.push(`PAUSES:${pauseMatches.length}`);
+    
+    // Emphasis markers
+    const emphasisMatches = text.match(/<emphasis[^>]*>/g);
+    if (emphasisMatches) tags.push(`EMPHASIS:${emphasisMatches.length}`);
+    
+    // Breath markers
+    const breathMatches = text.match(/<breath[^>]*>/g);
+    if (breathMatches) tags.push(`BREATH:${breathMatches.length}`);
+    
+    // Pace markers
+    const paceMatches = text.match(/<pace[^>]*>/g);
+    if (paceMatches) tags.push(`PACE:${paceMatches.length}`);
+
+    // Sacred markers (custom)
+    const sacredMatches = text.match(/<sacred[^>]*>/g);
+    if (sacredMatches) tags.push(`SACRED:${sacredMatches.length}`);
+    
+    return tags;
   }
 
   /**
