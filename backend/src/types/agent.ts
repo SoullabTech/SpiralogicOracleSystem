@@ -1,3 +1,4 @@
+// import { AgentResponse } from "./types/agentResponse"; // Defined in this file
 import type { Metadata } from "./metadata";
 
 export interface AgentResponse {

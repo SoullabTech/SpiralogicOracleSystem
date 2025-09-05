@@ -12,16 +12,26 @@ import { logger } from "./logger";
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY!;
 const ELEVENLABS_VOICE_URL = "https://api.elevenlabs.io/v1/text-to-speech";
+const SESAME_URL = process.env.SESAME_URL || process.env.SESAME_CSM_URL || 'http://localhost:8000';
+const USE_SESAME = process.env.USE_SESAME === 'true' || process.env.SESAME_URL || process.env.SESAME_CSM_URL;
 
 export interface VoiceSynthesisOptions {
   text: string;
   voiceId?: string;
+  voice_settings?: {
+    stability?: number;
+    similarity_boost?: number;
+    style?: number;
+    use_speaker_boost?: boolean;
+  };
   voiceSettings?: {
     stability?: number;
     similarity_boost?: number;
     style?: number;
     use_speaker_boost?: boolean;
   };
+  model_id?: string;
+  optimize_streaming_latency?: number;
 }
 
 export interface ArchetypalVoiceSynthesisOptions {
@@ -43,17 +53,105 @@ export interface VoiceSynthesisResult {
 }
 
 /**
- * Standard voice synthesis (backward compatibility)
+ * Sesame TTS synthesis with file saving
+ */
+async function synthesizeWithSesame(text: string, voiceId?: string): Promise<string> {
+  try {
+    logger.info('🌱 [VoiceService] Attempting Sesame TTS synthesis', { 
+      sesameUrl: SESAME_URL,
+      textLength: text.length 
+    });
+
+    const response = await axios.post(
+      `${SESAME_URL}/tts`,
+      {
+        text: text,
+        voice: voiceId || 'maya',
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 30000
+      }
+    );
+
+    // Sesame returns base64 encoded audio
+    const audioData = response.data.audio;
+    const format = response.data.format || 'wav';
+    const buffer = Buffer.from(audioData, 'base64');
+    const filename = `sesame-${uuidv4()}.${format}`;
+    
+    // Save to frontend's public directory for serving via Next.js
+    const frontendAudioDir = path.resolve(process.cwd(), "public/audio");
+    const outputPath = path.join(frontendAudioDir, filename);
+
+    // Ensure audio directory exists
+    if (!fs.existsSync(frontendAudioDir)) {
+      fs.mkdirSync(frontendAudioDir, { recursive: true });
+    }
+
+    fs.writeFileSync(outputPath, buffer);
+    
+    // Return frontend URL for serving via Next.js API route
+    const frontendUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const audioUrl = `${frontendUrl}/audio/${filename}`;
+    
+    logger.info('🌱 [VoiceService] Sesame TTS synthesis successful', { 
+      audioUrl, 
+      fileSize: buffer.length 
+    });
+    
+    return audioUrl;
+  } catch (error: any) {
+    logger.error('🌱 [VoiceService] Sesame TTS synthesis failed:', {
+      error: error.message,
+      code: error.code,
+      sesameUrl: SESAME_URL
+    });
+    throw error;
+  }
+}
+
+/**
+ * Standard voice synthesis with Sesame/ElevenLabs fallback
  */
 export async function synthesizeVoice({
   text,
   voiceId,
-  voiceSettings = {
-    stability: 0.5,
-    similarity_boost: 0.8,
-  },
+  voice_settings,
+  voiceSettings,
+  model_id = 'eleven_multilingual_v2',
+  optimize_streaming_latency = 2,
 }: VoiceSynthesisOptions): Promise<string> {
+  // Use voice_settings if provided, otherwise voiceSettings, otherwise defaults
+  const settings = voice_settings || voiceSettings || {
+    stability: 0.35,        // More dynamic pitch variation
+    similarity_boost: 0.85, // Stronger voice identity  
+    style: 0.65,           // Much more expressive delivery!
+    use_speaker_boost: true,
+  };
+  // Try Sesame first if configured
+  if (USE_SESAME) {
+    try {
+      return await synthesizeWithSesame(text, voiceId);
+    } catch (sesameError: any) {
+      logger.warn('🌱 [VoiceService] Sesame failed, falling back to ElevenLabs:', {
+        error: sesameError.message,
+        sesameFailFast: process.env.SESAME_FAIL_FAST
+      });
+      
+      // If SESAME_FAIL_FAST is true, don't fallback
+      if (process.env.SESAME_FAIL_FAST === 'true') {
+        throw new Error(`Sesame TTS failed and SESAME_FAIL_FAST is enabled: ${sesameError.message}`);
+      }
+    }
+  }
+
+  // Fallback to ElevenLabs
   try {
+    logger.info('🎙️ [VoiceService] Using ElevenLabs TTS');
+    
     const response = await axios.post(
       `${ELEVENLABS_VOICE_URL}/${voiceId}`,
       {
@@ -71,20 +169,28 @@ export async function synthesizeVoice({
     );
 
     const buffer = Buffer.from(response.data, "binary");
-    const filename = `${uuidv4()}.mp3`;
-    const outputPath = path.resolve(__dirname, "../../public/audio", filename);
+    const filename = `elevenlabs-${uuidv4()}.mp3`;
+    
+    // Save to frontend's public directory for serving via Next.js
+    const frontendAudioDir = path.resolve(process.cwd(), "public/audio");
+    const outputPath = path.join(frontendAudioDir, filename);
 
     // Ensure audio directory exists
-    const audioDir = path.dirname(outputPath);
-    if (!fs.existsSync(audioDir)) {
-      fs.mkdirSync(audioDir, { recursive: true });
+    if (!fs.existsSync(frontendAudioDir)) {
+      fs.mkdirSync(frontendAudioDir, { recursive: true });
     }
 
     fs.writeFileSync(outputPath, buffer);
-    return `/audio/${filename}`;
+    
+    // Return frontend URL for serving via Next.js API route
+    const frontendUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const audioUrl = `${frontendUrl}/audio/${filename}`;
+    
+    logger.info('🎙️ [VoiceService] ElevenLabs synthesis successful', { audioUrl });
+    return audioUrl;
   } catch (err) {
-    logger.error("[VoiceService] Synthesis error:", err);
-    throw new Error("Failed to synthesize voice");
+    logger.error("[VoiceService] Both Sesame and ElevenLabs synthesis failed:", err);
+    throw new Error("Failed to synthesize voice with any provider");
   }
 }
 
@@ -136,17 +242,21 @@ export async function synthesizeArchetypalVoice({
 
     const buffer = Buffer.from(response.data, "binary");
     const filename = `archetypal-${primaryArchetype}-${uuidv4()}.mp3`;
-    const outputPath = path.resolve(__dirname, "../../public/audio", filename);
+    
+    // Save to frontend's public directory for serving via Next.js
+    const frontendAudioDir = path.resolve(process.cwd(), "public/audio");
+    const outputPath = path.join(frontendAudioDir, filename);
 
     // Ensure audio directory exists
-    const audioDir = path.dirname(outputPath);
-    if (!fs.existsSync(audioDir)) {
-      fs.mkdirSync(audioDir, { recursive: true });
+    if (!fs.existsSync(frontendAudioDir)) {
+      fs.mkdirSync(frontendAudioDir, { recursive: true });
     }
 
     fs.writeFileSync(outputPath, buffer);
 
-    const audioUrl = `/audio/${filename}`;
+    // Return frontend URL for serving via Next.js API route
+    const frontendUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const audioUrl = `${frontendUrl}/audio/${filename}`;
 
     logger.info("Archetypal voice synthesized successfully", {
       userId,

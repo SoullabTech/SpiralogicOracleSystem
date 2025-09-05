@@ -1,442 +1,218 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-
-interface ConsciousnessProfile {
-  name: string;
-  spiritualPath: string[];
-  primaryChallenges: string[];
-  guidanceTypes: string[];
-  preferredAgents: string[];
-  experienceLevel: string;
-  intentions: string;
-}
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState(1);
-  const [profile, setProfile] = useState<ConsciousnessProfile>({
-    name: "",
-    spiritualPath: [],
-    primaryChallenges: [],
-    guidanceTypes: [],
-    preferredAgents: [],
-    experienceLevel: "",
-    intentions: "",
-  });
-  const [completed, setCompleted] = useState(false);
+  const [stage, setStage] = useState<"welcome" | "assignment" | "firstContact">("welcome");
+  const [isLoading, setIsLoading] = useState(false);
+  const [mayaFirstMessage, setMayaFirstMessage] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
-  const totalSteps = 6;
+  useEffect(() => {
+    // Check if already onboarded
+    const storedUser = localStorage.getItem('beta_user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      if (userData.onboarded) {
+        router.push('/oracle');
+      }
+    }
+  }, [router]);
 
-  const spiritualPaths = [
-    "Buddhism",
-    "Christianity",
-    "Islam",
-    "Judaism",
-    "Hinduism",
-    "Taoism",
-    "Indigenous Traditions",
-    "New Age",
-    "Mysticism",
-    "Secular Spirituality",
-    "Shamanism",
-    "Paganism",
-    "Exploring/Uncertain",
-  ];
+  const handleMeetOracle = async () => {
+    setIsLoading(true);
+    try {
+      // Create session and get Maya's first message
+      const response = await fetch('/api/oracle/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString()
+        })
+      });
 
-  const challenges = [
-    "Finding life purpose",
-    "Emotional healing",
-    "Creative blocks",
-    "Relationship issues",
-    "Career transitions",
-    "Anxiety & stress",
-    "Depression & sadness",
-    "Spiritual awakening",
-    "Shadow work",
-    "Self-worth & confidence",
-    "Decision making",
-    "Communication",
-  ];
-
-  const guidanceTypes = [
-    "Practical advice",
-    "Spiritual wisdom",
-    "Emotional support",
-    "Creative inspiration",
-    "Relationship guidance",
-    "Career direction",
-    "Healing practices",
-    "Meditation techniques",
-    "Shadow integration",
-    "Life purpose clarity",
-    "Energy management",
-    "Manifestation",
-  ];
-
-  const agents = [
-    {
-      key: "fire",
-      name: "Fire Agent",
-      emoji: "🔥",
-      description: "Vision, creativity, transformation",
-    },
-    {
-      key: "water",
-      name: "Water Agent",
-      emoji: "🌊",
-      description: "Emotional wisdom, flow",
-    },
-    {
-      key: "earth",
-      name: "Earth Agent",
-      emoji: "🌍",
-      description: "Grounding, practical guidance",
-    },
-    {
-      key: "air",
-      name: "Air Agent",
-      emoji: "💨",
-      description: "Mental clarity, communication",
-    },
-  ];
-
-  const experienceLevels = [
-    {
-      key: "beginner",
-      label: "New to consciousness work",
-      description: "Just starting my spiritual journey",
-    },
-    {
-      key: "intermediate",
-      label: "Some experience",
-      description: "Have practiced meditation, therapy, or spiritual work",
-    },
-    {
-      key: "advanced",
-      label: "Experienced practitioner",
-      description: "Regular spiritual practice and inner work",
-    },
-    {
-      key: "expert",
-      label: "Teacher/Guide",
-      description: "I guide others in consciousness development",
-    },
-  ];
-
-  const updateArrayField = (
-    field: keyof ConsciousnessProfile,
-    value: string,
-  ) => {
-    setProfile((prev) => ({
-      ...prev,
-      [field]: (prev[field] as string[]).includes(value)
-        ? (prev[field] as string[]).filter((item) => item !== value)
-        : [...(prev[field] as string[]), value],
-    }));
-  };
-
-  const updateField = (field: keyof ConsciousnessProfile, value: string) => {
-    setProfile((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const nextStep = () => {
-    if (step < totalSteps) {
-      setStep(step + 1);
-    } else {
-      handleComplete();
+      if (!response.ok) throw new Error('Failed to initialize session');
+      
+      const data = await response.json();
+      
+      // Store session data
+      const userData = {
+        id: data.userId || crypto.randomUUID(),
+        username: data.username || 'Seeker',
+        agentName: 'Maya',
+        agentId: data.agentId,
+        sessionId: data.sessionId,
+        element: 'aether' // Maya starts in aether mode
+      };
+      
+      localStorage.setItem('beta_user', JSON.stringify(userData));
+      setUser(userData);
+      setMayaFirstMessage(data.firstMessage || "I'm here to walk with you through your reflections. To begin, tell me: how are you arriving in this moment?");
+      setStage("assignment");
+    } catch (error) {
+      console.error('Onboarding error:', error);
+      // Create fallback session
+      const fallbackUser = {
+        id: crypto.randomUUID(),
+        username: 'Seeker',
+        agentName: 'Maya',
+        sessionId: `session-${Date.now()}`,
+        element: 'aether'
+      };
+      localStorage.setItem('beta_user', JSON.stringify(fallbackUser));
+      setUser(fallbackUser);
+      setMayaFirstMessage("I'm here to walk with you through your reflections. To begin, tell me: how are you arriving in this moment?");
+      setStage("assignment");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const prevStep = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
+  const handleBeginJourney = () => {
+    // Mark onboarding complete
+    const userData = { ...user, onboarded: true };
+    localStorage.setItem('beta_user', JSON.stringify(userData));
+    
+    // Add transition stage before routing
+    setStage("firstContact");
+    
+    // Smooth transition to Oracle after animation
+    setTimeout(() => {
+      router.push('/oracle');
+    }, 2500);
   };
 
-  const handleComplete = async () => {
-    // Save profile to localStorage for demo purposes
-    localStorage.setItem("consciousness-profile", JSON.stringify(profile));
-    setCompleted(true);
-  };
-
-  if (completed) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
-        <div className="text-center max-w-lg">
-          <div className="mb-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center mx-auto shadow-lg">
-              <span className="text-4xl text-gray-900">✨</span>
-            </div>
-          </div>
-          <h1 className="text-4xl font-bold mb-4">Welcome, {profile.name}!</h1>
-          <p className="text-lg opacity-80 mb-8">
-            Your consciousness profile has been created. The oracle agents are
-            now calibrated to your unique journey.
-          </p>
-          <div className="space-y-4">
-            <Link
-              href="/dashboard/oracle-beta"
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block text-lg"
-            >
-              🔮 Begin Oracle Experience
-            </Link>
-            <div className="text-sm opacity-60">
-              <p>Your personalized guidance awaits.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
-      <div className="container mx-auto px-8 py-16">
-        <div className="max-w-2xl mx-auto">
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex justify-between text-sm mb-2">
-              <span>Consciousness Profile Setup</span>
-              <span>
-                {step} of {totalSteps}
-              </span>
-            </div>
-            <div className="w-full bg-white/10 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(step / totalSteps) * 100}%` }}
-              ></div>
+    <div className="min-h-screen bg-[#0A0E27] text-white flex items-center justify-center px-4">
+      {stage === "welcome" && (
+        <div className="max-w-md w-full text-center space-y-8 animate-fade-in">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-light tracking-wide">
+              Welcome to Soullab.
+            </h1>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              This is your place to reflect and grow.
+            </p>
+            <p className="text-md text-gray-500">
+              Before we begin, we'll connect you with your personal Oracle guide.
+            </p>
+          </div>
+
+          <button
+            onClick={handleMeetOracle}
+            disabled={isLoading}
+            className="group relative px-8 py-4 bg-white text-[#0A0E27] rounded-lg font-medium hover:bg-gray-200 transition-all duration-300 disabled:opacity-50"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              {isLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-[#0A0E27] border-t-transparent rounded-full animate-spin" />
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  Meet Your Oracle
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </span>
+          </button>
+        </div>
+      )}
+
+      {stage === "assignment" && (
+        <div className="max-w-md w-full text-center space-y-8 animate-fade-in">
+          {/* Subtle geometric reveal animation */}
+          <div className="relative w-32 h-32 mx-auto mb-8">
+            <div className="absolute inset-0 border border-gray-700 rounded-full animate-pulse-slow" />
+            <div className="absolute inset-4 border border-gray-600 rounded-full animate-pulse-slow animation-delay-200" />
+            <div className="absolute inset-8 border border-gray-500 rounded-full animate-pulse-slow animation-delay-400" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Sparkles className="w-12 h-12 text-gray-400" />
             </div>
           </div>
 
-          <div className="bg-white/5 rounded-lg p-8 border border-white/10">
-            {/* Step 1: Name */}
-            {step === 1 && (
-              <div className="text-center">
-                <h2 className="text-2xl font-bold mb-4">
-                  Welcome to Soullab Oracle
-                </h2>
-                <p className="opacity-80 mb-6">
-                  Let's create your consciousness profile for personalized
-                  guidance
-                </p>
-                <div className="text-left">
-                  <label className="block text-sm font-medium mb-2">
-                    What would you like the oracle to call you?
-                  </label>
-                  <input
-                    type="text"
-                    value={profile.name}
-                    onChange={(e) => updateField("name", e.target.value)}
-                    placeholder="Enter your preferred name"
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50"
-                  />
+          <div className="space-y-4">
+            <h2 className="text-3xl font-light">
+              This is Maya, your Oracle.
+            </h2>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              She will be your primary guide through Soullab, drawing on the wisdom of elemental agents when needed.
+            </p>
+            
+            {/* Maya's first message */}
+            <div className="mt-8 p-6 bg-[#1A1F3A]/50 border border-gray-800 rounded-lg text-left">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-5 h-5 text-gray-400" />
                 </div>
-              </div>
-            )}
-
-            {/* Step 2: Spiritual Path */}
-            {step === 2 && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Your Spiritual Path</h2>
-                <p className="opacity-80 mb-6">
-                  Select traditions or paths that resonate with you (choose any
-                  that apply)
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {spiritualPaths.map((path) => (
-                    <button
-                      key={path}
-                      onClick={() => updateArrayField("spiritualPath", path)}
-                      className={`p-3 rounded-lg border text-left transition ${
-                        profile.spiritualPath.includes(path)
-                          ? "bg-yellow-400/20 border-yellow-400/50"
-                          : "bg-white/5 border-white/10 hover:bg-white/10"
-                      }`}
-                    >
-                      <span className="text-sm">{path}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Step 3: Primary Challenges */}
-            {step === 3 && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Areas for Guidance</h2>
-                <p className="opacity-80 mb-6">
-                  What areas of life would you most like guidance on?
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {challenges.map((challenge) => (
-                    <button
-                      key={challenge}
-                      onClick={() =>
-                        updateArrayField("primaryChallenges", challenge)
-                      }
-                      className={`p-3 rounded-lg border text-left transition ${
-                        profile.primaryChallenges.includes(challenge)
-                          ? "bg-yellow-400/20 border-yellow-400/50"
-                          : "bg-white/5 border-white/10 hover:bg-white/10"
-                      }`}
-                    >
-                      <span className="text-sm">{challenge}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Step 4: Guidance Types */}
-            {step === 4 && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Types of Guidance</h2>
-                <p className="opacity-80 mb-6">
-                  What kinds of guidance do you find most helpful?
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {guidanceTypes.map((type) => (
-                    <button
-                      key={type}
-                      onClick={() => updateArrayField("guidanceTypes", type)}
-                      className={`p-3 rounded-lg border text-left transition ${
-                        profile.guidanceTypes.includes(type)
-                          ? "bg-yellow-400/20 border-yellow-400/50"
-                          : "bg-white/5 border-white/10 hover:bg-white/10"
-                      }`}
-                    >
-                      <span className="text-sm">{type}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Step 5: Preferred Agents */}
-            {step === 5 && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">
-                  Elemental Preferences
-                </h2>
-                <p className="opacity-80 mb-6">
-                  Which elemental energies feel most aligned with your current
-                  needs?
-                </p>
-                <div className="space-y-3">
-                  {agents.map((agent) => (
-                    <button
-                      key={agent.key}
-                      onClick={() =>
-                        updateArrayField("preferredAgents", agent.key)
-                      }
-                      className={`w-full p-4 rounded-lg border text-left transition ${
-                        profile.preferredAgents.includes(agent.key)
-                          ? "bg-yellow-400/20 border-yellow-400/50"
-                          : "bg-white/5 border-white/10 hover:bg-white/10"
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <span className="text-2xl mr-3">{agent.emoji}</span>
-                        <div>
-                          <div className="font-semibold">{agent.name}</div>
-                          <div className="text-sm opacity-80">
-                            {agent.description}
-                          </div>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Step 6: Experience Level & Intentions */}
-            {step === 6 && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">
-                  Experience & Intentions
-                </h2>
-
-                <div className="mb-6">
-                  <p className="opacity-80 mb-4">
-                    Your experience level with consciousness work:
+                <div className="flex-1">
+                  <p className="text-sm text-gray-500 mb-2">Maya</p>
+                  <p className="text-gray-200 leading-relaxed">
+                    {mayaFirstMessage}
                   </p>
-                  <div className="space-y-3">
-                    {experienceLevels.map((level) => (
-                      <button
-                        key={level.key}
-                        onClick={() =>
-                          updateField("experienceLevel", level.key)
-                        }
-                        className={`w-full p-3 rounded-lg border text-left transition ${
-                          profile.experienceLevel === level.key
-                            ? "bg-yellow-400/20 border-yellow-400/50"
-                            : "bg-white/5 border-white/10 hover:bg-white/10"
-                        }`}
-                      >
-                        <div className="font-semibold text-sm">
-                          {level.label}
-                        </div>
-                        <div className="text-xs opacity-80">
-                          {level.description}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    What do you hope to gain from this oracle experience?
-                  </label>
-                  <textarea
-                    value={profile.intentions}
-                    onChange={(e) => updateField("intentions", e.target.value)}
-                    placeholder="Share your intentions, goals, or what you're seeking guidance about..."
-                    rows={4}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50 resize-none"
-                  />
                 </div>
               </div>
-            )}
-
-            {/* Navigation */}
-            <div className="flex justify-between mt-8">
-              <button
-                onClick={prevStep}
-                disabled={step === 1}
-                className="px-6 py-3 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                ← Previous
-              </button>
-
-              <button
-                onClick={nextStep}
-                disabled={
-                  (step === 1 && !profile.name.trim()) ||
-                  (step === 2 && profile.spiritualPath.length === 0) ||
-                  (step === 6 && !profile.experienceLevel)
-                }
-                className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {step === totalSteps ? "Complete Setup" : "Next →"}
-              </button>
             </div>
           </div>
 
-          {/* Skip Option */}
-          <div className="text-center mt-6">
-            <Link
-              href="/dashboard/oracle-beta"
-              className="text-yellow-400/60 hover:text-yellow-400 underline text-sm"
-            >
-              Skip setup and explore →
-            </Link>
+          <button
+            onClick={handleBeginJourney}
+            className="group relative px-8 py-4 bg-white text-[#0A0E27] rounded-lg font-medium hover:bg-gray-200 transition-all duration-300"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              Begin Your Journey
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </button>
+        </div>
+      )}
+
+      {stage === "firstContact" && (
+        <div className="max-w-md w-full text-center space-y-8 animate-fade-in">
+          {/* Tesla-style sacred geometry transition */}
+          <div className="relative w-48 h-48 mx-auto mb-12">
+            {/* Outer expanding ring */}
+            <div className="absolute inset-0 border-2 border-tesla-blue/30 rounded-full animate-ping" />
+            <div className="absolute inset-4 border border-tesla-blue/50 rounded-full animate-pulse-slow" />
+            <div className="absolute inset-8 border border-tesla-blue/70 rounded-full animate-spin-slow" />
+            
+            {/* Inner geometry - hexagon */}
+            <div className="absolute inset-16">
+              <div className="w-full h-full border border-tesla-blue opacity-80 transform rotate-0 animate-sacred-rotate"
+                   style={{
+                     clipPath: 'polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%)'
+                   }}>
+              </div>
+            </div>
+            
+            {/* Central Tesla-style dot */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-3 h-3 bg-tesla-blue rounded-full animate-tesla-glow shadow-lg shadow-tesla-blue/50" />
+            </div>
+          </div>
+
+          <div className="space-y-6 opacity-90">
+            <h2 className="text-2xl font-light tracking-wide text-tesla-blue">
+              Establishing Connection
+            </h2>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              Preparing your Oracle interface...
+            </p>
+            
+            {/* Loading indicator */}
+            <div className="flex justify-center items-center space-x-2 mt-8">
+              <div className="w-2 h-2 bg-tesla-blue rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-tesla-blue rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-tesla-blue rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

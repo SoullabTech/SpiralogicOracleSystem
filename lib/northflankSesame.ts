@@ -1,8 +1,9 @@
-// lib/northflankSesame.ts
-export interface NorthflankSesameConfig {
+// lib/sesameCsm.ts - Local Sesame CSM Integration
+export interface SesameConfig {
   serviceUrl: string;
   apiKey?: string;
   timeout?: number;
+  mode?: 'offline' | 'online';
 }
 
 export interface SynthesisRequest {
@@ -23,7 +24,7 @@ export interface SynthesisResponse {
 
 export async function synthesizeToWav(
   text: string, 
-  config: NorthflankSesameConfig
+  config: SesameConfig
 ): Promise<ArrayBuffer> {
   const { serviceUrl, apiKey, timeout = 30000 } = config;
   
@@ -32,17 +33,17 @@ export async function synthesizeToWav(
   }
   
   if (!serviceUrl) {
-    throw new Error('Northflank service URL is required');
+    throw new Error('Sesame service URL is required');
   }
 
-  const ttsUrl = `${serviceUrl}/tts`;
+  const ttsUrl = `${serviceUrl}/api/v1/generate`;
   
   try {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
     
-    if (apiKey) {
+    if (apiKey && apiKey !== 'local') {
       headers['Authorization'] = `Bearer ${apiKey}`;
     }
 
@@ -61,7 +62,7 @@ export async function synthesizeToWav(
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Northflank Sesame API error ${response.status}: ${errorText}`);
+      throw new Error(`Sesame CSM API error ${response.status}: ${errorText}`);
     }
 
     // Direct audio stream response
@@ -83,17 +84,17 @@ export async function synthesizeToWav(
     
   } catch (error: any) {
     if (error.name === 'TimeoutError') {
-      throw new Error(`Northflank Sesame request timed out after ${timeout}ms`);
+      throw new Error(`Sesame CSM request timed out after ${timeout}ms`);
     }
     if (error.name === 'AbortError') {
-      throw new Error('Northflank Sesame request was aborted');
+      throw new Error('Sesame CSM request was aborted');
     }
     throw error;
   }
 }
 
 // Health check function
-export async function checkHealth(config: NorthflankSesameConfig): Promise<boolean> {
+export async function checkHealth(config: SesameConfig): Promise<boolean> {
   try {
     const response = await fetch(`${config.serviceUrl}/health`, {
       signal: AbortSignal.timeout(5000),
@@ -105,8 +106,8 @@ export async function checkHealth(config: NorthflankSesameConfig): Promise<boole
   }
 }
 
-// List available voices
-export async function listVoices(config: NorthflankSesameConfig): Promise<any[]> {
+// List available voices (for future use)
+export async function listVoices(config: SesameConfig): Promise<any[]> {
   try {
     const response = await fetch(`${config.serviceUrl}/voices`);
     if (!response.ok) {

@@ -8,9 +8,13 @@ import { logger } from "../utils/logger";
 // Import our new route services
 import orchestratorRoutes from '../routes/orchestrator.routes';
 import voiceJournalingRoutes from '../routes/voiceJournaling.routes';
+import voiceStreamRoutes from '../routes/voice/stream.routes';
 import semanticJournalingRoutes from '../routes/semanticJournaling.routes';
 import conversationalRoutes from '../routes/conversational.routes';
 import conversationalStreamRoutes from '../routes/conversational.stream.routes';
+import enhancedConversationalStreamRoutes from '../routes/enhanced.conversational.stream.routes';
+import streamingChatRoutes from '../routes/streaming.chat.routes';
+import adminRoutes from '../routes/admin.routes';
 
 const router = Router();
 
@@ -55,9 +59,13 @@ router.get(`/${API_VERSION}/health`, (req, res) => {
  */
 router.use(`/${API_VERSION}/orchestrator`, orchestratorRoutes);
 router.use(`/${API_VERSION}/voice`, voiceJournalingRoutes);
+router.use(`/${API_VERSION}/voice`, voiceStreamRoutes); // Add streaming voice endpoints
 router.use(`/${API_VERSION}/semantic`, semanticJournalingRoutes);
 router.use(`/${API_VERSION}/converse`, conversationalRoutes);
 router.use(`/${API_VERSION}/converse`, conversationalStreamRoutes);
+router.use(`/${API_VERSION}/enhanced/converse`, enhancedConversationalStreamRoutes);
+router.use(`/${API_VERSION}/stream`, streamingChatRoutes); // Real-time streaming with chunked TTS
+router.use(`/${API_VERSION}/admin`, adminRoutes); // Admin dashboard and monitoring
 
 /**
  * Placeholder routers for missing modules
@@ -94,6 +102,7 @@ router.get("/", (req, res) => {
         voice: `/${API_VERSION}/voice`,
         semantic: `/${API_VERSION}/semantic`,
         converse: `/${API_VERSION}/converse`,
+        enhancedConverse: `/${API_VERSION}/enhanced/converse`,
         oracle: `/${API_VERSION}/oracle`,
         personalOracle: `/${API_VERSION}/personal-oracle`,
         ainEngine: `/${API_VERSION}/ain-engine`,

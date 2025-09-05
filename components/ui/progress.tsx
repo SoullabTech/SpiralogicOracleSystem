@@ -48,4 +48,34 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
 )
 Progress.displayName = "Progress"
 
-export { Progress }
+// Archetype-specific progress
+export interface ArchetypeProgressProps extends ProgressProps {
+  archetype: 'sage' | 'seeker' | 'healer' | 'creator' | 'rebel' | 'ruler'
+  level: number
+}
+
+const ArchetypeProgress = React.forwardRef<HTMLDivElement, ArchetypeProgressProps>(
+  ({ archetype, level, ...props }, ref) => {
+    const archetypeColors = {
+      sage: 'blue',
+      seeker: 'purple',
+      healer: 'green',
+      creator: 'orange', 
+      rebel: 'pink',
+      ruler: 'blue'
+    } as const
+    
+    return (
+      <Progress
+        ref={ref}
+        value={level}
+        max={100}
+        color={archetypeColors[archetype]}
+        {...props}
+      />
+    )
+  }
+)
+ArchetypeProgress.displayName = "ArchetypeProgress"
+
+export { Progress, ArchetypeProgress }

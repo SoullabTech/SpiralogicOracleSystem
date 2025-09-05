@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom animations for onboarding */
+/* Custom animations */
 @layer utilities {
   @keyframes spin-slow {
     from {
@@ -12,8 +12,191 @@
       transform: rotate(360deg);
     }
   }
+  
+  .animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(180deg);
+    }
+  }
+  
+  @keyframes float-slow {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-30px) scale(1.05);
+    }
+  }
+  
+  @keyframes float-reverse {
+    0%, 100% {
+      transform: translateY(0) rotate(360deg);
+    }
+    50% {
+      transform: translateY(-25px) rotate(180deg);
+    }
+  }
+  
+  /* Tesla-inspired clean glow */
+  @keyframes tesla-glow {
+    0%, 100% {
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3),
+                  0 0 20px rgba(59, 130, 246, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                  0 0 40px rgba(59, 130, 246, 0.3);
+    }
+  }
+  
+  /* Clean pulse for active states */
+  @keyframes clean-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+  }
+  
+  /* Tesla-style pulse glow */
+  @keyframes pulse-glow {
+    0%, 100% { 
+      box-shadow: 0 0 12px #3B82F6, 0 0 24px #3B82F6;
+      opacity: 0.6;
+    }
+    50% { 
+      box-shadow: 0 0 24px #3B82F6, 0 0 48px #3B82F6;
+      opacity: 1;
+    }
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  /* Consciousness field ripple */
+  @keyframes consciousness-ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.4;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
+  
+  /* Sacred geometry rotation */
+  @keyframes sacred-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Enhanced Torus Animation for Voice Recording */
+  @keyframes torus-expand {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.3;
+    }
+  }
+  
+  @keyframes torus-inner-pulse {
+    0%, 100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 0.8;
+    }
+    25% {
+      transform: scale(1.1) rotate(90deg);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.05) rotate(180deg);
+      opacity: 0.9;
+    }
+    75% {
+      transform: scale(1.15) rotate(270deg);
+      opacity: 0.5;
+    }
+  }
+  
+  .animate-torus-expand {
+    animation: torus-expand 3s ease-in-out infinite;
+  }
+  
+  .animate-torus-inner {
+    animation: torus-inner-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+  
   .animate-spin-slow {
     animation: spin-slow 6s linear infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: float-slow 12s ease-in-out infinite;
+  }
+  
+  .animate-float-reverse {
+    animation: float-reverse 10s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
   }
 }
 
@@ -27,4 +210,24 @@
   html.dark input, html.dark textarea, html.dark select {
     @apply text-gray-100 bg-gray-900;
   }
+}
+
+/* Tesla Volume Slider Styling */
+.slider-tesla::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #3B82F6;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.slider-tesla::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #3B82F6;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
 }

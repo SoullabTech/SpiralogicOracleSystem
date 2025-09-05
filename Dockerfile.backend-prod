@@ -1,0 +1,147 @@
+# =============================================================================
+# Maya Backend & Next.js Frontend - Production Dockerfile
+# =============================================================================
+# Multi-stage build for optimized Node.js/Next.js application
+# Features: Layer caching, security hardening, health checks, production optimizations
+
+FROM node:20-alpine AS base
+
+# Set production environment variables
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    HOSTNAME="0.0.0.0"
+
+# Install system dependencies needed for native modules
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    make \
+    g++ \
+    curl \
+    dumb-init
+
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+WORKDIR /app
+
+# =============================================================================
+# Dependencies Stage - Cached layer for faster rebuilds
+# =============================================================================
+FROM base AS deps
+
+# Copy package files
+COPY package*.json ./
+COPY backend/package*.json ./backend/
+
+# Install dependencies with clean slate (production + dev for build)
+RUN npm ci --include=dev && \
+    cd backend && npm ci --include=dev
+
+# =============================================================================
+# Backend Build Stage
+# =============================================================================
+FROM deps AS backend-build
+
+# Copy backend source
+COPY backend/ ./backend/
+
+# Build backend if needed (TypeScript compilation, etc.)
+WORKDIR /app/backend
+RUN npm run build || echo "No backend build script found"
+
+# =============================================================================
+# Frontend Build Stage  
+# =============================================================================
+FROM deps AS frontend-build
+
+WORKDIR /app
+
+# Copy frontend source
+COPY . .
+COPY --from=backend-build /app/backend/dist ./backend/dist 2>/dev/null || true
+
+# Build Next.js application
+RUN npm run build
+
+# =============================================================================
+# Production Runtime Stage
+# =============================================================================
+FROM base AS runtime
+
+# Copy built applications
+COPY --from=frontend-build --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=frontend-build --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=frontend-build --chown=nextjs:nodejs /app/public ./public
+COPY --from=backend-build --chown=nextjs:nodejs /app/backend/dist ./backend/dist 2>/dev/null || true
+
+# Copy necessary configuration files
+COPY --from=frontend-build --chown=nextjs:nodejs /app/next.config.js ./next.config.js 2>/dev/null || true
+COPY --from=frontend-build --chown=nextjs:nodejs /app/package.json ./package.json
+
+# Install only production dependencies for runtime
+RUN npm ci --omit=dev --omit=optional && npm cache clean --force
+
+# Create required directories with proper permissions
+RUN mkdir -p /app/logs /app/uploads /app/temp && \
+    chown -R nextjs:nodejs /app/logs /app/uploads /app/temp
+
+# Create health check script
+RUN echo '#!/bin/sh\ncurl -f http://localhost:3000/api/health || exit 1' > /app/healthcheck.sh && \
+    chmod +x /app/healthcheck.sh && \
+    chown nextjs:nodejs /app/healthcheck.sh
+
+# Switch to non-root user
+USER nextjs
+
+# Expose application port
+EXPOSE 3000
+
+# Health check for container orchestration
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=30s \
+    CMD /app/healthcheck.sh
+
+# Production environment variables
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    HOSTNAME="0.0.0.0" \
+    # Optimization flags
+    NODE_OPTIONS="--max-old-space-size=1024" \
+    # Logging
+    LOG_LEVEL=info
+
+# Use dumb-init to handle signals properly in containers
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# Start the application
+CMD ["node", "server.js"]
+
+# =============================================================================
+# Development Stage (optional - for dev containers)
+# =============================================================================
+FROM deps AS development
+
+# Install all dependencies including dev
+WORKDIR /app
+COPY . .
+
+# Don't switch to non-root user in development
+ENV NODE_ENV=development
+
+EXPOSE 3000 3001 3002
+
+CMD ["npm", "run", "dev"]
+
+# =============================================================================
+# Metadata Labels
+# =============================================================================
+LABEL maintainer="SpiralogicOracle Team" \
+      version="1.0.0" \
+      description="Maya Backend + Next.js Frontend - Production Ready" \
+      service="maya-backend" \
+      environment="production" \
+      nodejs.version="20" \
+      nextjs.version="14"

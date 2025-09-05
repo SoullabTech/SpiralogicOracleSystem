@@ -8,6 +8,7 @@ import { conversationalPipeline, ConversationalContext } from '../services/Conve
 import { safetyService } from '../services/SafetyModerationService';
 import { logger } from '../utils/logger';
 import { rateLimit } from '../middleware/rateLimit';
+import { adminAnalytics } from '../services/AdminAnalyticsService';
 
 const router = Router();
 
@@ -134,6 +135,7 @@ router.post('/stream', async (req: Request, res: Response) => {
         element,
         voiceEnabled,
         sessionId: sessionId || `session_${Date.now()}`,
+        conversationHistory: [], // Required field
         convoSummary: '',
         longMemSnippets: [],
         recentBotReplies: [],
@@ -219,14 +221,43 @@ router.post('/message', messageLimiter, async (req: Request, res: Response) => {
       element,
       voiceEnabled,
       sessionId,
+      conversationHistory: [], // Required field
       convoSummary: context.summary || '',
       longMemSnippets: context.memorySnippets || [],
       recentBotReplies: context.recentReplies || [],
       sentiment: determineSentiment(userText)
     };
 
+    // Start analytics tracking for this session
+    try {
+      adminAnalytics.startSession(
+        sessionId || `session_${Date.now()}`, 
+        userId, 
+        'Anonymous', // Username - could be extracted from context
+        element
+      );
+    } catch (analyticsError) {
+      logger.warn('Analytics tracking failed (non-critical):', analyticsError);
+    }
+
     // Process through Sesame-centric pipeline
+    const startTime = Date.now();
     const result = await conversationalPipeline.converseViaSesame(conversationalContext);
+    const responseTime = Date.now() - startTime;
+
+    // Record interaction analytics
+    try {
+      const interactionType = voiceEnabled ? 'voice' : 'text';
+      const citationCount = result.citations?.length || 0;
+      adminAnalytics.recordInteraction(
+        sessionId || `session_${Date.now()}`, 
+        interactionType, 
+        responseTime, 
+        citationCount
+      );
+    } catch (analyticsError) {
+      logger.warn('Analytics interaction recording failed (non-critical):', analyticsError);
+    }
 
     res.json({
       success: true,
@@ -300,6 +331,8 @@ router.post('/voice-journal', async (req: Request, res: Response) => {
       userId,
       element,
       voiceEnabled: true, // Voice journal implies voice response
+      sessionId: `session_${Date.now()}`,
+      conversationHistory: [], // Required field
       convoSummary: "User shared a voice journal entry",
       longMemSnippets: [],
       recentBotReplies: [],
@@ -357,6 +390,8 @@ router.post('/workflow-step', async (req: Request, res: Response) => {
       userId,
       element: element || 'aether',
       voiceEnabled: true,
+      sessionId: `session_${Date.now()}`,
+      conversationHistory: [], // Required field
       convoSummary: `Workflow: ${workflowType}`,
       longMemSnippets: stepContext?.memories || [],
       recentBotReplies: stepContext?.previousSteps || [],
@@ -449,6 +484,8 @@ router.post('/test', async (req: Request, res: Response) => {
       userId: 'test_user',
       element,
       voiceEnabled: false,
+      sessionId: 'test_session',
+      conversationHistory: [], // Required field
       convoSummary: "Test conversation for pipeline validation",
       longMemSnippets: ["Previous discussions about life direction", "Mentioned feeling overwhelmed last week"],
       recentBotReplies: [],

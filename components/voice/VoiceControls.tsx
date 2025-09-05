@@ -19,6 +19,7 @@ import {
   Info
 } from 'lucide-react';
 import { useMayaVoice, useVoiceCapabilities } from '@/hooks/useMayaVoice';
+import { FullVoiceEngineStatus } from './VoiceEngineStatus';
 
 interface VoiceControlsProps {
   className?: string;
@@ -89,10 +90,10 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
   }
 
   return (
-    <Card className={`bg-background/80 backdrop-blur-xl border-purple-500/20 ${className}`}>
+    <Card className={`bg-background/80 backdrop-blur-xl border-blue-500/20 ${className}`}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center space-x-2">
-          <Sparkles className="w-5 h-5 text-purple-400" />
+          <Volume2 className="w-5 h-5 text-blue-400" />
           <span>Maya's Voice</span>
           <Badge variant={voiceState.isPlaying ? "success" : "secondary"} className="ml-auto">
             {voiceState.isPlaying ? 'Speaking' : voiceState.isPaused ? 'Paused' : 'Ready'}
@@ -116,6 +117,9 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
           </span>
         </div>
 
+        {/* Voice Engine Status */}
+        <FullVoiceEngineStatus className="mt-4" />
+
         {/* Current Activity */}
         <AnimatePresence>
           {voiceState.isPlaying && (
@@ -123,16 +127,16 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3"
+              className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3"
             >
               <div className="flex items-center space-x-2 mb-2">
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
                 >
-                  <Volume2 className="w-4 h-4 text-purple-400" />
+                  <Volume2 className="w-4 h-4 text-blue-400" />
                 </motion.div>
-                <span className="text-sm font-medium text-purple-300">Maya is speaking</span>
+                <span className="text-sm font-medium text-blue-300">Maya is speaking</span>
               </div>
               <p className="text-xs text-muted-foreground line-clamp-2">
                 {voiceState.currentText}
@@ -191,7 +195,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
               size="sm"
               onClick={playGreeting}
               disabled={isLoading || !capabilities.webSpeechSupported}
-              className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
             >
               {isLoading ? (
                 <>
@@ -235,7 +239,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
             variant={autoSpeak ? "default" : "outline"}
             onClick={() => handleAutoSpeakChange(!autoSpeak)}
             disabled={!capabilities.webSpeechSupported}
-            className={autoSpeak ? "bg-purple-600 hover:bg-purple-700" : ""}
+            className={autoSpeak ? "bg-blue-600 hover:bg-blue-700" : ""}
           >
             {autoSpeak ? (
               <><Volume2 className="w-4 h-4 mr-2" />ON</>
@@ -250,7 +254,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="space-y-3 pt-3 border-t border-purple-500/20"
+            className="space-y-3 pt-3 border-t border-blue-500/20"
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Voice Settings</span>

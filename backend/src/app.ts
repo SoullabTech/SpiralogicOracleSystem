@@ -29,7 +29,7 @@ app.use(
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN?.split(",") || ["http://localhost:3000"],
+    origin: process.env.CORS_ORIGIN?.split(",") || ["http://localhost:3000", "http://localhost:3001"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Request-ID"],
@@ -38,6 +38,18 @@ app.use(
 
 // Compression and performance
 app.use(compression());
+
+// Static file serving for audio files
+app.use('/audio', express.static('public/audio', {
+  maxAge: '1d',
+  setHeaders: (res, path) => {
+    if (path.endsWith('.mp3')) {
+      res.setHeader('Content-Type', 'audio/mpeg');
+    } else if (path.endsWith('.wav')) {
+      res.setHeader('Content-Type', 'audio/wav');
+    }
+  }
+}));
 
 // Logging
 app.use(

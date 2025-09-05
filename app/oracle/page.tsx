@@ -1,597 +1,830 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Mic, 
-  MicOff, 
-  Send, 
-  Users, 
-  Calendar, 
-  Sparkles, 
-  BarChart3, 
-  Settings, 
-  Crown,
-  Pause,
-  Play,
-  Volume2
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Spinner } from "@/components/ui/spinner";
-import { useToast, ToastProvider } from "@/components/ui/toast";
-// Temporary fallback implementations for deployment
-const mayaVoice = {
-  speak: (text: string) => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.85;
-      utterance.pitch = 1.1;
-      speechSynthesis.speak(utterance);
-    }
-  }
-};
+import { Send, Mic, MicOff, Sparkles, User, BookOpen, LogOut, Library, Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { cleanMessage } from "@/lib/cleanMessage";
+import { MicrophoneCapture, MicrophoneCaptureRef } from "@/components/voice/MicrophoneCapture";
+import { ContinuousConversation, ContinuousConversationRef } from "@/components/voice/ContinuousConversation";
+import { OracleVoicePlayer } from "@/components/voice/OracleVoicePlayer";
+import TranscriptPreview from "@/app/components/TranscriptPreview";
+import { unlockAudio, addAutoUnlockListeners } from "@/lib/audio/audioUnlock";
+import { betaTracker } from "@/lib/analytics/betaTracker";
+import { onboardingTracker } from "@/lib/analytics/onboardingTracker";
+import { voiceFlowAnalytics } from "@/lib/analytics/voiceFlowAnalytics";
+import { Analytics } from "@/lib/analytics/supabaseAnalytics";
+import QuickFeedback from "@/components/beta/QuickFeedback";
+import FileUploadTracker from "@/components/beta/FileUploadTracker";
+import MicTorusIndicator from "@/components/voice/MicTorusIndicator";
+import { ChatMessage } from "@/components/chat/ChatMessage";
+import VoiceSettingsPanel from "@/components/settings/VoiceSettingsPanel";
+import { VoiceSettingsProvider, useVoiceSettings } from "@/lib/contexts/VoiceSettingsContext";
 
-const useVoiceInput = () => ({
-  isRecording: false,
-  transcript: '',
-  startRecording: () => console.log('Voice input not available'),
-  stopRecording: () => {},
-  resetTranscript: () => {}
-});
-
-const unlockAudio = async () => true;
-const addAutoUnlockListeners = () => {};
-const isAudioUnlocked = () => true;
-const speakWithMaya = mayaVoice.speak;
-const smartSpeak = mayaVoice.speak;
-import { useMayaStream } from "@/hooks/useMayaStream";
-
-interface Message {
-  id: string;
-  type: 'user' | 'maya';
-  content: string;
-  timestamp: Date;
-  audio?: string | null;
-}
-
-function OraclePageContent() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'maya',
-      content: 'Welcome! I am Maya, your personal oracle agent. I learn and evolve with you. How may I guide you today?',
-      timestamp: new Date()
-    }
-  ]);
-  const [inputText, setInputText] = useState("");
-  const [isPlayingAudio, setIsPlayingAudio] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('agent');
-  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('connected');
+// Inner component that uses voice settings
+function OraclePageInner() {
+  const { settings } = useVoiceSettings();
+  const [messages, setMessages] = useState<Array<{
+    role: string, 
+    content: string, 
+    timestamp: string, 
+    audioUrl?: string,
+    citations?: Array<{
+      fileId: string;
+      fileName: string;
+      category?: string;
+      pageNumber?: number;
+      sectionTitle?: string;
+      sectionLevel?: number;
+      preview: string;
+      relevance: number;
+      chunkIndex: number;
+    }>;
+    metadata?: {
+      element?: string;
+      confidence?: number;
+      sessionId?: string;
+    };
+  }>>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [useContinuousMode, setUseContinuousMode] = useState(true); // Toggle for continuous mode
+  const [isSpeaking, setIsSpeaking] = useState(false); // Track when Maya is speaking
+  const [user, setUser] = useState<any>(null);
+  const [currentAudioUrl, setCurrentAudioUrl] = useState<string | null>(null);
+  const [currentAudioData, setCurrentAudioData] = useState<string | null>(null);
+  const [currentAudioFormat, setCurrentAudioFormat] = useState<string>('wav');
+  const [interimTranscript, setInterimTranscript] = useState("");
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const [debugInfo, setDebugInfo] = useState<any>({});
+  const [interactionCount, setInteractionCount] = useState(0);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [showFileUpload, setShowFileUpload] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { addToast } = useToast();
-  const [autoSpeak, setAutoSpeak] = useState(false);
-  const [voiceResponses, setVoiceResponses] = useState(true);
-  const [element, setElement] = useState<"air"|"fire"|"water"|"earth"|"aether">("earth");
-  
-  // Maya streaming integration
-  const { text: streamingText, isStreaming, metadata, stream, cancelSpeech } = useMayaStream();
-  const currentStreamingMessage = useRef<string | null>(null);
-  
-  // Voice input functionality with smart endpointing
-  const voiceInput = useVoiceInput({
-    onResult: (transcript: string, isFinal: boolean) => {
-      // Show live transcript as user speaks
-      setInputText(transcript);
-    },
-    onAutoStop: (finalTranscript: string) => {
-      console.log('🎤 Auto-stopped with transcript:', finalTranscript);
-      setInputText(finalTranscript);
-      // Auto-send after a brief delay
-      setTimeout(() => {
-        if (finalTranscript.trim()) {
-          sendMessage();
-        }
-      }, 300);
-    },
-    onError: (error: string) => {
-      addToast({
-        title: 'Voice Input Error',
-        description: error,
-        variant: 'error',
-        duration: 4000
-      });
-    },
-    continuous: true,  // Enable continuous mode for smart endpointing
-    interimResults: true,
-    language: localStorage.getItem('mayaLang') || 'en-US',
-    silenceTimeoutMs: 1200,  // 1.2s silence detection
-    minSpeechLengthChars: 3  // Minimum 3 chars to trigger auto-send
-  });
-  
-  // Update streaming message as text arrives
+  const microphoneRef = useRef<MicrophoneCaptureRef>(null);
+  const continuousRef = useRef<ContinuousConversationRef>(null);
+  const router = useRouter();
+
   useEffect(() => {
-    if (currentStreamingMessage.current && streamingText) {
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === currentStreamingMessage.current 
-            ? { ...msg, content: streamingText }
-            : msg
-        )
-      );
+    // Check if user is authenticated
+    const storedUser = localStorage.getItem('beta_user');
+    if (!storedUser) {
+      router.push('/auth');
+      return;
     }
-  }, [streamingText]);
-  
-  // Handle streaming completion
-  useEffect(() => {
-    if (!isStreaming && currentStreamingMessage.current) {
-      currentStreamingMessage.current = null;
-    }
-  }, [isStreaming]);
-  
-  useEffect(() => {
-    // Load preferences from localStorage
-    const savedAutoSpeak = localStorage.getItem('maya-auto-speak');
-    const savedVoiceResponses = localStorage.getItem('maya-voice-responses');
-    if (savedAutoSpeak) setAutoSpeak(JSON.parse(savedAutoSpeak));
-    if (savedVoiceResponses) setVoiceResponses(JSON.parse(savedVoiceResponses));
+    const userData = JSON.parse(storedUser);
+    setUser(userData);
     
-    // Set up audio unlock listeners for autoplay policy
+    // Start analytics session
+    Analytics.startSession(userData.id);
+    
+    // Track page view
+    Analytics.pageView('/oracle', {
+      user_id: userData.id,
+      username: userData.username,
+      element: userData.element
+    });
+    
+    // Initialize beta tracking
+    betaTracker.initBetaTester(userData.id, {
+      username: userData.username,
+      preferredElement: userData.element,
+      consentAnalytics: true
+    });
+    
+    // Initialize onboarding tracking
+    onboardingTracker.reset();
+    
+    // Add auto-unlock listeners for audio playback
     addAutoUnlockListeners();
-  }, []);
-
-  useEffect(() => {
-    // Save auto-speak preference
-    localStorage.setItem('maya-auto-speak', JSON.stringify(autoSpeak));
-  }, [autoSpeak]);
-
-  useEffect(() => {
-    // Save voice responses preference
-    localStorage.setItem('maya-voice-responses', JSON.stringify(voiceResponses));
-  }, [voiceResponses]);
-
-  // Get oracle info from localStorage
-  const [oracleInfo, setOracleInfo] = useState<any>(null);
-  
-  useEffect(() => {
-    try {
-      const oracle = localStorage.getItem('spiralogic-oracle');
-      if (oracle) {
-        setOracleInfo(JSON.parse(oracle));
+    
+    // Track Milestone 1: Torus Activated (when user loads Maya page)
+    setTimeout(() => {
+      onboardingTracker.trackTorusActivated(true, {
+        torusVisible: true,
+        context: 'oracle_page_loaded',
+        userElement: userData.element
+      });
+    }, 1000); // Small delay to ensure torus is rendered
+    
+    // Welcome message from assigned agent
+    setMessages([{
+      role: 'assistant',
+      content: `Hey ${userData.username}, good to see you again. What's going on?`,
+      timestamp: new Date().toISOString(),
+      citations: [],
+      metadata: {
+        element: userData.element,
+        sessionId: `session-${userData.id}-${Date.now()}`
       }
-    } catch (error) {
-      console.error('Error loading oracle info:', error);
-    }
-  }, []);
+    }]);
+
+    // Cleanup function to end session when component unmounts
+    return () => {
+      Analytics.endSession({
+        total_interactions: interactionCount,
+        page: '/oracle'
+      });
+    };
+  }, [router]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom();
   }, [messages]);
 
-  // Keyboard accessibility for voice input
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Space to toggle mic (when input is not focused)
-      if (event.code === 'Space' && event.target !== document.querySelector('input')) {
-        event.preventDefault();
-        toggleVoiceRecording();
-      }
-      
-      // Escape to cancel recording
-      if (event.code === 'Escape' && voiceInput.isRecording) {
-        event.preventDefault();
-        voiceInput.stopRecording();
-        voiceInput.resetTranscript();
-        setInputText('');
-      }
-    };
+  const handleSend = async (text?: string) => {
+    const messageText = text || input;
+    if (!messageText.trim() || isLoading) return;
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [voiceInput.isRecording]);
+    const sendStartTime = Date.now();
+    const isVoiceInput = !!text;
 
-  const sendMessage = async () => {
-    if (!inputText.trim() || isStreaming) return;
+    // Track interaction start
+    Analytics.startInteraction(isVoiceInput ? 'voice' : 'text', {
+      input_length: messageText.length,
+      user_id: user?.id
+    });
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: inputText,
-      timestamp: new Date()
+    const userMessage = {
+      role: 'user',
+      content: messageText,
+      timestamp: new Date().toISOString()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    const currentInput = inputText;
-    setInputText("");
+    if (!text) setInput(""); // Only clear input if not from voice
+    setIsLoading(true);
     
+    // Track interaction
+    const newCount = interactionCount + 1;
+    setInteractionCount(newCount);
+    
+    // Update beta tracking session
+    betaTracker.updateSession({
+      interactionCount: newCount,
+      voiceUsed: isVoiceInput,
+      durationMinutes: Math.floor((Date.now() - Date.now()) / 60000) // Will be calculated properly in tracker
+    });
+
     try {
-      setConnectionStatus('connecting');
+      // First, get Maya's text response
+      // First check for the backend port
+      const backendPort = process.env.NEXT_PUBLIC_BACKEND_URL?.split(':').pop() || '3002';
       
-      // Create placeholder message for streaming
-      const streamingMessageId = (Date.now() + 1).toString();
-      currentStreamingMessage.current = streamingMessageId;
+      const response = await fetch('/api/oracle/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: messageText,
+          userId: user?.id,
+          agentId: user?.agentId,
+          element: user?.element || 'aether',
+          oracle: user?.agentName || 'Maya',
+          sessionId: `session-${user?.id}-${Date.now()}`,
+          conversationHistory: messages,
+          enableVoice: true,
+          voiceEngine: 'auto',
+          useCSM: true,
+          fallbackEnabled: true
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to get response');
       
-      const placeholderMessage: Message = {
-        id: streamingMessageId,
-        type: 'maya',
-        content: '',
-        timestamp: new Date()
+      const data = await response.json();
+      
+      // Capture debug information
+      if (process.env.NODE_ENV === 'development') {
+        setDebugInfo({
+          ...data.debug,
+          ttsService: data.ttsService || data.voiceMetadata?.engine,
+          processingTime: data.processingTime || data.voiceMetadata?.processingTimeMs,
+          memoryLayersLoaded: data.memoryLayers,
+          timestamp: new Date().toISOString()
+        });
+      }
+      
+      const assistantMessage = {
+        role: 'assistant',
+        content: data.message || data.response?.text || data.response || "I am here to listen and reflect with you.",
+        audioUrl: data.audioUrl || data.response?.audioUrl,
+        audioData: data.audioData,
+        audioFormat: data.audioFormat || 'wav',
+        timestamp: new Date().toISOString(),
+        citations: (data.citations || data.response?.citations || []).map((citation: any, index: number) => ({
+          fileId: citation.fileId || `file-${index}`,
+          fileName: citation.fileName || citation.file_name || 'Unknown File',
+          category: citation.category || 'reference',
+          pageNumber: citation.pageNumber || citation.page_number,
+          sectionTitle: citation.sectionTitle || citation.section_title,
+          sectionLevel: citation.sectionLevel || 1,
+          preview: citation.snippet || citation.content || '',
+          relevance: citation.confidence || citation.score || 0.8,
+          chunkIndex: citation.chunkIndex || index
+        })),
+        metadata: {
+          element: data.element || user?.element,
+          confidence: data.confidence,
+          sessionId: `session-${user?.id}-${Date.now()}`
+        }
       };
-      setMessages(prev => [...prev, placeholderMessage]);
       
-      // Start streaming
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002';
-      stream(
-        {
-          backendUrl,
-          element,
-          userId: "web-user",
-          voiceEnabled: voiceResponses && autoSpeak,
-          lang: "en-US"
-        },
-        currentInput
+      setMessages(prev => [...prev, assistantMessage]);
+      
+      // Analytics: Track response completion
+      const responseLatency = Date.now() - sendStartTime;
+      
+      // Track interaction completion
+      Analytics.completeInteraction(isVoiceInput ? 'voice' : 'text', {
+        input_length: messageText.length,
+        response_length: assistantMessage.content.length,
+        latency_ms: responseLatency,
+        success: true,
+        has_audio: !!(assistantMessage.audioUrl || assistantMessage.audioData)
+      });
+      
+      if (!isVoiceInput) {
+        // This is a text interaction
+        voiceFlowAnalytics.trackTextInteraction(messageText, assistantMessage.content, responseLatency);
+      } else {
+        // This is part of voice flow - track response completion
+        voiceFlowAnalytics.trackResponseComplete(assistantMessage.content, responseLatency);
+      }
+      
+      // Now generate TTS audio if we have text but no audio
+      if (!assistantMessage.audioUrl && !assistantMessage.audioData) {
+        try {
+          console.log('🎤 No audio from backend, generating TTS...');
+          const voiceResponse = await fetch('/api/voice/unified', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              text: assistantMessage.content,
+              voice: 'maya',
+              engine: 'auto',
+              fallback: true,
+              testMode: false
+            })
+          });
+          
+          if (voiceResponse.ok) {
+            const voiceData = await voiceResponse.json();
+            
+            if (voiceData.success) {
+              // Update message with audio
+              assistantMessage.audioUrl = voiceData.audioUrl;
+              assistantMessage.audioData = voiceData.audioData;
+              assistantMessage.audioFormat = voiceData.format || 'wav';
+              
+              // Determine TTS provider from engine or URL patterns
+              const ttsProvider: 'Sesame' | 'ElevenLabs' = 
+                voiceData.engine === 'sesame' || assistantMessage.audioUrl?.includes('sesame') ? 'Sesame' : 'ElevenLabs';
+              
+              // Analytics: Track TTS completion
+              const ttsLatency = Date.now() - sendStartTime - responseLatency;
+              voiceFlowAnalytics.trackTTSComplete(
+                ttsProvider, 
+                ttsLatency, 
+                voiceData.audioSize,
+                true
+              );
+              
+              // Track TTS success
+              betaTracker.trackVoiceEvent('tts', {
+                success: true,
+                metadata: { 
+                  engine: voiceData.engine,
+                  fallbackUsed: voiceData.fallbackUsed 
+                }
+              });
+            } else {
+              console.error('🎤 Voice generation failed:', voiceData.error);
+            }
+          }
+        } catch (voiceError) {
+          console.error('🎤 TTS generation error:', voiceError);
+          // Continue without audio
+        }
+      }
+      
+      // Set current audio for playback
+      if (assistantMessage.audioUrl || assistantMessage.audioData) {
+        setCurrentAudioUrl(assistantMessage.audioUrl);
+        setCurrentAudioData(assistantMessage.audioData);
+        setCurrentAudioFormat(assistantMessage.audioFormat);
+        
+        // Track voice flow complete
+        onboardingTracker.trackVoiceFlowComplete(true, {
+          sttSuccess: true,
+          ttsSuccess: true,
+          transcriptLength: messageText?.length || 0,
+          audioQuality: 4.5
+        });
+      
+        // Check for memory references
+        const mayaContent = assistantMessage.content.toLowerCase();
+        const hasMemoryReference = mayaContent.includes(user?.username?.toLowerCase() || '') ||
+                                  mayaContent.includes('remember') ||
+                                  mayaContent.includes('you mentioned') ||
+                                  mayaContent.includes('earlier') ||
+                                  mayaContent.includes('before');
+        
+        if (hasMemoryReference && interactionCount > 1) {
+          onboardingTracker.trackMemoryRecallSuccess(true, {
+            memoryType: 'session',
+            contextRecalled: true,
+            personalityConsistent: true
+          });
+        }
+        
+        // Show file upload option after 3rd interaction
+        if (interactionCount === 3 && !showFileUpload) {
+          setTimeout(() => setShowFileUpload(true), 2000);
+        }
+        
+        // Show feedback after successful voice interaction
+        if (interactionCount % 5 === 0 && !showFeedback) {
+          setTimeout(() => setShowFeedback(true), 3000);
+        }
+      }
+      
+    } catch (error) {
+      console.error('Error:', error);
+      const responseLatency = Date.now() - sendStartTime;
+      
+      // Track interaction failure
+      Analytics.completeInteraction(isVoiceInput ? 'voice' : 'text', {
+        input_length: messageText.length,
+        response_length: 0,
+        latency_ms: responseLatency,
+        success: false,
+        error_type: 'api_error',
+        error_message: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      // Analytics: Track error
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      voiceFlowAnalytics.trackError(
+        'processing',
+        'api_error',
+        errorMessage,
+        isVoiceInput ? 'voice' : 'text'
       );
       
-      setConnectionStatus('connected');
-    } catch (error) {
-      console.error('Streaming error:', error);
-      setConnectionStatus('disconnected');
-      
-      addToast({
-        title: 'Network Error',
-        description: 'Please check your connection and try again',
-        variant: 'error'
+      // Track API error
+      betaTracker.trackMemoryEvent('load', 'session', {
+        success: false,
+        errorMessage
       });
+      
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "I apologize, I'm having trouble connecting. Please try again.",
+        timestamp: new Date().toISOString()
+      }]);
+    } finally {
+      setIsLoading(false);
+      // Update session metrics after each interaction
+      voiceFlowAnalytics.updateSessionMetrics();
     }
   };
 
-  const playAudio = (messageId: string, audioUrl: string) => {
-    if (audioRef.current) {
-      if (isPlayingAudio === messageId) {
-        audioRef.current.pause();
-        setIsPlayingAudio(null);
+  // Handle interim transcript (live preview)
+  const handleInterimTranscript = (transcript: string) => {
+    setInterimTranscript(transcript);
+  };
+
+  // Handle final transcript (complete)
+  const handleVoiceTranscript = (transcript: string) => {
+    setFinalTranscript(transcript);
+    setInterimTranscript(""); // Clear interim
+    
+    // Track STT success
+    const sttSuccess = transcript.trim().length > 0;
+    betaTracker.trackVoiceEvent('stt', {
+      success: sttSuccess,
+      metadata: { transcriptLength: transcript.length }
+    });
+    
+    // Analytics: Track voice interaction and transcription complete
+    voiceFlowAnalytics.trackVoiceInteraction();
+    voiceFlowAnalytics.trackTranscriptionComplete(transcript);
+    
+    // Track Milestone 2: Voice Flow Complete (STT part)
+    if (sttSuccess) {
+      console.log('🎯 STT completed, waiting for TTS to complete voice flow milestone');
+    }
+    
+    if (transcript.trim()) {
+      setTimeout(() => {
+        setFinalTranscript(""); // Clear final transcript after sending
+        handleSend(transcript);
+      }, 500); // Brief delay to show final transcript
+    }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('beta_user');
+    router.push('/');
+  };
+
+  // Recording control functions
+  const startRecording = async () => {
+    console.log('🎙️ [Oracle] Starting recording');
+    // Unlock audio on first interaction
+    await unlockAudio();
+    // Analytics: Track voice flow start
+    voiceFlowAnalytics.startVoiceFlow('voice');
+    microphoneRef.current?.startRecording();
+  };
+
+  const stopRecording = () => {
+    console.log('🛑 [Oracle] Stopping recording');
+    microphoneRef.current?.stopRecording();
+  };
+
+  const toggleRecording = () => {
+    microphoneRef.current?.toggleRecording();
+  };
+
+  // Keyboard handler for Return key shortcuts
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
+      e.preventDefault();
+
+      if (input.trim()) {
+        // Send text message
+        handleSend(input);
       } else {
-        audioRef.current.src = audioUrl;
-        audioRef.current.play();
-        setIsPlayingAudio(messageId);
+        // Voice toggle when no text
+        if (isRecording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
+      }
+    } else if (e.key === "Escape") {
+      // Escape to cancel recording or clear input
+      if (isRecording) {
+        stopRecording();
+      } else if (input.trim()) {
+        setInput("");
       }
     }
   };
 
-  const toggleVoiceRecording = async () => {
-    if (voiceInput.isRecording) {
-      voiceInput.stopRecording();
-    } else {
-      // Unlock audio on first voice interaction
-      if (!isAudioUnlocked()) {
-        await unlockAudio();
-      }
-      voiceInput.startRecording();
-    }
-  };
 
-  const bottomNavItems = [
-    { id: 'agent', icon: Users, label: 'Agent' },
-    { id: 'journal', icon: Calendar, label: 'Journal' },
-    { id: 'astrology', icon: Sparkles, label: 'Astrology' },
-    { id: 'insights', icon: BarChart3, label: 'Insights' },
-    { id: 'settings', icon: Settings, label: 'Settings' }
-  ];
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#0A0D16] flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-gray-600 border-t-[#FFD700] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#0A0D16] text-white flex flex-col">
       {/* Header */}
-      <div className="bg-background/80 backdrop-blur-xl border-b border-purple-500/20 p-4">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-orange-500 rounded-full flex items-center justify-center">
-              <Crown className="w-5 h-5 text-white" />
+      <header className="border-b border-gray-800 backdrop-blur-sm bg-[#0A0D16]/80 sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+              <User className="w-5 h-5 text-white/70" />
             </div>
             <div>
-              <h1 className="font-semibold text-lg">
-                {oracleInfo?.name || 'Maya'}
-              </h1>
-              <p className="text-xs text-muted-foreground">Personal Oracle Agent</p>
+              <h1 className="text-lg font-medium text-white">Soullab</h1>
+              <p className="text-xs text-gray-400">Personal Oracle • {user.element || 'Adaptive'}</p>
             </div>
           </div>
           
-          {/* Maya Voice Controls & Element Selection */}
-          <div className="flex-1 flex justify-center max-w-md">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => mayaVoice.speak('Hello, I am Maya, your mystical oracle guide.')}
-                className="p-2 rounded-full bg-purple-600 hover:bg-purple-700 text-white transition-colors"
-                title="Hear Maya"
-              >
-                <Play className="w-4 h-4" />
-              </button>
-              
-              {/* Element Selection */}
-              <div className="flex gap-1">
-                {['air', 'fire', 'water', 'earth', 'aether'].map(el => (
-                  <button
-                    key={el}
-                    onClick={() => setElement(el as any)}
-                    className={`px-2 py-1 text-xs rounded transition-colors ${
-                      element === el 
-                        ? 'bg-purple-600 text-white' 
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                    }`}
-                    title={`${el} element ${el === 'air' ? '(Claude)' : ''}`}
-                  >
-                    {el}
-                  </button>
-                ))}
-              </div>
-              
-              <div className="flex flex-col gap-1">
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={voiceResponses}
-                    onChange={(e) => setVoiceResponses(e.target.checked)}
-                    className="rounded"
-                  />
-                  Voice responses
-                </label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={autoSpeak}
-                    onChange={(e) => setAutoSpeak(e.target.checked)}
-                    className="rounded"
-                    disabled={!voiceResponses}
-                  />
-                  Auto-play
-                </label>
-              </div>
-              {voiceInput.isSupported && (
-                <div className="flex items-center gap-2 text-xs">
-                  <div className="flex items-center gap-1">
-                    <Mic className="w-3 h-3 text-green-400" />
-                    <span className="text-green-400">Voice ready</span>
-                  </div>
-                  {voiceInput.isRecording && (
-                    <div className="flex items-center gap-1 text-orange-400">
-                      <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
-                      <span>Local processing</span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-            <div className={`w-2 h-2 rounded-full ${
-              connectionStatus === 'connected' ? 'bg-green-500 animate-pulse' :
-              connectionStatus === 'connecting' ? 'bg-orange-500 animate-pulse' :
-              'bg-red-500'
-            }`} />
-            <span>
-              {connectionStatus === 'connected' ? 'Connected' :
-               connectionStatus === 'connecting' ? 'Connecting...' :
-               'Disconnected'}
-            </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.push('/oracle/library')}
+              className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
+              title="Maya's Library"
+            >
+              <Library className="w-5 h-5 text-gray-400 hover:text-sacred-gold" />
+            </button>
+            <button
+              onClick={() => router.push('/journal')}
+              className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
+              title="Journal"
+            >
+              <BookOpen className="w-5 h-5 text-gray-400" />
+            </button>
+            <button
+              onClick={() => setShowSettings(true)}
+              className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
+              title="Voice Settings"
+            >
+              <Settings className="w-5 h-5 text-gray-400 hover:text-tesla-blue" />
+            </button>
+            <button
+              onClick={() => setShowFeedback(true)}
+              className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
+              title="Give Feedback"
+            >
+              <Sparkles className="w-5 h-5 text-sacred-gold" />
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="w-5 h-5 text-gray-400" />
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 max-w-4xl mx-auto w-full">
-        <div className="space-y-4">
-          <AnimatePresence>
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className={`max-w-[80%] ${
-                  message.type === 'user' 
-                    ? 'bg-gradient-to-r from-purple-600 to-orange-500 text-white' 
-                    : 'bg-background/80 backdrop-blur-xl border border-purple-500/20'
-                } rounded-2xl p-4`}>
-                  {message.type === 'maya' && (
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Crown className="w-4 h-4 text-purple-400" />
-                      <span className="text-xs font-medium text-purple-400">
-                        {oracleInfo?.name || 'Maya'}
-                      </span>
-                    </div>
-                  )}
-                  
-                  <p className="text-sm leading-relaxed">{message.content}</p>
-                  
-                  {message.audio && (
-                    <div className="flex items-center space-x-2 mt-3 pt-2 border-t border-purple-500/20">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => playAudio(message.id, message.audio!)}
-                        className="text-purple-400 hover:text-purple-300 p-1"
-                      >
-                        {isPlayingAudio === message.id ? (
-                          <Pause className="w-4 h-4" />
-                        ) : (
-                          <Volume2 className="w-4 h-4" />
-                        )}
-                      </Button>
-                      <span className="text-xs text-muted-foreground">
-                        {isPlayingAudio === message.id ? 'Speaking...' : 'Play audio'}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+      {/* Chat Area */}
+      <div className="flex-1 overflow-hidden flex flex-col max-w-4xl w-full mx-auto">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((message, index) => (
+            <ChatMessage
+              key={index}
+              message={{
+                role: message.role as 'user' | 'assistant',
+                content: message.role === 'assistant' ? cleanMessage(message.content) : message.content,
+                timestamp: message.timestamp,
+                audioUrl: message.audioUrl,
+                citations: message.citations || [],
+                metadata: message.metadata
+              }}
+              isLatest={index === messages.length - 1}
+              onPlayAudio={(audioUrl) => {
+                setCurrentAudioUrl(audioUrl);
+                setIsSpeaking(true);
+              }}
+            />
+          ))}
           
-          {isStreaming && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex justify-start"
-            >
-              <div className="bg-background/80 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-4 max-w-[80%]">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Crown className="w-4 h-4 text-purple-400" />
-                  <span className="text-xs font-medium text-purple-400">
-                    {oracleInfo?.name || 'Maya'}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Spinner variant="oracle" size="sm" color="purple" />
-                  <span className="text-xs text-muted-foreground">Maya is speaking...</span>
+          {isLoading && (
+            <div className="flex justify-start animate-fade-in">
+              <div className="bg-[#1A1F2E]/50 border border-gray-800 p-4 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse" />
+                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse delay-75" />
+                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse delay-150" />
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
+          
+          <div ref={messagesEndRef} />
         </div>
-        <div ref={messagesEndRef} />
-      </div>
 
-      {/* Input Area */}
-      <div className="bg-background/80 backdrop-blur-xl border-t border-purple-500/20 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center space-x-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleVoiceRecording}
-              disabled={!voiceInput.isSupported || isStreaming}
-              className={`p-3 rounded-full transition-all touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center ${
-                voiceInput.isRecording 
-                  ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/50 scale-110' 
-                  : voiceInput.isSupported 
-                    ? 'text-muted-foreground hover:text-purple-400 hover:bg-purple-500/10 active:scale-95'
-                    : 'text-gray-500 cursor-not-allowed opacity-50'
-              }`}
-              title={
-                !voiceInput.isSupported 
-                  ? 'Voice input not supported in this browser'
-                  : voiceInput.isRecording 
-                    ? 'Recording... (tap to stop or wait for silence)'
-                    : 'Tap to start voice input (Space key also works)'
-              }
-              aria-label={
-                voiceInput.isRecording 
-                  ? 'Stop voice recording' 
-                  : 'Start voice recording'
-              }
-            >
-              {voiceInput.isRecording ? (
-                <MicOff className="w-6 h-6" />
-              ) : (
-                <Mic className="w-6 h-6" />
-              )}
-            </Button>
-            
-            <div className="flex-1 relative">
-              <Input
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && !voiceInput.isRecording && !isStreaming && sendMessage()}
-                placeholder={
-                  voiceInput.isRecording 
-                    ? "🎤 Listening... speak now (or press Esc to cancel)"
-                    : voiceInput.transcript && !voiceInput.isRecording
-                      ? "Voice transcription complete - press Enter or click Send"
-                      : "Type a message, click mic, or press Space to speak..."
+        {/* Voice Player */}
+        {(currentAudioUrl || currentAudioData) && (
+          <OracleVoicePlayer
+            audioUrl={currentAudioUrl}
+            audioData={currentAudioData}
+            format={currentAudioFormat}
+            onPlaybackComplete={() => {
+              setCurrentAudioUrl(null);
+              setCurrentAudioData(null);
+              setIsSpeaking(false); // Maya finished speaking
+            }}
+            onPlaybackStart={() => {
+              setIsSpeaking(true); // Maya started speaking
+              // Update transcript preview to show speaking state
+              const audioSource = currentAudioUrl || (currentAudioData ? 'base64 data' : 'unknown');
+              console.log('🔊 Maya is speaking with:', audioSource);
+              console.log('Audio URL type:', currentAudioUrl ? (currentAudioUrl.startsWith('http') ? 'absolute URL' : 'relative URL') : 'no URL');
+            }}
+          />
+        )}
+
+        {/* Torus Indicator - Shows voice state */}
+        <div className={`
+          absolute bottom-32 left-1/2 transform -translate-x-1/2 z-20
+          relative flex items-center justify-center transition-all duration-500
+          ${isRecording 
+            ? 'scale-110 brightness-125' 
+            : 'scale-100 brightness-100'
+          }
+        `}>
+          {/* Ripple waves - only show when recording */}
+          {isRecording && (
+            <>
+              <span className="absolute w-24 h-24 rounded-full border border-[#FFD700] opacity-60 animate-[ping_2s_linear_infinite]" />
+              <span className="absolute w-32 h-32 rounded-full border border-[#FFD700] opacity-30 animate-[ping_3s_linear_infinite]" />
+            </>
+          )}
+          
+          <MicTorusIndicator 
+            isRecording={isRecording} 
+            isProcessing={isLoading}
+            isSpeaking={!!currentAudioUrl || !!currentAudioData}
+          />
+        </div>
+
+        {/* Live Transcript Preview - Fixed positioning */}
+        <div className="px-4 pb-2">
+          <TranscriptPreview
+            interimTranscript={interimTranscript}
+            finalTranscript={finalTranscript}
+            isRecording={isRecording}
+            isSpeaking={!!currentAudioUrl}
+            isProcessing={isLoading}
+          />
+        </div>
+
+        {/* Input Area */}
+        <div className="border-t border-gray-800 p-4 bg-[#0A0D16]/80 backdrop-blur-sm">
+          <div className="flex items-center gap-3 relative">
+            {/* Continuous Conversation Mode */}
+            {useContinuousMode ? (
+              <ContinuousConversation
+                ref={continuousRef}
+                onTranscript={handleVoiceTranscript}
+                onInterimTranscript={setInterimTranscript}
+                onRecordingStateChange={setIsRecording}
+                isProcessing={isLoading}
+                isSpeaking={isSpeaking}
+                autoStart={true}
+                silenceThreshold={settings.adaptiveMode 
+                  ? Math.min(settings.silenceTimeout, 4000) // Adaptive mode uses shorter timeout
+                  : settings.silenceTimeout
                 }
-                className={`bg-background/50 border-purple-500/20 focus:border-purple-400 pr-12 ${
-                  voiceInput.isRecording ? 'border-red-400 shadow-sm shadow-red-500/20' : ''
-                }`}
-                disabled={isStreaming}
-                aria-label="Chat input"
-                aria-describedby="voice-status"
+                vadSensitivity={0.3}
               />
-              {voiceInput.isRecording && (
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+            ) : (
+              <>
+                {/* Traditional Mic Button - Tesla Style with proper click target */}
+                <button
+                  onClick={toggleRecording}
+                  className="relative group"
+                  title={isRecording ? "Stop recording" : "Start recording"}
+                >
+                  {/* Tesla-style visualization container */}
+                  <div className="w-12 h-12 flex items-center justify-center">
+                    {/* Pulsing ring effect */}
+                    {isRecording && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full border-2 border-sacred-gold/30 animate-ping" />
+                        <div className="absolute w-8 h-8 rounded-full border border-sacred-gold/50 animate-pulse" />
+                      </div>
+                    )}
+                    
+                    {/* Mic icon button */}
+                    <div className={`
+                      relative z-10 w-10 h-10 rounded-full flex items-center justify-center
+                      transition-all duration-300 border-2
+                      ${isRecording 
+                        ? 'bg-sacred-gold/20 border-sacred-gold text-sacred-gold shadow-lg shadow-sacred-gold/30' 
+                        : 'bg-gray-900/50 border-gray-700 text-gray-400 hover:border-sacred-gold/50 hover:text-sacred-gold/70'
+                      }
+                    `}>
+                      {isRecording ? (
+                        <MicOff className="w-5 h-5" />
+                      ) : (
+                        <Mic className="w-5 h-5" />
+                      )}
+                    </div>
+                  </div>
+                </button>
+                
+                {/* Hidden MicrophoneCapture for actual functionality */}
+                <div className="hidden">
+                  <MicrophoneCapture
+                    ref={microphoneRef}
+                    onTranscript={handleVoiceTranscript}
+                    onInterimTranscript={setInterimTranscript}
+                    isProcessing={isLoading}
+                    onRecordingStateChange={setIsRecording}
+                  />
                 </div>
-              )}
-              
-              {/* Privacy indicator */}
-              {voiceInput.isRecording && (
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-xs text-orange-400 flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-orange-400 rounded-full"></div>
-                  <span>Local</span>
-                </div>
-              )}
-            </div>
+              </>
+            )}
             
-            {/* Screen reader announcements */}
-            <div 
-              id="voice-status"
-              className="sr-only" 
-              aria-live="polite" 
-              aria-atomic="true"
-            >
-              {voiceInput.isRecording 
-                ? "Voice recording active. Speak your message or press Escape to cancel."
-                : voiceInput.transcript 
-                  ? "Voice input complete. Message ready to send."
-                  : ""
-              }
-            </div>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="What's on your mind?"
+              className="flex-1 bg-[#1A1F2E] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] transition-colors"
+            />
             
-            <Button
-              onClick={sendMessage}
-              disabled={!inputText.trim() || isStreaming}
-              className="p-2 bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white rounded-full"
+            <button
+              onClick={() => handleSend()}
+              disabled={!input.trim() || isLoading}
+              className="p-3 bg-[#FFD700] text-black rounded-lg hover:bg-[#FFD700]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               <Send className="w-5 h-5" />
-            </Button>
+            </button>
+          </div>
+          
+          {/* Dynamic Hint Text */}
+          <div className="text-xs mt-2 px-4 pb-2 flex justify-center">
+            {isRecording ? (
+              <span className="text-[#FFD700] animate-pulse font-medium">
+                ✨ Press ⏎ to stop & send recording • Esc to cancel
+              </span>
+            ) : input.trim() ? (
+              <span className="text-slate-400">
+                Press ⏎ to send text • Shift+⏎ for newline
+              </span>
+            ) : (
+              <span className="text-slate-400">
+                Press ⏎ to start voice recording • Shift+⏎ for newline
+              </span>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Bottom Navigation */}
-      <div className="bg-background/95 backdrop-blur-xl border-t border-purple-500/20 p-2">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-around">
-            {bottomNavItems.map((item) => (
-              <motion.button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`flex flex-col items-center space-y-1 p-3 rounded-lg transition-all ${
-                  activeTab === item.id
-                    ? 'bg-purple-500/20 text-purple-400'
-                    : 'text-muted-foreground hover:text-purple-400'
-                }`}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="text-xs font-medium">{item.label}</span>
-              </motion.button>
-            ))}
+        {/* File Upload for Multimodal Milestone */}
+        {showFileUpload && (
+          <div className="p-4 border-t border-gray-800 bg-[#0A0D16]/60">
+            <FileUploadTracker 
+              onFileAnalyzed={(success, metadata) => {
+                console.log('File analysis result:', { success, metadata });
+                if (success) {
+                  // Add a message showing the analysis
+                  setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: `I've analyzed your ${metadata?.fileName || 'file'}. ${metadata?.analysisResults || 'Analysis complete.'}`,
+                    timestamp: new Date().toISOString(),
+                    citations: [],
+                    metadata: {
+                      element: user?.element,
+                      sessionId: `session-${user?.id}-${Date.now()}`
+                    }
+                  }]);
+                }
+                // Hide upload after first successful analysis
+                if (success) {
+                  setTimeout(() => setShowFileUpload(false), 2000);
+                }
+              }}
+            />
           </div>
+        )}
+        
+        {/* Beta Feedback */}
+        {showFeedback && (
+          <QuickFeedback onClose={() => setShowFeedback(false)} />
+        )}
+
+        {/* Voice Settings */}
+        <VoiceSettingsPanel 
+          isOpen={showSettings} 
+          onClose={() => setShowSettings(false)} 
+        />
+
+        {/* Debug Panel - Development Only */}
+        {process.env.NODE_ENV === 'development' && debugInfo.timestamp && (
+          <div className="border-t border-gray-800 bg-[#0A0D16]/90 p-4">
+            <div className="max-w-4xl mx-auto">
+              <h3 className="text-xs font-semibold text-[#FFD700] mb-2">🧪 Voice Pipeline Debug</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                <div>
+                  <span className="text-gray-400">TTS Service:</span>
+                  <p className="text-white font-mono">{debugInfo.ttsService || 'unknown'}</p>
+                </div>
+                <div>
+                  <span className="text-gray-400">Processing Time:</span>
+                  <p className="text-white font-mono">{debugInfo.processingTime || 0}ms</p>
+                </div>
+                <div>
+                  <span className="text-gray-400">Memory Layers:</span>
+                  <p className="text-white font-mono">
+                    {debugInfo.memoryLayersLoaded 
+                      ? Object.entries(debugInfo.memoryLayersLoaded)
+                          .map(([key, value]) => `${key}: ${value}`)
+                          .join(', ') 
+                      : 'none'}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-gray-400">Recording:</span>
+                  <p className="text-white font-mono">{isRecording ? '🎙️ Active' : '⏹️ Idle'}</p>
+                </div>
+              </div>
+              {debugInfo.error && (
+                <div className="mt-2 p-2 bg-red-500/10 border border-red-500/20 rounded">
+                  <span className="text-red-400 text-xs">Error: {debugInfo.error}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         </div>
       </div>
-
-      {/* Hidden audio element for playback */}
-      <audio
-        ref={audioRef}
-        onEnded={() => setIsPlayingAudio(null)}
-        onError={() => setIsPlayingAudio(null)}
-      />
-    </div>
   );
 }
 
+// Simple auth check for beta
 export default function OraclePage() {
   return (
-    <ToastProvider>
-      <OraclePageContent />
-    </ToastProvider>
+    <VoiceSettingsProvider>
+      <OraclePageInner />
+    </VoiceSettingsProvider>
   );
 }

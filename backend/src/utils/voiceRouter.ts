@@ -344,7 +344,10 @@ async function synthesizeWithSesameCSM(
 
     // Verify file creation
     if (fs.existsSync(outputPath)) {
-      return `/audio/${filename}`;
+      // Return absolute URL for cross-port access
+      const backendPort = process.env.PORT || process.env.APP_PORT || 3002;
+      const backendUrl = process.env.BACKEND_URL || `http://localhost:${backendPort}`;
+      return `${backendUrl}/audio/${filename}`;
     } else {
       throw new Error("Audio file was not created by Sesame CSM");
     }

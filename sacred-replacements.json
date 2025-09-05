@@ -1,0 +1,10 @@
+{
+  "replacements": {
+    "bg-purple": "bg-sacred-cosmic",
+    "text-purple": "text-gold-divine",
+    "border-purple": "border-gold-divine",
+    "from-purple": "from-sacred-cosmic",
+    "to-purple": "to-sacred-navy",
+    "bg-gradient-to-": "bg-sacred-cosmic"
+  }
+}

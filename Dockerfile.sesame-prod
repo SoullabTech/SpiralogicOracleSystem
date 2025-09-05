@@ -1,0 +1,128 @@
+# =============================================================================
+# Sesame CSM TTS Service - Production Dockerfile
+# =============================================================================
+# Multi-stage build for optimized Python TTS service with CSM model weights
+# Features: Model preloading, health checks, audio processing, security hardening
+
+FROM python:3.10-slim as base
+
+# Set environment variables for production
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Create non-root user for security
+RUN groupadd -r sesame && useradd -r -g sesame -s /bin/false sesame
+
+WORKDIR /app
+
+# =============================================================================
+# System Dependencies Stage
+# =============================================================================
+FROM base as deps
+
+# Install system dependencies for audio processing and CSM models
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Audio processing libraries
+    ffmpeg \
+    libsndfile1 \
+    libasound2-dev \
+    portaudio19-dev \
+    # Build tools for Python packages
+    gcc \
+    g++ \
+    make \
+    pkg-config \
+    # Network tools for health checks
+    curl \
+    wget \
+    # Clean up to reduce image size
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get autoremove -y \
+    && apt-get clean
+
+# =============================================================================
+# Python Dependencies Stage
+# =============================================================================
+FROM deps as python-deps
+
+# Copy Python requirements
+COPY requirements.txt .
+
+# Install Python dependencies with optimizations
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
+
+# =============================================================================
+# Model Preloading Stage
+# =============================================================================
+FROM python-deps as models
+
+# Copy source code
+COPY . .
+
+# Create directories for model cache and audio output
+RUN mkdir -p /app/models /app/audio_output /app/logs && \
+    chown -R sesame:sesame /app
+
+# Preload CSM model weights during build (saves startup time)
+# This downloads and caches the model files in the image
+COPY preload_models.py .
+RUN python preload_models.py && \
+    echo "✅ CSM models preloaded successfully"
+
+# =============================================================================
+# Production Stage
+# =============================================================================
+FROM models as production
+
+# Copy application files
+COPY app/ ./app/
+COPY config/ ./config/
+COPY scripts/ ./scripts/
+
+# Set proper permissions
+RUN chown -R sesame:sesame /app && \
+    chmod +x scripts/*.sh
+
+# Create health check script
+RUN echo '#!/bin/bash\ncurl -f http://localhost:8000/health || exit 1' > /app/healthcheck.sh && \
+    chmod +x /app/healthcheck.sh
+
+# Switch to non-root user
+USER sesame
+
+# Expose TTS service port
+EXPOSE 8000
+
+# Health check for container orchestrators (K8s, Docker Compose, etc.)
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=60s \
+    CMD /app/healthcheck.sh
+
+# Set production environment
+ENV NODE_ENV=production \
+    SESAME_ENV=production \
+    SESAME_LOG_LEVEL=info \
+    SESAME_MODEL_CACHE=/app/models \
+    SESAME_AUDIO_OUTPUT=/app/audio_output
+
+# Production startup command with optimized settings
+CMD ["uvicorn", "app.main:app", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--workers", "4", \
+     "--worker-class", "uvicorn.workers.UvicornWorker", \
+     "--access-log", \
+     "--log-level", "info", \
+     "--no-server-header"]
+
+# =============================================================================
+# Metadata Labels
+# =============================================================================
+LABEL maintainer="SpiralogicOracle Team" \
+      version="1.0.0" \
+      description="Sesame CSM TTS Service - Production Ready" \
+      service="sesame-tts" \
+      environment="production"

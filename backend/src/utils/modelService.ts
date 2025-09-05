@@ -2,7 +2,7 @@
 
 import { openai } from "../lib/openaiClient"; // adjust if using other clients
 import logger from "./logger";
-import type { AgentResponse } from "../core/agents/types";
+import type { AgentResponse } from "../types/agent";
 
 class ModelService {
   /**
@@ -21,6 +21,7 @@ class ModelService {
       if (!process.env.OPENAI_API_KEY) {
         logger.warn("⚠️ OpenAI API key not set, returning fallback response");
         return {
+          content: "The oracle channels are realigning. Please ensure your configuration is complete.",
           response: "The oracle channels are realigning. Please ensure your configuration is complete.",
           confidence: 0.5,
           metadata: {
@@ -54,7 +55,8 @@ class ModelService {
         completion.choices[0]?.message?.content?.trim() ?? "";
 
       const response: AgentResponse = {
-        response: responseText,
+        content: responseText,
+        response: responseText, // Legacy compatibility
         confidence: 0.9,
         metadata: {
           timestamp: new Date().toISOString(),
@@ -77,6 +79,7 @@ class ModelService {
       
       // Return fallback response instead of throwing
       return {
+        content: "The oracle channels are temporarily disrupted. Please try again.",
         response: "The oracle channels are temporarily disrupted. Please try again.",
         confidence: 0.3,
         metadata: {

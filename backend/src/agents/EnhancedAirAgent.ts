@@ -1,3 +1,4 @@
+import { AgentResponse } from "./types/agentResponse";
 /**
  * Enhanced Air Agent - Powered by Claude for Superior Communication
  * Integrates with Sesame Conversational Intelligence for optimal voice synthesis

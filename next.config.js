@@ -19,6 +19,19 @@ const nextConfig = {
   // Asset prefix for IPFS
   assetPrefix: isProd && isIPFS ? "./" : "",
 
+  // Proxy backend requests through Next.js for seamless dev experience
+  async rewrites() {
+    // Skip rewrites for IPFS static export
+    if (isIPFS) return [];
+    
+    return [
+      {
+        source: "/api/backend/:path*",
+        destination: "http://localhost:3002/api/:path*", // proxy to Maya backend
+      },
+    ];
+  },
+
   // Environment variables
   env: {
     NEXT_PUBLIC_API_URL:

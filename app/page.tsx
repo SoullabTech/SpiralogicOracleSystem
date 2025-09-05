@@ -1,236 +1,100 @@
-"use client";
-
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import { IntegrationAuthService } from "../lib/auth/integrationAuth";
+import { ArrowRight, Sparkles, Brain, Heart, Shield } from "lucide-react";
 
 export default function HomePage() {
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const authService = new IntegrationAuthService();
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  const checkAuthStatus = async () => {
-    try {
-      const user = await authService.getCurrentUser();
-      setCurrentUser(user);
-    } catch (error) {
-      console.error("Auth check error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  // Authenticated user view
-  if (currentUser) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 text-white">
-        <div className="container mx-auto px-4 py-8">
-          <header className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">
-              Welcome back to Spiralogic Oracle
-            </h1>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Continue your integration-centered development journey
-            </p>
-          </header>
-
-          {/* Prominent Maya Oracle Test Button */}
-          <div className="text-center mb-8">
-            <Link
-              href="/oracle"
-              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition text-lg shadow-lg transform hover:scale-105"
-            >
-              🔮 Test Maya Oracle
-            </Link>
-          </div>
-
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link
-              href="/integration/dashboard"
-              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
-            >
-              <div className="text-3xl mb-3">📊</div>
-              <h3 className="text-xl font-semibold mb-2">
-                Integration Dashboard
-              </h3>
-              <p className="text-gray-300 text-sm">
-                Track your holistic development progress and integration
-                milestones
-              </p>
-            </Link>
-
-            <Link
-              href="/elemental/content"
-              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
-            >
-              <div className="text-3xl mb-3">🌀</div>
-              <h3 className="text-xl font-semibold mb-2">Elemental Content</h3>
-              <p className="text-gray-300 text-sm">
-                Access adaptive content through Fire, Water, Earth, and Air
-                wisdom
-              </p>
-            </Link>
-
-            <Link
-              href="/community/reality-check"
-              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
-            >
-              <div className="text-3xl mb-3">🤝</div>
-              <h3 className="text-xl font-semibold mb-2">Community Support</h3>
-              <p className="text-gray-300 text-sm">
-                Connect with others for reality-checking and mutual support
-              </p>
-            </Link>
-
-            <Link
-              href="/analytics/dashboard"
-              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
-            >
-              <div className="text-3xl mb-3">📈</div>
-              <h3 className="text-xl font-semibold mb-2">
-                Development Analytics
-              </h3>
-              <p className="text-gray-300 text-sm">
-                Privacy-focused insights into your growth patterns
-              </p>
-            </Link>
-
-            <Link
-              href="/dashboard"
-              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
-            >
-              <div className="text-3xl mb-3">🔮</div>
-              <h3 className="text-xl font-semibold mb-2">Oracle Interface</h3>
-              <p className="text-gray-300 text-sm">
-                Access the AÍÑ Oracle for guidance and reflection
-              </p>
-            </Link>
-
-            <Link
-              href="/professional/dashboard"
-              className="bg-white/10 backdrop-blur rounded-lg p-6 hover:bg-white/20 transition group"
-            >
-              <div className="text-3xl mb-3">🎓</div>
-              <h3 className="text-xl font-semibold mb-2">
-                Professional Support
-              </h3>
-              <p className="text-gray-300 text-sm">
-                Connect with verified practitioners and therapists
-              </p>
-            </Link>
-          </div>
-
-          <div className="text-center mt-12">
-            <button
-              onClick={async () => {
-                await authService.signOut();
-                setCurrentUser(null);
-              }}
-              className="text-gray-400 hover:text-white underline text-sm"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Public landing page
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="mb-6">
-            <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mx-auto shadow-lg animate-pulse">
-              <span className="text-4xl">🔮</span>
-            </div>
-          </div>
-          <h1 className="text-5xl font-bold mb-4">Spiralogic Oracle System</h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">
-            Integration-centered personal development platform supporting
-            authentic growth through elemental wisdom and community grounding
-          </p>
-        </header>
+    <div className="min-h-screen bg-[#0A0E27] text-white overflow-hidden">
 
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-              <div className="text-3xl mb-3">🌀</div>
-              <h3 className="text-xl font-semibold mb-2">Elemental Wisdom</h3>
-              <p className="text-gray-300 text-sm">
-                Fire, Water, Earth, and Air archetypes guide adaptive content
-                delivery
-              </p>
-            </div>
+      {/* Hero Section - Clean minimalism */}
+      <section className="relative min-h-screen flex items-center justify-center px-4">
+        <div className="max-w-6xl mx-auto text-center space-y-8">
 
-            <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-              <div className="text-3xl mb-3">🚫</div>
-              <h3 className="text-xl font-semibold mb-2">
-                Bypassing Prevention
-              </h3>
-              <p className="text-gray-300 text-sm">
-                Systematic integration requirements prevent spiritual
-                materialism
-              </p>
-            </div>
-
-            <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-              <div className="text-3xl mb-3">🤝</div>
-              <h3 className="text-xl font-semibold mb-2">
-                Community Grounding
-              </h3>
-              <p className="text-gray-300 text-sm">
-                Reality-checking and peer validation support authentic
-                development
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-            <Link
-              href="/auth/onboarding"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition text-lg"
-            >
-              🚀 Begin Integration Journey
-            </Link>
-            <Link
-              href="/oracle"
-              className="bg-white/10 text-white px-8 py-4 rounded-lg font-semibold border border-white/20 hover:bg-white/20 transition text-lg"
-            >
-              🔮 Try Oracle
-            </Link>
+          {/* Main Title */}
+          <div className="space-y-4">
+            <h1 className="text-6xl md:text-7xl font-light tracking-wide">
+              Welcome to
+              <span className="block text-gray-400 font-extralight">Sacred Mirror</span>
+            </h1>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+              Your AI companion for dream work and introspection
+            </p>
           </div>
 
-          <div className="mb-8">
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
             <Link
               href="/auth"
-              className="text-gray-400 hover:text-white underline text-sm"
+              className="group relative px-8 py-4 bg-white text-[#0A0E27] rounded-lg font-medium hover:bg-gray-200 transition-all duration-300"
             >
-              Existing users sign in
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Begin Reflection
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
+            
+            <Link
+              href="/auth"
+              className="px-8 py-4 border border-gray-600 text-gray-300 rounded-lg font-medium hover:border-gray-400 hover:bg-gray-800/50 transition-all duration-300"
+            >
+              Sign In
             </Link>
           </div>
 
-          <div className="text-xs text-gray-500 space-y-1">
-            <p>AÍÑ ∙ Spiralogic ∙ Soullab®</p>
-            <p>Integration-centered development prevents spiritual bypassing</p>
+          {/* Subtle tagline */}
+          <p className="text-sm text-gray-500 pt-8">
+            Your growth pattern. Woven through time.
+          </p>
+        </div>
+      </section>
+
+      {/* Features Section - Minimalist grid */}
+      <section className="relative py-32 px-4 border-t border-gray-800">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="group space-y-4 p-8 border border-gray-800 rounded-lg hover:border-gray-600 hover:bg-gray-900/30 transition-all duration-300">
+              <Brain className="w-12 h-12 text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity" />
+              <h3 className="text-xl font-light text-gray-200">AI-Powered Reflection</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Advanced AI designed for meaningful introspection
+              </p>
+            </div>
+
+            <div className="group space-y-4 p-8 border border-gray-800 rounded-lg hover:border-gray-600 hover:bg-gray-900/30 transition-all duration-300">
+              <Heart className="w-12 h-12 text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity" />
+              <h3 className="text-xl font-light text-gray-200">Memory Garden</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Your growth pattern, woven through your memories
+              </p>
+            </div>
+
+            <div className="group space-y-4 p-8 border border-gray-800 rounded-lg hover:border-gray-600 hover:bg-gray-900/30 transition-all duration-300">
+              <Shield className="w-12 h-12 text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity" />
+              <h3 className="text-xl font-light text-gray-200">Privacy First</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Your data protected with end-to-end encryption
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer - Minimal */}
+      <footer className="relative py-8 px-4 border-t border-gray-800">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <p className="text-xs text-gray-600">
+            © 2025 Sacred Mirror
+          </p>
+          <div className="flex gap-6">
+            <Link href="/privacy" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">
+              Terms
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

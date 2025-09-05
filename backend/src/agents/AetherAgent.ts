@@ -3,14 +3,14 @@
 
 "use strict";
 
-import { ArchetypeAgent } from "../ArchetypeAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
+import { ArchetypeAgent } from "./ArchetypeAgent";
+import { logOracleInsight } from "../utils/oracleLogger";
 import {
   getRelevantMemories,
   storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../utils/modelService";
-import type { AIResponse } from "../../../types/ai";
+} from "../services/memoryService";
+import ModelService from "../utils/modelService";
+import type { AIResponse } from "../types/ai";
 
 // Sacred Aether Voice Protocols - Embodying Unity & Transcendence Intelligence
 const AetherVoiceProtocols = {
@@ -216,7 +216,7 @@ What wants to emerge from this place of connection? What is your unique note in 
     }
   },
 
-  addAetherSignature: (response: string, aetherType: string): string => {
+  addAetherSignature: (content: string, aetherType: string): string => {
     const signatures = {
       elemental_integration:
         "✨ You are the symphony where all elements harmonize.",
@@ -234,7 +234,7 @@ What wants to emerge from this place of connection? What is your unique note in 
         "✨ In the unity of all things, you find your truest self.",
     };
 
-    return `${response}\n\n${signatures[aetherType] || signatures.general_integration}`;
+    return `${content}\n\n${signatures[aetherType] || signatures.general_integration}`;
   },
 
   assessElementalHistory: (memories: any[]): any => {
@@ -284,7 +284,7 @@ export class AetherAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - ALL elemental wisdom from the journey
-    const contextMemory = await getRelevantMemories(userId, 5); // More context for integration
+    const contextMemory = await getRelevantMemories(userId, undefined, 5); // More context for integration
     const aetherType = AetherIntelligence.detectAetherType(
       input,
       contextMemory,
@@ -302,7 +302,7 @@ export class AetherAgent extends ArchetypeAgent {
               { fire: "🔥", water: "💧", earth: "🌱", air: "🌬️", aether: "✨" }[
                 element
               ] || "•";
-            return `${elementSymbol} ${memory.response || memory.content || ""}`;
+            return `${elementSymbol} ${memory.content || memory.content || ""}`;
           })
           .join(
             "\n",
@@ -330,11 +330,12 @@ Respond with the wisdom of aether that serves integration and transcendence. Hel
       input: aetherPrompt,
       userId,
     });
+    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.content, content: modelResponse.content || modelResponse.content };
 
     // Weave AI insight with our aether wisdom
     const weavedWisdom = `${aetherWisdom}
 
-${modelResponse.response}`;
+${enhancedResponse.content}`;
 
     // Add aether signature that matches the transcendent energy needed
     const content = AetherIntelligence.addAetherSignature(
@@ -343,16 +344,14 @@ ${modelResponse.response}`;
     );
 
     // Store memory with aether-specific integration metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await storeMemoryItem(userId, content, {
       element: "aether",
       sourceAgent: "aether-agent",
       confidence: 0.93,
       metadata: {
         role: "oracle",
         phase: "integration",
-        archetype: "Aether",
+        archetypes: ["Aether"],
         aetherType,
         unityWisdom: true,
         transcendentPerspective: true,
@@ -365,32 +364,31 @@ ${modelResponse.response}`;
 
     // Log with aether-specific integration insights
     await logOracleInsight({
-      anon_id: userId,
-      archetype: "Aether",
-      element: "aether",
-      insight: {
-        message: content,
-        raw_input: input,
+      userId: userId,
+      agentType: "aether-agent",
+      query: input,
+      content: content,
+      metadata: {
+        archetypes: ["Aether"],
+        elementalAlignment: "aether",
         aetherType,
         integrationLevel: this.assessIntegrationLevel(input, contextMemory),
         transcendenceCapacity: this.assessTranscendenceCapacity(input),
         elementalSynthesis: elementalHistory,
-      },
-      emotion: this.assessAetherEmotion(input),
-      phase: "integration",
-      context: contextMemory,
+      
+      }
     });
 
     // Return response with aether-specific metadata
     return {
       content,
-      provider: "aether-agent",
-      model: modelResponse.model || "gpt-4",
+      provider: "aether-agent" as any,
+      model: (modelResponse as any).model || "gpt-4",
       confidence: 0.93,
       metadata: {
         element: "aether",
         phase: "integration",
-        archetype: "Aether",
+        archetypes: ["Aether"],
         aetherType,
         reflections: this.extractAetherReflections(content),
         symbols: this.extractAetherSymbols(content),

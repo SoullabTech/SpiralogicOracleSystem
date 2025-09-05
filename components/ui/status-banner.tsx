@@ -19,7 +19,7 @@ interface StatusBannerProps {
 }
 
 export function StatusBanner({ 
-  backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002',
+  backendUrl = '/api/backend',
   className = '',
   autoRefresh = true,
   refreshInterval = 30000 

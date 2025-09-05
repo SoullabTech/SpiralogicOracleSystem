@@ -1,0 +1,286 @@
+# =============================================================================
+# Maya & Sesame Production Docker Compose
+# =============================================================================
+# Complete production orchestration for Maya Backend + Sesame CSM TTS
+# Features: Health checks, auto-restart, resource limits, logging, networking
+
+version: '3.8'
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  maya-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# =============================================================================
+# Volumes for persistent data
+# =============================================================================
+volumes:
+  sesame-models:
+    driver: local
+  maya-logs:
+    driver: local
+  supabase-data:
+    driver: local
+
+services:
+  # ---------------------------------------------------------------------------
+  # Maya Backend Service (Next.js + Node.js)
+  # ---------------------------------------------------------------------------
+  maya-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend-prod
+      target: runtime
+      args:
+        NODE_ENV: production
+    image: maya-backend:latest
+    container_name: maya-backend-prod
+    hostname: maya-backend
+    
+    ports:
+      - "3000:3000"
+    
+    environment:
+      # Core settings
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      
+      # Database & Auth (from .env.production)
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      
+      # AI Services
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      
+      # Sesame TTS Integration
+      SESAME_TTS_URL: http://sesame-tts:8000
+      SESAME_HEALTH_CHECK_URL: http://sesame-tts:8000/health
+      
+      # Performance tuning
+      NODE_OPTIONS: "--max-old-space-size=1024"
+      
+      # Logging
+      LOG_LEVEL: info
+    
+    volumes:
+      - maya-logs:/app/logs
+      - ./volumes/maya-uploads:/app/uploads:rw
+      - ./volumes/maya-temp:/app/temp:rw
+    
+    networks:
+      - maya-network
+    
+    depends_on:
+      sesame-tts:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Sesame CSM TTS Service
+  # ---------------------------------------------------------------------------
+  sesame-tts:
+    build:
+      context: .
+      dockerfile: Dockerfile.sesame-prod
+      target: production
+    image: sesame-tts:latest
+    container_name: sesame-tts-prod
+    hostname: sesame-tts
+    
+    ports:
+      - "8000:8000"
+    
+    environment:
+      # Core Python settings
+      PYTHONUNBUFFERED: 1
+      PYTHONDONTWRITEBYTECODE: 1
+      
+      # Service configuration
+      SESAME_ENV: production
+      SESAME_LOG_LEVEL: info
+      SESAME_MODEL_CACHE: /app/models
+      SESAME_AUDIO_OUTPUT: /app/audio_output
+      
+      # Performance settings
+      UVICORN_WORKERS: 4
+      UVICORN_WORKER_CLASS: uvicorn.workers.UvicornWorker
+      
+      # Model caching
+      HF_HOME: /app/models/huggingface
+      TRANSFORMERS_CACHE: /app/models/transformers
+      TORCH_HOME: /app/models/torch
+      
+      # Authentication for model downloads (if needed)
+      HUGGINGFACE_HUB_TOKEN: ${HUGGINGFACE_HUB_TOKEN:-}
+    
+    volumes:
+      - sesame-models:/app/models:rw
+      - ./volumes/sesame-audio:/app/audio_output:rw
+      - ./volumes/sesame-logs:/app/logs:rw
+    
+    networks:
+      - maya-network
+    
+    healthcheck:
+      test: ["CMD", "python", "/app/health_check.py"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 90s  # CSM models take time to load
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # Redis for caching and session storage
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis-prod
+    hostname: redis
+    
+    ports:
+      - "6379:6379"
+    
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-maya_redis_2024}
+    
+    command: [
+      "redis-server",
+      "--appendonly", "yes",
+      "--requirepass", "${REDIS_PASSWORD:-maya_redis_2024}",
+      "--maxmemory", "256mb",
+      "--maxmemory-policy", "allkeys-lru"
+    ]
+    
+    volumes:
+      - ./volumes/redis-data:/data:rw
+    
+    networks:
+      - maya-network
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "2"
+
+  # ---------------------------------------------------------------------------
+  # Nginx Reverse Proxy & Load Balancer
+  # ---------------------------------------------------------------------------
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: nginx-proxy-prod
+    hostname: nginx-proxy
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./volumes/nginx-logs:/var/log/nginx:rw
+    
+    networks:
+      - maya-network
+    
+    depends_on:
+      maya-backend:
+        condition: service_healthy
+      sesame-tts:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    restart: unless-stopped
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+# =============================================================================
+# Default Environment Variables (override with .env.production)
+# =============================================================================
+# Create a .env.production file with your actual secrets:
+#
+# NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+# SUPABASE_SERVICE_ROLE_KEY=your-service-key
+# NEXTAUTH_SECRET=your-nextauth-secret
+# NEXTAUTH_URL=https://yourdomain.com
+# OPENAI_API_KEY=sk-your-openai-key
+# REDIS_PASSWORD=your-redis-password
+# HUGGINGFACE_HUB_TOKEN=your-hf-token (optional)

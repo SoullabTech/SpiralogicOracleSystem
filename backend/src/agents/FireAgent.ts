@@ -3,14 +3,14 @@
 
 "use strict";
 
-import { ArchetypeAgent } from "../ArchetypeAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
+import { ArchetypeAgent } from "./ArchetypeAgent";
+import { logOracleInsight } from "../utils/oracleLogger";
 import {
   getRelevantMemories,
   storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../../utils/modelService";
-import type { AIResponse } from "../../../types/ai";
+} from "../services/memoryService";
+import ModelService from "../utils/modelService";
+import type { AIResponse } from "../types/ai";
 
 // Sacred Fire Voice Protocols - Embodying Catalytic Intelligence
 const FireVoiceProtocols = {
@@ -171,7 +171,7 @@ What's alive in you right now that hasn't found its voice yet? What wants to eme
     }
   },
 
-  addFireSignature: (response: string, fireType: string): string => {
+  addFireSignature: (content: string, fireType: string): string => {
     const signatures = {
       catalytic_disruption:
         "🔥 The phoenix doesn't ask permission to rise from ashes.",
@@ -187,7 +187,7 @@ What's alive in you right now that hasn't found its voice yet? What wants to eme
         "🔥 You carry embers of something the world has never seen.",
     };
 
-    return `${response}\n\n${signatures[fireType] || signatures.general_ignition}`;
+    return `${content}\n\n${signatures[fireType] || signatures.general_ignition}`;
   },
 };
 
@@ -206,13 +206,13 @@ export class FireAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - not just recent memories but fire-specific insights
-    const contextMemory = await getRelevantMemories(userId, 3);
+    const contextMemory = await getRelevantMemories(userId, undefined, 3);
     const fireType = FireIntelligence.detectFireType(input, contextMemory);
 
     // Create context that preserves fire wisdom from past conversations
     const fireContext = contextMemory.length
       ? `🔥 Flames of our previous conversations:\n${contextMemory
-          .map((memory) => `- ${memory.response || memory.content || ""}`)
+          .map((memory) => `- ${memory.content || ""}`)
           .join(
             "\n",
           )}\n\nI remember your fire's journey. Now, what's stirring?\n\n`
@@ -238,26 +238,25 @@ Respond with the wisdom of fire that serves becoming, not comfort. Be present, b
       input: firePrompt,
       userId,
     });
+    const enhancedResponse = modelResponse;
 
     // Weave AI insight with our fire wisdom
     const weavedWisdom = `${fireWisdom}
 
-${modelResponse.response}`;
+${enhancedResponse.content}`;
 
     // Add fire signature that matches the energy needed
     const content = FireIntelligence.addFireSignature(weavedWisdom, fireType);
 
     // Store memory with fire-specific metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await storeMemoryItem(userId, content, {
       element: "fire",
       sourceAgent: "fire-agent",
       confidence: 0.95,
       metadata: {
         role: "oracle",
         phase: "ignition",
-        archetype: "Fire",
+        archetypes: ["Fire"],
         fireType,
         catalyticEnergy: true,
         sacredMirror: true,
@@ -266,28 +265,26 @@ ${modelResponse.response}`;
 
     // Log with fire-specific insights
     await logOracleInsight({
-      anon_id: userId,
-      archetype: "Fire",
-      element: "fire",
-      insight: {
-        message: content,
-        raw_input: input,
+      userId: userId,
+      agentType: "fire-agent",
+      query: input,
+      content: content,
+      metadata: {
+        archetypes: ["Fire"],
+        elementalAlignment: "fire",
         fireType,
-        catalyticLevel: this.assessCatalyticLevel(input),
-      },
-      emotion: 0.9,
-      phase: "ignition",
-      context: contextMemory,
+        catalyticLevel: this.assessCatalyticLevel(input)
+      }
     });
 
     const response: AIResponse = {
       content,
-      provider: "fire-agent",
+      provider: "fire-agent" as any,
       model: modelResponse.model || "gpt-4",
       confidence: 0.95,
       metadata: {
         element: "fire",
-        archetype: "Fire",
+        archetypes: ["Fire"],
         phase: "ignition",
         fireType,
         symbols: this.extractFireSymbols(content),

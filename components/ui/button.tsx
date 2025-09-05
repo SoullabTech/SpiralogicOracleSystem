@@ -1,6 +1,4 @@
 import * as React from "react"
-import { useFeatureFlag } from "@/lib/feature-flags"
-import { ButtonV2, ButtonPropsV2 } from "./button-v2"
 
 // Original Button props (preserved for compatibility)
 export interface ButtonPropsV1
@@ -60,18 +58,7 @@ const ButtonV1 = React.forwardRef<HTMLButtonElement, ButtonPropsV1>(
 
 // Smart Button Router - chooses between V1 and V2 based on feature flags
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const useUizardButtons = useFeatureFlag('uizard_buttons');
-  const useEnhancedUI = useFeatureFlag('enhanced_ui_v2');
-  
-  // Use V2 if either Uizard or enhanced UI flags are enabled
-  const useV2 = useUizardButtons || useEnhancedUI;
-  
-  if (useV2) {
-    // Cast to V2 props and render enhanced version
-    return <ButtonV2 ref={ref} {...props as ButtonPropsV2} />;
-  }
-  
-  // Default to V1 for compatibility
+  // Simplified - always use V1 for compatibility
   const { elevation, rounded, animation, gradient, ...v1Props } = props;
   return <ButtonV1 ref={ref} {...v1Props} />;
 })

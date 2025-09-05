@@ -1,23 +1,24 @@
 // Personal Oracle Agent - Central orchestrator for all user interactions
 // This is the main interface between users and the Spiralogic Oracle System
 
-import { logger } from "../../utils/logger";
+import { logger } from "../utils/logger";
 import {
   successResponse,
   errorResponse,
   asyncErrorHandler,
   generateRequestId,
-} from "../../utils/sharedUtilities";
-import { AgentRegistry } from "../../core/factories/AgentRegistry";
-import { astrologyService } from "../../services/astrologyService";
-import { journalingService } from "../../services/journalingService";
-import { assessmentService } from "../../services/assessmentService";
+} from "../utils/sharedUtilities";
+import { AgentRegistry } from "../core/factories/AgentRegistry";
+import { astrologyService } from "../services/astrologyService";
+import { journalingService } from "../services/journalingService";
+import { assessmentService } from "../services/assessmentService";
 import {
   getRelevantMemories,
   storeMemoryItem,
-} from "../../services/memoryService";
-import { logOracleInsight } from "../../utils/oracleLogger";
-import type { StandardAPIResponse } from "../../utils/sharedUtilities";
+} from "../services/memoryService";
+import { logOracleInsight } from "../utils/oracleLogger";
+import { FileMemoryIntegration } from "../../../lib/services/FileMemoryIntegration";
+import type { StandardAPIResponse } from "../utils/sharedUtilities";
 
 export interface PersonalOracleQuery {
   input: string;
@@ -36,12 +37,24 @@ export interface PersonalOracleResponse {
   element: string;
   archetype: string;
   confidence: number;
+  citations?: {
+    fileId: string;
+    fileName: string;
+    category?: string;
+    pageNumber?: number;
+    sectionTitle?: string;
+    sectionLevel?: number;
+    preview: string;
+    relevance: number;
+    chunkIndex: number;
+  }[];
   metadata: {
     sessionId?: string;
     symbols?: string[];
     phase?: string;
     recommendations?: string[];
     nextSteps?: string[];
+    fileContextsUsed?: number;
   };
 }
 
@@ -59,14 +72,16 @@ export interface PersonalOracleSettings {
  */
 export class PersonalOracleAgent {
   private agentRegistry: AgentRegistry;
+  private fileMemory: FileMemoryIntegration;
 
   // User settings cache
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
 
   constructor() {
     this.agentRegistry = new AgentRegistry();
+    this.fileMemory = new FileMemoryIntegration();
 
-    logger.info("Personal Oracle Agent initialized with AgentRegistry");
+    logger.info("Personal Oracle Agent initialized with AgentRegistry and FileMemory");
   }
 
   /**
@@ -87,6 +102,13 @@ export class PersonalOracleAgent {
       // Get user context and preferences
       const userSettings = await this.getUserSettings(query.userId);
       const memories = await getRelevantMemories(query.userId, query.input, 5);
+      
+      // Get relevant files from user's library
+      const fileContexts = await this.fileMemory.retrieveRelevantFiles(
+        query.userId, 
+        query.input, 
+        { limit: 3, minRelevance: 0.75 }
+      );
 
       // Determine which elemental agent to use
       const targetElement =
@@ -98,6 +120,7 @@ export class PersonalOracleAgent {
         targetElement,
         query,
         memories,
+        fileContexts,
       );
 
       // Enhance response with personalization
@@ -286,26 +309,91 @@ export class PersonalOracleAgent {
     element: string,
     query: PersonalOracleQuery,
     memories: any[],
+    fileContexts?: any[],
   ): Promise<PersonalOracleResponse> {
     // Get agent from registry
     const agent = this.agentRegistry.createAgent(element);
 
-    // Call the elemental agent
-    const response = await agent.processQuery(query.input);
+    // Prepare context with file knowledge
+    let contextualInput = query.input;
+    if (fileContexts && fileContexts.length > 0) {
+      const fileContextPrompt = this.fileMemory.formatFileContextForPrompt(fileContexts);
+      contextualInput = query.input + fileContextPrompt;
+      
+      logger.info("File contexts integrated into query", {
+        userId: query.userId,
+        filesReferenced: fileContexts.length
+      });
+    }
+
+    // Call the elemental agent with enhanced context
+    const response = await agent.processQuery(contextualInput);
+
+    // Generate citations from file contexts
+    const citations = this.fileMemory.formatCitationMetadata(fileContexts);
 
     return {
       message: response.content,
       element,
       archetype: response.metadata?.archetype || "Unknown",
       confidence: response.confidence,
+      citations,
       metadata: {
         sessionId: query.sessionId,
         symbols: response.metadata?.symbols || [],
         phase: response.metadata?.phase,
         recommendations: response.metadata?.reflections || [],
         nextSteps: [],
+        fileContextsUsed: fileContexts.length,
       },
     };
+  }
+
+  /**
+   * Get streaming context for Maya personality in chat
+   */
+  async getStreamingContext(params: {
+    userId: string;
+    sessionId: string;
+    element?: string;
+  }): Promise<{ systemPrompt: string }> {
+    const element = params.element || 'aether';
+    
+    // Get Maya's personality prompt based on element
+    const elementPrompts = {
+      fire: `You are Maya, a passionate and inspiring oracle guide. Your voice carries the warmth of fire - 
+        energetic, transformative, and illuminating. Speak with enthusiasm and courage, helping seekers 
+        find their inner spark and take bold action.`,
+      
+      water: `You are Maya, a flowing and intuitive oracle guide. Your voice carries the depth of water - 
+        emotional, healing, and adaptable. Speak with empathy and emotional wisdom, helping seekers 
+        navigate their feelings and find emotional clarity.`,
+      
+      earth: `You are Maya, a grounded and nurturing oracle guide. Your voice carries the stability of earth - 
+        practical, reliable, and supportive. Speak with patience and wisdom, helping seekers find 
+        stability and manifest their goals in tangible ways.`,
+      
+      air: `You are Maya, an insightful and communicative oracle guide. Your voice carries the clarity of air - 
+        intellectual, curious, and expansive. Speak with clarity and wisdom, helping seekers gain 
+        new perspectives and mental clarity.`,
+      
+      aether: `You are Maya, a transcendent and mystical oracle guide. Your voice carries the essence of all elements - 
+        balanced, spiritual, and deeply connected. Speak with gentle wisdom and cosmic perspective, 
+        helping seekers connect with their higher self and universal truths.`
+    };
+
+    const basePrompt = `${elementPrompts[element as keyof typeof elementPrompts] || elementPrompts.aether}
+    
+    Guidelines for conversation:
+    - Keep responses natural and conversational, around 2-3 sentences
+    - Use warm, encouraging language that feels personal
+    - Include subtle pauses with "..." for natural speech rhythm
+    - Avoid overly formal or robotic language
+    - Remember previous context within the session
+    - End responses in a way that invites continued dialogue
+    - Speak as if having a real conversation, not giving a lecture`;
+
+    return { systemPrompt: basePrompt };
   }
 
   private async personalizeResponse(
@@ -366,18 +454,38 @@ export class PersonalOracleAgent {
       });
 
       await logOracleInsight({
-        anon_id: query.userId,
-        archetype: response.archetype,
-        element: response.element,
-        insight: {
-          message: response.message,
-          raw_input: query.input,
-          requestId,
+        userId: query.userId,
+        agentType: response.element,
+        query: query.input,
+        response: response.message,
+        confidence: response.confidence,
+        metadata: {
+          symbols: response.metadata.symbols,
+          archetypes: [response.archetype],
+          phase: response.metadata.phase || "guidance",
+          elementalAlignment: response.element,
         },
-        emotion: response.confidence,
-        phase: response.metadata.phase || "guidance",
-        context: [],
       });
+
+      // Record file citations for this interaction
+      if (response.citations && response.citations.length > 0) {
+        for (const citation of response.citations) {
+          await this.fileMemory.recordCitation(
+            query.userId,
+            citation.fileId,
+            requestId,
+            `chunk_${citation.chunkIndex}`,
+            citation.relevance,
+            query.input,
+            {
+              pageNumber: citation.pageNumber,
+              sectionTitle: citation.sectionTitle,
+              sectionLevel: citation.sectionLevel,
+              preview: citation.preview
+            }
+          );
+        }
+      }
     } catch (error) {
       logger.error("Failed to store interaction", {
         error: error instanceof Error ? error.message : "Unknown error",

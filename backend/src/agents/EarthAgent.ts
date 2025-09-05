@@ -3,14 +3,14 @@
 
 "use strict";
 
-import { ArchetypeAgent } from "../ArchetypeAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
+import { ArchetypeAgent } from "./ArchetypeAgent";
+import { logOracleInsight } from "../utils/oracleLogger";
 import {
   getRelevantMemories,
   storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../utils/modelService";
-import type { AIResponse } from "../../../types/ai";
+} from "../services/memoryService";
+import ModelService from "../utils/modelService";
+import type { AIResponse } from "../types/ai";
 
 // Sacred Earth Voice Protocols - Embodying Grounding & Manifestation Intelligence
 const EarthVoiceProtocols = {
@@ -216,7 +216,7 @@ What in your life feels most solid and trustworthy right now? Let's start there 
     }
   },
 
-  addEarthSignature: (response: string, earthType: string): string => {
+  addEarthSignature: (content: string, earthType: string): string => {
     const signatures = {
       grounding_stabilization: "🌱 Even in the storm, your roots run deep.",
       vision_manifestation:
@@ -242,9 +242,6 @@ export class EarthAgent extends ArchetypeAgent {
   ) {
     super("earth", oracleName, voiceProfile, phase);
   }
-  constructor() {
-    super({ debug: false });
-  }
 
   public async processExtendedQuery(query: {
     input: string;
@@ -253,13 +250,13 @@ export class EarthAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - grounding patterns from past conversations
-    const contextMemory = await getRelevantMemories(userId, 3);
+    const contextMemory = await getRelevantMemories(userId, undefined, 3);
     const earthType = EarthIntelligence.detectEarthType(input, contextMemory);
 
     // Create context that preserves grounding wisdom from past conversations
     const earthContext = contextMemory.length
       ? `🌱 Roots of our previous conversations:\n${contextMemory
-          .map((memory) => `- ${memory.response || memory.content || ""}`)
+          .map((memory) => `- ${memory.content || memory.content || ""}`)
           .join(
             "\n",
           )}\n\nI remember the foundations we've been building. What's growing now?\n\n`
@@ -285,11 +282,12 @@ Respond with the wisdom of earth that serves practical manifestation and embodie
       input: earthPrompt,
       userId,
     });
+    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.content, content: modelResponse.content || modelResponse.content };
 
     // Weave AI insight with our earth wisdom
     const weavedWisdom = `${earthWisdom}
 
-${modelResponse.response}`;
+${enhancedResponse.content}`;
 
     // Add earth signature that matches the grounding energy needed
     const content = EarthIntelligence.addEarthSignature(
@@ -298,16 +296,14 @@ ${modelResponse.response}`;
     );
 
     // Store memory with earth-specific manifestation metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await storeMemoryItem(userId, content, {
       element: "earth",
       sourceAgent: "earth-agent",
       confidence: 0.89,
       metadata: {
         role: "oracle",
         phase: "earth",
-        archetype: "Earth",
+        archetypes: ["Earth"],
         earthType,
         groundingWisdom: true,
         manifestationEnergy: true,
@@ -317,31 +313,30 @@ ${modelResponse.response}`;
 
     // Log with earth-specific manifestation insights
     await logOracleInsight({
-      anon_id: userId,
-      archetype: "Earth",
-      element: "earth",
-      insight: {
-        message: content,
-        raw_input: input,
+      userId: userId,
+      agentType: "earth-agent",
+      query: input,
+      content: content,
+      metadata: {
+        archetypes: ["Earth"],
+        elementalAlignment: "earth",
         earthType,
         groundingLevel: this.assessGroundingLevel(input),
         manifestationReadiness: this.assessManifestationReadiness(input),
-      },
-      emotion: this.assessEarthEmotion(input),
-      phase: "earth",
-      context: contextMemory,
+      
+      }
     });
 
     // Return response with earth-specific metadata
     return {
       content,
-      provider: "earth-agent",
-      model: modelResponse.model || "gpt-4",
+      provider: "earth-agent" as any,
+      model: (modelResponse as any).model || "gpt-4",
       confidence: 0.89,
       metadata: {
         element: "earth",
         phase: "earth",
-        archetype: "Earth",
+        archetypes: ["Earth"],
         earthType,
         reflections: this.extractEarthReflections(content),
         symbols: this.extractEarthSymbols(content),

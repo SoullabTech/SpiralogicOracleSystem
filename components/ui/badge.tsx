@@ -26,4 +26,57 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
 )
 Badge.displayName = "Badge"
 
-export { Badge }
+// Archetype-specific badge
+export interface ArchetypeBadgeProps extends BadgeProps {
+  archetype: 'sage' | 'seeker' | 'healer' | 'creator' | 'rebel' | 'ruler'
+}
+
+const ArchetypeBadge = React.forwardRef<HTMLDivElement, ArchetypeBadgeProps>(
+  ({ archetype, ...props }, ref) => {
+    const archetypeColors = {
+      sage: 'bg-blue-500/20 text-blue-400',
+      seeker: 'bg-purple-500/20 text-purple-400',
+      healer: 'bg-green-500/20 text-green-400', 
+      creator: 'bg-orange-500/20 text-orange-400',
+      rebel: 'bg-red-500/20 text-red-400',
+      ruler: 'bg-yellow-500/20 text-yellow-400'
+    }
+    
+    return (
+      <Badge 
+        ref={ref} 
+        className={`${archetypeColors[archetype]} capitalize`}
+        {...props}
+      >
+        {archetype}
+      </Badge>
+    )
+  }
+)
+ArchetypeBadge.displayName = "ArchetypeBadge"
+
+// Count badge
+export interface CountBadgeProps extends BadgeProps {
+  count: number
+  max?: number
+}
+
+const CountBadge = React.forwardRef<HTMLDivElement, CountBadgeProps>(
+  ({ count, max, ...props }, ref) => {
+    const percentage = max ? (count / max) * 100 : 100
+    const variant = percentage > 80 ? 'success' : percentage > 40 ? 'warning' : 'destructive'
+    
+    return (
+      <Badge 
+        ref={ref} 
+        variant={variant}
+        {...props}
+      >
+        {max ? `${count}/${max}` : count}
+      </Badge>
+    )
+  }
+)
+CountBadge.displayName = "CountBadge"
+
+export { Badge, ArchetypeBadge, CountBadge }

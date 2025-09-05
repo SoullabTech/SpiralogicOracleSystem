@@ -12,7 +12,12 @@ export type AIProvider =
   | "guide-agent"
   | "mentor-agent"
   | "relationship-agent"
-  | "shadow-agent";
+  | "shadow-agent"
+  | "fire-agent"
+  | "water-agent"
+  | "earth-agent"
+  | "air-agent"
+  | "aether-agent";
 
 /**
  * Standard AI response envelope with extended metadata for routing, analysis, and form generation.

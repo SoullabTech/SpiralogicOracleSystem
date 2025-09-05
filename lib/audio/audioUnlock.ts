@@ -6,6 +6,11 @@
 let audioUnlocked = false;
 
 export async function unlockAudio(): Promise<boolean> {
+  // Skip on server-side
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   // Check if already unlocked
   if (audioUnlocked || localStorage.getItem('mayaAudioUnlocked') === '1') {
     audioUnlocked = true;
@@ -47,12 +52,17 @@ export async function unlockAudio(): Promise<boolean> {
 }
 
 export function isAudioUnlocked(): boolean {
+  if (typeof window === 'undefined') {
+    return false; // Server-side default
+  }
   return audioUnlocked || localStorage.getItem('mayaAudioUnlocked') === '1';
 }
 
 export function resetAudioUnlock(): void {
   audioUnlocked = false;
-  localStorage.removeItem('mayaAudioUnlocked');
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('mayaAudioUnlocked');
+  }
 }
 
 // Auto-unlock on any user interaction

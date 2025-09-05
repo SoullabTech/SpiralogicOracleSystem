@@ -2,6 +2,7 @@
 // Optimized streaming hook with phrase-based voice synthesis
 
 import { useEffect, useRef, useState } from "react";
+import { Analytics } from "../../lib/analytics/supabaseAnalytics";
 
 type StreamOptions = {
   backendUrl: string; // e.g., NEXT_PUBLIC_BACKEND_URL
@@ -22,12 +23,18 @@ export function useMayaStream() {
   const currentEventSource = useRef<EventSource | null>(null);
 
   const cancelSpeech = () => {
-    window.speechSynthesis?.cancel();
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     speakQueue.current = [];
     speaking.current = false;
   };
 
   const enqueueSpeech = (phrase: string, lang: string) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      return; // Skip speech on server-side
+    }
+    
     speakQueue.current.push(phrase);
     if (!speaking.current) {
       speaking.current = true;
@@ -51,6 +58,16 @@ export function useMayaStream() {
 
   const stream = (opts: StreamOptions, userText: string) => {
     const { backendUrl, element, userId, lang = "en-US", voiceEnabled, minPhraseLen = 20 } = opts;
+    const streamStartTime = Date.now();
+    
+    // Track Maya response start
+    Analytics.startMayaResponse({
+      input_text: userText,
+      input_length: userText.length,
+      element,
+      voice_enabled: voiceEnabled,
+      backend_url: backendUrl
+    });
     
     // Cancel any existing stream and speech
     if (currentEventSource.current) {
@@ -61,8 +78,8 @@ export function useMayaStream() {
     setMetadata(null);
     setIsStreaming(true);
 
-    // Build streaming URL with query parameters
-    const url = new URL(`${backendUrl}/api/v1/converse/stream`);
+    // Build streaming URL with query parameters (use proxy in dev, direct URL in prod)
+    const url = new URL(`/api/backend/v1/converse/stream`, window.location.origin);
     url.searchParams.set("element", element);
     url.searchParams.set("userId", userId);
     url.searchParams.set("lang", lang);
@@ -111,6 +128,7 @@ export function useMayaStream() {
 
     eventSource.addEventListener("done", (e: MessageEvent) => {
       const doneData = JSON.parse(e.data);
+      const streamDuration = Date.now() - streamStartTime;
       
       // Flush any remaining buffer
       const tail = buffer.trim();
@@ -121,6 +139,16 @@ export function useMayaStream() {
       buffer = "";
       setIsStreaming(false);
       setMetadata((prev: any) => ({ ...prev, ...doneData }));
+      
+      // Track successful Maya response completion
+      Analytics.completeMayaResponse({
+        response_length: text.length,
+        response_duration_ms: streamDuration,
+        element,
+        voice_enabled: voiceEnabled,
+        success: true,
+        metadata: doneData
+      });
       
       eventSource.close();
       currentEventSource.current = null;
@@ -134,6 +162,17 @@ export function useMayaStream() {
 
     eventSource.onerror = (error) => {
       console.error('Maya stream error:', error);
+      const streamDuration = Date.now() - streamStartTime;
+      
+      // Track Maya response error
+      Analytics.mayaResponseError({
+        error_type: 'stream_error',
+        error_message: 'EventSource connection failed',
+        duration_ms: streamDuration,
+        element,
+        voice_enabled: voiceEnabled
+      });
+      
       eventSource.close();
       currentEventSource.current = null;
       setIsStreaming(false);
@@ -174,7 +213,7 @@ export function useMayaStream() {
 
 // Example usage in MayaChat component:
 export const MayaChatWithStreaming = () => {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002';
+  const backendUrl = '/api/backend'; // Use proxy endpoint
   const { text, isStreaming, metadata, stream, cancelSpeech } = useMayaStream();
   
   const [voiceEnabled, setVoiceEnabled] = useState(true);
@@ -204,74 +243,26 @@ export const MayaChatWithStreaming = () => {
   const handleBargeIn = () => {
     cancelSpeech();
     // If you saved the stop function, call it here for true barge-in
+    if (currentEventSource.current) {
+      currentEventSource.current.close();
+      currentEventSource.current = null;
+      setIsStreaming(false);
+    }
   };
 
-  return (
-    <div className="flex flex-col gap-4 p-4">
-      {/* Element selector */}
-      <div className="flex gap-2">
-        {['air', 'fire', 'water', 'earth', 'aether'].map(el => (
-          <button
-            key={el}
-            onClick={() => setElement(el as any)}
-            className={`px-3 py-1 rounded ${element === el ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-          >
-            {el} {el === 'air' && '(Claude)'}
-          </button>
-        ))}
-      </div>
-
-      {/* Voice toggle */}
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={voiceEnabled}
-          onChange={e => setVoiceEnabled(e.target.checked)}
-        />
-        Voice enabled
-      </label>
-
-      {/* Response area with streaming text */}
-      <div className="rounded-lg p-4 bg-zinc-900/40 min-h-[140px] whitespace-pre-wrap text-white">
-        {text || "…"}
-        {isStreaming && <span className="animate-pulse">|</span>}
-      </div>
-
-      {/* Metadata display */}
-      {metadata && (
-        <div className="text-sm text-gray-500">
-          Model: {metadata.model} | Element: {element}
-          {metadata.tokens && ` | Tokens: ${metadata.tokens}`}
-        </div>
-      )}
-
-      {/* Input area */}
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={userInput}
-          onChange={e => setUserInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSend()}
-          placeholder="Ask Maya for guidance..."
-          className="flex-1 px-3 py-2 border rounded"
-          disabled={isStreaming}
-        />
-        <button
-          onClick={handleSend}
-          disabled={!userInput.trim() || isStreaming}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-        >
-          {isStreaming ? 'Streaming...' : 'Send'}
-        </button>
-        {isStreaming && (
-          <button
-            onClick={handleBargeIn}
-            className="px-4 py-2 bg-red-500 text-white rounded"
-          >
-            Stop
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
+  // Return hook values and functions, not JSX
+  return {
+    text,
+    isStreaming,
+    metadata,
+    element,
+    voiceEnabled,
+    userInput,
+    setElement,
+    setVoiceEnabled,
+    setUserInput,
+    handleSend,
+    handleBargeIn,
+    streamMessage
+  };
+}

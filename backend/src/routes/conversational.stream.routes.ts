@@ -1,18 +1,23 @@
 import { Router, Request, Response } from "express";
-import { routeToModel } from "../services/ElementalIntelligenceRouter";
-import { safetyService } from "../services/SafetyModerationService";
 import { logger } from "../utils/logger";
-import { SesameMayaRefiner } from "../services/SesameMayaRefiner";
 import { rateLimit } from "../middleware/rateLimit";
 import { attachSSE } from "../utils/sseRegistry";
+import { personalOracleAgent } from "../agents/PersonalOracleAgent";
+import { dialogueStateTracker } from "../services/EnhancedDialogueStateTracker";
+import { ResearchLogger } from "../services/ResearchLogger";
+import { intentMappingService } from "../services/IntentMappingService";
 
 const router = Router();
+
+// Initialize ResearchLogger
+const researchLogger = new ResearchLogger();
 
 // ~30 streams per minute per IP for SSE endpoints
 const streamLimiter = rateLimit({ windowMs: 60_000, max: 30 });
 
 /**
  * GET /api/v1/converse/stream
+ * Maya Conversational Pipeline: SpiralogicAdapter → SesameMayaRefiner → PersonalOracleAgent → ElevenLabs
  * Query: ?element=air|fire|water|earth|aether&userId=...&lang=en-US&q=userText
  * Header: Accept: text/event-stream
  */
@@ -26,6 +31,8 @@ router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
   const userId = String(req.query.userId || "anon");
   const userText = String(req.query.q || req.query.text || "");
   const lang = String(req.query.lang || "en-US");
+  // Accept sessionId from client or create persistent one per user
+  const sessionId = String(req.query.sessionId || req.headers['x-session-id'] || `session-${userId}-persistent`);
 
   // Basic validation
   if (!userText) {
@@ -58,114 +65,187 @@ router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
     res.write(`event: ${type}\n` + `data: ${JSON.stringify(payload)}\n\n`);
 
   try {
-    logger.info('🌊 Starting Maya stream', { element, userId, userText: userText.substring(0, 50) });
+    logger.info('🌊 Starting Maya conversational stream', { element, userId, sessionId, userText: userText.substring(0, 50) });
 
-    // Safety pre-check
-    const safetyCheck = await safetyService.moderateInput(userText, userId);
-    if (!safetyCheck.safe) {
-      send("delta", { text: "I want to make sure you're safe. " });
-      send("delta", { text: safetyCheck.response || "Here are some immediate resources..." });
-      send("done", { reason: "moderated", supportResources: safetyCheck.supportResources });
-      res.end();
-      return;
-    }
-
-    // Let the client prep voice pipeline
-    send("meta", { element, lang, model: element === 'air' ? 'claude-3-sonnet' : 'elemental-oracle-2.0' });
-
-    // Route to the right upstream (Claude primary, fallback to OpenAI)
-    const model = routeToModel(element);
-
-    // Initialize Sesame/Maya refiner with feature flags
-    const refiner = new SesameMayaRefiner({
-      element: element as any,
+    // Update dialogue state for intent detection and tracking
+    const dialogueState = await dialogueStateTracker.updateState(
+      sessionId,
       userId,
-      styleTightening: process.env.MAYA_STYLE_TIGHT !== '0',
-      safetySoften: process.env.MAYA_SOFTEN_SAFETY !== '0', 
-      addClosers: true,
-      tts: {
-        breathMarks: process.env.MAYA_BREATH_MARKS !== '0',
-        phraseMinChars: 36,
-        phraseMaxChars: 120
+      userText
+    );
+
+    // Send metadata with Maya branding
+    send("meta", { 
+      element, 
+      lang, 
+      model: 'maya-conversational-pipeline',
+      pipeline: ['spiralogic-adapter', 'sesame-refiner', 'maya-personality', 'elevenlabs-voice'],
+      tracking: {
+        intent: dialogueState.intent.primary,
+        confidence: dialogueState.intent.confidence,
+        stage: dialogueState.flow.stage
       }
     });
 
-    // Check if model supports AsyncGenerator streaming
-    if (!model.streamResponse) {
-      // Fallback to regular response with refiner
-      const response = await model.generateResponse({
-        system: `You are Maya, a mystical oracle guide embodying the ${element} element. Provide wisdom that helps with personal transformation and spiritual growth.`,
-        user: userText,
-        temperature: 0.7,
-        maxTokens: 300
-      });
-      
-      // Apply Sesame/Maya refinement
-      const refined = refiner.refineText(response.content);
-      
-      // Send as single chunk
-      send("delta", { text: refined });
-      send("done", { reason: "complete", metadata: { model: response.model, tokens: response.tokens } });
+    // Process through Maya's full conversational pipeline with persistent session
+    const mayaResponse = await personalOracleAgent.consult({
+      input: userText,
+      userId,
+      sessionId, // Now uses persistent session for memory continuity
+      targetElement: element as any,
+      context: {
+        previousInteractions: dialogueState.turnCount,
+        userPreferences: {},
+        currentPhase: dialogueState.flow.stage,
+        // Include conversation history for memory persistence
+        conversationHistory: req.query.conversationHistory ? 
+          JSON.parse(String(req.query.conversationHistory)) : []
+      }
+    });
+
+    if (!mayaResponse.success) {
+      logger.error('Maya consultation failed', { errors: mayaResponse.errors });
+      send("delta", { text: "I'm experiencing some technical difficulties. Could you share that again?" });
+      send("done", { reason: "error", message: "Maya consultation failed" });
       res.end();
       return;
     }
 
-    // Stream from Claude → Sesame/Maya refiner → client
-    let totalText = '';
-    let tokenCount = 0;
+    // Stream Maya's response word by word for real-time feel
+    const response = mayaResponse.data;
+    
+    // Log intent detection for research
+    const mappedIntents = intentMappingService.getResearchLoggerIntents(
+      dialogueState.intent.primary,
+      userText,
+      dialogueState.intent.confidence
+    );
+    
+    researchLogger.logIntent({
+      userId,
+      sessionId,
+      intent: mappedIntents.primary,
+      confidence: mappedIntents.mappingConfidence,
+      userMessage: userText,
+      mayaResponse: response.message,
+      metadata: {
+        element: response.element,
+        archetype: response.archetype,
+        secondaryIntents: mappedIntents.secondary,
+        dialogueStage: dialogueState.flow.stage,
+        emotionalState: dialogueState.emotion.current.primaryEmotion
+      }
+    });
+    
+    // Log dialogue stage if changed
+    const currentStageNumber = intentMappingService.mapDialogueStage(dialogueState.flow.stage);
+    if (dialogueState.turnCount === 1 || dialogueState.flow.stage !== 'exploring') {
+      researchLogger.logStageTransition({
+        userId,
+        sessionId,
+        previousStage: dialogueState.turnCount === 1 ? 1 : currentStageNumber - 1,
+        currentStage: currentStageNumber,
+        transitionReason: `Progression to ${dialogueState.flow.stage}`,
+        stageMetrics: {
+          duration: 0, // Would need proper tracking
+          messageCount: dialogueState.turnCount,
+          engagementScore: dialogueState.flow.momentum
+        }
+      });
+    }
+    
+    // Log emotional shifts
+    if (dialogueState.emotion.trajectory.volatility > 0.3) {
+      researchLogger.logEmotionShift({
+        userId,
+        sessionId,
+        previousState: {
+          valence: 0, // Would need proper tracking
+          arousal: 0,
+          dominance: 0
+        },
+        currentState: {
+          valence: dialogueState.emotion.current.valence,
+          arousal: dialogueState.emotion.current.arousal,
+          dominance: dialogueState.emotion.current.dominance
+        },
+        triggerIntent: mappedIntents.primary,
+        elementalInfluence: response.element
+      });
+    }
+    
+    const words = response.message.split(' ');
+    let accumulatedText = '';
 
     // Heartbeat to prevent proxy timeouts
     const heartbeat = setInterval(() => send("heartbeat", { t: Date.now() }), 15000);
 
     try {
-      // Get raw stream from upstream model
-      const upstream = model.streamResponse({
-        system: `You are Maya, a mystical oracle guide embodying the ${element} element. 
-                 Provide wisdom that helps with personal transformation and spiritual growth.
-                 Keep responses natural, humane, and specific to their situation.`,
-        user: userText,
-        temperature: 0.7,
-        maxTokens: 300
-      });
-
-      // Pass through Sesame/Maya refiner for real-time enhancement
-      for await (const refinedPhrase of refiner.refineStream(upstream)) {
-        totalText += refinedPhrase;
-        tokenCount++;
-        send("delta", { text: refinedPhrase });
+      // Stream words with natural pacing
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        accumulatedText += (i > 0 ? ' ' : '') + word;
+        
+        send("delta", { text: word + (i < words.length - 1 ? ' ' : '') });
+        
+        // Natural pause between words (Maya's conversational rhythm)
+        await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 50));
       }
 
       clearInterval(heartbeat);
       send("done", { 
         reason: "complete", 
         metadata: { 
-          model: `claude-${element}-maya-refined`, 
-          tokens: tokenCount,
-          totalText: totalText.length,
-          refined: true
+          model: 'maya-conversational',
+          element: response.element,
+          archetype: response.archetype,
+          confidence: response.confidence,
+          pipeline: 'spiralogic → sesame → maya → voice',
+          totalLength: accumulatedText.length,
+          refined: true,
+          research: {
+            intentDetected: mappedIntents.primary,
+            intentName: ['greeting_connection', 'seeking_guidance', 'emotional_expression', 'philosophical_inquiry', 
+                        'practical_help', 'spiritual_exploration', 'creative_block', 'relationship_dynamics',
+                        'shadow_work', 'integration_request', 'resistance_expression', 'vulnerability_sharing',
+                        'celebration_achievement', 'crisis_support', 'curiosity_learning', 'boundary_setting',
+                        'breakthrough_moment', 'gratitude_expression', 'transition_navigation', 'wisdom_seeking'][mappedIntents.primary - 1],
+            dialogueStage: currentStageNumber,
+            stageName: ['initial_contact', 'trust_building', 'exploration', 'deepening',
+                       'challenge_growth', 'integration', 'transformation', 'ongoing_companionship'][currentStageNumber - 1],
+            emotionalTrend: dialogueState.emotion.trajectory.trend,
+            relationshipTrust: dialogueState.relationship.trust,
+            momentum: dialogueState.flow.momentum
+          }
         } 
       });
 
     } catch (streamError) {
       clearInterval(heartbeat);
-      logger.error('Model streaming error:', streamError);
+      logger.error('Maya streaming error:', streamError);
       
-      // Graceful fallback message
-      send("delta", { text: "I'm having trouble connecting to the oracle. " });
-      send("delta", { text: "Let's breathe together for a moment..." });
+      // Maya's warm error handling
+      send("delta", { text: "I'm here with you, even when the technology isn't cooperating perfectly. " });
+      send("delta", { text: "What would you like to explore together?" });
       send("done", { reason: "error" });
     }
 
     res.end();
 
   } catch (err: any) {
-    logger.error("SSE stream setup error:", err);
-    // Soft-fail: send a gentle message so UI can still speak something
-    send("delta", { text: "I'm having trouble connecting to the oracle. " });
-    send("delta", { text: "Let's breathe together for a moment..." });
+    logger.error("Maya conversational pipeline error:", err);
+    // Maya's gentle error response
+    send("delta", { text: "I'm experiencing a moment of technical difficulty. " });
+    send("delta", { text: "Your question is important to me - could you share it again?" });
     send("done", { reason: "error" });
     res.end();
   }
+});
+
+// Cleanup function for graceful shutdown
+process.on('SIGTERM', () => {
+  logger.info('Closing research logger streams');
+  researchLogger.close();
 });
 
 export default router;

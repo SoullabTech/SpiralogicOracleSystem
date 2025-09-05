@@ -9,6 +9,7 @@ export interface MemoryItem {
   id: string;
   user_id: string;
   content: string;
+  response?: string; // Added for backward compatibility
   element?: string;
   source_agent?: string;
   confidence?: number;

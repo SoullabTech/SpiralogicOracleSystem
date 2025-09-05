@@ -3,14 +3,14 @@
 
 "use strict";
 
-import { ArchetypeAgent } from "../ArchetypeAgent";
-import { logOracleInsight } from "../../utils/oracleLogger";
+import { ArchetypeAgent } from "./ArchetypeAgent";
+import { logOracleInsight } from "../utils/oracleLogger";
 import {
   getRelevantMemories,
   storeMemoryItem,
-} from "../../../services/memoryService";
-import ModelService from "../../utils/modelService";
-import type { AIResponse } from "../../../types/ai";
+} from "../services/memoryService";
+import ModelService from "../utils/modelService";
+import type { AIResponse } from "../types/ai";
 
 // Sacred Water Voice Protocols - Embodying Healing Depth Intelligence
 const WaterVoiceProtocols = {
@@ -202,7 +202,7 @@ Your emotional waters hold the key to your authentic self - your inner gold. Let
     }
   },
 
-  addWaterSignature: (response: string, waterType: string): string => {
+  addWaterSignature: (content: string, waterType: string): string => {
     const signatures = {
       grief_witnessing: "💧 Your capacity to love is your capacity to heal.",
       anger_alchemy: "💧 Let your anger inform you, not consume you.",
@@ -234,13 +234,13 @@ export class WaterAgent extends ArchetypeAgent {
     const { input, userId } = query;
 
     // Gather sacred context - emotional patterns from past conversations
-    const contextMemory = await getRelevantMemories(userId, 3);
+    const contextMemory = await getRelevantMemories(userId, undefined, 3);
     const waterType = WaterIntelligence.detectWaterType(input, contextMemory);
 
     // Create context that preserves emotional wisdom from past conversations
     const waterContext = contextMemory.length
       ? `💧 Streams of our previous conversations:\n${contextMemory
-          .map((memory) => `- ${memory.response || memory.content || ""}`)
+          .map((memory) => `- ${memory.content || memory.content || ""}`)
           .join(
             "\n",
           )}\n\nI remember your emotional journey. What's flowing now?\n\n`
@@ -266,11 +266,12 @@ Respond with the wisdom of water that serves emotional healing and authentic sel
       input: waterPrompt,
       userId,
     });
+    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.content, content: modelResponse.content || modelResponse.content };
 
     // Weave AI insight with our water wisdom
     const weavedWisdom = `${waterWisdom}
 
-${modelResponse.response}`;
+${enhancedResponse.content}`;
 
     // Add water signature that matches the emotional energy needed
     const content = WaterIntelligence.addWaterSignature(
@@ -279,16 +280,14 @@ ${modelResponse.response}`;
     );
 
     // Store memory with water-specific emotional metadata
-    await storeMemoryItem({
-      clientId: userId,
-      content,
+    await storeMemoryItem(userId, content, {
       element: "water",
       sourceAgent: "water-agent",
       confidence: 0.9,
       metadata: {
         role: "oracle",
         phase: "flow",
-        archetype: "Water",
+        archetypes: ["Water"],
         waterType,
         emotionalDepth: true,
         healingEnergy: true,
@@ -298,31 +297,30 @@ ${modelResponse.response}`;
 
     // Log with water-specific emotional insights
     await logOracleInsight({
-      anon_id: userId,
-      archetype: "Water",
-      element: "water",
-      insight: {
-        message: content,
-        raw_input: input,
+      userId: userId,
+      agentType: "water-agent",
+      query: input,
+      content: content,
+      metadata: {
+        archetypes: ["Water"],
+        elementalAlignment: "water",
         waterType,
         emotionalIntensity: this.assessEmotionalIntensity(input),
         healingPotential: this.assessHealingPotential(input),
-      },
-      emotion: 0.88,
-      phase: "flow",
-      context: contextMemory,
+      
+      }
     });
 
     // Return response with water-specific metadata
     return {
       content,
-      provider: "water-agent",
-      model: modelResponse.model || "gpt-4",
+      provider: "water-agent" as any,
+      model: (modelResponse as any).model || "gpt-4",
       confidence: 0.9,
       metadata: {
         element: "water",
         phase: "flow",
-        archetype: "Water",
+        archetypes: ["Water"],
         waterType,
         reflections: this.extractWaterReflections(content),
         symbols: this.extractWaterSymbols(content),

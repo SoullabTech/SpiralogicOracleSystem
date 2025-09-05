@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  sesame-csm-offline:
+    build:
+      context: .
+      dockerfile: Dockerfile.sesame
+    image: soullab/sesame-csm:offline
+    container_name: sesame-csm-offline
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/models/sesame
+      - TRANSFORMERS_CACHE=/app/cache
+      - HF_HOME=/app/cache
+      - CUDA_VISIBLE_DEVICES=0  # Use GPU 0 if available
+      - TORCH_CUDA_ARCH_LIST="6.0;6.1;7.0;7.5;8.0;8.6"  # Common CUDA architectures
+    volumes:
+      # Mount local model cache for persistence
+      - ./backend/models/sesame:/app/models/sesame:ro
+      - ./backend/cache/huggingface:/app/cache:rw
+      # Optional: Mount sesame-csm source if you have it locally
+      - ./sesame-csm:/app/sesame-csm:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s  # Longer startup time for model loading
+    deploy:
+      resources:
+        limits:
+          memory: 4G  # Increase for larger models
+        reservations:
+          memory: 2G
+    # GPU support (uncomment if you have NVIDIA GPU)
+    # runtime: nvidia
+    # environment:
+    #   - NVIDIA_VISIBLE_DEVICES=all
+    #   - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+volumes:
+  sesame_models:
+    driver: local
+  sesame_cache:
+    driver: local

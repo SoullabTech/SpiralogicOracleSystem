@@ -5,21 +5,30 @@
  */
 
 import { logger } from '../utils/logger';
-import { routeToModel, routeToModelStreaming } from './ElementalIntelligenceRouter';
+import { routeToModel } from './ElementalIntelligenceRouter';
 import { safetyService } from './SafetyModerationService';
+import { getMayaMode, MAYA_FEATURES } from '../config/mayaMode';
+import { MAYA_PROMPT_BETA, getMayaBetaFallback } from '../prompts/mayaPrompt.beta';
+import { MAYA_PROMPT_FULL } from '../prompts/mayaPrompt.full';
+import { sesameTTS } from './SesameTTS';
+import { MemoryOrchestrator } from './MemoryOrchestrator';
+import { ttsOrchestrator } from './TTSOrchestrator';
+// import { FileMemoryIntegration } from '../../../lib/services/FileMemoryIntegration'; // Temporarily disabled
 import axios from 'axios';
 
 // Context type for pipeline
 export interface ConversationalContext {
   userText: string;
-  convoSummary: string;
-  longMemSnippets: string[];
-  recentBotReplies: string[];
+  conversationHistory: Array<{ role: 'user' | 'assistant'; content: string; timestamp: string }>;
   sentiment: "low" | "neutral" | "high";
   element: "air" | "fire" | "water" | "earth" | "aether";
   voiceEnabled: boolean;
   userId: string;
-  sessionId?: string;
+  sessionId: string;
+  // Legacy fields for backward compatibility
+  convoSummary?: string;
+  longMemSnippets?: string[];
+  recentBotReplies?: string[];
 }
 
 // Pipeline result
@@ -29,6 +38,17 @@ export interface ConversationalResult {
   element: string;
   processingTime: number;
   source: 'sesame_shaped' | 'fallback';
+  citations?: {
+    fileId: string;
+    fileName: string;
+    category?: string;
+    pageNumber?: number;
+    sectionTitle?: string;
+    sectionLevel?: number;
+    preview: string;
+    relevance: number;
+    chunkIndex: number;
+  }[];
   metadata: {
     draftModel: string;
     reshapeCount: number;
@@ -73,6 +93,13 @@ const GENERIC_PATTERNS = [
 export class ConversationalPipeline {
   private recentAudioCache = new Map<string, string>();
   private debounceTimers = new Map<string, NodeJS.Timeout>();
+  private memoryOrchestrator: MemoryOrchestrator;
+  // private fileMemory: FileMemoryIntegration; // Temporarily disabled
+
+  constructor(dependencies?: { supabase?: any; vectorSearch?: any }) {
+    this.memoryOrchestrator = new MemoryOrchestrator(dependencies);
+    // this.fileMemory = new FileMemoryIntegration(); // Temporarily disabled
+  }
 
   /**
    * Main conversational pipeline entry point
@@ -82,15 +109,86 @@ export class ConversationalPipeline {
     let reshapeCount = 0;
 
     try {
-      // Step 1: Draft with upstream model (not final)
-      let draft = await this.draftText(ctx);
+      // Step 0: Build comprehensive memory context - MUST ALWAYS HAPPEN
+      let memoryContext;
+      try {
+        memoryContext = await this.memoryOrchestrator.buildContext(
+          ctx.userId,
+          ctx.userText,
+          ctx.sessionId,
+          ctx.conversationHistory
+        );
+        
+        // Debug memory loading if enabled
+        if (process.env.MAYA_DEBUG_MEMORY === 'true') {
+          console.log('[Memory Debug] Context loaded:', {
+            sessionEntries: memoryContext.session?.length || 0,
+            journalEntries: memoryContext.journal?.length || 0,
+            profileLoaded: !!memoryContext.profile,
+            symbolicPatterns: memoryContext.symbolic?.length || 0,
+            externalContent: memoryContext.external?.length || 0,
+            totalContextSize: JSON.stringify(memoryContext).length,
+            processingTime: Date.now() - startTime
+          });
+        }
+        
+      } catch (memoryError) {
+        console.warn('[ConversationalPipeline] Memory orchestration failed, using fallback context:', memoryError.message);
+        logger.error('Memory orchestration failed:', memoryError);
+        
+        // Provide minimal fallback context - never skip memory injection completely
+        memoryContext = {
+          session: [],
+          journal: [],
+          profile: {},
+          symbolic: [],
+          external: []
+        };
+      }
+
+      // Step 0.5: Fetch relevant files from user's library for citations
+      let fileContexts: any[] = [];
+      let citations: any[] = [];
+      try {
+        // fileContexts = await this.fileMemory.retrieveRelevantFiles(
+        //   ctx.userId, 
+        //   ctx.userText, 
+        //   { limit: 3, minRelevance: 0.75 }
+        // ); // Temporarily disabled
+        
+        if (fileContexts.length > 0) {
+          // citations = this.fileMemory.formatCitationMetadata(fileContexts); // Temporarily disabled
+          logger.info('File contexts integrated for citations', {
+            userId: ctx.userId,
+            filesReferenced: fileContexts.length,
+            citationsGenerated: citations.length
+          });
+        }
+      } catch (fileError) {
+        logger.warn('File memory integration failed:', fileError);
+        fileContexts = [];
+        citations = [];
+      }
+
+      // Step 1: Draft with upstream model using full memory context + file context
+      let draft = await this.draftTextWithMemory(ctx, memoryContext, fileContexts);
       let draftModel = this.getDraftModelName(ctx.element);
 
       // Step 2: Anti-canned guard - reshape if needed
-      if (this.rejectBoilerplate(draft) || this.tooSimilar(draft, ctx.recentBotReplies)) {
-        logger.info(`Reshaping canned response for user ${ctx.userId}`);
-        draft = await this.redraftWithFreshness(ctx, draft);
+      const recentReplies = ctx.recentBotReplies || ctx.conversationHistory
+        .filter(turn => turn.role === 'assistant')
+        .slice(-3)
+        .map(turn => turn.content);
+      
+      if (this.rejectBoilerplate(draft) || this.tooSimilar(draft, recentReplies)) {
+        logger.info(`Reshaping response for Maya tone for user ${ctx.userId}`);
+        draft = await this.redraftWithFreshness(ctx, draft, memoryContext);
         reshapeCount = 1;
+        
+        // If still generic, use Maya fallback
+        if (this.rejectBoilerplate(draft)) {
+          draft = getMayaBetaFallback();
+        }
       }
 
       // Step 3: Format for Maya with prosody hints
@@ -111,14 +209,37 @@ export class ConversationalPipeline {
 
       if (ctx.voiceEnabled && this.shouldSynthesize(finalForVoice)) {
         const ttsStart = Date.now();
-        audioUrl = await this.mayaTTS(finalForVoice, {
+        const ttsResult = await ttsOrchestrator.generateSpeech(finalForVoice, "maya", {
           userId: ctx.userId,
-          voice: "maya"
+          sessionId: ctx.sessionId
         });
+        audioUrl = ttsResult.audioUrl || null;
         ttsSeconds = (Date.now() - ttsStart) / 1000;
+        
+        logger.debug('TTS generated', {
+          service: ttsResult.service,
+          cached: ttsResult.cached,
+          processingTime: ttsResult.processingTime
+        });
       }
 
       const processingTime = Date.now() - startTime;
+
+      // Persist conversation turn to user's memory
+      await this.memoryOrchestrator.persistConversationTurn(
+        ctx.userId,
+        ctx.userText,
+        finalForVoice,
+        ctx.sessionId,
+        {
+          element: ctx.element,
+          sentiment: ctx.sentiment,
+          processingTime,
+          voiceSynthesized: audioUrl !== null
+        }
+      ).catch(error => {
+        logger.warn('Memory persistence failed (non-critical):', error);
+      });
 
       return {
         text: finalForVoice,
@@ -126,6 +247,7 @@ export class ConversationalPipeline {
         element: ctx.element,
         processingTime,
         source: 'sesame_shaped',
+        citations,
         metadata: {
           draftModel,
           reshapeCount,
@@ -140,13 +262,16 @@ export class ConversationalPipeline {
     } catch (error) {
       logger.error('Conversational pipeline error:', error);
       
-      // Fallback to simple response
+      // Use Maya fallback instead of generic response
+      const fallbackText = getMayaBetaFallback();
+      
       return {
-        text: "I'm taking a moment to gather my thoughts. What would you like to explore together?",
+        text: fallbackText,
         audioUrl: null,
         element: ctx.element,
         processingTime: Date.now() - startTime,
         source: 'fallback',
+        citations: [],
         metadata: {
           draftModel: 'fallback',
           reshapeCount: 0,
@@ -158,27 +283,29 @@ export class ConversationalPipeline {
   }
 
   /**
-   * Draft text using upstream model
+   * Draft text using Maya prompts (beta or full mode)
    */
   private async draftText(ctx: ConversationalContext): Promise<string> {
     const plan = this.planTurn(ctx);
-    const tone = this.toneInstruction(ctx.userText, ctx.sentiment);
-
+    
+    // Determine which Maya mode to use (could be user-specific later)
+    const mayaMode = getMayaMode();
+    const mayaPrompt = mayaMode === 'beta' ? MAYA_PROMPT_BETA : MAYA_PROMPT_FULL;
+    
     const system = [
-      "You are Maya (conversational intelligence).",
-      "Use concrete, situation-specific guidance from context & memory.",
-      ...plan.contentConstraints.map(c => `Constraint: ${c}`),
-      `Tone: ${tone}`,
-      ...plan.voiceDirectives.map(v => `Voice: ${v}`),
-      "Avoid boilerplate and meta-AI talk.",
-      "Speak naturally as if continuing a conversation with someone you know."
+      mayaPrompt,
+      "",
+      "Context for this conversation:",
+      ...plan.contentConstraints.map(c => `- ${c}`),
+      ctx.convoSummary ? `Recent discussion: ${ctx.convoSummary}` : "",
+      ctx.longMemSnippets.length ? `Relevant context: ${ctx.longMemSnippets.slice(0, 3).join(", ")}` : "",
+      "",
+      mayaMode === 'beta' 
+        ? "Respond as Maya - thoughtful, mature, and present."
+        : "Draw from your full understanding to guide this person."
     ].join("\n");
 
-    const user = [
-      `User: ${ctx.userText}`,
-      ctx.convoSummary ? `Context: ${ctx.convoSummary}` : "",
-      ctx.longMemSnippets.length ? `Memory:\n- ${ctx.longMemSnippets.slice(0, 3).join("\n- ")}` : ""
-    ].join("\n");
+    const user = ctx.userText;
 
     // Route to appropriate upstream model for drafting
     const model = routeToModel(ctx.element);
@@ -192,33 +319,16 @@ export class ConversationalPipeline {
     return response.content.trim();
   }
 
-  /**
-   * Redraft with emphasis on freshness
-   */
-  private async redraftWithFreshness(ctx: ConversationalContext, originalDraft: string): Promise<string> {
-    const system = [
-      "Rephrase with fresh structure; no generic phrases.",
-      "Use specific, contextual language that reflects the user's actual situation.",
-      "Draw from memory snippets for concrete, personal responses.",
-      "Avoid: 'I understand', 'I'm here to help', 'That makes sense', etc."
-    ].join("\n");
-
-    const user = `Redraft this response with fresh language and specific context:\n\nOriginal: ${originalDraft}\n\nUser context: ${ctx.userText}\nMemory: ${ctx.longMemSnippets.slice(0, 2).join(", ")}`;
-
-    const model = routeToModel(ctx.element);
-    const response = await model.generateResponse({
-      system,
-      user,
-      temperature: 0.7,
-      maxTokens: 300
-    });
-    return response.content;
-  }
 
   /**
    * Format text for Maya with light prosody hints
    */
   private formatForMaya(text: string, opts: { pace?: "calm" | "neutral" | "brisk" } = {}): string {
+    // Add null/undefined check
+    if (!text || typeof text !== 'string') {
+      console.warn('[formatForMaya] Invalid text input:', text);
+      return '';
+    }
     let out = text.trim();
 
     // Light prosody hints Maya understands (keep it minimal & natural)
@@ -246,8 +356,16 @@ export class ConversationalPipeline {
     sentiment: string;
     goals: string[];
   }): Promise<string> {
+    // Add null/undefined check
+    if (!text || typeof text !== 'string') {
+      console.warn('[sesameCITransform] Invalid text input:', text);
+      return text || '';
+    }
+    
     try {
-      const response = await axios.post(`${process.env.SESAME_CI_URL}/ci/shape`, {
+      // Use SESAME_URL instead of SESAME_CI_URL
+      const sesameBaseUrl = process.env.SESAME_URL || 'http://localhost:8000';
+      const response = await axios.post(`${sesameBaseUrl}/ci/shape`, {
         text,
         meta
       }, {
@@ -289,19 +407,10 @@ export class ConversationalPipeline {
       return new Promise((resolve) => {
         const timer = setTimeout(async () => {
           try {
-            const response = await axios.post(`${process.env.SESAME_TTS_URL}/tts`, {
-              text: truncatedText,
-              voice: opts.voice ?? "maya",
-              seed: opts.seed
-            }, {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.SESAME_TOKEN}`
-              },
-              timeout: 10000 // 10s timeout with fallback
+            // Use SesameTTS service with prosody preservation
+            const audioUrl = await sesameTTS.synthesize(truncatedText, {
+              voice: opts.voice || 'maya'
             });
-
-            const audioUrl = response.data.audioUrl;
             
             // Cache for 5 minutes
             if (audioUrl) {
@@ -400,6 +509,11 @@ export class ConversationalPipeline {
    * Check if text should be synthesized
    */
   private shouldSynthesize(text: string): boolean {
+    // Type safety check
+    if (!text || typeof text !== 'string') {
+      logger.warn('shouldSynthesize received invalid text:', { text, type: typeof text });
+      return false; // Don't synthesize invalid text
+    }
     return text.length >= 5 && text.length <= 1000 && !text.includes('[');
   }
 
@@ -407,6 +521,12 @@ export class ConversationalPipeline {
    * Detect boilerplate phrases
    */
   private rejectBoilerplate(text: string): boolean {
+    // Type safety check - ensure we have a valid string
+    if (!text || typeof text !== 'string') {
+      logger.warn('rejectBoilerplate received invalid text:', { text, type: typeof text });
+      return true; // Reject non-string responses as boilerplate
+    }
+    
     const lowerText = text.toLowerCase();
     
     // Check for boilerplate phrases
@@ -464,6 +584,204 @@ export class ConversationalPipeline {
   }
 
   /**
+   * Process streaming message - returns a stream of text chunks
+   */
+  async processStreamingMessage(params: any): Promise<any> {
+    const { userText, element = 'aether', userId, sessionId, threadId, metadata = {} } = params;
+    
+    try {
+      // Build memory context first
+      const memoryContext = await this.memoryOrchestrator.buildContext({
+        userId,
+        userText,
+        sessionId,
+        threadId
+      });
+
+      // Create context object
+      const ctx: ConversationalContext = {
+        userText,
+        conversationHistory: memoryContext.conversationHistory || [],
+        sentiment: 'neutral',
+        element: element as any,
+        voiceEnabled: metadata.enableVoice || false,
+        userId,
+        sessionId
+      };
+
+      // Use streaming model if available
+      const model = routeToModel(element);
+      
+      if (!model || !model.generateStreamingResponse) {
+        // Fallback to non-streaming
+        const result = await this.converseViaSesame(ctx);
+        return {
+          stream: null,
+          text: result.text,
+          metadata: result.metadata
+        };
+      }
+
+      // Generate streaming response
+      const mayaMode = getMayaMode();
+      const systemPrompt = mayaMode === 'full' ? MAYA_PROMPT_FULL : MAYA_PROMPT_BETA;
+      const memoryPrompt = this.memoryOrchestrator.formatForPrompt(memoryContext);
+      
+      const fullPrompt = `${systemPrompt}
+
+${memoryPrompt}
+
+Current User Message: ${userText}
+
+Respond as Maya with appropriate depth and memory integration.`;
+
+      const stream = await model.generateStreamingResponse({
+        messages: [
+          { role: 'system', content: fullPrompt },
+          { role: 'user', content: userText }
+        ],
+        temperature: 0.8,
+        max_tokens: 800
+      });
+
+      // Store conversation after streaming completes
+      if (memoryContext) {
+        setTimeout(async () => {
+          try {
+            await this.memoryOrchestrator.storeConversation({
+              userId,
+              sessionId,
+              threadId,
+              userMessage: userText,
+              assistantResponse: '', // Will be accumulated from stream
+              element,
+              metadata
+            });
+          } catch (error) {
+            logger.error('Failed to store streaming conversation:', error);
+          }
+        }, 5000);
+      }
+
+      return {
+        stream,
+        metadata: {
+          model: model.name || 'maya-streaming',
+          element,
+          sessionId,
+          userId
+        }
+      };
+
+    } catch (error) {
+      logger.error('Streaming message processing failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Process non-streaming message (for backward compatibility)
+   */
+  async processMessage(params: any): Promise<any> {
+    const { userText, element = 'aether', userId, sessionId, metadata = {} } = params;
+    
+    const ctx: ConversationalContext = {
+      userText,
+      conversationHistory: [],
+      sentiment: 'neutral',
+      element: element as any,
+      voiceEnabled: metadata.enableVoice || false,
+      userId,
+      sessionId
+    };
+
+    const result = await this.converseViaSesame(ctx);
+    return {
+      text: result.text,
+      element: result.element,
+      metadata: result.metadata
+    };
+  }
+
+  /**
+   * Draft text using memory-enhanced context
+   */
+  private async draftTextWithMemory(ctx: ConversationalContext, memoryContext: any, fileContexts?: any[]): Promise<string> {
+    const mayaMode = getMayaMode();
+    const systemPrompt = mayaMode === 'full' ? MAYA_PROMPT_FULL : MAYA_PROMPT_BETA;
+    
+    // Format memory context for prompt injection - ALWAYS called
+    const memoryPrompt = this.memoryOrchestrator.formatForPrompt(memoryContext);
+    
+    // Format file contexts if available
+    let filePrompt = '';
+    if (fileContexts && fileContexts.length > 0) {
+      const fileReferences = fileContexts.map(file => 
+        `File: ${file.fileName} (${file.category || 'uncategorized'})\nContent: ${file.content}`
+      ).join('\n\n');
+      filePrompt = `\nRelevant files from user's library:\n${fileReferences}\n`;
+    }
+    
+    const fullPrompt = `${systemPrompt}
+
+${memoryPrompt}${filePrompt}
+
+Current User Message: ${ctx.userText}
+
+Respond as Maya with appropriate depth, memory integration, and reference to uploaded files when relevant.`;
+
+    // Ensure we have just the element string, not the whole context
+    const element = typeof ctx.element === 'string' ? ctx.element : 'aether';
+    logger.debug('draftTextWithMemory routing to element:', { element, ctxElement: ctx.element });
+    
+    const model = routeToModel(element);
+    const response = await model.generateResponse({
+      system: "You are Maya, a wise and empathetic AI companion.",
+      user: fullPrompt,
+      temperature: 0.7,
+      maxTokens: 300
+    });
+
+    return response?.content?.trim() || getMayaBetaFallback();
+  }
+
+  /**
+   * Redraft with memory context for freshness
+   */
+  private async redraftWithFreshness(
+    ctx: ConversationalContext, 
+    previousDraft: string, 
+    memoryContext?: any
+  ): Promise<string> {
+    const freshPrompt = `The previous response was too generic: "${previousDraft}"
+
+Given the user's message: "${ctx.userText}"
+${memoryContext ? `\nMemory Context:\n${this.memoryOrchestrator.formatForPrompt(memoryContext)}` : ''}
+
+Generate a more specific, personalized Maya response that:
+- References specific details from the user's context
+- Avoids generic phrases
+- Shows genuine understanding
+- Asks a thoughtful question if appropriate
+
+Respond naturally as Maya:`;
+
+    // Ensure we have just the element string, not the whole context
+    const element = typeof ctx.element === 'string' ? ctx.element : 'aether';
+    logger.debug('redraftWithFreshness routing to element:', { element, ctxElement: ctx.element });
+    
+    const model = routeToModel(element);
+    const response = await model.generateResponse({
+      system: "You are Maya, a wise and empathetic AI companion.",
+      user: freshPrompt,
+      temperature: 0.7,
+      maxTokens: 300
+    });
+
+    return response?.content?.trim() || getMayaBetaFallback();
+  }
+
+  /**
    * Streaming version of conversational pipeline
    * Streams tokens in real-time for live Maya experience
    */
@@ -485,6 +803,43 @@ export class ConversationalPipeline {
         voiceEnabled: ctx.voiceEnabled
       });
 
+      // CRITICAL FIX: Build comprehensive memory context BEFORE streaming
+      let memoryContext;
+      try {
+        memoryContext = await this.memoryOrchestrator.buildContext(
+          ctx.userId,
+          ctx.userText,
+          ctx.sessionId,
+          ctx.conversationHistory
+        );
+        
+        // Debug memory loading if enabled
+        if (process.env.MAYA_DEBUG_MEMORY === 'true') {
+          console.log('[Stream Memory Debug] Context loaded:', {
+            sessionEntries: memoryContext.session?.length || 0,
+            journalEntries: memoryContext.journal?.length || 0,
+            profileLoaded: !!memoryContext.profile,
+            symbolicPatterns: memoryContext.symbolic?.length || 0,
+            externalContent: memoryContext.external?.length || 0,
+            totalContextSize: JSON.stringify(memoryContext).length,
+            processingTime: Date.now() - startTime
+          });
+        }
+        
+      } catch (memoryError) {
+        console.warn('[StreamResponse] Memory orchestration failed, using fallback context:', memoryError.message);
+        logger.error('Stream memory orchestration failed:', memoryError);
+        
+        // Provide minimal fallback context - never skip memory injection completely
+        memoryContext = {
+          session: [],
+          journal: [],
+          profile: {},
+          symbolic: [],
+          external: []
+        };
+      }
+
       // Send element routing notification
       callbacks.onElement({
         element: ctx.element,
@@ -492,8 +847,11 @@ export class ConversationalPipeline {
         status: 'routing'
       });
 
-      // Route to appropriate elemental intelligence with streaming
-      const draftResponse = await routeToModelStreaming(ctx, {
+      // Route to appropriate elemental intelligence with streaming (now with memory context)
+      const draftResponse = await routeToModelStreaming({
+        ...ctx,
+        memoryContext // Pass memory context to streaming router
+      }, {
         streaming: true,
         onToken: callbacks.onToken
       });
@@ -545,6 +903,24 @@ export class ConversationalPipeline {
       };
 
       callbacks.onComplete(result);
+
+      // CRITICAL FIX: Persist conversation turn to user's memory (matches converseViaSesame behavior)
+      try {
+        await this.memoryOrchestrator.persistConversationTurn(
+          ctx.userId,
+          ctx.userText,
+          shapedText,
+          ctx.sessionId,
+          {
+            element: ctx.element,
+            processingTime: Math.round(processingTime),
+            hasVoice: !!audioUrl,
+            source: 'streaming_pipeline'
+          }
+        );
+      } catch (persistError) {
+        logger.warn('Failed to persist conversation turn for streaming response:', persistError);
+      }
 
       logger.info('✅ Streaming conversation completed', {
         userId: ctx.userId,

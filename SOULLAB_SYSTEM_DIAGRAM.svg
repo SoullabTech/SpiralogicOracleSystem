@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Tesla-inspired gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0A0D16;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A1F2E;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Golden accent gradient -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F6AD55;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Subtle glow filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" fill="#FFD700" font-family="SF Pro Display, Arial" font-size="24" font-weight="600">
+    Maya Personal Oracle Agent — System Architecture
+  </text>
+  
+  <!-- Input Section -->
+  <g id="inputs">
+    <!-- Input Icons -->
+    <circle cx="100" cy="150" r="35" fill="#1A1F2E" stroke="#FFD700" stroke-width="2"/>
+    <text x="100" y="155" text-anchor="middle" fill="#FFD700" font-size="20">✍️</text>
+    <text x="100" y="200" text-anchor="middle" fill="#FFFFFF" font-size="12" font-family="SF Pro Text, Arial">TEXT</text>
+    
+    <circle cx="100" cy="250" r="35" fill="#1A1F2E" stroke="#FFD700" stroke-width="2"/>
+    <text x="100" y="255" text-anchor="middle" fill="#FFD700" font-size="20">🎙️</text>
+    <text x="100" y="300" text-anchor="middle" fill="#FFFFFF" font-size="12" font-family="SF Pro Text, Arial">VOICE</text>
+    
+    <circle cx="100" cy="350" r="35" fill="#1A1F2E" stroke="#FFD700" stroke-width="2"/>
+    <text x="100" y="355" text-anchor="middle" fill="#FFD700" font-size="20">📂</text>
+    <text x="100" y="400" text-anchor="middle" fill="#FFFFFF" font-size="12" font-family="SF Pro Text, Arial">FILES</text>
+    
+    <circle cx="100" cy="450" r="35" fill="#1A1F2E" stroke="#FFD700" stroke-width="2"/>
+    <text x="100" y="455" text-anchor="middle" fill="#FFD700" font-size="20">🌐</text>
+    <text x="100" y="500" text-anchor="middle" fill="#FFFFFF" font-size="12" font-family="SF Pro Text, Arial">URLs</text>
+  </g>
+  
+  <!-- Flow Arrows to Memory -->
+  <path d="M 150 200 Q 200 220 250 250" stroke="#FFD700" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 150 275 L 250 275" stroke="#FFD700" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 150 375 Q 200 350 250 300" stroke="#FFD700" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 150 450 Q 200 400 250 325" stroke="#FFD700" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Memory Orchestrator -->
+  <g id="memory">
+    <rect x="250" y="200" width="180" height="150" rx="20" fill="#1A1F2E" stroke="#FFD700" stroke-width="3" filter="url(#glow)"/>
+    <text x="340" y="225" text-anchor="middle" fill="#FFD700" font-family="SF Pro Display, Arial" font-size="16" font-weight="600">🧠 MEMORY</text>
+    <text x="340" y="245" text-anchor="middle" fill="#FFD700" font-family="SF Pro Display, Arial" font-size="16" font-weight="600">ORCHESTRATION</text>
+    
+    <!-- Memory layers -->
+    <text x="265" y="270" fill="#FFFFFF" font-size="11" font-family="SF Pro Text, Arial">• Session Context</text>
+    <text x="265" y="285" fill="#FFFFFF" font-size="11" font-family="SF Pro Text, Arial">• Journal Entries</text>
+    <text x="265" y="300" fill="#FFFFFF" font-size="11" font-family="SF Pro Text, Arial">• User Profile</text>
+    <text x="265" y="315" fill="#FFFFFF" font-size="11" font-family="SF Pro Text, Arial">• Symbolic Patterns</text>
+    <text x="265" y="330" fill="#FFFFFF" font-size="11" font-family="SF Pro Text, Arial">• External Content</text>
+  </g>
+  
+  <!-- Flow Arrow to Maya -->
+  <path d="M 430 275 L 480 275" stroke="#FFD700" stroke-width="4" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Maya Intelligence -->
+  <g id="maya">
+    <ellipse cx="550" cy="275" rx="90" ry="60" fill="url(#goldGradient)" filter="url(#glow)"/>
+    <text x="550" y="265" text-anchor="middle" fill="#0A0D16" font-family="SF Pro Display, Arial" font-size="18" font-weight="700">🌱 MAYA</text>
+    <text x="550" y="285" text-anchor="middle" fill="#0A0D16" font-family="SF Pro Display, Arial" font-size="14" font-weight="600">INTELLIGENCE</text>
+    <text x="550" y="305" text-anchor="middle" fill="#0A0D16" font-family="SF Pro Text, Arial" font-size="11">Mirror → Nudge → Integrate</text>
+  </g>
+  
+  <!-- Output Arrows -->
+  <path d="M 625 240 Q 670 200 700 150" stroke="#FFD700" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 625 310 Q 670 350 700 400" stroke="#FFD700" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Output Section -->
+  <g id="outputs">
+    <!-- Text Output -->
+    <rect x="650" y="100" width="120" height="80" rx="15" fill="#1A1F2E" stroke="#FFD700" stroke-width="2"/>
+    <text x="710" y="125" text-anchor="middle" fill="#FFD700" font-family="SF Pro Display, Arial" font-size="14" font-weight="600">💬 CLEAN TEXT</text>
+    <text x="675" y="145" fill="#FFFFFF" font-size="10" font-family="SF Pro Text, Arial">• UI Display</text>
+    <text x="675" y="158" fill="#FFFFFF" font-size="10" font-family="SF Pro Text, Arial">• Readable</text>
+    <text x="675" y="171" fill="#FFFFFF" font-size="10" font-family="SF Pro Text, Arial">• Structured</text>
+    
+    <!-- Voice Output -->
+    <rect x="650" y="350" width="120" height="80" rx="15" fill="#1A1F2E" stroke="#FFD700" stroke-width="2"/>
+    <text x="710" y="375" text-anchor="middle" fill="#FFD700" font-family="SF Pro Display, Arial" font-size="14" font-weight="600">🔊 PROSODY</text>
+    <text x="710" y="390" text-anchor="middle" fill="#FFD700" font-family="SF Pro Display, Arial" font-size="14" font-weight="600">VOICE</text>
+    <text x="675" y="405" fill="#FFFFFF" font-size="10" font-family="SF Pro Text, Arial">• Natural TTS</text>
+    <text x="675" y="418" fill="#FFFFFF" font-size="10" font-family="SF Pro Text, Arial">• Emotional</text>
+  </g>
+  
+  <!-- Connection Lines (subtle) -->
+  <path d="M 200 100 Q 400 80 600 100" stroke="#FFD700" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+  <path d="M 200 520 Q 400 540 600 520" stroke="#FFD700" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+  
+  <!-- Tagline -->
+  <text x="400" y="560" text-anchor="middle" fill="#FFFFFF" font-family="SF Pro Text, Arial" font-size="14" font-style="italic">
+    One Intelligence • Multiple Interfaces • Continuous Understanding
+  </text>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+            refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#FFD700" />
+    </marker>
+  </defs>
+</svg>
