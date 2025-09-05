@@ -21,7 +21,7 @@ ELEVENLABS_API_KEY=your_elevenlabs_key_here  # Get from elevenlabs.io
 
 # Existing keys from .env
 SUPABASE_URL=https://jkbetmadzcpoinjogkli.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_ANON_KEY=your_supabase_anon_key_here
 ```
 
 ### 3️⃣ Start Services

@@ -92,8 +92,8 @@ Once created, go to **Settings > API**:
 ```bash
 # Copy these values:
 PROJECT_URL=https://[new-id].supabase.co
-ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cC...
-SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cC...
+ANON_KEY=your_supabase_anon_key_here
+SERVICE_ROLE_KEY=your_supabase_service_role_key_here
 ```
 
 ### **3.3 Update Environment**

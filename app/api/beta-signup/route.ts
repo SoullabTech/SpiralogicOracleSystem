@@ -33,22 +33,11 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Validate Switzerland city (basic check)
-    const swissCities = [
-      'zurich', 'geneva', 'basel', 'bern', 'lausanne', 'winterthur',
-      'lucerne', 'st. gallen', 'lugano', 'biel', 'thun', 'köniz',
-      'la chaux-de-fonds', 'schaffhausen', 'fribourg', 'vernier',
-      'chur', 'neuchâtel', 'uster', 'sion', 'emmen', 'zug'
-    ];
-    
-    const cityLower = city.toLowerCase().trim();
-    const isCityValid = swissCities.some(swissCity => 
-      cityLower.includes(swissCity) || swissCity.includes(cityLower)
-    );
-
-    if (!isCityValid && !cityLower.includes('swiss')) {
-      console.warn('Possibly invalid Swiss city:', city);
-      // Don't block signup, just log for review
+    // Basic city validation - ensure it's not empty
+    if (!city.trim()) {
+      return NextResponse.json({ 
+        error: 'City is required' 
+      }, { status: 400 });
     }
 
     const supabase = createClient();

@@ -51,7 +51,7 @@ export default function BetaSignupPage() {
         body: JSON.stringify({
           ...formData,
           signupTimestamp: new Date().toISOString(),
-          source: 'switzerland_beta_landing'
+          source: 'beta_landing'
         })
       });
       
@@ -128,7 +128,7 @@ export default function BetaSignupPage() {
             transition={{ delay: 0.2 }}
             className="text-xl text-gray-300 max-w-2xl mx-auto"
           >
-            Join 25 pioneers in Switzerland testing the future of consciousness-aware AI
+            Join the beta program testing the future of consciousness-aware AI
           </motion.p>
         </div>
 
@@ -220,7 +220,7 @@ export default function BetaSignupPage() {
               </div>
 
               <div>
-                <label className="block text-gray-300 text-sm mb-2">City in Switzerland *</label>
+                <label className="block text-gray-300 text-sm mb-2">City *</label>
                 <input
                   type="text"
                   required
