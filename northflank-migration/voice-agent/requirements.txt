@@ -1,10 +1,10 @@
 # FastAPI and server
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
+fastapi>=0.115.0
+uvicorn>=0.32.0
 pydantic==2.5.0
 
 # AI/ML dependencies for Sesame CSM
-transformers==4.52.1
+transformers>=4.44.2
 accelerate==0.33.0
 torch>=2.0.0
 torchaudio>=2.0.0
@@ -20,9 +20,9 @@ pyrubberband==0.3.0
 noisereduce==3.0.0
 
 # HTTP and utilities
-requests==2.31.0
+requests>=2.32.0
 httpx==0.25.2
-aiohttp==3.9.0
+aiohttp>=3.9.5
 
 # Caching and performance
 redis==5.0.1

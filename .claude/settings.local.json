@@ -320,7 +320,9 @@
       "Bash(./scripts/setup-git-aliases.sh:*)",
       "Bash(git st:*)",
       "Bash(./scripts/safe-commit.sh:*)",
-      "Bash(git submodule:*)"
+      "Bash(git submodule:*)",
+      "Bash(npm update:*)",
+      "Bash(./scripts/security-patch.sh:*)"
     ],
     "deny": []
   },
