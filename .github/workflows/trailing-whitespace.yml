@@ -16,7 +16,7 @@ jobs:
   whitespace-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Find trailing whitespace
         run: |
           git ls-files | grep -E '\.(py|js|ts|md|txt|sh|yml|yaml)$' | xargs grep -nH -E ' +$' || echo "No trailing whitespace found."
