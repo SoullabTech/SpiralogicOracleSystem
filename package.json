@@ -46,7 +46,7 @@
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "critters": "^0.0.23",
-    "dotenv": "^17.2.1",
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-rate-limit": "^8.0.1",
     "framer-motion": "^12.23.12",
