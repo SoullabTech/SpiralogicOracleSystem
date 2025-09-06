@@ -72,7 +72,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Handle onboarding skip behavior (only for development)
-    if (process.env.SKIP_ONBOARDING === 'true' && process.env.NODE_ENV === 'development') {
+    if (process.env.NEXT_PUBLIC_SKIP_ONBOARDING === 'true' && process.env.NODE_ENV === 'development') {
       // Force redirect to Oracle for testing, unless already there
       if (path !== '/oracle' && !path.startsWith('/oracle/')) {
         return NextResponse.redirect(new URL("/oracle", request.url));

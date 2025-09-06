@@ -7,7 +7,7 @@ export async function GET() {
     northflank_sesame_api_key: !!process.env.NORTHFLANK_SESAME_API_KEY,
     voice_provider: process.env.VOICE_PROVIDER,
     sesame_provider: process.env.SESAME_PROVIDER,
-    skip_onboarding: process.env.SKIP_ONBOARDING,
+    skip_onboarding: process.env.NEXT_PUBLIC_SKIP_ONBOARDING,
     node_env: process.env.NODE_ENV,
   };
 

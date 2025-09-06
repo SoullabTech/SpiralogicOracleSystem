@@ -44,7 +44,6 @@ SUPABASE_SERVICE_ROLE_KEY=your-staging-service-role-key
 RUNPOD_API_KEY=your-staging-runpod-key
 RUNPOD_ENDPOINT_ID=your-staging-endpoint-id
 VOICE_PROVIDER=runpod
-SKIP_ONBOARDING=true
 
 # Legacy Support
 VITE_SUPABASE_URL=https://jkbetmadzcpoinjogkli.supabase.co
@@ -65,7 +64,6 @@ SUPABASE_SERVICE_ROLE_KEY=your-dev-service-role-key
 RUNPOD_API_KEY=your-dev-runpod-key
 RUNPOD_ENDPOINT_ID=your-dev-endpoint-id
 VOICE_PROVIDER=runpod
-SKIP_ONBOARDING=true
 
 # Legacy Support
 VITE_SUPABASE_URL=https://jkbetmadzcpoinjogkli.supabase.co
