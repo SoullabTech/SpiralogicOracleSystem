@@ -54,7 +54,7 @@
     "ioredis": "^5.7.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
-    "langchain": "^0.3.32",
+    "langchain": "^0.3.33",
     "lucide-react": "^0.542.0",
     "mammoth": "^1.10.0",
     "mem0ai": "^2.1.38",
