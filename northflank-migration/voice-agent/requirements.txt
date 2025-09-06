@@ -5,7 +5,7 @@ pydantic==2.5.0
 
 # AI/ML dependencies for Sesame CSM
 transformers>=4.44.2
-accelerate==0.33.0
+accelerate==1.10.1
 torch>=2.0.0
 torchaudio>=2.0.0
 numpy<2
