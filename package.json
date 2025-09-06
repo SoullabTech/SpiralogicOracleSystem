@@ -84,7 +84,10 @@
     "winston": "^3.17.0"
   },
   "overrides": {
-    "axios": "^1.11.0"
+    "axios": "^1.11.0",
+    "mem0ai": {
+      "@anthropic-ai/sdk": "^0.61.0"
+    }
   },
   "devDependencies": {
     "@types/chai": "^5.2.2",
