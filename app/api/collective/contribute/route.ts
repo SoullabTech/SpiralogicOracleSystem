@@ -3,9 +3,9 @@
  * Submit afferent streams for collective field analysis (opt-in, anonymized)
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { CollectiveDataCollector } from '@/backend/src/ain/collective/CollectiveDataCollector';
-import { CollectiveIntelligence } from '@/backend/src/ain/collective/CollectiveIntelligence';
-import { Logger } from '@/backend/src/types/core';
+import { CollectiveDataCollector } from '../../../../backend/src/ain/collective/CollectiveDataCollector';
+import { CollectiveIntelligence } from '../../../../backend/src/ain/collective/CollectiveIntelligence';
+import { Logger } from '../../../../backend/src/types/core';
 import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 
