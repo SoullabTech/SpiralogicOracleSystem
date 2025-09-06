@@ -112,15 +112,15 @@ export class DaimonicNarrativeGenerator {
     const mostSuppressed = this.identifyMostSuppressedElement(context.elementalVoices);
 
     if (activeChannels.includes('obstacles') && highestChargeGap) {
-      return `Something in your life refuses to be solved. ${this.describeObstacleOtherness(context)} This resistance is not your failure - it's an Other with its own agenda. The space between what you want and what this obstacle demands is where we need to meet.`;
+      return `Something in your life refuses to be solved. ${this.describeObstacleOtherness(context)} This resistance is not your failure - it&apos;s an Other with its own agenda. The space between what you want and what this obstacle demands is where we need to meet.`;
     }
 
     if (activeChannels.includes('failures') && context.integrationFailures.length > 0) {
-      return `Your failures are trying to teach you something you don't want to learn. ${this.describeFailureWisdom(context)} This isn't about fixing what's broken - it's about encountering what's trying to redirect your life.`;
+      return `Your failures are trying to teach you something you don&apos;t want to learn. ${this.describeFailureWisdom(context)} This isn&apos;t about fixing what&apos;s broken - it&apos;s about encountering what's trying to redirect your life.`;
     }
 
     if (activeChannels.includes('dreams') || activeChannels.includes('visions')) {
-      return `Images arrive without your permission, carrying messages you don't understand. ${this.describeVisionaryOtherness(context)} These aren't symbols to decode - they're autonomous beings with something to say.`;
+      return `Images arrive without your permission, carrying messages you don't understand. ${this.describeVisionaryOtherness(context)} These aren&apos;t symbols to decode - they're autonomous beings with something to say.`;
     }
 
     if (activeChannels.includes('symptoms') || activeChannels.includes('obstacles')) {

@@ -56,7 +56,7 @@ export class AdaptiveExperienceEngine {
   private createStageAdaptations(
     baseContent: string,
     domains: HolisticDomain[],
-  ): AdaptiveContent["adaptations"] {
+  ): AdaptiveContent[&quot;adaptations"] {
     return {
       [DevelopmentStage.BEGINNER]: {
         content: this.simplifyContent(baseContent),
@@ -341,7 +341,7 @@ export class AdaptiveExperienceEngine {
           recommendations.push(
             this.createRecommendation(
               [domain],
-              "practice",
+              &quot;practice",
               `${domain} Development Practice`,
               `Targeted practice for ${domain} enhancement.`,
               userStage,
@@ -408,13 +408,13 @@ export class AdaptiveExperienceEngine {
   ): string {
     const messages = {
       [UserState.STRESSED]:
-        "I notice you're experiencing stress. Let's focus on grounding and regulation practices to help you find center.",
+        "I notice you&apos;re experiencing stress. Let&apos;s focus on grounding and regulation practices to help you find center.",
       [UserState.SEEKING_CLARITY]:
-        "It seems you're seeking mental clarity. Let's work with practices that enhance focus and clear thinking.",
+        "It seems you&apos;re seeking mental clarity. Let's work with practices that enhance focus and clear thinking.",
       [UserState.DISCONNECTED]:
         "You may be feeling disconnected from your deeper purpose. Let's explore practices that reconnect you with meaning.",
       [UserState.PHYSICAL_CONCERNS]:
-        "I'm aware of your physical concerns. Let's approach practice gently, honoring your body's current needs.",
+        "I&apos;m aware of your physical concerns. Let's approach practice gently, honoring your body's current needs.",
       [UserState.BALANCED]:
         "You're in a balanced state. Let's deepen your practice across all domains.",
       [UserState.ENERGIZED]:

@@ -60,7 +60,7 @@ export interface OracleStageConfig {
   // Disclosure and depth
   disclosure: {
     archetype_visibility: number;    // How much to reveal inner workings
-    uncertainty_admission: number;   // Willingness to say "I don't know"
+    uncertainty_admission: number;   // Willingness to say &quot;I don&apos;t know&quot;
     multiple_perspectives: boolean;  // Present conflicting viewpoints
     collective_field_access: boolean; // Share collective intelligence insights
     shadow_work_depth: number;      // Depth of shadow integration

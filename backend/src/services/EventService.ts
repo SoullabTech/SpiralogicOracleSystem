@@ -46,7 +46,7 @@ export class EventService extends EventEmitter {
 
       // Emit for real-time subscribers
       super.emit(eventType, event);
-      super.emit("*", event); // Global listener
+      super.emit(&quot;*&quot;, event); // Global listener
 
       logger.info("Domain event emitted", {
         eventType,
@@ -71,7 +71,7 @@ export class EventService extends EventEmitter {
 
       // Fallback to database
       const { data, error } = await supabase
-        .from("event_log")
+        .from(&quot;event_log")
         .select("*")
         .eq("aggregate_id", aggregateId)
         .order("metadata->version", { ascending: true });
@@ -94,7 +94,7 @@ export class EventService extends EventEmitter {
 
   private async persistEvent(event: DomainEvent): Promise<void> {
     try {
-      const { error } = await supabase.from("event_log").insert({
+      const { error } = await supabase.from(&quot;event_log").insert({
         id: event.id,
         type: event.type,
         aggregate_id: event.aggregateId,
@@ -115,7 +115,7 @@ export class EventService extends EventEmitter {
   private async applyEventToReadModel(event: DomainEvent): Promise<void> {
     try {
       switch (event.type) {
-        case "memory.created":
+        case &quot;memory.created&quot;:
           await this.handleMemoryCreated(event);
           break;
         case "memory.updated":
@@ -129,13 +129,13 @@ export class EventService extends EventEmitter {
       }
     } catch (error) {
       logger.error("Failed to apply event to read model", { error, event });
-      // Don't throw - event was persisted successfully
+      // Don&apos;t throw - event was persisted successfully
     }
   }
 
   private async handleMemoryCreated(event: DomainEvent): Promise<void> {
     const { data } = event;
-    await supabase.from("memories").insert({
+    await supabase.from(&quot;memories&quot;).insert({
       id: data.id,
       user_id: data.userId,
       content: data.content,
@@ -152,7 +152,7 @@ export class EventService extends EventEmitter {
   private async handleMemoryUpdated(event: DomainEvent): Promise<void> {
     const { data } = event;
     await supabase
-      .from("memories")
+      .from(&quot;memories&quot;)
       .update({
         ...data.updates,
         updated_at: event.metadata.timestamp,
@@ -164,7 +164,7 @@ export class EventService extends EventEmitter {
   private async handleMemoryDeleted(event: DomainEvent): Promise<void> {
     const { data } = event;
     await supabase
-      .from("memories")
+      .from(&quot;memories")
       .delete()
       .eq("id", data.id)
       .eq("user_id", data.userId);

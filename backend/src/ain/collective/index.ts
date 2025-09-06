@@ -14,7 +14,6 @@ export { CollectiveDataCollector } from './CollectiveDataCollector';
 export type {
   AfferentStream,
   ElementalSignature,
-  SpiralPhase,
   ArchetypeMap,
   ShadowPattern,
   CollectiveFieldState,

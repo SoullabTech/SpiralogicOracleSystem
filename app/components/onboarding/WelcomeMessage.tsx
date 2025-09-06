@@ -25,7 +25,7 @@ export function WelcomeMessage({ onContinue, userName }: WelcomeMessageProps) {
           </p>
 
           <p className="text-sm text-gray-400 leading-relaxed">
-            You'll be guided by Maya, your personal oracle, who will remember your journey, 
+            You&apos;ll be guided by Maya, your personal oracle, who will remember your journey, 
             reflect patterns back to you, and nudge you forward with questions that matter.
           </p>
 

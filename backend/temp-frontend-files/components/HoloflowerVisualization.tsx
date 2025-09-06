@@ -320,7 +320,7 @@ export const HoloflowerVisualization: React.FC<
 
   const renderConnections = () => {
     return state.activeTransformations.map((transformation, index) => {
-      const [fromId, toId] = transformation.split("->");
+      const [fromId, toId] = transformation.split(&quot;->&quot;);
       const fromHouse = state.houses.find((h) => h.id === fromId);
       const toHouse = state.houses.find((h) => h.id === toId);
 
@@ -358,7 +358,7 @@ export const HoloflowerVisualization: React.FC<
     <div className="holoflower-container">
       <div className="controls">
         <button onClick={() => setShowShadows(!showShadows)}>
-          {showShadows ? "Hide" : "Show"} Shadows
+          {showShadows ? &quot;Hide&quot; : "Show"} Shadows
         </button>
         <button onClick={() => holoflower.integrateAether()}>
           Integrate Aether

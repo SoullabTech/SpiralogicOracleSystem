@@ -63,7 +63,7 @@ export class NarrativeEngine {
     // Adjust formality
     const formality = config.tone.formality ?? 0.5; // Default to 0.5
     if (formality > 0.7) {
-      adjusted = adjusted.replace(/\byou're\b/g, 'you are');
+      adjusted = adjusted.replace(/\byou&apos;re\b/g, 'you are');
       adjusted = adjusted.replace(/\bcan't\b/g, 'cannot');
       adjusted = adjusted.replace(/\bwon't\b/g, 'will not');
     } else if (formality < 0.3) {
@@ -123,7 +123,7 @@ export class NarrativeEngine {
 
     // Add multiple perspectives if enabled
     if (config.disclosure.multiple_perspectives && response.length > 100) {
-      adjusted += "\n\nOf course, there's another way to see this...";
+      adjusted += &quot;\n\nOf course, there&apos;s another way to see this...&quot;;
     }
 
     return adjusted;
@@ -242,7 +242,7 @@ export class NarrativeEngine {
 
     // Strip jargon
     const jargonReplacements: Record<string, string> = {
-      ontology: "pattern",
+      ontology: &quot;pattern",
       consciousness: "awareness",
       archetypal: "symbolic",
       synchronicity: "timing",

@@ -54,7 +54,7 @@ export class SpiralogicReportPdfService {
     birthData: any,
   ): Promise<Blob> {
     const doc = new jsPDF({
-      orientation: "portrait",
+      orientation: &quot;portrait",
       unit: "mm",
       format: "a4",
     });
@@ -447,7 +447,7 @@ export class SpiralogicReportPdfService {
         ],
       );
       doc.setFontSize(24);
-      doc.text(symbol, centerX + pos.x, centerY + pos.y, { align: "center" });
+      doc.text(symbol, centerX + pos.x, centerY + pos.y, { align: &quot;center" });
     });
   }
 
@@ -597,7 +597,7 @@ export class SpiralogicReportPdfService {
     }
 
     .protocol-steps li:before {
-      content: "✦";
+      content: &quot;✦";
       position: absolute;
       left: 0;
       color: ${style.accentColors.aether};
@@ -619,13 +619,13 @@ export class SpiralogicReportPdfService {
     <div style="margin: 40px 0;">
       <p style="font-size: 18px;">Born ${new Date(
         birthData.date,
-      ).toLocaleDateString("en-US", {
+      ).toLocaleDateString(&quot;en-US", {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
       })}</p>
-      <p>${birthData.time} • ${birthData.location.placeName || "Location"}</p>
+      <p>${birthData.time} • ${birthData.location.placeName || &quot;Location"}</p>
     </div>
 
     <div class="elemental-symbols">
@@ -739,7 +739,7 @@ export class SpiralogicReportPdfService {
       ${
         protocol.materials
           ? `
-      <p><strong>Materials needed:</strong> ${protocol.materials.join(", ")}</p>
+      <p><strong>Materials needed:</strong> ${protocol.materials.join(&quot;, &quot;)}</p>
       `
           : ""
       }

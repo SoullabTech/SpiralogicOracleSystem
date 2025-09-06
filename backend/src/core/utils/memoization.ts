@@ -78,7 +78,7 @@ export async function invalidateUserCache(userId: string): Promise<void> {
   try {
     const cache = get<ICache>(TOKENS.Cache);
     
-    // This is a simple implementation - for production you'd want
+    // This is a simple implementation - for production you&apos;d want
     // a more efficient way to track keys by user
     if (typeof cache === 'object' && 'keys' in cache) {
       const keys = (cache as any).keys() as string[];

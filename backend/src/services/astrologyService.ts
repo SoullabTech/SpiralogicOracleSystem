@@ -136,7 +136,7 @@ export type AstrologyResponse =
 
 export class AstrologyService {
   private readonly SIGNS = [
-    "Aries",
+    &quot;Aries&quot;,
     "Taurus",
     "Gemini",
     "Cancer",
@@ -182,7 +182,7 @@ export class AstrologyService {
     query: AstrologyQuery,
   ): Promise<StandardAPIResponse<NatalChart>> {
     try {
-      logger.info("Generating natal chart", { userId: query.userId });
+      logger.info(&quot;Generating natal chart&quot;, { userId: query.userId });
 
       if (!query.birthData?.date) {
         return errorResponse([
@@ -208,7 +208,7 @@ export class AstrologyService {
     query: AstrologyQuery,
   ): Promise<StandardAPIResponse<TransitReading>> {
     try {
-      logger.info("Calculating current transits", { userId: query.userId });
+      logger.info(&quot;Calculating current transits&quot;, { userId: query.userId });
 
       if (!query.birthData?.date) {
         return errorResponse([
@@ -234,7 +234,7 @@ export class AstrologyService {
     query: AstrologyQuery,
   ): Promise<StandardAPIResponse<CompatibilityReading>> {
     try {
-      logger.info("Calculating compatibility", { userId: query.userId });
+      logger.info(&quot;Calculating compatibility", { userId: query.userId });
 
       if (!query.birthData?.date || !query.partnerBirthData?.date) {
         return errorResponse([
@@ -355,7 +355,7 @@ export class AstrologyService {
     birthData: BirthData,
     currentDate?: string,
   ): Promise<TransitReading> {
-    const date = currentDate || new Date().toISOString().split("T")[0];
+    const date = currentDate || new Date().toISOString().split(&quot;T&quot;)[0];
 
     // Simulate current transits
     const activeTransits = [
@@ -420,7 +420,7 @@ export class AstrologyService {
         growth: Math.floor(Math.random() * 40) + 60,
       },
       challenges: [
-        "Different communication styles",
+        &quot;Different communication styles&quot;,
         "Timing of emotional needs",
       ],
       strengths: ["Complementary elements", "Mutual growth potential"],

@@ -128,7 +128,7 @@ async function testMayaCanonicalPrompt(): Promise<void> {
 
       // Test 3: Should match expected pattern
       if (!testCase.expectedPattern.test(response)) {
-        console.log(`❌ FAILED: Doesn't match expected pattern: ${testCase.expectedPattern}`);
+        console.log(`❌ FAILED: Doesn&apos;t match expected pattern: ${testCase.expectedPattern}`);
         failed++;
         continue;
       }

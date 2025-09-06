@@ -53,7 +53,7 @@ export class CollectiveDashboardService {
 
     try {
       const expertMode = params.expert || false;
-      const window = params.window || "7d";
+      const window = params.window || &quot;7d";
       
       // Get current field state and patterns
       const fieldState = this.collectiveIntelligence.getFieldState();
@@ -106,7 +106,7 @@ export class CollectiveDashboardService {
 
     try {
       const expertMode = params.expert || false;
-      const window = params.window || "7d";
+      const window = params.window || &quot;7d";
       const limit = params.limit || 8;
 
       const activePatterns = this.collectiveIntelligence.getActivePatterns();
@@ -142,7 +142,7 @@ export class CollectiveDashboardService {
 
     try {
       const expertMode = params.expert || false;
-      const horizon = params.horizon || "7d";
+      const horizon = params.horizon || &quot;7d&quot;;
 
       const fieldState = this.collectiveIntelligence.getFieldState();
       const activePatterns = this.collectiveIntelligence.getActivePatterns();
@@ -299,7 +299,7 @@ export class CollectiveDashboardService {
     
     // Calculate trend (simplified - would use historical data in production)
     const delta = Math.floor(Math.random() * 10 - 5); // Mock delta for now
-    const trend = delta > 2 ? "rising" : delta < -2 ? "softening" : "steady";
+    const trend = delta > 2 ? &quot;rising&quot; : delta < -2 ? "softening" : "steady";
 
     return {
       value: Math.round(current),
@@ -325,7 +325,7 @@ export class CollectiveDashboardService {
 
     return {
       label,
-      horizon: "days" as const,
+      horizon: &quot;days&quot; as const,
       confidence
     };
   }
@@ -348,7 +348,7 @@ export class CollectiveDashboardService {
         suggestions: [
           "speak one difficult truth gently",
           "ask for what you actually need",
-          "have the conversation you've been avoiding"
+          "have the conversation you&apos;ve been avoiding"
         ],
         ...(expertMode && { internal: { codes: ["high_coherence", "air_clarity"] } })
       });

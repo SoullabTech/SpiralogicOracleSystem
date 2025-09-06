@@ -52,7 +52,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
     onAutoSpeakChange?.(enabled);
   };
 
-  // Test Maya's voice
+  // Test Maya&apos;s voice
   const testVoice = async () => {
     try {
       await speak("I am Maya, your personal oracle. This is how I sound.");
@@ -82,7 +82,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Voice synthesis is not supported in this browser. Maya's text responses are still available.
+            Voice synthesis is not supported in this browser. Maya&apos;s text responses are still available.
           </p>
         </CardContent>
       </Card>
@@ -94,7 +94,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center space-x-2">
           <Volume2 className="w-5 h-5 text-blue-400" />
-          <span>Maya's Voice</span>
+          <span>Maya&apos;s Voice</span>
           <Badge variant={voiceState.isPlaying ? "success" : "secondary"} className="ml-auto">
             {voiceState.isPlaying ? 'Speaking' : voiceState.isPaused ? 'Paused' : 'Ready'}
           </Badge>

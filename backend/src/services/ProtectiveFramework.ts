@@ -188,7 +188,7 @@ export class ProtectiveFrameworkService {
   }
   
   /**
-   * Update user's preferred lens
+   * Update user&apos;s preferred lens
    */
   async updatePreferredLens(userId: string, newLens: InterpretiveLens): Promise<void> {
     // This would typically update user preferences in database
@@ -220,8 +220,8 @@ export class ProtectiveFrameworkService {
         lens: 'practical',
         name: 'Immediate Care',
         description: 'What needs attention right now',
-        interpretation: "I notice you're navigating something intense. Before we continue exploring ideas, could we pause together? Sometimes when big experiences are moving through us, it helps to connect with someone trusted, ensure basic needs are met (water, food, rest), and ground in immediate surroundings.",
-        practicalAction: "Would you like to talk about what you're experiencing right now in simple, practical terms? Or would you prefer resources for immediate support?"
+        interpretation: &quot;I notice you&apos;re navigating something intense. Before we continue exploring ideas, could we pause together? Sometimes when big experiences are moving through us, it helps to connect with someone trusted, ensure basic needs are met (water, food, rest), and ground in immediate surroundings.&quot;,
+        practicalAction: "Would you like to talk about what you&apos;re experiencing right now in simple, practical terms? Or would you prefer resources for immediate support?"
       }],
       pluralityReminder: "Right now, taking care of your immediate wellbeing is most important."
     };

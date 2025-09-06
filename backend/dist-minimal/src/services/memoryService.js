@@ -7,7 +7,7 @@ const supabaseClient_1 = require("../lib/supabaseClient");
 exports.memoryService = {
     // Store a new memory item
     store: async (userId, content, element, sourceAgent, confidence, metadata) => {
-        const symbols = (0, symbolService_1.extractSymbolicTags)(content, sourceAgent || "oracle");
+        const symbols = (0, symbolService_1.extractSymbolicTags)(content, sourceAgent || &quot;oracle&quot;);
         // Extract themes from content
         const themes = extractThemesFromContent(content.toLowerCase());
         // Check for spiritual keywords
@@ -293,7 +293,7 @@ exports.memoryService = {
         const symbolOccurrences = new Map();
         // Sacred symbols to track
         const sacredSymbols = [
-            "phoenix",
+            &quot;phoenix&quot;,
             "serpent",
             "lotus",
             "rose",
@@ -469,7 +469,7 @@ function detectTimingPattern(dates) {
 function determineSymbolicSignificance(sync) {
     const count = sync.occurrences.length;
     const elementDiversity = new Set(sync.occurrences.map((o) => o.element)).size;
-    const hasIntenseClustering = sync.pattern === "intense_clustering";
+    const hasIntenseClustering = sync.pattern === &quot;intense_clustering&quot;;
     if (count >= 7 && elementDiversity >= 3) {
         return "Major archetypal activation - this symbol is a primary guide";
     }
@@ -653,7 +653,7 @@ function calculateMoonPhase() {
     jd -= b; // subtract integer part to leave fractional part of original jd
     b = Math.round(jd * 8); // scale fraction from 0-8 and round
     const phases = [
-        "new_moon",
+        &quot;new_moon&quot;,
         "waxing_crescent",
         "first_quarter",
         "waxing_gibbous",

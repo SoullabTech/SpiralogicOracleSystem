@@ -185,10 +185,10 @@ class EmotionAnalysisService {
     const { valence, arousal, dominance, energySignature } = emotion;
     
     // Trust-aware insights
-    const trustModifier = trustLevel > 0.7 ? "deeply" : trustLevel > 0.4 ? "gently" : "softly";
+    const trustModifier = trustLevel > 0.7 ? &quot;deeply&quot; : trustLevel > 0.4 ? "gently" : "softly";
     
     if (valence > 0.6 && arousal > 0.6) {
-      return `I sense ${trustModifier} that you're experiencing vibrant, uplifting energy. This ${energySignature} quality suggests you're in a space of creative expansion.`;
+      return `I sense ${trustModifier} that you&apos;re experiencing vibrant, uplifting energy. This ${energySignature} quality suggests you&apos;re in a space of creative expansion.`;
     } else if (valence > 0.4 && arousal < 0.3) {
       return `There's a ${trustModifier} peaceful quality to your emotional state. This ${energySignature} energy feels like a place of integration and rest.`;
     } else if (valence < -0.4 && arousal > 0.6) {

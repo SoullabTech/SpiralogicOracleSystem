@@ -105,7 +105,7 @@ class SpiralogicAstrologyService {
     const { date, time, location } = birthData;
 
     // Convert birth time to Julian Day
-    const [hours, minutes] = time.split(":").map(Number);
+    const [hours, minutes] = time.split(&quot;:&quot;).map(Number);
     const julianDay = this.dateToJulianDay(
       date,
       hours,
@@ -237,7 +237,7 @@ class SpiralogicAstrologyService {
     chartData: any,
   ) {
     const { data, error } = await supabase
-      .from("birth_charts")
+      .from(&quot;birth_charts&quot;)
       .insert({
         user_id: userId,
         birth_date: birthData.date,
@@ -308,7 +308,7 @@ class SpiralogicAstrologyService {
       ascmc,
     );
 
-    // Return house cusps (skip first element as it's duplicate of ASC)
+    // Return house cusps (skip first element as it&apos;s duplicate of ASC)
     return cusps.slice(1, 13);
   }
 
@@ -317,7 +317,7 @@ class SpiralogicAstrologyService {
   ): Promise<Map<string, any>> {
     const planets = new Map();
     const planetList = [
-      { id: swisseph.SE_SUN, name: "Sun" },
+      { id: swisseph.SE_SUN, name: &quot;Sun&quot; },
       { id: swisseph.SE_MOON, name: "Moon" },
       { id: swisseph.SE_MERCURY, name: "Mercury" },
       { id: swisseph.SE_VENUS, name: "Venus" },
@@ -372,7 +372,7 @@ class SpiralogicAstrologyService {
   private calculateAspects(planets: Map<string, any>): any[] {
     const aspects = [];
     const aspectTypes = [
-      { angle: 0, name: "Conjunction", orb: 8 },
+      { angle: 0, name: &quot;Conjunction&quot;, orb: 8 },
       { angle: 60, name: "Sextile", orb: 6 },
       { angle: 90, name: "Square", orb: 8 },
       { angle: 120, name: "Trine", orb: 8 },
@@ -443,7 +443,7 @@ class SpiralogicAstrologyService {
     modalities: Map<string, number>;
   } {
     const elements = new Map([
-      ["Fire", 0],
+      [&quot;Fire", 0],
       ["Earth", 0],
       ["Air", 0],
       ["Water", 0],

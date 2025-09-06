@@ -17,6 +17,7 @@
 import { logger } from '../utils/logger';
 import { supabase } from '../lib/supabaseClient';
 import { semanticSearch, getJournalEntries, getSymbolThreads } from '../lib/supabaseClient';
+import { getRelevantMemories } from './semanticRecall';
 
 // Core memory interfaces
 export interface MemoryResult {
@@ -74,6 +75,9 @@ export class MemoryOrchestrator {
     const fallbacksUsed: string[] = [];
 
     try {
+      // NEW: Inject semantic memories from past journal entries
+      const semanticMemoryPromise = getRelevantMemories(userText, userId, 0.78);
+      
       // Parallel fetch across all enabled layers
       const layerPromises = this.layers
         .filter(layer => layer.enabled)
@@ -93,7 +97,13 @@ export class MemoryOrchestrator {
           }
         });
 
-      const layerResults = await Promise.all(layerPromises);
+      const [layerResults, semanticMemoryResult] = await Promise.all([
+        Promise.all(layerPromises),
+        semanticMemoryPromise
+      ]);
+      
+      const semanticMemoryContext = semanticMemoryResult.context;
+      const semanticDebugInfo = semanticMemoryResult.debug;
       
       // Merge and rank results
       const allResults: MemoryResult[] = [];
@@ -128,15 +138,28 @@ export class MemoryOrchestrator {
       // Debug output if enabled
       if (process.env.MAYA_DEBUG_MEMORY === 'true') {
         this.debugMemoryContext(rankedResults, processingTime, layersUsed, fallbacksUsed);
+        if (semanticMemoryContext) {
+          logger.info('[MEMORY] Semantic memories injected:', semanticMemoryContext.slice(0, 200));
+        }
+        if (semanticDebugInfo) {
+          logger.debug('[SEMANTIC] Recall results:', semanticDebugInfo);
+        }
       }
 
-      return {
+      // Store semantic memory in metadata for formatForPrompt to use
+      const contextWithSemantic: MemoryContext = {
         results: rankedResults,
         totalTokens,
         layersUsed,
         processingTime,
         fallbacksUsed
       };
+      
+      // Attach semantic memory and debug info as metadata
+      (contextWithSemantic as any).semanticMemoryContext = semanticMemoryContext;
+      (contextWithSemantic as any).semanticDebugInfo = semanticDebugInfo;
+
+      return contextWithSemantic;
 
     } catch (error) {
       logger.error('MemoryOrchestrator.buildContext failed:', error);
@@ -166,16 +189,17 @@ export class MemoryOrchestrator {
   }
 
   /**
-   * Format memory context for Maya's system prompt
+   * Format memory context for Maya&apos;s system prompt
    * Used by ConversationalPipeline.ts in draftTextWithMemory
    */
-  formatForPrompt(memoryContext: MemoryContext): string {
-    if (!memoryContext.results.length) {
-      return "Memory Context: No specific context retrieved.";
-    }
-
+  formatForPrompt(memoryContext: MemoryContext, semanticMemoryContext?: string): string {
     const sections = this.groupResultsBySource(memoryContext.results);
     const formattedSections: string[] = [];
+
+    // Add semantic memory context if available
+    if (semanticMemoryContext && semanticMemoryContext.trim()) {
+      formattedSections.push(semanticMemoryContext);
+    }
 
     // Format each memory source section
     Object.entries(sections).forEach(([source, results]) => {
@@ -189,6 +213,10 @@ export class MemoryOrchestrator {
       
       formattedSections.push(`${sectionTitle}:\n${items}`);
     });
+
+    if (formattedSections.length === 0) {
+      return &quot;Memory Context: No specific context retrieved.";
+    }
 
     const contextBlock = formattedSections.join('\n\n');
     const tokenInfo = `[Memory tokens: ${memoryContext.totalTokens}]`;
@@ -808,7 +836,7 @@ export class MemoryOrchestrator {
 
     } catch (error) {
       logger.error('Failed to persist conversation turn:', error);
-      // Don't throw - memory persistence shouldn't break the conversation
+      // Don&apos;t throw - memory persistence shouldn&apos;t break the conversation
     }
   }
 
@@ -849,6 +877,66 @@ export class MemoryOrchestrator {
       logger.error('Failed to store journal entry:', error);
       throw error; // Throw for journal entries - user should know if their entry failed
     }
+  }
+
+  /**
+   * Save journal entry with tags and elemental annotation
+   */
+  async saveJournalEntry(
+    userId: string,
+    text: string,
+    tags: string[],
+    element?: string,
+    phase?: string
+  ): Promise<void> {
+    try {
+      const entry = {
+        userId,
+        content: text,
+        type: 'journal' as const,
+        timestamp: new Date().toISOString(),
+        elementalTag: element,
+        symbols: tags,
+        metadata: {
+          tags,
+          phase,
+          autoTagged: this.autoDetectTags(text)
+        }
+      };
+
+      // Use existing saveJournalEntry function
+      await import('../lib/supabaseClient').then(({ saveJournalEntry }) =>
+        saveJournalEntry(entry)
+      );
+
+      logger.info('[JOURNAL] Entry saved with tags:', {
+        userId,
+        tags: tags.join(', '),
+        element,
+        phase
+      });
+
+    } catch (error) {
+      logger.error('[JOURNAL] Failed to save journal entry:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Auto-detect tags from journal text
+   */
+  private autoDetectTags(text: string): string[] {
+    const autoTags: string[] = [];
+    const lowerText = text.toLowerCase();
+    
+    if (lowerText.includes('work')) autoTags.push('work');
+    if (lowerText.includes('dream')) autoTags.push('dream');
+    if (lowerText.includes('stress') || lowerText.includes('anxious')) autoTags.push('stress');
+    if (lowerText.includes('relationship') || lowerText.includes('family')) autoTags.push('relationship');
+    if (lowerText.includes('insight') || lowerText.includes('realize')) autoTags.push('insight');
+    if (lowerText.includes('grateful') || lowerText.includes('thankful')) autoTags.push('gratitude');
+    
+    return autoTags;
   }
 
   /**
@@ -929,7 +1017,7 @@ export class MemoryOrchestrator {
       }
     } catch (error) {
       logger.debug('Insight extraction failed:', error);
-      // Don't throw - this is optional enhancement
+      // Don&apos;t throw - this is optional enhancement
     }
   }
 

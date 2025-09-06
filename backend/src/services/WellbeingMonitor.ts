@@ -50,7 +50,7 @@ export class WellbeingMonitorService {
   // Grounding content suggestions
   private readonly groundingContent = {
     mild: [
-      "Taking a short walk can help insights settle",
+      &quot;Taking a short walk can help insights settle&quot;,
       "Sometimes the most profound truth is in a warm cup of tea",
       "The mystics knew: enlightenment, then laundry",
       "Wisdom often comes through simple acts of daily care"
@@ -64,7 +64,7 @@ export class WellbeingMonitorService {
     strong: [
       "Sometimes the wisest action is the most mundane one available",
       "Grounding in simple routines often clarifies complex experiences",
-      "The body knows things the mind hasn't figured out yet",
+      "The body knows things the mind hasn&apos;t figured out yet",
       "Taking care of basics creates space for integration"
     ]
   };
@@ -185,11 +185,11 @@ export class WellbeingMonitorService {
       (now.getTime() - indicators.basicNeeds.lastSelfCareMention.getTime()) / (1000 * 60 * 60) : 999;
     
     if (hoursSinceFood > 8 || hoursSinceSelfCare > 12) {
-      return "Quick check: When did you last eat something nourishing? Sometimes wisdom comes through the simple acts of daily care.";
+      return &quot;Quick check: When did you last eat something nourishing? Sometimes wisdom comes through the simple acts of daily care.&quot;;
     }
     
     if (this.sleepConcernDetected(indicators) || indicators.meaningVelocity.insightsPerHour > 3) {
-      return "Gentle reminder: Integration often happens best when we're well-rested and grounded in routine.";
+      return "Gentle reminder: Integration often happens best when we&apos;re well-rested and grounded in routine.";
     }
     
     return null;

@@ -336,7 +336,7 @@ export class UserService implements IUserService {
   }
 
   /**
-   * Update user's journey progress
+   * Update user&apos;s journey progress
    */
   async updateUserJourney(userId: string, journeyUpdates: Partial<any>): Promise<void> {
     const user = await this.getCurrentUser(userId);

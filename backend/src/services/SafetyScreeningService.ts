@@ -77,7 +77,7 @@ export class SafetyScreeningService {
     this.userProfiles.set(userId, profile);
 
     // Log safety assessment (without personal info)
-    logger.info("Safety screening completed", {
+    logger.info(&quot;Safety screening completed&quot;, {
       userId: userId.substring(0, 8) + '...',
       safetyLevel: assessment.level,
       indicatorCount: assessment.indicators.length,
@@ -149,7 +149,7 @@ export class SafetyScreeningService {
         .filter(([_, value]) => !value)
         .map(([key, _]) => key);
       
-      logger.warn("Incomplete consent provided", {
+      logger.warn(&quot;Incomplete consent provided&quot;, {
         userId: userId.substring(0, 8) + '...',
         missingConsents: missing
       });
@@ -179,7 +179,7 @@ export class SafetyScreeningService {
       "This system provides multiple viewpoints on your internal experiences and development",
       "Nothing here detects external spiritual entities, forces, or beings - only internal patterns",
       "Complex experiences benefit from human support and perspective",
-      "If you're in crisis, professional support is more appropriate than this system",
+      "If you&apos;re in crisis, professional support is more appropriate than this system",
       "Adequate sleep is essential for processing complex psychological content safely"
     ];
 

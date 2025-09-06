@@ -3,13 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 // Streaming transcription endpoint for voice recording
 export async function POST(request: NextRequest) {
   try {
-    console.log('[TRANSCRIBE STREAM] Received audio for transcription');
     
     // Get the audio blob from the request body
     const audioBuffer = await request.arrayBuffer();
     const audioBlob = new Blob([audioBuffer], { type: 'audio/webm' });
     
-    console.log('[TRANSCRIBE STREAM] Audio size:', audioBlob.size, 'bytes');
 
     if (audioBlob.size === 0) {
       console.error('[TRANSCRIBE STREAM] Empty audio blob received');
@@ -47,7 +45,6 @@ export async function POST(request: NextRequest) {
             formData.append('language', 'en');
             formData.append('response_format', 'json');
 
-            console.log('[TRANSCRIBE STREAM] Calling OpenAI Whisper...');
 
             // Call OpenAI Whisper API
             const whisperResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
@@ -65,7 +62,6 @@ export async function POST(request: NextRequest) {
             }
 
             const transcriptionData = await whisperResponse.json();
-            console.log('[TRANSCRIBE STREAM] Transcription complete:', transcriptionData.text);
 
             // Send final result
             const finalMessage = {

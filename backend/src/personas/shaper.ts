@@ -132,9 +132,9 @@ function applyShadowWorkGuidance(
   const controlCount = (result.match(controlLanguage) || []).length;
   if (controlCount > 2) {
     const controlChallenges = [
-      "I'm hearing a lot of 'shoulds' - whose voice is that really?",
+      &quot;I&apos;m hearing a lot of 'shoulds' - whose voice is that really?&quot;,
       "What would happen if you let this be messy and imperfect?",
-      "Sounds like you're trying to control the uncontrollable. What are you afraid will happen if you don't?",
+      "Sounds like you&apos;re trying to control the uncontrollable. What are you afraid will happen if you don&apos;t?",
       "Where did you learn that everything has to be just right?"
     ];
     const challenge = controlChallenges[Math.floor(Math.random() * controlChallenges.length)];
@@ -146,8 +146,8 @@ function applyShadowWorkGuidance(
     const bypassLanguage = /(everything happens for a reason|trust the universe|just vibrate higher|positive vibes only)/i;
     if (bypassLanguage.test(result)) {
       const realityChecks = [
-        "That sounds beautiful and... what's the messy human truth underneath?",
-        "I hear the spiritual wisdom, and I'm curious about the feelings you might be skipping over.",
+        "That sounds beautiful and... what&apos;s the messy human truth underneath?",
+        "I hear the spiritual wisdom, and I&apos;m curious about the feelings you might be skipping over.",
         "What's the less enlightened part of you that needs attention right now?",
         "Even spiritual truths can become ways to avoid being human. What are you not wanting to feel?"
       ];

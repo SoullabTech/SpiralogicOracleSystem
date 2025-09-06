@@ -1,6 +1,9 @@
 // Voice Flow Analytics - Beta Testing Metrics
 import { supabase } from '@/lib/supabase';
 
+// Check if we're in mock mode
+const MOCK_MODE = process.env.NEXT_PUBLIC_MOCK_SUPABASE === 'true';
+
 export type InteractionMode = 'voice' | 'text';
 export type TTSProvider = 'Sesame' | 'ElevenLabs' | 'fallback_failed';
 export type VoiceFlowStage = 'recording' | 'transcription' | 'processing' | 'speaking' | 'complete' | 'error';
@@ -75,6 +78,12 @@ export class VoiceFlowAnalytics {
   }
 
   private async trackEvent(event: Omit<VoiceFlowEvent, 'created_at'>) {
+    // Skip tracking in mock mode
+    if (MOCK_MODE) {
+      console.log('📊 [VoiceFlowAnalytics] Mock mode - skipping:', event.event_type, event.stage);
+      return;
+    }
+    
     try {
       const { error } = await supabase
         .from('voice_flow_analytics')

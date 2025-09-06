@@ -267,7 +267,7 @@ export class CollectiveDaimonicFieldService {
       if (count >= 3) {
         switch (resistance) {
           case 'fire':
-            denialPatterns.push("Authentic passion and decisive action");
+            denialPatterns.push(&quot;Authentic passion and decisive action");
             break;
           case 'water':
             denialPatterns.push("Emotional depth and genuine connection");
@@ -577,7 +577,7 @@ export class CollectiveDaimonicFieldService {
 
   private analyzeConvergencePattern(p1: CollectiveParticipant, p2: CollectiveParticipant): string {
     // Analyze how the participants' experiences converged
-    return "Thematic convergence - similar challenges emerging simultaneously";
+    return &quot;Thematic convergence - similar challenges emerging simultaneously";
   }
 
   private async identifyIndividualPatterns(): Promise<string[]> {
@@ -603,7 +603,7 @@ export class CollectiveDaimonicFieldService {
       return `Collective recognition of shared challenges: ${sharedThemes.join(', ')}`;
     }
     
-    return "Collective awareness of individual patterns creating shared field";
+    return &quot;Collective awareness of individual patterns creating shared field&quot;;
   }
 
   private isCollectiveEvolutionOngoing(): boolean {
@@ -633,7 +633,7 @@ export class CollectiveDaimonicFieldService {
     // This would analyze what old stories are losing power
     // For now, return common dying narratives
     return [
-      "Individual success through competition",
+      &quot;Individual success through competition",
       "Emotional suppression for productivity",
       "Technology as salvation",
       "Control over nature and body"

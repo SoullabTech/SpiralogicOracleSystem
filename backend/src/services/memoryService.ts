@@ -1,5 +1,7 @@
 import { extractSymbolicTags } from "./symbolService";
 import { supabase } from "../lib/supabaseClient";
+import { embeddingQueue } from "./embeddingQueue";
+import { logger } from "../utils/logger";
 
 // Types
 export interface MemoryItem {
@@ -50,7 +52,7 @@ export interface MysticalInsight {
   insight: string;
   recognizedAt: string;
   triggers: string[]; // What patterns triggered this recognition
-  depth: "surface" | "emerging" | "deep" | "integrated";
+  depth: &quot;surface&quot; | "emerging" | "deep" | "integrated";
   relatedMemories: string[]; // Memory IDs
 }
 
@@ -65,7 +67,7 @@ export const memoryService = {
     confidence?: number,
     metadata?: any,
   ): Promise<MemoryItem | null> => {
-    const symbols = extractSymbolicTags(content, sourceAgent || "oracle");
+    const symbols = extractSymbolicTags(content, sourceAgent || &quot;oracle&quot;);
 
     // Extract themes from content
     const themes = extractThemesFromContent(content.toLowerCase());
@@ -104,6 +106,34 @@ export const memoryService = {
       return null;
     }
 
+    // Automatically create embedding for semantic search
+    try {
+      await embeddingQueue.storeEmbeddedMemory(
+        userId,
+        content,
+        "memory",
+        {
+          memoryId: data.id,
+          element,
+          sourceAgent,
+          confidence,
+          themes: enhancedMetadata.themes,
+          spiritualKeywords: enhancedMetadata.spiritualKeywords,
+        }
+      );
+      logger.info("[EMBED] Memory event indexed", {
+        memoryId: data.id,
+        userId,
+      });
+    } catch (embedError) {
+      // Don&apos;t block insert if embedding fails
+      logger.warn("[EMBED] Failed to index memory event, will retry", {
+        memoryId: data.id,
+        userId,
+        error: embedError instanceof Error ? embedError.message : "Unknown error",
+      });
+    }
+
     // After storing, check for emerging patterns
     const recentMemories = await memoryService.recall(userId, {
       userId,
@@ -135,7 +165,7 @@ export const memoryService = {
     query?: MemoryQuery,
   ): Promise<MemoryItem[]> => {
     let queryBuilder = supabase
-      .from("memories")
+      .from(&quot;memories&quot;)
       .select("*")
       .eq("user_id", userId)
       .order("timestamp", { ascending: false });
@@ -179,7 +209,7 @@ export const memoryService = {
     const symbols = extractSymbolicTags(content);
 
     const { error } = await supabase
-      .from("memories")
+      .from(&quot;memories&quot;)
       .update({
         content,
         metadata: {
@@ -202,7 +232,7 @@ export const memoryService = {
   // Delete a memory item
   delete: async (memoryId: string, userId: string): Promise<boolean> => {
     const { error } = await supabase
-      .from("memories")
+      .from(&quot;memories&quot;)
       .delete()
       .eq("id", memoryId)
       .eq("user_id", userId);
@@ -221,7 +251,7 @@ export const memoryService = {
 
     const elementCounts = memories.reduce(
       (acc, memory) => {
-        const element = memory.element || "unknown";
+        const element = memory.element || &quot;unknown&quot;;
         acc[element] = (acc[element] || 0) + 1;
         return acc;
       },
@@ -230,7 +260,7 @@ export const memoryService = {
 
     const agentCounts = memories.reduce(
       (acc, memory) => {
-        const agent = memory.source_agent || "unknown";
+        const agent = memory.source_agent || &quot;unknown&quot;;
         acc[agent] = (acc[agent] || 0) + 1;
         return acc;
       },
@@ -261,7 +291,7 @@ export const memoryService = {
   ): Promise<SpiritualTheme[]> => {
     const themePatterns = {
       shadow_work: [
-        "shadow",
+        &quot;shadow",
         "dark",
         "hidden",
         "unconscious",
@@ -426,7 +456,7 @@ export const memoryService = {
 
     // Sacred symbols to track
     const sacredSymbols = [
-      "phoenix",
+      &quot;phoenix&quot;,
       "serpent",
       "lotus",
       "rose",
@@ -529,7 +559,7 @@ export const memoryService = {
     // Pattern recognition for mystical insights
     const insightPatterns = [
       {
-        pattern: ["death", "rebirth", "transform"],
+        pattern: [&quot;death&quot;, "rebirth", "transform"],
         insight:
           "You are in a profound cycle of death and rebirth, shedding old identity",
         depth: "deep" as const,
@@ -874,7 +904,7 @@ export class MemoryService {
 function detectSpiritualKeywords(content: string): string[] {
   const keywords: string[] = [];
   const spiritualTerms = {
-    awakening: ["awaken", "wake up", "conscious", "realize"],
+    awakening: [&quot;awaken&quot;, "wake up", "conscious", "realize"],
     transformation: ["transform", "transmute", "alchemize", "metamorphosis"],
     shadow: ["shadow", "darkness", "hidden", "repressed"],
     light: ["light", "illuminate", "radiant", "bright"],
@@ -918,7 +948,7 @@ function calculateMoonPhase(): string {
   b = Math.round(jd * 8); // scale fraction from 0-8 and round
 
   const phases = [
-    "new_moon",
+    &quot;new_moon&quot;,
     "waxing_crescent",
     "first_quarter",
     "waxing_gibbous",
@@ -989,7 +1019,7 @@ async function checkForEmergingPatterns(
   Object.entries(symbolCounts).forEach(([symbol, count]) => {
     if ((count as number) >= 3) {
       patterns.push({
-        type: "recurring_symbol",
+        type: &quot;recurring_symbol&quot;,
         data: { symbol, count, timeframe: "weekly" },
       });
     }

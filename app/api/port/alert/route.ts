@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
     const alert: PortAlert = await request.json()
     
     // Log the alert
-    console.log('🚨 Port Alert:', alert)
     
     // Send to Slack if configured
     if (process.env.SLACK_WEBHOOK_URL) {

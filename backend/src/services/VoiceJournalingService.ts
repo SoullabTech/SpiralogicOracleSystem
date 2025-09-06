@@ -84,7 +84,7 @@ export class VoiceJournalingService {
           text: transcription.text,
           language: transcription.language || 'en',
           duration: duration,
-          confidence: 0.9 // Whisper doesn't provide confidence, using default high value
+          confidence: 0.9 // Whisper doesn&apos;t provide confidence, using default high value
         };
 
       } catch (whisperError: any) {
@@ -186,10 +186,10 @@ export class VoiceJournalingService {
       // Create reflective prompt
       const reflectivePrompt = `You are a compassionate spiritual companion reflecting on a voice journal entry. 
       
-The user has shared: "${transcription}"
+The user has shared: "${transcription}&quot;
 
 Respond with gentle, reflective questions or insights that honor their sharing. Focus on:
-- Acknowledging what they've expressed
+- Acknowledging what they&apos;ve expressed
 - Asking curious, non-judgmental questions 
 - Offering gentle perspectives or connections
 - Inviting deeper exploration if appropriate
@@ -297,7 +297,7 @@ Keep your response warm, brief (2-3 sentences), and voice-friendly for potential
   }
 
   /**
-   * Get user's voice journaling statistics
+   * Get user&apos;s voice journaling statistics
    */
   async getVoiceJournalingStats(userId: string): Promise<{
     totalEntries: number;

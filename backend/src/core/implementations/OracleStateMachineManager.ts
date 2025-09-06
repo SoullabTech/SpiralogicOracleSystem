@@ -69,7 +69,7 @@ export class OracleStateMachineManager {
     if (stageConfig.mastery.simplifyResponses) {
       // Strip jargon, keep sentences short
       simplified = simplified
-        .replace(/\b(ontology|epistemology|archetypal|phenomenological|dialectical)\b/gi, "pattern")
+        .replace(/\b(ontology|epistemology|archetypal|phenomenological|dialectical)\b/gi, &quot;pattern&quot;)
         .replace(/\b(consciousness|awareness)\b/gi, "knowing")
         .replace(/\b(integration|synthesis)\b/gi, "bringing together")
         .split(/[.!?]/)
@@ -159,7 +159,7 @@ export class OracleStateMachineManager {
 
     // 11. Log significant changes
     if (transitionResult.stageChanged) {
-      logger.info("Oracle stage transition", {
+      logger.info(&quot;Oracle stage transition&quot;, {
         userId: userId.substring(0, 8) + '...',
         from: previousStage,
         to: stateMachine.currentStage,
@@ -189,7 +189,7 @@ export class OracleStateMachineManager {
   ): Promise<{success: boolean; message: string}> {
     const stateMachine = this.getStateMachine(userId);
     
-    // Safety check - don't allow advancement if recent critical safety issues
+    // Safety check - don&apos;t allow advancement if recent critical safety issues
     const recentCritical = stateMachine.safetyMetrics
       .filter(m => m.severity === 'critical' && 
         Date.now() - m.timestamp.getTime() < 24 * 60 * 60 * 1000);
@@ -197,7 +197,7 @@ export class OracleStateMachineManager {
     if (recentCritical.length > 0) {
       return {
         success: false,
-        message: "Cannot change stages due to recent safety concerns. Please ensure wellbeing first."
+        message: &quot;Cannot change stages due to recent safety concerns. Please ensure wellbeing first.&quot;
       };
     }
 
@@ -319,7 +319,7 @@ export class OracleStateMachineManager {
           signals.push(signal);
         }
       } catch (error) {
-        logger.warn("Capacity detector failed", {
+        logger.warn(&quot;Capacity detector failed&quot;, {
           detector: detector.constructor.name,
           error: error instanceof Error ? error.message : "Unknown error"
         });
@@ -345,7 +345,7 @@ export class OracleStateMachineManager {
           metrics.push(metric);
         }
       } catch (error) {
-        logger.warn("Safety monitor failed", {
+        logger.warn(&quot;Safety monitor failed&quot;, {
           monitor: monitor.constructor.name,
           error: error instanceof Error ? error.message : "Unknown error"
         });
@@ -495,7 +495,7 @@ export class OracleStateMachineManager {
     // Clear pending transition
     delete stateMachine.pendingTransition;
     
-    logger.info("Oracle stage transition executed", {
+    logger.info(&quot;Oracle stage transition executed&quot;, {
       userId: userId.substring(0, 8) + '...',
       targetStage,
       reason,
@@ -508,7 +508,7 @@ export class OracleStateMachineManager {
     stateMachine: OracleStateMachine,
     safetyMetric: SafetyMetric
   ): Promise<void> {
-    logger.warn("Oracle safety fallback triggered", {
+    logger.warn(&quot;Oracle safety fallback triggered&quot;, {
       userId: userId.substring(0, 8) + '...',
       currentStage: stateMachine.currentStage,
       safetyType: safetyMetric.type,

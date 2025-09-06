@@ -69,7 +69,7 @@ export interface CategoryErrorPattern {
  */
 export class BothAndPhenomenologyService {
   private user_paradox_patterns: Map<string, BothAndExperience[]>; // User history of both-and experiences
-  private category_error_tracking: Map<string, CategoryErrorPattern[]>; // Track user's categorization tendencies
+  private category_error_tracking: Map<string, CategoryErrorPattern[]>; // Track user&apos;s categorization tendencies
   private cultural_literalization: Map<string, number>; // Track cultural tendency to literalize different domains
   
   constructor() {
@@ -531,7 +531,7 @@ export class BothAndPhenomenologyService {
     const warnings: string[] = [];
     
     if (material.physical_traces.length > 0 && imaginal.symbolic_content.length > 0) {
-      warnings.push('Warning: Reducing this to "just physical" loses the symbolic teaching.');
+      warnings.push('Warning: Reducing this to &quot;just physical&quot; loses the symbolic teaching.');
       warnings.push('Warning: Making this "purely spiritual" ignores the physical reality.');
     }
     
@@ -548,7 +548,7 @@ export class BothAndPhenomenologyService {
   }
 
   /**
-   * Detect category errors in user's interpretation
+   * Detect category errors in user&apos;s interpretation
    */
   public detectCategoryError(experience: any, interpretation: string): CategoryErrorPattern | null {
     const error_type = this.identifyErrorType(interpretation);
@@ -613,7 +613,7 @@ export class BothAndPhenomenologyService {
         error_type: 'either_or_forcing',
         how_it_manifests: ['Demanding single explanation', 'Rejecting paradox', 'Insisting on one interpretation'],
         what_gets_lost: 'The paradoxical wisdom that some truths transcend single categories',
-        correction_guidance: 'Practice saying "Both are true." Reality is more complex than either-or categories.',
+        correction_guidance: 'Practice saying &quot;Both are true.&quot; Reality is more complex than either-or categories.',
         why_tempting: 'Our minds prefer clear categories and avoid cognitive dissonance'
       },
       premature_resolution: {
@@ -666,7 +666,7 @@ export class BothAndPhenomenologyService {
   ): BothAndExperience {
     const both_and_experience = this.assessBothAndQuality(experience, context);
     
-    // Store user's both-and patterns
+    // Store user&apos;s both-and patterns
     const user_patterns = this.user_paradox_patterns.get(userId) || [];
     user_patterns.push(both_and_experience);
     this.user_paradox_patterns.set(userId, user_patterns.slice(-20)); // Keep last 20
@@ -675,7 +675,7 @@ export class BothAndPhenomenologyService {
   }
 
   /**
-   * Get user's both-and experience history
+   * Get user&apos;s both-and experience history
    */
   public getUserBothAndHistory(userId: string): BothAndExperience[] {
     return this.user_paradox_patterns.get(userId) || [];

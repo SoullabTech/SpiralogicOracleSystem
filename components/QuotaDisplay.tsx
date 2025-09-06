@@ -15,7 +15,7 @@ export function QuotaDisplay({
   getQuotaColor,
   compact = false 
 }: QuotaDisplayProps) {
-  // Don't show if no quota info
+  // Don&apos;t show if no quota info
   if (hint.limit === undefined || hint.remaining === undefined) {
     return null;
   }

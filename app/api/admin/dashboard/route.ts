@@ -133,12 +133,10 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'terminate_session':
         // Terminate specific session
-        console.log(`Admin terminating session: ${targetId}`);
         return NextResponse.json({ success: true, action: 'session_terminated' });
         
       case 'system_message':
         // Send system-wide message
-        console.log(`Admin sending system message`);
         return NextResponse.json({ success: true, action: 'message_sent' });
         
       default:

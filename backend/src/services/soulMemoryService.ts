@@ -10,14 +10,14 @@ export class SoulMemoryService {
   private memorySystems: Map<string, SoulMemorySystem> = new Map();
 
   constructor() {
-    logger.info("Soul Memory Service initialized");
+    logger.info(&quot;Soul Memory Service initialized&quot;);
   }
 
   async getOrCreateMemorySystem(userId: string): Promise<SoulMemorySystem> {
     if (!this.memorySystems.has(userId)) {
       const memorySystem = new SoulMemorySystem({
         userId,
-        storageType: "sqlite",
+        storageType: &quot;sqlite",
         databasePath: `./soul_memory_${userId}.db`,
         memoryDepth: 100,
       });
@@ -46,7 +46,7 @@ export class SoulMemoryService {
 
     return memorySystem.storeMemory({
       userId,
-      type: "oracle_exchange",
+      type: &quot;oracle_exchange&quot;,
       content: userMessage,
       element: metadata?.element || "aether",
       emotionalTone: metadata?.emotionalTone,

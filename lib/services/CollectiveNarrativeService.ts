@@ -98,7 +98,7 @@ export class CollectiveNarrativeService {
   private generateArchetypalReading(tone: NarrativeTone, dominant: string, emerging: string, stats: CollectiveStats): string {
     const archetypeReadings = {
       poetic: {
-        Hero: `The Hero's flame burns brightest now, casting long shadows that dance with courage. Each soul carries a sword of their own forging, ready to cut through what no longer serves.`,
+        Hero: `The Hero&apos;s flame burns brightest now, casting long shadows that dance with courage. Each soul carries a sword of their own forging, ready to cut through what no longer serves.`,
         Sage: `Ancient wisdom flows like honey from the collective hive. The Sage speaks through a thousand voices, each offering a drop of distilled understanding to those who thirst.`,
         Creator: `The cosmic artist awakens within the many. Colors that have never been seen splash across the canvas of possibility, as the Creator births new worlds from imagination's womb.`,
         Lover: `Hearts crack open like ripe fruit in the sun. The Lover moves through the field with tender mercy, weaving connections that transcend the illusion of separation.`,
@@ -192,7 +192,7 @@ export class CollectiveNarrativeService {
       
       mystical: `${integrationRate} integration creates a morphic field of transformation. What one integrates becomes available to all, as the web of consciousness grows ever more luminous.`,
       
-      urgent: `With ${integrationRate} integration happening NOW, the window of collective transformation is WIDE OPEN! Don't delay - your personal integration serves the whole!`,
+      urgent: `With ${integrationRate} integration happening NOW, the window of collective transformation is WIDE OPEN! Don&apos;t delay - your personal integration serves the whole!`,
       
       ceremonial: `We honor the ${integrationRate} integration rate as sacred achievement. Each integration is a prayer answered, each synthesis a blessing received by all.`
     };

@@ -208,7 +208,7 @@ export class LiminalDetectionService {
 
   /**
    * Calculate overall liminal intensity
-   * How "between" is this experience?
+   * How &quot;between&quot; is this experience?
    */
   private calculateLiminalIntensity(markers: LiminalMarkers): number {
     let intensity = 0;

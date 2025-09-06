@@ -10,7 +10,7 @@ export interface UserProfile {
 
 export async function getUserProfile(userId: string): Promise<UserProfile> {
   const { data, error } = await supabase
-    .from("user_profiles")
+    .from(&quot;user_profiles")
     .select("personal_guide_name, guide_gender, voice_id, guide_language")
     .eq("user_id", userId)
     .single();

@@ -261,7 +261,7 @@ export default function AnalyticsPage() {
                 <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
                   <h4 className="font-medium text-white mb-2">Most Active Time</h4>
                   <p className="text-sm text-muted-foreground">
-                    You engage most deeply on {analytics?.mostActiveDay}s, suggesting this is when you're most 
+                    You engage most deeply on {analytics?.mostActiveDay}s, suggesting this is when you&apos;re most 
                     receptive to guidance and reflection.
                   </p>
                 </div>

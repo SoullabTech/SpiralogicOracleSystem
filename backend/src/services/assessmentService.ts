@@ -70,7 +70,7 @@ export interface ArchetypalProfile {
 }
 
 export interface GrowthStageAnalysis {
-  currentStage: "initiate" | "explorer" | "practitioner" | "adept" | "master";
+  currentStage: &quot;initiate&quot; | "explorer" | "practitioner" | "adept" | "master";
   stageDescription: string;
   completionPercentage: number;
   nextMilestones: string[];
@@ -145,7 +145,7 @@ export class AssessmentService {
     query: AssessmentQuery,
   ): Promise<StandardAPIResponse<AssessmentResponse>> {
     try {
-      logger.info("Listing available assessments", { userId: query.userId });
+      logger.info(&quot;Listing available assessments&quot;, { userId: query.userId });
 
       let assessments = Array.from(this.assessmentTemplates.values());
 
@@ -169,7 +169,7 @@ export class AssessmentService {
     query: AssessmentQuery,
   ): Promise<StandardAPIResponse<AssessmentResponse>> {
     try {
-      logger.info("Getting assessment", {
+      logger.info(&quot;Getting assessment&quot;, {
         userId: query.userId,
         assessmentId: query.assessmentId,
       });
@@ -198,7 +198,7 @@ export class AssessmentService {
     query: AssessmentQuery,
   ): Promise<StandardAPIResponse<AssessmentResponse>> {
     try {
-      logger.info("Submitting assessment", {
+      logger.info(&quot;Submitting assessment", {
         userId: query.userId,
         assessmentId: query.assessmentId,
       });
@@ -265,7 +265,7 @@ export class AssessmentService {
     query: AssessmentQuery,
   ): Promise<StandardAPIResponse<AssessmentResponse>> {
     try {
-      logger.info("Analyzing assessment history", { userId: query.userId });
+      logger.info(&quot;Analyzing assessment history&quot;, { userId: query.userId });
 
       const userResults = this.assessmentResults.get(query.userId) || [];
 
@@ -422,7 +422,7 @@ export class AssessmentService {
         },
         {
           id: "inner_calling",
-          text: "What feels most like your soul's calling?",
+          text: "What feels most like your soul&apos;s calling?",
           type: "multiple_choice",
           required: true,
           options: [
@@ -604,7 +604,7 @@ export class AssessmentService {
     responses: Record<string, any>,
   ): ArchetypalProfile {
     // Simplified archetypal calculation
-    const archetypes = ["Warrior", "Healer", "Teacher", "Creator", "Sage"];
+    const archetypes = [&quot;Warrior&quot;, "Healer", "Teacher", "Creator", "Sage"];
     const scores = archetypes.reduce(
       (acc, archetype) => {
         acc[archetype] = Math.random() * 100; // Simplified for demo
@@ -633,7 +633,7 @@ export class AssessmentService {
       Object.values(responses).reduce((sum, val) => sum + Number(val), 0) /
       Object.keys(responses).length;
 
-    let currentStage: GrowthStageAnalysis["currentStage"];
+    let currentStage: GrowthStageAnalysis[&quot;currentStage&quot;];
     let stageDescription: string;
     let completionPercentage: number;
 
@@ -713,7 +713,7 @@ export class AssessmentService {
   ): Partial<AssessmentResult> {
     const dominantElement = elemental
       ? Object.entries(elemental).sort(([, a], [, b]) => b - a)[0][0]
-      : "balanced";
+      : &quot;balanced";
 
     const currentPhase = growth
       ? `${dominantElement}_${growth.currentStage}`

@@ -2,7 +2,7 @@ import { divinationAgent } from "../core/agents/divinationAgent";
 import { DivinationQuery } from "../types/divination";
 
 describe("DivinationAgent", () => {
-  describe("Tarot Readings", () => {
+  describe(&quot;Tarot Readings&quot;, () => {
     test("performs basic tarot reading", async () => {
       const query: DivinationQuery = {
         method: "tarot",
@@ -112,7 +112,7 @@ describe("DivinationAgent", () => {
 
       expect(result.method).toBe("yijing");
       expect(result.title).toContain("Yi Jing");
-      expect(result.subtitle).toContain("Traveler's Path");
+      expect(result.subtitle).toContain("Traveler&apos;s Path");
       expect(result.insight).toContain("soul");
       expect(result.guidance).toContain("Soul Guidance");
       expect(result.energeticSignature).toBeTruthy();
@@ -253,7 +253,7 @@ describe("DivinationAgent", () => {
   });
 
   describe("Error Handling", () => {
-    test("handles invalid method gracefully", async () => {
+    test(&quot;handles invalid method gracefully", async () => {
       const query: DivinationQuery = {
         method: "invalid" as any,
         query: "Test question",

@@ -82,7 +82,7 @@ export class PersonalizationEngine {
       oracleVoiceId: selectedVoiceId,
       voiceSettings: this.getDefaultVoiceSettings(selectedVoiceId),
       preferences: {
-        symbolicStyle: preferences.symbolicStyle || "mystical",
+        symbolicStyle: preferences.symbolicStyle || &quot;mystical",
         ritualPacing: preferences.ritualPacing || "medium",
         responseLength: preferences.responseLength || "balanced",
         elementalAffinity: preferences.elementalAffinity || ["aether"],
@@ -174,7 +174,7 @@ export class PersonalizationEngine {
   ): Promise<OraclePersonalization> {
     const existing = await this.getUserPersonalization(userId);
     if (!existing) {
-      throw new Error("Oracle agent not initialized for user");
+      throw new Error(&quot;Oracle agent not initialized for user&quot;);
     }
 
     const updated: OraclePersonalization = {
@@ -255,7 +255,7 @@ export class PersonalizationEngine {
   }
 
   /**
-   * 🌱 Update User's Spiritual Evolution
+   * 🌱 Update User&apos;s Spiritual Evolution
    */
   async updateSpiritualEvolution(userId: string, response: any): Promise<void> {
     const personalization = await this.getUserPersonalization(userId);
@@ -310,7 +310,7 @@ export class PersonalizationEngine {
     // Load from database
     try {
       const { data, error } = await supabase
-        .from("oracle_personalizations")
+        .from(&quot;oracle_personalizations&quot;)
         .select("*")
         .eq("user_id", userId)
         .single();
@@ -335,7 +335,7 @@ export class PersonalizationEngine {
       const serialized = this.serializePersonalization(personalization);
 
       const { error } = await supabase
-        .from("oracle_personalizations")
+        .from(&quot;oracle_personalizations&quot;)
         .upsert(serialized, { onConflict: "user_id" });
 
       if (error) {
@@ -556,9 +556,9 @@ export class PersonalizationEngine {
     userId: string,
     inputAnalysis: any,
   ): Promise<void> {
-    // This would update the user's interaction patterns over time
+    // This would update the user&apos;s interaction patterns over time
     // For now, just logging
-    logger.debug("Interaction pattern update:", {
+    logger.debug(&quot;Interaction pattern update:&quot;, {
       userId,
       primaryArchetype: inputAnalysis.primaryArchetype,
       emotionalTone: inputAnalysis.emotionalTone,

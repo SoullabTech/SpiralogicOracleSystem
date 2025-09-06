@@ -93,7 +93,6 @@ export const MicrophoneCapture = forwardRef<MicrophoneCaptureRef, MicrophoneCapt
         try {
           const formData = new FormData();
           formData.append('file', audioBlob, 'recording.webm');
-          console.log('🎙️ [MicrophoneCapture] Sending audio to STT:', audioBlob.size, 'bytes');
 
           const response = await fetch('/api/voice/transcribe-simple', {
             method: 'POST',
@@ -103,12 +102,10 @@ export const MicrophoneCapture = forwardRef<MicrophoneCaptureRef, MicrophoneCapt
           if (!response.ok) throw new Error('Transcription failed');
 
           const data = await response.json();
-          console.log('🎯 [MicrophoneCapture] STT response:', data);
           
           const transcriptionDuration = Date.now() - transcriptionStartTime;
           
           if (data.success && data.transcription) {
-            console.log('✅ [MicrophoneCapture] Transcription success:', data.transcription);
             
             // Track successful transcription
             Analytics.transcriptionSuccess({

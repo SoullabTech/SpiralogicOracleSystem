@@ -26,13 +26,13 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
   const [timingData, setTimingData] = useState<TimingData | null>(null);
   const [selectedView, setSelectedView] = useState<
     "overview" | "monthly" | "transits" | "opportunities"
-  >("overview");
+  >(&quot;overview&quot;);
   const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Planetary symbols
   const planetSymbols: Record<string, string> = {
-    sun: "☉",
+    sun: &quot;☉&quot;,
     moon: "☽",
     mercury: "☿",
     venus: "♀",
@@ -202,7 +202,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
                   </div>
                   <div className="rec-description">{rec.description}</div>
                   <div className="rec-planets">
-                    {rec.planets.map((p) => planetSymbols[p] || p).join(" ")}
+                    {rec.planets.map((p) => planetSymbols[p] || p).join(&quot; &quot;)}
                   </div>
                 </div>
               ))}
@@ -232,7 +232,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
               onClick={() => setSelectedHouse(activation.house)}
             >
               <div className="activation-date">
-                {new Date(activation.date).toLocaleDateString("en-US", {
+                {new Date(activation.date).toLocaleDateString(&quot;en-US&quot;, {
                   month: "short",
                   day: "numeric",
                 })}
@@ -287,7 +287,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
             >
               <div className="transit-header">
                 <span className="transit-planet">
-                  {planetSymbols[transit.transit.planet]}{" "}
+                  {planetSymbols[transit.transit.planet]}{&quot; &quot;}
                   {transit.transit.planet}
                 </span>
                 {transit.transit.retrograde && (
@@ -380,7 +380,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
   // Helper functions
   const getMoonPhaseIcon = (phase: string): string => {
     const icons: Record<string, string> = {
-      "New Moon": "🌑",
+      &quot;New Moon&quot;: "🌑",
       "Waxing Crescent": "🌒",
       "First Quarter": "🌓",
       "Waxing Gibbous": "🌔",
@@ -402,7 +402,7 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
   const getTransitPhase = (start: Date, exact: Date, end: Date): string => {
     const now = new Date();
     if (now < new Date(start)) return "Approaching";
-    if (now > new Date(end)) return "Separating";
+    if (now > new Date(end)) return &quot;Separating&quot;;
     if (Math.abs(now.getTime() - new Date(exact).getTime()) < 86400000)
       return "Exact";
     if (now < new Date(exact)) return "Applying";
@@ -425,25 +425,25 @@ export const CosmicTimingDashboard: React.FC<CosmicTimingDashboardProps> = ({
         <div className="view-tabs">
           <button
             className={selectedView === "overview" ? "active" : ""}
-            onClick={() => setSelectedView("overview")}
+            onClick={() => setSelectedView(&quot;overview&quot;)}
           >
             Overview
           </button>
           <button
             className={selectedView === "monthly" ? "active" : ""}
-            onClick={() => setSelectedView("monthly")}
+            onClick={() => setSelectedView(&quot;monthly&quot;)}
           >
             Monthly
           </button>
           <button
             className={selectedView === "transits" ? "active" : ""}
-            onClick={() => setSelectedView("transits")}
+            onClick={() => setSelectedView(&quot;transits&quot;)}
           >
             Transits
           </button>
           <button
             className={selectedView === "opportunities" ? "active" : ""}
-            onClick={() => setSelectedView("opportunities")}
+            onClick={() => setSelectedView(&quot;opportunities&quot;)}
           >
             Opportunities
           </button>

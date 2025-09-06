@@ -28,7 +28,7 @@ export class ClarityEngine {
     return {
       clarified_content: `Clarified: ${request.content}`,
       clarity_score: clarityScore,
-      transformations: ["simplified", "structured", "focused"],
+      transformations: [&quot;simplified", "structured", "focused"],
       clarity: clarityScore,
       score: clarityScore,
       final: `Final: ${request.content}`,

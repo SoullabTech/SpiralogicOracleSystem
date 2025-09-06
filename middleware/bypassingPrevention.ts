@@ -28,7 +28,7 @@ export class BypassingPreventionMiddleware {
         return NextResponse.next();
       }
 
-      // For now, return a simplified version that doesn't rely on backend services
+      // For now, return a simplified version that doesn&apos;t rely on backend services
       // TODO: Implement full bypassing prevention via backend API calls
       return NextResponse.next();
     } catch (error) {
@@ -118,7 +118,7 @@ export class BypassingPreventionMiddleware {
     integrationAvoidance: number;
     communityAvoidance: number;
   } {
-    const insightPaths = ["/oracle", "/insights", "/content", "/elemental"];
+    const insightPaths = [&quot;/oracle&quot;, "/insights", "/content", "/elemental"];
     const integrationPaths = [
       "/integration",
       "/embodied-wisdom",
@@ -176,7 +176,7 @@ export class BypassingPreventionMiddleware {
   private isContentRequest(request: NextRequest): boolean {
     const url = new URL(request.url);
     const contentPaths = [
-      "/api/oracle",
+      &quot;/api/oracle&quot;,
       "/api/content",
       "/api/insights",
       "/api/elemental",
@@ -204,7 +204,7 @@ export class BypassingPreventionMiddleware {
   }
 
   private extractContentType(url: URL): string {
-    if (url.pathname.includes("/oracle")) return "oracle_insight";
+    if (url.pathname.includes(&quot;/oracle&quot;)) return "oracle_insight";
     if (url.pathname.includes("/elemental")) return "elemental_practice";
     if (url.pathname.includes("/insights")) return "insight_content";
     return "general_content";
@@ -229,7 +229,7 @@ export class BypassingPreventionMiddleware {
         {
           userId,
           userBehavior: userBehavior.architecture,
-          requestType: "content_request",
+          requestType: &quot;content_request&quot;,
         },
       );
     } catch (error) {
@@ -268,9 +268,9 @@ export class BypassingPreventionMiddleware {
   ): NextResponse {
     const response = NextResponse.json(
       {
-        error: "Integration Support Needed",
+        error: &quot;Integration Support Needed&quot;,
         message:
-          "We've detected patterns that suggest focusing on integration would be beneficial.",
+          "We&apos;ve detected patterns that suggest focusing on integration would be beneficial.",
         patterns: analysis.patterns,
         interventions: analysis.interventions,
         supportResources: this.getBypassingSupportResources(analysis.patterns),
@@ -396,7 +396,7 @@ export class BypassingPreventionMiddleware {
 
     // Avoiding integration sections
     if (sessionData.contentViews > 3 && sessionData.integrationViews === 0) {
-      patterns.push("integration_avoidance");
+      patterns.push(&quot;integration_avoidance");
     }
 
     // Seeking only "advanced" or "breakthrough" content
@@ -427,14 +427,14 @@ export class BypassingPreventionMiddleware {
     const interventions = {
       content_skimming: {
         message:
-          "Notice the pace of your exploration. What would it be like to slow down and sit with one insight?",
+          &quot;Notice the pace of your exploration. What would it be like to slow down and sit with one insight?&quot;,
         suggestion:
           "Try spending 5 minutes reflecting on the last piece of content before continuing.",
         type: "gentle_pause",
       },
       integration_avoidance: {
         message:
-          "You've explored several insights. How might you apply one of them in your daily life?",
+          "You&apos;ve explored several insights. How might you apply one of them in your daily life?",
         suggestion:
           "Consider journaling about how recent insights show up in ordinary moments.",
         type: "integration_prompt",
@@ -481,7 +481,7 @@ export class BypassingPreventionMiddleware {
 
     // Spiritual superiority language
     const superiorityWords = [
-      "less awakened",
+      &quot;less awakened&quot;,
       "lower vibration",
       "not ready",
       "more evolved",

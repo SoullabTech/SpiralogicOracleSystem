@@ -61,7 +61,7 @@ export class SpiralogicAdapter implements IOrchestrator {
     private cache: ICache,
     private analytics: IAnalytics
   ) {
-    logger.info("SpiralogicAdapter initialized with performance guardrails");
+    logger.info(&quot;SpiralogicAdapter initialized with performance guardrails");
   }
 
   private k(userId: string, day: string): string { 
@@ -142,7 +142,7 @@ export class SpiralogicAdapter implements IOrchestrator {
       this.analytics.emit({ type: 'chat.error', userId: q.userId, properties: { err: e?.message || 'unknown' } });
       return {
         id: `fallback-${Date.now()}`,
-        text: "Let's keep it simple. What feels like the next honest step for you right now?",
+        text: &quot;Let&apos;s keep it simple. What feels like the next honest step for you right now?",
         tokens: { prompt: 0, completion: 0 },
         meta: { 
           element: q.element ?? 'aether', 
@@ -161,7 +161,7 @@ export class SpiralogicAdapter implements IOrchestrator {
     
     let archetypes = await this.cache.get<any>(archKey);
     if (!archetypes) {
-      logger.debug("Computing daily archetypes", { userId: userId.substring(0, 8) + '...' });
+      logger.debug(&quot;Computing daily archetypes&quot;, { userId: userId.substring(0, 8) + '...' });
       
       // Initialize consciousness if needed and compute archetypes
       const consciousnessState = this.engine.getConsciousnessState(userId) || 
@@ -302,7 +302,7 @@ export class SpiralogicAdapter implements IOrchestrator {
         }
       };
     } catch (error) {
-      logger.warn("Full synthesis failed, falling back to lite mode", { 
+      logger.warn(&quot;Full synthesis failed, falling back to lite mode&quot;, { 
         error: error instanceof Error ? error.message : 'Unknown error'
       });
       return this.synthesizeResponse(query, { ...options, mode: 'lite' });
@@ -314,11 +314,11 @@ export class SpiralogicAdapter implements IOrchestrator {
    */
   private generateLiteResponse(query: QueryRequest, resonance: ElementalResonance): string {
     const responses = {
-      fire: "I sense your energy for action. What's the first step that calls to you right now?",
+      fire: "I sense your energy for action. What&apos;s the first step that calls to you right now?",
       water: "I hear the depth in your words. What does your heart know about this?",
-      earth: "Let's ground this in something concrete. What would stability look like here?",
+      earth: "Let&apos;s ground this in something concrete. What would stability look like here?",
       air: "Your mind is working with this beautifully. What clarity wants to emerge?",
-      aether: "There's wisdom moving through you. What's the deeper knowing you're sensing?"
+      aether: "There&apos;s wisdom moving through you. What&apos;s the deeper knowing you&apos;re sensing?"
     };
 
     return responses[resonance.top as keyof typeof responses] || responses.aether;
@@ -349,7 +349,7 @@ export class SpiralogicAdapter implements IOrchestrator {
       "I hear you. What's the one thing you know for sure about this situation?",
       "Something's stirring in you around this. What wants your attention?",
       "What would it look like to trust yourself completely here?",
-      "I'm curious - what's the conversation you're not quite ready to have yet?"
+      "I&apos;m curious - what's the conversation you're not quite ready to have yet?"
     ];
 
     return {

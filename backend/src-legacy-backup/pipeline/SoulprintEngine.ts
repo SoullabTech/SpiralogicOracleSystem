@@ -92,7 +92,7 @@ export class SoulprintEngine {
       ),
     };
 
-    logger.info("Soulprint Analysis:", {
+    logger.info(&quot;Soulprint Analysis:&quot;, {
       userId,
       currentPhase: analysis.currentPhase,
       readinessForTransition: analysis.readinessForTransition,
@@ -282,7 +282,7 @@ export class SoulprintEngine {
   ): Promise<string> {
     const currentPhase = currentSoulprint.currentSpiralogicPhase;
     const phases = [
-      "initiation",
+      &quot;initiation&quot;,
       "exploration",
       "integration",
       "transcendence",
@@ -290,7 +290,7 @@ export class SoulprintEngine {
     ];
     const currentIndex = phases.indexOf(currentPhase);
 
-    // Can't transition beyond final phase
+    // Can&apos;t transition beyond final phase
     if (currentIndex >= phases.length - 1) return currentPhase;
 
     // Calculate readiness for next phase
@@ -475,7 +475,7 @@ export class SoulprintEngine {
     const response = oracleResponse.toLowerCase();
 
     // Pattern matching for insight extraction
-    if (input.includes("fear") || input.includes("afraid")) {
+    if (input.includes(&quot;fear") || input.includes("afraid")) {
       return "Exploring relationship with fear and courage";
     }
     if (input.includes("love") || input.includes("heart")) {
@@ -516,7 +516,7 @@ export class SoulprintEngine {
     }
 
     if (soulprint.totalInteractions > 20) {
-      suggestions.push("Begin deeper shadow work and integration practices");
+      suggestions.push(&quot;Begin deeper shadow work and integration practices&quot;);
     }
 
     if (soulprint.currentSpiralogicPhase === "integration") {
@@ -534,7 +534,7 @@ export class SoulprintEngine {
   private async getSoulprint(userId: string): Promise<Soulprint> {
     try {
       const { data, error } = await supabase
-        .from("user_soulprints")
+        .from(&quot;user_soulprints&quot;)
         .select("*")
         .eq("user_id", userId)
         .single();
@@ -575,7 +575,7 @@ export class SoulprintEngine {
     soulprint: Soulprint,
   ): Promise<void> {
     try {
-      const { error } = await supabase.from("user_soulprints").upsert({
+      const { error } = await supabase.from(&quot;user_soulprints&quot;).upsert({
         user_id: userId,
         dominant_archetypes: soulprint.dominantArchetypes,
         current_spiralogic_phase: soulprint.currentSpiralogicPhase,
@@ -639,7 +639,7 @@ export class SoulprintEngine {
 
   private getNextPhaseGuidance(currentPhase: string): string {
     const guidance = {
-      initiation: "Focus on building foundation across all archetypes",
+      initiation: &quot;Focus on building foundation across all archetypes&quot;,
       exploration: "Deepen your understanding of each elemental wisdom",
       integration: "Practice daily integration of archetypal insights",
       transcendence: "Prepare for transcendent awareness and service",

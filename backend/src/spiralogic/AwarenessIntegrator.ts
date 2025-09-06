@@ -93,7 +93,7 @@ export class AwarenessIntegrator {
       resonanceLevel: 0.5
     };
 
-    logger.info("AwarenessIntegrator initialized with collective field");
+    logger.info(&quot;AwarenessIntegrator initialized with collective field&quot;);
   }
 
   /**
@@ -104,7 +104,7 @@ export class AwarenessIntegrator {
     input: string,
     consciousnessState: SpiralogicConsciousnessState
   ): Promise<IntegratedAwareness> {
-    logger.debug("Starting consciousness integration", { 
+    logger.debug(&quot;Starting consciousness integration&quot;, { 
       userId, 
       phase: consciousnessState.currentPhase,
       elements: consciousnessState.elementalStates.size 

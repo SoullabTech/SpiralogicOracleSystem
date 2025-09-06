@@ -49,7 +49,6 @@ export async function POST(request: NextRequest) {
 
     // In production, this would store interactions in the memory system
     // For now, we'll just log them
-    console.log("Chat interaction:", { userId, message, response });
 
     return NextResponse.json({
       text: response,

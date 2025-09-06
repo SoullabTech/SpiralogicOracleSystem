@@ -258,7 +258,7 @@ export class DaimonicFacilitationService {
     }
 
     if (highChargeGaps > 2) {
-      return "Work with high-charge encounters by staying in the tension rather than resolving it quickly.";
+      return &quot;Work with high-charge encounters by staying in the tension rather than resolving it quickly.&quot;;
     }
 
     if (stableGaps > 1) {
@@ -267,7 +267,7 @@ export class DaimonicFacilitationService {
 
     switch (primaryChannel) {
       case 'failures':
-        return "Engage with your failures as initiatory experiences. Ask what they're trying to redirect you toward.";
+        return "Engage with your failures as initiatory experiences. Ask what they&apos;re trying to redirect you toward.";
       
       case 'obstacles':
         return "Stop trying to overcome chronic obstacles. Instead, ask what they're protecting or redirecting.";
@@ -300,7 +300,7 @@ export class DaimonicFacilitationService {
       warnings.push("You may be integrating encounters too quickly. Allow more time for metabolizing otherness.");
     }
 
-    warnings.push("Don't turn daimonic encounters into spiritual concepts. Maintain the lived relationship with otherness.");
+    warnings.push("Don&apos;t turn daimonic encounters into spiritual concepts. Maintain the lived relationship with otherness.");
     warnings.push("Avoid using daimonic insights to feel special or enlightened. They're meant to make you more human, not more spiritual.");
 
     return warnings;
@@ -362,7 +362,7 @@ export class DaimonicFacilitationService {
         break;
         
       case 'obstacles':
-        practices.push("Daily: Notice what you're fighting against and ask what it's protecting");
+        practices.push("Daily: Notice what you&apos;re fighting against and ask what it&apos;s protecting");
         practices.push("Monthly: Review chronic patterns and their redirective functions");
         break;
         
@@ -448,7 +448,7 @@ export class DaimonicFacilitationService {
 
     const highChargeGaps = result.synapticGaps.filter(gap => gap.gapCharge > 0.7).length;
     if (highChargeGaps > 0) {
-      guidance.push("Stay in the tension between self and Other rather than collapsing the distance");
+      guidance.push(&quot;Stay in the tension between self and Other rather than collapsing the distance&quot;);
     }
 
     if (result.recommendations.primaryChannel === 'failures') {
@@ -459,7 +459,7 @@ export class DaimonicFacilitationService {
   }
 
   /**
-   * Get user's ongoing daimonic relationship status
+   * Get user&apos;s ongoing daimonic relationship status
    */
   async getDaimonicRelationshipStatus(userId: string): Promise<{
     activeChannels: string[];

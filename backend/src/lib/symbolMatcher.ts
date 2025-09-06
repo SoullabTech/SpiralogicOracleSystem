@@ -1,7 +1,7 @@
 // 📁 File: src/lib/emotionParser.ts
 
 const emotionKeywords: Record<string, string[]> = {
-  grief: ["loss", "mourning", "absence", "longing", "tears"],
+  grief: [&quot;loss", "mourning", "absence", "longing", "tears"],
   inspiration: ["vision", "light", "awakening", "breakthrough", "spark"],
   shadow: ["fear", "conflict", "doubt", "dark", "mirror"],
   awe: ["mystery", "cosmos", "vast", "grand", "beauty"],

@@ -74,7 +74,7 @@ class ProductionMonitor {
 
     // Log results
     results.forEach((result) => {
-      const status = result.healthy ? "✅" : "❌";
+      const status = result.healthy ? &quot;✅" : "❌";
       console.log(
         `${status} ${result.name}: ${result.status} (${result.latency}ms)`,
       );
@@ -163,7 +163,7 @@ class ProductionMonitor {
       await sendAlert(
         `System health issues detected. Attempting automated repair (${this.repairAttempts}/${this.maxRepairAttempts})\n` +
           `Issue type: ${issueType}\n` +
-          `Failed endpoints: ${healthCheck.unhealthyEndpoints.map((e) => e.name).join(", ")}`,
+          `Failed endpoints: ${healthCheck.unhealthyEndpoints.map((e) => e.name).join(&quot;, ")}`,
         "warning",
       );
 

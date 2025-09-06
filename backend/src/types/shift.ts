@@ -23,7 +23,7 @@ export interface FacetCode {
 export const SPIRALOGIC_FACETS: Record<string, FacetCode> = {
   F1_Meaning: { code: 'F1_Meaning', element: 'fire', phenomenologicalLabel: 'Inspired purpose' },
   F2_Courage: { code: 'F2_Courage', element: 'fire', phenomenologicalLabel: 'Willingness to face truth / take action' },
-  E1_Coherence: { code: 'E1_Coherence', element: 'earth', phenomenologicalLabel: 'Life-path coherence / "crystal" clarity' },
+  E1_Coherence: { code: 'E1_Coherence', element: 'earth', phenomenologicalLabel: 'Life-path coherence / &quot;crystal&quot; clarity' },
   E2_Grounding: { code: 'E2_Grounding', element: 'earth', phenomenologicalLabel: 'Reliable routines / embodied stability' },
   W1_Attunement: { code: 'W1_Attunement', element: 'water', phenomenologicalLabel: 'Emotional range & regulation' },
   W2_Belonging: { code: 'W2_Belonging', element: 'water', phenomenologicalLabel: 'Felt support / reciprocity' },
@@ -50,7 +50,7 @@ export interface ConversationalSignals {
   metaReferences: number;               // % noticing, reframing, perspective-taking
   valuesHits: number;                   // count of values lexicon matches
   wholenessReferences: number;          // % "peace with," "chapter closed/open"
-  integrationCommitment: boolean;       // "I'll try X for Y days"
+  integrationCommitment: boolean;       // "I&apos;ll try X for Y days"
   integrityRepair: boolean;             // acknowledges mismatch & repairs
 }
 

@@ -202,7 +202,7 @@ const HoloflowerVisualization = ({
           cx: centerX,
           cy: centerY,
           r: 50,
-          fill: "url(#aetherGradient)",
+          fill: &quot;url(#aetherGradient)",
           fillOpacity: 0.3,
           animate: {
             scale: [pulseScale, pulseScale + 0.1, pulseScale],

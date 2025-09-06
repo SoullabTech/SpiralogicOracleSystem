@@ -56,7 +56,7 @@ export class SemanticJournalingService {
   }
 
   /**
-   * Analyze user's journaling patterns using semantic AI
+   * Analyze user&apos;s journaling patterns using semantic AI
    */
   async analyzeJournalingPatterns(userId: string): Promise<SemanticPattern[]> {
     try {
@@ -131,7 +131,7 @@ export class SemanticJournalingService {
   }
 
   /**
-   * Analyze recurring themes across user's memories
+   * Analyze recurring themes across user&apos;s memories
    */
   private async analyzeRecurringThemes(userId: string, memories: Memory[]): Promise<SemanticPattern[]> {
     // Extract content for theme analysis

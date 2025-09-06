@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
   try {
     const { fileId, userId, mimeType, storagePath }: ProcessingRequest = await request.json();
 
-    console.log('📄 Starting file processing:', { fileId, mimeType, storagePath });
 
     // Update file status to processing
     await updateFileStatus(fileId, 'processing', 'Extracting text content...');
@@ -65,7 +64,6 @@ export async function POST(request: NextRequest) {
 
     // 3. Smart chunking - preserve sentence boundaries
     const chunks = await intelligentChunking(extractedText, fileId);
-    console.log(`📚 Created ${chunks.length} chunks for file ${fileId}`);
 
     // Update status
     await updateFileStatus(fileId, 'processing', 'Generating embeddings...');
@@ -132,7 +130,6 @@ export async function POST(request: NextRequest) {
       console.error('Failed to update file status:', updateError);
     }
 
-    console.log('✅ File processing complete:', {
       fileId,
       chunks: validEmbeddings.length,
       tokens: validEmbeddings.reduce((sum, e) => sum + e.token_count, 0)

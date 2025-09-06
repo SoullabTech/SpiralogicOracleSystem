@@ -29,7 +29,7 @@ export interface EmergingShift {
   id: string;
   title: string;          // e.g., "Clarity rising"
   description?: string;   // optional, short phenomenological gloss
-  momentum: 0 | 1 | 2 | 3; // how quickly it's rising
+  momentum: 0 | 1 | 2 | 3; // how quickly it&apos;s rising
   when?: string;          // e.g., "next 2–3 days"
   // expert fields (hidden unless expertMode)
   _technical?: { code?: string; confidence?: number };
@@ -311,14 +311,14 @@ export const ExampleScreen = () => {
     ],
     shadow: [
       { id: 's1', observation: 'I notice a hesitation to name a small truth.', invitation: 'Say one sentence aloud—even quietly to yourself.', severity: 2, _technical: { tag: 'deflection', code: 'shadow.deflection' } },
-      { id: 's2', observation: "There's a pull toward perfection before starting.", invitation: 'Start messy—one honest paragraph or two minutes of action.', severity: 1, _technical: { tag: 'perfectionism', code: 'shadow.perfection' } },
+      { id: 's2', observation: "There&apos;s a pull toward perfection before starting.", invitation: 'Start messy—one honest paragraph or two minutes of action.', severity: 1, _technical: { tag: 'perfectionism', code: 'shadow.perfection' } },
     ],
     windows: [
       { id: 'w1', label: 'Honest conversations', timeframe: 'next 3 days', note: 'Keep it simple and kind.', _technical: { element: 'air', phase: 'integration' } },
       { id: 'w2', label: 'Clean starts', timeframe: 'this weekend', note: 'Small resets beat big overhauls.', _technical: { element: 'earth', phase: 'renewal' } },
     ],
     practices: [
-      { id: 'p1', title: 'One-line truth', duration: '2-3 min', instruction: "Whisper a single sentence you've been avoiding. Notice the relief.", tags: ['clarity', 'courage'] },
+      { id: 'p1', title: 'One-line truth', duration: '2-3 min', instruction: "Whisper a single sentence you&apos;ve been avoiding. Notice the relief.", tags: ['clarity', 'courage'] },
       { id: 'p2', title: 'Barefoot step', duration: '2 min', instruction: 'Stand on earth or floor. Breathe slowly for ten cycles.', tags: ['grounding'] },
       { id: 'p3', title: 'Tiny clean slate', duration: '5 min', instruction: 'Reset one surface or list. Let completion spark energy.', tags: ['renewal'] },
     ],

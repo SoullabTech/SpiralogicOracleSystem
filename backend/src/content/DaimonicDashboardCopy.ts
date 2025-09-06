@@ -227,7 +227,7 @@ export class DaimonicDashboardCopy {
     const copy = {
       high: {
         standard: [
-          "The field is highly activated—strong currents moving through.",
+          &quot;The field is highly activated—strong currents moving through.",
           "Intense archetypal weather with significant collective activity.",
           "The shared space is electric with transformational energy.",
           "Peak conditions for collective breakthrough experiences."
@@ -444,7 +444,7 @@ export class DaimonicDashboardCopy {
   static getInteractiveCopy(): Record<string, CopyVariations> {
     return {
       expertToggle: {
-        standard: ["Switch to technical view"],
+        standard: [&quot;Switch to technical view&quot;],
         expert: ["Switch to phenomenological view"]
       },
       refreshButton: {
@@ -472,7 +472,7 @@ export class DaimonicDashboardCopy {
   static getTooltipCopy(): Record<string, CopyVariations> {
     return {
       fieldIntensity: {
-        standard: ["How active the collective archetypal field is right now"],
+        standard: [&quot;How active the collective archetypal field is right now&quot;],
         expert: ["Calculated from avg_tension + avg_surprise across all participants"]
       },
       transmissionClarity: {

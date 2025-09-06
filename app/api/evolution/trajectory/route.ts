@@ -15,7 +15,6 @@ const TrajectoryQuerySchema = z.object({
 // GET /api/evolution/trajectory
 export async function GET(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[Evolution] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[Evolution] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[Evolution] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[Evolution] ${msg}`, meta),
@@ -45,10 +44,10 @@ export async function GET(req: NextRequest) {
     // Use provided userId or default to current user
     const targetUserId = query.userId || user.id;
 
-    // Check permissions if viewing another user's trajectory
+    // Check permissions if viewing another user&apos;s trajectory
     if (targetUserId !== user.id) {
       // Here you would check if the current user has permission to view this trajectory
-      // For now, we'll restrict to own trajectory only
+      // For now, we&apos;ll restrict to own trajectory only
       return NextResponse.json(
         { error: 'Cannot view other user trajectories' },
         { status: 403 }
@@ -152,7 +151,6 @@ export async function GET(req: NextRequest) {
 // Record achievement of an evolution milestone
 export async function POST(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[Milestone] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[Milestone] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[Milestone] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[Milestone] ${msg}`, meta),

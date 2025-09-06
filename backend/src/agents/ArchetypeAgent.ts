@@ -40,7 +40,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
   public element: string;
   public energySignature: string;
   public oracleName: string;
-  public voiceProfile: OracleIdentity["voiceProfile"];
+  public voiceProfile: OracleIdentity[&quot;voiceProfile"];
   public phase: string;
   public evolutionHistory: OracleIdentity["evolutionHistory"];
   public lastInteraction: Date;
@@ -64,7 +64,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
   // Override base class method to maintain compatibility
   async processQuery(query: string): Promise<AgentResponse> {
     // Convert to extended format for subclasses
-    const extendedQuery = { input: query, userId: "anonymous" };
+    const extendedQuery = { input: query, userId: &quot;anonymous&quot; };
     const aiResponse = await this.processExtendedQuery(extendedQuery);
 
     // Update last interaction
@@ -122,7 +122,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
     return this.oracleName;
   }
 
-  public getVoiceProfile(): OracleIdentity["voiceProfile"] {
+  public getVoiceProfile(): OracleIdentity[&quot;voiceProfile"] {
     return this.voiceProfile;
   }
 
@@ -148,7 +148,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
     benefits: string[];
   } {
     return {
-      suggestion: `${this.oracleName} senses you're ready to evolve from ${this.phase} to ${newPhase}`,
+      suggestion: `${this.oracleName} senses you&apos;re ready to evolve from ${this.phase} to ${newPhase}`,
       fromPhase: this.phase,
       toPhase: newPhase,
       archetypeChange: newArchetype
@@ -197,7 +197,7 @@ export abstract class ArchetypeAgent extends OracleAgent {
   /**
    * 🎭 Oracle Personality Methods
    */
-  protected getDefaultVoiceProfile(): OracleIdentity["voiceProfile"] {
+  protected getDefaultVoiceProfile(): OracleIdentity[&quot;voiceProfile"] {
     const elementVoiceProfiles = {
       fire: {
         voiceId: "elevenlabs_fire_voice",

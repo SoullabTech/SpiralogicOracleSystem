@@ -211,7 +211,7 @@ export class SNetArchetypalService {
 
       callback(null, {
         audio_data: audioData,
-        audio_format: "audio/mpeg",
+        audio_format: &quot;audio/mpeg&quot;,
         duration_ms: this.estimateDuration(text),
         voice_id: voiceProfile.voiceId,
       });
@@ -243,7 +243,7 @@ export class SNetArchetypalService {
 
       return {
         audio_content: audioData,
-        mime_type: "audio/mpeg",
+        mime_type: &quot;audio/mpeg&quot;,
         duration_ms: this.estimateDuration(text),
         voice_profile: archetype,
       };

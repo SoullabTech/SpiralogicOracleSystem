@@ -101,7 +101,7 @@ export class DivinationAgent {
 
     // Enhance with birth data if available
     if (query.birthData) {
-      insight.sacredTiming += ` Your birth essence carries the energy of ${query.birthData.date}, which harmonizes with this hexagram's timing.`;
+      insight.sacredTiming += ` Your birth essence carries the energy of ${query.birthData.date}, which harmonizes with this hexagram&apos;s timing.`;
     }
 
     return this.enhanceWithSpiralogicWisdom(insight, query);
@@ -129,7 +129,7 @@ export class DivinationAgent {
   ): Promise<DivinationInsight> {
     try {
       // Perform multiple readings
-      const tarotInsight = getTarotReading(query.query, "three-card");
+      const tarotInsight = getTarotReading(query.query, &quot;three-card");
       const ichingInsight = castIChingHexagram(query.query);
       const astroInsight = generateAstroOracle(query.birthData);
 
@@ -215,7 +215,7 @@ export class DivinationAgent {
     insights: DivinationInsight[],
     themes: string[],
   ): string {
-    const methods = insights.map((insight) => insight.method).join(", ");
+    const methods = insights.map((insight) => insight.method).join(&quot;, ");
     const primaryTheme = themes[0] || "transformation";
 
     return `The sacred traditions of ${methods} converge on the theme of ${primaryTheme}. Each method illuminates a different facet of your current spiritual moment, creating a holographic view of your path forward.`;
@@ -243,7 +243,7 @@ ${guidanceElements.join("\n\n")}
       "Create sacred space with elements representing each tradition.",
       "Light candles honoring the wisdom of Tarot, I Ching, and Astrology.",
       "Place cards, coins, and star chart before you as unified altar.",
-      "Meditate on how each method's message resonates in your heart.",
+      "Meditate on how each method&apos;s message resonates in your heart.",
       "Journal the synthesis and unified guidance received.",
       "Close with gratitude to all wisdom traditions and your own inner knowing.",
     ];
@@ -370,7 +370,7 @@ ${guidanceElements.join("\n\n")}
     );
 
     // Rotate through methods based on day
-    const methods = ["tarot", "iching", "astro"];
+    const methods = [&quot;tarot&quot;, "iching", "astro"];
     const methodIndex = dayOfYear % methods.length;
     const method = methods[methodIndex];
 

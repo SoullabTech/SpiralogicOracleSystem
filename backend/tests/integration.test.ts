@@ -95,7 +95,7 @@ describe("System Integration Tests", () => {
       // 3. Oracle interaction with mode switching
       await oracle.switchMode("alchemist");
       const response1 = await oracle.respondToPrompt(
-        "I'm ready to begin my shadow work",
+        "I&apos;m ready to begin my shadow work",
       );
 
       expect(response1).toMatch(/shadow|integrate|transform|alchemy/i);
@@ -118,7 +118,7 @@ describe("System Integration Tests", () => {
       const responses = [];
       const prompts = [
         "This shadow work is bringing up a lot of anger",
-        "I don't want to feel this rage",
+        "I don&apos;t want to feel this rage",
         "What if I hurt someone with this anger?",
       ];
 
@@ -137,7 +137,7 @@ describe("System Integration Tests", () => {
       // Start conversation in one mode
       await oracle.switchMode("buddha");
       const buddhaResponse = await oracle.respondToPrompt(
-        "I'm attached to my old self",
+        "I&apos;m attached to my old self",
       );
 
       expect(buddhaResponse).toMatch(/attachment|let go|impermanence/i);
@@ -169,7 +169,7 @@ describe("System Integration Tests", () => {
       // Simulate buildup to breakthrough
       const buildupPrompts = [
         "I keep feeling this same pattern repeating",
-        "It's like I'm stuck in a loop with my relationships",
+        "It&apos;s like I'm stuck in a loop with my relationships",
         "Everyone I date becomes distant after a few months",
       ];
 
@@ -414,7 +414,7 @@ describe("System Integration Tests", () => {
         "How do I start?",
         "What if it's too intense?",
         "Can you support me through this?",
-        "What's the first step?",
+        "What&apos;s the first step?",
       ];
 
       const startTime = Date.now();

@@ -221,7 +221,7 @@ const CoreDashboard: React.FC<CoreDashboardProps> = ({
               psychology
             </p>
             <p>
-              This is not AI mysticism—it's consciousness engineering for
+              This is not AI mysticism—it&apos;s consciousness engineering for
               rational seekers
             </p>
           </div>

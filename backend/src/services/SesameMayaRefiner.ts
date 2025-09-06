@@ -109,7 +109,7 @@ export class SesameMayaRefiner {
   /** choose phrase cuts: punctuation > emdash > newline > length */
   private findCutIndex(t: string) {
     // prefer full stop boundaries
-    const re = /[.!?…](?:["'"])?(?=\s|$)/g;
+    const re = /[.!?…](?:[&quot;'&quot;])?(?=\s|$)/g;
     let m: RegExpExecArray | null;
     let last = -1;
     while ((m = re.exec(t))) last = m.index;
@@ -127,7 +127,7 @@ export class SesameMayaRefiner {
   }
 
   private applyElementalTone(s: string) {
-    // micro-tonal tweaks that don't "rewrite" content, just voice
+    // micro-tonal tweaks that don&apos;t "rewrite" content, just voice
     const prefaceMap: Record<Element, string> = {
       air:   '',
       fire:  '',
@@ -138,13 +138,13 @@ export class SesameMayaRefiner {
     // lightweight diction nudge per element
     const swaps: Record<Element, Array<[RegExp, string]>> = {
       air: [
-        [/\b(I think|maybe|perhaps)\b/gi, "let's clarify"],
+        [/\b(I think|maybe|perhaps)\b/gi, &quot;let&apos;s clarify&quot;],
         [/\bvery\s+([a-z]+)\b/gi, '$1'],  // "very good" -> "good"
         [/\bquite\b/gi, ''],
       ],
       fire: [
         [/\btry to\b/gi, 'go ahead and'],  // More natural than "ignite"
-        [/\bmaybe we could\b/gi, "let's"],
+        [/\bmaybe we could\b/gi, "let&apos;s"],
         [/\bperhaps\b/gi, 'definitely'],
       ],
       water: [
@@ -192,7 +192,7 @@ export class SesameMayaRefiner {
     return s
       .replace(/\b(you need to|you have to)\b/gi, 'you can')
       .replace(/\byou should\b/gi, 'you might')
-      .replace(/\bdon\'t\s+([a-z]+)\b/gi, 'consider not $1ing')  // "don't worry" -> "consider not worrying"
+      .replace(/\bdon\'t\s+([a-z]+)\b/gi, 'consider not $1ing')  // "don&apos;t worry" -> "consider not worrying"
       .replace(/\b(always|never)\s+([a-z]+)\b/gi, 'often $2')  // More nuanced
       .replace(/\byou must\b/gi, 'it helps to');
   }

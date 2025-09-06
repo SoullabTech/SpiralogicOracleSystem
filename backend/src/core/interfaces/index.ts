@@ -82,22 +82,22 @@ export interface IOrchestrator {
 
 export interface IMemory {
   /**
-   * Get user's conversation session
+   * Get user&apos;s conversation session
    */
   getSession(userId: string, sessionId?: string): Promise<ConversationSession>;
   
   /**
-   * Append a new turn to user's conversation
+   * Append a new turn to user&apos;s conversation
    */
   append(userId: string, turn: ConversationTurn): Promise<void>;
   
   /**
-   * Get user's long-term memory patterns
+   * Get user&apos;s long-term memory patterns
    */
   getPatterns(userId: string): Promise<MemoryPattern[]>;
   
   /**
-   * Update user's consciousness profile
+   * Update user&apos;s consciousness profile
    */
   updateConsciousnessProfile(userId: string, updates: Partial<ConsciousnessProfile>): Promise<void>;
 }
@@ -126,7 +126,7 @@ export interface IAnalytics {
   emit(event: AnalyticsEvent): void;
   
   /**
-   * Get user's usage metrics
+   * Get user&apos;s usage metrics
    */
   getUserMetrics(userId: string, timeRange?: { start: Date; end: Date }): Promise<UserMetrics>;
   
@@ -191,12 +191,12 @@ export interface IPersonalOracle {
   process(request: QueryRequest): Promise<AIResponse>;
   
   /**
-   * Update oracle's personality and preferences
+   * Update oracle&apos;s personality and preferences
    */
   updatePersonality(userId: string, settings: Partial<UserOracleSettings>): Promise<void>;
   
   /**
-   * Get oracle's current consciousness state
+   * Get oracle&apos;s current consciousness state
    */
   getConsciousnessState(userId: string): Promise<ConsciousnessState>;
 }

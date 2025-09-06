@@ -241,7 +241,7 @@ function SimplifiedOracleContent() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && !isStreaming && sendMessage()}
-              placeholder="Share what's on your mind..."
+              placeholder="Share what&apos;s on your mind..."
               className="flex-1 bg-transparent border-0 focus:ring-0 text-white placeholder:text-gray-400"
               disabled={isStreaming}
             />

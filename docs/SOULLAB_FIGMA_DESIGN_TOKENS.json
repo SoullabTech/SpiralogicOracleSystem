@@ -1,0 +1,708 @@
+{
+  "project": {
+    "name": "Soullab Mirror - Complete State System",
+    "version": "1.0.0",
+    "description": "Figma-ready design tokens for Maia conversational interface with full interaction states"
+  },
+  "canvas": {
+    "artboards": 6,
+    "size": { "width": 390, "height": 844 },
+    "spacing": { "horizontal": 50 }
+  },
+  "states": {
+    "idle": {
+      "name": "1. Idle - Ready State",
+      "description": "Maia waiting for user interaction",
+      "logoIndicator": {
+        "position": { "x": 163, "y": 48 },
+        "size": { "width": 64, "height": 64 },
+        "fill": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)",
+        "animation": "breathing-scale-0.95-to-1.05-2s-infinite-ease-in-out",
+        "shadow": "0 0 20px rgba(139, 92, 246, 0.3)",
+        "opacity": 1.0
+      },
+      "statusDot": {
+        "position": { "x": 187, "y": 116 },
+        "size": { "width": 8, "height": 8 },
+        "fill": "#10B981",
+        "animation": "none"
+      },
+      "inputBar": {
+        "position": { "x": 20, "y": 766 },
+        "size": { "width": 350, "height": 52 },
+        "background": "#FFFFFF",
+        "border": "1px solid #E5E7EB",
+        "cornerRadius": 26,
+        "shadow": "0 2px 8px rgba(0, 0, 0, 0.08)",
+        "controls": {
+          "voiceButton": {
+            "position": { "x": 12, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F3F4F6",
+            "cornerRadius": 18,
+            "icon": "mic",
+            "iconColor": "#6B7280",
+            "state": "idle"
+          },
+          "textInput": {
+            "position": { "x": 60, "y": 8 },
+            "size": { "width": 230, "height": 36 },
+            "placeholder": "Offer your reflection…",
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "color": "#9CA3AF"
+            },
+            "background": "transparent",
+            "cursor": "text"
+          },
+          "sendButton": {
+            "position": { "x": 302, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F59E0B",
+            "cornerRadius": 18,
+            "icon": "arrow-right",
+            "iconColor": "#FFFFFF",
+            "opacity": 0.5,
+            "state": "disabled"
+          }
+        }
+      },
+      "messageArea": {
+        "position": { "x": 20, "y": 140 },
+        "size": { "width": 350, "height": 600 },
+        "messages": []
+      }
+    },
+    "typing": {
+      "name": "2. Typing - User Input Active",
+      "description": "User is typing a message",
+      "logoIndicator": {
+        "position": { "x": 163, "y": 48 },
+        "size": { "width": 64, "height": 64 },
+        "fill": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)",
+        "animation": "breathing-scale-0.95-to-1.05-2s-infinite-ease-in-out",
+        "shadow": "0 0 20px rgba(139, 92, 246, 0.3)",
+        "opacity": 1.0
+      },
+      "statusDot": {
+        "position": { "x": 187, "y": 116 },
+        "size": { "width": 8, "height": 8 },
+        "fill": "#10B981",
+        "animation": "none"
+      },
+      "inputBar": {
+        "position": { "x": 20, "y": 766 },
+        "size": { "width": 350, "height": 52 },
+        "background": "#FFFFFF",
+        "border": "2px solid #6366F1",
+        "cornerRadius": 26,
+        "shadow": "0 2px 12px rgba(99, 102, 241, 0.15)",
+        "controls": {
+          "voiceButton": {
+            "position": { "x": 12, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F3F4F6",
+            "cornerRadius": 18,
+            "icon": "mic",
+            "iconColor": "#6B7280",
+            "state": "disabled"
+          },
+          "textInput": {
+            "position": { "x": 60, "y": 8 },
+            "size": { "width": 230, "height": 36 },
+            "content": "I've been thinking about transitions...",
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "color": "#1F2937"
+            },
+            "background": "transparent",
+            "cursor": "text-active"
+          },
+          "sendButton": {
+            "position": { "x": 302, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "linear-gradient(135deg, #F59E0B 0%, #F97316 100%)",
+            "cornerRadius": 18,
+            "icon": "arrow-right",
+            "iconColor": "#FFFFFF",
+            "opacity": 1.0,
+            "state": "active",
+            "shadow": "0 2px 8px rgba(245, 158, 11, 0.3)"
+          }
+        }
+      },
+      "messageArea": {
+        "position": { "x": 20, "y": 140 },
+        "size": { "width": 350, "height": 600 },
+        "messages": []
+      }
+    },
+    "sending": {
+      "name": "3. Sending - Message In Transit",
+      "description": "Message sent, brief transition state",
+      "logoIndicator": {
+        "position": { "x": 163, "y": 48 },
+        "size": { "width": 64, "height": 64 },
+        "fill": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)",
+        "animation": "pulse-glow-1s-ease-in-out",
+        "shadow": "0 0 25px rgba(139, 92, 246, 0.5)",
+        "opacity": 1.0
+      },
+      "statusDot": {
+        "position": { "x": 187, "y": 116 },
+        "size": { "width": 8, "height": 8 },
+        "fill": "#F59E0B",
+        "animation": "pulse-0.5s-infinite"
+      },
+      "inputBar": {
+        "position": { "x": 20, "y": 766 },
+        "size": { "width": 350, "height": 52 },
+        "background": "#FFFFFF",
+        "border": "1px solid #E5E7EB",
+        "cornerRadius": 26,
+        "shadow": "0 2px 8px rgba(0, 0, 0, 0.08)",
+        "controls": {
+          "voiceButton": {
+            "position": { "x": 12, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F3F4F6",
+            "cornerRadius": 18,
+            "icon": "mic",
+            "iconColor": "#6B7280",
+            "state": "disabled",
+            "opacity": 0.5
+          },
+          "textInput": {
+            "position": { "x": 60, "y": 8 },
+            "size": { "width": 230, "height": 36 },
+            "placeholder": "Sending...",
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "color": "#9CA3AF"
+            },
+            "background": "transparent",
+            "state": "disabled"
+          },
+          "sendButton": {
+            "position": { "x": 302, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F59E0B",
+            "cornerRadius": 18,
+            "icon": "loading-spinner",
+            "iconColor": "#FFFFFF",
+            "opacity": 1.0,
+            "animation": "spin-1s-linear-infinite",
+            "state": "loading"
+          }
+        }
+      },
+      "messageArea": {
+        "position": { "x": 20, "y": 140 },
+        "size": { "width": 350, "height": 600 },
+        "messages": [
+          {
+            "type": "user",
+            "position": { "x": 30, "y": 520 },
+            "maxWidth": 280,
+            "alignment": "right",
+            "content": "I've been thinking about transitions in my life and feeling uncertain about the path ahead.",
+            "background": "rgba(255, 255, 255, 0.95)",
+            "textColor": "#1F2937",
+            "cornerRadius": 18,
+            "padding": { "horizontal": 16, "vertical": 12 },
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "lineHeight": 1.4
+            },
+            "shadow": "0 2px 8px rgba(0, 0, 0, 0.06)"
+          }
+        ]
+      }
+    },
+    "thinking": {
+      "name": "4. Thinking - Maia Processing",
+      "description": "Maia is thinking, processing the user's message",
+      "logoIndicator": {
+        "position": { "x": 163, "y": 48 },
+        "size": { "width": 64, "height": 64 },
+        "fill": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)",
+        "animation": "rotate-360deg-6s-linear-infinite",
+        "shadow": "0 0 30px rgba(139, 92, 246, 0.4)",
+        "opacity": 1.0
+      },
+      "statusDot": {
+        "position": { "x": 187, "y": 116 },
+        "size": { "width": 8, "height": 8 },
+        "fill": "#F59E0B",
+        "animation": "pulse-1s-infinite"
+      },
+      "thinkingIndicator": {
+        "position": { "x": 163, "y": 124 },
+        "type": "typing-dots",
+        "dots": [
+          {
+            "size": { "width": 4, "height": 4 },
+            "fill": "#8B5CF6",
+            "animation": "bounce-0.6s-infinite-delay-0ms"
+          },
+          {
+            "size": { "width": 4, "height": 4 },
+            "fill": "#8B5CF6",
+            "animation": "bounce-0.6s-infinite-delay-200ms"
+          },
+          {
+            "size": { "width": 4, "height": 4 },
+            "fill": "#8B5CF6",
+            "animation": "bounce-0.6s-infinite-delay-400ms"
+          }
+        ]
+      },
+      "inputBar": {
+        "position": { "x": 20, "y": 766 },
+        "size": { "width": 350, "height": 52 },
+        "background": "#FFFFFF",
+        "border": "1px solid #E5E7EB",
+        "cornerRadius": 26,
+        "shadow": "0 2px 8px rgba(0, 0, 0, 0.08)",
+        "controls": {
+          "voiceButton": {
+            "position": { "x": 12, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F3F4F6",
+            "cornerRadius": 18,
+            "icon": "mic",
+            "iconColor": "#6B7280",
+            "state": "disabled",
+            "opacity": 0.5
+          },
+          "textInput": {
+            "position": { "x": 60, "y": 8 },
+            "size": { "width": 230, "height": 36 },
+            "placeholder": "Maia is thinking...",
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "color": "#9CA3AF"
+            },
+            "background": "transparent",
+            "state": "disabled"
+          },
+          "sendButton": {
+            "position": { "x": 302, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F59E0B",
+            "cornerRadius": 18,
+            "icon": "arrow-right",
+            "iconColor": "#FFFFFF",
+            "opacity": 0.3,
+            "state": "disabled"
+          }
+        }
+      },
+      "messageArea": {
+        "position": { "x": 20, "y": 140 },
+        "size": { "width": 350, "height": 600 },
+        "messages": [
+          {
+            "type": "user",
+            "position": { "x": 30, "y": 520 },
+            "maxWidth": 280,
+            "alignment": "right",
+            "content": "I've been thinking about transitions in my life and feeling uncertain about the path ahead.",
+            "background": "rgba(255, 255, 255, 0.95)",
+            "textColor": "#1F2937",
+            "cornerRadius": 18,
+            "padding": { "horizontal": 16, "vertical": 12 },
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "lineHeight": 1.4
+            },
+            "shadow": "0 2px 8px rgba(0, 0, 0, 0.06)"
+          }
+        ]
+      }
+    },
+    "responding": {
+      "name": "5. Responding - Maia Speaking",
+      "description": "Maia is typing/speaking her response",
+      "logoIndicator": {
+        "position": { "x": 163, "y": 48 },
+        "size": { "width": 64, "height": 64 },
+        "fill": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)",
+        "animation": "glow-pulse-1s-infinite-ease-in-out",
+        "shadow": "0 0 40px rgba(139, 92, 246, 0.6)",
+        "opacity": 1.0,
+        "audioWaves": {
+          "visible": true,
+          "rings": [
+            {
+              "radius": 80,
+              "stroke": "rgba(139, 92, 246, 0.3)",
+              "animation": "expand-fade-1.5s-infinite"
+            },
+            {
+              "radius": 100,
+              "stroke": "rgba(139, 92, 246, 0.2)",
+              "animation": "expand-fade-1.5s-infinite-delay-0.5s"
+            }
+          ]
+        }
+      },
+      "statusDot": {
+        "position": { "x": 187, "y": 116 },
+        "size": { "width": 8, "height": 8 },
+        "fill": "#10B981",
+        "animation": "pulse-0.8s-infinite"
+      },
+      "inputBar": {
+        "position": { "x": 20, "y": 766 },
+        "size": { "width": 350, "height": 52 },
+        "background": "#FFFFFF",
+        "border": "1px solid #E5E7EB",
+        "cornerRadius": 26,
+        "shadow": "0 2px 8px rgba(0, 0, 0, 0.08)",
+        "controls": {
+          "voiceButton": {
+            "position": { "x": 12, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F3F4F6",
+            "cornerRadius": 18,
+            "icon": "mic",
+            "iconColor": "#6B7280",
+            "state": "disabled",
+            "opacity": 0.5
+          },
+          "textInput": {
+            "position": { "x": 60, "y": 8 },
+            "size": { "width": 230, "height": 36 },
+            "placeholder": "Maia is responding...",
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "color": "#9CA3AF"
+            },
+            "background": "transparent",
+            "state": "disabled"
+          },
+          "sendButton": {
+            "position": { "x": 302, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F59E0B",
+            "cornerRadius": 18,
+            "icon": "arrow-right",
+            "iconColor": "#FFFFFF",
+            "opacity": 0.3,
+            "state": "disabled"
+          }
+        }
+      },
+      "messageArea": {
+        "position": { "x": 20, "y": 140 },
+        "size": { "width": 350, "height": 600 },
+        "messages": [
+          {
+            "type": "user",
+            "position": { "x": 30, "y": 440 },
+            "maxWidth": 280,
+            "alignment": "right",
+            "content": "I've been thinking about transitions in my life and feeling uncertain about the path ahead.",
+            "background": "rgba(255, 255, 255, 0.95)",
+            "textColor": "#1F2937",
+            "cornerRadius": 18,
+            "padding": { "horizontal": 16, "vertical": 12 },
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "lineHeight": 1.4
+            },
+            "shadow": "0 2px 8px rgba(0, 0, 0, 0.06)"
+          },
+          {
+            "type": "maia-typing",
+            "position": { "x": 40, "y": 520 },
+            "maxWidth": 280,
+            "alignment": "left",
+            "background": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+            "cornerRadius": 18,
+            "padding": { "horizontal": 16, "vertical": 12 },
+            "breathingAura": {
+              "visible": true,
+              "color": "rgba(139, 92, 246, 0.2)",
+              "blur": 20,
+              "animation": "breathing-3s-infinite"
+            },
+            "typingIndicator": {
+              "dots": [
+                {
+                  "size": 6,
+                  "color": "#FFFFFF",
+                  "animation": "bounce-0.6s-infinite-delay-0ms"
+                },
+                {
+                  "size": 6,
+                  "color": "#FFFFFF",
+                  "animation": "bounce-0.6s-infinite-delay-200ms"
+                },
+                {
+                  "size": 6,
+                  "color": "#FFFFFF",
+                  "animation": "bounce-0.6s-infinite-delay-400ms"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "complete": {
+      "name": "6. Complete - Conversation Active",
+      "description": "Maia has responded, ready for next input",
+      "logoIndicator": {
+        "position": { "x": 163, "y": 48 },
+        "size": { "width": 64, "height": 64 },
+        "fill": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)",
+        "animation": "breathing-scale-0.95-to-1.05-2s-infinite-ease-in-out",
+        "shadow": "0 0 20px rgba(139, 92, 246, 0.3)",
+        "opacity": 1.0
+      },
+      "statusDot": {
+        "position": { "x": 187, "y": 116 },
+        "size": { "width": 8, "height": 8 },
+        "fill": "#10B981",
+        "animation": "none"
+      },
+      "inputBar": {
+        "position": { "x": 20, "y": 766 },
+        "size": { "width": 350, "height": 52 },
+        "background": "#FFFFFF",
+        "border": "1px solid #E5E7EB",
+        "cornerRadius": 26,
+        "shadow": "0 2px 8px rgba(0, 0, 0, 0.08)",
+        "controls": {
+          "voiceButton": {
+            "position": { "x": 12, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F3F4F6",
+            "cornerRadius": 18,
+            "icon": "mic",
+            "iconColor": "#6B7280",
+            "state": "idle"
+          },
+          "textInput": {
+            "position": { "x": 60, "y": 8 },
+            "size": { "width": 230, "height": 36 },
+            "placeholder": "Continue the conversation...",
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "color": "#9CA3AF"
+            },
+            "background": "transparent",
+            "cursor": "text"
+          },
+          "sendButton": {
+            "position": { "x": 302, "y": 8 },
+            "size": { "width": 36, "height": 36 },
+            "background": "#F59E0B",
+            "cornerRadius": 18,
+            "icon": "arrow-right",
+            "iconColor": "#FFFFFF",
+            "opacity": 0.5,
+            "state": "disabled"
+          }
+        }
+      },
+      "messageArea": {
+        "position": { "x": 20, "y": 140 },
+        "size": { "width": 350, "height": 600 },
+        "messages": [
+          {
+            "type": "user",
+            "position": { "x": 30, "y": 360 },
+            "maxWidth": 280,
+            "alignment": "right",
+            "content": "I've been thinking about transitions in my life and feeling uncertain about the path ahead.",
+            "background": "rgba(255, 255, 255, 0.95)",
+            "textColor": "#1F2937",
+            "cornerRadius": 18,
+            "padding": { "horizontal": 16, "vertical": 12 },
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "lineHeight": 1.4
+            },
+            "shadow": "0 2px 8px rgba(0, 0, 0, 0.06)"
+          },
+          {
+            "type": "maia",
+            "position": { "x": 40, "y": 460 },
+            "maxWidth": 280,
+            "alignment": "left",
+            "content": "I notice there's something tender in how you speak about uncertainty. Transitions can feel like standing at the edge of the unknown. What feels most alive in this change for you right now?",
+            "background": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+            "textColor": "#FFFFFF",
+            "cornerRadius": 18,
+            "padding": { "horizontal": 16, "vertical": 12 },
+            "font": {
+              "family": "Inter",
+              "size": 16,
+              "weight": 400,
+              "lineHeight": 1.4
+            },
+            "shadow": "0 2px 12px rgba(99, 102, 241, 0.15)",
+            "breathingAura": {
+              "visible": true,
+              "color": "rgba(139, 92, 246, 0.2)",
+              "blur": 20,
+              "animation": "breathing-3s-infinite"
+            }
+          }
+        ]
+      },
+      "quickActions": {
+        "position": { "x": 20, "y": 720 },
+        "size": { "width": 350, "height": 32 },
+        "alignment": "center",
+        "chips": [
+          {
+            "content": "📓 Journal",
+            "background": "rgba(245, 158, 11, 0.1)",
+            "border": "1px solid rgba(245, 158, 11, 0.3)",
+            "textColor": "#F59E0B",
+            "cornerRadius": 16,
+            "padding": { "horizontal": 12, "vertical": 6 },
+            "font": {
+              "family": "Inter",
+              "size": 14,
+              "weight": 500
+            }
+          },
+          {
+            "content": "🌀 Spiral", 
+            "background": "rgba(99, 102, 241, 0.1)",
+            "border": "1px solid rgba(99, 102, 241, 0.3)",
+            "textColor": "#6366F1",
+            "cornerRadius": 16,
+            "padding": { "horizontal": 12, "vertical": 6 },
+            "font": {
+              "family": "Inter",
+              "size": 14,
+              "weight": 500
+            }
+          },
+          {
+            "content": "🎚 Tone",
+            "background": "rgba(139, 92, 246, 0.1)",
+            "border": "1px solid rgba(139, 92, 246, 0.3)",
+            "textColor": "#8B5CF6",
+            "cornerRadius": 16,
+            "padding": { "horizontal": 12, "vertical": 6 },
+            "font": {
+              "family": "Inter",
+              "size": 14,
+              "weight": 500
+            }
+          }
+        ]
+      }
+    }
+  },
+  "globalTokens": {
+    "colors": {
+      "primary": {
+        "50": "#EEF2FF",
+        "500": "#6366F1",
+        "600": "#4F46E5",
+        "700": "#4338CA"
+      },
+      "secondary": {
+        "500": "#8B5CF6",
+        "600": "#7C3AED"
+      },
+      "accent": {
+        "400": "#F59E0B",
+        "500": "#D97706"
+      },
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "neutral": {
+        "50": "#F9FAFB",
+        "100": "#F3F4F6",
+        "400": "#9CA3AF",
+        "500": "#6B7280",
+        "900": "#1F2937"
+      }
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "sizes": {
+        "sm": 14,
+        "base": 16,
+        "lg": 18
+      },
+      "weights": {
+        "normal": 400,
+        "medium": 500,
+        "semibold": 600
+      }
+    },
+    "spacing": {
+      "xs": 4,
+      "sm": 8,
+      "md": 12,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    },
+    "borderRadius": {
+      "sm": 8,
+      "md": 12,
+      "lg": 16,
+      "xl": 18,
+      "full": 9999
+    },
+    "shadows": {
+      "sm": "0 1px 3px rgba(0, 0, 0, 0.1)",
+      "md": "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "lg": "0 4px 12px rgba(0, 0, 0, 0.15)",
+      "glow": "0 0 20px rgba(139, 92, 246, 0.3)"
+    },
+    "animations": {
+      "breathing": "breathing 2s ease-in-out infinite",
+      "rotation": "rotate 6s linear infinite", 
+      "pulse": "pulse 1s ease-in-out infinite",
+      "bounce": "bounce 0.6s infinite",
+      "ripple": "ripple 0.6s ease-out"
+    }
+  },
+  "figmaPluginConfig": {
+    "anima": {
+      "responsive": true,
+      "animations": true,
+      "interactions": true
+    },
+    "locofy": {
+      "framework": "react",
+      "styling": "tailwind",
+      "typescript": true
+    },
+    "figmaTokens": {
+      "export": ["colors", "typography", "spacing", "borderRadius", "shadows"]
+    }
+  }
+}

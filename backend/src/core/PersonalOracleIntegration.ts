@@ -385,7 +385,7 @@ export class PersonalOracleIntegration {
       
       // Generate emergency gentle response
       const emergencyResponse: AgentResponse = {
-        content: "I notice something unexpected in my processing. Let me pause and approach this more simply. How are you feeling right now?",
+        content: &quot;I notice something unexpected in my processing. Let me pause and approach this more simply. How are you feeling right now?",
         metadata: {
           agentId: session.selectedAgent,
           personalityVersion: '2.0.0',
@@ -848,7 +848,7 @@ export class PersonalOracleIntegration {
       case 'transparent_prism': return 'co_creative_partner';
       case 'co_creative_partner': return 'dialogical_companion';
       case 'dialogical_companion': return 'structured_guide';
-      case 'structured_guide': return 'structured_guide'; // Can't go lower
+      case 'structured_guide': return 'structured_guide'; // Can&apos;t go lower
     }
   }
 

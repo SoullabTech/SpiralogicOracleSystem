@@ -119,7 +119,6 @@ export async function POST(request: NextRequest) {
     // TODO: Notify team of new beta signup
     // await notifyTeamNewBetaSignup({ firstName, lastName, email, city });
 
-    console.log('New beta signup:', { 
       email, 
       city, 
       betaAccessId,

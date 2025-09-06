@@ -125,7 +125,7 @@ export class SHIFtNarrativeService {
     fire: [
       'lighting a candle with intention',
       'speaking one bold truth',
-      "starting that project you've been holding"
+      &quot;starting that project you&apos;ve been holding"
     ],
     earth: [
       'a grounding walk',
@@ -250,7 +250,7 @@ export class SHIFtNarrativeService {
     synapticSpace: SynapticSpace
   ): string {
     if (daimonicOther.antiSolipsistic.challengesNarrative) {
-      return "Your life story is being disrupted by something that won't fit your categories. This disruption IS the daimonic presence — not a higher aspect of self, but the important Other that makes development possible.";
+      return "Your life story is being disrupted by something that won&apos;t fit your categories. This disruption IS the daimonic presence — not a higher aspect of self, but the important Other that makes development possible.";
     }
     
     if (daimonicOther.alterity.resistance > 0.7) {
@@ -627,7 +627,7 @@ export class SHIFtNarrativeService {
   ): string {
     const narratives = {
       fire: {
-        high: "There is abundant vision, though grounding may lag.",
+        high: &quot;There is abundant vision, though grounding may lag.",
         low: "The collective fire needs tending—inspiration waits to be kindled."
       },
       earth: {
@@ -810,7 +810,7 @@ export class SHIFtNarrativeService {
     const dominantMode = ElementalAlignment.getDominantAlignmentMode([...synthesis.natural, ...synthesis.adaptive]);
     
     if (dominantMode === 'natural') {
-      return `The Soullab field moves through ${phase} with natural intelligence — collective patterns aligned with Nature's will.`;
+      return `The Soullab field moves through ${phase} with natural intelligence — collective patterns aligned with Nature&apos;s will.`;
     } else if (dominantMode === 'adaptive') {
       return `The collective field navigates ${phase} through both wisdom and adaptation — learning to discern diamond from overlay.`;
     } else {

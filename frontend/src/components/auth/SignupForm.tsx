@@ -94,7 +94,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
             </h2>
 
             <p className="text-gray-300 mb-6 leading-relaxed">
-              We've sent a confirmation link to{" "}
+              We&apos;ve sent a confirmation link to{" "}
               <strong>{formData.email}</strong>. Click the link to activate your
               account and begin your Oracle journey.
             </p>

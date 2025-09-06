@@ -74,7 +74,7 @@ export default function IChingAstroCard({
   const [showHexagrams, setShowHexagrams] = useState(false);
 
   const getCompatibilityColor = (score: number) => {
-    if (score >= 80) return "text-green-600 bg-green-50";
+    if (score >= 80) return &quot;text-green-600 bg-green-50";
     if (score >= 60) return "text-yellow-600 bg-yellow-50";
     return "text-red-600 bg-red-50";
   };
@@ -124,7 +124,7 @@ export default function IChingAstroCard({
                   <span
                     className={`text-3xl ${symbolColors[profile.birthElement as keyof typeof symbolColors]}`}
                   >
-                    {birthArchetype?.symbol || "☰"}
+                    {birthArchetype?.symbol || &quot;☰&quot;}
                   </span>
                   <div>
                     <div className="font-medium text-gray-900">
@@ -147,7 +147,7 @@ export default function IChingAstroCard({
               </div>
 
               <div className="text-sm text-gray-600 mb-2">
-                <strong>Base Number:</strong> {profile.baseNumber} •{" "}
+                <strong>Base Number:</strong> {profile.baseNumber} •{&quot; &quot;}
                 <strong>Direction:</strong> {birthArchetype?.direction}
               </div>
 
@@ -174,7 +174,7 @@ export default function IChingAstroCard({
                   <span
                     className={`text-3xl ${symbolColors[currentArchetype?.element as keyof typeof symbolColors] || "text-gray-600"}`}
                   >
-                    {currentArchetype?.symbol || "☰"}
+                    {currentArchetype?.symbol || &quot;☰&quot;}
                   </span>
                   <div>
                     <div className="font-medium text-gray-900">
@@ -192,12 +192,12 @@ export default function IChingAstroCard({
                     ] || "bg-gray-100"
                   }
                 >
-                  {currentArchetype?.element || "Unknown"}
+                  {currentArchetype?.element || &quot;Unknown&quot;}
                 </Badge>
               </div>
 
               <div className="text-sm text-gray-600 mb-2">
-                <strong>Year Number:</strong> {profile.currentYearNumber} •{" "}
+                <strong>Year Number:</strong> {profile.currentYearNumber} •{&quot; &quot;}
                 <strong>Phase:</strong> {profile.cyclePosition}
               </div>
 
@@ -321,7 +321,7 @@ export default function IChingAstroCard({
                       <strong>Position:</strong> {profile.cyclePosition}
                     </div>
                     <div>
-                      <strong>Phase:</strong>{" "}
+                      <strong>Phase:</strong>{&quot; &quot;}
                       {profile.fractalPhase.split(" -")[0]}
                     </div>
                   </div>

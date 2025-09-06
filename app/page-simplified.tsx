@@ -96,7 +96,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-2">
-                  Share What's on Your Mind
+                  Share What&apos;s on Your Mind
                 </h3>
                 <p className="text-gray-600">
                   Talk to Maya like you would a thoughtful friend. 
@@ -162,7 +162,7 @@ export default function LandingPage() {
                 <h3 className="font-semibold mb-2">Clear Boundaries</h3>
                 <p className="text-gray-600">
                   Maya is a reflection tool, not a therapist. 
-                  We'll always recommend professional help when needed.
+                  We&apos;ll always recommend professional help when needed.
                 </p>
               </div>
             </div>
@@ -180,7 +180,7 @@ export default function LandingPage() {
             <Card className="p-6">
               <p className="text-gray-600 mb-4">
                 "Maya helped me realize I always put others first. 
-                Now I check in with myself daily. It's been transformative."
+                Now I check in with myself daily. It&apos;s been transformative."
               </p>
               <p className="font-semibold">— Sarah, Teacher</p>
             </Card>

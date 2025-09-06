@@ -12,7 +12,7 @@ interface OracleInput {
 export const elementalOracle = {
   async process({ userId, input, element, context }: OracleInput) {
     if (!userId || !input || !element) {
-      throw new Error("Missing required fields: userId, input, or element");
+      throw new Error(&quot;Missing required fields: userId, input, or element&quot;);
     }
 
     const response = await fetchElementalInsights({

@@ -46,7 +46,7 @@ describe("Adaptive Wisdom Engine Tests", () => {
     test("Should detect spiritual bypassing patterns", async () => {
       const bypassingExchanges = [
         {
-          prompt: "I never get angry anymore, I've transcended that",
+          prompt: "I never get angry anymore, I&apos;ve transcended that",
           response: "Anger is a natural human emotion...",
         },
         {
@@ -86,7 +86,7 @@ describe("Adaptive Wisdom Engine Tests", () => {
       const repetitivePrompts = [
         "Why does this keep happening to me?",
         "Why do I always end up here?",
-        "Why can't I break this cycle?",
+        "Why can&apos;t I break this cycle?",
         "Why does this pattern repeat?",
       ];
 
@@ -249,7 +249,7 @@ describe("Adaptive Wisdom Engine Tests", () => {
       await soulMemory.storeMemory({
         userId: testUserId,
         type: "oracle_exchange",
-        content: "I'm trying to let go but it's not working",
+        content: "I&apos;m trying to let go but it&apos;s not working",
         element: "air",
         emotionalTone: "frustrated",
         metadata: {
@@ -442,7 +442,7 @@ describe("Adaptive Wisdom Engine Tests", () => {
       await soulMemory.storeMemory({
         userId: testUserId,
         type: "oracle_exchange",
-        content: "But I don't want anything to change",
+        content: "But I don&apos;t want anything to change",
         element: "earth",
         metadata: { intent: "preserve" },
       });

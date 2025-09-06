@@ -135,7 +135,7 @@ export class SupabaseMemory implements IMemory {
 
     } catch (error) {
       logger.warn('Turn cleanup failed', { userId, error });
-      // Don't throw - cleanup failure shouldn't break the main flow
+      // Don&apos;t throw - cleanup failure shouldn&apos;t break the main flow
     }
   }
 

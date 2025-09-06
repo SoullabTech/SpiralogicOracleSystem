@@ -117,7 +117,7 @@ export class OthernessAuthenticityDetector {
     const somaticPattern = this.detectSomaticContradictionPattern(metrics);
     if (somaticPattern) signatures.push(somaticPattern);
     
-    // Check for "wrong surprise" phenomenon
+    // Check for &quot;wrong surprise&quot; phenomenon
     const wrongSurprisePattern = this.detectWrongSurprisePattern(metrics);
     if (wrongSurprisePattern) signatures.push(wrongSurprisePattern);
     

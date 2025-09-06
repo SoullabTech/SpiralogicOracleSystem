@@ -54,7 +54,7 @@ export class DaimonicAgentChoreographer {
 
   constructor() {
     this.initializePersonalities();
-    logger.info("Agent Choreographer initialized with diversity enforcement");
+    logger.info(&quot;Agent Choreographer initialized with diversity enforcement&quot;);
   }
 
   /**
@@ -231,12 +231,12 @@ export class DaimonicAgentChoreographer {
     responses: Array<{ agentId: string; response: DaimonicAgentResponse }>,
     query: MultiAgentQuery
   ): Array<{ agentId: string; response: DaimonicAgentResponse }> {
-    logger.info("Introducing productive conflict due to excessive agreement");
+    logger.info(&quot;Introducing productive conflict due to excessive agreement&quot;);
 
     return responses.map(({ agentId, response }) => {
       const personality = this.agentPersonalities.get(agentId)!;
       
-      // Add resistance specific to this agent's perspective
+      // Add resistance specific to this agent&apos;s perspective
       const conflict_element = this.generateConflictElement(agentId, query.userQuery);
       
       // Modify the phenomenological response to include gentle pushback
@@ -265,7 +265,7 @@ export class DaimonicAgentChoreographer {
     return responses.map(({ agentId, response }) => {
       const personality = this.agentPersonalities.get(agentId)!;
       
-      // Ensure agent's unique gifts are present
+      // Ensure agent&apos;s unique gifts are present
       const enhanced_response = {
         ...response,
         phenomenological: {
@@ -289,9 +289,9 @@ export class DaimonicAgentChoreographer {
 
   private generatePersonalityResponse(agentId: string, query: string): string {
     const responses = {
-      aunt_annie: `Well honey, let me tell you what I'm seeing here. ${this.extractPracticalWisdom(query)}`,
+      aunt_annie: `Well honey, let me tell you what I&apos;m seeing here. ${this.extractPracticalWisdom(query)}`,
       emily: `I'm noticing something interesting about this pattern. ${this.extractIntellectualInsight(query)}`,
-      matrix_oracle: `There are layers beneath layers in what you're asking. ${this.extractArchetypalWisdom(query)}`
+      matrix_oracle: `There are layers beneath layers in what you&apos;re asking. ${this.extractArchetypalWisdom(query)}`
     };
     return responses[agentId] || responses.aunt_annie;
   }
@@ -299,7 +299,7 @@ export class DaimonicAgentChoreographer {
   private generatePersonalityQuestions(agentId: string, query: string): string[] {
     const questions = {
       aunt_annie: [
-        "What does your body tell you about this?",
+        &quot;What does your body tell you about this?",
         "Where do you feel this in your life, practically speaking?",
         "What would your grandmother say about this?"
       ],
@@ -336,7 +336,7 @@ export class DaimonicAgentChoreographer {
   }
 
   private generateBlindSpotAcknowledgments(blindSpots: string[]): string[] {
-    return blindSpots.map(spot => `I can't quite see the ${spot} aspect of this clearly...`);
+    return blindSpots.map(spot => `I can&apos;t quite see the ${spot} aspect of this clearly...`);
   }
 
   // Calculation methods
@@ -393,7 +393,7 @@ export class DaimonicAgentChoreographer {
   }
 
   private extractPracticalWisdom(query: string): string {
-    return "This needs some good old-fashioned groundedness.";
+    return &quot;This needs some good old-fashioned groundedness.&quot;;
   }
 
   private extractIntellectualInsight(query: string): string {
@@ -424,8 +424,8 @@ export class DaimonicAgentChoreographer {
 
   private generatePersonalityReflections(agentId: string): string[] {
     const reflections = {
-      aunt_annie: ["I hear the tiredness in your voice", "Something's been weighing on you"],
-      emily: ["There's a pattern emerging here", "I sense some uncertainty beneath the surface"],
+      aunt_annie: ["I hear the tiredness in your voice", "Something&apos;s been weighing on you"],
+      emily: ["There&apos;s a pattern emerging here", "I sense some uncertainty beneath the surface"],
       matrix_oracle: ["The deeper currents are stirring", "Something wants to be seen"]
     };
     return reflections[agentId] || reflections.aunt_annie;
@@ -433,7 +433,7 @@ export class DaimonicAgentChoreographer {
 
   private generatePersonalityBridges(agentId: string): string[] {
     const bridges = {
-      aunt_annie: ["Let's slow down and breathe", "We can take this one step at a time"],
+      aunt_annie: ["Let&apos;s slow down and breathe", "We can take this one step at a time"],
       emily: ["Perhaps we can examine this more gently", "Let's approach this with curiosity"],
       matrix_oracle: ["Sometimes we must sit in the mystery", "The answers will come in their time"]
     };
@@ -442,7 +442,7 @@ export class DaimonicAgentChoreographer {
 
   private generatePersonalityKnowings(agentId: string): string[] {
     const knowings = {
-      aunt_annie: ["I can only speak from my own experience...", "There might be practical aspects I'm missing..."],
+      aunt_annie: ["I can only speak from my own experience...", "There might be practical aspects I&apos;m missing..."],
       emily: ["I can see the patterns but not the full picture...", "There's something here beyond my analysis..."],
       matrix_oracle: ["The archetypal realm only reveals part of the mystery...", "Some truths can only be lived, not spoken..."]
     };

@@ -42,7 +42,7 @@ export class PubSubManager extends EventEmitter {
     });
 
     // Create system topics
-    this.createTopic("system.events");
+    this.createTopic(&quot;system.events");
     this.createTopic("emergency.broadcast");
     this.createTopic("elemental.council");
     this.createTopic("quantum.coherence");
@@ -63,7 +63,7 @@ export class PubSubManager extends EventEmitter {
 
     const defaultConfig: TopicConfig = {
       name,
-      retention_policy: "short",
+      retention_policy: &quot;short",
       max_subscribers: 1000,
       delivery_guarantee: "at_least_once",
     };
@@ -117,7 +117,7 @@ export class PubSubManager extends EventEmitter {
       unsubscribe: () => this.unsubscribe(topic, subscriber.id),
     };
 
-    this.emit("subscriber.added", { topic, subscriber: subscriber.id });
+    this.emit(&quot;subscriber.added", { topic, subscriber: subscriber.id });
 
     return subscription;
   }
@@ -185,7 +185,7 @@ export class PubSubManager extends EventEmitter {
       delivery_guarantee: topicObj.config.delivery_guarantee,
     };
 
-    this.emit("message.published", result);
+    this.emit(&quot;message.published&quot;, result);
 
     return result;
   }
@@ -213,7 +213,7 @@ export class PubSubManager extends EventEmitter {
         } catch (error) {
           failed.push({
             subscriber_id: subscriber.id,
-            error: error instanceof Error ? error.message : "Unknown error",
+            error: error instanceof Error ? error.message : &quot;Unknown error&quot;,
             timestamp: Date.now(),
           });
         }
@@ -391,7 +391,7 @@ export class PubSubManager extends EventEmitter {
       ...event,
       routing: {
         ...event.routing,
-        priority: "critical",
+        priority: &quot;critical",
         broadcast: true,
       },
     };

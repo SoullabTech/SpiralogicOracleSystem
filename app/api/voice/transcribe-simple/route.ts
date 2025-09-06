@@ -26,7 +26,6 @@ export async function POST(request: NextRequest) {
       type: file.type || "audio/webm"
     });
 
-    console.log(`🎤 Processing transcription for ${userId}, file size: ${buffer.length} bytes`);
 
     // Transcribe using OpenAI Whisper
     const transcription = await openai.audio.transcriptions.create({
@@ -36,7 +35,6 @@ export async function POST(request: NextRequest) {
     });
 
     const transcribedText = transcription.text.trim();
-    console.log(`✅ Transcription successful: "${transcribedText.slice(0, 50)}..."`);
 
     return NextResponse.json({
       success: true,

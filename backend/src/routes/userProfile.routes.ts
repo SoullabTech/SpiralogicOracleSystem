@@ -11,7 +11,7 @@ const router = Router();
 // Public route for basic health check
 router.get("/health", (_req, res) => {
   res.status(200).json({
-    status: "OK",
+    status: &quot;OK&quot;,
     message: "Spiralogic Oracle backend is running",
     timestamp: new Date().toISOString(),
   });

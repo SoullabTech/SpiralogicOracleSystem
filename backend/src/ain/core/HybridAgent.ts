@@ -34,7 +34,7 @@ export class HybridAgent extends EventEmitter {
       payload: {
         content: payload,
         metadata: {
-          processed_at: "hybrid",
+          processed_at: &quot;hybrid",
           intensity: 1.0,
         },
         elemental_signature: {

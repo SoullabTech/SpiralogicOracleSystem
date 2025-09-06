@@ -18,7 +18,7 @@ export class PersonalOracleAgent {
 
   async processMessage(message: string): Promise<any> {
     return {
-      content: "Oracle response placeholder",
+      content: &quot;Oracle response placeholder",
       emotion: "neutral",
       transformationType: "none",
       timestamp: new Date().toISOString()

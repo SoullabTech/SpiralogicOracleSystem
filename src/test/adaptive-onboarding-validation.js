@@ -100,14 +100,14 @@ function evaluateCondition(context) {
 
 const adaptiveTemplates = {
   firstContact: [
-    "Welcome. This is a space for you. What feels present right now?",
-    "I'm glad you're here. Where shall we begin?", 
-    "I'm listening. What's moving in you today?"
+    &quot;Welcome. This is a space for you. What feels present right now?&quot;,
+    "I&apos;m glad you&apos;re here. Where shall we begin?", 
+    "I&apos;m listening. What&apos;s moving in you today?"
   ],
   tentativeExploration: [
     "That sounds important. Can you tell me more about what you mean?",
     "I hear some hesitation. Want to take this slowly?",
-    "Let's stay simple — what matters most in this moment?"
+    "Let&apos;s stay simple — what matters most in this moment?"
   ],
   overwhelmDetected: [
     "Let's pause here together. Take a moment… breathe. You're not alone in this.",
@@ -127,7 +127,7 @@ console.log(`✓ Modifiers: warmth=${firstContactCondition.responseModifiers.war
 console.log();
 
 console.log('🔍 Test 2: Crisis Override Detection');
-const crisisContext = mockOnboardingContext(5, 0.5, 0.8, 0.6, "I can't handle this anymore, everything is overwhelming");
+const crisisContext = mockOnboardingContext(5, 0.5, 0.8, 0.6, "I can&apos;t handle this anymore, everything is overwhelming");
 const crisisCondition = evaluateCondition(crisisContext);
 console.log(`✓ Condition: ${crisisCondition.name}`);
 console.log(`✓ Stage Override: ${crisisCondition.stageOverride} (should be 1 - safety first)`);

@@ -94,7 +94,7 @@ export class OracleFailsafeManager {
     query: OracleQuery,
     error: Error,
   ): Promise<OracleResponse> {
-    logger.warn("Oracle Failsafe Activated:", {
+    logger.warn(&quot;Oracle Failsafe Activated:&quot;, {
       userId: query.userId,
       error: error.message,
       query: query.input.substring(0, 50),
@@ -208,7 +208,7 @@ export class OracleFailsafeManager {
       content,
       archetype: alternateArchetype,
       metadata: {
-        failsafeLevel: "voice_retry",
+        failsafeLevel: &quot;voice_retry&quot;,
         originalError: error.message,
         recoveryMethod: "alternate_archetype_voice",
         spiritualContinuity: true,
@@ -232,7 +232,7 @@ export class OracleFailsafeManager {
       content,
       archetype,
       metadata: {
-        failsafeLevel: "cached_voice",
+        failsafeLevel: &quot;cached_voice&quot;,
         originalError: error.message,
         recoveryMethod: "cached_voice_fragment",
         spiritualContinuity: true,
@@ -254,7 +254,7 @@ export class OracleFailsafeManager {
       content,
       archetype,
       metadata: {
-        failsafeLevel: "text_symbolic",
+        failsafeLevel: &quot;text_symbolic&quot;,
         originalError: error.message,
         recoveryMethod: "symbolic_text_generation",
         spiritualContinuity: true,
@@ -276,7 +276,7 @@ export class OracleFailsafeManager {
       content,
       archetype,
       metadata: {
-        failsafeLevel: "poetic_oracle",
+        failsafeLevel: &quot;poetic_oracle&quot;,
         originalError: error.message,
         recoveryMethod: "poetic_wisdom_generation",
         spiritualContinuity: true,
@@ -295,7 +295,7 @@ export class OracleFailsafeManager {
 
     return {
       content,
-      archetype: "aether",
+      archetype: &quot;aether&quot;,
       metadata: {
         failsafeLevel: "sacred_holding",
         originalError: error.message,

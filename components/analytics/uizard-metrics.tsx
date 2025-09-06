@@ -130,7 +130,6 @@ class UizardAnalytics {
   private sendToAnalytics(event: string, data: any) {
     // For development, just log
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[Uizard Analytics] ${event}:`, data);
       return;
     }
     

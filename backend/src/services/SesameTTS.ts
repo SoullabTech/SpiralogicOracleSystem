@@ -137,15 +137,19 @@ export class SesameTTS {
    * Synthesize speech from text with prosody support
    */
   async synthesize(text: string, options: TTSOptions = {}): Promise<string | null> {
+    console.log('[SesameTTS] TTS input:', text.substring(0, 100) + '...');
+    
     try {
       // Skip if no Sesame URL configured
       if (!this.sesameUrl) {
         logger.warn('Sesame TTS not configured, returning null audio URL');
+        console.log('[SesameTTS] No Sesame URL configured, skipping TTS');
         return null;
       }
 
       // Parse prosody markers
       const { cleanText, markers } = this.parseProsodyMarkers(text);
+      console.log('[SesameTTS] Prosody markers found:', markers.length);
       
       // Convert to SSML if markers present
       const ssmlText = markers.length > 0 
@@ -167,8 +171,11 @@ export class SesameTTS {
       };
 
       // Call Sesame TTS endpoint
+      const ttsEndpoint = `${this.sesameUrl}/v1/text-to-speech/${options.voice || this.defaultVoice}`;
+      console.log('[SesameTTS] Calling TTS endpoint:', ttsEndpoint);
+      
       const response = await axios.post(
-        `${this.sesameUrl}/v1/text-to-speech/${options.voice || this.defaultVoice}`,
+        ttsEndpoint,
         ttsPayload,
         {
           headers: {
@@ -178,6 +185,8 @@ export class SesameTTS {
           responseType: 'arraybuffer'
         }
       );
+      
+      console.log('[SesameTTS] TTS response status:', response.status);
 
       // Convert audio to base64 URL
       const audioBuffer = Buffer.from(response.data);
@@ -190,13 +199,16 @@ export class SesameTTS {
         audioSize: audioBuffer.length
       });
 
+      console.log('[SesameTTS] TTS success, audio size:', audioBuffer.length, 'bytes');
       return audioUrl;
 
     } catch (error) {
+      console.error('[SesameTTS] TTS synthesis failed:', error.message);
       logger.error('TTS synthesis failed', error);
       
       // Fallback: try direct ElevenLabs if Sesame fails
       if (process.env.ELEVENLABS_API_KEY) {
+        console.log('[SesameTTS] Falling back to direct ElevenLabs');
         return this.fallbackToElevenLabs(text, options);
       }
       

@@ -56,7 +56,7 @@ export interface SemanticCluster {
   culturalVariations: Map<string, string>;
   archetypalSignature: string;
   emergencePhase:
-    | "seeding"
+    | &quot;seeding&quot;
     | "growing"
     | "flowering"
     | "fruiting"
@@ -278,7 +278,7 @@ export class EnhancedSacredIntelligence {
 
   // Private helper methods for shadow detection
   private detectRepetitiveLanguage(queries: string[]): string | null {
-    const phrases = queries.join(" ").split(/[.!?]+/);
+    const phrases = queries.join(&quot; &quot;).split(/[.!?]+/);
     const phraseCounts = new Map<string, number>();
 
     phrases.forEach((phrase) => {
@@ -290,7 +290,7 @@ export class EnhancedSacredIntelligence {
 
     for (const [phrase, count] of phraseCounts.entries()) {
       if (count >= 3) {
-        return `Repetitive pattern: "${phrase}"`;
+        return `Repetitive pattern: "${phrase}&quot;`;
       }
     }
 
@@ -299,12 +299,12 @@ export class EnhancedSacredIntelligence {
 
   private detectAvoidanceLanguage(queries: string[]): string | null {
     const avoidancePatterns = [
-      /i can't seem to/i,
+      /i can&apos;t seem to/i,
       /i always/i,
       /i never/i,
       /why do i/i,
-      /i don't understand why/i,
-      /it's not my fault/i,
+      /i don&apos;t understand why/i,
+      /it&apos;s not my fault/i,
       /they make me/i,
     ];
 
@@ -420,7 +420,7 @@ export class EnhancedSacredIntelligence {
 
   private mapEmotionToElement(emotion: string): string {
     const emotionElementMap: Record<string, string> = {
-      angry: "fire",
+      angry: &quot;fire&quot;,
       frustrated: "fire",
       excited: "fire",
       passionate: "fire",
@@ -487,7 +487,7 @@ export class EnhancedSacredIntelligence {
   // Placeholder implementations for complex methods
   private async loadSemanticClusters(): Promise<void> {
     // Load existing semantic clusters from database
-    logger.info("Enhanced Sacred Intelligence: Semantic clusters loaded");
+    logger.info(&quot;Enhanced Sacred Intelligence: Semantic clusters loaded&quot;);
   }
 
   private extractRepeatingTheme(queries: string[]): string {
@@ -516,7 +516,7 @@ export class EnhancedSacredIntelligence {
     detection: ShadowPatternDetection,
   ): Promise<void> {
     // Store shadow pattern for collective learning
-    logger.info("Shadow insight stored", {
+    logger.info(&quot;Shadow insight stored&quot;, {
       userId,
       pattern: detection.shadowElement,
     });
@@ -524,7 +524,7 @@ export class EnhancedSacredIntelligence {
 
   private identifyUnderlyingNeed(emotion: string): string {
     const needMap: Record<string, string> = {
-      angry: "boundaries and respect",
+      angry: &quot;boundaries and respect&quot;,
       sad: "connection and comfort",
       afraid: "safety and security",
       anxious: "clarity and control",
@@ -551,7 +551,7 @@ export class EnhancedSacredIntelligence {
       string,
       EmotionalResonanceMap["integrationTone"]
     > = {
-      angry: "direct",
+      angry: &quot;direct&quot;,
       sad: "nurturing",
       afraid: "gentle",
       overwhelmed: "gentle",
@@ -606,7 +606,7 @@ export class EnhancedSacredIntelligence {
     patterns: ElementalPattern[],
   ): Promise<SemanticCluster> {
     return {
-      clusterName: "Transformation",
+      clusterName: &quot;Transformation&quot;,
       coreThemes: ["change", "growth"],
       relatedPatterns: [],
       culturalVariations: new Map(),
@@ -617,13 +617,13 @@ export class EnhancedSacredIntelligence {
 
   // Self-healing methods
   private async recalibratePatternThresholds(): Promise<void> {
-    logger.info("Recalibrating pattern recognition thresholds");
+    logger.info(&quot;Recalibrating pattern recognition thresholds&quot;);
   }
   private async optimizeCacheStrategy(): Promise<void> {
-    logger.info("Optimizing cache strategy");
+    logger.info(&quot;Optimizing cache strategy&quot;);
   }
   private async clearAgentCommunicationBacklog(): Promise<void> {
-    logger.info("Clearing agent communication backlog");
+    logger.info(&quot;Clearing agent communication backlog");
   }
   private async regenerateUniversalFieldConnections(): Promise<void> {
     logger.info("Regenerating universal field connections");

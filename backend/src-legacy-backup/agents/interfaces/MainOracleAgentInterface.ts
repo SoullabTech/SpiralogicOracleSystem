@@ -138,7 +138,7 @@ export interface CollectiveSalonInfo {
   salonId: string;
   theme: string;
   type:
-    | "world_cafe"
+    | &quot;world_cafe&quot;
     | "council_of_elders"
     | "elemental_salon"
     | "wisdom_circle";

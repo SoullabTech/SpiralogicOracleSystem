@@ -85,7 +85,7 @@ async function runTests() {
 
     // Test 2: High formality
     console.log('✅ Test 2: High formality transformation');
-    const formalResponse = "You're gonna love this cosmic insight!";
+    const formalResponse = "You&apos;re gonna love this cosmic insight!";
     const formalContext = {
       intent: 'guidance',
       prefs: createMockPersonaPrefs(),

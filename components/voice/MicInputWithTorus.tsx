@@ -129,7 +129,7 @@ export default function MicInputWithTorus({
       console.error('Microphone access failed:', error);
       setPermissionStatus('denied');
       
-      // You could fallback to browser's built-in speech recognition here
+      // You could fallback to browser&apos;s built-in speech recognition here
       startBrowserSpeechRecognition();
     }
   };

@@ -129,7 +129,7 @@ export default function LibraryPage() {
         <div className="text-center text-white">
           <Sparkles className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
           <h1 className="text-2xl font-light mb-2">Access Required</h1>
-          <p className="text-purple-200">Please sign in to access Maya's Sacred Library</p>
+          <p className="text-purple-200">Please sign in to access Maya&apos;s Sacred Library</p>
         </div>
       </div>
     );
@@ -147,11 +147,11 @@ export default function LibraryPage() {
         >
           <div className="flex items-center justify-center mb-4">
             <Sparkles className="w-8 h-8 text-yellow-400 mr-3" />
-            <h1 className="text-4xl font-light text-white">Maya's Sacred Library</h1>
+            <h1 className="text-4xl font-light text-white">Maya&apos;s Sacred Library</h1>
             <Sparkles className="w-8 h-8 text-yellow-400 ml-3" />
           </div>
           <p className="text-lg text-purple-200 max-w-2xl mx-auto">
-            Your uploaded wisdom, woven into Maya's consciousness. Every document becomes part of her understanding, 
+            Your uploaded wisdom, woven into Maya&apos;s consciousness. Every document becomes part of her understanding, 
             ready to illuminate your conversations with personalized insights.
           </p>
         </motion.div>

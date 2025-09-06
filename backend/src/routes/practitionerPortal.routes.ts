@@ -10,7 +10,7 @@ const isPractitioner = async (req: any, res: any, next: any) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ success: false, error: "Unauthorized" });
+      return res.status(401).json({ success: false, error: &quot;Unauthorized&quot; });
     }
 
     // Check if user has practitioner role
@@ -42,7 +42,7 @@ practitionerPortalRouter.get(
     try {
       const practitionerId = req.user!.id;
 
-      // Get practitioner's clients
+      // Get practitioner&apos;s clients
       const { data: clients, error: clientsError } = await supabase
         .from("practitioner_clients")
         .select("*, spiralogic_reports(count)")
@@ -120,7 +120,7 @@ practitionerPortalRouter.post(
       if (!validationResult.success) {
         return res.status(400).json({
           success: false,
-          error: "Invalid client data",
+          error: &quot;Invalid client data&quot;,
           details: validationResult.error.errors,
         });
       }
@@ -257,7 +257,7 @@ practitionerPortalRouter.get(
         });
       }
 
-      // Get client's reports
+      // Get client&apos;s reports
       const { data: reports } = await supabase
         .from("spiralogic_reports")
         .select("*, birth_charts(*)")

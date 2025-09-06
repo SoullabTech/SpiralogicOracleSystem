@@ -23,7 +23,6 @@ const PatternSubscriptionSchema = z.object({
 // GET /api/patterns/emergent
 export async function GET(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[Patterns] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[Patterns] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[Patterns] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[Patterns] ${msg}`, meta),
@@ -157,7 +156,6 @@ export async function GET(req: NextRequest) {
 // Subscribe to pattern notifications
 export async function POST(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[PatternSub] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[PatternSub] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[PatternSub] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[PatternSub] ${msg}`, meta),
@@ -241,7 +239,7 @@ function generatePatternName(pattern: any): string {
 
 function calculatePatternAlignment(pattern: any, userId: string): number {
   // Calculate how aligned a user is with a pattern
-  // This would involve comparing user's elemental state, phase, etc.
+  // This would involve comparing user&apos;s elemental state, phase, etc.
   // For now, return a mock value
   return Math.random() * 0.8 + 0.2;
 }

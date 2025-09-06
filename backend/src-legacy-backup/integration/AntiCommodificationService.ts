@@ -82,19 +82,19 @@ export class AntiCommodificationService {
 
   private generateHumanityReplacement(transformationPhrase: string): string {
     const replacements = {
-      "transform your life":
+      &quot;transform your life&quot;:
         "support your ongoing development as a human being",
       "breakthrough to new levels":
         "explore new perspectives while honoring where you are",
       "unlock your potential":
-        "discover what's already present in your experience",
+        "discover what&apos;s already present in your experience",
       "activate your power": "connect with your inherent human capacity",
       "quantum leap": "take thoughtful steps in your development",
       "instant healing": "support your natural healing process over time",
       "permanent change":
         "cultivate sustainable practices that serve your growth",
       "never struggle again":
-        "develop tools for navigating life's inevitable challenges",
+        "develop tools for navigating life&apos;s inevitable challenges",
       "complete transformation": "support your ongoing development journey",
       "life-changing results": "meaningful support for your growth process",
       "guaranteed success": "tools that some people find helpful",

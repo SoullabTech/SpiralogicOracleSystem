@@ -71,7 +71,6 @@ export default function BetaFeedbackPage() {
     try {
       // Simulate API call - in production, this would send to backend
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log("Beta Feedback Submitted:", feedback);
       setSubmitted(true);
     } catch (error) {
       console.error("Feedback submission error:", error);
@@ -124,7 +123,7 @@ export default function BetaFeedbackPage() {
           <h1 className="text-4xl font-bold mb-4">Thank You!</h1>
           <p className="text-lg opacity-80 mb-8">
             Your feedback is invaluable in shaping the future of consciousness
-            technology. We're honored to have you as part of this revolutionary
+            technology. We&apos;re honored to have you as part of this revolutionary
             journey.
           </p>
           <div className="space-y-4">
@@ -292,7 +291,7 @@ export default function BetaFeedbackPage() {
                     }
                     rows={3}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50 resize-none"
-                    placeholder="New features, agent capabilities, or platform enhancements you'd love to see..."
+                    placeholder="New features, agent capabilities, or platform enhancements you&apos;d love to see..."
                   />
                 </div>
 
@@ -345,7 +344,7 @@ export default function BetaFeedbackPage() {
               🌟 Beta Tester Appreciation
             </h3>
             <p className="opacity-80 text-sm">
-              As a beta tester, you're part of a revolutionary moment in
+              As a beta tester, you&apos;re part of a revolutionary moment in
               consciousness technology. Your insights help us create tools that
               serve the evolution of human awareness and wisdom.
             </p>

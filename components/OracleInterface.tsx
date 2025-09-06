@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import EnhancedVoiceRecorder from "./EnhancedVoiceRecorder";
 import FileUpload from "./FileUpload";
 import JournalModal from "./JournalModal";
-import { useMayaStream } from "@/hooks/useMayaStream";
+import { useMaiaStream } from "@/hooks/useMayaStream";
 
 export default function OracleInterface() {
   const [showJournalModal, setShowJournalModal] = useState(false);
@@ -218,7 +218,6 @@ export default function OracleInterface() {
         onClose={() => setShowJournalModal(false)}
         onSuccess={() => {
           // Optionally refresh memory view or show success message
-          console.log('Journal entry created');
         }}
       />
     </div>

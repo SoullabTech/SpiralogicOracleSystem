@@ -125,7 +125,6 @@ export const EnhancedVoiceControls: React.FC<EnhancedVoiceControlsProps> = ({
         // Start silence timer if voice was detected before
         if (settings.autoListen && !silenceTimerRef.current && mediaRecorderRef.current?.state === 'recording') {
           silenceTimerRef.current = setTimeout(() => {
-            console.log('🔇 Silence detected, stopping recording');
             stopRecording();
           }, settings.silenceDuration);
         }
@@ -205,7 +204,6 @@ export const EnhancedVoiceControls: React.FC<EnhancedVoiceControlsProps> = ({
       mediaRecorder.start(100);
       setIsListening(true);
       
-      console.log('🎤 Recording started', settings.autoListen ? '(auto-listen mode)' : '');
       
     } catch (error) {
       console.error('Microphone access error:', error);
@@ -233,7 +231,6 @@ export const EnhancedVoiceControls: React.FC<EnhancedVoiceControlsProps> = ({
         silenceTimerRef.current = null;
       }
       
-      console.log('🛑 Recording stopped');
     }
   }, []);
 
@@ -484,7 +481,7 @@ export const EnhancedVoiceControls: React.FC<EnhancedVoiceControlsProps> = ({
           <button
             onClick={() => {
               const audio = new Audio();
-              const utterance = new SpeechSynthesisUtterance("Hello! This is how I'll sound with these settings.");
+              const utterance = new SpeechSynthesisUtterance("Hello! This is how I&apos;ll sound with these settings.");
               utterance.rate = settings.speed;
               utterance.pitch = settings.pitch;
               window.speechSynthesis.speak(utterance);

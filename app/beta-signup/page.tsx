@@ -83,17 +83,17 @@ export default function BetaSignupPage() {
           <div className="w-24 h-24 bg-sacred-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-12 h-12 text-sacred-gold" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-4">Welcome to Maya's Beta!</h1>
+          <h1 className="text-2xl font-bold text-white mb-4">Welcome to Maya&apos;s Beta!</h1>
           <p className="text-gray-300 mb-6">
-            Your application has been received. We'll be in touch within 48 hours with your unique access link.
+            Your application has been received. We&apos;ll be in touch within 48 hours with your unique access link.
           </p>
           <div className="bg-[#1A1F2E] border border-sacred-gold/20 rounded-lg p-4">
             <p className="text-sacred-gold font-medium text-sm">What happens next?</p>
             <ul className="text-gray-400 text-sm mt-2 space-y-1 text-left">
-              <li>• We'll review your application</li>
+              <li>• We&apos;ll review your application</li>
               <li>• Send your personal Maya session link</li>
               <li>• Guide you through the first 20 minutes</li>
-              <li>• Gather your feedback to shape Maya's evolution</li>
+              <li>• Gather your feedback to shape Maya&apos;s evolution</li>
             </ul>
           </div>
         </motion.div>
@@ -145,7 +145,7 @@ export default function BetaSignupPage() {
             <div className="space-y-4">
               {[
                 { icon: Sparkles, title: "Sacred Torus Interface", desc: "Watch Tesla-inspired geometry pulse with your voice" },
-                { icon: Mic, title: "Natural Voice Flow", desc: "Speak freely, hear thoughtful responses in Maya's voice" },
+                { icon: Mic, title: "Natural Voice Flow", desc: "Speak freely, hear thoughtful responses in Maya&apos;s voice" },
                 { icon: Brain, title: "Memory Continuity", desc: "Maya remembers your conversations across sessions" },
                 { icon: Upload, title: "Multimodal Understanding", desc: "Upload files, images, URLs—Maya analyzes everything" }
               ].map((feature, index) => (
@@ -289,7 +289,7 @@ export default function BetaSignupPage() {
                     className="mt-1 rounded border-gray-600 bg-[#0A0D16] text-sacred-gold focus:ring-sacred-gold"
                   />
                   <span className="text-gray-300 text-sm">
-                    I consent to anonymous analytics being collected during my beta testing session to improve Maya's performance.
+                    I consent to anonymous analytics being collected during my beta testing session to improve Maya&apos;s performance.
                   </span>
                 </label>
                 

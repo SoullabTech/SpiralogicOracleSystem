@@ -118,7 +118,7 @@ export class MemoryStore {
 
   async getTrustMetrics(userId: string): Promise<any> {
     const result = await this.db.get(
-      "SELECT * FROM user_trust_metrics WHERE user_id = ?",
+      &quot;SELECT * FROM user_trust_metrics WHERE user_id = ?",
       [userId]
     );
     return result ? JSON.parse(result.metrics_json) : null;
@@ -145,7 +145,7 @@ export class MemoryStore {
   async getJournalEntry(userId: string, entryId: string): Promise<any> {
     const id = entryId.replace('journal_', '');
     return this.db.get(
-      "SELECT * FROM journal_entries WHERE user_id = ? AND id = ?",
+      &quot;SELECT * FROM journal_entries WHERE user_id = ? AND id = ?",
       [userId, id]
     );
   }
@@ -161,7 +161,7 @@ export class MemoryStore {
   async getUploads(userId: string, limit = 20, fileType?: string): Promise<any[]> {
     if (fileType) {
       return this.db.all(
-        "SELECT * FROM uploads WHERE user_id = ? AND file_type = ? ORDER BY created_at DESC LIMIT ?",
+        &quot;SELECT * FROM uploads WHERE user_id = ? AND file_type = ? ORDER BY created_at DESC LIMIT ?&quot;,
         [userId, fileType, limit]
       );
     }
@@ -174,7 +174,7 @@ export class MemoryStore {
   async getUpload(userId: string, uploadId: string): Promise<any> {
     const id = uploadId.replace('upload_', '');
     return this.db.get(
-      "SELECT * FROM uploads WHERE user_id = ? AND id = ?",
+      &quot;SELECT * FROM uploads WHERE user_id = ? AND id = ?&quot;,
       [userId, id]
     );
   }
@@ -203,7 +203,7 @@ export class MemoryStore {
 
   async getDaimonicEncounters(userId: string, limit = 20): Promise<any[]> {
     const rows = await this.db.all(
-      "SELECT * FROM daimonic_encounters WHERE user_id = ? ORDER BY timestamp DESC LIMIT ?",
+      &quot;SELECT * FROM daimonic_encounters WHERE user_id = ? ORDER BY timestamp DESC LIMIT ?&quot;,
       [userId, limit]
     );
     
@@ -216,7 +216,7 @@ export class MemoryStore {
 
   async getLastDaimonicEncounter(userId: string): Promise<any> {
     const row = await this.db.get(
-      "SELECT * FROM daimonic_encounters WHERE user_id = ? ORDER BY timestamp DESC LIMIT 1",
+      &quot;SELECT * FROM daimonic_encounters WHERE user_id = ? ORDER BY timestamp DESC LIMIT 1&quot;,
       [userId]
     );
     

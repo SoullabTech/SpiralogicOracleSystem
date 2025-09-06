@@ -37,7 +37,7 @@ export class WorldviewPluralityService {
   
   // Lens descriptions to help users understand frameworks
   private readonly lensDescriptions: Record<InterpretiveLens, string> = {
-    psychological: "Internal mental processes, unconscious patterns, and personal psychology",
+    psychological: &quot;Internal mental processes, unconscious patterns, and personal psychology&quot;,
     daimonic: "Autonomous forces or 'Others' that operate beyond personal control",
     neurobiological: "Brain states, neurotransmitters, and biological processes",
     systemic: "Environmental factors, social dynamics, and external influences", 
@@ -49,10 +49,10 @@ export class WorldviewPluralityService {
   // Gentle reminders that rotate to prevent habituation
   private readonly pluralityReminders: string[] = [
     "Remember: These are interpretive frameworks, not truth claims. What feels most useful to you right now?",
-    "All perspectives can coexist - you don't have to choose just one way of understanding this.",
-    "These are lenses for exploring, not conclusions about what's real. Which resonates with you?",
+    "All perspectives can coexist - you don&apos;t have to choose just one way of understanding this.",
+    "These are lenses for exploring, not conclusions about what&apos;s real. Which resonates with you?",
     "Different frameworks can all be partially true. What combination serves your wellbeing?",
-    "Consider these as tools rather than truths - use what helps, leave what doesn't."
+    "Consider these as tools rather than truths - use what helps, leave what doesn&apos;t."
   ];
   
   static getInstance(): WorldviewPluralityService {
@@ -85,7 +85,7 @@ export class WorldviewPluralityService {
       interpretations: sortedInterpretations,
       pluralityReminder: this.getRotatingReminder(),
       lensRotationSuggestion: this.shouldSuggestRotation() ? 
-        "Try exploring this through a different lens - sometimes new perspectives reveal hidden aspects." : 
+        &quot;Try exploring this through a different lens - sometimes new perspectives reveal hidden aspects.&quot; : 
         undefined
     };
   }
@@ -102,7 +102,7 @@ export class WorldviewPluralityService {
       name: 'Psychological Lens',
       description: this.lensDescriptions.psychological,
       interpretation: await this.generatePsychologicalInterpretation(experience),
-      practicalAction: "Consider journaling about the emotions and thoughts this brings up."
+      practicalAction: &quot;Consider journaling about the emotions and thoughts this brings up.&quot;
     });
     
     // Daimonic lens  
@@ -129,7 +129,7 @@ export class WorldviewPluralityService {
       name: 'Systemic Lens', 
       description: this.lensDescriptions.systemic,
       interpretation: await this.generateSystemicInterpretation(experience),
-      practicalAction: "Look at what's happening in your environment, relationships, and social context."
+      practicalAction: "Look at what&apos;s happening in your environment, relationships, and social context."
     });
     
     // Somatic lens
@@ -149,7 +149,7 @@ export class WorldviewPluralityService {
    */
   private async generatePsychologicalInterpretation(experience: string): Promise<string> {
     if (experience.includes('pattern') || experience.includes('synchron')) {
-      return "Through a psychological lens, this could be your unconscious mind recognizing patterns and bringing them to awareness - the brain's natural meaning-making process at work.";
+      return &quot;Through a psychological lens, this could be your unconscious mind recognizing patterns and bringing them to awareness - the brain&apos;s natural meaning-making process at work.&quot;;
     }
     
     if (experience.includes('resistance') || experience.includes('obstacle')) {
@@ -157,7 +157,7 @@ export class WorldviewPluralityService {
     }
     
     if (experience.includes('vision') || experience.includes('insight')) {
-      return "From this perspective, insights often emerge when we're relaxed enough for unconscious processing to surface into conscious awareness.";
+      return "From this perspective, insights often emerge when we&apos;re relaxed enough for unconscious processing to surface into conscious awareness.";
     }
     
     return "Through a psychological lens, this experience could reflect your mind's natural process of integration, making sense of information in creative ways.";
@@ -168,11 +168,11 @@ export class WorldviewPluralityService {
    */
   private async generateDaimonicInterpretation(experience: string): Promise<string> {
     if (experience.includes('resistance') || experience.includes('demand')) {
-      return "Through a daimonic lens, this could be experienced as an autonomous force making demands that your ego wouldn't make - something that maintains its otherness while guiding development.";
+      return &quot;Through a daimonic lens, this could be experienced as an autonomous force making demands that your ego wouldn&apos;t make - something that maintains its otherness while guiding development.&quot;;
     }
     
     if (experience.includes('synchron') || experience.includes('meaning')) {
-      return "From this perspective, this might be the 'important Other' speaking through circumstances that won't fit your usual categories.";
+      return "From this perspective, this might be the 'important Other' speaking through circumstances that won&apos;t fit your usual categories.";
     }
     
     if (experience.includes('pattern') || experience.includes('message')) {
@@ -187,7 +187,7 @@ export class WorldviewPluralityService {
    */
   private async generateNeurobiologicalInterpretation(experience: string): Promise<string> {
     if (experience.includes('insight') || experience.includes('clarity')) {
-      return "Neurobiologically, insights often occur when the default mode network quiets, allowing new neural connections to form and previously unlinked information to integrate.";
+      return &quot;Neurobiologically, insights often occur when the default mode network quiets, allowing new neural connections to form and previously unlinked information to integrate.&quot;;
     }
     
     if (experience.includes('energy') || experience.includes('intense')) {
@@ -198,7 +198,7 @@ export class WorldviewPluralityService {
       return "The brain is constantly seeking patterns - this could be your pattern recognition systems working on information that has been processing in the background.";
     }
     
-    return "Neurobiologically, experiences like this often involve the brain's meaning-making networks becoming more active, possibly due to changes in sleep, stress, or attention patterns.";
+    return "Neurobiologically, experiences like this often involve the brain&apos;s meaning-making networks becoming more active, possibly due to changes in sleep, stress, or attention patterns.";
   }
   
   /**
@@ -206,7 +206,7 @@ export class WorldviewPluralityService {
    */
   private async generateSystemicInterpretation(experience: string): Promise<string> {
     if (experience.includes('change') || experience.includes('shift')) {
-      return "Systemically, this might reflect changes in your environment, relationships, or social context that are affecting your internal landscape.";
+      return &quot;Systemically, this might reflect changes in your environment, relationships, or social context that are affecting your internal landscape.";
     }
     
     if (experience.includes('pattern') || experience.includes('theme')) {

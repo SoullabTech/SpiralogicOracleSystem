@@ -157,7 +157,7 @@ export async function GET(req: NextRequest) {
       where: whereClause
     });
 
-    // Maya's reflection on the library
+    // Maya&apos;s reflection on the library
     const mayaReflection = generateMayaLibraryReflection(libraryFiles);
 
     return NextResponse.json({

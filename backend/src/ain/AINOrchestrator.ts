@@ -29,7 +29,7 @@ export class AINOrchestrator extends EventEmitter {
     this.config = config;
     this.pubsub = PubSubManager.getInstance();
     this.orchestrationState = {
-      status: "initializing",
+      status: &quot;initializing&quot;,
       services_online: new Set(),
       current_load: new Map(),
       last_health_check: 0,
@@ -98,7 +98,7 @@ export class AINOrchestrator extends EventEmitter {
     for (const element of this.config.edge_services) {
       const service = serviceMap[element];
       if (service) {
-        await this.initializeService(element, service, "edge");
+        await this.initializeService(element, service, &quot;edge");
       }
     }
 
@@ -152,7 +152,7 @@ export class AINOrchestrator extends EventEmitter {
    */
   private setupOrchestrationMonitoring(): void {
     // Monitor universal field coherence
-    this.pubsub.subscribe("coherence.state", async (event) => {
+    this.pubsub.subscribe(&quot;coherence.state&quot;, async (event) => {
       await this.handleCoherenceUpdate(event);
     });
 
@@ -286,7 +286,7 @@ export class AINOrchestrator extends EventEmitter {
 
       return {
         service: element,
-        status: isResponsive ? "healthy" : "unhealthy",
+        status: isResponsive ? &quot;healthy&quot; : "unhealthy",
         details: {
           response_time: responseTime,
           metrics,
@@ -479,7 +479,7 @@ export class AINOrchestrator extends EventEmitter {
 
     // Enable aggressive caching
     await this.pubsub.publish(
-      "system.optimization",
+      &quot;system.optimization&quot;,
       this.createSystemEvent("system.optimization", {
         mode: "performance",
         cache_aggressive: true,
@@ -500,7 +500,7 @@ export class AINOrchestrator extends EventEmitter {
 
     // Focus on coherence building
     await this.pubsub.publish(
-      "system.stabilization",
+      &quot;system.stabilization",
       this.createSystemEvent("system.stabilization", {
         mode: "stability",
         focus_coherence: true,
@@ -521,7 +521,7 @@ export class AINOrchestrator extends EventEmitter {
         id: this.generateEventId(),
         timestamp: Date.now(),
         source: ElementalService.Aether,
-        type: "emergence_instruction",
+        type: &quot;emergence_instruction&quot;,
         payload: {
           content: { instruction, emergence },
           metadata: { orchestrated: true },
@@ -544,7 +544,7 @@ export class AINOrchestrator extends EventEmitter {
   private async activateEmergencyMode(): Promise<void> {
     // Reduce non-critical processing
     await this.pubsub.publish(
-      "system.emergency",
+      &quot;system.emergency&quot;,
       this.createSystemEvent("system.emergency", {
         mode: "emergency",
         reduce_non_critical: true,
@@ -578,7 +578,7 @@ export class AINOrchestrator extends EventEmitter {
   private async implementLoadShedding(): Promise<void> {
     // Temporarily reduce processing of non-critical events
     await this.pubsub.publish(
-      "system.load_shedding",
+      &quot;system.load_shedding",
       this.createSystemEvent("system.load_shedding", {
         reduce_non_critical: true,
         increase_thresholds: true,

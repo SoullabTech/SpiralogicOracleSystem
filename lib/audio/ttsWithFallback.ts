@@ -83,7 +83,7 @@ export async function synthesizeWithFallback(options: TTSOptions): Promise<TTSRe
           // Server error - worth retrying
           throw new Error(`Server error: ${response.status} ${response.statusText}`);
         } else {
-          // Client error - don't retry
+          // Client error - don&apos;t retry
           lastError = `Client error: ${response.status} ${response.statusText}`;
           break;
         }
@@ -92,7 +92,7 @@ export async function synthesizeWithFallback(options: TTSOptions): Promise<TTSRe
         lastError = error.name === 'AbortError' ? 'Server TTS timeout' : error.message;
         console.warn(`⚠️ Server TTS attempt ${attempt + 1} failed:`, lastError);
         
-        // Don't retry on client errors or aborts
+        // Don&apos;t retry on client errors or aborts
         if (error.name === 'AbortError' || error.message.includes('Client error')) {
           break;
         }

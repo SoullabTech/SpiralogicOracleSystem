@@ -132,7 +132,6 @@ export function CitationBadge({ citation, index, onClick, className = '' }: Cita
             <button 
               onClick={() => {
                 // TODO: Open full file viewer or jump to page
-                console.log('Open file:', citation.fileName, 'page:', citation.pageNumber);
               }}
               className="text-xs text-gold-divine hover:text-gold-amber transition-colors"
             >

@@ -23,7 +23,6 @@ async function sendSlackAlert(alert: AlertRequest) {
   
   // Rate limiting
   if (now - lastAlert < RATE_LIMIT_WINDOW) {
-    console.log('Rate limited: Slack alert suppressed', alertKey)
     return false
   }
 
@@ -95,7 +94,6 @@ async function sendEmailAlert(alert: AlertRequest) {
   
   // Rate limiting (longer for emails)
   if (now - lastAlert < RATE_LIMIT_WINDOW * 2) {
-    console.log('Rate limited: Email alert suppressed', alertKey)
     return false
   }
 
@@ -153,7 +151,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Log the alert
-    console.log('Voice Alert:', {
       type: alert.type,
       engine: alert.engine,
       message: alert.message,

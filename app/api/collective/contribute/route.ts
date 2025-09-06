@@ -52,7 +52,6 @@ const ContributionSchema = z.object({
 // POST /api/collective/contribute
 export async function POST(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[Contribute] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[Contribute] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[Contribute] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[Contribute] ${msg}`, meta),
@@ -184,7 +183,6 @@ export async function POST(req: NextRequest) {
 // GET /api/collective/contribute/history
 export async function GET(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[ContribHistory] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[ContribHistory] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[ContribHistory] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[ContribHistory] ${msg}`, meta),

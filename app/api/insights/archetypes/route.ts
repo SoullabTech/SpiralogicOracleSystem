@@ -112,7 +112,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Store the insight (in production, this would go to the memory system)
-    console.log("Generated archetypal insight:", {
       userId: userId?.substring(0, 8) + '...',
       archetype: insight.archetype,
       theme: insight.theme

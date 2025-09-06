@@ -109,7 +109,6 @@ Remember, flow isn't just about productivity - it's about aligning with your dee
   ];
 
   const handlePlayAudio = (audioUrl: string) => {
-    console.log('Playing audio:', audioUrl);
     // In real implementation, this would trigger audio playback
   };
 

@@ -185,7 +185,7 @@ export class DaimonicDialogueService {
   }
 
   /**
-   * Measure genuine surprise - what you couldn't have imagined
+   * Measure genuine surprise - what you couldn&apos;t have imagined
    */
   private measureGenuineSurprise(experience: any, context?: any): number {
     let surprise = 0;
@@ -218,7 +218,7 @@ export class DaimonicDialogueService {
   }
 
   /**
-   * Extract what the Daimon demands that ego wouldn't demand
+   * Extract what the Daimon demands that ego wouldn&apos;t demand
    */
   private extractDaimonicDemands(experience: any): string[] {
     const demands: string[] = [];
@@ -229,7 +229,7 @@ export class DaimonicDialogueService {
       /(?:called|compelled|driven) to ([^.!?]+)/gi,
       /(?:had to|must|needed to) ([^.!?]+) despite/gi,
       /(?:demanded that I|required me to) ([^.!?]+)/gi,
-      /couldn't rest until (?:I )?([^.!?]+)/gi
+      /couldn&apos;t rest until (?:I )?([^.!?]+)/gi
     ];
     
     for (const pattern of demand_patterns) {
@@ -331,7 +331,7 @@ export class DaimonicDialogueService {
     
     // Look for conversational markers
     const conversation_patterns = [
-      /I (?:said|asked|wondered)[: ]+"([^"]+)"/gi,
+      /I (?:said|asked|wondered)[: ]+&quot;([^&quot;]+)"/gi,
       /(?:it|life|the universe) (?:replied|answered|said)[: ]+"([^"]+)"/gi,
       /the (?:voice|presence|other) (?:said|whispered)[: ]+"([^"]+)"/gi,
       /(?:heard|received) the (?:words|message)[: ]+"([^"]+)"/gi
@@ -500,7 +500,7 @@ export class DaimonicDialogueService {
   }
 
   /**
-   * Check if element operates autonomously rather than as "your" element
+   * Check if element operates autonomously rather than as &quot;your&quot; element
    */
   private elementShowsAutonomy(
     element: Element, 
@@ -541,7 +541,7 @@ export class DaimonicDialogueService {
     const elementalVoices = {
       fire: {
         high: {
-          voice: "I burn whether you want me to or not. I have my own trajectory.",
+          voice: &quot;I burn whether you want me to or not. I have my own trajectory.&quot;,
           demand: "Honor the vision even when it burns away comfort",
           resistance: "Refuses to be controlled, dimmed, or made convenient",
           gift: "Transformative vision that transcends personal desire"
@@ -563,7 +563,7 @@ export class DaimonicDialogueService {
         low: {
           voice: "I recede like tide. You must learn to call me forth.",
           demand: "Develop emotional courage before emotional depth",
-          resistance: "Refuses to flow where there's no authentic feeling",
+          resistance: "Refuses to flow where there&apos;s no authentic feeling",
           gift: "The clarity that comes from emotional honesty"
         }
       },

@@ -157,7 +157,7 @@ export class FrontendIntegration {
         integrationPractices: this.extractIntegrationPractices(sacredResponse),
         nextEvolutionStep:
           sacredResponse.sacredSynthesis?.nextEvolution ||
-          "Continue your sacred journey",
+          &quot;Continue your sacred journey&quot;,
 
         processingTime: sacredResponse.performanceMetrics?.processingTime || 0,
         safeguardsTriggered: this.extractSafeguards(sacredResponse),
@@ -230,7 +230,7 @@ export class FrontendIntegration {
         response.performanceMetrics?.transformationPotential || 0,
       archetypeIcon:
         this.archetypeIcons[archetype as keyof typeof this.archetypeIcons] ||
-        "🌟",
+        &quot;🌟",
       stageDescription: this.getStageDescription(stage),
       integrationKeys: this.extractIntegrationKeys(response),
     };

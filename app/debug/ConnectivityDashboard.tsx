@@ -206,7 +206,7 @@ export default function ConnectivityDashboard() {
       </div>
 
       <div className="mt-3 text-xs text-gray-500">
-        Tip: if Backend shows WARN and you're on Vercel/Render, check env vars and that /health is mounted.
+        Tip: if Backend shows WARN and you&apos;re on Vercel/Render, check env vars and that /health is mounted.
       </div>
     </div>
   );

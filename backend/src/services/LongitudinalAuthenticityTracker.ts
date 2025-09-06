@@ -61,7 +61,7 @@ export class LongitudinalAuthenticityTracker {
   }
 
   /**
-   * Add new session analysis to user's timeline
+   * Add new session analysis to user&apos;s timeline
    */
   async addSessionAnalysis(userId: string, sessionMetrics: SessionMetrics): Promise<SessionAnalysis> {
     let timeline = this.userTimelines.get(userId);
@@ -432,7 +432,7 @@ export class LongitudinalAuthenticityTracker {
   }
 
   /**
-   * Get user's authenticity timeline
+   * Get user&apos;s authenticity timeline
    */
   getUserTimeline(userId: string): AuthenticityTimeline | null {
     return this.userTimelines.get(userId) || null;

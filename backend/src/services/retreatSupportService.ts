@@ -75,7 +75,7 @@ export class RetreatSupportService {
       const checkInId = uuidv4();
 
       // Store check-in data
-      const { data, error } = await supabase.from("daily_checkins").insert({
+      const { data, error } = await supabase.from(&quot;daily_checkins&quot;).insert({
         id: checkInId,
         participant_id: checkIn.participantId,
         retreat_id: checkIn.retreatId,
@@ -91,7 +91,7 @@ export class RetreatSupportService {
 
       if (error) throw error;
 
-      // Update participant's current state
+      // Update participant&apos;s current state
       await this.updateParticipantCurrentState(checkIn.participantId, checkIn);
 
       // Check if support is needed
@@ -122,7 +122,7 @@ export class RetreatSupportService {
     try {
       // Get participant info
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants")
         .select("*")
         .eq("id", participantId)
         .single();
@@ -173,9 +173,9 @@ export class RetreatSupportService {
 Your ${participant.oracleElement} essence is ${this.interpretEnergyLevel(checkIn.morningState.energyLevel)} today.
 
 Based on your check-in, I sense ${checkIn.morningState.emotionalTone} flowing through you.
-${checkIn.shadowWork?.breakthroughMoments ? `Beautiful breakthrough: ${checkIn.shadowWork.breakthroughMoments}` : ""}
+${checkIn.shadowWork?.breakthroughMoments ? `Beautiful breakthrough: ${checkIn.shadowWork.breakthroughMoments}` : "&quot;}
 
-Today's medicine: ${this.getElementalMedicine(participant.oracleElement, checkIn)}
+Today&apos;s medicine: ${this.getElementalMedicine(participant.oracleElement, checkIn)}
 
 Trust your journey today.
 ~ Your ${participant.oracleArchetype}`;
@@ -184,7 +184,7 @@ Trust your journey today.
   }
 
   private interpretEnergyLevel(level: number): string {
-    if (level >= 8) return "vibrant and ready to shine";
+    if (level >= 8) return &quot;vibrant and ready to shine";
     if (level >= 6) return "steady and present";
     if (level >= 4) return "seeking balance";
     return "calling for gentle restoration";
@@ -221,7 +221,7 @@ Trust your journey today.
       };
 
       // Store session
-      await supabase.from("live_sessions").insert(session);
+      await supabase.from(&quot;live_sessions&quot;).insert(session);
 
       // Initialize tracking
       await this.initializeSessionTracking(session.id);
@@ -241,7 +241,7 @@ Trust your journey today.
   // Initialize session tracking
   async initializeSessionTracking(sessionId: string): Promise<void> {
     // In production, this would set up real-time tracking
-    await supabase.from("session_tracking").insert({
+    await supabase.from(&quot;session_tracking&quot;).insert({
       session_id: sessionId,
       tracking_data: {
         participantStates: {},
@@ -258,7 +258,7 @@ Trust your journey today.
     try {
       const participationId = uuidv4();
 
-      await supabase.from("session_participations").insert({
+      await supabase.from(&quot;session_participations&quot;).insert({
         id: participationId,
         session_id: participation.sessionId,
         participant_id: participation.participantId,
@@ -282,7 +282,7 @@ Trust your journey today.
     try {
       // Get session data
       const { data: session } = await supabase
-        .from("live_sessions")
+        .from(&quot;live_sessions&quot;)
         .select("*")
         .eq("id", sessionId)
         .single();
@@ -332,7 +332,7 @@ Trust your journey today.
       };
 
       // Store wisdom
-      await supabase.from("collective_wisdom").insert(wisdom);
+      await supabase.from(&quot;collective_wisdom&quot;).insert(wisdom);
 
       // Update wisdom index
       await this.updateWisdomIndex(wisdom);
@@ -357,7 +357,7 @@ Trust your journey today.
     try {
       // Get all participants
       const { data: participants } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("id, email, preferredName")
         .eq("retreat_id", retreatId);
 
@@ -387,7 +387,7 @@ Trust your journey today.
   async getCollectiveWisdom(retreatId: string, filters: any): Promise<any[]> {
     try {
       let query = supabase
-        .from("collective_wisdom")
+        .from(&quot;collective_wisdom&quot;)
         .select("*")
         .eq("retreat_id", retreatId)
         .order("timestamp", { ascending: false });
@@ -416,7 +416,7 @@ Trust your journey today.
   async getWisdomByElement(retreatId: string): Promise<any> {
     try {
       const { data } = await supabase
-        .from("collective_wisdom")
+        .from(&quot;collective_wisdom&quot;)
         .select("content")
         .eq("retreat_id", retreatId);
 
@@ -449,7 +449,7 @@ Trust your journey today.
     try {
       // Get participant data
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("*")
         .eq("id", participantId)
         .single();
@@ -508,11 +508,11 @@ Trust your journey today.
     try {
       // Get all participants
       const { data: participants } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("*")
         .eq("retreat_id", retreatId);
 
-      // Get today's check-ins
+      // Get today&apos;s check-ins
       const { data: todayCheckIns } = await supabase
         .from("daily_checkins")
         .select("*")
@@ -573,7 +573,7 @@ Trust your journey today.
         retreat_id: supportData.retreatId,
         issue: supportData.issue,
         urgency_level: supportData.urgencyLevel,
-        status: "open",
+        status: &quot;open&quot;,
         created_at: supportData.timestamp,
       };
 
@@ -591,7 +591,7 @@ Trust your journey today.
     try {
       // Get facilitators
       const { data: facilitators } = await supabase
-        .from("retreat_facilitators")
+        .from(&quot;retreat_facilitators&quot;)
         .select("*")
         .eq("retreat_id", retreatId);
 
@@ -628,7 +628,7 @@ Trust your journey today.
         follow_up_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
       };
 
-      await supabase.from("integration_tracking").insert(integration);
+      await supabase.from(&quot;integration_tracking&quot;).insert(integration);
 
       // Schedule follow-up
       await this.scheduleFollowUp(integration);
@@ -649,7 +649,7 @@ Trust your journey today.
     checkIn: DailyCheckIn,
   ): Promise<void> {
     await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants&quot;)
       .update({
         current_state: {
           energyLevel: checkIn.morningState.energyLevel,
@@ -665,7 +665,7 @@ Trust your journey today.
     participantId: string,
     supportNeeded: string,
   ): Promise<void> {
-    await supabase.from("support_flags").insert({
+    await supabase.from(&quot;support_flags").insert({
       participant_id: participantId,
       support_needed: supportNeeded,
       flagged_at: new Date(),
@@ -748,7 +748,7 @@ Trust your journey today.
   ): Promise<string> {
     // In production, this would fetch from the retreat schedule
     const activities = [
-      "Opening Circle - Setting Sacred Space",
+      &quot;Opening Circle - Setting Sacred Space&quot;,
       "Elemental Journey - Discovering Your Nature",
       "Shadow Dancing - Embracing the Dark",
       "Vision Quest - Meeting Your Future Self",
@@ -763,7 +763,7 @@ Trust your journey today.
     sessionId: string,
   ): Promise<void> {
     const { count } = await supabase
-      .from("session_participations")
+      .from(&quot;session_participations&quot;)
       .select("*", { count: "exact" })
       .eq("session_id", sessionId);
 
@@ -775,7 +775,7 @@ Trust your journey today.
 
   private async generateSessionSummary(sessionId: string): Promise<any> {
     const { data: participations } = await supabase
-      .from("session_participations")
+      .from(&quot;session_participations&quot;)
       .select("*")
       .eq("session_id", sessionId);
 
@@ -799,8 +799,8 @@ Trust your journey today.
     return {
       summary,
       recommendations: [
-        "Follow up with participants who had breakthroughs",
-        "Integrate captured wisdom into tomorrow's session",
+        &quot;Follow up with participants who had breakthroughs&quot;,
+        "Integrate captured wisdom into tomorrow&apos;s session",
         "Address any unresolved tensions noticed",
       ],
       highlights: this.extractSessionHighlights(summary),
@@ -809,7 +809,7 @@ Trust your journey today.
 
   private async updateWisdomIndex(wisdom: CollectiveWisdom): Promise<void> {
     // In production, this would update a searchable wisdom index
-    logger.info("Wisdom indexed", { wisdomId: wisdom.id });
+    logger.info(&quot;Wisdom indexed", { wisdomId: wisdom.id });
   }
 
   private analyzeParticipantPatterns(checkIns: any[]): any {
@@ -860,7 +860,7 @@ Trust your journey today.
     growth: any,
   ): Promise<string> {
     // In production, this would use the PersonalOracleAgent
-    return `Based on your journey, ${participant?.preferredName}, I recommend focusing on ${patterns.shadowPatterns?.[0] || "deeper self-inquiry"} while celebrating your growth in ${growth.trajectory || "presence"}.`;
+    return `Based on your journey, ${participant?.preferredName}, I recommend focusing on ${patterns.shadowPatterns?.[0] || &quot;deeper self-inquiry"} while celebrating your growth in ${growth.trajectory || "presence"}.`;
   }
 
   private countBreakthroughs(checkIns: any[]): number {
@@ -926,7 +926,7 @@ Trust your journey today.
       .filter((c) => c.support_needed || c.morning_state?.energyLevel < 4)
       .map((c) => ({
         participantId: c.participant_id,
-        need: c.support_needed || "Low energy - check in recommended",
+        need: c.support_needed || &quot;Low energy - check in recommended&quot;,
         urgency: c.morning_state?.energyLevel < 3 ? "high" : "medium",
       }));
   }
@@ -948,7 +948,7 @@ Trust your journey today.
 
     if (supportRequests.length > 3) {
       alerts.push({
-        type: "multiple_support_needs",
+        type: &quot;multiple_support_needs",
         message: `${supportRequests.length} participants need support`,
         severity: "high",
       });
@@ -974,18 +974,18 @@ Trust your journey today.
 
     if (groupMetrics.supportNeeds > 2) {
       recommendations.push(
-        "Schedule individual check-ins with those needing support",
+        &quot;Schedule individual check-ins with those needing support&quot;,
       );
     }
 
-    recommendations.push("Celebrate the group's journey so far");
+    recommendations.push("Celebrate the group&apos;s journey so far");
 
     return recommendations;
   }
 
   private async getUpcomingSessions(retreatId: string): Promise<any[]> {
     const { data } = await supabase
-      .from("retreat_sessions")
+      .from(&quot;retreat_sessions&quot;)
       .select("*")
       .eq("retreat_id", retreatId)
       .gte("start_time", new Date().toISOString())
@@ -997,7 +997,7 @@ Trust your journey today.
 
   private async scheduleFollowUp(integration: any): Promise<void> {
     // In production, this would schedule actual follow-up communications
-    logger.info("Follow-up scheduled", {
+    logger.info(&quot;Follow-up scheduled&quot;, {
       participantId: integration.participant_id,
       date: integration.follow_up_date,
     });
@@ -1008,7 +1008,7 @@ Trust your journey today.
     if (values.length < 2) return "stable";
     const start = this.average(values.slice(0, 2));
     const end = this.average(values.slice(-2));
-    if (end > start + 1) return "rising";
+    if (end > start + 1) return &quot;rising&quot;;
     if (end < start - 1) return "declining";
     return "stable";
   }

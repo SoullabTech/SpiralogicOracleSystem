@@ -111,7 +111,7 @@ function OraclePageInner() {
     // Welcome message from assigned agent
     setMessages([{
       role: 'assistant',
-      content: `Hey ${userData.username}, good to see you again. What's going on?`,
+      content: `Hey ${userData.username}, good to see you again. What&apos;s going on?`,
       timestamp: new Date().toISOString(),
       citations: [],
       metadata: {
@@ -172,7 +172,7 @@ function OraclePageInner() {
     });
 
     try {
-      // First, get Maya's text response
+      // First, get Maya&apos;s text response
       // First check for the backend port
       const backendPort = process.env.NEXT_PUBLIC_BACKEND_URL?.split(':').pop() || '3002';
       
@@ -259,7 +259,6 @@ function OraclePageInner() {
       // Now generate TTS audio if we have text but no audio
       if (!assistantMessage.audioUrl && !assistantMessage.audioData) {
         try {
-          console.log('🎤 No audio from backend, generating TTS...');
           const voiceResponse = await fetch('/api/voice/unified', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -384,7 +383,7 @@ function OraclePageInner() {
       
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: "I apologize, I'm having trouble connecting. Please try again.",
+        content: "I apologize, I&apos;m having trouble connecting. Please try again.",
         timestamp: new Date().toISOString()
       }]);
     } finally {
@@ -417,7 +416,6 @@ function OraclePageInner() {
     
     // Track Milestone 2: Voice Flow Complete (STT part)
     if (sttSuccess) {
-      console.log('🎯 STT completed, waiting for TTS to complete voice flow milestone');
     }
     
     if (transcript.trim()) {
@@ -435,7 +433,6 @@ function OraclePageInner() {
 
   // Recording control functions
   const startRecording = async () => {
-    console.log('🎙️ [Oracle] Starting recording');
     // Unlock audio on first interaction
     await unlockAudio();
     // Analytics: Track voice flow start
@@ -444,7 +441,6 @@ function OraclePageInner() {
   };
 
   const stopRecording = () => {
-    console.log('🛑 [Oracle] Stopping recording');
     microphoneRef.current?.stopRecording();
   };
 
@@ -506,7 +502,7 @@ function OraclePageInner() {
             <button
               onClick={() => router.push('/oracle/library')}
               className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
-              title="Maya's Library"
+              title="Maya&apos;s Library"
             >
               <Library className="w-5 h-5 text-gray-400 hover:text-sacred-gold" />
             </button>
@@ -594,8 +590,6 @@ function OraclePageInner() {
               setIsSpeaking(true); // Maya started speaking
               // Update transcript preview to show speaking state
               const audioSource = currentAudioUrl || (currentAudioData ? 'base64 data' : 'unknown');
-              console.log('🔊 Maya is speaking with:', audioSource);
-              console.log('Audio URL type:', currentAudioUrl ? (currentAudioUrl.startsWith('http') ? 'absolute URL' : 'relative URL') : 'no URL');
             }}
           />
         )}
@@ -744,12 +738,11 @@ function OraclePageInner() {
           <div className="p-4 border-t border-gray-800 bg-[#0A0D16]/60">
             <FileUploadTracker 
               onFileAnalyzed={(success, metadata) => {
-                console.log('File analysis result:', { success, metadata });
                 if (success) {
                   // Add a message showing the analysis
                   setMessages(prev => [...prev, {
                     role: 'assistant',
-                    content: `I've analyzed your ${metadata?.fileName || 'file'}. ${metadata?.analysisResults || 'Analysis complete.'}`,
+                    content: `I&apos;ve analyzed your ${metadata?.fileName || 'file'}. ${metadata?.analysisResults || 'Analysis complete.'}`,
                     timestamp: new Date().toISOString(),
                     citations: [],
                     metadata: {

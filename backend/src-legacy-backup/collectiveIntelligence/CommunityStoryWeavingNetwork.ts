@@ -524,7 +524,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<StoryWeavingNetwork> {
     try {
-      logger.info("Expanding dream weaving network", {
+      logger.info(&quot;Expanding dream weaving network&quot;, {
         dreamInsightsCount: dreamInsights.length,
         communityId: communityContext.communityId,
         culturalContext: culturalProfile.primaryCulture,
@@ -591,7 +591,7 @@ export class CommunityStoryWeavingNetwork {
     culturalWisdomMap: CulturalWisdomMap,
   ): Promise<MythologicalPattern[]> {
     try {
-      logger.info("Recognizing mythological patterns", {
+      logger.info(&quot;Recognizing mythological patterns&quot;, {
         storiesCount: stories.length,
         representedCultures: culturalWisdomMap.representedCultures.length,
       });
@@ -659,7 +659,7 @@ export class CommunityStoryWeavingNetwork {
     sovereigntyProtocol: typeof indigenousSovereigntyProtocol,
   ): Promise<CulturalStoryIntegration> {
     try {
-      logger.info("Integrating cultural stories", {
+      logger.info(&quot;Integrating cultural stories", {
         narrativesCount: narratives.length,
       });
 
@@ -736,7 +736,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<CommunityNarrative> {
     try {
-      logger.info("Building community narrative", {
+      logger.info(&quot;Building community narrative", {
         storyElementsCount: storyElements.length,
         culturalContext: culturalProfile.primaryCulture,
         hasShadowIntegration: !!shadowIntegration,
@@ -841,7 +841,7 @@ export class CommunityStoryWeavingNetwork {
     targetCommunity: string,
   ): Promise<WisdomStorySharing> {
     try {
-      logger.info("Sharing wisdom stories", {
+      logger.info(&quot;Sharing wisdom stories", {
         storiesCount: stories.length,
         attributionsCount: culturalAttributions.length,
         targetCommunity,
@@ -923,7 +923,7 @@ export class CommunityStoryWeavingNetwork {
     facilitatorId: string,
   ): Promise<CommunityStoryWeavingSession> {
     try {
-      logger.info("Facilitating community story weaving session", {
+      logger.info(&quot;Facilitating community story weaving session", {
         sessionType,
         participantsCount: participants.length,
         culturalContext: culturalContext.primaryCulture,
@@ -1042,7 +1042,7 @@ export class CommunityStoryWeavingNetwork {
       const connection: DreamStoryConnection = {
         connectionId: `dream_connection_${Date.now()}_${Math.random().toString(36).substr(2, 3)}`,
         dreamAnalysis,
-        connectionType: "archetypal_similarity",
+        connectionType: &quot;archetypal_similarity",
         connectionStrength: 0.7,
         narrativeIntegration:
           "Dream elements integrated into community narrative",
@@ -1082,7 +1082,7 @@ export class CommunityStoryWeavingNetwork {
     themes: string[],
     culturalProfile: CulturalProfile,
   ): Promise<string> {
-    return `Community dream narrative weaving ${dreamConnections.length} dreams with themes: ${themes.join(", ")} through ${culturalProfile.primaryCulture} storytelling tradition`;
+    return `Community dream narrative weaving ${dreamConnections.length} dreams with themes: ${themes.join(&quot;, ")} through ${culturalProfile.primaryCulture} storytelling tradition`;
   }
 
   private async extractCommunityDreamWisdom(
@@ -1091,7 +1091,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
     return [
-      "Collective dream wisdom extracted",
+      &quot;Collective dream wisdom extracted",
       "Community healing insights identified",
       "Evolutionary direction clarified through dreams",
     ];
@@ -1108,7 +1108,7 @@ export class CommunityStoryWeavingNetwork {
       dreamConnections: [], // Would map from DreamStoryConnection to StoryWeavingConnection
       narrativeThreads: [
         {
-          threadId: "expanded_thread_1",
+          threadId: &quot;expanded_thread_1&quot;,
           threadTheme: "Community dream integration",
           threadEvolution: ["Evolution step 1", "Evolution step 2"],
           connectedDreams: dreamConnections.map((c) => c.dreamAnalysis.dreamId),
@@ -1128,7 +1128,7 @@ export class CommunityStoryWeavingNetwork {
     stories: CommunityStory[],
   ): Promise<string[]> {
     return [
-      "Hero's journey",
+      &quot;Hero&apos;s journey&quot;,
       "Death and rebirth",
       "Sacred marriage",
       "Return to source",
@@ -1145,7 +1145,7 @@ export class CommunityStoryWeavingNetwork {
   private async identifyArchetypalPatterns(
     stories: CommunityStory[],
   ): Promise<string[]> {
-    return ["Archetypal pattern 1", "Archetypal pattern 2"];
+    return [&quot;Archetypal pattern 1", "Archetypal pattern 2"];
   }
 
   private async createMythologicalPattern(
@@ -1160,7 +1160,7 @@ export class CommunityStoryWeavingNetwork {
       patternDescription: `Mythological pattern: ${theme}`,
       culturalOrigins: culturalMap.representedCultures,
       universalTheme: theme,
-      archetypalSignature: archetypes[0] || "Universal archetype",
+      archetypalSignature: archetypes[0] || &quot;Universal archetype&quot;,
       variationsAcrossCultures: variations,
       modernManifestations: ["Modern manifestation 1"],
       collectiveActivation: "Collective activation through pattern recognition",
@@ -1200,21 +1200,21 @@ export class CommunityStoryWeavingNetwork {
     narratives: Narrative[],
     assessments: CulturalProtocolResult[],
   ): Promise<string[]> {
-    return ["Respectful adaptation 1", "Respectful adaptation 2"];
+    return [&quot;Respectful adaptation 1&quot;, "Respectful adaptation 2"];
   }
 
   private async ensureAppropriatAttributions(
     narratives: Narrative[],
     assessments: CulturalProtocolResult[],
   ): Promise<string[]> {
-    return ["Proper attribution 1", "Proper attribution 2"];
+    return [&quot;Proper attribution 1&quot;, "Proper attribution 2"];
   }
 
   private async createCulturalIntegrationFramework(
     adaptations: string[],
     attributions: string[],
   ): Promise<any> {
-    return { framework: "Cultural integration framework" };
+    return { framework: &quot;Cultural integration framework&quot; };
   }
 
   private async buildRespectfulSharingProtocols(
@@ -1227,13 +1227,13 @@ export class CommunityStoryWeavingNetwork {
   private async validateWithCulturalCommunities(
     narratives: Narrative[],
   ): Promise<string[]> {
-    return ["Community validation 1", "Community validation 2"];
+    return [&quot;Community validation 1&quot;, "Community validation 2"];
   }
 
   private async implementEthicalSafeguards(
     narratives: Narrative[],
   ): Promise<string[]> {
-    return ["Ethical safeguard 1", "Ethical safeguard 2"];
+    return [&quot;Ethical safeguard 1&quot;, "Ethical safeguard 2"];
   }
 
   // Community narrative building methods (placeholders)
@@ -1242,7 +1242,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<NarrativeArchitecture> {
     return {
-      architectureId: "architecture_1",
+      architectureId: &quot;architecture_1&quot;,
       narrativeStructure: "Three-act structure with cultural framing",
       storyThreads: [],
       narrativeFlow: ["Beginning", "Middle", "End"],
@@ -1260,7 +1260,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<NarrativeShadowIntegration> {
     return {
-      integrationId: "shadow_integration_1",
+      integrationId: &quot;shadow_integration_1&quot;,
       shadowNarratives: ["Shadow narrative 1"],
       shadowCharacters: ["Shadow character 1"],
       shadowThemes: ["Shadow theme 1"],
@@ -1277,7 +1277,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<CulturalWisdomWeaving> {
     return {
-      weavingId: "wisdom_weaving_1",
+      weavingId: &quot;wisdom_weaving_1&quot;,
       culturalWisdomElements: ["Cultural wisdom element 1"],
       storytellingTraditions: culturalProfile.traditionalPractices,
       culturalSymbols: ["Cultural symbol 1"],
@@ -1294,7 +1294,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<NarrativeDreamWisdom> {
     return {
-      dreamWisdomId: "dream_wisdom_1",
+      dreamWisdomId: &quot;dream_wisdom_1&quot;,
       dreamElements: ["Dream element 1"],
       dreamSymbols: ["Dream symbol 1"],
       dreamMessages: ["Dream message 1"],
@@ -1312,7 +1312,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<CommunityHealingJourney> {
     return {
-      journeyId: "healing_journey_1",
+      journeyId: &quot;healing_journey_1&quot;,
       healingPhases: [
         {
           phaseId: "phase_1",
@@ -1341,7 +1341,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<CommunityTransformationArc> {
     return {
-      arcId: "transformation_arc_1",
+      arcId: &quot;transformation_arc_1&quot;,
       transformationStages: [
         {
           stageId: "stage_1",
@@ -1369,7 +1369,7 @@ export class CommunityStoryWeavingNetwork {
     culturalProfile: CulturalProfile,
   ): Promise<EvolutionaryTheme> {
     return {
-      themeId: "evolutionary_theme_1",
+      themeId: &quot;evolutionary_theme_1&quot;,
       themeName: "Collective awakening",
       themeDescription: "Community evolutionary theme",
       evolutionaryDirection: ["Evolutionary direction 1"],
@@ -1387,7 +1387,7 @@ export class CommunityStoryWeavingNetwork {
     healingJourney: CommunityHealingJourney,
   ): Promise<NarrativeCollectiveWisdom> {
     return {
-      wisdomId: "collective_wisdom_1",
+      wisdomId: &quot;collective_wisdom_1&quot;,
       emergentWisdom: ["Emergent wisdom 1"],
       collectiveInsights: ["Collective insight 1"],
       wisdomSynthesis: "Wisdom synthesis achieved",
@@ -1418,7 +1418,7 @@ export class CommunityStoryWeavingNetwork {
     stories: WisdomStory[],
     attributions: CulturalAttribution[],
   ): Promise<string[]> {
-    return ["Proper attribution 1"];
+    return [&quot;Proper attribution 1&quot;];
   }
 
   private async createRespectfulPresentation(
@@ -1426,7 +1426,7 @@ export class CommunityStoryWeavingNetwork {
     attributions: string[],
     community: string,
   ): Promise<string> {
-    return "Respectful presentation created";
+    return &quot;Respectful presentation created";
   }
 
   private async implementCommunityValidation(
@@ -1456,7 +1456,7 @@ export class CommunityStoryWeavingNetwork {
     type: string,
     cultural: CulturalProfile,
   ): Promise<any> {
-    return { framework: "Session framework" };
+    return { framework: &quot;Session framework&quot; };
   }
 
   private async facilitateSessionActivities(
@@ -1481,7 +1481,7 @@ export class CommunityStoryWeavingNetwork {
     cultural: CulturalProfile,
   ): Promise<WeavingOutcome> {
     return {
-      outcomeId: "outcome_1",
+      outcomeId: &quot;outcome_1&quot;,
       emergentNarratives: ["Emergent narrative 1"],
       wisdomSynthesis: "Wisdom synthesis achieved",
       healingAchieved: ["Healing achieved 1"],
@@ -1497,14 +1497,14 @@ export class CommunityStoryWeavingNetwork {
     activities: SessionActivity[],
     outcome: WeavingOutcome,
   ): Promise<string[]> {
-    return ["Session collective wisdom 1"];
+    return [&quot;Session collective wisdom 1&quot;];
   }
 
   private async generateNextStepsGuidance(
     outcome: WeavingOutcome,
     cultural: CulturalProfile,
   ): Promise<string[]> {
-    return ["Next step guidance 1"];
+    return [&quot;Next step guidance 1&quot;];
   }
 
   private async assessSessionImpact(

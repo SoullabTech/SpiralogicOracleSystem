@@ -2,7 +2,7 @@
 
 // Keyword mapping to Spiralogic facets
 const keywordFacetMap: Record<string, string> = {
-  purpose: "fire1",
+  purpose: &quot;fire1&quot;,
   passion: "fire2",
   vision: "fire3",
   identity: "fire1",

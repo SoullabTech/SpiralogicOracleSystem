@@ -25,7 +25,7 @@ export class LearningFlow {
     insights: string[];
   }> {
     if (!this.session) {
-      throw new Error("Learning flow not started");
+      throw new Error(&quot;Learning flow not started&quot;);
     }
 
     return this.flowManager.processInteractionFlow(

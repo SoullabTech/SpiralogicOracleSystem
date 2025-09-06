@@ -545,7 +545,7 @@ export class UnifiedStorageService {
   }
 
   private shouldCacheQuery(query: StorageQuery): boolean {
-    // Don't cache very specific or user-specific queries
+    // Don&apos;t cache very specific or user-specific queries
     return !query.userId && !query.sessionId && (query.limit || 0) <= 50;
   }
 

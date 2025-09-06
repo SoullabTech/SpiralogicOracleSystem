@@ -300,7 +300,7 @@ export class NarrativeService implements INarrativeService {
     const fieldDominant = collective.dominantArchetype;
     
     if (userDominant === fieldDominant) {
-      return `You swim in the mainstream of collective consciousness, your ${userDominant} nature aligned with the field's dominant current.`;
+      return `You swim in the mainstream of collective consciousness, your ${userDominant} nature aligned with the field&apos;s dominant current.`;
     } else {
       return `Your ${userDominant} essence offers a unique counterpoint to the field's ${fieldDominant} momentum, creating valuable tension and balance.`;
     }
@@ -432,7 +432,7 @@ export class NarrativeService implements INarrativeService {
    * Get user personality factors for narrative customization
    */
   private async getUserPersonalityFactors(userId: string): Promise<string[]> {
-    // In a real implementation, would analyze user's conversation patterns
+    // In a real implementation, would analyze user&apos;s conversation patterns
     // For now, return default factors
     return ['reflective', 'growth-oriented', 'intuitive'];
   }

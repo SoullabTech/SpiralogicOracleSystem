@@ -151,7 +151,7 @@ export class PatternRecognitionEngine {
       });
     });
 
-    // If 60% of participants show same archetype activation, it's a shift
+    // If 60% of participants show same archetype activation, it&apos;s a shift
     const maxActivation = Math.max(...archetypeChanges.values());
     return maxActivation / streams.length > 0.6;
   }

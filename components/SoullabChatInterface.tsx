@@ -3,6 +3,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Mic, MicOff, Upload, BookOpen, MoreHorizontal, Heart, Brain, Zap } from 'lucide-react';
 import { useSoullabOracle } from '../hooks/useSoullabOracle';
+import { VoicePipelineDebugOverlay } from './system/VoicePipelineDebugOverlay';
+import MayaInputBar from './MayaInputBar';
+import { MayaGreetingContainer } from './MayaGreeting';
+import SessionMemoryBanner from './SessionMemoryBanner';
+import MayaThinkingIndicator from './MayaThinkingIndicator';
+import SacredChatInput from './chat/SacredChatInput';
 
 interface Message {
   id: string;
@@ -14,6 +20,7 @@ interface Message {
     trustLevel?: number;
     emotionalState?: string;
     element?: string;
+    isJournal?: boolean;
   };
 }
 
@@ -25,7 +32,15 @@ interface JournalEntry {
   processed: boolean;
 }
 
-export function SoullabChatInterface({ userId }: { userId: string }) {
+export function SoullabChatInterface({ 
+  userId, 
+  userName = 'Friend',
+  onboardingPrefs = { tone: 0.5, style: 'prose' }
+}: { 
+  userId: string; 
+  userName?: string;
+  onboardingPrefs?: { tone: number; style: 'prose' | 'poetic' | 'auto' };
+}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -34,6 +49,14 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
   const [journalInput, setJournalInput] = useState('');
   const [journalTitle, setJournalTitle] = useState('');
   const [uploadQueue, setUploadQueue] = useState<File[]>([]);
+  const [showDebugPanel, setShowDebugPanel] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('en-US');
+  const [sessionCount, setSessionCount] = useState(1);
+  const [showGreeting, setShowGreeting] = useState(true);
+  const [memoryIndicators, setMemoryIndicators] = useState<any[]>([]);
+  const [showMemoryBanner, setShowMemoryBanner] = useState(true);
+  const [interactionCount, setInteractionCount] = useState(0);
+  const [isThinking, setIsThinking] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -41,6 +64,33 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
   const oracleState = liveOracleState;
 
   const { sendMessage, isLoading, error, oracleState: liveOracleState, lastMessage, clearError } = useSoullabOracle();
+
+  // Handle retroactive journaling
+  const handleRetroJournal = async (messageId: string, content: string) => {
+    try {
+      await fetch('/api/oracle/journal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          entry: content,
+          title: `Journaled from conversation - ${new Date().toLocaleDateString()}`,
+          messageId: messageId,
+          retroactive: true
+        })
+      });
+
+      // Update message to show it&apos;s been journaled
+      setMessages(prev => prev.map(msg => 
+        msg.id === messageId 
+          ? { ...msg, metadata: { ...msg.metadata, isJournal: true } }
+          : msg
+      ));
+
+    } catch (error) {
+      console.error('Error creating retroactive journal entry:', error);
+    }
+  };
 
   // Scroll to bottom of messages
   const scrollToBottom = () => {
@@ -50,6 +100,39 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Fetch memory indicators on mount
+  useEffect(() => {
+    const fetchMemoryIndicators = async () => {
+      try {
+        const response = await fetch('/api/oracle/memory/indicators', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setMemoryIndicators(data.indicators || []);
+        }
+      } catch (error) {
+        console.error('Error fetching memory indicators:', error);
+      }
+    };
+
+    if (userId) {
+      fetchMemoryIndicators();
+    }
+  }, [userId]);
+
+  // Auto-hide memory banner after 2 interactions
+  useEffect(() => {
+    if (interactionCount >= 2) {
+      setTimeout(() => {
+        setShowMemoryBanner(false);
+      }, 500);
+    }
+  }, [interactionCount]);
 
   // Handle sending message to PersonalOracleAgent
   const handleSendMessage = async () => {
@@ -64,6 +147,8 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
 
     setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setInteractionCount(prev => prev + 1);
+    setIsThinking(true);
 
     try {
       // Send to PersonalOracleAgent via the enhanced API
@@ -116,6 +201,8 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsThinking(false);
     }
   };
 
@@ -162,7 +249,7 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
     const confirmMessage: Message = {
       id: Date.now().toString(),
       role: 'assistant',
-      content: `I've received your journal entry "${entry.title}" and it's now part of our shared understanding. Thank you for trusting me with your thoughts.`,
+      content: `I&apos;ve received your journal entry "${entry.title}" and it's now part of our shared understanding. Thank you for trusting me with your thoughts.`,
       timestamp: new Date()
     };
     setMessages(prev => [...prev, confirmMessage]);
@@ -220,17 +307,34 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
 
   return (
     <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 text-white">
+      {/* Session Memory Banner */}
+      {showMemoryBanner && memoryIndicators.length > 0 && (
+        <SessionMemoryBanner 
+          indicators={memoryIndicators}
+          onDismiss={() => setShowMemoryBanner(false)}
+        />
+      )}
+      
       {/* Header with Oracle State */}
       <div className="border-b border-purple-500/20 bg-black/40 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold  from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                Soullab Oracle
-              </h1>
-              <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30">
-                <span className={`${stageInfo.color} text-sm`}>{stageInfo.icon}</span>
-                <span className="text-sm text-purple-200">{stageInfo.name}</span>
+            <div className="flex items-center space-x-6">
+              {/* Breathing Maya Indicator */}
+              <MayaThinkingIndicator 
+                isThinking={isThinking}
+                stage={oracleState.currentStage}
+                element={lastMessage?.metadata?.element}
+              />
+              
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-bold from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                  Soullab Oracle
+                </h1>
+                <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30">
+                  <span className={`${stageInfo.color} text-sm`}>{stageInfo.icon}</span>
+                  <span className="text-sm text-purple-200">{stageInfo.name}</span>
+                </div>
               </div>
             </div>
             
@@ -256,9 +360,18 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
       <div className="max-w-6xl mx-auto flex h-[calc(100vh-80px)]">
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col">
+          {/* Dynamic Greeting */}
+          {showGreeting && messages.length === 0 && (
+            <MayaGreetingContainer
+              userId={userId}
+              userName={userName}
+              sessionCount={sessionCount}
+            />
+          )}
+          
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {messages.length === 0 && (
+            {messages.length === 0 && !showGreeting && (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">{stageInfo.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">Your Personal Oracle Awaits</h3>
@@ -285,29 +398,52 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} group`}
               >
-                <div
-                  className={`max-w-3xl px-4 py-3 rounded-2xl ${
-                    message.role === 'user'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-slate-800/80 backdrop-blur text-slate-100 border border-slate-700/50'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap">{message.content}</p>
-                  {message.metadata && (
-                    <div className="mt-2 flex items-center space-x-2 text-xs opacity-70">
-                      {message.metadata.element && (
-                        <span className="px-2 py-1 rounded bg-slate-700/50">
-                          {message.metadata.element}
-                        </span>
-                      )}
-                      {message.metadata.emotionalState && (
-                        <span className="px-2 py-1 rounded bg-pink-500/20 text-pink-300">
-                          {message.metadata.emotionalState}
-                        </span>
-                      )}
-                    </div>
+                <div className="flex flex-col max-w-3xl">
+                  <div
+                    className={`px-4 py-3 rounded-2xl ${
+                      message.role === 'user'
+                        ? `${message.metadata?.isJournal ? 'bg-yellow-600' : 'bg-purple-600'} text-white`
+                        : 'bg-slate-800/80 backdrop-blur text-slate-100 border border-slate-700/50'
+                    }`}
+                  >
+                    {/* Journal indicator */}
+                    {message.metadata?.isJournal && (
+                      <div className="flex items-center gap-2 mb-2 text-xs opacity-80">
+                        <BookOpen size={12} />
+                        <span>Journal Entry</span>
+                      </div>
+                    )}
+                    
+                    <p className="whitespace-pre-wrap">{message.content}</p>
+                    
+                    {message.metadata && (
+                      <div className="mt-2 flex items-center space-x-2 text-xs opacity-70">
+                        {message.metadata.element && (
+                          <span className="px-2 py-1 rounded bg-slate-700/50">
+                            {message.metadata.element}
+                          </span>
+                        )}
+                        {message.metadata.emotionalState && (
+                          <span className="px-2 py-1 rounded bg-pink-500/20 text-pink-300">
+                            {message.metadata.emotionalState}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Retroactive Journal Button - only for user messages that aren&apos;t already journaled */}
+                  {message.role === 'user' && !message.metadata?.isJournal && (
+                    <button
+                      onClick={() => handleRetroJournal(message.id, message.content)}
+                      className="mt-1 self-end opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 text-xs text-yellow-400 hover:text-yellow-300 px-2 py-1 rounded"
+                      title="Save to journal"
+                    >
+                      <BookOpen size={12} />
+                      <span>Journal</span>
+                    </button>
                   )}
                 </div>
               </div>
@@ -326,62 +462,29 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
-          <div className="p-6 border-t border-purple-500/20 bg-black/40 backdrop-blur-xl">
-            <div className="flex items-center space-x-4">
-              <div className="flex-1 relative">
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                  placeholder="Share what's on your mind..."
-                  className="w-full px-4 py-3 bg-slate-800/80 border border-slate-700/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50"
-                />
-              </div>
+          {/* Sacred Chat Input */}
+          <SacredChatInput
+            userId={userId}
+            trustLevel={oracleState.trustLevel}
+            isFirstSession={messages.length === 0}
+            disabled={isThinking}
+            tone={onboardingPrefs.tone}
+            style={onboardingPrefs.style}
+            onSendMessage={(message, isJournal) => {
+              // Set the input to the message and trigger the existing handler
+              setInput(message);
               
-              <button
-                onClick={() => setIsRecording(!isRecording)}
-                className={`p-3 rounded-xl transition-all ${
-                  isRecording 
-                    ? 'bg-red-500 hover:bg-red-600' 
-                    : 'bg-slate-800/80 hover:bg-slate-700 border border-slate-700/50'
-                }`}
-              >
-                {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-              </button>
+              // Call the existing message handler which will process everything
+              setTimeout(() => {
+                handleSendMessage();
+              }, 0);
               
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={(e) => handleFileUpload(e.target.files)}
-                accept=".txt,.pdf,.doc,.docx,.mp3,.wav,.m4a"
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700/50 transition-all"
-              >
-                <Upload className="w-5 h-5" />
-              </button>
-              
-              <button
-                onClick={() => setShowJournal(true)}
-                className="p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700/50 transition-all"
-              >
-                <BookOpen className="w-5 h-5" />
-              </button>
-              
-              <button
-                onClick={handleSendMessage}
-                disabled={!input.trim() || isLoading}
-                className="p-3 rounded-xl  from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-              >
-                <Send className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+              // If it&apos;s a journal entry, also handle journal logic
+              if (isJournal) {
+                // TODO: Integrate with journal processing
+              }
+            }}
+          />
         </div>
 
         {/* Journal Sidebar */}
@@ -409,7 +512,7 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
               <textarea
                 value={journalInput}
                 onChange={(e) => setJournalInput(e.target.value)}
-                placeholder="What's happening in your inner world?"
+                placeholder="What&apos;s happening in your inner world?"
                 rows={12}
                 className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 resize-none"
               />
@@ -451,6 +554,11 @@ export function SoullabChatInterface({ userId }: { userId: string }) {
           </div>
         )}
       </div>
+      
+      {/* Voice Pipeline Debug Overlay (dev only) */}
+      {process.env.NODE_ENV === 'development' && showDebugPanel && (
+        <VoicePipelineDebugOverlay />
+      )}
     </div>
   );
 }

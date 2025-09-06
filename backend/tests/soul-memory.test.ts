@@ -223,7 +223,7 @@ describe("Soul Memory System Tests", () => {
   });
 
   describe("Transformation Journey Tests", () => {
-    test("Should track transformation milestones", async () => {
+    test(&quot;Should track transformation milestones", async () => {
       // Add transformation memories representing a journey
       const milestones = [
         {

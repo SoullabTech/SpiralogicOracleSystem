@@ -115,9 +115,9 @@ export class AnalyticsService {
 
   async generateUserMetrics(
     userId: string,
-    timeframe: "week" | "month" | "quarter" | "year" = "month",
+    timeframe: &quot;week&quot; | "month" | "quarter" | "year" = "month",
   ): Promise<UserDevelopmentMetrics> {
-    // Get user's integration architecture and activity
+    // Get user&apos;s integration architecture and activity
     const architecture = await this.getUserIntegrationArchitecture(userId);
     const activityData = await this.getUserActivityData(userId, timeframe);
     const engagementData = await this.getUserEngagementData(userId, timeframe);
@@ -170,7 +170,7 @@ export class AnalyticsService {
   }
 
   async generatePlatformAnalytics(
-    timeframe: "month" | "quarter" | "year" = "month",
+    timeframe: &quot;month" | "quarter" | "year" = "month",
   ): Promise<PlatformAnalytics> {
     const cohortData = await this.getCohortData(timeframe);
 
@@ -271,7 +271,7 @@ export class AnalyticsService {
       },
       groundedContext: {
         elementalLanguage: {
-          presentedAs: "metaphor",
+          presentedAs: &quot;metaphor&quot;,
           disclaimers: [],
           personalExperimentationPrompts: [],
           realityGroundingQuestions: [],
@@ -389,7 +389,7 @@ export class AnalyticsService {
     // Count instances where user revisited a theme at a similar or deeper level
     const regressions = spiralProgress.filter(
       (point) =>
-        point.phase.includes("regression") || point.phase.includes("revisit"),
+        point.phase.includes(&quot;regression") || point.phase.includes("revisit"),
     );
 
     return regressions.length;
@@ -557,7 +557,7 @@ export class AnalyticsService {
       .fill(null)
       .map((_, index) => ({
         anonymizedId: `anon_${index}`,
-        developmentPattern: "steady_progress",
+        developmentPattern: &quot;steady_progress&quot;,
         elementalBalance: {},
         integrationMetrics: {},
         communityEngagement: {},
@@ -569,7 +569,7 @@ export class AnalyticsService {
   ): Promise<ResearchInsights["developmentPatterns"]> {
     return {
       commonProgressionPaths: [
-        "Earth → Water → Fire integration shows highest sustainability",
+        &quot;Earth → Water → Fire integration shows highest sustainability&quot;,
         "Early community engagement correlates with long-term success",
         "Spiral regression acceptance reduces abandonment by 40%",
       ],
@@ -591,7 +591,7 @@ export class AnalyticsService {
   ): Promise<ResearchInsights["bypassingPatterns"]> {
     return {
       mostCommonPatterns: [
-        "Insight addiction (45% of users)",
+        &quot;Insight addiction (45% of users)&quot;,
         "Emotional avoidance (38% of users)",
         "Spiritual superiority (23% of users)",
       ],
@@ -613,7 +613,7 @@ export class AnalyticsService {
   ): Promise<ResearchInsights["elementalIntegration"]> {
     return {
       balanceBenefits: [
-        "Balanced archetype development increases wellbeing scores by 45%",
+        &quot;Balanced archetype development increases wellbeing scores by 45%&quot;,
         "Cross-domain integration correlates with relationship improvement",
         "Elemental diversity reduces platform abandonment by 55%",
       ],
@@ -635,7 +635,7 @@ export class AnalyticsService {
   ): Promise<ResearchInsights["communityDynamics"]> {
     return {
       supportiveBehaviors: [
-        "Sharing struggles increases community trust by 85%",
+        &quot;Sharing struggles increases community trust by 85%&quot;,
         "Reality-checking reduces spiritual bypassing by 70%",
         "Celebrating small consistencies improves motivation",
       ],

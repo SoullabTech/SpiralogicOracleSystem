@@ -283,7 +283,7 @@ function createSpiralogicOrchestrator(): IOrchestrator {
       analytics
     );
     
-    logger.info("Spiralogic orchestrator initialized with full consciousness architecture");
+    logger.info(&quot;Spiralogic orchestrator initialized with full consciousness architecture&quot;);
     
     return {
       async process(request) {
@@ -321,8 +321,8 @@ function createBaselineOrchestrator(): IOrchestrator {
       // Simple baseline responses with shadow work elements
       const shadowWorkPrompts = [
         "What are you not quite ready to face about this situation?",
-        "I hear what you're saying, and I'm curious about what you're not saying.",
-        "That sounds like the story you tell yourself. What's the story underneath that one?",
+        "I hear what you&apos;re saying, and I&apos;m curious about what you&apos;re not saying.",
+        "That sounds like the story you tell yourself. What&apos;s the story underneath that one?",
         "What would you tell your best friend if they brought this exact problem to you?",
         "I notice you're asking me what to do. What do you already know you need to do?"
       ];
@@ -331,7 +331,7 @@ function createBaselineOrchestrator(): IOrchestrator {
         fire: "Your passion is clear. What's the action you're avoiding taking?",
         water: "I sense deep feeling here. What emotion are you not quite ready to feel fully?",
         earth: "You want solid ground. What foundation are you afraid to build?",
-        air: "Your mind is working hard on this. What does your body know that your thoughts don't?",
+        air: "Your mind is working hard on this. What does your body know that your thoughts don&apos;t?",
         aether: shadowWorkPrompts[Math.floor(Math.random() * shadowWorkPrompts.length)]
       };
 

@@ -123,7 +123,7 @@ export function VoiceControls({
   return (
     <div className={`p-4 bg-white rounded-lg shadow-md ${className}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">Maya's Voice</h3>
+        <h3 className="text-lg font-semibold text-gray-800">Maya&apos;s Voice</h3>
         <div className={`text-sm font-medium ${getStatusColor()}`}>
           {getStatusText()}
         </div>
@@ -256,7 +256,7 @@ export function VoiceControls({
                     value={testText}
                     onChange={(e) => setTestText(e.target.value)}
                     className="flex-1 p-2 border border-gray-300 rounded-md text-sm"
-                    placeholder="Enter text to test Maya's voice..."
+                    placeholder="Enter text to test Maya&apos;s voice..."
                   />
                   <button
                     onClick={handleTestSpeak}

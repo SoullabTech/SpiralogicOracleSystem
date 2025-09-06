@@ -53,7 +53,7 @@ export class FileIngestionService {
       // 4. Store embeddings in database
       await this.storeEmbeddings(fileId, userId, embeddings);
       
-      // 5. Generate Maya's reflection on the content
+      // 5. Generate Maya&apos;s reflection on the content
       const reflection = await this.generateMayaReflection(chunks, filename);
       
       // 6. Update file status to ready

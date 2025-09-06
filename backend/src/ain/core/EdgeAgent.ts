@@ -18,7 +18,7 @@ export class EdgeAgent extends BaseAgent {
   protected offlineMode: boolean = false;
 
   constructor(serviceId: string, elementalService?: ElementalService) {
-    super(serviceId, "edge", elementalService);
+    super(serviceId, &quot;edge&quot;, elementalService);
 
     this.processingMode = {
       local_threshold: 0.8, // Process 80% locally
@@ -81,7 +81,7 @@ export class EdgeAgent extends BaseAgent {
       await this.publish(this.generateResponseEventType(event), {
         ...result,
         processing: {
-          type: "edge",
+          type: &quot;edge&quot;,
           latency: processingTime,
           cached: true,
         },
@@ -105,7 +105,7 @@ export class EdgeAgent extends BaseAgent {
     }
 
     try {
-      await this.publish("cloud.escalation", {
+      await this.publish(&quot;cloud.escalation&quot;, {
         original_event: event,
         escalation_reason: "complexity_threshold_exceeded",
         edge_service: this.serviceId,
@@ -123,7 +123,7 @@ export class EdgeAgent extends BaseAgent {
   protected async edgeProcessingLogic(event: SpiralogicEvent): Promise<any> {
     // Default edge processing - return simplified response
     return {
-      response: "Edge processed response",
+      response: &quot;Edge processed response&quot;,
       confidence: 0.7,
       elemental_influence: this.calculateElementalInfluence(event),
     };
@@ -186,7 +186,7 @@ export class EdgeAgent extends BaseAgent {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch("/health", {
+      const response = await fetch(&quot;/health", {
         method: "HEAD",
         signal: controller.signal,
       });

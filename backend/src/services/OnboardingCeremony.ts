@@ -114,7 +114,7 @@ export class UserOracleBindingService {
       sacredContract: {
         purpose: this.deriveSacredPurpose(preferences),
         journey: this.deriveJourneyPath(preferences),
-        commitment: "To guide with wisdom, evolve with understanding, and honor the sacred journey"
+        commitment: &quot;To guide with wisdom, evolve with understanding, and honor the sacred journey&quot;
       }
     };
 
@@ -131,7 +131,7 @@ export class UserOracleBindingService {
   }
 
   /**
-   * Retrieve user's bound Oracle agent
+   * Retrieve user&apos;s bound Oracle agent
    */
   public async getBinding(userId: string): Promise<OracleBinding | null> {
     return this.bindings.get(userId) || null;
@@ -167,7 +167,7 @@ export class UserOracleBindingService {
 
   private deriveSacredPurpose(preferences?: OnboardingPreferences): string {
     const purposes = {
-      catalyst: "To ignite transformation and awaken dormant potential",
+      catalyst: &quot;To ignite transformation and awaken dormant potential&quot;,
       nurturer: "To heal wounds and cultivate emotional wisdom", 
       introspective: "To explore inner landscapes and uncover hidden truths",
       explorer: "To expand consciousness and discover new perspectives",
@@ -215,7 +215,7 @@ export class OnboardingCeremony {
     const requestId = generateRequestId();
 
     try {
-      logger.info("Sacred onboarding ceremony beginning", {
+      logger.info(&quot;Sacred onboarding ceremony beginning&quot;, {
         userId: initiation.userId,
         requestId,
         hasCeremonialContext: !!initiation.ceremonialContext
@@ -339,7 +339,7 @@ export class OnboardingCeremony {
   ): Promise<void> {
     // Sesame is already integrated through SesameMayaRefiner
     // Here we can add additional Sesame-specific initialization
-    logger.info("Sesame CSM intelligence activated", {
+    logger.info(&quot;Sesame CSM intelligence activated&quot;, {
       userId: binding.userId,
       refinerId: binding.sesameRefinerId
     });
@@ -372,7 +372,7 @@ export class OnboardingCeremony {
       };
     });
 
-    logger.info("MicroPsi emotional system activated", {
+    logger.info(&quot;MicroPsi emotional system activated&quot;, {
       userId: binding.userId,
       initialAffiliation: 0.8
     });
@@ -393,7 +393,7 @@ export class OnboardingCeremony {
     const oracle = binding.personalOracleInstance;
     
     const welcomeQuery = {
-      input: "I am beginning my sacred journey with you. Please introduce yourself and help me understand our path together.",
+      input: &quot;I am beginning my sacred journey with you. Please introduce yourself and help me understand our path together.",
       userId: initiation.userId,
       sessionId: `ceremony-${Date.now()}`,
       targetElement: oracleSettings.archetype,
@@ -447,7 +447,7 @@ export class OnboardingCeremony {
   }
 
   /**
-   * Retrieve user's Oracle for ongoing interactions
+   * Retrieve user&apos;s Oracle for ongoing interactions
    */
   public async getUserOracle(
     userId: string

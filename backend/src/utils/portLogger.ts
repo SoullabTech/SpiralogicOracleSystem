@@ -67,7 +67,7 @@ export function checkPortAlerts(entry: PortLogEntry) {
           suggestion: 'Consider changing default port or removing blocking service'
         }
       };
-      fs.appendFileSync(ALERTS_FILE, JSON.stringify(frequentAlert) + "\n", "utf8");
+      fs.appendFileSync(ALERTS_FILE, JSON.stringify(frequentAlert) + &quot;\n&quot;, "utf8");
     }
   }
 }

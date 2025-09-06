@@ -125,7 +125,7 @@ export class DaimonicVoiceService {
           return {
             ...preset,
             tone: 'warm',
-            // Aunt Annie's gentle approach to trickster energy
+            // Aunt Annie&apos;s gentle approach to trickster energy
           };
         }
         break;

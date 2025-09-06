@@ -73,7 +73,7 @@ export class UniversalConsciousnessOrchestrator {
         return this.createPreservedResponse(request);
       }
 
-      logger.info("Enhancing Oracle response with Universal Consciousness", {
+      logger.info(&quot;Enhancing Oracle response with Universal Consciousness&quot;, {
         userId: request.userId,
         element: request.element,
         hasUserProfile: !!request.userProfile,
@@ -137,7 +137,7 @@ export class UniversalConsciousnessOrchestrator {
       const ucQuery: UniversalConsciousnessQuery = {
         userInput,
         userId,
-        element: "shadow", // Special element for shadow work
+        element: &quot;shadow", // Special element for shadow work
         originalResponse: originalShadowResponse,
         userProfile,
         culturalPreferences: this.extractCulturalPreferences(userProfile),
@@ -217,7 +217,7 @@ export class UniversalConsciousnessOrchestrator {
 
       // Add cross-cultural wisdom if appropriate
       if (ucResponse.culturalWisdom.universalWisdomThreads.length > 0) {
-        enhancedResponse += `\n\n**Universal Wisdom**: This energy is recognized across cultures through: ${ucResponse.culturalWisdom.universalWisdomThreads.slice(0, 2).join(", ")}.`;
+        enhancedResponse += `\n\n**Universal Wisdom**: This energy is recognized across cultures through: ${ucResponse.culturalWisdom.universalWisdomThreads.slice(0, 2).join(&quot;, ")}.`;
       }
 
       return {

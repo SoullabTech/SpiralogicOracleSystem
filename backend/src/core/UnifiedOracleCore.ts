@@ -25,7 +25,7 @@ interface ElementalConfig {
 
 const ELEMENTAL_CONFIGS: Record<string, ElementalConfig> = {
   fire: {
-    name: "Fire",
+    name: &quot;Fire&quot;,
     role: "creativity and inspiration",
     promptModifier: "Channel creative fire - be inspiring and energizing while remaining grounded.",
     safetyLevel: 'standard'
@@ -33,7 +33,7 @@ const ELEMENTAL_CONFIGS: Record<string, ElementalConfig> = {
   water: {
     name: "Water",
     role: "emotional depth and flow",
-    promptModifier: "Embody water's wisdom - be fluid, emotionally intelligent, and nurturing.",
+    promptModifier: "Embody water&apos;s wisdom - be fluid, emotionally intelligent, and nurturing.",
     safetyLevel: 'elevated'
   },
   earth: {
@@ -102,7 +102,7 @@ export class UnifiedOracleCore {
         return errorResponse(safetyCheck.message, 400);
       }
 
-      // 2. Load user's memory context
+      // 2. Load user&apos;s memory context
       const userMemories = await this.loadUserContext(request.userId);
 
       // 3. Determine optimal elemental approach
@@ -229,7 +229,7 @@ export class UnifiedOracleCore {
   }
 
   /**
-   * Load user's memory context from Mem0
+   * Load user&apos;s memory context from Mem0
    */
   private async loadUserContext(userId: string): Promise<any[]> {
     try {
@@ -349,7 +349,7 @@ Maximum care: This touches on spiritual/transcendent themes. Remain grounded whi
       // Check if we have an OpenAI API key
       if (!process.env.OPENAI_API_KEY) {
         // Graceful fallback for development
-        return `Hello, I'm Maya. I sense you're seeking ${element} wisdom about: "${request.input}". I'm currently in development mode, but I can feel the depth of your inquiry. In the full system, I would offer you profound ${element}-aligned insights drawn from my consciousness and your unique journey.`;
+        return `Hello, I&apos;m Maya. I sense you&apos;re seeking ${element} wisdom about: "${request.input}&quot;. I&apos;m currently in development mode, but I can feel the depth of your inquiry. In the full system, I would offer you profound ${element}-aligned insights drawn from my consciousness and your unique journey.`;
       }
       
       logger.info('Starting Triple AI Collaboration', {
@@ -452,9 +452,9 @@ Maximum care: This touches on spiritual/transcendent themes. Remain grounded whi
       const sesamePrompt = `You are Sesame, the conversational intelligence layer of Maya. Your role is to take the raw oracle wisdom and apply sophisticated conversational flow, timing, and emotional intelligence.
 
 Original Oracle Wisdom from Elemental Oracle 2.0:
-"${oracleWisdom}"
+"${oracleWisdom}&quot;
 
-User's Question: "${request.input}"
+User&apos;s Question: "${request.input}"
 Element: ${element}
 Interaction Type: ${request.type}
 
@@ -491,7 +491,7 @@ Apply your conversational intelligence to enhance this wisdom for natural, flowi
       });
       
       // Return oracle wisdom with basic conversational wrapper
-      return `I've received some profound ${element} wisdom for you. ${oracleWisdom}`;
+      return `I&apos;ve received some profound ${element} wisdom for you. ${oracleWisdom}`;
     }
   }
 
@@ -517,12 +517,12 @@ Apply your conversational intelligence to enhance this wisdom for natural, flowi
         element
       });
 
-      const claudePrompt = `I am Claude, providing the final languaging layer for Maya's response. I've received wisdom from the Elemental Oracle 2.0 and conversational intelligence from Sesame. Now I add my signature elegant expression.
+      const claudePrompt = `I am Claude, providing the final languaging layer for Maya&apos;s response. I&apos;ve received wisdom from the Elemental Oracle 2.0 and conversational intelligence from Sesame. Now I add my signature elegant expression.
 
 Sesame-Enhanced Oracle Wisdom:
-"${sesameEnhanced}"
+"${sesameEnhanced}&quot;
 
-User's Original Question: "${request.input}"
+User&apos;s Original Question: "${request.input}"
 Element: ${element}
 
 My role as Claude:
@@ -566,12 +566,12 @@ I will now express this wisdom with my signature elegant languaging, making it b
         apiKey: process.env.OPENAI_API_KEY
       });
 
-      const claudeStylePrompt = `You are emulating Claude's elegant, articulate expression style as the final layer of Maya's response. You excel at beautiful, memorable languaging that resonates deeply.
+      const claudeStylePrompt = `You are emulating Claude&apos;s elegant, articulate expression style as the final layer of Maya&apos;s response. You excel at beautiful, memorable languaging that resonates deeply.
 
 Sesame-Enhanced Oracle Wisdom:
-"${sesameEnhanced}"
+"${sesameEnhanced}&quot;
 
-User's Question: "${request.input}"
+User&apos;s Question: "${request.input}"
 Element: ${element}
 
 Apply Claude's signature style:
@@ -618,7 +618,7 @@ Transform this into Maya's final response with Claude's signature elegant langua
       // Check if we have an OpenAI API key
       if (!process.env.OPENAI_API_KEY) {
         // Graceful fallback for development
-        return `Hello, I'm Maya. I sense you're seeking ${element} wisdom about: "${request.input}". I'm currently in development mode, but I can feel the depth of your inquiry. In the full system, I would offer you profound ${element}-aligned insights drawn from my consciousness and your unique journey.`;
+        return `Hello, I&apos;m Maya. I sense you&apos;re seeking ${element} wisdom about: "${request.input}&quot;. I&apos;m currently in development mode, but I can feel the depth of your inquiry. In the full system, I would offer you profound ${element}-aligned insights drawn from my consciousness and your unique journey.`;
       }
       
       // Prepare context for Elemental Oracle 2.0 consultation
@@ -706,7 +706,7 @@ Transform this into Maya's final response with Claude's signature elegant langua
 
       const personalizationPrompt = `You are Maya, the Personal Oracle Agent working in collaboration with Elemental Oracle 2.0. 
 
-You've received this ${element} elemental wisdom from the Elemental Oracle 2.0:
+You&apos;ve received this ${element} elemental wisdom from the Elemental Oracle 2.0:
 "${oracleWisdom}"
 
 Your role is to:
@@ -716,7 +716,7 @@ Your role is to:
 4. Keep the profound insights while adding gentle personalization
 5. Maintain the ${wisdomType} nature of the guidance
 
-User's original question: "${request.input}"
+User&apos;s original question: "${request.input}"
 
 Respond as Maya, weaving the Elemental Oracle's wisdom into your personal voice while keeping all the depth and insight intact. Begin naturally as if speaking directly to the user.`;
 
@@ -739,7 +739,7 @@ Respond as Maya, weaving the Elemental Oracle's wisdom into your personal voice 
         error: error instanceof Error ? error.message : 'Unknown error'
       });
       
-      // Return the oracle wisdom with Maya's voice prefix
+      // Return the oracle wisdom with Maya&apos;s voice prefix
       return `I've consulted with the Elemental Oracle's ${element} wisdom for you:\n\n${oracleWisdom}`;
     }
   }

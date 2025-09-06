@@ -25,7 +25,7 @@ export class LocalAudioStorage implements AudioStorage {
       const filePath = path.join(this.outputDir, fileName);
       await fs.unlink(filePath);
     } catch (error) {
-      // File might not exist, that's ok
+      // File might not exist, that&apos;s ok
     }
   }
 

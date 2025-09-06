@@ -23,7 +23,7 @@ export interface ArchetypalVoiceProfile {
 export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
   {
     fire: {
-      voiceId: "EXAVITQu4vr4xnSDxMaL", // Sarah - Bold, inspiring voice
+      voiceId: &quot;EXAVITQu4vr4xnSDxMaL&quot;, // Sarah - Bold, inspiring voice
       personality: "Bold, inspiring, action-oriented",
       energySignature: "Dynamic energy with focused intensity",
       voiceSettings: {
@@ -44,7 +44,7 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
       personality: "Gentle, intuitive, emotionally intelligent",
       energySignature: "Flowing wisdom with empathetic presence",
       voiceSettings: {
-        stability: 0.8, // More stable for water's flowing nature
+        stability: 0.8, // More stable for water&apos;s flowing nature
         similarity_boost: 0.7,
         style: 0.3, // Gentler style
         use_speaker_boost: false,

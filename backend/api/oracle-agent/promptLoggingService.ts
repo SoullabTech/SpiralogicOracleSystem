@@ -31,7 +31,7 @@ export class PromptLoggingService {
    */
   async logPromptUsage(entry: PromptLogEntry): Promise<void> {
     try {
-      const { error } = await this.supabase.from("prompt_insight_log").insert({
+      const { error } = await this.supabase.from(&quot;prompt_insight_log&quot;).insert({
         user_id: entry.user_id,
         prompt_id: entry.prompt_id,
         prompt_text: entry.prompt_text,
@@ -48,16 +48,16 @@ export class PromptLoggingService {
       }
     } catch (error) {
       console.error("Error in logPromptUsage:", error);
-      // Don't throw - logging shouldn't break the main flow
+      // Don&apos;t throw - logging shouldn&apos;t break the main flow
     }
   }
 
   /**
-   * Get user's prompt history for personalization
+   * Get user&apos;s prompt history for personalization
    */
   async getUserPromptHistory(userId: string, limit = 20): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from("prompt_insight_log")
+      .from(&quot;prompt_insight_log&quot;)
       .select("*")
       .eq("user_id", userId)
       .order("served_at", { ascending: false })
@@ -72,7 +72,7 @@ export class PromptLoggingService {
   }
 
   /**
-   * Get prompts that haven't been shown to a user recently
+   * Get prompts that haven&apos;t been shown to a user recently
    */
   async getUnseenPrompts(
     userId: string,
@@ -84,7 +84,7 @@ export class PromptLoggingService {
 
     // Get recently seen prompt IDs
     const { data: recentLogs } = await this.supabase
-      .from("prompt_insight_log")
+      .from(&quot;prompt_insight_log&quot;)
       .select("prompt_id")
       .eq("user_id", userId)
       .eq("phase", phase)
@@ -93,7 +93,7 @@ export class PromptLoggingService {
 
     const seenPromptIds = recentLogs?.map((log) => log.prompt_id) || [];
 
-    // Get all prompts for this phase that haven't been seen
+    // Get all prompts for this phase that haven&apos;t been seen
     const { data: unseenPrompts } = await this.supabase
       .from("spiralogic_prompts")
       .select("id, prompt")
@@ -112,7 +112,7 @@ export class PromptLoggingService {
     quality: number,
   ): Promise<void> {
     const { error } = await this.supabase
-      .from("prompt_insight_log")
+      .from(&quot;prompt_insight_log&quot;)
       .update({ response_quality: quality })
       .eq("id", promptLogId)
       .eq("user_id", userId);
@@ -128,7 +128,7 @@ export class PromptLoggingService {
    */
   async getPromptAnalytics(phase?: SpiralogicPhase): Promise<any[]> {
     let query = this.supabase
-      .from("prompt_usage_analytics")
+      .from(&quot;prompt_usage_analytics&quot;)
       .select("*")
       .order("total_uses", { ascending: false });
 

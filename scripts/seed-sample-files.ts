@@ -114,7 +114,7 @@ function chunkText(text: string, filename: string): Array<{
           chunks.push({
             content: currentChunk.trim(),
             chunkIndex: chunkIndex++,
-            pageNumber: 1, // For markdown, all content is "page 1"
+            pageNumber: 1, // For markdown, all content is &quot;page 1&quot;
             sectionTitle,
             sectionLevel,
             preview: currentChunk.trim().slice(0, 200) + (currentChunk.length > 200 ? '...' : '')

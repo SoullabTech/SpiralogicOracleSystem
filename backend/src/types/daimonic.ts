@@ -26,7 +26,7 @@ export interface CollectiveDaimonicSnapshot {
   timestamp: string;
   fieldIntensity: number;          // 0–1
   collectiveMyth: string;          // human phrase
-  culturalCompensation: string;    // "balancing abstraction with embodiment"
+  culturalCompensation: string;    // &quot;balancing abstraction with embodiment&quot;
   tricksterPrevalence: number;     // 0–1
   bothAndRate: number;             // 0–1
   activeElements: Array<'fire' | 'water' | 'earth' | 'air' | 'aether'>;

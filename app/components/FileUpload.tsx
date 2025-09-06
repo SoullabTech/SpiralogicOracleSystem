@@ -322,7 +322,7 @@ export default function FileUpload({
         </div>
       )}
 
-      {/* Maya's Response Area */}
+      {/* Maya&apos;s Response Area */}
       {files.some(f => f.status === 'processing') && (
         <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
           <div className="flex items-center space-x-2">
@@ -332,7 +332,7 @@ export default function FileUpload({
             </p>
           </div>
           <p className="text-xs text-purple-600 dark:text-purple-400 mt-2">
-            She'll weave these insights into your future conversations
+            She&apos;ll weave these insights into your future conversations
           </p>
         </div>
       )}
@@ -342,7 +342,7 @@ export default function FileUpload({
           <div className="flex items-center space-x-2">
             <CheckCircle className="w-5 h-5 text-green-600" />
             <p className="text-sm text-green-700 dark:text-green-300">
-              Files absorbed into Maya's memory
+              Files absorbed into Maya&apos;s memory
             </p>
           </div>
           <p className="text-xs text-green-600 dark:text-green-400 mt-2">

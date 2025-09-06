@@ -15,7 +15,7 @@ export async function login(authRequest: AuthRequest): Promise<AuthResponse> {
   } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !user || !session) {
-    throw new Error(error?.message || "Authentication failed");
+    throw new Error(error?.message || &quot;Authentication failed&quot;);
   }
 
   return {
@@ -40,7 +40,7 @@ export async function refreshSession(
   } = await supabase.auth.refreshSession({ refresh_token: refreshToken });
 
   if (error || !session || !session.user) {
-    throw new Error(error?.message || "Invalid refresh token");
+    throw new Error(error?.message || &quot;Invalid refresh token&quot;);
   }
 
   return {

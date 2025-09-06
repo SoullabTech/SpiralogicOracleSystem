@@ -28,7 +28,7 @@ export const ONBOARDING_CONDITIONS: OnboardingCondition[] = [
   
   // FIRST CONTACT - Brand new users
   {
-    name: "firstContact",
+    name: &quot;firstContact&quot;,
     detect: (context) => {
       return context.sessionCount === 0 || 
              (context.sessionCount <= 2 && context.trustLevel < 0.3);

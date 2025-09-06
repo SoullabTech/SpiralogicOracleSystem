@@ -262,7 +262,7 @@ function generateRealEmotionalInsight(valence: number, arousal: number, dominanc
 
   // Generate contextual insights based on actual patterns
   if (valence > 0.3 && arousal > 0.6 && dominance > 0.6) {
-    return `I sense radiant empowerment flowing through your recent expressions. Your ${dominantSignature || 'vibrant'} energy suggests you're in a powerful creative and transformative phase.`;
+    return `I sense radiant empowerment flowing through your recent expressions. Your ${dominantSignature || 'vibrant'} energy suggests you&apos;re in a powerful creative and transformative phase.`;
   }
   
   if (valence > 0.2 && arousal < 0.4 && dominance > 0.5) {
@@ -274,7 +274,7 @@ function generateRealEmotionalInsight(valence: number, arousal: number, dominanc
   }
   
   if (arousal > 0.7) {
-    return `There's high activation and aliveness in your emotional field. Your ${dominantSignature || 'intense'} energy suggests important life processes are moving through you.`;
+    return `There&apos;s high activation and aliveness in your emotional field. Your ${dominantSignature || 'intense'} energy suggests important life processes are moving through you.`;
   }
   
   if (dominance > 0.7) {

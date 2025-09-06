@@ -27,7 +27,7 @@ const emotionalStateTracker = new Map<string, { valence: number; arousal: number
  * Enhanced Maya Conversational Pipeline with full research logging
  * Tracks all 20 intents, 8 dialogue stages, and emotional shifts
  */
-router.get("/stream/enhanced", streamLimiter, async (req: Request, res: Response) => {
+router.get(&quot;/stream/enhanced", streamLimiter, async (req: Request, res: Response) => {
   // Feature flag to disable streaming in prod if needed
   if (process.env.STREAMING_ENABLED === '0') {
     return res.status(503).json({ success: false, error: 'Streaming disabled' });
@@ -124,7 +124,7 @@ router.get("/stream/enhanced", streamLimiter, async (req: Request, res: Response
       }
     });
 
-    // Process through Maya's full conversational pipeline
+    // Process through Maya&apos;s full conversational pipeline
     const mayaResponse = await personalOracleAgent.consult({
       input: userText,
       userId,
@@ -139,7 +139,7 @@ router.get("/stream/enhanced", streamLimiter, async (req: Request, res: Response
 
     if (!mayaResponse.success) {
       logger.error('Maya consultation failed', { error: mayaResponse.error });
-      send("delta", { text: "I'm experiencing some technical difficulties. Could you share that again?" });
+      send("delta", { text: "I&apos;m experiencing some technical difficulties. Could you share that again?" });
       send("done", { reason: "error", message: "Maya consultation failed" });
       res.end();
       return;
@@ -220,7 +220,7 @@ router.get("/stream/enhanced", streamLimiter, async (req: Request, res: Response
     // Update emotional state tracker
     emotionalStateTracker.set(userId, currentEmotionalState);
 
-    // Stream Maya's response word by word for real-time feel
+    // Stream Maya&apos;s response word by word for real-time feel
     const words = response.message.split(' ');
     let accumulatedText = '';
 
@@ -242,7 +242,7 @@ router.get("/stream/enhanced", streamLimiter, async (req: Request, res: Response
         const word = words[i];
         accumulatedText += (i > 0 ? ' ' : '') + word;
         
-        send("delta", { text: word + (i < words.length - 1 ? ' ' : '') });
+        send(&quot;delta&quot;, { text: word + (i < words.length - 1 ? ' ' : '') });
         
         // Natural pause between words (Maya's conversational rhythm)
         await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 50));

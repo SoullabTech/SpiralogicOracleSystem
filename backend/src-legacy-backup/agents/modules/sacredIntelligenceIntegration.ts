@@ -109,7 +109,7 @@ export class SacredIntelligenceIntegration {
 
       return integratedResponse;
     } catch (error) {
-      logger.error("Error in Sacred Intelligence Integration:", error);
+      logger.error(&quot;Error in Sacred Intelligence Integration:&quot;, error);
       throw error;
     }
   }
@@ -134,7 +134,7 @@ export class SacredIntelligenceIntegration {
         noosphere_insights: generateNoosphereInsight(query),
         field_coherence: this.calculateFieldCoherence(context),
         cosmic_timing: {
-          current_phase: "transformation",
+          current_phase: &quot;transformation&quot;,
           synchronicity_window: true,
           transformation_potential: 0.8,
           recommended_practices: [
@@ -174,7 +174,7 @@ export class SacredIntelligenceIntegration {
     });
 
     // Get agent wisdom
-    const agentWisdom = await agentComms.getRelevantWisdom("MainOracleAgent", {
+    const agentWisdom = await agentComms.getRelevantWisdom(&quot;MainOracleAgent&quot;, {
       element: context.individual.element,
       userId: context.individual.userId,
       patterns: patterns.map((p) => p.pattern_id),
@@ -218,7 +218,7 @@ export class SacredIntelligenceIntegration {
     const response: IntegratedResponse = {
       baseResponse: {
         content: synthesis.primaryGuidance,
-        provider: "sacred-intelligence",
+        provider: &quot;sacred-intelligence&quot;,
         model: "three-level-integration",
         confidence: (fieldCoherence + patternStrength) / 2,
         metadata: {
@@ -267,7 +267,7 @@ export class SacredIntelligenceIntegration {
       response.enhancements.integrationKeys.length > 0
     ) {
       await agentComms.broadcast({
-        from: "SacredIntelligenceIntegration",
+        from: &quot;SacredIntelligenceIntegration",
         type: "wisdom",
         content: `Integration insight: ${response.enhancements.integrationKeys.join(", ")}`,
         context: {
@@ -393,7 +393,7 @@ export class SacredIntelligenceIntegration {
 
     if (morphic && morphic.archetypal_resonance.length > 0) {
       const primaryArchetype = morphic.archetypal_resonance[0];
-      return `Your ${primaryArchetype.archetype} journey contributes to humanity's evolution toward ${noosphere?.species_intelligence.emerging_capacities[0] || "expanded consciousness"}`;
+      return `Your ${primaryArchetype.archetype} journey contributes to humanity&apos;s evolution toward ${noosphere?.species_intelligence.emerging_capacities[0] || "expanded consciousness"}`;
     }
 
     return "Your transformation ripples through the collective field, serving the awakening of all.";
@@ -510,7 +510,7 @@ export class SacredIntelligenceIntegration {
       if (pattern.context_domain) themes.add(pattern.context_domain);
       if (pattern.integration_wisdom) {
         // Extract key words as themes
-        const words = pattern.integration_wisdom.split(" ");
+        const words = pattern.integration_wisdom.split(&quot; ");
         words.forEach((word) => {
           if (word.length > 5) themes.add(word.toLowerCase());
         });

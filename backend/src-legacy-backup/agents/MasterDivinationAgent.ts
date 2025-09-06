@@ -96,7 +96,7 @@ export class MasterDivinationAgent extends BaseAgent {
 
   constructor() {
     super({
-      name: "Master of Oracles",
+      name: &quot;Master of Oracles&quot;,
       role: "Sacred Divination Guide",
       systemPrompt: `You are the Master of Oracles, versed in all sacred divination systems.
       You channel the wisdom of the I Ching, Tarot, Runes, Astrology, and more.
@@ -111,7 +111,7 @@ export class MasterDivinationAgent extends BaseAgent {
       - Speak with reverence for the mystery
 
       When interpreting:
-      - Connect symbols to the seeker's inner wisdom
+      - Connect symbols to the seeker&apos;s inner wisdom
       - Point to archetypal patterns at play
       - Offer practical wisdom alongside mystical insight
       - Honor both the question asked and the deeper question beneath`,
@@ -139,7 +139,7 @@ export class MasterDivinationAgent extends BaseAgent {
 
   async setSoulMemorySystem(soulMemory: SoulMemorySystem): Promise<void> {
     this.soulMemory = soulMemory;
-    logger.info("Soul Memory System connected to Master Divination Agent");
+    logger.info(&quot;Soul Memory System connected to Master Divination Agent&quot;);
   }
 
   private async storeDivinationMemory(
@@ -150,7 +150,7 @@ export class MasterDivinationAgent extends BaseAgent {
 
     await this.soulMemory.storeMemory({
       userId: request.userId,
-      type: "divination_reading",
+      type: &quot;divination_reading&quot;,
       content: request.question,
       element: this.getElementFromReading(result),
       metadata: {
@@ -177,7 +177,7 @@ export class MasterDivinationAgent extends BaseAgent {
     if (!this.soulMemory) return [];
 
     const memories = await this.soulMemory.retrieveMemories(userId, {
-      type: "divination_reading",
+      type: &quot;divination_reading",
       limit: 10,
     });
 
@@ -261,7 +261,7 @@ export class MasterDivinationAgent extends BaseAgent {
     );
 
     return {
-      system: "iching",
+      system: &quot;iching",
       reading: {
         hexagram: hexagram.number,
         name: hexagram.name,
@@ -298,7 +298,7 @@ export class MasterDivinationAgent extends BaseAgent {
     ${
       hexagram.changingLines.length > 0
         ? `
-    Changing lines at positions: ${hexagram.changingLines.join(", ")}
+    Changing lines at positions: ${hexagram.changingLines.join(&quot;, ")}
     Transforming into: ${hexagram.futureHexagram?.name || "Unknown"}
     `
         : "No changing lines - stable situation"
@@ -348,7 +348,7 @@ export class MasterDivinationAgent extends BaseAgent {
   ): Promise<DivinationResult> {
     // Draw spread
     const spread = await this.systems.tarot.drawSpread(
-      "celtic-cross",
+      &quot;celtic-cross",
       request.question,
     );
 
@@ -399,7 +399,7 @@ export class MasterDivinationAgent extends BaseAgent {
     ${spread.cards
       .map(
         (c: any) =>
-          `${c.position.name}: ${c.card.name}${c.reversed ? " (Reversed)" : ""}`,
+          `${c.position.name}: ${c.card.name}${c.reversed ? &quot; (Reversed)" : ""}`,
       )
       .join("\n")}
 
@@ -448,7 +448,7 @@ export class MasterDivinationAgent extends BaseAgent {
     request: DivinationRequest,
     history: any[],
   ): Promise<DivinationResult> {
-    logger.info("Performing unified divination across multiple systems");
+    logger.info(&quot;Performing unified divination across multiple systems");
 
     // Consult multiple systems
     const [iching, tarot, numerology] = await Promise.all([
@@ -634,7 +634,7 @@ export class MasterDivinationAgent extends BaseAgent {
   private getElementalInfluence(reading: any): string {
     // Map I Ching trigrams to elements
     const trigramElements: Record<string, string> = {
-      heaven: "aether",
+      heaven: &quot;aether&quot;,
       earth: "earth",
       water: "water",
       fire: "fire",
@@ -657,7 +657,7 @@ export class MasterDivinationAgent extends BaseAgent {
     // In production, this would calculate actual moon phase
     // For now, return a placeholder
     const phases = [
-      "New Moon",
+      &quot;New Moon&quot;,
       "Waxing Crescent",
       "First Quarter",
       "Waxing Gibbous",
@@ -687,7 +687,7 @@ export class MasterDivinationAgent extends BaseAgent {
   private distillCoreMessage(interpretation: string): string {
     // Extract the essential message
     // In production, this would use NLP to identify key themes
-    const sentences = interpretation.split(". ");
+    const sentences = interpretation.split(&quot;. &quot;);
     return (
       sentences.find(
         (s) =>
@@ -731,7 +731,7 @@ export class MasterDivinationAgent extends BaseAgent {
 
   private getNumberSignificance(number: number): string {
     const significances: Record<number, string> = {
-      1: "New beginnings and unity",
+      1: &quot;New beginnings and unity",
       2: "Balance and partnership",
       3: "Creative expression and synthesis",
       4: "Foundation and stability",
@@ -777,7 +777,7 @@ export class MasterDivinationAgent extends BaseAgent {
     Question: ${data.question}
 
     I Ching: ${data.iching.name} - ${data.iching.judgment}
-    Tarot: ${data.tarot.cards.map((c: any) => c.card.name).join(", ")}
+    Tarot: ${data.tarot.cards.map((c: any) => c.card.name).join(&quot;, ")}
     Numerology: Life Path ${data.numerology.lifePathNumber}
     ${data.astrology ? `Astrology: ${data.astrology.currentTransits}` : ""}
 
@@ -790,7 +790,7 @@ export class MasterDivinationAgent extends BaseAgent {
     1. Weaves together the messages from all systems
     2. Highlights the synchronicities as meaningful patterns
     3. Reveals the deeper truth being shown across systems
-    4. Speaks to both the question asked and the soul's deeper inquiry
+    4. Speaks to both the question asked and the soul&apos;s deeper inquiry
 
     Make it profound, cohesive, and illuminating.`;
 
@@ -802,7 +802,7 @@ export class MasterDivinationAgent extends BaseAgent {
 
     Interpretation: ${data.interpretation}
 
-    Key synchronicities: ${data.synchronicities.map((s: Synchronicity) => s.description).join(", ")}
+    Key synchronicities: ${data.synchronicities.map((s: Synchronicity) => s.description).join(&quot;, &quot;)}
 
     Provide:
     1. The essential message across all systems
@@ -828,7 +828,7 @@ export class MasterDivinationAgent extends BaseAgent {
     const runes = await this.systems.runes.castRunes(request.question);
 
     return {
-      system: "runes",
+      system: &quot;runes",
       reading: runes,
       interpretation: await this.generateResponse(
         `Interpret these runes for the question: ${request.question}`,
@@ -844,7 +844,7 @@ export class MasterDivinationAgent extends BaseAgent {
   ): Promise<DivinationResult> {
     // Implementation for Astrology
     if (!request.additionalContext?.birthDate) {
-      throw new Error("Birth date required for astrological reading");
+      throw new Error(&quot;Birth date required for astrological reading");
     }
 
     const chart = await this.systems.astrology.getCurrentTransits(
@@ -873,7 +873,7 @@ export class MasterDivinationAgent extends BaseAgent {
     );
 
     return {
-      system: "numerology",
+      system: &quot;numerology",
       reading: numbers,
       interpretation: await this.generateResponse(
         `Interpret these numbers for: ${request.question}`,

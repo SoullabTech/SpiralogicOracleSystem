@@ -134,7 +134,7 @@ export class IntentMappingService {
   private hasStrongIntentMarkers(intent: UserIntent, message: string): boolean {
     const markers: Record<UserIntent, string[]> = {
       [UserIntent.BREAKTHROUGH]: ['realize', 'aha', 'now I see', 'breakthrough'],
-      [UserIntent.RESISTANCE]: ['but', 'however', "don't agree", 'not sure'],
+      [UserIntent.RESISTANCE]: ['but', 'however', &quot;don&apos;t agree&quot;, 'not sure'],
       [UserIntent.CELEBRATION]: ['amazing', 'wonderful', 'achieved', 'success'],
       [UserIntent.PROCESSING_GRIEF]: ['loss', 'grief', 'mourning', 'passed away'],
       [UserIntent.SPIRITUAL_INQUIRY]: ['soul', 'spirit', 'divine', 'sacred']

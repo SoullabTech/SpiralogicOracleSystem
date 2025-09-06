@@ -87,13 +87,13 @@ export class MasteryVoice {
   
   private masteryPhrases: string[] = [
     // Simple expressions of complex truths
-    "Let's sit with that.",
+    &quot;Let&apos;s sit with that.&quot;,
     "No need to figure it all out.",
-    "That's worth staying curious about.",
+    "That&apos;s worth staying curious about.",
     "Sometimes the not-knowing is the answer.",
     "What wants to be simple here?",
     "The body usually knows first.",
-    "It's both, and that's okay.",
+    "It&apos;s both, and that&apos;s okay.",
     "One step. Then the next.",
     "What would feel true right now?",
     "The way through is usually through.",
@@ -397,11 +397,11 @@ export class MasteryVoice {
    */
   private addGentleHumor(content: string): { content: string; added: boolean } {
     const humorOptions = [
-      "Life's funny that way.",
+      &quot;Life&apos;s funny that way.&quot;,
       "The universe has a sense of humor.",
-      "Or maybe I'm overthinking it.",
+      "Or maybe I&apos;m overthinking it.",
       "Then again, what do I know?",
-      "It's all a bit mysterious, isn't it?",
+      "It&apos;s all a bit mysterious, isn&apos;t it?",
       "Welcome to being human."
     ];
     
@@ -452,7 +452,7 @@ export class MasteryVoice {
     let condensed = coreInsight;
     let currentWords = this.countWords(condensed);
     
-    // Add mastery phrase if there's room
+    // Add mastery phrase if there&apos;s room
     const masteryPhrase = this.masteryPhrases[Math.floor(Math.random() * this.masteryPhrases.length)];
     if (currentWords + this.countWords(masteryPhrase) <= maxWords) {
       condensed = `${condensed} ${masteryPhrase}`;

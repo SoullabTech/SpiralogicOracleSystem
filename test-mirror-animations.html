@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soullab Mirror Animation Test</title>
+    <script src="https://unpkg.com/framer-motion@12.23.12/dist/framer-motion.js"></script>
+    <style>
+        body {
+            background: #0a0f1c;
+            color: white;
+            font-family: system-ui;
+            padding: 20px;
+        }
+        .sacred-gold { 
+            box-shadow: 0 0 16px rgba(255, 215, 0, 0.6);
+        }
+        .purple-aura {
+            box-shadow: 0 0 16px rgba(139, 92, 246, 0.6);
+        }
+        .message-bubble {
+            background: rgba(26, 31, 46, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+            max-width: 600px;
+        }
+        .input-area {
+            background: rgba(26, 31, 46, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            color: white;
+            outline: none;
+        }
+        .send-btn {
+            background: rgba(255, 215, 0, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #d4af37, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🪞 Soullab Mirror Animation Test</h1>
+    
+    <div id="logo" class="logo">SL</div>
+    
+    <div id="maya-message" class="message-bubble">
+        <strong>Maya:</strong> Welcome to the Sacred Mirror. How may I assist your journey today?
+    </div>
+    
+    <div style="display: flex; align-items: center; margin-top: 20px;">
+        <input 
+            id="input" 
+            class="input-area" 
+            placeholder="Offer your reflection..."
+            style="animation: breathe 3s ease-in-out infinite;"
+        />
+        <button id="send-btn" class="send-btn">→</button>
+    </div>
+    
+    <style>
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 0px rgba(139, 92, 246, 0.2); }
+            50% { box-shadow: 0 0 6px rgba(139, 92, 246, 0.4); }
+        }
+        
+        @keyframes maya-breathe {
+            0%, 100% { box-shadow: 0 0 0px rgba(139, 92, 246, 0.3); }
+            50% { box-shadow: 0 0 16px rgba(139, 92, 246, 0.6); }
+        }
+        
+        @keyframes logo-breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes logo-thinking {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        @keyframes send-ripple {
+            0% { transform: scale(1); box-shadow: 0 0 0px rgba(255, 215, 0, 0.3); }
+            50% { transform: scale(1.2); box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 0px rgba(255, 215, 0, 0.3); }
+        }
+    </style>
+    
+    <script>
+        const logo = document.getElementById('logo');
+        const mayaMessage = document.getElementById('maya-message');
+        const input = document.getElementById('input');
+        const sendBtn = document.getElementById('send-btn');
+        
+        // Apply animations
+        mayaMessage.style.animation = 'maya-breathe 6s ease-in-out infinite';
+        logo.style.animation = 'logo-breathe 2s ease-in-out infinite';
+        
+        let logoState = 'idle';
+        
+        // Logo state changes
+        document.addEventListener('keydown', () => {
+            if (logoState !== 'thinking') {
+                logoState = 'thinking';
+                logo.style.animation = 'logo-thinking 6s linear infinite';
+            }
+        });
+        
+        // Input changes golden glow when typing
+        input.addEventListener('input', (e) => {
+            if (e.target.value.length > 0) {
+                input.style.animation = 'none';
+                input.style.boxShadow = '0 0 12px rgba(255, 215, 0, 0.6)';
+                input.style.animation = 'breathe 2s ease-in-out infinite';
+            } else {
+                input.style.animation = 'breathe 3s ease-in-out infinite';
+                input.style.boxShadow = '';
+            }
+        });
+        
+        // Send button ripple
+        sendBtn.addEventListener('click', () => {
+            sendBtn.style.animation = 'send-ripple 0.6s ease-out';
+            setTimeout(() => {
+                sendBtn.style.animation = '';
+            }, 600);
+            
+            // Reset logo to breathing
+            logoState = 'idle';
+            logo.style.animation = 'logo-breathe 2s ease-in-out infinite';
+            
+            // Clear input
+            input.value = '';
+            input.style.animation = 'breathe 3s ease-in-out infinite';
+            input.style.boxShadow = '';
+        });
+    </script>
+    
+    <div style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+        <h3>✨ Animation States Demonstrated:</h3>
+        <ul>
+            <li><strong>Logo:</strong> Breathing (idle) → Spinning (thinking) → Back to breathing</li>
+            <li><strong>Maya Messages:</strong> Purple breathing aura (6s cycle)</li>
+            <li><strong>Input:</strong> Purple idle glow → Golden glow when typing</li>
+            <li><strong>Send Button:</strong> Golden ripple burst on click</li>
+        </ul>
+        <p><em>Try typing and clicking send to see the ceremonial flow!</em></p>
+    </div>
+</body>
+</html>

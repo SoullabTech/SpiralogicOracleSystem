@@ -65,7 +65,7 @@ export class ParticipantContextService {
       };
 
       const { data, error } = await supabase
-        .from("participant_contexts")
+        .from(&quot;participant_contexts&quot;)
         .upsert(contextData, {
           onConflict: "participant_id",
           ignoreDuplicates: false,
@@ -127,7 +127,7 @@ export class ParticipantContextService {
 
       // Fetch from database
       const { data, error } = await supabase
-        .from("participant_contexts")
+        .from(&quot;participant_contexts&quot;)
         .select("*")
         .eq("participant_id", participantId)
         .order("stored_at", { ascending: false })
@@ -185,7 +185,7 @@ export class ParticipantContextService {
       const currentResult =
         await this.retrieveParticipantContext(participantId);
       if (!currentResult.success || !currentResult.context) {
-        return { success: false, error: "Current context not found" };
+        return { success: false, error: &quot;Current context not found&quot; };
       }
 
       const currentContext = currentResult.context;
@@ -252,7 +252,7 @@ export class ParticipantContextService {
         email: participant.email,
         birthDate: participant.birthDate,
         location: participant.location,
-        timezone: participant.timezone || "UTC",
+        timezone: participant.timezone || &quot;UTC&quot;,
       },
       currentState: {
         lifePhase: participant.currentLifePhase || "unknown",
@@ -307,7 +307,7 @@ export class ParticipantContextService {
         await this.updateParticipantContext(
           participantId,
           insights,
-          "system",
+          &quot;system",
           "oracle_interaction",
         );
 
@@ -338,7 +338,7 @@ export class ParticipantContextService {
     const contextResult = await this.retrieveParticipantContext(participantId);
 
     if (!contextResult.success || !contextResult.context) {
-      throw new Error("Context not found");
+      throw new Error(&quot;Context not found&quot;);
     }
 
     const context = contextResult.context;
@@ -366,7 +366,7 @@ export class ParticipantContextService {
     participantId: string,
   ): Promise<ContextUpdateTracker[]> {
     const { data, error } = await supabase
-      .from("context_update_tracking")
+      .from(&quot;context_update_tracking&quot;)
       .select("*")
       .eq("participant_id", participantId)
       .order("updated_at", { ascending: false });
@@ -394,9 +394,9 @@ export class ParticipantContextService {
     // Remove from cache
     this.contextCache.delete(participantId);
 
-    // Archive in database (don't delete, for audit trail)
+    // Archive in database (don&apos;t delete, for audit trail)
     await supabase
-      .from("participant_contexts")
+      .from(&quot;participant_contexts&quot;)
       .update({ archived: true, archived_at: new Date().toISOString() })
       .eq("participant_id", participantId);
 
@@ -438,7 +438,7 @@ export class ParticipantContextService {
     // Analyze interactions for patterns
     interactions.forEach((interaction) => {
       // Extract emotional state patterns
-      if (interaction.query?.toLowerCase().includes("feeling")) {
+      if (interaction.query?.toLowerCase().includes(&quot;feeling&quot;)) {
         // Update emotional state based on recent expressions
       }
 
@@ -526,7 +526,7 @@ export class ParticipantContextService {
     this.compareAndTrack(
       updates,
       participantId,
-      "personalInfo",
+      &quot;personalInfo",
       previous.personalInfo,
       updated.personalInfo,
       updatedBy,

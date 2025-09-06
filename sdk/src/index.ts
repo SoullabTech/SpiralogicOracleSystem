@@ -83,7 +83,7 @@ export interface APIResponse<T = any> {
 export interface CollectiveInsightsQuery {
   limit?: number;
   type?:
-    | "archetypal_pattern"
+    | &quot;archetypal_pattern"
     | "elemental_shift"
     | "consciousness_trend"
     | "shadow_integration";
@@ -133,7 +133,7 @@ export class AINEngineClient {
     const config: RequestInit = {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        &quot;Content-Type": "application/json",
         "X-API-Key": this.apiKey,
         ...options.headers,
       },
@@ -174,7 +174,7 @@ export class AINEngineClient {
       .filter(([_, value]) => value !== undefined && value !== null)
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
 
-    return filtered.length > 0 ? `?${filtered.join("&")}` : "";
+    return filtered.length > 0 ? `?${filtered.join(&quot;&")}` : "";
   }
 
   /**
@@ -208,7 +208,7 @@ export class AINEngineClient {
    */
   async getElementalWisdom(): Promise<ElementalWisdom> {
     const response =
-      await this.makeRequest<ElementalWisdom>("/elemental-wisdom");
+      await this.makeRequest<ElementalWisdom>(&quot;/elemental-wisdom&quot;);
     return response.data || {};
   }
 
@@ -216,7 +216,7 @@ export class AINEngineClient {
    * Get AIN Engine system status and health metrics
    */
   async getSystemStatus(): Promise<SystemStatus> {
-    const response = await this.makeRequest<SystemStatus>("/system-status");
+    const response = await this.makeRequest<SystemStatus>(&quot;/system-status&quot;);
     return response.data || ({} as SystemStatus);
   }
 

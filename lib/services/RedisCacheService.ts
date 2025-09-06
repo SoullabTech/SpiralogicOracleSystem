@@ -147,7 +147,7 @@ export class RedisCacheService implements ICacheService {
   private async initializeRedis(): Promise<void> {
     try {
       // In a real implementation, would initialize Redis client here
-      // For now, we'll use fallback cache
+      // For now, we&apos;ll use fallback cache
       console.log('Redis cache falling back to in-memory cache');
     } catch (error) {
       console.warn('Redis connection failed, using in-memory cache:', error);

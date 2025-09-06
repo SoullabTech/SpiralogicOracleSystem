@@ -43,7 +43,7 @@ export class BreathGeometryIntegration {
 
   // Initialize breath session for user
   async initializeSession(userId: string): Promise<BreathSession> {
-    // Get user's elemental balance from memories
+    // Get user&apos;s elemental balance from memories
     const memories = await getRelevantMemories(userId, undefined, 100);
     const patterns = await getSpiritualPatternInsights(userId);
 
@@ -74,13 +74,13 @@ export class BreathGeometryIntegration {
     return session;
   }
 
-  // Process voice sample through Grant's harmonics
+  // Process voice sample through Grant&apos;s harmonics
   processVoiceSample(
     userId: string,
     voiceSample: number[],
   ): EnhancedBreathCurve {
     const session = this.sessions.get(userId);
-    if (!session) throw new Error("No active breath session");
+    if (!session) throw new Error(&quot;No active breath session");
 
     // Store raw sample
     session.voiceSamples.push(voiceSample);
@@ -138,7 +138,7 @@ export class BreathGeometryIntegration {
     // Background with current element gradient
     svg += this.createElementalBackground(session.currentElement);
 
-    // Grant's constant guide circles
+    // Grant&apos;s constant guide circles
     svg += this.createGrantCircles(cx, cy);
 
     // Breath spiral from all samples
@@ -171,7 +171,7 @@ export class BreathGeometryIntegration {
     breathGuidance: string;
   }> {
     const session = this.sessions.get(userId);
-    if (!session) throw new Error("No active breath session");
+    if (!session) throw new Error(&quot;No active breath session&quot;);
 
     // Analyze breath patterns for transition indicators
     const recentCycles = session.breathCycles.slice(-10);
@@ -221,7 +221,7 @@ export class BreathGeometryIntegration {
     session: BreathSession,
   ): string {
     const enhanced = voiceSample.map((sample, i) => {
-      // Apply Grant's constants as harmonic filters
+      // Apply Grant&apos;s constants as harmonic filters
       const phi_mod = Math.sin(
         ((i * GRANT_CONSTANTS.PHI) / voiceSample.length) * Math.PI,
       );
@@ -351,7 +351,7 @@ export class BreathGeometryIntegration {
 
     Object.entries(GRANT_CONSTANTS).forEach(([name, value], i) => {
       const r = value * 50;
-      const color = ["#FF6B35", "#2E86AB", "#7D4F39", "#B8B8D1"][i];
+      const color = [&quot;#FF6B35", "#2E86AB", "#7D4F39", "#B8B8D1"][i];
 
       circles += `<circle cx="${cx}" cy="${cy}" r="${r}"
                   fill="none" stroke="${color}" stroke-width="1" />`;
@@ -359,7 +359,7 @@ export class BreathGeometryIntegration {
                   fill="${color}" font-size="10" opacity="0.5">${name}</text>`;
     });
 
-    circles += "</g>";
+    circles += "</g>&quot;;
     return circles;
   }
 
@@ -477,7 +477,7 @@ export class BreathGeometryIntegration {
       "Breath guidance:",
       `- Begin with ${ELEMENTAL_BREATH_PATTERNS[from].inhale.toFixed(1)}s inhale`,
       `- Gradually shift to ${ELEMENTAL_BREATH_PATTERNS[to].inhale.toFixed(1)}s inhale`,
-      `- Use Grant's √10 (${GRANT_CONSTANTS.SQRT_10.toFixed(2)}) as your base rhythm`,
+      `- Use Grant&apos;s √10 (${GRANT_CONSTANTS.SQRT_10.toFixed(2)}) as your base rhythm`,
       `- Allow the golden ratio (${GRANT_CONSTANTS.PHI.toFixed(3)}) to guide expansion`,
       "",
       "Visualize the elemental shift in your breath geometry.",

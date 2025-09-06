@@ -2,6 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
+import { showError } from '@/components/system/ErrorOverlay';
+import { useMaiaStream } from '@/hooks/useMayaStream';
+import { OracleVoicePlayer } from './voice/OracleVoicePlayer';
+import { unlockAudio } from '@/lib/audio/audioUnlock';
+import { useToastContext } from '@/components/system/ToastProvider';
 
 interface VoiceRecorderProps {
   userId: string;
@@ -11,6 +16,10 @@ interface VoiceRecorderProps {
   silenceTimeout?: number; // Base silence detection (ms) - only used in strict mode
   minSpeechLength?: number; // Minimum speech duration before auto-send (ms)
   strictMode?: boolean; // If true, use fixed timeout; if false, use adaptive timeout
+  autoStartSession?: boolean; // Auto-trigger Maya&apos;s welcome ritual on component mount
+  // 🌀 Jungian Prosody Props
+  prosodyData?: any; // Live prosody data from backend
+  onProsodyUpdate?: (data: any) => void; // Callback when new prosody data is available
 }
 
 export default function VoiceRecorder({ 
@@ -20,8 +29,13 @@ export default function VoiceRecorder({
   autoSend = true,
   silenceTimeout = 5000,
   minSpeechLength = 2000,
-  strictMode = false // Default to adaptive mode for better UX
+  strictMode = false, // Default to adaptive mode for better UX
+  autoStartSession = true, // Default to auto-start Maya&apos;s welcome ritual
+  // 🌀 Jungian Prosody Props
+  prosodyData: externalProsodyData,
+  onProsodyUpdate
 }: VoiceRecorderProps) {
+  const { showToast } = useToastContext();
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -32,6 +46,11 @@ export default function VoiceRecorder({
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [autoStopReason, setAutoStopReason] = useState<string | null>(null);
   const [currentTranscript, setCurrentTranscript] = useState<string>(''); // Track interim transcript for adaptive timeout
+  const [prosodyData, setProsodyData] = useState<any>(externalProsodyData || null); // Live Jungian prosody data
+  const [jungianFlow, setJungianFlow] = useState<any>(null); // Mirror→Balance flow data
+  const [hasTriggeredWelcome, setHasTriggeredWelcome] = useState(false); // Track if we&apos;ve auto-triggered Maya&apos;s welcome
+  const [mayaWelcomeMessage, setMayaWelcomeMessage] = useState<string>(''); // Store Maya&apos;s welcome message
+  const [isPlayingWelcome, setIsPlayingWelcome] = useState(false); // Track welcome audio playback
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -44,39 +63,30 @@ export default function VoiceRecorder({
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const safetyTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastSpeechTimeRef = useRef<number>(0);
+  const stopRecordingRef = useRef<(() => void) | null>(null);
+  
+  // Maya Stream integration
+  const { isStreaming, stream: streamMayaMessage, stopStream } = useMayaStream();
 
   // Silence detection constants (Adaptive + ChatGPT-style)
   const SILENCE_THRESHOLD = 0.025; // Raised for background noise tolerance
   const MIN_RECORDING_TIME = minSpeechLength; // Configurable minimum speech length
-  const MAX_RECORDING_DURATION = 60000; // 60s safety cutoff
-  
-  // 🧠 Adaptive Silence Timeout (Smart UX for Beta)
-  const getAdaptiveTimeout = (transcriptLength: number) => {
-    if (strictMode) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`🔧 [VoiceRecorder] Using strict mode: ${silenceTimeout}ms`);
-      }
-      return silenceTimeout; // Use fixed timeout in strict mode
-    }
-    
-    // Estimate word count (rough: 5 chars per word)
-    const estimatedWords = Math.max(1, Math.floor(transcriptLength / 5));
-    
-    let timeout;
-    if (estimatedWords < 4) timeout = 2500;  // Short phrases: 2.5s (snappy)
-    else if (estimatedWords < 12) timeout = 4000; // Medium: 4s (balanced)  
-    else timeout = 6000; // Long thoughts: 6s (breathing room)
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`🧠 [VoiceRecorder] Adaptive timeout: ${timeout}ms (${estimatedWords} words, ${transcriptLength} chars)`);
-    }
-    
-    return timeout;
+  const MAX_RECORDING_DURATION = 8000; // 8s hard cutoff
+  const SILENCE_THRESHOLDS = {
+    short: 2500,
+    medium: 4000,
+    long: 6000,
   };
   
-  const ADAPTIVE_TIMEOUT = getAdaptiveTimeout(currentTranscript.length);
+  // 🧠 Adaptive Silence Detection Mode
+  const detectSilenceMode = (transcriptLength: number): "short" | "medium" | "long" => {
+    const estimatedWords = Math.max(1, Math.floor(transcriptLength / 5));
+    if (estimatedWords < 4) return "short";
+    if (estimatedWords < 12) return "medium";
+    return "long";
+  };
 
-  // 🔥 Bulletproof silence detection (ChatGPT-style logic)
+  // 🔥 Enhanced silence detection with adaptive thresholds
   const checkSilence = (volume: number) => {
     const now = Date.now();
     const totalRecordingTime = now - recordingStartTime;
@@ -90,42 +100,37 @@ export default function VoiceRecorder({
         silenceTimerRef.current = null;
         
         if (process.env.NODE_ENV === 'development') {
-          console.log(`🎤 [VoiceRecorder] Speech detected (${(volume * 100).toFixed(1)}%) - silence timer cleared`);
         }
       }
     } else if (
       isRecording && 
       !silenceTimerRef.current && 
       autoSend && 
-      totalRecordingTime > MIN_RECORDING_TIME // Use total recording time, not time since speech
+      totalRecordingTime > MIN_RECORDING_TIME
     ) {
-      // ⏰ Start silence countdown - we have enough content and are now silent
-      const timeoutToUse = ADAPTIVE_TIMEOUT;
+      // ⏰ Start adaptive silence countdown
+      const mode = detectSilenceMode(currentTranscript.length);
+      const timeout = SILENCE_THRESHOLDS[mode];
+      
+      console.debug(`[DEBUG] Silence countdown started: ${timeout}ms`);
       
       if (process.env.NODE_ENV === 'development') {
-        const modeLabel = strictMode ? 'Strict' : 'Adaptive';
         const estimatedWords = Math.max(1, Math.floor(currentTranscript.length / 5));
-        console.log(`🔇 [VoiceRecorder] Silence detected - starting ${timeoutToUse/1000}s countdown`);
-        console.log(`   Mode: ${modeLabel} | Volume: ${(volume * 100).toFixed(1)}% | Threshold: ${(SILENCE_THRESHOLD * 100).toFixed(1)}%`);
-        console.log(`   Recording: ${(totalRecordingTime/1000).toFixed(1)}s | Words: ~${estimatedWords} | Min required: ${MIN_RECORDING_TIME/1000}s`);
       }
       
       silenceTimerRef.current = setTimeout(() => {
+        console.debug(`[DEBUG] Auto-stop after ${timeout}ms (${mode}) silence`);
+        
         if (process.env.NODE_ENV === 'development') {
-          console.log(`⏹️ [VoiceRecorder] Auto-stopping after ${timeoutToUse/1000}s silence - triggering stop sequence`);
         }
         
-        // 🎯 Hybrid Toast Behavior
-        const isDev = process.env.NODE_ENV === 'development';
-        const modeLabel = strictMode ? 'strict' : 'adaptive';
+        setAutoStopReason(`Stopped after ${(timeout/1000).toFixed(1)}s silence`);
         
-        setAutoStopReason(
-          isDev 
-            ? `Stopped after ${(timeoutToUse/1000).toFixed(1)}s ${modeLabel} silence`
-            : 'Stopped after silence'
-        );
-        stopRecording();
-      }, timeoutToUse);
+        // Force stop recording
+        if (stopRecordingRef.current) {
+          stopRecordingRef.current();
+        }
+      }, timeout);
     }
   };
 
@@ -134,6 +139,42 @@ export default function VoiceRecorder({
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // 🌀 Helper functions for Jungian Prosody Debug Panel
+  const getElementColor = (element: string) => {
+    const colors: Record<string, string> = {
+      fire: 'text-orange-400',
+      water: 'text-blue-400', 
+      earth: 'text-green-400',
+      air: 'text-yellow-400',
+      aether: 'text-purple-400'
+    };
+    return colors[element] || 'text-white';
+  };
+
+  const getElementIcon = (element: string) => {
+    const icons: Record<string, string> = {
+      fire: '🔥',
+      water: '💧',
+      earth: '🌍', 
+      air: '💨',
+      aether: '✨'
+    };
+    return icons[element] || '❓';
+  };
+
+  const getBalanceReason = (userElement: string, balanceElement: string) => {
+    const reasons: Record<string, string> = {
+      'fire-earth': 'Jungian opposite (grounding)',
+      'fire-water': 'softened for overwhelm',
+      'air-water': 'Jungian opposite (feeling)',
+      'air-aether': 'uncertainty bridge',
+      'water-air': 'Jungian opposite (clarity)', 
+      'earth-fire': 'Jungian opposite (activation)',
+      'aether-earth': 'transcendence grounding'
+    };
+    return reasons[`${userElement}-${balanceElement}`] || 'contextual balance';
   };
 
   // Continuous audio analysis loop (runs even when silent)
@@ -174,6 +215,8 @@ export default function VoiceRecorder({
       const now = Date.now();
       const totalRecordingTime = now - recordingStartTime;
       const timeSinceLastSpeech = now - lastSpeechTimeRef.current;
+      const mode = detectSilenceMode(currentTranscript.length);
+      const adaptiveTimeout = SILENCE_THRESHOLDS[mode];
       
       setDebugInfo({
         volume: rms,
@@ -184,12 +227,13 @@ export default function VoiceRecorder({
         timeSinceLastSpeech,
         recordingDuration: totalRecordingTime,
         minRecordingMet: totalRecordingTime > MIN_RECORDING_TIME,
-        autoStopCountdown: silenceTimerRef.current ? Math.max(0, ADAPTIVE_TIMEOUT - timeSinceLastSpeech) : 0,
+        autoStopCountdown: silenceTimerRef.current ? Math.max(0, adaptiveTimeout - (now - lastSpeechTimeRef.current)) : 0,
         isSpeaking: rms > SILENCE_THRESHOLD,
-        adaptiveTimeout: ADAPTIVE_TIMEOUT,
-        adaptiveMode: !strictMode,
+        adaptiveTimeout,
+        adaptiveMode: true,
         estimatedWords: Math.max(1, Math.floor(currentTranscript.length / 5)),
-        transcriptLength: currentTranscript.length
+        transcriptLength: currentTranscript.length,
+        mode
       });
     };
 
@@ -329,6 +373,9 @@ export default function VoiceRecorder({
     try {
       setError(null);
       
+      // ✅ Gracefully unlock audio on first interaction
+      await unlockAudio(showToast);
+      
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
@@ -386,25 +433,19 @@ export default function VoiceRecorder({
       
       if (process.env.NODE_ENV === 'development') {
         const modeLabel = strictMode ? 'Strict' : 'Adaptive';
-        console.log(`🎤 [VoiceRecorder] Started recording in ${modeLabel} mode`);
-        console.log(`   Auto-send: ${autoSend} | Min speech: ${MIN_RECORDING_TIME/1000}s | Max duration: ${MAX_RECORDING_DURATION/1000}s`);
       }
       
       // Start both organic blob animation AND audio analysis
       drawOrganicBlob();
       startAudioAnalysis();
       
-      // Safety fallback: auto-stop after 60s max
+      // Safety timer: 8s hard cutoff
       safetyTimerRef.current = setTimeout(() => {
-        console.warn("Safety fallback triggered — stopping recording after 60s");
-        // 🎯 Hybrid Toast Behavior for Safety Timer
-        const isDev = process.env.NODE_ENV === 'development';
-        setAutoStopReason(
-          isDev 
-            ? "Stopped after 60s for safety" 
-            : "Stopped after silence"
-        );
-        stopRecording();
+        console.warn("[DEBUG] Safety cutoff at 8s reached");
+        setAutoStopReason("Stopped after 8s (safety cutoff)");
+        if (stopRecordingRef.current) {
+          stopRecordingRef.current();
+        }
       }, MAX_RECORDING_DURATION);
       
       // Start timer
@@ -420,7 +461,9 @@ export default function VoiceRecorder({
       
     } catch (err) {
       console.error('Error starting recording:', err);
-      setError('Failed to access microphone. Please check permissions.');
+      const errorMsg = 'Failed to access microphone. Please check permissions.';
+      setError(errorMsg);
+      showError(errorMsg, 'error');
     }
   };
 
@@ -429,9 +472,6 @@ export default function VoiceRecorder({
     if (process.env.NODE_ENV === 'development') {
       const recordingDuration = Date.now() - recordingStartTime;
       const estimatedWords = Math.max(1, Math.floor(currentTranscript.length / 5));
-      console.log(`🛑 [VoiceRecorder] Stopping recording cleanly after ${(recordingDuration/1000).toFixed(1)}s`);
-      console.log(`   Transcript length: ${currentTranscript.length} chars (~${estimatedWords} words)`);
-      console.log(`   Stop reason: ${autoStopReason || 'Manual stop'}`);
     }
     
     // ✅ Always clear timers first
@@ -459,7 +499,6 @@ export default function VoiceRecorder({
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => {
         track.stop();
-        console.log('🎤 Stopped track:', track.kind);
       });
       streamRef.current = null;
     }
@@ -492,11 +531,15 @@ export default function VoiceRecorder({
     // Clear debug info
     setDebugInfo({});
     
-    console.log('✅ Recording stopped cleanly with full state reset');
   };
 
   // Process and upload audio
   const processAudio = async (audioBlob: Blob) => {
+      size: audioBlob.size,
+      type: audioBlob.type,
+      timestamp: new Date().toISOString()
+    });
+    
     setIsProcessing(true);
     setError(null);
     
@@ -505,6 +548,7 @@ export default function VoiceRecorder({
       const formData = new FormData();
       formData.append('userId', userId);
       formData.append('file', audioBlob, 'voice-note.webm');
+      
       
       // Upload to transcription API
       const response = await fetch('/api/voice/transcribe', {
@@ -518,32 +562,47 @@ export default function VoiceRecorder({
       
       const data = await response.json();
       
+        success: data.success,
+        transcript: data.transcription?.substring(0, 50) + '...',
+        hasTranscript: !!data.transcription
+      });
+      
       if (data.success) {
         const transcript = data.transcription;
         const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Log the final transcript
         
         // Check if we recorded long enough
         const recordingDuration = Date.now() - recordingStartTime;
         
         if (autoSend && recordingDuration >= MIN_RECORDING_TIME) {
           // Auto-send mode: send immediately
+            transcript: transcript.substring(0, 50) + '...',
+            audioUrl: audioUrl ? 'Has URL' : 'No URL',
+            duration: recordingDuration + 'ms'
+          });
+          
           onTranscribed?.({
             transcript,
             audioUrl
           });
+          
         } else if (!autoSend) {
           // Manual mode: store for manual confirmation
           setPendingTranscript(transcript);
-          console.log('Transcript ready for manual send:', transcript);
         } else {
           // Recording too short, ignore
-          console.log('Recording too short, ignoring:', recordingDuration, 'ms');
         }
+      } else {
+        console.error('❌ [DEBUG] Transcription failed:', data);
       }
       
     } catch (err) {
       console.error('Error processing audio:', err);
-      setError('Failed to transcribe audio. Please try again.');
+      const errorMsg = 'Failed to transcribe audio. Please try again.';
+      setError(errorMsg);
+      showError(errorMsg, 'error');
     } finally {
       setIsProcessing(false);
       setRecordingTime(0);
@@ -606,6 +665,56 @@ export default function VoiceRecorder({
       return () => clearTimeout(timer);
     }
   }, [autoStopReason]);
+
+  // Setup stop ref for use in timers
+  useEffect(() => {
+    stopRecordingRef.current = stopRecording;
+  }, []);
+
+  // 🌀 Sync external prosody data with internal state
+  useEffect(() => {
+    if (externalProsodyData && externalProsodyData !== prosodyData) {
+      setProsodyData(externalProsodyData);
+      if (externalProsodyData.jungianFlow) {
+        setJungianFlow(externalProsodyData.jungianFlow);
+      }
+        userElement: externalProsodyData.userElement,
+        balanceElement: externalProsodyData.balanceElement,
+        hasContext: !!externalProsodyData.context
+      });
+    }
+  }, [externalProsodyData, prosodyData]);
+  
+  // 🌟 Auto-trigger Maya&apos;s Welcome Ritual on component mount
+  useEffect(() => {
+    const triggerMayaWelcome = async () => {
+      if (!autoStartSession || hasTriggeredWelcome || isStreaming) return;
+      
+      try {
+        setHasTriggeredWelcome(true);
+        
+        // Trigger Maya&apos;s opening ritual with a special parameter to indicate this is a new session
+        const welcomeMessage = await streamMayaMessage({
+          userText: '__MAYA_WELCOME_RITUAL__', // Special trigger for opening ritual
+          element: 'aether', // Start with balanced aether energy
+          userId: userId || 'anonymous',
+          lang: 'en-US'
+        });
+        
+        if (welcomeMessage) {
+          setMayaWelcomeMessage(welcomeMessage);
+          setIsPlayingWelcome(true);
+        }
+      } catch (error) {
+        console.error('❌ [VoiceRecorder] Failed to trigger Maya welcome ritual:', error);
+        // Don&apos;t show error to user, as this is a background enhancement
+      }
+    };
+    
+    // Slight delay to ensure component is fully mounted
+    const timer = setTimeout(triggerMayaWelcome, 500);
+    return () => clearTimeout(timer);
+  }, [autoStartSession, hasTriggeredWelcome, streamMayaMessage, userId, isStreaming]);
 
   // Set canvas size
   useEffect(() => {
@@ -731,16 +840,19 @@ export default function VoiceRecorder({
       {/* Mode indicator */}
       <div className="text-xs text-gray-500">
         {autoSend 
-          ? (strictMode 
-              ? `Auto-send after ${silenceTimeout/1000}s silence (Strict)` 
-              : 'Smart auto-send (Adaptive 2.5-6s)')
+          ? 'Auto-stop: 2.5s (short) / 4s (medium) / 6s (long) / 8s (max)'
           : 'Manual send mode - tap ✅ to confirm'
         }
       </div>
 
       {/* 🔍 Enhanced Debug Overlay - Live Diagnostics */}
       {process.env.NODE_ENV === 'development' && isRecording && debugInfo.volume !== undefined && (
-        <div className="absolute top-full left-0 mt-2 p-3 bg-black/90 text-white rounded-lg text-xs font-mono shadow-lg border border-gray-600 min-w-80">
+        <div className="absolute top-full left-0 mt-2 p-3 bg-black/90 text-white rounded-lg text-xs font-mono shadow-lg border border-gray-600 min-w-80 z-50">
+          {/* Title Bar */}
+          <div className="mb-2 pb-2 border-b border-gray-600">
+            <div className="text-cyan-400 font-bold text-sm">🔍 VOICE DEBUG PANEL</div>
+          </div>
+          
           {/* Volume Meter */}
           <div className="mb-2">
             <div className="flex justify-between text-yellow-300 font-semibold mb-1">
@@ -813,15 +925,26 @@ export default function VoiceRecorder({
           {/* Adaptive Mode Status */}
           <div className="mt-2 pt-2 border-t border-gray-600">
             <div className="flex justify-between text-xs text-cyan-300 font-semibold mb-1">
-              <span>Mode: {debugInfo.adaptiveMode ? '🧠 Adaptive' : '⏱️ Strict'}</span>
+              <span>Mode: 🧠 {debugInfo.mode || 'Adaptive'}</span>
               <span>Timeout: {(debugInfo.adaptiveTimeout / 1000).toFixed(1)}s</span>
             </div>
-            {debugInfo.adaptiveMode && (
-              <div className="grid grid-cols-2 gap-2 text-xs text-gray-400">
-                <span>Est. Words: {debugInfo.estimatedWords}</span>
-                <span>Chars: {debugInfo.transcriptLength}</span>
-              </div>
-            )}
+            <div className="grid grid-cols-2 gap-2 text-xs text-gray-400">
+              <span>Est. Words: {debugInfo.estimatedWords}</span>
+              <span>Chars: {debugInfo.transcriptLength}</span>
+            </div>
+          </div>
+          
+          {/* System Status */}
+          <div className="mt-2 pt-2 border-t border-gray-600">
+            <div className="text-xs text-green-400 font-semibold mb-1">SYSTEM STATUS</div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <span className="text-gray-400">TTS Service:</span>
+              <span className="text-white">{process.env.SESAME_URL ? 'Sesame' : 'Fallback'}</span>
+              <span className="text-gray-400">Memory Refs:</span>
+              <span className="text-white">{process.env.NEXT_PUBLIC_MEMORY_REFERENCES_ENABLED === 'true' ? 'Enabled' : 'Disabled'}</span>
+              <span className="text-gray-400">Input Clear:</span>
+              <span className="text-green-400">✅ Active</span>
+            </div>
           </div>
           
           {/* Logic Status */}
@@ -829,6 +952,228 @@ export default function VoiceRecorder({
             Logic: {debugInfo.isSpeaking ? 'Speech clearing timer' : 
                     debugInfo.minRecordingMet ? 'Ready for silence detection' : 'Waiting for minimum duration'}
           </div>
+        </div>
+      )}
+
+      {/* 🌀 Enhanced Jungian Prosody Debug Panel (Development Only) */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="absolute top-full right-0 mt-2 p-3 bg-gradient-to-br from-purple-900/90 to-indigo-900/90 text-white rounded-lg text-xs font-mono shadow-lg border border-purple-600 min-w-80 z-40">
+          {/* Title Bar */}
+          <div className="mb-2 pb-2 border-b border-purple-600">
+            <div className="text-purple-300 font-bold text-sm flex items-center gap-2">
+              🌀 JUNGIAN PROSODY LAB
+              {prosodyData && <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" title="Live Data" />}
+            </div>
+            <div className="text-purple-400 text-xs mt-1">Mirror → Balance → Shape</div>
+          </div>
+
+          {/* Real-Time Data or Demo Mode */}
+          <div className="space-y-3">
+            {prosodyData ? (
+              /* 🔴 LIVE DATA MODE */
+              <>
+                {/* User Element Detection */}
+                <div className="bg-purple-800/40 rounded p-2">
+                  <div className="text-yellow-300 font-semibold mb-1 flex items-center gap-1">
+                    {getElementIcon(prosodyData.userElement)} User Element Detection:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <span className="text-gray-300">Detected:</span>
+                    <span className={`font-bold ${getElementColor(prosodyData.userElement)}`}>
+                      {prosodyData.userElement} 
+                    </span>
+                    <span className="text-gray-300">Confidence:</span>
+                    <span className="text-green-400">{Math.round((prosodyData.confidence || 0.8) * 100)}%</span>
+                    <span className="text-gray-300">Context:</span>
+                    <span className="text-red-400">
+                      {prosodyData.context ? Object.keys(prosodyData.context).filter(k => prosodyData.context[k]).join(', ') || 'balanced' : 'analyzing...'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Mirror Phase - Live Data */}
+                <div className="bg-blue-800/40 rounded p-2">
+                  <div className="text-blue-300 font-semibold mb-1 flex items-center gap-1">
+                    🪞 1. Mirror Phase:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <span className="text-gray-300">Element:</span>
+                    <span className={`${getElementColor(prosodyData.mirrorElement || prosodyData.userElement)}`}>
+                      {getElementIcon(prosodyData.mirrorElement || prosodyData.userElement)} {prosodyData.mirrorElement || prosodyData.userElement}
+                    </span>
+                    <span className="text-gray-300">Duration:</span>
+                    <span className="text-blue-400">{prosodyData.mirrorDuration || 'moderate'}</span>
+                    <span className="text-gray-300">Approach:</span>
+                    <span className="text-blue-400">{prosodyData.mirrorApproach || 'empathetic'}</span>
+                  </div>
+                </div>
+
+                {/* Balance Phase - Live Data */}
+                <div className="bg-green-800/40 rounded p-2">
+                  <div className="text-green-300 font-semibold mb-1 flex items-center gap-1">
+                    ⚖️ 2. Balance Phase:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <span className="text-gray-300">Target:</span>
+                    <span className={`${getElementColor(prosodyData.balanceElement)}`}>
+                      {getElementIcon(prosodyData.balanceElement)} {prosodyData.balanceElement}
+                    </span>
+                    <span className="text-gray-300">Reason:</span>
+                    <span className="text-yellow-400 text-wrap">
+                      {prosodyData.balanceReason || getBalanceReason(prosodyData.userElement, prosodyData.balanceElement)}
+                    </span>
+                    <span className="text-gray-300">Transition:</span>
+                    <span className="text-green-400">{prosodyData.transition || 'moderate'}</span>
+                  </div>
+                </div>
+
+                {/* Voice Parameters - Live Data */}
+                <div className="bg-indigo-800/40 rounded p-2">
+                  <div className="text-indigo-300 font-semibold mb-1 flex items-center gap-1">
+                    🎵 3. Voice Shaping:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <span className="text-gray-300">Speed:</span>
+                    <span className="text-white font-mono">{prosodyData.voiceParams?.speed?.toFixed(2) || '1.00'}x</span>
+                    <span className="text-gray-300">Pitch:</span>
+                    <span className="text-white font-mono">{prosodyData.voiceParams?.pitch?.toFixed(0) || '0'}</span>
+                    <span className="text-gray-300">Warmth:</span>
+                    <span className="text-white font-mono">{prosodyData.voiceParams?.warmth?.toFixed(2) || '0.50'}</span>
+                    <span className="text-gray-300">Emphasis:</span>
+                    <span className="text-white font-mono">{prosodyData.voiceParams?.emphasis?.toFixed(2) || '0.50'}</span>
+                  </div>
+                </div>
+
+                {/* Context Flags - Live Data */}
+                <div className="bg-red-800/40 rounded p-2">
+                  <div className="text-red-300 font-semibold mb-1 flex items-center gap-1">
+                    🧠 Context Analysis:
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {prosodyData.context ? Object.entries(prosodyData.context).map(([key, active]) => (
+                      <span key={key} className={`px-2 py-1 rounded text-xs transition-all ${
+                        active ? 'bg-red-700 text-white font-semibold animate-pulse' : 'bg-gray-600 text-gray-400 opacity-50'
+                      }`}>
+                        {key}
+                      </span>
+                    )) : <span className="text-gray-400 text-xs">No context flags detected</span>}
+                  </div>
+                  {prosodyData.contextReasoning && (
+                    <div className="mt-1 text-xs text-red-300 border-l-2 border-red-500 pl-2">
+                      💡 {prosodyData.contextReasoning}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              /* 📊 DEMO MODE (when no live data available) */
+              <>
+                <div className="bg-purple-800/40 rounded p-2 opacity-60">
+                  <div className="text-yellow-300 font-semibold mb-1 flex items-center gap-1">
+                    🔥 User Element Detection:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <span className="text-gray-300">Status:</span>
+                    <span className="text-gray-400">Waiting for voice input...</span>
+                  </div>
+                </div>
+
+                <div className="bg-blue-800/40 rounded p-2 opacity-60">
+                  <div className="text-blue-300 font-semibold mb-1 flex items-center gap-1">
+                    🪞 Mirror Phase:
+                  </div>
+                  <div className="text-xs text-gray-400">Will match your detected element for rapport</div>
+                </div>
+
+                <div className="bg-green-800/40 rounded p-2 opacity-60">
+                  <div className="text-green-300 font-semibold mb-1 flex items-center gap-1">
+                    ⚖️ Balance Phase:
+                  </div>
+                  <div className="text-xs text-gray-400">Will apply Jungian opposite or contextual adjustment</div>
+                </div>
+
+                <div className="bg-indigo-800/40 rounded p-2 opacity-60">
+                  <div className="text-indigo-300 font-semibold mb-1 flex items-center gap-1">
+                    🎵 Voice Shaping:
+                  </div>
+                  <div className="text-xs text-gray-400">Speed, pitch, warmth, emphasis parameters</div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* System Status */}
+          <div className="mt-3 pt-2 border-t border-purple-600">
+            <div className="flex justify-between text-xs">
+              <span className="text-purple-300">Jungian Engine:</span>
+              <span className={prosodyData ? "text-green-400" : "text-yellow-400"}>
+                {prosodyData ? "🟢 Live Data" : "🟡 Standby"}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-purple-300">Data Source:</span>
+              <span className="text-blue-400">
+                {prosodyData ? "ConversationalPipeline" : "Demo Mode"}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-purple-300">Last Update:</span>
+              <span className="text-green-400 font-mono">
+                {prosodyData?.timestamp ? new Date(prosodyData.timestamp).toLocaleTimeString() : 'None'}
+              </span>
+            </div>
+          </div>
+
+          {/* Live Updates Indicator */}
+          {prosodyData && (
+            <div className="mt-2 pt-2 border-t border-purple-600 text-xs text-center">
+              <div className="text-green-300 animate-pulse flex items-center justify-center gap-1">
+                📡 Real-time Jungian prosody analysis active
+                <div className="flex gap-1">
+                  <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                  <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                  <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Instructions for Demo Mode */}
+          {!prosodyData && (
+            <div className="mt-2 pt-2 border-t border-purple-600 text-xs text-purple-300 text-center">
+              💡 Record a voice message to see live Jungian prosody analysis
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 🌟 Maya Welcome Audio Player */}
+      {mayaWelcomeMessage && (
+        <div className="mb-4">
+          <OracleVoicePlayer
+            text={mayaWelcomeMessage}
+            element="aether"
+            autoPlay={true}
+            onPlayStart={() => setIsPlayingWelcome(true)}
+            onPlayEnd={() => setIsPlayingWelcome(false)}
+            className="maya-welcome-player"
+          />
+        </div>
+      )}
+      
+      {/* Maya Welcome Status Indicator */}
+      {isPlayingWelcome && (
+        <div className="mb-3 flex items-center justify-center gap-2 animate-fade-in">
+          <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+          <span className="text-sm text-purple-600 font-medium">Maya is greeting you...</span>
+          <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+        </div>
+      )}
+      
+      {/* Auto-start session indicator */}
+      {autoStartSession && !hasTriggeredWelcome && !isStreaming && (
+        <div className="mb-3 text-xs text-gray-500 text-center animate-fade-in">
+          🌟 Preparing Maya&apos;s welcome...
         </div>
       )}
 

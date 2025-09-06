@@ -116,7 +116,7 @@ export class CulturalShadowIntegration {
           culturalProfile,
         );
 
-      logger.info("Cultural shadow integration completed", {
+      logger.info(&quot;Cultural shadow integration completed&quot;, {
         culturalContext: culturalProfile.primaryCulture,
         shadowType,
         traumaAssessed: !!culturalTrauma,
@@ -240,7 +240,7 @@ export class CulturalShadowIntegration {
 
     // Add cultural strengths
     if (culturalProfile.culturalStrengths.length > 0) {
-      guidance += `\n\nYour cultural heritage offers these strengths for your healing: ${culturalProfile.culturalStrengths.join(", ")}. `;
+      guidance += `\n\nYour cultural heritage offers these strengths for your healing: ${culturalProfile.culturalStrengths.join(&quot;, ")}. `;
     }
 
     return guidance;
@@ -258,7 +258,7 @@ export class CulturalShadowIntegration {
 The suppression of your cultural identity created wounds that run deep. Healing involves reclaiming what was taken and honoring what survived. Your ancestors preserved their essence through the darkest times - their resilience lives in you.`,
 
       intergenerational_trauma: `
-The pain you carry isn't only yours - it's the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who breaks the cycle and transforms ancestral pain into ancestral wisdom.`,
+The pain you carry isn&apos;t only yours - it&apos;s the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who breaks the cycle and transforms ancestral pain into ancestral wisdom.`,
 
       cultural_disconnection: `
 The disconnection from your cultural roots created an inner emptiness that no amount of assimilation could fill. Healing involves returning home to yourself, to your people, to the traditions that nourish your soul.`,
@@ -288,7 +288,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
       return `\n\nYour ancestors faced similar challenges and found ways to transform them into strength. Their wisdom lives in your DNA and in your cultural memory.`;
     }
 
-    return `\n\n🔥 **Ancestral Wisdom**: ${ancestralWisdom.survivorWisdom[0]} Your cultural resilience includes: ${ancestralWisdom.culturalResilience.join(", ")}. Consider exploring these healing traditions: ${ancestralWisdom.healingTraditions.slice(0, 2).join(", ")}.`;
+    return `\n\n🔥 **Ancestral Wisdom**: ${ancestralWisdom.survivorWisdom[0]} Your cultural resilience includes: ${ancestralWisdom.culturalResilience.join(&quot;, ")}. Consider exploring these healing traditions: ${ancestralWisdom.healingTraditions.slice(0, 2).join(", ")}.`;
   }
 
   /**
@@ -303,7 +303,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
 
     // Add cultural framing if appropriate
     if (culturalProfile.culturalTrauma) {
-      const culturalFraming = `\n\n**Honoring Your Cultural Journey**: This shadow work honors both your individual healing and your role in your cultural lineage's healing. `;
+      const culturalFraming = `\n\n**Honoring Your Cultural Journey**: This shadow work honors both your individual healing and your role in your cultural lineage&apos;s healing. `;
       enhancedResponse = culturalFraming + enhancedResponse;
     }
 
@@ -327,7 +327,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     const recommendations = [];
 
     // Universal cultural healing practices
-    recommendations.push("Connect with your cultural community");
+    recommendations.push(&quot;Connect with your cultural community");
     recommendations.push("Learn about your cultural history and traditions");
     recommendations.push(
       "Practice cultural rituals or ceremonies that feel authentic",
@@ -393,7 +393,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
 
     // Check for identity fragmentation
     if (
-      input.includes("don't know who i am") ||
+      input.includes("don&apos;t know who i am") ||
       input.includes("lost my identity") ||
       input.includes("between two worlds") ||
       input.includes("don't belong")
@@ -457,7 +457,7 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     if (
       input.includes("not ready") ||
       input.includes("too painful") ||
-      input.includes("can't handle")
+      input.includes("can&apos;t handle")
     ) {
       readiness -= 0.2;
     }

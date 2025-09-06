@@ -236,7 +236,7 @@ export class EthicalCollectiveIntelligence {
     return {
       shouldOffer: true,
       invitation: {
-        message: "Your engagement and integration suggest you might be ready to explore differently. What feels right for you?",
+        message: &quot;Your engagement and integration suggest you might be ready to explore differently. What feels right for you?",
         options: [
           {
             choice: "Continue developing here",

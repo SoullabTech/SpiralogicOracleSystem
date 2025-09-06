@@ -214,7 +214,6 @@ export async function POST(request: NextRequest) {
         memoryUsers.set(username, userData);
     }
 
-    console.log(`✅ New user created: ${username} with oracle: ${oracleName} (${STORAGE_TYPE} storage)`);
 
     // Return success response (don't send password hash back)
     return NextResponse.json({

@@ -22,7 +22,6 @@ export async function GET(request: NextRequest) {
         sesamePrimary = true
       }
     } catch (error) {
-      console.log('Sesame CSM not available:', error)
     }
 
     // Check ElevenLabs availability (fallback)
@@ -42,7 +41,6 @@ export async function GET(request: NextRequest) {
         elevenlabsResponseTime = Date.now() - startTime
         elevenlabsAvailable = elevenlabsResponse.ok
       } catch (error) {
-        console.log('ElevenLabs API not available:', error)
       }
     }
 

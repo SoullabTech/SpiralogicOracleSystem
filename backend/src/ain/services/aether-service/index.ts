@@ -20,7 +20,7 @@ export class AetherService extends CloudOrchestrator {
   private activeIntegrations: Map<string, Integration> = new Map();
 
   constructor() {
-    super("aether-service");
+    super(&quot;aether-service&quot;);
 
     // Initialize quantum and collective systems
     this.quantumEngine = new QuantumThoughtEngine();
@@ -284,7 +284,7 @@ export class AetherService extends CloudOrchestrator {
 
     if (conditionsMet >= 3) {
       return {
-        type: "transcendent-emergence",
+        type: &quot;transcendent-emergence&quot;,
         trigger: event,
         conditions,
         timestamp: Date.now(),
@@ -323,7 +323,7 @@ export class AetherService extends CloudOrchestrator {
     return {
       steps: [
         {
-          action: "Balance elemental energies",
+          action: &quot;Balance elemental energies",
           target: "elemental_harmony",
           impact: 0.2,
         },

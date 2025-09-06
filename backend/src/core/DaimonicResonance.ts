@@ -86,7 +86,7 @@ export class DaimonicResonanceSystem {
       // Process through attention field first
       const attention_analysis = this.attention_field.processExperience(life_thread, 'life_thread');
       
-      // Check for each of Kastrup's markers
+      // Check for each of Kastrup&apos;s markers
       const markers = this.scanForMarkers(life_thread, attention_analysis);
       
       // Assess overall resonance
@@ -125,7 +125,7 @@ export class DaimonicResonanceSystem {
   private scanForMarkers(life_thread: LifeThread, attention: any): DaimonicMarker[] {
     const markers: DaimonicMarker[] = [];
 
-    // 1. Inexplicable Pull - "I just need to do this"
+    // 1. Inexplicable Pull - &quot;I just need to do this&quot;
     const inexplicable = this.scanInexplicablePull(life_thread, attention);
     if (inexplicable) markers.push(inexplicable);
 
@@ -133,7 +133,7 @@ export class DaimonicResonanceSystem {
     const anti_utilitarian = this.scanAntiUtilitarian(life_thread, attention);
     if (anti_utilitarian) markers.push(anti_utilitarian);
 
-    // 3. Skill Burden - Good at it but don't enjoy it (the chain that binds)
+    // 3. Skill Burden - Good at it but don&apos;t enjoy it (the chain that binds)
     const skill_burden = this.scanSkillBurden(life_thread, attention);
     if (skill_burden) markers.push(skill_burden);
 
@@ -150,7 +150,7 @@ export class DaimonicResonanceSystem {
 
   /**
    * Marker 1: Inexplicable Pull
-   * "I can't explain why, but I just need to do this"
+   * "I can&apos;t explain why, but I just need to do this"
    * The person feels compelled despite lack of rational justification
    */
   private scanInexplicablePull(life_thread: LifeThread, attention: any): DaimonicMarker | null {
@@ -477,7 +477,7 @@ export class DaimonicResonanceSystem {
    */
   private identifyResistancePattern(life_thread: LifeThread, markers: DaimonicMarker[]): string | undefined {
     if (this.showsRationalResistance(life_thread)) {
-      return 'intellectual_bypass'; // "This isn't practical"
+      return 'intellectual_bypass'; // "This isn&apos;t practical"
     }
     
     if (this.showsEmotionalResistance(life_thread)) {
@@ -485,11 +485,11 @@ export class DaimonicResonanceSystem {
     }
     
     if (this.showsSocialResistance(life_thread)) {
-      return 'social_conformity'; // "People will think I'm crazy"
+      return 'social_conformity'; // "People will think I&apos;m crazy"
     }
     
     if (this.showsPracticalResistance(life_thread)) {
-      return 'practical_deferral'; // "I'll do it when I'm financially stable"
+      return 'practical_deferral'; // "I&apos;ll do it when I'm financially stable"
     }
 
     return undefined;

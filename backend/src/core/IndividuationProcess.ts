@@ -164,7 +164,7 @@ export class IndividuationService {
 
   /**
    * Process shadow material
-   * Jung: Shadow = everything we've rejected about ourselves
+   * Jung: Shadow = everything we&apos;ve rejected about ourselves
    */
   private async processShadowMaterial(
     experience: any, 
@@ -200,13 +200,13 @@ export class IndividuationService {
     // Look for intense emotional language
     const intense_emotions = this.extractIntenseEmotions(experience);
     
-    // Look for "should" statements - often shadow projections
+    // Look for &quot;should&quot; statements - often shadow projections
     const shoulds = this.findShouldStatements(experience);
     
     // Look for strong judgments of others
     const judgments = this.findJudgmentalLanguage(experience);
     
-    // Look for what's being avoided or resisted
+    // Look for what&apos;s being avoided or resisted
     const avoidances = this.findAvoidancePatterns(experience);
 
     charges.push(...intense_emotions, ...shoulds, ...judgments, ...avoidances);
@@ -454,7 +454,7 @@ export class IndividuationService {
   }
 
   private findShouldStatements(experience: any): Array<{emotion: string, intensity: number, trigger: string}> {
-    // Would look for "should", "must", "ought to" statements
+    // Would look for &quot;should&quot;, "must", "ought to" statements
     return [];
   }
 
@@ -464,7 +464,7 @@ export class IndividuationService {
   }
 
   private findAvoidancePatterns(experience: any): Array<{emotion: string, intensity: number, trigger: string}> {
-    // Would identify what's being avoided or resisted
+    // Would identify what&apos;s being avoided or resisted
     return [];
   }
 

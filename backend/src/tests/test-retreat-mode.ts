@@ -38,7 +38,7 @@ async function testRetreatMode() {
   // Test 2: Send intensive message
   console.log("2️⃣ Sending profound opening experience...\n");
 
-  const intensiveMessage = "I'm having a profound opening experience";
+  const intensiveMessage = "I&apos;m having a profound opening experience";
   console.log(`User: "${intensiveMessage}"`);
 
   const response = await oracle.respondToPrompt(intensiveMessage);
@@ -50,7 +50,7 @@ async function testRetreatMode() {
   console.log("3️⃣ Sending another intensive experience...\n");
 
   const mysticMessage =
-    "I'm experiencing unity consciousness and ego dissolution";
+    "I&apos;m experiencing unity consciousness and ego dissolution";
   console.log(`User: "${mysticMessage}"`);
 
   const mysticResponse = await oracle.respondToPrompt(mysticMessage);

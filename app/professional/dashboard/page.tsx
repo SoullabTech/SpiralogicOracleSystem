@@ -157,7 +157,7 @@ export default function ProfessionalDashboard() {
             Professional Verification Required
           </h2>
           <p className="text-gray-600 mb-6">
-            Your professional credentials are being reviewed. You'll receive
+            Your professional credentials are being reviewed. You&apos;ll receive
             access to the professional dashboard once verification is complete.
           </p>
           <button

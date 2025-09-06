@@ -544,7 +544,7 @@ export class SacrificialWisdomService {
   }
 
   private extractArchetypalUnderstanding(regret_experience: any, individuation_context?: IndividuationStage): string {
-    return `Recognized the Hero's journey includes necessary failures`;
+    return `Recognized the Hero&apos;s journey includes necessary failures`;
   }
 
   // Elemental wisdom extraction

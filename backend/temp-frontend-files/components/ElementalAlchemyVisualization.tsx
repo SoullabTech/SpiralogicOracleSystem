@@ -54,7 +54,7 @@ export const ElementalAlchemyVisualization: React.FC<
 
   // Consciousness level colors
   const consciousnessColors: Record<ConsciousnessLevel, string> = {
-    "meta-conscious": "#FFD700", // Gold
+    &quot;meta-conscious&quot;: "#FFD700", // Gold
     conscious: "#87CEEB", // Sky blue
     subconscious: "#9370DB", // Medium purple
     unconscious: "#483D8B", // Dark slate blue
@@ -62,7 +62,7 @@ export const ElementalAlchemyVisualization: React.FC<
 
   // Alchemical process patterns
   const alchemicalPatterns: Record<AlchemicalProcess, string> = {
-    sublimatio: "ascending-pattern", // Upward arrows
+    sublimatio: &quot;ascending-pattern&quot;, // Upward arrows
     calcinatio: "fire-pattern", // Flame shapes
     coagulatio: "crystal-pattern", // Crystalline structure
     solutio: "wave-pattern", // Flowing waves
@@ -194,7 +194,7 @@ export const ElementalAlchemyVisualization: React.FC<
     const pathData = spiralPoints
       .map(
         (point, index) =>
-          `${index === 0 ? "M" : "L"} ${centerX + point.x} ${centerY + point.y}`,
+          `${index === 0 ? &quot;M" : "L"} ${centerX + point.x} ${centerY + point.y}`,
       )
       .join(" ");
 
@@ -278,7 +278,7 @@ export const ElementalAlchemyVisualization: React.FC<
         `M ${centerX} ${centerY}`,
         `L ${x1} ${y1}`,
         `A ${baseRadius * 1.5} ${baseRadius * 1.5} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-        "Z",
+        &quot;Z",
       ].join(" ");
 
       return (
@@ -428,12 +428,12 @@ export const ElementalAlchemyVisualization: React.FC<
         <button
           onClick={() => setShowConsciousnessRings(!showConsciousnessRings)}
         >
-          {showConsciousnessRings ? "Hide" : "Show"} Consciousness Rings
+          {showConsciousnessRings ? &quot;Hide&quot; : "Show"} Consciousness Rings
         </button>
         <button
           onClick={() => setShowAlchemicalOverlay(!showAlchemicalOverlay)}
         >
-          {showAlchemicalOverlay ? "Hide" : "Show"} Alchemical Overlay
+          {showAlchemicalOverlay ? &quot;Hide&quot; : "Show"} Alchemical Overlay
         </button>
         <button onClick={() => holoflower.integratePhiSpiral()}>
           Activate Phi Spiral
@@ -457,7 +457,7 @@ export const ElementalAlchemyVisualization: React.FC<
         onMouseLeave={() => setDragStart(null)}
         style={{
           background:
-            "radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)",
+            &quot;radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%)&quot;,
           borderRadius: "50%",
           cursor: dragStart ? "grabbing" : "default",
         }}
@@ -579,7 +579,7 @@ export const ElementalAlchemyVisualization: React.FC<
             House {selectedHouse.number}: {selectedHouse.description}
           </h3>
           <p>
-            <strong>Element:</strong> {selectedHouse.element}{" "}
+            <strong>Element:</strong> {selectedHouse.element}{&quot; &quot;}
             {selectedHouse.sacredSymbol}
           </p>
           <p>
@@ -592,7 +592,7 @@ export const ElementalAlchemyVisualization: React.FC<
             <strong>Process:</strong> {selectedHouse.alchemicalProcess}
           </p>
           <p>
-            <strong>Keywords:</strong> {selectedHouse.keywords.join(", ")}
+            <strong>Keywords:</strong> {selectedHouse.keywords.join(&quot;, &quot;)}
           </p>
           <p>
             <strong>Shadow:</strong> {selectedHouse.shadowAspect}
@@ -601,7 +601,7 @@ export const ElementalAlchemyVisualization: React.FC<
             <strong>Gift:</strong> {selectedHouse.giftAspect}
           </p>
           <p>
-            <strong>Intensity:</strong>{" "}
+            <strong>Intensity:</strong>{&quot; &quot;}
             {Math.round(selectedHouse.currentIntensity * 100)}%
           </p>
         </div>

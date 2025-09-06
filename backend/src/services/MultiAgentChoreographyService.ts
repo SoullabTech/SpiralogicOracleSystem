@@ -190,7 +190,7 @@ export class MultiAgentChoreographyService {
     if (response) {
       // Add a resistance to the dialogical layer
       response.dialogical.resistances.unshift(
-        "I'm seeing this differently than my colleagues here. Let me offer another angle."
+        &quot;I&apos;m seeing this differently than my colleagues here. Let me offer another angle.&quot;
       );
       
       // Adjust tone to be more challenging
@@ -210,12 +210,12 @@ export class MultiAgentChoreographyService {
       if (agentName === 'Aunt Annie') {
         // Emphasize embodied, nurturing approach
         response.phenomenological.primary = this.addNurturingFraming(response.phenomenological.primary);
-        response.dialogical.questions.unshift("What does your body tell you about this?");
+        response.dialogical.questions.unshift(&quot;What does your body tell you about this?&quot;);
         
       } else if (agentName === 'Emily') {
         // Emphasize structured, analytical approach
         response.phenomenological.primary = this.addAnalyticalFraming(response.phenomenological.primary);
-        response.dialogical.questions.unshift("Let's break this down into clearer steps.");
+        response.dialogical.questions.unshift("Let&apos;s break this down into clearer steps.");
       }
     }
   }
@@ -358,7 +358,7 @@ export class MultiAgentChoreographyService {
   }
 
   private addNurturingFraming(message: string): string {
-    return `Honey, ${message.charAt(0).toLowerCase()}${message.slice(1)} Let's be gentle with yourself here.`;
+    return `Honey, ${message.charAt(0).toLowerCase()}${message.slice(1)} Let&apos;s be gentle with yourself here.`;
   }
 
   private addAnalyticalFraming(message: string): string {
@@ -380,9 +380,9 @@ export class MultiAgentChoreographyService {
   private generateComplexQuestion(userQuery: string, agentName: string): string {
     const complexQuestions = {
       'Aunt Annie': [
-        "What's the tension between what your mind wants and what your body knows?",
-        "How might this situation be asking you to grow in ways you haven't considered?",
-        "What would it mean to trust the process even when it's uncomfortable?"
+        &quot;What&apos;s the tension between what your mind wants and what your body knows?&quot;,
+        "How might this situation be asking you to grow in ways you haven&apos;t considered?",
+        "What would it mean to trust the process even when it&apos;s uncomfortable?"
       ],
       'Emily': [
         "What are the systemic patterns here that might be worth examining?",

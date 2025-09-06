@@ -77,7 +77,7 @@ export function LibraryTable({ className = '', onFileSelect, onRefresh }: Librar
   };
   
   const handleDeleteFile = async (fileId: string, filename: string) => {
-    if (!confirm(`Remove "${filename}" from Maya's memory?`)) return;
+    if (!confirm(`Remove "${filename}" from Maya&apos;s memory?`)) return;
     
     try {
       const response = await fetch(`/api/oracle/files/${fileId}/delete`, {
@@ -105,7 +105,7 @@ export function LibraryTable({ className = '', onFileSelect, onRefresh }: Librar
     const selectedArray = Array.from(selectedFiles);
     if (selectedArray.length === 0) return;
     
-    if (!confirm(`Remove ${selectedArray.length} files from Maya's memory?`)) return;
+    if (!confirm(`Remove ${selectedArray.length} files from Maya&apos;s memory?`)) return;
     
     setBulkDeleting(true);
     try {
@@ -407,7 +407,7 @@ export function LibraryTable({ className = '', onFileSelect, onRefresh }: Librar
                             {file.mayaSummary && (
                               <div className="mb-4">
                                 <h4 className="text-sm font-medium text-sacred-gold mb-2">
-                                  Maya's Reflection
+                                  Maya&apos;s Reflection
                                 </h4>
                                 <p className="text-sm text-gray-300 italic">
                                   "{file.mayaSummary}"

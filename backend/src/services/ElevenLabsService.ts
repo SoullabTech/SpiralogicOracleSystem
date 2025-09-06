@@ -30,7 +30,7 @@ export class ElevenLabsService {
         `${this.baseUrl}/text-to-speech/${voiceId}`,
         {
           text,
-          model_id: "eleven_multilingual_v2",
+          model_id: &quot;eleven_multilingual_v2",
           voice_settings: voiceSettings,
         },
         {
@@ -60,7 +60,7 @@ export class ElevenLabsService {
     try {
       const response = await axios.get(`${this.baseUrl}/voices`, {
         headers: {
-          "xi-api-key": this.apiKey,
+          &quot;xi-api-key": this.apiKey,
         },
       });
 
@@ -78,7 +78,7 @@ export class ElevenLabsService {
     try {
       const response = await axios.get(`${this.baseUrl}/voices/${voiceId}`, {
         headers: {
-          "xi-api-key": this.apiKey,
+          &quot;xi-api-key": this.apiKey,
         },
       });
 

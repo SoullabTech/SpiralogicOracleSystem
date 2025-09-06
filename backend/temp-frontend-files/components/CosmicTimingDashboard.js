@@ -8,7 +8,7 @@ const comprehensiveAstrologicalService_1 = require("../services/comprehensiveAst
 const AstrologicalHoloflowerVisualization_1 = require("./AstrologicalHoloflowerVisualization");
 const CosmicTimingDashboard = ({ userId, birthData }) => {
   const [timingData, setTimingData] = (0, react_1.useState)(null);
-  const [selectedView, setSelectedView] = (0, react_1.useState)("overview");
+  const [selectedView, setSelectedView] = (0, react_1.useState)(&quot;overview&quot;);
   const [selectedHouse, setSelectedHouse] = (0, react_1.useState)(null);
   const [loading, setLoading] = (0, react_1.useState)(true);
   // Planetary symbols
@@ -166,7 +166,7 @@ const CosmicTimingDashboard = ({ userId, birthData }) => {
             retrogradePeriods.filter(
               (r) => r.startDate <= new Date() && r.endDate >= new Date(),
             ).length > 0
-              ? (0, jsx_runtime_1.jsx)("div", {
+              ? (0, jsx_runtime_1.jsx)(&quot;div&quot;, {
                   className: "retrograde-list",
                   children: retrogradePeriods
                     .filter(
@@ -175,7 +175,7 @@ const CosmicTimingDashboard = ({ userId, birthData }) => {
                     )
                     .map((retro, index) =>
                       (0, jsx_runtime_1.jsxs)(
-                        "div",
+                        &quot;div&quot;,
                         {
                           className: "retrograde-item",
                           children: [
@@ -529,7 +529,7 @@ const CosmicTimingDashboard = ({ userId, birthData }) => {
   const getTransitPhase = (start, exact, end) => {
     const now = new Date();
     if (now < new Date(start)) return "Approaching";
-    if (now > new Date(end)) return "Separating";
+    if (now > new Date(end)) return &quot;Separating&quot;;
     if (Math.abs(now.getTime() - new Date(exact).getTime()) < 86400000)
       return "Exact";
     if (now < new Date(exact)) return "Applying";

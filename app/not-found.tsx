@@ -16,7 +16,7 @@ export default function NotFound() {
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <p className="text-sm text-muted-foreground">
-            This wisdom path doesn't exist in our oracle system. Let's guide you back to familiar territory.
+            This wisdom path doesn&apos;t exist in our oracle system. Let&apos;s guide you back to familiar territory.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-2 justify-center">

@@ -166,7 +166,7 @@ export class EnhancedAirAgent {
     // Extract structural elements
     const structure = this.extractCommunicationStructure(claudeResponse.response);
     
-    // Get breathwork suggestion from Claude's insights
+    // Get breathwork suggestion from Claude&apos;s insights
     const breathworkSuggestion = claudeResponse.insights?.breathPattern || 
       'Natural rhythmic breathing for clear communication';
     
@@ -210,10 +210,10 @@ export class EnhancedAirAgent {
   }
 
   /**
-   * Detect user's linguistic preferences
+   * Detect user&apos;s linguistic preferences
    */
   private async detectLinguisticPreferences(userId: string): Promise<any> {
-    // In production, this would analyze user's historical language patterns
+    // In production, this would analyze user&apos;s historical language patterns
     return {
       vocabulary: 'accessible',
       sentenceStructure: 'varied',
@@ -340,7 +340,7 @@ export class EnhancedAirAgent {
     const emphasisWords = [];
     
     // Words in quotes
-    const quoted = text.match(/"([^"]+)"/g);
+    const quoted = text.match(/&quot;([^"]+)"/g);
     if (quoted) emphasisWords.push(...quoted);
     
     // Words in bold

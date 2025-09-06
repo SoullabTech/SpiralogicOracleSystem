@@ -186,7 +186,6 @@ export const DaimonicOracleInterface: React.FC<DaimonicOracleInterfaceProps> = (
       const data = await response.json();
       if (data.success) {
         // Show complexity progression guidance
-        console.log('Complexity progression:', data.data);
       }
     } catch (error) {
       console.error('Complexity increase request failed:', error);

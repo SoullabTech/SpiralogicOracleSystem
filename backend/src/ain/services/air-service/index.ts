@@ -16,7 +16,7 @@ export class AirService extends HybridAgent {
   private activeConversations: Map<string, Conversation> = new Map();
 
   constructor() {
-    super("air-service");
+    super(&quot;air-service");
     this.messageRouter = new MessageRouter();
     this.clarityEngine = new ClarityEngine();
     this.pubsubManager = PubSubManager.getInstance();
@@ -341,7 +341,7 @@ export class AirService extends HybridAgent {
   private async performSynthesis(params: SynthesisParams): Promise<Synthesis> {
     // Simplified synthesis
     return {
-      result: "Synthesized wisdom from all inputs",
+      result: &quot;Synthesized wisdom from all inputs",
       coherence: 0.85,
       method: params.method,
       insights: ["Combined insight 1", "Combined insight 2"],
@@ -452,7 +452,7 @@ export class AirService extends HybridAgent {
       },
       routing: {
         broadcast: true,
-        priority: "medium",
+        priority: &quot;medium&quot;,
       },
     };
   }

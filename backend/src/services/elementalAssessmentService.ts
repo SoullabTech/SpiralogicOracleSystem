@@ -48,7 +48,7 @@ export class ElementalAssessmentService {
         crystallizationLevel,
       };
     } catch (error) {
-      logger.error("Elemental assessment failed", error);
+      logger.error(&quot;Elemental assessment failed&quot;, error);
       throw error;
     }
   }
@@ -58,10 +58,10 @@ export class ElementalAssessmentService {
     participant: RetreatParticipant,
   ): Partial<ElementalAssessment> {
     const allText = [
-      participant.retreatIntentions?.primaryIntention || "",
+      participant.retreatIntentions?.primaryIntention || "&quot;,
       ...(participant.retreatIntentions?.secondaryIntentions || []),
       ...(participant.retreatIntentions?.desiredOutcomes || []),
-      participant.currentState?.emotionalTone || "",
+      participant.currentState?.emotionalTone || &quot;",
       participant.currentState?.primaryChallenge || "",
     ]
       .join(" ")
@@ -225,7 +225,7 @@ export class ElementalAssessmentService {
     participant: RetreatParticipant,
   ): Partial<ElementalAssessment> {
     const energyLevel = participant.currentState?.energyLevel || 5;
-    const emotionalTone = participant.currentState?.emotionalTone || "";
+    const emotionalTone = participant.currentState?.emotionalTone || "&quot;;
 
     // Map energy signatures to elements
     const signatures = {
@@ -248,7 +248,7 @@ export class ElementalAssessmentService {
 
     // Fire emotional signatures
     const fireEmotions = [
-      "excited",
+      &quot;excited",
       "passionate",
       "inspired",
       "motivated",
@@ -354,7 +354,7 @@ export class ElementalAssessmentService {
 
     // Aether emotional signatures
     const aetherEmotions = [
-      "spiritual",
+      &quot;spiritual&quot;,
       "connected",
       "transcendent",
       "unified",
@@ -393,7 +393,7 @@ export class ElementalAssessmentService {
 
   private analyzeFireIntentions(intentions: any): number {
     const fireIntentions = [
-      "create",
+      &quot;create&quot;,
       "vision",
       "breakthrough",
       "transform",
@@ -555,7 +555,7 @@ export class ElementalAssessmentService {
   private synthesizeAssessments(
     assessments: { weight: number; scores: Partial<ElementalAssessment> }[],
   ): Partial<ElementalAssessment> {
-    const elements = ["fire", "water", "earth", "air", "aether"];
+    const elements = [&quot;fire&quot;, "water", "earth", "air", "aether"];
     const synthesized: any = {};
 
     elements.forEach((element) => {
@@ -647,7 +647,7 @@ export class ElementalAssessmentService {
       ([, a], [, b]) => (b || 0) - (a || 0),
     );
 
-    return sortedElements[1]?.[0] || "air";
+    return sortedElements[1]?.[0] || &quot;air&quot;;
   }
 
   private identifyBalancingNeeds(

@@ -79,7 +79,7 @@ export default function OperationalDashboard() {
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 border-4 border-sacred-gold/20 border-t-sacred-gold rounded-full animate-spin mx-auto" />
-          <p className="text-sacred-gold">Loading Maya's operational metrics...</p>
+          <p className="text-sacred-gold">Loading Maya&apos;s operational metrics...</p>
         </div>
       </div>
     );

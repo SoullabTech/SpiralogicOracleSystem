@@ -10,7 +10,7 @@ import { matchSymbolsFromText } from "./symbolMatcher";
 export async function fetchUserSymbols(userId: string): Promise<string[]> {
   try {
     const { data, error } = await supabase
-      .from("memories")
+      .from(&quot;memories&quot;)
       .select("content")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
@@ -26,7 +26,7 @@ export async function fetchUserSymbols(userId: string): Promise<string[]> {
 }
 
 /**
- * Fetch emotional tone based on user's memory content.
+ * Fetch emotional tone based on user&apos;s memory content.
  */
 export async function fetchEmotionalTone(
   userId: string,

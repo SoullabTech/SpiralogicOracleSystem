@@ -270,12 +270,12 @@ export function AgnosticConsentFlow({
             Final Consent Confirmation
           </h2>
           <p className="text-gray-600">
-            You've reviewed the terms and understand the boundaries of this exploration tool.
+            You&apos;ve reviewed the terms and understand the boundaries of this exploration tool.
           </p>
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h3 className="font-semibold text-gray-800 mb-2">You've confirmed:</h3>
+          <h3 className="font-semibold text-gray-800 mb-2">You&apos;ve confirmed:</h3>
           <ul className="text-sm text-gray-700 space-y-1">
             <li>• Understanding this is an exploration tool, not professional guidance</li>
             <li>• Commitment to maintaining connections with trusted people</li>

@@ -57,7 +57,7 @@ export const AGENT_VOICE_MAPPING: AgentVoiceMapping = {
 
 // Role-based fallback mapping
 export const ROLE_VOICE_MAPPING: Record<string, string> = {
-  oracle: "oracle_matrix",
+  oracle: &quot;oracle_matrix&quot;,
   elemental: "aether_agent",
   narrator: "narrator",
   fire: "fire_agent",

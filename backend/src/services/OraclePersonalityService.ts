@@ -69,7 +69,7 @@ export class OraclePersonalityService {
         if (userState.agreementLevel > 0.85) {
           return {
             type: 'creative_dissonance',
-            message: "Honey, I'm going to push back on this a little. Sometimes what feels right isn't what we need to hear.",
+            message: &quot;Honey, I&apos;m going to push back on this a little. Sometimes what feels right isn&apos;t what we need to hear.&quot;,
             voiceAdjustment: { warmth: 'neutral' },
             pacingAdjustment: { responseDelay: 1200 }
           };
@@ -152,7 +152,7 @@ export class OraclePersonalityService {
         if (userState.agreementLevel > 0.85) {
           return {
             type: 'creative_dissonance',
-            message: "I'm noticing we're agreeing on everything. Let me offer a different angle that might be useful.",
+            message: &quot;I&apos;m noticing we&apos;re agreeing on everything. Let me offer a different angle that might be useful.&quot;,
             voiceAdjustment: { clarity: 'nuanced' },
             pacingAdjustment: { responseDelay: 800 }
           };

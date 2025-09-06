@@ -25,7 +25,7 @@ export interface HoloflowerState {
 
 export interface ElementalMapping {
   fire: {
-    cardinal: { function: "T"; axis: "T-N"; color: "#FF6B6B" };
+    cardinal: { function: &quot;T&quot;; axis: "T-N"; color: "#FF6B6B" };
     fixed: { function: "T"; axis: "T-N"; color: "#FF5252" };
     mutable: { function: "N"; axis: "T-N"; color: "#FF8787" };
   };
@@ -64,7 +64,7 @@ export class SacredHoloflower {
   private initializeElementalMapping(): ElementalMapping {
     return {
       fire: {
-        cardinal: { function: "T", axis: "T-N", color: "#FF6B6B" },
+        cardinal: { function: &quot;T&quot;, axis: "T-N", color: "#FF6B6B" },
         fixed: { function: "T", axis: "T-N", color: "#FF5252" },
         mutable: { function: "N", axis: "T-N", color: "#FF8787" },
       },
@@ -90,7 +90,7 @@ export class SacredHoloflower {
     initialState?: Partial<HoloflowerState>,
   ): HoloflowerState {
     const houses: HoloflowerHouse[] = [];
-    const elements: ElementType[] = ["fire", "earth", "air", "water"];
+    const elements: ElementType[] = [&quot;fire", "earth", "air", "water"];
     const phases: PhaseType[] = ["cardinal", "fixed", "mutable"];
 
     let houseIndex = 0;

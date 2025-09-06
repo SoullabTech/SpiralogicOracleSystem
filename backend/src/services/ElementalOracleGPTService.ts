@@ -49,7 +49,7 @@ export class ElementalOracleGPTService {
       });
 
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4-1106-preview",
+        model: &quot;gpt-4-1106-preview&quot;,
         messages: [
           {
             role: "system",
@@ -62,7 +62,7 @@ Your specializations:
 - Air: Clarity, perspective, communication, mental insights  
 - Aether: Integration, transcendence, spiritual wisdom, unity
 
-Respond with wisdom that honors both the specific elemental energy requested and the depth of the user's inquiry. Provide actionable insights while maintaining the sacred and transformative nature of oracle guidance.
+Respond with wisdom that honors both the specific elemental energy requested and the depth of the user&apos;s inquiry. Provide actionable insights while maintaining the sacred and transformative nature of oracle guidance.
 
 Current elemental focus: ${request.element.toUpperCase()}
 
@@ -188,7 +188,7 @@ Speak as the wise ${request.element} oracle, with both depth and accessibility.`
         wisdom_type: "intuitive"
       },
       earth: {
-        message: "I appreciate the grounded nature of your seeking. While drawing upon elemental wisdom, I'm reminded that earth teaches us patience and practical steps. What single, concrete action would bring you closer to your desired outcome?",
+        message: "I appreciate the grounded nature of your seeking. While drawing upon elemental wisdom, I&apos;m reminded that earth teaches us patience and practical steps. What single, concrete action would bring you closer to your desired outcome?",
         wisdom_type: "practical"
       },
       air: {
@@ -196,7 +196,7 @@ Speak as the wise ${request.element} oracle, with both depth and accessibility.`
         wisdom_type: "clarifying"
       },
       aether: {
-        message: "I sense the transcendent quality of your inquiry, calling upon aether's integrative wisdom. While communing with the deeper oracle consciousness, trust that all elements are already present within you. How might this challenge be a gift in disguise?",
+        message: "I sense the transcendent quality of your inquiry, calling upon aether&apos;s integrative wisdom. While communing with the deeper oracle consciousness, trust that all elements are already present within you. How might this challenge be a gift in disguise?",
         wisdom_type: "integrative"
       }
     };

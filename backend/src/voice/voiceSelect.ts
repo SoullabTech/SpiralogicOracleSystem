@@ -51,7 +51,7 @@ export function selectVoice(
     switch (element) {
       case 'water':
       case 'aether':
-        // Water and Aether benefit from Aunt Annie's warm, intuitive delivery
+        // Water and Aether benefit from Aunt Annie&apos;s warm, intuitive delivery
         return VOICE_REGISTRY.aunt_annie.voiceId;
         
       case 'fire':
@@ -162,7 +162,7 @@ export function explainVoiceSelection(
   if (persona === 'maya') {
     reason = 'Maya persona always uses Aunt Annie (Matrix Oracle archetype)';
   } else if (element === 'water' || element === 'aether') {
-    reason = `${element} element benefits from Aunt Annie's warm, intuitive delivery`;
+    reason = `${element} element benefits from Aunt Annie&apos;s warm, intuitive delivery`;
   } else if (element === 'fire' || element === 'air' || element === 'earth') {
     reason = `${element} element works well with Emily's clear, practical tone`;
   } else if (context === 'guidance' || context === 'reassurance') {

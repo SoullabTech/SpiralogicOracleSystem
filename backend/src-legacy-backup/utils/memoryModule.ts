@@ -17,7 +17,7 @@ class MemoryModule {
    * Stores a symbolic tag in Supabase.
    */
   async storeTag(tag: SymbolicMemoryTag): Promise<void> {
-    const { error } = await supabase.from("symbolic_tags").insert({
+    const { error } = await supabase.from(&quot;symbolic_tags&quot;).insert({
       user_id: tag.userId,
       symbol: tag.symbol,
       agent: tag.agent,
@@ -37,7 +37,7 @@ class MemoryModule {
    */
   async getAllSymbolicTags(userId: string): Promise<SymbolicMemoryTag[]> {
     const { data, error } = await supabase
-      .from("symbolic_tags")
+      .from(&quot;symbolic_tags&quot;)
       .select("*")
       .eq("user_id", userId)
       .order("timestamp", { ascending: false });
@@ -58,7 +58,7 @@ class MemoryModule {
     symbol: string,
   ): Promise<SymbolicMemoryTag[]> {
     const { data, error } = await supabase
-      .from("symbolic_tags")
+      .from(&quot;symbolic_tags&quot;)
       .select("*")
       .eq("user_id", userId)
       .ilike("symbol", symbol);
@@ -79,7 +79,7 @@ class MemoryModule {
     agent: string,
   ): Promise<SymbolicMemoryTag[]> {
     const { data, error } = await supabase
-      .from("symbolic_tags")
+      .from(&quot;symbolic_tags&quot;)
       .select("*")
       .eq("user_id", userId)
       .ilike("agent", agent);

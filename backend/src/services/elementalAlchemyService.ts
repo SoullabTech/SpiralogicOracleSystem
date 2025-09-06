@@ -57,7 +57,7 @@ export class ElementalAlchemyService {
   private initializeWebSocketServer() {
     this.wsServer = new WebSocketServer({ port: 5003 });
 
-    this.wsServer.on("connection", (ws, req) => {
+    this.wsServer.on(&quot;connection&quot;, (ws, req) => {
       const userId = req.url?.split("/").pop();
       if (!userId) return;
 
@@ -134,7 +134,7 @@ export class ElementalAlchemyService {
     userId: string,
   ): Promise<Partial<HoloflowerState> | undefined> {
     const { data, error } = await supabase
-      .from("elemental_alchemy_states")
+      .from(&quot;elemental_alchemy_states&quot;)
       .select("state")
       .eq("user_id", userId)
       .single();
@@ -146,7 +146,7 @@ export class ElementalAlchemyService {
     userId: string,
   ): Promise<AlchemicalTransformation[]> {
     const { data, error } = await supabase
-      .from("alchemical_transformations")
+      .from(&quot;alchemical_transformations&quot;)
       .select("*")
       .eq("user_id", userId)
       .order("timestamp", { ascending: false })
@@ -159,7 +159,7 @@ export class ElementalAlchemyService {
     userId: string,
   ): Promise<TransformationInsight[]> {
     const { data, error } = await supabase
-      .from("transformation_insights")
+      .from(&quot;transformation_insights")
       .select("*")
       .eq("user_id", userId)
       .order("timestamp", { ascending: false })
@@ -337,7 +337,7 @@ export class ElementalAlchemyService {
     const insight: TransformationInsight = {
       id: `${userId}-transform-${Date.now()}`,
       timestamp: new Date(),
-      type: "alchemical_process",
+      type: &quot;alchemical_process",
       houseNumber: toHouse,
       insight: baseInsight,
       metadata: {
@@ -455,7 +455,7 @@ export class ElementalAlchemyService {
 
     insights.push({
       type: "consciousness_focus",
-      message: `You're operating primarily from ${highestConsciousness[0]} consciousness`,
+      message: `You&apos;re operating primarily from ${highestConsciousness[0]} consciousness`,
       recommendations: this.getConsciousnessRecommendations(
         highestConsciousness[0],
       ),
@@ -469,7 +469,7 @@ export class ElementalAlchemyService {
 
     if (shadowHouses.length > 0) {
       insights.push({
-        type: "shadow_work",
+        type: &quot;shadow_work&quot;,
         message: "Shadow work opportunities detected",
         houses: shadowHouses.map((h) => ({
           number: h.number,
@@ -501,7 +501,7 @@ export class ElementalAlchemyService {
   private getElementalRecommendations(element: string): string[] {
     const recommendations: Record<string, string[]> = {
       fire: [
-        "Channel your passion into creative projects",
+        &quot;Channel your passion into creative projects&quot;,
         "Practice patience and sustained focus",
         "Balance action with reflection",
       ],
@@ -527,7 +527,7 @@ export class ElementalAlchemyService {
 
   private getConsciousnessRecommendations(level: string): string[] {
     const recommendations: Record<string, string[]> = {
-      "meta-conscious": [
+      &quot;meta-conscious&quot;: [
         "Integrate transcendent insights into daily life",
         "Share wisdom through practical teaching",
         "Stay grounded while exploring higher realms",
@@ -585,7 +585,7 @@ export class ElementalAlchemyService {
     // Broadcast group pattern
     if (this.wsServer) {
       const message = JSON.stringify({
-        type: "group-alchemy-pattern",
+        type: &quot;group-alchemy-pattern&quot;,
         groupId,
         pattern: groupPattern,
         timestamp: new Date(),
@@ -603,7 +603,7 @@ export class ElementalAlchemyService {
 
   private async getGroupParticipants(groupId: string): Promise<string[]> {
     const { data } = await supabase
-      .from("group_participants")
+      .from(&quot;group_participants&quot;)
       .select("user_id")
       .eq("group_id", groupId);
 
@@ -643,7 +643,7 @@ export class ElementalAlchemyService {
     const wisdom = [];
 
     if (state.overallBalance > 0.85) {
-      wisdom.push("Collective Harmony Achieved - Group is in sacred balance");
+      wisdom.push(&quot;Collective Harmony Achieved - Group is in sacred balance&quot;);
     }
 
     if (state.centerSpiral.integration > 0.8) {
@@ -668,7 +668,7 @@ export class ElementalAlchemyService {
 
     if (alchemicalMin > 0.6) {
       wisdom.push(
-        "All Alchemical Processes Active - Complete transformation potential",
+        &quot;All Alchemical Processes Active - Complete transformation potential&quot;,
       );
     }
 

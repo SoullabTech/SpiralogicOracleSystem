@@ -146,7 +146,7 @@ function evaluateOracleVibe(text: string): {
   const warnings: string[] = [];
   let score = 1.0;
   
-  // Check for overly directive language (Oracle invites, doesn't command)
+  // Check for overly directive language (Oracle invites, doesn&apos;t command)
   const directiveCount = (text.match(/\b(must|should|need to|have to|require)\b/gi) || []).length;
   if (directiveCount > 2) {
     issues.push('too_directive');

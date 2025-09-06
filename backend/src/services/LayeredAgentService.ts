@@ -62,7 +62,7 @@ export class LayeredAgentService {
       memory
     );
     
-    // Apply agent's gap maintenance strategy
+    // Apply agent&apos;s gap maintenance strategy
     const intervention = agentPersonality.maintainGap(userState);
     this.applyIntervention(phenomenological, dialogical, intervention);
     
@@ -116,7 +116,7 @@ export class LayeredAgentService {
     userState: UserState
   ): Promise<string> {
     
-    // Base response from agent's perspective
+    // Base response from agent&apos;s perspective
     let response = this.getAgentPerspectiveOn(agent, userQuery);
     
     // Adjust for daimonic states
@@ -180,7 +180,7 @@ export class LayeredAgentService {
     // Liminal states require spacious pacing
     if (daimonicState.liminal.weight >= 0.5) {
       basePacing.pauseBetweenSentences *= 1.2;
-      basePacing.allowInterruption = false; // Don't rush liminal moments
+      basePacing.allowInterruption = false; // Don&apos;t rush liminal moments
     }
     
     // High user resistance requires patient pacing
@@ -204,7 +204,7 @@ export class LayeredAgentService {
     userState: UserState
   ): Promise<AgentResponse['dialogical']> {
     
-    // Generate questions that invite encounter (don't prescribe)
+    // Generate questions that invite encounter (don&apos;t prescribe)
     const questions = this.generateInvitingQuestions(agent, userQuery, userState);
     
     // Generate reflections that mirror without absorbing
@@ -233,7 +233,7 @@ export class LayeredAgentService {
     
     // Questions that open rather than close
     if (userState.agreementLevel > 0.8) {
-      questions.push("What if there's something here that doesn't fit your current understanding?");
+      questions.push(&quot;What if there&apos;s something here that doesn&apos;t fit your current understanding?");
     }
     
     if (userState.resistanceLevel > 0.7) {
@@ -259,7 +259,7 @@ export class LayeredAgentService {
     }
     
     if (memory.callbacks.emergences.length > 0) {
-      reflections.push(`Something new emerged when we talked about ${memory.callbacks.emergences[0]}. It's still developing between us.`);
+      reflections.push(`Something new emerged when we talked about ${memory.callbacks.emergences[0]}. It&apos;s still developing between us.`);
     }
     
     return reflections;
@@ -288,7 +288,7 @@ export class LayeredAgentService {
   ): string[] {
     const incomplete: string[] = [
       "I can only see part of this...",
-      "There's something here I can't quite name...",
+      "There's something here I can&apos;t quite name...",
       "This reminds me of something, but it's not exactly that...",
       "Part of this is clear, but part remains mysterious to me..."
     ];
@@ -436,7 +436,7 @@ export class LayeredAgentService {
   }
 
   private addTricksterAwareness(agent: AgentPersonality, response: string): string {
-    return `${response} (And there may be a teaching riddle here that I'm sensing but can't quite name.)`;
+    return `${response} (And there may be a teaching riddle here that I&apos;m sensing but can't quite name.)`;
   }
 
   private addLiminalSensitivity(agent: AgentPersonality, response: string): string {
@@ -460,7 +460,7 @@ export class LayeredAgentService {
   }
 
   private craftResistanceResponse(agent: AgentPersonality, resistance: string): string {
-    return `I find myself pushing back on the idea that ${resistance}. Something in me says that's not quite right.`;
+    return `I find myself pushing back on the idea that ${resistance}. Something in me says that&apos;s not quite right.`;
   }
 
   private applyIntervention(

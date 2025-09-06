@@ -28,7 +28,6 @@ export function useVoiceManager(onFinalTranscript?: (text: string) => void): Voi
   // 🎤 Start Recording
   const startRecording = useCallback(async () => {
     try {
-      console.log("[VOICE MANAGER] Starting recording...");
       
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
@@ -51,12 +50,10 @@ export function useVoiceManager(onFinalTranscript?: (text: string) => void): Voi
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           chunksRef.current.push(event.data);
-          console.log("[VOICE MANAGER] Audio chunk received:", event.data.size, "bytes");
         }
       };
 
       mediaRecorder.onstop = async () => {
-        console.log("[VOICE MANAGER] Recording stopped, processing...");
         setMicState("processing");
         
         const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
@@ -92,7 +89,6 @@ export function useVoiceManager(onFinalTranscript?: (text: string) => void): Voi
   // ⏹️ Stop Recording
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-      console.log("[VOICE MANAGER] Stopping recording...");
       mediaRecorderRef.current.stop();
     }
   }, []);
@@ -100,7 +96,6 @@ export function useVoiceManager(onFinalTranscript?: (text: string) => void): Voi
   // 🔄 Send Audio for Transcription (with streaming support)
   const sendAudioForTranscription = useCallback(async (audioBlob: Blob) => {
     try {
-      console.log("[VOICE MANAGER] Sending audio for transcription...", audioBlob.size, "bytes");
       
       const response = await fetch('/api/oracle/voice/transcribe/stream', {
         method: 'POST',
@@ -136,7 +131,6 @@ export function useVoiceManager(onFinalTranscript?: (text: string) => void): Voi
             try {
               const data = JSON.parse(line.slice(6));
               
-              console.log("[VOICE MANAGER] Transcription event:", data);
 
               switch (data.type) {
                 case 'interim':
@@ -164,7 +158,6 @@ export function useVoiceManager(onFinalTranscript?: (text: string) => void): Voi
                   break;
                   
                 default:
-                  console.log("[VOICE MANAGER] Unknown event type:", data.type);
               }
             } catch (parseError) {
               console.error("[VOICE MANAGER] Failed to parse event:", line, parseError);

@@ -53,7 +53,7 @@ const ELEMENTAL_VOICE_PARAMS: Record<Element, CSMVoiceParams> = {
     temperature: 0.7,   // More variation for intellectual exploration
     topk: 40,          // Wider selection for creativity
     speed: 1.0,        // Clear, articulate
-    modulation: "bright"
+    modulation: &quot;bright&quot;
   },
   fire: {
     temperature: 0.8,   // Higher energy, more dynamic
@@ -277,7 +277,7 @@ export class EnhancedSesameMayaRefiner extends SesameMayaRefiner {
   private cleanupOldThreads(): void {
     const oneHourAgo = Date.now() - 3600000;
     
-    // This is simplified - in production, you'd track last access time
+    // This is simplified - in production, you&apos;d track last access time
     if (this.conversationMemory.size > 100) {
       // Remove oldest entries
       const entries = Array.from(this.conversationMemory.entries());

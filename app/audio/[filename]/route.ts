@@ -9,7 +9,6 @@ export async function GET(
 ) {
   try {
     const filename = params.filename;
-    console.log('[AUDIO SERVE] Serving audio file:', filename);
 
     if (!filename || !filename.endsWith('.mp3')) {
       return new NextResponse('Invalid audio file', { status: 400 });
@@ -33,12 +32,10 @@ export async function GET(
     // Try each possible path
     for (const audioPath of possiblePaths) {
       try {
-        console.log('[AUDIO SERVE] Checking path:', audioPath);
         const stats = await fs.stat(audioPath);
         if (stats.isFile()) {
           audioData = await fs.readFile(audioPath);
           foundPath = audioPath;
-          console.log('[AUDIO SERVE] Found audio file at:', foundPath);
           break;
         }
       } catch (error) {
@@ -56,9 +53,7 @@ export async function GET(
         try {
           const dir = path.dirname(possiblePath);
           const files = await fs.readdir(dir);
-          console.log(`[AUDIO SERVE] Contents of ${dir}:`, files);
         } catch (error) {
-          console.log(`[AUDIO SERVE] Directory ${path.dirname(possiblePath)} does not exist`);
         }
       }
       

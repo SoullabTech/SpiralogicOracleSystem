@@ -117,7 +117,7 @@ export class CulturalContextAwareness {
       
       // Extract locale information if available  
       const detectedLocale = this.extractLocaleHeuristics(userInput, userProfile);
-      const primaryCulture = detectedLocale || "universal";
+      const primaryCulture = detectedLocale || &quot;universal&quot;;
       
       // Keyword-based cultural indicators
       const culturalKeywords = this.detectCulturalKeywords(userInput);
@@ -188,7 +188,7 @@ export class CulturalContextAwareness {
 
       const culturalProfile: CulturalProfile = {
         primaryCulture:
-          profileCulture.primary || culturalIndicators.primary || "universal",
+          profileCulture.primary || culturalIndicators.primary || &quot;universal&quot;,
         culturalIdentities: [
           ...new Set([
             ...profileCulture.identities,
@@ -267,7 +267,7 @@ export class CulturalContextAwareness {
     const wisdomRequest: IndigenousWisdomRequest = {
       tradition,
       userCulturalBackground: userProfile.primaryCulture,
-      intentionForUse: "spiritual_growth",
+      intentionForUse: &quot;spiritual_growth&quot;,
     };
 
     const protocolResult =
@@ -331,7 +331,7 @@ export class CulturalContextAwareness {
 
     const culturalKeywords = {
       native_american: [
-        "medicine wheel",
+        &quot;medicine wheel&quot;,
         "four directions",
         "eagle",
         "sage",
@@ -459,7 +459,7 @@ export class CulturalContextAwareness {
     const culturalTraumaPatterns = {
       native_american: {
         historicalTrauma: [
-          "boarding schools",
+          &quot;boarding schools&quot;,
           "land dispossession",
           "cultural suppression",
         ],

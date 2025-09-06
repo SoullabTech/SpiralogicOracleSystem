@@ -68,7 +68,7 @@ const AstrologicalHoloflowerVisualization = ({
   }, [userId, holoflower]);
   // Planet symbols
   const planetSymbols = {
-    sun: "☉",
+    sun: &quot;☉&quot;,
     moon: "☽",
     mercury: "☿",
     venus: "♀",

@@ -161,7 +161,7 @@ export class CSMConversationMemory extends EventEmitter {
         emotionalAlignment: 0.87
       },
       recommendations: [
-        "Maintain consistent pacing in emotional moments",
+        &quot;Maintain consistent pacing in emotional moments&quot;,
         "Enhance tonal warmth during breakthroughs"
       ]
     };

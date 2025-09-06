@@ -210,7 +210,7 @@ const PersonalOracleHome: React.FC = () => {
 
           <div className="bg-black/20 rounded-lg p-4">
             <h4 className="text-sm font-semibold text-white mb-2">
-              Today's Guidance
+              Today&apos;s Guidance
             </h4>
             <p className="text-gray-200 text-sm">
               {oracleSummary.currentPhase.guidance}

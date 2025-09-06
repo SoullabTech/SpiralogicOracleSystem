@@ -492,7 +492,7 @@ export class DaimonicDashboardMetaphors {
   ): string {
     if (category === 'fieldStatus') {
       if (condition === 'stormy' && intensity > 0.8) {
-        return "The field churns with lightning—powerful teachings move through the storm.";
+        return &quot;The field churns with lightning—powerful teachings move through the storm.&quot;;
       } else if (condition === 'clear' && intensity > 0.7) {
         return "Rare clarity illuminates the collective space—truth moves freely.";
       } else if (intensity < 0.2) {

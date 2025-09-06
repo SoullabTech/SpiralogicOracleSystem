@@ -60,12 +60,12 @@ export class ElementalAlchemyHoloflower {
   private state: HoloflowerState;
   private readonly PHI = 1.618033988749895; // Golden ratio
 
-  // Kelly's Elemental Alchemy Model Structure
+  // Kelly&apos;s Elemental Alchemy Model Structure
   private readonly houseDefinitions = [
     // FIRE QUADRANT (Houses 1-3)
     {
       number: 1,
-      element: "fire" as ElementType,
+      element: &quot;fire&quot; as ElementType,
       phase: "cardinal" as PhaseType,
       consciousnessLevel: "conscious" as ConsciousnessLevel,
       alchemicalProcess: "calcinatio" as AlchemicalProcess,
@@ -226,7 +226,7 @@ export class ElementalAlchemyHoloflower {
     const houses: HoloflowerHouse[] = this.houseDefinitions.map(
       (def, index) => ({
         ...def,
-        angle: (index * 30 - 90) * (Math.PI / 180), // Start at top (12 o'clock)
+        angle: (index * 30 - 90) * (Math.PI / 180), // Start at top (12 o&apos;clock)
         currentIntensity:
           initialState?.houses?.[index]?.currentIntensity || 0.5,
         transformationPotential: 0.5,
@@ -236,7 +236,7 @@ export class ElementalAlchemyHoloflower {
     // Initialize quadrants
     const quadrants: ElementalQuadrant[] = [
       {
-        element: "fire",
+        element: &quot;fire&quot;,
         houses: [1, 2, 3],
         alchemicalProcess: "calcinatio",
         consciousnessRange: ["conscious", "subconscious", "meta-conscious"],
@@ -275,7 +275,7 @@ export class ElementalAlchemyHoloflower {
 
     // Initialize consciousness distribution
     const consciousnessDistribution = new Map<ConsciousnessLevel, number>([
-      ["meta-conscious", 0.25],
+      [&quot;meta-conscious&quot;, 0.25],
       ["conscious", 0.25],
       ["subconscious", 0.25],
       ["unconscious", 0.25],
@@ -283,7 +283,7 @@ export class ElementalAlchemyHoloflower {
 
     // Initialize alchemical balance
     const alchemicalBalance = new Map<AlchemicalProcess, number>([
-      ["sublimatio", 0.25],
+      [&quot;sublimatio", 0.25],
       ["calcinatio", 0.25],
       ["coagulatio", 0.25],
       ["solutio", 0.25],

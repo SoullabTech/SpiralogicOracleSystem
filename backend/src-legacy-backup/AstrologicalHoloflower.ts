@@ -120,7 +120,7 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   private readonly astrologicalHouseDefinitions = [
     {
       number: 1,
-      astrologicalMeaning: "Self, Identity, Appearance",
+      astrologicalMeaning: &quot;Self, Identity, Appearance&quot;,
       lifeArea: "Personal identity and self-expression",
       traditionalRuler: "mars" as Planet,
       spiralogicStage: 1,
@@ -217,7 +217,7 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
       modernRuler: "uranus" as Planet,
       spiralogicStage: 11,
       developmentalTheme: "Collective Evolution",
-      evolutionaryGoal: "Innovative service to humanity's awakening",
+      evolutionaryGoal: "Innovative service to humanity&apos;s awakening",
     },
     {
       number: 12,
@@ -274,16 +274,16 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
     };
   }
 
-  // Set user's natal chart
+  // Set user&apos;s natal chart
   public setNatalChart(birthData: {
     date: Date;
     time: string;
     location: { lat: number; lng: number };
   }) {
     // In reality, this would calculate actual positions
-    // For now, we'll use placeholder data
+    // For now, we&apos;ll use placeholder data
     this.astroState.natalChart = {
-      ascendant: "aries",
+      ascendant: &quot;aries&quot;,
       midheaven: "capricorn",
       planets: new Map([
         [
@@ -328,7 +328,7 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
     this.astroState.houses.forEach((house) => {
       house.currentTransits = [];
 
-      // Check each planet's position
+      // Check each planet&apos;s position
       transitData.forEach((position, planet) => {
         if (this.isPlanetInHouse(position, house.number)) {
           house.currentTransits.push({
@@ -394,7 +394,7 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
   ): string {
     const influences: Record<Planet, Record<number, string>> = {
       jupiter: {
-        1: "Expansion of self-awareness and new beginnings",
+        1: &quot;Expansion of self-awareness and new beginnings",
         2: "Growth in resources and self-worth",
         3: "Expanding communication and learning",
         4: "Blessings in home and family",

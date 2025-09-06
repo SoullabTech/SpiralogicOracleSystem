@@ -30,14 +30,14 @@ export class ElementalContentService {
     context: ContentDeliveryContext,
     settings: ContentAdaptationSettings,
   ): Promise<ContentRecommendation[]> {
-    // Get user's elemental profile
+    // Get user&apos;s elemental profile
     const userProfile = await this.getUserElementalProfile(context.userId);
 
     // Check anti-commodification gates
     const commodificationCheck =
       this.antiCommodification.implementPacingAlgorithm(
         { lastIntegrationCheck: new Date() } as any,
-        { type: "content_request" },
+        { type: &quot;content_request&quot; },
       );
 
     if (!commodificationCheck.allowed) {
@@ -76,7 +76,7 @@ export class ElementalContentService {
           [ElementalArchetype.AIR]: 4,
         },
         contentHistory: [],
-        integrationPattern: "steady_progress",
+        integrationPattern: &quot;steady_progress&quot;,
         lastAssessment: new Date(),
       }
     );
@@ -119,7 +119,7 @@ export class ElementalContentService {
   ): boolean {
     // Check if user has completed prerequisite content
     return content.prerequisiteGates.every((gateId) => {
-      // In real implementation, check against user's completed gates
+      // In real implementation, check against user&apos;s completed gates
       return true;
     });
   }
@@ -215,7 +215,7 @@ export class ElementalContentService {
     profile: UserElementalProfile,
   ): string {
     if (context.stressLevel > 7) {
-      return "Adapted for high stress - focusing on grounding and stability";
+      return &quot;Adapted for high stress - focusing on grounding and stability&quot;;
     }
 
     if (context.energyLevel < 4) {
@@ -304,7 +304,7 @@ export class ElementalContentService {
       adapted.content = this.simplifyForStressState(adapted.content);
       adapted.realWorldApplications = adapted.realWorldApplications.filter(
         (app) =>
-          app.includes("gentle") ||
+          app.includes(&quot;gentle") ||
           app.includes("simple") ||
           app.includes("basic"),
       );
@@ -387,7 +387,7 @@ export class ElementalContentService {
     profile: UserElementalProfile,
   ): string[] {
     return [
-      "Share your real-world application attempts, including what didn't work",
+      "Share your real-world application attempts, including what didn&apos;t work",
       "Ask for reality-checking on your understanding",
       "Offer support to others working with similar themes",
       "Request accountability for consistent practice",
@@ -440,7 +440,7 @@ export class ElementalContentService {
       description: "Understanding passion as a tool for purposeful action",
       content: "Passion is not a feeling to chase, but energy to direct...",
       metaphoricalFraming:
-        "Like fire, passion can warm and illuminate, or burn and destroy - the difference lies in how it's contained and directed.",
+        "Like fire, passion can warm and illuminate, or burn and destroy - the difference lies in how it&apos;s contained and directed.",
       realWorldApplications: [
         "Channel frustration into constructive problem-solving",
         "Use excitement to fuel consistent daily practices",
@@ -501,7 +501,7 @@ export class ElementalContentService {
       estimatedEngagementTime: 20,
       integrationPeriod: 21,
       bypassingAlerts: ["emotional_avoidance"],
-      disclaimers: ["Adaptation doesn't mean losing your boundaries or values"],
+      disclaimers: ["Adaptation doesn&apos;t mean losing your boundaries or values"],
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -540,7 +540,7 @@ export class ElementalContentService {
       integrationPeriod: 45,
       bypassingAlerts: ["ordinary_rejection", "insight_addiction"],
       disclaimers: [
-        "Grounding practices support but don't replace professional mental health care when needed",
+        "Grounding practices support but don&apos;t replace professional mental health care when needed",
       ],
       createdAt: new Date(),
       updatedAt: new Date(),

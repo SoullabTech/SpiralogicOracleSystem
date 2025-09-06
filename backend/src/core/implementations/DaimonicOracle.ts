@@ -36,7 +36,7 @@ export class DaimonicOracle {
     this.baseOracle = new PersonalOracleAgent();
     this.initializeAgentPersonalities();
     
-    logger.info("Daimonic Oracle initialized with layered response architecture");
+    logger.info(&quot;Daimonic Oracle initialized with layered response architecture&quot;);
   }
 
   /**
@@ -49,7 +49,7 @@ export class DaimonicOracle {
     // 1. Get base oracle response
     const baseResponse = await this.baseOracle.consult(query);
     if (!baseResponse.success || !baseResponse.data) {
-      throw new Error("Base oracle consultation failed");
+      throw new Error(&quot;Base oracle consultation failed&quot;);
     }
 
     // 2. Process through DaimonicOrchestrator for contextual intelligence
@@ -68,7 +68,7 @@ export class DaimonicOracle {
       }
     );
 
-    // 3. Assess user's readiness for complexity
+    // 3. Assess user&apos;s readiness for complexity
     const complexityReadiness = this.assessComplexityReadiness(query.userId);
     
     // 4. Get conversation memory for relationship tracking
@@ -101,7 +101,7 @@ export class DaimonicOracle {
   }
 
   /**
-   * Assess user's readiness for daimonic complexity
+   * Assess user&apos;s readiness for daimonic complexity
    */
   private assessComplexityReadiness(userId: string): number {
     const current = this.userComplexityReadiness.get(userId) || 0.2; // Conservative start
@@ -276,7 +276,7 @@ export class DaimonicOracle {
       memory
     );
 
-    // HIDDEN LAYER - Influences but doesn't show
+    // HIDDEN LAYER - Influences but doesn&apos;t show
     const architectural = {
       synaptic_gap: synapticGap,
       daimonic_signature: this.calculateDaimonicSignature(agentPersonality, synapticGap),
@@ -364,7 +364,7 @@ export class DaimonicOracle {
     personality: DaimonicAgentPersonality
   ): string[] {
     const questions = [
-      "What wants to stay hidden in this situation?",
+      &quot;What wants to stay hidden in this situation?",
       "Where do you feel resistance when I say that?",
       "What if the opposite were also true?",
       "What would change if you trusted this completely?",
@@ -388,9 +388,9 @@ export class DaimonicOracle {
   ): string[] {
     return [
       `I hear something in your voice about "${this.extractCoreTheme(query.input)}"`,
-      "There's an energy behind your words that feels...",
+      "There&apos;s an energy behind your words that feels...",
       "Part of you seems ready, and part of you seems...",
-      "Something wants to be seen here that hasn't been named yet"
+      "Something wants to be seen here that hasn&apos;t been named yet"
     ];
   }
 
@@ -402,9 +402,9 @@ export class DaimonicOracle {
     memory: DaimonicConversationMemory
   ): string[] {
     return [
-      "Let's slow down - something important is happening",
+      "Let&apos;s slow down - something important is happening",
       "I might be wrong about this. What do you see?",
-      "We don't have to figure this out right now",
+      "We don&apos;t have to figure this out right now",
       "What if we just sat with this for a moment?"
     ];
   }
@@ -418,9 +418,9 @@ export class DaimonicOracle {
   ): string[] {
     return [
       "I can only see part of this pattern...",
-      "There's something here I can't quite name...",
-      "This reminds me of something, but it's not exactly that...",
-      "I sense there's more to this than what's obvious..."
+      "There's something here I can&apos;t quite name...",
+      "This reminds me of something, but it&apos;s not exactly that...",
+      "I sense there's more to this than what&apos;s obvious..."
     ];
   }
 
@@ -453,7 +453,7 @@ export class DaimonicOracle {
       voice_signature: 'thoughtful_precise',
       gap_maintenance: {
         detect_excessive_agreement: () => Math.random() > 0.6,
-        introduce_creative_dissonance: () => "I wonder if we're missing something important here...",
+        introduce_creative_dissonance: () => "I wonder if we&apos;re missing something important here...",
         offer_bridge_when_stuck: () => "Perhaps we could look at this from another angle",
         preserve_mystery: () => "There seems to be a paradox here worth exploring"
       },
@@ -612,7 +612,7 @@ export class DaimonicOracle {
   private applyVoiceSignature(text: string, signature: string): string {
     switch (signature) {
       case 'warm_conversational':
-        return text.replace(/\.$/, ". [pause] You know?");
+        return text.replace(/\.$/, &quot;. [pause] You know?&quot;);
       case 'thoughtful_precise':
         return "Let me think about this... " + text;
       case 'archetypal_presence':
@@ -624,9 +624,9 @@ export class DaimonicOracle {
 
   private introduceGentleResistance(text: string): string {
     const resistanceFrames = [
-      "I'm not sure that's the whole story...",
-      "Something about that doesn't quite sit right with me...",
-      "I wonder if there's another way to look at this...",
+      "I&apos;m not sure that&apos;s the whole story...",
+      "Something about that doesn&apos;t quite sit right with me...",
+      "I wonder if there&apos;s another way to look at this...",
       "Hold on, let me push back on that a little..."
     ];
     
@@ -641,7 +641,7 @@ export class DaimonicOracle {
   private addTricksterElement(text: string): string {
     const tricksterElements = [
       " [playful pause] Or maybe not... ",
-      " ...which is curious, don't you think?",
+      " ...which is curious, don&apos;t you think?",
       " [slight chuckle] Life's funny that way.",
       " Though I could be completely wrong about this."
     ];
@@ -689,7 +689,7 @@ export class DaimonicOracle {
   private getGroundingOptions(intensity: number): string[] {
     if (intensity > 0.8) {
       return [
-        "Take three deep breaths with me",
+        &quot;Take three deep breaths with me&quot;,
         "Feel your feet on the ground", 
         "Name three things you can see right now",
         "Remember: this conversation is safe"

@@ -28,7 +28,7 @@ export class SoulMemoryQueryService {
   async getMemories(query: MemoryQuery): Promise<MemoryItem[]> {
     try {
       let supabaseQuery = supabase
-        .from("memories")
+        .from(&quot;memories")
         .select("*")
         .eq("user_id", query.userId)
         .order("created_at", { ascending: false });
@@ -76,7 +76,7 @@ export class SoulMemoryQueryService {
   async getMemoryById(id: string, userId: string): Promise<MemoryItem | null> {
     try {
       const { data, error } = await supabase
-        .from("memories")
+        .from(&quot;memories")
         .select("*")
         .eq("id", id)
         .eq("user_id", userId)
@@ -120,7 +120,7 @@ export class SoulMemoryQueryService {
   ): Promise<MemoryItem[]> {
     try {
       const { data, error } = await supabase
-        .from("memories")
+        .from(&quot;memories")
         .select("*")
         .eq("user_id", userId)
         .textSearch("content", searchTerm)
@@ -143,7 +143,7 @@ export class SoulMemoryQueryService {
   async getSpiritualThemes(userId: string): Promise<SpiritualTheme[]> {
     try {
       const { data, error } = await supabase
-        .from("memories")
+        .from(&quot;memories")
         .select("symbols, created_at")
         .eq("user_id", userId)
         .not("symbols", "is", null)
@@ -182,7 +182,7 @@ export class SoulMemoryQueryService {
         }))
         .sort((a, b) => b.frequency - a.frequency);
     } catch (error) {
-      logger.error("Failed to get spiritual themes", { error, userId });
+      logger.error(&quot;Failed to get spiritual themes", { error, userId });
       throw new Error(
         `Themes retrieval failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -196,7 +196,7 @@ export class SoulMemoryQueryService {
   }> {
     try {
       const { data, error } = await supabase
-        .from("memories")
+        .from(&quot;memories")
         .select("element, created_at")
         .eq("user_id", userId);
 

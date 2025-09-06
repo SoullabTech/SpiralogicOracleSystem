@@ -131,7 +131,7 @@ export const sanitizers = {
     return input
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+      .replace(/"/g, '"')
       .replace(/'/g, '&#x27;')
       .replace(/\//g, '&#x2F;');
   },

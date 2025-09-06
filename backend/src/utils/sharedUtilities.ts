@@ -30,7 +30,7 @@ export function createAPIResponse<T>(
     errors,
     metadata: {
       timestamp: new Date().toISOString(),
-      version: process.env.APP_VERSION || "1.0.0",
+      version: process.env.APP_VERSION || &quot;1.0.0&quot;,
       requestId,
     },
   };
@@ -67,7 +67,7 @@ export function asyncErrorHandler<T extends any[], R>(
     try {
       return await fn(...args);
     } catch (error) {
-      logger.error("Async operation failed", {
+      logger.error(&quot;Async operation failed", {
         error: error instanceof Error ? error.message : "Unknown error",
         stack: error instanceof Error ? error.stack : undefined,
         args: args.length > 0 ? "provided" : "none",
@@ -142,7 +142,7 @@ export function validateEnvironmentVariables(requiredVars: string[]): void {
   }
 
   if (missing.length > 0) {
-    const error = `Missing required environment variables: ${missing.join(", ")}`;
+    const error = `Missing required environment variables: ${missing.join(&quot;, &quot;)}`;
     logger.error(error);
     throw new Error(error);
   }
@@ -159,7 +159,7 @@ export function safeJSONParse<T>(jsonString: string, fallback: T): T {
   try {
     return JSON.parse(jsonString) as T;
   } catch (error) {
-    logger.warn("JSON parse failed, using fallback", {
+    logger.warn(&quot;JSON parse failed, using fallback&quot;, {
       error: error instanceof Error ? error.message : "Unknown error",
       fallback: typeof fallback,
     });

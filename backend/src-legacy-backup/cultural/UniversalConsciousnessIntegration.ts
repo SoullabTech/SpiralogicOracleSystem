@@ -113,7 +113,7 @@ export class UniversalConsciousnessIntegration {
     query: UniversalConsciousnessQuery,
   ): Promise<UniversalConsciousnessResponse> {
     try {
-      logger.info("Processing Universal Consciousness query", {
+      logger.info(&quot;Processing Universal Consciousness query&quot;, {
         userId: query.userId,
         element: query.element,
         inputLength: query.userInput.length,
@@ -233,7 +233,7 @@ export class UniversalConsciousnessIntegration {
       const wisdomRequest: IndigenousWisdomRequest = {
         tradition,
         userCulturalBackground: culturalProfile.primaryCulture,
-        intentionForUse: "spiritual_growth",
+        intentionForUse: &quot;spiritual_growth&quot;,
       };
 
       const protocolResult =
@@ -278,9 +278,9 @@ export class UniversalConsciousnessIntegration {
         culturalProfile.primaryCulture,
       );
 
-    // Get recommended expression for user's culture
+    // Get recommended expression for user&apos;s culture
     let recommendedExpression: CulturalArchetypeExpression | null = null;
-    let culturalFraming = "";
+    let culturalFraming = "&quot;;
 
     if (availableExpressions.has(culturalProfile.primaryCulture)) {
       recommendedExpression =
@@ -302,7 +302,7 @@ export class UniversalConsciousnessIntegration {
     // Generate shadow work adaptation
     const shadowWorkAdaptation = recommendedExpression
       ? this.adaptShadowWorkToCulture(recommendedExpression, culturalProfile)
-      : "";
+      : &quot;";
 
     return {
       universalArchetype: query.element,
@@ -326,7 +326,7 @@ export class UniversalConsciousnessIntegration {
         query.originalResponse,
         query.userInput,
         culturalProfile,
-        "general_shadow_work", // This would be detected from original shadow agent
+        &quot;general_shadow_work", // This would be detected from original shadow agent
       );
 
     return {
@@ -358,7 +358,7 @@ export class UniversalConsciousnessIntegration {
       if (culture !== culturalProfile.primaryCulture) {
         crossCulturalInsights.set(
           culture,
-          `In ${culture} tradition, this energy manifests as ${expression.culturalName}: ${expression.sacredQualities.slice(0, 2).join(", ")}`,
+          `In ${culture} tradition, this energy manifests as ${expression.culturalName}: ${expression.sacredQualities.slice(0, 2).join(&quot;, ")}`,
         );
       }
     }
@@ -416,7 +416,7 @@ export class UniversalConsciousnessIntegration {
       const insights = Array.from(
         culturalWisdom.crossCulturalInsights.values(),
       ).slice(0, 2);
-      enhancedResponse += crossCulturalNote + insights.join(". ") + ".";
+      enhancedResponse += crossCulturalNote + insights.join(&quot;. ") + ".";
     }
 
     // Add universal wisdom threads
@@ -453,7 +453,7 @@ export class UniversalConsciousnessIntegration {
     // Cultural learning recommendations
     recommendations.culturalLearning.push(
       `Learn more about your ${culturalProfile.primaryCulture} traditional wisdom`,
-      "Explore how other cultures understand similar archetypal energies",
+      &quot;Explore how other cultures understand similar archetypal energies",
     );
 
     // Community connections
@@ -561,7 +561,7 @@ export class UniversalConsciousnessIntegration {
 
   private isUniversalQuality(quality: string): boolean {
     const universalQualities = [
-      "transformation",
+      &quot;transformation",
       "healing",
       "wisdom",
       "growth",

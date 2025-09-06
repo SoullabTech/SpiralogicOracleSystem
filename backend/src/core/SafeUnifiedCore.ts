@@ -139,7 +139,7 @@ export class SafeUnifiedCore {
 
   constructor() {
     this.loadSafeAgentConfigurations();
-    logger.info("Safe Unified Core initialized - internal complexity architecture active");
+    logger.info(&quot;Safe Unified Core initialized - internal complexity architecture active&quot;);
   }
 
   /**
@@ -191,7 +191,7 @@ export class SafeUnifiedCore {
     // 8. Update user state safely
     this.updateUserStateSafely(context.userId, internalAspect, strategy, thresholds);
 
-    logger.info("Safe complexity processing complete", {
+    logger.info(&quot;Safe complexity processing complete&quot;, {
       userId: context.userId.substring(0, 8) + '...',
       strategy: strategy.mode,
       latency: Date.now() - startTime,
@@ -417,7 +417,7 @@ export class SafeUnifiedCore {
       safety_interventions.push(safeResponse.groundingPractice);
     }
     if (strategy.refer) {
-      safety_interventions.push("Professional support recommended");
+      safety_interventions.push(&quot;Professional support recommended&quot;);
     }
     if (thresholds.safety_level === 'yellow') {
       safety_interventions.push("Enhanced safety monitoring");
@@ -451,10 +451,10 @@ export class SafeUnifiedCore {
     thresholds: SafeThresholds
   ): SafeUnifiedResponse {
     return {
-      primary_message: "I'm concerned about what you're sharing and want to make sure you're safe. Let's focus on your immediate well-being.",
+      primary_message: "I&apos;m concerned about what you&apos;re sharing and want to make sure you&apos;re safe. Let&apos;s focus on your immediate well-being.",
       support_voices: [{
         agent_id: 'crisis_support',
-        message: "Your safety is the most important thing right now. You don't have to face this alone.",
+        message: "Your safety is the most important thing right now. You don&apos;t have to face this alone.",
         tone: 'emergency_calm',
         offers_practice: true
       }],
@@ -597,15 +597,15 @@ export class SafeUnifiedCore {
     context: SafeContext
   ): Promise<{ agent_id: string; message: string; tone: string; offers_practice: boolean }> {
     
-    let message = "";
+    let message = "&quot;;
     
-    // Generate message based on agent's approach (always internal attribution)
+    // Generate message based on agent&apos;s approach (always internal attribution)
     switch (agent.supportStyle) {
       case 'nurturing and unconditionally accepting':
-        message = "I hear the complexity you're experiencing. It's completely human to navigate these internal tensions.";
+        message = &quot;I hear the complexity you&apos;re experiencing. It&apos;s completely human to navigate these internal tensions.";
         break;
       case 'offering different viewpoints with care':
-        message = "There are several ways to understand what you're going through internally. Let's explore some possibilities.";
+        message = "There are several ways to understand what you're going through internally. Let&apos;s explore some possibilities.";
         break;
       case 'providing stability and practical grounding':
         message = "Let's ground this experience in your body and breath. What you're feeling is real and manageable.";
@@ -617,7 +617,7 @@ export class SafeUnifiedCore {
         message = "Your safety and well-being are most important. Let's connect you with appropriate professional support.";
         break;
       default:
-        message = `I'm here to support you through this internal complexity.`;
+        message = `I&apos;m here to support you through this internal complexity.`;
     }
 
     return {
@@ -712,7 +712,7 @@ export class SafeUnifiedCore {
   ): SharedPattern {
     return {
       theme: this.extractHumanTheme(internalAspect),
-      commonality: "Many people experience similar internal complexity",
+      commonality: &quot;Many people experience similar internal complexity&quot;,
       support_type: strategy.mode,
       prevalence: 'common',
       sharing_scope: strategy.mode === 'referral' ? 'private' : 'collective'

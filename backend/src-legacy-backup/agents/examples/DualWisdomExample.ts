@@ -130,14 +130,14 @@ export class DualWisdomDemo {
 
   private async simulateConversationHistory(): Promise<void> {
     console.log(
-      "🎭 Simulating conversation history with predominant Jung mode...\n",
+      &quot;🎭 Simulating conversation history with predominant Jung mode...\n&quot;,
     );
 
     // Simulate several Jung-mode interactions
     const jungInputs = [
       "I hate this part of myself",
-      "I don't want to look at my shadow",
-      "I can't stand my anger",
+      "I don&apos;t want to look at my shadow",
+      "I can&apos;t stand my anger",
       "I refuse to accept this",
     ];
 
@@ -169,7 +169,7 @@ export class DualWisdomDemo {
         expectedBalance: "Should switch to Jung for balance",
       },
       {
-        input: "I don't want to feel this",
+        input: "I don&apos;t want to feel this",
         expectedBalance: "Jung for avoidance",
       },
       {

@@ -372,7 +372,7 @@ export class SafetyModerationService {
         });
     } catch (error) {
       logger.error('Failed to log safety metrics:', error);
-      // Don't throw - safety logging shouldn't break the flow
+      // Don&apos;t throw - safety logging shouldn&apos;t break the flow
     }
   }
 

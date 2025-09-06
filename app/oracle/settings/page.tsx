@@ -137,7 +137,7 @@ export default function OracleSettingsPage() {
           Back to Settings
         </Button>
         <h1 className="text-3xl font-bold text-white mb-2">Oracle Configuration</h1>
-        <p className="text-muted-foreground">Customize your Oracle's personality and voice</p>
+        <p className="text-muted-foreground">Customize your Oracle&apos;s personality and voice</p>
       </div>
 
       <div className="space-y-6">

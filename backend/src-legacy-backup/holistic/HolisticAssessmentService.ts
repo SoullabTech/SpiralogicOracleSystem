@@ -154,7 +154,7 @@ export class HolisticAssessmentService {
     const strengths: string[] = [];
 
     if (domain === HolisticDomain.MIND && score >= 6) {
-      strengths.push("Clear thinking patterns", "Effective communication");
+      strengths.push(&quot;Clear thinking patterns&quot;, "Effective communication");
     }
     if (domain === HolisticDomain.BODY && score >= 6) {
       strengths.push("Body awareness", "Physical vitality");
@@ -233,7 +233,7 @@ export class HolisticAssessmentService {
       stressLevel: assessmentData.stressLevel || 5,
       energyLevel: assessmentData.energyLevel || 5,
       lifeCircumstances: assessmentData.lifeCircumstances || [],
-      preferredLearningStyle: assessmentData.learningStyle || "mixed",
+      preferredLearningStyle: assessmentData.learningStyle || &quot;mixed&quot;,
       developmentGoals: [],
       lastUpdated: new Date(),
     };

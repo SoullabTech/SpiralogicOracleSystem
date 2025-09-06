@@ -107,7 +107,7 @@ export default function OracleVoiceExample({ onSubmit, disabled = false }: Oracl
       <CardContent className="p-6 space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-sacred-gold">Maya's Voice Interface</h2>
+          <h2 className="text-2xl font-bold text-sacred-gold">Maya&apos;s Voice Interface</h2>
           <p className="text-sm text-gray-400">Speak, type, upload files, or share URLs - Maya understands it all</p>
         </div>
 

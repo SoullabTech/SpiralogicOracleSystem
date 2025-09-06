@@ -121,7 +121,7 @@ export default function ChatPage() {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "oracle",
-        content: "I'm having trouble connecting right now. Please try again in a moment.",
+        content: "I&apos;m having trouble connecting right now. Please try again in a moment.",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -266,7 +266,7 @@ export default function ChatPage() {
             {messages.length === 0 && (
               <div className="text-center text-gray-500 mt-8">
                 <p>Welcome to your personal Oracle.</p>
-                <p className="text-sm mt-2">Start by asking a question or sharing what's on your mind.</p>
+                <p className="text-sm mt-2">Start by asking a question or sharing what&apos;s on your mind.</p>
               </div>
             )}
             
@@ -487,7 +487,7 @@ export default function ChatPage() {
               <textarea
                 value={journalContent}
                 onChange={(e) => setJournalContent(e.target.value)}
-                placeholder="What's on your mind?"
+                placeholder="What&apos;s on your mind?"
                 rows={4}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-blue-600 resize-none"
               />

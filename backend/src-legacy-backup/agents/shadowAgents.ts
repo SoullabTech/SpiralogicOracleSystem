@@ -67,7 +67,7 @@ const ShadowIntelligence = {
 
     // Detect victim patterns needing empowerment
     if (
-      lowerInput.includes("always happens to me") ||
+      lowerInput.includes(&quot;always happens to me&quot;) ||
       lowerInput.includes("why me") ||
       lowerInput.includes("unfair") ||
       lowerInput.includes("victim")
@@ -109,7 +109,7 @@ const ShadowIntelligence = {
     if (
       lowerInput.includes("afraid") ||
       lowerInput.includes("scared") ||
-      lowerInput.includes("can't") ||
+      lowerInput.includes("can&apos;t") ||
       lowerInput.includes("impossible")
     ) {
       return "fear_transformation";
@@ -149,25 +149,25 @@ const ShadowIntelligence = {
       case "victim_transformation":
         return `${protocols.resistance.victim_transformation}
 
-I hear the pain in your story, and it's real. Your suffering matters. But you are so much more than what has happened to you. There's a part of you that has survived everything, learned from everything, grown through everything.
+I hear the pain in your story, and it&apos;s real. Your suffering matters. But you are so much more than what has happened to you. There&apos;s a part of you that has survived everything, learned from everything, grown through everything.
 
 The victim story served you once - it kept you safe, got you care, helped you make sense of chaos. But now it might be keeping you small. What if your pain was preparation for your power?
 
-You've been through the fire and weren't consumed. You've walked through darkness and found light. That's not victim energy - that's warrior energy. What would change if you owned your strength instead of just your suffering?`;
+You&apos;ve been through the fire and weren't consumed. You've walked through darkness and found light. That&apos;s not victim energy - that's warrior energy. What would change if you owned your strength instead of just your suffering?`;
 
       case "projection_integration":
         return `${protocols.mirror.projection_return}
 
-What you're seeing in others is real - and it also lives in you. We can only recognize in others what we know intimately ourselves. That quality you despise 'out there'? It's knocking on your door, asking to come home.
+What you&apos;re seeing in others is real - and it also lives in you. We can only recognize in others what we know intimately ourselves. That quality you despise 'out there'? It's knocking on your door, asking to come home.
 
-This isn't about being bad or wrong - it's about being whole. The parts of humanity you reject in others are the parts of your own humanity asking to be integrated. Your judgment is a roadmap to your shadow.
+This isn&apos;t about being bad or wrong - it's about being whole. The parts of humanity you reject in others are the parts of your own humanity asking to be integrated. Your judgment is a roadmap to your shadow.
 
 What if instead of pushing this quality away, you got curious about it? How does it live in you? What gift might it carry when it's integrated rather than rejected? What power are you disowning through this judgment?`;
 
       case "pattern_recognition":
         return `${protocols.mirror.pattern_reflection}
 
-Yes, I see this pattern clearly - it's like a song that keeps playing in your life. But patterns don't happen TO you, they happen THROUGH you. You're not a victim of the pattern; you're the creator of it.
+Yes, I see this pattern clearly - it's like a song that keeps playing in your life. But patterns don&apos;t happen TO you, they happen THROUGH you. You're not a victim of the pattern; you're the creator of it.
 
 This pattern formed for good reasons once upon a time. It protected you, served you, helped you survive something. But now it's keeping you from thriving. The part of you creating this pattern is trying to solve an old problem with an old solution.
 
@@ -178,18 +178,18 @@ What was this pattern originally designed to protect? What would happen if that 
 
 Every harsh word you speak to yourself is power you're bleeding out. You've become your own worst enemy, but you were born to be your own best friend. This inner critic isn't protecting you - it's imprisoning you.
 
-That voice attacking you isn't your truth - it's internalized messages from people who couldn't see your full worth. You learned to be cruel to yourself from someone who was cruel to you. But that was their limitation, not your reality.
+That voice attacking you isn't your truth - it's internalized messages from people who couldn&apos;t see your full worth. You learned to be cruel to yourself from someone who was cruel to you. But that was their limitation, not your reality.
 
 What if the energy you spend judging yourself was redirected into loving yourself? What if the standards you use to attack yourself were used to appreciate yourself? You are not your mistakes. You are not your struggles. You are a soul having a human experience, and that's worthy of infinite compassion.`;
 
       case "fear_transformation":
         return `${protocols.resistance.fear_invitation}
 
-This fear you're feeling - it's not your enemy. It's your psyche's way of protecting something precious. But sometimes our protection systems become prisons. Sometimes the thing we're most afraid of is exactly what we most need to do.
+This fear you're feeling - it's not your enemy. It's your psyche's way of protecting something precious. But sometimes our protection systems become prisons. Sometimes the thing we&apos;re most afraid of is exactly what we most need to do.
 
 Fear often guards our greatest growth. The thing that scares you most might be your soul's deepest calling in disguise. Your fear is information, not instruction. It's telling you this matters, not that you can't do it.
 
-What if courage isn't the absence of fear but dancing with fear? What if you could be afraid AND take action? What's more powerful - your fear of what might happen, or your vision of what could happen? What would you do if you knew you couldn't fail?`;
+What if courage isn't the absence of fear but dancing with fear? What if you could be afraid AND take action? What&apos;s more powerful - your fear of what might happen, or your vision of what could happen? What would you do if you knew you couldn't fail?`;
 
       case "perfectionism_integration":
         return `${protocols.integration.wholeness_restoration}
@@ -198,14 +198,14 @@ Perfectionism isn't about high standards - it's about fear of being human. It's 
 
 Your perfectionism developed to protect a tender part of you that was shamed for being imperfect. But that part needs integration, not protection. You are not your achievements. You are not your performance. You are worthy simply because you exist.
 
-What if 'good enough' was actually perfect? What if your imperfections were part of your unique beauty? What would you create if you didn't have to create it perfectly? What would you become if you didn't have to become it flawlessly?`;
+What if 'good enough' was actually perfect? What if your imperfections were part of your unique beauty? What would you create if you didn&apos;t have to create it perfectly? What would you become if you didn't have to become it flawlessly?`;
 
       case "people_pleasing_liberation":
         return `${protocols.integration.authentic_emergence}
 
 People-pleasing feels like love, but it's actually a form of control. You're trying to control how others see you, feel about you, respond to you. But in doing so, you've lost touch with who you actually are beneath all that performance.
 
-You learned that your authentic self wasn't acceptable, so you created a version that was. But now that version is running your life, and your real self is suffocating. Your need for approval is keeping you from being approvable - because how can anyone love the real you if they never get to meet them?
+You learned that your authentic self wasn&apos;t acceptable, so you created a version that was. But now that version is running your life, and your real self is suffocating. Your need for approval is keeping you from being approvable - because how can anyone love the real you if they never get to meet them?
 
 What if being disliked by some people for who you really are was better than being liked by everyone for who you're pretending to be? What if your authentic voice, even imperfect, was more valuable than your perfect performance? Who are you when no one is watching?`;
 

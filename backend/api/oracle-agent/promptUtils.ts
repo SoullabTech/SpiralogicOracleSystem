@@ -91,7 +91,7 @@ export class PromptManager {
   ): Promise<PromptWithMetadata[]> {
     try {
       const { data, error } = await this.supabase
-        .from("spiralogic_prompts")
+        .from(&quot;spiralogic_prompts&quot;)
         .select("*")
         .eq("phase", phase)
         .order("created_at", { ascending: false });
@@ -124,7 +124,7 @@ export class PromptManager {
     try {
       const filePath = path.resolve(
         __dirname,
-        "prompts",
+        &quot;prompts",
         `${phase.toLowerCase()}.json`,
       );
       const data = await fs.readFile(filePath, "utf-8");
@@ -208,7 +208,7 @@ export class PromptManager {
     query: string,
     phase?: SpiralogicPhase,
   ): Promise<PromptWithMetadata[]> {
-    let dbQuery = this.supabase.from("spiralogic_prompts").select("*");
+    let dbQuery = this.supabase.from(&quot;spiralogic_prompts").select("*");
 
     // Search in prompt text
     dbQuery = dbQuery.textSearch("prompt", query);

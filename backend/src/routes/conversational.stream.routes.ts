@@ -27,7 +27,7 @@ router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
     return res.status(503).json({ success: false, error: 'Streaming disabled' });
   }
 
-  const element = String(req.query.element || "aether").toLowerCase();
+  const element = String(req.query.element || &quot;aether").toLowerCase();
   const userId = String(req.query.userId || "anon");
   const userText = String(req.query.q || req.query.text || "");
   const lang = String(req.query.lang || "en-US");
@@ -87,7 +87,7 @@ router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
       }
     });
 
-    // Process through Maya's full conversational pipeline with persistent session
+    // Process through Maya&apos;s full conversational pipeline with persistent session
     const mayaResponse = await personalOracleAgent.consult({
       input: userText,
       userId,
@@ -105,13 +105,13 @@ router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
 
     if (!mayaResponse.success) {
       logger.error('Maya consultation failed', { errors: mayaResponse.errors });
-      send("delta", { text: "I'm experiencing some technical difficulties. Could you share that again?" });
+      send("delta", { text: "I&apos;m experiencing some technical difficulties. Could you share that again?" });
       send("done", { reason: "error", message: "Maya consultation failed" });
       res.end();
       return;
     }
 
-    // Stream Maya's response word by word for real-time feel
+    // Stream Maya&apos;s response word by word for real-time feel
     const response = mayaResponse.data;
     
     // Log intent detection for research
@@ -186,7 +186,7 @@ router.get("/stream", streamLimiter, async (req: Request, res: Response) => {
         const word = words[i];
         accumulatedText += (i > 0 ? ' ' : '') + word;
         
-        send("delta", { text: word + (i < words.length - 1 ? ' ' : '') });
+        send(&quot;delta&quot;, { text: word + (i < words.length - 1 ? ' ' : '') });
         
         // Natural pause between words (Maya's conversational rhythm)
         await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 50));

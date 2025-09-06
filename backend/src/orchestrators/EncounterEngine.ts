@@ -203,7 +203,7 @@ export class EncounterEngine {
       surprise,
       coherence,
       type: encounterType,
-      safetyLevel: "green", // Will be updated by safety assessment
+      safetyLevel: &quot;green&quot;, // Will be updated by safety assessment
       encounterContext: {
         triggeringEvent: context.userInput,
         durationSeconds: context.environmentalContext?.sessionDuration || 0,
@@ -289,9 +289,9 @@ export class EncounterEngine {
     
     // Simple classification heuristics (dev should enhance)
     if (resistance > 0.7 && coherence < 0.4) return "conflict";
-    if (surprise > 0.8 && coherence > 0.6) return "breakthrough";
+    if (surprise > 0.8 && coherence > 0.6) return &quot;breakthrough&quot;;
     if (irreducibility > 0.6 && resistance > 0.5) return "paradox";
-    if (surprise < 0.3 && coherence > 0.7) return "ordinary";
+    if (surprise < 0.3 && coherence > 0.7) return &quot;ordinary";
     return "opening";
   }
   
@@ -381,7 +381,7 @@ export class EncounterEngine {
       resistance: 0.1,
       surprise: 0.1,
       coherence: 0.9,
-      type: "ordinary",
+      type: &quot;ordinary",
       safetyLevel: "green"
     };
     
@@ -524,7 +524,7 @@ class ResistanceDetector implements ResistanceDetector {
 class SurpriseCalculator implements SurpriseCalculator {
   async calculate(context: EncounterProcessingContext): Promise<number> {
     // Stub: Calculate unexpectedness
-    // Compare against user's typical patterns and conversation history
+    // Compare against user&apos;s typical patterns and conversation history
     return Math.random() * 0.4 + 0.3; // Placeholder
   }
 }
@@ -540,7 +540,7 @@ class CoherenceEvaluator implements CoherenceEvaluator {
 class SafetyAssessor implements SafetyAssessor {
   async assess(signature: EncounterSignature, context: EncounterProcessingContext): Promise<"green" | "yellow" | "red"> {
     // Stub: Assess safety based on capacity signals and encounter intensity
-    if (context.userCapacitySignals?.safetyFlag) return "red";
+    if (context.userCapacitySignals?.safetyFlag) return &quot;red&quot;;
     if (signature.resistance > 0.8 && signature.surprise > 0.7) return "yellow";
     return "green";
   }

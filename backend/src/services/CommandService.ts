@@ -39,7 +39,7 @@ export class SoulMemoryCommandService {
       const memoryId = this.generateMemoryId();
 
       // Emit domain event for memory creation
-      await this.eventService.emit("memory.created", {
+      await this.eventService.emit(&quot;memory.created", {
         id: memoryId,
         ...command,
         timestamp: new Date().toISOString(),
@@ -62,7 +62,7 @@ export class SoulMemoryCommandService {
     command: UpdateMemoryCommand,
   ): Promise<{ success: boolean }> {
     try {
-      await this.eventService.emit("memory.updated", {
+      await this.eventService.emit(&quot;memory.updated", {
         ...command,
         timestamp: new Date().toISOString(),
       });

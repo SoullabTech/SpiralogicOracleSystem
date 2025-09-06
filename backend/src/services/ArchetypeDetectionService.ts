@@ -186,7 +186,7 @@ export class ArchetypeDetectionService {
 
   private extractExcerpt(text: string, keyword: string): string {
     const index = text.toLowerCase().indexOf(keyword.toLowerCase());
-    if (index === -1) return text.slice(0, 100) + "...";
+    if (index === -1) return text.slice(0, 100) + &quot;...&quot;;
 
     const start = Math.max(0, index - 50);
     const end = Math.min(text.length, index + keyword.length + 50);
@@ -197,12 +197,12 @@ export class ArchetypeDetectionService {
   }
 
   private generateInterpretation(archetype: Archetype, keywords: string[], confidence: number): string {
-    const intensity = confidence > 0.7 ? "really" : confidence > 0.5 ? "clearly" : "gently";
+    const intensity = confidence > 0.7 ? &quot;really&quot; : confidence > 0.5 ? "clearly" : "gently";
     
     const interpretations: Record<string, string> = {
-      "The Hero": `I notice you're ${intensity} in growth mode right now - taking on challenges and pushing through resistance.`,
-      "The Sage": `There's a ${intensity} reflective quality to what you're sharing - you're processing and making sense of things.`,
-      "The Shadow": `You're ${intensity} exploring some deeper territory here - the parts of life that aren't always comfortable but hold important insights.`,
+      &quot;The Hero&quot;: `I notice you&apos;re ${intensity} in growth mode right now - taking on challenges and pushing through resistance.`,
+      "The Sage": `There&apos;s a ${intensity} reflective quality to what you&apos;re sharing - you're processing and making sense of things.`,
+      "The Shadow": `You're ${intensity} exploring some deeper territory here - the parts of life that aren&apos;t always comfortable but hold important insights.`,
       "The Lover": `Connection seems ${intensity} alive in what you're expressing - whether to others, to beauty, or to what matters most.`,
       "The Creator": `Your creative essence is ${intensity} coming through - there's something wanting to be expressed or brought into being.`,
       "The Caregiver": `I can sense your caring nature ${intensity} - you're naturally oriented toward nurturing and supporting.`,
@@ -217,9 +217,9 @@ export class ArchetypeDetectionService {
 
   private generateGrowthPrompt(archetype: Archetype): string {
     const prompts: Record<string, string> = {
-      "The Hero": "What's the real challenge asking for your attention right now? Where do you feel ready to step up?",
+      &quot;The Hero&quot;: "What&apos;s the real challenge asking for your attention right now? Where do you feel ready to step up?",
       "The Sage": "What are you learning about yourself through this experience? What patterns are you starting to see?",
-      "The Shadow": "What's one thing you've been avoiding that might actually be worth exploring? What would happen if you faced it?",
+      "The Shadow": "What&apos;s one thing you've been avoiding that might actually be worth exploring? What would happen if you faced it?",
       "The Lover": "What brings you most alive right now? How can you create more connection - with others or with what you care about?",
       "The Creator": "What wants to be expressed through you? What would you make if you knew it would turn out beautifully?",
       "The Caregiver": "How are you taking care of yourself while supporting others? What do you need right now?",

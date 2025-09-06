@@ -219,7 +219,7 @@ export class BoundaryEnforcer {
 
   private static getSuggestion(phrase: string): string {
     const replacements: Record<string, string> = {
-      "I sense": "Based on what you've shared",
+      &quot;I sense&quot;: "Based on what you&apos;ve shared",
       "I feel": "Your words suggest",
       "The universe": "Your experience",
       "Spirit says": "You might consider",

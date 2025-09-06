@@ -160,7 +160,7 @@ export interface ServiceCapability {
 export interface DistributedState {
   local_cache: Map<string, any>;
   cloud_sync: boolean;
-  consistency_level: "eventual" | "strong" | "weak";
+  consistency_level: &quot;eventual&quot; | "strong" | "weak";
   conflict_resolution: "last_write_wins" | "vector_clock" | "merge";
 }
 

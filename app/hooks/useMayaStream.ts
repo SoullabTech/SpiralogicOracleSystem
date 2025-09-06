@@ -94,7 +94,6 @@ export function useMayaStream() {
     eventSource.addEventListener("meta", (e: MessageEvent) => {
       const meta = JSON.parse(e.data);
       setMetadata(meta);
-      console.log('🔮 Maya routing:', meta);
     });
 
     eventSource.addEventListener("delta", (e: MessageEvent) => {
@@ -153,7 +152,6 @@ export function useMayaStream() {
       eventSource.close();
       currentEventSource.current = null;
       
-      console.log('✅ Maya stream complete:', doneData);
     });
 
     eventSource.addEventListener("heartbeat", () => {

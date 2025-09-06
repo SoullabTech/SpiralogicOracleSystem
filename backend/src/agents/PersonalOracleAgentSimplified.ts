@@ -47,7 +47,7 @@ export interface PersonalOracleResponse {
 export interface PersonalOracleSettings {
   name?: string;
   voice?: string;
-  persona?: "warm" | "formal" | "playful";
+  persona?: &quot;warm&quot; | "formal" | "playful";
   preferredElements?: string[];
   interactionStyle?: "brief" | "detailed" | "comprehensive";
   voiceEnabled?: boolean;
@@ -60,7 +60,7 @@ export class PersonalOracleAgentSimplified {
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
   
   constructor() {
-    logger.info("Simplified Personal Oracle Agent initialized for testing");
+    logger.info(&quot;Simplified Personal Oracle Agent initialized for testing&quot;);
   }
 
   /**
@@ -72,7 +72,7 @@ export class PersonalOracleAgentSimplified {
     const requestId = generateRequestId();
 
     return asyncErrorHandler(async () => {
-      logger.info("Simplified Oracle consultation started", {
+      logger.info(&quot;Simplified Oracle consultation started&quot;, {
         userId: query.userId.substring(0, 8) + '...',
         requestId,
       });
@@ -81,7 +81,7 @@ export class PersonalOracleAgentSimplified {
       const isCrisis = this.detectCrisis(query.input);
       if (isCrisis) {
         return successResponse({
-          message: "I hear that you're going through something very difficult right now. Your wellbeing is what matters most. \n\nLet's take this moment to ground ourselves. Take a slow, deep breath with me. \n\nIf you're in immediate danger, please reach out to emergency services or a crisis hotline. You don't have to face this alone.",
+          message: "I hear that you&apos;re going through something very difficult right now. Your wellbeing is what matters most. \n\nLet&apos;s take this moment to ground ourselves. Take a slow, deep breath with me. \n\nIf you're in immediate danger, please reach out to emergency services or a crisis hotline. You don&apos;t have to face this alone.",
           element: "earth",
           archetype: "Protector", 
           confidence: 1.0,
@@ -97,7 +97,7 @@ export class PersonalOracleAgentSimplified {
       const isOverwhelmed = this.detectOverwhelm(query.input);
       if (isOverwhelmed) {
         return successResponse({
-          message: "I can sense that things feel overwhelming right now. That's completely understandable. \n\nLet's slow down together. Take a gentle breath. \n\nWhat's one small thing that feels manageable right now?",
+          message: "I can sense that things feel overwhelming right now. That&apos;s completely understandable. \n\nLet's slow down together. Take a gentle breath. \n\nWhat's one small thing that feels manageable right now?",
           element: "water",
           archetype: "Healer",
           confidence: 0.9,

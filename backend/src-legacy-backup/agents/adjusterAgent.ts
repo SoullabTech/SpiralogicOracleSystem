@@ -25,7 +25,7 @@ function scoreQuery(input: string): Record<string, number> {
   const lower = input.toLowerCase();
   return {
     fire:
-      lower.includes("passion") ||
+      lower.includes(&quot;passion&quot;) ||
       lower.includes("energy") ||
       lower.includes("action")
         ? 1
@@ -78,7 +78,7 @@ export class PersonalOracleAgent extends OracleAgent {
   public async getTransformationMetrics(userId: string): Promise<any> {
     return {
       metricsAvailable: false,
-      message: "Transformation metrics not yet implemented",
+      message: &quot;Transformation metrics not yet implemented&quot;,
     };
   }
 
@@ -88,7 +88,7 @@ export class PersonalOracleAgent extends OracleAgent {
   ): Promise<any> {
     return {
       retreatModeActive: false,
-      message: "Retreat mode not yet implemented",
+      message: &quot;Retreat mode not yet implemented&quot;,
     };
   }
 
@@ -98,7 +98,7 @@ export class PersonalOracleAgent extends OracleAgent {
   ): Promise<any> {
     return {
       reflectionOffered: false,
-      message: "Weekly reflection not yet implemented",
+      message: &quot;Weekly reflection not yet implemented",
     };
   }
 
@@ -262,7 +262,7 @@ export class PersonalOracleAgent extends OracleAgent {
     return response;
   }
 
-  // Special wrapper for agents that don't fit the OracleAgent signature
+  // Special wrapper for agents that don&apos;t fit the OracleAgent signature
   private async wrapSpecialAgent(
     agent: any,
     query: { input: string; userId: string },

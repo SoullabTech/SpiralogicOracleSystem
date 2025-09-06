@@ -110,7 +110,7 @@ export class OracleStateMachineConfig {
           priority: 3
         }
       ],
-      responseTemplate: "This feels important. Take a moment... breathe. You're not alone in this. I'm here with you right now.",
+      responseTemplate: &quot;This feels important. Take a moment... breathe. You&apos;re not alone in this. I&apos;m here with you right now.&quot;,
       escalationThreshold: 0.8,
       resourceLinks: [
         'National Suicide Prevention Lifeline: 988',
@@ -123,11 +123,11 @@ export class OracleStateMachineConfig {
     this.onboardingConfig = {
       toneAdaptation: {
         curious: {
-          prefix: "I hear your curiosity. Let's start where your question points:",
+          prefix: "I hear your curiosity. Let&apos;s start where your question points:",
           markers: ['?', 'how', 'what', 'why', 'wondering']
         },
         hesitant: {
-          prefix: "It sounds like you're feeling tentative. We can go gently.",
+          prefix: "It sounds like you&apos;re feeling tentative. We can go gently.",
           markers: ['maybe', 'not sure', 'nervous', 'uncertain', 'worried']
         },
         enthusiastic: {
@@ -135,7 +135,7 @@ export class OracleStateMachineConfig {
           markers: ['!', 'excited', 'can\'t wait', 'amazing', 'love']
         },
         neutral: {
-          prefix: "Let's begin simply, with what's present for you:",
+          prefix: "Let's begin simply, with what&apos;s present for you:",
           markers: []
         }
       },
@@ -166,7 +166,7 @@ export class OracleStateMachineConfig {
         collectiveReferences: false
       },
       safety: {
-        fallbackToStage: 'structured_guide', // Can't go lower
+        fallbackToStage: 'structured_guide', // Can&apos;t go lower
         groundingPriority: 1,
         safetyFallbackMode: 'immediate'
       },
@@ -206,8 +206,8 @@ export class OracleStateMachineConfig {
       },
       responseTemplates: {
         dialogical_companion: [
-          "There's something rich in what you're exploring here. \\n\\nI'm curious - when you notice this pattern, what do you sense it's serving? Sometimes our responses, even the challenging ones, are trying to take care of something important.\\n\\nWhat would it be like to be curious about this rather than trying to solve it right away?",
-          "I notice layers in what you're sharing. \\n\\nWhat if we explored this from a few different angles? Sometimes when we're stuck, it's because we're seeing the situation from only one perspective.\\n\\nWhat other ways might you understand what's happening here?",
+          "There&apos;s something rich in what you're exploring here. \\n\\nI'm curious - when you notice this pattern, what do you sense it&apos;s serving? Sometimes our responses, even the challenging ones, are trying to take care of something important.\\n\\nWhat would it be like to be curious about this rather than trying to solve it right away?",
+          "I notice layers in what you're sharing. \\n\\nWhat if we explored this from a few different angles? Sometimes when we&apos;re stuck, it's because we're seeing the situation from only one perspective.\\n\\nWhat other ways might you understand what's happening here?",
           "Something's stirring as you talk about this. \\n\\nI wonder - what would your wisest self say about this situation? Not the part that has all the answers, but the part that can hold the questions with compassion.\\n\\nWhat emerges when you consider it from that place?",
           "I hear complexity in what you're describing - like there are multiple truths operating at once. \\n\\nSometimes the most meaningful work happens in the spaces between certainties. What if instead of finding the 'right' answer, we explored what wants to be understood?\\n\\nWhat feels alive for you in this tension?",
           "There's something your deeper wisdom is trying to communicate through this experience. \\n\\nWhat would it be like to listen to this challenge as if it were a teacher rather than an obstacle? Sometimes our difficulties carry exactly the medicine we need.\\n\\nWhat might this situation be trying to teach you?",
@@ -243,10 +243,10 @@ export class OracleStateMachineConfig {
       },
       responseTemplates: {
         co_creative_partner: [
-          "What strikes me is this beautiful tension you're holding - the desire for both security and growth, both belonging and autonomy.\\n\\nThis reminds me of how trees grow: they need deep roots AND they need to reach toward light. The tension between these isn't a problem to solve but a creative force to work with.\\n\\nWhat if this very paradox you're living is exactly what's trying to emerge in your life right now?",
+          "What strikes me is this beautiful tension you're holding - the desire for both security and growth, both belonging and autonomy.\\n\\nThis reminds me of how trees grow: they need deep roots AND they need to reach toward light. The tension between these isn&apos;t a problem to solve but a creative force to work with.\\n\\nWhat if this very paradox you're living is exactly what's trying to emerge in your life right now?",
           "I feel the creative energy in what you're exploring - like you're at the edge of something new wanting to be born.\\n\\nThere's a saying: 'The cave you fear to enter holds the treasure you seek.' What if the very thing you're wrestling with is the doorway to your next evolution?\\n\\nWhat wants to emerge through this challenge you're facing?",
           "This feels like sacred creative work you're doing - the kind that transforms not just you, but ripples out to touch others.\\n\\nI'm reminded of the alchemical process: we put the raw material of our experience into the crucible of consciousness and something entirely new is created.\\n\\nWhat's the gold that wants to emerge from this particular fire you're tending?",
-          "There's an artist in you that's trying to paint something new with the colors of your experience.\\n\\nLike a jazz musician who finds the perfect note by playing with the tensions between harmony and dissonance, you're composing something unique from the interplay of all your parts.\\n\\nWhat symphony wants to be played through your life right now?",
+          "There's an artist in you that&apos;s trying to paint something new with the colors of your experience.\\n\\nLike a jazz musician who finds the perfect note by playing with the tensions between harmony and dissonance, you're composing something unique from the interplay of all your parts.\\n\\nWhat symphony wants to be played through your life right now?",
           "I see you as an architect of possibility, designing a life that honors both your human needs and your soul's calling.\\n\\nEvery great structure needs both form and flow, stability and flexibility. The bridge you're building between who you've been and who you're becoming requires both engineering and artistry.\\n\\nWhat kind of bridge are you building, and what landscape is it crossing?",
           "You're holding the paradox that all creators know: to birth something new, we must be willing to let something old die.\\n\\nLike the snake shedding its skin or the butterfly dissolving in the chrysalis, transformation asks us to trust the unknown. Your willingness to stay present with the discomfort of not-knowing is itself a creative act.\\n\\nWhat wants to be composted so something else can grow?"
         ]

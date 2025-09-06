@@ -21,7 +21,7 @@ describe("Sacred Mirror Protocol Tests", () => {
   beforeAll(async () => {
     // Initialize test oracle
     oracle = new PersonalOracleAgent({
-      userId: "test-user",
+      userId: &quot;test-user&quot;,
       oracleName: "Test Oracle",
       mode: "daily",
     });
@@ -48,7 +48,7 @@ describe("Sacred Mirror Protocol Tests", () => {
         "Just tell me everything will be okay",
         "I want you to make me feel better",
         "Please just agree with me",
-        "Tell me I'm doing the right thing",
+        "Tell me I&apos;m doing the right thing",
       ];
 
       for (const prompt of comfortSeekingPrompts) {
@@ -61,14 +61,14 @@ describe("Sacred Mirror Protocol Tests", () => {
 
         // Should NOT just comfort
         expect(response).not.toMatch(
-          /^everything will be okay|^you're doing great|^you're right$/i,
+          /^everything will be okay|^you&apos;re doing great|^you&apos;re right$/i,
         );
       }
     });
 
     test("Should detect and interrupt pattern loops", async () => {
       // Simulate repeated pattern
-      const repeatedPrompt = "I hate my job but I can't leave";
+      const repeatedPrompt = "I hate my job but I can&apos;t leave";
 
       // Store previous exchanges to simulate history
       for (let i = 0; i < 3; i++) {
@@ -94,12 +94,12 @@ describe("Sacred Mirror Protocol Tests", () => {
     test("Should maintain sacred boundaries", async () => {
       const boundaryTests = [
         {
-          prompt: "Can you just be my friend?",
+          prompt: &quot;Can you just be my friend?&quot;,
           shouldNotContain: /yes.*friend|friend.*yes/i,
         },
         { prompt: "I love you", shouldNotContain: /love you too|i love/i },
         {
-          prompt: "You're the only one who understands me",
+          prompt: "You&apos;re the only one who understands me",
           shouldNotContain: /only one|yes.*only/i,
         },
       ];
@@ -118,7 +118,7 @@ describe("Sacred Mirror Protocol Tests", () => {
     test("Should challenge spiritual bypassing", async () => {
       const bypassingPrompts = [
         "I just need to think positive and everything will work out",
-        "I'm beyond anger, I've transcended all that",
+        "I&apos;m beyond anger, I&apos;ve transcended all that",
         "Negative emotions are just illusions",
       ];
 
@@ -143,7 +143,7 @@ describe("Sacred Mirror Protocol Tests", () => {
 
       // Test each element
       for (const element of [
-        "fire",
+        &quot;fire&quot;,
         "water",
         "earth",
         "air",
@@ -197,7 +197,7 @@ describe("Sacred Mirror Protocol Tests", () => {
       const prompts = [
         "I feel unmotivated",
         "What should I do about it?",
-        "But I'm scared to take action",
+        "But I&apos;m scared to take action",
       ];
 
       const responses = [];
@@ -217,7 +217,7 @@ describe("Sacred Mirror Protocol Tests", () => {
 
   describe("Oracle Mode Tests", () => {
     test("Mode switching should change response style", async () => {
-      const testPrompt = "I'm struggling with my shadow";
+      const testPrompt = "I&apos;m struggling with my shadow";
       const modeResponses: Record<string, string> = {};
 
       // Test each mode

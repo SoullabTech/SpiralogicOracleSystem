@@ -152,7 +152,7 @@ export class LanguageMappingService {
         id: `shadow.${internalType}`,
         label: this.humanizeShadowType(internalType),
         intensity,
-        suggestion: "gentle awareness often brings natural shifts.",
+        suggestion: &quot;gentle awareness often brings natural shifts.&quot;,
         ...(expertMode && { internal: { code: internalType } })
       };
     }
@@ -199,10 +199,10 @@ export class LanguageMappingService {
     const coherencePhrase = this.getCoherencePhrase(coherence);
     const themeDescriptions = topThemes.slice(0, 2).map(t => t.label);
     
-    let reflection = `${coherencePhrase}. I'm seeing ${themeDescriptions.join(", with ")}.`;
+    let reflection = `${coherencePhrase}. I&apos;m seeing ${themeDescriptions.join(", with ")}.`;
     
     if (coherence > 70) {
-      reflection += " If you've been waiting to start, this is a supportive window.";
+      reflection += " If you&apos;ve been waiting to start, this is a supportive window.";
     }
 
     if (expertMode && topThemes.length > 0) {
@@ -241,7 +241,7 @@ export class LanguageMappingService {
 
   private static humanizeShadowType(type: string): string {
     const typeMap: Record<string, string> = {
-      deflection: "gentle avoidance patterns",
+      deflection: &quot;gentle avoidance patterns&quot;,
       victim: "feeling stuck in old stories", 
       perfectionism: "waiting for perfect conditions",
       spiritual_bypass: "floating above the human experience",

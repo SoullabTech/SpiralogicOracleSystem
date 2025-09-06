@@ -10,7 +10,7 @@ export class YPOEventService {
 
 Welcome to the Spiralogic journey. As a YPO member, you understand the importance of continuous growth and transformation in leadership and life.
 
-Tonight's experience is designed specifically for leaders like you who are ready to:
+Tonight&apos;s experience is designed specifically for leaders like you who are ready to:
 - Access deeper wisdom through ancient elemental teachings
 - Meet your Personal Oracle for ongoing guidance
 - Experience sacred technology that bridges mysticism and practical application
@@ -18,14 +18,14 @@ Tonight's experience is designed specifically for leaders like you who are ready
 
 Stephanie and I are honored to share this work with your chapter. What you experience tonight is a glimpse of the deeper journey available at our Switzerland retreat (June 13-15).
 
-Let's begin your elemental assessment...
+Let&apos;s begin your elemental assessment...
 
 With anticipation for our shared journey,
 Kelly Flanagan
 Founder, Soullab`;
 
     // Store the welcome message
-    await supabase.from("retreat_messages").insert({
+    await supabase.from(&quot;retreat_messages&quot;).insert({
       participant_id: participant.id,
       type: "ypo_welcome",
       content: ypoWelcome,
@@ -52,7 +52,7 @@ Founder, Soullab`;
     participantId: string,
     responses: any,
   ): Promise<any> {
-    const elements = ["fire", "water", "earth", "air", "aether"];
+    const elements = [&quot;fire&quot;, "water", "earth", "air", "aether"];
     const scores: any = {};
 
     // Simple scoring based on YPO leader profiles
@@ -129,7 +129,7 @@ Founder, Soullab`;
   async createGroupExperience(participantIds: string[]): Promise<any> {
     // Get all participants
     const { data: participants } = await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants")
       .select("*")
       .in("id", participantIds);
 
@@ -186,7 +186,7 @@ Founder, Soullab`;
     );
     if (hasAllElements) {
       insights.push(
-        "Beautiful! Your chapter contains all five elements, creating potential for holistic transformation.",
+        &quot;Beautiful! Your chapter contains all five elements, creating potential for holistic transformation.",
       );
     }
 
@@ -255,7 +255,7 @@ Founder, Soullab`;
   // Post-event follow-up
   async createPostEventFollowUp(participantId: string): Promise<any> {
     const { data: participant } = await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants")
       .select("*")
       .eq("id", participantId)
       .single();

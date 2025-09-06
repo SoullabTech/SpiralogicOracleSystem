@@ -57,7 +57,7 @@ export class EnhancedMemoryRetrieval {
         hasRelevantMemories: allMemories.length > 0
       };
     } catch (error) {
-      logger.error("Failed to retrieve memory context", {
+      logger.error(&quot;Failed to retrieve memory context&quot;, {
         error: error instanceof Error ? error.message : "Unknown error",
         userId: userId.substring(0, 8) + '...'
       });
@@ -153,7 +153,7 @@ export class EnhancedMemoryRetrieval {
    */
   private formatMemoriesForContext(memories: MemoryItem[]): string {
     if (memories.length === 0) {
-      return "";
+      return "&quot;;
     }
 
     const header = "\n## Relevant Past Memories\n";

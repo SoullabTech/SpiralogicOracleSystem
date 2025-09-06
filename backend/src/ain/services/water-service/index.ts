@@ -53,7 +53,7 @@ export class WaterService extends HybridAgent {
 
     // If significant shift, request cloud processing
     if (immediateReading.magnitude > 0.7) {
-      await this.requestCloudProcessing("deep-emotional-analysis", {
+      await this.requestCloudProcessing(&quot;deep-emotional-analysis&quot;, {
         event,
         currentState: this.emotionalState,
         historicalContext: await this.getLocalEmotionalHistory(),
@@ -162,7 +162,7 @@ export class WaterService extends HybridAgent {
     // Simulate intuitive access - replace with actual implementation
     const patterns = [
       {
-        primaryInsight: "Trust the flow of this moment",
+        primaryInsight: &quot;Trust the flow of this moment",
         depth: 0.8,
         clarity: 0.9,
         resonance: 0.85,
@@ -294,7 +294,7 @@ export class WaterService extends HybridAgent {
 
     return {
       value: average,
-      primary: emotions[0] || "neutral",
+      primary: emotions[0] || &quot;neutral",
       complexity: emotions.length,
     };
   }

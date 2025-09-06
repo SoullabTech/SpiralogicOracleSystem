@@ -58,7 +58,7 @@ export class FireService extends EdgeAgent {
       this.isTransformativeIntent(intent) &&
       intensity > this.visionThreshold
     ) {
-      await this.publish("transformation.begin", {
+      await this.publish(&quot;transformation.begin&quot;, {
         catalyst: "user-intent",
         intensity,
         timestamp: Date.now(),

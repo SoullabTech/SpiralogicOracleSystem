@@ -463,11 +463,11 @@ async function handleGroundingRequest(userId: string) {
   const response = {
     success: true,
     data: {
-      message: "Let's ground this together.",
+      message: "Let&apos;s ground this together.",
       practice: grounding_practices[Math.floor(Math.random() * grounding_practices.length)],
       tone: 'ultra_grounded',
-      follow_up: "Take all the time you need. We can continue when you're ready.",
-      emergency_contact: process.env.CRISIS_SUPPORT_INFO || "If you're in crisis, please contact emergency services or a crisis hotline."
+      follow_up: "Take all the time you need. We can continue when you&apos;re ready.",
+      emergency_contact: process.env.CRISIS_SUPPORT_INFO || "If you&apos;re in crisis, please contact emergency services or a crisis hotline."
     }
   };
 
@@ -480,15 +480,15 @@ async function handleGroundingRequest(userId: string) {
 async function handleResistanceExpression(userId: string, resistance: string) {
   const resistance_responses = {
     "rushing to solutions": "You're right to push back on that. Sometimes the not-knowing is where the real wisdom lives.",
-    "avoiding difficulty": "I hear you. Maybe we're moving too fast into the hard stuff.",
-    "spiritual bypassing": "Good catch. Let's stay with what's actually happening in your real life.",
-    "oversimplification": "You're absolutely right - this is more complex than I'm making it sound.",
+    "avoiding difficulty": "I hear you. Maybe we&apos;re moving too fast into the hard stuff.",
+    "spiritual bypassing": "Good catch. Let's stay with what&apos;s actually happening in your real life.",
+    "oversimplification": "You're absolutely right - this is more complex than I&apos;m making it sound.",
     "emotional reactivity": "Fair point. Let me approach this more thoughtfully.",
-    "premature closure": "Yes, we don't need to wrap this up neatly. Some things need to stay open."
+    "premature closure": "Yes, we don&apos;t need to wrap this up neatly. Some things need to stay open."
   };
 
   const response_text = resistance_responses[resistance as keyof typeof resistance_responses] || 
-    "I hear your resistance, and that's actually really important information.";
+    "I hear your resistance, and that&apos;s actually really important information.";
 
   const response = {
     success: true,

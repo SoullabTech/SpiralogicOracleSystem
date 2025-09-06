@@ -328,7 +328,7 @@ export class EnhancedConversationalOrchestrator extends EventEmitter {
       case UserIntent.SEEKING_SUPPORT:
         // Add validation and gentle support
         if (!text.includes('I hear') && !text.includes('I understand')) {
-          text = `I can feel the weight of what you're carrying. ${text}`;
+          text = `I can feel the weight of what you&apos;re carrying. ${text}`;
         }
         break;
 
@@ -341,7 +341,7 @@ export class EnhancedConversationalOrchestrator extends EventEmitter {
 
       case UserIntent.RESISTANCE:
         // Honor the resistance
-        text = `I notice some hesitation here, and that's completely valid. ${text}`;
+        text = `I notice some hesitation here, and that&apos;s completely valid. ${text}`;
         break;
 
       case UserIntent.EXISTENTIAL:

@@ -6,7 +6,8 @@
  * that differ from everyday personal spiritual practice.
  */
 
-import { AfferentStream, ElementalSignature, ArchetypeMap, ShadowPattern, SpiralPhase } from "../ain/collective/CollectiveIntelligence";
+import { AfferentStream, ElementalSignature, ArchetypeMap, ShadowPattern } from "../ain/collective/CollectiveIntelligence";
+import { SpiralPhase } from "../spiralogic/SpiralogicCognitiveEngine";
 
 // =============================================================================
 // CEREMONY CONTEXT TYPES

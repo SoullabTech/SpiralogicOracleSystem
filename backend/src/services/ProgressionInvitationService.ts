@@ -226,7 +226,7 @@ export class ProgressionInvitationService {
       sessionHistory
     );
     
-    // Even if system thinks they're not ready, respect their request
+    // Even if system thinks they&apos;re not ready, respect their request
     // but provide honest feedback
     
     if (readinessSignals.confidence < 0.3) {
@@ -295,7 +295,7 @@ export class ProgressionInvitationService {
     const currentLabel = this.getStageLabel(currentStage);
     
     if (signals.explicitReadinessRequests > 1) {
-      return `You've expressed interest in more depth, and your engagement suggests you're ready to explore differently. What feels right for you at this point in your journey?`;
+      return `You&apos;ve expressed interest in more depth, and your engagement suggests you&apos;re ready to explore differently. What feels right for you at this point in your journey?`;
     }
     
     return `Your consistent engagement and integration at the ${currentLabel} level suggests you might be ready for a different kind of exploration. The choice is entirely yours - what resonates?`;

@@ -6,7 +6,7 @@ type Bucket = { count: number; resetAt: number };
 export function rateLimit(opts: Options) {
   const windowMs = Math.max(1000, opts.windowMs);
   const max = Math.max(1, opts.max);
-  const keyFn = opts.key ?? ((req) => (req.ip || req.headers["x-forwarded-for"] as string || "anon"));
+  const keyFn = opts.key ?? ((req) => (req.ip || req.headers[&quot;x-forwarded-for&quot;] as string || "anon"));
   const store = new Map<string, Bucket>();
 
   return (req: Request, res: Response, next: NextFunction) => {

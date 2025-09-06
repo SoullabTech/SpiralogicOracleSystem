@@ -64,13 +64,13 @@ export class OracleSettingsService {
     // Validate voice settings
     this.validateVoiceSettings(voiceCustomization);
 
-    // Update Oracle's voice profile
+    // Update Oracle&apos;s voice profile
     await OracleService.updateOracleVoiceSettings(userId, voiceCustomization);
 
     // Clear cache to force recreation with new voice
     OracleService.clearUserCache(userId);
 
-    logger.info("Oracle Voice Settings Updated:", {
+    logger.info(&quot;Oracle Voice Settings Updated:&quot;, {
       userId,
       voiceCustomization,
     });
@@ -82,7 +82,7 @@ export class OracleSettingsService {
   static async renameOracle(userId: string, newName: string): Promise<void> {
     // Validate name
     if (!newName || newName.trim().length === 0) {
-      throw new Error("Oracle name cannot be empty");
+      throw new Error(&quot;Oracle name cannot be empty");
     }
 
     if (newName.length > 50) {
@@ -120,7 +120,7 @@ export class OracleSettingsService {
       benefits: this.getEvolutionBenefits(proposedPhase, proposedArchetype),
       risks: this.getEvolutionRisks(oracle.phase, proposedPhase),
       timestamp: new Date(),
-      status: "pending",
+      status: &quot;pending&quot;,
     };
 
     // Store proposal
@@ -156,12 +156,12 @@ export class OracleSettingsService {
     const proposal = this.evolutionProposals.get(proposalId);
 
     if (!proposal) {
-      throw new Error("Evolution proposal not found");
+      throw new Error(&quot;Evolution proposal not found&quot;);
     }
 
     if (proposal.userId !== userId) {
       throw new Error(
-        "Unauthorized: Cannot accept another user's evolution proposal",
+        "Unauthorized: Cannot accept another user&apos;s evolution proposal",
       );
     }
 
@@ -197,12 +197,12 @@ export class OracleSettingsService {
     const proposal = this.evolutionProposals.get(proposalId);
 
     if (!proposal) {
-      throw new Error("Evolution proposal not found");
+      throw new Error(&quot;Evolution proposal not found&quot;);
     }
 
     if (proposal.userId !== userId) {
       throw new Error(
-        "Unauthorized: Cannot decline another user's evolution proposal",
+        "Unauthorized: Cannot decline another user&apos;s evolution proposal",
       );
     }
 
@@ -239,7 +239,7 @@ export class OracleSettingsService {
     // Clear cache to force recreation
     OracleService.clearUserCache(userId);
 
-    logger.info("Oracle Personality Settings Updated:", {
+    logger.info(&quot;Oracle Personality Settings Updated:&quot;, {
       userId,
       personalityAdjustments,
     });
@@ -258,7 +258,7 @@ export class OracleSettingsService {
     // Clear cache to force recreation
     OracleService.clearUserCache(userId);
 
-    logger.info("Oracle Communication Preferences Updated:", {
+    logger.info(&quot;Oracle Communication Preferences Updated:&quot;, {
       userId,
       communicationPreferences,
     });
@@ -334,7 +334,7 @@ export class OracleSettingsService {
     return {
       totalInteractions: 0,
       averageSessionLength: 0,
-      mostActiveTime: "00:00",
+      mostActiveTime: &quot;00:00&quot;,
       topTopics: [],
       evolutionJourney: [],
       satisfactionScore: 0,
@@ -364,7 +364,7 @@ export class OracleSettingsService {
     // Store backup
     await this.storeOracleBackup(backup);
 
-    logger.info("Oracle Backup Created:", {
+    logger.info(&quot;Oracle Backup Created:&quot;, {
       userId,
       backupId: backup.backupId,
     });
@@ -379,11 +379,11 @@ export class OracleSettingsService {
     const backup = await this.getOracleBackup(backupId);
 
     if (!backup) {
-      throw new Error("Backup not found");
+      throw new Error(&quot;Backup not found&quot;);
     }
 
     if (backup.settings.userId !== userId) {
-      throw new Error("Unauthorized: Cannot restore another user's backup");
+      throw new Error("Unauthorized: Cannot restore another user&apos;s backup");
     }
 
     // Restore settings
@@ -414,7 +414,7 @@ export class OracleSettingsService {
       exportId: `export_${userId}_${Date.now()}`,
       timestamp: new Date(),
       userData: settings,
-      format: "json" as const,
+      format: &quot;json&quot; as const,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     };
 
@@ -436,7 +436,7 @@ export class OracleSettingsService {
   ): Promise<void> {
     // Verify confirmation code
     if (!this.verifyDeletionConfirmation(userId, confirmationCode)) {
-      throw new Error("Invalid confirmation code");
+      throw new Error(&quot;Invalid confirmation code&quot;);
     }
 
     // Delete all Oracle data
@@ -453,13 +453,13 @@ export class OracleSettingsService {
   ): void {
     if (voiceSettings.stability !== undefined) {
       if (voiceSettings.stability < 0 || voiceSettings.stability > 1) {
-        throw new Error("Voice stability must be between 0 and 1");
+        throw new Error(&quot;Voice stability must be between 0 and 1&quot;);
       }
     }
 
     if (voiceSettings.style !== undefined) {
       if (voiceSettings.style < 0 || voiceSettings.style > 1) {
-        throw new Error("Voice style must be between 0 and 1");
+        throw new Error(&quot;Voice style must be between 0 and 1&quot;);
       }
     }
   }
@@ -482,7 +482,7 @@ export class OracleSettingsService {
   ): string[] {
     const phaseBenefits = {
       initiation: [
-        "Clarify your purpose",
+        &quot;Clarify your purpose&quot;,
         "Activate your potential",
         "Begin your journey",
       ],
@@ -533,7 +533,7 @@ export class OracleSettingsService {
     settings: OracleCustomization["personalityAdjustments"],
   ): Promise<void> {
     // Implementation depends on database
-    logger.info("Personality settings stored:", { userId, settings });
+    logger.info(&quot;Personality settings stored:&quot;, { userId, settings });
   }
 
   private static async storeCommunicationPreferences(
@@ -541,7 +541,7 @@ export class OracleSettingsService {
     preferences: OracleCustomization["communicationPreferences"],
   ): Promise<void> {
     // Implementation depends on database
-    logger.info("Communication preferences stored:", { userId, preferences });
+    logger.info(&quot;Communication preferences stored:&quot;, { userId, preferences });
   }
 
   private static async getPersonalitySettings(
@@ -575,7 +575,7 @@ export class OracleSettingsService {
 
   private static async storeOracleBackup(backup: any): Promise<void> {
     // Implementation depends on database
-    logger.info("Oracle backup stored:", { backupId: backup.backupId });
+    logger.info(&quot;Oracle backup stored:&quot;, { backupId: backup.backupId });
   }
 
   private static async getOracleBackup(backupId: string): Promise<any> {
@@ -588,7 +588,7 @@ export class OracleSettingsService {
     backup: any,
   ): Promise<void> {
     // Implementation depends on database
-    logger.info("Oracle settings restored:", {
+    logger.info(&quot;Oracle settings restored:", {
       userId,
       backupId: backup.backupId,
     });

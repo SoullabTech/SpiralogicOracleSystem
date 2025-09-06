@@ -101,7 +101,7 @@ export const internalTestingConfig: RolloutConfig = {
     {
       name: 'Interaction Rate',
       target: 15, // 15% improvement
-      critical: -5, // Don't decrease by more than 5%
+      critical: -5, // Don&apos;t decrease by more than 5%
       unit: 'percentage'
     }
   ]
@@ -233,7 +233,7 @@ export const gradualExpansionConfig: RolloutConfig = {
     {
       name: 'Session Duration',
       target: 10, // 10% increase
-      critical: -10, // Don't decrease by more than 10%
+      critical: -10, // Don&apos;t decrease by more than 10%
       unit: 'percentage'
     }
   ]

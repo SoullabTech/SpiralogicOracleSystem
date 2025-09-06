@@ -168,7 +168,7 @@ export class GroupDynamicsService {
 
       return dynamics;
     } catch (error) {
-      logger.error("Failed to get current dynamics", error);
+      logger.error(&quot;Failed to get current dynamics&quot;, error);
       throw error;
     }
   }
@@ -181,7 +181,7 @@ export class GroupDynamicsService {
     try {
       // Get session info
       const { data: session } = await supabase
-        .from("live_sessions")
+        .from(&quot;live_sessions&quot;)
         .select("retreat_id")
         .eq("id", sessionId)
         .single();
@@ -215,7 +215,7 @@ export class GroupDynamicsService {
   async getSessionField(sessionId: string): Promise<any> {
     try {
       const { data } = await supabase
-        .from("session_dynamics")
+        .from(&quot;session_dynamics&quot;)
         .select("field_data")
         .eq("session_id", sessionId)
         .single();
@@ -233,7 +233,7 @@ export class GroupDynamicsService {
       const participantStates = await this.getAllParticipantStates(retreatId);
       return this.calculateElementalBalance(participantStates);
     } catch (error) {
-      logger.error("Failed to get elemental field", error);
+      logger.error(&quot;Failed to get elemental field&quot;, error);
       throw error;
     }
   }
@@ -265,7 +265,7 @@ export class GroupDynamicsService {
 
   private async getParticipantName(participantId: string): Promise<string> {
     const { data } = await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants&quot;)
       .select("preferredName, firstName")
       .eq("id", participantId)
       .single();
@@ -275,7 +275,7 @@ export class GroupDynamicsService {
 
   private async getParticipantElement(participantId: string): Promise<string> {
     const { data } = await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants&quot;)
       .select("oracleElement")
       .eq("id", participantId)
       .single();
@@ -287,7 +287,7 @@ export class GroupDynamicsService {
     retreatId: string,
     state: ParticipantState,
   ): Promise<void> {
-    await supabase.from("participant_states").upsert({
+    await supabase.from(&quot;participant_states&quot;).upsert({
       retreat_id: retreatId,
       participant_id: state.participantId,
       state_data: state,
@@ -298,7 +298,7 @@ export class GroupDynamicsService {
   private async recalculateGroupDynamics(retreatId: string): Promise<void> {
     const dynamics = await this.getCurrentDynamics(retreatId, false);
 
-    await supabase.from("group_dynamics").upsert({
+    await supabase.from(&quot;group_dynamics&quot;).upsert({
       retreat_id: retreatId,
       dynamics_data: dynamics,
       calculated_at: new Date(),
@@ -309,7 +309,7 @@ export class GroupDynamicsService {
     retreatId: string,
   ): Promise<ParticipantState[]> {
     const { data } = await supabase
-      .from("participant_states")
+      .from(&quot;participant_states&quot;)
       .select("state_data")
       .eq("retreat_id", retreatId);
 
@@ -416,7 +416,7 @@ export class GroupDynamicsService {
   ): Promise<CoherenceMap> {
     // Get interaction data
     const { data: interactions } = await supabase
-      .from("participant_interactions")
+      .from(&quot;participant_interactions&quot;)
       .select("*")
       .eq("retreat_id", retreatId);
 
@@ -429,7 +429,7 @@ export class GroupDynamicsService {
         participant1: interaction.participant1_id,
         participant2: interaction.participant2_id,
         strength: interaction.strength || 5,
-        type: interaction.type || "neutral",
+        type: interaction.type || &quot;neutral&quot;,
       });
 
       // Build connection map for clustering
@@ -484,7 +484,7 @@ export class GroupDynamicsService {
     const lowEnergyParticipants = states.filter((s) => s.currentEnergy < 4);
     if (lowEnergyParticipants.length > states.length * 0.3) {
       patterns.push({
-        type: "shadow",
+        type: &quot;shadow",
         description: "Collective energy depletion",
         affectedParticipants: lowEnergyParticipants.map((p) => p.participantId),
         recommendations: [
@@ -609,7 +609,7 @@ export class GroupDynamicsService {
     const vortexPoints: VortexPoint[] = [];
 
     states.forEach((state) => {
-      let type: VortexPoint["type"] = "harmonizer";
+      let type: VortexPoint[&quot;type&quot;] = "harmonizer";
       let intensity = 5;
 
       // High energy catalysts
@@ -653,7 +653,7 @@ export class GroupDynamicsService {
     if (intensity <= 4)
       notes.push("Low energy field - gentle restoration needed");
 
-    if (coherence >= 8) notes.push("Excellent group coherence");
+    if (coherence >= 8) notes.push(&quot;Excellent group coherence");
     if (coherence <= 4)
       notes.push("Fragmented field - unify through shared practice");
 
@@ -733,7 +733,7 @@ export class GroupDynamicsService {
     const centerElement =
       Object.entries(elements).sort(
         ([, a], [, b]) => (b as number) - (a as number),
-      )[0]?.[0] || "aether";
+      )[0]?.[0] || &quot;aether&quot;;
 
     // Calculate cluster coherence
     const clusterStates = states.filter((s) =>

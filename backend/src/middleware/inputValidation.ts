@@ -26,7 +26,7 @@ export const commonSchemas = {
   // Element validation
   element: z.enum(["fire", "water", "earth", "air", "aether"], {
     errorMap: () => ({
-      message: "Element must be one of: fire, water, earth, air, aether",
+      message: &quot;Element must be one of: fire, water, earth, air, aether&quot;,
     }),
   }),
 
@@ -126,7 +126,7 @@ export const oracleSchemas = {
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords do not match",
+      message: &quot;Passwords do not match&quot;,
       path: ["confirmPassword"],
     }),
 };

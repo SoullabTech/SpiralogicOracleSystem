@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
       engineToUse = useCSM ? 'sesame' : 'elevenlabs';
     }
 
-    console.log(`🎤 Generating chunk ${chunkId}: "${text.slice(0, 50)}..." with ${engineToUse}`);
 
     let audioData = null;
     let audioUrl = null;
@@ -176,7 +175,7 @@ async function generateElevenLabsAudio(text: string) {
 // Save audio chunk to disk
 async function saveAudioChunk(audioData: Uint8Array, chunkId: string): Promise<string> {
   try {
-    // Create audio directory if it doesn't exist
+    // Create audio directory if it doesn&apos;t exist
     const audioDir = path.join(process.cwd(), 'public', 'audio', 'chunks');
     await fs.mkdir(audioDir, { recursive: true });
 

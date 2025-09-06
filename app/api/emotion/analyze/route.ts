@@ -97,7 +97,7 @@ class EmotionAnalysisService {
     }
 
     // Negation handling
-    const negations = text.match(/\b(not|don't|can't|won't|never|no|nothing|nobody)\b/g);
+    const negations = text.match(/\b(not|don&apos;t|can&apos;t|won&apos;t|never|no|nothing|nobody)\b/g);
     if (negations && negations.length > 0) {
       valence = valence * (1 - negations.length * 0.3);
     }

@@ -59,7 +59,7 @@ export class AstrologicalService {
   private async updateCurrentEphemeris() {
     try {
       // In production, this would call a real ephemeris API
-      // For now, we'll use calculated positions
+      // For now, we&apos;ll use calculated positions
       const now = new Date();
       const positions = this.calculateCurrentPositions(now);
 
@@ -90,7 +90,7 @@ export class AstrologicalService {
 
     // Sun position (approximately 1 degree per day)
     const sunDegree = (dayOfYear - 80) % 360; // Spring equinox around day 80
-    positions.set("sun", {
+    positions.set(&quot;sun&quot;, {
       sign: this.getSignFromDegree(sunDegree),
       degree: sunDegree % 30,
       retrograde: false,
@@ -269,7 +269,7 @@ export class AstrologicalService {
     const natalPlanets = new Map<Planet, NatalPlacement>();
 
     // Example natal placements (would be calculated based on birth data)
-    natalPlanets.set("sun", {
+    natalPlanets.set(&quot;sun&quot;, {
       planet: "sun",
       sign: "leo",
       degree: 15,
@@ -460,7 +460,7 @@ export class AstrologicalService {
     userData.lastUpdate = new Date();
 
     // Save to database
-    await supabase.from("user_transits").upsert({
+    await supabase.from(&quot;user_transits&quot;).upsert({
       user_id: userId,
       transits,
       updated_at: new Date().toISOString(),
@@ -531,7 +531,7 @@ export class AstrologicalService {
   ): string {
     const interpretations: Record<Planet, Record<number, string>> = {
       sun: {
-        1: "Time to shine and express your authentic self",
+        1: &quot;Time to shine and express your authentic self",
         2: "Focus on building resources and self-worth",
         3: "Communication and learning are highlighted",
         4: "Attention turns to home and emotional foundations",
@@ -670,15 +670,15 @@ export class AstrologicalService {
     try {
       logger.info(`Generating Spiralogic report for user ${userId}`);
 
-      // Get user's birth data and natal chart
+      // Get user&apos;s birth data and natal chart
       const userData = await this.getUserAstrologicalData(userId);
       if (!userData || !userData.birthData || !userData.natalChart) {
         throw new Error(
-          "User birth data not found. Please set birth information first.",
+          &quot;User birth data not found. Please set birth information first.&quot;,
         );
       }
 
-      // Get user's elemental profile from the database
+      // Get user&apos;s elemental profile from the database
       const { data: profileData, error } = await supabase
         .from("user_profiles")
         .select("name, elemental_profile, archetypes")
@@ -781,7 +781,7 @@ export class AstrologicalService {
   // Get element for zodiac sign
   private getElementForSign(sign: ZodiacSign): ArchetypalElement | null {
     const elementMap: Record<ZodiacSign, ArchetypalElement> = {
-      aries: "fire",
+      aries: &quot;fire&quot;,
       leo: "fire",
       sagittarius: "fire",
       taurus: "earth",
@@ -819,7 +819,7 @@ export class AstrologicalService {
   // Save report to database
   private async saveReport(userId: string, report: any): Promise<string> {
     const { data, error } = await supabase
-      .from("spiralogic_reports")
+      .from(&quot;spiralogic_reports&quot;)
       .insert({
         user_id: userId,
         report_type: "astrology",
@@ -840,7 +840,7 @@ export class AstrologicalService {
     return data.id;
   }
 
-  // Get user's previous reports
+  // Get user&apos;s previous reports
   public async getUserReports(userId: string): Promise<any[]> {
     const { data, error } = await supabase
       .from("spiralogic_reports")

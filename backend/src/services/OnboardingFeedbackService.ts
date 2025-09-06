@@ -58,7 +58,7 @@ export class OnboardingFeedbackService {
       return {
         sessionNumber: 1,
         promptType: 'first_session',
-        question: "How did our conversation feel — gentle, curious, energizing, or neutral?",
+        question: &quot;How did our conversation feel — gentle, curious, energizing, or neutral?&quot;,
         options: ['curious', 'hesitant', 'enthusiastic', 'neutral'],
         allowCustomResponse: true
       };
@@ -78,7 +78,7 @@ export class OnboardingFeedbackService {
       return {
         sessionNumber: 8,
         promptType: 'bias_evolution',
-        question: "Do you feel the way I've been speaking with you has changed since we began?",
+        question: "Do you feel the way I&apos;ve been speaking with you has changed since we began?",
         options: undefined, // Open-ended
         allowCustomResponse: true
       };

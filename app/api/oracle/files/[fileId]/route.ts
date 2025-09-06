@@ -161,7 +161,6 @@ export async function DELETE(
       }
     });
 
-    console.log(`File deleted: ${file.fileName} (${fileId}) for user ${userId}`);
 
     return NextResponse.json({
       message: 'File successfully removed from Maya\'s memory',

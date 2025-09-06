@@ -108,7 +108,7 @@ export class NeuralReservoir {
     intent: string,
     element: keyof ElementalSignature
   ): Promise<CollectiveInsight> {
-    // Get user's evolution context
+    // Get user&apos;s evolution context
     const userGuidance = await this.evolutionTracker.generateGuidance(userId);
     
     // Find relevant patterns

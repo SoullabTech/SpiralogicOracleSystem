@@ -14,7 +14,6 @@ const FieldStateQuerySchema = z.object({
 // GET /api/collective/field-state
 export async function GET(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[FieldState] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[FieldState] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[FieldState] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[FieldState] ${msg}`, meta),
@@ -133,7 +132,6 @@ export async function GET(req: NextRequest) {
 // Allows real-time field state updates via WebSocket-like experience
 export async function POST(req: NextRequest) {
   const logger: Logger = {
-    info: (msg, meta) => console.log(`[FieldPulse] ${msg}`, meta),
     error: (msg, error, meta) => console.error(`[FieldPulse] ${msg}`, error, meta),
     warn: (msg, meta) => console.warn(`[FieldPulse] ${msg}`, meta),
     debug: (msg, meta) => console.debug(`[FieldPulse] ${msg}`, meta),

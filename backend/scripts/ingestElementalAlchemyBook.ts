@@ -87,7 +87,7 @@ async function ingestElementalAlchemyBook() {
       console.log(`\n${element.toUpperCase()}:`);
       console.log(`- Essence: ${teaching.essence.substring(0, 100)}...`);
       console.log(`- Practices: ${teaching.practices.length} practices`);
-      console.log(`- Qualities: ${teaching.qualities.join(", ")}`);
+      console.log(`- Qualities: ${teaching.qualities.join(&quot;, ")}`);
     });
 
     console.log("\n🎯 Core Teachings:");
@@ -115,7 +115,7 @@ async function ingestElementalAlchemyBook() {
 async function parseElementalAlchemyBook(
   content: string,
 ): Promise<BookContent> {
-  const lines = content.split("\n");
+  const lines = content.split(&quot;\n&quot;);
   const chapters: Chapter[] = [];
   let currentChapter: Chapter | null = null;
   const coreTeachings: string[] = [];
@@ -189,7 +189,7 @@ async function parseElementalAlchemyBook(
 }
 
 function extractDedication(lines: string[]): string {
-  const dedStart = lines.findIndex((line) => line.includes("Dedication"));
+  const dedStart = lines.findIndex((line) => line.includes(&quot;Dedication&quot;));
   const dedEnd = lines.findIndex(
     (line, index) => index > dedStart && line.includes("Acknowledgments"),
   );
@@ -291,7 +291,7 @@ function extractEssence(content: string, element: string): string {
 
   // Fallback essences based on traditional associations
   const fallbackEssences: Record<string, string> = {
-    fire: "Spirit, transformation, passion, and creative energy",
+    fire: &quot;Spirit, transformation, passion, and creative energy&quot;,
     water: "Emotional intelligence, flow, intuition, and deep transformation",
     earth: "Embodiment, grounding, manifestation, and practical wisdom",
     air: "Intellect, communication, clarity, and mental agility",
@@ -330,7 +330,7 @@ function extractQualities(content: string, element: string): string[] {
   // Define qualities for each element based on the book's teachings
   const elementQualities: Record<string, string[]> = {
     fire: [
-      "transformation",
+      &quot;transformation&quot;,
       "passion",
       "creativity",
       "inspiration",
@@ -402,7 +402,7 @@ function extractShadowAspects(content: string, element: string): string[] {
   // Define shadow aspects for each element
   const shadowAspects: Record<string, string[]> = {
     fire: [
-      "burnout",
+      &quot;burnout&quot;,
       "impulsiveness",
       "aggression",
       "scattered energy",

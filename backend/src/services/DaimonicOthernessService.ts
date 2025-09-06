@@ -85,16 +85,16 @@ export class DaimonicOthernessService {
    * Scan dream content for autonomous Other manifestations
    */
   private async scanDreamChannel(userId: string, timeWindow: string): Promise<DreamOtherness[]> {
-    // This would integrate with user's dream logs, journal entries, etc.
+    // This would integrate with user&apos;s dream logs, journal entries, etc.
     // For now, returning mock structure showing the analysis pattern
     return [
       {
         id: 'dream_001',
-        content: "Recurring figure who appears across multiple dreams",
+        content: &quot;Recurring figure who appears across multiple dreams&quot;,
         autonomousCharacters: ["The Old Woman", "The Guide", "The Shadow Figure"],
         recurringElements: ["Stone bridge", "Dark water", "Written message"],
         dreamEgoResponse: "Tried to control or understand the figure",
-        dreamOtherResponse: "Responded independently, ignored dream ego's intentions",
+        dreamOtherResponse: "Responded independently, ignored dream ego&apos;s intentions",
         unresolvableElements: ["What the message said", "Where the bridge leads"],
         timestamp: new Date()
       }
@@ -108,7 +108,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'vision_001',
-        content: "Sudden image that appeared during meditation",
+        content: &quot;Sudden image that appeared during meditation&quot;,
         spontaneity: 0.9,
         resistanceToModification: 0.8,
         visualQuality: 'symbolic',
@@ -124,7 +124,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'idea_001',
-        idea: "Sudden understanding that contradicts previous beliefs",
+        idea: &quot;Sudden understanding that contradicts previous beliefs&quot;,
         arrivedFullyFormed: true,
         resistsModification: true,
         contradictsBeliefs: true,
@@ -141,7 +141,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'dialogue_001',
-        speakerContext: "Friend in casual conversation",
+        speakerContext: &quot;Friend in casual conversation&quot;,
         whatWasSaid: "Statement that surprised both speaker and listener",
         spokeBeyondThemselves: true,
         surprisedSpeaker: true,
@@ -158,7 +158,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'therapeutic_001',
-        sessionContext: "Therapy session or healing work",
+        sessionContext: &quot;Therapy session or healing work&quot;,
         whatEmerged: "Insight or healing that surprised both parties",
         surprisedTherapist: true,
         surprisedClient: true,
@@ -175,7 +175,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'internal_001',
-        voiceCharacteristics: "Consistent personality that contradicts ego",
+        voiceCharacteristics: &quot;Consistent personality that contradicts ego&quot;,
         autonomyLevel: 0.8,
         contradictsEgoWill: true,
         maintainsConsistency: true,
@@ -192,7 +192,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'obstacle_001',
-        obstacleType: "Chronic pattern that resists direct approach",
+        obstacleType: &quot;Chronic pattern that resists direct approach&quot;,
         chronicityLevel: 0.9,
         redirectiveFunction: "Forces different path than ego intended",
         resistsDirectApproach: true,
@@ -209,7 +209,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'somatic_001',
-        bodyResponse: "Physical reaction that contradicts mental decision",
+        bodyResponse: &quot;Physical reaction that contradicts mental decision&quot;,
         contradictsEgoPlans: true,
         intelligentTiming: true,
         communicativeQuality: "Body saying no when mind says yes",
@@ -226,7 +226,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'failure_001',
-        failureType: "Repeated failure in specific area",
+        failureType: &quot;Repeated failure in specific area&quot;,
         redirectiveFunction: "Forces development in unexpected direction",
         daimonicPurpose: "Initiates into deeper truth",
         resistsIntegration: true,
@@ -243,7 +243,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'sync_001',
-        synchronicityType: "Meaningful coincidence",
+        synchronicityType: &quot;Meaningful coincidence&quot;,
         meaningfulCoincidence: "External event mirrors internal process",
         participatesInDialogue: true,
         temporalSignificance: "Perfect timing",
@@ -260,7 +260,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'disruption_001',
-        disruptionType: "Unexpected life change",
+        disruptionType: &quot;Unexpected life change&quot;,
         redirectiveImpact: "Forced new direction",
         timingSignificance: "Arrived at crucial moment",
         revealsHiddenPath: true,
@@ -277,7 +277,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'encounter_001',
-        personContext: "Unexpected meeting with stranger or friend",
+        personContext: &quot;Unexpected meeting with stranger or friend&quot;,
         whatTheyBrought: "Message or catalyst for change",
         daimonicMessengerQualities: ["Perfect timing", "Brought exactly what was needed"],
         transformativeImpact: 0.8,
@@ -294,7 +294,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'creative_001',
-        creativeWork: "Art project or creative expression",
+        creativeWork: &quot;Art project or creative expression&quot;,
         developsOwnWill: true,
         surprisesCreator: true,
         resistsCreatorPlans: true,
@@ -305,13 +305,13 @@ export class DaimonicOthernessService {
   }
 
   /**
-   * Scan for characters who refuse author's plans
+   * Scan for characters who refuse author&apos;s plans
    */
   private async scanEntityChannel(userId: string, timeWindow: string): Promise<IndependentEntities[]> {
     return [
       {
         id: 'entity_001',
-        entityType: "Character in creative work or imagination",
+        entityType: &quot;Character in creative work or imagination&quot;,
         autonomyMarkers: ["Refuses to do what author wants", "Has own agenda"],
         refusesAuthorPlans: true,
         speaksForItself: true,
@@ -328,7 +328,7 @@ export class DaimonicOthernessService {
     return [
       {
         id: 'emergence_001',
-        patternType: "Self-organizing life pattern",
+        patternType: &quot;Self-organizing life pattern&quot;,
         selfOrganizingQualities: ["Emerges without planning", "Develops own logic"],
         resistsPrediction: true,
         continuesEvolving: true,

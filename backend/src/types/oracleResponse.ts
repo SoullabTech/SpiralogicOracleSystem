@@ -94,7 +94,7 @@ export const OracleResponseCodes = {
 
 // Oracle-specific error codes
 export const OracleErrorCodes = {
-  INVALID_ELEMENT: "ORACLE_INVALID_ELEMENT",
+  INVALID_ELEMENT: &quot;ORACLE_INVALID_ELEMENT&quot;,
   AGENT_NOT_AVAILABLE: "ORACLE_AGENT_NOT_AVAILABLE",
   PROCESSING_FAILED: "ORACLE_PROCESSING_FAILED",
   RATE_LIMITED: "ORACLE_RATE_LIMITED",
@@ -161,7 +161,7 @@ export class OracleResponseBuilder {
     return this;
   }
 
-  resonance(resonance: "high" | "medium" | "low"): OracleResponseBuilder {
+  resonance(resonance: &quot;high&quot; | "medium" | "low"): OracleResponseBuilder {
     this.metadata.resonance = resonance;
     return this;
   }

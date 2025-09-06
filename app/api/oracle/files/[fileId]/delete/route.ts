@@ -19,7 +19,6 @@ export async function DELETE(
     }
     const { fileId } = params;
 
-    console.log(`[FileDelete] Deleting file ${fileId} for user ${userId}`);
 
     // Get file info first to verify ownership and get storage path
     const { data: file, error: fileError } = await supabase
@@ -47,7 +46,6 @@ export async function DELETE(
         console.error('Storage deletion error:', storageError);
         cleanupErrors.push(`Storage: ${storageError.message}`);
       } else {
-        console.log(`[FileDelete] Deleted from storage: ${file.storage_path}`);
       }
     }
 
@@ -61,7 +59,6 @@ export async function DELETE(
       console.error('Embeddings deletion error:', embeddingsError);
       cleanupErrors.push(`Embeddings: ${embeddingsError.message}`);
     } else {
-      console.log(`[FileDelete] Deleted embeddings for file ${fileId}`);
     }
 
     // 3. Delete file citations
@@ -74,7 +71,6 @@ export async function DELETE(
       console.error('Citations deletion error:', citationsError);
       cleanupErrors.push(`Citations: ${citationsError.message}`);
     } else {
-      console.log(`[FileDelete] Deleted citations for file ${fileId}`);
     }
 
     // 4. Delete file record
@@ -92,7 +88,6 @@ export async function DELETE(
       }, { status: 500 });
     }
 
-    console.log(`[FileDelete] Successfully deleted file ${file.filename} (${fileId})`);
 
     // Return success with any cleanup warnings
     const response = {

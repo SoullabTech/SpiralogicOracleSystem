@@ -70,11 +70,11 @@ export class WisdomKeeperService {
       };
 
       // Store wisdom
-      const { error } = await supabase.from("wisdom_keeper").insert(wisdom);
+      const { error } = await supabase.from(&quot;wisdom_keeper&quot;).insert(wisdom);
 
       if (error) throw error;
 
-      // Update participant's wisdom score
+      // Update participant&apos;s wisdom score
       await this.updateWisdomScore(wisdom.participantId);
 
       // Find and link related wisdom
@@ -107,7 +107,7 @@ export class WisdomKeeperService {
         created_at: wisdom.metadata.createdAt,
       };
 
-      await supabase.from("wisdom_search_index").insert(searchIndex);
+      await supabase.from(&quot;wisdom_search_index&quot;).insert(searchIndex);
 
       // Update tag cloud
       await this.updateTagCloud(wisdom.content.tags);
@@ -123,7 +123,7 @@ export class WisdomKeeperService {
     try {
       // Find members interested in this type/element
       const { data: interestedMembers } = await supabase
-        .from("member_interests")
+        .from(&quot;member_interests")
         .select("participant_id")
         .or(
           `elements.cs.{${wisdom.content.element}},types.cs.{${wisdom.type}}`,
@@ -158,14 +158,14 @@ export class WisdomKeeperService {
   // Search wisdom archive
   async searchWisdom(params: WisdomSearchParams): Promise<WisdomEntry[]> {
     try {
-      let query = supabase.from("wisdom_keeper").select("*");
+      let query = supabase.from(&quot;wisdom_keeper&quot;).select("*");
 
       // Access control
       query = query.or(
         `accessibility.eq.public,accessibility.eq.retreat_alumni`,
       );
 
-      // Add participant's private wisdom
+      // Add participant&apos;s private wisdom
       query = query.or(
         `and(participant_id.eq.${params.requesterId},accessibility.eq.private)`,
       );
@@ -212,7 +212,7 @@ export class WisdomKeeperService {
   async getWisdomFacets(facetType: "element" | "type"): Promise<any> {
     try {
       const { data } = await supabase
-        .from("wisdom_keeper")
+        .from(&quot;wisdom_keeper&quot;)
         .select(facetType === "element" ? "content->element" : "type");
 
       const facets: any = {};
@@ -235,7 +235,7 @@ export class WisdomKeeperService {
   async getPopularTags(limit: number = 20): Promise<any[]> {
     try {
       const { data } = await supabase
-        .from("tag_cloud")
+        .from(&quot;tag_cloud&quot;)
         .select("*")
         .order("usage_count", { ascending: false })
         .limit(limit);
@@ -254,7 +254,7 @@ export class WisdomKeeperService {
     try {
       // Get contributed wisdom
       const { data: contributed } = await supabase
-        .from("wisdom_keeper")
+        .from(&quot;wisdom_keeper&quot;)
         .select("*")
         .eq("participant_id", participantId)
         .order("metadata->createdAt", { ascending: false });
@@ -305,7 +305,7 @@ export class WisdomKeeperService {
   // Bookmark wisdom
   async bookmarkWisdom(participantId: string, wisdomId: string): Promise<void> {
     try {
-      await supabase.from("wisdom_bookmarks").insert({
+      await supabase.from(&quot;wisdom_bookmarks&quot;).insert({
         participant_id: participantId,
         wisdom_id: wisdomId,
         created_at: new Date(),
@@ -329,7 +329,7 @@ export class WisdomKeeperService {
     message?: string,
   ): Promise<void> {
     try {
-      await supabase.from("wisdom_shares").insert({
+      await supabase.from(&quot;wisdom_shares&quot;).insert({
         wisdom_id: wisdomId,
         shared_by: sharedBy,
         shared_with: sharedWith,
@@ -366,7 +366,7 @@ export class WisdomKeeperService {
     resonanceLevel: number,
   ): Promise<void> {
     try {
-      await supabase.from("wisdom_resonance").insert({
+      await supabase.from(&quot;wisdom_resonance&quot;).insert({
         wisdom_id: wisdomId,
         participant_id: participantId,
         resonance_level: resonanceLevel,
@@ -389,9 +389,9 @@ export class WisdomKeeperService {
     limit: number = 10,
   ): Promise<WisdomEntry[]> {
     try {
-      // Get participant's interests and element
+      // Get participant&apos;s interests and element
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("oracleElement, retreatIntentions")
         .eq("id", participantId)
         .single();
@@ -441,7 +441,7 @@ export class WisdomKeeperService {
     connectionType: "response" | "expansion" | "question" | "integration",
   ): Promise<void> {
     try {
-      await supabase.from("wisdom_threads").insert({
+      await supabase.from(&quot;wisdom_threads&quot;).insert({
         source_wisdom_id: sourceWisdomId,
         target_wisdom_id: targetWisdomId,
         connection_type: connectionType,
@@ -466,7 +466,7 @@ export class WisdomKeeperService {
   async getWisdomThreads(wisdomId: string): Promise<any> {
     try {
       const { data: threads } = await supabase
-        .from("wisdom_threads")
+        .from(&quot;wisdom_threads")
         .select(
           `
           *,
@@ -488,7 +488,7 @@ export class WisdomKeeperService {
   async getThematicArchives(): Promise<any> {
     try {
       const themes = [
-        "Shadow Integration",
+        &quot;Shadow Integration&quot;,
         "Elemental Mastery",
         "Relationship Alchemy",
         "Purpose Clarification",
@@ -528,7 +528,7 @@ export class WisdomKeeperService {
 
       // Get participant info
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants")
         .select("firstName, lastName, oracleElement, retreatDate")
         .eq("id", participantId)
         .single();
@@ -587,14 +587,14 @@ export class WisdomKeeperService {
 
   private async updateTagCloud(tags: string[]): Promise<void> {
     for (const tag of tags) {
-      await supabase.rpc("increment_tag_usage", { tag_name: tag });
+      await supabase.rpc(&quot;increment_tag_usage&quot;, { tag_name: tag });
     }
   }
 
   private async linkRelatedWisdom(wisdom: WisdomEntry): Promise<void> {
     // Find wisdom with similar tags or element
     const { data: related } = await supabase
-      .from("wisdom_keeper")
+      .from(&quot;wisdom_keeper")
       .select("id")
       .neq("id", wisdom.id)
       .or(
@@ -615,7 +615,7 @@ export class WisdomKeeperService {
 
   private async updateWisdomScore(participantId: string): Promise<void> {
     const { count } = await supabase
-      .from("wisdom_keeper")
+      .from(&quot;wisdom_keeper&quot;)
       .select("*", { count: "exact" })
       .eq("participant_id", participantId);
 
@@ -627,7 +627,7 @@ export class WisdomKeeperService {
   }
 
   private async trackSearch(params: WisdomSearchParams): Promise<void> {
-    await supabase.from("wisdom_searches").insert({
+    await supabase.from(&quot;wisdom_searches").insert({
       participant_id: params.requesterId,
       search_query: params.query,
       filters: {
@@ -648,7 +648,7 @@ export class WisdomKeeperService {
 
   private async updateAverageResonance(wisdomId: string): Promise<void> {
     const { data } = await supabase
-      .from("wisdom_resonance")
+      .from(&quot;wisdom_resonance&quot;)
       .select("resonance_level")
       .eq("wisdom_id", wisdomId);
 
@@ -669,7 +669,7 @@ export class WisdomKeeperService {
   ): Promise<void> {
     // Update source wisdom
     const { data: source } = await supabase
-      .from("wisdom_keeper")
+      .from(&quot;wisdom_keeper&quot;)
       .select("connections")
       .eq("id", sourceId)
       .single();
@@ -703,7 +703,7 @@ export class WisdomKeeperService {
     try {
       // Get participant preferences
       const { data: preferences } = await supabase
-        .from("participant_preferences")
+        .from(&quot;participant_preferences&quot;)
         .select("wisdom_digest_preferences")
         .eq("participant_id", participantId)
         .single();
@@ -719,7 +719,7 @@ export class WisdomKeeperService {
         .order("metadata->resonance", { ascending: false })
         .limit(3);
 
-      // Get wisdom from participant's element
+      // Get wisdom from participant&apos;s element
       const { data: participant } = await supabase
         .from("retreat_participants")
         .select("oracleElement")

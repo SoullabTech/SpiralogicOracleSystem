@@ -43,7 +43,7 @@ export class TrustEvolutionService {
         return stored;
       }
     } catch (error) {
-      logger.warn("Failed to load trust metrics from storage", {
+      logger.warn(&quot;Failed to load trust metrics from storage&quot;, {
         userId: userId.substring(0, 8) + '...',
         error
       });
@@ -125,7 +125,7 @@ export class TrustEvolutionService {
     await this.saveTrustMetrics(metrics);
     this.trustCache.set(userId, metrics);
 
-    logger.info("Trust metrics updated", {
+    logger.info(&quot;Trust metrics updated&quot;, {
       userId: userId.substring(0, 8) + '...',
       trustScore: metrics.trustScore.toFixed(3),
       sessionCount: metrics.sessionCount,
@@ -147,7 +147,7 @@ export class TrustEvolutionService {
     const reasons: string[] = [];
 
     // Personal disclosure patterns
-    if (lower.match(/\b(i feel|i'm feeling|i felt)\b/)) {
+    if (lower.match(/\b(i feel|i&apos;m feeling|i felt)\b/)) {
       score += 0.3;
       reasons.push("emotional_disclosure");
     }
@@ -199,7 +199,7 @@ export class TrustEvolutionService {
     }
 
     // Uncertainty admission
-    if (lower.match(/\b(don't know|uncertain|confused|lost)\b/)) {
+    if (lower.match(/\b(don&apos;t know|uncertain|confused|lost)\b/)) {
       score += 0.3;
       reasons.push("uncertainty");
     }
@@ -296,7 +296,7 @@ export class TrustEvolutionService {
     try {
       await this.memoryStore.saveTrustMetrics(metrics);
     } catch (error) {
-      logger.error("Failed to save trust metrics", {
+      logger.error(&quot;Failed to save trust metrics&quot;, {
         userId: metrics.userId.substring(0, 8) + '...',
         error
       });

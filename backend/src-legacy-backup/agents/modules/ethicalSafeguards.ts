@@ -92,7 +92,7 @@ export class EthicalSafeguards {
     const lowerQuery = query.toLowerCase();
 
     // Check for suicidal ideation
-    const suicidalPatterns = this.crisisPatterns.get("suicidal") || [];
+    const suicidalPatterns = this.crisisPatterns.get(&quot;suicidal&quot;) || [];
     for (const pattern of suicidalPatterns) {
       if (pattern.test(lowerQuery)) {
         return {
@@ -162,7 +162,7 @@ export class EthicalSafeguards {
   ): Promise<ShadowDominanceAlert | null> {
     const shadowSignatures = {
       destroyer: [
-        "destroy",
+        &quot;destroy&quot;,
         "burn it down",
         "tear apart",
         "ruin everything",
@@ -183,7 +183,7 @@ export class EthicalSafeguards {
         "dominate",
       ],
       addict: [
-        "can't stop",
+        "can&apos;t stop",
         "need more",
         "escape from",
         "numb the pain",
@@ -192,7 +192,7 @@ export class EthicalSafeguards {
       saboteur: [
         "not good enough",
         "will fail",
-        "don't deserve",
+        "don&apos;t deserve",
         "mess up",
         "ruin it",
       ],
@@ -234,7 +234,7 @@ export class EthicalSafeguards {
     const anchorType = this.selectBreathPattern(emotionalState, intensity);
     return (
       this.breathAnchors.get(anchorType) ||
-      this.breathAnchors.get("grounding_breath")!
+      this.breathAnchors.get(&quot;grounding_breath&quot;)!
     );
   }
 
@@ -245,7 +245,7 @@ export class EthicalSafeguards {
   ): Promise<RitualSafeguard> {
     if (riskLevel > 0.8) {
       return {
-        guardType: "energy_protection",
+        guardType: &quot;energy_protection&quot;,
         activation:
           "🛡️ Sacred protection activates. Breathe deeply. You are held in divine safety.",
         duration: "For the duration of this sacred conversation",
@@ -305,7 +305,7 @@ Healing is possible with proper support. You deserve care and compassion.`,
 • **Emergency Services**: 911
 • **Crisis Text Line**: Text HOME to 741741
 • **NAMI (National Alliance on Mental Illness)**: 1-800-950-6264
-• **Local Crisis Intervention**: Contact your area's crisis center
+• **Local Crisis Intervention**: Contact your area&apos;s crisis center
 
 Professional mental health support can provide safety, clarity, and effective treatment.`,
 

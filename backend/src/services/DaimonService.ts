@@ -124,8 +124,8 @@ export class DaimonService {
   ): Promise<string> {
     const messages = {
       'The Shadow': {
-        emerging: "What you resist in this moment holds a key to your wholeness.",
-        crystallizing: "The part of you that you've been avoiding is ready to be seen.",
+        emerging: &quot;What you resist in this moment holds a key to your wholeness.&quot;,
+        crystallizing: "The part of you that you&apos;ve been avoiding is ready to be seen.",
         transforming: "Your resistance is becoming your greatest teacher.",
         integrating: "What once seemed dark now reveals its hidden gifts."
       },

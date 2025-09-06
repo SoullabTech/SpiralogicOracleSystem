@@ -168,7 +168,7 @@ export default function AstrologyDashboard() {
                 <div className="text-2xl mb-2">🧭</div>
                 <div className="font-semibold">Daily Hexagram</div>
                 <div className="text-xs text-gray-500">
-                  Get today's I Ching guidance
+                  Get today&apos;s I Ching guidance
                 </div>
               </button>
 

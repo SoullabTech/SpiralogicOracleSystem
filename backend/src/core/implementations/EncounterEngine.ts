@@ -24,7 +24,7 @@ export class DefaultEncounterEngine implements EncounterEngine {
     const signature: EncounterSignature = {
       id: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
-      userId: context.userId || "anon",
+      userId: context.userId || &quot;anon&quot;,
 
       // Placeholder metrics - replace with real detection
       irreducibility: this.detectIrreducibility(input),
@@ -63,8 +63,8 @@ export class DefaultEncounterEngine implements EncounterEngine {
     userId: string,
     capacityMetrics: any
   ): Promise<void> {
-    // TODO: Adjust detection thresholds based on user's capacity
-    logger.debug("[EncounterEngine] Calibrating detection for user", {
+    // TODO: Adjust detection thresholds based on user&apos;s capacity
+    logger.debug(&quot;[EncounterEngine] Calibrating detection for user&quot;, {
       userId: userId.substring(0, 8) + '...',
       capacityMetrics
     });

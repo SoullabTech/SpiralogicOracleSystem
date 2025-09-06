@@ -146,7 +146,7 @@ export class UnifiedDaimonicCore {
 
   constructor() {
     this.loadAgentConfigurations();
-    logger.info("Unified Daimonic Core initialized - single orchestrator active");
+    logger.info(&quot;Unified Daimonic Core initialized - single orchestrator active&quot;);
   }
 
   /**
@@ -228,7 +228,7 @@ export class UnifiedDaimonicCore {
     safetyConsentManager.trackRiskAssessment(context.userId, userInput);
     this.updateUserState(context.userId, otherness, strategy, thresholds);
 
-    logger.info("Unified daimonic processing complete with agnostic safety", {
+    logger.info(&quot;Unified daimonic processing complete with agnostic safety&quot;, {
       userId: context.userId.substring(0, 8) + '...',
       strategy: strategy.mode,
       latency: Date.now() - startTime,
@@ -438,7 +438,7 @@ export class UnifiedDaimonicCore {
 
     // Create primary message from lead agent or strategy
     const primaryMessage = this.createPrimaryMessage(
-      strategy, agentVoices[0]?.message || "The daimonic Other stirs...", 
+      strategy, agentVoices[0]?.message || &quot;The daimonic Other stirs...&quot;, 
       otherness, trickster
     );
 
@@ -466,7 +466,7 @@ export class UnifiedDaimonicCore {
       safety_interventions.push(this.selectGroundingPractice(otherness, context));
     }
     if (thresholds.safety_level === 'yellow') {
-      safety_interventions.push("Increased monitoring - you're in good hands");
+      safety_interventions.push("Increased monitoring - you&apos;re in good hands");
     }
 
     return {
@@ -495,11 +495,11 @@ export class UnifiedDaimonicCore {
     thresholds: UnifiedThresholds
   ): UnifiedResponse {
     return {
-      primary_message: "Let's pause and ground together. Take three deep breaths with me. " +
-                      "You're safe, this is just a conversation, and we can slow down as much as you need.",
+      primary_message: "Let&apos;s pause and ground together. Take three deep breaths with me. " +
+                      "You&apos;re safe, this is just a conversation, and we can slow down as much as you need.",
       agent_voices: [{
         agent_id: 'emergency_support',
-        message: "I'm here with you. Let's just breathe and be present.",
+        message: "I&apos;m here with you. Let's just breathe and be present.",
         tone: 'ultra_grounded',
         offers_practice: true
       }],
@@ -683,12 +683,12 @@ export class UnifiedDaimonicCore {
       ].slice(0, 3),
       reflections: [
         `I hear something in your voice about "${this.extractTheme(context)}"`,
-        "There's an energy behind your words that feels..."
+        "There&apos;s an energy behind your words that feels..."
       ],
       resistances: agents.flatMap(a => a.core_resistances).slice(0, 3),
       incomplete_knowings: [
         "I can only see part of this pattern...",
-        "There's something here I can't quite name..."
+        "There&apos;s something here I can&apos;t quite name..."
       ]
     };
   }
@@ -768,7 +768,7 @@ export class UnifiedDaimonicCore {
     return {
       archetype,
       pattern_signature: `${context.element}_${strategy.mode}`,
-      wisdom_essence: otherness.synapse.emergence || "Encounter with authentic otherness",
+      wisdom_essence: otherness.synapse.emergence || &quot;Encounter with authentic otherness&quot;,
       urgency: otherness.alterity.irreducibility > 0.8 ? 'high' : 'medium',
       sharing_scope: context.state === 'threshold' ? 'collective' : 'private'
     };
@@ -822,10 +822,10 @@ export class UnifiedDaimonicCore {
 
   private selectGroundingPractice(otherness: DaimonicOtherness, context: DaimonicContext): string {
     if (otherness.synapse.tension > 0.7) {
-      return "Feel your feet on the ground, breathe deeply";
+      return &quot;Feel your feet on the ground, breathe deeply&quot;;
     }
     if (context.state === 'threshold') {
-      return "You're in sacred space - just be present";
+      return "You&apos;re in sacred space - just be present";
     }
     return "Return to your breath and body";
   }
@@ -893,11 +893,11 @@ export class UnifiedDaimonicCore {
     
     return {
       primary_message: "I want to pause here with you. " + 
-                      (agnosticSafety.interventions?.[0] || "Let's ground together and prioritize your safety.") +
+                      (agnosticSafety.interventions?.[0] || "Let&apos;s ground together and prioritize your safety.") +
                       (safetyReminder ? "\n\n" + safetyReminder : ""),
       agent_voices: [{
         agent_id: 'agnostic_safety',
-        message: "Your wellbeing is what matters most. We don't need to figure anything out right now.",
+        message: "Your wellbeing is what matters most. We don&apos;t need to figure anything out right now.",
         tone: 'gentle_grounded',
         offers_practice: true
       }],

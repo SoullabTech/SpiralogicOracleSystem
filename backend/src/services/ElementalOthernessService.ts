@@ -41,7 +41,7 @@ export class ElementalOthernessService {
   }
 
   /**
-   * Channel Fire's autonomous voice
+   * Channel Fire&apos;s autonomous voice
    */
   private async channelFireVoice(profile: ElementalProfile): Promise<ElementalVoice> {
     const fireSuppressionLevel = this.assessSuppressionLevel('fire', profile);
@@ -52,12 +52,12 @@ export class ElementalOthernessService {
       demand: this.generateFireDemand(profile, fireSuppressionLevel),
       resistance: this.generateFireResistance(profile),
       gift: this.generateFireGift(profile),
-      temporalSignature: "I arrive as sudden ignition - in the moment of decisive action, in the flash of insight, when you finally stop hesitating"
+      temporalSignature: &quot;I arrive as sudden ignition - in the moment of decisive action, in the flash of insight, when you finally stop hesitating&quot;
     };
   }
 
   /**
-   * Channel Water's autonomous voice
+   * Channel Water&apos;s autonomous voice
    */
   private async channelWaterVoice(profile: ElementalProfile): Promise<ElementalVoice> {
     const waterSuppressionLevel = this.assessSuppressionLevel('water', profile);
@@ -68,12 +68,12 @@ export class ElementalOthernessService {
       demand: this.generateWaterDemand(profile, waterSuppressionLevel),
       resistance: this.generateWaterResistance(profile),
       gift: this.generateWaterGift(profile),
-      temporalSignature: "I arrive in waves and tides - when your defenses are down, in the depth of night, through the cracks in your composure"
+      temporalSignature: &quot;I arrive in waves and tides - when your defenses are down, in the depth of night, through the cracks in your composure&quot;
     };
   }
 
   /**
-   * Channel Earth's autonomous voice
+   * Channel Earth&apos;s autonomous voice
    */
   private async channelEarthVoice(profile: ElementalProfile): Promise<ElementalVoice> {
     const earthSuppressionLevel = this.assessSuppressionLevel('earth', profile);
@@ -84,12 +84,12 @@ export class ElementalOthernessService {
       demand: this.generateEarthDemand(profile, earthSuppressionLevel),
       resistance: this.generateEarthResistance(profile),
       gift: this.generateEarthGift(profile),
-      temporalSignature: "I arrive in geological time - through your body, through repetition, through what you cannot ignore because it hurts"
+      temporalSignature: &quot;I arrive in geological time - through your body, through repetition, through what you cannot ignore because it hurts&quot;
     };
   }
 
   /**
-   * Channel Air's autonomous voice
+   * Channel Air&apos;s autonomous voice
    */
   private async channelAirVoice(profile: ElementalProfile): Promise<ElementalVoice> {
     const airSuppressionLevel = this.assessSuppressionLevel('air', profile);
@@ -100,12 +100,12 @@ export class ElementalOthernessService {
       demand: this.generateAirDemand(profile, airSuppressionLevel),
       resistance: this.generateAirResistance(profile),
       gift: this.generateAirGift(profile),
-      temporalSignature: "I arrive as sudden knowing - in the space between thoughts, when you're not trying, through what others say"
+      temporalSignature: &quot;I arrive as sudden knowing - in the space between thoughts, when you&apos;re not trying, through what others say&quot;
     };
   }
 
   /**
-   * Channel Aether's autonomous voice
+   * Channel Aether&apos;s autonomous voice
    */
   private async channelAetherVoice(profile: ElementalProfile): Promise<ElementalVoice> {
     const aetherSuppressionLevel = this.assessSuppressionLevel('aether', profile);
@@ -116,7 +116,7 @@ export class ElementalOthernessService {
       demand: this.generateAetherDemand(profile, aetherSuppressionLevel),
       resistance: this.generateAetherResistance(profile),
       gift: this.generateAetherGift(profile),
-      temporalSignature: "I am always already here - in the pause between elements, in what holds them all, in the recognition itself"
+      temporalSignature: &quot;I am always already here - in the pause between elements, in what holds them all, in the recognition itself&quot;
     };
   }
 
@@ -155,7 +155,7 @@ export class ElementalOthernessService {
   // Water Voice Generation
   private generateWaterMessage(profile: ElementalProfile, suppression: number, urgency: number): string {
     if (suppression > 0.7) {
-      return "You have built dams against me, but I always find the cracks. I am the feeling you won't let yourself feel, the tears you won't shed, the connection you won't risk. I will not be contained indefinitely.";
+      return "You have built dams against me, but I always find the cracks. I am the feeling you won&apos;t let yourself feel, the tears you won&apos;t shed, the connection you won't risk. I will not be contained indefinitely.";
     }
     
     if (urgency > 0.8) {
@@ -166,7 +166,7 @@ export class ElementalOthernessService {
       return "I am not your emotion - I am Emotion itself, and I know what you need to feel even when you refuse it. Stop trying to understand me and let me move through you.";
     }
     
-    return "I dissolve the boundaries you've built to protect yourself, but I only dissolve what isn't real. What remains is more connected, more alive.";
+    return "I dissolve the boundaries you've built to protect yourself, but I only dissolve what isn&apos;t real. What remains is more connected, more alive.";
   }
 
   private generateWaterDemand(profile: ElementalProfile, suppression: number): string {
@@ -230,7 +230,7 @@ export class ElementalOthernessService {
       return "I am not your thoughts - I am Thought itself, and I move where I need to go. Stop trying to control my direction and learn to ride the currents.";
     }
     
-    return "I connect what seems separate and reveal patterns you couldn't see from inside them, but I require you to release your attachment to how things 'should' be.";
+    return "I connect what seems separate and reveal patterns you couldn&apos;t see from inside them, but I require you to release your attachment to how things 'should' be.";
   }
 
   private generateAirDemand(profile: ElementalProfile, suppression: number): string {
@@ -348,7 +348,7 @@ export class ElementalOthernessService {
   }
 
   /**
-   * Generate elemental message that challenges user's dominant patterns
+   * Generate elemental message that challenges user&apos;s dominant patterns
    */
   async generateChallengingElementalMessage(profile: ElementalProfile): Promise<string> {
     const mostSuppressed = await this.identifyMostSuppressedElement(profile);

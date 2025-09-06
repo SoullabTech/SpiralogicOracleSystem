@@ -67,7 +67,7 @@ router.post('/ceremony', async (req, res) => {
 });
 
 /**
- * 🔮 GET /api/onboarding/oracle/:userId - Retrieve user's Oracle agent
+ * 🔮 GET /api/onboarding/oracle/:userId - Retrieve user&apos;s Oracle agent
  */
 router.get('/oracle/:userId', async (req, res) => {
   const requestId = generateRequestId();
@@ -111,9 +111,9 @@ router.get('/oracle/:userId', async (req, res) => {
 });
 
 /**
- * 💬 POST /api/onboarding/oracle/:userId/consult - Consult with user's Oracle
+ * 💬 POST /api/onboarding/oracle/:userId/consult - Consult with user&apos;s Oracle
  * 
- * Direct consultation with the user's bound PersonalOracleAgent
+ * Direct consultation with the user&apos;s bound PersonalOracleAgent
  * utilizing all cognitive architectures and refinements
  */
 router.post('/oracle/:userId/consult', async (req, res) => {

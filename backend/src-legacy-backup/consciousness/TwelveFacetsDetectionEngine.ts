@@ -101,7 +101,7 @@ export interface CulturalFacetExpression {
 export interface BiometricMonitoringRecommendation {
   facet: keyof TwelveFacetsProfile;
   recommended_metrics: string[];
-  monitoring_frequency: "continuous" | "daily" | "weekly";
+  monitoring_frequency: &quot;continuous&quot; | "daily" | "weekly";
   correlation_hypothesis: string;
 }
 
@@ -154,7 +154,7 @@ export class TwelveFacetsDetectionEngine {
     culturalContext?: string,
     userHistory?: any[],
   ): FacetDetectionResult {
-    logger.info("Starting 12 facets consciousness detection", {
+    logger.info(&quot;Starting 12 facets consciousness detection&quot;, {
       queryLength: query.length,
       hasArchetypalContext: !!archetypalIntent,
       culturalContext,
@@ -617,7 +617,7 @@ export class TwelveFacetsDetectionEngine {
     // Boost facets that align with primary archetype
     const elementalBoosts = {
       fire: [
-        "transcendent_purpose",
+        &quot;transcendent_purpose",
         "creative_expression",
         "spiritual_connection",
       ],
@@ -680,7 +680,7 @@ export class TwelveFacetsDetectionEngine {
     // Weight the mapping based on detected facet strengths
     for (const facet of facets) {
       for (const element of [
-        "fire",
+        &quot;fire",
         "water",
         "earth",
         "air",
@@ -769,7 +769,7 @@ export class TwelveFacetsDetectionEngine {
     const facetNames = facets.map((f) => f.facet);
 
     if (
-      facetNames.includes("analytical_thinking") &&
+      facetNames.includes(&quot;analytical_thinking&quot;) &&
       facetNames.includes("intuitive_wisdom")
     ) {
       opportunities.push({
@@ -995,7 +995,7 @@ export class TwelveFacetsDetectionEngine {
       totalTransformations: 0,
       averageGrowthRate: 0.15,
       dominantArchetypalTrends: new Map([
-        ["fire", 0.25],
+        [&quot;fire", 0.25],
         ["water", 0.25],
         ["earth", 0.2],
         ["air", 0.2],
@@ -1333,7 +1333,7 @@ export class TwelveFacetsDetectionEngine {
   ): string[] {
     const alignmentPractices = {
       fire: [
-        "Solar meditation at dawn",
+        &quot;Solar meditation at dawn&quot;,
         "Intention amplification through visualization",
         "Catalytic breathwork",
       ],
@@ -1391,7 +1391,7 @@ export class TwelveFacetsDetectionEngine {
     dominantFacets: Array<keyof TwelveFacetsProfile>,
   ): string[] {
     return [
-      "Collective intention practices",
+      &quot;Collective intention practices&quot;,
       "Ancestral wisdom connection",
       "Species evolution prayers",
     ];
@@ -1401,7 +1401,7 @@ export class TwelveFacetsDetectionEngine {
     dominantFacets: Array<keyof TwelveFacetsProfile>,
   ): string[] {
     return [
-      "Community wisdom sharing",
+      &quot;Community wisdom sharing&quot;,
       "Anonymous insight contribution",
       "Global consciousness meditation",
     ];

@@ -18,7 +18,7 @@ export default function FileUploadTracker({ onFileAnalyzed }: FileUploadTrackerP
     const startTime = Date.now();
     
     try {
-      // Real file upload to Maya's ingestion system
+      // Real file upload to Maya&apos;s ingestion system
       const formData = new FormData();
       formData.append('file', file);
       
@@ -50,7 +50,7 @@ export default function FileUploadTracker({ onFileAnalyzed }: FileUploadTrackerP
         fileType: file.type,
         fileName: file.name,
         fileSizeKB: Math.round(file.size / 1024),
-        analysisAccuracy: 95, // Maya's ingestion is highly accurate
+        analysisAccuracy: 95, // Maya&apos;s ingestion is highly accurate
         processingTime: Date.now() - startTime,
         analysisMethod: 'file_upload',
         fileId: result.file_id
@@ -135,7 +135,7 @@ export default function FileUploadTracker({ onFileAnalyzed }: FileUploadTrackerP
     <div className="p-4 border border-gray-700 rounded-lg bg-[#1A1F2E]/50 backdrop-blur-sm">
       <h3 className="text-white font-medium mb-3 flex items-center gap-2">
         <Upload className="w-4 h-4 text-sacred-gold" />
-        Try Maya's Multimodal Analysis
+        Try Maya&apos;s Multimodal Analysis
       </h3>
       
       {/* File Upload */}

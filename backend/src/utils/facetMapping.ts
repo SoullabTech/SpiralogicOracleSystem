@@ -15,7 +15,7 @@ export type Facet =
   | "Consciousness";
 
 export const ElementalFacetMap: Record<string, Facet[]> = {
-  Fire: ["Experience", "Expression", "Expansion"],
+  Fire: [&quot;Experience&quot;, "Expression", "Expansion"],
   Water: ["Heart", "Healing", "Holiness"],
   Earth: ["Mission", "Means", "Medicine"],
   Air: ["Connection", "Community", "Consciousness"],

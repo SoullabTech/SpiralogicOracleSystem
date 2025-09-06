@@ -84,7 +84,7 @@ export class EnhancedSHIFtNarrativeService extends SHIFtNarrativeService {
     length: NarrativeLength = 'medium'
   ): Promise<IndividualNarrative & { enhanced: EnhancedNarrative }> {
     try {
-      // Layer 1: McGilchrist's Attention Assessment
+      // Layer 1: McGilchrist&apos;s Attention Assessment
       const attention_analysis = this.attentionField.processExperience(profile, 'individual_profile');
       
       // Layer 2: Current Natural/Adaptive Alignment
@@ -266,7 +266,7 @@ export class EnhancedSHIFtNarrativeService extends SHIFtNarrativeService {
       return {
         type: 'attention',
         level: 'depth',
-        message: `You're caught in left-hemisphere dominance — analyzing life rather than living it. ` +
+        message: `You&apos;re caught in left-hemisphere dominance — analyzing life rather than living it. ` +
                 `McGilchrist would say: let the Master return, make the Emissary serve again.`,
         guidance: layers.attention.master_emissary_guidance,
         integration_invitation: `Try softening your gaze, feeling into your body, noticing the whole before the parts.`
@@ -277,7 +277,7 @@ export class EnhancedSHIFtNarrativeService extends SHIFtNarrativeService {
         level: 'depth',
         message: `Beautiful integration: the Master leads while the Emissary serves. This is optimal attention ` +
                 `for authentic development.`,
-        guidance: `Trust this integrated awareness while remaining vigilant against the Emissary's tendency to usurp.`
+        guidance: `Trust this integrated awareness while remaining vigilant against the Emissary&apos;s tendency to usurp.`
       };
     } else {
       return {
@@ -321,7 +321,7 @@ export class EnhancedSHIFtNarrativeService extends SHIFtNarrativeService {
         level: 'depth',
         message: `You're projecting ${shadow.projected.length} shadow aspects onto others — ` +
                 `strong reactions often reveal disowned parts of yourself.`,
-        guidance: `When someone triggers you intensely, ask: "How is this quality also in me?"`,
+        guidance: `When someone triggers you intensely, ask: &quot;How is this quality also in me?"`,
         integration_invitation: `Shadow integration transforms projection into wisdom.`
       };
     }
@@ -348,7 +348,7 @@ export class EnhancedSHIFtNarrativeService extends SHIFtNarrativeService {
           type: 'daimonic',
           level: 'archetypal',
           message: `That inexplicable pull toward what you're naturally skilled at, despite your resistance — ` +
-                  `Kastrup's 'chain that frees.' You're good at it, don't enjoy it, yet it generates meaning. ` +
+                  `Kastrup's 'chain that frees.' You're good at it, don&apos;t enjoy it, yet it generates meaning. ` +
                   `This IS your daimon speaking.`,
           guidance: daimonic.integration_guidance || 'Trust the burden that serves something larger.',
           integration_invitation: `What if your reluctant mastery is exactly how Nature wants to work through you?`
@@ -519,7 +519,7 @@ export class EnhancedSHIFtNarrativeService extends SHIFtNarrativeService {
       return `Something moves through you that cannot be fully understood — only honored. ` +
              `The mystery is not a problem to be solved but a current to follow.`;
     } else if (layers.individuation.self_axis.self_glimpses.length > 0) {
-      return `The Self reveals itself in glimpses, not explanations. What you've tasted ` +
+      return `The Self reveals itself in glimpses, not explanations. What you&apos;ve tasted ` +
              `cannot be grasped, only lived into more fully.`;
     } else {
       return `The most important movements in consciousness cannot be orchestrated — ` +

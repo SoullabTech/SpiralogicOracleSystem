@@ -168,7 +168,7 @@ export class ElementalDomainMapper {
       recommendations.push({
         id: `elemental-${element}-${index}`,
         domains: mapping.primaryDomains,
-        type: "practice",
+        type: &quot;practice",
         title: `${mapping.element.charAt(0).toUpperCase() + mapping.element.slice(1)} Element: ${practice}`,
         description: this.generatePracticeDescription(
           mapping.element,
@@ -210,7 +210,7 @@ export class ElementalDomainMapper {
   ): string {
     const baseDescriptions: Record<string, Record<string, string>> = {
       fire: {
-        "goal setting":
+        &quot;goal setting":
           "Harness fire energy to set clear, passionate intentions.",
         "willpower exercises":
           "Strengthen your inner fire through disciplined practice.",
@@ -271,7 +271,7 @@ export class ElementalDomainMapper {
     stage: DevelopmentStage,
   ): number {
     const baseTimes: Record<string, number> = {
-      "goal setting": 15,
+      &quot;goal setting&quot;: 15,
       "willpower exercises": 20,
       "transformative meditation": 25,
       "purpose visioning": 30,
@@ -306,7 +306,7 @@ export class ElementalDomainMapper {
   private getPracticeBenefits(element: string, practice: string): string[] {
     const benefitMap: Record<string, Record<string, string[]>> = {
       fire: {
-        "goal setting": [
+        &quot;goal setting": [
           "Clarity of direction",
           "Motivation enhancement",
           "Achievement focus",
@@ -450,7 +450,7 @@ export class ElementalDomainMapper {
       Record<string, Record<DevelopmentStage, string>>
     > = {
       fire: {
-        "goal setting": {
+        &quot;goal setting": {
           [DevelopmentStage.BEGINNER]:
             "Set one clear, achievable goal. Write it down and visualize success.",
           [DevelopmentStage.INTERMEDIATE]:

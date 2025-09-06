@@ -11,7 +11,7 @@ const MAJOR_ARCANA: Omit<
   "position" | "reversed" | "meaning" | "interpretation"
 >[] = [
   {
-    name: "The Fool",
+    name: &quot;The Fool&quot;,
     arcana: "major",
     number: 0,
     keywords: [
@@ -344,7 +344,7 @@ function drawCard(position: string, isReversed?: boolean): TarotCard {
 
     const card: TarotCard = {
       name: cardName,
-      arcana: "minor",
+      arcana: &quot;minor",
       suit,
       number,
       position,
@@ -399,7 +399,7 @@ function generateCardInterpretation(
   position: string,
 ): string {
   const interpretations: Record<string, Record<string, string>> = {
-    "The Fool": {
+    &quot;The Fool": {
       "false":
         "New beginnings and fresh opportunities await. Trust your instincts and take that leap of faith.",
       "true": "Recklessness or poor judgment may be holding you back. Consider your choices more carefully.",

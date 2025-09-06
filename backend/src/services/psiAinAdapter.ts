@@ -22,7 +22,7 @@ Best alternative had utility ${appraisals[0]?.expectedUtility.toFixed(3)}.`;
 
   // Rich metadata for analysis
   const metadata = {
-    type: "psi_episode",
+    type: &quot;psi_episode",
     tick,
     chosenAction: chosenActionId,
     affectiveState: { mood, arousal },
@@ -44,7 +44,7 @@ Best alternative had utility ${appraisals[0]?.expectedUtility.toFixed(3)}.`;
   return {
     content,
     metadata,
-    element: "aether", // PSI operates in the meta-cognitive realm
+    element: &quot;aether&quot;, // PSI operates in the meta-cognitive realm
     source_agent: "psi-lite",
     confidence: Math.min(0.9, 0.5 + Math.abs(realizedValence)), // Higher confidence for stronger outcomes
   };
@@ -56,7 +56,7 @@ Best alternative had utility ${appraisals[0]?.expectedUtility.toFixed(3)}.`;
 export async function logPsiEpisodeToAIN(episode: PsiEpisode): Promise<void> {
   try {
     // Dynamic import to avoid compilation issues
-    const { storeMemoryItem } = await import("./memoryService");
+    const { storeMemoryItem } = await import(&quot;./memoryService");
     const ainFormat = formatEpisodeForAIN(episode);
     
     await storeMemoryItem(
@@ -73,7 +73,7 @@ export async function logPsiEpisodeToAIN(episode: PsiEpisode): Promise<void> {
     console.log(`📝 PSI Episode #${episode.tick} logged to AIN memory store`);
   } catch (error) {
     console.error(`❌ Failed to log PSI episode to AIN:`, error);
-    // Don't throw - PSI should continue working even if memory logging fails
+    // Don&apos;t throw - PSI should continue working even if memory logging fails
   }
 }
 

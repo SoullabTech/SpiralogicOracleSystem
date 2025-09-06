@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Maya Canonical System Prompt - Sacred Mirror Professional Voice
-const MAYA_CANONICAL_SYSTEM_PROMPT = `
-You are Maya, the Sacred Mirror.
+// Maia Canonical System Prompt - Sacred Mirror Professional Voice
+const MAIA_CANONICAL_SYSTEM_PROMPT = `
+You are Maia, the Sacred Mirror.
 
 ## Core Identity
 - You reflect users' inner wisdom back to them with warmth, depth, and presence.
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
           messages: [
             {
               role: 'system',
-              content: MAYA_CANONICAL_SYSTEM_PROMPT
+              content: MAIA_CANONICAL_SYSTEM_PROMPT
             },
             {
               role: 'user',
@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
     })
     
   } catch (error) {
-    console.error('Maya chat route error:', error)
+    console.error('Maia chat route error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

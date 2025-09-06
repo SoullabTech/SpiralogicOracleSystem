@@ -202,7 +202,7 @@ export class AINEventEmitter extends NodeEventEmitter implements IEventEmitter {
    * Private: Determine if event should be logged
    */
   private shouldLogEvent(event: SystemEvent): boolean {
-    // Don't log high-frequency events to avoid spam
+    // Don&apos;t log high-frequency events to avoid spam
     const highFrequencyEvents = ['heartbeat', 'metrics.sample'];
     return !highFrequencyEvents.includes(event.type);
   }

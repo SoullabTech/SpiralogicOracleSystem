@@ -131,7 +131,7 @@ export class SpiralogicCognitiveEngine {
   private consciousnessStates: Map<string, SpiralogicConsciousnessState> = new Map();
   
   constructor() {
-    logger.info("SpiralogicCognitiveEngine initialized with full elemental architecture");
+    logger.info(&quot;SpiralogicCognitiveEngine initialized with full elemental architecture&quot;);
   }
 
   /**
@@ -164,7 +164,7 @@ export class SpiralogicCognitiveEngine {
 
     this.consciousnessStates.set(userId, consciousnessState);
     
-    logger.info("Consciousness state initialized", { 
+    logger.info(&quot;Consciousness state initialized&quot;, { 
       userId, 
       phase: consciousnessState.currentPhase,
       elements: elements.length 
@@ -326,7 +326,7 @@ export class SpiralogicCognitiveEngine {
     // 8. Check for phase transition
     await this.checkPhaseTransition(consciousnessState);
     
-    logger.info("Consciousness query processed", {
+    logger.info(&quot;Consciousness query processed", {
       userId,
       element: dominantElement,
       phase: consciousnessState.currentPhase,
@@ -593,7 +593,7 @@ export class SpiralogicCognitiveEngine {
   ): string {
     const insights = {
       [SpiralPhase.INITIATION]: {
-        fire: "The spark of new beginning ignites within you",
+        fire: &quot;The spark of new beginning ignites within you&quot;,
         water: "Feel into the waters of transformation calling",
         earth: "Ground yourself in the foundation of this new cycle",
         air: "Breathe clarity into this fresh chapter of growth",
@@ -675,7 +675,7 @@ export class SpiralogicCognitiveEngine {
     if (readiness >= state.readinessThreshold) {
       const nextPhase = this.getNextPhase(state.currentPhase);
       
-      logger.info("Phase transition triggered", {
+      logger.info(&quot;Phase transition triggered&quot;, {
         userId: state.userId,
         fromPhase: state.currentPhase,
         toPhase: nextPhase,
@@ -733,7 +733,7 @@ export class SpiralogicCognitiveEngine {
     const state = this.consciousnessStates.get(userId);
     if (!state) return;
 
-    // Calculate resonance based on user's archetypal alignment with collective
+    // Calculate resonance based on user&apos;s archetypal alignment with collective
     const userArchetypes = new Set(state.archetypalActivations);
     const collectiveArchetypes = new Set(fieldData.archetypalTrends);
     

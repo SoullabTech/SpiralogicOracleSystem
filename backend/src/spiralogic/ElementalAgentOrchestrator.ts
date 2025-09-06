@@ -58,7 +58,7 @@ export class ElementalAgentOrchestrator {
     this.elementalAgents.set('air', new AirAgent());
     this.elementalAgents.set('aether', new AetherAgent());
 
-    logger.info("ElementalAgentOrchestrator initialized with all five agents");
+    logger.info(&quot;ElementalAgentOrchestrator initialized with all five agents");
   }
 
   /**
@@ -75,7 +75,7 @@ export class ElementalAgentOrchestrator {
       throw new Error(`Unknown elemental agent: ${element}`);
     }
 
-    logger.debug("Processing elemental query", { element, awarenessLevel: elementalState.awarenessLevel });
+    logger.debug(&quot;Processing elemental query&quot;, { element, awarenessLevel: elementalState.awarenessLevel });
 
     return await agent.processQuery(input, elementalState, collectiveContext);
   }
@@ -88,7 +88,7 @@ export class ElementalAgentOrchestrator {
     dominantElement: string
   ): Promise<CrossElementalSynthesis> {
     if (responses.length === 0) {
-      throw new Error("Cannot synthesize empty response array");
+      throw new Error(&quot;Cannot synthesize empty response array");
     }
 
     const primary = responses.find(r => r.element === dominantElement) || responses[0];
@@ -202,7 +202,7 @@ export class ElementalAgentOrchestrator {
    */
   private extractEssence(response: ElementalAgentResponse): string {
     const essencePatterns = {
-      fire: "ignites transformation",
+      fire: &quot;ignites transformation",
       water: "flows with healing",
       earth: "grounds with stability",
       air: "clarifies understanding",

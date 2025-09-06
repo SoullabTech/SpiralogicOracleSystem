@@ -544,7 +544,7 @@ export const sacredOrchestrator = new SacredOrchestrator();
 export async function runLangChain(query: string): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    throw new Error("OPENAI_API_KEY environment variable is not set");
+    throw new Error(&quot;OPENAI_API_KEY environment variable is not set&quot;);
   }
 
   const model = new ChatOpenAI({

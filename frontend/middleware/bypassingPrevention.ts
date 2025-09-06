@@ -28,7 +28,7 @@ export class BypassingPreventionMiddleware {
         return NextResponse.next();
       }
 
-      // For now, return a simplified version that doesn't rely on backend services
+      // For now, return a simplified version that doesn&apos;t rely on backend services
       // TODO: Implement full bypassing prevention via backend API calls
       return NextResponse.next();
     } catch (error) {
@@ -270,7 +270,7 @@ export class BypassingPreventionMiddleware {
       {
         error: "Integration Support Needed",
         message:
-          "We've detected patterns that suggest focusing on integration would be beneficial.",
+          "We&apos;ve detected patterns that suggest focusing on integration would be beneficial.",
         patterns: analysis.patterns,
         interventions: analysis.interventions,
         supportResources: this.getBypassingSupportResources(analysis.patterns),
@@ -434,7 +434,7 @@ export class BypassingPreventionMiddleware {
       },
       integration_avoidance: {
         message:
-          "You've explored several insights. How might you apply one of them in your daily life?",
+          "You&apos;ve explored several insights. How might you apply one of them in your daily life?",
         suggestion:
           "Consider journaling about how recent insights show up in ordinary moments.",
         type: "integration_prompt",

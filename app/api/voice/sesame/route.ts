@@ -9,7 +9,6 @@ export async function POST(req: Request) {
   try {
     // Development mock mode for testing
     if (process.env.NODE_ENV === 'development' && !process.env.NORTHFLANK_SESAME_URL?.includes('northflank.app')) {
-      console.log('[Dev Mode] Using beep fallback - Northflank not configured');
     }
     
     // Warm-up endpoint for keeping service alive
@@ -39,12 +38,10 @@ export async function POST(req: Request) {
     const voiceProvider = process.env.VOICE_PROVIDER || 'sesame';
     const sesameProvider = process.env.SESAME_PROVIDER || 'northflank';
     
-    console.log('Voice configuration:', { voiceProvider, sesameProvider });
 
     // Check if we should use Northflank Sesame
     if (voiceProvider === 'sesame' && sesameProvider === 'northflank') {
       if (!process.env.NORTHFLANK_SESAME_URL || process.env.NORTHFLANK_SESAME_URL.includes('your-voice-agent-service')) {
-        console.log('Northflank Sesame not configured, trying ElevenLabs Maya fallback...');
         // Try ElevenLabs as fallback for Maya's voice
         if (process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID) {
           try {
@@ -66,7 +63,6 @@ export async function POST(req: Request) {
             });
             
             if (elevenLabsResponse.ok) {
-              console.log('✅ ElevenLabs Maya voice synthesis successful');
               const audioBuffer = await elevenLabsResponse.arrayBuffer();
               return new Response(audioBuffer, {
                 status: 200,
@@ -77,11 +73,9 @@ export async function POST(req: Request) {
               });
             }
           } catch (elevenLabsError) {
-            console.log('ElevenLabs fallback failed:', elevenLabsError);
           }
         }
         
-        console.log('All voice providers failed, client should use Web Speech API fallback');
         return new Response(JSON.stringify({ 
           ok: false, 
           error: 'Voice synthesis unavailable',
@@ -94,7 +88,6 @@ export async function POST(req: Request) {
       }
     } else {
       // Other providers not implemented yet
-      console.log(`Provider ${voiceProvider}/${sesameProvider} not implemented, fallback to Web Speech API`);
       return new Response(JSON.stringify({ 
         ok: false, 
         error: 'Provider not implemented',
@@ -107,8 +100,6 @@ export async function POST(req: Request) {
     }
 
     // NORTHFLANK: Maya voice enabled!
-    console.log('Attempting Northflank Sesame synthesis for:', text.substring(0, 50));
-    console.log('Northflank config:', {
       serviceUrl: process.env.NORTHFLANK_SESAME_URL,
       hasApiKey: !!process.env.NORTHFLANK_SESAME_API_KEY
     });
@@ -119,7 +110,6 @@ export async function POST(req: Request) {
         apiKey: process.env.NORTHFLANK_SESAME_API_KEY,
         timeout: 30000, // 30 seconds timeout
       });
-      console.log('Northflank Sesame synthesis successful, audio size:', wavBuffer.byteLength);
       return new Response(wavBuffer, {
         status: 200,
         headers: {

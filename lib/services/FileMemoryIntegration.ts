@@ -328,7 +328,7 @@ export class FileMemoryIntegration {
   }
   
   /**
-   * Prepare file context for Maya's conversation prompts with citation metadata
+   * Prepare file context for Maya&apos;s conversation prompts with citation metadata
    */
   formatFileContextForPrompt(fileContexts: FileContext[]): string {
     if (fileContexts.length === 0) {

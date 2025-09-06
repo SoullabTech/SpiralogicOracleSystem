@@ -134,7 +134,7 @@ export const StreamlinedDaimonicUI: React.FC<StreamlinedDaimonicUIProps> = ({
       // Simple error handling - no complex logic
       setConversationHistory(prev => [...prev, {
         type: 'oracle',
-        content: "Something went wrong. Let's try again.",
+        content: "Something went wrong. Let&apos;s try again.",
         timestamp: new Date()
       }]);
     } finally {

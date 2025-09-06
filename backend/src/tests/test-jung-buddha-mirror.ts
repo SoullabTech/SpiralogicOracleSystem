@@ -46,7 +46,7 @@ async function testJungBuddhaWisdom() {
   await oracle.setSacredMirrorMode("buddha");
 
   const attachmentPrompt =
-    "I need this relationship to work or I'll be nothing";
+    "I need this relationship to work or I&apos;ll be nothing";
   console.log(`User (attachment): "${attachmentPrompt}"`);
 
   const buddhaResponse = await oracle.respondToPrompt(attachmentPrompt);
@@ -75,7 +75,7 @@ async function testJungBuddhaWisdom() {
 
   const testPrompts = [
     "I keep projecting my shadow onto others", // Should trigger Jung
-    "I'm so attached to this outcome happening", // Should trigger Buddha
+    "I&apos;m so attached to this outcome happening", // Should trigger Buddha
     "I need to both accept and release this pattern", // Should trigger Hybrid
   ];
 

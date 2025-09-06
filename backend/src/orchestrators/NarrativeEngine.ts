@@ -315,8 +315,8 @@ export class NarrativeEngine {
   ): NarrativeSignature['type'] {
     
     // Simple classification heuristics (dev should enhance)
-    if (emergence > 0.8 && depth > 0.6) return "initiation";
-    if (coherence < 0.4 && depth > 0.7) return "threshold";
+    if (emergence > 0.8 && depth > 0.6) return &quot;initiation&quot;;
+    if (coherence < 0.4 && depth > 0.7) return &quot;threshold&quot;;
     if (resonance > 0.7 && coherence > 0.6) return "integration";
     if (coherence > 0.8 && depth > 0.8) return "completion";
     return "everyday";
@@ -329,7 +329,7 @@ export class NarrativeEngine {
   }
   
   private async analyzeNarrativeArc(context: NarrativeContext): Promise<NarrativeSignature['narrativeArc']> {
-    // Stub: Analyze where this fits in the user's journey arc
+    // Stub: Analyze where this fits in the user&apos;s journey arc
     return {
       stage: 'conflict',
       tension: Math.random() * 0.6 + 0.2,
@@ -372,13 +372,13 @@ export class NarrativeEngine {
       depth: 0.3,
       emergence: 0.1,
       resonance: 0.5,
-      type: "everyday",
+      type: &quot;everyday&quot;,
       thematicElements: ['present_moment'],
       relatedEncounters: []
     };
     
     const fallbackResponse: LayeredResponse = {
-      phenomenological: "I'm gathering the threads of our conversation, looking for what wants to be heard.",
+      phenomenological: "I&apos;m gathering the threads of our conversation, looking for what wants to be heard.",
       layerUsed: 'phenomenological',
       narrativeRole: 'companion'
     };
@@ -540,7 +540,7 @@ class EmergenceTracker implements EmergenceTracker {
 
 class ResonanceDetector implements ResonanceDetector {
   async detect(context: NarrativeContext): Promise<number> {
-    // Stub: Detect resonance with user's journey
+    // Stub: Detect resonance with user&apos;s journey
     // Look for: personal relevance, emotional engagement, life integration
     return Math.random() * 0.6 + 0.3; // Generally resonant
   }

@@ -135,7 +135,7 @@ export class JungianShadowIntegrationEngine {
     previousShadowWork?: any[],
   ): Promise<ShadowIntegrationPlan> {
     try {
-      logger.info("Beginning comprehensive shadow assessment", {
+      logger.info(&quot;Beginning comprehensive shadow assessment", {
         userId,
         culturalContext: culturalProfile.primaryCulture,
         hasPreviousWork: !!previousShadowWork?.length,
@@ -267,7 +267,7 @@ export class JungianShadowIntegrationEngine {
       userSessions.push(session);
       this.activeImaginationSessions.set(userId, userSessions);
 
-      logger.info("Active Imagination session created", {
+      logger.info(&quot;Active Imagination session created&quot;, {
         userId,
         sessionId,
         sessionType,
@@ -325,7 +325,7 @@ export class JungianShadowIntegrationEngine {
         completionIndicators,
       };
 
-      logger.info("Projection withdrawal process created", {
+      logger.info(&quot;Projection withdrawal process created&quot;, {
         userId,
         projectionTarget,
         qualitiesCount: projectedQualities.length,
@@ -369,7 +369,7 @@ export class JungianShadowIntegrationEngine {
 
     const response =
       shadowResponses[sessionType as keyof typeof shadowResponses] ||
-      "I represent the parts of you that have been hidden. What would you like to explore?";
+      &quot;I represent the parts of you that have been hidden. What would you like to explore?&quot;;
 
     return {
       speaker: "shadow",
@@ -436,7 +436,7 @@ export class JungianShadowIntegrationEngine {
 
   private detectAnimaAnimusComplex(input: string): boolean {
     const indicators = [
-      "ideal partner",
+      &quot;ideal partner&quot;,
       "perfect relationship",
       "soulmate",
       "nobody understands me",
@@ -480,7 +480,7 @@ export class JungianShadowIntegrationEngine {
       "sabotage success",
       "fear of success",
       "imposter syndrome",
-      "don't deserve",
+      "don&apos;t deserve",
       "success anxiety",
     ];
     return indicators.some((indicator) => input.includes(indicator));
@@ -516,7 +516,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
   ): Promise<ShadowComplexAnalysis> {
     return {
-      complexType: "anima_animus",
+      complexType: &quot;anima_animus&quot;,
       intensity: 0.7,
       culturalInfluences:
         this.getCulturalAnimaAnimusInfluences(culturalProfile),
@@ -540,7 +540,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
   ): Promise<ShadowComplexAnalysis> {
     return {
-      complexType: "mother_father",
+      complexType: &quot;mother_father&quot;,
       intensity: 0.8,
       culturalInfluences: this.getCulturalParentalInfluences(culturalProfile),
       manifestations: [
@@ -563,7 +563,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
   ): Promise<ShadowComplexAnalysis> {
     return {
-      complexType: "persona",
+      complexType: &quot;persona&quot;,
       intensity: 0.6,
       culturalInfluences: this.getCulturalPersonaInfluences(culturalProfile),
       manifestations: [
@@ -586,7 +586,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
   ): Promise<ShadowComplexAnalysis> {
     return {
-      complexType: "self_sabotage",
+      complexType: &quot;self_sabotage&quot;,
       intensity: 0.75,
       culturalInfluences:
         this.getCulturalSelfSabotageInfluences(culturalProfile),
@@ -610,7 +610,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
   ): Promise<ShadowComplexAnalysis> {
     return {
-      complexType: "power_shadow",
+      complexType: &quot;power_shadow&quot;,
       intensity: 0.7,
       culturalInfluences: this.getCulturalPowerInfluences(culturalProfile),
       manifestations: [
@@ -633,7 +633,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
   ): Promise<ShadowComplexAnalysis> {
     return {
-      complexType: "victim_shadow",
+      complexType: &quot;victim_shadow&quot;,
       intensity: 0.8,
       culturalInfluences: this.getCulturalVictimInfluences(culturalProfile),
       manifestations: [
@@ -843,7 +843,7 @@ export class JungianShadowIntegrationEngine {
     culturalProfile: CulturalProfile,
   ): string {
     const partners = {
-      inner_critic: "Inner Critic",
+      inner_critic: &quot;Inner Critic",
       rejected_self: "Rejected Self",
       cultural_shadow: `Cultural Shadow (${culturalProfile.primaryCulture})`,
       archetypal_shadow: "Archetypal Shadow",
@@ -871,7 +871,7 @@ export class JungianShadowIntegrationEngine {
 
   private planNextSessionFocus(sessionType: string): string {
     // Plan focus for next session
-    return "Continue shadow dialogue and integration";
+    return &quot;Continue shadow dialogue and integration&quot;;
   }
 
   private async identifyOwnedQualities(
@@ -909,7 +909,7 @@ export class JungianShadowIntegrationEngine {
     userMessage: string,
     culturalProfile: CulturalProfile,
   ): Promise<string> {
-    return `I am the voice that tells you you're not good enough. What would you like to say to me?`;
+    return `I am the voice that tells you you&apos;re not good enough. What would you like to say to me?`;
   }
 
   private async generateRejectedSelfResponse(
@@ -923,7 +923,7 @@ export class JungianShadowIntegrationEngine {
     userMessage: string,
     culturalProfile: CulturalProfile,
   ): Promise<string> {
-    return `I represent the cultural aspects you've been taught to suppress. Your heritage has both light and shadow.`;
+    return `I represent the cultural aspects you&apos;ve been taught to suppress. Your heritage has both light and shadow.`;
   }
 
   private async generateArchetypalShadowResponse(

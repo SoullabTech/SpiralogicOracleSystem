@@ -28,7 +28,7 @@ interface ComprehensiveBirthChart {
   >;
   houses: {
     cusps: number[]; // 12 house cusps in degrees
-    system: "placidus" | "whole" | "equal";
+    system: &quot;placidus&quot; | "whole" | "equal";
   };
   aspects: ChartAspect[];
   patterns: ChartPattern[];
@@ -49,7 +49,7 @@ interface ChartAspect {
 
 interface ChartPattern {
   type:
-    | "grand-trine"
+    | &quot;grand-trine&quot;
     | "grand-cross"
     | "t-square"
     | "yod"
@@ -166,7 +166,7 @@ interface CollectiveTransit {
 }
 
 interface GroupDynamic {
-  type: "harmony" | "tension" | "catalyst" | "support";
+  type: &quot;harmony&quot; | "tension" | "catalyst" | "support";
   participants: string[];
   description: string;
   transformationPotential: number;
@@ -196,7 +196,7 @@ export class ComprehensiveAstrologicalService {
   private initializeWebSocketServer() {
     this.wsServer = new WebSocketServer({ port: 5004 });
 
-    this.wsServer.on("connection", (ws, req) => {
+    this.wsServer.on(&quot;connection&quot;, (ws, req) => {
       const userId = req.url?.split("/").pop();
       if (!userId) return;
 
@@ -280,7 +280,7 @@ export class ComprehensiveAstrologicalService {
 
     // Example calculation (would use ephemeris)
     const planets: Planet[] = [
-      "sun",
+      &quot;sun",
       "moon",
       "mercury",
       "venus",
@@ -463,7 +463,7 @@ export class ComprehensiveAstrologicalService {
             exactDate: new Date(),
             endDate: new Date(),
           },
-          type: "ingress",
+          type: &quot;ingress&quot;,
           timestamp: new Date(),
           duration: this.calculateTransitDuration(transitPlanet),
           intensity: this.calculateTransitIntensity(
@@ -529,7 +529,7 @@ export class ComprehensiveAstrologicalService {
   // Generate sacred timing recommendations
   public async generateSacredTiming(userId: string): Promise<SacredTiming> {
     const birthChart = this.birthCharts.get(userId);
-    if (!birthChart) throw new Error("Birth chart not found");
+    if (!birthChart) throw new Error(&quot;Birth chart not found&quot;);
 
     const recommendations = await this.calculateTimingRecommendations(userId);
     const cosmicSupport = await this.identifyCosmicSupportPeriods(userId);
@@ -614,7 +614,7 @@ export class ComprehensiveAstrologicalService {
     const currentPositions = await this.getCurrentPlanetaryPositions();
 
     // Jupiter transits
-    const jupiterPos = currentPositions.get("jupiter");
+    const jupiterPos = currentPositions.get(&quot;jupiter&quot;);
     if (jupiterPos) {
       birthChart.planets.forEach((natalPos, natalPlanet) => {
         const aspect = this.calculateAspectBetweenPlanets(
@@ -659,7 +659,7 @@ export class ComprehensiveAstrologicalService {
   // Get current lunar cycle information
   private async getCurrentLunarCycle(userId: string): Promise<LunarPhaseInfo> {
     const birthChart = this.birthCharts.get(userId);
-    if (!birthChart) throw new Error("Birth chart not found");
+    if (!birthChart) throw new Error(&quot;Birth chart not found&quot;);
 
     const currentMoonPos = await this.getCurrentMoonPosition();
     const lunarPhase = this.calculateLunarPhase();
@@ -753,7 +753,7 @@ export class ComprehensiveAstrologicalService {
   ): CompositeChartData {
     const compositePlanets = new Map<Planet, any>();
     const planets: Planet[] = [
-      "sun",
+      &quot;sun&quot;,
       "moon",
       "mercury",
       "venus",
@@ -841,7 +841,7 @@ export class ComprehensiveAstrologicalService {
   // Helper methods
   private getAbsoluteDegree(sign: ZodiacSign, degree: number): number {
     const signs: ZodiacSign[] = [
-      "aries",
+      &quot;aries&quot;,
       "taurus",
       "gemini",
       "cancer",

@@ -130,7 +130,7 @@ export class AttentionField {
 
   /**
    * Assess the quality of attention being brought to this moment
-   * Integrating McGilchrist's hemispheric insights with Kastrup's markers
+   * Integrating McGilchrist&apos;s hemispheric insights with Kastrup's markers
    */
   private assessAttentionQuality(experience: any): AttentionQuality {
     const mcgilchrist_mode = this.assessMcGilchristMode(experience);
@@ -147,7 +147,7 @@ export class AttentionField {
 
   /**
    * Assess McGilchrist's hemispheric mode of attention
-   * "The manner of our attending literally creates the world"
+   * &quot;The manner of our attending literally creates the world&quot;
    */
   private assessMcGilchristMode(experience: any): McGilchristAttentionMode {
     const presencing = this.measurePresencing(experience);
@@ -288,7 +288,7 @@ export class AttentionField {
   }
 
   /**
-   * Resistance: What's being avoided or pushed away
+   * Resistance: What&apos;s being avoided or pushed away
    * Enhanced: Left hemisphere often resists right hemisphere insights
    */
   private detectResistance(experience: any, mcgilchrist_mode: McGilchristAttentionMode): number {

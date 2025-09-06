@@ -39,7 +39,6 @@ export default function VoiceInterface({
 
   // Handle audio blob from HybridMicIndicator (fallback method)
   const handleRecordingComplete = async (blob: Blob) => {
-    console.log("[VOICE INTERFACE] Recording complete, processing...");
     // This is handled automatically by useVoiceManager, but keeping for compatibility
   };
 

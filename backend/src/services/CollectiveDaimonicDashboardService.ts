@@ -298,7 +298,7 @@ export class CollectiveDaimonicDashboardService {
    */
   private generateTransmissionGuidance(intensity: number, trickster: number): string {
     if (intensity > 0.8 && trickster > 0.6) {
-      return "The field is electric with teaching riddles. Slow down and listen carefully.";
+      return &quot;The field is electric with teaching riddles. Slow down and listen carefully.&quot;;
     } else if (intensity > 0.7 && trickster < 0.3) {
       return "Conditions favor clear insight. Shared understanding is flowing freely.";
     } else if (intensity < 0.3) {
@@ -313,7 +313,7 @@ export class CollectiveDaimonicDashboardService {
    */
   private generateTransmissionConditions(intensity: number, trickster: number): string {
     if (trickster > 0.7) {
-      return "High riddle activity present";
+      return &quot;High riddle activity present&quot;;
     } else if (intensity > 0.8) {
       return "Strong field intensity";
     } else if (intensity < 0.2) {
@@ -328,7 +328,7 @@ export class CollectiveDaimonicDashboardService {
    */
   private generateTransmissionRecommendation(clarity: number): string {
     if (clarity > 0.7) {
-      return "Excellent time for group work and shared insights";
+      return &quot;Excellent time for group work and shared insights&quot;;
     } else if (clarity > 0.4) {
       return "Good conditions for careful exploration";
     } else if (clarity > 0.2) {

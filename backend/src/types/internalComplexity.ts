@@ -45,7 +45,7 @@ export interface InternalComplexityDetected {
 
 export interface SharedHumanExperiences {
   timestamp: string;
-  commonThemes: string[];              // Human themes like "seeking balance", "navigating change"
+  commonThemes: string[];              // Human themes like &quot;seeking balance&quot;, "navigating change"
   supportNeeded: string;               // "grounding", "encouragement", "reflection space"  
   activeQualities: Array<'passion' | 'flow' | 'stability' | 'clarity' | 'integration'>;
   sharedChallenges: string[];          // Common human challenges

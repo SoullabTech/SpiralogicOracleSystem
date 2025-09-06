@@ -425,7 +425,7 @@ export class VectorEquilibrium {
 
   private getElementColor(element?: string): string {
     const colors: Record<string, string> = {
-      fire: "#FF6B35",
+      fire: &quot;#FF6B35&quot;,
       water: "#2E86AB",
       earth: "#7D4F39",
       air: "#B8B8D1",

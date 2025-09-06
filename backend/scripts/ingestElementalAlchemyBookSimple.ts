@@ -100,7 +100,7 @@ async function ingestElementalAlchemyBook() {
       console.log(`\n${element.toUpperCase()}:`);
       console.log(`- Essence: ${teaching.essence.substring(0, 100)}...`);
       console.log(`- Practices: ${teaching.practices.length} practices`);
-      console.log(`- Qualities: ${teaching.qualities.join(", ")}`);
+      console.log(`- Qualities: ${teaching.qualities.join(&quot;, ")}`);
     });
 
     console.log("\n🎯 Core Teachings:");
@@ -127,7 +127,7 @@ async function ingestElementalAlchemyBook() {
 async function parseElementalAlchemyBook(
   content: string,
 ): Promise<BookContent> {
-  const lines = content.split("\n");
+  const lines = content.split(&quot;\n&quot;);
   const chapters: Chapter[] = [];
   let currentChapter: Chapter | null = null;
   const coreTeachings: string[] = [];
@@ -214,7 +214,7 @@ async function parseElementalAlchemyBook(
   );
 
   return {
-    title: "Elemental Alchemy: The Ancient Art of Living a Phenomenal Life",
+    title: &quot;Elemental Alchemy: The Ancient Art of Living a Phenomenal Life",
     author: metadata.author,
     chapters,
     elementalWisdom: {} as ElementalWisdom, // Will be filled by extractElementalWisdom
@@ -339,7 +339,7 @@ function extractEssence(content: string, element: string): string {
 
 function getDefaultEssence(element: string): string {
   const essences: Record<string, string> = {
-    fire: "Spirit, transformation, passion, creative energy, and catalytic vision that ignites the soul",
+    fire: &quot;Spirit, transformation, passion, creative energy, and catalytic vision that ignites the soul&quot;,
     water:
       "Emotional intelligence, flow, intuition, deep transformation, and the healing power of feeling",
     earth:
@@ -388,7 +388,7 @@ function extractPractices(content: string): string[] {
 function getDefaultPractices(element: string): string[] {
   const practicesMap: Record<string, string[]> = {
     fire: [
-      "Practice: Vision meditation - sit quietly and connect with your deepest dreams and aspirations",
+      &quot;Practice: Vision meditation - sit quietly and connect with your deepest dreams and aspirations&quot;,
       "Exercise: Creative expression through art, writing, or movement to channel fire energy",
       "Practice: Sunrise meditation to connect with the transformative power of fire",
     ],
@@ -419,7 +419,7 @@ function getDefaultPractices(element: string): string[] {
 function getDefaultQualities(element: string): string[] {
   const qualities: Record<string, string[]> = {
     fire: [
-      "transformation",
+      &quot;transformation&quot;,
       "passion",
       "creativity",
       "inspiration",
@@ -504,7 +504,7 @@ function getDefaultHealingApplications(element: string): string[] {
 function getDefaultShadowAspects(element: string): string[] {
   const shadows: Record<string, string[]> = {
     fire: [
-      "burnout",
+      &quot;burnout&quot;,
       "impulsiveness",
       "aggression",
       "scattered energy",

@@ -44,7 +44,7 @@ export const ELEMENTAL_BREATH_PATTERNS: Record<string, BreathPattern> = {
     exhale: GRANT_CONSTANTS.SQRT_10 * 2,
     pause: 1,
     ratio: HARMONIC_RATIOS.BREATH_CYCLE,
-    geometry: "M 0 0 L 100 -100 L 200 0", // Upward triangle
+    geometry: &quot;M 0 0 L 100 -100 L 200 0&quot;, // Upward triangle
   },
   water: {
     inhale: GRANT_CONSTANTS.PI,
@@ -101,7 +101,7 @@ export class HarmonicCodex {
     this.elementalBalance = elementalBalance;
     this.ve = new VectorEquilibrium(0, 0, 0, 100);
 
-    // Initialize with dominant element's breath pattern
+    // Initialize with dominant element&apos;s breath pattern
     const dominantElement = this.getDominantElement();
     this.currentBreathPattern = ELEMENTAL_BREATH_PATTERNS[dominantElement];
 
@@ -264,9 +264,9 @@ export class HarmonicCodex {
     // Background with breath gradient
     svg += this.createBreathGradient(cx, cy);
 
-    // Grant's constant circles
+    // Grant&apos;s constant circles
     const circles = [
-      { r: GRANT_CONSTANTS.SQRT_10 * 50, stroke: "#FF6B35", label: "√10" },
+      { r: GRANT_CONSTANTS.SQRT_10 * 50, stroke: &quot;#FF6B35", label: "√10" },
       { r: GRANT_CONSTANTS.PHI * 50, stroke: "#2E86AB", label: "φ" },
       { r: GRANT_CONSTANTS.E * 50, stroke: "#7D4F39", label: "e" },
       { r: GRANT_CONSTANTS.PI * 50, stroke: "#B8B8D1", label: "π" },
@@ -286,13 +286,13 @@ export class HarmonicCodex {
     // Current breath phase indicator
     svg += this.createBreathPhaseIndicator(cx, cy);
 
-    svg += "</svg>";
+    svg += "</svg>&quot;;
     return svg;
   }
 
   // Private helper methods
   private getDominantElement(): string {
-    let maxElement = "aether";
+    let maxElement = &quot;aether";
     let maxValue = 0;
 
     Object.entries(this.elementalBalance).forEach(([element, value]) => {
@@ -364,7 +364,7 @@ export class HarmonicCodex {
   }
 
   private applyHarmonicEasing(t: number): number {
-    // Use Grant's constants for easing
+    // Use Grant&apos;s constants for easing
     return (
       Math.pow(t, GRANT_CONSTANTS.PHI) /
       (Math.pow(t, GRANT_CONSTANTS.PHI) + Math.pow(1 - t, GRANT_CONSTANTS.PHI))

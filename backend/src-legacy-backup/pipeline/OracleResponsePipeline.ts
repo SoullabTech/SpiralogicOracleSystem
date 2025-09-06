@@ -26,7 +26,7 @@ export interface OracleQuery {
   streamingEnabled?: boolean;
   preferredElement?: string;
   ritualPacing?: boolean;
-  symbolicDepth?: "light" | "medium" | "deep";
+  symbolicDepth?: &quot;light&quot; | "medium" | "deep";
 }
 
 export interface OracleResponse {
@@ -107,7 +107,7 @@ export class OracleResponsePipeline extends EventEmitter {
 
       // Return cached response if available and fresh
       if (cachedResponse) {
-        this.emit("cacheHit", { userId: query.userId, query: query.input });
+        this.emit(&quot;cacheHit&quot;, { userId: query.userId, query: query.input });
         return cachedResponse;
       }
 
@@ -151,7 +151,7 @@ export class OracleResponsePipeline extends EventEmitter {
         soulprintAnalysis,
       );
 
-      // Async: Update user's soulprint and cache response
+      // Async: Update user&apos;s soulprint and cache response
       this.updateUserSoulprint(query.userId, response);
       this.cacheResponse(query, response);
 
@@ -186,7 +186,7 @@ export class OracleResponsePipeline extends EventEmitter {
       scores[archetype] += contentScores[archetype] * 0.4;
     });
 
-    // Factor 2: User's dominant patterns (30% weight)
+    // Factor 2: User&apos;s dominant patterns (30% weight)
     const userPatterns = personalizedContext.dominantArchetypes || {};
     Object.keys(scores).forEach((archetype) => {
       scores[archetype] += (userPatterns[archetype] || 0) * 0.3;
@@ -208,7 +208,7 @@ export class OracleResponsePipeline extends EventEmitter {
       ([, a], [, b]) => b - a,
     )[0][0];
 
-    logger.info("Archetype Selection:", {
+    logger.info(&quot;Archetype Selection:&quot;, {
       userId: query.userId,
       selected: selectedArchetype,
       scores,
@@ -255,7 +255,7 @@ export class OracleResponsePipeline extends EventEmitter {
     streamingEnabled: boolean = false,
   ): Promise<{ audioUrl?: string; audioStream?: ReadableStream }> {
     if (streamingEnabled) {
-      // Stream audio as it's generated
+      // Stream audio as it&apos;s generated
       const audioStream = await this.streamingService.synthesizeStreaming(
         text,
         voicePreparation.voiceConfig,
@@ -324,7 +324,7 @@ export class OracleResponsePipeline extends EventEmitter {
   }
 
   private generateCacheKey(query: OracleQuery): string {
-    return `${query.userId}_${query.input.substring(0, 50)}_${query.preferredElement || "auto"}`;
+    return `${query.userId}_${query.input.substring(0, 50)}_${query.preferredElement || &quot;auto&quot;}`;
   }
 
   private isCacheValid(response: OracleResponse): boolean {
@@ -333,7 +333,7 @@ export class OracleResponsePipeline extends EventEmitter {
   }
 
   private async preloadCommonVoices(): Promise<void> {
-    const commonArchetypes = ["fire", "water", "earth", "air", "aether"];
+    const commonArchetypes = [&quot;fire", "water", "earth", "air", "aether"];
 
     for (const archetype of commonArchetypes) {
       try {
@@ -356,7 +356,7 @@ export class OracleResponsePipeline extends EventEmitter {
   // Utility methods
   private analyzeQueryContent(input: string): Record<string, number> {
     const keywords = {
-      fire: ["stuck", "ignite", "passion", "create", "vision", "breakthrough"],
+      fire: [&quot;stuck&quot;, "ignite", "passion", "create", "vision", "breakthrough"],
       water: ["feel", "emotion", "flow", "heal", "heart", "intuition"],
       earth: [
         "ground",
@@ -408,7 +408,7 @@ export class OracleResponsePipeline extends EventEmitter {
 
   private async getArchetypalGuidance(archetype: string): Promise<string> {
     const guidance = {
-      fire: "Channel transformative energy and catalytic wisdom",
+      fire: &quot;Channel transformative energy and catalytic wisdom&quot;,
       water: "Flow with emotional depth and healing presence",
       earth: "Provide grounding wisdom and practical guidance",
       air: "Offer clear perspective and mental clarity",
@@ -423,7 +423,7 @@ export class OracleResponsePipeline extends EventEmitter {
     context: any,
   ): Promise<any> {
     const voiceConfig = ARCHETYPE_VOICES[archetype];
-    const ritualTiming = context.ritualPreferences?.pacing || "normal";
+    const ritualTiming = context.ritualPreferences?.pacing || &quot;normal&quot;;
 
     return {
       voiceConfig,

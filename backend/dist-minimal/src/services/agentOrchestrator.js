@@ -28,7 +28,7 @@ class AgentOrchestrator {
     determineOrchestrationStrategy(intent, userContext) {
         // Single agent strategies
         if (intent.confidence > 0.8 && !intent.secondary) {
-            return intent.primary === "fire" ? "fire_lead" : "water_lead";
+            return intent.primary === &quot;fire&quot; ? "fire_lead" : "water_lead";
         }
         // Dual agent strategies
         if (intent.primary === "fire" && intent.secondary === "water") {

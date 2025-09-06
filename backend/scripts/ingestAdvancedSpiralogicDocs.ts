@@ -102,7 +102,7 @@ async function ingestAdvancedSpiralogicDocs() {
       console.log(`📄 Processing: ${path.basename(docInfo.path)}`);
 
       try {
-        const content = await fs.readFile(docInfo.path, "utf-8");
+        const content = await fs.readFile(docInfo.path, &quot;utf-8");
         const processed = await processDocument(content, docInfo);
         processedDocs.push(processed);
 
@@ -167,7 +167,7 @@ async function processDocument(
   content: string,
   docInfo: any,
 ): Promise<ProcessedDocument> {
-  const lines = content.split("\n");
+  const lines = content.split(&quot;\n&quot;);
   const title = extractTitle(content, docInfo.path);
 
   return {
@@ -328,7 +328,7 @@ function extractIntellectualSources(content: string): string[] {
 
   // Common intellectual figures mentioned in these documents
   const knownFigures = [
-    "Federico Faggin",
+    &quot;Federico Faggin&quot;,
     "Faggin",
     "Donald Hoffman",
     "Hoffman",
@@ -377,7 +377,7 @@ function extractIntellectualSources(content: string): string[] {
 function extractThemes(text: string): string[] {
   const themes = new Set<string>();
   const themeKeywords = [
-    "consciousness",
+    &quot;consciousness&quot;,
     "awareness",
     "transformation",
     "evolution",
@@ -414,7 +414,7 @@ async function saveAdvancedKnowledge(
 ): Promise<void> {
   const knowledgePath = path.join(
     __dirname,
-    "../data/founder-knowledge/advanced-spiralogic-collection.json",
+    &quot;../data/founder-knowledge/advanced-spiralogic-collection.json",
   );
 
   try {

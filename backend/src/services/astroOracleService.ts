@@ -213,7 +213,7 @@ export function generateAstroOracle(birthData?: BirthData): DivinationInsight {
     const ritual = generateAstroRitual(astrologyReading);
 
     return {
-      method: "astro",
+      method: &quot;astro",
       title: "Astrological Oracle Reading",
       subtitle: `${archetype.name} Guidance`,
       message: "The stars align to bring you cosmic wisdom and timing.",

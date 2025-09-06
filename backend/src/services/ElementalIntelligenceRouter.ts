@@ -148,7 +148,7 @@ class ClaudeModel implements ModelInterface {
 
     } catch (error) {
       logger.error('Claude stream error:', error);
-      yield `I'm having trouble connecting to the ${this.element} element. Let's center ourselves together...`;
+      yield `I&apos;m having trouble connecting to the ${this.element} element. Let&apos;s center ourselves together...`;
     }
   }
 
@@ -313,7 +313,7 @@ class ElementalOracleModel implements ModelInterface {
 
     } catch (error) {
       logger.error(`Elemental Oracle (${this.element}) stream error:`, error);
-      yield `The ${this.element} element is realigning. Let's take a moment together...`;
+      yield `The ${this.element} element is realigning. Let&apos;s take a moment together...`;
     }
   }
 
@@ -348,10 +348,10 @@ class ElementalOracleModel implements ModelInterface {
 class FallbackModel implements ModelInterface {
   async generateResponse(request: GenerationRequest): Promise<ModelResponse> {
     const wisdom = [
-      "I sense there's something important here. What would you like to explore?",
-      "Let's pause together and see what wants to emerge.",
-      "I'm here with you in this moment. What's most alive for you right now?",
-      "There's wisdom in what you're experiencing. What does your intuition tell you?",
+      &quot;I sense there&apos;s something important here. What would you like to explore?&quot;,
+      "Let&apos;s pause together and see what wants to emerge.",
+      "I&apos;m here with you in this moment. What&apos;s most alive for you right now?",
+      "There&apos;s wisdom in what you&apos;re experiencing. What does your intuition tell you?",
       "Sometimes the most profound insights come from simply being present. What do you notice?"
     ];
 

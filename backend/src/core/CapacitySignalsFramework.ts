@@ -376,7 +376,7 @@ export class CapacitySignalsFramework {
     
     const indicators: BehavioralIndicator[] = [];
     
-    // Question Tolerance - doesn't rush to closure
+    // Question Tolerance - doesn&apos;t rush to closure
     const openEndedComfort = this.assessOpenEndedComfort(sessionData.userMessages, sessionData.agentResponses);
     indicators.push({
       type: 'open_ended_comfort',
@@ -461,7 +461,7 @@ export class CapacitySignalsFramework {
     
     const indicators: BehavioralIndicator[] = [];
     
-    // Reported Actions - "I tried what you suggested"
+    // Reported Actions - &quot;I tried what you suggested&quot;
     const actionReports = this.detectActionReports(sessionData.userMessages);
     indicators.push({
       type: 'action_reports',
@@ -485,7 +485,7 @@ export class CapacitySignalsFramework {
       context: 'User identifies patterns across domains'
     });
     
-    // Embodied Changes - "I've been feeling different"
+    // Embodied Changes - "I&apos;ve been feeling different"
     const embodiedChanges = this.detectEmbodiedChanges(sessionData.userMessages);
     indicators.push({
       type: 'embodied_changes',
@@ -655,10 +655,10 @@ export class CapacitySignalsFramework {
     const patiencePatterns = [
       /interesting/i,
       /tell me more/i,
-      /i'm curious/i,
+      /i&apos;m curious/i,
       /let me think/i,
-      /that's complex/i,
-      /i don't know/i
+      /that&apos;s complex/i,
+      /i don&apos;t know/i
     ];
     
     let rushCount = 0;
@@ -729,7 +729,7 @@ export class CapacitySignalsFramework {
       /both.*and/i,
       /contradictory/i,
       /paradox/i,
-      /doesn't make sense but/i,
+      /doesn&apos;t make sense but/i,
       /strange that/i,
       /opposite/i,
       /tension/i
@@ -873,7 +873,7 @@ export class CapacitySignalsFramework {
       /gifted/i,
       /understand everything/i,
       /others don't get it/i,
-      /i see what they can't/i
+      /i see what they can&apos;t/i
     ];
     
     let count = 0;
@@ -987,7 +987,7 @@ export class CapacitySignalsFramework {
     
     if (userRange === 0) return rawScore;
     
-    // Normalize within user's historical range
+    // Normalize within user&apos;s historical range
     const normalizedWithinRange = (rawScore - userBaseline.min) / userRange;
     
     // Blend with raw score to avoid over-personalization

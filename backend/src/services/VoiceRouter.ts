@@ -409,7 +409,7 @@ class VoiceRouter {
       const data = await response.json();
       
       // HuggingFace inference API typically returns text, not audio
-      // This is a simplified version - in practice you'd need text-to-speech conversion
+      // This is a simplified version - in practice you&apos;d need text-to-speech conversion
       if (data && (data.generated_text || data[0]?.generated_text)) {
         const generatedText = data.generated_text || data[0]?.generated_text;
         

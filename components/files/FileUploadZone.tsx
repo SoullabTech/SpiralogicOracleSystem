@@ -107,7 +107,7 @@ export function FileUploadZone({
         } : f
       ));
       
-      // Show Maya's insight
+      // Show Maya&apos;s insight
       if (result.mayaInsight) {
         toast.success(result.mayaInsight, { duration: 4000 });
       }

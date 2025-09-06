@@ -253,7 +253,7 @@ export class InitiationWithoutCultureService {
     if (text.toLowerCase().includes('had to endure') || 
         text.toLowerCase().includes('went through') ||
         text.toLowerCase().includes('suffered through')) {
-      // Extract user's own description
+      // Extract user&apos;s own description
       const matches = text.match(/(?:had to endure|went through|suffered through)([^.!?]*)/i);
       if (matches && matches[1]) {
         return matches[1].trim();
@@ -414,7 +414,7 @@ export class InitiationWithoutCultureService {
       if (elements.return && elements.return.length > 10) {
         return 'integrated'; // Living differently based on ordeal wisdom
       } else {
-        return 'unrecognized'; // Went through ordeal but hasn't recognized its sacred nature
+        return 'unrecognized'; // Went through ordeal but hasn&apos;t recognized its sacred nature
       }
     }
   }
@@ -611,7 +611,7 @@ export class InitiationWithoutCultureService {
     const initiation = this.recognizeInitiation(experience, context);
     
     if (initiation) {
-      // Store user's initiation pattern
+      // Store user&apos;s initiation pattern
       const user_initiations = this.user_initiations.get(userId) || [];
       user_initiations.push(initiation);
       this.user_initiations.set(userId, user_initiations);
@@ -625,7 +625,7 @@ export class InitiationWithoutCultureService {
   }
 
   /**
-   * Get user's initiation history
+   * Get user&apos;s initiation history
    */
   public getUserInitiationHistory(userId: string): SelfInitiation[] {
     return this.user_initiations.get(userId) || [];

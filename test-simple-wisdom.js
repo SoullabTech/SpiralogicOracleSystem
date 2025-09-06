@@ -45,7 +45,7 @@ const req = http.request(options, (res) => {
       console.log('Element:', response.element);
       console.log('Length:', response.message.length);
       
-      // Check if it's a real AI response or fallback
+      // Check if it&apos;s a real AI response or fallback
       if (response.message.includes('momentarily processing') || 
           response.message.includes('development mode') ||
           response.message.length < 100) {

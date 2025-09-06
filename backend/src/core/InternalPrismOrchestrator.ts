@@ -396,14 +396,14 @@ export class InternalPrismOrchestrator {
   private frameAsInternal(aspects: InternalAspectFacet[]): string {
     const aspectNames = aspects.map(a => a.name).join(', ');
     
-    return `You're experiencing input from different parts of yourself. ` +
+    return `You&apos;re experiencing input from different parts of yourself. ` +
            `${aspectNames} are all active right now. ` +
-           `This internal complexity is natural and valuable - it means you're considering multiple dimensions of the situation.`;
+           `This internal complexity is natural and valuable - it means you&apos;re considering multiple dimensions of the situation.`;
   }
 
   private generateSafeRedirect(safetyAssessment: any): InternalDialogue {
     return {
-      introduction: "Right now might be a good time for some grounding.",
+      introduction: &quot;Right now might be a good time for some grounding.",
       perspectives: [{
         aspectName: "Present Moment Awareness",
         viewpoint: "Part of you recognizes this is a moment to pause and reconnect with simple presence",

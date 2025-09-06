@@ -423,7 +423,7 @@ export class DreamJournalingIntegration {
     lifeSpiralPlan?: LifeSpiralHarmonizerPlan,
   ): Promise<DreamAnalysis> {
     try {
-      logger.info("Processing dream entry", {
+      logger.info(&quot;Processing dream entry", {
         userId: dreamEntry.userId,
         dreamId: dreamEntry.dreamId,
         culturalContext: culturalProfile.primaryCulture,
@@ -590,7 +590,7 @@ export class DreamJournalingIntegration {
         evolutionGuidance,
       };
     } catch (error) {
-      logger.error("Error analyzing dream patterns:", error);
+      logger.error(&quot;Error analyzing dream patterns:&quot;, error);
       throw error;
     }
   }
@@ -609,7 +609,7 @@ export class DreamJournalingIntegration {
       const storyNetwork = this.storyWeavingNetworks.get(userId);
 
       if (!storyNetwork) {
-        throw new Error("Story weaving network not found for user");
+        throw new Error(&quot;Story weaving network not found for user&quot;);
       }
 
       // Create network structure
@@ -704,7 +704,7 @@ export class DreamJournalingIntegration {
         mandateIntegrationPractices,
       };
     } catch (error) {
-      logger.error("Error generating dream integration practices:", error);
+      logger.error(&quot;Error generating dream integration practices:&quot;, error);
       throw error;
     }
   }
@@ -909,7 +909,7 @@ export class DreamJournalingIntegration {
 
   // Placeholder implementations for helper methods
   private identifyStoryStructure(narrative: string): string {
-    if (narrative.includes("beginning") || narrative.includes("started")) {
+    if (narrative.includes(&quot;beginning") || narrative.includes("started")) {
       return "linear_progression";
     }
     if (narrative.includes("suddenly") || narrative.includes("then")) {
@@ -963,7 +963,7 @@ export class DreamJournalingIntegration {
       psychologicalSignificance: `Psychological significance of ${symbol}`,
       jungianInterpretation: `Jungian interpretation of ${symbol}`,
       frequency: 1,
-      emotionalResonance: "neutral",
+      emotionalResonance: &quot;neutral",
     }));
   }
 
@@ -976,7 +976,7 @@ export class DreamJournalingIntegration {
       culturalContext: culturalProfile.primaryCulture,
       traditionalMeaning: `Traditional meaning in ${culturalProfile.primaryCulture}`,
       modernInterpretation: `Modern interpretation in ${culturalProfile.primaryCulture}`,
-      culturalResonance: "strong",
+      culturalResonance: &quot;strong",
       ancestralConnection: `Ancestral connection to ${symbol}`,
     }));
   }
@@ -1068,14 +1068,14 @@ export class DreamJournalingIntegration {
     dreamEntry: DreamEntry,
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
-    return ["Cultural healing opportunity 1", "Cultural healing opportunity 2"];
+    return [&quot;Cultural healing opportunity 1&quot;, "Cultural healing opportunity 2"];
   }
 
   private async createCrossCulturalInsights(
     dreamEntry: DreamEntry,
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
-    return ["Cross-cultural insight 1", "Cross-cultural insight 2"];
+    return [&quot;Cross-cultural insight 1", "Cross-cultural insight 2"];
   }
 
   private async createRespectfulFraming(
@@ -1225,35 +1225,35 @@ export class DreamJournalingIntegration {
     analysis: DreamAnalysis,
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
-    return ["Daily dream practice 1", "Daily dream practice 2"];
+    return [&quot;Daily dream practice 1&quot;, "Daily dream practice 2"];
   }
 
   private async createWeeklyDreamRituals(
     analysis: DreamAnalysis,
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
-    return ["Weekly dream ritual 1", "Weekly dream ritual 2"];
+    return [&quot;Weekly dream ritual 1&quot;, "Weekly dream ritual 2"];
   }
 
   private async createMonthlyDreamReflections(
     analysis: DreamAnalysis,
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
-    return ["Monthly dream reflection 1", "Monthly dream reflection 2"];
+    return [&quot;Monthly dream reflection 1&quot;, "Monthly dream reflection 2"];
   }
 
   private async createCulturalDreamPractices(
     analysis: DreamAnalysis,
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
-    return ["Cultural dream practice 1", "Cultural dream practice 2"];
+    return [&quot;Cultural dream practice 1&quot;, "Cultural dream practice 2"];
   }
 
   private async createShadowWorkDreamPractices(
     analysis: DreamAnalysis,
     culturalProfile: CulturalProfile,
   ): Promise<string[]> {
-    return ["Shadow work dream practice 1", "Shadow work dream practice 2"];
+    return [&quot;Shadow work dream practice 1&quot;, "Shadow work dream practice 2"];
   }
 
   private async createMandateIntegrationDreamPractices(

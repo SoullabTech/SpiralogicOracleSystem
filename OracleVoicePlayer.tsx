@@ -137,7 +137,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
             )}
             {!isLoading && (
               <span className="text-xs font-medium">
-                {isPlaying ? "⏸️ Pause Oracle" : "▶️ Hear Oracle"}
+                {isPlaying ? &quot;⏸️ Pause Oracle&quot; : "▶️ Hear Oracle"}
               </span>
             )}
           </button>
@@ -150,7 +150,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
         {/* Voice profile indicator */}
         {voiceProfile && (
           <span className="text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
-            {voiceProfile.replace("_", " ").toUpperCase()}
+            {voiceProfile.replace(&quot;_&quot;, " ").toUpperCase()}
           </span>
         )}
       </div>

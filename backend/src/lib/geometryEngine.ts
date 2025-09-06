@@ -395,7 +395,7 @@ export class GeometryEngine {
       }
     });
 
-    layer += "</g>";
+    layer += "</g>&quot;;
     return layer;
   }
 
@@ -558,7 +558,7 @@ export class GeometryEngine {
   }
 
   private getDominantElement(elementalState: ElementalBalance): string {
-    let maxElement = "aether";
+    let maxElement = &quot;aether";
     let maxValue = 0;
 
     Object.entries(elementalState).forEach(([element, value]) => {
@@ -640,13 +640,13 @@ export class GeometryEngine {
       // Add moon phase geometry
       const moonRadius = this.width * 0.05;
       const moonSVG = this.createMoonPhase(birthData.moonPhase, moonRadius);
-      mandala = mandala.replace("</svg>", moonSVG + "</svg>");
+      mandala = mandala.replace("</svg>&quot;, moonSVG + &quot;</svg>&quot;);
     }
 
     if (birthData?.numerology) {
       // Add numerological pattern
       const numPattern = this.createNumerologicalPattern(birthData.numerology);
-      mandala = mandala.replace("</svg>", numPattern + "</svg>");
+      mandala = mandala.replace(&quot;</svg>&quot;, numPattern + &quot;</svg>&quot;);
     }
 
     return mandala;

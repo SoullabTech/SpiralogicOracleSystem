@@ -90,7 +90,7 @@ export class CodeAuditor {
   } {
     const issues = [];
     let score = 0;
-    const lines = content.split("\n");
+    const lines = content.split(&quot;\n");
 
     lines.forEach((line, index) => {
       const lineNumber = index + 1;

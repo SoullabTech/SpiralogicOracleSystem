@@ -186,22 +186,22 @@ export class EnhancedDialogueStateTracker {
   private intentPatterns = new Map<UserIntent, RegExp[]>([
     [UserIntent.SEEKING_INFORMATION, [
       /what is|how does|can you explain|tell me about/i,
-      /I want to know|I'm curious about|wondering/i
+      /I want to know|I&apos;m curious about|wondering/i
     ]],
     [UserIntent.VENTING, [
-      /I'm so frustrated|can't believe|annoyed|angry about/i,
+      /I&apos;m so frustrated|can&apos;t believe|annoyed|angry about/i,
       /need to get this off my chest|just need to vent/i
     ]],
     [UserIntent.SEEKING_SUPPORT, [
       /I need help|struggling with|hard time|difficult/i,
-      /don't know what to do|feeling lost|overwhelmed/i
+      /don&apos;t know what to do|feeling lost|overwhelmed/i
     ]],
     [UserIntent.CELEBRATION, [
       /I'm so happy|excited|achieved|accomplished|great news/i,
       /finally did it|success|wonderful/i
     ]],
     [UserIntent.EXISTENTIAL, [
-      /meaning of|purpose|why are we here|what's the point/i,
+      /meaning of|purpose|why are we here|what&apos;s the point/i,
       /existential|philosophy|deeper meaning/i
     ]],
     [UserIntent.RESISTANCE, [

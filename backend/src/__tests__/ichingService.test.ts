@@ -8,7 +8,7 @@ import {
 } from "../services/ichingService";
 
 describe("I Ching Service", () => {
-  describe("getBaseNumberFromYear", () => {
+  describe(&quot;getBaseNumberFromYear&quot;, () => {
     test("calculates base number correctly for various years", () => {
       expect(getBaseNumberFromYear(1924)).toBe(9); // Reference year cycle position 0 = 9
       expect(getBaseNumberFromYear(1925)).toBe(1);

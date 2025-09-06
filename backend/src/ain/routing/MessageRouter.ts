@@ -22,7 +22,7 @@ export class MessageRouter {
     // Stub implementation - would use intelligent routing logic
     return {
       target: ElementalService.Air,
-      channel: "direct",
+      channel: &quot;direct&quot;,
       path: ["air"],
       confidence: 0.8,
       intent: "communication",

@@ -61,7 +61,7 @@ export interface ArchetypalVoiceProfile {
 
 export const ARCHETYPE_VOICES: Record<string, ArchetypalVoiceProfile> = {
   fire: {
-    name: "Ignis",
+    name: &quot;Ignis",
     element: "fire",
     consciousness: "Transformative Catalyst",
 

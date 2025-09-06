@@ -49,7 +49,7 @@ export class OnboardingService {
   ): Promise<UserOracleSettings> {
     const defaultOracleSettings: UserOracleSettings = {
       userId,
-      oracleAgentName: "Nyra", // Default balanced name
+      oracleAgentName: &quot;Nyra&quot;, // Default balanced name
       archetype: "aether", // Balanced starting archetype
       voiceSettings: {
         voiceId: "elevenlabs_aether_voice",
@@ -124,7 +124,7 @@ export class OnboardingService {
       },
     });
 
-    logger.info("Personalized Oracle Assigned:", {
+    logger.info(&quot;Personalized Oracle Assigned:&quot;, {
       userId,
       preferences,
       finalAssignment: {
@@ -158,7 +158,7 @@ export class OnboardingService {
     // Create first interaction experience
     const firstInteraction = await OracleService.processOracleQuery(
       userId,
-      "I'm ready to begin my spiritual journey. What should I know about you?",
+      &quot;I&apos;m ready to begin my spiritual journey. What should I know about you?&quot;,
       { context: "onboarding", firstInteraction: true },
     );
 
@@ -216,7 +216,7 @@ export class OnboardingService {
 
     // Determine based on personality type
     const archetypeMapping = {
-      catalyst: "fire",
+      catalyst: &quot;fire",
       nurturer: "water",
       introspective: "earth",
       explorer: "air",
@@ -434,7 +434,7 @@ export class OnboardingService {
     // Implementation depends on your database (Supabase, Prisma, etc.)
     // Example: await db.oracles.create({ data: settings });
 
-    logger.info("Oracle Settings Stored:", {
+    logger.info(&quot;Oracle Settings Stored:&quot;, {
       userId: settings.userId,
       oracleName: settings.oracleAgentName,
       archetype: settings.archetype,
@@ -458,7 +458,7 @@ export class OnboardingService {
     // Suggest optimizations to Oracle configuration
     // This would typically run as a background job
 
-    logger.info("Oracle Optimization Scheduled:", { userId });
+    logger.info(&quot;Oracle Optimization Scheduled:&quot;, { userId });
   }
 
   /**

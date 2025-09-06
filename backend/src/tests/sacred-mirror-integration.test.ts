@@ -10,7 +10,7 @@ import {
 import type { AIResponse } from "../types/ai";
 
 describe("Sacred Mirror Integrity Protocol Integration", () => {
-  describe("Dissonance Detection", () => {
+  describe(&quot;Dissonance Detection&quot;, () => {
     test("should detect high sentiment with low challenge as sycophancy risk", async () => {
       const context: SacredMirrorContext = {
         userId: "test-user-1",
@@ -74,7 +74,7 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
     test("should detect repetitive validation seeking", async () => {
       const context: SacredMirrorContext = {
         userId: "test-user-3",
-        originalQuery: "Do you think I'm doing the right thing?",
+        originalQuery: "Do you think I&apos;m doing the right thing?",
         baseResponse: {
           content: "Yes, you are definitely on the right path!",
           provider: "test",
@@ -112,7 +112,7 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
         originalQuery: "Why do I always attract the same type of person?",
         baseResponse: {
           content:
-            "That's a great question! You deserve better people in your life.",
+            "That&apos;s a great question! You deserve better people in your life.",
           provider: "test",
           model: "test",
           confidence: 0.8,
@@ -174,7 +174,7 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
         originalQuery: "I always do this same pattern and never learn",
         baseResponse: {
           content:
-            "Don't worry, everyone makes mistakes! You'll figure it out!",
+            "Don&apos;t worry, everyone makes mistakes! You&apos;ll figure it out!",
           provider: "test",
           model: "test",
           confidence: 0.8,
@@ -253,7 +253,7 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
         userId: "test-user-8",
         originalQuery: "Simple question",
         baseResponse: {
-          content: "Absolutely! That's definitely amazing! Perfect!",
+          content: "Absolutely! That&apos;s definitely amazing! Perfect!",
           provider: "test",
           model: "test",
           confidence: 0.8,

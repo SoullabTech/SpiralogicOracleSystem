@@ -106,7 +106,7 @@ export class CrossNarrativeService {
       type = 'harmonious';
       strength = 0.8 + (Math.random() * 0.2);
       description = `Your ${personalDominant} essence flows in perfect harmony with the collective tide. You are part of the great convergence, amplifying what the field most needs.`;
-      guidance = "Trust this alignment. Your personal work serves the collective healing, and the field's movement supports your transformation.";
+      guidance = "Trust this alignment. Your personal work serves the collective healing, and the field&apos;s movement supports your transformation.";
     } else if (personalGrowth > collectivePercent + 20) {
       // Leading/pioneering
       type = 'pioneering';
@@ -178,7 +178,7 @@ export class CrossNarrativeService {
 
       if (variance > 25) {
         position = 'leading';
-        insight = `Your ${archetype} development significantly leads the field. You're pioneering this archetypal territory.`;
+        insight = `Your ${archetype} development significantly leads the field. You&apos;re pioneering this archetypal territory.`;
       } else if (variance > -10 && variance < 10) {
         position = 'aligned';
         insight = `Your ${archetype} growth moves in harmony with the collective current. You're part of the shared evolution.`;

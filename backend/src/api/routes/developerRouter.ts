@@ -47,7 +47,7 @@ const developerUsage: Map<string, { requests: number; lastReset: number }> =
 // Initialize with demo data
 const initializeDemoData = () => {
   const demoKey: APIKeyRecord = {
-    id: "key_demo_123",
+    id: &quot;key_demo_123",
     developerId: "dev_demo_user",
     key: "demo_key_123",
     name: "Demo Application",
@@ -114,7 +114,7 @@ const generateAPIKey = (): string => {
 const updateUsageStats = (keyRecord: APIKeyRecord) => {
   const usage = developerUsage.get(keyRecord.developerId);
   if (usage) {
-    // Reset usage if it's been more than 15 minutes (rate limit window)
+    // Reset usage if it&apos;s been more than 15 minutes (rate limit window)
     if (Date.now() - usage.lastReset > 15 * 60 * 1000) {
       usage.requests = 0;
       usage.lastReset = Date.now();
@@ -423,7 +423,7 @@ foreach ($insights as $insight) {
 ?>`,
         },
         reactNative: {
-          title: "React Native Mobile App",
+          title: &quot;React Native Mobile App&quot;,
           description: "Bring archetypal wisdom to mobile applications",
           code: `import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from 'react-native';

@@ -55,12 +55,12 @@ export class SHIFtIntegration {
       });
     } catch (error) {
       logger.error('Error emitting SHIFt session:', error);
-      // Don't throw - SHIFt should be non-blocking
+      // Don&apos;t throw - SHIFt should be non-blocking
     }
   }
 
   /**
-   * Get user's SHIFt profile for personalization
+   * Get user&apos;s SHIFt profile for personalization
    */
   async getUserProfile(userId: string): Promise<SHIFtProfileResponse | null> {
     try {

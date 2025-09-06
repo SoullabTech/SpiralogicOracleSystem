@@ -12,7 +12,7 @@ const facilitatorAuth = async (req: any, res: any, next: any) => {
   try {
     // Check if user is a facilitator
     const { data: facilitator } = await supabase
-      .from("sacred_facilitators")
+      .from(&quot;sacred_facilitators&quot;)
       .select("id")
       .eq("user_id", req.user.id)
       .single();
@@ -43,7 +43,7 @@ facilitatorDashboardRouter.get(
     try {
       const facilitatorId = req.facilitator.id;
 
-      // Get today's priorities
+      // Get today&apos;s priorities
       const priorities =
         await facilitatorDashboardService.generateDailyPriorities(
           facilitatorId,
@@ -593,7 +593,7 @@ facilitatorDashboardRouter.post(
 // Helper functions
 async function getParticipantCount(facilitatorId: string): Promise<number> {
   const { count } = await supabase
-    .from("sacred_participants")
+    .from(&quot;sacred_participants&quot;)
     .select("*", { count: "exact", head: true })
     .eq("facilitator_id", facilitatorId);
   return count || 0;
@@ -602,7 +602,7 @@ async function getParticipantCount(facilitatorId: string): Promise<number> {
 async function getWeeklySessionCount(facilitatorId: string): Promise<number> {
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const { count } = await supabase
-    .from("session_records")
+    .from(&quot;session_records")
     .select("*", { count: "exact", head: true })
     .eq("facilitator_id", facilitatorId)
     .gte("scheduled_time", weekAgo.toISOString());

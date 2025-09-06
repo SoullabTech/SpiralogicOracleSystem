@@ -80,7 +80,7 @@ class EmotionalIntelligenceEngine {
       return {
         primary: "sadness",
         intensity: 0.7,
-        complexity: shadowElements.length > 0 ? "mixed" : "simple",
+        complexity: shadowElements.length > 0 ? &quot;mixed&quot; : "simple",
         shadowElements,
       };
     }
@@ -146,8 +146,8 @@ class EmotionalIntelligenceEngine {
       ],
       anger: [
         "but anger is bad",
-        "i shouldn't feel this",
-        "good people don't get angry",
+        "i shouldn&apos;t feel this",
+        "good people don&apos;t get angry",
       ],
       fear: [
         "but i should be brave",

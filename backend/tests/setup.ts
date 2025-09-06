@@ -58,7 +58,7 @@ expect.extend({
 
   toContainSacredLanguage(received: string) {
     const sacredWords = [
-      "sacred",
+      &quot;sacred",
       "divine",
       "holy",
       "blessed",
@@ -215,31 +215,31 @@ export const testUtils = {
     initialize: testUtils.mock<() => Promise<void>>().mockResolvedValue(undefined),
     close: testUtils.mock<() => Promise<void>>().mockResolvedValue(undefined),
     storeMemory: testUtils.mock<() => Promise<any>>()
-      .mockResolvedValue({ id: "mock-id", timestamp: new Date() }),
+      .mockResolvedValue({ id: &quot;mock-id&quot;, timestamp: new Date() }),
     retrieveMemories: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
     semanticSearch: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
     getSacredMoments: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
     getActiveArchetypes: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
     getTransformationJourney: testUtils.mock<() => Promise<any>>().mockResolvedValue({
       milestones: [],
-      currentPhase: "initiation",
+      currentPhase: &quot;initiation&quot;,
       nextSpiralSuggestion: "Continue your journey",
     }),
     createMemoryThread: testUtils.mock<() => Promise<any>>()
-      .mockResolvedValue({ id: "thread-id", memories: [] }),
+      .mockResolvedValue({ id: &quot;thread-id&quot;, memories: [] }),
     getMemoryThreads: testUtils.mock<() => Promise<any[]>>().mockResolvedValue([]),
   }),
 
   createMockWisdomEngine: () => ({
     detectPattern: testUtils.mock<() => Promise<any>>().mockResolvedValue({ strength: 0.8, frequency: 3 }),
     selectWisdomApproach: testUtils.mock<() => Promise<any>>()
-      .mockResolvedValue({ primary: "jung", confidence: 0.9 }),
+      .mockResolvedValue({ primary: &quot;jung&quot;, confidence: 0.9 }),
     generateElementalWisdom: testUtils.mock<() => Promise<string>>()
-      .mockResolvedValue("Mock elemental wisdom"),
+      .mockResolvedValue(&quot;Mock elemental wisdom&quot;),
     analyzeConversationFlow: testUtils.mock<() => Promise<any>>()
       .mockResolvedValue({ patterns: [], stuckPoints: [] }),
     identifyGrowthEdge: testUtils.mock<() => Promise<any>>()
-      .mockResolvedValue({ edge: "vulnerability", readiness: 0.7 }),
+      .mockResolvedValue({ edge: &quot;vulnerability&quot;, readiness: 0.7 }),
     getArchetypalActivation: testUtils.mock<() => Promise<any>>().mockResolvedValue({
       dominantArchetype: "Shadow",
       emergingArchetype: "Warrior",

@@ -186,10 +186,10 @@ export default function LibraryPage() {
             <div>
               <div className="flex items-center space-x-3">
                 <Sparkles className="w-8 h-8 text-yellow-400" />
-                <h1 className="text-3xl font-light text-white">Maya's Sacred Library</h1>
+                <h1 className="text-3xl font-light text-white">Maya&apos;s Sacred Library</h1>
               </div>
               <p className="text-purple-200 mt-1">
-                Your uploaded wisdom, woven into Maya's consciousness
+                Your uploaded wisdom, woven into Maya&apos;s consciousness
               </p>
             </div>
           </div>
@@ -287,7 +287,7 @@ export default function LibraryPage() {
               <FileText className="w-16 h-16 mx-auto mb-4 text-gray-500" />
               <h3 className="text-xl text-white mb-2">No sacred knowledge yet</h3>
               <p className="text-purple-200 mb-6">
-                Upload your first document to begin building Maya's wisdom
+                Upload your first document to begin building Maya&apos;s wisdom
               </p>
               <button
                 onClick={() => setShowUpload(true)}
@@ -424,15 +424,13 @@ export default function LibraryPage() {
                 
                 <FileUploadZone
                   onUploadComplete={(fileId, mayaReflection) => {
-                    console.log('Upload completed:', fileId, mayaReflection);
                     fetchLibrary(); // Refresh the library
-                    // Close upload modal after a short delay to show Maya's reflection
+                    // Close upload modal after a short delay to show Maya&apos;s reflection
                     setTimeout(() => {
                       setShowUpload(false);
                     }, 3000);
                   }}
                   onUploadProgress={(fileId, progress) => {
-                    console.log('Upload progress:', fileId, progress);
                   }}
                   className="border-2 border-dashed border-white/30 rounded-lg hover:border-yellow-400/50 transition-colors"
                 />

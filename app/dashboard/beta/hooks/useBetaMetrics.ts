@@ -241,7 +241,7 @@ function generateMockFeedback(): FeedbackItem[] {
     { text: "Maya feels incredibly lifelike - her voice responses are natural and contextual", rating: 5, category: "voice" },
     { text: "Love how she remembers our previous conversations", rating: 4, category: "memory" },
     { text: "The interface is beautiful but sometimes voice cuts out", rating: 3, category: "technical" },
-    { text: "Maya's insights feel genuinely personal and helpful", rating: 5, category: "experience" },
+    { text: "Maya&apos;s insights feel genuinely personal and helpful", rating: 5, category: "experience" },
     { text: "Voice recognition could be better with background noise", rating: 3, category: "voice" }
   ];
   

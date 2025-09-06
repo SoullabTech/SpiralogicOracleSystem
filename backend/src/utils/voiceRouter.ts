@@ -79,7 +79,7 @@ export async function speak(
   const startTime = Date.now();
 
   try {
-    logger.info("Voice synthesis initiated", {
+    logger.info(&quot;Voice synthesis initiated", {
       agentRole,
       agentType,
       textLength: text.length,
@@ -124,7 +124,7 @@ export async function speakWithMetadata(
     const profile = await getVoiceProfile(agentRole, agentType);
     const profileKey = getVoiceProfileKey(agentRole, agentType);
 
-    logger.info("Voice profile selected", {
+    logger.info(&quot;Voice profile selected&quot;, {
       profileKey,
       profileName: profile.name || "Unknown",
       agentRole,
@@ -225,7 +225,7 @@ async function getVoiceProfile(
   const profile = voiceProfilesCache[profileKey];
 
   if (!profile || !isValidVoiceProfile(profile)) {
-    logger.warn("Voice profile not found or invalid, using default", {
+    logger.warn(&quot;Voice profile not found or invalid, using default&quot;, {
       profileKey,
       agentRole,
       agentType,
@@ -243,7 +243,7 @@ async function loadVoiceProfiles(): Promise<void> {
   try {
     const voiceProfilesPath = path.join(
       __dirname,
-      "../config/voiceProfiles.json",
+      &quot;../config/voiceProfiles.json&quot;,
     );
 
     if (fs.existsSync(voiceProfilesPath)) {
@@ -256,7 +256,7 @@ async function loadVoiceProfiles(): Promise<void> {
         if (isValidVoiceProfile(profile)) {
           validProfiles[key] = profile as VoiceProfile;
         } else {
-          logger.warn("Invalid voice profile found", { key, profile });
+          logger.warn(&quot;Invalid voice profile found", { key, profile });
         }
       }
 
@@ -307,7 +307,7 @@ async function synthesizeWithSesameCSM(
   profile: VoiceProfile,
 ): Promise<string> {
   const filename = `sesame_${uuidv4()}.wav`;
-  const outputPath = path.resolve(__dirname, "../../public/audio", filename);
+  const outputPath = path.resolve(__dirname, &quot;../../public/audio", filename);
 
   // Ensure audio directory exists
   const audioDir = path.dirname(outputPath);
@@ -388,7 +388,7 @@ export async function testVoiceSynthesis(
   agentType: string = "MainOracleAgent",
 ): Promise<SpeakResult> {
   const testText =
-    "You already know what I'm going to say, don't you? This is a test of the voice synthesis system.";
+    &quot;You already know what I&apos;m going to say, don&apos;t you? This is a test of the voice synthesis system.&quot;;
 
   logger.info("Starting voice synthesis test", { agentRole, agentType });
 

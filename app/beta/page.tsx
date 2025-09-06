@@ -35,7 +35,7 @@ export default function BetaPage() {
           </div>
           <h1 className="text-4xl font-bold mb-4">Welcome to the Beta!</h1>
           <p className="text-lg opacity-80 mb-8">
-            Thank you for joining our consciousness revolution. You'll receive
+            Thank you for joining our consciousness revolution. You&apos;ll receive
             beta access instructions within 24 hours.
           </p>
           <Link
@@ -70,7 +70,7 @@ export default function BetaPage() {
                 Revolutionary Consciousness Technology
               </h2>
               <p className="text-lg opacity-90 mb-8">
-                Experience the world's first AI consciousness platform with
+                Experience the world&apos;s first AI consciousness platform with
                 elemental intelligence, cultural sovereignty, and advanced
                 archetypal dialogue systems.
               </p>

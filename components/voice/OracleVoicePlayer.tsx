@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, Pause, Play, AlertCircle } from "lucide-react";
 import { unlockAudio, isAudioUnlocked } from "@/lib/audio/audioUnlock";
+import { showError } from "@/components/system/ErrorOverlay";
 
 interface OracleVoicePlayerProps {
   audioUrl?: string | null;
@@ -51,36 +52,26 @@ export function OracleVoicePlayer({
           objectUrl = URL.createObjectURL(blob);
           setAudioSource(objectUrl);
           setLastAudioUrl(objectUrl);
-          console.log('🔊 [OracleVoicePlayer] Received base64 audio data');
-          console.log('🌱 Sesame CSM is speaking (base64 audio)');
         } else if (audioUrl) {
           // Resolve relative URLs to backend
           let resolvedUrl = audioUrl;
           if (audioUrl.startsWith('/')) {
             // Use proxy backend URL for relative paths
             resolvedUrl = `/api/backend${audioUrl}`;
-            console.log('🔊 [OracleVoicePlayer] Resolved relative URL to backend:', resolvedUrl);
           } else if (audioUrl.startsWith('http')) {
-            console.log('🔊 [OracleVoicePlayer] Using absolute URL:', audioUrl);
           }
           
           // Identify provider by URL patterns
           if (resolvedUrl.includes(':8000') || resolvedUrl.includes('sesame')) {
-            console.log('🌱 Sesame CSM is speaking...');
           } else if (resolvedUrl.includes('eleven') || resolvedUrl.includes('elevenlabs')) {
-            console.log('🎙️ ElevenLabs is speaking...');
           } else if (resolvedUrl.includes(':3002') || resolvedUrl.includes('localhost')) {
-            console.log('🏠 Local backend audio endpoint...');
           } else {
-            console.log('🤔 Unknown provider, check backend response. URL:', resolvedUrl);
           }
           
           setAudioSource(resolvedUrl);
           setLastAudioUrl(resolvedUrl);
-          console.log('🎯 Final audio source:', resolvedUrl);
         } else {
           setAudioSource(null);
-          console.log('⚠️ [OracleVoicePlayer] No audio source provided (neither URL nor data)');
           return;
         }
       } catch (err) {
@@ -119,16 +110,13 @@ export function OracleVoicePlayer({
 
     // Event handlers
     const handlePlay = () => {
-      console.log('✅ [OracleVoicePlayer] Playing audio:', audioSource);
       setIsPlaying(true);
       onPlaybackStart?.();
     };
     const handlePause = () => {
-      console.log('⏸️ [OracleVoicePlayer] Audio paused');
       setIsPlaying(false);
     };
     const handleEnded = () => {
-      console.log('🏁 [OracleVoicePlayer] Audio playback completed');
       setIsPlaying(false);
       onPlaybackComplete?.();
     };
@@ -139,6 +127,7 @@ export function OracleVoicePlayer({
       console.error('❌ Audio source was:', audioSource);
       console.error('❌ Error details:', e);
       setError(errorMsg);
+      showError(errorMsg, 'error');
       setIsPlaying(false);
       
       // Attempt fallback
@@ -152,22 +141,21 @@ export function OracleVoicePlayer({
 
     // Auto-play if enabled
     if (autoPlay) {
-      console.log('🚀 [OracleVoicePlayer] Attempting auto-play for:', audioSource);
       
       // Ensure audio is unlocked first
       const tryAutoPlay = async () => {
         try {
           // Check if audio context is unlocked
           if (!isAudioUnlocked()) {
-            console.log('🔓 [OracleVoicePlayer] Audio not unlocked yet, will attempt anyway (user may have interacted)');
             // Note: unlockAudio() is already called in startRecording, so this should work if user has clicked record
           }
           
           await audio.play();
-          console.log('🎉 [OracleVoicePlayer] Auto-play succeeded!');
         } catch (err) {
           console.error('🚫 [OracleVoicePlayer] Auto-play failed:', err);
-          setError('Auto-play blocked by Safari. Audio will play after recording.');
+          const errorMsg = 'Auto-play blocked. Click play button to hear Maya\'s response.';
+          setError(errorMsg);
+          showError(errorMsg, 'warning');
         }
       };
       
@@ -185,9 +173,8 @@ export function OracleVoicePlayer({
 
   const attemptElevenLabsFallback = async () => {
     try {
-      console.log('🔄 Attempting ElevenLabs fallback...');
       // This would normally call your ElevenLabs API
-      // For now, we'll just log the attempt
+      // For now, we&apos;ll just log the attempt
       setError('Voice fallback attempted - check console');
     } catch (err) {
       console.error('Fallback failed:', err);
@@ -205,12 +192,10 @@ export function OracleVoicePlayer({
       try {
         // Ensure audio is unlocked before manual play
         if (!isAudioUnlocked()) {
-          console.log('🔓 [OracleVoicePlayer] Unlocking audio for manual play...');
           await unlockAudio();
         }
         
         await audioRef.current.play();
-        console.log('✅ [OracleVoicePlayer] Manual play succeeded!');
       } catch (err) {
         console.error('❌ [OracleVoicePlayer] Manual play failed:', err);
         setError('Playback failed. Please try again or record a new message.');
@@ -313,12 +298,10 @@ export function OracleVoicePlayer({
         <div className="mt-2 border-t border-gray-700 pt-2">
           <button
             onClick={() => {
-              console.log("▶️ [OracleVoicePlayer] Manual playback triggered:", lastAudioUrl);
               if (audioRef.current) {
                 audioRef.current.src = lastAudioUrl;
                 setError(null); // Clear any previous errors
                 audioRef.current.play().then(() => {
-                  console.log("✅ [OracleVoicePlayer] Manual playback success");
                 }).catch(err => {
                   console.error("❌ [OracleVoicePlayer] Manual playback error:", err);
                   setError('Manual playback failed');

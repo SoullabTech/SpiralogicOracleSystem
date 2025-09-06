@@ -396,7 +396,7 @@ export class FacilitatorDashboardService {
   private initializeWebSocketServer() {
     this.wsServer = new WebSocketServer({ port: 5005 });
 
-    this.wsServer.on("connection", (ws, req) => {
+    this.wsServer.on(&quot;connection", (ws, req) => {
       const facilitatorId = req.url?.split("/").pop();
       if (!facilitatorId) return;
 
@@ -455,7 +455,7 @@ export class FacilitatorDashboardService {
     };
 
     // Save to database
-    await supabase.from("sacred_events").insert(event);
+    await supabase.from(&quot;sacred_events").insert(event);
 
     // Create group holoflower
     if (eventData.createGroupHoloflower) {
@@ -532,7 +532,7 @@ export class FacilitatorDashboardService {
     const job: TranscriptionJob = {
       id: `job-${Date.now()}`,
       recordingId: recordingData.sessionId,
-      status: "queued",
+      status: &quot;queued&quot;,
       service: "assembly-ai",
     };
 
@@ -576,7 +576,7 @@ export class FacilitatorDashboardService {
     return {
       elements: {
         fire: [
-          "Expressed vision for new project",
+          &quot;Expressed vision for new project",
           "Breakthrough moment at 14:32",
         ],
         water: [

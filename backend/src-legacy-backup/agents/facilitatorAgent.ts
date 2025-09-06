@@ -24,7 +24,7 @@ export class FacilitatorAgent extends OracleAgent {
       const profile = await getUserProfile(userId);
 
       if (!profile) {
-        throw new Error("User profile not found for intervention.");
+        throw new Error(&quot;User profile not found for intervention.");
       }
 
       const topElement = this.getDominantElement(profile);

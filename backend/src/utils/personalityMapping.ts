@@ -19,7 +19,7 @@ export function computePersonalityAdjustment(
   const adjustments: Record<(typeof elements)[number], PersonalityAdjustment> =
     {
       fire: {
-        tone: "passionate",
+        tone: &quot;passionate",
         style: "energetic",
         emphasis: ["creativity", "inspiration", "action"],
       },

@@ -89,7 +89,7 @@ export class LlamaService {
 
   async addJournalMemory(userId: string, journalId: number, content: string, title?: string) {
     const enrichedContent = title ? `Journal: ${title}\n${content}` : content;
-    await this.addMemory(userId, enrichedContent, "journal", journalId);
+    await this.addMemory(userId, enrichedContent, &quot;journal", journalId);
   }
 
   async addUploadMemory(userId: string, uploadId: number, extractedContent: string, filename: string) {
@@ -106,7 +106,7 @@ export class LlamaService {
     const memories = await this.queryMemory(userId, currentMessage);
     
     if (memories.length === 0) {
-      return "";
+      return "&quot;;
     }
 
     const contextParts = memories.map(mem => {

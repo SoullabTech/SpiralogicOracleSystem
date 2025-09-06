@@ -126,7 +126,7 @@ async function processIngestion(job: IngestionJob) {
     // 3. Generate embeddings
     const embedding = await generateEmbedding(extractedContent.text);
     
-    // 4. Analyze with Maya's intelligence
+    // 4. Analyze with Maya&apos;s intelligence
     const analysis = await analyzeMayaContext(extractedContent.text, job.userId);
     
     // 5. Store in database
@@ -156,7 +156,7 @@ async function processIngestion(job: IngestionJob) {
       }
     });
     
-    // 6. Update user's memory context
+    // 6. Update user&apos;s memory context
     await updateUserMemoryContext(job.userId, {
       type: 'file_upload',
       fileName: job.fileName,
@@ -213,7 +213,7 @@ async function extractPDF(buffer: Buffer): Promise<ExtractedContent> {
   try {
     const data = await pdfParse(buffer, {
       // Enable page-by-page extraction
-      pagerender: null, // Don't render pages as images
+      pagerender: null, // Don&apos;t render pages as images
       normalizeWhitespace: true,
       max: 0 // No page limit
     });
@@ -221,7 +221,7 @@ async function extractPDF(buffer: Buffer): Promise<ExtractedContent> {
     const fullText = data.text;
     const totalPages = data.numpages;
     
-    // Split text into pages (approximate - PDF parsing doesn't give exact page breaks)
+    // Split text into pages (approximate - PDF parsing doesn&apos;t give exact page breaks)
     const pages: PageContent[] = [];
     const sections: SectionContent[] = [];
     
@@ -391,7 +391,7 @@ async function generateEmbedding(text: string): Promise<number[]> {
 }
 
 /**
- * Analyze content with Maya's perspective
+ * Analyze content with Maya&apos;s perspective
  */
 async function analyzeMayaContext(text: string, userId: string) {
   try {
@@ -437,11 +437,11 @@ Respond in JSON format.`
 }
 
 /**
- * Update user's memory context with new file
+ * Update user&apos;s memory context with new file
  */
 async function updateUserMemoryContext(userId: string, context: any) {
   // This would integrate with your MemoryOrchestrator
-  // For now, we'll store in a session table
+  // For now, we&apos;ll store in a session table
   try {
     await prisma.userMemoryUpdate.create({
       data: {
@@ -480,7 +480,7 @@ export async function searchUserFiles(
         content,
         metadata,
         1 - (embedding <=> ${queryEmbedding}::vector) as similarity
-      FROM "UserFile"
+      FROM &quot;UserFile"
       WHERE userId = ${userId}
       ORDER BY embedding <=> ${queryEmbedding}::vector
       LIMIT ${limit}
@@ -585,7 +585,7 @@ function findBestSnippet(text: string, query: string, maxLength: number = 200): 
     const sentenceIndex = sentences.indexOf(bestSentence);
     let expandedText = bestSentence;
     
-    // Add previous sentence if there's room
+    // Add previous sentence if there&apos;s room
     if (sentenceIndex > 0 && expandedText.length < maxLength / 2) {
       expandedText = sentences[sentenceIndex - 1] + '. ' + expandedText;
     }

@@ -72,9 +72,9 @@ export class ElementalDialogueService {
   private async mapFireAsOther(profile: any): Promise<ElementalOtherness> {
     const fireData = profile.elemental?.fire || {};
     
-    // Fire's autonomous messages based on its state
+    // Fire&apos;s autonomous messages based on its state
     const fireMessages = {
-      excessive: "I burn whether you want me to or not. Your comfort zones are kindling.",
+      excessive: &quot;I burn whether you want me to or not. Your comfort zones are kindling.&quot;,
       blocked: "You've tried to contain me in safe channels. I will find my own way out.",
       misdirected: "You've aimed me at the wrong targets. I burn for what matters.",
       authentic: "I am the vision that sees beyond your small plans. Follow or be consumed."
@@ -102,8 +102,8 @@ export class ElementalDialogueService {
     const waterData = profile.elemental?.water || {};
     
     const waterMessages = {
-      overwhelming: "I am the feeling that connects all things. Your boundaries cannot hold me.",
-      frozen: "You've tried to freeze me into manageable forms. I will thaw when I choose.",
+      overwhelming: &quot;I am the feeling that connects all things. Your boundaries cannot hold me.&quot;,
+      frozen: "You&apos;ve tried to freeze me into manageable forms. I will thaw when I choose.",
       stagnant: "You've dammed me with your need for control. I require flow.",
       authentic: "I am the current that carries you to where you belong. Trust the tide."
     };
@@ -130,7 +130,7 @@ export class ElementalDialogueService {
     const earthData = profile.elemental?.earth || {};
     
     const earthMessages = {
-      disconnected: "I am the wisdom of seasons and cycles. You cannot rush my timing.",
+      disconnected: &quot;I am the wisdom of seasons and cycles. You cannot rush my timing.&quot;,
       overdriven: "You push beyond my natural rhythms. I will force rest when needed.",
       ignored: "I am the body that knows what the mind cannot. Listen to my signals.",
       authentic: "I am the ground of being, older than your plans. I have my own intelligence."
@@ -158,10 +158,10 @@ export class ElementalDialogueService {
     const airData = profile.elemental?.air || {};
     
     const airMessages = {
-      scattered: "I blow where I will. You cannot capture me in your categories.",
-      rigid: "You've tried to fix me in place. I am movement itself.",
+      scattered: &quot;I blow where I will. You cannot capture me in your categories.&quot;,
+      rigid: "You&apos;ve tried to fix me in place. I am movement itself.",
       disconnected: "I am the perspective that sees beyond personal viewpoint. Rise up.",
-      authentic: "I am the wind of inspiration. I bring what you couldn't think alone."
+      authentic: "I am the wind of inspiration. I bring what you couldn&apos;t think alone."
     };
     
     const airState = this.assessAirState(airData);
@@ -212,7 +212,7 @@ export class ElementalDialogueService {
     if (others.length === 0) {
       return {
         totalIntensity: 0,
-        primaryTension: "No elemental Others detected",
+        primaryTension: &quot;No elemental Others detected",
         emergentQuality: "Awaiting elemental awakening",
         resonanceMoments: []
       };
@@ -250,7 +250,7 @@ export class ElementalDialogueService {
     if (collapsedElements.length > 0) {
       warnings.push(
         `Elements ${collapsedElements.map(e => e.element).join(', ')} are collapsing into self. ` +
-        `They need to remain foreign, autonomous, making demands you wouldn't make.`
+        `They need to remain foreign, autonomous, making demands you wouldn&apos;t make.`
       );
     }
     
@@ -259,7 +259,7 @@ export class ElementalDialogueService {
       others.reduce((sum, other) => sum + other.synapticGap, 0) / others.length : 0;
     if (averageGap > 0.9) {
       warnings.push(
-        "Perfect elemental harmony might mean you're projecting rather than encountering. " +
+        &quot;Perfect elemental harmony might mean you&apos;re projecting rather than encountering. " +
         "True elemental Others should surprise, resist, challenge."
       );
     }
@@ -353,8 +353,8 @@ export class ElementalDialogueService {
   // Demand extraction methods
   private extractFireDemand(fireData: any, state: string): string {
     const demands = {
-      excessive: "Channel me toward what truly matters, not just what excites",
-      blocked: "Remove the obstacles you've placed in my path",
+      excessive: &quot;Channel me toward what truly matters, not just what excites&quot;,
+      blocked: "Remove the obstacles you&apos;ve placed in my path",
       misdirected: "Align with my authentic purpose, not your ego goals",
       authentic: "Burn for the vision that serves something greater"
     };
@@ -375,7 +375,7 @@ export class ElementalDialogueService {
     const demands = {
       disconnected: "Return to the wisdom of the body and natural cycles",
       overdriven: "Respect my rhythms, allow natural rest and restoration",
-      ignored: "Listen to the signals I'm constantly sending",
+      ignored: "Listen to the signals I&apos;m constantly sending",
       authentic: "Ground your vision in the reality of natural timing"
     };
     return demands[state] || "Honor the intelligence of embodied being";
@@ -396,7 +396,7 @@ export class ElementalDialogueService {
     const resistances = {
       excessive: "Refuses to be contained in comfortable channels",
       blocked: "Burns through obstacles despite ego's safety concerns", 
-      misdirected: "Won't serve inauthentic goals no matter how appealing",
+      misdirected: "Won&apos;t serve inauthentic goals no matter how appealing",
       authentic: "Burns for the greater vision regardless of personal cost"
     };
     return resistances[state] || "Resists reduction to personal passion";

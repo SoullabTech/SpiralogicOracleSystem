@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    console.log(`[BulkDelete] Deleting ${fileIds.length} files for user ${userId}`);
 
     // Get all files to verify ownership and get storage paths
     const { data: files, error: filesError } = await supabase
@@ -107,7 +106,6 @@ export async function POST(request: NextRequest) {
           });
         } else {
           results.successful.push(file.id);
-          console.log(`[BulkDelete] Successfully deleted ${file.filename} (${file.id})`);
         }
 
       } catch (error) {
@@ -119,7 +117,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log(`[BulkDelete] Completed: ${results.successful.length} successful, ${results.failed.length} failed`);
 
     return NextResponse.json({
       success: true,

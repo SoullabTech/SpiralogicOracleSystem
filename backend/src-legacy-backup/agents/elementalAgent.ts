@@ -44,7 +44,7 @@ export class ElementalAgent {
     return response;
   }
 
-  private mapFacetToElement(facet: string): keyof ElementalAgent["agents"] {
+  private mapFacetToElement(facet: string): keyof ElementalAgent[&quot;agents&quot;] {
     const facetMap: Record<string, keyof ElementalAgent["agents"]> = {
       courage: "fire",
       empathy: "water",

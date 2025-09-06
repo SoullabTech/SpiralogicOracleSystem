@@ -17,7 +17,7 @@ export class RetreatOnboardingService {
     assessDominantElement: (participant: RetreatParticipant): string => {
       // In production, this would use the elemental assessment quiz
       // For now, using a simple algorithm based on registration data
-      const elements = ["fire", "water", "earth", "air", "aether"];
+      const elements = [&quot;fire&quot;, "water", "earth", "air", "aether"];
       const nameHash =
         participant.firstName.charCodeAt(0) +
         participant.lastName.charCodeAt(0);
@@ -51,7 +51,7 @@ export class RetreatOnboardingService {
         email,
         firstName,
         lastName,
-        onboardingStatus: "registered",
+        onboardingStatus: &quot;registered",
         retreatId,
         arrivalDate,
         departureDate,
@@ -85,7 +85,7 @@ export class RetreatOnboardingService {
   private async createOnboardingFlow(participantId: string): Promise<void> {
     const flow: OnboardingFlow = {
       participantId,
-      currentStep: "welcome",
+      currentStep: &quot;welcome&quot;,
       completedSteps: [],
       startedAt: new Date(),
       lastUpdatedAt: new Date(),
@@ -101,7 +101,7 @@ export class RetreatOnboardingService {
         await soullabFounderAgent.generatePersonalWelcome(participant);
 
       // Store the welcome message
-      await supabase.from("retreat_messages").insert({
+      await supabase.from(&quot;retreat_messages").insert({
         participant_id: participant.id,
         type: "founder_welcome",
         content: welcomeMessage.message,
@@ -123,7 +123,7 @@ export class RetreatOnboardingService {
     }
   }
 
-  // Capture participant's current state
+  // Capture participant&apos;s current state
   async captureCurrentState(
     participantId: string,
     state: {
@@ -135,7 +135,7 @@ export class RetreatOnboardingService {
   ): Promise<void> {
     try {
       await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .update({
           currentState: state,
           updatedAt: new Date(),
@@ -165,7 +165,7 @@ export class RetreatOnboardingService {
     try {
       // Get participant
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("*")
         .eq("id", participantId)
         .single();
@@ -219,7 +219,7 @@ export class RetreatOnboardingService {
     try {
       // Get participant
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("*")
         .eq("id", participantId)
         .single();
@@ -298,7 +298,7 @@ export class RetreatOnboardingService {
     archetype: string,
   ): Promise<void> {
     // In production, this would create a personalized Oracle configuration
-    await supabase.from("personal_oracles").insert({
+    await supabase.from(&quot;personal_oracles&quot;).insert({
       id: oracleId,
       participant_id: participantId,
       element,
@@ -342,7 +342,7 @@ export class RetreatOnboardingService {
   async completeOnboarding(participantId: string): Promise<void> {
     try {
       await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .update({
           onboardingStatus: "completed",
           updatedAt: new Date(),
@@ -365,7 +365,7 @@ export class RetreatOnboardingService {
   // Send onboarding completion message
   private async sendOnboardingComplete(participantId: string): Promise<void> {
     const { data: participant } = await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants")
       .select("*")
       .eq("id", participantId)
       .single();
@@ -376,7 +376,7 @@ export class RetreatOnboardingService {
 
 Your sacred journey preparation is complete.
 
-You've been welcomed by Kelly, shared your intentions, met your Personal Oracle (${participant.oracleElement} - ${participant.oracleArchetype}), and set your container for transformation.
+You&apos;ve been welcomed by Kelly, shared your intentions, met your Personal Oracle (${participant.oracleElement} - ${participant.oracleArchetype}), and set your container for transformation.
 
 As you prepare for Switzerland, know that:
 - Your Oracle is already working with your energy
@@ -402,7 +402,7 @@ The Soullab Team 🌀`;
     status: RetreatParticipant["onboardingStatus"],
   ): Promise<void> {
     await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants&quot;)
       .update({
         onboardingStatus: status,
         updatedAt: new Date(),
@@ -416,7 +416,7 @@ The Soullab Team 🌀`;
     step: OnboardingStep,
   ): Promise<void> {
     const { data: flow } = await supabase
-      .from("onboarding_flows")
+      .from(&quot;onboarding_flows&quot;)
       .select("*")
       .eq("participant_id", participantId)
       .single();
@@ -441,7 +441,7 @@ The Soullab Team 🌀`;
   // Get retreat overview
   async getRetreatOverview(retreatId: string): Promise<RetreatSession | null> {
     const { data } = await supabase
-      .from("retreat_sessions")
+      .from(&quot;retreat_sessions&quot;)
       .select("*")
       .eq("id", retreatId)
       .single();

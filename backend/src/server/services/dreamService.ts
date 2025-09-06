@@ -18,7 +18,7 @@ export const dreamService = {
   },
 
   interpret: async (dream: Dream): Promise<string> => {
-    return `The dream contains ${dream.symbols?.join(", ") || "no symbols"}, revealing hidden archetypes.`;
+    return `The dream contains ${dream.symbols?.join(&quot;, &quot;) || "no symbols"}, revealing hidden archetypes.`;
   },
 
   getAllByUser: async (userId: string): Promise<Dream[]> => {

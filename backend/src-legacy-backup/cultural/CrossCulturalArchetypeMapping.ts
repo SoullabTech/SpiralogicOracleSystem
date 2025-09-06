@@ -118,7 +118,7 @@ export class CrossCulturalArchetypeMapping {
         culturalExpression,
       );
 
-      logger.info("Archetype translation completed", {
+      logger.info(&quot;Archetype translation completed&quot;, {
         sourceElement: request.sourceElement,
         targetCulture: request.targetCulture,
         culturalName: culturalExpression.culturalName,
@@ -162,7 +162,7 @@ export class CrossCulturalArchetypeMapping {
         sourceElement: element,
         targetCulture: cultureName,
         userCulturalBackground,
-        contextOfUse: "educational",
+        contextOfUse: &quot;educational&quot;,
         respectfulApproach: true,
       };
 
@@ -188,7 +188,7 @@ export class CrossCulturalArchetypeMapping {
       sourceElement: element,
       targetCulture,
       userCulturalBackground: userBackground,
-      contextOfUse: "personal_guidance",
+      contextOfUse: &quot;personal_guidance",
       respectfulApproach: true,
     };
 
@@ -315,7 +315,7 @@ export class CrossCulturalArchetypeMapping {
     let guidance = `This wisdom comes from ${culturalSystem.traditionName} traditions. `;
 
     if (expression.appropriateUse.length > 0) {
-      guidance += `Appropriate contexts include: ${expression.appropriateUse.join(", ")}. `;
+      guidance += `Appropriate contexts include: ${expression.appropriateUse.join(&quot;, ")}. `;
     }
 
     if (expression.culturalTaboos && expression.culturalTaboos.length > 0) {
@@ -716,7 +716,7 @@ export class CrossCulturalArchetypeMapping {
         [
           "fire",
           {
-            culturalName: "Brigid's Flame",
+            culturalName: "Brigid&apos;s Flame",
             traditionalRole: "Fire Keeper",
             sacredQualities: [
               "creative fire",

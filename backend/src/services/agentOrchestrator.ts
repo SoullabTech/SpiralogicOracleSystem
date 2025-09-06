@@ -7,7 +7,7 @@ export class AgentOrchestrator {
   async processQuery(input: string, userContext?: any): Promise<any> {
     return {
       success: true,
-      response: "Agent orchestrator is ready for enhancement",
+      response: &quot;Agent orchestrator is ready for enhancement&quot;,
       input,
       userContext,
       timestamp: new Date().toISOString()

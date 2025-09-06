@@ -84,7 +84,7 @@ export function useMayaVoice(): UseMayaVoiceReturn {
     }
   }, [isSupported, mayaVoice]);
 
-  // Speak text with Maya's voice
+  // Speak text with Maya&apos;s voice
   const speak = useCallback(async (text: string): Promise<void> => {
     if (!isSupported) {
       throw new Error('Speech synthesis not supported in this browser');
@@ -104,7 +104,7 @@ export function useMayaVoice(): UseMayaVoiceReturn {
     }
   }, [isSupported, mayaVoice]);
 
-  // Play Maya's greeting
+  // Play Maya&apos;s greeting
   const playGreeting = useCallback(async (): Promise<void> => {
     if (!isSupported) {
       throw new Error('Speech synthesis not supported in this browser');

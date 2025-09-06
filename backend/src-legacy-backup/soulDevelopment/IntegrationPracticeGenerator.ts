@@ -418,7 +418,7 @@ export class IntegrationPracticeGenerator {
     practicePreferences?: Partial<PracticePreferences>,
   ): Promise<PracticeEcosystem> {
     try {
-      logger.info("Generating practice ecosystem", {
+      logger.info(&quot;Generating practice ecosystem", {
         userId,
         culturalContext: culturalProfile.primaryCulture,
         hasShadowPlan: !!shadowPlan,
@@ -528,7 +528,7 @@ export class IntegrationPracticeGenerator {
       const currentEcosystem = this.practiceEcosystems.get(userId);
 
       if (!currentEcosystem) {
-        throw new Error("Practice ecosystem not found for user");
+        throw new Error(&quot;Practice ecosystem not found for user&quot;);
       }
 
       logger.info("Adapting practice ecosystem", {
@@ -601,7 +601,7 @@ export class IntegrationPracticeGenerator {
       const ecosystem = this.practiceEcosystems.get(userId);
 
       if (!ecosystem) {
-        throw new Error("Practice ecosystem not found for user");
+        throw new Error(&quot;Practice ecosystem not found for user&quot;);
       }
 
       // Analyze current context
@@ -681,7 +681,7 @@ export class IntegrationPracticeGenerator {
       const ecosystem = this.practiceEcosystems.get(userId);
 
       if (!ecosystem) {
-        throw new Error("Practice ecosystem not found for user");
+        throw new Error(&quot;Practice ecosystem not found for user");
       }
 
       // Record completed practice
@@ -871,7 +871,7 @@ export class IntegrationPracticeGenerator {
     return {
       practiceTypes: [
         {
-          type: "meditation",
+          type: &quot;meditation&quot;,
           preference: 0.8,
           experience: 0.5,
           effectiveness: 0.7,
@@ -958,7 +958,7 @@ export class IntegrationPracticeGenerator {
     practiceProfile: PracticeProfile,
     practiceSequences: PracticeSequence[],
   ): Promise<string> {
-    return "beginner_integration";
+    return &quot;beginner_integration";
   }
 
   private async createEvolutionTrajectory(
@@ -1009,7 +1009,7 @@ export class IntegrationPracticeGenerator {
         practiceName: `Shadow Integration: ${shadowComplex.complexType}`,
         practiceDescription: `Integrate the ${shadowComplex.complexType} shadow complex through culturally-adapted practices`,
         practiceType: {
-          type: "dialogue",
+          type: &quot;dialogue",
           preference: 0.8,
           experience: 0.5,
           effectiveness: 0.7,
@@ -1185,7 +1185,7 @@ export class IntegrationPracticeGenerator {
     context: any,
   ): Promise<string[]> {
     return [
-      "Recommended based on current integration level",
+      &quot;Recommended based on current integration level&quot;,
       "Aligned with cultural preferences",
     ];
   }
@@ -1196,7 +1196,7 @@ export class IntegrationPracticeGenerator {
     context: any,
   ): Promise<string[]> {
     return [
-      "Adjust duration based on available time",
+      &quot;Adjust duration based on available time&quot;,
       "Adapt intensity based on energy level",
     ];
   }
@@ -1205,7 +1205,7 @@ export class IntegrationPracticeGenerator {
     ecosystem: PracticeEcosystem,
     practices: IntegrationPractice[],
   ): Promise<string[]> {
-    return ["Shadow integration opportunity", "Purpose activation potential"];
+    return [&quot;Shadow integration opportunity&quot;, "Purpose activation potential"];
   }
 
   private async assessCulturalRelevance(
@@ -1213,7 +1213,7 @@ export class IntegrationPracticeGenerator {
     practices: IntegrationPractice[],
   ): Promise<string[]> {
     return [
-      "Culturally adapted practices available",
+      &quot;Culturally adapted practices available&quot;,
       "Ancestral wisdom integration opportunity",
     ];
   }
@@ -1226,7 +1226,7 @@ export class IntegrationPracticeGenerator {
   ): Promise<CompletedPractice> {
     return {
       practiceId,
-      practiceName: "Practice Name",
+      practiceName: &quot;Practice Name&quot;,
       completionDate: new Date().toISOString(),
       duration: data.duration,
       intensity: data.intensity,
@@ -1250,7 +1250,7 @@ export class IntegrationPracticeGenerator {
     profile: PracticeProfile,
     completed: CompletedPractice,
   ): Promise<string[]> {
-    return ["Practice consistency improving", "Integration level increasing"];
+    return [&quot;Practice consistency improving&quot;, "Integration level increasing"];
   }
 
   private async generateNextRecommendations(
@@ -1259,7 +1259,7 @@ export class IntegrationPracticeGenerator {
     insights: string[],
   ): Promise<string[]> {
     return [
-      "Continue current practice sequence",
+      &quot;Continue current practice sequence&quot;,
       "Consider adding cultural elements",
     ];
   }

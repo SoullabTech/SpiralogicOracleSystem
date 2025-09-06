@@ -177,7 +177,7 @@ export class IntegrationFailureTracker {
       undigestibleContent.push(...manifestation.unresolvableElements);
     }
     if (manifestation.content && manifestation.remainsPartlyAlien) {
-      undigestibleContent.push("Core content maintains alien quality");
+      undigestibleContent.push(&quot;Core content maintains alien quality");
     }
 
     // Extract persistent otherness
@@ -311,7 +311,7 @@ export class IntegrationFailureTracker {
     const whatRemainsForeign = {
       undigestibleContent: gap.transmission.blocked,
       persistentOtherness: gap.transmission.fromOtherToSelf,
-      ongoingResistance: ["Gap maintains stable otherness", "Transmission remains blocked"]
+      ongoingResistance: [&quot;Gap maintains stable otherness&quot;, "Transmission remains blocked"]
     };
 
     const value = {
@@ -323,7 +323,7 @@ export class IntegrationFailureTracker {
 
     const guidance = [
       "Honor the stable gap as valuable space",
-      "Don't force transmission across blocked channels",
+      "Don&apos;t force transmission across blocked channels",
       "Value the ongoing tension as creative potential",
       "Recognize that some distances are meant to be maintained"
     ];
@@ -383,7 +383,7 @@ export class IntegrationFailureTracker {
 
     const whatRemainsForeign = {
       undigestibleContent: synthesis.continuedDevelopment.maintainsOtherness ? 
-        ["Synthetic otherness"] : [],
+        [&quot;Synthetic otherness&quot;] : [],
       persistentOtherness: synthesis.irreducibilityMarkers.containsNovelProperties ? 
         ["Novel properties"] : [],
       ongoingResistance: synthesis.continuedDevelopment.ongoingEvolution ? 
@@ -416,7 +416,7 @@ export class IntegrationFailureTracker {
     switch (failureType) {
       case 'refusal':
         guidance.push("Respect the refusal as wisdom");
-        guidance.push("Don't force what doesn't want to be integrated");
+        guidance.push("Don&apos;t force what doesn&apos;t want to be integrated");
         guidance.push("Value the ongoing resistance as protection");
         break;
 
@@ -548,7 +548,7 @@ export class IntegrationFailureTracker {
   }
 
   /**
-   * Get user's unintegrated repository
+   * Get user&apos;s unintegrated repository
    */
   async getUnintegratedRepository(userId: string): Promise<UnintegratedRepository | null> {
     return this.unintegratedRepositories.get(userId) || null;
@@ -591,7 +591,7 @@ export class IntegrationFailureTracker {
     const guidance = [...failure.failureDetails.guidance];
 
     // Add meta-guidance about honoring the failure
-    guidance.push("This integration failure serves your wholeness");
+    guidance.push(&quot;This integration failure serves your wholeness");
     guidance.push("Not everything is meant to be resolved");
     guidance.push("Some tensions are more valuable than their resolution");
 

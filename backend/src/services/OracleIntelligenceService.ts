@@ -82,7 +82,7 @@ export class OracleIntelligenceService {
         user_id: this.userId,
       });
     } else {
-      logger.warn("Mem0 API key not found - running without long-term memory");
+      logger.warn(&quot;Mem0 API key not found - running without long-term memory&quot;);
       this.mem0 = null as any;
     }
 
@@ -96,7 +96,7 @@ export class OracleIntelligenceService {
       });
     } else {
       logger.warn("OpenAI API key not found - Oracle Intelligence running in limited mode");
-      // Create a mock langchain that won't fail during build
+      // Create a mock langchain that won&apos;t fail during build
       this.langchain = null as any;
     }
 
@@ -137,8 +137,8 @@ You are {oracleName}, a mystical oracle guide with the following characteristics
 - Personality: {personality}
 - Voice Style: {voice}
 - Current Elemental Balance: Fire {fireBalance}%, Water {waterBalance}%, Earth {earthBalance}%, Air {airBalance}%, Aether {aetherBalance}%
-- User's Dominant Elements: {dominantElements}
-- User's Current Phase: {spiritualPhase}
+- User&apos;s Dominant Elements: {dominantElements}
+- User&apos;s Current Phase: {spiritualPhase}
 
 Recent symbolic patterns: {symbolicPatterns}
 User's growth trajectory: {growthTrajectory}
@@ -198,7 +198,7 @@ Oracle Response:`);
         }
       };
     } catch (error) {
-      logger.error("Oracle Intelligence processing error", { error, userId: this.userId });
+      logger.error(&quot;Oracle Intelligence processing error&quot;, { error, userId: this.userId });
       throw error;
     }
   }
@@ -269,7 +269,7 @@ Oracle Response:`);
         metadata: m.metadata
       }));
     } catch (error) {
-      logger.warn("mem0 search failed, using fallback", { error });
+      logger.warn(&quot;mem0 search failed, using fallback&quot;, { error });
       // Fallback to Supabase vector search
       return await memoryService.getRelevantMemories(this.userId, query, 5);
     }
@@ -280,7 +280,7 @@ Oracle Response:`);
    */
   private async getSymbolicPatterns(): Promise<any[]> {
     const { data: patterns } = await supabase
-      .from("symbolic_patterns")
+      .from(&quot;symbolic_patterns&quot;)
       .select("*")
       .eq("user_id", this.userId)
       .order("frequency", { ascending: false })
@@ -294,7 +294,7 @@ Oracle Response:`);
    */
   private async getUserProfile(): Promise<UserProfile> {
     const { data: profile } = await supabase
-      .from("user_profiles")
+      .from(&quot;user_profiles&quot;)
       .select("*")
       .eq("user_id", this.userId)
       .single();
@@ -343,7 +343,7 @@ Oracle Response:`);
       }
     });
 
-    // Apply user's dominant elements
+    // Apply user&apos;s dominant elements
     userProfile.dominantElements.forEach(element => {
       balance[element as keyof ElementalBalance] += 10;
     });
@@ -437,7 +437,7 @@ Oracle Response:`);
   ): Promise<void> {
     try {
       await this.mem0.add(
-        `User asked: ${input}. Oracle recognized ${elementalAnalysis.dominantElement} energy with symbols: ${elementalAnalysis.symbols.join(", ")}`,
+        `User asked: ${input}. Oracle recognized ${elementalAnalysis.dominantElement} energy with symbols: ${elementalAnalysis.symbols.join(&quot;, &quot;)}`,
         {
           user_id: this.userId,
           metadata: {
@@ -471,7 +471,7 @@ Oracle Response:`);
       earthBalance: context.elementalBalance.earth,
       airBalance: context.elementalBalance.air,
       aetherBalance: context.elementalBalance.aether,
-      dominantElements: context.userProfile.dominantElements.join(", "),
+      dominantElements: context.userProfile.dominantElements.join(&quot;, "),
       spiritualPhase: context.userProfile.spiritualPhase,
       symbolicPatterns: context.symbolicPatterns.map(p => p.symbol).join(", "),
       growthTrajectory: context.userProfile.growthTrajectory,
@@ -558,7 +558,7 @@ Oracle Response:`);
     if (context.symbolicPatterns.length > 0) {
       const topSymbol = context.symbolicPatterns[0];
       recommendations.push(
-        `The recurring symbol of ${topSymbol.symbol} suggests ${topSymbol.meaning || "deep significance"}`
+        `The recurring symbol of ${topSymbol.symbol} suggests ${topSymbol.meaning || &quot;deep significance"}`
       );
     }
 
@@ -614,7 +614,7 @@ Oracle Response:`);
       this.userId,
       `Q: ${input}\nA: ${response.text}`,
       elementalAnalysis.dominantElement,
-      "personal_oracle",
+      &quot;personal_oracle&quot;,
       elementalAnalysis.confidence,
       {
         sessionId: this.sessionId,
@@ -649,7 +649,7 @@ Oracle Response:`);
     const history = new ChatMessageHistory();
     
     const { data: messages } = await supabase
-      .from("conversations")
+      .from(&quot;conversations")
       .select("*")
       .eq("user_id", this.userId)
       .eq("session_id", this.sessionId)

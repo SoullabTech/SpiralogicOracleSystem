@@ -10,7 +10,8 @@
  */
 
 import { logger } from '../utils/logger';
-import { AfferentStream, ElementalSignature, SpiralPhase } from '../ain/collective/CollectiveIntelligence';
+import { AfferentStream, ElementalSignature } from '../ain/collective/CollectiveIntelligence';
+import { SpiralPhase } from '../spiralogic/SpiralogicCognitiveEngine';
 import { PersonalOracleQuery, PersonalOracleResponse } from '../agents/PersonalOracleAgent';
 
 // Import existing services to enhance
@@ -331,7 +332,7 @@ export class DialogicalAINIntegrationService {
     context: AINDialogicalContext,
     query: PersonalOracleQuery
   ): Promise<any> {
-    // Combine existing profile data with what's needed for dialogical services
+    // Combine existing profile data with what&apos;s needed for dialogical services
     return {
       userId: context.userId,
       sessionId: context.sessionId,
@@ -494,7 +495,7 @@ export class DialogicalAINIntegrationService {
       },
       spiralogicEnhancement: {
         elementalDeepening: context.elementalState || { fire: 0.5, water: 0.5, earth: 0.5, air: 0.5, aether: 0.5 },
-        phaseAlignment: context.currentPhase || 'unknown',
+        phaseAlignment: context.currentPhase || SpiralPhase.INITIATION,
         alchemicalProcess: 'integration'
       }
     };

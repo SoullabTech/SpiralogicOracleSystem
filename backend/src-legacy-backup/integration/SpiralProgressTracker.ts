@@ -90,7 +90,7 @@ export class SpiralProgressTracker {
 
   private hasLongTermPerspective(insight: string): boolean {
     const longTermIndicators = [
-      "over time",
+      &quot;over time&quot;,
       "gradually",
       "ongoing",
       "continuing to",
@@ -173,7 +173,7 @@ export class SpiralProgressTracker {
 
     // Diversity (different life areas)
     const lifeAreas = [
-      "work",
+      &quot;work&quot;,
       "relationship",
       "family",
       "daily",
@@ -363,7 +363,7 @@ export class SpiralProgressTracker {
     );
     longTermPractices.forEach((practice) => {
       celebrations.push(
-        `🌱 You've maintained ${practice.practice} for ${practice.maintainedFor} days. This steady presence is the foundation of all growth.`,
+        `🌱 You&apos;ve maintained ${practice.practice} for ${practice.maintainedFor} days. This steady presence is the foundation of all growth.`,
       );
     });
 
@@ -374,7 +374,7 @@ export class SpiralProgressTracker {
 
     if (recentOrdinaryMoments.length > 0) {
       celebrations.push(
-        `✨ You've been present to ${recentOrdinaryMoments.length} ordinary moments this week. This presence is where real transformation lives.`,
+        `✨ You&apos;ve been present to ${recentOrdinaryMoments.length} ordinary moments this week. This presence is where real transformation lives.`,
       );
     }
 
@@ -385,7 +385,7 @@ export class SpiralProgressTracker {
 
     if (maintenancePhases.length > 0) {
       encouragements.push(
-        "Maintenance phases are as valuable as growth spurts. Your steady practice creates the soil for future insights.",
+        &quot;Maintenance phases are as valuable as growth spurts. Your steady practice creates the soil for future insights.",
       );
     }
 

@@ -54,7 +54,7 @@ export class UsageMetricsLogger {
     startTime: number;
     includesVoice: boolean;
     voiceDurationMs?: number;
-    status: "success" | "error";
+    status: &quot;success" | "error";
     errorMessage?: string;
   }): Promise<void> {
     const endTime = Date.now();
@@ -121,7 +121,7 @@ export class UsageMetricsLogger {
     if (this.metricsBuffer.length === 0) return;
 
     const date = new Date();
-    const filename = `usage-${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}.jsonl`;
+    const filename = `usage-${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, &quot;0")}-${String(date.getDate()).padStart(2, "0")}.jsonl`;
     const filepath = path.join(this.logPath, filename);
 
     const linesToWrite =
@@ -182,7 +182,7 @@ export class UsageMetricsLogger {
     const files = await fs.promises.readdir(this.logPath);
 
     for (const file of files) {
-      if (!file.startsWith("usage-") || !file.endsWith(".jsonl")) continue;
+      if (!file.startsWith(&quot;usage-&quot;) || !file.endsWith(".jsonl")) continue;
 
       const filepath = path.join(this.logPath, file);
       const content = await fs.promises.readFile(filepath, "utf-8");

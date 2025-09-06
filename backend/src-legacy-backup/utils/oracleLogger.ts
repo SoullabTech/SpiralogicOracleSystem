@@ -20,7 +20,7 @@ export async function logOracleInsight(
 ): Promise<{ id: string }> {
   try {
     const { data, error } = await supabase
-      .from("insight_history")
+      .from(&quot;insight_history&quot;)
       .insert({
         anon_id: entry.anon_id,
         archetype: entry.archetype,
@@ -59,7 +59,7 @@ export async function getInsightHistory(
 ): Promise<any[]> {
   try {
     const query = supabase
-      .from("insight_history")
+      .from(&quot;insight_history&quot;)
       .select("*")
       .eq("anon_id", userId)
       .order("created_at", { ascending: false })
@@ -86,7 +86,7 @@ export async function getInsightHistory(
 export async function getInsightStats(userId: string): Promise<any> {
   try {
     const { data, error } = await supabase
-      .from("insight_history")
+      .from(&quot;insight_history&quot;)
       .select("element, metadata->>phase")
       .eq("anon_id", userId);
 

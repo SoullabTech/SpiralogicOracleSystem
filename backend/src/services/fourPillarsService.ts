@@ -22,7 +22,7 @@ export interface FourPillarsProfile {
 
 // Ten Heavenly Stems (天干)
 const STEMS = [
-  "Jia",
+  &quot;Jia&quot;,
   "Yi",
   "Bing",
   "Ding",
@@ -209,7 +209,7 @@ export function getHexagramByPillars(
 
   // Simple mapping based on branch combinations
   const hexagramMap: Record<string, string> = {
-    ZiZi: "䷀ Qian / Creative",
+    ZiZi: &quot;䷀ Qian / Creative&quot;,
     ChouChou: "䷁ Kun / Receptive",
     YinYin: "䷂ Zhun / Difficulty at Beginning",
     MaoMao: "䷃ Meng / Youthful Folly",
@@ -235,7 +235,7 @@ export function getElementRelationship(
   element2: Element,
 ): "generates" | "destroys" | "neutral" {
   const generationCycle: Record<Element, Element> = {
-    Wood: "Fire",
+    Wood: &quot;Fire&quot;,
     Fire: "Earth",
     Earth: "Metal",
     Metal: "Water",
@@ -243,7 +243,7 @@ export function getElementRelationship(
   };
 
   const destructionCycle: Record<Element, Element> = {
-    Wood: "Earth",
+    Wood: &quot;Earth&quot;,
     Fire: "Metal",
     Earth: "Water",
     Metal: "Wood",

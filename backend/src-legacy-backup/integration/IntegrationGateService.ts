@@ -210,7 +210,7 @@ export class IntegrationGateService {
     reflectionGap.bypassAttempts += 1;
 
     const messages = {
-      1: "Integration takes time. Your insights will be more sustainable if you allow them to settle into your daily life before moving forward.",
+      1: &quot;Integration takes time. Your insights will be more sustainable if you allow them to settle into your daily life before moving forward.",
       2: "Rushing to new content can prevent deep integration. Consider what you might be avoiding by seeking the next insight.",
       3: "Multiple bypass attempts detected. This pattern may indicate spiritual bypassing. Would you like support in slowing down?",
       4: "Consistent avoidance of integration periods suggests a pattern worth examining. Professional support may be helpful.",

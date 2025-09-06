@@ -79,7 +79,7 @@ export interface ResistanceConfig {
 
 export interface BlindSpotConfig {
   name: string;
-  domain: string; // What area this agent doesn't "see"
+  domain: string; // What area this agent doesn&apos;t &quot;see&quot;
   severity: number; // 0-1 how blind they are
   compensations: string[]; // How they try to work around the blindness
   occasionalInsight: number; // 0-1 chance of sudden clarity
@@ -436,7 +436,7 @@ export class AgentBase {
   }> {
     
     // This would interface with the actual LLM/response generation
-    // For now, we'll create a structured response framework
+    // For now, we&apos;ll create a structured response framework
     
     const baseResponse = await this.generateBaseResponse(userInput, context);
     
@@ -570,7 +570,7 @@ export class AgentBase {
   
   private async generateBaseResponse(userInput: string, context: any): Promise<string> {
     // This would interface with LLM or response generation system
-    // For now, return a placeholder that indicates the agent's approach
+    // For now, return a placeholder that indicates the agent&apos;s approach
     return `[${this.personality.name} contemplates: "${userInput}"]`;
   }
   
@@ -766,7 +766,7 @@ export class AgentBase {
   
   private createEmergencyResponse(userInput: string, error: Error): AgentResponse {
     return {
-      content: "I notice something unexpected in my processing. Let me pause and approach this differently.",
+      content: &quot;I notice something unexpected in my processing. Let me pause and approach this differently.",
       metadata: {
         agentId: this.personality.id,
         personalityVersion: this.personality.version,

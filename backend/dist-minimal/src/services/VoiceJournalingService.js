@@ -229,7 +229,7 @@ Keep your response warm, brief (2-3 sentences), and voice-friendly for potential
         return shadowKeywords.some(keyword => lowerText.includes(keyword));
     }
     /**
-     * Get user's voice journaling statistics
+     * Get user&apos;s voice journaling statistics
      */
     async getVoiceJournalingStats(userId) {
         // In full implementation, this would query the database

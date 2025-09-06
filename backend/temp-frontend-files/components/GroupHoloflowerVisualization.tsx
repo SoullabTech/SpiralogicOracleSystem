@@ -32,7 +32,7 @@ export const GroupHoloflowerVisualization: React.FC<
   );
   const [resonanceView, setResonanceView] = useState<
     "grid" | "circle" | "spiral"
-  >("circle");
+  >(&quot;circle&quot;);
 
   useEffect(() => {
     const ws = new WebSocket(`ws://localhost:5002`);
@@ -183,14 +183,14 @@ export const GroupHoloflowerVisualization: React.FC<
               {groupPattern && (
                 <div className="field-metrics">
                   <div>
-                    Integration:{" "}
+                    Integration:{&quot; &quot;}
                     {Math.round(
                       groupPattern.collectiveState.centerIntegration * 100,
                     )}
                     %
                   </div>
                   <div>
-                    Balance:{" "}
+                    Balance:{&quot; "}
                     {Math.round(
                       groupPattern.collectiveState.overallBalance * 100,
                     )}
@@ -339,7 +339,7 @@ export const GroupHoloflowerVisualization: React.FC<
 
   const getColorForMetric = (metric: string): string => {
     const colors: Record<string, string> = {
-      harmony: "#87CEEB",
+      harmony: &quot;#87CEEB&quot;,
       synergy: "#FFD700",
       coherence: "#FF6B6B",
     };
@@ -351,19 +351,19 @@ export const GroupHoloflowerVisualization: React.FC<
       <div className="view-controls">
         <button
           className={resonanceView === "grid" ? "active" : ""}
-          onClick={() => setResonanceView("grid")}
+          onClick={() => setResonanceView(&quot;grid&quot;)}
         >
           Grid View
         </button>
         <button
           className={resonanceView === "circle" ? "active" : ""}
-          onClick={() => setResonanceView("circle")}
+          onClick={() => setResonanceView(&quot;circle&quot;)}
         >
           Circle View
         </button>
         <button
           className={resonanceView === "spiral" ? "active" : ""}
-          onClick={() => setResonanceView("spiral")}
+          onClick={() => setResonanceView(&quot;spiral&quot;)}
         >
           Spiral View
         </button>

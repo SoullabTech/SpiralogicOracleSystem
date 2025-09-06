@@ -243,7 +243,7 @@ export class SynapticSpaceAnalyzer {
   }
 
   /**
-   * Assess if the Other arrives at the "wrong" time
+   * Assess if the Other arrives at the &quot;wrong&quot; time
    */
   private assessReadinessMismatch(manifestation: any): boolean {
     // Look for signs that the encounter came when not ready

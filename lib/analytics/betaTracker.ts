@@ -5,8 +5,11 @@
 
 import { createClient } from '@/lib/supabase/client';
 
+// Check if we're in mock mode
+const MOCK_MODE = process.env.NEXT_PUBLIC_MOCK_SUPABASE === 'true';
+
 export class BetaTracker {
-  private supabase = createClient();
+  private supabase = MOCK_MODE ? null : createClient();
   private userId: string | null = null;
   private sessionId: string | null = null;
   private sessionStartTime: Date | null = null;
@@ -37,6 +40,11 @@ export class BetaTracker {
       localStorage.setItem('beta_user_id', userId);
     }
 
+    if (MOCK_MODE || !this.supabase) {
+      console.log('📦 [BetaTracker] Mock mode - skipping beta tester init');
+      return;
+    }
+    
     try {
       await this.supabase
         .from('beta_testers')
@@ -73,6 +81,11 @@ export class BetaTracker {
       localStorage.setItem('current_session_id', this.sessionId);
     }
 
+    if (MOCK_MODE || !this.supabase) {
+      console.log('📦 [BetaTracker] Mock mode - skipping session start');
+      return;
+    }
+    
     try {
       await this.supabase
         .from('user_sessions')
@@ -100,6 +113,11 @@ export class BetaTracker {
   }) {
     if (!this.userId || !this.sessionId) return;
 
+    if (MOCK_MODE || !this.supabase) {
+      console.log('📦 [BetaTracker] Mock mode - skipping session update');
+      return;
+    }
+    
     try {
       await this.supabase
         .from('user_sessions')
@@ -126,6 +144,11 @@ export class BetaTracker {
     metadata?: any;
   }) {
     if (!this.userId || !this.sessionId) return;
+
+    if (MOCK_MODE || !this.supabase) {
+      console.log('📦 [BetaTracker] Mock mode - skipping voice event');
+      return;
+    }
 
     try {
       await this.supabase
@@ -156,6 +179,11 @@ export class BetaTracker {
   }) {
     if (!this.userId || !this.sessionId) return;
 
+    if (MOCK_MODE || !this.supabase) {
+      console.log('📦 [BetaTracker] Mock mode - skipping memory event');
+      return;
+    }
+    
     try {
       await this.supabase
         .from('memory_events')
@@ -186,6 +214,11 @@ export class BetaTracker {
   }) {
     if (!this.userId) return;
 
+    if (MOCK_MODE || !this.supabase) {
+      console.log('📦 [BetaTracker] Mock mode - skipping feedback');
+      return;
+    }
+    
     try {
       await this.supabase
         .from('beta_feedback')
@@ -214,6 +247,11 @@ export class BetaTracker {
 
     const duration = Math.floor((new Date().getTime() - this.sessionStartTime.getTime()) / 60000); // Minutes
 
+    if (MOCK_MODE || !this.supabase) {
+      console.log('📦 [BetaTracker] Mock mode - skipping session end');
+      return;
+    }
+    
     try {
       await this.supabase
         .from('user_sessions')
@@ -224,13 +262,14 @@ export class BetaTracker {
         .eq('session_id', this.sessionId);
 
       // Update beta tester last active
-      await this.supabase
-        .from('beta_testers')
-        .update({
-          last_active: new Date().toISOString()
-        })
-        .eq('user_id', this.userId);
-
+      if (!MOCK_MODE && this.supabase) {
+        await this.supabase
+          .from('beta_testers')
+          .update({
+            last_active: new Date().toISOString()
+          })
+          .eq('user_id', this.userId);
+      }
     } catch (error) {
       console.warn('Failed to end session:', error);
     }

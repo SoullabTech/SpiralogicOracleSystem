@@ -37,10 +37,10 @@ export class OracleService {
     new Map();
 
   /**
-   * 🎭 Get User's Personal Oracle Agent (Primary Method)
+   * 🎭 Get User&apos;s Personal Oracle Agent (Primary Method)
    */
   static async getUserOracle(userId: string): Promise<ArchetypeAgent> {
-    // Retrieve user's Oracle settings
+    // Retrieve user&apos;s Oracle settings
     const oracleSettings = await this.getOracleSettings(userId);
 
     if (!oracleSettings) {
@@ -83,7 +83,7 @@ export class OracleService {
     // Check for evolution opportunities
     await this.checkForEvolutionOpportunity(userId, input, response);
 
-    logger.info("Oracle Query Processed:", {
+    logger.info(&quot;Oracle Query Processed:&quot;, {
       userId,
       oracleName: oracle.oracleName,
       archetype: oracle.element,
@@ -162,7 +162,7 @@ export class OracleService {
     ArchetypeAgentFactory.clearUserCache(userId);
     this.oracleSettingsCache.delete(userId);
 
-    logger.info("Oracle Evolution Accepted:", {
+    logger.info(&quot;Oracle Evolution Accepted:", {
       userId,
       oracleName: oracle.oracleName,
       newPhase,
@@ -200,7 +200,7 @@ export class OracleService {
       updatedAt: new Date(),
     });
 
-    logger.info("Oracle Voice Settings Updated:", {
+    logger.info(&quot;Oracle Voice Settings Updated:&quot;, {
       userId,
       voiceSettings: updatedVoiceSettings,
     });
@@ -216,7 +216,7 @@ export class OracleService {
       updatedAt: new Date(),
     });
 
-    logger.info("Oracle Renamed:", {
+    logger.info(&quot;Oracle Renamed:&quot;, {
       userId,
       newName,
     });
@@ -298,7 +298,7 @@ export class OracleService {
     // Implementation depends on your database choice
     // Example: await db.oracles.update({ where: { userId }, data: updates });
 
-    logger.info("Oracle Settings Updated:", { userId, updates });
+    logger.info(&quot;Oracle Settings Updated:&quot;, { userId, updates });
   }
 
   private static async updateLastInteraction(userId: string): Promise<void> {
@@ -313,7 +313,7 @@ export class OracleService {
   ): Promise<void> {
     // Store evolution suggestion for user review
     // Implementation depends on your database choice
-    logger.info("Evolution suggestion stored:", { userId, suggestion });
+    logger.info(&quot;Evolution suggestion stored:&quot;, { userId, suggestion });
   }
 
   private static async checkForEvolutionOpportunity(
@@ -326,7 +326,7 @@ export class OracleService {
     // For now, this is a placeholder
 
     const phaseIndicators = {
-      exploration: ["curious", "explore", "discover", "try", "experiment"],
+      exploration: [&quot;curious&quot;, "explore", "discover", "try", "experiment"],
       integration: [
         "understand",
         "connect",
@@ -361,7 +361,7 @@ export class OracleService {
     const settings = await this.getOracleSettings(userId);
 
     const issues = [];
-    let status: "healthy" | "warning" | "error" = "healthy";
+    let status: &quot;healthy&quot; | "warning" | "error" = "healthy";
 
     if (!settings) {
       issues.push("No Oracle settings found");

@@ -198,9 +198,9 @@ export class InternalComplexityService {
    */
   private describeExperience(patterns: any): string {
     const templates = [
-      "You seem to be experiencing complexity around {theme}",
+      &quot;You seem to be experiencing complexity around {theme}&quot;,
       "You might be navigating internal tension between {aspect1} and {aspect2}",
-      "It sounds like you're processing something significant about {focus}",
+      "It sounds like you&apos;re processing something significant about {focus}",
       "You appear to be in a phase of {development_type}"
     ];
 
@@ -220,7 +220,7 @@ export class InternalComplexityService {
    */
   private articulateTension(tensions: any[]): string {
     if (tensions.length === 0) {
-      return "You might be experiencing internal complexity that's worth exploring";
+      return "You might be experiencing internal complexity that&apos;s worth exploring";
     }
 
     const tension = tensions[0];
@@ -230,7 +230,7 @@ export class InternalComplexityService {
       case 'growth_safety':
         return "You might feel pulled between growing and staying safe";
       default:
-        return "You're experiencing some internal complexity";
+        return "You&apos;re experiencing some internal complexity";
     }
   }
 

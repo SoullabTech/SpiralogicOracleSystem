@@ -156,7 +156,7 @@ export class PatternRecognitionEngine {
 
   // Create a unique key for a pattern
   private createPatternKey(elements: string[]): string {
-    return elements.sort().join("-");
+    return elements.sort().join(&quot;-&quot;);
   }
 
   // Update pattern candidate with new occurrence
@@ -214,7 +214,7 @@ export class PatternRecognitionEngine {
 
       // Share with agents
       await agentComms.sharePatternDiscovery({
-        discoveredBy: "PatternRecognitionEngine",
+        discoveredBy: &quot;PatternRecognitionEngine&quot;,
         pattern_id: pattern.pattern_id!,
         elements: pattern.elements_involved,
         wisdom: pattern.integration_wisdom,
@@ -235,7 +235,7 @@ export class PatternRecognitionEngine {
       elements_involved: candidate.elements,
       context_domain: this.determinePrimaryDomain(candidate.contexts),
       cultural_context: await this.determineCulturalContext(candidate),
-      age_demographic: "mixed", // Would be calculated from user demographics
+      age_demographic: &quot;mixed&quot;, // Would be calculated from user demographics
       success_metrics: {
         confidence: candidate.averageConfidence,
         user_satisfaction: "pending",
@@ -295,7 +295,7 @@ export class PatternRecognitionEngine {
 
       // Filter by elements
       if (context.elements && context.elements.length > 0) {
-        query = query.contains("elements_involved", context.elements);
+        query = query.contains(&quot;elements_involved&quot;, context.elements);
       }
 
       // Filter by domain
@@ -340,7 +340,7 @@ export class PatternRecognitionEngine {
     try {
       // Get current pattern
       const { data: pattern, error: fetchError } = await supabase
-        .from("elemental_patterns")
+        .from(&quot;elemental_patterns&quot;)
         .select("*")
         .eq("pattern_id", patternId)
         .single();
@@ -381,7 +381,7 @@ export class PatternRecognitionEngine {
     context: PatternRecognitionContext,
   ): Promise<void> {
     try {
-      await supabase.from("collective_observations").insert({
+      await supabase.from(&quot;collective_observations&quot;).insert({
         user_id: context.userId,
         query_text: context.query,
         query_type: this.categorizeQuery(context.query),
@@ -398,7 +398,7 @@ export class PatternRecognitionEngine {
 
   // Analyze pattern candidates periodically
   private async analyzePatternCandidates(): Promise<void> {
-    logger.info("Analyzing pattern candidates", {
+    logger.info(&quot;Analyzing pattern candidates&quot;, {
       candidateCount: this.patternCandidates.size,
     });
 
@@ -411,7 +411,7 @@ export class PatternRecognitionEngine {
   private async loadExistingPatterns(): Promise<void> {
     try {
       const { data, error } = await supabase
-        .from("elemental_patterns")
+        .from(&quot;elemental_patterns&quot;)
         .select("*")
         .order("pattern_strength", { ascending: false })
         .limit(100);
@@ -468,7 +468,7 @@ export class PatternRecognitionEngine {
   }
 
   private determinePrimaryDomain(contexts: Set<string>): string {
-    if (contexts.size === 0) return "general";
+    if (contexts.size === 0) return &quot;general&quot;;
 
     // Return most common context
     const contextArray = Array.from(contexts);
@@ -488,7 +488,7 @@ export class PatternRecognitionEngine {
   ): Promise<string> {
     // This would analyze user profiles and content for cultural markers
     // Simplified for now
-    return "universal";
+    return &quot;universal";
   }
 
   private synthesizeWisdom(wisdomPieces: string[]): string {
@@ -535,7 +535,7 @@ export class PatternRecognitionEngine {
     type: string,
   ): Promise<void> {
     try {
-      await supabase.from("pattern_contributions").insert({
+      await supabase.from(&quot;pattern_contributions&quot;).insert({
         user_id: userId,
         pattern_id: patternId,
         contribution_type: type,
@@ -555,7 +555,7 @@ export class PatternRecognitionEngine {
   }> {
     try {
       const { data: patterns, error } = await supabase
-        .from("elemental_patterns")
+        .from(&quot;elemental_patterns&quot;)
         .select("pattern_strength, context_domain");
 
       if (error) throw error;

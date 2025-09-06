@@ -77,7 +77,7 @@ export class SymbolicIntegrationEngine {
       userProfile,
     );
 
-    logger.info("Symbolic Integration Generated:", {
+    logger.info(&quot;Symbolic Integration Generated:&quot;, {
       archetype,
       userPhase,
       ritualCount: ritualPrompts.length,
@@ -109,7 +109,7 @@ export class SymbolicIntegrationEngine {
       fire: {
         initiation: {
           suggestion:
-            "Light a red candle and speak your deepest intention to the flame",
+            &quot;Light a red candle and speak your deepest intention to the flame&quot;,
           materials: [
             "red candle",
             "matches",
@@ -188,7 +188,7 @@ export class SymbolicIntegrationEngine {
             "Hold moonstone while drinking mindfully",
             "Ask water for guidance on emotional needs",
             "Journal insights received",
-            "End with gratitude for water's wisdom",
+            "End with gratitude for water&apos;s wisdom",
             "Offer blessed water to plants",
           ],
           duration: 10,
@@ -220,7 +220,7 @@ export class SymbolicIntegrationEngine {
             "Walk barefoot on earth for 5 minutes",
             "Hold crystals while setting daily intentions",
             "Tend to plants with loving attention",
-            "Journal about what's growing in your life",
+            "Journal about what&apos;s growing in your life",
             "Offer gratitude to earth spirits",
             "Close by placing hands on earth",
           ],
@@ -336,7 +336,7 @@ export class SymbolicIntegrationEngine {
   ): Promise<string[]> {
     const basePrompts = {
       fire: [
-        "What is ready to be transformed in my life?",
+        &quot;What is ready to be transformed in my life?&quot;,
         "Where do I need more courage to take action?",
         "What vision wants to be born through me?",
         "How can I channel my passion more effectively?",
@@ -367,7 +367,7 @@ export class SymbolicIntegrationEngine {
         "How am I being called to serve others?",
         "What spiritual practice wants to deepen?",
         "Where do I feel most connected to source?",
-        "What is my soul's purpose in this moment?",
+        "What is my soul&apos;s purpose in this moment?",
         "How can I honor the sacred in daily life?",
       ],
     };
@@ -397,7 +397,7 @@ export class SymbolicIntegrationEngine {
   ): Promise<string[]> {
     const dreamThemes = {
       fire: [
-        "Dreams of transformation, fire, or bright lights",
+        &quot;Dreams of transformation, fire, or bright lights&quot;,
         "Visions of creating, building, or breakthrough moments",
         "Dreams featuring volcanoes, dragons, or solar imagery",
       ],
@@ -440,7 +440,7 @@ export class SymbolicIntegrationEngine {
       water: [
         "Yemanja, African goddess of oceans and motherhood",
         "Quan Yin, compassionate water goddess",
-        "Poseidon's realm of emotional depths",
+        "Poseidon&apos;s realm of emotional depths",
         "Celtic wells of healing and wisdom",
       ],
       earth: [
@@ -543,10 +543,10 @@ export class SymbolicIntegrationEngine {
 
     const moonGuidance = {
       fire: {
-        new: "New moon fire energy perfect for setting intentions",
+        new: &quot;New moon fire energy perfect for setting intentions&quot;,
         waxing: "Growing moon amplifies your creative fire",
         full: "Full moon illuminates your passionate purpose",
-        waning: "Release what blocks your fire's expression",
+        waning: "Release what blocks your fire&apos;s expression",
       },
       water: {
         new: "New moon calls for emotional renewal",
@@ -590,10 +590,10 @@ export class SymbolicIntegrationEngine {
 
     const timingMap = {
       fire: hour < 12 ? "morning" : "evening",
-      water: hour < 6 || hour > 18 ? "evening" : "morning",
+      water: hour < 6 || hour > 18 ? &quot;evening&quot; : "morning",
       earth: hour < 16 ? "morning" : "evening",
       air: hour < 14 ? "morning" : "evening",
-      aether: hour < 6 || hour > 22 ? "midnight" : "evening",
+      aether: hour < 6 || hour > 22 ? &quot;midnight&quot; : "evening",
     };
 
     return timingMap[archetype] || "evening";
@@ -615,7 +615,7 @@ export class SymbolicIntegrationEngine {
       );
     }
     if (input.includes("work") || input.includes("career")) {
-      contextualPrompts.push("How does my work align with my soul's purpose?");
+      contextualPrompts.push("How does my work align with my soul&apos;s purpose?");
     }
     if (input.includes("change") || input.includes("transition")) {
       contextualPrompts.push("What is trying to be born through this change?");

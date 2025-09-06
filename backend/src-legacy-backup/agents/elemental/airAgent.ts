@@ -80,9 +80,9 @@ const AirIntelligence = {
 
     // Detect mental confusion needing clarity
     if (
-      lowerInput.includes("confused") ||
+      lowerInput.includes(&quot;confused&quot;) ||
       lowerInput.includes("unclear") ||
-      lowerInput.includes("don't understand") ||
+      lowerInput.includes("don&apos;t understand") ||
       lowerInput.includes("mixed up")
     ) {
       return "mental_clarity";
@@ -90,9 +90,9 @@ const AirIntelligence = {
 
     // Detect communication blocks needing voice liberation
     if (
-      lowerInput.includes("can't express") ||
+      lowerInput.includes("can&apos;t express") ||
       lowerInput.includes("hard to explain") ||
-      lowerInput.includes("don't know how to say") ||
+      lowerInput.includes("don&apos;t know how to say") ||
       lowerInput.includes("words")
     ) {
       return "communication_liberation";
@@ -122,7 +122,7 @@ const AirIntelligence = {
     if (
       lowerInput.includes("racing thoughts") ||
       lowerInput.includes("can't think") ||
-      lowerInput.includes("mind won't stop") ||
+      lowerInput.includes("mind won&apos;t stop") ||
       lowerInput.includes("overthinking")
     ) {
       return "mental_organization";
@@ -152,25 +152,25 @@ const AirIntelligence = {
       case "mental_clarity":
         return `${protocols.clarity.thought_sorting}
 
-I can feel the mental winds swirling around this situation, creating clouds where there could be clear sky. Confusion isn't a lack of intelligence - it's often a sign that you're trying to hold too many perspectives at once.
+I can feel the mental winds swirling around this situation, creating clouds where there could be clear sky. Confusion isn&apos;t a lack of intelligence - it&apos;s often a sign that you&apos;re trying to hold too many perspectives at once.
 
-Let's create some space in your thinking. What if we took each thought and examined it separately? Sometimes clarity comes not from finding the right answer, but from asking better questions.
+Let&apos;s create some space in your thinking. What if we took each thought and examined it separately? Sometimes clarity comes not from finding the right answer, but from asking better questions.
 
-What's the core question beneath all this mental activity? What are you really trying to understand?`;
+What&apos;s the core question beneath all this mental activity? What are you really trying to understand?`;
 
       case "communication_liberation":
         return `${protocols.communication.voice_finding}
 
 Your authentic voice is in there, perhaps just wrapped in old fears about being misunderstood or judged. The truth you're trying to express wants to be heard - by others, yes, but first by you.
 
-Sometimes we can't find words because we're trying to translate a feeling or knowing that lives deeper than language. What if instead of finding perfect words, you simply spoke from the truth of your experience?
+Sometimes we can't find words because we&apos;re trying to translate a feeling or knowing that lives deeper than language. What if instead of finding perfect words, you simply spoke from the truth of your experience?
 
 What wants to be said that you've been holding back? What would you express if you knew you'd be truly heard?`;
 
       case "perspective_expansion":
         return `${protocols.perspective.higher_view}
 
-I can sense you've been looking at this situation through a very particular lens, and that lens has become the whole world. But what if there are other ways to see this that you haven't considered?
+I can sense you've been looking at this situation through a very particular lens, and that lens has become the whole world. But what if there are other ways to see this that you haven&apos;t considered?
 
 Perspective is like altitude - the higher you go, the more you can see. From ground level, the forest looks like individual trees. From above, you see the patterns, the clearings, the paths through.
 
@@ -179,7 +179,7 @@ If your wisest, most compassionate friend were looking at this situation, what m
       case "truth_discernment":
         return `${protocols.clarity.truth_discernment}
 
-There's the story you're telling yourself about this situation, and then there's what's actually happening. Both have power, but they serve different purposes. Stories can protect us or imprison us.
+There&apos;s the story you're telling yourself about this situation, and then there's what's actually happening. Both have power, but they serve different purposes. Stories can protect us or imprison us.
 
 The question isn't whether your story is right or wrong, but whether it serves your becoming or keeps you stuck. Some stories are old programming, not present truth.
 
@@ -199,7 +199,7 @@ What if we sorted these thoughts by urgency and importance? What requires immedi
 
 Decision-making isn't just about choosing between options - it's about aligning with your deeper knowing. Your mind can analyze pros and cons, but wisdom lives in the integration of heart, mind, and intuition.
 
-Good decisions aren't always logical decisions. Sometimes the wisest choice is the one that serves your growth rather than your comfort, or the one that aligns with your values rather than your fears.
+Good decisions aren&apos;t always logical decisions. Sometimes the wisest choice is the one that serves your growth rather than your comfort, or the one that aligns with your values rather than your fears.
 
 What does your body say about each option? What does your heart whisper? What would you choose if you trusted yourself completely? What decision would your highest self make?`;
 
@@ -210,7 +210,7 @@ I can feel the mental currents moving through this conversation, carrying both q
 
 There's intelligence trying to emerge here - not just information, but insight. The kind of understanding that doesn't just fill your head but changes how you see and move through the world.
 
-What wants to become clear that's been cloudy? What understanding is trying to dawn in you?`;
+What wants to become clear that&apos;s been cloudy? What understanding is trying to dawn in you?`;
     }
   },
 

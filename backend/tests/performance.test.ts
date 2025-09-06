@@ -46,11 +46,11 @@ describe('Performance Benchmarks', () => {
   describe('Oracle Response Performance', () => {
     test('Should respond to simple prompts within 2 seconds', async () => {
       const simplePrompts = [
-        "How are you?",
+        &quot;How are you?&quot;,
         "I need guidance",
         "What should I focus on today?",
         "Help me understand myself",
-        "I'm feeling confused"
+        "I&apos;m feeling confused"
       ];
 
       for (const prompt of simplePrompts) {
@@ -66,8 +66,8 @@ describe('Performance Benchmarks', () => {
 
     test('Should handle complex prompts within 5 seconds', async () => {
       const complexPrompts = [
-        "I'm struggling with the paradox of wanting deep transformation while also fearing change, and I notice this pattern showing up in my relationships where I get close to someone but then sabotage it when they want more intimacy. How do I work with this shadow pattern?",
-        "My father was both abusive and loving, and I'm finding that I've internalized his voice as both my inner critic and my motivation. I want to honor the good he gave me while healing from the harm, but I don't know how to separate these aspects.",
+        "I&apos;m struggling with the paradox of wanting deep transformation while also fearing change, and I notice this pattern showing up in my relationships where I get close to someone but then sabotage it when they want more intimacy. How do I work with this shadow pattern?",
+        "My father was both abusive and loving, and I'm finding that I've internalized his voice as both my inner critic and my motivation. I want to honor the good he gave me while healing from the harm, but I don&apos;t know how to separate these aspects.",
         "I keep having dreams about flying over dark water, and when I try to land, the ground disappears. I've been doing shadow work for months, and I feel like these dreams are trying to tell me something about my spiritual bypassing patterns."
       ];
 
@@ -259,7 +259,7 @@ describe('Performance Benchmarks', () => {
     });
 
     test('Should cache wisdom selections for improved performance', async () => {
-      const testPrompt = "I'm struggling with shadow integration";
+      const testPrompt = &quot;I&apos;m struggling with shadow integration";
       const context = { emotionalState: 'anxious', currentArchetype: 'Shadow' };
 
       // First selection (uncached)
@@ -426,7 +426,7 @@ describe('Performance Benchmarks', () => {
 
         switch (test.operation) {
           case 'Simple oracle response':
-            await oracle.respondToPrompt("Hello");
+            await oracle.respondToPrompt(&quot;Hello");
             break;
           case 'Memory storage':
             await soulMemory.storeMemory({

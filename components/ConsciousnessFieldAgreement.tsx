@@ -225,7 +225,7 @@ export default function ConsciousnessFieldAgreement({
                     <li>Personal identifying information (names, emails, locations)</li>
                     <li>Specific content of your conversations or journal entries</li>
                     <li>Individual trauma details or personal stories</li>
-                    <li>Any data you haven't explicitly consented to share</li>
+                    <li>Any data you haven&apos;t explicitly consented to share</li>
                     <li>Behavioral tracking outside the platform</li>
                   </ul>
                 </div>

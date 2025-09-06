@@ -6,6 +6,7 @@ import {
 } from "../utils/sharedUtilities";
 import { logger } from "../utils/logger";
 import { storeMemoryItem, getRelevantMemories } from "./memoryService";
+import { embeddingQueue } from "./embeddingQueue";
 
 export interface JournalEntry {
   id: string;
@@ -103,7 +104,7 @@ export class JournalingService {
     query: JournalQuery,
   ): Promise<StandardAPIResponse<JournalResponse>> {
     try {
-      logger.info("Creating journal entry", { userId: query.userId });
+      logger.info(&quot;Creating journal entry", { userId: query.userId });
 
       if (!query.content?.trim()) {
         return errorResponse(["Journal content is required"]);
@@ -157,6 +158,34 @@ export class JournalingService {
         },
       );
 
+      // Automatically create embedding for semantic search
+      try {
+        await embeddingQueue.storeEmbeddedMemory(
+          query.userId,
+          query.content,
+          "journal",
+          {
+            entryId: entry.id,
+            mood: entry.mood,
+            sentiment: sentiment.dominant,
+            spiralogicPhase,
+            wordCount,
+            tags: entry.tags,
+          }
+        );
+        logger.info("[EMBED] Journal entry indexed", {
+          entryId: entry.id,
+          userId: query.userId,
+        });
+      } catch (embedError) {
+        // Don&apos;t block insert if embedding fails
+        logger.warn("[EMBED] Failed to index journal entry, will retry", {
+          entryId: entry.id,
+          userId: query.userId,
+          error: embedError instanceof Error ? embedError.message : "Unknown error",
+        });
+      }
+
       logger.info("Journal entry created successfully", {
         entryId: entry.id,
         userId: query.userId,
@@ -178,7 +207,7 @@ export class JournalingService {
     query: JournalQuery,
   ): Promise<StandardAPIResponse<JournalResponse>> {
     try {
-      logger.info("Retrieving journal entries", { userId: query.userId });
+      logger.info(&quot;Retrieving journal entries&quot;, { userId: query.userId });
 
       const userEntries = this.journalEntries.get(query.userId) || [];
       let filteredEntries = [...userEntries];
@@ -244,7 +273,7 @@ export class JournalingService {
         hasMore,
       });
     } catch (error) {
-      logger.error("Failed to retrieve journal entries", {
+      logger.error(&quot;Failed to retrieve journal entries&quot;, {
         error: error instanceof Error ? error.message : "Unknown error",
         userId: query.userId,
       });
@@ -256,7 +285,7 @@ export class JournalingService {
     query: JournalQuery,
   ): Promise<StandardAPIResponse<JournalResponse>> {
     try {
-      logger.info("Updating journal entry", {
+      logger.info(&quot;Updating journal entry&quot;, {
         userId: query.userId,
         entryId: query.entryId,
       });
@@ -315,7 +344,7 @@ export class JournalingService {
     query: JournalQuery,
   ): Promise<StandardAPIResponse<JournalResponse>> {
     try {
-      logger.info("Deleting journal entry", {
+      logger.info(&quot;Deleting journal entry&quot;, {
         userId: query.userId,
         entryId: query.entryId,
       });
@@ -349,7 +378,7 @@ export class JournalingService {
     query: JournalQuery,
   ): Promise<StandardAPIResponse<JournalResponse>> {
     try {
-      logger.info("Analyzing journal patterns", { userId: query.userId });
+      logger.info(&quot;Analyzing journal patterns&quot;, { userId: query.userId });
 
       const userEntries = this.journalEntries.get(query.userId) || [];
 
@@ -546,7 +575,7 @@ export class JournalingService {
   }
 
   private determineSpiralogicPhase(
-    sentiment: JournalEntry["sentiment"],
+    sentiment: JournalEntry[&quot;sentiment"],
     elemental: JournalEntry["elementalResonance"],
   ): string {
     // Determine current phase based on sentiment and elemental resonance
@@ -631,7 +660,7 @@ export class JournalingService {
     // Emotional trend (last 30 days or all entries if fewer)
     const recentEntries = entries.slice(0, 30);
     const emotionalTrend = recentEntries.map((entry) => ({
-      date: entry.createdAt.split("T")[0],
+      date: entry.createdAt.split(&quot;T&quot;)[0],
       sentiment: entry.sentiment?.score || 0,
     }));
 
@@ -694,7 +723,7 @@ export class JournalingService {
     entries: JournalEntry[],
   ): Array<{ date: string; elements: Record<string, number> }> {
     return entries.slice(0, 10).map((entry) => ({
-      date: entry.createdAt.split("T")[0],
+      date: entry.createdAt.split(&quot;T&quot;)[0],
       elements: entry.elementalResonance || {
         fire: 0,
         water: 0,

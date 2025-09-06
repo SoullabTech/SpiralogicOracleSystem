@@ -69,7 +69,7 @@ export default function IntegrationDashboard() {
             Integration Architecture Not Found
           </h2>
           <p className="text-gray-600 mb-6">
-            Let's initialize your integration-centered development journey.
+            Let&apos;s initialize your integration-centered development journey.
           </p>
           <button
             onClick={() => router.push("/auth/onboarding")}

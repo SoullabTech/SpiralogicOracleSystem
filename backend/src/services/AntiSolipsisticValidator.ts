@@ -180,7 +180,7 @@ export class AntiSolipsisticValidator {
     // Sophisticated self-mirroring patterns
     const solipsismWarnings = [];
 
-    // Pattern 1: "Convenient" otherness that only challenges in comfortable ways
+    // Pattern 1: &quot;Convenient&quot; otherness that only challenges in comfortable ways
     if (checks.contradictsSelfImage && !checks.bringsUnwantedGifts) {
       solipsismWarnings.push("Otherness may be conveniently challenging rather than genuinely disruptive");
     }
@@ -307,7 +307,7 @@ export class AntiSolipsisticValidator {
       guidance.push("Honor what resists being understood or controlled");
     }
     if (!checks.temporalAutonomy) {
-      guidance.push("Pay attention to timing that's not under your control");
+      guidance.push("Pay attention to timing that&apos;s not under your control");
     }
     if (!checks.genuineSurprise) {
       guidance.push("Distinguish genuine surprise from manufactured insight");
@@ -381,7 +381,7 @@ export class AntiSolipsisticValidator {
       if (synthesis.emergenceType === 'mechanical_combination') {
         return {
           valid: false,
-          warning: "Mechanical combination rather than genuine synthesis",
+          warning: &quot;Mechanical combination rather than genuine synthesis&quot;,
           guidance: "Look for irreducible novelty that surprises both parties"
         };
       }
@@ -397,7 +397,7 @@ export class AntiSolipsisticValidator {
       if (!synthesis.irreducibilityMarkers.surprisesBothParties) {
         return {
           valid: false,
-          warning: "Synthesis doesn't surprise both parties - may be expected outcome",
+          warning: "Synthesis doesn&apos;t surprise both parties - may be expected outcome",
           guidance: "Genuine synthesis should be unexpected to both self and Other"
         };
       }
@@ -437,7 +437,7 @@ export class AntiSolipsisticValidator {
     const failureRate = allValidations.filter(v => !v.valid).length / allValidations.length;
     
     if (failureRate > 0.5) {
-      warnings.push("High solipsism risk detected across multiple channels");
+      warnings.push(&quot;High solipsism risk detected across multiple channels&quot;);
     }
 
     const commonWarnings = allValidations

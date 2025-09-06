@@ -54,14 +54,14 @@ export class PhaseTransitionService {
   async analyzeTransitionPotential(): Promise<TransitionTrigger[]> {
     const triggers: TransitionTrigger[] = [];
 
-    // Get user's spiritual patterns
+    // Get user&apos;s spiritual patterns
     const patterns = await getSpiritualPatternInsights(this.userId);
     const memories = await getRelevantMemories(this.userId, undefined, 50);
 
     // Check for Water 2 death/rebirth patterns
     if (this.detectWater2Pattern(patterns, memories)) {
       triggers.push({
-        type: "pattern",
+        type: &quot;pattern",
         data: { phase: "water2", theme: "death_rebirth" },
         strength: 0.9,
       });
@@ -112,7 +112,7 @@ export class PhaseTransitionService {
     await storeMemoryItem({
       clientId: this.userId,
       content: `Phase transition initiated: ${transitionType}`,
-      element: "aether",
+      element: &quot;aether",
       sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType,
@@ -169,7 +169,7 @@ export class PhaseTransitionService {
     await storeMemoryItem({
       clientId: this.userId,
       content: `Water 2 death/rebirth cycle completed. ${water2Process.getArchetypalMessage()}`,
-      element: "water",
+      element: &quot;water&quot;,
       sourceAgent: "vector-equilibrium",
       metadata: {
         transitionType: TransitionType.DISSOLUTION,
@@ -193,7 +193,7 @@ export class PhaseTransitionService {
     await storeMemoryItem({
       clientId: this.userId,
       content:
-        "Manifestation crystallized into form. Earth element anchors vision into reality.",
+        &quot;Manifestation crystallized into form. Earth element anchors vision into reality.&quot;,
       element: "earth",
       sourceAgent: "vector-equilibrium",
       metadata: {
@@ -218,7 +218,7 @@ export class PhaseTransitionService {
     await storeMemoryItem({
       clientId: this.userId,
       content:
-        "Consciousness expands into new perspectives. Air element brings clarity and vision.",
+        &quot;Consciousness expands into new perspectives. Air element brings clarity and vision.&quot;,
       element: "air",
       sourceAgent: "vector-equilibrium",
       metadata: {
@@ -267,7 +267,7 @@ export class PhaseTransitionService {
     await storeMemoryItem({
       clientId: this.userId,
       content:
-        "All elements unified in perfect balance. Aether consciousness achieved.",
+        &quot;All elements unified in perfect balance. Aether consciousness achieved.&quot;,
       element: "aether",
       sourceAgent: "vector-equilibrium",
       metadata: {
@@ -291,7 +291,7 @@ export class PhaseTransitionService {
   // Helper methods
   private detectWater2Pattern(patterns: any, memories: any[]): boolean {
     // Look for death/rebirth themes
-    const deathThemes = ["death_rebirth", "void_work", "dark_night"];
+    const deathThemes = [&quot;death_rebirth&quot;, "void_work", "dark_night"];
     const hasDeathTheme = patterns.activeThemes.some((theme: string) =>
       deathThemes.includes(theme),
     );

@@ -25,7 +25,7 @@ export default function OnboardingPage() {
   const handleMeetOracle = async () => {
     setIsLoading(true);
     try {
-      // Create session and get Maya's first message
+      // Create session and get Maya&apos;s first message
       const response = await fetch('/api/oracle/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -50,7 +50,7 @@ export default function OnboardingPage() {
       
       localStorage.setItem('beta_user', JSON.stringify(userData));
       setUser(userData);
-      setMayaFirstMessage(data.firstMessage || "I'm here to walk with you through your reflections. To begin, tell me: how are you arriving in this moment?");
+      setMayaFirstMessage(data.firstMessage || "I&apos;m here to walk with you through your reflections. To begin, tell me: how are you arriving in this moment?");
       setStage("assignment");
     } catch (error) {
       console.error('Onboarding error:', error);
@@ -64,7 +64,7 @@ export default function OnboardingPage() {
       };
       localStorage.setItem('beta_user', JSON.stringify(fallbackUser));
       setUser(fallbackUser);
-      setMayaFirstMessage("I'm here to walk with you through your reflections. To begin, tell me: how are you arriving in this moment?");
+      setMayaFirstMessage("I&apos;m here to walk with you through your reflections. To begin, tell me: how are you arriving in this moment?");
       setStage("assignment");
     } finally {
       setIsLoading(false);
@@ -98,7 +98,7 @@ export default function OnboardingPage() {
               This is your place to reflect and grow.
             </p>
             <p className="text-md text-gray-500">
-              Before we begin, we'll connect you with your personal Oracle guide.
+              Before we begin, we&apos;ll connect you with your personal Oracle guide.
             </p>
           </div>
 
@@ -144,7 +144,7 @@ export default function OnboardingPage() {
               She will be your primary guide through Soullab, drawing on the wisdom of elemental agents when needed.
             </p>
             
-            {/* Maya's first message */}
+            {/* Maya&apos;s first message */}
             <div className="mt-8 p-6 bg-[#1A1F3A]/50 border border-gray-800 rounded-lg text-left">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">

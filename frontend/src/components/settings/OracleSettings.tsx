@@ -209,7 +209,7 @@ const OracleSettings: React.FC = () => {
               Personal Oracle Settings
             </h2>
             <p className="text-gray-400 mt-1">
-              Customize your Oracle's personality and interaction style
+              Customize your Oracle&apos;s personality and interaction style
             </p>
           </div>
 
@@ -335,7 +335,7 @@ const OracleSettings: React.FC = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      placeholder="Enter your Oracle's name..."
+                      placeholder="Enter your Oracle&apos;s name..."
                       className="w-full px-4 py-3 bg-[#0E0F1B] border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-[#F6E27F] focus:outline-none transition-colors"
                       maxLength={50}
                     />
@@ -438,7 +438,7 @@ const OracleSettings: React.FC = () => {
                       Preferred Elements (Optional)
                     </label>
                     <p className="text-xs text-gray-500 mb-3">
-                      Select elements you'd like your Oracle to emphasize
+                      Select elements you&apos;d like your Oracle to emphasize
                     </p>
                     <div className="grid grid-cols-1 gap-2">
                       {elementalPreferences.map((element) => (

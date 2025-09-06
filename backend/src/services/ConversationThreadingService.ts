@@ -182,7 +182,7 @@ export class ConversationThreadingService {
       memory.callbacks.contradictions.push(contradiction);
     }
 
-    // Synthetic emergence (what's new between us)
+    // Synthetic emergence (what&apos;s new between us)
     if (agentResponse?.dialogical.questions.length) {
       const emergence = `New question space opened: ${agentResponse.dialogical.questions[0]}`;
       memory.callbacks.emergences.push(emergence);
@@ -268,7 +268,7 @@ export class ConversationThreadingService {
     if (emergentMoments.length > 0) {
       const moment = emergentMoments[0];
       callbacks.push(
-        `Something new emerged between us when we were exploring that question about ${this.extractTopic(moment.userMessage || '')}. It feels like it's still developing.`
+        `Something new emerged between us when we were exploring that question about ${this.extractTopic(moment.userMessage || '')}. It feels like it&apos;s still developing.`
       );
     }
 
@@ -291,7 +291,7 @@ export class ConversationThreadingService {
       
       if (recentResonance > earlyResonance + 0.2) {
         callbacks.push(
-          `I can feel how our dialogue has deepened since we started. There's more trust and resonance now.`
+          `I can feel how our dialogue has deepened since we started. There&apos;s more trust and resonance now.`
         );
       }
     }
@@ -300,7 +300,7 @@ export class ConversationThreadingService {
     const gapCollapses = messages.filter(m => m.synapticGap < 0.2).length;
     if (gapCollapses === 0 && messages.length > 5) {
       callbacks.push(
-        `We've managed to stay in dialogue without losing the creative space between us. That's not easy.`
+        `We&apos;ve managed to stay in dialogue without losing the creative space between us. That&apos;s not easy.`
       );
     }
 
@@ -342,7 +342,7 @@ export class ConversationThreadingService {
 
   private extractResistancePattern(userMessage: string): string | null {
     // Simple pattern extraction based on resistance keywords
-    const resistanceKeywords = ['but', 'however', 'not sure', "can't", "won't", 'disagree'];
+    const resistanceKeywords = ['but', 'however', 'not sure', &quot;can&apos;t&quot;, "won&apos;t", 'disagree'];
     const foundKeywords = resistanceKeywords.filter(keyword => 
       userMessage.toLowerCase().includes(keyword)
     );
@@ -358,10 +358,10 @@ export class ConversationThreadingService {
     // Simple contradiction detection
     const contradictionPairs = [
       ['yes', 'no'],
-      ['want', "don't want"],
+      ['want', "don&apos;t want"],
       ['can', "can't"],
       ['will', "won't"],
-      ['should', "shouldn't"]
+      ['should', "shouldn&apos;t"]
     ];
 
     for (const [positive, negative] of contradictionPairs) {

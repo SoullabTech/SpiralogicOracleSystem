@@ -173,7 +173,7 @@ function calculateRelevance(file: DemoFile, query: string): number {
 }
 
 /**
- * Formats demo file context for Maya's prompts
+ * Formats demo file context for Maya&apos;s prompts
  */
 export function formatDemoFileContext(files: DemoFile[]): string {
   if (files.length === 0) return '';

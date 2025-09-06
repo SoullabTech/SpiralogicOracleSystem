@@ -42,6 +42,7 @@ import waterAgentRoutes from "./water-agent.routes";
 import orchestratorRoutes from "./orchestrator.routes";
 import holisticRoutes from "./holistic.routes";
 import integrationRoutes from "./integration.routes";
+import spiralJourneyRoutes from "./spiralJourney";
 
 const router = Router();
 
@@ -95,5 +96,6 @@ router.use("/water-agent", waterAgentRoutes);
 router.use("/orchestrator", orchestratorRoutes);
 router.use("/holistic", holisticRoutes);
 router.use("/integration", integrationRoutes);
+router.use("/spiral-journey", spiralJourneyRoutes);
 
 export default router;

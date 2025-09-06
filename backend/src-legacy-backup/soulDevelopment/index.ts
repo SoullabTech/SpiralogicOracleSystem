@@ -119,7 +119,7 @@ export class EnhancedSoulDevelopmentIntegration {
       );
 
       let response: any = {
-        culturalWisdomIntegration: "",
+        culturalWisdomIntegration: "&quot;,
         nextStepsGuidance: [],
         integrationOpportunities: [],
       };
@@ -208,7 +208,7 @@ export class EnhancedSoulDevelopmentIntegration {
     userProfile?: any,
   ): Promise<any> {
     const { jungianShadowIntegrationEngine } = await import(
-      "./JungianShadowIntegrationEngine"
+      &quot;./JungianShadowIntegrationEngine&quot;
     );
 
     // Create shadow integration plan
@@ -238,7 +238,7 @@ export class EnhancedSoulDevelopmentIntegration {
     culturalProfile: CulturalProfile,
     userProfile?: any,
   ): Promise<any> {
-    const { lifeSpiralHarmonizer } = await import("./LifeSpiralHarmonizer");
+    const { lifeSpiralHarmonizer } = await import(&quot;./LifeSpiralHarmonizer&quot;);
 
     // Create life spiral harmonization plan
     const lifeSpiralPlan = await lifeSpiralHarmonizer.analyzeSoulMandate(
@@ -268,7 +268,7 @@ export class EnhancedSoulDevelopmentIntegration {
     userProfile?: any,
   ): Promise<any> {
     const { dreamJournalingIntegration } = await import(
-      "./DreamJournalingIntegration"
+      &quot;./DreamJournalingIntegration&quot;
     );
 
     // For now, return placeholder response as dream processing requires actual dream entry
@@ -302,7 +302,7 @@ export class EnhancedSoulDevelopmentIntegration {
     userProfile?: any,
   ): Promise<any> {
     const { integrationPracticeGenerator } = await import(
-      "./IntegrationPracticeGenerator"
+      &quot;./IntegrationPracticeGenerator"
     );
 
     // Generate practice ecosystem

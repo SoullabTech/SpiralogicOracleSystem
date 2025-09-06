@@ -152,7 +152,7 @@ export function SimpleOnboarding() {
           </div>
 
           {userData.password && userData.confirmPassword && userData.password !== userData.confirmPassword && (
-            <p className="text-sm text-red-500 text-center">Passwords don't match</p>
+            <p className="text-sm text-red-500 text-center">Passwords don&apos;t match</p>
           )}
           
           <div className="text-center text-xs text-muted-foreground bg-purple-500/5 p-3 rounded-lg">

@@ -123,7 +123,6 @@ function OraclePageContent() {
       setInputText(transcript);
     },
     onAutoStop: (finalTranscript: string) => {
-      console.log('🎤 Auto-stopped with transcript:', finalTranscript);
       setInputText(finalTranscript);
       // Auto-send after a brief delay
       setTimeout(() => {
@@ -573,7 +572,6 @@ function OraclePageContent() {
         }
       }
     } catch (error) {
-      console.log('Daimonic encounter check failed:', error);
       // Non-blocking - encounters are mystical bonuses, not required functionality
     }
   };
@@ -584,7 +582,6 @@ function OraclePageContent() {
 
   const handleDaimonIntegrate = (cardId: string) => {
     // Could store integration event for future reference
-    console.log('Daimon integrated:', cardId);
     
     addToast({
       title: 'Daimonic Encounter Integrated',

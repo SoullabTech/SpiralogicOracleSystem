@@ -258,7 +258,7 @@ export class LifeSpiralHarmonizer {
     shadowIntegrationPlan?: ShadowIntegrationPlan,
   ): Promise<LifeSpiralHarmonizerPlan> {
     try {
-      logger.info("Beginning soul mandate analysis", {
+      logger.info(&quot;Beginning soul mandate analysis&quot;, {
         userId,
         culturalContext: culturalProfile.primaryCulture,
         hasShadowPlan: !!shadowIntegrationPlan,
@@ -354,7 +354,7 @@ export class LifeSpiralHarmonizer {
       const soulMandate = this.soulMandateRegistry.get(userId);
 
       if (!soulMandate) {
-        throw new Error("Soul mandate analysis not found for user");
+        throw new Error(&quot;Soul mandate analysis not found for user&quot;);
       }
 
       // Analyze current evolution phase
@@ -425,7 +425,7 @@ export class LifeSpiralHarmonizer {
       const soulMandate = this.soulMandateRegistry.get(userId);
 
       if (!soulMandate) {
-        throw new Error("Soul mandate analysis not found for user");
+        throw new Error(&quot;Soul mandate analysis not found for user");
       }
 
       // Analyze transition alignment with soul mandate
@@ -647,7 +647,7 @@ export class LifeSpiralHarmonizer {
         sourceElement: elementalSignature.primaryElement,
         targetCulture: culturalProfile.primaryCulture,
         userCulturalBackground: culturalProfile.primaryCulture,
-        contextOfUse: "life_purpose",
+        contextOfUse: &quot;life_purpose&quot;,
         respectfulApproach: true,
       });
 
@@ -848,7 +848,7 @@ export class LifeSpiralHarmonizer {
   private extractPurposeKeywords(userInput: string): string[] {
     const keywords = [];
     const purposeWords = [
-      "purpose",
+      &quot;purpose&quot;,
       "calling",
       "mission",
       "vision",
@@ -902,7 +902,7 @@ export class LifeSpiralHarmonizer {
     purposeKeywords: string[],
     culturalThemes: string[],
   ): string {
-    return `Your soul's purpose integrates ${purposeKeywords.join(", ")} with ${culturalThemes[0]}`;
+    return `Your soul&apos;s purpose integrates ${purposeKeywords.join(", ")} with ${culturalThemes[0]}`;
   }
 
   private detectElementalThemes(userInput: string): Record<string, number> {
@@ -937,7 +937,7 @@ export class LifeSpiralHarmonizer {
 
   private determinePrimaryElement(
     themes: Record<string, number>,
-  ): "fire" | "water" | "earth" | "air" {
+  ): &quot;fire&quot; | "water" | "earth" | "air" {
     const entries = Object.entries(themes) as [string, number][];
     const sorted = entries.sort((a, b) => b[1] - a[1]);
     return sorted[0][0] as "fire" | "water" | "earth" | "air";
@@ -946,7 +946,7 @@ export class LifeSpiralHarmonizer {
   private determineSecondaryElement(
     themes: Record<string, number>,
     primaryElement: string,
-  ): "fire" | "water" | "earth" | "air" {
+  ): &quot;fire&quot; | "water" | "earth" | "air" {
     const entries = Object.entries(themes) as [string, number][];
     const sorted = entries.sort((a, b) => b[1] - a[1]);
     const secondary = sorted.find(([element]) => element !== primaryElement);
@@ -963,7 +963,7 @@ export class LifeSpiralHarmonizer {
 
   private getPurposeArchetype(primary: string, secondary: string): string {
     const archetypes = {
-      fire_water: "Healing Catalyst",
+      fire_water: &quot;Healing Catalyst",
       fire_earth: "Manifestation Leader",
       fire_air: "Visionary Communicator",
       water_fire: "Transformational Healer",
@@ -1220,35 +1220,35 @@ export class LifeSpiralHarmonizer {
     challenges: string[],
     experiences: string[],
   ): string {
-    return "current_evolution_phase";
+    return &quot;current_evolution_phase&quot;;
   }
 
   private async generateEvolutionGuidance(
     soulMandate: SoulMandateAnalysis,
     phase: string,
   ): Promise<string> {
-    return "Evolution guidance based on soul mandate";
+    return &quot;Evolution guidance based on soul mandate&quot;;
   }
 
   private async createNextEvolutionSteps(
     soulMandate: SoulMandateAnalysis,
     phase: string,
   ): Promise<string[]> {
-    return ["Next evolution steps"];
+    return [&quot;Next evolution steps&quot;];
   }
 
   private async identifyEvolutionSupports(
     soulMandate: SoulMandateAnalysis,
     phase: string,
   ): Promise<string[]> {
-    return ["Evolution supports"];
+    return [&quot;Evolution supports&quot;];
   }
 
   private async createEvolutionPractices(
     soulMandate: SoulMandateAnalysis,
     phase: string,
   ): Promise<string[]> {
-    return ["Evolution practices"];
+    return [&quot;Evolution practices&quot;];
   }
 
   // Methods for transition harmonization
@@ -1257,7 +1257,7 @@ export class LifeSpiralHarmonizer {
     type: string,
     context: string,
   ): Promise<string> {
-    return "Transition harmony analysis";
+    return &quot;Transition harmony analysis&quot;;
   }
 
   private async generateMandateAlignment(
@@ -1265,7 +1265,7 @@ export class LifeSpiralHarmonizer {
     type: string,
     context: string,
   ): Promise<string> {
-    return "Mandate alignment guidance";
+    return &quot;Mandate alignment guidance&quot;;
   }
 
   private async createTransitionPractices(
@@ -1273,14 +1273,14 @@ export class LifeSpiralHarmonizer {
     type: string,
     challenges: string[],
   ): Promise<string[]> {
-    return ["Transition practices"];
+    return [&quot;Transition practices&quot;];
   }
 
   private async getCulturalTransitionWisdom(
     soulMandate: SoulMandateAnalysis,
     type: string,
   ): Promise<string> {
-    return "Cultural transition wisdom";
+    return &quot;Cultural transition wisdom&quot;;
   }
 
   private async identifyTransitionSupport(

@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
       ...memories.map(m => m.content),
       ...journalEntries.map(j => `${j.title}: ${j.content} (mood: ${j.mood || 'neutral'})`),
       ...voiceNotes.map(v => v.transcript)
-    ].join("\n\n");
+    ].join(&quot;\n\n");
 
     if (!allContent.trim()) {
       return NextResponse.json({ 
@@ -148,7 +148,7 @@ async function selectRelevantArchetypes(content: string): Promise<(keyof typeof 
   const selected: (keyof typeof ARCHETYPE_PROMPTS)[] = [];
   
   // Simple keyword-based selection (enhance with AI later)
-  if (contentLower.includes("challenge") || contentLower.includes("difficult") || contentLower.includes("overcome")) {
+  if (contentLower.includes(&quot;challenge&quot;) || contentLower.includes("difficult") || contentLower.includes("overcome")) {
     selected.push("hero");
   }
   

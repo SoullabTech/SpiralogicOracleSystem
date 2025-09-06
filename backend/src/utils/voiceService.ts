@@ -82,8 +82,8 @@ async function synthesizeWithSesame(text: string, voiceId?: string): Promise<str
     const buffer = Buffer.from(audioData, 'base64');
     const filename = `sesame-${uuidv4()}.${format}`;
     
-    // Save to frontend's public directory for serving via Next.js
-    const frontendAudioDir = path.resolve(process.cwd(), "public/audio");
+    // Save to frontend&apos;s public directory for serving via Next.js
+    const frontendAudioDir = path.resolve(process.cwd(), &quot;public/audio");
     const outputPath = path.join(frontendAudioDir, filename);
 
     // Ensure audio directory exists
@@ -141,7 +141,7 @@ export async function synthesizeVoice({
         sesameFailFast: process.env.SESAME_FAIL_FAST
       });
       
-      // If SESAME_FAIL_FAST is true, don't fallback
+      // If SESAME_FAIL_FAST is true, don&apos;t fallback
       if (process.env.SESAME_FAIL_FAST === 'true') {
         throw new Error(`Sesame TTS failed and SESAME_FAIL_FAST is enabled: ${sesameError.message}`);
       }
@@ -160,7 +160,7 @@ export async function synthesizeVoice({
       },
       {
         headers: {
-          "xi-api-key": ELEVENLABS_API_KEY,
+          &quot;xi-api-key": ELEVENLABS_API_KEY,
           "Content-Type": "application/json",
           Accept: "audio/mpeg",
         },
@@ -171,7 +171,7 @@ export async function synthesizeVoice({
     const buffer = Buffer.from(response.data, "binary");
     const filename = `elevenlabs-${uuidv4()}.mp3`;
     
-    // Save to frontend's public directory for serving via Next.js
+    // Save to frontend&apos;s public directory for serving via Next.js
     const frontendAudioDir = path.resolve(process.cwd(), "public/audio");
     const outputPath = path.join(frontendAudioDir, filename);
 
@@ -215,7 +215,7 @@ export async function synthesizeArchetypalVoice({
 
     const { enhancedText, voiceProfile, synthesisMetadata } = voiceInstructions;
 
-    logger.info("Synthesizing archetypal voice", {
+    logger.info(&quot;Synthesizing archetypal voice", {
       userId,
       primaryArchetype,
       secondaryArchetype,
@@ -243,7 +243,7 @@ export async function synthesizeArchetypalVoice({
     const buffer = Buffer.from(response.data, "binary");
     const filename = `archetypal-${primaryArchetype}-${uuidv4()}.mp3`;
     
-    // Save to frontend's public directory for serving via Next.js
+    // Save to frontend&apos;s public directory for serving via Next.js
     const frontendAudioDir = path.resolve(process.cwd(), "public/audio");
     const outputPath = path.join(frontendAudioDir, filename);
 

@@ -47,7 +47,7 @@ export function VoiceEngineStatus() {
   const testVoice = async () => {
     setTesting(true)
     try {
-      const testPhrase = "✨ Sesame voice test successful. Maya's voice system is working perfectly."
+      const testPhrase = "✨ Sesame voice test successful. Maya&apos;s voice system is working perfectly."
       
       const response = await fetch('/api/voice/unified', {
         method: 'POST',

@@ -56,7 +56,7 @@ interface SacredRelationship {
 export class EnhancedPersonalOracleAgent extends BaseAgent {
   private userId: string;
   private oracleName: string;
-  private mode: "daily" | "retreat";
+  private mode: &quot;daily&quot; | "retreat";
   private ainConnection?: MainOracleAgentInterface;
 
   // Elemental Agents - owned by PersonalOracleAgent
@@ -161,7 +161,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
           collectiveWisdom =
             await this.ainConnection.requestCollectiveWisdom(query);
         } catch (error) {
-          logger.warn("Could not access collective wisdom from AIN:", error);
+          logger.warn(&quot;Could not access collective wisdom from AIN:&quot;, error);
         }
       }
 
@@ -228,7 +228,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       // Graceful fallback response
       return {
         content:
-          "I sense a temporary disruption in our connection. Let me re-center and be present with you. What's most alive in you right now?",
+          "I sense a temporary disruption in our connection. Let me re-center and be present with you. What&apos;s most alive in you right now?",
         provider: "personal-oracle-fallback",
         model: "gpt-4",
         confidence: 0.7,
@@ -283,7 +283,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
 
       return context;
     } catch (error) {
-      logger.error("Error gathering personal context:", error);
+      logger.error(&quot;Error gathering personal context:", error);
       return {
         memories: [],
         sacredRelationship: this.sacredRelationship,
@@ -447,7 +447,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     return {
       ...elementalResponse,
       content,
-      provider: "personal-oracle-enhanced",
+      provider: &quot;personal-oracle-enhanced&quot;,
       metadata: {
         ...elementalResponse.metadata,
         personalOracleEnhanced: true,
@@ -515,7 +515,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         collectiveRelevance: this.calculateCollectiveRelevance(query, response),
         personalContext: {
           archetypeStage:
-            personalContext.archetypeJourney[0]?.archetype || "explorer",
+            personalContext.archetypeJourney[0]?.archetype || &quot;explorer&quot;,
           relationshipDepth: this.sacredRelationship.trustLevel,
           transformationReadiness:
             this.calculateTransformationReadiness(personalContext),
@@ -562,7 +562,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
         clientId: this.userId,
         content: query.input,
         element: elementUsed,
-        sourceAgent: "user",
+        sourceAgent: &quot;user&quot;,
         confidence: 0.7,
         metadata: {
           role: "user",
@@ -633,7 +633,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     const confusionWords = [
       "confused",
       "unclear",
-      "don't know",
+      "don&apos;t know",
       "not sure",
       "lost",
     ];
@@ -689,7 +689,7 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       "why do i",
       "i always",
       "i never",
-      "i can't seem to",
+      "i can&apos;t seem to",
     ];
     return shadowWords.some((phrase) => input.includes(phrase));
   }

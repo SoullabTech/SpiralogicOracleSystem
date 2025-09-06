@@ -89,12 +89,12 @@ export class SoulMemoryRedis {
         await redis.setex(key, this.DEFAULT_TTL, serialized);
       }
 
-      // Add to user's memory index
+      // Add to user&apos;s memory index
       await redis.sadd(`${this.MEMORY_PREFIX}${userId}:index`, memoryId);
 
       return true;
     } catch (error) {
-      logger.error("Failed to store memory in Redis:", error);
+      logger.error(&quot;Failed to store memory in Redis:", error);
       return false;
     }
   }
@@ -114,7 +114,7 @@ export class SoulMemoryRedis {
 
       return null;
     } catch (error) {
-      logger.error("Failed to retrieve memory from Redis:", error);
+      logger.error(&quot;Failed to retrieve memory from Redis:", error);
       return null;
     }
   }
@@ -126,7 +126,7 @@ export class SoulMemoryRedis {
       const memoryIds = await redis.smembers(indexKey);
       return memoryIds;
     } catch (error) {
-      logger.error("Failed to get user memory IDs:", error);
+      logger.error(&quot;Failed to get user memory IDs:", error);
       return [];
     }
   }
@@ -142,7 +142,7 @@ export class SoulMemoryRedis {
       await redis.setex(key, ttl, JSON.stringify(sessionData));
       return true;
     } catch (error) {
-      logger.error("Failed to store session:", error);
+      logger.error(&quot;Failed to store session:", error);
       return false;
     }
   }
@@ -159,7 +159,7 @@ export class SoulMemoryRedis {
 
       return null;
     } catch (error) {
-      logger.error("Failed to get session:", error);
+      logger.error(&quot;Failed to get session:", error);
       return null;
     }
   }
@@ -185,7 +185,7 @@ export class SoulMemoryRedis {
 
       return true;
     } catch (error) {
-      logger.error("Failed to store vector:", error);
+      logger.error(&quot;Failed to store vector:", error);
       return false;
     }
   }
@@ -207,12 +207,12 @@ export class SoulMemoryRedis {
         }),
       );
 
-      // Add to user's thread index
+      // Add to user&apos;s thread index
       await redis.sadd(`${this.THREAD_PREFIX}${userId}:index`, threadId);
 
       return true;
     } catch (error) {
-      logger.error("Failed to store thread:", error);
+      logger.error(&quot;Failed to store thread:", error);
       return false;
     }
   }
@@ -242,12 +242,12 @@ export class SoulMemoryRedis {
 
       return memoryMap;
     } catch (error) {
-      logger.error("Failed to batch get memories:", error);
+      logger.error(&quot;Failed to batch get memories:&quot;, error);
       return new Map();
     }
   }
 
-  // Clear user's memory cache (for GDPR compliance)
+  // Clear user&apos;s memory cache (for GDPR compliance)
   static async clearUserMemory(userId: string): Promise<boolean> {
     try {
       // Get all memory IDs
@@ -281,7 +281,7 @@ export class SoulMemoryRedis {
       logger.info(`Cleared all Redis memory for user: ${userId}`);
       return true;
     } catch (error) {
-      logger.error("Failed to clear user memory:", error);
+      logger.error(&quot;Failed to clear user memory:&quot;, error);
       return false;
     }
   }
@@ -302,7 +302,7 @@ export class CacheManager {
       await redis.setex(key, ttl, JSON.stringify(value));
       return true;
     } catch (error) {
-      logger.error("Cache set failed:", error);
+      logger.error(&quot;Cache set failed:&quot;, error);
       return false;
     }
   }
@@ -312,7 +312,7 @@ export class CacheManager {
       const value = await redis.get(key);
       return value ? JSON.parse(value) : null;
     } catch (error) {
-      logger.error("Cache get failed:", error);
+      logger.error(&quot;Cache get failed:&quot;, error);
       return null;
     }
   }
@@ -322,7 +322,7 @@ export class CacheManager {
       await redis.del(key);
       return true;
     } catch (error) {
-      logger.error("Cache delete failed:", error);
+      logger.error(&quot;Cache delete failed:&quot;, error);
       return false;
     }
   }
@@ -336,7 +336,7 @@ export class CacheManager {
       const result = await redis.del(...keys);
       return result;
     } catch (error) {
-      logger.error("Pattern invalidation failed:", error);
+      logger.error(&quot;Pattern invalidation failed:&quot;, error);
       return 0;
     }
   }
@@ -360,7 +360,7 @@ export class CacheManager {
 
       return value;
     } catch (error) {
-      logger.error("Cache getOrSet failed:", error);
+      logger.error(&quot;Cache getOrSet failed:", error);
       return null;
     }
   }
@@ -382,7 +382,7 @@ export class RateLimiter {
 
     try {
       // Remove old entries
-      await redis.zremrangebyscore(key, "-inf", window);
+      await redis.zremrangebyscore(key, &quot;-inf", window);
 
       // Count requests in current window
       const count = await redis.zcard(key);
@@ -412,7 +412,7 @@ export class RateLimiter {
         resetAt,
       };
     } catch (error) {
-      logger.error("Rate limit check failed:", error);
+      logger.error(&quot;Rate limit check failed:&quot;, error);
       // Fail open in case of Redis issues
       return {
         allowed: true,
@@ -434,7 +434,7 @@ export class WebSocketRedis {
       await pubClient.publish(channel, JSON.stringify(message));
       return true;
     } catch (error) {
-      logger.error("Failed to publish message:", error);
+      logger.error(&quot;Failed to publish message:&quot;, error);
       return false;
     }
   }
@@ -446,7 +446,7 @@ export class WebSocketRedis {
   ): Promise<void> {
     await subClient.subscribe(channel);
 
-    subClient.on("message", (receivedChannel, message) => {
+    subClient.on(&quot;message&quot;, (receivedChannel, message) => {
       if (receivedChannel === channel) {
         try {
           const parsed = JSON.parse(message);

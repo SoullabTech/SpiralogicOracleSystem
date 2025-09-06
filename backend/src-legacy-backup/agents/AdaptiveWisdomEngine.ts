@@ -189,7 +189,7 @@ export class AdaptiveWisdomEngine {
           "Buddha approach helps release attachment to outcomes",
         ],
         adjustments: {
-          pace: graspingLevel > 0.9 ? "gentle" : "normal",
+          pace: graspingLevel > 0.9 ? &quot;gentle&quot; : "normal",
           depth: "moderate",
           tone: "nurturing",
         },
@@ -210,7 +210,7 @@ export class AdaptiveWisdomEngine {
         ],
         adjustments: {
           pace: context.vulnerabilityLevel < 0.3 ? "gentle" : "normal",
-          depth: context.shadowReadiness > 0.6 ? "deep" : "moderate",
+          depth: context.shadowReadiness > 0.6 ? &quot;deep&quot; : "moderate",
           tone: "nurturing",
         },
       };
@@ -557,7 +557,7 @@ export class AdaptiveWisdomEngine {
     if (identity)
       return "Identity crisis requires both grounding in self and transcendence of self";
     if (grasping > 0.5 && avoidance > 0.5)
-      return "Both grasping and avoidance present - balanced approach needed";
+      return &quot;Both grasping and avoidance present - balanced approach needed";
     return "Complex pattern suggests integrated Jung-Buddha approach";
   }
 

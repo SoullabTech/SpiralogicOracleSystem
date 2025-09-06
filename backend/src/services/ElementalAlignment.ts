@@ -81,7 +81,7 @@ export class ElementalAlignment {
         return {
           element: element as Element,
           mode: 'natural',
-          narrative: `The group's ${element} flows with harmony — a shared current aligned with Nature's will.`
+          narrative: `The group&apos;s ${element} flows with harmony — a shared current aligned with Nature's will.`
         };
       }
 

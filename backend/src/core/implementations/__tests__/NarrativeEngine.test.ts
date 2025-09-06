@@ -75,7 +75,7 @@ const createMockStageConfig = (stage: string, overrides: any = {}): OracleStageC
 describe('NarrativeEngine', () => {
   describe('generate()', () => {
     test('should apply basic Maya shaping and stage transformations', () => {
-      const rawResponse = "You should listen to the universe's cosmic guidance for your sacred journey.";
+      const rawResponse = &quot;You should listen to the universe&apos;s cosmic guidance for your sacred journey.&quot;;
       const context = {
         intent: 'guidance' as Intent,
         prefs: createMockPersonaPrefs(),
@@ -92,7 +92,7 @@ describe('NarrativeEngine', () => {
     });
 
     test('should handle high formality stage configuration', () => {
-      const rawResponse = "You're gonna love this cosmic insight!";
+      const rawResponse = "You&apos;re gonna love this cosmic insight!";
       const context = {
         intent: 'guidance' as Intent,
         prefs: createMockPersonaPrefs(),

@@ -148,7 +148,7 @@ function generateCrossNarrative(
     narrative += `This alignment suggests you are both receiving and transmitting the archetypal energy that wants to emerge. `;
     narrative += `Your personal journey serves the collective healing, and the collective movement supports your individual transformation.`;
   } else {
-    narrative += `Your **${personalDominant}** path offers a counterpoint to the field's **${collectiveDominant}** current. `;
+    narrative += `Your **${personalDominant}** path offers a counterpoint to the field&apos;s **${collectiveDominant}** current. `;
     narrative += `Where many gather around one archetypal flame, you carry a different torch - and this difference is medicine.\n\n`;
     narrative += `The field needs both the dominant current and its complement. Your ${personalDominant} energy `;
     narrative += `provides balance, offering what the collective ${collectiveDominant} movement might be missing. `;

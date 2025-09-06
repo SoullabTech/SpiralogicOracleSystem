@@ -196,7 +196,7 @@ export class DaimonicOrchestrator {
       };
     }
 
-    // Default to ephemeral unless there's a compelling reason to store
+    // Default to ephemeral unless there&apos;s a compelling reason to store
     reasoning.push('No compelling reason for persistence - allowing natural passage');
     return {
       mode: 'ephemeral',
@@ -273,7 +273,7 @@ export class DaimonicOrchestrator {
                `What does this repetition want to teach you?`;
 
       case 'threshold_support':
-        return `You're in sacred threshold space. ${daimon.otherness_signature} ` +
+        return `You&apos;re in sacred threshold space. ${daimon.otherness_signature} ` +
                `is your companion in this liminal territory. Breathe deeply, ` +
                `stay grounded, and trust the process of transformation.`;
 
@@ -316,7 +316,7 @@ export class DaimonicOrchestrator {
     
     // Find events from similar phases or with resonant patterns
     const relevantEvents = userEvents.filter(event => {
-      // Same spiral phase (e.g., all "Water" phases)
+      // Same spiral phase (e.g., all &quot;Water" phases)
       const phaseElement = currentPhase.split(' ')[0];
       const eventPhaseElement = event.context.phase.split(' ')[0];
       
@@ -498,7 +498,7 @@ export class DaimonicOrchestrator {
    */
 
   /**
-   * Get user's daimonic encounter summary
+   * Get user&apos;s daimonic encounter summary
    */
   getUserDaimonicSummary(userId: string): {
     total_encounters: number;

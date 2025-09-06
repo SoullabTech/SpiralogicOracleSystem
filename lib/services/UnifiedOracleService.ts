@@ -110,7 +110,7 @@ export class UnifiedOracleService implements IOracleService {
       
       // Fallback response
       return {
-        text: "I sense there's something profound you wish to explore, though the connection feels momentarily unclear. Perhaps you could share more about what's on your heart?",
+        text: "I sense there&apos;s something profound you wish to explore, though the connection feels momentarily unclear. Perhaps you could share more about what&apos;s on your heart?",
         emotionalResonance: undefined,
         archetypeInsights: [],
         suggestedActions: ['Try rephrasing your question', 'Share more context about your situation']
@@ -518,7 +518,7 @@ class IntentDetectionProcessor implements MessageProcessor {
     const intentPatterns = [
       { pattern: /what should i|how do i|help me/i, intent: 'seeking_advice' },
       { pattern: /tell me about|explain|what is/i, intent: 'seeking_information' },
-      { pattern: /i feel|i'm feeling|i am/i, intent: 'sharing_emotion' },
+      { pattern: /i feel|i&apos;m feeling|i am/i, intent: 'sharing_emotion' },
       { pattern: /i want|i need|i wish/i, intent: 'expressing_desire' },
       { pattern: /thank|grateful|appreciate/i, intent: 'expressing_gratitude' },
       { pattern: /\?/g, intent: 'asking_question' }
@@ -601,10 +601,10 @@ class ContextualOracleResponseGenerator implements ResponseGenerator {
 
   private generateFallbackResponse(message: ProcessedMessage, context: ConversationContext): string {
     const templates = [
-      "I sense there's something profound stirring within you. Tell me more about what you're experiencing.",
+      "I sense there&apos;s something profound stirring within you. Tell me more about what you&apos;re experiencing.",
       "Your words carry weight and meaning. What would you like to explore further?",
-      "I'm here to journey with you through whatever is emerging. How can we go deeper?",
-      "There's wisdom in what you're sharing. What feels most important for you right now?"
+      "I&apos;m here to journey with you through whatever is emerging. How can we go deeper?",
+      "There&apos;s wisdom in what you're sharing. What feels most important for you right now?"
     ];
     
     return templates[Math.floor(Math.random() * templates.length)];

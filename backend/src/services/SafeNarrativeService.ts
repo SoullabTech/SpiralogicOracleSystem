@@ -135,14 +135,14 @@ export class SafeNarrativeService {
    */
   private generateEmergencyResponse(userInput: string, safetyLevel: SafetyLevel): SafeResponse {
     return {
-      primaryMessage: "I'm concerned about what you're sharing. Let's pause and focus on your immediate safety and well-being.",
+      primaryMessage: &quot;I&apos;m concerned about what you&apos;re sharing. Let&apos;s pause and focus on your immediate safety and well-being.&quot;,
       perspectives: [
-        "What you're experiencing sounds overwhelming and I want to make sure you're safe",
+        "What you&apos;re experiencing sounds overwhelming and I want to make sure you're safe",
         "These intense experiences deserve professional attention and support"
       ],
       groundingPractice: "Right now, take three deep breaths with me. Feel your feet on the ground. You are safe in this moment.",
       realityAnchor: "You are a person having a difficult experience. This is a conversation, and you are in control of your choices.",
-      connectionPrompt: "Please reach out to a crisis helpline, trusted friend, or mental health professional immediately. You don't have to go through this alone.",
+      connectionPrompt: "Please reach out to a crisis helpline, trusted friend, or mental health professional immediately. You don&apos;t have to go through this alone.",
       safetyNote: "If you're in immediate danger, please contact emergency services (911) or a crisis hotline: National Suicide Prevention Lifeline 988"
     };
   }
@@ -256,7 +256,7 @@ export class SafeNarrativeService {
    * Format complete safe response
    */
   async formatCompleteResponse(safeResponse: SafeResponse): Promise<string> {
-    let response = safeResponse.primaryMessage + "\n\n";
+    let response = safeResponse.primaryMessage + &quot;\n\n";
     
     // Add perspectives
     response += "Here are some ways to think about this:\n";

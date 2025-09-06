@@ -105,7 +105,7 @@ export class UniversalFieldCache {
     this.config = {
       ttl: 15 * 60 * 1000, // 15 minutes default
       maxSize: 1000,
-      namespace: "universal_field",
+      namespace: &quot;universal_field",
       ...config,
     };
 
@@ -154,7 +154,7 @@ export class UniversalFieldCache {
         if (cached) {
           const parsed = JSON.parse(cached);
           if (this.isValid(parsed)) {
-            logger.debug("Universal Field Cache hit (Redis)", { key });
+            logger.debug(&quot;Universal Field Cache hit (Redis)&quot;, { key });
             return parsed.data;
           }
         }
@@ -203,7 +203,7 @@ export class UniversalFieldCache {
         this.evictOldest();
       }
 
-      logger.debug("Universal Field Cache set", { key, ttl: this.config.ttl });
+      logger.debug(&quot;Universal Field Cache set&quot;, { key, ttl: this.config.ttl });
     } catch (error) {
       logger.error("Error setting Universal Field Cache:", error);
     }
@@ -242,7 +242,7 @@ export class UniversalFieldCache {
     }
 
     if (removed > 0) {
-      logger.debug("Universal Field Cache cleanup", { removed });
+      logger.debug(&quot;Universal Field Cache cleanup&quot;, { removed });
     }
   }
 
@@ -263,7 +263,7 @@ export class UniversalFieldCache {
       }
     }
 
-    logger.info("Universal Field Cache cleared for user", {
+    logger.info(&quot;Universal Field Cache cleared for user", {
       userId,
       cleared: keysToRemove.length,
     });
@@ -281,7 +281,7 @@ export class UniversalFieldCache {
       }
     }
 
-    logger.info("Universal Field Cache cleared completely");
+    logger.info(&quot;Universal Field Cache cleared completely&quot;);
   }
 
   // Get cache statistics
@@ -305,7 +305,7 @@ export class UniversalFieldCache {
   async prefetch(userId: string, likelyQueries: string[]): Promise<void> {
     // This method would be called to pre-populate cache with likely field accesses
     // Implementation would depend on prediction algorithms
-    logger.info("Universal Field Cache prefetch initiated", {
+    logger.info(&quot;Universal Field Cache prefetch initiated&quot;, {
       userId,
       queries: likelyQueries.length,
     });
@@ -322,7 +322,7 @@ export class UniversalFieldCache {
     }
 
     this.memoryCache.clear();
-    logger.info("Universal Field Cache shutdown complete");
+    logger.info(&quot;Universal Field Cache shutdown complete&quot;);
   }
 }
 

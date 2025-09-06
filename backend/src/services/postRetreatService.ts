@@ -59,7 +59,7 @@ interface TransformationUpdate {
 
 interface TransformationAnalysis {
   overallProgress: number;
-  growthTrajectory: "accelerating" | "steady" | "plateauing" | "integrating";
+  growthTrajectory: &quot;accelerating&quot; | "steady" | "plateauing" | "integrating";
   strengths: string[];
   edges: string[];
   patterns: {
@@ -100,7 +100,7 @@ export class PostRetreatService {
 
       // Store transformation update
       const { data, error } = await supabase
-        .from("transformation_updates")
+        .from(&quot;transformation_updates&quot;)
         .insert({
           id: updateId,
           participant_id: update.participantId,
@@ -116,7 +116,7 @@ export class PostRetreatService {
 
       if (error) throw error;
 
-      // Update participant's integration status
+      // Update participant&apos;s integration status
       await this.updateIntegrationStatus(update.participantId, update);
 
       // Calculate next check-in date
@@ -145,7 +145,7 @@ export class PostRetreatService {
     try {
       // Get all transformation updates
       const { data: updates } = await supabase
-        .from("transformation_updates")
+        .from(&quot;transformation_updates&quot;)
         .select("*")
         .eq("participant_id", participantId)
         .order("created_at", { ascending: true });
@@ -187,7 +187,7 @@ export class PostRetreatService {
     analysis: TransformationAnalysis,
   ): Promise<any> {
     try {
-      // Get participant's retreat data
+      // Get participant&apos;s retreat data
       const retreatContext =
         await this.getParticipantRetreatContext(participantId);
 
@@ -220,7 +220,7 @@ export class PostRetreatService {
         nextFocus: this.determineNextFocus(analysis, currentUpdate),
       };
     } catch (error) {
-      logger.error("Failed to generate integration guidance", error);
+      logger.error(&quot;Failed to generate integration guidance&quot;, error);
       throw error;
     }
   }
@@ -232,7 +232,7 @@ export class PostRetreatService {
   ): Promise<any> {
     try {
       let query = supabase
-        .from("transformation_updates")
+        .from(&quot;transformation_updates&quot;)
         .select("*")
         .eq("participant_id", participantId)
         .order("created_at", { ascending: true });
@@ -288,7 +288,7 @@ export class PostRetreatService {
     try {
       // Get participant data
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("*")
         .eq("id", participantId)
         .single();
@@ -360,7 +360,7 @@ export class PostRetreatService {
         nextSteps,
       };
     } catch (error) {
-      logger.error("Failed to generate sacred guidance", error);
+      logger.error(&quot;Failed to generate sacred guidance&quot;, error);
       throw error;
     }
   }
@@ -371,7 +371,7 @@ export class PostRetreatService {
     guidance: any,
   ): Promise<void> {
     try {
-      await supabase.from("guidance_sessions").insert({
+      await supabase.from(&quot;guidance_sessions&quot;).insert({
         participant_id: participantId,
         guidance,
         created_at: new Date(),
@@ -394,7 +394,7 @@ export class PostRetreatService {
       };
 
       // Store schedule
-      await supabase.from("oracle_checkin_schedules").upsert({
+      await supabase.from(&quot;oracle_checkin_schedules&quot;).upsert({
         participant_id: params.participantId,
         ...schedule,
         created_at: new Date(),
@@ -423,7 +423,7 @@ export class PostRetreatService {
       };
 
       // Store milestone
-      await supabase.from("milestones").insert(milestone);
+      await supabase.from(&quot;milestones&quot;).insert(milestone);
 
       // Update participant stats
       await this.updateMilestoneStats(milestone.participantId, milestone.type);
@@ -448,7 +448,7 @@ export class PostRetreatService {
     try {
       // Get participant info
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants")
         .select("*")
         .eq("id", participantId)
         .single();
@@ -486,7 +486,7 @@ export class PostRetreatService {
   // Share with alumni community
   async shareWithAlumniCommunity(milestone: Milestone): Promise<void> {
     try {
-      await supabase.from("community_shares").insert({
+      await supabase.from(&quot;community_shares&quot;).insert({
         type: "milestone",
         content: milestone,
         shared_by: milestone.participantId,
@@ -505,7 +505,7 @@ export class PostRetreatService {
   async getMilestones(participantId: string, filters: any): Promise<any> {
     try {
       let query = supabase
-        .from("milestones")
+        .from(&quot;milestones&quot;)
         .select("*")
         .eq("participant_id", participantId)
         .order("date", { ascending: false });
@@ -581,7 +581,7 @@ export class PostRetreatService {
         followUpDate,
       };
     } catch (error) {
-      logger.error("Failed to generate challenge support", error);
+      logger.error(&quot;Failed to generate challenge support&quot;, error);
       throw error;
     }
   }
@@ -594,7 +594,7 @@ export class PostRetreatService {
     try {
       // Get participants with similar challenges
       const { data: similarParticipants } = await supabase
-        .from("transformation_updates")
+        .from(&quot;transformation_updates&quot;)
         .select("participant_id")
         .contains("challenges", [{ type: challengeType }])
         .neq("participant_id", participantId)
@@ -643,7 +643,7 @@ export class PostRetreatService {
     try {
       // Get scheduled check-ins
       const { data: schedule } = await supabase
-        .from("oracle_checkin_schedules")
+        .from(&quot;oracle_checkin_schedules&quot;)
         .select("*")
         .eq("participant_id", participantId)
         .single();
@@ -675,7 +675,7 @@ export class PostRetreatService {
     try {
       // Get alumni members
       let query = supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("*")
         .eq("retreat_id", retreatId);
 
@@ -717,12 +717,12 @@ export class PostRetreatService {
     year: number,
   ): Promise<any> {
     try {
-      // Get year's transformation updates
+      // Get year&apos;s transformation updates
       const startDate = new Date(year, 0, 1);
       const endDate = new Date(year, 11, 31);
 
       const { data: updates } = await supabase
-        .from("transformation_updates")
+        .from(&quot;transformation_updates&quot;)
         .select("*")
         .eq("participant_id", participantId)
         .gte("created_at", startDate.toISOString())
@@ -765,9 +765,9 @@ export class PostRetreatService {
   // Check retreat anniversary
   async checkRetreatAnniversary(participantId: string): Promise<any> {
     try {
-      // Get participant's retreat date
+      // Get participant&apos;s retreat date
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("created_at, retreatId")
         .eq("id", participantId)
         .single();
@@ -779,7 +779,7 @@ export class PostRetreatService {
       const retreatDate = new Date(participant.created_at);
       const today = new Date();
 
-      // Check if it's anniversary (same month and day)
+      // Check if it&apos;s anniversary (same month and day)
       const isAnniversary =
         retreatDate.getMonth() === today.getMonth() &&
         retreatDate.getDate() === today.getDate();
@@ -833,7 +833,7 @@ export class PostRetreatService {
   ): Promise<string> {
     try {
       const { data: participant } = await supabase
-        .from("retreat_participants")
+        .from(&quot;retreat_participants&quot;)
         .select("*")
         .eq("id", participantId)
         .single();
@@ -865,7 +865,7 @@ export class PostRetreatService {
     const integrationScore = this.calculateIntegrationScore(update);
 
     await supabase
-      .from("retreat_participants")
+      .from(&quot;retreat_participants&quot;)
       .update({
         integration_status: {
           lastUpdate: new Date(),
@@ -975,7 +975,7 @@ export class PostRetreatService {
 
     const trend = scores[2] - scores[0];
 
-    if (trend > 1) return "accelerating";
+    if (trend > 1) return &quot;accelerating&quot;;
     if (trend < -0.5) return "integrating";
     if (Math.abs(trend) < 0.2) return "plateauing";
     return "steady";
@@ -986,7 +986,7 @@ export class PostRetreatService {
     const strengths: string[] = [];
 
     if (latest.current_state.emotionalClarity >= 8)
-      strengths.push("Emotional mastery");
+      strengths.push(&quot;Emotional mastery&quot;);
     if (latest.current_state.spiritualConnection >= 8)
       strengths.push("Deep spiritual connection");
     if (latest.current_state.lifeAlignment >= 8)
@@ -1013,7 +1013,7 @@ export class PostRetreatService {
     });
 
     if (latest.challenges && latest.challenges.length > 3) {
-      edges.push("Challenge navigation");
+      edges.push(&quot;Challenge navigation");
     }
 
     if (
@@ -1207,7 +1207,7 @@ export class PostRetreatService {
 
     // Challenge-specific practices
     if (update.challenges && update.challenges.length > 0) {
-      practices.push("Shadow work journaling", "Support circle connection");
+      practices.push(&quot;Shadow work journaling&quot;, "Support circle connection");
     }
 
     return practices.slice(0, 5);
@@ -1220,7 +1220,7 @@ export class PostRetreatService {
     // In production, this would search the wisdom database
     return [
       {
-        type: "insight",
+        type: &quot;insight",
         content: "Trust the spiral nature of growth",
         contributor: "Alumni Member",
         relevance: "transformation",
@@ -1362,7 +1362,7 @@ export class PostRetreatService {
     practices.push(`${element} meditation for ${lifeArea}`);
 
     // Context-specific practices
-    if (context.includes("challenge")) {
+    if (context.includes(&quot;challenge&quot;)) {
       practices.push("Shadow work journaling", "Support circle activation");
     }
 
@@ -1381,7 +1381,7 @@ export class PostRetreatService {
     // In production, search wisdom database
     return [
       {
-        type: "guidance",
+        type: &quot;guidance&quot;,
         content: "Trust the wisdom already within you",
         element,
         relevance: lifeArea,
@@ -1395,7 +1395,7 @@ export class PostRetreatService {
     practices: string[],
   ): string[] {
     return [
-      `Sit with the Oracle's message: "${oracleResponse.substring(0, 50)}..."`,
+      `Sit with the Oracle&apos;s message: "${oracleResponse.substring(0, 50)}..."`,
       `Begin with ${practices[0]}`,
       "Journal any insights that arise",
       "Check in again in one week",
@@ -1452,7 +1452,7 @@ export class PostRetreatService {
   ): Promise<void> {
     // Update participant statistics
     const { data: stats } = await supabase
-      .from("participant_stats")
+      .from(&quot;participant_stats&quot;)
       .select("*")
       .eq("participant_id", participantId)
       .single();
@@ -1501,7 +1501,7 @@ export class PostRetreatService {
 
   private async createCommunityCelebration(milestone: Milestone): Promise<any> {
     return {
-      sharedWith: "retreat_alumni",
+      sharedWith: &quot;retreat_alumni&quot;,
       celebrationCircle: true,
       message: "Your journey inspires the collective",
     };
@@ -1509,14 +1509,14 @@ export class PostRetreatService {
 
   private async notifyAlumniOfShare(milestone: Milestone): Promise<void> {
     // In production, send notifications
-    logger.info("Alumni notified of milestone share", {
+    logger.info(&quot;Alumni notified of milestone share&quot;, {
       milestoneId: milestone.id,
     });
   }
 
   private async getMilestoneStatistics(participantId: string): Promise<any> {
     const { data: stats } = await supabase
-      .from("participant_stats")
+      .from(&quot;participant_stats")
       .select("milestone_count")
       .eq("participant_id", participantId)
       .single();
@@ -1562,7 +1562,7 @@ export class PostRetreatService {
       practices: [
         `Daily ${context.element} practice for ${params.challengeType}`,
       ],
-      mindset: "This challenge is a teacher",
+      mindset: &quot;This challenge is a teacher&quot;,
       support: "Oracle guidance + community wisdom",
     };
   }
@@ -1573,7 +1573,7 @@ export class PostRetreatService {
   ): Promise<any[]> {
     return [
       {
-        type: "guide",
+        type: &quot;guide",
         title: `${element} approach to ${type}`,
         content: "Wisdom from your element",
       },
@@ -1599,7 +1599,7 @@ export class PostRetreatService {
     // Analyze patterns to predict
     return [
       {
-        type: "integration",
+        type: &quot;integration",
         predictedDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         area: "Shadow work completion",
       },
@@ -1612,7 +1612,7 @@ export class PostRetreatService {
     const context = await this.getParticipantRetreatContext(participantId);
     return [
       `Daily ${context.element} meditation`,
-      "Integration journaling",
+      &quot;Integration journaling&quot;,
       "Community connection",
     ];
   }
@@ -1622,7 +1622,7 @@ export class PostRetreatService {
   ): Promise<any[]> {
     return [
       {
-        type: "online_circle",
+        type: &quot;online_circle&quot;,
         date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         title: "Monthly Integration Circle",
       },
@@ -1772,7 +1772,7 @@ export class PostRetreatService {
     const endDate = new Date(year, 11, 31);
 
     const { data: contributions } = await supabase
-      .from("community_shares")
+      .from(&quot;community_shares")
       .select("*")
       .eq("shared_by", participantId)
       .gte("created_at", startDate.toISOString())
@@ -1829,7 +1829,7 @@ export class PostRetreatService {
 
   private async getTransformationSummary(participantId: string): Promise<any> {
     const { data: updates } = await supabase
-      .from("transformation_updates")
+      .from(&quot;transformation_updates")
       .select("*")
       .eq("participant_id", participantId)
       .order("created_at", { ascending: false })

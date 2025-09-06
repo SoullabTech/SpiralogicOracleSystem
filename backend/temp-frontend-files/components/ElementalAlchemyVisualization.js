@@ -39,7 +39,7 @@ const ElementalAlchemyVisualization = ({
   }, [holoflower]);
   // Consciousness level colors
   const consciousnessColors = {
-    "meta-conscious": "#FFD700", // Gold
+    &quot;meta-conscious&quot;: "#FFD700", // Gold
     conscious: "#87CEEB", // Sky blue
     subconscious: "#9370DB", // Medium purple
     unconscious: "#483D8B", // Dark slate blue

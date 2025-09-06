@@ -22,7 +22,7 @@ class VoiceStartupLogger {
   private logFile: string;
 
   constructor() {
-    // Create logs directory if it doesn't exist
+    // Create logs directory if it doesn&apos;t exist
     this.logDir = path.join(process.cwd(), 'logs');
     this.logFile = path.join(this.logDir, 'voice-startup.log');
     

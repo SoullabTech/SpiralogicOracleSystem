@@ -131,7 +131,6 @@ export default function BetaMinimalMirror() {
 
   const handleTranscript = (transcript: string) => {
     // Optional: Show live transcript preview
-    console.log('Live transcript:', transcript);
   };
 
   return (

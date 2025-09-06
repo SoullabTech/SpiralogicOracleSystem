@@ -66,7 +66,6 @@ export async function POST(request: NextRequest) {
     
     if (enableVoice && result.response?.text) {
       try {
-        console.log(`🎤 Generating voice with engine: ${voiceEngine}, fallback: ${fallbackEnabled}`);
         
         // Use new unified voice API
         const voiceUrl = process.env.NEXT_PUBLIC_APP_URL 
@@ -106,7 +105,6 @@ export async function POST(request: NextRequest) {
               metadata: voiceData.metadata
             };
             
-            console.log(`🎤 Voice generated successfully via ${voiceData.engine}${voiceData.fallbackUsed ? ' (fallback)' : ''}`);
           } else {
             console.error(`🎤 Voice generation failed: ${voiceData.error}`);
             voiceMetadata = { 

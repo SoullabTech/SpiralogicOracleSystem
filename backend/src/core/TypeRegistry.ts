@@ -198,7 +198,7 @@ export interface LinguisticOtherness extends BaseManifestation {
 
 export interface EmotionalOtherness extends BaseManifestation {
   emotionType: 'foreign_emotion' | 'impossible_feeling' | 'collective_emotion' | 'transpersonal_affect';
-  personalResonance: number; // 0-1 how much feels "mine"
+  personalResonance: number; // 0-1 how much feels &quot;mine&quot;
   culturalFamiliarity: number; // 0-1 how culturally recognizable
 }
 

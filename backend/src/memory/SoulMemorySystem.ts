@@ -503,7 +503,7 @@ export class SoulMemorySystem {
   async createMemoryThread(
     userId: string,
     threadName: string,
-    threadType: "ritual" | "shadow_work" | "transformation" | "integration"
+    threadType: &quot;ritual" | "shadow_work" | "transformation" | "integration"
   ): Promise<{ id: string; name: string; type: string }> {
     // Placeholder implementation
     const threadId = this.generateId();

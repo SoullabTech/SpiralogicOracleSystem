@@ -280,7 +280,7 @@ function generateAdaptationInsight(
     const newIndex = levels.indexOf(newState.complexityLevel);
     
     if (newIndex > oldIndex) {
-      return `Interface complexity increased to ${newState.complexityLevel} - you're ready for more nuanced interactions`;
+      return `Interface complexity increased to ${newState.complexityLevel} - you&apos;re ready for more nuanced interactions`;
     }
   }
   
@@ -300,7 +300,7 @@ function generateAdaptationInsight(
   if (newState.interactionDepth !== oldState.interactionDepth &&
       ['surface', 'medium', 'deep'].indexOf(newState.interactionDepth) >
       ['surface', 'medium', 'deep'].indexOf(oldState.interactionDepth)) {
-    return `Enabling deeper dialogue interactions - you're showing readiness for more otherness`;
+    return `Enabling deeper dialogue interactions - you&apos;re showing readiness for more otherness`;
   }
   
   return null;
@@ -402,7 +402,7 @@ export function SafeguardedInteraction({
     return (
       <div className="safeguarded-interaction">
         <div className="mb-3 p-2 bg-blue-50 rounded text-sm text-blue-700">
-          Simplifying to focus on what's most important right now.
+          Simplifying to focus on what&apos;s most important right now.
         </div>
         {emergencySimplification}
       </div>

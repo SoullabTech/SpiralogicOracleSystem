@@ -72,7 +72,7 @@ export class SupabaseIntegrationService {
     profileData: Partial<SupabaseUserProfile>,
   ): Promise<SupabaseUserProfile> {
     const { data, error } = await this.supabase
-      .from("user_profiles")
+      .from(&quot;user_profiles&quot;)
       .insert({
         user_id: userId,
         display_name: profileData.display_name,
@@ -97,7 +97,7 @@ export class SupabaseIntegrationService {
 
   async getUserProfile(userId: string): Promise<SupabaseUserProfile | null> {
     const { data, error } = await this.supabase
-      .from("user_profiles")
+      .from(&quot;user_profiles&quot;)
       .select("*")
       .eq("user_id", userId)
       .single();
@@ -111,7 +111,7 @@ export class SupabaseIntegrationService {
     updates: Partial<SupabaseUserProfile>,
   ): Promise<SupabaseUserProfile> {
     const { data, error } = await this.supabase
-      .from("user_profiles")
+      .from(&quot;user_profiles&quot;)
       .update(updates)
       .eq("user_id", userId)
       .select()
@@ -128,7 +128,7 @@ export class SupabaseIntegrationService {
     profileData: any,
   ): Promise<SupabaseDomainProfile> {
     const { data, error } = await this.supabase
-      .from("domain_profiles")
+      .from(&quot;domain_profiles&quot;)
       .insert({
         user_id: userId,
         domain,
@@ -148,7 +148,7 @@ export class SupabaseIntegrationService {
 
   async getDomainProfiles(userId: string): Promise<SupabaseDomainProfile[]> {
     const { data, error } = await this.supabase
-      .from("domain_profiles")
+      .from(&quot;domain_profiles&quot;)
       .select("*")
       .eq("user_id", userId);
 
@@ -162,7 +162,7 @@ export class SupabaseIntegrationService {
     updates: any,
   ): Promise<SupabaseDomainProfile> {
     const { data, error } = await this.supabase
-      .from("domain_profiles")
+      .from(&quot;domain_profiles&quot;)
       .update(updates)
       .eq("user_id", userId)
       .eq("domain", domain)
@@ -176,7 +176,7 @@ export class SupabaseIntegrationService {
   // Spiral Progress Tracking
   async createSpiralProgress(userId: string, progressData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from("spiral_progress")
+      .from(&quot;spiral_progress&quot;)
       .insert({
         user_id: userId,
         theme: progressData.theme,
@@ -198,7 +198,7 @@ export class SupabaseIntegrationService {
 
   async getSpiralProgress(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from("spiral_progress")
+      .from(&quot;spiral_progress&quot;)
       .select("*")
       .eq("user_id", userId)
       .order("visit_date", { ascending: false });
@@ -212,7 +212,7 @@ export class SupabaseIntegrationService {
     validatorId: string,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("spiral_progress")
+      .from(&quot;spiral_progress&quot;)
       .update({
         community_validated: true,
         validated_by: validatorId,
@@ -232,7 +232,7 @@ export class SupabaseIntegrationService {
     journeyData: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("integration_journeys")
+      .from(&quot;integration_journeys&quot;)
       .insert({
         user_id: userId,
         insight_content: journeyData.insightContent,
@@ -253,7 +253,7 @@ export class SupabaseIntegrationService {
 
   async getIntegrationJourneys(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from("integration_journeys")
+      .from(&quot;integration_journeys&quot;)
       .select("*")
       .eq("user_id", userId)
       .order("journey_start_date", { ascending: false });
@@ -267,7 +267,7 @@ export class SupabaseIntegrationService {
     updates: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("integration_journeys")
+      .from(&quot;integration_journeys&quot;)
       .update(updates)
       .eq("id", journeyId)
       .select()
@@ -280,7 +280,7 @@ export class SupabaseIntegrationService {
   // Embodied Wisdom Tracking
   async createEmbodiedWisdom(userId: string, wisdomData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from("embodied_wisdom")
+      .from(&quot;embodied_wisdom&quot;)
       .insert({
         user_id: userId,
         type: wisdomData.type,
@@ -312,7 +312,7 @@ export class SupabaseIntegrationService {
 
   async getEmbodiedWisdom(userId: string, type?: string): Promise<any[]> {
     let query = this.supabase
-      .from("embodied_wisdom")
+      .from(&quot;embodied_wisdom&quot;)
       .select("*")
       .eq("user_id", userId);
 
@@ -333,7 +333,7 @@ export class SupabaseIntegrationService {
     validationNotes: string,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("embodied_wisdom")
+      .from(&quot;embodied_wisdom&quot;)
       .update({
         validated: true,
         validation_notes: validationNotes,
@@ -352,7 +352,7 @@ export class SupabaseIntegrationService {
     detectionData: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("bypassing_detections")
+      .from(&quot;bypassing_detections&quot;)
       .insert({
         user_id: userId,
         pattern: detectionData.pattern,
@@ -376,7 +376,7 @@ export class SupabaseIntegrationService {
     unaddressedOnly: boolean = false,
   ): Promise<any[]> {
     let query = this.supabase
-      .from("bypassing_detections")
+      .from(&quot;bypassing_detections&quot;)
       .select("*")
       .eq("user_id", userId);
 
@@ -397,7 +397,7 @@ export class SupabaseIntegrationService {
     resolutionNotes: string,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("bypassing_detections")
+      .from(&quot;bypassing_detections&quot;)
       .update({
         addressed: true,
         addressed_date: new Date().toISOString(),
@@ -414,7 +414,7 @@ export class SupabaseIntegrationService {
   // Integration Gates Management
   async createIntegrationGate(userId: string, gateData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from("integration_gates")
+      .from(&quot;integration_gates&quot;)
       .insert({
         user_id: userId,
         content_to_unlock: gateData.contentToUnlock,
@@ -436,7 +436,7 @@ export class SupabaseIntegrationService {
     unlockedOnly: boolean = false,
   ): Promise<any[]> {
     let query = this.supabase
-      .from("integration_gates")
+      .from(&quot;integration_gates&quot;)
       .select("*")
       .eq("user_id", userId);
 
@@ -454,7 +454,7 @@ export class SupabaseIntegrationService {
 
   async unlockIntegrationGate(gateId: string): Promise<any> {
     const { data, error } = await this.supabase
-      .from("integration_gates")
+      .from(&quot;integration_gates&quot;)
       .update({
         unlocked: true,
         unlocked_date: new Date().toISOString(),
@@ -469,7 +469,7 @@ export class SupabaseIntegrationService {
 
   async recordBypassAttempt(gateId: string): Promise<any> {
     const { data, error } = await this.supabase
-      .from("integration_gates")
+      .from(&quot;integration_gates&quot;)
       .update({
         bypass_attempts: this.supabase.rpc("increment_bypass_attempts", {
           gate_id: gateId,
@@ -487,7 +487,7 @@ export class SupabaseIntegrationService {
   // Reflection Gaps Management
   async createReflectionGap(userId: string, gapData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from("reflection_gaps")
+      .from(&quot;reflection_gaps&quot;)
       .insert({
         user_id: userId,
         content_id: gapData.contentId,
@@ -504,7 +504,7 @@ export class SupabaseIntegrationService {
 
   async getActiveReflectionGaps(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from("reflection_gaps")
+      .from(&quot;reflection_gaps&quot;)
       .select("*")
       .eq("user_id", userId)
       .eq("status", "processing")
@@ -516,7 +516,7 @@ export class SupabaseIntegrationService {
 
   async updateReflectionGap(gapId: string, updates: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from("reflection_gaps")
+      .from(&quot;reflection_gaps&quot;)
       .update(updates)
       .eq("id", gapId)
       .select()
@@ -532,7 +532,7 @@ export class SupabaseIntegrationService {
     interactionData: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("community_interactions")
+      .from(&quot;community_interactions&quot;)
       .insert({
         user_id: userId,
         interaction_type: interactionData.interactionType,
@@ -553,7 +553,7 @@ export class SupabaseIntegrationService {
     userId?: string,
     interactionType?: string,
   ): Promise<any[]> {
-    let query = this.supabase.from("community_interactions").select(`
+    let query = this.supabase.from(&quot;community_interactions&quot;).select(`
         *,
         user_profiles!community_interactions_user_id_fkey(display_name, community_visibility)
       `);
@@ -584,7 +584,7 @@ export class SupabaseIntegrationService {
     updates: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("community_interactions")
+      .from(&quot;community_interactions&quot;)
       .update(updates)
       .eq("id", interactionId)
       .select()
@@ -601,7 +601,7 @@ export class SupabaseIntegrationService {
     connectionData: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("professional_connections")
+      .from(&quot;professional_connections&quot;)
       .insert({
         user_id: userId,
         professional_id: professionalId,
@@ -621,7 +621,7 @@ export class SupabaseIntegrationService {
 
   async getProfessionalConnections(userId: string): Promise<any[]> {
     const { data, error } = await this.supabase
-      .from("professional_connections")
+      .from(&quot;professional_connections")
       .select(
         `
         *,
@@ -640,7 +640,7 @@ export class SupabaseIntegrationService {
     updates: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("professional_connections")
+      .from(&quot;professional_connections&quot;)
       .update(updates)
       .eq("id", connectionId)
       .select()
@@ -656,7 +656,7 @@ export class SupabaseIntegrationService {
     interactionData: any,
   ): Promise<any> {
     const { data, error } = await this.supabase
-      .from("content_interactions")
+      .from(&quot;content_interactions&quot;)
       .insert({
         user_id: userId,
         content_id: interactionData.contentId,
@@ -685,7 +685,7 @@ export class SupabaseIntegrationService {
     contentType?: string,
   ): Promise<any[]> {
     let query = this.supabase
-      .from("content_interactions")
+      .from(&quot;content_interactions&quot;)
       .select("*")
       .eq("user_id", userId);
 
@@ -704,7 +704,7 @@ export class SupabaseIntegrationService {
   // Analytics (Anonymized)
   async recordAnalytics(userHash: string, analyticsData: any): Promise<any> {
     const { data, error } = await this.supabase
-      .from("platform_analytics")
+      .from(&quot;platform_analytics&quot;)
       .insert({
         user_hash: userHash,
         cohort_identifier: analyticsData.cohortIdentifier,

@@ -578,7 +578,7 @@ const DeveloperPortal: React.FC = () => {
             </h3>
             <div className="mb-4">
               <p className="text-gray-400 mb-2">
-                Your new API key has been created. Copy it now - you won't be
+                Your new API key has been created. Copy it now - you won&apos;t be
                 able to see the full key again.
               </p>
               <div className="p-3 bg-[#0E0F1B] border border-gray-600 rounded-lg">

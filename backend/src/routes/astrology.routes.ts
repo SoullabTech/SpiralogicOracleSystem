@@ -15,7 +15,7 @@ astrologyRouter.post("/birth-chart", authenticate, async (req, res) => {
     if (!date || !time || !location) {
       return res.status(400).json({
         success: false,
-        error: "Birth date, time, and location are required",
+        error: &quot;Birth date, time, and location are required&quot;,
       });
     }
 
@@ -115,7 +115,7 @@ astrologyRouter.get(
       if (houseNumber < 1 || houseNumber > 12) {
         return res.status(400).json({
           success: false,
-          error: "Invalid house number. Must be between 1 and 12.",
+          error: &quot;Invalid house number. Must be between 1 and 12.&quot;,
         });
       }
 

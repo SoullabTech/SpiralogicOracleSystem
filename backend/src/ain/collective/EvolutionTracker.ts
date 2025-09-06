@@ -7,10 +7,10 @@ import { Logger } from '../../types/core';
 import { 
   AfferentStream, 
   CollectiveFieldState,
-  SpiralPhase,
   ElementalSignature,
   ArchetypeMap
 } from './CollectiveIntelligence';
+import { SpiralPhase } from '../../spiralogic/SpiralogicCognitiveEngine';
 
 export interface UserEvolutionProfile {
   userId: string;
@@ -510,7 +510,7 @@ export class EvolutionTracker {
     }
     
     if (contribution > 0.7) {
-      return `You're a lighthouse for others. Your presence alone catalyzes awakening.`;
+      return `You&apos;re a lighthouse for others. Your presence alone catalyzes awakening.`;
     } else if (contribution > 0.5) {
       return `Your journey is inspiring others. Share your process authentically.`;
     } else {

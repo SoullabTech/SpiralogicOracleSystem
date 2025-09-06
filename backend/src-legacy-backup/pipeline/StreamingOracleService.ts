@@ -64,7 +64,7 @@ export class StreamingOracleService extends EventEmitter {
         const cached = this.voiceCache.get(cacheKey)!;
         const audioUrl = await this.saveCachedAudio(cached);
 
-        logger.info("Voice synthesis cache hit:", {
+        logger.info(&quot;Voice synthesis cache hit:&quot;, {
           cacheKey,
           responseTime: Date.now() - startTime,
         });
@@ -111,7 +111,7 @@ export class StreamingOracleService extends EventEmitter {
   ): Promise<ReadableStream> {
     const streamId = this.generateStreamId();
 
-    logger.info("Starting streaming synthesis:", {
+    logger.info(&quot;Starting streaming synthesis:&quot;, {
       streamId,
       archetype: config.archetype,
       textLength: text.length,
@@ -150,7 +150,7 @@ export class StreamingOracleService extends EventEmitter {
    */
   async preloadVoice(voiceConfig: any): Promise<void> {
     const preloadTexts = [
-      "You already know what I'm going to say, don't you?",
+      &quot;You already know what I&apos;m going to say, don&apos;t you?&quot;,
       "The oracle speaks through silence and symbols.",
       "In the sacred space between breaths, wisdom awakens.",
     ];
@@ -229,7 +229,7 @@ export class StreamingOracleService extends EventEmitter {
         controller.enqueue(audioChunk);
 
         // Emit progress event
-        this.emit("streamProgress", {
+        this.emit(&quot;streamProgress&quot;, {
           streamId,
           progress: (i + 1) / textChunks.length,
           chunk: audioChunk,
@@ -295,7 +295,7 @@ export class StreamingOracleService extends EventEmitter {
   private splitTextForStreaming(text: string, chunkSize: number): string[] {
     const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
     const chunks: string[] = [];
-    let currentChunk = "";
+    let currentChunk = "&quot;;
 
     for (const sentence of sentences) {
       if (
@@ -339,7 +339,7 @@ export class StreamingOracleService extends EventEmitter {
     archetype: string,
   ): Promise<string> {
     const fileName = `oracle_${archetype}_${Date.now()}.mp3`;
-    const filePath = path.join(__dirname, "../../../public/audio", fileName);
+    const filePath = path.join(__dirname, &quot;../../../public/audio", fileName);
 
     // Ensure directory exists
     const audioDir = path.dirname(filePath);

@@ -379,7 +379,7 @@ export class SynapticResonanceService {
     
     // Unmet demands create tension
     for (const demand of daimonicOther.alterity.demand) {
-      tension_points.push(`Tension around demand: "${demand}"`);
+      tension_points.push(`Tension around demand: "${demand}&quot;`);
     }
     
     // Narrative challenges create tension

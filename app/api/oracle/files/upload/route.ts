@@ -166,7 +166,6 @@ async function triggerFileProcessing(fileId: string, userId: string, mimeType: s
       }),
     });
 
-    console.log('🚀 Background processing triggered for:', fileId);
   } catch (error) {
     console.error('Error triggering processing:', error);
   }

@@ -83,7 +83,7 @@ export class MayaReasoningChains {
       - Earth 🌍: Grounding, stability, manifestation, abundance
       - Aether ✨: Spirit, unity, transcendence, mystery
       
-      Analyze the user's message to identify:
+      Analyze the user&apos;s message to identify:
       1. Primary element present
       2. Secondary elements
       3. Elemental balance or imbalance
@@ -148,7 +148,7 @@ export class MayaReasoningChains {
       5. Integration practices
       
       Frame insights through:
-      - Hero's Journey archetypes
+      - Hero&apos;s Journey archetypes
       - Spiral dynamics
       - Integral development
       - Sacred psychology`],

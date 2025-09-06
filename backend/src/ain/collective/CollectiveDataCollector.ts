@@ -7,10 +7,10 @@ import { Logger } from '../../types/core';
 import { 
   AfferentStream, 
   ElementalSignature, 
-  SpiralPhase,
   ArchetypeMap,
   ShadowPattern
 } from './CollectiveIntelligence';
+import { SpiralPhase } from '../../spiralogic/SpiralogicCognitiveEngine';
 
 export interface SessionData {
   sessionId: string;
@@ -62,7 +62,7 @@ export class CollectiveDataCollector {
     userId: string, 
     sessionData: SessionData
   ): Promise<AfferentStream> {
-    // Get user's historical data for context
+    // Get user&apos;s historical data for context
     const history = this.getUserHistory(userId);
     
     // Analyze session for consciousness markers
@@ -162,7 +162,7 @@ export class CollectiveDataCollector {
   }
 
   /**
-   * Identify user's spiral phase
+   * Identify user&apos;s spiral phase
    */
   private identifyPhase(
     sessionData: SessionData, 
@@ -319,7 +319,7 @@ export class CollectiveDataCollector {
     }
     
     // Victim pattern
-    if (queryLower.match(/always happens|never works|they make me|can't help/)) {
+    if (queryLower.match(/always happens|never works|they make me|can&apos;t help/)) {
       patterns.push({
         type: 'victim',
         intensity: 0.7,
@@ -339,7 +339,7 @@ export class CollectiveDataCollector {
     }
     
     // Spiritual bypass pattern
-    if (queryLower.match(/just love|all is one|doesn't matter|above that/)) {
+    if (queryLower.match(/just love|all is one|doesn&apos;t matter|above that/)) {
       patterns.push({
         type: 'spiritual_bypass',
         intensity: 0.6,

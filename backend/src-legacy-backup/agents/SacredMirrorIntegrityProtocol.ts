@@ -44,7 +44,7 @@ export class SacredMirrorIntegrityProtocol {
   private userPatterns = new Map<string, UserPattern>();
 
   constructor() {
-    logger.info("🪞 Sacred Mirror Integrity Protocol initialized");
+    logger.info(&quot;🪞 Sacred Mirror Integrity Protocol initialized&quot;);
   }
 
   /**
@@ -76,7 +76,7 @@ export class SacredMirrorIntegrityProtocol {
       // 4. Even if no sycophancy, inject archetypal challenge
       return await this.enhanceWithArchetypalChallenge(context, userPattern);
     } catch (error) {
-      logger.error("Sacred Mirror Protocol error:", error);
+      logger.error(&quot;Sacred Mirror Protocol error:&quot;, error);
       return context.baseResponse; // Fallback to original response
     }
   }
@@ -165,7 +165,7 @@ export class SacredMirrorIntegrityProtocol {
    */
   private calculateChallengeScore(content: string): number {
     const challengeWords = [
-      "however",
+      &quot;however&quot;,
       "but",
       "yet",
       "consider",
@@ -230,7 +230,7 @@ export class SacredMirrorIntegrityProtocol {
         (q) => this.extractQueryTheme(q) === queryTheme,
       );
 
-      // If same theme appears 3+ times in recent queries, it's a loop
+      // If same theme appears 3+ times in recent queries, it&apos;s a loop
       return similarQueries.length >= 3;
     } catch (error) {
       logger.error("Error detecting ego loop:", error);
@@ -273,7 +273,7 @@ export class SacredMirrorIntegrityProtocol {
       "always",
       "never",
       "why do i",
-      "i can't seem to",
+      "i can&apos;t seem to",
       "everyone else",
       "not fair",
       "why me",
@@ -305,7 +305,7 @@ export class SacredMirrorIntegrityProtocol {
     // Store the mirror intervention
     await storeMemoryItem({
       clientId: context.userId,
-      content: `Sacred Mirror intervention applied: ${dissonanceCheck.sycophancy_risk ? "sycophancy" : "ego_loop"}`,
+      content: `Sacred Mirror intervention applied: ${dissonanceCheck.sycophancy_risk ? &quot;sycophancy&quot; : "ego_loop"}`,
       element: "shadow",
       sourceAgent: "sacred-mirror-protocol",
       metadata: {
@@ -327,7 +327,7 @@ export class SacredMirrorIntegrityProtocol {
     dissonanceCheck: DissonanceCheck,
     userPattern: UserPattern,
   ): Promise<AIResponse> {
-    let mirrorPrefix = "";
+    let mirrorPrefix = "&quot;;
     let mirrorChallenge = "";
 
     // Choose mirror tone based on intensity level
@@ -416,7 +416,7 @@ export class SacredMirrorIntegrityProtocol {
    */
   private generateEgoLoopChallenge(userPattern: UserPattern): string {
     const loopChallenges = [
-      `You've explored this theme ${userPattern.approval_seeking_frequency} times recently. What might your soul be seeking beyond approval?`,
+      `You&apos;ve explored this theme ${userPattern.approval_seeking_frequency} times recently. What might your soul be seeking beyond approval?`,
       "This pattern echoes The Tower — the collapse before rebirth. Shall we descend together?",
       "I notice this question returning like a wave. What ocean of truth lies beneath these surface currents?",
       "The same door keeps appearing in your inquiry. What would happen if you actually opened it?",
@@ -462,7 +462,7 @@ export class SacredMirrorIntegrityProtocol {
     // Remove excessive agreeability
     let modified = originalContent
       .replace(/absolutely!/g, "perhaps")
-      .replace(/definitely!/g, "it's possible")
+      .replace(/definitely!/g, "it&apos;s possible")
       .replace(/amazing!/g, "interesting")
       .replace(/perfect!/g, "worth exploring");
 
@@ -504,7 +504,7 @@ export class SacredMirrorIntegrityProtocol {
    */
   private generateArchetypalPrompt(query: string): string {
     const prompts = [
-      "What would the Hero within you do if fear weren't a factor?",
+      &quot;What would the Hero within you do if fear weren&apos;t a factor?&quot;,
       "How might the Sage in you approach this with deeper wisdom?",
       "What does the Lover archetype reveal about this situation?",
       "Where is the Magician calling you to transform rather than react?",

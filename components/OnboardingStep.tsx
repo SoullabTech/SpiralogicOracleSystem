@@ -48,7 +48,7 @@ export default function OnboardingStep({
           <div className="text-center">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Welcome to Your Journey</h2>
             <p className="text-gray-600 mb-6 leading-relaxed">
-              We'll help you create a personalized oracle experience that grows with your needs. 
+              We&apos;ll help you create a personalized oracle experience that grows with your needs. 
               This process takes about 5 minutes and helps us understand your preferences.
             </p>
             <div className="space-y-4">
@@ -157,7 +157,7 @@ export default function OnboardingStep({
         return (
           <div>
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Elemental Preferences</h2>
-            <p className="text-gray-600 mb-6">Which elements do you feel drawn to? These influence your oracle's perspective.</p>
+            <p className="text-gray-600 mb-6">Which elements do you feel drawn to? These influence your oracle&apos;s perspective.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { value: "fire", label: "Fire", desc: "Passion, transformation, action", color: "text-red-500" },

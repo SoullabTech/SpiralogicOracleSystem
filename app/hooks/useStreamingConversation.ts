@@ -61,19 +61,16 @@ export function useStreamingConversation(options: UseStreamingConversationOption
       const queue = audioQueueRef.current;
       
       const handleChunkAdded = (chunk: any) => {
-        console.log('🎵 Audio chunk added:', chunk);
         updateAudioQueueStatus();
         onAudioChunk?.(chunk);
       };
 
       const handleChunkPlaying = (chunk: any) => {
-        console.log('🔊 Playing chunk:', chunk.text);
         setState(prev => ({ ...prev, isSpeaking: true }));
         updateAudioQueueStatus();
       };
 
       const handleQueueEmpty = () => {
-        console.log('✅ Audio queue empty');
         setState(prev => ({ ...prev, isSpeaking: false }));
         updateAudioQueueStatus();
         

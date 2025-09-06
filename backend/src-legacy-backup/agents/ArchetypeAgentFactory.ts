@@ -73,7 +73,7 @@ export class ArchetypeAgentFactory {
       this.personalOracles.set(oracleKey, oracle);
       this.initializationPromises.delete(oracleKey);
 
-      logger.info("Personal Oracle Created:", {
+      logger.info(&quot;Personal Oracle Created:&quot;, {
         userId,
         archetype,
         oracleName,
@@ -90,7 +90,7 @@ export class ArchetypeAgentFactory {
   }
 
   /**
-   * 🎭 Get User's Personal Oracle (By User ID)
+   * 🎭 Get User&apos;s Personal Oracle (By User ID)
    */
   static async getUserPersonalOracle(
     userId: string,
@@ -121,7 +121,7 @@ export class ArchetypeAgentFactory {
     const agent = await this.createPersonalOracleAgent(normalizedArchetype);
     this.personalOracles.set(genericKey, agent);
 
-    logger.info("Generic Agent Created:", {
+    logger.info(&quot;Generic Agent Created:", {
       archetype: normalizedArchetype,
       element: agent.element,
       energySignature: agent.energySignature,
@@ -185,7 +185,7 @@ export class ArchetypeAgentFactory {
 
     await Promise.all(preloadPromises);
 
-    logger.info("All archetype agents preloaded:", {
+    logger.info(&quot;All archetype agents preloaded:&quot;, {
       totalAgents: this.agents.size,
       archetypes: Array.from(this.agents.keys()),
     });
@@ -210,7 +210,7 @@ export class ArchetypeAgentFactory {
       ([, a], [, b]) => b - a,
     )[0][0];
 
-    logger.info("Optimal Agent Selection:", {
+    logger.info(&quot;Optimal Agent Selection:&quot;, {
       userId: userProfile.userId,
       selectedArchetype,
       scores,
@@ -271,7 +271,7 @@ export class ArchetypeAgentFactory {
   private static analyzeInputContent(input: string): Record<string, number> {
     const keywords = {
       fire: [
-        "passion",
+        &quot;passion&quot;,
         "create",
         "ignite",
         "transform",
@@ -451,7 +451,7 @@ export class ArchetypeAgentFactory {
     userProfile?: UserPersonalization,
     context: any = {},
   ): Promise<AIResponse> {
-    // Get user's personal Oracle
+    // Get user&apos;s personal Oracle
     const oracle = await this.getUserPersonalOracle(userId);
 
     if (!oracle) {
@@ -466,7 +466,7 @@ export class ArchetypeAgentFactory {
       userProfile || { userId },
     );
 
-    logger.info("Personal Oracle Query Processed:", {
+    logger.info(&quot;Personal Oracle Query Processed:&quot;, {
       userId,
       oracleName: oracle.oracleName,
       archetype: oracle.element,
@@ -494,7 +494,7 @@ export class ArchetypeAgentFactory {
       userProfile || { userId },
     );
 
-    logger.info("Direct Oracle Query Processed:", {
+    logger.info(&quot;Direct Oracle Query Processed:&quot;, {
       userId,
       requestedArchetype: archetype,
       actualArchetype: agent.element,
@@ -521,7 +521,7 @@ export class ArchetypeAgentFactory {
     if (oracle.phase !== detectedPhase) {
       const suggestion = oracle.suggestEvolution(detectedPhase);
 
-      logger.info("Oracle Evolution Suggested:", {
+      logger.info(&quot;Oracle Evolution Suggested:", {
         userId,
         oracleName: oracle.oracleName,
         currentPhase: oracle.phase,
@@ -551,7 +551,7 @@ export class ArchetypeAgentFactory {
 
     oracle.evolveToPhase(newPhase, newArchetype, userInitiated);
 
-    logger.info("Oracle Evolution Completed:", {
+    logger.info(&quot;Oracle Evolution Completed:", {
       userId,
       oracleName: oracle.oracleName,
       newPhase,
@@ -575,7 +575,7 @@ export class ArchetypeAgentFactory {
 
     oracle.updateVoiceProfile(newVoiceProfile);
 
-    logger.info("Oracle Voice Profile Updated:", {
+    logger.info(&quot;Oracle Voice Profile Updated:", {
       userId,
       oracleName: oracle.oracleName,
       newVoiceProfile,
@@ -592,7 +592,7 @@ export class ArchetypeAgentFactory {
     const oldName = oracle.oracleName;
     oracle.updateOracleName(newName);
 
-    logger.info("Oracle Renamed:", {
+    logger.info(&quot;Oracle Renamed:", {
       userId,
       oldName,
       newName,

@@ -177,7 +177,7 @@ export default function OracleBetaDashboard() {
       fire: {
         message: `🔥 The Sacred Flames illuminate your path, dear seeker. Your question "${input}" burns with the urgency of transformation. I perceive a phoenix energy surrounding you - something within you is ready to be reborn through the crucible of creative fire. The universe whispers that your passion is the key that unlocks the next chapter of your evolutionary journey.`,
         insight:
-          "Your inner fire seeks authentic expression. Trust the creative impulses that feel both exciting and slightly terrifying - they point toward your soul's growth edge.",
+          "Your inner fire seeks authentic expression. Trust the creative impulses that feel both exciting and slightly terrifying - they point toward your soul&apos;s growth edge.",
         symbols: [
           "Phoenix Rising",
           "Sacred Flame",

@@ -88,7 +88,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
 
   // Planet symbols
   const planetSymbols: Record<Planet, string> = {
-    sun: "☉",
+    sun: &quot;☉&quot;,
     moon: "☽",
     mercury: "☿",
     venus: "♀",
@@ -104,7 +104,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
 
   // Zodiac colors
   const zodiacColors: Record<string, string> = {
-    aries: "#FF0000",
+    aries: &quot;#FF0000&quot;,
     taurus: "#228B22",
     gemini: "#FFD700",
     cancer: "#C0C0C0",
@@ -261,7 +261,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
 
   const renderZodiacWheel = () => {
     const signs = [
-      "Aries",
+      &quot;Aries&quot;,
       "Taurus",
       "Gemini",
       "Cancer",
@@ -374,7 +374,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
     }
 
     const pathData = points
-      .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
+      .map((point, index) => `${index === 0 ? &quot;M" : "L"} ${point.x} ${point.y}`)
       .join(" ");
 
     return (
@@ -400,7 +400,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
   // Helper function to get absolute degree
   const getAbsoluteDegree = (sign: string, degree: number): number => {
     const signs = [
-      "aries",
+      &quot;aries&quot;,
       "taurus",
       "gemini",
       "cancer",
@@ -523,7 +523,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
           <div className="detail-section">
             <h4>Elemental Alchemy</h4>
             <p>
-              <strong>Element:</strong> {selectedHouse.element}{" "}
+              <strong>Element:</strong> {selectedHouse.element}{&quot; &quot;}
               {selectedHouse.sacredSymbol}
             </p>
             <p>
@@ -542,7 +542,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
               <h4>Current Transits</h4>
               {selectedHouse.currentTransits.map((transit) => (
                 <p key={transit.planet}>
-                  {planetSymbols[transit.planet]} {transit.planet} in{" "}
+                  {planetSymbols[transit.planet]} {transit.planet} in{&quot; &quot;}
                   {transit.sign}: {transit.influence}
                 </p>
               ))}
@@ -554,7 +554,7 @@ export const AstrologicalHoloflowerVisualization: React.FC<
               <h4>Natal Planets</h4>
               {selectedHouse.natalPlanets.map((natal) => (
                 <p key={natal.planet}>
-                  {planetSymbols[natal.planet]} {natal.planet}:{" "}
+                  {planetSymbols[natal.planet]} {natal.planet}:{&quot; &quot;}
                   {natal.interpretation}
                 </p>
               ))}

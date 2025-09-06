@@ -49,7 +49,7 @@ export class GenerateReportFlow {
 
       // Call OpenAI with the prompt
       const response = await openai.chat.completions.create({
-        model: "gpt-4-turbo-preview",
+        model: &quot;gpt-4-turbo-preview",
         messages: [
           {
             role: "system",
@@ -126,7 +126,7 @@ export class GenerateReportFlow {
 
     // Define section markers
     const sectionMarkers = [
-      "Soul's Welcome Message",
+      &quot;Soul&apos;s Welcome Message&quot;,
       "Mythic Chart Narrative",
       "Soul Journey Arc",
       "Elemental Alchemy",
@@ -180,7 +180,7 @@ export class GenerateReportFlow {
   ) {
     return {
       userId: input.userId,
-      reportType: "spiralogic-astrology",
+      reportType: &quot;spiralogic-astrology&quot;,
       birthChart: {
         date: input.birthDate,
         time: input.birthTime,
@@ -206,7 +206,7 @@ export class GenerateReportFlow {
   async generatePDF(reportContent: string, metadata: any): Promise<Buffer> {
     // This would integrate with your existing PDF generation service
     // For now, returning a placeholder
-    logger.info("PDF generation requested for Spiralogic report");
+    logger.info(&quot;PDF generation requested for Spiralogic report");
 
     // TODO: Integrate with spiralogicReportPdfService
     return Buffer.from("PDF generation not yet implemented");
@@ -233,7 +233,7 @@ export class GenerateReportFlow {
   private slugify(text: string): string {
     return text
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/[^a-z0-9]+/g, &quot;-")
       .replace(/(^-|-$)/g, "");
   }
 

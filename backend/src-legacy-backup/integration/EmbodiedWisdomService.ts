@@ -81,7 +81,7 @@ export class EmbodiedWisdomService {
 
     // Check for somatic specificity
     if (bodyIntegration.somaticAwareness.length > 50) {
-      strengths.push("Detailed somatic awareness");
+      strengths.push(&quot;Detailed somatic awareness&quot;);
     } else {
       growthAreas.push("Develop more specific body awareness descriptions");
     }
@@ -163,7 +163,7 @@ export class EmbodiedWisdomService {
     // Check for humility development
     const humilityIndicators = [
       "humbled",
-      "learned i don't know",
+      "learned i don&apos;t know",
       "more questions",
       "realize how much",
       "beginning to understand",
@@ -344,7 +344,7 @@ export class EmbodiedWisdomService {
     const strugglingPractices = metrics.filter((m) => m.consistencyRating < 6);
     if (strugglingPractices.length > 0) {
       encouragements.push(
-        "🌿 Struggling with consistency is part of the human experience. The practice is showing up even when it's difficult.",
+        &quot;🌿 Struggling with consistency is part of the human experience. The practice is showing up even when it&apos;s difficult.&quot;,
       );
     }
 
@@ -352,7 +352,7 @@ export class EmbodiedWisdomService {
     const perfectPractices = metrics.filter((m) => m.consistencyRating >= 9);
     if (perfectPractices.length > 2) {
       realityChecks.push(
-        "💫 High consistency is wonderful, but remember that perfection isn't the goal. Allow space for your humanity.",
+        "💫 High consistency is wonderful, but remember that perfection isn&apos;t the goal. Allow space for your humanity.",
       );
     }
 
@@ -385,7 +385,7 @@ export class EmbodiedWisdomService {
       ) / tracking.livedExperiences.length;
 
     if (experienceDepth >= 2) {
-      strengths.push("You're honest about the challenges in applying insights");
+      strengths.push("You&apos;re honest about the challenges in applying insights");
     } else {
       growthEdges.push(
         "Consider exploring the challenges more deeply - they contain wisdom",
@@ -420,7 +420,7 @@ export class EmbodiedWisdomService {
 
     if (wisdomToStruggleRatio > 3) {
       growthEdges.push(
-        "Balance insights with honest acknowledgment of ongoing struggles",
+        &quot;Balance insights with honest acknowledgment of ongoing struggles",
       );
     } else if (wisdomToStruggleRatio < 1) {
       growthEdges.push(

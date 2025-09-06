@@ -241,7 +241,7 @@ export class QuantumThoughtEngine {
     const str = JSON.stringify(input);
     return str
       .split("")
-      .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
+      .map((char) => char.charCodeAt(0).toString(2).padStart(8, &quot;0"))
       .join("")
       .substring(0, this.config.max_qubits);
   }
@@ -471,7 +471,7 @@ export class QuantumThoughtEngine {
   }
 
   private extractSacredGeometry(measurement: QuantumMeasurement): string {
-    const geometries = ["merkaba", "flower_of_life", "torus", "golden_spiral"];
+    const geometries = [&quot;merkaba&quot;, "flower_of_life", "torus", "golden_spiral"];
     const index = Math.floor(measurement.coherence * geometries.length);
     return geometries[Math.min(index, geometries.length - 1)];
   }
@@ -569,7 +569,7 @@ class IBMQuantumBackend implements QuantumBackend {
 
   async execute(circuit: QuantumCircuit, shots: number): Promise<any> {
     // Would integrate with IBM Quantum API
-    throw new Error("IBM Quantum integration not implemented");
+    throw new Error(&quot;IBM Quantum integration not implemented&quot;);
   }
 }
 
@@ -578,7 +578,7 @@ class GoogleQuantumBackend implements QuantumBackend {
 
   async execute(circuit: QuantumCircuit, shots: number): Promise<any> {
     // Would integrate with Google Quantum AI
-    throw new Error("Google Quantum integration not implemented");
+    throw new Error(&quot;Google Quantum integration not implemented&quot;);
   }
 }
 

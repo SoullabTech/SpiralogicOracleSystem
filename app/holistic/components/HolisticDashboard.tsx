@@ -116,7 +116,7 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({
             Welcome to Holistic Development
           </h2>
           <p className="text-gray-600 mb-6">
-            Let's begin with an assessment to understand your current
+            Let&apos;s begin with an assessment to understand your current
             development across mind, body, spirit, and emotions.
           </p>
           <button
@@ -175,7 +175,6 @@ export const HolisticDashboard: React.FC<HolisticDashboardProps> = ({
             pathway={pathway}
             onStepComplete={(stepId) => {
               // Handle step completion
-              console.log("Step completed:", stepId);
             }}
           />
         )}

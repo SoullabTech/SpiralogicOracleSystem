@@ -98,7 +98,7 @@ export class ResearchLogger {
   ];
 
   constructor() {
-    // Create log directories if they don't exist
+    // Create log directories if they don&apos;t exist
     const logDir = join(process.cwd(), 'logs', 'research');
     const summariesDir = join(logDir, 'summaries');
     

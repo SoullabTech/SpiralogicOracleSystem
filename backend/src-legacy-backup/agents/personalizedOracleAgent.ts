@@ -47,7 +47,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
     this.config.retreatMode = mode;
 
     switch (mode) {
-      case "pre-retreat":
+      case &quot;pre-retreat":
         await this.initializePreRetreatMode();
         break;
       case "retreat-active":
@@ -65,7 +65,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   private async initializePreRetreatMode(): Promise<void> {
     // Pre-retreat preparation mode
-    this.systemPrompt = this.buildSystemPrompt("pre-retreat");
+    this.systemPrompt = this.buildSystemPrompt(&quot;pre-retreat");
 
     // Schedule preparation sessions
     const preRetreatPlan = this.config.match.lifecyclePlanning.preRetreat;
@@ -83,7 +83,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   private async activateRetreatActiveMode(): Promise<void> {
     // Full retreat mode activation
-    this.systemPrompt = this.buildSystemPrompt("retreat-active");
+    this.systemPrompt = this.buildSystemPrompt(&quot;retreat-active");
 
     const retreatConfig = this.config.match.lifecyclePlanning.retreatMode;
 
@@ -102,7 +102,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
 
   private async activatePostRetreatMode(): Promise<void> {
     // Post-retreat integration mode
-    this.systemPrompt = this.buildSystemPrompt("post-retreat");
+    this.systemPrompt = this.buildSystemPrompt(&quot;post-retreat");
 
     const postRetreatPlan = this.config.match.lifecyclePlanning.postRetreat;
 
@@ -261,9 +261,9 @@ export class PersonalizedOracleAgent extends BaseAgent {
         case "trauma_indicators":
           return /trauma|abuse|hurt|pain|wounded/i.test(lowerQuery);
         case "overwhelm_signals":
-          return /overwhelmed|too much|can't handle|breaking/i.test(lowerQuery);
+          return /overwhelmed|too much|can&apos;t handle|breaking/i.test(lowerQuery);
         case "spiritual_emergency":
-          return /losing myself|can't ground|spinning|dissolving/i.test(
+          return /losing myself|can&apos;t ground|spinning|dissolving/i.test(
             lowerQuery,
           );
         case "substance_concerns":
@@ -360,7 +360,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
   // Relationship dynamic methods
   private addTrustBuildingElements(response: string): string {
     const trustPhrases = [
-      "I'm here when you're ready",
+      "I&apos;m here when you&apos;re ready",
       "Take your time with this",
       "You're safe to explore this at your own pace",
     ];
@@ -375,7 +375,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
   }
 
   private async logInteraction(query: string, response: string): Promise<void> {
-    logger.info("Personalized Oracle Interaction", {
+    logger.info(&quot;Personalized Oracle Interaction", {
       participantId: this.config.participant.id,
       oracleName: this.personality.name,
       retreatMode: this.config.retreatMode,

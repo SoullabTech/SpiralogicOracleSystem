@@ -51,7 +51,7 @@ router.post('/analyze-patterns', async (req: Request, res: Response) => {
 
 /**
  * @route GET /api/semantic/journey-insights/:userId
- * @description Generate predictive insights about user's spiritual journey
+ * @description Generate predictive insights about user&apos;s spiritual journey
  */
 router.get('/journey-insights/:userId', async (req: Request, res: Response) => {
   try {
@@ -84,7 +84,7 @@ router.get('/journey-insights/:userId', async (req: Request, res: Response) => {
 
 /**
  * @route GET /api/semantic/archetypal-constellation/:userId
- * @description Map user's archetypal constellation
+ * @description Map user&apos;s archetypal constellation
  */
 router.get('/archetypal-constellation/:userId', async (req: Request, res: Response) => {
   try {
@@ -196,7 +196,7 @@ router.post('/cross-session-analysis', async (req: Request, res: Response) => {
 
 /**
  * @route POST /api/semantic/pattern-threading
- * @description Map how patterns thread through user's journey over time
+ * @description Map how patterns thread through user&apos;s journey over time
  */
 router.post('/pattern-threading', async (req: Request, res: Response) => {
   try {

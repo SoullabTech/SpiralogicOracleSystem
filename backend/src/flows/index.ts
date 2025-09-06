@@ -23,7 +23,7 @@ export class FlowManager {
       // Initialize with a starting memory
       const initialMemory = await this.memoryService.storeMemory({
         id: Math.random().toString(36).substring(7),
-        content: "Learning flow initiated",
+        content: &quot;Learning flow initiated&quot;,
         clientId,
         metadata: MetaService.createMeta(),
       });

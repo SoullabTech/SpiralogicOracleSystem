@@ -42,7 +42,7 @@ export class HoloflowerService {
   private initializeWebSocketServer() {
     this.wsServer = new WebSocketServer({ port: 5002 });
 
-    this.wsServer.on("connection", (ws, req) => {
+    this.wsServer.on(&quot;connection&quot;, (ws, req) => {
       const userId = req.url?.split("/").pop();
       if (!userId) return;
 
@@ -103,7 +103,7 @@ export class HoloflowerService {
     userId: string,
   ): Promise<Partial<HoloflowerState> | undefined> {
     const { data, error } = await supabase
-      .from("holoflower_states")
+      .from(&quot;holoflower_states")
       .select("state")
       .eq("user_id", userId)
       .single();
@@ -215,7 +215,7 @@ export class HoloflowerService {
     }
 
     if (state.centerIntegration > 0.8) {
-      patterns.push("high-integration");
+      patterns.push(&quot;high-integration&quot;);
     }
 
     if (state.overallBalance > 0.85) {
@@ -229,7 +229,7 @@ export class HoloflowerService {
     );
 
     if (recentTransformations.length > 5) {
-      patterns.push("rapid-transformation");
+      patterns.push(&quot;rapid-transformation&quot;);
     }
 
     if (patterns.length > 0) {
@@ -269,7 +269,7 @@ export class HoloflowerService {
     const [toElement, toPhase] = toHouseId.split("-");
 
     const insights: Record<string, string> = {
-      "fire-cardinal->fire-fixed":
+      &quot;fire-cardinal->fire-fixed":
         "Channeling initial spark into sustained will",
       "fire-fixed->fire-mutable": "Releasing rigid control for inspired flow",
       "earth-cardinal->earth-fixed":
@@ -349,7 +349,7 @@ export class HoloflowerService {
   ): Map<string, number> {
     const resonances = new Map<string, number>();
 
-    resonances.set("harmony", Math.random() * 0.5 + 0.5);
+    resonances.set(&quot;harmony&quot;, Math.random() * 0.5 + 0.5);
     resonances.set("synergy", Math.random() * 0.5 + 0.5);
     resonances.set("coherence", Math.random() * 0.5 + 0.5);
 

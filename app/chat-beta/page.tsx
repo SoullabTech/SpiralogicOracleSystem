@@ -8,7 +8,7 @@ export default function ChatBetaPage() {
     {
       id: '1',
       role: 'maya',
-      content: "Welcome to Sacred Mirror Beta. I'm Maya, your guide for inner exploration. What's on your mind today?"
+      content: "Welcome to Sacred Mirror Beta. I&apos;m Maya, your guide for inner exploration. What&apos;s on your mind today?"
     }
   ])
   const [input, setInput] = useState('')
@@ -42,7 +42,7 @@ export default function ChatBetaPage() {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'maya',
-        content: data.response || data.message || "I'm here, listening deeply to what you're sharing."
+        content: data.response || data.message || "I&apos;m here, listening deeply to what you&apos;re sharing."
       }])
     } catch (error) {
       console.error('Error:', error)
@@ -117,7 +117,7 @@ export default function ChatBetaPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder="Share what's on your mind..."
+                placeholder="Share what&apos;s on your mind..."
                 className="flex-1 px-4 py-3 bg-sacred-blue/50 text-neutral-pure rounded-sacred focus:outline-none focus:ring-1 focus:ring-gold-divine/50 focus:border-gold-divine placeholder-neutral-mystic"
                 disabled={isLoading}
               />

@@ -28,7 +28,7 @@ export class ConnectionEncourajerService {
   // Natural prompts for different contexts
   private readonly connectionPrompts = {
     share_insight: [
-      "This insight might be interesting to discuss with someone you trust",
+      &quot;This insight might be interesting to discuss with someone you trust&quot;,
       "Sometimes patterns become clearer when we describe them aloud to a friend",
       "You might enjoy exploring this idea with someone who knows you well",
       "This kind of understanding often deepens when shared with a thoughtful listener"
@@ -41,7 +41,7 @@ export class ConnectionEncourajerService {
     ],
     seek_perspective: [
       "Who in your life might offer a helpful perspective on this?",
-      "Sometimes an outside view can illuminate what we can't see from within",
+      "Sometimes an outside view can illuminate what we can&apos;t see from within",
       "This sounds like something that might benefit from a second opinion",
       "A conversation with someone you trust might add another layer to this understanding"
     ],
@@ -58,7 +58,7 @@ export class ConnectionEncourajerService {
     "By the way, exploring these patterns is often more interesting when shared. Who in your life enjoys these kinds of conversations?",
     "These insights might resonate with someone you trust. Sometimes discussing experiences helps them settle and integrate.",
     "Have you mentioned any of these experiences to friends or family? Outside perspectives can be surprisingly helpful.",
-    "When we're exploring deep territory, it can be grounding to stay connected with people who care about us."
+    "When we&apos;re exploring deep territory, it can be grounding to stay connected with people who care about us."
   ];
   
   static getInstance(): ConnectionEncourajerService {
@@ -98,7 +98,7 @@ export class ConnectionEncourajerService {
     conversationTopic: string,
     urgency?: 'casual' | 'gentle' | 'important'
   ): Promise<ConnectionPrompt | null> {
-    // Don't prompt if recently connected
+    // Don&apos;t prompt if recently connected
     if (assessment.isolationLevel === 'connected' && !urgency) {
       return null;
     }
@@ -147,9 +147,9 @@ export class ConnectionEncourajerService {
     
     if (preferenceForDepth === 'light') {
       suggestions.push(
-        "Maybe grab coffee with a friend who makes you laugh",
-        "A simple text check-in with someone you haven't heard from in a while",
-        "Even sharing this experience with a pet or journal can help clarify what's emerging"
+        &quot;Maybe grab coffee with a friend who makes you laugh&quot;,
+        "A simple text check-in with someone you haven&apos;t heard from in a while",
+        "Even sharing this experience with a pet or journal can help clarify what&apos;s emerging"
       );
     } else if (preferenceForDepth === 'moderate') {
       suggestions.push(
@@ -326,14 +326,14 @@ export class ConnectionEncourajerService {
   }
   
   /**
-   * Check if it's appropriate timing for connection prompt
+   * Check if it&apos;s appropriate timing for connection prompt
    */
   shouldPromptNow(
     assessment: IsolationAssessment,
     conversationLength: number,
     lastPromptInteraction?: number
   ): boolean {
-    // Don't prompt too frequently
+    // Don&apos;t prompt too frequently
     if (lastPromptInteraction && (conversationLength - lastPromptInteraction) < 3) {
       return false;
     }

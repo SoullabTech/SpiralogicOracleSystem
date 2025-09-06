@@ -1,5 +1,5 @@
 /**
- * Conversational Routes - Sesame/Maya Centric API
+ * Conversational Routes - Sesame/Maia Centric API
  * Main endpoint for sacred conversational intelligence
  */
 
@@ -26,7 +26,7 @@ router.get('/ops/ping', (req: Request, res: Response) => {
     ok: true,
     uptime: uptimeSeconds,
     timestamp: Date.now(),
-    service: 'maya'
+    service: 'maia'
   });
 });
 
@@ -83,7 +83,10 @@ router.post('/stream', async (req: Request, res: Response) => {
       element = 'aether',
       voiceEnabled = false,
       sessionId,
-      context = {}
+      context = {},
+      journal = false,
+      tags = [],
+      phase
     } = req.body;
 
     if (!userText || !userId) {
@@ -139,7 +142,10 @@ router.post('/stream', async (req: Request, res: Response) => {
         convoSummary: '',
         longMemSnippets: [],
         recentBotReplies: [],
-        sentiment: 'neutral'
+        sentiment: 'neutral',
+        journal,
+        tags,
+        phase
       };
 
       // Stream the response through ConversationalPipeline
@@ -188,7 +194,10 @@ router.post('/message', messageLimiter, async (req: Request, res: Response) => {
       element = 'aether',
       voiceEnabled = false,
       sessionId,
-      context = {}
+      context = {},
+      journal = false,
+      tags = [],
+      phase
     } = req.body;
 
     if (!userText || !userId) {
@@ -225,7 +234,10 @@ router.post('/message', messageLimiter, async (req: Request, res: Response) => {
       convoSummary: context.summary || '',
       longMemSnippets: context.memorySnippets || [],
       recentBotReplies: context.recentReplies || [],
-      sentiment: determineSentiment(userText)
+      sentiment: determineSentiment(userText),
+      journal,
+      tags,
+      phase
     };
 
     // Start analytics tracking for this session

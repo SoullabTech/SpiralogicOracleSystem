@@ -70,7 +70,7 @@ export class MainOracleIntegrationService {
     userId: string,
   ): Promise<StandardAPIResponse<MainOracleSync>> {
     try {
-      logger.info("Starting Main Oracle sync", { userId });
+      logger.info(&quot;Starting Main Oracle sync&quot;, { userId });
 
       // Check throttling
       const lastSync = this.lastSyncTimes.get(userId) || 0;
@@ -126,12 +126,12 @@ export class MainOracleIntegrationService {
     limit = 10,
   ): Promise<StandardAPIResponse<CollectiveInsight[]>> {
     try {
-      logger.info("Fetching collective insights", { userId, limit });
+      logger.info(&quot;Fetching collective insights&quot;, { userId, limit });
 
-      // Get user's recent memories to determine relevance
+      // Get user&apos;s recent memories to determine relevance
       const userMemories = await getRelevantMemories(userId, "", 20);
 
-      // Calculate user's elemental and archetypal preferences
+      // Calculate user&apos;s elemental and archetypal preferences
       const userProfile = this.analyzeUserProfile(userMemories);
 
       // Filter and rank insights by relevance to user
@@ -160,13 +160,13 @@ export class MainOracleIntegrationService {
     userId: string,
   ): Promise<StandardAPIResponse<ArchetypalProcess[]>> {
     try {
-      logger.info("Fetching archetypal processes", { userId });
+      logger.info(&quot;Fetching archetypal processes&quot;, { userId });
 
-      // Get user's profile to suggest relevant processes
+      // Get user&apos;s profile to suggest relevant processes
       const userMemories = await getRelevantMemories(userId, "", 10);
       const userProfile = this.analyzeUserProfile(userMemories);
 
-      // Filter processes by user's dominant elements and archetypes
+      // Filter processes by user&apos;s dominant elements and archetypes
       const relevantProcesses = this.archetypalProcesses
         .filter((process) => process.isActive)
         .filter((process) => {
@@ -201,7 +201,7 @@ export class MainOracleIntegrationService {
   private async pushInsightsToMainOracle(userId: string): Promise<number> {
     try {
       // Get recent user insights from Soul Memory
-      const userMemories = await getRelevantMemories(userId, "", 50);
+      const userMemories = await getRelevantMemories(userId, "&quot;, 50);
 
       if (userMemories.length === 0) {
         return 0;
@@ -212,7 +212,7 @@ export class MainOracleIntegrationService {
 
       // In production, would make HTTP request to Main Oracle
       // For now, simulate the push
-      logger.info("Pushing anonymized insights to Main Oracle", {
+      logger.info(&quot;Pushing anonymized insights to Main Oracle", {
         userId: "anonymized",
         insightCount: anonymizedInsights.length,
       });
@@ -240,7 +240,7 @@ export class MainOracleIntegrationService {
         )
         .slice(0, 100);
 
-      logger.info("Pulled new insights from Main Oracle", {
+      logger.info(&quot;Pulled new insights from Main Oracle&quot;, {
         newInsightCount: newInsights.length,
         totalInsights: this.collectiveInsights.length,
       });
@@ -331,7 +331,7 @@ export class MainOracleIntegrationService {
   }
 
   private createAnonymizedHash(userId: string, memoryId: string): string {
-    // Create a one-way hash that can't be traced back to user
+    // Create a one-way hash that can&apos;t be traced back to user
     return `anon_${Date.now().toString(36)}_${Math.random().toString(36).substr(2, 9)}`;
   }
 

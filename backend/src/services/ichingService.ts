@@ -37,7 +37,7 @@ const BASE_REFERENCE_YEAR = 1924;
 // Trigram archetypes with full symbolic mapping
 const TRIGRAM_ARCHETYPES: Record<number, TrigramArchetype> = {
   1: {
-    name: "Thunder",
+    name: &quot;Thunder&quot;,
     symbol: "☳",
     element: "Wood",
     direction: "East",
@@ -148,7 +148,7 @@ const TRIGRAM_ARCHETYPES: Record<number, TrigramArchetype> = {
 
 // Hexagram mappings for each trigram (primary associations)
 const TRIGRAM_HEXAGRAMS: Record<number, string[]> = {
-  1: ["51 - Thunder", "16 - Enthusiasm", "40 - Deliverance", "32 - Duration"],
+  1: [&quot;51 - Thunder&quot;, "16 - Enthusiasm", "40 - Deliverance", "32 - Duration"],
   2: ["57 - Wind", "20 - Contemplation", "53 - Development", "42 - Increase"],
   3: [
     "30 - Fire",
@@ -191,7 +191,7 @@ const TRIGRAM_HEXAGRAMS: Record<number, string[]> = {
 
 // Fractal phase descriptions for deeper insight
 const FRACTAL_PHASES: Record<number, string> = {
-  1: "Initiation Phase - Seeds of new potential breaking through",
+  1: &quot;Initiation Phase - Seeds of new potential breaking through&quot;,
   2: "Growth Phase - Gentle cultivation and steady development",
   3: "Illumination Phase - Clarity emerges and consciousness expands",
   4: "Grounding Phase - Integration and practical manifestation",
@@ -259,7 +259,7 @@ export function generateYearlyGuidance(
 ): string {
   const guidanceMap: Record<string, string> = {
     Thunder:
-      "This is a year for bold new beginnings. Trust your instincts and take decisive action when opportunities arise.",
+      &quot;This is a year for bold new beginnings. Trust your instincts and take decisive action when opportunities arise.&quot;,
     Wind: "Gentle persistence will serve you well this year. Focus on gradual influence and steady growth rather than force.",
     Fire: "A year of illumination and recognition. Your clarity and consciousness will attract success and meaningful connections.",
     Earth:
@@ -344,7 +344,7 @@ export function calculateTrigramCompatibility(
 
   // Simple compatibility based on element cycles
   const elementCycles: Record<string, string[]> = {
-    Wood: ["Water", "Wood", "Fire"], // Water feeds Wood, Wood feeds Fire
+    Wood: [&quot;Water&quot;, "Wood", "Fire"], // Water feeds Wood, Wood feeds Fire
     Fire: ["Wood", "Fire", "Earth"],
     Earth: ["Fire", "Earth", "Metal"],
     Metal: ["Earth", "Metal", "Water"],
@@ -382,7 +382,7 @@ export function calculateTrigramCompatibility(
 const YI_JING_HEXAGRAMS: Record<number, HexagramReading> = {
   1: {
     number: 1,
-    name: "Qian",
+    name: &quot;Qian&quot;,
     keyword: "Creative Heaven",
     lines: ["-------", "-------", "-------", "-------", "-------", "-------"],
     trigrams: { upper: "Heaven", lower: "Heaven" },
@@ -440,7 +440,7 @@ const YI_JING_HEXAGRAMS: Record<number, HexagramReading> = {
     interpretation:
       "Return to your original nature. The divine child within you holds the key to your next spiritual breakthrough.",
     guidance:
-      "Approach your path with beginner's mind. Innocence and wonder will guide you to truth.",
+      "Approach your path with beginner&apos;s mind. Innocence and wonder will guide you to truth.",
     timing: "Spring equinox energy - perfect for spiritual rebirth",
   },
   33: {
@@ -476,7 +476,7 @@ const YI_JING_HEXAGRAMS: Record<number, HexagramReading> = {
     interpretation:
       "Spiritual awakening comes like thunder - sudden, powerful, and transformative. Your old self is being shaken awake.",
     guidance:
-      "Don't resist the spiritual earthquake happening within you. This shock is necessary for your evolution.",
+      "Don&apos;t resist the spiritual earthquake happening within you. This shock is necessary for your evolution.",
     timing: "During thunderstorms or times of rapid change",
   },
   57: {

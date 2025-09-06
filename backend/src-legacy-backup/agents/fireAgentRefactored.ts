@@ -82,8 +82,8 @@ const detectFireThemes = (
   const themes: string[] = [];
   const lowerInput = input.toLowerCase();
 
-  // Detect themes from user's own words
-  if (lowerInput.includes("stuck") || lowerInput.includes("stagnant")) {
+  // Detect themes from user&apos;s own words
+  if (lowerInput.includes(&quot;stuck&quot;) || lowerInput.includes("stagnant")) {
     themes.push("movement_seeking");
   }
   if (lowerInput.includes("passion") || lowerInput.includes("excited")) {
@@ -141,7 +141,7 @@ export class FireAgentRefactored extends OracleAgent {
     context?: any,
   ): Promise<AIResponse> {
     try {
-      // Get user's previous reflections
+      // Get user&apos;s previous reflections
       const memories = await getRelevantMemories(userId, 10);
 
       // Detect themes from user input
@@ -167,7 +167,7 @@ export class FireAgentRefactored extends OracleAgent {
       await storeMemoryItem({
         user_id: userId,
         content: input,
-        element: "fire",
+        element: &quot;fire&quot;,
         source_agent: this.name,
         metadata: {
           themes,
@@ -204,7 +204,7 @@ export class FireAgentRefactored extends OracleAgent {
       // Error response that maintains boundaries
       return {
         content:
-          "I notice there was an interruption. Let's return to your reflection when you're ready. What would you like to explore about passion or action in your life?",
+          "I notice there was an interruption. Let&apos;s return to your reflection when you&apos;re ready. What would you like to explore about passion or action in your life?",
         provider: "fire-facilitator",
         model: "human-centered-support",
         confidence: 0.8,

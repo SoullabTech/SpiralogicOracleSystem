@@ -15,7 +15,7 @@ const GroupHoloflowerVisualization = ({
   const [selectedParticipant, setSelectedParticipant] = (0, react_1.useState)(
     null,
   );
-  const [resonanceView, setResonanceView] = (0, react_1.useState)("circle");
+  const [resonanceView, setResonanceView] = (0, react_1.useState)(&quot;circle&quot;);
   (0, react_1.useEffect)(() => {
     const ws = new WebSocket(`ws://localhost:5002`);
     ws.onopen = () => {
@@ -219,7 +219,7 @@ const GroupHoloflowerVisualization = ({
     const centerX = 400;
     const centerY = 400;
     const spiralTurns = 2;
-    return (0, jsx_runtime_1.jsxs)("svg", {
+    return (0, jsx_runtime_1.jsxs)(&quot;svg", {
       width: 800,
       height: 800,
       className: "spiral-arrangement",

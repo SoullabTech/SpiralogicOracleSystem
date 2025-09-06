@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       case 'individual': {
         const { userId, length = 'medium' } = params as z.infer<typeof IndividualNarrativeSchema>;
         
-        // Get user's SHIFt profile
+        // Get user&apos;s SHIFt profile
         const inferenceService = new SHIFtInferenceService();
         const profile = await inferenceService.compute({ userId });
         

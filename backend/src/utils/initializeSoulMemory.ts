@@ -15,7 +15,7 @@ export async function initializeSoulMemorySystem(): Promise<{
   testResults?: any;
 }> {
   try {
-    logger.info("🌀 Initializing Soul Memory System...");
+    logger.info(&quot;🌀 Initializing Soul Memory System...");
 
     // Ensure database directory exists
     const dbDir = path.join(process.cwd(), "soul_memory_dbs");
@@ -88,7 +88,7 @@ async function runSoulMemoryTests(soulMemory: any): Promise<any> {
   };
 
   try {
-    logger.info("🧪 Running Soul Memory tests...");
+    logger.info(&quot;🧪 Running Soul Memory tests...");
 
     // Test 1: Memory Storage
     logger.info("Testing memory storage...");

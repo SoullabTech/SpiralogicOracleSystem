@@ -251,7 +251,7 @@ export class SHIFtInferenceService {
       confidence: 0.3,
       lastUpdated: new Date(),
       freshness: 0,
-      narrative: "Just beginning to understand your journey. Keep engaging to reveal deeper patterns."
+      narrative: &quot;Just beginning to understand your journey. Keep engaging to reveal deeper patterns."
     };
   }
 
@@ -372,7 +372,7 @@ export class SHIFtInferenceService {
 
   private generateSimpleNarrative(elements: any, phase: any): string {
     const dominantElement = this.getDominantElement(elements);
-    return `Your ${dominantElement} energy is prominent today. You're in a phase of ${phase.primary}.`;
+    return `Your ${dominantElement} energy is prominent today. You&apos;re in a phase of ${phase.primary}.`;
   }
 
   private suggestPractice(facets: Record<string, any>): SuggestedPractice | undefined {
@@ -406,7 +406,7 @@ export class SHIFtInferenceService {
         description: 'Gently acknowledge what needs to be spoken',
         steps: [
           'Find a quiet moment alone',
-          'Ask yourself: "What am I not saying?"',
+          'Ask yourself: &quot;What am I not saying?&quot;',
           'Speak one true sentence aloud, even if just to yourself',
           'Notice any relief or clarity that follows'
         ],

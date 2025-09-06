@@ -116,10 +116,10 @@ export interface DaimonicConversationMemory {
   
   // CALLBACK PATTERNS - Agent references relational history
   callbacks: {
-    resistance_memory: string;      // "Remember when you resisted..."
+    resistance_memory: string;      // &quot;Remember when you resisted...&quot;
     contradiction_holding: string;  // "This contradicts what you said, but maybe both..."  
     emergence_tracking: string;     // "Something new is trying to emerge..."
-    depth_acknowledgment: string;   // "We've been here before, deeper now..."
+    depth_acknowledgment: string;   // "We&apos;ve been here before, deeper now..."
   };
 
   // LIMINAL MOMENTS - Threshold experiences tracked

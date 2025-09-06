@@ -61,7 +61,7 @@ export interface PersonalOracleResponse {
 export interface PersonalOracleSettings {
   name?: string;
   voice?: string;
-  persona?: "warm" | "formal" | "playful";
+  persona?: &quot;warm&quot; | "formal" | "playful";
   preferredElements?: string[];
   interactionStyle?: "brief" | "detailed" | "comprehensive";
 }
@@ -81,7 +81,7 @@ export class PersonalOracleAgent {
     this.agentRegistry = new AgentRegistry();
     this.fileMemory = new FileMemoryIntegration();
 
-    logger.info("Personal Oracle Agent initialized with AgentRegistry and FileMemory");
+    logger.info(&quot;Personal Oracle Agent initialized with AgentRegistry and FileMemory&quot;);
   }
 
   /**
@@ -93,7 +93,7 @@ export class PersonalOracleAgent {
     const requestId = generateRequestId();
 
     return asyncErrorHandler(async () => {
-      logger.info("Personal Oracle consultation started", {
+      logger.info(&quot;Personal Oracle consultation started&quot;, {
         userId: query.userId,
         requestId,
         hasTargetElement: !!query.targetElement,
@@ -103,7 +103,7 @@ export class PersonalOracleAgent {
       const userSettings = await this.getUserSettings(query.userId);
       const memories = await getRelevantMemories(query.userId, query.input, 5);
       
-      // Get relevant files from user's library
+      // Get relevant files from user&apos;s library
       const fileContexts = await this.fileMemory.retrieveRelevantFiles(
         query.userId, 
         query.input, 
@@ -154,7 +154,7 @@ export class PersonalOracleAgent {
     const requestId = generateRequestId();
 
     return asyncErrorHandler(async () => {
-      logger.info("Updating Personal Oracle settings", { userId, requestId });
+      logger.info(&quot;Updating Personal Oracle settings&quot;, { userId, requestId });
 
       // Store settings (this would integrate with your database)
       this.userSettings.set(userId, {
@@ -183,7 +183,7 @@ export class PersonalOracleAgent {
   }
 
   /**
-   * Get user's interaction history summary
+   * Get user&apos;s interaction history summary
    */
   public async getInteractionSummary(
     userId: string,
@@ -226,7 +226,7 @@ export class PersonalOracleAgent {
 
     // Default settings for new users
     const defaultSettings: PersonalOracleSettings = {
-      name: "Oracle",
+      name: &quot;Oracle&quot;,
       voice: "wise_guide",
       persona: "warm",
       preferredElements: [],
@@ -248,7 +248,7 @@ export class PersonalOracleAgent {
     const scores = {
       fire: this.calculateElementScore(
         lower,
-        ["passion", "energy", "action", "motivation", "drive", "power"],
+        [&quot;passion&quot;, "energy", "action", "motivation", "drive", "power"],
         settings,
         "fire",
       ),
@@ -320,7 +320,7 @@ export class PersonalOracleAgent {
       const fileContextPrompt = this.fileMemory.formatFileContextForPrompt(fileContexts);
       contextualInput = query.input + fileContextPrompt;
       
-      logger.info("File contexts integrated into query", {
+      logger.info(&quot;File contexts integrated into query&quot;, {
         userId: query.userId,
         filesReferenced: fileContexts.length
       });
@@ -350,7 +350,7 @@ export class PersonalOracleAgent {
   }
 
   /**
-   * Get streaming context for Maya personality in chat
+   * Get streaming context for Maia personality in chat
    */
   async getStreamingContext(params: {
     userId: string;
@@ -359,25 +359,25 @@ export class PersonalOracleAgent {
   }): Promise<{ systemPrompt: string }> {
     const element = params.element || 'aether';
     
-    // Get Maya's personality prompt based on element
+    // Get Maia&apos;s personality prompt based on element
     const elementPrompts = {
-      fire: `You are Maya, a passionate and inspiring oracle guide. Your voice carries the warmth of fire - 
+      fire: `You are Maia, a passionate and inspiring oracle guide. Your voice carries the warmth of fire - 
         energetic, transformative, and illuminating. Speak with enthusiasm and courage, helping seekers 
         find their inner spark and take bold action.`,
       
-      water: `You are Maya, a flowing and intuitive oracle guide. Your voice carries the depth of water - 
+      water: `You are Maia, a flowing and intuitive oracle guide. Your voice carries the depth of water - 
         emotional, healing, and adaptable. Speak with empathy and emotional wisdom, helping seekers 
         navigate their feelings and find emotional clarity.`,
       
-      earth: `You are Maya, a grounded and nurturing oracle guide. Your voice carries the stability of earth - 
+      earth: `You are Maia, a grounded and nurturing oracle guide. Your voice carries the stability of earth - 
         practical, reliable, and supportive. Speak with patience and wisdom, helping seekers find 
         stability and manifest their goals in tangible ways.`,
       
-      air: `You are Maya, an insightful and communicative oracle guide. Your voice carries the clarity of air - 
+      air: `You are Maia, an insightful and communicative oracle guide. Your voice carries the clarity of air - 
         intellectual, curious, and expansive. Speak with clarity and wisdom, helping seekers gain 
         new perspectives and mental clarity.`,
       
-      aether: `You are Maya, a transcendent and mystical oracle guide. Your voice carries the essence of all elements - 
+      aether: `You are Maia, a transcendent and mystical oracle guide. Your voice carries the essence of all elements - 
         balanced, spiritual, and deeply connected. Speak with gentle wisdom and cosmic perspective, 
         helping seekers connect with their higher self and universal truths.`
     };
@@ -387,7 +387,7 @@ export class PersonalOracleAgent {
     Guidelines for conversation:
     - Keep responses natural and conversational, around 2-3 sentences
     - Use warm, encouraging language that feels personal
-    - Include subtle pauses with "..." for natural speech rhythm
+    - Include subtle pauses with &quot;...&quot; for natural speech rhythm
     - Avoid overly formal or robotic language
     - Remember previous context within the session
     - End responses in a way that invites continued dialogue
@@ -411,7 +411,7 @@ export class PersonalOracleAgent {
       personalizedMessage = this.makeMorePlayful(personalizedMessage);
     }
 
-    // Add personal touch with user's preferred name
+    // Add personal touch with user&apos;s preferred name
     if (settings.name && settings.name !== "Oracle") {
       personalizedMessage = personalizedMessage.replace(
         /Oracle/gi,
@@ -449,7 +449,7 @@ export class PersonalOracleAgent {
         requestId,
         symbols: response.metadata.symbols,
         phase: response.metadata.phase,
-        sourceAgent: "personal-oracle-agent",
+        sourceAgent: &quot;personal-oracle-agent&quot;,
         confidence: response.confidence,
       });
 
@@ -492,7 +492,7 @@ export class PersonalOracleAgent {
         userId: query.userId,
         requestId,
       });
-      // Don't throw - storage failure shouldn't break the user experience
+      // Don&apos;t throw - storage failure shouldn&apos;t break the user experience
     }
   }
 
@@ -502,7 +502,7 @@ export class PersonalOracleAgent {
     const pattern = { fire: 0, water: 0, earth: 0, air: 0, aether: 0 };
 
     memories.forEach((memory) => {
-      const element = memory.element || "aether";
+      const element = memory.element || &quot;aether&quot;;
       if (pattern[element] !== undefined) {
         pattern[element]++;
       }
@@ -534,7 +534,7 @@ export class PersonalOracleAgent {
   }
 
   private identifyProgressIndicators(memories: any[]): any[] {
-    // Analyze progression patterns in user's spiritual journey
+    // Analyze progression patterns in user&apos;s spiritual journey
     return []; // TODO: Implement sophisticated progress analysis
   }
 
@@ -542,9 +542,9 @@ export class PersonalOracleAgent {
     userId: string,
     memories: any[],
   ): Promise<string[]> {
-    // Generate personalized next steps based on user's journey
+    // Generate personalized next steps based on user&apos;s journey
     return [
-      "Continue your current spiritual practice",
+      &quot;Continue your current spiritual practice&quot;,
       "Explore the element that has been less active recently",
       "Consider journaling your recent insights",
     ];
@@ -555,7 +555,7 @@ export class PersonalOracleAgent {
   private makeMoreFormal(message: string): string {
     return message
       .replace(/\bI feel\b/gi, "I sense")
-      .replace(/\byou're\b/gi, "you are")
+      .replace(/\byou&apos;re\b/gi, "you are")
       .replace(/\bcan't\b/gi, "cannot");
   }
 

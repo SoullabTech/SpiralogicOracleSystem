@@ -187,7 +187,7 @@ export default function CommunityRealityCheckPage() {
                 Community Reality-Checking
               </h1>
               <p className="text-sm text-gray-600">
-                Support each other's integration through grounded feedback
+                Support each other&apos;s integration through grounded feedback
               </p>
             </div>
 
@@ -303,7 +303,7 @@ const PostCreationForm: React.FC<{
     {
       value: "integration_share",
       label: "Integration Share",
-      description: "Share how you're applying insights in daily life",
+      description: "Share how you&apos;re applying insights in daily life",
     },
     {
       value: "struggle_support",

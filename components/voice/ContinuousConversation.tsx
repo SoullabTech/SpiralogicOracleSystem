@@ -48,6 +48,8 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
   const lastSpeechTime = useRef<number>(Date.now());
   const accumulatedTranscript = useRef<string>("");
   const isProcessingRef = useRef(false);
+  const recognitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSentRef = useRef<string>("");
 
   // Expose methods to parent
   useImperativeHandle(ref, () => ({
@@ -77,10 +79,19 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
-      console.log('🎙️ [Continuous] Speech recognition started');
       setIsRecording(true);
       onRecordingStateChange?.(true);
       accumulatedTranscript.current = "";
+      
+      // Set timeout to auto-stop recognition after 6 seconds
+      if (recognitionTimeoutRef.current) {
+        clearTimeout(recognitionTimeoutRef.current);
+      }
+      recognitionTimeoutRef.current = setTimeout(() => {
+        if (recognitionRef.current && isRecording) {
+          recognitionRef.current.stop();
+        }
+      }, 6000);
     };
 
     recognition.onresult = (event: any) => {
@@ -108,7 +119,6 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
         // Start new silence timer
         silenceTimerRef.current = setTimeout(() => {
           if (isRecording && !isProcessingRef.current) {
-            console.log('🔕 [Continuous] Silence detected, processing...');
             processAccumulatedTranscript();
           }
         }, silenceThreshold);
@@ -120,30 +130,44 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
 
       if (finalTranscript) {
         accumulatedTranscript.current += finalTranscript;
-        console.log('📝 [Continuous] Accumulated:', accumulatedTranscript.current);
       }
     };
 
     recognition.onerror = (event: any) => {
       console.error('❌ [Continuous] Speech recognition error:', event.error);
       if (event.error === 'no-speech') {
-        // Restart recognition if no speech detected
-        if (isListening) {
-          setTimeout(() => {
-            if (recognitionRef.current && isListening) {
-              recognitionRef.current.start();
-            }
-          }, 100);
+        // Process accumulated transcript before restarting
+        if (accumulatedTranscript.current.trim()) {
+          processAccumulatedTranscript();
+        } else {
+          // Restart recognition if no speech detected and no accumulated text
+          if (isListening) {
+            setTimeout(() => {
+              if (recognitionRef.current && isListening) {
+                recognitionRef.current.start();
+              }
+            }, 100);
+          }
         }
       }
     };
 
     recognition.onend = () => {
-      console.log('🔚 [Continuous] Speech recognition ended');
       setIsRecording(false);
       onRecordingStateChange?.(false);
       
-      // Restart if we're still listening and not processing/speaking
+      // Clear timeout
+      if (recognitionTimeoutRef.current) {
+        clearTimeout(recognitionTimeoutRef.current);
+        recognitionTimeoutRef.current = null;
+      }
+      
+      // Process any accumulated transcript before restarting
+      if (accumulatedTranscript.current.trim() && !isProcessingRef.current) {
+        processAccumulatedTranscript();
+      }
+      
+      // Restart if we&apos;re still listening and not processing/speaking
       if (isListening && !isProcessingRef.current && !isSpeaking) {
         setTimeout(() => {
           if (recognitionRef.current && isListening) {
@@ -162,33 +186,48 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
 
   // Process accumulated transcript
   const processAccumulatedTranscript = useCallback(() => {
-    if (accumulatedTranscript.current.trim() && !isProcessingRef.current) {
-      console.log('🚀 [Continuous] Processing transcript:', accumulatedTranscript.current);
-      isProcessingRef.current = true;
-      
-      // Stop recognition while processing
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-      
-      // Send transcript
-      onTranscript(accumulatedTranscript.current.trim());
-      
-      // Track analytics
-      Analytics.transcriptionSuccess({
-        transcription_duration_ms: Date.now() - lastSpeechTime.current,
-        transcription_length: accumulatedTranscript.current.length,
-        mode: 'continuous'
-      });
-      
-      // Clear accumulated
-      accumulatedTranscript.current = "";
-      
-      // Will restart when Maya finishes speaking
-      setTimeout(() => {
-        isProcessingRef.current = false;
-      }, 500);
+    const transcript = accumulatedTranscript.current.trim();
+    
+    if (!transcript) {
+      return;
     }
+    
+    if (isProcessingRef.current) {
+      return;
+    }
+    
+    // ✅ Prevent duplicate sends
+    if (transcript === lastSentRef.current) {
+      accumulatedTranscript.current = ""; // Clear duplicate
+      return;
+    }
+    
+    lastSentRef.current = transcript;
+    
+    isProcessingRef.current = true;
+    
+    // Stop recognition while processing
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    
+    // Send transcript
+    onTranscript(transcript);
+    
+    // Track analytics
+    Analytics.transcriptionSuccess({
+      transcription_duration_ms: Date.now() - lastSpeechTime.current,
+      transcription_length: transcript.length,
+      mode: 'continuous'
+    });
+    
+    // Clear accumulated
+    accumulatedTranscript.current = "";
+    
+    // Will restart when Maya finishes speaking
+    setTimeout(() => {
+      isProcessingRef.current = false;
+    }, 500);
   }, [onTranscript]);
 
   // Initialize audio level monitoring
@@ -246,7 +285,6 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
 
   // Start listening
   const startListening = useCallback(async () => {
-    console.log('🎧 [Continuous] Starting continuous listening...');
     
     // Initialize audio monitoring
     const audioReady = await initializeAudioMonitoring();
@@ -281,7 +319,6 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
 
   // Stop listening
   const stopListening = useCallback(() => {
-    console.log('🛑 [Continuous] Stopping continuous listening...');
     
     setIsListening(false);
     setIsRecording(false);
@@ -297,6 +334,11 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
       silenceTimerRef.current = null;
+    }
+    
+    if (recognitionTimeoutRef.current) {
+      clearTimeout(recognitionTimeoutRef.current);
+      recognitionTimeoutRef.current = null;
     }
     
     // Stop audio monitoring
@@ -345,7 +387,6 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
         if (recognitionRef.current && isListening) {
           try {
             recognitionRef.current.start();
-            console.log('🔄 [Continuous] Restarted after Maya finished');
           } catch (err) {
             // Already started, ignore
           }

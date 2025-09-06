@@ -82,7 +82,7 @@ export class IndigenousSovereigntyProtocol {
       );
 
       // Log the cultural protocol evaluation
-      logger.info("Indigenous wisdom request evaluated", {
+      logger.info(&quot;Indigenous wisdom request evaluated", {
         tradition: request.tradition,
         userBackground: request.userCulturalBackground,
         permitted: protocolResult.permitted,

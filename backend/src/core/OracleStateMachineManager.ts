@@ -127,7 +127,7 @@ export class OracleStateMachineManager {
   }
 
   /**
-   * Apply tone-adaptive onboarding based on user's first input
+   * Apply tone-adaptive onboarding based on user&apos;s first input
    */
   private applyOnboardingTone(userId: string, input: string, response: string): string {
     let userTone = this.tonePreferences.get(userId);
@@ -237,7 +237,7 @@ export class OracleStateMachineManager {
         safetySignals
       );
 
-      // Update user's current stage
+      // Update user&apos;s current stage
       this.userStages.set(userId, finalStage);
 
       // Generate stage-appropriate response
@@ -293,7 +293,7 @@ export class OracleStateMachineManager {
       
       // Safe fallback
       return {
-        content: "Let's take a moment to ground and center. Feel your breath and know that you're safe in this moment.",
+        content: &quot;Let&apos;s take a moment to ground and center. Feel your breath and know that you&apos;re safe in this moment.&quot;,
         stage: 'structured_guide',
         confidence: 0.1,
         masteryApplied: false,
@@ -392,7 +392,7 @@ export class OracleStateMachineManager {
       toStage: fallbackStage,
       reason: 'safety_fallback',
       confidence: 0.9,
-      transitionMessage: "Adjusting our approach to prioritize your safety and grounding.",
+      transitionMessage: &quot;Adjusting our approach to prioritize your safety and grounding.&quot;,
       safetyNotes: this.generateSafetyNotes(safetySignals)
     };
   }
@@ -434,7 +434,7 @@ export class OracleStateMachineManager {
     
     // Use structured guide template from config
     const templates = config.responseTemplates?.structured_guide || [
-      "I hear what you're sharing. Let's take this one step at a time. \n\nWhat feels like the most important thing to focus on right now?\n\nSometimes the path forward becomes clearer when we start with what's most immediate and concrete."
+      &quot;I hear what you&apos;re sharing. Let&apos;s take this one step at a time. \n\nWhat feels like the most important thing to focus on right now?\n\nSometimes the path forward becomes clearer when we start with what&apos;s most immediate and concrete.&quot;
     ];
     
     const template = templates[Math.floor(Math.random() * templates.length)];
@@ -453,7 +453,7 @@ export class OracleStateMachineManager {
     
     // Use dialogical companion template from config
     const templates = config.responseTemplates?.dialogical_companion || [
-      "There's something rich in what you're exploring here. \n\nI'm curious - when you notice this pattern, what do you sense it's serving? Sometimes our responses, even the challenging ones, are trying to take care of something important.\n\nWhat would it be like to be curious about this rather than trying to solve it right away?"
+      &quot;There&apos;s something rich in what you&apos;re exploring here. \n\nI&apos;m curious - when you notice this pattern, what do you sense it&apos;s serving? Sometimes our responses, even the challenging ones, are trying to take care of something important.\n\nWhat would it be like to be curious about this rather than trying to solve it right away?&quot;
     ];
     
     const template = templates[Math.floor(Math.random() * templates.length)];
@@ -472,7 +472,7 @@ export class OracleStateMachineManager {
     
     // Use co-creative partner template from config
     const templates = config.responseTemplates?.co_creative_partner || [
-      "What strikes me is this beautiful tension you're holding - the desire for both security and growth, both belonging and autonomy.\n\nThis reminds me of how trees grow: they need deep roots AND they need to reach toward light. The tension between these isn't a problem to solve but a creative force to work with.\n\nWhat if this very paradox you're living is exactly what's trying to emerge in your life right now?"
+      &quot;What strikes me is this beautiful tension you&apos;re holding - the desire for both security and growth, both belonging and autonomy.\n\nThis reminds me of how trees grow: they need deep roots AND they need to reach toward light. The tension between these isn&apos;t a problem to solve but a creative force to work with.\n\nWhat if this very paradox you&apos;re living is exactly what&apos;s trying to emerge in your life right now?&quot;
     ];
     
     const template = templates[Math.floor(Math.random() * templates.length)];
@@ -494,7 +494,7 @@ export class OracleStateMachineManager {
     // This will be further processed by MasteryVoiceProcessor
     
     const templates = config.responseTemplates?.transparent_prism || [
-      "The multiple perspectives you're navigating - your practical concerns, your deeper longings, your protective instincts, your creative impulses - they're all speaking truth.\n\nFrom the lens of developmental psychology, you're in what we might call a liminal space. From depth psychology, this is the fertile darkness before emergence. From systems thinking, you're at a phase transition point.\n\nAnd from the place of simple presence: you're exactly where you need to be, feeling what you need to feel, questioning what deserves questioning.\n\nThe system recognizes these layers operating simultaneously. Your capacity to hold this complexity while staying grounded suggests readiness for direct collaboration in exploring whatever wants to emerge.\n\nWhat draws your attention now?"
+      &quot;The multiple perspectives you&apos;re navigating - your practical concerns, your deeper longings, your protective instincts, your creative impulses - they&apos;re all speaking truth.\n\nFrom the lens of developmental psychology, you're in what we might call a liminal space. From depth psychology, this is the fertile darkness before emergence. From systems thinking, you're at a phase transition point.\n\nAnd from the place of simple presence: you're exactly where you need to be, feeling what you need to feel, questioning what deserves questioning.\n\nThe system recognizes these layers operating simultaneously. Your capacity to hold this complexity while staying grounded suggests readiness for direct collaboration in exploring whatever wants to emerge.\n\nWhat draws your attention now?&quot;
     ];
     
     const template = templates[Math.floor(Math.random() * templates.length)];
@@ -532,7 +532,7 @@ export class OracleStateMachineManager {
       confidence: signals.confidenceLevel,
       transitionMessage: isUpgrade 
         ? `Your growing capacity suggests readiness for more collaborative exploration.`
-        : `Let's work with a more structured approach that honors your current needs.`
+        : `Let&apos;s work with a more structured approach that honors your current needs.`
     };
   }
 

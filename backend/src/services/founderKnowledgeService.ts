@@ -78,7 +78,7 @@ export class FounderKnowledgeService {
    */
   async ingestElementalAlchemyBook(): Promise<ElementalAlchemyBook> {
     try {
-      logger.info("FounderKnowledge: Loading Elemental Alchemy Book knowledge");
+      logger.info(&quot;FounderKnowledge: Loading Elemental Alchemy Book knowledge&quot;);
 
       const knowledgePath = path.join(
         __dirname,
@@ -144,7 +144,7 @@ export class FounderKnowledgeService {
    */
   async ingestSpiralogicManifesto(filePath: string): Promise<ManifestoContent> {
     try {
-      logger.info("FounderKnowledge: Ingesting Spiralogic Process Manifesto", {
+      logger.info(&quot;FounderKnowledge: Ingesting Spiralogic Process Manifesto&quot;, {
         filePath,
       });
 
@@ -199,7 +199,7 @@ export class FounderKnowledgeService {
       }
 
       // Parse section headers
-      if (line.startsWith("### ")) {
+      if (line.startsWith(&quot;### &quot;)) {
         if (currentSection) {
           sections.push(currentSection);
         }
@@ -396,7 +396,7 @@ export class FounderKnowledgeService {
     try {
       // Create structured knowledge update for elemental wisdom
       const elementalKnowledgeUpdate = {
-        type: "elemental_alchemy_book" as const,
+        type: &quot;elemental_alchemy_book&quot; as const,
         title: book.title,
         author: book.author,
         content: {
@@ -513,7 +513,7 @@ export class FounderKnowledgeService {
   private async storeElementalKnowledge(knowledge: any): Promise<void> {
     const knowledgePath = path.join(
       __dirname,
-      "../../data/founder-knowledge/elemental-alchemy-processed.json",
+      &quot;../../data/founder-knowledge/elemental-alchemy-processed.json&quot;,
     );
 
     try {
@@ -538,7 +538,7 @@ export class FounderKnowledgeService {
   private async storeElementalSummary(summary: any): Promise<void> {
     const summaryPath = path.join(
       __dirname,
-      "../../data/founder-knowledge/elemental-wisdom-summary.json",
+      &quot;../../data/founder-knowledge/elemental-wisdom-summary.json&quot;,
     );
 
     try {
@@ -553,7 +553,7 @@ export class FounderKnowledgeService {
   }
 
   /**
-   * Update the founder agent's knowledge base
+   * Update the founder agent&apos;s knowledge base
    */
   private async updateFounderKnowledge(
     manifesto: ManifestoContent,
@@ -561,7 +561,7 @@ export class FounderKnowledgeService {
   ): Promise<void> {
     // Create structured knowledge update
     const knowledgeUpdate = {
-      type: "manifesto" as const,
+      type: &quot;manifesto&quot; as const,
       title: manifesto.title,
       content: JSON.stringify(manifesto),
       metadata: {
@@ -573,7 +573,7 @@ export class FounderKnowledgeService {
       },
     };
 
-    // In a real implementation, this would update the agent's knowledge repository
+    // In a real implementation, this would update the agent&apos;s knowledge repository
     logger.info(
       "FounderKnowledge: Knowledge base updated with Spiralogic insights",
       {

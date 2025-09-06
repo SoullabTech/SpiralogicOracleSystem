@@ -50,7 +50,7 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }) => {
             throw new Error("No user data received");
           }
         } else {
-          // Check if there's a session in the URL hash (for some OAuth flows)
+          // Check if there&apos;s a session in the URL hash (for some OAuth flows)
           const { data, error: sessionError } =
             await supabase.auth.getSessionFromUrl();
 

@@ -90,7 +90,7 @@ export class MayaVoiceSystem {
   }
 
   /**
-   * Select the most suitable voice for Maya's mystical character
+   * Select the most suitable voice for Maya&apos;s mystical character
    */
   private selectBestVoiceForMaya(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
     if (!voices.length) return null;
@@ -142,7 +142,7 @@ export class MayaVoiceSystem {
   }
 
   /**
-   * Play Maya's greeting
+   * Play Maya&apos;s greeting
    */
   public async playGreeting(): Promise<void> {
     const greeting = MAYA_GREETINGS[Math.floor(Math.random() * MAYA_GREETINGS.length)];
@@ -150,7 +150,7 @@ export class MayaVoiceSystem {
   }
 
   /**
-   * Speak text with Maya's voice configuration
+   * Speak text with Maya&apos;s voice configuration
    */
   public async speak(text: string): Promise<void> {
     if (typeof window === 'undefined') {
@@ -167,7 +167,7 @@ export class MayaVoiceSystem {
     // Create new utterance
     this.utterance = new SpeechSynthesisUtterance(text);
     
-    // Apply Maya's voice configuration
+    // Apply Maya&apos;s voice configuration
     this.utterance.rate = this.config.rate;
     this.utterance.pitch = this.config.pitch;
     this.utterance.volume = this.config.volume;
@@ -326,7 +326,7 @@ export function getMayaVoice(onStateChange?: (state: VoiceState) => void): MayaV
 }
 
 /**
- * Quick function to play Maya's greeting
+ * Quick function to play Maya&apos;s greeting
  */
 export async function playMayaGreeting(): Promise<void> {
   const maya = getMayaVoice();

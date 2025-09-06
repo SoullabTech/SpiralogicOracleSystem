@@ -184,7 +184,7 @@ export class DatabaseService implements IDatabaseService {
    * Run database migrations
    */
   private async runMigrations(): Promise<void> {
-    // Create migrations table if it doesn't exist
+    // Create migrations table if it doesn&apos;t exist
     await this.db!.exec(`
       CREATE TABLE IF NOT EXISTS migrations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

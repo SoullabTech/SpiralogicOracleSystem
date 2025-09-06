@@ -203,7 +203,7 @@ class CollectiveIntelligenceNetworkIntegration {
   ): Promise<CollectiveIntelligenceResponse> {
     try {
       if (!this.initialized) {
-        throw new Error("Collective Intelligence Network not initialized");
+        throw new Error(&quot;Collective Intelligence Network not initialized");
       }
 
       logger.info(
@@ -337,7 +337,7 @@ class CollectiveIntelligenceNetworkIntegration {
       userId,
       insightDate: new Date().toISOString(),
       insightContent: userInput,
-      insightType: "collective_awareness",
+      insightType: &quot;collective_awareness",
       culturalContext: culturalProfile,
       shadowIntegrationLevel: 0.5,
       wisdomDepth: 0.7,
@@ -416,7 +416,7 @@ class CollectiveIntelligenceNetworkIntegration {
     const communityContext = {
       communityId: `community_${culturalProfile.primaryCulture}`,
       communityName: `${culturalProfile.primaryCulture} wisdom circle`,
-      communityType: "cultural_wisdom" as const,
+      communityType: &quot;cultural_wisdom" as const,
       communityValues: culturalProfile.culturalStrengths,
       storytellingTraditions: culturalProfile.traditionalPractices,
       healingFocus: ["narrative_medicine", "cultural_healing"],
@@ -466,7 +466,7 @@ class CollectiveIntelligenceNetworkIntegration {
         interactionId: `interaction_${Date.now()}`,
         userId,
         interactionDate: new Date().toISOString(),
-        interactionType: "oracle_query",
+        interactionType: &quot;oracle_query",
         culturalContext: culturalProfile,
         interactionContent: userInput,
         interactionOutcome: "pattern_recognition_initiated",
@@ -531,7 +531,7 @@ class CollectiveIntelligenceNetworkIntegration {
       userId,
       insightDate: new Date().toISOString(),
       insightContent: userInput,
-      insightType: "collective_awareness",
+      insightType: &quot;collective_awareness",
       culturalContext: culturalProfile,
       shadowIntegrationLevel: shadowPlan ? 0.8 : 0.3,
       wisdomDepth: 0.8,
@@ -701,7 +701,7 @@ class CollectiveIntelligenceNetworkIntegration {
 
     // Default universal profile
     return {
-      primaryCulture: "universal",
+      primaryCulture: &quot;universal&quot;,
       culturalIdentities: ["universal"],
       languagePreferences: ["english"],
       traditionalPractices: [],
@@ -757,7 +757,7 @@ export async function processArchetypalDialogueWithIntegration(
   return collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
     userInput,
     userId,
-    "archetypal_dialogue",
+    &quot;archetypal_dialogue&quot;,
     userProfile,
   );
 }
@@ -770,7 +770,7 @@ export async function processWisdomSynthesisWithIntegration(
   return collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
     userInput,
     userId,
-    "wisdom_synthesis",
+    &quot;wisdom_synthesis&quot;,
     userProfile,
   );
 }
@@ -783,7 +783,7 @@ export async function processStoryWeavingWithIntegration(
   return collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
     userInput,
     userId,
-    "story_weaving",
+    &quot;story_weaving&quot;,
     userProfile,
   );
 }
@@ -796,7 +796,7 @@ export async function processConsciousnessPatternWithIntegration(
   return collectiveIntelligenceNetworkIntegration.processCollectiveIntelligenceQuery(
     userInput,
     userId,
-    "consciousness_patterns",
+    &quot;consciousness_patterns&quot;,
     userProfile,
   );
 }

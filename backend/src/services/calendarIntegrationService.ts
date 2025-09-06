@@ -74,7 +74,7 @@ export class CalendarIntegrationService {
   private googleCalendarToken: string;
 
   constructor() {
-    this.calendlyApiKey = process.env.CALENDLY_API_KEY || "";
+    this.calendlyApiKey = process.env.CALENDLY_API_KEY || "&quot;;
     this.msGraphToken = process.env.MS_GRAPH_TOKEN || "";
     this.googleCalendarToken = process.env.GOOGLE_CALENDAR_TOKEN || "";
   }
@@ -169,7 +169,7 @@ export class CalendarIntegrationService {
       ],
       location: payload.scheduled_event.location?.location,
       meetingLink: payload.scheduled_event.location?.join_url,
-      type: "session",
+      type: &quot;session",
       metadata: { source: "calendly", originalPayload: payload },
     };
   }
@@ -277,7 +277,7 @@ export class CalendarIntegrationService {
       })),
       meetingLink: msEvent.onlineMeeting?.joinUrl,
       type: this.detectEventType(msEvent.subject),
-      metadata: { source: "msteams", originalEvent: msEvent },
+      metadata: { source: &quot;msteams&quot;, originalEvent: msEvent },
     };
   }
 
@@ -285,7 +285,7 @@ export class CalendarIntegrationService {
     status: string,
   ): "accepted" | "declined" | "tentative" | "needsAction" {
     const statusMap: Record<string, any> = {
-      accepted: "accepted",
+      accepted: &quot;accepted&quot;,
       declined: "declined",
       tentativelyAccepted: "tentative",
       notResponded: "needsAction",
@@ -312,7 +312,7 @@ export class CalendarIntegrationService {
       currentChallenges: [],
     };
 
-    // Get participant's recent activity
+    // Get participant&apos;s recent activity
     const recentActivity = await this.getParticipantRecentActivity(
       participant.id,
     );

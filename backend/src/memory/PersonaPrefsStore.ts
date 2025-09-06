@@ -25,7 +25,7 @@ export class PersonaPrefsStore {
   constructor(private memory: IMemoryStore) {}
 
   /**
-   * Get user's persona preferences (cached)
+   * Get user&apos;s persona preferences (cached)
    */
   async get(userId: string): Promise<PersonaPrefs> {
     try {
@@ -57,7 +57,7 @@ export class PersonaPrefsStore {
   }
 
   /**
-   * Update user's persona preferences
+   * Update user&apos;s persona preferences
    */
   async set(userId: string, updates: Partial<PersonaPrefs>): Promise<PersonaPrefs> {
     try {
@@ -110,7 +110,7 @@ export class PersonaPrefsStore {
       // Gradually adapt preferences
       const adapted = adaptPrefs(current, worldviewSignal);
       
-      // Only persist if there's a meaningful change
+      // Only persist if there&apos;s a meaningful change
       if (adapted.worldview !== current.worldview || 
           Math.abs((adapted.metaphysics_confidence || 0) - (current.metaphysics_confidence || 0)) > 0.05) {
         return await this.set(userId, adapted);

@@ -264,7 +264,7 @@ export class EarthService extends CloudAgent {
         duration: milestone.duration,
         dependencies: milestone.dependencies || [],
         earth_practice:
-          phase.earth_element_practices[0] || "grounding meditation",
+          phase.earth_element_practices[0] || &quot;grounding meditation",
       })),
     );
   }
@@ -277,7 +277,7 @@ export class EarthService extends CloudAgent {
       `Like a mountain, build your ${plan.goal} with patience and permanence.`,
       `The earth teaches: strong foundations support great achievements.`,
       `Root deeply into your purpose, and your ${plan.goal} will flourish.`,
-      `With earth's steadiness, transform vision into reality.`,
+      `With earth&apos;s steadiness, transform vision into reality.`,
     ];
 
     return wisdomTemplates[Math.floor(Math.random() * wisdomTemplates.length)];
@@ -324,7 +324,7 @@ export class EarthService extends CloudAgent {
     // Simplified pattern identification
     return [
       {
-        type: "foundation",
+        type: &quot;foundation&quot;,
         principle: "stability through grounding",
         supports: ["daily routine", "physical practice"],
         strength: 0.8,
@@ -369,7 +369,7 @@ export class EarthService extends CloudAgent {
   }
 
   private async identifyMaterialNeeds(structure: any): Promise<any> {
-    return { resources: ["foundation", "support"], priority: "high" };
+    return { resources: [&quot;foundation", "support"], priority: "high" };
   }
 
   private identifyImmediateResources(available: any, need: any): string[] {

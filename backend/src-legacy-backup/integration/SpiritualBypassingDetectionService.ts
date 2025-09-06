@@ -148,7 +148,7 @@ export class SpiritualBypassingDetectionService {
             integrationHistory,
           )
         ) {
-          triggerEvents.push("Rapid content consumption without integration");
+          triggerEvents.push(&quot;Rapid content consumption without integration&quot;);
           if (integrationHistory.reflectionGapsBypassAttempts > 3) {
             severity = RedFlagSeverity.INTERVENTION;
             triggerEvents.push("Multiple attempts to bypass reflection gaps");

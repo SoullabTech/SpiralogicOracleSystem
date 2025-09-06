@@ -27,7 +27,7 @@ export type PsiRuntimeConfig = {
   learning: LearningParams;
 };
 
-const learningEnabled = (process.env.PSI_LEARNING_ENABLED ?? "true") === "true";
+const learningEnabled = (process.env.PSI_LEARNING_ENABLED ?? &quot;true&quot;) === "true";
 const learningRate = Number(process.env.PSI_LEARNING_RATE ?? "0.08");
 
 let RUNTIME: PsiRuntimeConfig = {

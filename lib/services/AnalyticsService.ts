@@ -107,7 +107,7 @@ export class AnalyticsService implements IAnalyticsService {
 
     } catch (error) {
       console.error('Analytics tracking error:', error);
-      // Don't throw - analytics should never break the user experience
+      // Don&apos;t throw - analytics should never break the user experience
     }
   }
 

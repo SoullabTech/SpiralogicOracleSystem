@@ -35,7 +35,7 @@ router.post("/", async (req: Request, res: Response) => {
     if (!validation.success) {
       return res.status(400).json({
         success: false,
-        error: "Invalid request data",
+        error: &quot;Invalid request data",
         details: validation.error.errors,
       });
     }

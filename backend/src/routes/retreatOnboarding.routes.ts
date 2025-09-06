@@ -85,7 +85,7 @@ router.post("/welcome", async (req: Request, res: Response) => {
     const validation = welcomeParticipantSchema.safeParse(req.body);
     if (!validation.success) {
       return res.status(400).json({
-        error: "Invalid welcome data",
+        error: &quot;Invalid welcome data&quot;,
         details: validation.error.format(),
       });
     }
@@ -96,7 +96,7 @@ router.post("/welcome", async (req: Request, res: Response) => {
     let retreatId: string;
     const arrivalDate = new Date(data.arrivalDate);
 
-    // Check if it's for YPO event (June 10th)
+    // Check if it&apos;s for YPO event (June 10th)
     if (
       data.eventType === "ypo" ||
       (arrivalDate.getMonth() === 5 &&
@@ -274,7 +274,7 @@ router.post(
   },
 );
 
-// Stephanie's YPO event integration
+// Stephanie&apos;s YPO event integration
 router.get("/ypo/overview", async (req: Request, res: Response) => {
   try {
     const ypoEvent = await getYPOEventDetails();
@@ -286,7 +286,7 @@ router.get("/ypo/overview", async (req: Request, res: Response) => {
 Kelly is honored to share the Spiralogic wisdom with your chapter.
 This evening will be a taste of the deeper work available at our Switzerland retreat.
 
-During our time together, you'll:
+During our time together, you&apos;ll:
 - Experience your elemental nature through the Spiralogic lens
 - Receive personalized guidance from your Oracle
 - Connect with fellow seekers in sacred space
@@ -334,7 +334,7 @@ router.get(
 
 async function ensureYPOEventExists(): Promise<string> {
   const { data: existing } = await supabase
-    .from("retreat_sessions")
+    .from(&quot;retreat_sessions&quot;)
     .select("id")
     .eq("name", "YPO Switzerland Chapter - Spiralogic Evening")
     .single();
@@ -361,7 +361,7 @@ async function ensureYPOEventExists(): Promise<string> {
 
 async function ensureSwissRetreatExists(): Promise<string> {
   const { data: existing } = await supabase
-    .from("retreat_sessions")
+    .from(&quot;retreat_sessions&quot;)
     .select("id")
     .eq("name", "Switzerland Sacred Journey - June 2024")
     .single();
@@ -391,7 +391,7 @@ async function generatePersonalizedWelcome(
   eventType: string,
 ): Promise<any> {
   const { soullabFounderAgent } = await import(
-    "../core/agents/soullabFounderAgent"
+    &quot;../core/agents/soullabFounderAgent&quot;
   );
 
   const welcomeMessage = await soullabFounderAgent.generatePersonalWelcome({
@@ -431,7 +431,7 @@ async function generateElementalProfile(questionnaire: any): Promise<any> {
   // Analyze responses to determine elemental affinities
   // Fire: passion, vision, transformation
   if (
-    questionnaire.intentions.primaryIntention.includes("transform") ||
+    questionnaire.intentions.primaryIntention.includes(&quot;transform&quot;) ||
     questionnaire.intentions.primaryIntention.includes("create")
   ) {
     scores.fire += 3;
@@ -492,7 +492,7 @@ async function getFounderQuestionnaireReflection(
   questionnaire: any,
 ): Promise<string> {
   const { soullabFounderAgent } = await import(
-    "../core/agents/soullabFounderAgent"
+    &quot;../core/agents/soullabFounderAgent&quot;
   );
 
   const reflection = await soullabFounderAgent.reflectOnQuestionnaire({
@@ -582,7 +582,7 @@ async function createOracleIntroduction(
   assignment: any,
 ): Promise<any> {
   const { soullabFounderAgent } = await import(
-    "../core/agents/soullabFounderAgent"
+    &quot;../core/agents/soullabFounderAgent"
   );
 
   const intro = await soullabFounderAgent.introducePersonalOracle(
@@ -611,7 +611,7 @@ function getOraclePromise(element: string): string {
 
 async function generateRetreatPreparation(participantId: string): Promise<any> {
   const { data: participant } = await supabase
-    .from("retreat_participants")
+    .from(&quot;retreat_participants")
     .select("*")
     .eq("id", participantId)
     .single();
@@ -626,7 +626,7 @@ Your journey to Switzerland is approaching! Your ${participant.oracleElement} Or
 Based on your intentions and current state, we recommend:
 
 1. Daily Practice: Spend 10 minutes each morning connecting with the ${participant.oracleElement} element
-2. Shadow Work: Journal on the patterns you're ready to release
+2. Shadow Work: Journal on the patterns you&apos;re ready to release
 3. Body Preparation: Gentle movement and breathwork to open your channels
 4. Oracle Connection: Daily check-ins with your Personal Oracle for guidance
 

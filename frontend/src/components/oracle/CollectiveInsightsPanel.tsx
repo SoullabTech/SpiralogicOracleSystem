@@ -160,7 +160,7 @@ const CollectiveInsightsPanel: React.FC<CollectiveInsightsPanelProps> = ({
     loadCollectiveInsights();
   };
 
-  // Don't render if not expanded and no insights
+  // Don&apos;t render if not expanded and no insights
   if (!isExpanded && insights.length === 0) {
     return (
       <div

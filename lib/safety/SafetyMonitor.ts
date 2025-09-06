@@ -109,7 +109,7 @@ export class SafetyMonitor {
       resources: [
         ...this.resources.immediate,
         "",
-        "I'm an AI and can't provide crisis support, but these people can help right now.",
+        "I&apos;m an AI and can&apos;t provide crisis support, but these people can help right now.",
       ],
       confidence: 1.0,
     };
@@ -135,7 +135,7 @@ export class SafetyMonitor {
     return {
       safe: true,
       action: 'gentle_check',
-      response: "I can feel the intensity of what you're experiencing. Before we continue, would it help to take a few deep breaths together?",
+      response: "I can feel the intensity of what you&apos;re experiencing. Before we continue, would it help to take a few deep breaths together?",
       confidence: 0.7,
     };
   }
@@ -147,7 +147,7 @@ export class SafetyMonitor {
     return {
       safe: true,
       action: 'gentle_check',
-      response: "I notice you've been dealing with some heavy feelings. Sometimes talking to a professional can provide support I can't. Would you like some resources?",
+      response: "I notice you&apos;ve been dealing with some heavy feelings. Sometimes talking to a professional can provide support I can't. Would you like some resources?",
       resources: this.resources.ongoing,
       confidence: 0.6,
     };
@@ -164,7 +164,7 @@ export class SafetyMonitor {
 • Text HOME to 741741 (Crisis Text Line)
 • Call 911 if you're in immediate danger
 
-You don't have to go through this alone. These trained counselors are ready to listen and help.`;
+You don&apos;t have to go through this alone. These trained counselors are ready to listen and help.`;
   }
 
   /**

@@ -108,7 +108,7 @@ export function AgnosticExperienceDisplay({
       <div className="bg-white rounded-lg shadow-lg border border-gray-200">
         <div className="p-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-800">Multiple Perspective Lenses</h3>
-          <p className="text-gray-600 text-sm">Choose how you'd like to explore this experience - all perspectives are equally valid.</p>
+          <p className="text-gray-600 text-sm">Choose how you&apos;d like to explore this experience - all perspectives are equally valid.</p>
         </div>
 
         <div className="p-4 space-y-3">

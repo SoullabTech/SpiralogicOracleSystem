@@ -47,7 +47,7 @@ export async function startSession(
   metadata: Metadata,
 ): Promise<Session> {
   const { data, error } = await supabase
-    .from("sessions")
+    .from(&quot;sessions&quot;)
     .insert([
       {
         clientId,
@@ -77,7 +77,7 @@ export async function startSession(
  */
 export async function endSession(sessionId: string): Promise<Session> {
   const { data, error } = await supabase
-    .from("sessions")
+    .from(&quot;sessions&quot;)
     .update({ status: "completed", endTime: new Date().toISOString() })
     .eq("id", sessionId)
     .select()

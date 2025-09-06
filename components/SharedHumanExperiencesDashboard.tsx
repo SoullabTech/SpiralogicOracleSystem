@@ -236,7 +236,7 @@ export default function SharedHumanExperiencesDashboard() {
       <div className="text-center text-sm text-gray-500 space-y-2">
         <p>All data is anonymized and reflects patterns in human experiences, not external forces.</p>
         <p>This dashboard shows shared themes to help you feel less alone in your journey.</p>
-        <p>If you're experiencing crisis, please contact professional support: 988 (Crisis Lifeline)</p>
+        <p>If you&apos;re experiencing crisis, please contact professional support: 988 (Crisis Lifeline)</p>
       </div>
     </div>
   );

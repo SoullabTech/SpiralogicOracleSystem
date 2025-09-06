@@ -7,9 +7,9 @@ export interface StreamMessage {
   metadata?: any;
 }
 
-export interface UseMayaStreamResult {
+export interface UseMaiaStreamResult {
   isStreaming: boolean;
-  streamMessage: (params: {
+  stream: (params: {
     userText: string;
     element: string;
     userId?: string;
@@ -18,7 +18,7 @@ export interface UseMayaStreamResult {
   stopStream: () => void;
 }
 
-export function useMayaStream(): UseMayaStreamResult {
+export function useMaiaStream(): UseMaiaStreamResult {
   const [isStreaming, setIsStreaming] = useState(false);
   const [controller, setController] = useState<AbortController | null>(null);
 
@@ -37,6 +37,13 @@ export function useMayaStream(): UseMayaStreamResult {
     lang?: string;
   }): Promise<string> => {
     const { userText, element, userId = 'anonymous', lang = 'en-US' } = params;
+    
+    console.log('[MaiaStream] Starting stream request:', { 
+      userText: userText.substring(0, 50) + '...', 
+      element, 
+      userId,
+      timestamp: new Date().toISOString() 
+    });
     
     // Stop any existing stream
     stopStream();
@@ -57,6 +64,8 @@ export function useMayaStream(): UseMayaStreamResult {
           lang,
           q: userText
         });
+
+      console.log('[MaiaStream] Making HTTP request to backend:', streamUrl);
 
       const response = await fetch(streamUrl, {
         method: 'GET',
@@ -127,7 +136,7 @@ export function useMayaStream(): UseMayaStreamResult {
         return ''; // Stream was cancelled
       }
       
-      console.error('Maya stream error:', error);
+      console.error('Maia stream error:', error);
       
       // Fallback to POST endpoint
       try {
@@ -153,7 +162,7 @@ export function useMayaStream(): UseMayaStreamResult {
         return fallbackData.response?.text || 'I apologize, but I am having trouble connecting right now.';
         
       } catch (fallbackError) {
-        console.error('Maya fallback error:', fallbackError);
+        console.error('Maia fallback error:', fallbackError);
         return 'I am experiencing technical difficulties. Please try again in a moment.';
       }
     }
@@ -161,7 +170,7 @@ export function useMayaStream(): UseMayaStreamResult {
 
   return {
     isStreaming,
-    streamMessage,
+    stream: streamMessage,
     stopStream
   };
 }

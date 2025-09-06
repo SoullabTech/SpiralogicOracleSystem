@@ -34,7 +34,7 @@ export interface AgentWisdomExchange {
 export interface AgentLearning {
   agent_name: string;
   learning_type:
-    | "pattern_recognition"
+    | &quot;pattern_recognition&quot;
     | "wisdom_integration"
     | "user_feedback"
     | "collective_insight";
@@ -58,7 +58,7 @@ export class AgentCommunicationProtocol {
   private constructor() {
     // Initialize message queues for each agent
     const agents = [
-      "FireAgent",
+      &quot;FireAgent",
       "WaterAgent",
       "EarthAgent",
       "AirAgent",
@@ -92,12 +92,12 @@ export class AgentCommunicationProtocol {
         message.timestamp = new Date().toISOString();
       }
 
-      // Add to recipient's queue
+      // Add to recipient&apos;s queue
       const queue = this.messageQueue.get(message.to) || [];
       queue.push(message);
       this.messageQueue.set(message.to, queue);
 
-      // If it's a wisdom exchange, store it
+      // If it&apos;s a wisdom exchange, store it
       if (message.type === "wisdom" || message.type === "pattern") {
         await this.storeWisdomExchange(message);
       }
@@ -137,7 +137,7 @@ export class AgentCommunicationProtocol {
       await this.sendMessage({
         ...message,
         to: agent,
-        type: "broadcast",
+        type: &quot;broadcast&quot;,
       });
     }
   }
@@ -155,7 +155,7 @@ export class AgentCommunicationProtocol {
       };
 
       const { error } = await supabase
-        .from("agent_wisdom_exchanges")
+        .from(&quot;agent_wisdom_exchanges&quot;)
         .insert(exchange);
 
       if (error) throw error;
@@ -177,7 +177,7 @@ export class AgentCommunicationProtocol {
     try {
       // Query from database for persistent wisdom
       const { data, error } = await supabase
-        .from("agent_wisdom_exchanges")
+        .from(&quot;agent_wisdom_exchanges&quot;)
         .select("*")
         .eq("to_agent", agentName)
         .gte("relevance_score", this.learningThreshold)
@@ -209,7 +209,7 @@ export class AgentCommunicationProtocol {
   // Log agent learning for evolution tracking
   async logLearning(learning: AgentLearning): Promise<void> {
     try {
-      const { error } = await supabase.from("agent_learning_log").insert({
+      const { error } = await supabase.from(&quot;agent_learning_log&quot;).insert({
         agent_name: learning.agent_name,
         learning_type: learning.learning_type,
         content: learning.content,
@@ -301,7 +301,7 @@ export class AgentCommunicationProtocol {
       await this.sendMessage({
         from: pattern.discoveredBy,
         to: agent,
-        type: "pattern",
+        type: &quot;pattern",
         content: `New pattern discovered: ${pattern.wisdom}`,
         context: {
           pattern_id: pattern.pattern_id,
@@ -332,7 +332,7 @@ export class AgentCommunicationProtocol {
   // Determine which agents are interested in specific elements
   private determineInterestedAgents(elements: string[]): string[] {
     const elementAgentMap: Record<string, string> = {
-      fire: "FireAgent",
+      fire: &quot;FireAgent&quot;,
       water: "WaterAgent",
       earth: "EarthAgent",
       air: "AirAgent",
@@ -349,7 +349,7 @@ export class AgentCommunicationProtocol {
     });
 
     // Always include MainOracleAgent for oversight
-    agents.add("MainOracleAgent");
+    agents.add(&quot;MainOracleAgent&quot;);
 
     // Include AetherAgent for multi-element patterns
     if (elements.length > 1) {
@@ -373,7 +373,7 @@ export class AgentCommunicationProtocol {
     // Send request to all agents
     await this.broadcast({
       from: requestingAgent,
-      type: "request",
+      type: &quot;request",
       content: `Requesting wisdom on: ${topic}`,
       context: {
         ...context,

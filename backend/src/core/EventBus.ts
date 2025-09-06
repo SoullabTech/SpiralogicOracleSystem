@@ -292,7 +292,7 @@ export class EventBus {
       console.error(`EventBus error processing ${event.type}:`, error);
     }
 
-    // Emit error event (but don't process if it would cause recursion)
+    // Emit error event (but don&apos;t process if it would cause recursion)
     if (event.type !== 'system:error') {
       this.emit('system:error', {
         originalEvent: event,

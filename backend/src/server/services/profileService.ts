@@ -19,7 +19,7 @@ export interface ProfileData {
  */
 export async function getUserProfile(userId: string): Promise<ProfileData> {
   const { data, error } = await supabase
-    .from("profiles")
+    .from(&quot;profiles&quot;)
     .select(
       "user_id, fire, water, earth, air, aether, crystal_focus, voice_profile, guide_voice, guide_name, updated_at",
     )

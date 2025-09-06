@@ -10,7 +10,7 @@ export const getUserArchetypeStats = async (
   userId: string,
 ): Promise<ArchetypeStat[]> => {
   const { data, error } = await supabase
-    .from("user_phases")
+    .from(&quot;user_phases&quot;)
     .select("archetype, element")
     .eq("user_id", userId);
 

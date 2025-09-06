@@ -47,7 +47,7 @@ elementalAlchemyRouter.post(
       if (houseNumber < 1 || houseNumber > 12) {
         return res.status(400).json({
           success: false,
-          error: "Invalid house number. Must be between 1 and 12.",
+          error: &quot;Invalid house number. Must be between 1 and 12.&quot;,
         });
       }
 
@@ -83,7 +83,7 @@ elementalAlchemyRouter.post(
       if (fromHouse < 1 || fromHouse > 12 || toHouse < 1 || toHouse > 12) {
         return res.status(400).json({
           success: false,
-          error: "Invalid house numbers. Must be between 1 and 12.",
+          error: &quot;Invalid house numbers. Must be between 1 and 12.&quot;,
         });
       }
 
@@ -205,7 +205,7 @@ elementalAlchemyRouter.get("/house/:houseNumber", async (req, res) => {
     if (houseNumber < 1 || houseNumber > 12) {
       return res.status(400).json({
         success: false,
-        error: "Invalid house number. Must be between 1 and 12.",
+        error: &quot;Invalid house number. Must be between 1 and 12.&quot;,
       });
     }
 
@@ -282,7 +282,7 @@ elementalAlchemyRouter.get("/houses", async (req, res) => {
 
 /**
  * GET /elemental-alchemy/book/wisdom
- * Returns the elemental wisdom summary from Kelly's book
+ * Returns the elemental wisdom summary from Kelly&apos;s book
  */
 elementalAlchemyRouter.get("/book/wisdom", authenticate, async (req, res) => {
   try {

@@ -140,7 +140,7 @@ export function MayaLibrary({ userId, className = '', onFileSelect }: MayaLibrar
       {/* Header */}
       <div className="p-4 border-b border-sacred-gold/20">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-sacred-gold">Maya's Library</h3>
+          <h3 className="text-lg font-semibold text-sacred-gold">Maya&apos;s Library</h3>
           <button
             onClick={() => setShowUpload(!showUpload)}
             className="px-3 py-1 text-sm bg-sacred-gold/20 text-sacred-gold rounded-md hover:bg-sacred-gold/30 transition-colors"
