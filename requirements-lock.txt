@@ -54,7 +54,7 @@ griffe==1.7.2
 grpcio==1.68.1
 grpcio-health-checking==1.68.1
 grpcio-tools==1.68.1
-h11==0.14.0
+h11==0.16.0
 h2==4.2.0
 hf-xet==1.1.5
 hpack==4.1.0
