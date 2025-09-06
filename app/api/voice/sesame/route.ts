@@ -100,6 +100,7 @@ export async function POST(req: Request) {
     }
 
     // NORTHFLANK: Maya voice enabled!
+    console.log('Sesame route config:', {
       serviceUrl: process.env.NORTHFLANK_SESAME_URL,
       hasApiKey: !!process.env.NORTHFLANK_SESAME_API_KEY
     });

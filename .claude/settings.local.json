@@ -322,7 +322,8 @@
       "Bash(./scripts/safe-commit.sh:*)",
       "Bash(git submodule:*)",
       "Bash(npm update:*)",
-      "Bash(./scripts/security-patch.sh:*)"
+      "Bash(./scripts/security-patch.sh:*)",
+      "Bash(whois:*)"
     ],
     "deny": []
   },

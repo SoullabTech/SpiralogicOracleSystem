@@ -61,7 +61,7 @@ export interface PersonalOracleResponse {
 export interface PersonalOracleSettings {
   name?: string;
   voice?: string;
-  persona?: &quot;warm&quot; | "formal" | "playful";
+  persona?: "warm" | "formal" | "playful";
   preferredElements?: string[];
   interactionStyle?: "brief" | "detailed" | "comprehensive";
 }

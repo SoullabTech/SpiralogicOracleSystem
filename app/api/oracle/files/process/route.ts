@@ -130,6 +130,7 @@ export async function POST(request: NextRequest) {
       console.error('Failed to update file status:', updateError);
     }
 
+    console.log('File processing completed:', {
       fileId,
       chunks: validEmbeddings.length,
       tokens: validEmbeddings.reduce((sum, e) => sum + e.token_count, 0)

@@ -535,6 +535,7 @@ export default function VoiceRecorder({
 
   // Process and upload audio
   const processAudio = async (audioBlob: Blob) => {
+    console.log('Processing audio blob:', {
       size: audioBlob.size,
       type: audioBlob.type,
       timestamp: new Date().toISOString()
@@ -562,6 +563,7 @@ export default function VoiceRecorder({
       
       const data = await response.json();
       
+      console.log('[VoiceRecorder] Response:', {
         success: data.success,
         transcript: data.transcription?.substring(0, 50) + '...',
         hasTranscript: !!data.transcription

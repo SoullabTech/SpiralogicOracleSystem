@@ -111,6 +111,8 @@ export function VoicePipelineDebugOverlay() {
 
   useEffect(() => {
     // Listen for console logs and extract pipeline data
+    const originalLog = console.log;
+    console.log = function(...args: any[]) {
       originalLog.apply(console, args);
       
       const message = args[0];
@@ -185,6 +187,7 @@ export function VoicePipelineDebugOverlay() {
     };
 
     return () => {
+      console.log = originalLog;
     };
   }, []);
 

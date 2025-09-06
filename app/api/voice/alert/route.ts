@@ -151,6 +151,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Log the alert
+    console.log('Voice alert received:', {
       type: alert.type,
       engine: alert.engine,
       message: alert.message,

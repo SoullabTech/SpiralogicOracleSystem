@@ -126,7 +126,7 @@ export class CollectiveIntelligence {
     // Stub implementation - would access collective knowledge
     return {
       primaryInsight: `Collective insight about: ${params.question}`,
-      patterns: [&quot;emergence&quot;, "coherence", "resonance"],
+      patterns: ["emergence", "coherence", "resonance"],
       resonance: Math.random() * 0.5 + 0.5,
       contributors: Math.floor(Math.random() * 100) + 10,
     };
