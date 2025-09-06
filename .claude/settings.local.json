@@ -319,7 +319,8 @@
       "Bash(do echo \"Processing $file\")",
       "Bash(./scripts/setup-git-aliases.sh:*)",
       "Bash(git st:*)",
-      "Bash(./scripts/safe-commit.sh:*)"
+      "Bash(./scripts/safe-commit.sh:*)",
+      "Bash(git submodule:*)"
     ],
     "deny": []
   },
