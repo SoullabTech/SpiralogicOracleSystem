@@ -14,7 +14,7 @@ tokenizers>=0.15.0
 
 # Audio processing for Maya voice
 librosa==0.10.1
-soundfile==0.12.1
+soundfile==0.13.1
 scipy==1.11.4
 pyrubberband==0.3.0
 noisereduce==3.0.0
