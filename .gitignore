@@ -50,3 +50,77 @@ Desktop.ini
 dev-archive/
 
 UPDATE_KEYS_TEMPLATE.md
+
+# Audio files
+*.wav
+*.mp3
+
+# Coverage reports
+.coverage
+coverage/
+*.lcov
+
+# Build artifacts
+build/
+out/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+soul_memory/
+
+# Docker volumes
+docker-volumes/
+
+# Testing artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Deployment specific
+.vercel-force-rebuild
+trigger.txt
+trigger-build.txt
+
+# Local environment
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug files
+debug-*.wav
+test-*.wav
+maya-*.wav
+
+# Temporary test files
+test-*.js
+test-*.ts
+test-*.html
+*-test.mp3
+*-test.wav
+
+# Shell script artifacts
+*.pid
+
+# Submodule build artifacts
+*/node_modules/
+*/dist/
+*/build/
+*/.next/

@@ -338,7 +338,9 @@
       "Bash(./scripts/verify-deployment.sh:*)",
       "Bash(./scripts/deploy-vercel.sh:*)",
       "Bash(./emergency-deploy.sh)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(git clean:*)",
+      "Bash(git remote set-url:*)"
     ],
     "deny": []
   },
