@@ -1,0 +1,196 @@
+---
+version: "2.0"
+
+services:
+  # Main Oracle System (Backend + Frontend)
+  oracle-system:
+    image: spiralogic/archetypal-consciousness:sovereign-latest
+    expose:
+      - port: 80
+        as: 80
+        to:
+          - global: true
+      - port: 8080
+        as: 8080
+        to:
+          - global: true
+      - port: 7000
+        as: 7000
+        to:
+          - global: true
+      - port: 5001
+        as: 5001 # IPFS API
+        to:
+          - service: ipfs-gateway
+    env:
+      - NODE_ENV=production
+      - SOVEREIGN_MODE=true
+      - OPENAI_API_KEY=$OPENAI_API_KEY
+      - ELEVENLABS_API_KEY=$ELEVENLABS_API_KEY
+      - MONGODB_URI=mongodb://mongo:27017/spiralogic
+      - REDIS_URL=redis://redis:6379
+      - IPFS_API=http://ipfs-node:5001
+      - SNET_ENABLED=true
+      - AKASH_DEPLOYMENT=true
+      - MEMORY_OPTIMIZATION=true
+    command:
+      - "sh"
+      - "-c"
+      - "npm start"
+
+  # MongoDB
+  mongo:
+    image: mongo:7
+    expose:
+      - port: 27017
+        as: 27017
+        to:
+          - service: oracle-system
+    env:
+      - MONGO_INITDB_ROOT_USERNAME=oracle
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGO_INITDB_DATABASE=spiralogic
+    args:
+      - "--wiredTigerCacheSizeGB"
+      - "0.5" # Optimize memory usage
+
+  # Redis
+  redis:
+    image: redis:alpine
+    expose:
+      - port: 6379
+        as: 6379
+        to:
+          - service: oracle-system
+    command:
+      - "redis-server"
+      - "--appendonly"
+      - "yes"
+      - "--maxmemory"
+      - "256mb"
+      - "--maxmemory-policy"
+      - "allkeys-lru"
+
+  # IPFS Gateway
+  ipfs-gateway:
+    image: ipfs/go-ipfs:latest
+    expose:
+      - port: 8080
+        as: 8080
+        to:
+          - service: oracle-system
+      - port: 5001
+        as: 5001
+        to:
+          - service: oracle-system
+    env:
+      - IPFS_PROFILE=lowpower
+      - IPFS_FD_MAX=1024
+
+  # Nginx Load Balancer
+  nginx:
+    image: nginx:alpine
+    expose:
+      - port: 80
+        as: 80
+        to:
+          - global: true
+      - port: 443
+        as: 443
+        to:
+          - global: true
+    depends_on:
+      - oracle-system
+
+profiles:
+  compute:
+    oracle-system:
+      resources:
+        cpu:
+          units: 2.0
+        memory:
+          size: 3Gi
+        storage:
+          - size: 20Gi
+            class: beta3
+    mongo:
+      resources:
+        cpu:
+          units: 1.0
+        memory:
+          size: 2Gi
+        storage:
+          - size: 50Gi
+            class: beta3
+    redis:
+      resources:
+        cpu:
+          units: 0.5
+        memory:
+          size: 512Mi
+        storage:
+          - size: 5Gi
+            class: beta3
+    ipfs-gateway:
+      resources:
+        cpu:
+          units: 0.5
+        memory:
+          size: 1Gi
+        storage:
+          - size: 10Gi
+            class: beta3
+    nginx:
+      resources:
+        cpu:
+          units: 0.25
+        memory:
+          size: 256Mi
+
+  placement:
+    sovereign:
+      attributes:
+        region: us-west
+        organization: ovrclk.com
+      signedBy:
+        anyOf:
+          - "akash1365yvmc4s7awdyj3n2sav7xfx76adc6dnmlx63"
+          - "akash18qa2a2ltfyvkyj0ggj3hkvuj6twzyumuaru9s4"
+      pricing:
+        oracle-system:
+          denom: uakt
+          amount: 150 # ~$5/month
+        mongo:
+          denom: uakt
+          amount: 100
+        redis:
+          denom: uakt
+          amount: 50
+        ipfs-gateway:
+          denom: uakt
+          amount: 50
+        nginx:
+          denom: uakt
+          amount: 25
+
+deployment:
+  oracle-system:
+    sovereign:
+      profile: oracle-system
+      count: 2 # High availability
+  mongo:
+    sovereign:
+      profile: mongo
+      count: 1
+  redis:
+    sovereign:
+      profile: redis
+      count: 1
+  ipfs-gateway:
+    sovereign:
+      profile: ipfs-gateway
+      count: 1
+  nginx:
+    sovereign:
+      profile: nginx
+      count: 1

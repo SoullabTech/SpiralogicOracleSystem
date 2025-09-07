@@ -1,0 +1,22 @@
+name: Detect Trailing Whitespace
+
+on:
+  pull_request:
+    paths:
+      - "**/*.py"
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.md"
+      - "**/*.txt"
+      - "**/*.sh"
+      - "**/*.yml"
+      - "**/*.yaml"
+
+jobs:
+  whitespace-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find trailing whitespace
+        run: |
+          git ls-files | grep -E '\.(py|js|ts|md|txt|sh|yml|yaml)$' | xargs grep -nH -E ' +$' || echo "No trailing whitespace found."

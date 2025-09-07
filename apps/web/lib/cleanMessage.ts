@@ -1,0 +1,85 @@
+/**
+ * Clean prosody markup from messages for text display
+ * while preserving the original for voice synthesis
+ */
+
+export function cleanMessage(text: string): string {
+  if (!text) return "";
+  
+  return text
+    // Remove stage directions like *Settling in with a warm presence*
+    .replace(/\*[^*]*\*/g, "")
+    // Remove pause tags like <pause-200ms> or <pause-500ms>
+    .replace(/<pause-\d+ms>/g, "")
+    // Remove breath tags like <breath/>
+    .replace(/<breath\s*\/?>/g, "")
+    // Remove emphasis tags like <emphasis> or </emphasis>
+    .replace(/<\/?emphasis>/g, "")
+    // Remove prosody tags like <prosody rate="slow">
+    .replace(/<prosody[^>]*>/g, "")
+    .replace(/<\/prosody>/g, "")
+    // Remove SSML-style tags
+    .replace(/<\/?[^>]+>/g, "")
+    // Clean up multiple spaces
+    .replace(/\s+/g, " ")
+    // Clean up multiple line breaks
+    .replace(/\n{3,}/g, "\n\n")
+    // Trim whitespace
+    .trim();
+}
+
+/**
+ * Optional: Debug mode to show raw prosody markup
+ * Useful during development to see what's being generated
+ */
+export function cleanMessageWithDebug(text: string, showProsody = false): string {
+  if (showProsody || process.env.NEXT_PUBLIC_SHOW_PROSODY === "true") {
+    // In debug mode, show prosody tags as styled text
+    return text
+      .replace(/\*([^*]*)\*/g, "[$1]") // Show stage directions in brackets
+      .replace(/<(pause-\d+ms)>/g, "[{$1}]"); // Show pauses in brackets
+  }
+  
+  return cleanMessage(text);
+}
+
+/**
+ * Extract prosody markup for voice synthesis
+ * Returns both clean text and prosody instructions
+ */
+export function extractProsody(text: string): {
+  clean: string;
+  prosody: {
+    pauses: { position: number; duration: number }[];
+    emphasis: { start: number; end: number }[];
+    stageDirections: string[];
+  };
+} {
+  const pauses: { position: number; duration: number }[] = [];
+  const emphasis: { start: number; end: number }[] = [];
+  const stageDirections: string[] = [];
+  
+  // Extract stage directions
+  const stageMatches = text.matchAll(/\*([^*]*)\*/g);
+  for (const match of stageMatches) {
+    stageDirections.push(match[1]);
+  }
+  
+  // Extract pauses (simplified - would need more complex parsing for accurate positions)
+  const pauseMatches = text.matchAll(/<pause-(\d+)ms>/g);
+  for (const match of pauseMatches) {
+    pauses.push({
+      position: match.index || 0,
+      duration: parseInt(match[1])
+    });
+  }
+  
+  return {
+    clean: cleanMessage(text),
+    prosody: {
+      pauses,
+      emphasis,
+      stageDirections
+    }
+  };
+}

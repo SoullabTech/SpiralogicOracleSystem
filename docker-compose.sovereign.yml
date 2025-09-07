@@ -1,0 +1,164 @@
+version: "3.8"
+
+services:
+  # Sovereign Oracle Backend
+  oracle-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.sovereign
+    container_name: sovereign-oracle-backend
+    environment:
+      - NODE_ENV=production
+      - SOVEREIGN_MODE=true
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - MONGODB_URI=mongodb://mongo:27017/spiralogic
+      - REDIS_URL=redis://redis:6379
+      - IPFS_GATEWAY=https://gateway.pinata.cloud
+      - AKASH_DEPLOYMENT=true
+      - SNET_ENABLED=true
+    ports:
+      - "8080:8080"
+      - "7000:7000" # SingularityNET gRPC
+    depends_on:
+      - mongo
+      - redis
+      - ipfs
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+  # Sovereign Frontend (IPFS-Ready)
+  oracle-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.sovereign
+    container_name: sovereign-oracle-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://oracle-backend:8080
+      - NEXT_PUBLIC_IPFS_GATEWAY=https://gateway.pinata.cloud
+      - NEXT_PUBLIC_SOVEREIGN_MODE=true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - oracle-backend
+    volumes:
+      - ./public:/app/public
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+  # MongoDB (Decentralized Data)
+  mongo:
+    image: mongo:7
+    container_name: sovereign-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=oracle
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=spiralogic
+    volumes:
+      - mongo-data:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/init.js
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+  # Redis (Session & Cache)
+  redis:
+    image: redis:alpine
+    container_name: sovereign-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+  # IPFS Node
+  ipfs:
+    image: ipfs/go-ipfs:latest
+    container_name: sovereign-ipfs
+    environment:
+      - IPFS_PROFILE=server
+      - IPFS_PATH=/ipfsdata
+    volumes:
+      - ipfs-data:/ipfsdata
+      - ./ipfs/export:/export
+      - ./ipfs/data:/data/ipfs
+    ports:
+      - "4001:4001" # P2P
+      - "5001:5001" # API
+      - "8081:8080" # Gateway
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+  # Nginx (Sovereign Proxy)
+  nginx:
+    image: nginx:alpine
+    container_name: sovereign-nginx
+    volumes:
+      - ./nginx/sovereign.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./static:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - oracle-backend
+      - oracle-frontend
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+  # Prometheus (Decentralized Metrics)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sovereign-prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+  # Grafana (Visualization)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sovereign-grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - sovereign-network
+
+networks:
+  sovereign-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  mongo-data:
+  redis-data:
+  ipfs-data:
+  prometheus-data:
+  grafana-data:

@@ -1,0 +1,319 @@
+# Prometheus ServiceMonitor for Spiralogic Oracle System
+# Level 5 DevSecOps - Security metrics collection
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spiralogic-oracle-security
+  namespace: spiralogic
+  labels:
+    app: spiralogic-oracle
+    component: security-monitoring
+    tier: observability
+spec:
+  selector:
+    matchLabels:
+      app: spiralogic-oracle
+      metrics: security
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      scheme: https
+      tlsConfig:
+        caFile: /etc/prometheus/secrets/spiralogic-ca/ca.crt
+        certFile: /etc/prometheus/secrets/spiralogic-client/tls.crt
+        keyFile: /etc/prometheus/secrets/spiralogic-client/tls.key
+        serverName: spiralogic-oracle.spiralogic.svc.cluster.local
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: instance
+        - sourceLabels: [__meta_kubernetes_pod_annotation_elemental_type]
+          targetLabel: elemental_type
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: kubernetes_namespace
+      metricRelabelings:
+        - sourceLabels: [__name__]
+          regex: "spiralogic_(security|consciousness|auth|threat)_.*"
+          action: keep
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spiralogic-falco-security
+  namespace: spiralogic
+  labels:
+    app: falco
+    component: runtime-security
+spec:
+  selector:
+    matchLabels:
+      app: falco
+  endpoints:
+    - port: metrics
+      interval: 15s
+      path: /metrics
+      scheme: http
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spiralogic-vault-metrics
+  namespace: spiralogic
+  labels:
+    app: vault
+    component: secret-management
+spec:
+  selector:
+    matchLabels:
+      app: vault
+  endpoints:
+    - port: metrics
+      interval: 60s
+      path: /v1/sys/metrics
+      scheme: https
+      params:
+        format: ["prometheus"]
+      tlsConfig:
+        caFile: /etc/prometheus/secrets/vault-ca/ca.crt
+        certFile: /etc/prometheus/secrets/vault-client/tls.crt
+        keyFile: /etc/prometheus/secrets/vault-client/tls.key
+      authorization:
+        type: Bearer
+        credentialsFile: /etc/prometheus/secrets/vault-token/token
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spiralogic-network-policies
+  namespace: spiralogic
+  labels:
+    app: calico-node
+    component: network-security
+spec:
+  selector:
+    matchLabels:
+      k8s-app: calico-node
+  endpoints:
+    - port: metrics-port
+      interval: 30s
+      path: /metrics
+
+---
+# PrometheusRule for security alerting
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: spiralogic-security-alerts
+  namespace: spiralogic
+  labels:
+    app: spiralogic-oracle
+    component: security-alerts
+spec:
+  groups:
+    - name: spiralogic.consciousness.security
+      interval: 30s
+      rules:
+        - alert: ConsciousnessModelTampering
+          expr: increase(falco_events_total{rule_name="Consciousness Model Tampering"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            component: consciousness
+            elemental_type: "{{ $labels.elemental_type }}"
+          annotations:
+            summary: "Consciousness model tampering detected"
+            description: "Unauthorized access to consciousness models detected in {{ $labels.container_name }}"
+            runbook_url: "https://docs.spiralogic.network/runbooks/consciousness-security"
+
+        - alert: ElementalAgentCommunicationAnomaly
+          expr: increase(falco_events_total{rule_name="Elemental Agent Communication Anomaly"}[10m]) > 3
+          for: 2m
+          labels:
+            severity: warning
+            component: elemental-agents
+          annotations:
+            summary: "Unusual elemental agent communication pattern"
+            description: "Multiple external communication attempts from elemental agents"
+
+        - alert: SacredMirrorDataAccess
+          expr: increase(falco_events_total{rule_name="Sacred Mirror Biometric Data Access"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            component: sacred-mirror
+          annotations:
+            summary: "Unauthorized sacred mirror data access"
+            description: "Critical biometric data access violation detected"
+
+        - alert: OracleSessionHijacking
+          expr: increase(falco_events_total{rule_name="Oracle Session Hijacking Attempt"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            component: authentication
+          annotations:
+            summary: "Oracle session hijacking attempt"
+            description: "Potential session hijacking detected - immediate investigation required"
+
+        - alert: VaultSecretAccessAnomaly
+          expr: rate(vault_audit_log_request_total{operation="read",path=~"secret/spiralogic/.*"}[10m]) > 1
+          for: 5m
+          labels:
+            severity: warning
+            component: vault
+          annotations:
+            summary: "High vault secret access rate"
+            description: "Unusual secret access pattern detected in Vault"
+
+        - alert: ContainerPrivilegeEscalation
+          expr: increase(falco_events_total{rule_name="Spiralogic Container Privilege Escalation"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            component: container-security
+          annotations:
+            summary: "Container privilege escalation detected"
+            description: "Critical security violation - container privilege escalation"
+
+        - alert: MemoryDumpAttempt
+          expr: increase(falco_events_total{rule_name="Spiralogic Memory Dump Attempt"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            component: forensics
+          annotations:
+            summary: "Memory dump attempt detected"
+            description: "Potential memory extraction attempt - forensic investigation required"
+
+        - alert: UnauthorizedOutboundConnections
+          expr: rate(falco_events_total{rule_name="Spiralogic Unauthorized Outbound Connection"}[15m]) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            component: network-security
+          annotations:
+            summary: "Multiple unauthorized outbound connections"
+            description: "Suspicious network activity - multiple unauthorized connections"
+
+        - alert: AuditLogTampering
+          expr: increase(falco_events_total{rule_name="Spiralogic Audit Log Tampering"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            component: compliance
+          annotations:
+            summary: "Audit log tampering detected"
+            description: "Critical compliance violation - audit log manipulation"
+
+        - alert: HighResourceUsage
+          expr: spiralogic_container_cpu_usage_percent > 90 or spiralogic_container_memory_usage_percent > 90
+          for: 10m
+          labels:
+            severity: warning
+            component: performance
+          annotations:
+            summary: "High resource usage in consciousness container"
+            description: "Container {{ $labels.container_name }} using {{ $value }}% resources"
+
+    - name: spiralogic.authentication.security
+      interval: 60s
+      rules:
+        - alert: FailedAuthenticationSpike
+          expr: rate(spiralogic_auth_failures_total[5m]) > 0.5
+          for: 2m
+          labels:
+            severity: warning
+            component: authentication
+          annotations:
+            summary: "High authentication failure rate"
+            description: "Authentication failure rate: {{ $value }} failures/sec"
+
+        - alert: JWTTokenAnomalies
+          expr: rate(spiralogic_jwt_validation_failures_total[10m]) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            component: jwt
+          annotations:
+            summary: "JWT validation failures"
+            description: "Increased JWT validation failures detected"
+
+        - alert: SessionAnomalies
+          expr: spiralogic_active_sessions > 10000
+          for: 10m
+          labels:
+            severity: warning
+            component: sessions
+          annotations:
+            summary: "Unusually high number of active sessions"
+            description: "Active sessions: {{ $value }} - potential DDoS or session attack"
+
+    - name: spiralogic.network.security
+      interval: 30s
+      rules:
+        - alert: NetworkPolicyViolations
+          expr: increase(calico_denied_packets_total[5m]) > 100
+          for: 2m
+          labels:
+            severity: warning
+            component: network-policy
+          annotations:
+            summary: "High number of network policy violations"
+            description: "{{ $value }} packets denied by network policies"
+
+        - alert: TLSCertificateExpiry
+          expr: probe_ssl_earliest_cert_expiry - time() < 7 * 24 * 3600
+          for: 1h
+          labels:
+            severity: warning
+            component: tls
+          annotations:
+            summary: "TLS certificate expiring soon"
+            description: "Certificate for {{ $labels.instance }} expires in {{ $value | humanizeDuration }}"
+
+        - alert: MTLSFailures
+          expr: rate(nginx_ingress_controller_ssl_handshake_errors_total[10m]) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            component: mtls
+          annotations:
+            summary: "mTLS handshake failures"
+            description: "Mutual TLS handshake failure rate: {{ $value }}/sec"
+
+    - name: spiralogic.compliance.monitoring
+      interval: 300s
+      rules:
+        - alert: DataRetentionViolation
+          expr: spiralogic_data_retention_days{data_type="personal"} > 365
+          for: 1h
+          labels:
+            severity: warning
+            component: compliance
+          annotations:
+            summary: "Data retention policy violation"
+            description: "Personal data retained for {{ $value }} days (limit: 365)"
+
+        - alert: EncryptionAtRestFailure
+          expr: spiralogic_encryption_at_rest_enabled == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: encryption
+          annotations:
+            summary: "Encryption at rest disabled"
+            description: "Critical: Data encryption at rest is disabled"
+
+        - alert: BackupEncryptionFailure
+          expr: spiralogic_backup_encryption_enabled == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: backup
+          annotations:
+            summary: "Backup encryption disabled"
+            description: "Critical: Backup encryption is disabled"

@@ -1,0 +1,45 @@
+name: Block Unauthorized AI Co-authorship
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fetch full commit history
+        run: git fetch --unshallow || true
+
+      - name: Check for unauthorized co-authorship
+        run: |
+          echo "🔍 Scanning commit history for 'Co-authored-by:' tags..."
+          UNAUTHORIZED=false
+
+          # Define your whitelist of approved committers
+          WHITELIST=("kellynezat@gmail.com" "soullabtech@example.com")
+
+          # Loop through all commits in the push/PR
+          git log origin/main..HEAD --pretty=format:"%h %s%n%b" | while IFS= read -r line; do
+            if echo "$line" | grep -q "Co-authored-by:"; then
+              AUTHOR_EMAIL=$(echo "$line" | grep -oE "<.*?>" | tr -d '<>')
+              if ! printf '%s\n' "${WHITELIST[@]}" | grep -Fxq "$AUTHOR_EMAIL"; then
+                echo "❌ Unauthorized co-authorship detected: $AUTHOR_EMAIL"
+                UNAUTHORIZED=true
+              else
+                echo "✅ Authorized co-authorship: $AUTHOR_EMAIL"
+              fi
+            fi
+          done
+
+          if [ "$UNAUTHORIZED" = true ]; then
+            echo "🚫 Commit(s) contain unauthorized 'Co-authored-by:' attributions."
+            exit 1
+          else
+            echo "✅ All commits are clean."
+          fi

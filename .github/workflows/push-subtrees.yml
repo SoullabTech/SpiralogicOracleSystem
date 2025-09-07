@@ -1,0 +1,29 @@
+name: Push Subtrees to Subrepos
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push-frontend-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@soullab.org"
+          git config --global user.name "SoullabBot"
+
+      - name: Push frontend to subrepo
+        run: |
+          git subtree push --prefix frontend https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/SoullabTech/oracle-frontend.git main
+
+      - name: Push backend to subrepo
+        run: |
+          git subtree push --prefix backend https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/SoullabTech/oracle-backend.git main

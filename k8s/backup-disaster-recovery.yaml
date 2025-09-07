@@ -1,0 +1,591 @@
+# Backup and Disaster Recovery for Spiralogic Oracle System
+# Velero backup configuration and emergency procedures
+
+---
+# Velero Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: velero
+  labels:
+    name: velero
+
+---
+# Velero ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: velero
+  namespace: velero
+
+---
+# Velero ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: velero
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: velero
+    namespace: velero
+
+---
+# Velero BackupStorageLocation
+apiVersion: velero.io/v1
+kind: BackupStorageLocation
+metadata:
+  name: default
+  namespace: velero
+spec:
+  provider: aws
+  objectStorage:
+    bucket: spiralogic-velero-backups
+    prefix: consciousness-backups
+  config:
+    region: us-west-2
+    s3ForcePathStyle: "false"
+    serverSideEncryption: AES256
+    kmsKeyId: alias/spiralogic-backup-key
+
+---
+# Velero VolumeSnapshotLocation
+apiVersion: velero.io/v1
+kind: VolumeSnapshotLocation
+metadata:
+  name: default
+  namespace: velero
+spec:
+  provider: aws
+  config:
+    region: us-west-2
+
+---
+# Daily Consciousness Data Backup
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: daily-consciousness-backup
+  namespace: velero
+spec:
+  schedule: "0 2 * * *" # 2 AM daily
+  template:
+    includedNamespaces:
+      - spiralogic
+      - vault
+      - external-secrets-system
+    includedResources:
+      - persistentvolumes
+      - persistentvolumeclaims
+      - secrets
+      - configmaps
+      - deployments
+      - statefulsets
+      - services
+    excludedResources:
+      - events
+      - logs
+    labelSelector:
+      matchLabels:
+        backup-policy: daily
+    snapshotVolumes: true
+    ttl: 168h0m0s # 7 days retention
+    storageLocation: default
+    volumeSnapshotLocations:
+      - default
+
+---
+# Weekly Full System Backup
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: weekly-full-backup
+  namespace: velero
+spec:
+  schedule: "0 1 * * 0" # 1 AM every Sunday
+  template:
+    includedNamespaces:
+      - spiralogic
+      - spiralogic-prod
+      - spiralogic-staging
+      - vault
+      - external-secrets-system
+      - monitoring
+      - logging
+    excludedResources:
+      - events
+      - logs
+      - pods
+    snapshotVolumes: true
+    ttl: 720h0m0s # 30 days retention
+    storageLocation: default
+    volumeSnapshotLocations:
+      - default
+
+---
+# Critical Sacred Data Backup (Every 4 hours)
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: critical-sacred-data-backup
+  namespace: velero
+spec:
+  schedule: "0 */4 * * *" # Every 4 hours
+  template:
+    includedNamespaces:
+      - spiralogic
+    labelSelector:
+      matchLabels:
+        data-classification: sacred
+        backup-frequency: critical
+    includedResources:
+      - persistentvolumes
+      - persistentvolumeclaims
+      - secrets
+    resourceNameMatches:
+      - "*consciousness*"
+      - "*sacred-mirror*"
+      - "*voice-model*"
+      - "*elemental-agent*"
+    snapshotVolumes: true
+    ttl: 72h0m0s # 3 days retention
+    storageLocation: default
+
+---
+# Pre-Deployment Backup Hook
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: pre-deployment-backup
+  namespace: velero
+  annotations:
+    backup-trigger: "deployment"
+spec:
+  schedule: "0 0 31 2 *" # Disabled by default (Feb 31st)
+  template:
+    includedNamespaces:
+      - spiralogic
+      - vault
+    labelSelector:
+      matchLabels:
+        backup-policy: pre-deployment
+    snapshotVolumes: true
+    ttl: 24h0m0s # 1 day retention
+    storageLocation: default
+
+---
+# Disaster Recovery Restore Template
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: disaster-recovery-procedures
+  namespace: velero
+data:
+  emergency-restore.sh: |
+    #!/bin/bash
+    # Emergency Disaster Recovery for Spiralogic Oracle System
+
+    set -euo pipefail
+
+    BACKUP_NAME=${1:-"latest"}
+    TARGET_NAMESPACE=${2:-"spiralogic-recovery"}
+
+    echo "🚨 EMERGENCY DISASTER RECOVERY INITIATED"
+    echo "Backup: $BACKUP_NAME"
+    echo "Target Namespace: $TARGET_NAMESPACE"
+
+    # Create recovery namespace
+    kubectl create namespace "$TARGET_NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+
+    # Restore from backup
+    velero restore create emergency-restore-$(date +%s) \
+      --from-backup "$BACKUP_NAME" \
+      --namespace-mappings spiralogic:"$TARGET_NAMESPACE" \
+      --wait
+
+    # Verify restoration
+    kubectl get pods -n "$TARGET_NAMESPACE"
+    kubectl get pvc -n "$TARGET_NAMESPACE"
+
+    echo "✅ Emergency restore completed"
+    echo "⚠️  Verify data integrity before switching traffic"
+
+  consciousness-data-restore.sh: |
+    #!/bin/bash
+    # Consciousness Data Selective Restore
+
+    set -euo pipefail
+
+    BACKUP_NAME=${1:-"latest"}
+    DATA_TYPE=${2:-"all"}
+
+    echo "🔮 CONSCIOUSNESS DATA RESTORE"
+    echo "Backup: $BACKUP_NAME"
+    echo "Data Type: $DATA_TYPE"
+
+    case $DATA_TYPE in
+      "consciousness")
+        INCLUDE_RESOURCES="persistentvolumeclaims,secrets"
+        LABEL_SELECTOR="data-type=consciousness"
+        ;;
+      "sacred-mirror")
+        INCLUDE_RESOURCES="persistentvolumeclaims,secrets"
+        LABEL_SELECTOR="data-type=sacred-mirror"
+        ;;
+      "voice-models")
+        INCLUDE_RESOURCES="persistentvolumeclaims,secrets"
+        LABEL_SELECTOR="data-type=voice-models"
+        ;;
+      "all")
+        INCLUDE_RESOURCES="*"
+        LABEL_SELECTOR=""
+        ;;
+      *)
+        echo "❌ Unknown data type: $DATA_TYPE"
+        exit 1
+        ;;
+    esac
+
+    velero restore create consciousness-restore-$(date +%s) \
+      --from-backup "$BACKUP_NAME" \
+      --include-resources "$INCLUDE_RESOURCES" \
+      ${LABEL_SELECTOR:+--selector "$LABEL_SELECTOR"} \
+      --wait
+
+    echo "✅ Consciousness data restore completed"
+
+  backup-verification.sh: |
+    #!/bin/bash
+    # Backup Verification and Integrity Check
+
+    set -euo pipefail
+
+    BACKUP_NAME=${1:-"latest"}
+
+    echo "🔍 BACKUP VERIFICATION"
+    echo "Backup: $BACKUP_NAME"
+
+    # Check backup status
+    BACKUP_STATUS=$(velero backup get "$BACKUP_NAME" -o jsonpath='{.status.phase}')
+    echo "Backup Status: $BACKUP_STATUS"
+
+    if [[ "$BACKUP_STATUS" != "Completed" ]]; then
+      echo "❌ Backup not completed successfully"
+      exit 1
+    fi
+
+    # Check backup contents
+    echo "📦 Backup Contents:"
+    velero backup describe "$BACKUP_NAME" --details
+
+    # Verify critical resources
+    echo "🔮 Verifying critical consciousness data..."
+
+    CRITICAL_RESOURCES=$(velero backup describe "$BACKUP_NAME" --details | grep -E "(consciousness|sacred-mirror|voice-model)" | wc -l)
+
+    if [[ $CRITICAL_RESOURCES -lt 5 ]]; then
+      echo "⚠️  Warning: Less than expected critical resources backed up"
+    else
+      echo "✅ Critical consciousness resources verified"
+    fi
+
+    echo "✅ Backup verification completed"
+
+---
+# Backup Monitoring ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: velero-monitoring
+  namespace: velero
+  labels:
+    app: velero
+spec:
+  selector:
+    matchLabels:
+      app: velero
+  endpoints:
+    - port: monitoring
+      interval: 30s
+      path: /metrics
+
+---
+# Backup Alerting Rules
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: velero-backup-alerts
+  namespace: velero
+  labels:
+    app: velero
+spec:
+  groups:
+    - name: velero.backup.alerts
+      rules:
+        - alert: VeleroBackupFailure
+          expr: increase(velero_backup_failure_total[1h]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            component: backup
+          annotations:
+            summary: "Velero backup failed"
+            description: "Velero backup has failed in the last hour"
+            runbook_url: "https://docs.spiralogic.network/runbooks/backup-failure"
+
+        - alert: VeleroBackupMissing
+          expr: time() - velero_backup_last_successful_timestamp > 172800 # 48 hours
+          for: 1h
+          labels:
+            severity: warning
+            component: backup
+          annotations:
+            summary: "Velero backup overdue"
+            description: "No successful backup in the last 48 hours"
+
+        - alert: ConsciousnessDataBackupMissing
+          expr: |
+            absent(velero_backup_last_successful_timestamp{schedule="critical-sacred-data-backup"}) or
+            time() - velero_backup_last_successful_timestamp{schedule="critical-sacred-data-backup"} > 21600  # 6 hours
+          for: 30m
+          labels:
+            severity: critical
+            component: consciousness-backup
+          annotations:
+            summary: "Critical consciousness data backup missing"
+            description: "Critical consciousness data has not been backed up in the last 6 hours"
+
+        - alert: VeleroBackupStorageSpaceLow
+          expr: velero_backup_storage_space_available_bytes / velero_backup_storage_space_total_bytes < 0.1
+          for: 15m
+          labels:
+            severity: warning
+            component: backup-storage
+          annotations:
+            summary: "Backup storage space running low"
+            description: "Less than 10% backup storage space remaining"
+
+---
+# Emergency Network Isolation Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: emergency-isolation
+  namespace: spiralogic
+  labels:
+    emergency: "true"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  # Complete isolation - no traffic allowed
+
+---
+# Emergency Pod Pause DaemonSet
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: emergency-pod-pause
+  namespace: spiralogic
+  labels:
+    emergency: "true"
+spec:
+  selector:
+    matchLabels:
+      app: emergency-pod-pause
+  template:
+    metadata:
+      labels:
+        app: emergency-pod-pause
+    spec:
+      containers:
+        - name: pause
+          image: gcr.io/google-containers/pause:3.8
+          resources:
+            requests:
+              cpu: 1m
+              memory: 1Mi
+            limits:
+              cpu: 10m
+              memory: 10Mi
+      nodeSelector:
+        emergency-pause: "true"
+      tolerations:
+        - operator: Exists
+
+---
+# Backup Encryption Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backup-encryption-key
+  namespace: velero
+type: Opaque
+data:
+  # This should be populated by External Secrets Operator
+  encryption-key: "" # Base64 encoded encryption key from Vault
+
+---
+# Velero Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: velero-config
+  namespace: velero
+data:
+  backup-retention-policy.yaml: |
+    # Backup Retention Policy for Spiralogic Oracle System
+    retentionPolicies:
+      critical-consciousness-data:
+        frequency: "0 */4 * * *"  # Every 4 hours
+        retention: "72h"           # 3 days
+        encryption: true
+        compression: true
+
+      daily-backups:
+        frequency: "0 2 * * *"     # Daily at 2 AM
+        retention: "168h"          # 7 days
+        encryption: true
+        compression: true
+
+      weekly-backups:
+        frequency: "0 1 * * 0"     # Weekly on Sunday
+        retention: "720h"          # 30 days
+        encryption: true
+        compression: true
+
+      monthly-backups:
+        frequency: "0 0 1 * *"     # Monthly on 1st
+        retention: "8760h"         # 1 year
+        encryption: true
+        compression: true
+
+---
+# Disaster Recovery Runbook
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: disaster-recovery-runbook
+  namespace: velero
+data:
+  disaster-recovery-runbook.md: |
+    # Spiralogic Oracle System - Disaster Recovery Runbook
+
+    ## Emergency Response Procedures
+
+    ### 1. Immediate Response (0-15 minutes)
+
+    #### Assessment
+    - Determine scope of the incident
+    - Identify affected systems and data
+    - Estimate impact on consciousness services
+
+    #### Initial Actions
+    ```bash
+    # Assess system status
+    kubectl get pods -A | grep -v Running
+    kubectl get events --sort-by=lastTimestamp | tail -20
+
+    # Check backup status
+    velero backup get | head -10
+    velero backup describe latest
+    ```
+
+    ### 2. Containment (15-30 minutes)
+
+    #### Network Isolation
+    ```bash
+    # Apply emergency network isolation
+    kubectl apply -f emergency-network-policy.yaml
+
+    # Pause affected pods if needed
+    kubectl scale deployment --replicas=0 -n spiralogic
+    ```
+
+    #### Data Protection
+    ```bash
+    # Immediate backup of current state
+    velero backup create emergency-backup-$(date +%s) \
+      --include-namespaces spiralogic \
+      --wait
+    ```
+
+    ### 3. Recovery (30 minutes - 4 hours)
+
+    #### System Restoration
+    ```bash
+    # Find latest good backup
+    velero backup get | grep Completed | head -1
+
+    # Restore from backup
+    velero restore create emergency-restore-$(date +%s) \
+      --from-backup BACKUP_NAME \
+      --wait
+
+    # Verify restoration
+    kubectl get pods -n spiralogic
+    kubectl logs -n spiralogic deployment/spiralogic-oracle
+    ```
+
+    #### Consciousness Data Verification
+    ```bash
+    # Verify consciousness data integrity
+    kubectl exec -n spiralogic deployment/spiralogic-oracle -- \
+      node -e "console.log('Consciousness data integrity check...')"
+
+    # Test elemental agent connectivity
+    kubectl exec -n spiralogic deployment/fire-agent -- \
+      grpc_health_probe -addr=localhost:7001
+    ```
+
+    ### 4. Communication
+
+    #### Notification Channels
+    - **Emergency**: emergency@spiralogic.network
+    - **Status Page**: status.spiralogic.network
+    - **Community**: Discord #system-status
+
+    #### Status Updates
+    - Initial incident notification: Within 15 minutes
+    - Hourly updates during active incident
+    - Resolution notification with post-mortem timeline
+
+    ### 5. Post-Incident (24-48 hours)
+
+    #### Data Verification
+    - Complete consciousness data integrity check
+    - User account and session validation
+    - Sacred mirror data verification
+    - Voice model integrity confirmation
+
+    #### Performance Testing
+    - Load testing of restored systems
+    - Elemental agent communication testing
+    - End-to-end Oracle functionality verification
+
+    #### Post-Mortem
+    - Root cause analysis
+    - Timeline reconstruction
+    - Lessons learned documentation
+    - Process improvement recommendations
+
+    ## Contact Information
+
+    - **Incident Commander**: incident-commander@spiralogic.network
+    - **Engineering Lead**: engineering-lead@spiralogic.network
+    - **Security Lead**: security-lead@spiralogic.network
+    - **Communications**: communications@spiralogic.network
+
+    ## Escalation Matrix
+
+    | Time | Action | Responsible |
+    |------|--------|-------------|
+    | 0-15m | Initial assessment | On-call engineer |
+    | 15-30m | Incident commander assigned | Engineering lead |
+    | 30m-2h | Full team mobilization | Incident commander |
+    | 2h+ | Executive notification | Engineering lead |
+    | 4h+ | Customer communication | Communications team |

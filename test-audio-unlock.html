@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Unlock Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #059669;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            background: #374151;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔓 Audio Unlock Test</h1>
+    
+    <div class="status">
+        <strong>Status:</strong> <span id="status">Ready to test</span>
+    </div>
+    
+    <button onclick="testAudioUnlock()">🎤 Test Audio Unlock</button>
+    <button onclick="resetAudioUnlock()">🔄 Reset Audio State</button>
+    
+    <div class="status">
+        <h3>Expected Flow:</h3>
+        <ol>
+            <li>Click "Test Audio Unlock" - should show success toast</li>
+            <li>Click again - no toast (already unlocked)</li>
+            <li>Reset and try again - should show toast again</li>
+        </ol>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let audioUnlocked = false;
+        let toastShown = false;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        async function unlockAudio(showToastCallback) {
+            if (typeof window === 'undefined') return false;
+            
+            if (audioUnlocked || localStorage.getItem('mayaAudioUnlocked') === '1') {
+                audioUnlocked = true;
+                return true;
+            }
+
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) {
+                    console.warn('AudioContext not supported');
+                    return false;
+                }
+
+                const ctx = new AudioContext();
+                
+                if (ctx.state === 'suspended') {
+                    await ctx.resume();
+                }
+
+                const silence = ctx.createBuffer(1, 1, 22050);
+                const src = ctx.createBufferSource();
+                src.buffer = silence;
+                src.connect(ctx.destination);
+                src.start(0);
+
+                audioUnlocked = true;
+                localStorage.setItem('mayaAudioUnlocked', '1');
+                
+                console.log('🔓 [Audio] Context unlocked');
+                
+                if (showToastCallback && !toastShown) {
+                    showToastCallback("🔓 Maia's voice unlocked — you'll now hear her replies");
+                    toastShown = true;
+                }
+                
+                return true;
+            } catch (error) {
+                console.warn('Failed to unlock audio:', error);
+                return false;
+            }
+        }
+
+        async function testAudioUnlock() {
+            updateStatus('Testing audio unlock...');
+            
+            const result = await unlockAudio(showToast);
+            
+            if (result) {
+                if (toastShown) {
+                    updateStatus('✅ Audio unlocked successfully! Toast shown.');
+                } else {
+                    updateStatus('✅ Audio was already unlocked. No toast shown.');
+                }
+            } else {
+                updateStatus('❌ Audio unlock failed.');
+            }
+        }
+
+        function resetAudioUnlock() {
+            audioUnlocked = false;
+            toastShown = false;
+            localStorage.removeItem('mayaAudioUnlocked');
+            updateStatus('🔄 Audio unlock state reset. Ready to test again.');
+        }
+
+        // Auto-test on page load
+        updateStatus('Page loaded. Click button to test audio unlock.');
+    </script>
+</body>
+</html>

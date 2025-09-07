@@ -1,0 +1,22 @@
+HTTP/2 500 
+cache-control: public, max-age=0, must-revalidate
+content-type: application/json
+date: Mon, 25 Aug 2025 18:47:31 GMT
+server: Vercel
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+vary: RSC, Next-Router-State-Tree, Next-Router-Prefetch
+x-matched-path: /api/voice/sesame
+x-vercel-cache: MISS
+x-vercel-id: iad1::iad1::q42hv-1756147545305-6b5576ff5d45
+
+HTTP/2 500 
+cache-control: public, max-age=0, must-revalidate
+content-type: application/json
+date: Mon, 25 Aug 2025 18:47:39 GMT
+server: Vercel
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+vary: RSC, Next-Router-State-Tree, Next-Router-Prefetch
+x-matched-path: /api/voice/sesame
+x-vercel-cache: MISS
+x-vercel-id: iad1::iad1::w5xr7-1756147554599-5849048243c4
+

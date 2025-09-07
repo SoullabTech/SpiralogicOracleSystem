@@ -1,0 +1,193 @@
+# 🎤 Sesame CSM - Offline Build for Maya's Voice Stack
+# Builds a self-contained voice synthesis server with no external dependencies
+
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    build-essential \
+    ffmpeg \
+    libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Create directories for models and cache
+RUN mkdir -p /app/models/sesame /app/cache
+
+# Clone Sesame CSM repository (or copy if we have it locally)
+RUN git clone https://github.com/soullab-ai/sesame-csm.git /app/sesame-csm || echo "Using local sesame-csm"
+
+# Copy requirements and install Python dependencies
+COPY requirements.sesame.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Install PyTorch with CUDA support (optional - will fallback to CPU)
+RUN pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121 || \
+    pip install torch torchaudio
+
+# Copy Sesame CSM source if not cloned
+COPY sesame-csm/ /app/sesame-csm/ 2>/dev/null || echo "Using git clone"
+
+# Set up the application
+WORKDIR /app/sesame-csm
+
+# Copy our custom server configuration
+COPY configs/sesame-server-config.yaml /app/sesame-csm/config.yaml
+
+# Create the FastAPI server entrypoint
+RUN cat > /app/sesame-csm/server.py << 'EOF'
+import os
+import json
+import logging
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import uvicorn
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = FastAPI(title="Sesame CSM Server", version="1.0.0")
+
+# Global model variables
+tokenizer = None
+model = None
+model_loaded = False
+
+class GenerateRequest(BaseModel):
+    text: str
+    max_tokens: int = 150
+    temperature: float = 0.7
+    top_p: float = 0.9
+
+class GenerateResponse(BaseModel):
+    generated_text: str
+    success: bool = True
+    processing_time_ms: float
+
+@app.on_event("startup")
+async def load_model():
+    global tokenizer, model, model_loaded
+    try:
+        logger.info("Loading Sesame CSM model...")
+        
+        # Use local models if available, fallback to HuggingFace
+        model_path = os.getenv("MODEL_PATH", "/app/models/sesame")
+        if not os.path.exists(f"{model_path}/config.json"):
+            model_path = "microsoft/DialoGPT-medium"  # Fallback
+            logger.info(f"Using fallback model: {model_path}")
+        
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_path, 
+            cache_dir="/app/cache",
+            local_files_only=False
+        )
+        
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            cache_dir="/app/cache", 
+            local_files_only=False,
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            device_map="auto" if torch.cuda.is_available() else None
+        )
+        
+        # Add padding token if missing
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+            
+        model_loaded = True
+        logger.info("✅ Sesame CSM model loaded successfully")
+        
+    except Exception as e:
+        logger.error(f"❌ Failed to load model: {e}")
+        model_loaded = False
+
+@app.get("/health")
+async def health_check():
+    return JSONResponse({
+        "status": "healthy",
+        "model_loaded": model_loaded,
+        "gpu_available": torch.cuda.is_available(),
+        "device_count": torch.cuda.device_count() if torch.cuda.is_available() else 0
+    })
+
+@app.post("/api/v1/generate", response_model=GenerateResponse)
+async def generate_text(request: GenerateRequest):
+    if not model_loaded:
+        raise HTTPException(status_code=503, detail="Model not loaded")
+    
+    try:
+        import time
+        start_time = time.time()
+        
+        # Tokenize input
+        inputs = tokenizer.encode(
+            request.text + tokenizer.eos_token, 
+            return_tensors='pt'
+        )
+        
+        if torch.cuda.is_available():
+            inputs = inputs.cuda()
+        
+        # Generate response
+        with torch.no_grad():
+            outputs = model.generate(
+                inputs, 
+                max_length=inputs.shape[1] + request.max_tokens,
+                temperature=request.temperature,
+                top_p=request.top_p,
+                do_sample=True,
+                pad_token_id=tokenizer.eos_token_id,
+                eos_token_id=tokenizer.eos_token_id
+            )
+        
+        # Decode response
+        response_text = tokenizer.decode(
+            outputs[0][inputs.shape[1]:], 
+            skip_special_tokens=True
+        )
+        
+        processing_time = (time.time() - start_time) * 1000
+        
+        return GenerateResponse(
+            generated_text=response_text.strip(),
+            processing_time_ms=processing_time
+        )
+        
+    except Exception as e:
+        logger.error(f"Generation error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/")
+async def root():
+    return {"message": "Sesame CSM Server - Maya's Voice Stack", "status": "online"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+EOF
+
+# Make sure the server is executable
+RUN chmod +x /app/sesame-csm/server.py
+
+# Expose the API port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Set environment variables
+ENV MODEL_PATH=/app/models/sesame
+ENV CUDA_VISIBLE_DEVICES=0
+ENV TRANSFORMERS_CACHE=/app/cache
+ENV HF_HOME=/app/cache
+
+# Start the server
+CMD ["python", "/app/sesame-csm/server.py"]

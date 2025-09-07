@@ -1,0 +1,13 @@
+node_modules
+.env
+.env.local
+*.log
+.DS_Store
+._*
+.port
+.__pycache__
+*.pyc
+.pytest_cache
+.coverage
+.git
+.gitignore

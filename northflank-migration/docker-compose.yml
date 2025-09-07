@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  voice-agent:
+    build: 
+      context: ./voice-agent
+      dockerfile: Dockerfile
+    container_name: voice-agent
+    ports:
+      - "8001:8000"  # Map to 8001 locally to avoid conflicts
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - WORKERS=1
+    volumes:
+      - ./voice-agent/models:/app/models
+      - ./voice-agent/audio_cache:/app/audio_cache
+      - ./voice-agent/logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - oracle-network
+    # Uncomment below for GPU support (requires nvidia-docker)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  memory-agent:
+    build:
+      context: ./memory-agent
+      dockerfile: Dockerfile
+    container_name: memory-agent
+    ports:
+      - "8002:8000"  # Map to 8002 locally
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - WORKERS=1
+    volumes:
+      - ./memory-agent/data:/app/data
+      - ./memory-agent/logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - oracle-network
+    depends_on:
+      - voice-agent
+
+  # Optional: NGINX reverse proxy for local testing
+  nginx:
+    image: nginx:alpine
+    container_name: oracle-proxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./shared/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - voice-agent
+      - memory-agent
+    networks:
+      - oracle-network
+
+networks:
+  oracle-network:
+    driver: bridge
+
+volumes:
+  voice_models:
+  voice_cache:
+  memory_data:

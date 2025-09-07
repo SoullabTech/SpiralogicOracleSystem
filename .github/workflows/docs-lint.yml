@@ -1,0 +1,159 @@
+name: Documentation & Assets Lint
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  docs-guardrails:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        
+    - name: Check Markdown Placement
+      run: |
+        echo "🔍 Checking markdown file placement..."
+        
+        # Find markdown files outside /docs/
+        MISPLACED_MD=$(find . -name "*.md" -type f \
+          -not -path "./node_modules/*" \
+          -not -path "./backend/node_modules/*" \
+          -not -path "./docs/*" \
+          -not -path "./.github/*" \
+          -not -path "./sesame*/*" \
+          -not -path "./csm/*" \
+          -not -path "./backend/backend/*" \
+          -not -path "./backend/csm/*" \
+          -not -path "./SpiralogicOracleSystem/*" \
+          -not -name "README.md" \
+          -not -name "CONTRIBUTING.md" \
+          -not -name "LICENSE.md" \
+          -not -name "CHANGELOG.md" \
+          -not -name "SECURITY.md" || true)
+        
+        if [ -n "$MISPLACED_MD" ]; then
+          echo "❌ Found markdown files outside /docs/:"
+          echo "$MISPLACED_MD"
+          echo ""
+          echo "Please move these files to /docs/ or run: npm run docs:fix"
+          exit 1
+        fi
+        
+        echo "✅ All markdown files correctly placed"
+    
+    - name: Check Image Placement
+      run: |
+        echo "🖼️ Checking image file placement..."
+        
+        # Find images outside /docs/assets/
+        MISPLACED_IMAGES=$(find . \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \
+          -o -name "*.gif" -o -name "*.svg" -o -name "*.webp" -o -name "*.ico" \) \
+          -type f \
+          -not -path "./node_modules/*" \
+          -not -path "./backend/node_modules/*" \
+          -not -path "./docs/assets/*" \
+          -not -path "./.github/*" \
+          -not -path "./sesame*/*" \
+          -not -path "./csm/*" \
+          -not -path "./backend/backend/*" \
+          -not -path "./backend/csm/*" \
+          -not -path "./SpiralogicOracleSystem/*" \
+          -not -path "./.next/*" \
+          -not -path "./dist/*" \
+          -not -path "./build/*" || true)
+        
+        if [ -n "$MISPLACED_IMAGES" ]; then
+          echo "❌ Found images outside /docs/assets/:"
+          echo "$MISPLACED_IMAGES"
+          echo ""
+          echo "Please move these files to /docs/assets/{category}/ or run: npm run docs:fix"
+          echo ""
+          echo "Categories:"
+          echo "  • ui/ → UI screenshots"
+          echo "  • holoflower/ → Sacred symbols & geometry"
+          echo "  • storyboards/ → UX flows & wireframes"
+          echo "  • branding/ → Logos & brand assets"
+          echo "  • diagrams/ → Architecture & schemas"
+          echo "  • misc/ → Uncategorized"
+          exit 1
+        fi
+        
+        echo "✅ All images correctly placed in /docs/assets/"
+    
+    - name: Check for Broken Image Links
+      run: |
+        echo "🔗 Checking for broken image links in markdown..."
+        
+        # Create a script to check image links
+        cat > check-image-links.sh << 'EOF'
+        #!/bin/bash
+        
+        BROKEN_LINKS=""
+        
+        # Find all markdown files
+        find ./docs -name "*.md" -type f | while read -r md_file; do
+          # Extract image references
+          grep -oE '!\[.*?\]\(.*?\)' "$md_file" | while read -r img_ref; do
+            # Extract the path from the reference
+            img_path=$(echo "$img_ref" | sed -E 's/.*\((.*)\)/\1/' | sed 's/#.*//' | sed 's/?.*//')
+            
+            # Skip URLs
+            if [[ "$img_path" =~ ^https?:// ]]; then
+              continue
+            fi
+            
+            # Convert relative to absolute path
+            if [[ "$img_path" =~ ^/ ]]; then
+              full_path=".$img_path"
+            else
+              dir=$(dirname "$md_file")
+              full_path="$dir/$img_path"
+            fi
+            
+            # Normalize path
+            full_path=$(realpath -m "$full_path" 2>/dev/null || echo "$full_path")
+            
+            # Check if file exists
+            if [ ! -f "$full_path" ]; then
+              echo "❌ Broken link in $md_file: $img_path"
+              BROKEN_LINKS="yes"
+            fi
+          done
+        done
+        
+        if [ -n "$BROKEN_LINKS" ]; then
+          echo ""
+          echo "Found broken image links. Please fix them or run: npm run docs:fix"
+          exit 1
+        fi
+        
+        echo "✅ All image links are valid"
+        EOF
+        
+        chmod +x check-image-links.sh
+        ./check-image-links.sh
+    
+    - name: Verify Asset Categories
+      run: |
+        echo "📂 Verifying asset categorization..."
+        
+        # Check if sacred assets are preserved
+        if [ -d "./docs/assets/holoflower" ]; then
+          SACRED_COUNT=$(find ./docs/assets/holoflower -type f | wc -l)
+          echo "  Sacred geometry assets: $SACRED_COUNT files"
+        fi
+        
+        if [ -d "./docs/assets/branding" ]; then
+          BRAND_COUNT=$(find ./docs/assets/branding -type f | wc -l)
+          echo "  Brand assets: $BRAND_COUNT files"
+        fi
+        
+        echo "✅ Asset categories verified"

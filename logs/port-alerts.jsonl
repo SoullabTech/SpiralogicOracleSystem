@@ -1,0 +1,415 @@
+{"timestamp":"2025-09-04T02:36:08.284Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":66859}}
+{"timestamp":"2025-09-04T02:36:08.290Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:12:17.260Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:12:17.264Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:16:40.982Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:16:40.985Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:16:40.985Z","type":"frequent_conflict","details":{"count":6,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:21.859Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:17:21.859Z","type":"frequent_conflict","details":{"count":7,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:21.867Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:17:21.867Z","type":"frequent_conflict","details":{"count":8,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:33.915Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:17:33.915Z","type":"frequent_conflict","details":{"count":9,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:33.921Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:17:33.921Z","type":"frequent_conflict","details":{"count":10,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:44.128Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:17:44.128Z","type":"frequent_conflict","details":{"count":11,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:44.134Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:17:44.134Z","type":"frequent_conflict","details":{"count":12,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:51.935Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:17:51.935Z","type":"frequent_conflict","details":{"count":13,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:17:51.940Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:17:51.940Z","type":"frequent_conflict","details":{"count":14,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:18:06.951Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:18:06.951Z","type":"frequent_conflict","details":{"count":15,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:18:06.962Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:18:06.962Z","type":"frequent_conflict","details":{"count":16,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:05.558Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:23:05.558Z","type":"frequent_conflict","details":{"count":17,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:05.564Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:23:05.564Z","type":"frequent_conflict","details":{"count":18,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:23.419Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:23:23.419Z","type":"frequent_conflict","details":{"count":19,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:23.426Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:23:23.426Z","type":"frequent_conflict","details":{"count":20,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:32.528Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:23:32.528Z","type":"frequent_conflict","details":{"count":21,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:32.533Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:23:32.533Z","type":"frequent_conflict","details":{"count":22,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:40.894Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:23:40.894Z","type":"frequent_conflict","details":{"count":23,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:40.899Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:23:40.899Z","type":"frequent_conflict","details":{"count":24,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:53.032Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:23:53.032Z","type":"frequent_conflict","details":{"count":25,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:23:53.039Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:23:53.039Z","type":"frequent_conflict","details":{"count":26,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:24:07.484Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:24:07.484Z","type":"frequent_conflict","details":{"count":27,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:24:07.489Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:24:07.489Z","type":"frequent_conflict","details":{"count":28,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:24:30.374Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:24:30.374Z","type":"frequent_conflict","details":{"count":29,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:24:30.378Z","type":"conflict","details":{"requested":3002,"actual":3004,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:24:30.378Z","type":"frequent_conflict","details":{"count":30,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:30:27.674Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:30:27.674Z","type":"frequent_conflict","details":{"count":31,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:30:27.680Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:30:27.680Z","type":"frequent_conflict","details":{"count":32,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:30:51.294Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:30:51.294Z","type":"frequent_conflict","details":{"count":33,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:30:51.301Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:30:51.301Z","type":"frequent_conflict","details":{"count":34,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:15.478Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:31:15.478Z","type":"frequent_conflict","details":{"count":35,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:15.486Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:31:15.486Z","type":"frequent_conflict","details":{"count":36,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:23.340Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:31:23.340Z","type":"frequent_conflict","details":{"count":37,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:23.344Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:31:23.344Z","type":"frequent_conflict","details":{"count":38,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:36.999Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:31:36.999Z","type":"frequent_conflict","details":{"count":39,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:37.005Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:31:37.005Z","type":"frequent_conflict","details":{"count":40,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:43.935Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:31:43.935Z","type":"frequent_conflict","details":{"count":41,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:31:43.939Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:31:43.939Z","type":"frequent_conflict","details":{"count":42,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:32:03.167Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:32:03.167Z","type":"frequent_conflict","details":{"count":43,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:32:03.174Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:32:03.174Z","type":"frequent_conflict","details":{"count":44,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:32:21.072Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:32:21.072Z","type":"frequent_conflict","details":{"count":45,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:32:21.079Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:32:21.079Z","type":"frequent_conflict","details":{"count":46,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:35:36.097Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":27307}}
+{"timestamp":"2025-09-04T11:35:36.097Z","type":"frequent_conflict","details":{"count":47,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T11:35:36.107Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T11:35:36.107Z","type":"frequent_conflict","details":{"count":48,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:15:10.816Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":94555}}
+{"timestamp":"2025-09-04T14:15:10.816Z","type":"frequent_conflict","details":{"count":49,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:15:10.825Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:15:10.825Z","type":"frequent_conflict","details":{"count":50,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:18:00.563Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":10030}}
+{"timestamp":"2025-09-04T14:18:00.563Z","type":"frequent_conflict","details":{"count":51,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:18:00.580Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:18:00.580Z","type":"frequent_conflict","details":{"count":52,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:19:58.786Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":13458}}
+{"timestamp":"2025-09-04T14:19:58.786Z","type":"frequent_conflict","details":{"count":53,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:19:58.791Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:19:58.791Z","type":"frequent_conflict","details":{"count":54,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:20:02.737Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":13673}}
+{"timestamp":"2025-09-04T14:20:02.737Z","type":"frequent_conflict","details":{"count":55,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:20:02.745Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:20:02.745Z","type":"frequent_conflict","details":{"count":56,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:20:08.892Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":13899}}
+{"timestamp":"2025-09-04T14:20:08.892Z","type":"frequent_conflict","details":{"count":57,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:20:08.900Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:20:08.900Z","type":"frequent_conflict","details":{"count":58,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:20:26.110Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":14180}}
+{"timestamp":"2025-09-04T14:20:26.110Z","type":"frequent_conflict","details":{"count":59,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:20:26.117Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:20:26.117Z","type":"frequent_conflict","details":{"count":60,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:21:11.992Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":15751}}
+{"timestamp":"2025-09-04T14:21:11.992Z","type":"frequent_conflict","details":{"count":61,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:21:11.999Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:21:11.999Z","type":"frequent_conflict","details":{"count":62,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:21:24.071Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":16003}}
+{"timestamp":"2025-09-04T14:21:24.071Z","type":"frequent_conflict","details":{"count":63,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:21:24.080Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:21:24.080Z","type":"frequent_conflict","details":{"count":64,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:30:22.208Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":32025}}
+{"timestamp":"2025-09-04T14:30:22.208Z","type":"frequent_conflict","details":{"count":65,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:30:22.227Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:30:22.227Z","type":"frequent_conflict","details":{"count":66,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:30:59.585Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":33105}}
+{"timestamp":"2025-09-04T14:30:59.585Z","type":"frequent_conflict","details":{"count":67,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:30:59.588Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:30:59.588Z","type":"frequent_conflict","details":{"count":68,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:31:16.940Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":33907}}
+{"timestamp":"2025-09-04T14:31:16.940Z","type":"frequent_conflict","details":{"count":69,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:31:16.954Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:31:16.954Z","type":"frequent_conflict","details":{"count":70,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:31:16.979Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":33907}}
+{"timestamp":"2025-09-04T14:31:16.979Z","type":"frequent_conflict","details":{"count":71,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:31:16.989Z","type":"conflict","details":{"requested":3002,"actual":3004,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:31:16.989Z","type":"frequent_conflict","details":{"count":72,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:34:57.561Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":40561}}
+{"timestamp":"2025-09-04T14:34:57.561Z","type":"frequent_conflict","details":{"count":73,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:34:57.568Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:34:57.568Z","type":"frequent_conflict","details":{"count":74,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:35:01.728Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":40834}}
+{"timestamp":"2025-09-04T14:35:01.728Z","type":"frequent_conflict","details":{"count":75,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:35:01.736Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:35:01.736Z","type":"frequent_conflict","details":{"count":76,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:35:52.280Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":41730}}
+{"timestamp":"2025-09-04T14:35:52.280Z","type":"frequent_conflict","details":{"count":77,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:35:52.287Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:35:52.287Z","type":"frequent_conflict","details":{"count":78,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:36:49.057Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":42675}}
+{"timestamp":"2025-09-04T14:36:49.057Z","type":"frequent_conflict","details":{"count":79,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:36:49.062Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:36:49.062Z","type":"frequent_conflict","details":{"count":80,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:36:53.257Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":42858}}
+{"timestamp":"2025-09-04T14:36:53.257Z","type":"frequent_conflict","details":{"count":81,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:36:53.267Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:36:53.267Z","type":"frequent_conflict","details":{"count":82,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:45:31.166Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":42858}}
+{"timestamp":"2025-09-04T14:45:31.166Z","type":"frequent_conflict","details":{"count":83,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T14:45:31.173Z","type":"conflict","details":{"requested":3002,"actual":3004,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T14:45:31.173Z","type":"frequent_conflict","details":{"count":84,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:19:24.077Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":72080}}
+{"timestamp":"2025-09-04T15:19:24.077Z","type":"frequent_conflict","details":{"count":85,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:19:24.084Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T15:19:24.084Z","type":"frequent_conflict","details":{"count":86,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:21:27.421Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":79035}}
+{"timestamp":"2025-09-04T15:21:27.421Z","type":"frequent_conflict","details":{"count":87,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:21:27.429Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T15:21:27.429Z","type":"frequent_conflict","details":{"count":88,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:39:27.779Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":79035}}
+{"timestamp":"2025-09-04T15:39:27.779Z","type":"frequent_conflict","details":{"count":89,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:39:27.788Z","type":"conflict","details":{"requested":3002,"actual":3004,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T15:39:27.788Z","type":"frequent_conflict","details":{"count":90,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:44:09.465Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":12334}}
+{"timestamp":"2025-09-04T15:44:09.465Z","type":"frequent_conflict","details":{"count":91,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:44:09.480Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T15:44:09.480Z","type":"frequent_conflict","details":{"count":92,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:45:37.131Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":16217}}
+{"timestamp":"2025-09-04T15:45:37.131Z","type":"frequent_conflict","details":{"count":93,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T15:45:37.142Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T15:45:37.142Z","type":"frequent_conflict","details":{"count":94,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T16:44:47.951Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":45014}}
+{"timestamp":"2025-09-04T16:44:47.951Z","type":"frequent_conflict","details":{"count":95,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T16:44:47.973Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T16:44:47.973Z","type":"frequent_conflict","details":{"count":96,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T16:58:03.714Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":53177}}
+{"timestamp":"2025-09-04T16:58:03.714Z","type":"frequent_conflict","details":{"count":97,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T16:58:03.719Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T16:58:03.719Z","type":"frequent_conflict","details":{"count":98,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T23:57:06.659Z","type":"conflict","details":{"requested":3001,"actual":3002,"blockedBy":"node","pid":13307}}
+{"timestamp":"2025-09-04T23:57:06.659Z","type":"frequent_conflict","details":{"count":99,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T23:57:06.673Z","type":"conflict","details":{"requested":3001,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T23:57:06.673Z","type":"frequent_conflict","details":{"count":100,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T23:58:20.943Z","type":"conflict","details":{"requested":3001,"actual":3002,"blockedBy":"node","pid":13307}}
+{"timestamp":"2025-09-04T23:58:20.943Z","type":"frequent_conflict","details":{"count":101,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T23:58:21.002Z","type":"conflict","details":{"requested":3001,"actual":3002,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T23:58:21.002Z","type":"frequent_conflict","details":{"count":102,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T23:58:44.798Z","type":"conflict","details":{"requested":3001,"actual":3002,"blockedBy":"node","pid":13307}}
+{"timestamp":"2025-09-04T23:58:44.798Z","type":"frequent_conflict","details":{"count":103,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-04T23:58:44.818Z","type":"conflict","details":{"requested":3001,"actual":3002,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-04T23:58:44.818Z","type":"frequent_conflict","details":{"count":104,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T00:08:07.050Z","type":"conflict","details":{"requested":3001,"actual":3002,"blockedBy":"node","pid":13307}}
+{"timestamp":"2025-09-05T00:08:07.050Z","type":"frequent_conflict","details":{"count":105,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T00:08:07.057Z","type":"conflict","details":{"requested":3001,"actual":3002,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T00:08:07.057Z","type":"frequent_conflict","details":{"count":106,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:29.116Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:06:29.116Z","type":"frequent_conflict","details":{"count":107,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:29.190Z","type":"conflict","details":{"requested":3002,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:06:29.190Z","type":"frequent_conflict","details":{"count":108,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:29.211Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:06:29.211Z","type":"frequent_conflict","details":{"count":109,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:29.229Z","type":"conflict","details":{"requested":3002,"actual":3006,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:06:29.229Z","type":"frequent_conflict","details":{"count":110,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:51.672Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:06:51.672Z","type":"frequent_conflict","details":{"count":111,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:51.741Z","type":"conflict","details":{"requested":3002,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:06:51.741Z","type":"frequent_conflict","details":{"count":112,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:51.861Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:06:51.861Z","type":"frequent_conflict","details":{"count":113,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:06:51.897Z","type":"conflict","details":{"requested":3002,"actual":3006,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:06:51.897Z","type":"frequent_conflict","details":{"count":114,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:07:07.008Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:07:07.008Z","type":"frequent_conflict","details":{"count":115,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:07:07.016Z","type":"conflict","details":{"requested":3002,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:07:07.016Z","type":"frequent_conflict","details":{"count":116,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:15:29.919Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:15:29.919Z","type":"frequent_conflict","details":{"count":117,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:15:29.932Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:15:29.932Z","type":"frequent_conflict","details":{"count":118,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:15:29.969Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:15:29.969Z","type":"frequent_conflict","details":{"count":119,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:15:29.989Z","type":"conflict","details":{"requested":3002,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:15:29.989Z","type":"frequent_conflict","details":{"count":120,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:16:30.426Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:16:30.426Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:16:30.426Z","type":"frequent_conflict","details":{"count":122,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:16:30.426Z","type":"frequent_conflict","details":{"count":122,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:16:30.447Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:16:30.452Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:16:30.447Z","type":"frequent_conflict","details":{"count":124,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:16:30.452Z","type":"frequent_conflict","details":{"count":124,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:09.889Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:17:09.893Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:17:09.889Z","type":"frequent_conflict","details":{"count":126,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:09.893Z","type":"frequent_conflict","details":{"count":126,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:09.915Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:17:09.918Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:17:09.915Z","type":"frequent_conflict","details":{"count":128,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:09.918Z","type":"frequent_conflict","details":{"count":128,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:15.857Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:17:15.857Z","type":"frequent_conflict","details":{"count":129,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:15.863Z","type":"conflict","details":{"requested":3002,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:17:15.863Z","type":"frequent_conflict","details":{"count":130,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:45.907Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:17:45.913Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:17:45.907Z","type":"frequent_conflict","details":{"count":132,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:45.913Z","type":"frequent_conflict","details":{"count":132,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:45.946Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:17:45.950Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:17:45.946Z","type":"frequent_conflict","details":{"count":134,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:45.950Z","type":"frequent_conflict","details":{"count":134,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:46.247Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:17:46.247Z","type":"frequent_conflict","details":{"count":135,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:17:46.261Z","type":"conflict","details":{"requested":3002,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:17:46.261Z","type":"frequent_conflict","details":{"count":136,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:05.843Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:18:05.843Z","type":"frequent_conflict","details":{"count":137,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:05.854Z","type":"conflict","details":{"requested":3002,"actual":3006,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:18:05.854Z","type":"frequent_conflict","details":{"count":138,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:33.456Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:18:33.456Z","type":"frequent_conflict","details":{"count":139,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:33.469Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:18:33.469Z","type":"frequent_conflict","details":{"count":140,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:33.640Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:18:33.640Z","type":"frequent_conflict","details":{"count":141,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:33.655Z","type":"conflict","details":{"requested":3002,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:18:33.655Z","type":"frequent_conflict","details":{"count":142,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:34.070Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:18:34.070Z","type":"frequent_conflict","details":{"count":143,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:34.085Z","type":"conflict","details":{"requested":3002,"actual":3006,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:18:34.085Z","type":"frequent_conflict","details":{"count":144,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:34.123Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:18:34.123Z","type":"frequent_conflict","details":{"count":145,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:18:34.145Z","type":"conflict","details":{"requested":3002,"actual":3008,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:18:34.145Z","type":"frequent_conflict","details":{"count":146,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:28:02.366Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:28:02.366Z","type":"frequent_conflict","details":{"count":147,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:28:02.375Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:28:02.375Z","type":"frequent_conflict","details":{"count":148,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:52:15.410Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:52:15.410Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:52:15.410Z","type":"frequent_conflict","details":{"count":150,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:52:15.410Z","type":"frequent_conflict","details":{"count":150,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:52:15.427Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:52:15.430Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:52:15.427Z","type":"frequent_conflict","details":{"count":152,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:52:15.430Z","type":"frequent_conflict","details":{"count":152,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:35.364Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:58:35.364Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:58:35.364Z","type":"frequent_conflict","details":{"count":154,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:35.364Z","type":"frequent_conflict","details":{"count":154,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:35.381Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:58:35.384Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:58:35.381Z","type":"frequent_conflict","details":{"count":156,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:35.384Z","type":"frequent_conflict","details":{"count":156,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:46.614Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:58:46.614Z","type":"frequent_conflict","details":{"count":157,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:46.625Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:58:46.627Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T01:58:46.625Z","type":"frequent_conflict","details":{"count":159,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:46.627Z","type":"frequent_conflict","details":{"count":159,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T01:58:46.648Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T01:58:46.648Z","type":"frequent_conflict","details":{"count":160,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:17.909Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:01:17.910Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:01:17.910Z","type":"frequent_conflict","details":{"count":162,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:17.909Z","type":"frequent_conflict","details":{"count":162,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:17.929Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:01:17.932Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:01:17.929Z","type":"frequent_conflict","details":{"count":164,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:17.932Z","type":"frequent_conflict","details":{"count":164,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:53.424Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:01:53.425Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:01:53.424Z","type":"frequent_conflict","details":{"count":166,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:53.425Z","type":"frequent_conflict","details":{"count":166,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:53.445Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:01:53.453Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:01:53.445Z","type":"frequent_conflict","details":{"count":168,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:01:53.453Z","type":"frequent_conflict","details":{"count":168,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:36.154Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:02:36.154Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:02:36.154Z","type":"frequent_conflict","details":{"count":170,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:36.154Z","type":"frequent_conflict","details":{"count":170,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:36.168Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:02:36.175Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:02:36.168Z","type":"frequent_conflict","details":{"count":172,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:36.175Z","type":"frequent_conflict","details":{"count":172,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:42.947Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:02:42.947Z","type":"frequent_conflict","details":{"count":173,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:42.956Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:02:42.956Z","type":"frequent_conflict","details":{"count":174,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:42.968Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:02:42.968Z","type":"frequent_conflict","details":{"count":175,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:43.005Z","type":"conflict","details":{"requested":3002,"actual":3004,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:02:43.005Z","type":"frequent_conflict","details":{"count":176,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:43.154Z","type":"conflict","details":{"requested":3004,"actual":3005,"blockedBy":"node","pid":58824}}
+{"timestamp":"2025-09-05T02:02:43.154Z","type":"frequent_conflict","details":{"count":177,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:43.159Z","type":"conflict","details":{"requested":3004,"actual":3005,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:02:43.159Z","type":"frequent_conflict","details":{"count":178,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:54.461Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:02:54.461Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":87849}}
+{"timestamp":"2025-09-05T02:02:54.461Z","type":"frequent_conflict","details":{"count":180,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:54.461Z","type":"frequent_conflict","details":{"count":180,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:54.485Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:02:54.485Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T02:02:54.485Z","type":"frequent_conflict","details":{"count":182,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T02:02:54.485Z","type":"frequent_conflict","details":{"count":182,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T13:18:52.395Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":44415}}
+{"timestamp":"2025-09-05T13:18:52.395Z","type":"frequent_conflict","details":{"count":135,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T13:18:52.403Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T13:18:52.403Z","type":"frequent_conflict","details":{"count":136,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T15:04:04.608Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":7434}}
+{"timestamp":"2025-09-05T15:04:04.608Z","type":"frequent_conflict","details":{"count":101,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T15:04:04.617Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T15:04:04.617Z","type":"frequent_conflict","details":{"count":102,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:03:14.810Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":59247}}
+{"timestamp":"2025-09-05T16:03:14.810Z","type":"frequent_conflict","details":{"count":93,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:03:14.826Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:03:14.826Z","type":"frequent_conflict","details":{"count":94,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:03:54.792Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":60642}}
+{"timestamp":"2025-09-05T16:03:54.792Z","type":"frequent_conflict","details":{"count":95,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:03:54.809Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:03:54.809Z","type":"frequent_conflict","details":{"count":96,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:04:27.723Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":61527}}
+{"timestamp":"2025-09-05T16:04:27.723Z","type":"frequent_conflict","details":{"count":97,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:04:27.735Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:04:27.735Z","type":"frequent_conflict","details":{"count":98,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:07:44.965Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":62945}}
+{"timestamp":"2025-09-05T16:07:44.965Z","type":"frequent_conflict","details":{"count":99,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:07:44.973Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:07:44.973Z","type":"frequent_conflict","details":{"count":100,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:07:48.260Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":63131}}
+{"timestamp":"2025-09-05T16:07:48.260Z","type":"frequent_conflict","details":{"count":101,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:07:48.267Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:07:48.267Z","type":"frequent_conflict","details":{"count":102,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:08:17.544Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":63414}}
+{"timestamp":"2025-09-05T16:08:17.544Z","type":"frequent_conflict","details":{"count":103,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:08:17.553Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:08:17.553Z","type":"frequent_conflict","details":{"count":104,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:08:29.875Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":63675}}
+{"timestamp":"2025-09-05T16:08:29.875Z","type":"frequent_conflict","details":{"count":105,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:08:29.888Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:08:29.888Z","type":"frequent_conflict","details":{"count":106,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:12:11.174Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":67797}}
+{"timestamp":"2025-09-05T16:12:11.174Z","type":"frequent_conflict","details":{"count":107,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:12:11.186Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:12:11.186Z","type":"frequent_conflict","details":{"count":108,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:13:17.277Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:13:17.277Z","type":"frequent_conflict","details":{"count":109,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:13:17.292Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:13:17.292Z","type":"frequent_conflict","details":{"count":110,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:16:27.248Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":79568}}
+{"timestamp":"2025-09-05T16:16:27.248Z","type":"frequent_conflict","details":{"count":111,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:16:27.260Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:16:27.260Z","type":"frequent_conflict","details":{"count":112,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:17:35.376Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":80807}}
+{"timestamp":"2025-09-05T16:17:35.376Z","type":"frequent_conflict","details":{"count":113,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:17:35.395Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:17:35.395Z","type":"frequent_conflict","details":{"count":114,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:19:41.697Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"node","pid":82437}}
+{"timestamp":"2025-09-05T16:19:41.697Z","type":"frequent_conflict","details":{"count":115,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}
+{"timestamp":"2025-09-05T16:19:41.714Z","type":"conflict","details":{"requested":3002,"actual":3003,"blockedBy":"unknown"}}
+{"timestamp":"2025-09-05T16:19:41.714Z","type":"frequent_conflict","details":{"count":116,"mostCommonBlocker":"node","suggestion":"Consider changing default port or removing blocking service"}}

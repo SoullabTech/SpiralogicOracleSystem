@@ -1,0 +1,745 @@
+# Enhanced Observability Stack for Spiralogic Oracle System
+# Jaeger distributed tracing and Loki log aggregation
+
+---
+# Jaeger Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
+  labels:
+    name: observability
+
+---
+# Jaeger Operator
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger-prod
+  namespace: observability
+spec:
+  strategy: production
+  collector:
+    maxReplicas: 3
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "250m"
+      limits:
+        memory: "1Gi"
+        cpu: "500m"
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      nodeCount: 3
+      storage:
+        size: 50Gi
+        storageClassName: fast-ssd
+      resources:
+        requests:
+          memory: "2Gi"
+          cpu: "500m"
+        limits:
+          memory: "4Gi"
+          cpu: "1000m"
+      redundancyPolicy: SingleRedundancy
+  query:
+    replicas: 2
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "200m"
+  agent:
+    strategy: DaemonSet
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "50m"
+      limits:
+        memory: "256Mi"
+        cpu: "100m"
+
+---
+# Loki Stack Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-config
+  namespace: observability
+data:
+  loki.yaml: |
+    auth_enabled: false
+
+    server:
+      http_listen_port: 3100
+      grpc_listen_port: 9096
+
+    common:
+      path_prefix: /loki
+      storage:
+        filesystem:
+          chunks_directory: /loki/chunks
+          rules_directory: /loki/rules
+      replication_factor: 1
+      ring:
+        instance_addr: 127.0.0.1
+        kvstore:
+          store: inmemory
+
+    schema_config:
+      configs:
+        - from: 2020-10-24
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+
+    ruler:
+      alertmanager_url: http://alertmanager:9093
+      storage:
+        type: local
+        local:
+          directory: /loki/rules
+      rule_path: /loki/rules
+      enable_api: true
+      enable_alertmanager_v2: true
+
+    analytics:
+      reporting_enabled: false
+
+---
+# Loki Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  namespace: observability
+  labels:
+    app: loki
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: loki
+          image: grafana/loki:2.9.0
+          args:
+            - -config.file=/etc/loki/loki.yaml
+          ports:
+            - name: http
+              containerPort: 3100
+              protocol: TCP
+            - name: grpc
+              containerPort: 9096
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 45
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 45
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: config
+              mountPath: /etc/loki
+            - name: storage
+              mountPath: /loki
+      volumes:
+        - name: config
+          configMap:
+            name: loki-config
+        - name: storage
+          persistentVolumeClaim:
+            claimName: loki-storage
+
+---
+# Loki PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loki-storage
+  namespace: observability
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: fast-ssd
+
+---
+# Loki Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+  namespace: observability
+  labels:
+    app: loki
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3100
+      targetPort: http
+    - name: grpc
+      port: 9096
+      targetPort: grpc
+  selector:
+    app: loki
+
+---
+# Promtail DaemonSet for Log Collection
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: promtail
+  namespace: observability
+  labels:
+    app: promtail
+spec:
+  selector:
+    matchLabels:
+      app: promtail
+  template:
+    metadata:
+      labels:
+        app: promtail
+    spec:
+      serviceAccountName: promtail
+      containers:
+        - name: promtail
+          image: grafana/promtail:2.9.0
+          args:
+            - -config.file=/etc/promtail/promtail.yaml
+            - -client.url=http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
+          ports:
+            - name: http
+              containerPort: 3101
+              protocol: TCP
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 0
+            runAsUser: 0
+          volumeMounts:
+            - name: config
+              mountPath: /etc/promtail
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: positions
+              mountPath: /tmp/positions
+      volumes:
+        - name: config
+          configMap:
+            name: promtail-config
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: positions
+          emptyDir: {}
+      tolerations:
+        - operator: Exists
+
+---
+# Promtail Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: promtail-config
+  namespace: observability
+data:
+  promtail.yaml: |
+    server:
+      http_listen_port: 3101
+      grpc_listen_port: 0
+
+    positions:
+      filename: /tmp/positions/positions.yaml
+
+    clients:
+      - url: http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
+
+    scrape_configs:
+    # Kubernetes pods
+    - job_name: kubernetes-pods
+      kubernetes_sd_configs:
+      - role: pod
+
+      relabel_configs:
+      # Only scrape pods with logging annotation
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+
+      # Rename the job
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_job]
+        action: replace
+        target_label: job
+
+      # Add namespace label
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+
+      # Add pod name label
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
+      # Add container name label
+      - source_labels: [__meta_kubernetes_pod_container_name]
+        target_label: container
+
+      # Add elemental type for consciousness agents
+      - source_labels: [__meta_kubernetes_pod_label_elemental_type]
+        target_label: elemental_type
+
+      # Add consciousness data classification
+      - source_labels: [__meta_kubernetes_pod_label_data_classification]
+        target_label: data_classification
+
+      pipeline_stages:
+      # Parse log level
+      - regex:
+          expression: '(?P<level>(DEBUG|INFO|WARN|ERROR|CRITICAL))'
+
+      # Parse consciousness events
+      - regex:
+          expression: '(?P<consciousness_event>(model_access|sacred_mirror|voice_synthesis|elemental_communication))'
+
+      # Parse user interactions
+      - regex:
+          expression: 'user_id:(?P<user_id>[a-zA-Z0-9-]+)'
+
+      # Parse session data
+      - regex:
+          expression: 'session_id:(?P<session_id>[a-zA-Z0-9-]+)'
+
+      # Add labels
+      - labels:
+          level:
+          consciousness_event:
+          user_id:
+          session_id:
+
+    # Spiralogic namespace specific scraping
+    - job_name: spiralogic-consciousness-logs
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: [spiralogic, spiralogic-prod, spiralogic-staging]
+
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+      - source_labels: [__meta_kubernetes_pod_container_name]
+        target_label: container
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        target_label: app
+      - source_labels: [__meta_kubernetes_pod_label_elemental_type]
+        target_label: elemental_type
+
+      pipeline_stages:
+      # Enhanced consciousness log parsing
+      - regex:
+          expression: '(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+(?P<level>\w+)\s+(?P<message>.*)'
+
+      # Parse consciousness-specific events
+      - regex:
+          expression: 'consciousness_state:(?P<consciousness_state>\w+)'
+
+      # Parse sacred mirror events
+      - regex:
+          expression: 'sacred_mirror_event:(?P<sacred_mirror_event>\w+)'
+
+      # Parse elemental agent interactions
+      - regex:
+          expression: 'elemental_interaction:(?P<from_agent>\w+)->(?P<to_agent>\w+)'
+
+      # Parse voice synthesis events
+      - regex:
+          expression: 'voice_synthesis:(?P<voice_model>\w+):(?P<synthesis_event>\w+)'
+
+      # Add consciousness-specific labels
+      - labels:
+          timestamp:
+          level:
+          consciousness_state:
+          sacred_mirror_event:
+          from_agent:
+          to_agent:
+          voice_model:
+          synthesis_event:
+
+---
+# Promtail ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: promtail
+  namespace: observability
+
+---
+# Promtail ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: promtail
+rules:
+  - apiGroups: [""]
+    resources: ["nodes", "nodes/proxy", "services", "endpoints", "pods"]
+    verbs: ["get", "list", "watch"]
+
+---
+# Promtail ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: promtail
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: promtail
+subjects:
+  - kind: ServiceAccount
+    name: promtail
+    namespace: observability
+
+---
+# Grafana Enhanced Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: observability
+data:
+  datasources.yaml: |
+    apiVersion: 1
+
+    datasources:
+    # Prometheus for metrics
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus.monitoring.svc.cluster.local:9090
+      access: proxy
+      isDefault: true
+      jsonData:
+        timeInterval: 30s
+
+    # Loki for logs
+    - name: Loki
+      type: loki
+      url: http://loki.observability.svc.cluster.local:3100
+      access: proxy
+      jsonData:
+        maxLines: 1000
+        derivedFields:
+        - name: TraceID
+          matcherRegex: "trace_id:(\\w+)"
+          url: "http://jaeger-query.observability.svc.cluster.local:16686/trace/$${__value.raw}"
+          datasourceUid: jaeger
+
+    # Jaeger for tracing
+    - name: Jaeger
+      type: jaeger
+      uid: jaeger
+      url: http://jaeger-query.observability.svc.cluster.local:16686
+      access: proxy
+      jsonData:
+        tracesToLogs:
+          datasourceUid: loki
+          tags: [pod, namespace, container]
+          mappedTags:
+          - key: service.name
+            value: app
+          - key: service.namespace
+            value: namespace
+
+---
+# Consciousness-Specific Grafana Dashboard
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consciousness-dashboard
+  namespace: observability
+data:
+  consciousness-metrics.json: |
+    {
+      "dashboard": {
+        "title": "Spiralogic Oracle - Consciousness Metrics",
+        "tags": ["consciousness", "spiralogic", "oracle"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "title": "Consciousness Model Access Rate",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "rate(spiralogic_consciousness_model_access_total[5m])",
+                "legendFormat": "Access Rate"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 10},
+                    {"color": "red", "value": 50}
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "title": "Sacred Mirror Data Integrity",
+            "type": "gauge",
+            "targets": [
+              {
+                "expr": "spiralogic_sacred_mirror_integrity_score",
+                "legendFormat": "Integrity Score"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "min": 0,
+                "max": 100,
+                "unit": "percent",
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": null},
+                    {"color": "yellow", "value": 70},
+                    {"color": "green", "value": 90}
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "title": "Elemental Agent Communication",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(spiralogic_elemental_communication_total[5m])",
+                "legendFormat": "{{from_agent}} -> {{to_agent}}"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Messages/sec",
+                "min": 0
+              }
+            ]
+          },
+          {
+            "title": "Voice Synthesis Performance",
+            "type": "heatmap",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(spiralogic_voice_synthesis_duration_bucket[5m]))",
+                "legendFormat": "95th percentile"
+              }
+            ],
+            "yAxis": {
+              "unit": "s"
+            }
+          },
+          {
+            "title": "Consciousness Logs",
+            "type": "logs",
+            "targets": [
+              {
+                "expr": "{namespace=\"spiralogic\"} |= \"consciousness\"",
+                "refId": "A"
+              }
+            ],
+            "options": {
+              "showLabels": true,
+              "showTime": true,
+              "sortOrder": "Descending"
+            }
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+
+---
+# ServiceMonitor for Observability Stack
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: observability-stack
+  namespace: observability
+  labels:
+    app: observability
+spec:
+  selector:
+    matchLabels:
+      app: loki
+  endpoints:
+    - port: http
+      interval: 30s
+      path: /metrics
+
+---
+# Alert Rules for Observability
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: observability-alerts
+  namespace: observability
+  labels:
+    app: observability
+spec:
+  groups:
+    - name: observability.alerts
+      rules:
+        - alert: LokiDown
+          expr: up{job="loki"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: logging
+          annotations:
+            summary: "Loki is down"
+            description: "Loki has been down for more than 5 minutes"
+
+        - alert: JaegerDown
+          expr: up{job="jaeger"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: tracing
+          annotations:
+            summary: "Jaeger is down"
+            description: "Jaeger has been down for more than 5 minutes"
+
+        - alert: HighLogIngestionRate
+          expr: rate(loki_ingester_streams_created_total[5m]) > 100
+          for: 10m
+          labels:
+            severity: warning
+            component: logging
+          annotations:
+            summary: "High log ingestion rate"
+            description: "Log ingestion rate is unusually high"
+
+        - alert: ConsciousnessLogErrors
+          expr: |
+            sum(rate({namespace="spiralogic"} |= "ERROR" |= "consciousness" [5m])) > 5
+          for: 2m
+          labels:
+            severity: critical
+            component: consciousness
+          annotations:
+            summary: "High consciousness error rate in logs"
+            description: "Consciousness-related errors are occurring frequently"
+
+---
+# Network Policy for Observability
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: observability-network-policy
+  namespace: observability
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow ingress from monitoring namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 3100 # Loki
+        - protocol: TCP
+          port: 16686 # Jaeger
+    # Allow ingress from spiralogic for log shipping
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: spiralogic
+      ports:
+        - protocol: TCP
+          port: 3100 # Loki
+  egress:
+    # Allow DNS
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow access to Kubernetes API
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    # Allow access to Elasticsearch (for Jaeger)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: elasticsearch
+      ports:
+        - protocol: TCP
+          port: 9200

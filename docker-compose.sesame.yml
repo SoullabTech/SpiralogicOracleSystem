@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  sesame-local:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.sesame-local
+    container_name: sesame-maya-local
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app/csm
+      - PYTHONUNBUFFERED=1
+      - MODEL_CACHE_DIR=/app/.cache
+      - HF_HOME=/app/.cache/huggingface
+    volumes:
+      - sesame_cache:/app/.cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - maya-network
+
+networks:
+  maya-network:
+    driver: bridge
+
+volumes:
+  sesame_cache:
+    driver: local

@@ -1,0 +1,318 @@
+{
+  "projectName": "Soullab Mirror UI - Sacred Conversational Interface",
+  "version": "1.0",
+  "description": "Chat interface with ceremonial depth - Maia AI companion with voice, prosody, and elemental awareness",
+  "artboard": {
+    "name": "Mirror Chat Interface",
+    "width": 1440,
+    "height": 900,
+    "background": {
+      "type": "gradient",
+      "colors": ["#0A0D16", "#0F1419"],
+      "direction": "vertical"
+    }
+  },
+  "components": [
+    {
+      "id": "top_bar",
+      "type": "header",
+      "position": { "x": 0, "y": 0, "width": "100%", "height": 80 },
+      "background": "rgba(10, 13, 22, 0.95)",
+      "backdropBlur": true,
+      "children": [
+        {
+          "id": "soullab_logo",
+          "type": "image",
+          "position": { "x": "center", "y": 20, "width": 40, "height": 40 },
+          "src": "soullab-spiral.svg",
+          "animation": {
+            "type": "breathing",
+            "duration": "2s",
+            "iterations": "infinite"
+          },
+          "effects": ["drop-shadow(0 0 20px rgba(139, 92, 246, 0.3))"]
+        },
+        {
+          "id": "status_dot",
+          "type": "circle",
+          "position": { "x": "center", "y": 65, "width": 8, "height": 8 },
+          "background": "#10B981",
+          "states": {
+            "connected": "#10B981",
+            "reconnecting": "#F59E0B", 
+            "offline": "#EF4444"
+          }
+        }
+      ]
+    },
+    {
+      "id": "main_chat_area",
+      "type": "scrollable_container",
+      "position": { "x": 40, "y": 100, "width": "calc(100% - 80px)", "height": "calc(100vh - 280px)" },
+      "children": [
+        {
+          "id": "message_user_example",
+          "type": "message_bubble",
+          "alignment": "right",
+          "position": { "x": "auto", "y": 20, "maxWidth": "70%" },
+          "background": "#FFFFFF",
+          "color": "#1F2937",
+          "borderRadius": 18,
+          "padding": "12px 16px",
+          "text": "I've been reflecting on transitions in my life...",
+          "font": "Inter, 14px, 400"
+        },
+        {
+          "id": "message_maia_example",
+          "type": "message_bubble", 
+          "alignment": "left",
+          "position": { "x": 0, "y": 80, "maxWidth": "70%" },
+          "background": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+          "color": "#FFFFFF",
+          "borderRadius": 18,
+          "padding": "12px 16px",
+          "text": "I notice there's something tender in how you speak about transitions. What feels most alive in this change?",
+          "font": "Inter, 14px, 400",
+          "effects": ["breathing-aura"],
+          "aura": {
+            "color": "rgba(139, 92, 246, 0.2)",
+            "blur": 20,
+            "animation": "breathing 3s infinite"
+          }
+        }
+      ]
+    },
+    {
+      "id": "starfield_background",
+      "type": "particle_system",
+      "position": { "x": 0, "y": 0, "width": "100%", "height": "100%" },
+      "zIndex": -1,
+      "particles": {
+        "count": 50,
+        "size": "1-2px",
+        "color": "rgba(255, 255, 255, 0.1)",
+        "movement": "slow_drift",
+        "opacity": "0.05-0.15"
+      }
+    },
+    {
+      "id": "quick_actions_row",
+      "type": "horizontal_container",
+      "position": { "x": 40, "y": "calc(100vh - 160px)", "width": "calc(100% - 80px)", "height": 40 },
+      "justifyContent": "center",
+      "gap": 12,
+      "children": [
+        {
+          "id": "journal_chip",
+          "type": "pill_button",
+          "text": "📓 Journal",
+          "background": "rgba(255, 255, 255, 0.08)",
+          "border": "1px solid rgba(245, 158, 11, 0.3)",
+          "color": "#F59E0B",
+          "padding": "8px 16px",
+          "borderRadius": 20,
+          "font": "Inter, 12px, 500"
+        },
+        {
+          "id": "spiral_chip", 
+          "type": "pill_button",
+          "text": "🌀 Spiral",
+          "background": "rgba(255, 255, 255, 0.08)",
+          "border": "1px solid rgba(99, 102, 241, 0.3)",
+          "color": "#6366F1",
+          "padding": "8px 16px",
+          "borderRadius": 20,
+          "font": "Inter, 12px, 500"
+        },
+        {
+          "id": "tone_chip",
+          "type": "pill_button", 
+          "text": "🎚 Tone",
+          "background": "rgba(255, 255, 255, 0.08)",
+          "border": "1px solid rgba(139, 92, 246, 0.3)",
+          "color": "#8B5CF6",
+          "padding": "8px 16px",
+          "borderRadius": 20,
+          "font": "Inter, 12px, 500"
+        },
+        {
+          "id": "search_chip",
+          "type": "pill_button",
+          "text": "🔍 Search", 
+          "background": "rgba(255, 255, 255, 0.08)",
+          "border": "1px solid rgba(16, 185, 129, 0.3)",
+          "color": "#10B981",
+          "padding": "8px 16px",
+          "borderRadius": 20,
+          "font": "Inter, 12px, 500"
+        }
+      ]
+    },
+    {
+      "id": "input_container",
+      "type": "container",
+      "position": { "x": 40, "y": "calc(100vh - 100px)", "width": "calc(100% - 80px)", "height": 60 },
+      "background": "rgba(15, 20, 25, 0.95)",
+      "border": "1px solid rgba(107, 114, 128, 0.3)",
+      "borderRadius": 30,
+      "backdropBlur": true,
+      "children": [
+        {
+          "id": "language_selector",
+          "type": "dropdown_button",
+          "position": { "x": 16, "y": "center", "width": 32, "height": 32 },
+          "icon": "🌐",
+          "color": "rgba(156, 163, 175, 1)"
+        },
+        {
+          "id": "ritual_trigger",
+          "type": "icon_button", 
+          "position": { "x": 60, "y": "center", "width": 32, "height": 32 },
+          "icon": "🔮",
+          "color": "rgba(139, 92, 246, 1)"
+        },
+        {
+          "id": "message_input",
+          "type": "textarea",
+          "position": { "x": 104, "y": "center", "width": "calc(100% - 260px)", "height": 36 },
+          "background": "transparent",
+          "border": "none",
+          "placeholder": "Offer your reflection… (type or speak)",
+          "color": "#FFFFFF",
+          "font": "Inter, 14px, 400",
+          "resize": "none",
+          "autoExpand": true,
+          "maxHeight": 120,
+          "states": {
+            "recording": {
+              "placeholder": "Listening…",
+              "disabled": true,
+              "background": "rgba(59, 130, 246, 0.1)"
+            }
+          }
+        },
+        {
+          "id": "mic_button",
+          "type": "icon_button",
+          "position": { "x": "calc(100% - 140px)", "y": "center", "width": 32, "height": 32 },
+          "icon": "🎤",
+          "color": "rgba(59, 130, 246, 1)",
+          "states": {
+            "idle": {
+              "effects": ["soft-glow"],
+              "color": "rgba(156, 163, 175, 1)"
+            },
+            "active": {
+              "effects": ["pulsing-blue"],
+              "color": "rgba(59, 130, 246, 1)"
+            }
+          }
+        },
+        {
+          "id": "prosody_debug_toggle",
+          "type": "icon_button",
+          "position": { "x": "calc(100% - 100px)", "y": "center", "width": 32, "height": 32 },
+          "icon": "🟣",
+          "color": "rgba(139, 92, 246, 1)"
+        },
+        {
+          "id": "settings_button",
+          "type": "icon_button",
+          "position": { "x": "calc(100% - 60px)", "y": "center", "width": 32, "height": 32 },
+          "icon": "⚙️", 
+          "color": "rgba(156, 163, 175, 1)"
+        },
+        {
+          "id": "send_button",
+          "type": "button",
+          "position": { "x": "calc(100% - 20px)", "y": "center", "width": 36, "height": 36 },
+          "background": "linear-gradient(135deg, #F59E0B 0%, #F97316 100%)",
+          "borderRadius": 18,
+          "icon": "➤",
+          "color": "#FFFFFF",
+          "effects": ["ripple-on-click"]
+        }
+      ]
+    },
+    {
+      "id": "voice_waveform",
+      "type": "waveform_visualizer",
+      "position": { "x": 40, "y": "calc(100vh - 170px)", "width": "calc(100% - 80px)", "height": 40 },
+      "visibility": "hidden",
+      "states": {
+        "recording": {
+          "visibility": "visible",
+          "animation": "claude-style-wave",
+          "colors": {
+            "fire": "#EF4444",
+            "water": "#3B82F6", 
+            "earth": "#10B981",
+            "air": "#6B7280",
+            "aether": "#8B5CF6"
+          }
+        }
+      }
+    }
+  ],
+  "responsive": {
+    "mobile": {
+      "breakpoint": 768,
+      "modifications": [
+        {
+          "id": "input_container",
+          "position": { "x": 16, "y": "calc(100vh - 90px)", "width": "calc(100% - 32px)" },
+          "position_type": "fixed"
+        },
+        {
+          "id": "quick_actions_row",
+          "type": "collapsible_menu",
+          "trigger": "+"
+        },
+        {
+          "id": "soullab_logo",
+          "position": { "x": "center", "y": 10, "width": 32, "height": 32 }
+        },
+        {
+          "id": "main_chat_area",
+          "position": { "x": 16, "y": 60, "width": "calc(100% - 32px)", "height": "calc(100vh - 200px)" }
+        }
+      ]
+    }
+  },
+  "interactions": [
+    {
+      "trigger": "message_maia_example.swipe_left",
+      "action": "show_journal_modal"
+    },
+    {
+      "trigger": "message_user_example.swipe_right", 
+      "action": "show_edit_menu"
+    },
+    {
+      "trigger": "mic_button.click",
+      "action": "toggle_voice_recording"
+    },
+    {
+      "trigger": "send_button.click",
+      "action": "send_message_with_ripple"
+    }
+  ],
+  "states": {
+    "maia_thinking": {
+      "soullab_logo": {
+        "animation": "rotate 6s infinite linear"
+      }
+    },
+    "maia_responding": {
+      "soullab_logo": {
+        "animation": "pulse 1s infinite",
+        "effects": ["typing-dots-sync"]
+      }
+    },
+    "maia_speaking": {
+      "soullab_logo": {
+        "effects": ["glowing", "audio-waveform-radiate"]
+      }
+    }
+  }
+}

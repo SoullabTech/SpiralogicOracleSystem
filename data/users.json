@@ -1,0 +1,54 @@
+[
+  {
+    "id": "user_1756409573875_hbgmaa60i",
+    "username": "Soullab",
+    "password": "$2b$12$ldLQrrFwTLE9RHQtQM0pp.1n7foyRSsbuaAgWPM07YGeWhtgdRdSO",
+    "createdAt": "2025-08-28T19:32:53.875Z",
+    "onboardingCompleted": true,
+    "oracle": {
+      "id": "oracle_user_1756409573875_hbgmaa60i_1756409573875",
+      "name": "Oralia",
+      "userId": "user_1756409573875_hbgmaa60i",
+      "voice": "maya",
+      "personality": "adaptive",
+      "level": 1,
+      "experience": 0,
+      "gamification": {
+        "enabled": true,
+        "achievements": [
+          {
+            "id": "first_connection",
+            "name": "First Connection",
+            "description": "Created your personal oracle",
+            "unlockedAt": "2025-08-28T19:32:53.875Z",
+            "category": "milestone"
+          }
+        ],
+        "streaks": 0,
+        "totalInteractions": 0,
+        "lastInteraction": "2025-08-28T19:32:53.875Z"
+      },
+      "memory": {
+        "personalityInsights": [],
+        "conversationPatterns": [],
+        "userPreferences": {},
+        "adaptationTriggers": [
+          "user_frustration",
+          "repeated_questions",
+          "emotional_state_changes",
+          "learning_preferences"
+        ]
+      },
+      "preferences": {
+        "communicationStyle": "balanced",
+        "learningMode": "adaptive",
+        "reminderFrequency": "daily",
+        "interactionDepth": "medium"
+      },
+      "createdAt": "2025-08-28T19:32:53.875Z",
+      "updatedAt": "2025-08-28T19:32:53.875Z"
+    },
+    "lastLoginAt": "2025-08-28T19:32:53.875Z",
+    "loginCount": 1
+  }
+]

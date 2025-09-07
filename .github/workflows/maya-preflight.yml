@@ -1,0 +1,84 @@
+name: 🔮 Maya Preflight Check
+on:
+  push:
+    branches: [ main, staging, production ]
+  pull_request:
+    branches: [ main, staging, production ]
+  workflow_dispatch:
+
+jobs:
+  preflight:
+    name: API Keys & System Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: 'backend/package-lock.json'
+        
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci --only=production
+        
+    - name: Install dotenv for preflight
+      run: npm install dotenv
+      
+    - name: Create environment file for CI
+      run: |
+        cat > .env.local << EOF
+        # CI Environment - Secrets from GitHub
+        OPENAI_API_KEY=\${{ secrets.OPENAI_API_KEY }}
+        ANTHROPIC_API_KEY=\${{ secrets.ANTHROPIC_API_KEY }}
+        ELEVENLABS_API_KEY=\${{ secrets.ELEVENLABS_API_KEY }}
+        EOF
+        
+    - name: Run API Key Check
+      run: |
+        chmod +x ./scripts/check-keys.sh
+        ./scripts/check-keys.sh
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        
+    - name: Validate Maya Configuration
+      run: |
+        # Check critical files exist
+        test -f backend/src/server-minimal.ts || (echo "❌ Maya server file missing" && exit 1)
+        test -f backend/maya-quick-start.sh || (echo "❌ Maya startup script missing" && exit 1)
+        
+        # Validate package.json has required dependencies
+        cd backend
+        node -e "
+          const pkg = require('./package.json');
+          const required = ['@anthropic-ai/sdk', 'openai', 'express'];
+          const missing = required.filter(dep => !pkg.dependencies[dep] && !pkg.devDependencies[dep]);
+          if (missing.length > 0) {
+            console.log('❌ Missing dependencies:', missing.join(', '));
+            process.exit(1);
+          }
+          console.log('✅ All required dependencies present');
+        "
+        
+    - name: System Health Check
+      run: |
+        echo "🔍 System preflight complete:"
+        echo "  ✅ API keys validated"
+        echo "  ✅ Maya configuration verified"  
+        echo "  ✅ Dependencies installed"
+        echo ""
+        echo "🚀 Ready for deployment!"
+        
+    - name: Staging allowlist check
+      if: github.ref == 'refs/heads/staging'
+      run: |
+        echo "🟡 Staging environment detected"
+        echo "   Some API keys may be missing - this is expected for staging"
+        # Future: Add --allow-missing flag when implemented

@@ -1,0 +1,308 @@
+openapi: 3.0.3
+info:
+  title: AIN Consciousness API
+  version: 0.1.0
+  description: Real-time consciousness oracle with async voice synthesis
+servers:
+  - url: https://{host}
+    variables: 
+      host: 
+        default: localhost:3000
+
+paths:
+  /api/oracle/chat:
+    post:
+      summary: Chat with the oracle
+      description: Send text to consciousness oracle, receive immediate text response with async voice synthesis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: Unified response with text (voice queued)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnifiedResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      summary: API status
+      description: Check API health and capabilities
+      responses:
+        '200':
+          description: API status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  capabilities:
+                    type: array
+                    items:
+                      type: string
+
+  /api/voice/generate:
+    post:
+      summary: Generate TTS (queued)
+      description: Queue text-to-speech synthesis (fire-and-forget)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoiceGenerateRequest'
+      responses:
+        '202':
+          description: Voice synthesis queued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [queued]
+
+  /api/voice/status/{taskId}:
+    get:
+      summary: Check voice synthesis status
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [pending, processing, completed, failed]
+                  result:
+                    type: string
+                    nullable: true
+                  error:
+                    type: string
+                    nullable: true
+
+  /api/voice/stream:
+    get:
+      summary: SSE stream for voice events
+      description: Server-sent events for real-time voice synthesis notifications
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /api/memory/query:
+    post:
+      summary: Get recent conversation turns
+      description: Retrieve conversation history for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryQueryRequest'
+      responses:
+        '200':
+          description: Conversation turns
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  turns:
+                    type: array
+                    items:
+                      type: object
+
+  /api/memory/reset:
+    post:
+      summary: Reset user memory (dangerous)
+      description: Clear all conversation history for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryResetRequest'
+      responses:
+        '200':
+          description: Memory reset confirmed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /api/ops/health:
+    get:
+      summary: Health metrics
+      description: Performance metrics and system health
+      responses:
+        '200':
+          description: Health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  metrics:
+                    type: object
+                    properties:
+                      p50:
+                        type: number
+                      p95:
+                        type: number
+                      p99:
+                        type: number
+
+components:
+  schemas:
+    ChatRequest:
+      type: object
+      required: [userId, text]
+      properties:
+        userId: 
+          type: string
+          minLength: 1
+        text: 
+          type: string
+          minLength: 1
+          maxLength: 4000
+        element: 
+          type: string
+          enum: [air, fire, water, earth, aether]
+        sessionId: 
+          type: string
+        context: 
+          type: object
+          additionalProperties: true
+
+    Tokens:
+      type: object
+      properties:
+        prompt: 
+          type: integer
+          minimum: 0
+          default: 0
+        completion: 
+          type: integer
+          minimum: 0
+          default: 0
+
+    UnifiedResponse:
+      type: object
+      required: [id, text]
+      properties:
+        id: 
+          type: string
+        text: 
+          type: string
+        voiceUrl: 
+          type: string
+          nullable: true
+        tokens: 
+          $ref: '#/components/schemas/Tokens'
+        meta:
+          type: object
+          properties:
+            element: 
+              type: string
+              enum: [air, fire, water, earth, aether]
+            evolutionary_awareness_active: 
+              type: boolean
+            latencyMs: 
+              type: integer
+              minimum: 0
+            model: 
+              type: string
+            source: 
+              type: string
+            consciousness_level: 
+              type: number
+              minimum: 0
+              maximum: 100
+            sacred_mirror_active: 
+              type: boolean
+        sessionId: 
+          type: string
+
+    VoiceGenerateRequest:
+      type: object
+      required: [userId, text]
+      properties:
+        userId: 
+          type: string
+        text: 
+          type: string
+          minLength: 1
+        voiceId: 
+          type: string
+
+    MemoryQueryRequest:
+      type: object
+      required: [userId]
+      properties:
+        userId: 
+          type: string
+        limit: 
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+
+    MemoryResetRequest:
+      type: object
+      required: [userId, confirm]
+      properties:
+        userId: 
+          type: string
+        confirm: 
+          type: boolean
+          enum: [true]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string

@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Secret scanning
+bash scripts/scan-secrets.sh
+
+# Markdown guardrails
+bash scripts/docs-guardrails.sh
+
+# Asset guardrails (includes images, audio, video)
+bash scripts/asset-guardrails.sh
+
+# Generate previews for new assets
+bash scripts/generate-previews.sh
+
+# Stage any moved files and generated previews
+git add docs/assets/

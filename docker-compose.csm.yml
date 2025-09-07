@@ -1,0 +1,62 @@
+# Docker Compose for Sesame CSM TTS Service
+version: '3.8'
+
+services:
+  sesame-csm:
+    build: 
+      context: ./csm
+      dockerfile: Dockerfile
+    container_name: spiralogic-sesame-csm
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - CUDA_VISIBLE_DEVICES=0  # Adjust based on your GPU setup
+      - NO_TORCH_COMPILE=1
+      - HUGGINGFACE_HUB_CACHE=/app/cache
+      - TRANSFORMERS_CACHE=/app/cache
+      # Mount your HuggingFace token if needed
+      - HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN:-}
+    volumes:
+      # Cache model downloads to avoid re-downloading
+      - csm_cache:/app/cache
+      - csm_models:/app/models
+      # Mount your HuggingFace config if you have one
+      - ${HOME}/.cache/huggingface:/root/.cache/huggingface:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+  # Optional: Redis for caching (if you want to cache generated audio)
+  redis-csm:
+    image: redis:7-alpine
+    container_name: spiralogic-redis-csm
+    ports:
+      - "6380:6379"  # Different port to avoid conflicts
+    volumes:
+      - redis_csm_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+
+volumes:
+  csm_cache:
+    driver: local
+  csm_models:
+    driver: local
+  redis_csm_data:
+    driver: local
+
+networks:
+  default:
+    name: spiralogic-csm-network

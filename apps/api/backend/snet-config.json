@@ -1,0 +1,63 @@
+{
+  "service_spec": {
+    "display_name": "Archetypal Consciousness Oracle",
+    "service_name": "archetypal-consciousness-oracle",
+    "organization_name": "spiralogic",
+    "service_description": "Advanced consciousness intelligence system providing archetypal analysis and voice synthesis through five elemental archetypes. Powered by Spiralogic Oracle System and Soullab®.",
+    "tags": [
+      "consciousness",
+      "archetypal-analysis",
+      "voice-synthesis",
+      "personal-development",
+      "ai-oracle",
+      "elemental-wisdom"
+    ],
+    "groups": [
+      {
+        "group_name": "default_group",
+        "pricing": [
+          {
+            "price_model": "fixed_price",
+            "price_in_cogs": 1000000,
+            "package_name": "basic_query",
+            "description": "Single consciousness query with archetypal analysis"
+          },
+          {
+            "price_model": "fixed_price",
+            "price_in_cogs": 2000000,
+            "package_name": "voice_query",
+            "description": "Consciousness query with archetypal voice synthesis"
+          },
+          {
+            "price_model": "fixed_price",
+            "price_in_cogs": 5000000,
+            "package_name": "stream_session",
+            "description": "30-minute streaming insight session"
+          }
+        ],
+        "endpoints": ["https://oracle.spiralogic.ai:7000"]
+      }
+    ],
+    "service_type": "grpc",
+    "payment_expiry_threshold": 40320,
+    "model_ipfs_hash": "QmXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "consciousness_framework": "Spiralogic Elemental Alchemy",
+    "archetypes": ["fire", "water", "earth", "air", "aether"],
+    "voice_provider": "ElevenLabs",
+    "features": [
+      "Multi-archetypal consciousness analysis",
+      "Real-time voice synthesis",
+      "Pattern recognition",
+      "Elemental balance tracking",
+      "Streaming insights"
+    ],
+    "requirements": {
+      "min_stake": 100,
+      "compute_requirements": "GPU recommended for voice synthesis",
+      "response_time": "< 3 seconds for text, < 5 seconds with voice"
+    }
+  }
+}
