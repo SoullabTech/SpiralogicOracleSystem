@@ -1,30 +1,41 @@
 "use client";
 
-import React from "react";
-import SoulprintMilestoneFlow from "../components/MaiaCore/SoulprintMilestoneFlow";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import BetaOnboarding from "@/components/BetaOnboarding";
 
 export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-rose-900">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-white mb-4">
-            Maia Soulprint System
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Your sacred journey through elemental wisdom and milestone progression
-          </p>
-        </header>
+  const router = useRouter();
+  const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
+  
+  useEffect(() => {
+    // Check if user has completed onboarding
+    const onboarded = localStorage.getItem("sacredMirrorOnboarded") === "true";
+    setIsOnboarded(onboarded);
+    
+    if (onboarded) {
+      router.push('/oracle');
+    }
+  }, [router]);
 
-        <SoulprintMilestoneFlow />
-
-        <footer className="mt-16 text-center text-gray-400 text-sm">
-          <p>© 2025 Maia Soulprint System. All rights reserved.</p>
-          <p className="mt-2">
-            Built with sacred geometry and elemental coherence
-          </p>
-        </footer>
+  // Show loading while checking onboarding status
+  if (isOnboarded === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#1e293b] to-[#2e3a4b] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
       </div>
+    );
+  }
+
+  // Show onboarding if not completed
+  if (!isOnboarded) {
+    return <BetaOnboarding />;
+  }
+
+  // Show loading while redirecting
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#1e293b] to-[#2e3a4b] flex items-center justify-center">
+      <p className="text-white text-xl">Loading your sacred space...</p>
     </div>
   );
 }
