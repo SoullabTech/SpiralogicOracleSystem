@@ -50,6 +50,7 @@ Desktop.ini
 dev-archive/
 
 UPDATE_KEYS_TEMPLATE.md
+<<<<<<< HEAD
 
 # Audio files
 *.wav
@@ -124,3 +125,5 @@ test-*.html
 */dist/
 */build/
 */.next/
+=======
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26

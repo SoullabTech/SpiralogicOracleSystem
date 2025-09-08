@@ -1005,7 +1005,11 @@ class ArchetypalIntentAnalyzer {
  *     AIN (MainOracleAgent) Collective Intelligence
  *
  * This maintains the sacred relationship through PersonalOracleAgent while
+<<<<<<< HEAD
  * feeding all wisdom back into AIN's collective intelligence
+=======
+ * feeding all wisdom back into AIN&apos;s collective intelligence
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
  */
 export class HierarchyOrchestrator {
   private ainCollectiveIntelligence: MainOracleAgent;
@@ -1077,7 +1081,11 @@ export class HierarchyOrchestrator {
         pattern: PatternContribution,
       ): Promise<void> => {
         try {
+<<<<<<< HEAD
           // Store pattern in AIN's collective intelligence
+=======
+          // Store pattern in AIN&apos;s collective intelligence
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           await this.ainCollectiveIntelligence.receivePatternContribution(
             pattern,
           );
@@ -1336,7 +1344,11 @@ export class HierarchyOrchestrator {
         optimalTimingWindow: primarySynchronicity?.timingWindow.peakMoment,
       });
 
+<<<<<<< HEAD
       // Get user's PersonalOracleAgent (creates if doesn't exist)
+=======
+      // Get user&apos;s PersonalOracleAgent (creates if doesn&apos;t exist)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const personalOracle = await this.getPersonalOracle(
         userId,
         context?.oracleConfig,
@@ -2262,7 +2274,11 @@ export class HierarchyOrchestrator {
     const dependencyPhrases = [
       "i need you",
       "i depend on you",
+<<<<<<< HEAD
       "i can't do this without you",
+=======
+      "i can&apos;t do this without you",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "you are my only hope",
       "please save me",
       "tell me what to do",
@@ -2279,10 +2295,17 @@ export class HierarchyOrchestrator {
 
     const shadowIndicators = [
       "i hate myself",
+<<<<<<< HEAD
       "i'm terrible",
       "everyone leaves me",
       "i always fail",
       "i'm not good enough",
+=======
+      "i&apos;m terrible",
+      "everyone leaves me",
+      "i always fail",
+      "i&apos;m not good enough",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "i'm broken",
       "why does this always happen to me",
       "i can't change",
@@ -2541,7 +2564,11 @@ export class HierarchyOrchestrator {
    * Calculate seven generations impact for user guidance
    */
   private calculateSevenGenerationsImpact(userId: string): number {
+<<<<<<< HEAD
     // This would calculate the user's seven generations thinking alignment
+=======
+    // This would calculate the user&apos;s seven generations thinking alignment
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     // For now, return a baseline that encourages development
     return 0.4; // 40% seven generations alignment baseline
   }
@@ -2979,7 +3006,11 @@ export class HierarchyOrchestrator {
    */
   private generateArchetypalPattern(dominant: string, balance: any): string {
     const patterns = {
+<<<<<<< HEAD
       fire: "Your fire energy is leading your transformation. You're drawn to catalytic breakthroughs and visionary activation.",
+=======
+      fire: "Your fire energy is leading your transformation. You&apos;re drawn to catalytic breakthroughs and visionary activation.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       water:
         "Your water wisdom guides your journey. You process through emotional depth and healing flow.",
       earth:

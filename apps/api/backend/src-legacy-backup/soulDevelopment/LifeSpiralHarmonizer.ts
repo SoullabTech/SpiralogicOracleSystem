@@ -902,7 +902,11 @@ export class LifeSpiralHarmonizer {
     purposeKeywords: string[],
     culturalThemes: string[],
   ): string {
+<<<<<<< HEAD
     return `Your soul's purpose integrates ${purposeKeywords.join(", ")} with ${culturalThemes[0]}`;
+=======
+    return `Your soul&apos;s purpose integrates ${purposeKeywords.join(", ")} with ${culturalThemes[0]}`;
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 
   private detectElementalThemes(userInput: string): Record<string, number> {

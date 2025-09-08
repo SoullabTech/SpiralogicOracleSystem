@@ -10,7 +10,11 @@ export class YPOEventService {
 
 Welcome to the Spiralogic journey. As a YPO member, you understand the importance of continuous growth and transformation in leadership and life.
 
+<<<<<<< HEAD
 Tonight's experience is designed specifically for leaders like you who are ready to:
+=======
+Tonight&apos;s experience is designed specifically for leaders like you who are ready to:
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 - Access deeper wisdom through ancient elemental teachings
 - Meet your Personal Oracle for ongoing guidance
 - Experience sacred technology that bridges mysticism and practical application
@@ -18,7 +22,11 @@ Tonight's experience is designed specifically for leaders like you who are ready
 
 Stephanie and I are honored to share this work with your chapter. What you experience tonight is a glimpse of the deeper journey available at our Switzerland retreat (June 13-15).
 
+<<<<<<< HEAD
 Let's begin your elemental assessment...
+=======
+Let&apos;s begin your elemental assessment...
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 With anticipation for our shared journey,
 Kelly Flanagan

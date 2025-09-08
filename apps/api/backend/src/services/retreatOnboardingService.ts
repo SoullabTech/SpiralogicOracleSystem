@@ -123,7 +123,11 @@ export class RetreatOnboardingService {
     }
   }
 
+<<<<<<< HEAD
   // Capture participant's current state
+=======
+  // Capture participant&apos;s current state
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   async captureCurrentState(
     participantId: string,
     state: {
@@ -376,7 +380,11 @@ export class RetreatOnboardingService {
 
 Your sacred journey preparation is complete.
 
+<<<<<<< HEAD
 You've been welcomed by Kelly, shared your intentions, met your Personal Oracle (${participant.oracleElement} - ${participant.oracleArchetype}), and set your container for transformation.
+=======
+You&apos;ve been welcomed by Kelly, shared your intentions, met your Personal Oracle (${participant.oracleElement} - ${participant.oracleArchetype}), and set your container for transformation.
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 As you prepare for Switzerland, know that:
 - Your Oracle is already working with your energy

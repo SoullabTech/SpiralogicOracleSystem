@@ -90,7 +90,11 @@ export class ArchetypeAgentFactory {
   }
 
   /**
+<<<<<<< HEAD
    * 🎭 Get User's Personal Oracle (By User ID)
+=======
+   * 🎭 Get User&apos;s Personal Oracle (By User ID)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
    */
   static async getUserPersonalOracle(
     userId: string,
@@ -451,7 +455,11 @@ export class ArchetypeAgentFactory {
     userProfile?: UserPersonalization,
     context: any = {},
   ): Promise<AIResponse> {
+<<<<<<< HEAD
     // Get user's personal Oracle
+=======
+    // Get user&apos;s personal Oracle
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const oracle = await this.getUserPersonalOracle(userId);
 
     if (!oracle) {

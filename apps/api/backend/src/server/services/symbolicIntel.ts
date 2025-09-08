@@ -26,7 +26,11 @@ export async function fetchUserSymbols(userId: string): Promise<string[]> {
 }
 
 /**
+<<<<<<< HEAD
  * Fetch emotional tone based on user's memory content.
+=======
+ * Fetch emotional tone based on user&apos;s memory content.
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
  */
 export async function fetchEmotionalTone(
   userId: string,

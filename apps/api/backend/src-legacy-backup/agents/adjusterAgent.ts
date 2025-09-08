@@ -262,7 +262,11 @@ export class PersonalOracleAgent extends OracleAgent {
     return response;
   }
 
+<<<<<<< HEAD
   // Special wrapper for agents that don't fit the OracleAgent signature
+=======
+  // Special wrapper for agents that don&apos;t fit the OracleAgent signature
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   private async wrapSpecialAgent(
     agent: any,
     query: { input: string; userId: string },

@@ -282,7 +282,11 @@ elementalAlchemyRouter.get("/houses", async (req, res) => {
 
 /**
  * GET /elemental-alchemy/book/wisdom
+<<<<<<< HEAD
  * Returns the elemental wisdom summary from Kelly's book
+=======
+ * Returns the elemental wisdom summary from Kelly&apos;s book
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
  */
 elementalAlchemyRouter.get("/book/wisdom", authenticate, async (req, res) => {
   try {

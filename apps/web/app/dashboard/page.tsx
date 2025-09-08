@@ -62,12 +62,20 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
+<<<<<<< HEAD
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
+=======
+      <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+<<<<<<< HEAD
             className="w-16 h-16 bg-gradient-to-br from-purple-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"
+=======
+            className="w-16 h-16  from-purple-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           >
             <Crown className="w-8 h-8 text-white" />
           </motion.div>
@@ -78,7 +86,11 @@ export default function DashboardPage() {
   }
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+=======
+    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900">
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <motion.div 
@@ -247,7 +259,11 @@ export default function DashboardPage() {
                 whileTap={{ scale: 0.98 }}
               >
                 <Link href="/oracle">
+<<<<<<< HEAD
                   <Button className="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600">
+=======
+                  <Button className="w-full  from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600">
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                     <Crown className="w-4 h-4 mr-2" />
                     Chat with Oracle
                   </Button>

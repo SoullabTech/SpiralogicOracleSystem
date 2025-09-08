@@ -101,7 +101,11 @@ export class DivinationAgent {
 
     // Enhance with birth data if available
     if (query.birthData) {
+<<<<<<< HEAD
       insight.sacredTiming += ` Your birth essence carries the energy of ${query.birthData.date}, which harmonizes with this hexagram's timing.`;
+=======
+      insight.sacredTiming += ` Your birth essence carries the energy of ${query.birthData.date}, which harmonizes with this hexagram&apos;s timing.`;
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
 
     return this.enhanceWithSpiralogicWisdom(insight, query);
@@ -243,7 +247,11 @@ ${guidanceElements.join("\n\n")}
       "Create sacred space with elements representing each tradition.",
       "Light candles honoring the wisdom of Tarot, I Ching, and Astrology.",
       "Place cards, coins, and star chart before you as unified altar.",
+<<<<<<< HEAD
       "Meditate on how each method's message resonates in your heart.",
+=======
+      "Meditate on how each method&apos;s message resonates in your heart.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "Journal the synthesis and unified guidance received.",
       "Close with gratitude to all wisdom traditions and your own inner knowing.",
     ];

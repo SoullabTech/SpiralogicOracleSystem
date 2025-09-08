@@ -312,7 +312,11 @@ export class CalendarIntegrationService {
       currentChallenges: [],
     };
 
+<<<<<<< HEAD
     // Get participant's recent activity
+=======
+    // Get participant&apos;s recent activity
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const recentActivity = await this.getParticipantRecentActivity(
       participant.id,
     );

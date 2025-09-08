@@ -440,7 +440,11 @@ const YI_JING_HEXAGRAMS: Record<number, HexagramReading> = {
     interpretation:
       "Return to your original nature. The divine child within you holds the key to your next spiritual breakthrough.",
     guidance:
+<<<<<<< HEAD
       "Approach your path with beginner's mind. Innocence and wonder will guide you to truth.",
+=======
+      "Approach your path with beginner&apos;s mind. Innocence and wonder will guide you to truth.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     timing: "Spring equinox energy - perfect for spiritual rebirth",
   },
   33: {
@@ -476,7 +480,11 @@ const YI_JING_HEXAGRAMS: Record<number, HexagramReading> = {
     interpretation:
       "Spiritual awakening comes like thunder - sudden, powerful, and transformative. Your old self is being shaken awake.",
     guidance:
+<<<<<<< HEAD
       "Don't resist the spiritual earthquake happening within you. This shock is necessary for your evolution.",
+=======
+      "Don&apos;t resist the spiritual earthquake happening within you. This shock is necessary for your evolution.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     timing: "During thunderstorms or times of rapid change",
   },
   57: {

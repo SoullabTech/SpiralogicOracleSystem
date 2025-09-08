@@ -59,7 +59,11 @@ export default function UizardTestPage() {
   ] as const;
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+=======
+    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900">
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <motion.div 
@@ -253,7 +257,11 @@ export default function UizardTestPage() {
                   <h4 className="text-sm font-semibold text-white mb-3">Sacred Actions</h4>
                   <div className="space-y-2">
                     <Button 
+<<<<<<< HEAD
                       className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600"
+=======
+                      className="w-full  from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600"
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                       elevation={flags.uizard_buttons ? "high" : undefined}
                       animation={flags.uizard_buttons ? "glow" : undefined}
                     >

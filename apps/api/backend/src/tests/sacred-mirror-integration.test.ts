@@ -74,7 +74,11 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
     test("should detect repetitive validation seeking", async () => {
       const context: SacredMirrorContext = {
         userId: "test-user-3",
+<<<<<<< HEAD
         originalQuery: "Do you think I'm doing the right thing?",
+=======
+        originalQuery: "Do you think I&apos;m doing the right thing?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         baseResponse: {
           content: "Yes, you are definitely on the right path!",
           provider: "test",
@@ -112,7 +116,11 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
         originalQuery: "Why do I always attract the same type of person?",
         baseResponse: {
           content:
+<<<<<<< HEAD
             "That's a great question! You deserve better people in your life.",
+=======
+            "That&apos;s a great question! You deserve better people in your life.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           provider: "test",
           model: "test",
           confidence: 0.8,
@@ -174,7 +182,11 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
         originalQuery: "I always do this same pattern and never learn",
         baseResponse: {
           content:
+<<<<<<< HEAD
             "Don't worry, everyone makes mistakes! You'll figure it out!",
+=======
+            "Don&apos;t worry, everyone makes mistakes! You&apos;ll figure it out!",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           provider: "test",
           model: "test",
           confidence: 0.8,
@@ -253,7 +265,11 @@ describe("Sacred Mirror Integrity Protocol Integration", () => {
         userId: "test-user-8",
         originalQuery: "Simple question",
         baseResponse: {
+<<<<<<< HEAD
           content: "Absolutely! That's definitely amazing! Perfect!",
+=======
+          content: "Absolutely! That&apos;s definitely amazing! Perfect!",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           provider: "test",
           model: "test",
           confidence: 0.8,

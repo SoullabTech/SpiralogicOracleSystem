@@ -258,7 +258,11 @@ export class CulturalShadowIntegration {
 The suppression of your cultural identity created wounds that run deep. Healing involves reclaiming what was taken and honoring what survived. Your ancestors preserved their essence through the darkest times - their resilience lives in you.`,
 
       intergenerational_trauma: `
+<<<<<<< HEAD
 The pain you carry isn't only yours - it's the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who breaks the cycle and transforms ancestral pain into ancestral wisdom.`,
+=======
+The pain you carry isn&apos;t only yours - it&apos;s the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who breaks the cycle and transforms ancestral pain into ancestral wisdom.`,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       cultural_disconnection: `
 The disconnection from your cultural roots created an inner emptiness that no amount of assimilation could fill. Healing involves returning home to yourself, to your people, to the traditions that nourish your soul.`,
@@ -303,7 +307,11 @@ When your cultural identity was devalued, parts of yourself went into hiding for
 
     // Add cultural framing if appropriate
     if (culturalProfile.culturalTrauma) {
+<<<<<<< HEAD
       const culturalFraming = `\n\n**Honoring Your Cultural Journey**: This shadow work honors both your individual healing and your role in your cultural lineage's healing. `;
+=======
+      const culturalFraming = `\n\n**Honoring Your Cultural Journey**: This shadow work honors both your individual healing and your role in your cultural lineage&apos;s healing. `;
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       enhancedResponse = culturalFraming + enhancedResponse;
     }
 
@@ -393,7 +401,11 @@ When your cultural identity was devalued, parts of yourself went into hiding for
 
     // Check for identity fragmentation
     if (
+<<<<<<< HEAD
       input.includes("don't know who i am") ||
+=======
+      input.includes("don&apos;t know who i am") ||
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       input.includes("lost my identity") ||
       input.includes("between two worlds") ||
       input.includes("don't belong")
@@ -457,7 +469,11 @@ When your cultural identity was devalued, parts of yourself went into hiding for
     if (
       input.includes("not ready") ||
       input.includes("too painful") ||
+<<<<<<< HEAD
       input.includes("can't handle")
+=======
+      input.includes("can&apos;t handle")
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     ) {
       readiness -= 0.2;
     }

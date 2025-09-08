@@ -151,7 +151,11 @@ export class OracleResponsePipeline extends EventEmitter {
         soulprintAnalysis,
       );
 
+<<<<<<< HEAD
       // Async: Update user's soulprint and cache response
+=======
+      // Async: Update user&apos;s soulprint and cache response
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       this.updateUserSoulprint(query.userId, response);
       this.cacheResponse(query, response);
 
@@ -186,7 +190,11 @@ export class OracleResponsePipeline extends EventEmitter {
       scores[archetype] += contentScores[archetype] * 0.4;
     });
 
+<<<<<<< HEAD
     // Factor 2: User's dominant patterns (30% weight)
+=======
+    // Factor 2: User&apos;s dominant patterns (30% weight)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const userPatterns = personalizedContext.dominantArchetypes || {};
     Object.keys(scores).forEach((archetype) => {
       scores[archetype] += (userPatterns[archetype] || 0) * 0.3;
@@ -255,7 +263,11 @@ export class OracleResponsePipeline extends EventEmitter {
     streamingEnabled: boolean = false,
   ): Promise<{ audioUrl?: string; audioStream?: ReadableStream }> {
     if (streamingEnabled) {
+<<<<<<< HEAD
       // Stream audio as it's generated
+=======
+      // Stream audio as it&apos;s generated
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const audioStream = await this.streamingService.synthesizeStreaming(
         text,
         voicePreparation.voiceConfig,

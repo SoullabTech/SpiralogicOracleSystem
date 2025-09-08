@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Backend directories to ignore
 apps/api/backend/
 backend/
@@ -37,3 +38,83 @@ migration/
 # Backend dependencies (if separate)
 apps/api/backend/node_modules/
 apps/api/backend/package-lock.json
+=======
+# Git submodules - CRITICAL: must not be included in deployment
+SpiralogicOracleSystem/
+sesame-csm/
+sesame_csm_openai/
+csm/
+backend/backend/
+backend/csm/
+**/.!*
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+*.log
+__tests__/
+coverage/
+.pytest_cache/
+
+# Python/Backend files
+*.py
+*.pyc
+__pycache__/
+.venv/
+venv/
+backend/
+oracle-backend/
+soul_memory/
+claude-env/
+htmlcov/
+requirements.txt*
+
+# Keep frontend directory - DO NOT IGNORE
+# frontend/ should be built by Vercel
+
+# Documentation
+docs/
+DEPLOYMENT_CHECKLIST.md
+DEPLOYMENT_GUIDE.md
+TROUBLESHOOTING_GUIDE.md
+
+# Local environment files
+.env.local
+.env*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Archives
+*.zip
+*.tar.gz
+
+# Database files
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/
+
+# Test files
+*.test.*
+*.spec.*
+
+# IMPORTANT: Don't ignore build-related files
+# The following should NOT be ignored:
+# - app/
+# - components/
+# - public/
+# - styles/
+# - *.css
+# - *.js
+# - *.ts
+# - *.tsx
+# - *.json (except package-lock.json)
+# - .next/ (Vercel builds this)# Deployment timestamp: Sat Sep  6 21:01:05 EDT 2025
+# Force Vercel Deployment - 2025-09-06 22:56:27
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26

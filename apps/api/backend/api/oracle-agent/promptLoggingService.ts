@@ -48,12 +48,20 @@ export class PromptLoggingService {
       }
     } catch (error) {
       console.error("Error in logPromptUsage:", error);
+<<<<<<< HEAD
       // Don't throw - logging shouldn't break the main flow
+=======
+      // Don&apos;t throw - logging shouldn&apos;t break the main flow
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
   }
 
   /**
+<<<<<<< HEAD
    * Get user's prompt history for personalization
+=======
+   * Get user&apos;s prompt history for personalization
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
    */
   async getUserPromptHistory(userId: string, limit = 20): Promise<any[]> {
     const { data, error } = await this.supabase
@@ -72,7 +80,11 @@ export class PromptLoggingService {
   }
 
   /**
+<<<<<<< HEAD
    * Get prompts that haven't been shown to a user recently
+=======
+   * Get prompts that haven&apos;t been shown to a user recently
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
    */
   async getUnseenPrompts(
     userId: string,
@@ -93,7 +105,11 @@ export class PromptLoggingService {
 
     const seenPromptIds = recentLogs?.map((log) => log.prompt_id) || [];
 
+<<<<<<< HEAD
     // Get all prompts for this phase that haven't been seen
+=======
+    // Get all prompts for this phase that haven&apos;t been seen
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const { data: unseenPrompts } = await this.supabase
       .from("spiralogic_prompts")
       .select("id, prompt")

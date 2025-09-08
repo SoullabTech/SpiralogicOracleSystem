@@ -60,7 +60,11 @@ async function testMemoryContinuity() {
 
   // First interaction about feeling
   console.log("1️⃣ First interaction:");
+<<<<<<< HEAD
   const emotionMessage = "I'm feeling really overwhelmed with work stress";
+=======
+  const emotionMessage = "I&apos;m feeling really overwhelmed with work stress";
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   console.log(`User: "${emotionMessage}"`);
 
   const emotionResponse = await oracle.respondToPrompt(emotionMessage);
@@ -88,7 +92,11 @@ async function testMemoryContinuity() {
   // Multiple related interactions
   const patternMessages = [
     "I notice I always get anxious before big meetings",
+<<<<<<< HEAD
     "There's that anxiety again before today's presentation",
+=======
+    "There&apos;s that anxiety again before today&apos;s presentation",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     "The same anxious feeling is back",
   ];
 

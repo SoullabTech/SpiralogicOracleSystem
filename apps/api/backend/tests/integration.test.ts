@@ -95,7 +95,11 @@ describe("System Integration Tests", () => {
       // 3. Oracle interaction with mode switching
       await oracle.switchMode("alchemist");
       const response1 = await oracle.respondToPrompt(
+<<<<<<< HEAD
         "I'm ready to begin my shadow work",
+=======
+        "I&apos;m ready to begin my shadow work",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
 
       expect(response1).toMatch(/shadow|integrate|transform|alchemy/i);
@@ -118,7 +122,11 @@ describe("System Integration Tests", () => {
       const responses = [];
       const prompts = [
         "This shadow work is bringing up a lot of anger",
+<<<<<<< HEAD
         "I don't want to feel this rage",
+=======
+        "I don&apos;t want to feel this rage",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "What if I hurt someone with this anger?",
       ];
 
@@ -137,7 +145,11 @@ describe("System Integration Tests", () => {
       // Start conversation in one mode
       await oracle.switchMode("buddha");
       const buddhaResponse = await oracle.respondToPrompt(
+<<<<<<< HEAD
         "I'm attached to my old self",
+=======
+        "I&apos;m attached to my old self",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
 
       expect(buddhaResponse).toMatch(/attachment|let go|impermanence/i);
@@ -169,7 +181,11 @@ describe("System Integration Tests", () => {
       // Simulate buildup to breakthrough
       const buildupPrompts = [
         "I keep feeling this same pattern repeating",
+<<<<<<< HEAD
         "It's like I'm stuck in a loop with my relationships",
+=======
+        "It&apos;s like I'm stuck in a loop with my relationships",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "Everyone I date becomes distant after a few months",
       ];
 
@@ -414,7 +430,11 @@ describe("System Integration Tests", () => {
         "How do I start?",
         "What if it's too intense?",
         "Can you support me through this?",
+<<<<<<< HEAD
         "What's the first step?",
+=======
+        "What&apos;s the first step?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       ];
 
       const startTime = Date.now();

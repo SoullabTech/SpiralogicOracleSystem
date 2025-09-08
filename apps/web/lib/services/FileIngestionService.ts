@@ -1,6 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 import { OpenAI } from 'openai';
+<<<<<<< HEAD
 import { parsePDF } from '../pdf-parse-wrapper';
+=======
+import * as pdfParse from 'pdf-parse';
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 import * as mammoth from 'mammoth';
 import { encode } from 'gpt-tokenizer';
 
@@ -96,7 +100,11 @@ export class FileIngestionService {
     try {
       switch (mimeType) {
         case 'application/pdf':
+<<<<<<< HEAD
           const pdfData = await parsePDF(fileBuffer);
+=======
+          const pdfData = await pdfParse(fileBuffer);
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           text = pdfData.text;
           break;
           

@@ -188,7 +188,11 @@ export class SymbolicIntegrationEngine {
             "Hold moonstone while drinking mindfully",
             "Ask water for guidance on emotional needs",
             "Journal insights received",
+<<<<<<< HEAD
             "End with gratitude for water's wisdom",
+=======
+            "End with gratitude for water&apos;s wisdom",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             "Offer blessed water to plants",
           ],
           duration: 10,
@@ -220,7 +224,11 @@ export class SymbolicIntegrationEngine {
             "Walk barefoot on earth for 5 minutes",
             "Hold crystals while setting daily intentions",
             "Tend to plants with loving attention",
+<<<<<<< HEAD
             "Journal about what's growing in your life",
+=======
+            "Journal about what&apos;s growing in your life",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             "Offer gratitude to earth spirits",
             "Close by placing hands on earth",
           ],
@@ -367,7 +375,11 @@ export class SymbolicIntegrationEngine {
         "How am I being called to serve others?",
         "What spiritual practice wants to deepen?",
         "Where do I feel most connected to source?",
+<<<<<<< HEAD
         "What is my soul's purpose in this moment?",
+=======
+        "What is my soul&apos;s purpose in this moment?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "How can I honor the sacred in daily life?",
       ],
     };
@@ -440,7 +452,11 @@ export class SymbolicIntegrationEngine {
       water: [
         "Yemanja, African goddess of oceans and motherhood",
         "Quan Yin, compassionate water goddess",
+<<<<<<< HEAD
         "Poseidon's realm of emotional depths",
+=======
+        "Poseidon&apos;s realm of emotional depths",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "Celtic wells of healing and wisdom",
       ],
       earth: [
@@ -546,7 +562,11 @@ export class SymbolicIntegrationEngine {
         new: "New moon fire energy perfect for setting intentions",
         waxing: "Growing moon amplifies your creative fire",
         full: "Full moon illuminates your passionate purpose",
+<<<<<<< HEAD
         waning: "Release what blocks your fire's expression",
+=======
+        waning: "Release what blocks your fire&apos;s expression",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       },
       water: {
         new: "New moon calls for emotional renewal",
@@ -615,7 +635,11 @@ export class SymbolicIntegrationEngine {
       );
     }
     if (input.includes("work") || input.includes("career")) {
+<<<<<<< HEAD
       contextualPrompts.push("How does my work align with my soul's purpose?");
+=======
+      contextualPrompts.push("How does my work align with my soul&apos;s purpose?");
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
     if (input.includes("change") || input.includes("transition")) {
       contextualPrompts.push("What is trying to be born through this change?");

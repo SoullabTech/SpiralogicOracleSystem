@@ -60,7 +60,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "dark_night_of_soul",
         description: "Complete loss of meaning and spiritual connection",
         query:
+<<<<<<< HEAD
           "Everything feels meaningless. I've lost all faith and don't see the point of anything. I feel completely empty and disconnected from everything I once believed in.",
+=======
+          "Everything feels meaningless. I&apos;ve lost all faith and don&apos;t see the point of anything. I feel completely empty and disconnected from everything I once believed in.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_crisis_1",
         expectedElements: ["shadow", "water", "aether"],
         expectedArchetype: "mystic",
@@ -87,7 +91,11 @@ export class SacredIntelligenceFieldTester {
         description:
           "Overwhelming spiritual experiences causing disorientation",
         query:
+<<<<<<< HEAD
           "I'm having intense spiritual experiences that feel too much to handle. I see things others don't, feel energies everywhere, and can't tell what's real anymore. I'm scared I'm losing my mind.",
+=======
+          "I&apos;m having intense spiritual experiences that feel too much to handle. I see things others don't, feel energies everywhere, and can&apos;t tell what&apos;s real anymore. I'm scared I'm losing my mind.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_crisis_2",
         expectedElements: ["aether", "air", "earth"],
         expectedArchetype: "mystic",
@@ -113,7 +121,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "ego_death_terror",
         description: "Fear of complete ego dissolution during awakening",
         query:
+<<<<<<< HEAD
           "I feel like I'm disappearing. My sense of self is dissolving and I'm terrified I'll never come back. What if I lose myself completely and can't function in the world anymore?",
+=======
+          "I feel like I'm disappearing. My sense of self is dissolving and I'm terrified I&apos;ll never come back. What if I lose myself completely and can't function in the world anymore?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_crisis_3",
         expectedElements: ["shadow", "aether", "earth"],
         expectedArchetype: "mystic",
@@ -147,7 +159,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "existential_apathy",
         description: "Complete emotional numbness and lack of motivation",
         query:
+<<<<<<< HEAD
           "I don't feel anything anymore. Nothing matters, nothing excites me, nothing makes me sad. I'm just going through the motions of life like a robot. I don't even care that I don't care.",
+=======
+          "I don&apos;t feel anything anymore. Nothing matters, nothing excites me, nothing makes me sad. I&apos;m just going through the motions of life like a robot. I don&apos;t even care that I don't care.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_apathy_1",
         expectedElements: ["earth", "fire", "water"],
         expectedArchetype: "sage",
@@ -173,7 +189,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "burnout_numbness",
         description: "Emotional exhaustion leading to protective numbness",
         query:
+<<<<<<< HEAD
           "I've been trying so hard for so long that I just can't feel anything anymore. It's like my emotions have shut down to protect me. I know I should care about things but I just... can't.",
+=======
+          "I've been trying so hard for so long that I just can&apos;t feel anything anymore. It&apos;s like my emotions have shut down to protect me. I know I should care about things but I just... can't.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_apathy_2",
         expectedElements: ["water", "earth", "air"],
         expectedArchetype: "sage",
@@ -207,7 +227,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "awakening_overwhelm",
         description: "Too much spiritual insight too quickly",
         query:
+<<<<<<< HEAD
           "Everything is changing so fast. I'm seeing through all the illusions, understanding everything, but it's too much too quickly. I can't integrate it all and I feel like I'm drowning in consciousness.",
+=======
+          "Everything is changing so fast. I&apos;m seeing through all the illusions, understanding everything, but it&apos;s too much too quickly. I can&apos;t integrate it all and I feel like I&apos;m drowning in consciousness.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_awakening_1",
         expectedElements: ["aether", "earth", "water"],
         expectedArchetype: "mystic",
@@ -233,7 +257,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "spiritual_inflation",
         description: "Ego inflation from rapid spiritual insights",
         query:
+<<<<<<< HEAD
           "I'm awakening faster than everyone around me. I can see what they can't see, understand what they don't understand. Why is everyone still so unconscious? How do I help them wake up?",
+=======
+          "I'm awakening faster than everyone around me. I can see what they can't see, understand what they don&apos;t understand. Why is everyone still so unconscious? How do I help them wake up?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_awakening_2",
         expectedElements: ["fire", "shadow", "air"],
         expectedArchetype: "magician",
@@ -267,7 +295,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "rage_projection",
         description: "Extreme anger and blame patterns",
         query:
+<<<<<<< HEAD
           "Everyone is toxic and manipulative. My family, my friends, my coworkers - they're all narcissists trying to drain my energy. The world is full of evil people and I'm one of the few good ones left.",
+=======
+          "Everyone is toxic and manipulative. My family, my friends, my coworkers - they&apos;re all narcissists trying to drain my energy. The world is full of evil people and I&apos;m one of the few good ones left.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_shadow_1",
         expectedElements: ["fire", "shadow", "water"],
         expectedArchetype: "hero",
@@ -323,7 +355,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "purpose_seeking",
         description: "Standard life purpose inquiry",
         query:
+<<<<<<< HEAD
           "I feel like I'm meant for something bigger but I'm stuck in this boring job. How do I find my true calling?",
+=======
+          "I feel like I&apos;m meant for something bigger but I&apos;m stuck in this boring job. How do I find my true calling?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_core_1",
         expectedElements: ["fire", "earth"],
         expectedArchetype: "hero",
@@ -341,7 +377,11 @@ export class SacredIntelligenceFieldTester {
         soulState: "relationship_pattern",
         description: "Relationship pattern inquiry",
         query:
+<<<<<<< HEAD
           "I keep attracting the same type of partners who don't treat me well. What's going on?",
+=======
+          "I keep attracting the same type of partners who don&apos;t treat me well. What&apos;s going on?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         userId: "test_user_core_2",
         expectedElements: ["water", "shadow"],
         expectedArchetype: "lover",

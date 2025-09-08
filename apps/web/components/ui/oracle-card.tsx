@@ -130,9 +130,15 @@ const OracleCard = React.forwardRef<HTMLDivElement, OracleCardProps>(
     // 🆕 UIZARD ENHANCEMENT - Optional gradient backgrounds
     const gradientClasses = {
       none: 'bg-background/80',  // Our current default
+<<<<<<< HEAD
       subtle: 'bg-gradient-to-br from-background/80 to-background/60',
       primary: 'bg-gradient-to-br from-purple-900/20 via-background/80 to-slate-900/90',
       mystical: 'bg-gradient-to-br from-purple-900/30 via-indigo-900/20 to-orange-900/10'
+=======
+      subtle: ' from-background/80 to-background/60',
+      primary: ' from-purple-900/20 via-background/80 to-slate-900/90',
+      mystical: ' from-purple-900/30 via-indigo-900/20 to-orange-900/10'
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     };
     
     // Build the className with all enhancements
@@ -237,7 +243,11 @@ const OracleCardTitle = React.forwardRef<
   React.HTMLAttributes<HTMLHeadingElement> & { mystical?: boolean }
 >(({ className = "", mystical = false, ...props }, ref) => {
   const titleClasses = mystical 
+<<<<<<< HEAD
     ? `text-xl font-semibold leading-none tracking-tight bg-gradient-to-r from-purple-400 to-orange-400 bg-clip-text text-transparent ${className}`
+=======
+    ? `text-xl font-semibold leading-none tracking-tight  from-purple-400 to-orange-400 bg-clip-text text-transparent ${className}`
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     : `text-xl font-semibold leading-none tracking-tight text-white ${className}`;
   
   return (

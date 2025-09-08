@@ -183,7 +183,11 @@ export class EthicalSafeguards {
         "dominate",
       ],
       addict: [
+<<<<<<< HEAD
         "can't stop",
+=======
+        "can&apos;t stop",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "need more",
         "escape from",
         "numb the pain",
@@ -192,7 +196,11 @@ export class EthicalSafeguards {
       saboteur: [
         "not good enough",
         "will fail",
+<<<<<<< HEAD
         "don't deserve",
+=======
+        "don&apos;t deserve",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "mess up",
         "ruin it",
       ],
@@ -305,7 +313,11 @@ Healing is possible with proper support. You deserve care and compassion.`,
 • **Emergency Services**: 911
 • **Crisis Text Line**: Text HOME to 741741
 • **NAMI (National Alliance on Mental Illness)**: 1-800-950-6264
+<<<<<<< HEAD
 • **Local Crisis Intervention**: Contact your area's crisis center
+=======
+• **Local Crisis Intervention**: Contact your area&apos;s crisis center
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 Professional mental health support can provide safety, clarity, and effective treatment.`,
 

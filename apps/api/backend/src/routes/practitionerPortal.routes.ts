@@ -42,7 +42,11 @@ practitionerPortalRouter.get(
     try {
       const practitionerId = req.user!.id;
 
+<<<<<<< HEAD
       // Get practitioner's clients
+=======
+      // Get practitioner&apos;s clients
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const { data: clients, error: clientsError } = await supabase
         .from("practitioner_clients")
         .select("*, spiralogic_reports(count)")
@@ -257,7 +261,11 @@ practitionerPortalRouter.get(
         });
       }
 
+<<<<<<< HEAD
       // Get client's reports
+=======
+      // Get client&apos;s reports
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const { data: reports } = await supabase
         .from("spiralogic_reports")
         .select("*, birth_charts(*)")

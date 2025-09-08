@@ -336,11 +336,15 @@
       "Bash(git log:*)",
       "Bash(git mv:*)",
       "Bash(./scripts/verify-deployment.sh:*)",
+<<<<<<< HEAD
       "Bash(./scripts/deploy-vercel.sh:*)",
       "Bash(./emergency-deploy.sh)",
       "Bash(echo:*)",
       "Bash(git clean:*)",
       "Bash(git remote set-url:*)"
+=======
+      "Bash(./scripts/deploy-vercel.sh:*)"
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     ],
     "deny": []
   },

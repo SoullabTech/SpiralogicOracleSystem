@@ -1128,7 +1128,11 @@ export class CommunityStoryWeavingNetwork {
     stories: CommunityStory[],
   ): Promise<string[]> {
     return [
+<<<<<<< HEAD
       "Hero's journey",
+=======
+      "Hero&apos;s journey",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "Death and rebirth",
       "Sacred marriage",
       "Return to source",

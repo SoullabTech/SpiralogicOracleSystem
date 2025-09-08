@@ -43,7 +43,11 @@ facilitatorDashboardRouter.get(
     try {
       const facilitatorId = req.facilitator.id;
 
+<<<<<<< HEAD
       // Get today's priorities
+=======
+      // Get today&apos;s priorities
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const priorities =
         await facilitatorDashboardService.generateDailyPriorities(
           facilitatorId,

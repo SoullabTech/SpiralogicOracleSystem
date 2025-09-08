@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+<<<<<<< HEAD
 # Secret scanning
 bash scripts/scan-secrets.sh
 
@@ -15,3 +16,6 @@ bash scripts/generate-previews.sh
 
 # Stage any moved files and generated previews
 git add docs/assets/
+=======
+bash scripts/scan-secrets.sh
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26

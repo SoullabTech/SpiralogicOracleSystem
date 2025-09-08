@@ -160,7 +160,11 @@ export class EnhancedShadowAgent {
       "disconnected from culture",
       "ashamed of heritage",
       "lost my roots",
+<<<<<<< HEAD
       "don't belong anywhere",
+=======
+      "don&apos;t belong anywhere",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "between two worlds",
       "family shame",
       "generational pattern",
@@ -191,11 +195,19 @@ export class EnhancedShadowAgent {
   ): Promise<string> {
     const culturalShadowResponses = {
       native_american: {
+<<<<<<< HEAD
         victim_transformation: `Your ancestors survived incredible challenges and passed their strength to you. The victim story honors your pain, but your heritage calls you to reclaim the warrior spirit that lives in your DNA. What would your ancestors say about the power you're not owning?`,
 
         cultural_disconnection: `The disconnection from your roots has created a wound that only cultural reconnection can heal. Your people's wisdom is calling you home - not to the past, but to the integrated future where ancient wisdom meets modern life. How might you begin returning to yourself?`,
 
         intergenerational_trauma: `The pain you carry isn't only yours - it's the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who transforms ancestral pain into ancestral medicine. What healing would honor both your journey and your people's future?`,
+=======
+        victim_transformation: `Your ancestors survived incredible challenges and passed their strength to you. The victim story honors your pain, but your heritage calls you to reclaim the warrior spirit that lives in your DNA. What would your ancestors say about the power you&apos;re not owning?`,
+
+        cultural_disconnection: `The disconnection from your roots has created a wound that only cultural reconnection can heal. Your people&apos;s wisdom is calling you home - not to the past, but to the integrated future where ancient wisdom meets modern life. How might you begin returning to yourself?`,
+
+        intergenerational_trauma: `The pain you carry isn&apos;t only yours - it&apos;s the unhealed wounds of your lineage seeking resolution through you. You have the opportunity to be the one who transforms ancestral pain into ancestral medicine. What healing would honor both your journey and your people's future?`,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       },
 
       african_american: {

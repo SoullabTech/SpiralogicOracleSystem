@@ -1,6 +1,10 @@
 export default function TaoistElementsPage() {
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+=======
+    <div className="min-h-screen  from-emerald-50 via-teal-50 to-cyan-50">
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">

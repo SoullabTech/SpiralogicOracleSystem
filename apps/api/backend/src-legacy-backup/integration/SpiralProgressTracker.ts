@@ -363,7 +363,11 @@ export class SpiralProgressTracker {
     );
     longTermPractices.forEach((practice) => {
       celebrations.push(
+<<<<<<< HEAD
         `🌱 You've maintained ${practice.practice} for ${practice.maintainedFor} days. This steady presence is the foundation of all growth.`,
+=======
+        `🌱 You&apos;ve maintained ${practice.practice} for ${practice.maintainedFor} days. This steady presence is the foundation of all growth.`,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
     });
 
@@ -374,7 +378,11 @@ export class SpiralProgressTracker {
 
     if (recentOrdinaryMoments.length > 0) {
       celebrations.push(
+<<<<<<< HEAD
         `✨ You've been present to ${recentOrdinaryMoments.length} ordinary moments this week. This presence is where real transformation lives.`,
+=======
+        `✨ You&apos;ve been present to ${recentOrdinaryMoments.length} ordinary moments this week. This presence is where real transformation lives.`,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
     }
 

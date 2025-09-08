@@ -111,7 +111,11 @@ function OraclePageInner() {
     // Welcome message from assigned agent
     setMessages([{
       role: 'assistant',
+<<<<<<< HEAD
       content: `Hey ${userData.username}, good to see you again. What's going on?`,
+=======
+      content: `Hey ${userData.username}, good to see you again. What&apos;s going on?`,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       timestamp: new Date().toISOString(),
       citations: [],
       metadata: {

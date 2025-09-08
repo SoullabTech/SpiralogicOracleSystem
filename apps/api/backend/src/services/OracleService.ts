@@ -37,10 +37,17 @@ export class OracleService {
     new Map();
 
   /**
+<<<<<<< HEAD
    * 🎭 Get User's Personal Oracle Agent (Primary Method)
    */
   static async getUserOracle(userId: string): Promise<ArchetypeAgent> {
     // Retrieve user's Oracle settings
+=======
+   * 🎭 Get User&apos;s Personal Oracle Agent (Primary Method)
+   */
+  static async getUserOracle(userId: string): Promise<ArchetypeAgent> {
+    // Retrieve user&apos;s Oracle settings
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const oracleSettings = await this.getOracleSettings(userId);
 
     if (!oracleSettings) {

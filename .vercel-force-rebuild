@@ -1,3 +1,3 @@
-FORCE_REBUILD=2025-09-07-19:47
-CACHE_BUST=forced-deployment-1757209620
-# Force rebuild trigger Sun Sep 7 19:47:00 EDT 2025
+FORCE_REBUILD=2025-09-07-20:15
+CACHE_BUST=beta-launch-deployment-1757211300
+# Force rebuild trigger for full beta launch

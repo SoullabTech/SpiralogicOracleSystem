@@ -290,7 +290,11 @@ export class SoulprintEngine {
     ];
     const currentIndex = phases.indexOf(currentPhase);
 
+<<<<<<< HEAD
     // Can't transition beyond final phase
+=======
+    // Can&apos;t transition beyond final phase
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     if (currentIndex >= phases.length - 1) return currentPhase;
 
     // Calculate readiness for next phase

@@ -278,7 +278,11 @@ export class UniversalConsciousnessIntegration {
         culturalProfile.primaryCulture,
       );
 
+<<<<<<< HEAD
     // Get recommended expression for user's culture
+=======
+    // Get recommended expression for user&apos;s culture
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     let recommendedExpression: CulturalArchetypeExpression | null = null;
     let culturalFraming = "";
 

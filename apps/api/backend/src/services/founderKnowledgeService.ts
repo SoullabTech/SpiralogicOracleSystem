@@ -553,7 +553,11 @@ export class FounderKnowledgeService {
   }
 
   /**
+<<<<<<< HEAD
    * Update the founder agent's knowledge base
+=======
+   * Update the founder agent&apos;s knowledge base
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
    */
   private async updateFounderKnowledge(
     manifesto: ManifestoContent,
@@ -573,7 +577,11 @@ export class FounderKnowledgeService {
       },
     };
 
+<<<<<<< HEAD
     // In a real implementation, this would update the agent's knowledge repository
+=======
+    // In a real implementation, this would update the agent&apos;s knowledge repository
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     logger.info(
       "FounderKnowledge: Knowledge base updated with Spiralogic insights",
       {

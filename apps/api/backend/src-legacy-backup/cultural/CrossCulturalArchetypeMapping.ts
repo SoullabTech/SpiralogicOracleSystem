@@ -716,7 +716,11 @@ export class CrossCulturalArchetypeMapping {
         [
           "fire",
           {
+<<<<<<< HEAD
             culturalName: "Brigid's Flame",
+=======
+            culturalName: "Brigid&apos;s Flame",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             traditionalRole: "Fire Keeper",
             sacredQualities: [
               "creative fire",

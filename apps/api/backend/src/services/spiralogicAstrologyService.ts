@@ -308,7 +308,11 @@ class SpiralogicAstrologyService {
       ascmc,
     );
 
+<<<<<<< HEAD
     // Return house cusps (skip first element as it's duplicate of ASC)
+=======
+    // Return house cusps (skip first element as it&apos;s duplicate of ASC)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     return cusps.slice(1, 13);
   }
 

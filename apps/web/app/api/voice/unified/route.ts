@@ -5,11 +5,14 @@ const voiceRouter = {
   handleVoiceInput: async (data: any) => ({ 
     success: false, 
     message: 'Voice routing not available in beta' 
+<<<<<<< HEAD
   }),
   synthesize: async (data: any) => ({
     success: false,
     error: 'TTS service not available in stub mode',
     fallbackUsed: true
+=======
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   })
 };
 // Temporarily stub out backend imports that are excluded from build

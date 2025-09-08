@@ -146,8 +146,13 @@ class EmotionalIntelligenceEngine {
       ],
       anger: [
         "but anger is bad",
+<<<<<<< HEAD
         "i shouldn't feel this",
         "good people don't get angry",
+=======
+        "i shouldn&apos;t feel this",
+        "good people don&apos;t get angry",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       ],
       fear: [
         "but i should be brave",

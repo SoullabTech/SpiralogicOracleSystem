@@ -92,12 +92,20 @@ export class AgentCommunicationProtocol {
         message.timestamp = new Date().toISOString();
       }
 
+<<<<<<< HEAD
       // Add to recipient's queue
+=======
+      // Add to recipient&apos;s queue
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const queue = this.messageQueue.get(message.to) || [];
       queue.push(message);
       this.messageQueue.set(message.to, queue);
 
+<<<<<<< HEAD
       // If it's a wisdom exchange, store it
+=======
+      // If it&apos;s a wisdom exchange, store it
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       if (message.type === "wisdom" || message.type === "pattern") {
         await this.storeWisdomExchange(message);
       }

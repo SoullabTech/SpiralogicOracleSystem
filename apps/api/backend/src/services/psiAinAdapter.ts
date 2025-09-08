@@ -73,7 +73,11 @@ export async function logPsiEpisodeToAIN(episode: PsiEpisode): Promise<void> {
     console.log(`📝 PSI Episode #${episode.tick} logged to AIN memory store`);
   } catch (error) {
     console.error(`❌ Failed to log PSI episode to AIN:`, error);
+<<<<<<< HEAD
     // Don't throw - PSI should continue working even if memory logging fails
+=======
+    // Don&apos;t throw - PSI should continue working even if memory logging fails
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 }
 

@@ -228,7 +228,11 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       // Graceful fallback response
       return {
         content:
+<<<<<<< HEAD
           "I sense a temporary disruption in our connection. Let me re-center and be present with you. What's most alive in you right now?",
+=======
+          "I sense a temporary disruption in our connection. Let me re-center and be present with you. What&apos;s most alive in you right now?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         provider: "personal-oracle-fallback",
         model: "gpt-4",
         confidence: 0.7,
@@ -633,7 +637,11 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
     const confusionWords = [
       "confused",
       "unclear",
+<<<<<<< HEAD
       "don't know",
+=======
+      "don&apos;t know",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "not sure",
       "lost",
     ];
@@ -689,7 +697,11 @@ export class EnhancedPersonalOracleAgent extends BaseAgent {
       "why do i",
       "i always",
       "i never",
+<<<<<<< HEAD
       "i can't seem to",
+=======
+      "i can&apos;t seem to",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     ];
     return shadowWords.some((phrase) => input.includes(phrase));
   }

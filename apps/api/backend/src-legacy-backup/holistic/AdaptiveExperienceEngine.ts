@@ -408,6 +408,7 @@ export class AdaptiveExperienceEngine {
   ): string {
     const messages = {
       [UserState.STRESSED]:
+<<<<<<< HEAD
         "I notice you're experiencing stress. Let's focus on grounding and regulation practices to help you find center.",
       [UserState.SEEKING_CLARITY]:
         "It seems you're seeking mental clarity. Let's work with practices that enhance focus and clear thinking.",
@@ -415,6 +416,15 @@ export class AdaptiveExperienceEngine {
         "You may be feeling disconnected from your deeper purpose. Let's explore practices that reconnect you with meaning.",
       [UserState.PHYSICAL_CONCERNS]:
         "I'm aware of your physical concerns. Let's approach practice gently, honoring your body's current needs.",
+=======
+        "I notice you&apos;re experiencing stress. Let&apos;s focus on grounding and regulation practices to help you find center.",
+      [UserState.SEEKING_CLARITY]:
+        "It seems you&apos;re seeking mental clarity. Let's work with practices that enhance focus and clear thinking.",
+      [UserState.DISCONNECTED]:
+        "You may be feeling disconnected from your deeper purpose. Let's explore practices that reconnect you with meaning.",
+      [UserState.PHYSICAL_CONCERNS]:
+        "I&apos;m aware of your physical concerns. Let's approach practice gently, honoring your body's current needs.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       [UserState.BALANCED]:
         "You're in a balanced state. Let's deepen your practice across all domains.",
       [UserState.ENERGIZED]:

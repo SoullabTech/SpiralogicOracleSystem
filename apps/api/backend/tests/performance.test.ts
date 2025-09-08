@@ -50,7 +50,11 @@ describe('Performance Benchmarks', () => {
         "I need guidance",
         "What should I focus on today?",
         "Help me understand myself",
+<<<<<<< HEAD
         "I'm feeling confused"
+=======
+        "I&apos;m feeling confused"
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       ];
 
       for (const prompt of simplePrompts) {
@@ -66,8 +70,13 @@ describe('Performance Benchmarks', () => {
 
     test('Should handle complex prompts within 5 seconds', async () => {
       const complexPrompts = [
+<<<<<<< HEAD
         "I'm struggling with the paradox of wanting deep transformation while also fearing change, and I notice this pattern showing up in my relationships where I get close to someone but then sabotage it when they want more intimacy. How do I work with this shadow pattern?",
         "My father was both abusive and loving, and I'm finding that I've internalized his voice as both my inner critic and my motivation. I want to honor the good he gave me while healing from the harm, but I don't know how to separate these aspects.",
+=======
+        "I&apos;m struggling with the paradox of wanting deep transformation while also fearing change, and I notice this pattern showing up in my relationships where I get close to someone but then sabotage it when they want more intimacy. How do I work with this shadow pattern?",
+        "My father was both abusive and loving, and I'm finding that I've internalized his voice as both my inner critic and my motivation. I want to honor the good he gave me while healing from the harm, but I don&apos;t know how to separate these aspects.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "I keep having dreams about flying over dark water, and when I try to land, the ground disappears. I've been doing shadow work for months, and I feel like these dreams are trying to tell me something about my spiritual bypassing patterns."
       ];
 
@@ -259,7 +268,11 @@ describe('Performance Benchmarks', () => {
     });
 
     test('Should cache wisdom selections for improved performance', async () => {
+<<<<<<< HEAD
       const testPrompt = "I'm struggling with shadow integration";
+=======
+      const testPrompt = "I&apos;m struggling with shadow integration";
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const context = { emotionalState: 'anxious', currentArchetype: 'Shadow' };
 
       // First selection (uncached)

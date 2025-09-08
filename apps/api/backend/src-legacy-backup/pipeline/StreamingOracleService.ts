@@ -150,7 +150,11 @@ export class StreamingOracleService extends EventEmitter {
    */
   async preloadVoice(voiceConfig: any): Promise<void> {
     const preloadTexts = [
+<<<<<<< HEAD
       "You already know what I'm going to say, don't you?",
+=======
+      "You already know what I&apos;m going to say, don&apos;t you?",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "The oracle speaks through silence and symbols.",
       "In the sacred space between breaths, wisdom awakens.",
     ];

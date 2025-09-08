@@ -30,7 +30,11 @@ export class ElementalContentService {
     context: ContentDeliveryContext,
     settings: ContentAdaptationSettings,
   ): Promise<ContentRecommendation[]> {
+<<<<<<< HEAD
     // Get user's elemental profile
+=======
+    // Get user&apos;s elemental profile
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const userProfile = await this.getUserElementalProfile(context.userId);
 
     // Check anti-commodification gates
@@ -119,7 +123,11 @@ export class ElementalContentService {
   ): boolean {
     // Check if user has completed prerequisite content
     return content.prerequisiteGates.every((gateId) => {
+<<<<<<< HEAD
       // In real implementation, check against user's completed gates
+=======
+      // In real implementation, check against user&apos;s completed gates
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       return true;
     });
   }
@@ -387,7 +395,11 @@ export class ElementalContentService {
     profile: UserElementalProfile,
   ): string[] {
     return [
+<<<<<<< HEAD
       "Share your real-world application attempts, including what didn't work",
+=======
+      "Share your real-world application attempts, including what didn&apos;t work",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "Ask for reality-checking on your understanding",
       "Offer support to others working with similar themes",
       "Request accountability for consistent practice",
@@ -440,7 +452,11 @@ export class ElementalContentService {
       description: "Understanding passion as a tool for purposeful action",
       content: "Passion is not a feeling to chase, but energy to direct...",
       metaphoricalFraming:
+<<<<<<< HEAD
         "Like fire, passion can warm and illuminate, or burn and destroy - the difference lies in how it's contained and directed.",
+=======
+        "Like fire, passion can warm and illuminate, or burn and destroy - the difference lies in how it&apos;s contained and directed.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       realWorldApplications: [
         "Channel frustration into constructive problem-solving",
         "Use excitement to fuel consistent daily practices",
@@ -501,7 +517,11 @@ export class ElementalContentService {
       estimatedEngagementTime: 20,
       integrationPeriod: 21,
       bypassingAlerts: ["emotional_avoidance"],
+<<<<<<< HEAD
       disclaimers: ["Adaptation doesn't mean losing your boundaries or values"],
+=======
+      disclaimers: ["Adaptation doesn&apos;t mean losing your boundaries or values"],
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -540,7 +560,11 @@ export class ElementalContentService {
       integrationPeriod: 45,
       bypassingAlerts: ["ordinary_rejection", "insight_addiction"],
       disclaimers: [
+<<<<<<< HEAD
         "Grounding practices support but don't replace professional mental health care when needed",
+=======
+        "Grounding practices support but don&apos;t replace professional mental health care when needed",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       ],
       createdAt: new Date(),
       updatedAt: new Date(),

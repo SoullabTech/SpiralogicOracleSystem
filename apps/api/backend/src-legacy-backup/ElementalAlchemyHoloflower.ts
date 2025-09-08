@@ -60,7 +60,11 @@ export class ElementalAlchemyHoloflower {
   private state: HoloflowerState;
   private readonly PHI = 1.618033988749895; // Golden ratio
 
+<<<<<<< HEAD
   // Kelly's Elemental Alchemy Model Structure
+=======
+  // Kelly&apos;s Elemental Alchemy Model Structure
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   private readonly houseDefinitions = [
     // FIRE QUADRANT (Houses 1-3)
     {
@@ -226,7 +230,11 @@ export class ElementalAlchemyHoloflower {
     const houses: HoloflowerHouse[] = this.houseDefinitions.map(
       (def, index) => ({
         ...def,
+<<<<<<< HEAD
         angle: (index * 30 - 90) * (Math.PI / 180), // Start at top (12 o'clock)
+=======
+        angle: (index * 30 - 90) * (Math.PI / 180), // Start at top (12 o&apos;clock)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         currentIntensity:
           initialState?.houses?.[index]?.currentIntensity || 0.5,
         transformationPotential: 0.5,

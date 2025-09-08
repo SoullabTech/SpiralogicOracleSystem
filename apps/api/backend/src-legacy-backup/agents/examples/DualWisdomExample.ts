@@ -136,8 +136,13 @@ export class DualWisdomDemo {
     // Simulate several Jung-mode interactions
     const jungInputs = [
       "I hate this part of myself",
+<<<<<<< HEAD
       "I don't want to look at my shadow",
       "I can't stand my anger",
+=======
+      "I don&apos;t want to look at my shadow",
+      "I can&apos;t stand my anger",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "I refuse to accept this",
     ];
 
@@ -169,7 +174,11 @@ export class DualWisdomDemo {
         expectedBalance: "Should switch to Jung for balance",
       },
       {
+<<<<<<< HEAD
         input: "I don't want to feel this",
+=======
+        input: "I don&apos;t want to feel this",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         expectedBalance: "Jung for avoidance",
       },
       {

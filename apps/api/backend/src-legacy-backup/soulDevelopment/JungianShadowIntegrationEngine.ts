@@ -480,7 +480,11 @@ export class JungianShadowIntegrationEngine {
       "sabotage success",
       "fear of success",
       "imposter syndrome",
+<<<<<<< HEAD
       "don't deserve",
+=======
+      "don&apos;t deserve",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "success anxiety",
     ];
     return indicators.some((indicator) => input.includes(indicator));
@@ -909,7 +913,11 @@ export class JungianShadowIntegrationEngine {
     userMessage: string,
     culturalProfile: CulturalProfile,
   ): Promise<string> {
+<<<<<<< HEAD
     return `I am the voice that tells you you're not good enough. What would you like to say to me?`;
+=======
+    return `I am the voice that tells you you&apos;re not good enough. What would you like to say to me?`;
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 
   private async generateRejectedSelfResponse(
@@ -923,7 +931,11 @@ export class JungianShadowIntegrationEngine {
     userMessage: string,
     culturalProfile: CulturalProfile,
   ): Promise<string> {
+<<<<<<< HEAD
     return `I represent the cultural aspects you've been taught to suppress. Your heritage has both light and shadow.`;
+=======
+    return `I represent the cultural aspects you&apos;ve been taught to suppress. Your heritage has both light and shadow.`;
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 
   private async generateArchetypalShadowResponse(

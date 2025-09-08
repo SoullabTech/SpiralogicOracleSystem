@@ -58,6 +58,7 @@ You are Maia, the Sacred Mirror.
 
 export async function POST(req: NextRequest) {
   try {
+<<<<<<< HEAD
     const { message, content, enableVoice, userId } = await req.json()
     
     // Accept either 'message' or 'content' field
@@ -66,6 +67,13 @@ export async function POST(req: NextRequest) {
     if (!userText || typeof userText !== 'string') {
       return NextResponse.json(
         { error: 'Message is required and must be a string' },
+=======
+    const { content } = await req.json()
+    
+    if (!content || typeof content !== 'string') {
+      return NextResponse.json(
+        { error: 'Content is required and must be a string' },
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         { status: 400 }
       )
     }
@@ -76,14 +84,20 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+<<<<<<< HEAD
           userId: userId || 'beta-user',
           userText: userText,
+=======
+          userId: 'beta-user',
+          userText: content,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           element: 'aether'
         })
       })
 
       if (response.ok) {
         const data = await response.json()
+<<<<<<< HEAD
         const responseText = data.response || data.message || "I hear you. Tell me more about what's on your mind."
         
         // Generate voice response if enabled
@@ -114,6 +128,10 @@ export async function POST(req: NextRequest) {
           text: responseText,
           message: responseText, // For compatibility
           audioUrl,
+=======
+        return NextResponse.json({
+          response: data.response || data.message || "I hear you. Tell me more about what's on your mind.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           element: data.element,
           emotion: data.emotion,
           source: 'oracle-backend'
@@ -140,7 +158,11 @@ export async function POST(req: NextRequest) {
             },
             {
               role: 'user',
+<<<<<<< HEAD
               content: userText
+=======
+              content: content
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             }
           ],
           temperature: 0.7,
@@ -150,6 +172,7 @@ export async function POST(req: NextRequest) {
 
       if (openaiResponse.ok) {
         const data = await openaiResponse.json()
+<<<<<<< HEAD
         const responseText = data.choices[0].message.content
         
         // Generate voice for fallback if enabled
@@ -179,6 +202,12 @@ export async function POST(req: NextRequest) {
           text: responseText,
           message: responseText,
           audioUrl,
+=======
+        const response = data.choices[0].message.content
+        
+        return NextResponse.json({
+          response,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           element: 'aether',
           direct: true
         })
@@ -190,7 +219,11 @@ export async function POST(req: NextRequest) {
     }
     
     // Ultimate fallback - still unique per message
+<<<<<<< HEAD
     const hash = userText.length % 5
+=======
+    const hash = content.length % 5
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const deepFallbacks = [
       "I notice there's something important in what you're sharing. What would you like to explore about this?",
       "I'm curious about what's beneath this concern. What does your intuition tell you?",
@@ -199,12 +232,17 @@ export async function POST(req: NextRequest) {
       "I'm here with you in this uncertainty. What feels most true for you in this moment?"
     ]
     
+<<<<<<< HEAD
     const fallbackText = deepFallbacks[hash]
     
     return NextResponse.json({
       text: fallbackText,
       message: fallbackText,
       audioUrl: null, // No audio for ultimate fallback
+=======
+    return NextResponse.json({
+      response: deepFallbacks[hash],
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       element: 'aether',
       fallback: true
     })

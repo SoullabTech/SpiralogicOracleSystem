@@ -61,7 +61,11 @@ export default function AstrologyDashboard() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+=======
+    <div className="min-h-screen  from-purple-50 via-blue-50 to-indigo-50">
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">

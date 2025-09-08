@@ -394,7 +394,11 @@ export class ParticipantContextService {
     // Remove from cache
     this.contextCache.delete(participantId);
 
+<<<<<<< HEAD
     // Archive in database (don't delete, for audit trail)
+=======
+    // Archive in database (don&apos;t delete, for audit trail)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     await supabase
       .from("participant_contexts")
       .update({ archived: true, archived_at: new Date().toISOString() })

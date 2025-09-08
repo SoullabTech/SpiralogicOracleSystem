@@ -117,7 +117,11 @@ export class AnalyticsService {
     userId: string,
     timeframe: "week" | "month" | "quarter" | "year" = "month",
   ): Promise<UserDevelopmentMetrics> {
+<<<<<<< HEAD
     // Get user's integration architecture and activity
+=======
+    // Get user&apos;s integration architecture and activity
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const architecture = await this.getUserIntegrationArchitecture(userId);
     const activityData = await this.getUserActivityData(userId, timeframe);
     const engagementData = await this.getUserEngagementData(userId, timeframe);

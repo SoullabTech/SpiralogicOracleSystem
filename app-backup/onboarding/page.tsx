@@ -16,12 +16,20 @@ interface ConsciousnessProfile {
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [profile, setProfile] = useState<ConsciousnessProfile>({
+<<<<<<< HEAD
     name: "&quot;,
+=======
+    name: "",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     spiritualPath: [],
     primaryChallenges: [],
     guidanceTypes: [],
     preferredAgents: [],
+<<<<<<< HEAD
     experienceLevel: &quot;",
+=======
+    experienceLevel: "",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     intentions: "",
   });
   const [completed, setCompleted] = useState(false);
@@ -156,7 +164,11 @@ export default function OnboardingPage() {
 
   const handleComplete = async () => {
     // Save profile to localStorage for demo purposes
+<<<<<<< HEAD
     localStorage.setItem(&quot;consciousness-profile", JSON.stringify(profile));
+=======
+    localStorage.setItem("consciousness-profile", JSON.stringify(profile));
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     setCompleted(true);
   };
 
@@ -228,7 +240,11 @@ export default function OnboardingPage() {
                   <input
                     type="text"
                     value={profile.name}
+<<<<<<< HEAD
                     onChange={(e) => updateField(&quot;name&quot;, e.target.value)}
+=======
+                    onChange={(e) => updateField("name", e.target.value)}
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                     placeholder="Enter your preferred name"
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50"
                   />
@@ -248,7 +264,11 @@ export default function OnboardingPage() {
                   {spiritualPaths.map((path) => (
                     <button
                       key={path}
+<<<<<<< HEAD
                       onClick={() => updateArrayField(&quot;spiritualPath", path)}
+=======
+                      onClick={() => updateArrayField("spiritualPath", path)}
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                       className={`p-3 rounded-lg border text-left transition ${
                         profile.spiritualPath.includes(path)
                           ? "bg-yellow-400/20 border-yellow-400/50"
@@ -274,7 +294,11 @@ export default function OnboardingPage() {
                     <button
                       key={challenge}
                       onClick={() =>
+<<<<<<< HEAD
                         updateArrayField(&quot;primaryChallenges", challenge)
+=======
+                        updateArrayField("primaryChallenges", challenge)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                       }
                       className={`p-3 rounded-lg border text-left transition ${
                         profile.primaryChallenges.includes(challenge)
@@ -300,7 +324,11 @@ export default function OnboardingPage() {
                   {guidanceTypes.map((type) => (
                     <button
                       key={type}
+<<<<<<< HEAD
                       onClick={() => updateArrayField(&quot;guidanceTypes", type)}
+=======
+                      onClick={() => updateArrayField("guidanceTypes", type)}
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                       className={`p-3 rounded-lg border text-left transition ${
                         profile.guidanceTypes.includes(type)
                           ? "bg-yellow-400/20 border-yellow-400/50"
@@ -329,7 +357,11 @@ export default function OnboardingPage() {
                     <button
                       key={agent.key}
                       onClick={() =>
+<<<<<<< HEAD
                         updateArrayField(&quot;preferredAgents", agent.key)
+=======
+                        updateArrayField("preferredAgents", agent.key)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                       }
                       className={`w-full p-4 rounded-lg border text-left transition ${
                         profile.preferredAgents.includes(agent.key)
@@ -368,7 +400,11 @@ export default function OnboardingPage() {
                       <button
                         key={level.key}
                         onClick={() =>
+<<<<<<< HEAD
                           updateField(&quot;experienceLevel", level.key)
+=======
+                          updateField("experienceLevel", level.key)
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                         }
                         className={`w-full p-3 rounded-lg border text-left transition ${
                           profile.experienceLevel === level.key
@@ -393,7 +429,11 @@ export default function OnboardingPage() {
                   </label>
                   <textarea
                     value={profile.intentions}
+<<<<<<< HEAD
                     onChange={(e) => updateField(&quot;intentions&quot;, e.target.value)}
+=======
+                    onChange={(e) => updateField("intentions", e.target.value)}
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                     placeholder="Share your intentions, goals, or what you&apos;re seeking guidance about..."
                     rows={4}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50 resize-none"
@@ -421,7 +461,11 @@ export default function OnboardingPage() {
                 }
                 className="px-6 py-3  from-yellow-400 to-orange-500 text-gray-900 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
+<<<<<<< HEAD
                 {step === totalSteps ? &quot;Complete Setup&quot; : "Next →"}
+=======
+                {step === totalSteps ? "Complete Setup" : "Next →"}
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
               </button>
             </div>
           </div>

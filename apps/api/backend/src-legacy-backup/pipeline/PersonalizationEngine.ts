@@ -255,7 +255,11 @@ export class PersonalizationEngine {
   }
 
   /**
+<<<<<<< HEAD
    * 🌱 Update User's Spiritual Evolution
+=======
+   * 🌱 Update User&apos;s Spiritual Evolution
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
    */
   async updateSpiritualEvolution(userId: string, response: any): Promise<void> {
     const personalization = await this.getUserPersonalization(userId);
@@ -556,7 +560,11 @@ export class PersonalizationEngine {
     userId: string,
     inputAnalysis: any,
   ): Promise<void> {
+<<<<<<< HEAD
     // This would update the user's interaction patterns over time
+=======
+    // This would update the user&apos;s interaction patterns over time
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     // For now, just logging
     logger.debug("Interaction pattern update:", {
       userId,

@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AlertTriangle, RefreshCw } from 'lucide-react'
 
 export default function Error({
   error,
@@ -14,17 +17,48 @@ export default function Error({
   }, [error])
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold text-white mb-4">Something went wrong!</h2>
-        <p className="text-gray-300 mb-6">{error.message || 'An unexpected error occurred'}</p>
-        <button
-          onClick={reset}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
-        >
-          Try again
-        </button>
-      </div>
+    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-background/80 backdrop-blur-xl border-red-500/20">
+        <CardHeader className="text-center">
+          <div className="mx-auto w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="w-6 h-6 text-red-400" />
+          </div>
+          <CardTitle className="text-xl font-semibold">Something went wrong</CardTitle>
+        </CardHeader>
+        <CardContent className="text-center space-y-4">
+          <p className="text-sm text-muted-foreground">
+            We encountered an unexpected error. This has been logged and our team will investigate.
+          </p>
+          
+          {process.env.NODE_ENV === 'development' && (
+            <details className="text-left">
+              <summary className="cursor-pointer text-xs text-red-400 hover:text-red-300">
+                Error Details (Development)
+              </summary>
+              <pre className="mt-2 p-2 bg-red-900/20 rounded text-xs text-red-200 overflow-auto">
+                {error.message}
+              </pre>
+            </details>
+          )}
+
+          <div className="flex flex-col sm:flex-row gap-2 justify-center">
+            <Button 
+              onClick={reset}
+              className=" from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Try Again
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => window.location.href = '/'}
+              className="border-purple-500/20 hover:bg-purple-500/10"
+            >
+              Go Home
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

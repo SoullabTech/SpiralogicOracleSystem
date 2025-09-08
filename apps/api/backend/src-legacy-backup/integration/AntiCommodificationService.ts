@@ -87,14 +87,22 @@ export class AntiCommodificationService {
       "breakthrough to new levels":
         "explore new perspectives while honoring where you are",
       "unlock your potential":
+<<<<<<< HEAD
         "discover what's already present in your experience",
+=======
+        "discover what&apos;s already present in your experience",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "activate your power": "connect with your inherent human capacity",
       "quantum leap": "take thoughtful steps in your development",
       "instant healing": "support your natural healing process over time",
       "permanent change":
         "cultivate sustainable practices that serve your growth",
       "never struggle again":
+<<<<<<< HEAD
         "develop tools for navigating life's inevitable challenges",
+=======
+        "develop tools for navigating life&apos;s inevitable challenges",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "complete transformation": "support your ongoing development journey",
       "life-changing results": "meaningful support for your growth process",
       "guaranteed success": "tools that some people find helpful",

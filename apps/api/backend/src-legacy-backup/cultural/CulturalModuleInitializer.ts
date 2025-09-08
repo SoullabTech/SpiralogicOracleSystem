@@ -161,7 +161,11 @@ export class CulturalModuleInitializer {
    */
   private async initializeIndigenousSovereignty(): Promise<void> {
     // Indigenous Sovereignty Protocol is initialized on import
+<<<<<<< HEAD
     // Verify it's working correctly
+=======
+    // Verify it&apos;s working correctly
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const testRequest = {
       tradition: "test_tradition",
       userCulturalBackground: "test_user",

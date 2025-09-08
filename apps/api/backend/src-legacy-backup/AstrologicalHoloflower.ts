@@ -217,7 +217,11 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
       modernRuler: "uranus" as Planet,
       spiralogicStage: 11,
       developmentalTheme: "Collective Evolution",
+<<<<<<< HEAD
       evolutionaryGoal: "Innovative service to humanity's awakening",
+=======
+      evolutionaryGoal: "Innovative service to humanity&apos;s awakening",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     },
     {
       number: 12,
@@ -274,14 +278,22 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
     };
   }
 
+<<<<<<< HEAD
   // Set user's natal chart
+=======
+  // Set user&apos;s natal chart
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   public setNatalChart(birthData: {
     date: Date;
     time: string;
     location: { lat: number; lng: number };
   }) {
     // In reality, this would calculate actual positions
+<<<<<<< HEAD
     // For now, we'll use placeholder data
+=======
+    // For now, we&apos;ll use placeholder data
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     this.astroState.natalChart = {
       ascendant: "aries",
       midheaven: "capricorn",
@@ -328,7 +340,11 @@ export class AstrologicalHoloflower extends ElementalAlchemyHoloflower {
     this.astroState.houses.forEach((house) => {
       house.currentTransits = [];
 
+<<<<<<< HEAD
       // Check each planet's position
+=======
+      // Check each planet&apos;s position
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       transitData.forEach((position, planet) => {
         if (this.isPlanetInHouse(position, house.number)) {
           house.currentTransits.push({

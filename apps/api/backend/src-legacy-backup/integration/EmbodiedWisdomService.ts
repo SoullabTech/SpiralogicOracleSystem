@@ -163,7 +163,11 @@ export class EmbodiedWisdomService {
     // Check for humility development
     const humilityIndicators = [
       "humbled",
+<<<<<<< HEAD
       "learned i don't know",
+=======
+      "learned i don&apos;t know",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "more questions",
       "realize how much",
       "beginning to understand",
@@ -344,7 +348,11 @@ export class EmbodiedWisdomService {
     const strugglingPractices = metrics.filter((m) => m.consistencyRating < 6);
     if (strugglingPractices.length > 0) {
       encouragements.push(
+<<<<<<< HEAD
         "🌿 Struggling with consistency is part of the human experience. The practice is showing up even when it's difficult.",
+=======
+        "🌿 Struggling with consistency is part of the human experience. The practice is showing up even when it&apos;s difficult.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
     }
 
@@ -352,7 +360,11 @@ export class EmbodiedWisdomService {
     const perfectPractices = metrics.filter((m) => m.consistencyRating >= 9);
     if (perfectPractices.length > 2) {
       realityChecks.push(
+<<<<<<< HEAD
         "💫 High consistency is wonderful, but remember that perfection isn't the goal. Allow space for your humanity.",
+=======
+        "💫 High consistency is wonderful, but remember that perfection isn&apos;t the goal. Allow space for your humanity.",
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
     }
 
@@ -385,7 +397,11 @@ export class EmbodiedWisdomService {
       ) / tracking.livedExperiences.length;
 
     if (experienceDepth >= 2) {
+<<<<<<< HEAD
       strengths.push("You're honest about the challenges in applying insights");
+=======
+      strengths.push("You&apos;re honest about the challenges in applying insights");
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     } else {
       growthEdges.push(
         "Consider exploring the challenges more deeply - they contain wisdom",

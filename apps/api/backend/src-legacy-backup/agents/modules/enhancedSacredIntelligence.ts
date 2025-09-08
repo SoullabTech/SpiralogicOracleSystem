@@ -299,12 +299,21 @@ export class EnhancedSacredIntelligence {
 
   private detectAvoidanceLanguage(queries: string[]): string | null {
     const avoidancePatterns = [
+<<<<<<< HEAD
       /i can't seem to/i,
       /i always/i,
       /i never/i,
       /why do i/i,
       /i don't understand why/i,
       /it's not my fault/i,
+=======
+      /i can&apos;t seem to/i,
+      /i always/i,
+      /i never/i,
+      /why do i/i,
+      /i don&apos;t understand why/i,
+      /it&apos;s not my fault/i,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       /they make me/i,
     ];
 

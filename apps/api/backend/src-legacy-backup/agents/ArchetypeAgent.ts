@@ -148,7 +148,11 @@ export abstract class ArchetypeAgent extends OracleAgent {
     benefits: string[];
   } {
     return {
+<<<<<<< HEAD
       suggestion: `${this.oracleName} senses you're ready to evolve from ${this.phase} to ${newPhase}`,
+=======
+      suggestion: `${this.oracleName} senses you&apos;re ready to evolve from ${this.phase} to ${newPhase}`,
+>>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       fromPhase: this.phase,
       toPhase: newPhase,
       archetypeChange: newArchetype
