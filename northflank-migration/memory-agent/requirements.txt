@@ -5,7 +5,7 @@ pydantic==2.5.0
 
 # Database and storage
 sqlalchemy==2.0.23
-alembic==1.13.0
+alembic==1.16.5
 sqlite3
 
 # Vector search and embeddings
