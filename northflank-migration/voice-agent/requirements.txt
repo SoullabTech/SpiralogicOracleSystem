@@ -1,7 +1,7 @@
 # FastAPI and server
 fastapi>=0.115.0
 uvicorn>=0.32.0
-pydantic==2.5.0
+pydantic==2.11.7
 
 # AI/ML dependencies for Sesame CSM
 transformers>=4.44.2
