@@ -24,6 +24,5 @@
   "github": {
     "silent": true,
     "autoJobCancelation": true
-  },
-  "skipMiddlewareUrlNormalize": true
+  }
 }
