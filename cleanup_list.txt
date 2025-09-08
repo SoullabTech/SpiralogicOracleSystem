@@ -1,0 +1,40 @@
+DIRECTORIES TO REMOVE:
+
+## Duplicate/Nested Projects:
+- SpiralogicOracleSystem/ (duplicate nested project)
+- spiralogic-northflank/ (deployment experiment)
+- vast-maya-payperuse/ (old deployment)
+- northflank-migration/ (migration files)
+
+## Old Experimental Systems:
+- akash/ (blockchain experiment)
+- csm/ (old system)
+- sesame-csm/ (old system)
+- sesame_csm_openai/ (old system)
+- soul_memory/ (old version)
+- dev-archive/ (old code)
+- frontend/ (old frontend)
+- app-backup/ (backup we don't need)
+
+## Infrastructure Not Needed:
+- k8s/ (kubernetes configs)
+- prometheus/ (monitoring)
+- monitoring/ (monitoring)
+- volumes/ (docker volumes)
+- security/ (old security configs)
+
+## Unused Configs:
+- configs/ (duplicate of config)
+- templates/ (unused templates)
+- examples/ (example code)
+- logs/ (old logs)
+- tmp/ (temporary files)
+- audio_output/ (generated audio)
+
+## API Routes to Clean:
+- app/api/_disabled_*/ (all disabled routes)
+- pages/api/oracle/ (old pages API)
+
+## Environment Files to Remove (keeping only essential):
+Will keep: .env, .env.local, .env.production, .env.production.local
+Remove all others (.env.beta-launch, .env.docker.example, etc.)
