@@ -64,11 +64,7 @@ export class OracleSettingsService {
     // Validate voice settings
     this.validateVoiceSettings(voiceCustomization);
 
-<<<<<<< HEAD
     // Update Oracle's voice profile
-=======
-    // Update Oracle&apos;s voice profile
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     await OracleService.updateOracleVoiceSettings(userId, voiceCustomization);
 
     // Clear cache to force recreation with new voice
@@ -165,11 +161,7 @@ export class OracleSettingsService {
 
     if (proposal.userId !== userId) {
       throw new Error(
-<<<<<<< HEAD
         "Unauthorized: Cannot accept another user's evolution proposal",
-=======
-        "Unauthorized: Cannot accept another user&apos;s evolution proposal",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
     }
 
@@ -210,11 +202,7 @@ export class OracleSettingsService {
 
     if (proposal.userId !== userId) {
       throw new Error(
-<<<<<<< HEAD
         "Unauthorized: Cannot decline another user's evolution proposal",
-=======
-        "Unauthorized: Cannot decline another user&apos;s evolution proposal",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       );
     }
 
@@ -395,11 +383,7 @@ export class OracleSettingsService {
     }
 
     if (backup.settings.userId !== userId) {
-<<<<<<< HEAD
       throw new Error("Unauthorized: Cannot restore another user's backup");
-=======
-      throw new Error("Unauthorized: Cannot restore another user&apos;s backup");
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
 
     // Restore settings

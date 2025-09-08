@@ -148,11 +148,7 @@ function getThemeResponseForMode(theme: string, mode: OracleModeType): string {
     themeType = "general";
   }
 
-<<<<<<< HEAD
   // Mock responses based on the PersonalOracleAgent's getModeResponseForTheme method
-=======
-  // Mock responses based on the PersonalOracleAgent&apos;s getModeResponseForTheme method
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   const responses: Record<string, Record<OracleModeType, string>> = {
     mother_relationship: {
       alchemist:

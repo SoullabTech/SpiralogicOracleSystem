@@ -91,11 +91,7 @@ export class RetreatSupportService {
 
       if (error) throw error;
 
-<<<<<<< HEAD
       // Update participant's current state
-=======
-      // Update participant&apos;s current state
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       await this.updateParticipantCurrentState(checkIn.participantId, checkIn);
 
       // Check if support is needed
@@ -179,11 +175,7 @@ Your ${participant.oracleElement} essence is ${this.interpretEnergyLevel(checkIn
 Based on your check-in, I sense ${checkIn.morningState.emotionalTone} flowing through you.
 ${checkIn.shadowWork?.breakthroughMoments ? `Beautiful breakthrough: ${checkIn.shadowWork.breakthroughMoments}` : ""}
 
-<<<<<<< HEAD
 Today's medicine: ${this.getElementalMedicine(participant.oracleElement, checkIn)}
-=======
-Today&apos;s medicine: ${this.getElementalMedicine(participant.oracleElement, checkIn)}
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 Trust your journey today.
 ~ Your ${participant.oracleArchetype}`;
@@ -520,11 +512,7 @@ Trust your journey today.
         .select("*")
         .eq("retreat_id", retreatId);
 
-<<<<<<< HEAD
       // Get today's check-ins
-=======
-      // Get today&apos;s check-ins
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const { data: todayCheckIns } = await supabase
         .from("daily_checkins")
         .select("*")
@@ -812,11 +800,7 @@ Trust your journey today.
       summary,
       recommendations: [
         "Follow up with participants who had breakthroughs",
-<<<<<<< HEAD
         "Integrate captured wisdom into tomorrow's session",
-=======
-        "Integrate captured wisdom into tomorrow&apos;s session",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         "Address any unresolved tensions noticed",
       ],
       highlights: this.extractSessionHighlights(summary),
@@ -994,11 +978,7 @@ Trust your journey today.
       );
     }
 
-<<<<<<< HEAD
     recommendations.push("Celebrate the group's journey so far");
-=======
-    recommendations.push("Celebrate the group&apos;s journey so far");
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
     return recommendations;
   }

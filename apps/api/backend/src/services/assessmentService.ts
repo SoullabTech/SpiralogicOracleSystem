@@ -422,11 +422,7 @@ export class AssessmentService {
         },
         {
           id: "inner_calling",
-<<<<<<< HEAD
           text: "What feels most like your soul's calling?",
-=======
-          text: "What feels most like your soul&apos;s calling?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           type: "multiple_choice",
           required: true,
           options: [

@@ -92,11 +92,7 @@ const FireIntelligence = {
       lowerInput.includes("afraid") ||
       lowerInput.includes("scared") ||
       lowerInput.includes("doubt") ||
-<<<<<<< HEAD
       lowerInput.includes("can't")
-=======
-      lowerInput.includes("can&apos;t")
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     ) {
       return "sacred_rebellion";
     }
@@ -134,37 +130,23 @@ const FireIntelligence = {
       case "catalytic_disruption":
         return `${protocols.catalyst.stagnation_breaker}
 
-<<<<<<< HEAD
 I can feel the creative force in you pushing against the walls of where you've been. Stagnation isn't your enemy - it's your soul's way of saying "we've outgrown this space."
 
 What if this restlessness is actually your inner fire calling you toward something you haven't dared to imagine yet? What would you create if you knew you couldn't fail?`;
-=======
-I can feel the creative force in you pushing against the walls of where you&apos;ve been. Stagnation isn&apos;t your enemy - it&apos;s your soul's way of saying "we've outgrown this space."
-
-What if this restlessness is actually your inner fire calling you toward something you haven&apos;t dared to imagine yet? What would you create if you knew you couldn&apos;t fail?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       case "vision_ignition":
         return `${protocols.presence.recognition}
 
 Your vision isn't just a dream - it's a living force seeking form through you. I can feel it wanting to move from the realm of possibility into the realm of creation.
 
-<<<<<<< HEAD
 But here's what the fire knows: visions don't need perfection to begin. They need courage. What's one small way you could honor this vision today? What's the tiniest flame you could light?`;
-=======
-But here&apos;s what the fire knows: visions don&apos;t need perfection to begin. They need courage. What&apos;s one small way you could honor this vision today? What's the tiniest flame you could light?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       case "sacred_rebellion":
         return `${protocols.rebellion.authority_questioning}
 
 Fear isn't your enemy - it's often your inner wisdom disguised as warning. But some fears are old programming, not present truth. The fire in you burns brighter than the fear around you.
 
-<<<<<<< HEAD
 What if the thing you're afraid of is actually the doorway to who you're becoming? What would you do if you trusted your fire more than your fear?`;
-=======
-What if the thing you&apos;re afraid of is actually the doorway to who you're becoming? What would you do if you trusted your fire more than your fear?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       case "creative_channeling":
         return `${protocols.integration.creative_channeling}
@@ -183,11 +165,7 @@ What if this scattered energy is actually trying to show you multiple pathways? 
       default:
         return `${protocols.presence.greeting}
 
-<<<<<<< HEAD
 I feel something stirring in the space between your words. There's a quality of aliveness here that wants attention. Your soul-fire is always speaking - sometimes in whispers, sometimes in roars.
-=======
-I feel something stirring in the space between your words. There&apos;s a quality of aliveness here that wants attention. Your soul-fire is always speaking - sometimes in whispers, sometimes in roars.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 What's alive in you right now that hasn't found its voice yet? What wants to emerge that you haven't given permission to exist?`;
     }

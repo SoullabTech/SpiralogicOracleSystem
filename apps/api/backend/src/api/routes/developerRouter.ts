@@ -114,11 +114,7 @@ const generateAPIKey = (): string => {
 const updateUsageStats = (keyRecord: APIKeyRecord) => {
   const usage = developerUsage.get(keyRecord.developerId);
   if (usage) {
-<<<<<<< HEAD
     // Reset usage if it's been more than 15 minutes (rate limit window)
-=======
-    // Reset usage if it&apos;s been more than 15 minutes (rate limit window)
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     if (Date.now() - usage.lastReset > 15 * 60 * 1000) {
       usage.requests = 0;
       usage.lastReset = Date.now();

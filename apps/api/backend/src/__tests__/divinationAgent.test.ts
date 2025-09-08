@@ -112,11 +112,7 @@ describe("DivinationAgent", () => {
 
       expect(result.method).toBe("yijing");
       expect(result.title).toContain("Yi Jing");
-<<<<<<< HEAD
       expect(result.subtitle).toContain("Traveler's Path");
-=======
-      expect(result.subtitle).toContain("Traveler&apos;s Path");
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       expect(result.insight).toContain("soul");
       expect(result.guidance).toContain("Soul Guidance");
       expect(result.energeticSignature).toBeTruthy();

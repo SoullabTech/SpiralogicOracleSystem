@@ -158,11 +158,7 @@ export class OnboardingService {
     // Create first interaction experience
     const firstInteraction = await OracleService.processOracleQuery(
       userId,
-<<<<<<< HEAD
       "I'm ready to begin my spiritual journey. What should I know about you?",
-=======
-      "I&apos;m ready to begin my spiritual journey. What should I know about you?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       { context: "onboarding", firstInteraction: true },
     );
 

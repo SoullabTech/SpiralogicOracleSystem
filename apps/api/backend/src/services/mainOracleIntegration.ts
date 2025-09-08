@@ -128,17 +128,10 @@ export class MainOracleIntegrationService {
     try {
       logger.info("Fetching collective insights", { userId, limit });
 
-<<<<<<< HEAD
       // Get user's recent memories to determine relevance
       const userMemories = await getRelevantMemories(userId, "", 20);
 
       // Calculate user's elemental and archetypal preferences
-=======
-      // Get user&apos;s recent memories to determine relevance
-      const userMemories = await getRelevantMemories(userId, "", 20);
-
-      // Calculate user&apos;s elemental and archetypal preferences
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const userProfile = this.analyzeUserProfile(userMemories);
 
       // Filter and rank insights by relevance to user
@@ -169,19 +162,11 @@ export class MainOracleIntegrationService {
     try {
       logger.info("Fetching archetypal processes", { userId });
 
-<<<<<<< HEAD
       // Get user's profile to suggest relevant processes
       const userMemories = await getRelevantMemories(userId, "", 10);
       const userProfile = this.analyzeUserProfile(userMemories);
 
       // Filter processes by user's dominant elements and archetypes
-=======
-      // Get user&apos;s profile to suggest relevant processes
-      const userMemories = await getRelevantMemories(userId, "", 10);
-      const userProfile = this.analyzeUserProfile(userMemories);
-
-      // Filter processes by user&apos;s dominant elements and archetypes
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const relevantProcesses = this.archetypalProcesses
         .filter((process) => process.isActive)
         .filter((process) => {
@@ -346,11 +331,7 @@ export class MainOracleIntegrationService {
   }
 
   private createAnonymizedHash(userId: string, memoryId: string): string {
-<<<<<<< HEAD
     // Create a one-way hash that can't be traced back to user
-=======
-    // Create a one-way hash that can&apos;t be traced back to user
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     return `anon_${Date.now().toString(36)}_${Math.random().toString(36).substr(2, 9)}`;
   }
 

@@ -74,11 +74,7 @@ export class WisdomKeeperService {
 
       if (error) throw error;
 
-<<<<<<< HEAD
       // Update participant's wisdom score
-=======
-      // Update participant&apos;s wisdom score
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       await this.updateWisdomScore(wisdom.participantId);
 
       // Find and link related wisdom
@@ -169,11 +165,7 @@ export class WisdomKeeperService {
         `accessibility.eq.public,accessibility.eq.retreat_alumni`,
       );
 
-<<<<<<< HEAD
       // Add participant's private wisdom
-=======
-      // Add participant&apos;s private wisdom
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       query = query.or(
         `and(participant_id.eq.${params.requesterId},accessibility.eq.private)`,
       );
@@ -397,11 +389,7 @@ export class WisdomKeeperService {
     limit: number = 10,
   ): Promise<WisdomEntry[]> {
     try {
-<<<<<<< HEAD
       // Get participant's interests and element
-=======
-      // Get participant&apos;s interests and element
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const { data: participant } = await supabase
         .from("retreat_participants")
         .select("oracleElement, retreatIntentions")
@@ -731,11 +719,7 @@ export class WisdomKeeperService {
         .order("metadata->resonance", { ascending: false })
         .limit(3);
 
-<<<<<<< HEAD
       // Get wisdom from participant's element
-=======
-      // Get wisdom from participant&apos;s element
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const { data: participant } = await supabase
         .from("retreat_participants")
         .select("oracleElement")

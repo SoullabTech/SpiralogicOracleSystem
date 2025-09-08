@@ -129,11 +129,7 @@ export class EventService extends EventEmitter {
       }
     } catch (error) {
       logger.error("Failed to apply event to read model", { error, event });
-<<<<<<< HEAD
       // Don't throw - event was persisted successfully
-=======
-      // Don&apos;t throw - event was persisted successfully
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
   }
 

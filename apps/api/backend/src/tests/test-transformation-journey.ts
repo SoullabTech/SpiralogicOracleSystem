@@ -49,11 +49,7 @@ async function testTransformationJourney() {
   console.log("💫 Phase 2: Breakthroughs\n");
 
   const breakthroughMessages = [
-<<<<<<< HEAD
     "I just realized I've been living my mother's dreams, not mine!",
-=======
-    "I just realized I&apos;ve been living my mother's dreams, not mine!",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     "Aha! I see the pattern now - I keep choosing unavailable partners",
     "I understand why I've been so afraid of success",
   ];
@@ -70,13 +66,8 @@ async function testTransformationJourney() {
 
   const shadowMessages = [
     "I hate this jealous part of myself",
-<<<<<<< HEAD
     "Working with my shadow today, it's intense",
     "I'm learning to accept my dark side",
-=======
-    "Working with my shadow today, it&apos;s intense",
-    "I&apos;m learning to accept my dark side",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   ];
 
   for (const msg of shadowMessages) {

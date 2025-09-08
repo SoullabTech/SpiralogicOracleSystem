@@ -59,11 +59,7 @@ export class AstrologicalService {
   private async updateCurrentEphemeris() {
     try {
       // In production, this would call a real ephemeris API
-<<<<<<< HEAD
       // For now, we'll use calculated positions
-=======
-      // For now, we&apos;ll use calculated positions
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const now = new Date();
       const positions = this.calculateCurrentPositions(now);
 
@@ -674,11 +670,7 @@ export class AstrologicalService {
     try {
       logger.info(`Generating Spiralogic report for user ${userId}`);
 
-<<<<<<< HEAD
       // Get user's birth data and natal chart
-=======
-      // Get user&apos;s birth data and natal chart
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const userData = await this.getUserAstrologicalData(userId);
       if (!userData || !userData.birthData || !userData.natalChart) {
         throw new Error(
@@ -686,11 +678,7 @@ export class AstrologicalService {
         );
       }
 
-<<<<<<< HEAD
       // Get user's elemental profile from the database
-=======
-      // Get user&apos;s elemental profile from the database
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const { data: profileData, error } = await supabase
         .from("user_profiles")
         .select("name, elemental_profile, archetypes")
@@ -852,11 +840,7 @@ export class AstrologicalService {
     return data.id;
   }
 
-<<<<<<< HEAD
   // Get user's previous reports
-=======
-  // Get user&apos;s previous reports
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   public async getUserReports(userId: string): Promise<any[]> {
     const { data, error } = await supabase
       .from("spiralogic_reports")

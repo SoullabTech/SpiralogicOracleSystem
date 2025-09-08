@@ -43,11 +43,7 @@ export class BreathGeometryIntegration {
 
   // Initialize breath session for user
   async initializeSession(userId: string): Promise<BreathSession> {
-<<<<<<< HEAD
     // Get user's elemental balance from memories
-=======
-    // Get user&apos;s elemental balance from memories
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const memories = await getRelevantMemories(userId, undefined, 100);
     const patterns = await getSpiritualPatternInsights(userId);
 
@@ -78,11 +74,7 @@ export class BreathGeometryIntegration {
     return session;
   }
 
-<<<<<<< HEAD
   // Process voice sample through Grant's harmonics
-=======
-  // Process voice sample through Grant&apos;s harmonics
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   processVoiceSample(
     userId: string,
     voiceSample: number[],
@@ -146,11 +138,7 @@ export class BreathGeometryIntegration {
     // Background with current element gradient
     svg += this.createElementalBackground(session.currentElement);
 
-<<<<<<< HEAD
     // Grant's constant guide circles
-=======
-    // Grant&apos;s constant guide circles
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     svg += this.createGrantCircles(cx, cy);
 
     // Breath spiral from all samples
@@ -233,11 +221,7 @@ export class BreathGeometryIntegration {
     session: BreathSession,
   ): string {
     const enhanced = voiceSample.map((sample, i) => {
-<<<<<<< HEAD
       // Apply Grant's constants as harmonic filters
-=======
-      // Apply Grant&apos;s constants as harmonic filters
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const phi_mod = Math.sin(
         ((i * GRANT_CONSTANTS.PHI) / voiceSample.length) * Math.PI,
       );
@@ -493,11 +477,7 @@ export class BreathGeometryIntegration {
       "Breath guidance:",
       `- Begin with ${ELEMENTAL_BREATH_PATTERNS[from].inhale.toFixed(1)}s inhale`,
       `- Gradually shift to ${ELEMENTAL_BREATH_PATTERNS[to].inhale.toFixed(1)}s inhale`,
-<<<<<<< HEAD
       `- Use Grant's √10 (${GRANT_CONSTANTS.SQRT_10.toFixed(2)}) as your base rhythm`,
-=======
-      `- Use Grant&apos;s √10 (${GRANT_CONSTANTS.SQRT_10.toFixed(2)}) as your base rhythm`,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       `- Allow the golden ratio (${GRANT_CONSTANTS.PHI.toFixed(3)}) to guide expansion`,
       "",
       "Visualize the elemental shift in your breath geometry.",

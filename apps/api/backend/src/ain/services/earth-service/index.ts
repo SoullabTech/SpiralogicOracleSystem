@@ -277,11 +277,7 @@ export class EarthService extends CloudAgent {
       `Like a mountain, build your ${plan.goal} with patience and permanence.`,
       `The earth teaches: strong foundations support great achievements.`,
       `Root deeply into your purpose, and your ${plan.goal} will flourish.`,
-<<<<<<< HEAD
       `With earth's steadiness, transform vision into reality.`,
-=======
-      `With earth&apos;s steadiness, transform vision into reality.`,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     ];
 
     return wisdomTemplates[Math.floor(Math.random() * wisdomTemplates.length)];

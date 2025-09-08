@@ -101,11 +101,7 @@ export class HarmonicCodex {
     this.elementalBalance = elementalBalance;
     this.ve = new VectorEquilibrium(0, 0, 0, 100);
 
-<<<<<<< HEAD
     // Initialize with dominant element's breath pattern
-=======
-    // Initialize with dominant element&apos;s breath pattern
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const dominantElement = this.getDominantElement();
     this.currentBreathPattern = ELEMENTAL_BREATH_PATTERNS[dominantElement];
 
@@ -268,11 +264,7 @@ export class HarmonicCodex {
     // Background with breath gradient
     svg += this.createBreathGradient(cx, cy);
 
-<<<<<<< HEAD
     // Grant's constant circles
-=======
-    // Grant&apos;s constant circles
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const circles = [
       { r: GRANT_CONSTANTS.SQRT_10 * 50, stroke: "#FF6B35", label: "√10" },
       { r: GRANT_CONSTANTS.PHI * 50, stroke: "#2E86AB", label: "φ" },
@@ -372,11 +364,7 @@ export class HarmonicCodex {
   }
 
   private applyHarmonicEasing(t: number): number {
-<<<<<<< HEAD
     // Use Grant's constants for easing
-=======
-    // Use Grant&apos;s constants for easing
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     return (
       Math.pow(t, GRANT_CONSTANTS.PHI) /
       (Math.pow(t, GRANT_CONSTANTS.PHI) + Math.pow(1 - t, GRANT_CONSTANTS.PHI))

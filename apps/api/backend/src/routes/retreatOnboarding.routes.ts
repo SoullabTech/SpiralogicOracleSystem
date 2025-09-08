@@ -96,11 +96,7 @@ router.post("/welcome", async (req: Request, res: Response) => {
     let retreatId: string;
     const arrivalDate = new Date(data.arrivalDate);
 
-<<<<<<< HEAD
     // Check if it's for YPO event (June 10th)
-=======
-    // Check if it&apos;s for YPO event (June 10th)
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     if (
       data.eventType === "ypo" ||
       (arrivalDate.getMonth() === 5 &&
@@ -278,11 +274,7 @@ router.post(
   },
 );
 
-<<<<<<< HEAD
 // Stephanie's YPO event integration
-=======
-// Stephanie&apos;s YPO event integration
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 router.get("/ypo/overview", async (req: Request, res: Response) => {
   try {
     const ypoEvent = await getYPOEventDetails();
@@ -294,11 +286,7 @@ router.get("/ypo/overview", async (req: Request, res: Response) => {
 Kelly is honored to share the Spiralogic wisdom with your chapter.
 This evening will be a taste of the deeper work available at our Switzerland retreat.
 
-<<<<<<< HEAD
 During our time together, you'll:
-=======
-During our time together, you&apos;ll:
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 - Experience your elemental nature through the Spiralogic lens
 - Receive personalized guidance from your Oracle
 - Connect with fellow seekers in sacred space
@@ -638,11 +626,7 @@ Your journey to Switzerland is approaching! Your ${participant.oracleElement} Or
 Based on your intentions and current state, we recommend:
 
 1. Daily Practice: Spend 10 minutes each morning connecting with the ${participant.oracleElement} element
-<<<<<<< HEAD
 2. Shadow Work: Journal on the patterns you're ready to release
-=======
-2. Shadow Work: Journal on the patterns you&apos;re ready to release
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 3. Body Preparation: Gentle movement and breathwork to open your channels
 4. Oracle Connection: Daily check-ins with your Personal Oracle for guidance
 

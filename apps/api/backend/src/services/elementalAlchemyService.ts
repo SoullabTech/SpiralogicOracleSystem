@@ -455,11 +455,7 @@ export class ElementalAlchemyService {
 
     insights.push({
       type: "consciousness_focus",
-<<<<<<< HEAD
       message: `You're operating primarily from ${highestConsciousness[0]} consciousness`,
-=======
-      message: `You&apos;re operating primarily from ${highestConsciousness[0]} consciousness`,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       recommendations: this.getConsciousnessRecommendations(
         highestConsciousness[0],
       ),

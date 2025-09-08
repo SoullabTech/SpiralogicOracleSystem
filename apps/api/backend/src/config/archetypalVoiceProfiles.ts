@@ -44,11 +44,7 @@ export const ARCHETYPAL_VOICE_PROFILES: Record<string, ArchetypalVoiceProfile> =
       personality: "Gentle, intuitive, emotionally intelligent",
       energySignature: "Flowing wisdom with empathetic presence",
       voiceSettings: {
-<<<<<<< HEAD
         stability: 0.8, // More stable for water's flowing nature
-=======
-        stability: 0.8, // More stable for water&apos;s flowing nature
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         similarity_boost: 0.7,
         style: 0.3, // Gentler style
         use_speaker_boost: false,

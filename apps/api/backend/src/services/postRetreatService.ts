@@ -116,11 +116,7 @@ export class PostRetreatService {
 
       if (error) throw error;
 
-<<<<<<< HEAD
       // Update participant's integration status
-=======
-      // Update participant&apos;s integration status
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       await this.updateIntegrationStatus(update.participantId, update);
 
       // Calculate next check-in date
@@ -191,11 +187,7 @@ export class PostRetreatService {
     analysis: TransformationAnalysis,
   ): Promise<any> {
     try {
-<<<<<<< HEAD
       // Get participant's retreat data
-=======
-      // Get participant&apos;s retreat data
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const retreatContext =
         await this.getParticipantRetreatContext(participantId);
 
@@ -725,11 +717,7 @@ export class PostRetreatService {
     year: number,
   ): Promise<any> {
     try {
-<<<<<<< HEAD
       // Get year's transformation updates
-=======
-      // Get year&apos;s transformation updates
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const startDate = new Date(year, 0, 1);
       const endDate = new Date(year, 11, 31);
 
@@ -777,11 +765,7 @@ export class PostRetreatService {
   // Check retreat anniversary
   async checkRetreatAnniversary(participantId: string): Promise<any> {
     try {
-<<<<<<< HEAD
       // Get participant's retreat date
-=======
-      // Get participant&apos;s retreat date
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const { data: participant } = await supabase
         .from("retreat_participants")
         .select("created_at, retreatId")
@@ -795,11 +779,7 @@ export class PostRetreatService {
       const retreatDate = new Date(participant.created_at);
       const today = new Date();
 
-<<<<<<< HEAD
       // Check if it's anniversary (same month and day)
-=======
-      // Check if it&apos;s anniversary (same month and day)
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       const isAnniversary =
         retreatDate.getMonth() === today.getMonth() &&
         retreatDate.getDate() === today.getDate();
@@ -1415,11 +1395,7 @@ export class PostRetreatService {
     practices: string[],
   ): string[] {
     return [
-<<<<<<< HEAD
       `Sit with the Oracle's message: "${oracleResponse.substring(0, 50)}..."`,
-=======
-      `Sit with the Oracle&apos;s message: "${oracleResponse.substring(0, 50)}..."`,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       `Begin with ${practices[0]}`,
       "Journal any insights that arise",
       "Check in again in one week",

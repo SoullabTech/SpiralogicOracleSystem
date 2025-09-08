@@ -89,11 +89,7 @@ export class SoulMemoryRedis {
         await redis.setex(key, this.DEFAULT_TTL, serialized);
       }
 
-<<<<<<< HEAD
       // Add to user's memory index
-=======
-      // Add to user&apos;s memory index
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       await redis.sadd(`${this.MEMORY_PREFIX}${userId}:index`, memoryId);
 
       return true;
@@ -211,11 +207,7 @@ export class SoulMemoryRedis {
         }),
       );
 
-<<<<<<< HEAD
       // Add to user's thread index
-=======
-      // Add to user&apos;s thread index
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       await redis.sadd(`${this.THREAD_PREFIX}${userId}:index`, threadId);
 
       return true;
@@ -255,11 +247,7 @@ export class SoulMemoryRedis {
     }
   }
 
-<<<<<<< HEAD
   // Clear user's memory cache (for GDPR compliance)
-=======
-  // Clear user&apos;s memory cache (for GDPR compliance)
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   static async clearUserMemory(userId: string): Promise<boolean> {
     try {
       // Get all memory IDs

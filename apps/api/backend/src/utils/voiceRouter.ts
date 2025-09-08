@@ -388,11 +388,7 @@ export async function testVoiceSynthesis(
   agentType: string = "MainOracleAgent",
 ): Promise<SpeakResult> {
   const testText =
-<<<<<<< HEAD
     "You already know what I'm going to say, don't you? This is a test of the voice synthesis system.";
-=======
-    "You already know what I&apos;m going to say, don&apos;t you? This is a test of the voice synthesis system.";
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
   logger.info("Starting voice synthesis test", { agentRole, agentType });
 

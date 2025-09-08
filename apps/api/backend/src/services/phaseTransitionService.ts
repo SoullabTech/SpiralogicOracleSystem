@@ -54,11 +54,7 @@ export class PhaseTransitionService {
   async analyzeTransitionPotential(): Promise<TransitionTrigger[]> {
     const triggers: TransitionTrigger[] = [];
 
-<<<<<<< HEAD
     // Get user's spiritual patterns
-=======
-    // Get user&apos;s spiritual patterns
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const patterns = await getSpiritualPatternInsights(this.userId);
     const memories = await getRelevantMemories(this.userId, undefined, 50);
 

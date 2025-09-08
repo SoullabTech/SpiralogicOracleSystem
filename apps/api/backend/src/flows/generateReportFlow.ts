@@ -126,11 +126,7 @@ export class GenerateReportFlow {
 
     // Define section markers
     const sectionMarkers = [
-<<<<<<< HEAD
       "Soul's Welcome Message",
-=======
-      "Soul&apos;s Welcome Message",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "Mythic Chart Narrative",
       "Soul Journey Arc",
       "Elemental Alchemy",

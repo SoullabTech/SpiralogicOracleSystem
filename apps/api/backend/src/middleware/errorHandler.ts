@@ -254,11 +254,7 @@ function getClientSafeMessage(
     case ErrorType.EXTERNAL_API:
       return "External wisdom sources are temporarily unreachable.";
     case ErrorType.RATE_LIMIT:
-<<<<<<< HEAD
       return "You're moving quickly through the sacred space. Please pause and try again.";
-=======
-      return "You&apos;re moving quickly through the sacred space. Please pause and try again.";
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     case ErrorType.VALIDATION:
       return error.message;
     default:

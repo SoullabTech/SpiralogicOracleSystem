@@ -17,7 +17,7 @@ import {
   storeMemoryItem,
 } from "../services/memoryService";
 import { logOracleInsight } from "../utils/oracleLogger";
-import { FileMemoryIntegration } from "../../../lib/services/FileMemoryIntegration";
+import { FileMemoryIntegration } from "../../../../../lib/services/FileMemoryIntegration";
 import type { StandardAPIResponse } from "../utils/sharedUtilities";
 
 export interface PersonalOracleQuery {
@@ -183,11 +183,7 @@ export class PersonalOracleAgent {
   }
 
   /**
-<<<<<<< HEAD
    * Get user's interaction history summary
-=======
-   * Get user&apos;s interaction history summary
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
    */
   public async getInteractionSummary(
     userId: string,
@@ -415,11 +411,7 @@ export class PersonalOracleAgent {
       personalizedMessage = this.makeMorePlayful(personalizedMessage);
     }
 
-<<<<<<< HEAD
     // Add personal touch with user's preferred name
-=======
-    // Add personal touch with user&apos;s preferred name
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     if (settings.name && settings.name !== "Oracle") {
       personalizedMessage = personalizedMessage.replace(
         /Oracle/gi,
@@ -500,11 +492,7 @@ export class PersonalOracleAgent {
         userId: query.userId,
         requestId,
       });
-<<<<<<< HEAD
       // Don't throw - storage failure shouldn't break the user experience
-=======
-      // Don&apos;t throw - storage failure shouldn&apos;t break the user experience
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
   }
 
@@ -546,11 +534,7 @@ export class PersonalOracleAgent {
   }
 
   private identifyProgressIndicators(memories: any[]): any[] {
-<<<<<<< HEAD
     // Analyze progression patterns in user's spiritual journey
-=======
-    // Analyze progression patterns in user&apos;s spiritual journey
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     return []; // TODO: Implement sophisticated progress analysis
   }
 
@@ -558,11 +542,7 @@ export class PersonalOracleAgent {
     userId: string,
     memories: any[],
   ): Promise<string[]> {
-<<<<<<< HEAD
     // Generate personalized next steps based on user's journey
-=======
-    // Generate personalized next steps based on user&apos;s journey
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     return [
       "Continue your current spiritual practice",
       "Explore the element that has been less active recently",
@@ -575,11 +555,7 @@ export class PersonalOracleAgent {
   private makeMoreFormal(message: string): string {
     return message
       .replace(/\bI feel\b/gi, "I sense")
-<<<<<<< HEAD
       .replace(/\byou're\b/gi, "you are")
-=======
-      .replace(/\byou&apos;re\b/gi, "you are")
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       .replace(/\bcan't\b/gi, "cannot");
   }
 
