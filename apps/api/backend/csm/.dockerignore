@@ -1,0 +1,6 @@
+._*
+.DS_Store
+*.pyc
+__pycache__
+.git
+.gitignore
