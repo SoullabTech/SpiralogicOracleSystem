@@ -1,52 +1,16 @@
-<<<<<<< HEAD
-# Backend directories to ignore
-apps/api/backend/
-backend/
-server/
-
-# Development files
-*.log
-*.pid
-*.seed
-*.pid.lock
-
-# Docker files
-Dockerfile
-docker-compose.yml
-.dockerignore
-
-# Backend-specific configs
-render.yaml
-fly.toml
-
-# Test files
-__tests__/
-*.test.ts
-*.test.js
-*.spec.ts
-*.spec.js
-
-# Documentation
-docs/
-*.md
-!README.md
-
-# Scripts
-scripts/
-migration/
-
-# Backend dependencies (if separate)
-apps/api/backend/node_modules/
-apps/api/backend/package-lock.json
-=======
 # Git submodules - CRITICAL: must not be included in deployment
 SpiralogicOracleSystem/
 sesame-csm/
 sesame_csm_openai/
 csm/
-backend/backend/
-backend/csm/
+apps/api/backend/backend/csm
+apps/api/backend/csm
 **/.!*
+
+# Backend directories
+apps/api/backend/
+backend/
+server/
 
 # Development files
 .git/
@@ -64,21 +28,36 @@ coverage/
 __pycache__/
 .venv/
 venv/
-backend/
 oracle-backend/
 soul_memory/
 claude-env/
 htmlcov/
 requirements.txt*
 
-# Keep frontend directory - DO NOT IGNORE
-# frontend/ should be built by Vercel
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Backend-specific configs
+render.yaml
+fly.toml
 
 # Documentation
 docs/
-DEPLOYMENT_CHECKLIST.md
-DEPLOYMENT_GUIDE.md
-TROUBLESHOOTING_GUIDE.md
+*.md
+!README.md
+
+# Scripts
+scripts/
+migration/
+northflank-migration/
+
+# Test files
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
 
 # Local environment files
 .env.local
@@ -100,21 +79,7 @@ Thumbs.db
 tmp/
 temp/
 
-# Test files
-*.test.*
-*.spec.*
-
-# IMPORTANT: Don't ignore build-related files
-# The following should NOT be ignored:
-# - app/
-# - components/
-# - public/
-# - styles/
-# - *.css
-# - *.js
-# - *.ts
-# - *.tsx
-# - *.json (except package-lock.json)
-# - .next/ (Vercel builds this)# Deployment timestamp: Sat Sep  6 21:01:05 EDT 2025
-# Force Vercel Deployment - 2025-09-06 22:56:27
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
+# Build artifacts (Vercel will build these)
+.next/
+out/
+dist/
