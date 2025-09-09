@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflowerWithAudio } from './sacred/SacredHoloflowerWithAudio';
-import { SacredMicButton } from './ui/SacredMicButton';
+import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
@@ -283,13 +283,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Voice-activated mic button */}
+      {/* Enhanced Voice Mic with Transcript Display */}
       {voiceEnabled && (
-        <SacredMicButton
+        <EnhancedVoiceMicButton
           onVoiceStateChange={setUserVoiceState}
           onTranscript={handleVoiceTranscript}
           position="bottom-center"
-          autoHide={false}
+          silenceThreshold={3000}
         />
       )}
 

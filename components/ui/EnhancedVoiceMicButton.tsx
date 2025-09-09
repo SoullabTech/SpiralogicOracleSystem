@@ -1,0 +1,371 @@
+// Enhanced Voice Mic Button with Visual Transcript Display
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mic, MicOff, Loader2 } from 'lucide-react';
+
+interface EnhancedVoiceMicButtonProps {
+  onTranscript?: (text: string) => void;
+  onVoiceStateChange?: (state: any) => void;
+  size?: number;
+  position?: 'bottom-center' | 'bottom-right' | 'floating';
+  silenceThreshold?: number; // milliseconds of silence before triggering
+}
+
+export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
+  onTranscript,
+  onVoiceStateChange,
+  size = 64,
+  position = 'bottom-center',
+  silenceThreshold = 2000 // 2 seconds of silence triggers response
+}) => {
+  const [isListening, setIsListening] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [interimTranscript, setInterimTranscript] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
+  
+  const recognitionRef = useRef<any>(null);
+  const finalTranscriptRef = useRef<string>('');
+  const lastSpeechTimeRef = useRef<number>(Date.now());
+
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      
+      recognition.onstart = () => {
+        console.log('Voice recognition started');
+        setError(null);
+        finalTranscriptRef.current = '';
+      };
+      
+      recognition.onresult = (event: any) => {
+        let interimText = '';
+        let finalText = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalText += transcript + ' ';
+          } else {
+            interimText += transcript;
+          }
+        }
+        
+        if (finalText) {
+          finalTranscriptRef.current += finalText;
+          setTranscript(finalTranscriptRef.current);
+          lastSpeechTimeRef.current = Date.now();
+          
+          // Reset silence timer on new speech
+          if (silenceTimer) {
+            clearTimeout(silenceTimer);
+          }
+          
+          // Start new silence timer
+          const timer = setTimeout(() => {
+            if (finalTranscriptRef.current.trim()) {
+              handleSilenceDetected();
+            }
+          }, silenceThreshold);
+          setSilenceTimer(timer);
+        }
+        
+        setInterimTranscript(interimText);
+        
+        // Update voice state
+        onVoiceStateChange?.({
+          isSpeaking: true,
+          amplitude: 0.5 + Math.random() * 0.5,
+          emotion: 'engaged',
+          energy: 0.7,
+          clarity: 0.8
+        });
+      };
+      
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setError(`Error: ${event.error}`);
+        setIsListening(false);
+      };
+      
+      recognition.onend = () => {
+        console.log('Voice recognition ended');
+        if (isListening) {
+          // Restart if still supposed to be listening
+          recognition.start();
+        }
+      };
+      
+      recognitionRef.current = recognition;
+    } else {
+      setError('Speech recognition not supported');
+    }
+    
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      if (silenceTimer) {
+        clearTimeout(silenceTimer);
+      }
+    };
+  }, [silenceThreshold, onVoiceStateChange]);
+
+  const handleSilenceDetected = useCallback(() => {
+    console.log('Silence detected, processing transcript:', finalTranscriptRef.current);
+    
+    if (finalTranscriptRef.current.trim()) {
+      setIsProcessing(true);
+      onTranscript?.(finalTranscriptRef.current.trim());
+      
+      // Clear transcripts after sending
+      setTimeout(() => {
+        setTranscript('');
+        setInterimTranscript('');
+        finalTranscriptRef.current = '';
+        setIsProcessing(false);
+      }, 500);
+    }
+    
+    // Clear timer
+    if (silenceTimer) {
+      clearTimeout(silenceTimer);
+      setSilenceTimer(null);
+    }
+  }, [onTranscript, silenceTimer]);
+
+  const toggleListening = useCallback(() => {
+    if (!recognitionRef.current) {
+      setError('Speech recognition not available');
+      return;
+    }
+    
+    if (isListening) {
+      // Stop listening
+      recognitionRef.current.stop();
+      setIsListening(false);
+      setTranscript('');
+      setInterimTranscript('');
+      finalTranscriptRef.current = '';
+      
+      if (silenceTimer) {
+        clearTimeout(silenceTimer);
+        setSilenceTimer(null);
+      }
+      
+      onVoiceStateChange?.({
+        isSpeaking: false,
+        amplitude: 0,
+        emotion: 'neutral',
+        energy: 0,
+        clarity: 0
+      });
+    } else {
+      // Start listening
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+        lastSpeechTimeRef.current = Date.now();
+      } catch (err) {
+        console.error('Failed to start recognition:', err);
+        setError('Failed to start voice recognition');
+      }
+    }
+  }, [isListening, silenceTimer, onVoiceStateChange]);
+
+  // Position styles
+  const getPositionStyles = () => {
+    switch (position) {
+      case 'bottom-center':
+        return 'fixed bottom-8 left-1/2 transform -translate-x-1/2';
+      case 'bottom-right':
+        return 'fixed bottom-8 right-8';
+      case 'floating':
+        return 'absolute bottom-12';
+      default:
+        return 'fixed bottom-8 left-1/2 transform -translate-x-1/2';
+    }
+  };
+
+  const displayText = transcript + (interimTranscript ? ' ' + interimTranscript : '');
+
+  return (
+    <div className={`${getPositionStyles()} z-50`}>
+      {/* Transcript Display */}
+      <AnimatePresence>
+        {displayText && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="absolute bottom-full mb-4 left-1/2 transform -translate-x-1/2 w-80 max-w-[90vw]"
+          >
+            <div className="bg-black/90 backdrop-blur-md rounded-2xl p-4 border border-[#D4B896]/30">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0">
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="w-2 h-2 bg-[#D4B896] rounded-full"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-sm leading-relaxed">
+                    {transcript}
+                    {interimTranscript && (
+                      <span className="text-white/50 italic"> {interimTranscript}</span>
+                    )}
+                  </p>
+                  {isProcessing && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-[#D4B896] text-xs mt-2"
+                    >
+                      Processing your message...
+                    </motion.p>
+                  )}
+                </div>
+              </div>
+              
+              {/* Silence indicator */}
+              {transcript && !isProcessing && (
+                <motion.div
+                  className="mt-3 flex items-center gap-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <div className="flex-1 bg-white/10 rounded-full h-1">
+                    <motion.div
+                      className="bg-[#D4B896] h-1 rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: silenceThreshold / 1000, ease: 'linear' }}
+                    />
+                  </div>
+                  <span className="text-white/40 text-xs">
+                    Speak or wait for response
+                  </span>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Error Display */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="absolute bottom-full mb-4 left-1/2 transform -translate-x-1/2"
+          >
+            <div className="bg-red-500/90 text-white text-sm px-4 py-2 rounded-lg">
+              {error}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mic Button */}
+      <motion.button
+        className={`relative rounded-full flex items-center justify-center
+          ${isListening 
+            ? 'bg-gradient-to-br from-red-500 to-red-600' 
+            : 'bg-gradient-to-br from-[#D4B896] to-[#B69A78]'}
+          text-white shadow-lg transition-all duration-300`}
+        style={{ width: size, height: size }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={toggleListening}
+      >
+        {/* Pulse animation when listening */}
+        {isListening && (
+          <>
+            <motion.div
+              className="absolute inset-0 rounded-full bg-red-500"
+              animate={{
+                scale: [1, 1.3, 1.3],
+                opacity: [0.5, 0, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+              }}
+            />
+            <motion.div
+              className="absolute inset-0 rounded-full bg-red-500"
+              animate={{
+                scale: [1, 1.2, 1.2],
+                opacity: [0.3, 0, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: 0.2,
+              }}
+            />
+          </>
+        )}
+
+        {/* Icon */}
+        <div className="relative z-10">
+          {isProcessing ? (
+            <Loader2 className="w-8 h-8 animate-spin" />
+          ) : isListening ? (
+            <MicOff className="w-8 h-8" />
+          ) : (
+            <Mic className="w-8 h-8" />
+          )}
+        </div>
+
+        {/* Listening indicator dots */}
+        {isListening && !isProcessing && (
+          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                className="w-1 h-1 bg-white rounded-full"
+                animate={{
+                  y: [0, -4, 0],
+                }}
+                transition={{
+                  duration: 0.6,
+                  repeat: Infinity,
+                  delay: i * 0.1,
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </motion.button>
+
+      {/* Status label */}
+      <AnimatePresence>
+        {(isListening || isProcessing) && (
+          <motion.div
+            className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+          >
+            <div className="bg-black/70 text-white text-xs px-3 py-1 rounded-full">
+              {isProcessing ? 'Processing...' : 'Listening... (tap to stop)'}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default EnhancedVoiceMicButton;
