@@ -152,14 +152,14 @@ export const SacredMicButton: React.FC<SacredMicButtonProps> = ({
   const buttonVariants = {
     idle: {
       scale: 1,
-      boxShadow: '0 4px 20px rgba(139, 92, 246, 0.2)'
+      boxShadow: '0 4px 20px rgba(212, 184, 150, 0.3)'
     },
     listening: {
       scale: [1, 1.1, 1],
       boxShadow: [
-        '0 4px 20px rgba(139, 92, 246, 0.3)',
-        '0 8px 40px rgba(139, 92, 246, 0.5)',
-        '0 4px 20px rgba(139, 92, 246, 0.3)'
+        '0 4px 20px rgba(212, 184, 150, 0.4)',
+        '0 8px 40px rgba(212, 184, 150, 0.6)',
+        '0 4px 20px rgba(212, 184, 150, 0.4)'
       ],
       transition: {
         duration: 2,
@@ -231,7 +231,7 @@ export const SacredMicButton: React.FC<SacredMicButtonProps> = ({
       transition={{ duration: 0.1 }}
       style={{
         background: `radial-gradient(circle, 
-          rgba(139, 92, 246, ${voiceState.amplitude * 0.5}) 0%, 
+          rgba(212, 184, 150, ${voiceState.amplitude * 0.6}) 0%, 
           transparent 70%)`
       }}
     />
@@ -340,7 +340,8 @@ export const SacredMicButton: React.FC<SacredMicButtonProps> = ({
         {/* Expanding rings for listening state */}
         {(micState === 'listening' || micState === 'processing') && (
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-purple-400"
+            className="absolute inset-0 rounded-full border-2"
+            style={{ borderColor: '#D4B896' }}
             variants={ringVariants}
             initial="idle"
             animate={micState}
@@ -373,8 +374,8 @@ export const SacredMicButton: React.FC<SacredMicButtonProps> = ({
       {/* Main button */}
       <motion.button
         className={`relative rounded-full flex items-center justify-center
-          ${micState === 'idle' ? 'bg-gradient-to-br from-purple-500 to-purple-600' :
-            micState === 'listening' ? 'bg-gradient-to-br from-purple-400 to-purple-500' :
+          ${micState === 'idle' ? 'bg-gradient-to-br from-[#D4B896] to-[#B69A78]' :
+            micState === 'listening' ? 'bg-gradient-to-br from-[#E5C9A6] to-[#D4B896]' :
             micState === 'processing' ? 'bg-gradient-to-br from-yellow-400 to-amber-500' :
             micState === 'responding' ? 'bg-gradient-to-br from-green-400 to-green-500' :
             'bg-gradient-to-br from-red-400 to-red-500'}
