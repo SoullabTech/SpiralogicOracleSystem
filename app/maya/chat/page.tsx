@@ -377,12 +377,12 @@ export default function MayaChatInterface() {
   const mayaState = getMayaState();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-indigo-950 to-black flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-amber-950 via-yellow-950 to-black flex flex-col">
       {/* Header */}
       <div className="bg-black/20 backdrop-blur-lg border-b border-white/10 px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-600 to-yellow-600 flex items-center justify-center">
               <Brain className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -458,7 +458,7 @@ export default function MayaChatInterface() {
               <div className={`max-w-2xl ${message.role === 'user' ? 'order-2' : 'order-1'}`}>
                 {message.role === 'maya' && (
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-600 to-yellow-600 flex items-center justify-center">
                       <Brain className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-white/60 text-xs">Maya</span>
@@ -467,7 +467,7 @@ export default function MayaChatInterface() {
 
                 <div className={`rounded-2xl px-4 py-3 ${
                   message.role === 'user' 
-                    ? 'bg-purple-600/20 border border-purple-500/30' 
+                    ? 'bg-amber-600/20 border border-amber-500/30' 
                     : 'bg-white/5 border border-white/10'
                 }`}>
                   {/* Attachment indicator */}
@@ -515,7 +515,7 @@ export default function MayaChatInterface() {
                   transition={{ duration: 1.5, repeat: Infinity }}
                   className="flex items-center gap-2"
                 >
-                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <Sparkles className="w-4 h-4 text-amber-400" />
                   <span className="text-white/60">Maya is thinking...</span>
                 </motion.div>
               </div>
@@ -558,7 +558,7 @@ export default function MayaChatInterface() {
                   console.log('All memories:', allMemories);
                 }
               }}
-              className="text-purple-400 text-xs mt-2 hover:text-purple-300"
+              className="text-amber-400 text-xs mt-2 hover:text-amber-300"
             >
               View all memories →
             </button>
@@ -580,7 +580,7 @@ export default function MayaChatInterface() {
                   }}
                   className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
                     suggestion.urgent
-                      ? 'bg-purple-600/30 border border-purple-500/50 text-purple-200 hover:bg-purple-600/40'
+                      ? 'bg-amber-600/30 border border-amber-500/50 text-amber-200 hover:bg-amber-600/40'
                       : suggestion.confidence > 70
                       ? 'bg-white/10 border border-white/20 text-white/90 hover:bg-white/20'
                       : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10'
@@ -661,7 +661,7 @@ export default function MayaChatInterface() {
                   }
                 }}
                 placeholder="Share thoughts... (/remember to store, /recall to search)"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 resize-none"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 resize-none"
                 rows={1}
                 style={{ minHeight: '48px', maxHeight: '120px' }}
               />
@@ -679,7 +679,7 @@ export default function MayaChatInterface() {
               <button
                 onClick={handleSend}
                 disabled={isProcessing}
-                className="p-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-600/50 text-white rounded-xl transition-colors"
+                className="p-3 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-600/50 text-white rounded-xl transition-colors"
               >
                 <Send className="w-5 h-5" />
               </button>

@@ -19,7 +19,7 @@ const navItems: NavItem[] = [
     label: 'Home',
     icon: <Home className="w-5 h-5" />,
     path: '/',
-    color: '#9F7AEA',
+    color: '#D4B896',
   },
   {
     id: 'journal',
@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
     label: 'Dream',
     icon: <Moon className="w-5 h-5" />,
     path: '/dream',
-    color: '#B794F4',
+    color: '#E5C9A6',
   },
   {
     id: 'voice',

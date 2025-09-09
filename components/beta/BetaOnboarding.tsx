@@ -52,7 +52,7 @@ export function BetaOnboarding() {
             transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
             className="inline-block mb-6"
           >
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-600 to-yellow-600 flex items-center justify-center">
               <Sparkles className="w-16 h-16 text-white" />
             </div>
           </motion.div>
@@ -64,19 +64,19 @@ export function BetaOnboarding() {
           
           <div className="space-y-2 text-left bg-white/5 rounded-xl p-4">
             <div className="flex items-start gap-3">
-              <Star className="w-5 h-5 text-purple-400 mt-0.5" />
+              <Star className="w-5 h-5 text-amber-400 mt-0.5" />
               <p className="text-white/70 text-sm">
                 Your interactions will shape how the Oracle evolves
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <Heart className="w-5 h-5 text-purple-400 mt-0.5" />
+              <Heart className="w-5 h-5 text-amber-400 mt-0.5" />
               <p className="text-white/70 text-sm">
                 Your feedback becomes part of the sacred code
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <Moon className="w-5 h-5 text-purple-400 mt-0.5" />
+              <Moon className="w-5 h-5 text-amber-400 mt-0.5" />
               <p className="text-white/70 text-sm">
                 Your journey helps others find their path
               </p>
@@ -96,7 +96,7 @@ export function BetaOnboarding() {
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Your name or sacred alias..."
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 text-center text-lg"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 text-center text-lg"
             autoFocus
           />
           
@@ -122,7 +122,7 @@ export function BetaOnboarding() {
             value={intention}
             onChange={(e) => setIntention(e.target.value)}
             placeholder="I am here to..."
-            className="w-full h-32 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 resize-none"
+            className="w-full h-32 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 resize-none"
           />
           
           <div className="space-y-2">
@@ -195,7 +195,7 @@ export function BetaOnboarding() {
             transition={{ duration: 0.5 }}
             className="inline-block mb-6"
           >
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center relative">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-600 to-yellow-600 flex items-center justify-center relative">
               <motion.div
                 animate={{
                   scale: [1, 1.2, 1],
@@ -213,7 +213,7 @@ export function BetaOnboarding() {
           </h3>
           
           <div className="bg-white/5 rounded-xl p-4 mb-6">
-            <p className="text-purple-300 italic mb-2">Your Intention:</p>
+            <p className="text-amber-300 italic mb-2">Your Intention:</p>
             <p className="text-white/80">{intention}</p>
           </div>
           
@@ -250,7 +250,7 @@ export function BetaOnboarding() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-gradient-to-br from-purple-950 via-indigo-950 to-black z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-gradient-to-br from-amber-950 via-yellow-950 to-black z-50 flex items-center justify-center p-4"
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -282,7 +282,7 @@ export function BetaOnboarding() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-purple-500/20"
+            className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-amber-500/20"
           >
             <h2 className="text-2xl font-light text-white mb-6 text-center">
               {currentStepData.title}

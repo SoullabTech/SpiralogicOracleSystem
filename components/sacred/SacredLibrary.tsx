@@ -161,8 +161,8 @@ export function SacredLibrary({
       case 'Air':
         return {
           color: '#a8e6cf',
-          bg: 'bg-gradient-to-br from-purple-500/10 to-pink-500/10',
-          border: 'border-purple-500/30',
+          bg: 'bg-gradient-to-br from-amber-500/10 to-yellow-500/10',
+          border: 'border-amber-500/30',
           glow: '0 0 20px rgba(168, 230, 207, 0.3)'
         };
       default:
@@ -411,7 +411,7 @@ export function SacredLibrary({
                         repeat: Infinity 
                       }}
                     >
-                      <Sparkles className="w-5 h-5 text-purple-400" />
+                      <Sparkles className="w-5 h-5 text-amber-400" />
                     </motion.div>
                   )}
                 </div>
@@ -563,7 +563,7 @@ export function SacredLibrary({
                       {selectedDocument.element}
                     </span>
                     {selectedDocument.aetherDetected && (
-                      <Sparkles className="w-4 h-4 text-purple-400" />
+                      <Sparkles className="w-4 h-4 text-amber-400" />
                     )}
                   </div>
                 </div>

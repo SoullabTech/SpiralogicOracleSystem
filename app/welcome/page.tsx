@@ -39,9 +39,13 @@ export default function WelcomePage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-6xl"
+            className="w-24 h-24 mx-auto"
           >
-            🌙
+            <img 
+              src="/holoflower.png" 
+              alt="Holoflower"
+              className="w-full h-full object-contain"
+            />
           </motion.div>
           
           <div className="space-y-4">

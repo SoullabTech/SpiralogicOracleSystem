@@ -46,7 +46,7 @@ const elementColors = {
   water: 'from-blue-500 to-cyan-500',
   earth: 'from-green-600 to-emerald-500',
   air: 'from-yellow-400 to-amber-500',
-  aether: 'from-purple-500 to-violet-600'
+  aether: 'from-amber-500 to-yellow-600'
 };
 
 const elementEmojis = {
@@ -343,13 +343,13 @@ function DocumentCard({ document, onRetry }: {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="w-3 h-3 text-violet-400" />
+                <Sparkles className="w-3 h-3 text-amber-400" />
               </motion.div>
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="text-xs text-violet-300 font-medium"
+                className="text-xs text-amber-300 font-medium"
               >
                 {Math.round(document.analysis.aetherResonance * 100)}% resonance
               </motion.span>
@@ -580,7 +580,7 @@ function UploadZone({ onUpload, isUploading }: {
         "relative rounded-2xl p-6 border-2 border-dashed transition-all duration-300",
         "bg-white/5 dark:bg-black/20 min-h-[140px] flex items-center justify-center",
         isDragOver 
-          ? "border-violet-400 bg-violet-500/10" 
+          ? "border-amber-400 bg-amber-500/10" 
           : "border-white/20 hover:border-white/30",
         isUploading && "pointer-events-none opacity-50"
       )}
@@ -627,7 +627,7 @@ function UploadZone({ onUpload, isUploading }: {
           <motion.label
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-block px-4 py-2 text-xs rounded-lg bg-violet-500/80 hover:bg-violet-600 text-white font-medium cursor-pointer transition-colors"
+            className="inline-block px-4 py-2 text-xs rounded-lg bg-amber-500/80 hover:bg-amber-600 text-white font-medium cursor-pointer transition-colors"
           >
             Choose Files
             <input
@@ -672,7 +672,7 @@ export default function SacredLibraryBlooming({
         className="mb-6"
       >
         <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-2">
-          <FileText className="w-7 h-7 text-violet-400" />
+          <FileText className="w-7 h-7 text-amber-400" />
           Sacred Library
         </h2>
         <p className="text-white/60">
@@ -698,7 +698,7 @@ export default function SacredLibraryBlooming({
                 className={cn(
                   "px-4 py-2 text-sm rounded-lg transition-colors font-medium flex items-center gap-2",
                   filter === status
-                    ? "bg-violet-500 text-white shadow-lg"
+                    ? "bg-amber-500 text-white shadow-lg"
                     : "text-white/70 hover:text-white hover:bg-white/10"
                 )}
               >
@@ -767,7 +767,7 @@ export default function SacredLibraryBlooming({
           <motion.div 
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="text-sm text-violet-400"
+            className="text-sm text-amber-400"
           >
             Documents will bloom from seeds 🌱 into wisdom flowers 🌸
           </motion.div>

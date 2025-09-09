@@ -22,9 +22,9 @@ function CheckInModal({ isOpen, onClose, onMoodSelect, onSymbolSelect }: CheckIn
     { id: 'dense', label: 'Dense', color: '#4A5568', icon: '🌫️' },
     { id: 'heavy', label: 'Heavy', color: '#718096', icon: '⛈️' },
     { id: 'neutral', label: 'Neutral', color: '#A0AEC0', icon: '☁️' },
-    { id: 'emerging', label: 'Emerging', color: '#9F7AEA', icon: '🌤️' },
-    { id: 'light', label: 'Light', color: '#B794F4', icon: '☀️' },
-    { id: 'radiant', label: 'Radiant', color: '#D6BCFA', icon: '✨' },
+    { id: 'emerging', label: 'Emerging', color: '#D4B896', icon: '🌤️' },
+    { id: 'light', label: 'Light', color: '#E5C9A6', icon: '☀️' },
+    { id: 'radiant', label: 'Radiant', color: '#F0E5C9', icon: '✨' },
   ];
 
   const symbols = [
@@ -71,7 +71,7 @@ function CheckInModal({ isOpen, onClose, onMoodSelect, onSymbolSelect }: CheckIn
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-3xl p-6 max-w-md w-full border border-purple-500/20"
+            className="bg-gradient-to-br from-amber-950 to-yellow-950 rounded-3xl p-6 max-w-md w-full border border-amber-500/20"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -186,14 +186,14 @@ export function FloatingCheckIn() {
           setIsOpen(true);
           setPulseAnimation(false);
         }}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/30"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/30"
       >
         <Sparkles className="w-6 h-6 text-white" />
         
         {/* Pulse animation */}
         {pulseAnimation && (
           <motion.div
-            className="absolute inset-0 rounded-full bg-purple-600"
+            className="absolute inset-0 rounded-full bg-amber-600"
             animate={{
               scale: [1, 1.5, 1.5],
               opacity: [0.5, 0, 0],

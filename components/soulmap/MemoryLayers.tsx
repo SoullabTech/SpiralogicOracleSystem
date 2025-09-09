@@ -32,7 +32,7 @@ export function MemoryLayers() {
   // Memory type colors and configurations
   const memoryTypeConfig = {
     journal: { color: '#3B82F6', symbol: '📖', name: 'Journal' },
-    dream: { color: '#8B5CF6', symbol: '🌙', name: 'Dream' },
+    dream: { color: '#D4B896', symbol: '🌙', name: 'Dream' },
     ritual: { color: '#EC4899', symbol: '🔮', name: 'Ritual' },
     breakthrough: { color: '#F59E0B', symbol: '⚡', name: 'Breakthrough' },
     oracle: { color: '#10B981', symbol: '🏛️', name: 'Oracle' },
@@ -45,7 +45,7 @@ export function MemoryLayers() {
     water: { gradient: 'from-blue-500 to-cyan-500', symbol: '💧' },
     earth: { gradient: 'from-green-600 to-emerald-600', symbol: '🌍' },
     air: { gradient: 'from-gray-300 to-white', symbol: '💨' },
-    aether: { gradient: 'from-purple-600 to-pink-600', symbol: '✨' }
+    aether: { gradient: 'from-amber-600 to-yellow-600', symbol: '✨' }
   };
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export function MemoryLayers() {
               onClick={() => setTimeRange(range)}
               className={`px-4 py-2 rounded-lg transition-all ${
                 timeRange === range
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-amber-600 text-white'
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
@@ -291,7 +291,7 @@ export function MemoryLayers() {
                                 {memory.archetypes.map(archetype => (
                                   <span 
                                     key={archetype}
-                                    className="text-xs bg-purple-600/30 px-2 py-1 rounded"
+                                    className="text-xs bg-amber-600/30 px-2 py-1 rounded"
                                   >
                                     {archetype}
                                   </span>
@@ -323,7 +323,7 @@ export function MemoryLayers() {
               rotate: { duration: 60, repeat: Infinity, ease: "linear" },
               scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
             }}
-            className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 opacity-80 flex items-center justify-center"
+            className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-600 to-yellow-600 opacity-80 flex items-center justify-center"
           >
             <span className="text-2xl">🔮</span>
           </motion.div>

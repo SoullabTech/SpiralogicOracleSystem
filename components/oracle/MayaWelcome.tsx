@@ -109,9 +109,9 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="text-4xl"
+          className="flex justify-center"
         >
-          🌙
+          <img src="/holoflower.png" alt="Holoflower" className="w-16 h-16" />
         </motion.div>
       </div>
     );
@@ -136,9 +136,9 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="text-6xl"
+          className="flex justify-center"
         >
-          🌙
+          <img src="/holoflower.png" alt="Holoflower" className="w-24 h-24" />
         </motion.div>
 
         <div className="space-y-4">
@@ -212,7 +212,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
                 {wisdom.frequentThemes.slice(0, 5).map((theme, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-violet-500/20 text-violet-300 rounded-full text-xs"
+                    className="px-3 py-1 bg-[#D4B896]/20 text-[#D4B896] rounded-full text-xs"
                   >
                     {theme.replace(/_/g, ' ')}
                   </span>
@@ -232,7 +232,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
       >
         <button
           onClick={onConversationStart}
-          className="px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-full transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl"
+          className="px-8 py-4 bg-gradient-to-r from-[#D4B896] to-[#B69A78] hover:from-[#E5C9A6] hover:to-[#D4B896] text-white rounded-full transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl"
         >
           {isAuthenticated ? 'Continue Our Dialogue' : 'Begin Conversation'}
         </button>

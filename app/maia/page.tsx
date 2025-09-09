@@ -133,6 +133,58 @@ export default function MaiaPage() {
                 });
               })}
             </svg>
+            {/* White Holoflower in center */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <svg
+                width="60"
+                height="60"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+                className="animate-pulse"
+              >
+                <g transform="translate(50, 50)">
+                  {/* Outer petals */}
+                  {Array.from({ length: 8 }, (_, i) => {
+                    const angle = (i / 8) * Math.PI * 2;
+                    const petalX = Math.cos(angle) * 25;
+                    const petalY = Math.sin(angle) * 25;
+                    return (
+                      <ellipse
+                        key={`outer-${i}`}
+                        cx={petalX}
+                        cy={petalY}
+                        rx="12"
+                        ry="20"
+                        fill="white"
+                        opacity="0.9"
+                        transform={`rotate(${i * 45} ${petalX} ${petalY})`}
+                      />
+                    );
+                  })}
+                  {/* Inner petals */}
+                  {Array.from({ length: 8 }, (_, i) => {
+                    const angle = (i / 8) * Math.PI * 2 + Math.PI / 8;
+                    const petalX = Math.cos(angle) * 15;
+                    const petalY = Math.sin(angle) * 15;
+                    return (
+                      <ellipse
+                        key={`inner-${i}`}
+                        cx={petalX}
+                        cy={petalY}
+                        rx="8"
+                        ry="15"
+                        fill="white"
+                        opacity="0.8"
+                        transform={`rotate(${i * 45 + 22.5} ${petalX} ${petalY})`}
+                      />
+                    );
+                  })}
+                  {/* Center circle */}
+                  <circle cx="0" cy="0" r="8" fill="white" opacity="1" />
+                  <circle cx="0" cy="0" r="5" fill="#D4B896" opacity="0.3" />
+                </g>
+              </svg>
+            </div>
           </div>
           <p className="text-xl font-medium" style={{ color: '#D4B896' }}>
             {loadingMessage || "Processing..."}

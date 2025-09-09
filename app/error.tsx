@@ -17,7 +17,7 @@ export default function Error({
   }, [error])
 
   return (
-    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen  from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-background/80 backdrop-blur-xl border-red-500/20">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
@@ -44,7 +44,7 @@ export default function Error({
           <div className="flex flex-col sm:flex-row gap-2 justify-center">
             <Button 
               onClick={reset}
-              className=" from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600"
+              className=" from-amber-600 to-yellow-500 hover:from-amber-700 hover:to-yellow-600"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Try Again
@@ -52,7 +52,7 @@ export default function Error({
             <Button 
               variant="outline" 
               onClick={() => window.location.href = '/'}
-              className="border-purple-500/20 hover:bg-purple-500/10"
+              className="border-amber-500/20 hover:bg-amber-500/10"
             >
               Go Home
             </Button>
