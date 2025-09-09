@@ -8,7 +8,7 @@
 export { 
   AnamnesisField, 
   MemoryLayer,
-  ConsciousnessState,
+  // ConsciousnessState, // Not exported by AnamnesisField
   getAnamnesisField,
   initializeAnamnesisField 
 } from './AnamnesisField';
@@ -16,30 +16,30 @@ export {
 // Unified Memory Interface
 export {
   UnifiedMemoryInterface,
-  MemoryQuery,
-  MemoryResponse,
   createUnifiedMemoryInterface
+  // MemoryQuery,
+  // MemoryResponse,
 } from './UnifiedMemoryInterface';
 
 // Collective Consciousness Bridge
 export {
   CollectiveConsciousnessBridge,
-  PatternType,
-  CollectivePattern,
-  SynchronicityEvent,
-  CollectiveFieldState
+  PatternType
+  // CollectivePattern,
+  // SynchronicityEvent,
+  // CollectiveFieldState
 } from './CollectiveConsciousnessBridge';
 
 // Memory Core Components
 export {
-  MemoryManager,
-  CoreMemory,
-  WorkingMemory,
-  RecallMemory,
-  ArchivalMemory,
-  MemoryStore,
-  EmbeddingService,
-  MemoryCompressor
+  MemoryManager
+  // CoreMemory,
+  // WorkingMemory,
+  // RecallMemory,
+  // ArchivalMemory,
+  // MemoryStore,
+  // EmbeddingService,
+  // MemoryCompressor
 } from '../memory/core/MemoryCore';
 
 // Storage Implementations
@@ -188,7 +188,7 @@ export class MemorySystemFactory {
   /**
    * Query memories
    */
-  async queryMemories(query: MemoryQuery): Promise<MemoryResponse> {
+  async queryMemories(query: any): Promise<any> {
     if (!this.interface) {
       await this.initialize();
     }
@@ -377,7 +377,7 @@ export async function searchMemories(
     limit?: number;
     includeCollective?: boolean;
   }
-): Promise<MemoryResponse> {
+): Promise<any> {
   const factory = MemorySystemFactory.getInstance();
   return factory.queryMemories({
     query,

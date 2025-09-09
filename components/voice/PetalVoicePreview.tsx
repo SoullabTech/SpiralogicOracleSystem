@@ -16,7 +16,7 @@ interface PetalVoicePreviewProps {
   className?: string;
 }
 
-export default function PetalVoicePreview({
+export function PetalVoicePreview({
   message,
   context = 'journalReflection',
   customVoice,
@@ -134,3 +134,5 @@ export default function PetalVoicePreview({
     </div>
   );
 }
+
+export default PetalVoicePreview;

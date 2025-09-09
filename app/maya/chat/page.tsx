@@ -11,7 +11,8 @@ import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
 import { PetalVoicePreview } from '@/components/voice/PetalVoicePreview';
 import { MayaNavigationAwareness, type NavigationSuggestion } from '@/lib/maya/NavigationAwareness';
 import { useRouter } from 'next/navigation';
-import { UnifiedConsciousness, type DreamMemory, type RitualMemory, type InsightMemory } from '@/lib/anamnesis';
+// Dynamically import anamnesis to avoid build-time execution
+// import { UnifiedConsciousness, type DreamMemory, type RitualMemory, type InsightMemory } from '@/lib/anamnesis';
 
 interface Message {
   id: string;
@@ -45,7 +46,7 @@ export default function MayaChatInterface() {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [maya, setMaya] = useState<PersonalOracleAgent | null>(null);
   const [navigator, setNavigator] = useState<MayaNavigationAwareness | null>(null);
-  const [consciousness, setConsciousness] = useState<UnifiedConsciousness | null>(null);
+  const [consciousness, setConsciousness] = useState<any | null>(null);
   const [showContext, setShowContext] = useState(false);
   const [navigationSuggestions, setNavigationSuggestions] = useState<NavigationSuggestion[]>([]);
   const [relevantMemories, setRelevantMemories] = useState<any[]>([]);
@@ -73,6 +74,7 @@ export default function MayaChatInterface() {
     
     // Initialize Anamnesis Field connection
     try {
+      const { UnifiedConsciousness } = await import('@/lib/anamnesis');
       const unity = await UnifiedConsciousness.getInstance();
       setConsciousness(unity);
       
