@@ -1,46 +1,74 @@
-# 🚀 Deployment Guide - SpiraLogic Oracle System
+# 🚀 Soullab Beta Launch - Deployment Guide
 
 ## Current Status ✅
-- **Stub Mode**: Active and working
-- **Frontend**: Ready for Vercel deployment
-- **Backend**: Prepared for separate deployment
+- **Build**: Successful and deployment-ready
+- **Frontend**: Complete Soullab experience ready
+- **Memory System**: Gracefully disabled for smooth launch
+- **Core Features**: Onboarding, Holoflower, Voice, Journaling functional
 
-## 🔹 Phase 1: Deploy Frontend with Stubs (TODAY)
+## 🔹 Phase 1: Beta Launch Deployment (TODAY)
 
 ### 1. Vercel Deployment Steps
 
+**Option A: Via GitHub (Recommended)**
+1. Go to [vercel.com](https://vercel.com)
+2. Click "Add New Project"
+3. Import your GitHub repository
+4. Framework auto-detects as Next.js ✅
+5. Click "Deploy"
+
+**Option B: Via CLI**
 ```bash
 # Install Vercel CLI if needed
 npm i -g vercel
+vercel login
 
-# Deploy to Vercel
+# Deploy to production
 vercel --prod
 ```
 
-### 2. Environment Variables for Vercel
+### 2. Environment Variables for Production
 
 Add these in Vercel Dashboard → Settings → Environment Variables:
 
+**Required (Minimum Viable):**
 ```env
-# API Configuration (Stub Mode)
-NEXT_PUBLIC_API_MODE=stub
-NEXT_PUBLIC_API_URL=http://localhost:3002
-
-# Supabase (Current)
-NEXT_PUBLIC_SUPABASE_URL=https://jkbetmadzcpoinjogkli.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
-
-# Other Settings
-NEXT_PUBLIC_MEMORY_REFERENCES_ENABLED=false
-NEXT_PUBLIC_DISABLE_AUDIO_BANNER=true
+OPENAI_API_KEY=sk-your-openai-key-here
+NEXTAUTH_URL=https://your-project.vercel.app
+NEXTAUTH_SECRET=your-secure-random-string-32-chars
+NODE_ENV=production
 ```
 
-### 3. Test Stub Mode
-Visit: `https://your-app.vercel.app/test-stub`
-- Should show "API Mode: stub" in yellow
-- Test Chat Function should return stub responses
+**Optional (Enhanced Features):**
+```env
+# Supabase (for advanced memory features)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-key
 
-## 🔹 Phase 2: Deploy Backend Separately (THIS WEEK)
+# Voice Features
+ELEVENLABS_API_KEY=your-elevenlabs-api-key
+NEXT_PUBLIC_ELEVENLABS_VOICE_ID=your-voice-id
+
+# Additional AI
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
+```
+
+### 3. Post-Deployment Testing
+
+Visit your deployed URL and verify:
+- ✅ Landing page loads (`/`)
+- ✅ Onboarding flow works (`/welcome`)
+- ✅ Holoflower experience loads (`/holoflower`)
+- ✅ Voice conversation functional (if ElevenLabs configured)
+- ✅ Basic journaling saves data
+
+### 4. Custom Domain (Optional)
+- In Vercel → Settings → Domains
+- Add your custom domain (e.g., `soullab.io`)
+- Configure DNS records as instructed
+
+## 🔹 Phase 2: Beta Launch Ready 🎯
 
 ### Option A: Railway Deployment
 
