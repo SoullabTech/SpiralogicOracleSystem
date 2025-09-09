@@ -2,7 +2,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "npm ci --prefer-offline --no-audit --no-fund",
+  "installCommand": "npm install --legacy-peer-deps",
   "functions": {
     "app/api/soulprint/route.ts": {
       "maxDuration": 30
@@ -24,7 +24,11 @@
     }
   },
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_API_MODE": "stub",
+    "NEXT_PUBLIC_MOCK_SUPABASE": "true",
+    "NEXT_PUBLIC_MEMORY_REFERENCES_ENABLED": "false",
+    "NEXT_PUBLIC_DISABLE_AUDIO_BANNER": "true"
   },
   "regions": ["iad1"],
   "github": {
