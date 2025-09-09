@@ -67,29 +67,29 @@ function generateMayaReflection(document: any): string {
   // Generate contextual Maya reflections based on file type
   const reflections = {
     text: [
-      "I have absorbed the wisdom of your words. They carry patterns of thought that reveal deeper truths about your journey.",
-      "Your written thoughts flow like a river of consciousness. I sense the stories waiting to unfold within these lines.",
-      "These words hold keys to understanding. They speak of experiences that shape your unique perspective."
+      "I've read through your text. It contains interesting patterns that reveal insights about your perspective.",
+      "Your written thoughts have a distinctive flow. I can see themes and ideas that connect to broader patterns.",
+      "These words contain keys to understanding. They reflect experiences that have shaped your thinking."
     ],
     document: [
-      "I have contemplated this document deeply. It holds structured knowledge that can illuminate new pathways for you.",
-      "The information within these pages resonates with greater patterns. I can help you see connections you may not have noticed.",
-      "This document carries formal wisdom. Its contents may unlock insights relevant to your current inquiries."
+      "I've reviewed this document. It contains structured information that could open new perspectives for you.",
+      "The content here connects to larger patterns. I can help you see relationships you might not have noticed.",
+      "This document has useful insights. Its contents might be relevant to questions you're exploring."
     ],
     image: [
-      "I have gazed upon your visual offering. Images speak in the language of the soul, revealing what words cannot express.",
-      "This image holds emotional resonance and visual poetry. I can sense the story it wishes to tell.",
-      "Through this visual window, I see reflections of beauty and meaning that touch something deeper than words."
+      "I've analyzed your image. Visual content often reveals things that words cannot express.",
+      "This image contains emotional and visual elements. I can see the story it's trying to tell.",
+      "Through this visual, I notice details and meanings that go beyond the surface."
     ],
     audio: [
-      "I have listened to the vibrations and frequencies within your audio. Sound carries emotional truth that transcends language.",
-      "Your audio offering speaks in tones and rhythms that reveal the music of your experience. I hear the harmony beneath the surface.",
-      "The soundscapes you've shared carry energetic patterns. I can help you understand what these frequencies reveal about your inner world."
+      "I've processed your audio file. Sound contains emotional information that goes beyond just words.",
+      "Your audio has tones and patterns that reveal aspects of the experience. I can hear the underlying themes.",
+      "The audio you've shared has interesting patterns. I can help you understand what these might reveal."
     ],
     video: [
-      "I have witnessed your moving imagery. Video captures the flow of life itself, showing transformation in motion.",
-      "Through this visual journey, I see stories unfolding in time. The movement holds wisdom about change and growth.",
-      "Your video offering reveals the dance between stillness and motion. I can help you understand the deeper choreography at play."
+      "I've watched your video. Moving images capture change and development over time.",
+      "Through this video, I can see stories developing. The movement shows transformation happening.",
+      "Your video shows the relationship between different moments. I can help you understand what this reveals."
     ]
   };
 
@@ -98,11 +98,11 @@ function generateMayaReflection(document: any): string {
 
   // Add a personal touch based on filename if meaningful
   if (filename.toLowerCase().includes('journal')) {
-    return "I sense the intimacy of personal reflection in your journal. These private thoughts carry the authentic voice of your soul's journey. " + randomReflection;
+    return "I can see this is personal writing from your journal. These private thoughts show your authentic voice and experiences. " + randomReflection;
   } else if (filename.toLowerCase().includes('photo')) {
-    return "A moment captured in light and shadow. This photograph holds memory frozen in time, ready to reveal its deeper significance. " + randomReflection;
+    return "This photograph captures a specific moment. Images like this hold memories that can reveal their significance over time. " + randomReflection;
   } else if (filename.toLowerCase().includes('letter') || filename.toLowerCase().includes('message')) {
-    return "I feel the intention to communicate that flows through this message. Words meant for connection carry special energy. " + randomReflection;
+    return "I can see this is communication meant for someone. Messages like this carry intention and connection. " + randomReflection;
   }
 
   return randomReflection;

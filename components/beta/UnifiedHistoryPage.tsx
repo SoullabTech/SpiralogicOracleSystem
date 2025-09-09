@@ -226,7 +226,7 @@ export const UnifiedHistoryPage: React.FC<UnifiedHistoryPageProps> = ({
       <div className="fixed inset-0 bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center z-50">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-sacred-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sacred-gold">Loading your sacred history...</p>
+          <p className="text-sacred-gold">Loading your history...</p>
         </div>
       </div>
     );
@@ -245,7 +245,7 @@ export const UnifiedHistoryPage: React.FC<UnifiedHistoryPageProps> = ({
           </button>
           <div className="flex items-center gap-3">
             <Activity className="w-6 h-6 text-sacred-gold" />
-            <h1 className="text-2xl font-bold text-white">Sacred History</h1>
+            <h1 className="text-2xl font-bold text-white">History</h1>
           </div>
           <div className="ml-auto text-sm text-gray-400">
             {filteredItems.length} item{filteredItems.length !== 1 ? 's' : ''}

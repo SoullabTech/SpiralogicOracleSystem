@@ -303,7 +303,7 @@ export default function MaiaPage() {
                   border: '1px solid rgba(212, 184, 150, 0.3)',
                   color: '#D4B896'
                 }}
-                title="View Sacred History"
+                title="View History"
               >
                 <History size={20} />
                 <span className="text-sm font-medium">History</span>
@@ -439,7 +439,7 @@ export default function MaiaPage() {
         {showBetaRituals && (
           <div className="max-w-4xl mx-auto mb-12">
             <h2 className="text-3xl font-bold text-white text-center mb-8">
-              Sacred Rituals
+              Rituals
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {betaRituals.map((ritual) => {
@@ -528,7 +528,7 @@ export default function MaiaPage() {
                 color: showBetaRituals ? 'white' : '#D4B896'
               }}
             >
-              {showBetaRituals ? 'Hide' : 'Show'} Sacred Rituals
+              {showBetaRituals ? 'Hide' : 'Show'} Rituals
             </button>
           </div>
         </div>

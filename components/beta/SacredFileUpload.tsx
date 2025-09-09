@@ -88,14 +88,14 @@ export function SacredFileUpload({
       }
 
       // Maya speaks about receiving the file
-      const mayaComment = `I've received your ${fileInfo.type === 'text' ? 'sacred text' : 
-                                                fileInfo.type === 'image' ? 'visual offering' :
-                                                fileInfo.type === 'audio' ? 'sound essence' :
-                                                fileInfo.type === 'video' ? 'moving imagery' : 'document'}. 
-                           Let me absorb its wisdom...`;
+      const mayaComment = `I've received your ${fileInfo.type === 'text' ? 'text' : 
+                                                fileInfo.type === 'image' ? 'image' :
+                                                fileInfo.type === 'audio' ? 'audio' :
+                                                fileInfo.type === 'video' ? 'video' : 'document'}. 
+                           Let me analyze its content...`;
       
       onMayaSpeak?.(mayaComment);
-      toast.success('Maya is receiving your offering...', {
+      toast.success('Maya is analyzing your file...', {
         duration: 3000,
         style: {
           background: 'linear-gradient(135deg, #1e293b 0%, #2e3a4b 100%)',
@@ -162,7 +162,7 @@ export function SacredFileUpload({
               // Maya speaks her reflection
               onMayaSpeak?.(mayaReflection);
               
-              toast.success('Maya has absorbed your offering!', {
+              toast.success('Maya has analyzed your file!', {
                 duration: 4000,
                 style: {
                   background: 'linear-gradient(135deg, #7A9A65 0%, #6B9BD1 100%)',
@@ -199,7 +199,7 @@ export function SacredFileUpload({
         }
       }
 
-      throw new Error('Processing timeout - Maya is still contemplating your offering');
+      throw new Error('Processing timeout - Maya is still analyzing your file');
 
     } catch (error) {
       console.error('Upload error:', error);
@@ -275,7 +275,7 @@ export function SacredFileUpload({
         </div>
 
         <p className="text-gray-300 mb-6 text-center">
-          Share your documents, images, or audio with Maya. She will absorb their essence and reflect their wisdom back to you.
+          Share your documents, images, or audio with Maya. She will learn from them and provide insights about their content.
         </p>
 
         {/* Upload Area */}
@@ -377,9 +377,9 @@ export function SacredFileUpload({
                       {/* Status Text */}
                       <div className="text-xs text-gray-400">
                         {uploadFile.status === 'uploading' && 'Uploading...'}
-                        {uploadFile.status === 'processing' && 'Maya is absorbing the essence...'}
+                        {uploadFile.status === 'processing' && 'Maya is analyzing the content...'}
                         {uploadFile.status === 'ready' && (
-                          <span className="text-green-400">Maya has received your offering ✨</span>
+                          <span className="text-green-400">Maya has finished analyzing ✨</span>
                         )}
                         {uploadFile.status === 'error' && (
                           <span className="text-red-400">{uploadFile.error}</span>

@@ -1,0 +1,508 @@
+/**
+ * Maya Voice System - ElevenLabs "Aunt Annie" + Sesame Intelligence
+ * Modern, everyday, soulful, intelligent voice for the Oracle
+ */
+
+interface MayaVoiceConfig {
+  elevenLabsApiKey?: string;
+  voiceId: string; // Aunt Annie voice ID
+  sesameApiKey?: string;
+  fallbackToWebSpeech: boolean;
+  naturalSettings: {
+    rate: number;
+    pitch: number;
+    volume: number;
+    stability: number;
+    clarity: number;
+  };
+}
+
+interface VoiceState {
+  isPlaying: boolean;
+  isPaused: boolean;
+  isLoading: boolean;
+  currentText: string;
+  voiceType: 'elevenlabs' | 'webspeech' | 'sesame';
+  error?: string;
+}
+
+export class MayaVoiceSystem {
+  private config: MayaVoiceConfig;
+  private state: VoiceState;
+  private audioContext?: AudioContext;
+  private currentAudio?: HTMLAudioElement;
+  private listeners: ((state: VoiceState) => void)[] = [];
+
+  constructor(config?: Partial<MayaVoiceConfig>) {
+    this.config = {
+      voiceId: 'EXAVITQu4vr4xnSDxMaL', // Aunt Annie default voice ID
+      fallbackToWebSpeech: true,
+      naturalSettings: {
+        rate: 1.0,     // Natural conversational pace
+        pitch: 1.0,    // Natural pitch for everyday conversation
+        volume: 0.9,   // Clear and present
+        stability: 0.8, // ElevenLabs stability for natural flow
+        clarity: 0.9    // High clarity for intelligent conversation
+      },
+      ...config
+    };
+
+    this.state = {
+      isPlaying: false,
+      isPaused: false,
+      isLoading: false,
+      currentText: '',
+      voiceType: 'elevenlabs'
+    };
+
+    // Initialize audio context for better browser compatibility
+    if (typeof window !== 'undefined') {
+      try {
+        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      } catch (error) {
+        console.warn('AudioContext not available:', error);
+      }
+    }
+  }
+
+  // Subscribe to voice state changes
+  subscribe(listener: (state: VoiceState) => void) {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== listener);
+    };
+  }
+
+  private updateState(updates: Partial<VoiceState>) {
+    this.state = { ...this.state, ...updates };
+    this.listeners.forEach(listener => listener(this.state));
+  }
+
+  // Enhance text for natural conversation flow
+  private enhanceTextForSpeech(text: string): string {
+    return text
+      // Add natural breathing pauses
+      .replace(/\. /g, '. ')
+      .replace(/\? /g, '? ')
+      .replace(/! /g, '! ')
+      // Add brief pauses for emphasis
+      .replace(/\b(but|however|and|so|now|listen|look|here's the thing)\b/gi, '$1... ')
+      // Natural conversation flow
+      .replace(/\b(well|you know|I mean|actually|honestly)\b/gi, '$1, ')
+      .trim();
+  }
+
+  // Generate Maya's natural greeting
+  getNaturalGreeting(): string {
+    const greetings = [
+      "Hey there. I'm Maya. Good to connect with you.",
+      "Hi. I'm here when you're ready to explore what's on your mind.",
+      "Hello. I'm Maya, and I'm listening. What's stirring for you?",
+      "Hey. Let's see what we can discover together. How are you feeling?",
+      "Hi there. I'm Maya. What would it be helpful to talk about?"
+    ];
+    
+    return this.enhanceTextForSpeech(
+      greetings[Math.floor(Math.random() * greetings.length)]
+    );
+  }
+
+  // ElevenLabs TTS with Aunt Annie voice
+  private async speakWithElevenLabs(text: string): Promise<void> {
+    if (!this.config.elevenLabsApiKey) {
+      throw new Error('ElevenLabs API key not configured');
+    }
+
+    this.updateState({ isLoading: true, currentText: text, voiceType: 'elevenlabs' });
+
+    try {
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${this.config.voiceId}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key': this.config.elevenLabsApiKey
+        },
+        body: JSON.stringify({
+          text: this.enhanceTextForSpeech(text),
+          model_id: 'eleven_monolingual_v1',
+          voice_settings: {
+            stability: this.config.naturalSettings.stability,
+            similarity_boost: this.config.naturalSettings.clarity,
+            style: 0.0, // Natural conversational style
+            use_speaker_boost: true
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`ElevenLabs API error: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      return this.playAudioUrl(audioUrl);
+    } catch (error) {
+      console.error('ElevenLabs TTS failed:', error);
+      this.updateState({ error: error.message });
+      throw error;
+    } finally {
+      this.updateState({ isLoading: false });
+    }
+  }
+
+  // Sesame conversational intelligence + voice
+  private async speakWithSesame(text: string, context?: any): Promise<void> {
+    if (!this.config.sesameApiKey) {
+      throw new Error('Sesame API key not configured');
+    }
+
+    this.updateState({ isLoading: true, currentText: text, voiceType: 'sesame' });
+
+    try {
+      // First, enhance the text with Sesame's conversational intelligence
+      const sesameResponse = await fetch('/api/voice/sesame-enhance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.config.sesameApiKey}`
+        },
+        body: JSON.stringify({
+          text,
+          personality: 'maya_natural_intelligent',
+          context: context || {},
+          voice_config: {
+            style: 'conversational',
+            emotion: 'warm_intelligent',
+            pacing: 'natural'
+          }
+        })
+      });
+
+      const enhancedData = await sesameResponse.json();
+      const enhancedText = enhancedData.enhanced_text || text;
+
+      // Then convert to speech using Sesame's voice synthesis
+      const voiceResponse = await fetch('/api/voice/sesame-tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.config.sesameApiKey}`
+        },
+        body: JSON.stringify({
+          text: this.enhanceTextForSpeech(enhancedText),
+          voice: 'maya_aunt_annie',
+          rate: this.config.naturalSettings.rate,
+          pitch: this.config.naturalSettings.pitch,
+          volume: this.config.naturalSettings.volume
+        })
+      });
+
+      if (!voiceResponse.ok) {
+        throw new Error(`Sesame voice API error: ${voiceResponse.status}`);
+      }
+
+      const audioBlob = await voiceResponse.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      return this.playAudioUrl(audioUrl);
+    } catch (error) {
+      console.error('Sesame voice failed:', error);
+      this.updateState({ error: error.message });
+      throw error;
+    } finally {
+      this.updateState({ isLoading: false });
+    }
+  }
+
+  // Web Speech API fallback with Maya characteristics
+  private async speakWithWebSpeech(text: string): Promise<void> {
+    if (!('speechSynthesis' in window)) {
+      throw new Error('Web Speech API not supported');
+    }
+
+    this.updateState({ isLoading: true, currentText: text, voiceType: 'webspeech' });
+
+    return new Promise((resolve, reject) => {
+      try {
+        // Cancel any existing speech
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(this.enhanceTextForSpeech(text));
+        
+        // Configure Maya's natural voice characteristics
+        utterance.rate = this.config.naturalSettings.rate;
+        utterance.pitch = this.config.naturalSettings.pitch;
+        utterance.volume = this.config.naturalSettings.volume;
+        utterance.lang = 'en-US';
+
+        // Try to select the best available female voice
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = this.selectBestVoice(voices);
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        // Event handlers
+        utterance.onstart = () => {
+          this.updateState({ 
+            isPlaying: true, 
+            isLoading: false, 
+            isPaused: false 
+          });
+        };
+
+        utterance.onend = () => {
+          this.updateState({ 
+            isPlaying: false, 
+            currentText: '' 
+          });
+          resolve();
+        };
+
+        utterance.onerror = (event) => {
+          this.updateState({ 
+            isPlaying: false, 
+            isLoading: false,
+            error: event.error 
+          });
+          reject(new Error(`Speech synthesis error: ${event.error}`));
+        };
+
+        utterance.onpause = () => {
+          this.updateState({ isPaused: true });
+        };
+
+        utterance.onresume = () => {
+          this.updateState({ isPaused: false });
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } catch (error) {
+        this.updateState({ 
+          isLoading: false, 
+          error: error.message 
+        });
+        reject(error);
+      }
+    });
+  }
+
+  // Select the best available voice for Maya
+  private selectBestVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
+    // Priority order for Maya's voice
+    const voicePriority = [
+      'Samantha',       // macOS - warm, clear
+      'Victoria',       // macOS - sophisticated
+      'Allison',        // macOS - pleasant
+      'Ava',           // macOS - modern
+      'Karen',         // Windows - clear
+      'Hazel',         // Windows - warm
+      'Zira',          // Windows - professional
+      'Google UK English Female', // Chrome
+      'Microsoft Aria Online',     // Edge
+    ];
+
+    // First, try to find exact matches
+    for (const preferred of voicePriority) {
+      const voice = voices.find(v => v.name === preferred);
+      if (voice) return voice;
+    }
+
+    // Then try partial matches for female voices
+    const femaleVoice = voices.find(voice => 
+      voice.name.toLowerCase().includes('female') ||
+      voice.name.toLowerCase().includes('woman') ||
+      (voice.name.toLowerCase().includes('en') && voice.name.toLowerCase().includes('female'))
+    );
+    if (femaleVoice) return femaleVoice;
+
+    // Finally, any English voice
+    return voices.find(voice => voice.lang.startsWith('en')) || null;
+  }
+
+  // Play audio from URL
+  private async playAudioUrl(audioUrl: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        // Clean up previous audio
+        if (this.currentAudio) {
+          this.currentAudio.pause();
+          this.currentAudio = undefined;
+        }
+
+        const audio = new Audio(audioUrl);
+        this.currentAudio = audio;
+
+        audio.onloadstart = () => {
+          this.updateState({ isLoading: true });
+        };
+
+        audio.oncanplay = () => {
+          this.updateState({ isLoading: false });
+        };
+
+        audio.onplay = () => {
+          this.updateState({ 
+            isPlaying: true, 
+            isPaused: false 
+          });
+        };
+
+        audio.onended = () => {
+          this.updateState({ 
+            isPlaying: false, 
+            currentText: '' 
+          });
+          URL.revokeObjectURL(audioUrl); // Clean up blob URL
+          resolve();
+        };
+
+        audio.onerror = (error) => {
+          this.updateState({ 
+            isPlaying: false, 
+            isLoading: false,
+            error: 'Audio playback failed'
+          });
+          URL.revokeObjectURL(audioUrl);
+          reject(new Error('Audio playback failed'));
+        };
+
+        audio.onpause = () => {
+          this.updateState({ isPaused: true });
+        };
+
+        audio.volume = this.config.naturalSettings.volume;
+        audio.play();
+      } catch (error) {
+        this.updateState({ 
+          isLoading: false, 
+          error: error.message 
+        });
+        reject(error);
+      }
+    });
+  }
+
+  // Main speak method with intelligent fallback
+  async speak(text: string, context?: any): Promise<void> {
+    try {
+      // Reset error state
+      this.updateState({ error: undefined });
+
+      // Try Sesame first (if configured)
+      if (this.config.sesameApiKey) {
+        try {
+          await this.speakWithSesame(text, context);
+          return;
+        } catch (error) {
+          console.warn('Sesame voice failed, trying ElevenLabs:', error);
+        }
+      }
+
+      // Try ElevenLabs second (if configured)
+      if (this.config.elevenLabsApiKey) {
+        try {
+          await this.speakWithElevenLabs(text);
+          return;
+        } catch (error) {
+          console.warn('ElevenLabs failed, falling back to Web Speech:', error);
+        }
+      }
+
+      // Fallback to Web Speech API
+      if (this.config.fallbackToWebSpeech) {
+        await this.speakWithWebSpeech(text);
+        return;
+      }
+
+      throw new Error('No voice services available');
+    } catch (error) {
+      console.error('Maya voice system failed:', error);
+      this.updateState({ 
+        error: `Voice system error: ${error.message}`,
+        isPlaying: false,
+        isLoading: false
+      });
+      throw error;
+    }
+  }
+
+  // Speak Maya's greeting
+  async playGreeting(context?: any): Promise<void> {
+    const greeting = this.getNaturalGreeting();
+    return this.speak(greeting, { ...context, type: 'greeting' });
+  }
+
+  // Control methods
+  pause(): void {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+    } else if ('speechSynthesis' in window) {
+      window.speechSynthesis.pause();
+    }
+  }
+
+  resume(): void {
+    if (this.currentAudio && this.currentAudio.paused) {
+      this.currentAudio.play();
+    } else if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+  }
+
+  stop(): void {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = undefined;
+    }
+    
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    this.updateState({ 
+      isPlaying: false, 
+      isPaused: false, 
+      currentText: '' 
+    });
+  }
+
+  // Get current state
+  getState(): VoiceState {
+    return { ...this.state };
+  }
+
+  // Check voice capabilities
+  getCapabilities() {
+    return {
+      elevenLabs: !!this.config.elevenLabsApiKey,
+      sesame: !!this.config.sesameApiKey,
+      webSpeech: 'speechSynthesis' in window,
+      audioContext: !!this.audioContext
+    };
+  }
+}
+
+// Global Maya voice instance
+let mayaVoiceInstance: MayaVoiceSystem | null = null;
+
+export function getMayaVoice(config?: Partial<MayaVoiceConfig>): MayaVoiceSystem {
+  if (!mayaVoiceInstance) {
+    mayaVoiceInstance = new MayaVoiceSystem(config);
+  }
+  return mayaVoiceInstance;
+}
+
+// Configuration helper
+export function configureMayaVoice(config: Partial<MayaVoiceConfig>): void {
+  if (mayaVoiceInstance) {
+    // Update existing instance
+    Object.assign(mayaVoiceInstance['config'], config);
+  } else {
+    // Create new instance with config
+    mayaVoiceInstance = new MayaVoiceSystem(config);
+  }
+}

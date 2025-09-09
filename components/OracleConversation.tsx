@@ -7,6 +7,7 @@ import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
 import { VoiceState } from '@/lib/voice/voice-capture';
+import { useMayaVoice } from '@/hooks/useMayaVoice';
 
 interface OracleConversationProps {
   userId?: string;
@@ -37,6 +38,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   onMessageAdded,
   onSessionEnd
 }) => {
+  // Maya Voice Integration
+  const { speak: mayaSpeak, voiceState: mayaVoiceState, isReady: mayaReady } = useMayaVoice();
+  
   // Core state
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [checkIns, setCheckIns] = useState<Record<string, number>>(initialCheckIns);
@@ -52,7 +56,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   
   // Voice states
   const [userVoiceState, setUserVoiceState] = useState<VoiceState | null>(null);
-  const [oracleVoiceState, setOracleVoiceState] = useState<VoiceState | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
   
@@ -135,21 +138,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         .replace(/\s+/g, ' ') // Normalize whitespace
         .trim();
       
-      // Map response to motion
-      const motionMapping = mapResponseToMotion(responseText);
-      
-      // Update motion states
-      setCurrentMotionState(motionMapping.motionState);
-      setCoherenceLevel(motionMapping.coherenceLevel);
-      setCoherenceShift(motionMapping.coherenceShift);
-      setShadowPetals(motionMapping.shadowPetals);
+      // Simplified motion mapping for faster response
       setActiveFacetId(responseData.primaryFacetId || 'voice');
-      
-      // Check for breakthrough
-      if (motionMapping.isBreakthrough) {
-        setShowBreakthrough(true);
-        setTimeout(() => setShowBreakthrough(false), 3000);
-      }
+      setCurrentMotionState('responding');
+      setCoherenceLevel(0.7); // Default good coherence
       
       // Add oracle message
       const oracleMessage: ConversationMessage = {
@@ -158,8 +150,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         text: responseText,
         timestamp: new Date(),
         facetId: responseData.primaryFacetId || 'voice',
-        motionState: motionMapping.motionState,
-        coherenceLevel: motionMapping.coherenceLevel
+        motionState: 'responding',
+        coherenceLevel: 0.7
       };
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
@@ -170,15 +162,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         primaryFacetId: responseData.primaryFacetId || 'voice',
         ...responseData
       });
-      contextRef.current.coherenceHistory.push(motionMapping.coherenceLevel);
+      contextRef.current.coherenceHistory.push(0.7);
       
       // Set responding state
       setIsResponding(true);
       setCurrentMotionState('responding');
       
-      // Play Maya's voice response
-      if (voiceEnabled) {
-        await playMayaVoice(responseText);
+      // Play Maya's voice response immediately (non-blocking)
+      if (voiceEnabled && mayaReady) {
+        // Start voice playback without waiting to reduce lag
+        mayaSpeak(responseText, {
+          facetId: responseData.primaryFacetId,
+          coherenceLevel: 0.7,
+          motionState: 'responding'
+        }).catch(error => {
+          console.error('Maya voice failed:', error);
+        });
       }
       
     } catch (error) {
@@ -187,87 +186,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setIsProcessing(false);
       setIsResponding(false);
       
-      // Return to idle after response
+      // Return to idle quickly
       setTimeout(() => {
         setCurrentMotionState('idle');
-      }, 2000);
+      }, 500);
     }
   }, [isProcessing, messages.length, sessionId, userId, voiceEnabled, onMessageAdded]);
 
-  // Play Maya's voice using browser TTS
-  const playMayaVoice = async (text: string) => {
-    try {
-      // Use browser's built-in speech synthesis
-      if ('speechSynthesis' in window) {
-        // Cancel any ongoing speech
-        window.speechSynthesis.cancel();
-        
-        // Create utterance
-        const utterance = new SpeechSynthesisUtterance(text);
-        
-        // Configure voice settings for natural conversation
-        utterance.rate = 1.0; // Normal speaking speed
-        utterance.pitch = 1.0; // Natural pitch
-        utterance.volume = 0.9;
-        
-        // Try to use the best available English voice
-        const voices = window.speechSynthesis.getVoices();
-        const preferredVoice = voices.find(voice => 
-          voice.name.toLowerCase().includes('samantha') ||
-          voice.name.toLowerCase().includes('alex') ||
-          voice.name.toLowerCase().includes('allison') ||
-          voice.name.toLowerCase().includes('ava') ||
-          voice.name.toLowerCase().includes('susan') ||
-          voice.name.toLowerCase().includes('zira')
-        ) || voices.find(voice => 
-          voice.lang.startsWith('en') && voice.localService
-        ) || voices.find(voice => voice.lang.startsWith('en'));
-        
-        if (preferredVoice) {
-          utterance.voice = preferredVoice;
-        }
-        
-        // Set voice state
-        setOracleVoiceState({
-          amplitude: 0.6,
-          pitch: 180,
-          emotion: 'calm',
-          isSpeaking: true,
-          energy: 0.5,
-          clarity: 0.9,
-          breathDepth: 0.7
-        });
-        
-        // Handle speech end
-        utterance.onend = () => {
-          setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
-        };
-        
-        // Speak
-        window.speechSynthesis.speak(utterance);
-      } else {
-        // Fallback to visual-only indication
-        console.log('Speech synthesis not supported');
-        const words = text.split(' ');
-        const duration = words.length * 200;
-        
-        setOracleVoiceState({
-          amplitude: 0.6,
-          pitch: 180,
-          emotion: 'calm',
-          isSpeaking: true,
-          energy: 0.5,
-          clarity: 0.9,
-          breathDepth: 0.7
-        });
-        
-        await new Promise(resolve => setTimeout(resolve, duration));
-        setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
-      }
-    } catch (error) {
-      console.error('TTS playback error:', error);
-    }
-  };
 
   // Handle petal click for check-ins
   const handlePetalClick = useCallback((facetId: string) => {
@@ -308,7 +233,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             coherenceShift={coherenceShift}
             isListening={isListening}
             isProcessing={isProcessing}
-            isResponding={isResponding}
+            isResponding={isResponding || mayaVoiceState.isPlaying}
             showBreakthrough={showBreakthrough}
           />
           

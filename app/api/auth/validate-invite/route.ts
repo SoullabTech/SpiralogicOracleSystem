@@ -64,18 +64,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if code has been used (optional - remove for multi-use codes)
-    if (usedCodes.has(normalizedCode)) {
-      return NextResponse.json(
-        { 
-          error: 'Invitation already claimed',
-          message: 'This invitation has already been received by another soul'
-        },
-        { status: 403 }
-      );
-    }
+    // Note: Allowing multi-use codes for beta access
+    // Single-use tracking commented out to allow multiple users per code
+    // if (usedCodes.has(normalizedCode)) {
+    //   return NextResponse.json(
+    //     { 
+    //       error: 'Invitation already claimed',
+    //       message: 'This invitation has already been received by another soul'
+    //     },
+    //     { status: 403 }
+    //   );
+    // }
 
-    // Mark code as used
+    // Track usage for analytics (but don't block reuse)
     usedCodes.add(normalizedCode);
 
     // Set beta access cookie
