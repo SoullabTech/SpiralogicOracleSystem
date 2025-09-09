@@ -14,6 +14,8 @@ interface OracleConversationProps {
   initialCheckIns?: Record<string, number>;
   showAnalytics?: boolean;
   voiceEnabled?: boolean;
+  onMessageAdded?: (message: ConversationMessage) => void;
+  onSessionEnd?: (reason?: string) => void;
 }
 
 interface ConversationMessage {
@@ -31,7 +33,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   sessionId,
   initialCheckIns = {},
   showAnalytics = false,
-  voiceEnabled = true
+  voiceEnabled = true,
+  onMessageAdded,
+  onSessionEnd
 }) => {
   // Core state
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
@@ -86,6 +90,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       timestamp: new Date()
     };
     setMessages(prev => [...prev, userMessage]);
+    onMessageAdded?.(userMessage);
     
     // Set processing state
     setIsProcessing(true);
@@ -138,6 +143,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         coherenceLevel: motionMapping.coherenceLevel
       };
       setMessages(prev => [...prev, oracleMessage]);
+      onMessageAdded?.(oracleMessage);
       
       // Update context
       contextRef.current.previousResponses.push(oracleResponse);

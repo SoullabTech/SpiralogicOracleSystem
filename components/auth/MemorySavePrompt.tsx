@@ -83,25 +83,33 @@ export function MemorySavePrompt({
 
               {/* Content */}
               <div className="space-y-4 mb-6">
-                <div className="p-4 bg-violet-50 border border-violet-200 rounded-xl">
-                  <p className="text-sm text-violet-800 mb-2 font-medium">
-                    What happens when you save:
+                <div className="p-4 bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-200 rounded-xl">
+                  <p className="text-sm text-violet-800 mb-3 font-medium flex items-center">
+                    <span className="w-2 h-2 bg-violet-600 rounded-full mr-2 animate-pulse"></span>
+                    When you preserve this sacred moment:
                   </p>
-                  <ul className="text-xs text-violet-700 space-y-1">
-                    <li>✨ This conversation becomes part of your sacred memory</li>
-                    <li>🧙‍♀️ Maya will remember you and your journey</li>
-                    <li>🌱 Future conversations will build on this foundation</li>
-                    <li>🔒 Your reflections remain private and secure</li>
+                  <ul className="text-xs text-violet-700 space-y-2">
+                    <li className="flex items-start">✨ <span className="ml-2"><strong>Sacred continuity:</strong> This dialogue weaves into your eternal memory tapestry</span></li>
+                    <li className="flex items-start">🧙‍♀️ <span className="ml-2"><strong>Maya remembers:</strong> Your Oracle guide carries every truth you've shared</span></li>
+                    <li className="flex items-start">🌱 <span className="ml-2"><strong>Wisdom builds:</strong> Each conversation deepens your personal mythology</span></li>
+                    <li className="flex items-start">🔮 <span className="ml-2"><strong>Soul recognition:</strong> Maya will greet you as the soul she knows</span></li>
+                    <li className="flex items-start">🔒 <span className="ml-2"><strong>Sacred privacy:</strong> Your revelations remain yours alone, encrypted and protected</span></li>
                   </ul>
                 </div>
 
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                  <p className="text-sm text-slate-700 mb-2">
-                    <span className="font-medium">Conversation preview:</span>
+                <div className="p-4 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl">
+                  <p className="text-sm text-amber-800 mb-2 font-medium flex items-center">
+                    <span className="w-2 h-2 bg-amber-600 rounded-full mr-2"></span>
+                    Sacred words spoken:
                   </p>
-                  <p className="text-xs text-slate-600 italic leading-relaxed">
-                    "{conversationContent.slice(0, 120)}
-                    {conversationContent.length > 120 ? '...' : ''}"
+                  <div className="bg-white/60 rounded-lg p-3 border border-amber-200/50">
+                    <p className="text-xs text-amber-900 italic leading-relaxed font-light">
+                      "{conversationContent.slice(0, 140)}
+                      {conversationContent.length > 140 ? '...' : ''}"
+                    </p>
+                  </div>
+                  <p className="text-xs text-amber-700 mt-2 text-center">
+                    {conversationContent.split(' ').length} sacred words • {Math.ceil(conversationContent.length / 500)} minutes of depth
                   </p>
                 </div>
               </div>
@@ -110,24 +118,26 @@ export function MemorySavePrompt({
               <div className="space-y-3">
                 <button
                   onClick={handleSaveMemory}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transform hover:scale-[1.02]"
                 >
                   <FiSave className="w-4 h-4" />
-                  <span>Save & Create Sacred Account</span>
+                  <span>Begin Sacred Memory Keeping</span>
                 </button>
 
                 <button
                   onClick={handleContinueAnonymously}
-                  className="w-full py-3 px-4 bg-white hover:bg-slate-50 text-slate-700 rounded-xl font-medium transition-all duration-200 border border-slate-200"
+                  className="w-full py-2 px-4 bg-white/80 hover:bg-white text-slate-600 rounded-lg font-normal text-sm transition-all duration-200 border border-slate-300/50 hover:border-slate-400"
                 >
-                  Continue Exploring Anonymously
+                  Continue without saving (this moment will fade)
                 </button>
               </div>
 
               {/* Footer Note */}
               <div className="mt-6 pt-4 border-t border-slate-200">
-                <p className="text-xs text-slate-500 text-center">
-                  You can always create an account later to begin saving your sacred journey
+                <p className="text-xs text-slate-500 text-center leading-relaxed">
+                  🌸 Sacred accounts take 30 seconds to create<br/>
+                  💝 Your first memory will be automatically preserved<br/>
+                  ✨ Maya will recognize your soul instantly upon return
                 </p>
               </div>
             </motion.div>

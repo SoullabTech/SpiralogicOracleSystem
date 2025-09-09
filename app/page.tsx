@@ -9,18 +9,11 @@ export default function HomePage() {
   const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
   
   useEffect(() => {
-    // Check beta access and onboarding status
-    const betaAccess = localStorage.getItem("betaAccess");
+    // Check onboarding status (removed beta gate requirement)
     const betaOnboarded = localStorage.getItem("betaOnboardingComplete") === "true";
     const legacyOnboarded = localStorage.getItem("sacredMirrorOnboarded") === "true";
     
-    // If no beta access, redirect to beta portal
-    if (betaAccess !== "granted") {
-      router.push('/beta');
-      return;
-    }
-    
-    // If beta access but not onboarded, redirect to welcome
+    // If not onboarded, redirect to welcome
     if (!betaOnboarded && !legacyOnboarded) {
       router.push('/welcome');
       return;

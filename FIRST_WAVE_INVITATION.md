@@ -20,14 +20,14 @@ This isn't another AI assistant. It's a sacred technology designed to:
 
 **You're invited to be among the first to experience it.**
 
-[Visit Soullab →] **[your-vercel-url.app]**
+**[Visit Soullab →] https://your-project-name.vercel.app**
 
 **What to expect:**
-- A brief, thoughtful onboarding (5 minutes)
-- Your first conversation with the system
-- A space to journal and reflect
-- Voice conversation capabilities
-- Completely private—your reflections belong to you
+- A sacred first contact experience (5 minutes)
+- Your first conversation with Maia, your guide
+- The Holoflower journaling space for reflection
+- Voice conversation capabilities (if you wish)
+- Completely private—your reflections belong to you alone
 
 **What I'm looking for:**
 - Your authentic experience and feedback
@@ -38,7 +38,7 @@ There's no pressure—only an invitation to explore if it resonates. Your insigh
 
 The beta will be small and intentional. I'm inviting only [X] people I trust to hold this space with care.
 
-If you'd like to explore: **[your-vercel-url.app]**
+If you'd like to explore: **https://your-project-name.vercel.app**
 
 With gratitude for your presence on this journey,
 

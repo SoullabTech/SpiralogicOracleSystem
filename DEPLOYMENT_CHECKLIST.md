@@ -1,176 +1,150 @@
-# 🚀 Maya Voice Agent - Northflank Deployment Checklist
+# 🚀 Sacred Architecture Deployment Checklist
 
-## ✅ Pre-deployment Steps
+## ✅ Backend & Database (Supabase)
 
-- [x] ~~Remove all RunPod dependencies~~
-- [x] ~~Create Northflank Sesame client library~~
-- [x] ~~Update API endpoints to use Northflank~~
-- [x] ~~Build Sesame CSM voice agent container~~
-- [x] ~~Create deployment configuration~~
+### 1. Database Migration
+- [ ] Apply migration `20250909_sacred_beta_users.sql` to Supabase
+- [ ] Enable Row Level Security (RLS) for tables:
+  - [ ] `users` table
+  - [ ] `oracle_agents` table 
+  - [ ] `memories` table
+  - [ ] `journal_entries` table
 
-## 🏗️ Build & Push Steps
-
-### 1. Complete Docker Authentication
+### 2. Environment Variables
+Required in `.env.local`:
 ```bash
-# Complete the browser-based authentication that's currently pending
-# Press ENTER in your terminal after browser login completes
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_JWT_SECRET=your_jwt_secret
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-### 2. Build and Push Container
+### 3. Supabase Auth Configuration
+- [ ] Enable Email/Password authentication
+- [ ] Configure email templates (optional)
+- [ ] Set redirect URLs for auth callbacks
+
+## 🧩 API Routes Status
+Current routes verified:
+- [x] `/api/auth/signup` - User registration
+- [x] `/api/auth/signin` - Authentication  
+- [x] `/api/agents` - Oracle agent management
+- [x] `/api/memories` - Memory storage
+
+## 🎭 Frontend Integration
+
+### 1. Authentication Flow
+- [x] AuthProvider wrapped in `app/layout.tsx`
+- [x] useAuth hook with Supabase integration
+- [x] SignupModal for new user onboarding
+- [x] MemorySavePrompt for anonymous conversion
+
+### 2. Memory & Conversation System
+- [x] ConversationFlow component with session management
+- [x] Automatic wisdom theme extraction
+- [x] Elemental resonance detection
+- [x] Anonymous conversation buffering
+
+### 3. Voice Integration Points
+Integration needed in your existing voice components:
+- [ ] Add `onSessionEnd` handler to trigger MemorySavePrompt
+- [ ] Connect useConversationMemory hook
+- [ ] Implement transcript-to-memory pipeline
+
+## 🔊 Voice Component Integration
+
+### Required Additions to Voice Interface:
+```typescript
+import { useConversationMemory } from '@/lib/hooks/useConversationMemory';
+import { useAuth } from '@/lib/hooks/useAuth';
+
+const { saveMemory } = useConversationMemory();
+const { isAuthenticated } = useAuth();
+
+const handleEndSession = (transcript: string) => {
+  if (!isAuthenticated) {
+    setShowSavePrompt(true);
+    setConversationToSave(transcript);
+  } else {
+    saveMemory(transcript, {
+      memoryType: 'conversation',
+      sourceType: 'voice',
+      wisdomThemes: extractWisdomThemes(transcript),
+      elementalResonance: detectElementalResonance(transcript)
+    });
+  }
+};
+```
+
+## 🧪 Testing & Verification
+
+### Authentication Flow Test
 ```bash
-# Option A: Use the existing build script
-cd northflank-migration
-./build_and_push.sh
-
-# Option B: Use the simple build script (if issues persist)
-./simple-build.sh
-```
-
-Expected result: `andreanezat/voice-agent:latest` pushed to Docker Hub
-
-## 🌐 Northflank Deployment Steps
-
-### 3. Create Northflank Service
-
-**Via Northflank Dashboard:**
-1. Navigate to your Northflank project
-2. Click "Create Service"
-3. Select "Deploy from Docker registry"
-4. Enter image: `andreanezat/voice-agent:latest`
-
-**Service Configuration:**
-- **Name**: `maya-voice-agent`
-- **Deployment Plan**: `nf-compute-200` (GPU-enabled)
-- **Instances**: 1 (start with single instance)
-- **Port**: 8000 (expose as public HTTP)
-
-### 4. Set Environment Variables
-
-```env
-HF_TOKEN=your_huggingface_token_here
-HUGGINGFACE_TOKEN=your_huggingface_token_here
-SESAME_MODEL=sesame/csm-1b
-SESAME_VOICE=maya
-SESAME_FP16=1
-DEV_MODE=false
-HOST=0.0.0.0
-PORT=8000
-```
-
-### 5. Configure Health Checks
-- **Path**: `/health`
-- **Port**: 8000
-- **Protocol**: HTTP
-- **Interval**: 30s
-- **Timeout**: 10s
-
-## 🔧 Application Configuration
-
-### 6. Update Local Environment
-
-Once your Northflank service is deployed, update `.env.local`:
-
-```env
-# Replace with your actual Northflank service URL
-NORTHFLANK_SESAME_URL=https://maya-voice-agent-[random-id].northflank.app
-
-# Verify these settings
-VOICE_PROVIDER=sesame
-SESAME_PROVIDER=northflank
-```
-
-### 7. Test Integration
-
-```bash
-# Test health endpoint
-curl https://your-service-url.northflank.app/health
-
-# Test voices endpoint  
-curl https://your-service-url.northflank.app/voices
-
-# Test Maya TTS
-curl -X POST https://your-service-url.northflank.app/tts \
+# Test signup endpoint
+curl -X POST http://localhost:3000/api/auth/signup \
   -H "Content-Type: application/json" \
-  -d '{"text": "Hello, this is Maya speaking with wisdom and warmth."}' \
-  --output maya-test.wav
+  -d '{"email":"test@example.com","password":"password123","sacredName":"TestUser"}'
 
-# Test via your app
-curl -X POST http://localhost:3000/api/voice/sesame \
+# Test signin endpoint  
+curl -X POST http://localhost:3000/api/auth/signin \
   -H "Content-Type: application/json" \
-  -d '{"text": "Testing Maya through the personal oracle system."}' \
-  --output local-maya-test.wav
+  -d '{"email":"test@example.com","password":"password123"}'
 ```
 
-## 🎉 Go-Live Steps
-
-### 8. Enable Beta Mode
-
-In your application, enable Maya voice features:
-
-```env
-# Update feature flags
-NEXT_PUBLIC_VOICE_MAYA_ENABLED=true
-NEXT_PUBLIC_ORACLE_MAYA_VOICE=true
+### Memory Storage Test
+```bash
+# Test memory creation (requires auth token)
+curl -X POST http://localhost:3000/api/memories \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{"content":"Test memory","metadata":{"themes":["transformation"],"element":"water","tone":"peaceful"}}'
 ```
 
-### 9. Monitor Deployment
+## 🚦 Pre-Launch Verification
 
-Watch the Northflank service logs for:
-- ✅ `Sesame CSM model loaded successfully`
-- ✅ `Maya voice profile loaded`
-- ✅ Health checks passing
-- ✅ Successful TTS generations
+### Essential Checks
+- [ ] Supabase connection established
+- [ ] User registration creates oracle agent
+- [ ] Memory saving works for authenticated users
+- [ ] Anonymous conversation buffer functions
+- [ ] Voice-to-memory pipeline operational
 
-### 10. User Testing
+### Optional Enhancements
+- [ ] Email verification for new accounts
+- [ ] Password reset functionality
+- [ ] Social authentication (Google, Apple)
+- [ ] Memory search and filtering
+- [ ] Wisdom theme analytics
 
-- Test Maya voice in personal oracle chat
-- Verify audio quality and response times
-- Check caching is working (faster subsequent requests)
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Service won't start:**
-- Check GPU plan is selected
-- Verify HF_TOKEN is valid
-- Check container logs for model loading errors
-
-**TTS requests fail:**
-- Verify service URL in .env.local
-- Check health endpoint returns `model_loaded: true`
-- Test with shorter text first
-
-**Audio quality issues:**
-- Check sample rate (16kHz default)
-- Verify Maya voice profile loaded
-- Test different text inputs
-
-### Debug Endpoints
+## 🎯 Deployment Commands
 
 ```bash
-# Application debug
-GET /api/debug/env
+# Install dependencies
+npm install
 
-# Service health
-GET https://your-service-url.northflank.app/health
+# Run type checking
+npm run type-check
 
-# Available voices
-GET https://your-service-url.northflank.app/voices
+# Run tests
+npm run test
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
 
-## 🎯 Success Criteria
+## 📱 Post-Deployment Health Checks
 
-- [ ] Container builds and pushes successfully
-- [ ] Northflank service deploys and starts
-- [ ] Health checks pass consistently
-- [ ] Maya TTS generates clear audio
-- [ ] Personal oracle speaks with Maya's voice
-- [ ] Response times < 5 seconds for warm requests
-- [ ] Audio caching improves performance
+- [ ] Homepage loads (`/`)
+- [ ] ConversationFlow initializes (`/maia`)
+- [ ] Authentication endpoints respond
+- [ ] Memory storage functions
+- [ ] Database connections stable
+- [ ] No console errors in browser
 
-## 📈 Ready for Beta!
+---
 
-Once all items are checked, Maya's voice is ready for beta users! 🌟
-
-The RunPod migration is complete and your personal oracle agents now have access to Maya's warm, wise voice powered by Northflank's GPU infrastructure.
+🌟 **Sacred Architecture Ready for Beta Launch** 🌟

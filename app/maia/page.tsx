@@ -213,17 +213,28 @@ export default function MaiaPage() {
           </div>
         )}
 
-        {/* Coming Soon Button */}
-        <div className="text-center mb-12">
-          <button
-            disabled
-            className="px-8 py-4 rounded-lg text-white/50 font-semibold cursor-not-allowed"
+        {/* Sacred Conversation */}
+        <div className="text-center mb-12 space-y-4">
+          <a
+            href="/oracle-conversation"
+            className="inline-block px-8 py-4 rounded-lg text-white font-semibold transition-all duration-200 hover:shadow-lg hover:scale-105"
             style={{
-              background: 'linear-gradient(135deg, #7A9A6540 0%, #6B9BD140 50%, #C8545040 75%, #D4B89640 100%)',
+              background: 'linear-gradient(135deg, #7A9A65 0%, #6B9BD1 50%, #C85450 75%, #D4B896 100%)',
               boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
             }}
           >
-            Sacred Holoflower Coming Soon
+            ✨ Begin Sacred Conversation with Maya ✨
+          </a>
+          
+          <button
+            disabled
+            className="block mx-auto px-6 py-3 rounded-lg text-white/50 font-medium cursor-not-allowed"
+            style={{
+              background: 'linear-gradient(135deg, #7A9A6530 0%, #6B9BD130 50%, #C8545030 75%, #D4B89630 100%)',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+            }}
+          >
+            Sacred Holoflower Experience (Coming Soon)
           </button>
         </div>
 
