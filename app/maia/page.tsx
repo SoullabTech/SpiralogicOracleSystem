@@ -9,10 +9,10 @@ export default function MaiaPage() {
   const [showBetaRituals, setShowBetaRituals] = useState(false);
 
   const elements = [
+    { name: "Air", color: "#D4B896", description: "Ideas & Connection" },
     { name: "Earth", color: "#7A9A65", description: "Grounding & Structure" },
-    { name: "Water", color: "#6B9BD1", description: "Flow & Emotion" },
     { name: "Fire", color: "#C85450", description: "Vision & Transformation" },
-    { name: "Air", color: "#D4B896", description: "Ideas & Connection" }
+    { name: "Water", color: "#6B9BD1", description: "Flow & Emotion" }
   ];
 
   const betaRituals = [
