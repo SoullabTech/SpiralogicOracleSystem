@@ -335,7 +335,7 @@ export function RitualLibrary({ isOpen, onClose, selectedElement, selectedPetalN
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <BookOpen className="w-6 h-6 text-purple-400" />
-                    <h2 className="text-2xl font-light text-white">Sacred Ritual Library</h2>
+                    <h2 className="text-2xl font-light text-white">Ritual Library</h2>
                   </div>
                   <button
                     onClick={onClose}

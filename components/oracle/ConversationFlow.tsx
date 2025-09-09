@@ -350,7 +350,7 @@ export function ConversationFlow({ initialMode = 'welcome' }: ConversationFlowPr
             {/* Session indicator */}
             <div className="fixed top-8 right-8 z-50">
               <div className="bg-white/10 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
-                Sacred Session Active
+                Session Active
               </div>
             </div>
           </motion.div>

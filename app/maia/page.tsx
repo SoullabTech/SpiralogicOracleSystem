@@ -30,7 +30,7 @@ export default function MaiaPage() {
       ]
     },
     {
-      title: "Sacred Water Ceremony",
+      title: "Water Ceremony",
       element: "Water",
       duration: "10-15 minutes",
       description: "Use water as a medium for releasing and receiving wisdom",
@@ -149,7 +149,7 @@ export default function MaiaPage() {
               boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
             }}
           >
-            {showBetaRituals ? 'Hide Sacred Rituals' : 'Explore Sacred Beta Rituals'}
+            {showBetaRituals ? 'Hide Rituals' : 'Explore Beta Rituals'}
           </button>
         </div>
 
@@ -157,7 +157,7 @@ export default function MaiaPage() {
         {showBetaRituals && (
           <div className="max-w-6xl mx-auto mb-12">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">Sacred Beta Rituals</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">Beta Rituals</h2>
               <p style={{ color: '#D4B896' }} className="max-w-2xl mx-auto">
                 These practices help you connect with Maya's wisdom across all four elements. 
                 Choose the ritual that calls to you in this moment.
@@ -190,7 +190,7 @@ export default function MaiaPage() {
                   
                   <div className="space-y-2">
                     <p className="text-sm font-medium" style={{ color: elements.find(e => e.name === ritual.element)?.color }}>
-                      Sacred Steps:
+                      Steps:
                     </p>
                     <ol className="space-y-1 text-sm text-white/70">
                       {ritual.steps.map((step, stepIndex) => (
@@ -213,7 +213,7 @@ export default function MaiaPage() {
           </div>
         )}
 
-        {/* Sacred Conversation */}
+        {/* Conversation */}
         <div className="text-center mb-12 space-y-4">
           <a
             href="/oracle-conversation"
@@ -223,7 +223,7 @@ export default function MaiaPage() {
               boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
             }}
           >
-            ✨ Begin Sacred Conversation with Maya ✨
+            ✨ Begin Conversation with Maya ✨
           </a>
           
           <button
@@ -234,7 +234,7 @@ export default function MaiaPage() {
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
             }}
           >
-            Sacred Holoflower Experience (Coming Soon)
+            Holoflower Experience (Coming Soon)
           </button>
         </div>
 

@@ -76,7 +76,7 @@ function CheckInModal({ isOpen, onClose, onMoodSelect, onSymbolSelect }: CheckIn
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-light text-white">Sacred Check-In</h2>
+              <h2 className="text-xl font-light text-white">Check-In</h2>
               <button
                 onClick={onClose}
                 className="text-white/60 hover:text-white transition-colors"

@@ -308,7 +308,7 @@ const SoullabDeveloperPortal: React.FC = () => {
           }}
         >
           {[
-            { id: "keys", label: "Sacred Keys", icon: "🗝️" },
+            { id: "keys", label: "Keys", icon: "🗝️" },
             { id: "usage", label: "Wisdom Flow", icon: "📊" },
             { id: "guides", label: "Teachings", icon: "📜" },
           ].map((section) => (

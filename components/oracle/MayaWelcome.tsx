@@ -143,7 +143,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
 
         <div className="space-y-4">
           <h1 className="text-2xl font-light text-white/90">
-            Sacred Dialogue with Maya
+            Dialogue with Maya
           </h1>
           
           <div className="max-w-2xl mx-auto">
@@ -165,7 +165,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
           {/* Conversation History */}
           {oracleAgent && oracleAgent.conversations_count > 0 && (
             <div className="bg-white/5 border border-white/10 rounded-xl p-6 text-center">
-              <p className="text-white/70 text-sm mb-2">Your Sacred Journey</p>
+              <p className="text-white/70 text-sm mb-2">Your Journey</p>
               <p className="text-white/90">
                 {oracleAgent.conversations_count} conversations • Wisdom level {oracleAgent.wisdom_level}
               </p>
@@ -234,7 +234,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
           onClick={onConversationStart}
           className="px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-full transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl"
         >
-          {isAuthenticated ? 'Continue Our Sacred Dialogue' : 'Begin Sacred Conversation'}
+          {isAuthenticated ? 'Continue Our Dialogue' : 'Begin Conversation'}
         </button>
         
         <p className="mt-4 text-white/60 text-sm">

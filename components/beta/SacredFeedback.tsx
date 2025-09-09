@@ -120,7 +120,7 @@ export function SacredFeedback({ isOpen, onClose }: SacredFeedbackProps) {
   const steps = [
     // Step 1: Experience Ratings
     {
-      title: "Sacred Experience Reflection",
+      title: "Experience Reflection",
       icon: "🌟",
       content: (
         <div className="space-y-8">
@@ -164,7 +164,7 @@ export function SacredFeedback({ isOpen, onClose }: SacredFeedbackProps) {
     
     // Step 2: Qualitative Feedback
     {
-      title: "Sacred Insights & Reflections",
+      title: "Insights & Reflections",
       icon: "💎",
       content: (
         <div className="space-y-6">
@@ -224,7 +224,7 @@ export function SacredFeedback({ isOpen, onClose }: SacredFeedbackProps) {
                       : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
                   }`}
                 >
-                  Sacred Yes
+                  Yes
                 </button>
                 <button
                   onClick={() => updateFeedback('wouldRecommend', false)}
@@ -245,7 +245,7 @@ export function SacredFeedback({ isOpen, onClose }: SacredFeedbackProps) {
     
     // Step 3: Final Sacred Reflection
     {
-      title: "Sacred Completion",
+      title: "Completion",
       icon: "✨",
       content: (
         <div className="space-y-6">

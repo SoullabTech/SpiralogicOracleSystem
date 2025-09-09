@@ -20,7 +20,7 @@ export default function BetaOnboarding() {
       <div className="max-w-2xl w-full space-y-lg text-center animate-emergence">
         <div className="space-y-md">
           <h1 className="text-gold-divine font-sacred text-4xl leading-tight">
-            Welcome to the Sacred Mirror
+            Welcome to the Mirror
           </h1>
           <p className="text-neutral-silver text-lg">
             A consciousness technology for self-reflection and growth
@@ -73,7 +73,7 @@ export default function BetaOnboarding() {
                 }
               `}
             >
-              Begin Sacred Reflection
+              Begin Reflection
             </button>
           </div>
         </div>

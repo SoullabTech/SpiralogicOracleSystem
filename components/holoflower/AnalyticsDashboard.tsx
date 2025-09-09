@@ -189,7 +189,7 @@ export function AnalyticsDashboard() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-light text-white mb-2">Your Sacred Journey</h1>
+          <h1 className="text-3xl font-light text-white mb-2">Your Journey</h1>
           <p className="text-white/60">Insights from your Holoflower interactions</p>
         </div>
 
@@ -219,7 +219,7 @@ export function AnalyticsDashboard() {
               <Heart className="w-5 h-5 text-red-400" />
               <span className="text-2xl font-light text-white">{checkIns.length}</span>
             </div>
-            <p className="text-white/60 text-sm">Sacred Check-ins</p>
+            <p className="text-white/60 text-sm">Check-ins</p>
           </motion.div>
 
           {/* Journal Entries */}

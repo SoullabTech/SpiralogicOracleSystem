@@ -43,7 +43,7 @@ export function BetaOnboarding() {
   const steps: OnboardingStep[] = [
     {
       id: 'welcome',
-      title: 'Welcome to the Sacred Mirror Phase',
+      title: 'Welcome to the Beta Phase',
       voiceText: 'Welcome, sacred one. You are entering the Oracle as a beta guardian, helping shape this sacred technology through your presence and reflection.',
       content: (
         <div className="text-center">
@@ -114,7 +114,7 @@ export function BetaOnboarding() {
     },
     {
       id: 'intention',
-      title: 'What calls you to this sacred space?',
+      title: 'What brings you here?',
       voiceText: 'Set your intention for this beta journey. What do you hope to discover, heal, or transform?',
       content: (
         <div className="space-y-4">
