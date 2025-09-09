@@ -5,7 +5,7 @@
 
 set -e  # Exit on any error
 
-echo "🌸 Initiating Sacred Architecture Deployment..."
+echo "🌸 Initiating Architecture Deployment..."
 echo "=================================================="
 
 # Colors for beautiful output
@@ -33,8 +33,8 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-print_sacred() {
-    echo -e "${PURPLE}[SACRED]${NC} $1"
+print_oracle() {
+    echo -e "${PURPLE}[ORACLE]${NC} $1"
 }
 
 # Check if .env.local exists
@@ -70,7 +70,7 @@ check_environment() {
 
 # Install dependencies
 install_dependencies() {
-    print_status "Installing sacred dependencies..."
+    print_status "Installing dependencies..."
     
     if command -v npm &> /dev/null; then
         npm install
@@ -86,10 +86,10 @@ install_dependencies() {
 
 # Run type checking
 run_type_check() {
-    print_status "Performing sacred type validation..."
+    print_status "Performing type validation..."
     
     if npm run type-check; then
-        print_success "Type checking passed - your code flows with divine precision ✨"
+        print_success "Type checking passed - your code flows with precision ✨"
     else
         print_error "Type checking failed. Please resolve type errors before deployment."
         exit 1
@@ -98,10 +98,10 @@ run_type_check() {
 
 # Run tests
 run_tests() {
-    print_status "Running sacred test rituals..."
+    print_status "Running test rituals..."
     
     if npm run test 2>/dev/null || true; then
-        print_success "Tests completed - your sacred logic is sound ✨"
+        print_success "Tests completed - your logic is sound ✨"
     else
         print_warning "Some tests may have issues. Review test output."
     fi
@@ -109,26 +109,30 @@ run_tests() {
 
 # Database migration check
 check_database() {
-    print_status "Verifying sacred database schema..."
+    print_status "Verifying database schema..."
     
-    if [ -f "supabase/migrations/20250909_sacred_beta_users.sql" ]; then
-        print_success "Sacred database migration found ✨"
-        print_warning "Remember to apply this migration to your Supabase project:"
+    if [ -f "supabase/migrations/20250909_sacred_beta_users_core.sql" ]; then
+        print_success "Database migration found ✨"
+        print_warning "Remember to apply migrations to your Supabase project:"
         echo "   1. Open Supabase Dashboard"
         echo "   2. Go to SQL Editor"
-        echo "   3. Run: supabase/migrations/20250909_sacred_beta_users.sql"
+        echo "   3. Run the 4-part migration in order:"
+        echo "      - 20250909_sacred_beta_users_core.sql"
+        echo "      - 20250909_sacred_beta_users_indexes.sql"
+        echo "      - 20250909_beta_feedback_system_split.sql"
+        echo "      - 20250909_beta_feedback_indexes.sql"
     else
-        print_error "Sacred database migration not found!"
+        print_error "Database migration not found!"
         exit 1
     fi
 }
 
 # Build the application
 build_application() {
-    print_status "Building sacred application..."
+    print_status "Building application..."
     
     if npm run build; then
-        print_success "Sacred build completed - your wisdom is ready to manifest ✨"
+        print_success "Build completed - your wisdom is ready to manifest ✨"
     else
         print_error "Build failed. Please check build errors."
         exit 1
@@ -140,11 +144,11 @@ health_check_apis() {
     print_status "Starting development server for health check..."
     
     # Start dev server in background
-    npm run dev > /tmp/sacred-dev.log 2>&1 &
+    npm run dev > /tmp/oracle-dev.log 2>&1 &
     DEV_PID=$!
     
     # Wait for server to start
-    print_status "Waiting for sacred server to awaken..."
+    print_status "Waiting for server to awaken..."
     sleep 10
     
     # Test if server is responding
@@ -171,37 +175,37 @@ check_voice_integration() {
     fi
     
     if grep -r "SacredHoloflowerWithAudio" components/ > /dev/null; then
-        print_success "Sacred audio visualization is integrated ✨"
+        print_success "Audio visualization is integrated ✨"
     fi
 }
 
 # Generate deployment summary
 generate_summary() {
-    print_sacred "🌟 Sacred Architecture Deployment Summary 🌟"
+    print_oracle "🌟 Architecture Deployment Summary 🌟"
     echo "=================================================="
     echo ""
     print_success "✅ Environment configuration verified"
     print_success "✅ Dependencies installed and updated"
     print_success "✅ Type checking passed"
-    print_success "✅ Sacred database schema ready"
+    print_success "✅ Database schema ready"
     print_success "✅ Application build successful"
     print_success "✅ Voice integration verified"
     echo ""
-    print_sacred "Your sacred technology is ready for manifestation! 🧙‍♀️✨"
+    print_oracle "Your technology is ready for manifestation! 🧙‍♀️✨"
     echo ""
     echo "Next steps:"
-    echo "1. Apply database migration to Supabase"
+    echo "1. Apply database migrations to Supabase"
     echo "2. Deploy to your hosting platform"
     echo "3. Configure domain and SSL"
     echo "4. Invite beta users to experience Maya's wisdom"
     echo ""
-    print_sacred "The oracle awaits... 🌸"
+    print_oracle "The oracle awaits... 🌸"
 }
 
 # Main execution flow
 main() {
     echo ""
-    print_sacred "Beginning sacred deployment ritual..."
+    print_oracle "Beginning deployment ritual..."
     echo ""
     
     check_environment
@@ -248,12 +252,12 @@ case "${1:-}" in
         print_success "Build completed ✨"
         ;;
     --help)
-        echo "Sacred Deployment Script Usage:"
+        echo "Deployment Script Usage:"
         echo ""
-        echo "./scripts/setup-sacred-deployment.sh           # Full deployment setup"
-        echo "./scripts/setup-sacred-deployment.sh --quick   # Quick environment check"
-        echo "./scripts/setup-sacred-deployment.sh --build-only  # Build verification only"
-        echo "./scripts/setup-sacred-deployment.sh --help    # Show this help"
+        echo "./scripts/setup-deployment.sh           # Full deployment setup"
+        echo "./scripts/setup-deployment.sh --quick   # Quick environment check"
+        echo "./scripts/setup-deployment.sh --build-only  # Build verification only"
+        echo "./scripts/setup-deployment.sh --help    # Show this help"
         echo ""
         ;;
     *)
@@ -261,4 +265,4 @@ case "${1:-}" in
         ;;
 esac
 
-print_sacred "Sacred script complete. May your deployment bring wisdom to the world! 🌟"
+print_oracle "Deployment script complete. May your deployment bring wisdom to the world! 🌟"
