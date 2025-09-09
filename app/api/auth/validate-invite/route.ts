@@ -8,22 +8,30 @@ import { cookies } from 'next/headers';
 
 // Beta invite codes - in production, store in database
 const VALID_INVITE_CODES = [
-  // Founder codes
+  // Primary beta codes (from BETA_INVITATION_SYSTEM.md)
+  'SACRED_TECH',
+  'ANAMNESIS', 
+  'MAYA_SEED',
+  'ORACLE_BETA',
+  'SACRED_MIRROR',
+  
+  // Additional codes from SACRED_BETA_SETUP.md
+  'FIRST_LIGHT',
+  'SACRED_SPIRAL',
+  'ANAMNESIS_FIELD',
+  'MAYA_AWAKENING',
+  'SOUL_REMEMBERING',
+  
+  // Legacy codes for backward compatibility
   'SOUL-ALPHA-0001',
   'SOUL-ALPHA-0002',
-  
-  // Early beta codes
   'SOUL-BETA-1111',
   'SOUL-BETA-2222',
   'SOUL-BETA-3333',
   'SOUL-BETA-4444',
   'SOUL-BETA-5555',
-  
-  // Special codes
   'SOUL-MAIA-7777',
   'SOUL-ORACLE-9999',
-  
-  // Test codes for development
   'SOUL-TEST-0000',
 ];
 

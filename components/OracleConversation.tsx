@@ -125,7 +125,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       const responseData = await response.json();
       
       // Extract text from response - handle both formats
-      const responseText = responseData.message || responseData.mayaResponse || 'I am here with you.';
+      let responseText = responseData.message || responseData.mayaResponse || 'I am here with you.';
+      
+      // Clean up response text - remove stage directions and formatting
+      responseText = responseText
+        .replace(/\*[^*]*\*/g, '') // Remove *stage directions*
+        .replace(/\[[^\]]*\]/g, '') // Remove [actions]
+        .replace(/\([^)]*\)/g, '') // Remove (side notes)
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
       
       // Map response to motion
       const motionMapping = mapResponseToMotion(responseText);
