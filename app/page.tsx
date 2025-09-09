@@ -9,12 +9,28 @@ export default function HomePage() {
   const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
   
   useEffect(() => {
-    // Check if user has completed onboarding
-    const onboarded = localStorage.getItem("sacredMirrorOnboarded") === "true";
-    setIsOnboarded(onboarded);
+    // Check beta access and onboarding status
+    const betaAccess = localStorage.getItem("betaAccess");
+    const betaOnboarded = localStorage.getItem("betaOnboardingComplete") === "true";
+    const legacyOnboarded = localStorage.getItem("sacredMirrorOnboarded") === "true";
     
-    if (onboarded) {
-      router.push('/oracle');
+    // If no beta access, redirect to beta portal
+    if (betaAccess !== "granted") {
+      router.push('/beta');
+      return;
+    }
+    
+    // If beta access but not onboarded, redirect to welcome
+    if (!betaOnboarded && !legacyOnboarded) {
+      router.push('/welcome');
+      return;
+    }
+    
+    setIsOnboarded(true);
+    
+    // If onboarded, go to maia
+    if (betaOnboarded || legacyOnboarded) {
+      router.push('/maia');
     }
   }, [router]);
 

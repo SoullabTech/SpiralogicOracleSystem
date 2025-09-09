@@ -25,6 +25,7 @@ import { ADAPTIVE_ONBOARDING, detectResponseIntent, getAdaptiveResponse } from '
 import AdaptiveProsodyEngine from './AdaptiveProsodyEngine';
 import { UserMemoryService } from './UserMemoryService';
 import { DynamicGreetingService } from './DynamicGreetingService';
+import { MemoryCoreIndex } from './MemoryCoreIndex';
 
 // Load OpeningRitual configs
 const ritualPath = path.join(__dirname, '../../config/OpeningRitual.json');
@@ -161,6 +162,7 @@ export class ConversationalPipeline {
   private recentAudioCache = new Map<string, string>();
   private debounceTimers = new Map<string, NodeJS.Timeout>();
   private memoryOrchestrator: MemoryOrchestrator;
+  private memoryCoreIndex: MemoryCoreIndex;
   // Multi-modal intelligence engines
   // private multiModalEI: MultiModalEmotionalIntelligence;
   private adaptiveProsody: AdaptiveProsodyEngine;
@@ -168,13 +170,14 @@ export class ConversationalPipeline {
 
   constructor(dependencies?: { supabase?: any; vectorSearch?: any }) {
     this.memoryOrchestrator = new MemoryOrchestrator(dependencies);
+    this.memoryCoreIndex = new MemoryCoreIndex();
     // Initialize AdaptiveProsodyEngine with logger
     this.adaptiveProsody = new AdaptiveProsodyEngine(logger);
     // TEMPORARILY DISABLED - FIX COMPILATION ERRORS FIRST
     // this.multiModalEI = new MultiModalEmotionalIntelligence(logger);
     // this.fileMemory = new FileMemoryIntegration(); // Temporarily disabled
     
-    logger.info('🧠 ConversationalPipeline initialized with AdaptiveProsodyEngine');
+    logger.info('🧠 ConversationalPipeline initialized with MemoryCoreIndex and AdaptiveProsodyEngine');
   }
 
   /**
@@ -2458,7 +2461,7 @@ export class ConversationalPipeline {
     const { userText, element = 'aether', userId, sessionId, threadId, metadata = {} } = params;
     
     try {
-      // Build memory context first
+      // Build memory context first with both legacy and new system
       const memoryContext = await this.memoryOrchestrator.buildContext({
         userId,
         userText,
@@ -2466,15 +2469,48 @@ export class ConversationalPipeline {
         threadId
       });
 
-      // Create context object
+      // Enhanced memory recall using MemoryCoreIndex
+      const enhancedMemories = await this.memoryCoreIndex.recall({
+        query: userText,
+        userId,
+        sessionId,
+        element: element as any,
+        limit: 5,
+        includeRituals: true,
+        includeReflections: true,
+        includeSynchronicities: true
+      });
+
+      // Combine conversation history with enhanced memories
+      const conversationHistory = memoryContext.conversationHistory || [];
+      
+      // Add relevant memories to context if found
+      if (enhancedMemories.results.length > 0) {
+        logger.info(`🧠 Found ${enhancedMemories.results.length} relevant memories for user ${userId}`);
+        
+        // Inject top memory as system context
+        const topMemory = enhancedMemories.results[0];
+        if (topMemory.relevance > 0.7) {
+          conversationHistory.unshift({
+            role: 'assistant' as const,
+            content: `[Memory Context: ${topMemory.content}]`,
+            timestamp: topMemory.timestamp.toISOString()
+          });
+        }
+      }
+
+      // Create context object with enhanced memory
       const ctx: ConversationalContext = {
         userText,
-        conversationHistory: memoryContext.conversationHistory || [],
+        conversationHistory,
         sentiment: 'neutral',
         element: element as any,
         voiceEnabled: metadata.enableVoice || false,
         userId,
-        sessionId
+        sessionId,
+        // Add memory insights to context
+        longMemSnippets: enhancedMemories.results.map(m => m.content).slice(0, 3),
+        convoSummary: enhancedMemories.summary
       };
 
       // 🌟 Check for Maya Welcome Ritual trigger
@@ -2602,6 +2638,7 @@ Respond as Maya with appropriate depth and memory integration.`;
       if (memoryContext) {
         setTimeout(async () => {
           try {
+            // Store with legacy system
             await this.memoryOrchestrator.storeConversation({
               userId,
               sessionId,
@@ -2611,6 +2648,42 @@ Respond as Maya with appropriate depth and memory integration.`;
               element,
               metadata
             });
+
+            // Store with unified MemoryCoreIndex
+            await this.memoryCoreIndex.remember(
+              userText,
+              'conversation',
+              {
+                userId,
+                sessionId,
+                element: element as any,
+                emotionalState: ctx.sentiment,
+                ritualPhase: ctx.onboardingStep,
+                archetype: ctx.currentArchetype,
+                source: 'maya_chat',
+                responseType: 'streaming'
+              },
+              userId
+            );
+
+            // Store any detected patterns or insights
+            if (enhancedMemories.patterns && enhancedMemories.patterns.length > 0) {
+              logger.info(`🔮 Storing ${enhancedMemories.patterns.length} detected patterns`);
+              for (const pattern of enhancedMemories.patterns) {
+                await this.memoryCoreIndex.remember(
+                  pattern,
+                  'pattern',
+                  {
+                    userId,
+                    sessionId,
+                    element: element as any,
+                    source: 'pattern_detection',
+                    relatedQuery: userText
+                  },
+                  userId
+                );
+              }
+            }
           } catch (error) {
             logger.error('Failed to store streaming conversation:', error);
           }
@@ -2639,21 +2712,61 @@ Respond as Maya with appropriate depth and memory integration.`;
   async processMessage(params: any): Promise<any> {
     const { userText, element = 'aether', userId, sessionId, metadata = {} } = params;
     
+    // Build memory context
+    const memoryContext = await this.memoryOrchestrator.buildContext({
+      userId,
+      userText,
+      sessionId,
+      threadId: sessionId
+    });
+
+    // Enhanced memory recall using MemoryCoreIndex
+    const enhancedMemories = await this.memoryCoreIndex.recall({
+      query: userText,
+      userId,
+      sessionId,
+      element: element as any,
+      limit: 5,
+      includeRituals: true,
+      includeReflections: true
+    });
+
     const ctx: ConversationalContext = {
       userText,
-      conversationHistory: [],
+      conversationHistory: memoryContext.conversationHistory || [],
       sentiment: 'neutral',
       element: element as any,
       voiceEnabled: metadata.enableVoice || false,
       userId,
-      sessionId
+      sessionId,
+      longMemSnippets: enhancedMemories.results.map(m => m.content).slice(0, 3),
+      convoSummary: enhancedMemories.summary
     };
 
     const result = await this.converseViaSesame(ctx);
+    
+    // Store the conversation in memory
+    await this.memoryCoreIndex.remember(
+      userText,
+      'conversation',
+      {
+        userId,
+        sessionId,
+        element: element as any,
+        response: result.text,
+        source: 'maya_chat'
+      },
+      userId
+    );
+
     return {
       text: result.text,
       element: result.element,
-      metadata: result.metadata
+      metadata: {
+        ...result.metadata,
+        memoryRecallCount: enhancedMemories.results.length,
+        memoryPatterns: enhancedMemories.patterns
+      }
     };
   }
 

@@ -11,7 +11,7 @@ export default function BetaOnboarding() {
     if (agreed) {
       // Set onboarding complete flag
       localStorage.setItem("sacredMirrorOnboarded", "true");
-      router.push("/oracle");
+      router.push("/maia");
     }
   };
 

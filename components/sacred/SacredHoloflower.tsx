@@ -177,7 +177,7 @@ export const SacredHoloflower: React.FC<SacredHoloflowerProps> = ({
           alt="Spiralogic Holoflower"
           width={size}
           height={size}
-          className="absolute inset-0"
+          className="absolute inset-0 object-contain"
           priority
         />
 

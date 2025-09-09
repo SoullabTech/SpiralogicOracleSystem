@@ -5,8 +5,8 @@ import { Router } from "express";
 import { errorResponse } from "../utils/sharedUtilities";
 import { logger } from "../utils/logger";
 
-// Import our new route services
-import orchestratorRoutes from '../routes/orchestrator.routes';
+// Import our new route services  
+// import orchestratorRoutes from '../routes/orchestrator.routes'; // Temporarily disabled
 import voiceJournalingRoutes from '../routes/voiceJournaling.routes';
 import voiceStreamRoutes from '../routes/voice/stream.routes';
 import semanticJournalingRoutes from '../routes/semanticJournaling.routes';
@@ -15,6 +15,7 @@ import conversationalStreamRoutes from '../routes/conversational.stream.routes';
 import enhancedConversationalStreamRoutes from '../routes/enhanced.conversational.stream.routes';
 import streamingChatRoutes from '../routes/streaming.chat.routes';
 import adminRoutes from '../routes/admin.routes';
+import soulLabRoutes from '../routes/soullab.routes';
 
 const router = Router();
 
@@ -57,7 +58,7 @@ router.get(`/${API_VERSION}/health`, (req, res) => {
 /**
  * Mount our new service routes
  */
-router.use(`/${API_VERSION}/orchestrator`, orchestratorRoutes);
+// router.use(`/${API_VERSION}/orchestrator`, orchestratorRoutes); // Temporarily disabled
 router.use(`/${API_VERSION}/voice`, voiceJournalingRoutes);
 router.use(`/${API_VERSION}/voice`, voiceStreamRoutes); // Add streaming voice endpoints
 router.use(`/${API_VERSION}/semantic`, semanticJournalingRoutes);
@@ -66,6 +67,7 @@ router.use(`/${API_VERSION}/converse`, conversationalStreamRoutes);
 router.use(`/${API_VERSION}/enhanced/converse`, enhancedConversationalStreamRoutes);
 router.use(`/${API_VERSION}/stream`, streamingChatRoutes); // Real-time streaming with chunked TTS
 router.use(`/${API_VERSION}/admin`, adminRoutes); // Admin dashboard and monitoring
+router.use(`/${API_VERSION}/soullab`, soulLabRoutes); // Sacred Technology System
 
 /**
  * Placeholder routers for missing modules

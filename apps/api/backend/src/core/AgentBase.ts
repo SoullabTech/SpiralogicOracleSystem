@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 /**
  * AgentBase - Unified Foundation for All Daimonic Agents
  * Consolidates personality logic while preserving authentic Otherness

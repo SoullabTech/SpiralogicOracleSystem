@@ -330,7 +330,7 @@ Respond with the wisdom of aether that serves integration and transcendence. Hel
       input: aetherPrompt,
       userId,
     });
-    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.content, content: modelResponse.content || modelResponse.content };
+    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.response };
 
     // Weave AI insight with our aether wisdom
     const weavedWisdom = `${aetherWisdom}

@@ -1,13 +1,5 @@
-// import { AgentResponse } from "./types/agentResponse"; // Defined in this file
+import { AgentResponse } from "./agentResponse";
 import type { Metadata } from "./metadata";
 
-export interface AgentResponse {
-  content: string; // Primary field for compatibility
-  response?: string; // Legacy compatibility
-  metadata?: Metadata;
-  routingPath?: string[];
-  memoryEnhanced?: boolean;
-  confidence?: number;
-  provider?: string;
-  model?: string;
-}
+// Re-export AgentResponse for backward compatibility
+export { AgentResponse };

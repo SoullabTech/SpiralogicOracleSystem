@@ -765,7 +765,7 @@ export class ComprehensiveAstrologicalService {
     // Calculate midpoints for each planet
     planets.forEach((planet) => {
       const positions = charts.map((chart) => {
-        const pos = chart.planets.get(planet);
+        const pos = chart.planets[planet];
         return pos ? this.getAbsoluteDegree(pos.sign, pos.degree) : 0;
       });
 

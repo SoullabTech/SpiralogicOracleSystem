@@ -208,7 +208,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   }, []);
 
   return (
-    <div className="oracle-conversation min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-black">
+    <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black">
       {/* Sacred Holoflower - Always centered */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
         <div className="pointer-events-auto">

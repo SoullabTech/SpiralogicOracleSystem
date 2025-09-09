@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../../types/agentResponse";
 /**
  * Agent Choreographer - Ensures Genuine Diversity in Multi-Agent Responses
  * 

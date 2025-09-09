@@ -1,0 +1,106 @@
+{
+  "name": "Spiralogic Oracle",
+  "short_name": "Oracle",
+  "description": "Sacred technology for inner transformation - Interactive Holoflower experience",
+  "start_url": "/holoflower",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#9F7AEA",
+  "background_color": "#0F0517",
+  "categories": ["wellness", "lifestyle", "meditation"],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Wild Petal",
+      "short_name": "Wild",
+      "description": "Draw a wild petal oracle",
+      "url": "/holoflower?action=wild-petal",
+      "icons": [{ "src": "/icons/wild-petal.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Check In",
+      "short_name": "Check",
+      "description": "Sacred energy check-in",
+      "url": "/holoflower?action=check-in",
+      "icons": [{ "src": "/icons/check-in.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Journal",
+      "short_name": "Journal",
+      "description": "Open sacred journal",
+      "url": "/journal",
+      "icons": [{ "src": "/icons/journal.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/holoflower.png",
+      "type": "image/png",
+      "sizes": "1080x1920",
+      "label": "Holoflower sacred interface"
+    },
+    {
+      "src": "/screenshots/ritual.png",
+      "type": "image/png",
+      "sizes": "1080x1920",
+      "label": "Guided ritual experience"
+    },
+    {
+      "src": "/screenshots/analytics.png",
+      "type": "image/png",
+      "sizes": "1080x1920",
+      "label": "Journey insights dashboard"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}

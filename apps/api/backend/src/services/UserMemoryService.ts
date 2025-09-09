@@ -1,16 +1,45 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { logger } from '../utils/logger';
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // 🔐 Service role only
-const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: { persistSession: false },
-});
+// Validate Supabase configuration
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+let supabase: SupabaseClient | null = null;
+
+// Check if Supabase credentials are configured
+if (!supabaseUrl || !supabaseKey) {
+  const errorMessage = 'CRITICAL: Supabase credentials not configured. Memory service will not function.';
+  logger.error(errorMessage);
+  logger.error('Missing: SUPABASE_URL and/or SUPABASE_SERVICE_ROLE_KEY');
+  
+  if (process.env.NODE_ENV === 'production') {
+    // In production, memory is critical - fail fast
+    throw new Error(errorMessage);
+  } else {
+    // In development, warn but continue with null client
+    logger.warn('MEMORY SERVICE: Running without database connection');
+    logger.warn('Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable memory features');
+  }
+} else {
+  // Initialize Supabase client only if credentials are available
+  supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: { persistSession: false },
+  });
+  logger.info('Memory service initialized with Supabase connection');
+}
 
 export class UserMemoryService {
   /**
    * Get the last recorded session summary for a user
    */
   static async getLastSession(userId: string): Promise<{ element: string; phase: string; date: string } | null> {
+    // Check if Supabase is available
+    if (!supabase) {
+      logger.warn('Memory service unavailable - returning null for getLastSession');
+      return null;
+    }
+    
     try {
       const { data, error } = await supabase
         .from('user_sessions')
@@ -46,6 +75,12 @@ export class UserMemoryService {
    * Save a summary of the current session
    */
   static async saveSessionSummary(userId: string, element: string, phase: string): Promise<void> {
+    // Check if Supabase is available
+    if (!supabase) {
+      logger.warn('Memory service unavailable - cannot save session summary');
+      return;
+    }
+    
     try {
       const { error } = await supabase.from('user_sessions').insert([
         {

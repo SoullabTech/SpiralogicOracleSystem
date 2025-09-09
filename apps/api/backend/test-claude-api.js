@@ -3,7 +3,14 @@
 // Direct test of Claude API key
 const Anthropic = require('@anthropic-ai/sdk');
 
-const apiKey = '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';
+// Load from environment variable
+require('dotenv').config({ path: '../../.env.local' });
+const apiKey = process.env.ANTHROPIC_API_KEY;
+
+if (!apiKey) {
+  console.error('❌ Missing ANTHROPIC_API_KEY in environment variables');
+  process.exit(1);
+}
 
 console.log('🔮 Testing Claude API Key');
 console.log('=========================');

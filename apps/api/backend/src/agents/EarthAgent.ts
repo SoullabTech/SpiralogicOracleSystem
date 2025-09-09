@@ -230,7 +230,7 @@ What in your life feels most solid and trustworthy right now? Let's start there 
       general_grounding: "🌱 You are more rooted than you remember.",
     };
 
-    return `${response}\n\n${signatures[earthType] || signatures.general_grounding}`;
+    return `${content}\n\n${signatures[earthType] || signatures.general_grounding}`;
   },
 };
 
@@ -282,7 +282,7 @@ Respond with the wisdom of earth that serves practical manifestation and embodie
       input: earthPrompt,
       userId,
     });
-    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.content, content: modelResponse.content || modelResponse.content };
+    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.response };
 
     // Weave AI insight with our earth wisdom
     const weavedWisdom = `${earthWisdom}

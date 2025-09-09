@@ -517,8 +517,8 @@ class SpiralogicAstrologyService {
   }
 
   private generatePersonalOverview(chart: ComprehensiveBirthChart): string {
-    const sun = chart.planets.get("Sun");
-    const moon = chart.planets.get("Moon");
+    const sun = chart.planets["Sun"];
+    const moon = chart.planets["Moon"];
     const rising = this.getRisingSign(chart);
 
     return (
@@ -574,11 +574,11 @@ class SpiralogicAstrologyService {
     becomingArchetype: string;
   } {
     // Being archetype based on Sun/Moon/Rising
-    const sun = chart.planets.get("Sun");
-    const moon = chart.planets.get("Moon");
+    const sun = chart.planets["Sun"];
+    const moon = chart.planets["Moon"];
 
     // Becoming archetype based on North Node and progressed positions
-    const northNode = chart.planets.get("NorthNode");
+    const northNode = chart.planets["NorthNode"];
 
     // Implement archetype determination logic
     const beingArchetype = this.calculateBeingArchetype(sun, moon, chart);
@@ -828,9 +828,9 @@ class SpiralogicAstrologyService {
   }
 
   private analyzeKarmicAxis(chart: ComprehensiveBirthChart): any {
-    const northNode = chart.planets.get("NorthNode");
-    const saturn = chart.planets.get("Saturn");
-    const pluto = chart.planets.get("Pluto");
+    const northNode = chart.planets["NorthNode"];
+    const saturn = chart.planets["Saturn"];
+    const pluto = chart.planets["Pluto"];
 
     // Calculate South Node (opposite North Node)
     const southNodeDegree = (northNode?.degree || 0) + 180;

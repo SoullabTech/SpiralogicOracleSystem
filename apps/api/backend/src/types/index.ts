@@ -1,6 +1,8 @@
-// import { AgentResponse } from "./types/agentResponse"; // Fixed below
 import { Request } from "express";
 import type { Metadata } from "./metadata";
+
+// Export AgentResponse
+export { AgentResponse } from "./agentResponse";
 
 /**
  * Represents the authentication request payload

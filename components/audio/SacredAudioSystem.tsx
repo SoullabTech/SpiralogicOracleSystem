@@ -219,7 +219,7 @@ export const SacredAudioSystem: React.FC<SacredAudioSystemProps> = ({
       audioEngineRef.current = new SacredAudioEngine();
       
       const checkReady = () => {
-        const ready = audioEngineRef.current?.isReady() || false;
+        const ready = audioEngineRef.current ? audioEngineRef.current.isReady() : false;
         setIsReady(ready);
         onAudioStateChange?.(ready);
       };
@@ -269,14 +269,8 @@ export const SacredAudioSystem: React.FC<SacredAudioSystemProps> = ({
     }
   }, [enabled]);
 
-  // Expose methods to parent components via ref
-  React.useImperativeHandle(audioEngineRef, () => ({
-    playElementalTone,
-    playCue,
-    isReady,
-    resume: () => audioEngineRef.current?.resume(),
-    suspend: () => audioEngineRef.current?.suspend()
-  }));
+  // Note: Parent components can access these methods through context or props
+  // React.useImperativeHandle should be used with forwardRef, not on internal refs
 
   // Render nothing, this is a service component
   return null;

@@ -231,7 +231,7 @@ What wants to become clear that's been cloudy? What understanding is trying to d
         "🌬️ Let your thoughts be like birds - free to soar, wise to land.",
     };
 
-    return `${response}\n\n${signatures[airType] || signatures.general_clarity}`;
+    return `${content}\n\n${signatures[airType] || signatures.general_clarity}`;
   },
 };
 
@@ -283,7 +283,7 @@ Respond with the wisdom of air that serves mental clarity and authentic communic
       input: airPrompt,
       userId,
     });
-    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.content, content: modelResponse.content || modelResponse.content };
+    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.response };
 
     // Weave AI insight with our air wisdom
     const weavedWisdom = `${airWisdom}

@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 /**
  * AwarenessIntegrator - Synthesizes consciousness across all levels of awareness
  * 

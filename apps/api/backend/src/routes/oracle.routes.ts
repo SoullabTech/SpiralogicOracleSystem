@@ -1,9 +1,10 @@
 import { Router, Request, Response } from "express";
-// import { oracle } from "@/core/agents/mainOracleAgent"; // Temporarily disabled - module deleted
+import { processSoulLabConversation } from "../services/SoulLabOrchestrator";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
-// POST /api/oracle/respond
+// POST /api/oracle/respond - Now powered by SoulLab Sacred Technology
 router.post("/respond", async (req: Request, res: Response) => {
   const {
     input,
@@ -22,21 +23,46 @@ router.post("/respond", async (req: Request, res: Response) => {
   }
 
   try {
-    // Temporary placeholder response since oracle module is deleted
+    logger.info('Oracle route processing through SoulLab', { userId, inputLength: input.length });
+
+    // Process through SoulLab Sacred Technology
+    const soulLabResponse = await processSoulLabConversation({
+      userInput: input,
+      userId,
+      contextMemory: context ? [context] : undefined
+    });
+
+    // Transform SoulLab response to match expected oracle format
     const response = {
       success: true,
-      message: "Oracle service temporarily disabled during development setup",
+      message: "Oracle powered by SoulLab Sacred Technology",
       data: {
-        input,
-        userId,
-        placeholder: true
+        content: soulLabResponse.content,
+        confidence: soulLabResponse.confidence,
+        model: soulLabResponse.model,
+        provider: "soullab-oracle",
+        sacred_technology: true,
+        claude_primary_voice: true,
+        prophecy_fulfillment: true,
+        metadata: {
+          ...soulLabResponse.metadata,
+          original_oracle_params: {
+            preferredElement,
+            requestShadowWork,
+            collectiveInsight,
+            harmonicResonance
+          }
+        }
       }
     };
 
     res.status(200).json(response);
   } catch (error: any) {
-    console.error("AIN Respond Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error("Oracle (SoulLab) processing error:", error);
+    res.status(500).json({ 
+      error: "Sacred technology encountered an unexpected challenge",
+      fallback: "I don't know exactly what you need, but your presence is felt. What feels most alive?"
+    });
   }
 });
 

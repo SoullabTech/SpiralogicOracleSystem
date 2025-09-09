@@ -43,6 +43,8 @@ import orchestratorRoutes from "./orchestrator.routes";
 import holisticRoutes from "./holistic.routes";
 import integrationRoutes from "./integration.routes";
 import spiralJourneyRoutes from "./spiralJourney";
+import soulLabRoutes from "./soullab.routes";
+import oracleRoutes from "./oracle.routes";
 
 const router = Router();
 
@@ -97,5 +99,7 @@ router.use("/orchestrator", orchestratorRoutes);
 router.use("/holistic", holisticRoutes);
 router.use("/integration", integrationRoutes);
 router.use("/spiral-journey", spiralJourneyRoutes);
+router.use("/soullab", soulLabRoutes);
+router.use("/oracle", oracleRoutes);
 
 export default router;

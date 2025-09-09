@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 import { ConversationalContext, ConversationalResult, conversationalPipeline } from './ConversationalPipeline';
 import { dialogueStateTracker, DialogueState, UserIntent, DialogueStage } from './EnhancedDialogueStateTracker';
 import { ConversationThreadingService } from './ConversationThreadingService';

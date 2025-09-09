@@ -5,15 +5,32 @@
 
 import axios from "axios";
 import FormData from "form-data";
+import { logger } from "../utils/logger";
 
 export class ElevenLabsService {
-  private apiKey: string;
+  private apiKey: string | undefined;
   private baseUrl: string = "https://api.elevenlabs.io/v1";
+  private isAvailable: boolean = false;
 
   constructor() {
-    this.apiKey = process.env.ELEVENLABS_API_KEY || "";
+    this.apiKey = process.env.ELEVENLABS_API_KEY;
+    
     if (!this.apiKey) {
-      console.warn("⚠️  ELEVENLABS_API_KEY not found in environment");
+      const errorMessage = "WARNING: ELEVENLABS_API_KEY not configured. Voice synthesis will not be available.";
+      logger.warn(errorMessage);
+      
+      if (process.env.NODE_ENV === 'production' && process.env.VOICE_REQUIRED === 'true') {
+        // Only fail if voice is explicitly required in production
+        throw new Error(errorMessage);
+      } else {
+        // Log warning but continue - voice is optional
+        logger.info("Voice service running in text-only mode");
+        logger.info("Set ELEVENLABS_API_KEY in .env to enable voice features");
+      }
+      this.isAvailable = false;
+    } else {
+      this.isAvailable = true;
+      logger.info("ElevenLabs voice service initialized");
     }
   }
 
@@ -25,6 +42,12 @@ export class ElevenLabsService {
     voiceId: string,
     voiceSettings: any,
   ): Promise<Buffer> {
+    // Check if service is available
+    if (!this.isAvailable || !this.apiKey) {
+      logger.warn("ElevenLabs voice synthesis requested but service unavailable");
+      throw new Error("Voice synthesis unavailable - API key not configured");
+    }
+    
     try {
       const response = await axios.post(
         `${this.baseUrl}/text-to-speech/${voiceId}`,
@@ -44,8 +67,8 @@ export class ElevenLabsService {
       );
 
       return Buffer.from(response.data);
-    } catch (error) {
-      console.error(
+    } catch (error: any) {
+      logger.error(
         "Eleven Labs synthesis error:",
         error.response?.data || error.message,
       );
@@ -57,6 +80,11 @@ export class ElevenLabsService {
    * Get available voices
    */
   async getVoices(): Promise<any[]> {
+    if (!this.isAvailable || !this.apiKey) {
+      logger.warn("Cannot fetch voices - ElevenLabs not configured");
+      return [];
+    }
+    
     try {
       const response = await axios.get(`${this.baseUrl}/voices`, {
         headers: {
@@ -66,7 +94,7 @@ export class ElevenLabsService {
 
       return response.data.voices;
     } catch (error) {
-      console.error("Failed to fetch voices:", error);
+      logger.error("Failed to fetch voices:", error);
       return [];
     }
   }
@@ -75,6 +103,11 @@ export class ElevenLabsService {
    * Verify voice exists
    */
   async verifyVoice(voiceId: string): Promise<boolean> {
+    if (!this.isAvailable || !this.apiKey) {
+      logger.warn("Cannot verify voice - ElevenLabs not configured");
+      return false;
+    }
+    
     try {
       const response = await axios.get(`${this.baseUrl}/voices/${voiceId}`, {
         headers: {
@@ -86,6 +119,13 @@ export class ElevenLabsService {
     } catch (error) {
       return false;
     }
+  }
+  
+  /**
+   * Check if voice service is available
+   */
+  isServiceAvailable(): boolean {
+    return this.isAvailable;
   }
 
   /**

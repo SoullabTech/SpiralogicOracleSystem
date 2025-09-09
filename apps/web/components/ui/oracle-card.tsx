@@ -130,15 +130,9 @@ const OracleCard = React.forwardRef<HTMLDivElement, OracleCardProps>(
     // 🆕 UIZARD ENHANCEMENT - Optional gradient backgrounds
     const gradientClasses = {
       none: 'bg-background/80',  // Our current default
-<<<<<<< HEAD
       subtle: 'bg-gradient-to-br from-background/80 to-background/60',
       primary: 'bg-gradient-to-br from-purple-900/20 via-background/80 to-slate-900/90',
       mystical: 'bg-gradient-to-br from-purple-900/30 via-indigo-900/20 to-orange-900/10'
-=======
-      subtle: ' from-background/80 to-background/60',
-      primary: ' from-purple-900/20 via-background/80 to-slate-900/90',
-      mystical: ' from-purple-900/30 via-indigo-900/20 to-orange-900/10'
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     };
     
     // Build the className with all enhancements

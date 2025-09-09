@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 /**
  * Agent Configuration Loader
  * Manages personality configs and orchestrates agent choreography

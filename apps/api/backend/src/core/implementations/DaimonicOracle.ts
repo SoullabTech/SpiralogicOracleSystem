@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../../types/agentResponse";
 /**
  * Daimonic Oracle - Implementation of layered response architecture
  * 

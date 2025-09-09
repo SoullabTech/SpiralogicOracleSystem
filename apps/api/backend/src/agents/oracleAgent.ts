@@ -1,7 +1,6 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 import { getRitualForPhase } from "../lib/ritualEngine";
 import { getElementalPhase } from "../lib/spiralLogic";
-import type { AgentResponse } from "../types/index";
 import type { Metadata } from "../types/metadata";
 
 export class OracleAgent {

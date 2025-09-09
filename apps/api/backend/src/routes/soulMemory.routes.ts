@@ -91,6 +91,86 @@ router.post("/oracle/retreat/activate", async (req, res) => {
 // ===============================================
 
 /**
+ * POST /api/soul-memory/store
+ * Universal memory storage endpoint with type detection
+ */
+router.post("/store", async (req, res) => {
+  try {
+    const { 
+      content, 
+      type, 
+      metadata = {},
+      archetypes = [],
+      element,
+      spiralPhase,
+      dreamSymbols,
+      emotionalTone,
+      shadowAspects,
+      integrationLevel,
+      sacredContext
+    } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    if (!content) {
+      return res.status(400).json({ error: "Content is required" });
+    }
+
+    // Auto-detect memory type if not provided
+    const memoryType = type || await soulMemoryService.detectMemoryType(content);
+    
+    // Enhanced metadata with archetypal resonance
+    const enhancedMetadata = {
+      ...metadata,
+      element,
+      spiralPhase,
+      dreamSymbols,
+      emotionalTone,
+      shadowAspects,
+      integrationLevel,
+      sacredContext,
+      archetypes,
+      timestamp: new Date().toISOString(),
+      sourceEndpoint: "/api/memory/store"
+    };
+
+    // Store with automatic embeddings and indexing
+    const memory = await soulMemoryService.storeEnhancedMemory(
+      userId, 
+      content, 
+      memoryType,
+      enhancedMetadata
+    );
+
+    // Trigger archetypal pattern detection if dream content
+    if (memoryType === "dream" || dreamSymbols) {
+      await soulMemoryService.analyzeArchetypalResonance(userId, memory.id);
+    }
+
+    res.json({
+      success: true,
+      memory: {
+        id: memory.id,
+        type: memory.type,
+        timestamp: memory.timestamp,
+        element: memory.element,
+        archetypes: memory.archetypes || [],
+        integrationLevel: memory.integrationLevel,
+        indexed: true,
+        embedded: true
+      },
+      message: "Memory stored and indexed successfully"
+    });
+  } catch (error) {
+    logger.error("Error storing memory:", error);
+    res.status(500).json({ error: "Failed to store memory" });
+  }
+});
+
+/**
  * POST /api/soul-memory/journal
  * Store a journal entry
  */

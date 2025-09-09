@@ -215,7 +215,7 @@ Your emotional waters hold the key to your authentic self - your inner gold. Let
       general_healing: "💧 Your emotions are messengers from your soul.",
     };
 
-    return `${response}\n\n${signatures[waterType] || signatures.general_healing}`;
+    return `${content}\n\n${signatures[waterType] || signatures.general_healing}`;
   },
 };
 
@@ -266,7 +266,7 @@ Respond with the wisdom of water that serves emotional healing and authentic sel
       input: waterPrompt,
       userId,
     });
-    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.content, content: modelResponse.content || modelResponse.content };
+    const enhancedResponse = typeof modelResponse === "string" ? { content: modelResponse, confidence: 0.8 } : { ...modelResponse, content: modelResponse.content || modelResponse.response };
 
     // Weave AI insight with our water wisdom
     const weavedWisdom = `${waterWisdom}

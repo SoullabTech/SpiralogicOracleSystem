@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 /**
  * ElementalAgentOrchestrator - Coordinates the five elemental cognitive agents
  * Each agent embodies specific cognitive architectures and awareness levels

@@ -77,21 +77,49 @@ export const SacredMicButton: React.FC<SacredMicButtonProps> = ({
   }, [isCapturing, voiceState.isSpeaking, error]);
 
   const handleProcessing = async () => {
-    // Simulate processing (in real app, send to speech-to-text API)
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Mock transcript for demo
-    const mockTranscript = "I feel stuck in my patterns and need guidance";
-    setTranscript(mockTranscript);
-    onTranscript?.(mockTranscript);
-    
-    setMicState('responding');
-    
-    // Return to idle after response
-    setTimeout(() => {
-      setMicState('idle');
-      setBreathAnimation(false);
-    }, 3000);
+    // Use the actual captured audio for speech recognition
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+      
+      recognition.onresult = (event: any) => {
+        const result = event.results[0][0].transcript;
+        setTranscript(result);
+        onTranscript?.(result);
+        setMicState('responding');
+        
+        // Return to idle after response
+        setTimeout(() => {
+          setMicState('idle');
+          setBreathAnimation(false);
+        }, 3000);
+      };
+      
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setError(`Speech recognition error: ${event.error}`);
+        setMicState('error');
+        
+        setTimeout(() => {
+          setMicState('idle');
+          setError(null);
+        }, 3000);
+      };
+      
+      recognition.start();
+    } else {
+      // Fallback if speech recognition is not available
+      setError('Speech recognition not available in this browser');
+      setMicState('error');
+      setTimeout(() => {
+        setMicState('idle');
+        setError(null);
+      }, 3000);
+    }
   };
 
   const toggleRecording = useCallback(async () => {

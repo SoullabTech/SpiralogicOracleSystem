@@ -4,6 +4,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "build:beta": "tsc -p tsconfig.json --noEmitOnError",
+    "build:prod": "npm run clean && esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/server.js --external:./node_modules/* --minify",
     "build:watch": "tsc -p tsconfig.json -w --preserveWatchOutput",
     "build:app": "tsc --project tsconfig.app.json",
     "build:all": "tsc --noEmitOnError false",
@@ -22,6 +24,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
+    "@aws-sdk/client-s3": "^3.884.0",
     "@grpc/grpc-js": "^1.9.0",
     "@grpc/proto-loader": "^0.7.0",
     "@langchain/core": "^0.3.0",
@@ -80,6 +83,7 @@
     "@types/uuid": "^9.0.0",
     "concurrently": "^9.2.0",
     "dotenv": "^17.2.2",
+    "esbuild": "^0.25.9",
     "globals": "^14.0.0",
     "jest": "^29.5.0",
     "jest-junit": "^16.0.0",

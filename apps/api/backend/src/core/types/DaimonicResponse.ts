@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../../types/agentResponse";
 /**
  * Daimonic Response Architecture - Layered Communication Framework
  * 

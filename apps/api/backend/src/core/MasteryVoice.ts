@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 /**
  * Mastery Voice Module
  * Implements mature simplicity for Stage 4 (Transparent Prism)

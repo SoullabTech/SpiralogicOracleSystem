@@ -1,4 +1,4 @@
-import { AgentResponse } from "./types/agentResponse";
+import { AgentResponse } from "../types/agentResponse";
 /**
  * PersonalOracle Integration Layer
  * Connects CapacitySignals with PersonalOracleAgent for stage-appropriate responses

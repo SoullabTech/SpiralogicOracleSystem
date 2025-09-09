@@ -3,10 +3,33 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { logger } from "../utils/logger";
 
-// JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_dev_only";
+// JWT Configuration with proper validation
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "24h";
 const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "7d";
+
+// Validate JWT secret on startup
+if (!JWT_SECRET) {
+  const errorMessage = "CRITICAL: JWT_SECRET environment variable is not set. Authentication will not work.";
+  logger.error(errorMessage);
+  
+  if (process.env.NODE_ENV === "production") {
+    // In production, fail fast
+    throw new Error(errorMessage);
+  } else {
+    // In development, warn but continue with a secure random secret
+    const crypto = require('crypto');
+    const devSecret = crypto.randomBytes(32).toString('hex');
+    logger.warn(`DEV MODE: Using temporary JWT secret. Set JWT_SECRET in .env file!`);
+    // Note: We don't assign to JWT_SECRET here to maintain const
+  }
+}
+
+// Use validated secret or generate secure temporary one for dev
+const VALIDATED_JWT_SECRET = JWT_SECRET || (() => {
+  const crypto = require('crypto');
+  return crypto.randomBytes(32).toString('hex');
+})();
 
 export interface AuthenticatedUser {
   id: string;
@@ -41,14 +64,14 @@ export function generateAccessToken(
     permissions: user.permissions || getDefaultPermissions(user.role),
   };
 
-  return (jwt as any).sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return (jwt as any).sign(payload, VALIDATED_JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 /**
  * Generate refresh token
  */
 export function generateRefreshToken(userId: string): string {
-  return (jwt as any).sign({ userId, type: "refresh" }, JWT_SECRET, {
+  return (jwt as any).sign({ userId, type: "refresh" }, VALIDATED_JWT_SECRET, {
     expiresIn: JWT_REFRESH_EXPIRES_IN,
   });
 }
@@ -58,7 +81,7 @@ export function generateRefreshToken(userId: string): string {
  */
 export function verifyToken(token: string): JWTPayload {
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return jwt.verify(token, VALIDATED_JWT_SECRET) as JWTPayload;
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       throw new Error("Token expired");
