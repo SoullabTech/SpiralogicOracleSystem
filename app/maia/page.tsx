@@ -131,60 +131,92 @@ export default function MaiaPage() {
         background: 'linear-gradient(135deg, #1e293b 0%, #2e3a4b 100%)'
       }}>
         <div className="text-center">
-          <div className="relative w-48 h-48 mx-auto mb-8 flex items-center justify-center">
-            {/* Outer spinning rings */}
+          <div className="relative w-48 h-48 mx-auto mb-8">
+            {/* Holoflower Animation */}
             <svg
-              className="absolute inset-0 animate-spin"
               width="192"
               height="192"
               viewBox="0 0 200 200"
               xmlns="http://www.w3.org/2000/svg"
-              style={{ animationDuration: '3s' }}
+              className="animate-spin-slow"
+              style={{ animationDuration: '8s' }}
             >
               <defs>
-                <radialGradient id="gradient" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#D4B896" />
-                  <stop offset="25%" stopColor="#C85450" />
-                  <stop offset="50%" stopColor="#6B9BD1" />
-                  <stop offset="75%" stopColor="#7A9A65" />
-                  <stop offset="100%" stopColor="#D4B896" />
+                <radialGradient id="holoGradient" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#D4B896" stopOpacity="0.8" />
+                  <stop offset="50%" stopColor="#7A9A65" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#6B9BD1" stopOpacity="0.3" />
                 </radialGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
               </defs>
-              {/* Multiple rings of sparkles */}
-              {[30, 50, 70, 85].map((radius, ringIndex) => (
-                Array.from({ length: 8 + ringIndex * 3 }, (_, i) => {
-                  const dotCount = 8 + ringIndex * 3;
-                  const angle = (i / dotCount) * Math.PI * 2;
-                  const x = 100 + Math.cos(angle) * radius;
-                  const y = 100 + Math.sin(angle) * radius;
-                  const size = 2 + (ringIndex * 0.5);
+              <g transform="translate(100, 100)">
+                {/* Large outer petals */}
+                {Array.from({ length: 12 }, (_, i) => {
+                  const angle = (i / 12) * Math.PI * 2;
+                  const petalX = Math.cos(angle) * 60;
+                  const petalY = Math.sin(angle) * 60;
                   return (
-                    <circle
-                      key={`${ringIndex}-${i}`}
-                      cx={x}
-                      cy={y}
-                      r={size}
-                      fill="url(#gradient)"
-                      opacity={0.9 - (ringIndex * 0.15)}
-                      className="animate-pulse"
-                      style={{
-                        animationDelay: `${i * 0.1}s`,
-                        animationDuration: '2s'
-                      }}
+                    <ellipse
+                      key={`outer-${i}`}
+                      cx={petalX}
+                      cy={petalY}
+                      rx="25"
+                      ry="40"
+                      fill="url(#holoGradient)"
+                      opacity="0.7"
+                      transform={`rotate(${i * 30} ${petalX} ${petalY})`}
+                      filter="url(#glow)"
                     />
                   );
-                })
-              ).flat()}
+                })}
+                {/* Medium inner petals */}
+                {Array.from({ length: 8 }, (_, i) => {
+                  const angle = (i / 8) * Math.PI * 2 + Math.PI / 16;
+                  const petalX = Math.cos(angle) * 35;
+                  const petalY = Math.sin(angle) * 35;
+                  return (
+                    <ellipse
+                      key={`middle-${i}`}
+                      cx={petalX}
+                      cy={petalY}
+                      rx="18"
+                      ry="30"
+                      fill="#D4B896"
+                      opacity="0.6"
+                      transform={`rotate(${i * 45 + 22.5} ${petalX} ${petalY})`}
+                    />
+                  );
+                })}
+                {/* Small inner petals */}
+                {Array.from({ length: 6 }, (_, i) => {
+                  const angle = (i / 6) * Math.PI * 2;
+                  const petalX = Math.cos(angle) * 15;
+                  const petalY = Math.sin(angle) * 15;
+                  return (
+                    <ellipse
+                      key={`inner-${i}`}
+                      cx={petalX}
+                      cy={petalY}
+                      rx="10"
+                      ry="18"
+                      fill="#7A9A65"
+                      opacity="0.5"
+                      transform={`rotate(${i * 60} ${petalX} ${petalY})`}
+                    />
+                  );
+                })}
+                {/* Sacred center */}
+                <circle cx="0" cy="0" r="12" fill="#D4B896" opacity="0.9" filter="url(#glow)" />
+                <circle cx="0" cy="0" r="8" fill="#FFD700" opacity="0.7" className="animate-pulse" />
+                <circle cx="0" cy="0" r="4" fill="#FFFFFF" opacity="1" />
+              </g>
             </svg>
-            {/* Holoflower image in center */}
-            <img
-              src="/holoflower.png"
-              alt="Sacred Holoflower"
-              className="w-8 h-8 animate-pulse"
-              style={{
-                filter: 'brightness(1.1) contrast(1.05)'
-              }}
-            />
           </div>
           <p className="text-xl font-medium" style={{ color: '#D4B896' }}>
             {loadingMessage || "Processing..."}
