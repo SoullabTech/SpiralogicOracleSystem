@@ -50,7 +50,7 @@ function WildPetalDraw({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-3xl p-8 max-w-md w-full border border-purple-500/20"
+          className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-8 max-w-md w-full border border-[#D4B896]/20"
           onClick={(e) => e.stopPropagation()}
         >
           <h2 className="text-2xl font-light text-white mb-6 text-center">Wild Petal Oracle</h2>
@@ -95,7 +95,7 @@ function WildPetalDraw({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                     setDrawnPetal(null);
                     drawPetal();
                   }}
-                  className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                  className="flex-1 px-4 py-2 bg-[#D4B896] hover:bg-[#B69A78] text-white rounded-lg transition-colors"
                 >
                   Draw Another
                 </button>

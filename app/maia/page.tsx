@@ -7,6 +7,8 @@ export default function MaiaPage() {
   const [showHoloflower, setShowHoloflower] = useState(false);
   const [activeElement, setActiveElement] = useState<string | null>(null);
   const [showBetaRituals, setShowBetaRituals] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   const elements = [
     { name: "Air", color: "#D4B896", description: "Ideas & Connection" },
@@ -75,6 +77,71 @@ export default function MaiaPage() {
   //   return <BetaHoloflower userId="user-1" showOnboarding={true} />;
   // }
 
+  const handleActionWithLoading = async (action: () => Promise<void>, message: string) => {
+    setIsLoading(true);
+    setLoadingMessage(message);
+    try {
+      await action();
+    } finally {
+      setIsLoading(false);
+      setLoadingMessage("");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{
+        background: 'linear-gradient(135deg, #1e293b 0%, #2e3a4b 100%)'
+      }}>
+        <div className="text-center">
+          <div className="relative w-48 h-48 mx-auto mb-8">
+            <svg
+              className="animate-spin"
+              width="192"
+              height="192"
+              viewBox="0 0 200 200"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <radialGradient id="gradient" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#D4B896" />
+                  <stop offset="25%" stopColor="#C85450" />
+                  <stop offset="50%" stopColor="#6B9BD1" />
+                  <stop offset="75%" stopColor="#7A9A65" />
+                  <stop offset="100%" stopColor="#D4B896" />
+                </radialGradient>
+              </defs>
+              {Array.from({ length: 24 }, (_, ring) => {
+                const radius = 10 + ring * 4;
+                const dotsCount = 8 + ring * 2;
+                return Array.from({ length: dotsCount }, (_, i) => {
+                  const angle = (i / dotsCount) * Math.PI * 2;
+                  const x = 100 + Math.cos(angle) * radius;
+                  const y = 100 + Math.sin(angle) * radius;
+                  const size = 2 + (ring * 0.2);
+                  const opacity = 1 - (ring * 0.03);
+                  return (
+                    <circle
+                      key={`${ring}-${i}`}
+                      cx={x}
+                      cy={y}
+                      r={size}
+                      fill="url(#gradient)"
+                      opacity={opacity}
+                    />
+                  );
+                });
+              })}
+            </svg>
+          </div>
+          <p className="text-xl font-medium" style={{ color: '#D4B896' }}>
+            {loadingMessage || "Processing..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen" style={{
       background: 'linear-gradient(135deg, #1e293b 0%, #2e3a4b 100%)',
@@ -103,7 +170,13 @@ export default function MaiaPage() {
           {elements.map((element) => (
             <div
               key={element.name}
-              onClick={() => setActiveElement(element.name)}
+              onClick={() => handleActionWithLoading(
+                async () => {
+                  await new Promise(resolve => setTimeout(resolve, 1000));
+                  setActiveElement(element.name);
+                },
+                `Connecting with ${element.name} element...`
+              )}
               className="cursor-pointer transition-all duration-300 rounded-lg p-8 text-center"
               style={{
                 background: activeElement === element.name 
@@ -142,7 +215,13 @@ export default function MaiaPage() {
         {/* Beta Rituals */}
         <div className="text-center mb-12">
           <button
-            onClick={() => setShowBetaRituals(!showBetaRituals)}
+            onClick={() => handleActionWithLoading(
+              async () => {
+                await new Promise(resolve => setTimeout(resolve, 800));
+                setShowBetaRituals(!showBetaRituals);
+              },
+              showBetaRituals ? "Closing rituals..." : "Loading rituals..."
+            )}
             className="px-8 py-4 rounded-lg text-white font-semibold transition-all duration-200 hover:shadow-lg"
             style={{
               background: 'linear-gradient(135deg, #7A9A65 0%, #6B9BD1 50%, #C85450 75%, #D4B896 100%)',

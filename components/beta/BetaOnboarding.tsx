@@ -168,7 +168,7 @@ export function BetaOnboarding() {
               onClick={() => setSelectedElement(element.id)}
               className={`p-4 rounded-xl border-2 transition-all ${
                 selectedElement === element.id
-                  ? 'border-purple-500 bg-purple-600/20'
+                  ? 'border-[#D4B896] bg-[#D4B896]/20'
                   : 'border-white/10 bg-white/5 hover:bg-white/10'
               }`}
               style={{
@@ -267,9 +267,9 @@ export function BetaOnboarding() {
                 transition={{ delay: idx * 0.1 }}
                 className={`h-1 rounded-full transition-all ${
                   idx === currentStep
-                    ? 'w-12 bg-purple-500'
+                    ? 'w-12 bg-[#D4B896]'
                     : idx < currentStep
-                    ? 'w-6 bg-purple-400'
+                    ? 'w-6 bg-[#D4B896]/70'
                     : 'w-6 bg-white/20'
                 }`}
               />
@@ -324,7 +324,7 @@ export function BetaOnboarding() {
                 disabled={!canProceed}
                 className={`ml-auto px-6 py-2 rounded-lg transition-all flex items-center gap-2 ${
                   canProceed
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                    ? 'bg-[#D4B896] hover:bg-[#B69A78] text-white'
                     : 'bg-white/10 text-white/30 cursor-not-allowed'
                 }`}
               >

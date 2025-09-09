@@ -57,7 +57,7 @@ export default function WelcomePage() {
 
           <button
             onClick={() => setCurrentStep(1)}
-            className="px-8 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-full transition-all duration-200 font-medium"
+            className="px-8 py-3 bg-gradient-to-r from-[#D4B896] to-[#B69A78] hover:from-[#E5C9A6] hover:to-[#D4B896] text-white rounded-full transition-all duration-200 font-medium"
           >
             I'm ready to begin
           </button>
@@ -83,7 +83,7 @@ export default function WelcomePage() {
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               placeholder="Enter your name..."
-              className="w-full max-w-sm mx-auto px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 text-center focus:outline-none focus:border-violet-400 focus:bg-white/15 transition-all"
+              className="w-full max-w-sm mx-auto px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 text-center focus:outline-none focus:border-[#D4B896] focus:bg-white/15 transition-all"
               onKeyPress={(e) => e.key === 'Enter' && userName.trim() && setCurrentStep(2)}
             />
             
@@ -92,7 +92,7 @@ export default function WelcomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 onClick={() => setCurrentStep(2)}
-                className="px-8 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-full transition-all duration-200 font-medium"
+                className="px-8 py-3 bg-gradient-to-r from-[#D4B896] to-[#B69A78] hover:from-[#E5C9A6] hover:to-[#D4B896] text-white rounded-full transition-all duration-200 font-medium"
               >
                 Beautiful, {userName}
               </motion.button>
@@ -120,7 +120,7 @@ export default function WelcomePage() {
               onChange={(e) => setIntention(e.target.value)}
               placeholder="I am here because..."
               rows={4}
-              className="w-full max-w-lg mx-auto px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-violet-400 focus:bg-white/15 transition-all resize-none"
+              className="w-full max-w-lg mx-auto px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#D4B896] focus:bg-white/15 transition-all resize-none"
             />
             
             {intention.trim() && (
@@ -128,7 +128,7 @@ export default function WelcomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 onClick={() => setCurrentStep(3)}
-                className="px-8 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-full transition-all duration-200 font-medium"
+                className="px-8 py-3 bg-gradient-to-r from-[#D4B896] to-[#B69A78] hover:from-[#E5C9A6] hover:to-[#D4B896] text-white rounded-full transition-all duration-200 font-medium"
               >
                 Continue
               </motion.button>
@@ -178,7 +178,7 @@ export default function WelcomePage() {
 
           <button
             onClick={handleComplete}
-            className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-full transition-all duration-200 font-medium"
+            className="px-8 py-3 bg-gradient-to-r from-[#D4B896] to-[#B69A78] hover:from-[#E5C9A6] hover:to-[#D4B896] text-white rounded-full transition-all duration-200 font-medium"
           >
             Enter the Space
           </button>
