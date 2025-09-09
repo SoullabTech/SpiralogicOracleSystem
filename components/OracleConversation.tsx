@@ -98,33 +98,35 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     
     // Call Oracle API
     try {
-      const response = await fetch('/api/oracle-unified', {
+      const response = await fetch('/api/oracle/unified', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query: transcript,
-          checkIns,
+          input: transcript,
+          type: 'voice',
+          userId: userId || 'anonymous',
           sessionId,
-          userId,
-          voiceMetrics: userVoiceState ? {
-            emotion: userVoiceState.emotion,
-            energy: userVoiceState.energy,
-            clarity: userVoiceState.clarity
-          } : undefined
+          context: {
+            element: 'aether',
+            previousInteractions: messages.length
+          }
         })
       });
 
-      const oracleResponse: OracleResponse = await response.json();
+      const responseData = await response.json();
+      
+      // Extract text from response - handle both formats
+      const responseText = responseData.message || responseData.mayaResponse || 'I am here with you.';
       
       // Map response to motion
-      const motionMapping = mapResponseToMotion(oracleResponse.text);
+      const motionMapping = mapResponseToMotion(responseText);
       
       // Update motion states
       setCurrentMotionState(motionMapping.motionState);
       setCoherenceLevel(motionMapping.coherenceLevel);
       setCoherenceShift(motionMapping.coherenceShift);
       setShadowPetals(motionMapping.shadowPetals);
-      setActiveFacetId(oracleResponse.primaryFacetId);
+      setActiveFacetId(responseData.primaryFacetId || 'voice');
       
       // Check for breakthrough
       if (motionMapping.isBreakthrough) {
@@ -136,9 +138,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       const oracleMessage: ConversationMessage = {
         id: `msg-${Date.now()}-oracle`,
         role: 'oracle',
-        text: oracleResponse.text,
+        text: responseText,
         timestamp: new Date(),
-        facetId: oracleResponse.primaryFacetId,
+        facetId: responseData.primaryFacetId || 'voice',
         motionState: motionMapping.motionState,
         coherenceLevel: motionMapping.coherenceLevel
       };
@@ -146,7 +148,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       onMessageAdded?.(oracleMessage);
       
       // Update context
-      contextRef.current.previousResponses.push(oracleResponse);
+      contextRef.current.previousResponses.push({
+        text: responseText,
+        primaryFacetId: responseData.primaryFacetId || 'voice',
+        ...responseData
+      });
       contextRef.current.coherenceHistory.push(motionMapping.coherenceLevel);
       
       // Set responding state
