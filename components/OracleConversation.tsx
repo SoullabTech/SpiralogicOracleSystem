@@ -336,11 +336,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   <div className="text-sm leading-relaxed">
                     {message.text}
                   </div>
-                  {message.coherenceLevel && (
-                    <div className="text-xs text-purple-400">
-                      Coherence: {Math.round(message.coherenceLevel * 100)}%
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
@@ -358,22 +353,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         />
       )}
 
-      {/* Check-in controls */}
-      <div className="fixed bottom-8 left-8 space-y-2">
-        <button
-          onClick={clearCheckIns}
-          className="bg-white/10 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full
-                     hover:bg-white/20 transition-colors"
-        >
-          Clear Check-ins
-        </button>
-        
-        {Object.keys(checkIns).length > 0 && (
-          <div className="text-xs text-white/60">
-            {Object.keys(checkIns).length} active
-          </div>
-        )}
-      </div>
 
       {/* Analytics toggle */}
       {showAnalytics && (
@@ -387,22 +366,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Coherence indicator */}
-      <div className="fixed bottom-8 right-8 text-right">
-        <div className="text-xs text-white/60 uppercase tracking-wider mb-1">
-          Coherence
-        </div>
-        <div className="text-2xl font-bold text-white">
-          {Math.round(coherenceLevel * 100)}%
-        </div>
-        {coherenceShift !== 'stable' && (
-          <div className={`text-xs mt-1 ${
-            coherenceShift === 'rising' ? 'text-green-400' : 'text-red-400'
-          }`}>
-            {coherenceShift === 'rising' ? '↑ Rising' : '↓ Falling'}
-          </div>
-        )}
-      </div>
 
       {/* Voice state visualization (development) */}
       {process.env.NODE_ENV === 'development' && userVoiceState && (
