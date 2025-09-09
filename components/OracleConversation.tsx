@@ -159,9 +159,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setIsResponding(true);
       setCurrentMotionState('responding');
       
-      // Simulate oracle voice (in production, use TTS)
+      // Play Maya's voice response
       if (voiceEnabled) {
-        await simulateOracleVoice(oracleResponse.text);
+        await playMayaVoice(responseText);
       }
       
     } catch (error) {
@@ -175,28 +175,66 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         setCurrentMotionState('idle');
       }, 2000);
     }
-  }, [checkIns, sessionId, userId, userVoiceState, voiceEnabled]);
+  }, [messages, sessionId, userId, voiceEnabled, onMessageAdded, activeFacetId]);
 
-  // Simulate oracle voice response
-  const simulateOracleVoice = async (text: string) => {
-    // In production, this would use TTS API
-    // For now, simulate voice metrics
-    const words = text.split(' ');
-    const duration = words.length * 200; // ~200ms per word
-    
-    setOracleVoiceState({
-      amplitude: 0.6,
-      pitch: 180,
-      emotion: 'calm',
-      isSpeaking: true,
-      energy: 0.5,
-      clarity: 0.9,
-      breathDepth: 0.7
-    });
-    
-    await new Promise(resolve => setTimeout(resolve, duration));
-    
-    setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
+  // Play Maya's voice using TTS
+  const playMayaVoice = async (text: string) => {
+    try {
+      // Call TTS API
+      const response = await fetch('/api/tts/maya', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          text,
+          voice: 'maya',
+          element: activeFacetId?.split('-')[0] || 'aether'
+        })
+      });
+
+      if (response.ok) {
+        const { audio } = await response.json();
+        
+        if (audio) {
+          // Play the audio
+          const audioData = `data:audio/mp3;base64,${audio}`;
+          const audioElement = new Audio(audioData);
+          
+          setOracleVoiceState({
+            amplitude: 0.6,
+            pitch: 180,
+            emotion: 'calm',
+            isSpeaking: true,
+            energy: 0.5,
+            clarity: 0.9,
+            breathDepth: 0.7
+          });
+          
+          audioElement.onended = () => {
+            setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
+          };
+          
+          await audioElement.play();
+        }
+      }
+    } catch (error) {
+      console.error('TTS playback error:', error);
+      // Fallback to duration simulation
+      const words = text.split(' ');
+      const duration = words.length * 200;
+      
+      setOracleVoiceState({
+        amplitude: 0.6,
+        pitch: 180,
+        emotion: 'calm',
+        isSpeaking: true,
+        energy: 0.5,
+        clarity: 0.9,
+        breathDepth: 0.7
+      });
+      
+      await new Promise(resolve => setTimeout(resolve, duration));
+      setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
+    }
   };
 
   // Handle petal click for check-ins

@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BetaHoloflower } from "@/components/holoflower/BetaHoloflower";
+import { useMayaVoice, useMayaGreeting } from "@/hooks/useMayaVoice";
+import { Volume2, VolumeX, Play, Pause, RotateCcw, Sparkles } from "lucide-react";
 
 export default function MaiaPage() {
   const [showHoloflower, setShowHoloflower] = useState(false);
@@ -9,6 +11,41 @@ export default function MaiaPage() {
   const [showBetaRituals, setShowBetaRituals] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+  const [hasPlayedGreeting, setHasPlayedGreeting] = useState(false);
+  
+  // Maya Voice Integration
+  const { 
+    speak, 
+    playGreeting, 
+    voiceState, 
+    isPlaying, 
+    pause, 
+    resume, 
+    stop,
+    autoSpeak,
+    setAutoSpeak,
+    isSupported,
+    isReady 
+  } = useMayaVoice();
+
+  // Play Maya's greeting when page loads (once per session)
+  useEffect(() => {
+    if (isReady && !hasPlayedGreeting && autoSpeak) {
+      const timer = setTimeout(() => {
+        playGreeting().catch(console.error);
+        setHasPlayedGreeting(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isReady, hasPlayedGreeting, autoSpeak, playGreeting]);
+
+  // Speak element description when activated
+  const speakElementActivation = async (element: typeof elements[0]) => {
+    if (autoSpeak && isReady) {
+      const text = `You have connected with the ${element.name} element. ${element.description}. Let this energy guide your journey.`;
+      await speak(text).catch(console.error);
+    }
+  };
 
   const elements = [
     { name: "Air", color: "#D4B896", description: "Ideas & Connection" },
@@ -94,13 +131,15 @@ export default function MaiaPage() {
         background: 'linear-gradient(135deg, #1e293b 0%, #2e3a4b 100%)'
       }}>
         <div className="text-center">
-          <div className="relative w-48 h-48 mx-auto mb-8">
+          <div className="relative w-48 h-48 mx-auto mb-8 flex items-center justify-center">
+            {/* Outer spinning rings */}
             <svg
-              className="animate-spin"
+              className="absolute inset-0 animate-spin"
               width="192"
               height="192"
               viewBox="0 0 200 200"
               xmlns="http://www.w3.org/2000/svg"
+              style={{ animationDuration: '3s' }}
             >
               <defs>
                 <radialGradient id="gradient" cx="50%" cy="50%" r="50%">
@@ -111,80 +150,41 @@ export default function MaiaPage() {
                   <stop offset="100%" stopColor="#D4B896" />
                 </radialGradient>
               </defs>
-              {Array.from({ length: 24 }, (_, ring) => {
-                const radius = 10 + ring * 4;
-                const dotsCount = 8 + ring * 2;
-                return Array.from({ length: dotsCount }, (_, i) => {
-                  const angle = (i / dotsCount) * Math.PI * 2;
+              {/* Multiple rings of sparkles */}
+              {[30, 50, 70, 85].map((radius, ringIndex) => (
+                Array.from({ length: 8 + ringIndex * 3 }, (_, i) => {
+                  const dotCount = 8 + ringIndex * 3;
+                  const angle = (i / dotCount) * Math.PI * 2;
                   const x = 100 + Math.cos(angle) * radius;
                   const y = 100 + Math.sin(angle) * radius;
-                  const size = 2 + (ring * 0.2);
-                  const opacity = 1 - (ring * 0.03);
+                  const size = 2 + (ringIndex * 0.5);
                   return (
                     <circle
-                      key={`${ring}-${i}`}
+                      key={`${ringIndex}-${i}`}
                       cx={x}
                       cy={y}
                       r={size}
                       fill="url(#gradient)"
-                      opacity={opacity}
+                      opacity={0.9 - (ringIndex * 0.15)}
+                      className="animate-pulse"
+                      style={{
+                        animationDelay: `${i * 0.1}s`,
+                        animationDuration: '2s'
+                      }}
                     />
                   );
-                });
-              })}
+                })
+              ).flat()}
             </svg>
-            {/* White Holoflower in center */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg
-                width="60"
-                height="60"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-                className="animate-pulse"
-              >
-                <g transform="translate(50, 50)">
-                  {/* Outer petals */}
-                  {Array.from({ length: 8 }, (_, i) => {
-                    const angle = (i / 8) * Math.PI * 2;
-                    const petalX = Math.cos(angle) * 25;
-                    const petalY = Math.sin(angle) * 25;
-                    return (
-                      <ellipse
-                        key={`outer-${i}`}
-                        cx={petalX}
-                        cy={petalY}
-                        rx="12"
-                        ry="20"
-                        fill="white"
-                        opacity="0.9"
-                        transform={`rotate(${i * 45} ${petalX} ${petalY})`}
-                      />
-                    );
-                  })}
-                  {/* Inner petals */}
-                  {Array.from({ length: 8 }, (_, i) => {
-                    const angle = (i / 8) * Math.PI * 2 + Math.PI / 8;
-                    const petalX = Math.cos(angle) * 15;
-                    const petalY = Math.sin(angle) * 15;
-                    return (
-                      <ellipse
-                        key={`inner-${i}`}
-                        cx={petalX}
-                        cy={petalY}
-                        rx="8"
-                        ry="15"
-                        fill="white"
-                        opacity="0.8"
-                        transform={`rotate(${i * 45 + 22.5} ${petalX} ${petalY})`}
-                      />
-                    );
-                  })}
-                  {/* Center circle */}
-                  <circle cx="0" cy="0" r="8" fill="white" opacity="1" />
-                  <circle cx="0" cy="0" r="5" fill="#D4B896" opacity="0.3" />
-                </g>
-              </svg>
-            </div>
+            {/* Holoflower image in center */}
+            <img
+              src="/holoflower.png"
+              alt="Sacred Holoflower"
+              className="w-8 h-8 animate-pulse"
+              style={{
+                filter: 'brightness(1.1) contrast(1.05)'
+              }}
+            />
           </div>
           <p className="text-xl font-medium" style={{ color: '#D4B896' }}>
             {loadingMessage || "Processing..."}
@@ -215,6 +215,101 @@ export default function MaiaPage() {
           <p className="text-xl" style={{ color: '#D4B896' }}>
             Begin your elemental journey
           </p>
+          
+          {/* Maya Voice Controls */}
+          {isSupported && (
+            <div className="mt-6 flex items-center justify-center gap-4">
+              {/* Auto-speak Toggle */}
+              <button
+                onClick={() => setAutoSpeak(!autoSpeak)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all"
+                style={{
+                  background: autoSpeak ? 'rgba(212, 184, 150, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                  border: `1px solid ${autoSpeak ? '#D4B896' : 'rgba(255, 255, 255, 0.1)'}`,
+                  color: autoSpeak ? '#D4B896' : '#B69A78'
+                }}
+                title={autoSpeak ? "Voice Active" : "Voice Inactive"}
+              >
+                {autoSpeak ? <Volume2 size={20} /> : <VolumeX size={20} />}
+                <span className="text-sm">Maya's Voice</span>
+              </button>
+
+              {/* Play Greeting Button */}
+              <button
+                onClick={() => playGreeting().catch(console.error)}
+                disabled={isPlaying}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: 'linear-gradient(135deg, #D4B896 0%, #7A9A65 100%)',
+                  color: 'white'
+                }}
+                title="Hear Maya's Greeting"
+              >
+                <Sparkles size={20} />
+                <span className="text-sm font-medium">Hear Maya</span>
+              </button>
+
+              {/* Voice Controls */}
+              {isPlaying && (
+                <div className="flex items-center gap-2">
+                  {voiceState.isPaused ? (
+                    <button
+                      onClick={resume}
+                      className="p-2 rounded-lg transition-all hover:scale-110"
+                      style={{
+                        background: 'rgba(212, 184, 150, 0.2)',
+                        border: '1px solid #D4B896',
+                        color: '#D4B896'
+                      }}
+                      title="Resume"
+                    >
+                      <Play size={20} />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={pause}
+                      className="p-2 rounded-lg transition-all hover:scale-110"
+                      style={{
+                        background: 'rgba(212, 184, 150, 0.2)',
+                        border: '1px solid #D4B896',
+                        color: '#D4B896'
+                      }}
+                      title="Pause"
+                    >
+                      <Pause size={20} />
+                    </button>
+                  )}
+                  <button
+                    onClick={stop}
+                    className="p-2 rounded-lg transition-all hover:scale-110"
+                    style={{
+                      background: 'rgba(200, 84, 80, 0.2)',
+                      border: '1px solid #C85450',
+                      color: '#C85450'
+                    }}
+                    title="Stop"
+                  >
+                    <RotateCcw size={20} />
+                  </button>
+                </div>
+              )}
+
+              {/* Status Indicator */}
+              {isPlaying && (
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full animate-pulse"
+                     style={{
+                       background: 'rgba(212, 184, 150, 0.1)',
+                       border: '1px solid rgba(212, 184, 150, 0.3)'
+                     }}>
+                  <div className="w-2 h-2 rounded-full animate-pulse" 
+                       style={{ backgroundColor: '#D4B896' }} />
+                  <span className="text-xs" style={{ color: '#D4B896' }}>
+                    {voiceState.isPaused ? 'Paused' : 'Speaking'}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </header>
 
         {/* Elemental Grid */}
@@ -226,6 +321,7 @@ export default function MaiaPage() {
                 async () => {
                   await new Promise(resolve => setTimeout(resolve, 1000));
                   setActiveElement(element.name);
+                  await speakElementActivation(element);
                 },
                 `Connecting with ${element.name} element...`
               )}
@@ -265,7 +361,64 @@ export default function MaiaPage() {
         </div>
 
 
-        {/* Conversation */}
+        {/* Beta Rituals Section */}
+        {showBetaRituals && (
+          <div className="max-w-4xl mx-auto mb-12">
+            <h2 className="text-3xl font-bold text-white text-center mb-8">
+              Sacred Rituals
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {betaRituals.map((ritual) => {
+                const element = elements.find(e => e.name === ritual.element);
+                return (
+                  <div
+                    key={ritual.title}
+                    className="p-6 rounded-lg transition-all hover:scale-102"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: `1px solid ${element?.color || '#D4B896'}30`
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div 
+                        className="w-8 h-8 rounded-full"
+                        style={{ backgroundColor: element?.color }}
+                      />
+                      <h3 className="text-xl font-semibold" style={{ color: element?.color }}>
+                        {ritual.title}
+                      </h3>
+                    </div>
+                    <p className="text-sm mb-2" style={{ color: '#B69A78' }}>
+                      {ritual.duration} • {ritual.element} Element
+                    </p>
+                    <p className="text-sm mb-4" style={{ color: '#D4B896' }}>
+                      {ritual.description}
+                    </p>
+                    <button
+                      onClick={() => {
+                        if (autoSpeak && isReady) {
+                          const stepsText = `${ritual.title}. ${ritual.description}. ` + 
+                            ritual.steps.map((step, i) => `Step ${i + 1}: ${step}`).join('. ');
+                          speak(stepsText).catch(console.error);
+                        }
+                      }}
+                      className="text-sm px-3 py-1 rounded transition-all hover:scale-105"
+                      style={{
+                        background: `${element?.color}20`,
+                        border: `1px solid ${element?.color}50`,
+                        color: element?.color
+                      }}
+                    >
+                      {autoSpeak ? '🔊 Listen to Ritual' : 'View Steps'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Conversation and Actions */}
         <div className="text-center mb-12 space-y-4">
           <a
             href="/oracle-conversation"
@@ -278,16 +431,32 @@ export default function MaiaPage() {
             ✨ Begin Conversation with Maya ✨
           </a>
           
-          <button
-            disabled
-            className="block mx-auto px-6 py-3 rounded-lg text-white/50 font-medium cursor-not-allowed"
-            style={{
-              background: 'linear-gradient(135deg, #7A9A6530 0%, #6B9BD130 50%, #C8545030 75%, #D4B89630 100%)',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-            }}
-          >
-            Holoflower Experience (Coming Soon)
-          </button>
+          <div className="flex justify-center gap-4">
+            <button
+              disabled
+              className="px-6 py-3 rounded-lg text-white/50 font-medium cursor-not-allowed"
+              style={{
+                background: 'linear-gradient(135deg, #7A9A6530 0%, #6B9BD130 50%, #C8545030 75%, #D4B89630 100%)',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+              }}
+            >
+              Holoflower Experience (Coming Soon)
+            </button>
+            
+            <button
+              onClick={() => setShowBetaRituals(!showBetaRituals)}
+              className="px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+              style={{
+                background: showBetaRituals 
+                  ? 'linear-gradient(135deg, #D4B896 0%, #7A9A65 100%)'
+                  : 'rgba(212, 184, 150, 0.1)',
+                border: '1px solid #D4B896',
+                color: showBetaRituals ? 'white' : '#D4B896'
+              }}
+            >
+              {showBetaRituals ? 'Hide' : 'Show'} Sacred Rituals
+            </button>
+          </div>
         </div>
 
         {/* Active Element Details */}
