@@ -1,0 +1,112 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Sacred Gradients -->
+    <radialGradient id="centerGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="1"/>
+      <stop offset="30%" stop-color="#D4B896" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#7A9A65" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#6B9BD1" stop-opacity="0.5"/>
+    </radialGradient>
+    
+    <radialGradient id="petalGradient1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D4B896" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#B69A78" stop-opacity="0.6"/>
+    </radialGradient>
+    
+    <radialGradient id="petalGradient2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7A9A65" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#5A7A4D" stop-opacity="0.6"/>
+    </radialGradient>
+    
+    <radialGradient id="petalGradient3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6B9BD1" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#5B8BC1" stop-opacity="0.6"/>
+    </radialGradient>
+    
+    <radialGradient id="petalGradient4" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C85450" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#B84440" stop-opacity="0.6"/>
+    </radialGradient>
+    
+    <!-- Glow effects -->
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="brightGlow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background sacred circle -->
+  <circle cx="200" cy="200" r="190" fill="none" stroke="rgba(212, 184, 150, 0.1)" stroke-width="1"/>
+  <circle cx="200" cy="200" r="160" fill="none" stroke="rgba(212, 184, 150, 0.15)" stroke-width="1"/>
+  <circle cx="200" cy="200" r="130" fill="none" stroke="rgba(212, 184, 150, 0.2)" stroke-width="1"/>
+  
+  <!-- Outer petal layer (12 petals) -->
+  <g transform="translate(200, 200)">
+    <!-- Large outer petals -->
+    <g id="outerPetals">
+      <!-- Petal 1 - Air (Top) -->
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient1)" transform="rotate(0)" filter="url(#softGlow)" opacity="0.8"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient3)" transform="rotate(30)" filter="url(#softGlow)" opacity="0.7"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient2)" transform="rotate(60)" filter="url(#softGlow)" opacity="0.7"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient4)" transform="rotate(90)" filter="url(#softGlow)" opacity="0.8"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient1)" transform="rotate(120)" filter="url(#softGlow)" opacity="0.7"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient3)" transform="rotate(150)" filter="url(#softGlow)" opacity="0.7"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient2)" transform="rotate(180)" filter="url(#softGlow)" opacity="0.8"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient4)" transform="rotate(210)" filter="url(#softGlow)" opacity="0.7"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient1)" transform="rotate(240)" filter="url(#softGlow)" opacity="0.7"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient3)" transform="rotate(270)" filter="url(#softGlow)" opacity="0.8"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient2)" transform="rotate(300)" filter="url(#softGlow)" opacity="0.7"/>
+      <ellipse cx="0" cy="-80" rx="25" ry="40" fill="url(#petalGradient4)" transform="rotate(330)" filter="url(#softGlow)" opacity="0.7"/>
+    </g>
+    
+    <!-- Medium inner petals (8 petals) -->
+    <g id="middlePetals">
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient1)" transform="rotate(22.5)" opacity="0.6"/>
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient2)" transform="rotate(67.5)" opacity="0.6"/>
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient3)" transform="rotate(112.5)" opacity="0.6"/>
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient4)" transform="rotate(157.5)" opacity="0.6"/>
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient1)" transform="rotate(202.5)" opacity="0.6"/>
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient2)" transform="rotate(247.5)" opacity="0.6"/>
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient3)" transform="rotate(292.5)" opacity="0.6"/>
+      <ellipse cx="0" cy="-55" rx="20" ry="32" fill="url(#petalGradient4)" transform="rotate(337.5)" opacity="0.6"/>
+    </g>
+    
+    <!-- Small inner petals (6 petals) -->
+    <g id="innerPetals">
+      <ellipse cx="0" cy="-30" rx="12" ry="24" fill="#D4B896" transform="rotate(0)" opacity="0.5"/>
+      <ellipse cx="0" cy="-30" rx="12" ry="24" fill="#7A9A65" transform="rotate(60)" opacity="0.5"/>
+      <ellipse cx="0" cy="-30" rx="12" ry="24" fill="#6B9BD1" transform="rotate(120)" opacity="0.5"/>
+      <ellipse cx="0" cy="-30" rx="12" ry="24" fill="#C85450" transform="rotate(180)" opacity="0.5"/>
+      <ellipse cx="0" cy="-30" rx="12" ry="24" fill="#D4B896" transform="rotate(240)" opacity="0.5"/>
+      <ellipse cx="0" cy="-30" rx="12" ry="24" fill="#7A9A65" transform="rotate(300)" opacity="0.5"/>
+    </g>
+    
+    <!-- Sacred geometry connecting lines -->
+    <g id="sacredGeometry" stroke="rgba(212, 184, 150, 0.2)" stroke-width="1" fill="none">
+      <!-- Hexagon -->
+      <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" opacity="0.3"/>
+      <!-- Star -->
+      <polygon points="0,-40 12,-12 40,0 12,12 0,40 -12,12 -40,0 -12,-12" opacity="0.2"/>
+    </g>
+    
+    <!-- Sacred center -->
+    <circle cx="0" cy="0" r="20" fill="url(#centerGradient)" filter="url(#brightGlow)" opacity="0.9"/>
+    <circle cx="0" cy="0" r="15" fill="#FFD700" opacity="0.8"/>
+    <circle cx="0" cy="0" r="10" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="0" cy="0" r="5" fill="#FFD700" opacity="1"/>
+  </g>
+  
+  <!-- Outer sacred ring -->
+  <circle cx="200" cy="200" r="195" fill="none" stroke="rgba(212, 184, 150, 0.3)" stroke-width="2"/>
+</svg>

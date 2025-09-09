@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { BetaHoloflower } from "@/components/holoflower/BetaHoloflower";
 import { useMayaVoice, useMayaGreeting } from "@/hooks/useMayaVoice";
-import { Volume2, VolumeX, Play, Pause, RotateCcw, Sparkles } from "lucide-react";
+import { UnifiedHistoryPage } from "@/components/beta/UnifiedHistoryPage";
+import { SacredFileUpload } from "@/components/beta/SacredFileUpload";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
+import { Volume2, VolumeX, Play, Pause, RotateCcw, Sparkles, History, ChevronLeft, Upload } from "lucide-react";
 
 export default function MaiaPage() {
   const [showHoloflower, setShowHoloflower] = useState(false);
@@ -12,6 +15,8 @@ export default function MaiaPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
   const [hasPlayedGreeting, setHasPlayedGreeting] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
   
   // Maya Voice Integration
   const { 
@@ -27,6 +32,14 @@ export default function MaiaPage() {
     isSupported,
     isReady 
   } = useMayaVoice();
+
+  // Swipe Navigation
+  useSwipeNavigation({
+    onSwipeLeft: () => setShowHistory(true),
+    onSwipeRight: () => setShowHistory(false),
+    threshold: 100,
+    preventScroll: true
+  });
 
   // Play Maya's greeting when page loads (once per session)
   useEffect(() => {
@@ -281,6 +294,35 @@ export default function MaiaPage() {
                 <span className="text-sm font-medium">Hear Maya</span>
               </button>
 
+              {/* History Button */}
+              <button
+                onClick={() => setShowHistory(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
+                style={{
+                  background: 'rgba(212, 184, 150, 0.1)',
+                  border: '1px solid rgba(212, 184, 150, 0.3)',
+                  color: '#D4B896'
+                }}
+                title="View Sacred History"
+              >
+                <History size={20} />
+                <span className="text-sm font-medium">History</span>
+              </button>
+
+              {/* Upload Button */}
+              <button
+                onClick={() => setShowUpload(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #6B9BD1 0%, #7A9A65 100%)',
+                  color: 'white'
+                }}
+                title="Share Files with Maya"
+              >
+                <Upload size={20} />
+                <span className="text-sm font-medium">Share</span>
+              </button>
+
               {/* Voice Controls */}
               {isPlaying && (
                 <div className="flex items-center gap-2">
@@ -525,7 +567,49 @@ export default function MaiaPage() {
             Grounded in earth tones, elevated through balance
           </p>
         </footer>
+
+        {/* Swipe hint for mobile */}
+        <div className="fixed bottom-4 right-4 text-xs text-white/40 md:hidden">
+          ← Swipe for history
+        </div>
       </div>
+
+      {/* History Page Overlay */}
+      {showHistory && (
+        <UnifiedHistoryPage
+          onClose={() => setShowHistory(false)}
+          onSelectConversation={(conversation) => {
+            console.log('Selected conversation:', conversation);
+            setShowHistory(false);
+            // Navigate to conversation or load messages
+          }}
+          onSelectFile={(file) => {
+            console.log('Selected file:', file);
+            setShowHistory(false);
+            // Handle file selection
+          }}
+        />
+      )}
+
+      {/* Sacred File Upload Modal */}
+      <SacredFileUpload
+        isVisible={showUpload}
+        onToggle={() => setShowUpload(false)}
+        onUploadComplete={(fileId, mayaReflection) => {
+          console.log('Upload complete:', { fileId, mayaReflection });
+          // File is now available in Maya's knowledge base
+          // Could trigger a conversation or show in history
+        }}
+        onMayaSpeak={async (text) => {
+          if (autoSpeak && isReady) {
+            try {
+              await speak(text);
+            } catch (error) {
+              console.error('Maya speech failed:', error);
+            }
+          }
+        }}
+      />
     </div>
   );
 }

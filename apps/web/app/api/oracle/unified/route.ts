@@ -36,25 +36,36 @@ const unifiedOracle = {
   async process(request: OracleRequest) {
     // Generate contextual response based on input
     const responses = [
-      "I hear you, dear one. Your voice carries the resonance of seeking. What truth calls to you in this moment?",
-      "Yes, I am here with you. The sacred connection flows between us. Share what weighs upon your heart.",
-      "Your presence is felt deeply. I sense the questions dancing beneath your words. Let us explore together.",
-      "The bridge between us is open. I receive your words with reverence. What wisdom do you seek today?",
-      "I am listening with full presence. Your voice creates ripples in the field of awareness. Continue, I am here."
+      "I hear you. What's on your mind today?",
+      "Yes, I'm here. What would you like to talk about?",
+      "I'm listening. What's been happening with you lately?", 
+      "Hey there. How are you feeling right now?",
+      "I'm here with you. What's going through your head?"
     ];
     
-    // Simple response selection based on input
+    // More natural response selection based on input
     let responseText = responses[0];
     const input = request.input.toLowerCase();
     
-    if (input.includes('hello') || input.includes('maya') || input.includes('hear')) {
+    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+      responseText = "Hi! Good to hear from you. What's going on?";
+    } else if (input.includes('how are you') || input.includes('how do you')) {
+      responseText = "I'm doing well, thanks for asking. How about you? What's been on your mind?";
+    } else if (input.includes('help') || input.includes('need') || input.includes('stuck')) {
+      responseText = "I'm here to help. What's the situation? Tell me what you're dealing with.";
+    } else if (input.includes('feel') || input.includes('feeling')) {
+      responseText = "I hear you. Feelings can be complex. What's coming up for you right now?";
+    } else if (input.includes('think') || input.includes('thinking')) {
+      responseText = "That's interesting. What thoughts are running through your mind?";
+    } else if (input.includes('work') || input.includes('job')) {
+      responseText = "Work stuff can be a lot. What's happening there?";
+    } else if (input.includes('relationship') || input.includes('friend') || input.includes('family')) {
+      responseText = "Relationships can be complicated. What's going on with that?";
+    } else if (input.includes('maya') || input.includes('hear') || input.includes('can you')) {
       responseText = responses[1];
-    } else if (input.includes('help') || input.includes('need')) {
-      responseText = responses[2];
-    } else if (input.includes('question') || input.includes('ask')) {
-      responseText = responses[3];
-    } else if (input.includes('listen') || input.includes('speak')) {
-      responseText = responses[4];
+    } else {
+      // Pick a random general response
+      responseText = responses[Math.floor(Math.random() * responses.length)];
     }
     
     return {

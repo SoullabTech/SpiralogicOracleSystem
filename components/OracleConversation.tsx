@@ -197,23 +197,26 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         // Create utterance
         const utterance = new SpeechSynthesisUtterance(text);
         
-        // Configure voice settings for Maya
-        utterance.rate = 0.9; // Slightly slower for mystical effect
-        utterance.pitch = 1.1; // Slightly higher pitch
-        utterance.volume = 0.8;
+        // Configure voice settings for natural conversation
+        utterance.rate = 1.0; // Normal speaking speed
+        utterance.pitch = 1.0; // Natural pitch
+        utterance.volume = 0.9;
         
-        // Try to use a female voice if available
+        // Try to use the best available English voice
         const voices = window.speechSynthesis.getVoices();
-        const femaleVoice = voices.find(voice => 
-          voice.name.toLowerCase().includes('female') ||
+        const preferredVoice = voices.find(voice => 
           voice.name.toLowerCase().includes('samantha') ||
-          voice.name.toLowerCase().includes('victoria') ||
-          voice.name.toLowerCase().includes('kate') ||
-          voice.name.toLowerCase().includes('karen')
+          voice.name.toLowerCase().includes('alex') ||
+          voice.name.toLowerCase().includes('allison') ||
+          voice.name.toLowerCase().includes('ava') ||
+          voice.name.toLowerCase().includes('susan') ||
+          voice.name.toLowerCase().includes('zira')
+        ) || voices.find(voice => 
+          voice.lang.startsWith('en') && voice.localService
         ) || voices.find(voice => voice.lang.startsWith('en'));
         
-        if (femaleVoice) {
-          utterance.voice = femaleVoice;
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
         }
         
         // Set voice state

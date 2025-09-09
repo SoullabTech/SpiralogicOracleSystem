@@ -9,25 +9,34 @@ export default function BetaLandingPage() {
   const [isValidating, setIsValidating] = useState(false);
   const [error, setError] = useState("");
 
-  const validCodes = ["FIRST_LIGHT", "SACRED_SPIRAL", "ANAMNESIS_FIELD", "MAYA_AWAKENING", "SOUL_REMEMBERING"];
-
   const handleInviteSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsValidating(true);
     setError("");
 
-    // Simulate validation delay for sacred pacing
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch('/api/auth/validate-invite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: inviteCode }),
+      });
 
-    if (validCodes.includes(inviteCode.toUpperCase())) {
-      // Store beta access in localStorage
-      localStorage.setItem("betaAccess", "granted");
-      localStorage.setItem("betaInviteCode", inviteCode.toUpperCase());
-      
-      // Begin the sacred journey with Maya's welcome
-      router.push("/welcome");
-    } else {
-      setError("This invitation is not recognized. The Oracle awaits the right moment.");
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store beta access in localStorage for backward compatibility
+        localStorage.setItem("betaAccess", "granted");
+        localStorage.setItem("betaInviteCode", inviteCode.toUpperCase());
+        
+        // Begin the sacred journey with Maya's welcome
+        router.push("/welcome");
+      } else {
+        setError(data.message || "This invitation is not recognized. The Oracle awaits the right moment.");
+      }
+    } catch (error) {
+      setError("Unable to validate invitation. Please try again.");
     }
     
     setIsValidating(false);

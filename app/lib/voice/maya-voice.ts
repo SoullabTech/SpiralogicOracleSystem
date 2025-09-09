@@ -45,6 +45,7 @@ export const MAYA_GREETINGS = [
  */
 export class MayaVoiceSystem {
   private utterance: SpeechSynthesisUtterance | null = null;
+  private currentAudio: HTMLAudioElement | null = null;
   private config: MayaVoiceConfig;
   private state: VoiceState;
   private onStateChange?: (state: VoiceState) => void;
@@ -150,7 +151,7 @@ export class MayaVoiceSystem {
   }
 
   /**
-   * Speak text with Maya&apos;s voice configuration
+   * Speak text with Maya's voice using ElevenLabs (with fallback to Web Speech API)
    */
   public async speak(text: string): Promise<void> {
     if (typeof window === 'undefined') {
@@ -164,60 +165,131 @@ export class MayaVoiceSystem {
     // Stop any current speech
     this.stop();
 
-    // Create new utterance
-    this.utterance = new SpeechSynthesisUtterance(text);
-    
-    // Apply Maya&apos;s voice configuration
-    this.utterance.rate = this.config.rate;
-    this.utterance.pitch = this.config.pitch;
-    this.utterance.volume = this.config.volume;
-    this.utterance.lang = this.config.lang;
-
-    // Set voice if available
-    if (this.state.selectedVoice) {
-      this.utterance.voice = this.state.selectedVoice;
-    }
-
-    // Set up event handlers
-    this.utterance.onstart = () => {
-      this.state.isPlaying = true;
-      this.state.isPaused = false;
-      this.state.currentText = text;
-      this.updateState();
-    };
-
-    this.utterance.onend = () => {
-      this.state.isPlaying = false;
-      this.state.isPaused = false;
-      this.state.currentText = '';
-      this.updateState();
-    };
-
-    this.utterance.onerror = (event) => {
-      console.error('Maya voice synthesis error:', event.error);
-      this.state.isPlaying = false;
-      this.state.isPaused = false;
-      this.state.currentText = '';
-      this.updateState();
-    };
-
-    this.utterance.onpause = () => {
-      this.state.isPaused = true;
-      this.updateState();
-    };
-
-    this.utterance.onresume = () => {
-      this.state.isPaused = false;
-      this.updateState();
-    };
-
     // Apply mystical effects if enabled
     if (this.config.mysticalEffect) {
       text = this.applyMysticalEffects(text);
     }
 
-    // Speak the text
-    speechSynthesis.speak(this.utterance);
+    // Update state to indicate we're starting
+    this.state.isPlaying = true;
+    this.state.isPaused = false;
+    this.state.currentText = text;
+    this.updateState();
+
+    try {
+      // First, try ElevenLabs via our API endpoint
+      await this.speakWithElevenLabs(text);
+    } catch (error) {
+      console.warn('ElevenLabs synthesis failed, falling back to Web Speech API:', error);
+      
+      // Fallback to Web Speech API
+      try {
+        await this.speakWithWebSpeechAPI(text);
+      } catch (fallbackError) {
+        console.error('All voice synthesis methods failed:', fallbackError);
+        this.state.isPlaying = false;
+        this.state.isPaused = false;
+        this.state.currentText = '';
+        this.updateState();
+        throw fallbackError;
+      }
+    }
+  }
+
+  /**
+   * Speak using ElevenLabs API (Aunt Annie voice)
+   */
+  private async speakWithElevenLabs(text: string): Promise<void> {
+    const response = await fetch('/api/voice/sesame', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+
+    if (!response.ok) {
+      throw new Error(`ElevenLabs API failed: ${response.status}`);
+    }
+
+    const audioBlob = await response.blob();
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
+
+    return new Promise((resolve, reject) => {
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+        this.state.isPlaying = false;
+        this.state.isPaused = false;
+        this.state.currentText = '';
+        this.updateState();
+        resolve();
+      };
+      
+      audio.onerror = () => {
+        URL.revokeObjectURL(audioUrl);
+        this.state.isPlaying = false;
+        this.state.isPaused = false;
+        this.state.currentText = '';
+        this.updateState();
+        reject(new Error('Audio playback failed'));
+      };
+      
+      // Store reference for pause/resume functionality
+      this.currentAudio = audio;
+      
+      audio.play().catch(reject);
+    });
+  }
+
+  /**
+   * Fallback to Web Speech API
+   */
+  private async speakWithWebSpeechAPI(text: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Create new utterance
+      this.utterance = new SpeechSynthesisUtterance(text);
+      
+      // Apply Maya's voice configuration
+      this.utterance.rate = this.config.rate;
+      this.utterance.pitch = this.config.pitch;
+      this.utterance.volume = this.config.volume;
+      this.utterance.lang = this.config.lang;
+
+      // Set voice if available
+      if (this.state.selectedVoice) {
+        this.utterance.voice = this.state.selectedVoice;
+      }
+
+      // Set up event handlers
+      this.utterance.onend = () => {
+        this.state.isPlaying = false;
+        this.state.isPaused = false;
+        this.state.currentText = '';
+        this.updateState();
+        resolve();
+      };
+
+      this.utterance.onerror = (event) => {
+        console.error('Maya voice synthesis error:', event.error);
+        this.state.isPlaying = false;
+        this.state.isPaused = false;
+        this.state.currentText = '';
+        this.updateState();
+        reject(new Error(`Speech synthesis error: ${event.error}`));
+      };
+
+      this.utterance.onpause = () => {
+        this.state.isPaused = true;
+        this.updateState();
+      };
+
+      this.utterance.onresume = () => {
+        this.state.isPaused = false;
+        this.updateState();
+      };
+
+      // Speak the text
+      speechSynthesis.speak(this.utterance);
+    });
   }
 
   /**
@@ -249,7 +321,13 @@ export class MayaVoiceSystem {
    */
   public pause(): void {
     if (this.state.isPlaying && !this.state.isPaused) {
-      speechSynthesis.pause();
+      if (this.currentAudio) {
+        this.currentAudio.pause();
+      } else {
+        speechSynthesis.pause();
+      }
+      this.state.isPaused = true;
+      this.updateState();
     }
   }
 
@@ -258,7 +336,13 @@ export class MayaVoiceSystem {
    */
   public resume(): void {
     if (this.state.isPaused) {
-      speechSynthesis.resume();
+      if (this.currentAudio) {
+        this.currentAudio.play();
+      } else {
+        speechSynthesis.resume();
+      }
+      this.state.isPaused = false;
+      this.updateState();
     }
   }
 
@@ -266,7 +350,17 @@ export class MayaVoiceSystem {
    * Stop current speech
    */
   public stop(): void {
+    // Stop ElevenLabs audio if playing
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = null;
+    }
+    
+    // Stop Web Speech API
     speechSynthesis.cancel();
+    
+    // Reset state
     this.state.isPlaying = false;
     this.state.isPaused = false;
     this.state.currentText = '';
