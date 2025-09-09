@@ -1,12 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EnhancedVoiceMicButton } from '@/components/ui/EnhancedVoiceMicButton';
 
 export default function TestVoicePage() {
   const [transcript, setTranscript] = useState('');
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [debugInfo, setDebugInfo] = useState('{}');
+
+  // Only run browser detection on client side to prevent hydration errors
+  useEffect(() => {
+    setIsClient(true);
+    setDebugInfo(JSON.stringify({
+      hasWebkitSpeech: 'webkitSpeechRecognition' in window,
+      hasGetUserMedia: !!navigator.mediaDevices?.getUserMedia,
+      protocol: window.location.protocol
+    }, null, 2));
+  }, []);
 
   const handleTranscript = async (text: string) => {
     console.log('Received transcript:', text);
@@ -75,11 +87,7 @@ export default function TestVoicePage() {
         <div className="bg-slate-800 rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-2">Debug Info:</h3>
           <pre className="text-xs text-gray-400 overflow-auto">
-            {JSON.stringify({
-              hasWebkitSpeech: typeof window !== 'undefined' && 'webkitSpeechRecognition' in window,
-              hasGetUserMedia: typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getUserMedia,
-              protocol: typeof window !== 'undefined' ? window.location.protocol : 'unknown'
-            }, null, 2)}
+            {isClient ? debugInfo : 'Loading browser info...'}
           </pre>
         </div>
       </div>
