@@ -177,63 +177,75 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
   }, [messages, sessionId, userId, voiceEnabled, onMessageAdded, activeFacetId]);
 
-  // Play Maya's voice using TTS
+  // Play Maya's voice using browser TTS
   const playMayaVoice = async (text: string) => {
     try {
-      // Call TTS API
-      const response = await fetch('/api/tts/maya', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          text,
-          voice: 'maya',
-          element: activeFacetId?.split('-')[0] || 'aether'
-        })
-      });
-
-      if (response.ok) {
-        const { audio } = await response.json();
+      // Use browser's built-in speech synthesis
+      if ('speechSynthesis' in window) {
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
         
-        if (audio) {
-          // Play the audio
-          const audioData = `data:audio/mp3;base64,${audio}`;
-          const audioElement = new Audio(audioData);
-          
-          setOracleVoiceState({
-            amplitude: 0.6,
-            pitch: 180,
-            emotion: 'calm',
-            isSpeaking: true,
-            energy: 0.5,
-            clarity: 0.9,
-            breathDepth: 0.7
-          });
-          
-          audioElement.onended = () => {
-            setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
-          };
-          
-          await audioElement.play();
+        // Create utterance
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Configure voice settings for Maya
+        utterance.rate = 0.9; // Slightly slower for mystical effect
+        utterance.pitch = 1.1; // Slightly higher pitch
+        utterance.volume = 0.8;
+        
+        // Try to use a female voice if available
+        const voices = window.speechSynthesis.getVoices();
+        const femaleVoice = voices.find(voice => 
+          voice.name.toLowerCase().includes('female') ||
+          voice.name.toLowerCase().includes('samantha') ||
+          voice.name.toLowerCase().includes('victoria') ||
+          voice.name.toLowerCase().includes('kate') ||
+          voice.name.toLowerCase().includes('karen')
+        ) || voices.find(voice => voice.lang.startsWith('en'));
+        
+        if (femaleVoice) {
+          utterance.voice = femaleVoice;
         }
+        
+        // Set voice state
+        setOracleVoiceState({
+          amplitude: 0.6,
+          pitch: 180,
+          emotion: 'calm',
+          isSpeaking: true,
+          energy: 0.5,
+          clarity: 0.9,
+          breathDepth: 0.7
+        });
+        
+        // Handle speech end
+        utterance.onend = () => {
+          setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
+        };
+        
+        // Speak
+        window.speechSynthesis.speak(utterance);
+      } else {
+        // Fallback to visual-only indication
+        console.log('Speech synthesis not supported');
+        const words = text.split(' ');
+        const duration = words.length * 200;
+        
+        setOracleVoiceState({
+          amplitude: 0.6,
+          pitch: 180,
+          emotion: 'calm',
+          isSpeaking: true,
+          energy: 0.5,
+          clarity: 0.9,
+          breathDepth: 0.7
+        });
+        
+        await new Promise(resolve => setTimeout(resolve, duration));
+        setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
       }
     } catch (error) {
       console.error('TTS playback error:', error);
-      // Fallback to duration simulation
-      const words = text.split(' ');
-      const duration = words.length * 200;
-      
-      setOracleVoiceState({
-        amplitude: 0.6,
-        pitch: 180,
-        emotion: 'calm',
-        isSpeaking: true,
-        energy: 0.5,
-        clarity: 0.9,
-        breathDepth: 0.7
-      });
-      
-      await new Promise(resolve => setTimeout(resolve, duration));
-      setOracleVoiceState(prev => prev ? { ...prev, isSpeaking: false } : null);
     }
   };
 
