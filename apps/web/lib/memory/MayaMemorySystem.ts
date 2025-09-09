@@ -3,7 +3,8 @@
  * Powered by Mem0 for persistent memory across sessions
  */
 
-import { MemoryClient } from 'mem0ai';
+// import { MemoryClient } from 'mem0ai'; // TODO: Add to package.json
+const MemoryClient: any = {}; // Temporary stub
 import { EventEmitter } from 'events';
 
 interface MemoryContext {

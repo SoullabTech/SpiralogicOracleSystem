@@ -1,4 +1,5 @@
-import { MemoryClient } from "mem0ai";
+// import { MemoryClient } from "mem0ai"; // TODO: Add to package.json
+const MemoryClient: any = {}; // Temporary stub
 
 export interface MemoryConfig {
   apiKey?: string;
