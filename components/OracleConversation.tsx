@@ -82,7 +82,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
-    // Add user message
+    // Debounce rapid calls
+    if (isProcessing) return;
+    
+    // Add user message immediately for responsiveness
     const userMessage: ConversationMessage = {
       id: `msg-${Date.now()}`,
       role: 'user',
@@ -96,8 +99,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     setIsProcessing(true);
     setCurrentMotionState('processing');
     
-    // Call Oracle API
+    // Call Oracle API with timeout for better performance
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       const response = await fetch('/api/oracle/unified', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -110,8 +116,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             element: 'aether',
             previousInteractions: messages.length
           }
-        })
+        }),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       const responseData = await response.json();
       
@@ -175,7 +184,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         setCurrentMotionState('idle');
       }, 2000);
     }
-  }, [messages, sessionId, userId, voiceEnabled, onMessageAdded, activeFacetId]);
+  }, [isProcessing, messages.length, sessionId, userId, voiceEnabled, onMessageAdded]);
 
   // Play Maya's voice using browser TTS
   const playMayaVoice = async (text: string) => {
