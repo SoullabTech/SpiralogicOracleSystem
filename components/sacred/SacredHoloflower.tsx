@@ -173,7 +173,7 @@ export const SacredHoloflower: React.FC<SacredHoloflowerProps> = ({
       >
         {/* Base Holoflower Image - Your sacred asset */}
         <Image
-          src="/SpiralogicHoloflower.png"
+          src="/holoflower.png"
           alt="Spiralogic Holoflower"
           width={size}
           height={size}

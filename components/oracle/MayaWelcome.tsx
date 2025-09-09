@@ -138,7 +138,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
           }}
           className="flex justify-center"
         >
-          <img src="/holoflower.png" alt="Holoflower" className="w-24 h-24" />
+          <img src="/holoflower.png" alt="Holoflower" className="w-32 h-32 object-contain" />
         </motion.div>
 
         <div className="space-y-4">
