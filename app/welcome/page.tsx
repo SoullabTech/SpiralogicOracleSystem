@@ -42,7 +42,7 @@ export default function WelcomePage() {
             className="w-24 h-24 mx-auto"
           >
             <img 
-              src="/holoflower.png" 
+              src="/holoflower.svg" 
               alt="Holoflower"
               className="w-full h-full object-contain"
             />
