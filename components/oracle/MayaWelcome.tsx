@@ -43,31 +43,68 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
 
   const generatePersonalizedGreeting = (wisdomData: WisdomInsight) => {
     const sacredName = user?.sacredName || user?.display_name || user?.email?.split('@')[0] || 'friend';
+    const firstName = sacredName.split(' ')[0]; // Get first name for more casual feel
     const conversationCount = oracleAgent?.conversations_count || 0;
     
     const hour = new Date().getHours();
-    let timeGreeting = 'Good morning';
+    const day = new Date().getDay();
     
-    if (hour >= 12 && hour < 17) {
-      timeGreeting = 'Good afternoon';
-    } else if (hour >= 17) {
-      timeGreeting = 'Good evening';
+    // Variety of conversational greetings
+    const casualGreetings = [
+      `Back at it, ${firstName}`,
+      `Here we go, ${firstName}`,
+      `Good to see you, ${firstName}`,
+      `Welcome back, ${firstName}`,
+      `Hey there, ${firstName}`,
+      `Let's dive in, ${firstName}`,
+    ];
+    
+    // Special contextual greetings
+    if (conversationCount === 0) {
+      setGreeting(`Nice to meet you, ${firstName}`);
+    } else if (hour < 6) {
+      setGreeting(`Up early, ${firstName}`);
+    } else if (hour >= 22) {
+      setGreeting(`Late night session, ${firstName}`);
+    } else if (day === 1) {
+      setGreeting(`Monday momentum, ${firstName}`);
+    } else if (day === 5) {
+      setGreeting(`Friday vibes, ${firstName}`);
+    } else {
+      // Use a random casual greeting
+      const randomGreeting = casualGreetings[Math.floor(Math.random() * casualGreetings.length)];
+      setGreeting(randomGreeting);
     }
-
-    setGreeting(`${timeGreeting}, ${sacredName}! What journey are we taking?`);
   };
 
   const generateAnonymousGreeting = () => {
     const hour = new Date().getHours();
-    let timeGreeting = 'Good morning';
+    const day = new Date().getDay();
     
-    if (hour >= 12 && hour < 17) {
-      timeGreeting = 'Good afternoon';
-    } else if (hour >= 17) {
-      timeGreeting = 'Good evening';
+    // Conversational greetings for anonymous users
+    const greetings = [
+      "Let's explore together",
+      "Ready when you are",
+      "What's on your mind?",
+      "Let's dive in",
+      "Welcome, friend",
+    ];
+    
+    // Special contextual greetings
+    if (hour < 6) {
+      setGreeting("Up early today");
+    } else if (hour >= 22) {
+      setGreeting("Late night thoughts?");
+    } else if (day === 1) {
+      setGreeting("Monday momentum");
+    } else if (day === 5) {
+      setGreeting("Friday feelings");
+    } else if (day === 0 || day === 6) {
+      setGreeting("Weekend wanderings");
+    } else {
+      // Use a random greeting
+      setGreeting(greetings[Math.floor(Math.random() * greetings.length)]);
     }
-    
-    setGreeting(`${timeGreeting}! What journey are we taking?`);
   };
 
   const getElementalGuidance = () => {
