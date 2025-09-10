@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflowerWithAudio } from './sacred/SacredHoloflowerWithAudio';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
+import MayaChatInterface from './chat/MayaChatInterface';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
@@ -58,6 +59,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [userVoiceState, setUserVoiceState] = useState<VoiceState | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
+  
+  // UI states
+  const [showChatInterface, setShowChatInterface] = useState(false);
   
   // Conversation context
   const contextRef = useRef<ConversationContext>({
@@ -193,6 +197,20 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
   }, [isProcessing, messages.length, sessionId, userId, voiceEnabled, onMessageAdded]);
 
+  // Handle text messages from chat interface
+  const handleTextMessage = useCallback(async (text: string, attachments?: File[]) => {
+    // Process attachments first if any
+    let messageText = text;
+    if (attachments && attachments.length > 0) {
+      // For now, just mention the files - in a full implementation you'd upload them
+      const fileNames = attachments.map(f => f.name).join(', ');
+      messageText = `${text}\n\n[Files attached: ${fileNames}]`;
+    }
+    
+    // Use the same handler as voice transcript
+    handleVoiceTranscript(messageText);
+  }, [handleVoiceTranscript]);
+
 
   // Handle petal click for check-ins
   const handlePetalClick = useCallback((facetId: string) => {
@@ -279,14 +297,59 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Enhanced Voice Mic with Transcript Display */}
+      {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
-        <EnhancedVoiceMicButton
-          onVoiceStateChange={setUserVoiceState}
-          onTranscript={handleVoiceTranscript}
-          position="bottom-center"
-          silenceThreshold={3000}
-        />
+        <>
+          {/* Mode Toggle */}
+          <div className="fixed top-8 left-8 flex gap-2">
+            <button
+              onClick={() => setShowChatInterface(false)}
+              className={`px-3 py-1 rounded-full text-xs transition-colors ${
+                !showChatInterface 
+                  ? 'bg-[#D4B896] text-white' 
+                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+              }`}
+            >
+              Voice
+            </button>
+            <button
+              onClick={() => setShowChatInterface(true)}
+              className={`px-3 py-1 rounded-full text-xs transition-colors ${
+                showChatInterface 
+                  ? 'bg-[#D4B896] text-white' 
+                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+              }`}
+            >
+              Chat
+            </button>
+          </div>
+
+          {showChatInterface ? (
+            /* Text Chat Interface */
+            <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
+              <MayaChatInterface
+                onSendMessage={handleTextMessage}
+                onVoiceTranscript={handleVoiceTranscript}
+                messages={messages.map(msg => ({
+                  id: msg.id,
+                  role: msg.role === 'oracle' ? 'maya' : 'user',
+                  text: msg.text,
+                  timestamp: msg.timestamp
+                }))}
+                isProcessing={isProcessing}
+                disabled={isProcessing}
+              />
+            </div>
+          ) : (
+            /* Voice-Only Interface */
+            <EnhancedVoiceMicButton
+              onVoiceStateChange={setUserVoiceState}
+              onTranscript={handleVoiceTranscript}
+              position="bottom-center"
+              silenceThreshold={3000}
+            />
+          )}
+        </>
       )}
 
 
