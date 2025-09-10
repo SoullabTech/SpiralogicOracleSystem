@@ -316,7 +316,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             />
           </div>
         </div>
-          
       </div>
       
       {/* Shadow petal overlay */}
