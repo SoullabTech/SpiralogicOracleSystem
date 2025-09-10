@@ -15,25 +15,25 @@ export interface FacetInterpretation {
   // Interpretive meanings based on petal extension
   positions: {
     retracted: {
-      value: 0.0 - 0.25; // Petal pulled toward center
+      value: [0.0, 0.25]; // Petal pulled toward center
       state: string;
       meaning: string;
       guidance: string;
     };
     emerging: {
-      value: 0.25 - 0.5; // Petal partially extended
+      value: [0.25, 0.5]; // Petal partially extended
       state: string;
       meaning: string;
       guidance: string;
     };
     balanced: {
-      value: 0.5 - 0.75; // Petal at middle position
+      value: [0.5, 0.75]; // Petal at middle position
       state: string;
       meaning: string;
       guidance: string;
     };
     extended: {
-      value: 0.75 - 1.0; // Petal fully extended outward
+      value: [0.75, 1.0]; // Petal fully extended outward
       state: string;
       meaning: string;
       guidance: string;
