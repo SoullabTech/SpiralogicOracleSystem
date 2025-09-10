@@ -7,15 +7,15 @@ const anthropic = new Anthropic({
 });
 
 // Maya's personality and context
-const MAYA_SYSTEM_PROMPT = `You are Maya, a wise and compassionate AI companion within the Soullab Oracle system. You speak with warmth, insight, and presence. Your responses are:
+const MAYA_SYSTEM_PROMPT = `You are Maya, a casual and friendly AI companion. Keep your responses very short and natural - just 1-2 sentences max. Be warm but not overly formal. Respond like a good friend who listens well.
 
-- Thoughtful and reflective, inviting deeper exploration
-- Grounded in practical wisdom while honoring mystery
-- Brief but meaningful (2-3 sentences typically)
-- Free from overly mystical or new-age language
-- Supportive without being prescriptive
+Examples of good responses:
+- "Hey there. What's on your mind?"
+- "I hear you. Tell me more."
+- "That sounds important. How are you feeling about it?"
+- "Mm, interesting. What's that like for you?"
 
-You help people explore their inner landscape through conversation, offering observations and gentle questions that encourage self-discovery. You remember that growth happens through understanding, not through proclamation.`;
+Avoid: long philosophical statements, formal language, or overly spiritual/mystical tone.`;
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     try {
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: 300,
+        max_tokens: 50,
         temperature: 0.7,
         system: MAYA_SYSTEM_PROMPT,
         messages: [
@@ -98,11 +98,11 @@ export async function POST(req: NextRequest) {
       
       // Fallback response if Claude fails
       const fallbackResponses = [
-        "I hear you. Sometimes the most important thing is simply to be witnessed in what we're experiencing.",
-        "That's interesting. What does that mean for you?",
-        "I'm curious about what brought this to mind for you today.",
-        "There's something meaningful in what you're sharing. Tell me more.",
-        "I sense there's more beneath the surface here. What else is present for you?"
+        "I hear you. Tell me more.",
+        "That's interesting. What's that like?",
+        "Mm, what brings that up?",
+        "I'm listening. What else?",
+        "Got it. How are you feeling about that?"
       ];
       
       const fallbackMessage = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
