@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflowerWithAudio } from './sacred/SacredHoloflowerWithAudio';
+import { InteractiveHoloflowerPetals } from './sacred/InteractiveHoloflowerPetals';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import MayaChatInterface from './chat/MayaChatInterface';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
@@ -87,6 +88,25 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setIsListening(false);
     }
   }, [userVoiceState]);
+
+  // Listen for petal adjustment events from InteractiveHoloflowerPetals
+  useEffect(() => {
+    const handlePetalAdjusted = (event: CustomEvent) => {
+      const { facetId, extension, interpretation } = event.detail;
+      handlePetalUpdate(facetId, extension);
+      
+      // Optionally trigger Oracle response for significant changes
+      if (Math.abs(extension - 0.5) > 0.3) {
+        // User has moved petal significantly from center
+        setActiveFacetId(facetId);
+      }
+    };
+
+    window.addEventListener('holoflower:petal-adjusted', handlePetalAdjusted as EventListener);
+    return () => {
+      window.removeEventListener('holoflower:petal-adjusted', handlePetalAdjusted as EventListener);
+    };
+  }, [handlePetalUpdate]);
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
@@ -246,18 +266,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   }, [handleVoiceTranscript]);
 
 
-  // Handle petal click for check-ins
-  const handlePetalClick = useCallback((facetId: string) => {
+  // Handle petal state updates from interactive system
+  const handlePetalUpdate = useCallback((facetId: string, extension: number) => {
     setCheckIns(prev => ({
       ...prev,
-      [facetId]: Math.min(1, (prev[facetId] || 0) + 0.25)
+      [facetId]: extension
     }));
     
-    // Update context
+    // Update context with new petal position
     contextRef.current.checkIns = {
       ...contextRef.current.checkIns,
-      [facetId]: Math.min(1, (contextRef.current.checkIns[facetId] || 0) + 0.25)
+      [facetId]: extension
     };
+    
+    // Trigger motion state based on interaction
+    setCurrentMotionState('processing');
+    setTimeout(() => setCurrentMotionState('idle'), 500);
   }, []);
 
   // Clear all check-ins
@@ -268,52 +292,48 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   return (
     <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black">
-      {/* Sacred Holoflower - Always centered */}
-      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        {/* Container with orbital circles and holoflower */}
-        <div className="relative" style={{ width: 400, height: 400 }}>
-          {/* Outer orbital circle */}
-          <div className="absolute inset-0 rounded-full border border-[#D4B896]/20" 
-               style={{ borderStyle: 'dashed' }} />
+      {/* Sacred Holoflower with Interactive Petals - Always centered */}
+      <div className="fixed inset-0 flex items-center justify-center">
+        {/* Interactive Holoflower Petals System */}
+        <div className="relative pointer-events-auto">
+          <InteractiveHoloflowerPetals
+            size={500}
+            initialStates={checkIns}
+            onReadingUpdate={(reading) => {
+              // Update context with holoflower reading
+              contextRef.current.coherenceHistory.push(reading.balanceScore);
+              
+              // Send reading to Oracle for interpretation
+              window.dispatchEvent(new CustomEvent('holoflower:reading-update', {
+                detail: { reading, sessionId, userId }
+              }));
+            }}
+            showInterpretation={true}
+            mode={showChatInterface ? 'guided' : 'intuitive'}
+          />
           
-          {/* Middle orbital circle */}
-          <div className="absolute inset-8 rounded-full border border-purple-400/20" 
-               style={{ borderStyle: 'dashed' }} />
-          
-          {/* Inner orbital circle */}
-          <div className="absolute inset-16 rounded-full border border-blue-300/20" />
-          
-          {/* Full-size Interactive Layer - for petal clicking/dragging */}
-          <div className="absolute inset-0 pointer-events-auto" style={{ opacity: 0.001 }}>
-            <SacredHoloflowerWithAudio
-              size={400}
-              activeFacetId={activeFacetId}
-              userCheckIns={checkIns}
-              onPetalClick={handlePetalClick}
-              showLabels={false}
-              interactive={!isProcessing}
-              audioEnabled={true}
-              audioVolume={0.4}
-              motionState={currentMotionState}
-              coherenceLevel={coherenceLevel}
-              coherenceShift={coherenceShift}
-              isListening={isListening}
-              isProcessing={isProcessing}
-              isResponding={isResponding || mayaVoiceState.isPlaying}
-              showBreakthrough={showBreakthrough}
-            />
-          </div>
-          
-          {/* Small Visual Holoflower - centered in inner circle */}
+          {/* Central Holoflower Logo */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Image
-              src="/holoflower.svg"
-              alt="Spiralogic Holoflower"
-              width={120}
-              height={120}
-              className="object-contain"
-              priority
-            />
+            <motion.div
+              animate={{
+                scale: [1, 1.05, 1],
+                rotate: [0, 5, -5, 0]
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Image
+                src="/holoflower.svg"
+                alt="Spiralogic Holoflower"
+                width={80}
+                height={80}
+                className="object-contain opacity-80"
+                priority
+              />
+            </motion.div>
           </div>
         </div>
       </div>

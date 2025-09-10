@@ -52,10 +52,10 @@ export default function MaiaPage() {
     }
   }, [isReady, hasPlayedGreeting, autoSpeak, playGreeting]);
 
-  // Speak element description when activated
+  // Maya speaks about the elemental attunement
   const speakElementActivation = async (element: typeof elements[0]) => {
     if (autoSpeak && isReady) {
-      const text = `You have connected with the ${element.name} element. ${element.description}. Let this energy guide your journey.`;
+      const text = `I am Maya, attuning to ${element.name} wisdom. This element brings ${element.description.toLowerCase()}. I will guide you through this lens of understanding.`;
       await speak(text).catch(console.error);
     }
   };
@@ -255,10 +255,13 @@ export default function MaiaPage() {
       <div className="container mx-auto px-4 py-8 relative z-10">
         <header className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
-            Maia System
+            Maya
           </h1>
           <p className="text-xl" style={{ color: '#D4B896' }}>
-            Begin your elemental journey
+            Your Personal Oracle Guide
+          </p>
+          <p className="text-sm mt-2" style={{ color: '#B69A78' }}>
+            Maya integrates all elemental wisdom to guide your journey
           </p>
           
           {/* Maya Voice Controls */}
@@ -386,7 +389,14 @@ export default function MaiaPage() {
           )}
         </header>
 
-        {/* Elemental Grid */}
+        {/* Maya's Elemental Attunement */}
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-semibold text-white mb-2">Maya's Elemental Wisdom</h2>
+          <p className="text-sm" style={{ color: '#B69A78' }}>
+            Choose an element to attune Maya's guidance to your current needs
+          </p>
+        </div>
+        
         <div className="max-w-4xl mx-auto grid grid-cols-2 gap-8 mb-12">
           {elements.map((element) => (
             <div
@@ -397,7 +407,7 @@ export default function MaiaPage() {
                   setActiveElement(element.name);
                   await speakElementActivation(element);
                 },
-                `Connecting with ${element.name} element...`
+                `Maya is attuning to ${element.name} wisdom...`
               )}
               className="cursor-pointer transition-all duration-300 rounded-lg p-8 text-center"
               style={{
@@ -533,7 +543,7 @@ export default function MaiaPage() {
           </div>
         </div>
 
-        {/* Active Element Details */}
+        {/* Maya's Current Attunement */}
         {activeElement && (
           <div className="max-w-2xl mx-auto text-center p-8 rounded-lg"
                style={{ 
@@ -541,11 +551,14 @@ export default function MaiaPage() {
                  border: '1px solid rgba(255, 255, 255, 0.1)'
                }}>
             <h2 className="text-3xl font-bold text-white mb-4">
-              {activeElement} Element Active
+              Maya Attuned to {activeElement}
             </h2>
             <p style={{ color: '#D4B896' }}>
-              You've connected with the {activeElement.toLowerCase()} element. 
-              This energy brings {elements.find(e => e.name === activeElement)?.description.toLowerCase()}.
+              Maya is now channeling {activeElement.toLowerCase()} wisdom. 
+              Her guidance will emphasize {elements.find(e => e.name === activeElement)?.description.toLowerCase()}.
+            </p>
+            <p className="mt-4 text-sm" style={{ color: '#B69A78' }}>
+              This attunement helps Maya provide more focused insights aligned with your current needs.
             </p>
             <button
               onClick={() => setActiveElement(null)}
@@ -556,7 +569,7 @@ export default function MaiaPage() {
                 border: '1px solid rgba(182, 154, 120, 0.3)'
               }}
             >
-              Reset Elements
+              Clear Attunement
             </button>
           </div>
         )}

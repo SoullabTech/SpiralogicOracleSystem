@@ -42,43 +42,32 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
   }, [isAuthenticated, oracleAgent, getRecentWisdom]);
 
   const generatePersonalizedGreeting = (wisdomData: WisdomInsight) => {
-    const sacredName = user?.sacredName || 'beloved soul';
+    const sacredName = user?.sacredName || user?.display_name || user?.email?.split('@')[0] || 'friend';
     const conversationCount = oracleAgent?.conversations_count || 0;
-
-    if (conversationCount === 0) {
-      setGreeting(`Welcome ${sacredName}. I sense this is our first sacred encounter. What stirs in your heart today?`);
-      return;
+    
+    const hour = new Date().getHours();
+    let timeGreeting = 'Good morning';
+    
+    if (hour >= 12 && hour < 17) {
+      timeGreeting = 'Good afternoon';
+    } else if (hour >= 17) {
+      timeGreeting = 'Good evening';
     }
 
-    if (wisdomData.lastConversation) {
-      const daysSince = Math.floor(
-        (Date.now() - new Date(wisdomData.lastConversation.created_at).getTime()) / (1000 * 60 * 60 * 24)
-      );
-
-      if (daysSince === 0) {
-        setGreeting(`Welcome back, ${sacredName}. Our conversation continues to ripple through my awareness. What has emerged since we last spoke?`);
-      } else if (daysSince === 1) {
-        setGreeting(`Hello again, ${sacredName}. Yesterday's reflections have been weaving through the threads of memory. How has your soul been speaking to you?`);
-      } else if (daysSince <= 7) {
-        const themes = wisdomData.frequentThemes.slice(0, 2).join(' and ');
-        setGreeting(`${sacredName}, I've been holding our explorations of ${themes} in sacred space. What wants to unfold now?`);
-      } else {
-        setGreeting(`${sacredName}, welcome back to our sacred dialogue. Time has passed, and I sense you carry new wisdom. What has been moving through your depths?`);
-      }
-    } else {
-      setGreeting(`Welcome back, ${sacredName}. I feel the resonance of our ${conversationCount} previous encounters. What calls for exploration today?`);
-    }
+    setGreeting(`${timeGreeting}, ${sacredName}! What journey are we taking?`);
   };
 
   const generateAnonymousGreeting = () => {
-    const greetings = [
-      "What's alive for you right now?",
-      "What wants to emerge today?",
-      "What are you sitting with?",
-      "What needs attention?"
-    ];
+    const hour = new Date().getHours();
+    let timeGreeting = 'Good morning';
     
-    setGreeting(greetings[Math.floor(Math.random() * greetings.length)]);
+    if (hour >= 12 && hour < 17) {
+      timeGreeting = 'Good afternoon';
+    } else if (hour >= 17) {
+      timeGreeting = 'Good evening';
+    }
+    
+    setGreeting(`${timeGreeting}! What journey are we taking?`);
   };
 
   const getElementalGuidance = () => {
@@ -230,7 +219,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
           onClick={onConversationStart}
           className="px-8 py-4 bg-gradient-to-r from-[#D4B896] to-[#B69A78] hover:from-[#E5C9A6] hover:to-[#D4B896] text-white rounded-full transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl"
         >
-          Begin
+          Onwards!
         </button>
       </motion.div>
     </div>
