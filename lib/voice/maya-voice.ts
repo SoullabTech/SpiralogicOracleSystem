@@ -35,7 +35,8 @@ export class MayaVoiceSystem {
 
   constructor(config?: Partial<MayaVoiceConfig>) {
     this.config = {
-      voiceId: 'EXAVITQu4vr4xnSDxMaL', // Aunt Annie default voice ID - to be replaced with Sesame
+      voiceId: process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID_AUNT_ANNIE || 'y2TOWGCXSYEgBanvKsYJ', // Aunt Annie voice from env
+      elevenLabsApiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
       fallbackToWebSpeech: true,
       naturalSettings: {
         rate: 1.0,     // Natural conversational pace

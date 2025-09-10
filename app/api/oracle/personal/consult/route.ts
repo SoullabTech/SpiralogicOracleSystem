@@ -134,27 +134,27 @@ function determineElement(input: string): string {
   // Fire element - passion, energy, transformation
   if (lowerInput.includes('passion') || lowerInput.includes('energy') || lowerInput.includes('fire') || 
       lowerInput.includes('transform') || lowerInput.includes('power') || lowerInput.includes('vision')) {
-    return 'fire';
+    return 'fire-1';
   }
   
   // Water element - emotions, flow, intuition
   if (lowerInput.includes('feel') || lowerInput.includes('emotion') || lowerInput.includes('heart') || 
       lowerInput.includes('flow') || lowerInput.includes('dream') || lowerInput.includes('intuition')) {
-    return 'water';
+    return 'water-1';
   }
   
   // Earth element - grounding, practical, body
   if (lowerInput.includes('ground') || lowerInput.includes('body') || lowerInput.includes('practical') || 
       lowerInput.includes('stable') || lowerInput.includes('foundation') || lowerInput.includes('physical')) {
-    return 'earth';
+    return 'earth-1';
   }
   
   // Air element - thoughts, communication, ideas
   if (lowerInput.includes('think') || lowerInput.includes('idea') || lowerInput.includes('mind') || 
       lowerInput.includes('communicate') || lowerInput.includes('clarity') || lowerInput.includes('understand')) {
-    return 'air';
+    return 'air-1';
   }
   
   // Default to aether for spiritual/transcendent content
-  return 'aether';
+  return 'aether-1';
 }

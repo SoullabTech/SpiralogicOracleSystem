@@ -40,7 +40,7 @@ export default function MaiaPage() {
         {/* Clean Header */}
         <header className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
-            Maya
+            Maia
           </h1>
           <p className="text-xl" style={{ color: '#D4B896' }}>
             Your Personal Oracle Guide

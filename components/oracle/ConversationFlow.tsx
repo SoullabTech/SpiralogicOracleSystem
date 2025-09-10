@@ -154,7 +154,7 @@ export function ConversationFlow({ initialMode = 'welcome' }: ConversationFlowPr
       ? Math.floor((new Date(session.endedAt).getTime() - new Date(session.startedAt).getTime()) / (1000 * 60))
       : 0;
 
-    let summary = `Sacred dialogue with Maya (${duration} minutes, ${session.totalMessages} messages)\n\n`;
+    let summary = `Sacred dialogue with Maia (${duration} minutes, ${session.totalMessages} messages)\n\n`;
     
     if (reason) {
       summary += `Session ended: ${reason}\n\n`;
@@ -169,7 +169,7 @@ export function ConversationFlow({ initialMode = 'welcome' }: ConversationFlowPr
       const lastExchanges = session.messages.slice(-4);
       
       [...firstExchange, ...lastExchanges].forEach((msg, index) => {
-        const speaker = msg.role === 'user' ? 'Seeker' : 'Maya';
+        const speaker = msg.role === 'user' ? 'Seeker' : 'Maia';
         summary += `\n${speaker}: ${msg.text}`;
       });
 
@@ -371,7 +371,7 @@ export function ConversationFlow({ initialMode = 'welcome' }: ConversationFlowPr
                 Sacred Reflection Preserved
               </h2>
               <p className="text-white/70 text-lg leading-relaxed">
-                Your dialogue with Maya has been woven into the eternal tapestry of remembrance. 
+                Your dialogue with Maia has been woven into the eternal tapestry of remembrance. 
                 These insights will illuminate future conversations and deepen your journey of discovery.
               </p>
               
@@ -394,7 +394,7 @@ export function ConversationFlow({ initialMode = 'welcome' }: ConversationFlowPr
               {isAuthenticated && (
                 <div className="pt-8 text-sm text-white/50">
                   <p>🌿 Conversation saved to your sacred memory</p>
-                  <p>🧙‍♀️ Maya's understanding of your journey has deepened</p>
+                  <p>🧙‍♀️ Maia's understanding of your journey has deepened</p>
                 </div>
               )}
             </div>
