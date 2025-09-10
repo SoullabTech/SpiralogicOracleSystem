@@ -31,11 +31,7 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
     isProcessing = false,
     isSpeaking = false,
     autoStart = true,
-<<<<<<< HEAD
-    silenceThreshold = 1500,
-=======
-    silenceThreshold = 2000,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
+    silenceThreshold = 1200,
     vadSensitivity = 0.3
   } = props;
 
@@ -87,17 +83,12 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
       onRecordingStateChange?.(true);
       accumulatedTranscript.current = "";
       
-<<<<<<< HEAD
       // Set timeout to auto-stop recognition after 30 seconds (increased from 6)
-=======
-      // Set timeout to auto-stop recognition after 6 seconds
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       if (recognitionTimeoutRef.current) {
         clearTimeout(recognitionTimeoutRef.current);
       }
       recognitionTimeoutRef.current = setTimeout(() => {
         if (recognitionRef.current && isRecording) {
-<<<<<<< HEAD
           // Only stop if no speech detected for a while
           const timeSinceLastSpeech = Date.now() - lastSpeechTime.current;
           if (timeSinceLastSpeech > 5000) {
@@ -112,11 +103,6 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
           }
         }
       }, 30000);
-=======
-          recognitionRef.current.stop();
-        }
-      }, 6000);
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     };
 
     recognition.onresult = (event: any) => {
@@ -143,11 +129,7 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
         
         // Start new silence timer
         silenceTimerRef.current = setTimeout(() => {
-<<<<<<< HEAD
           if (isRecording && !isProcessingRef.current && accumulatedTranscript.current.trim()) {
-=======
-          if (isRecording && !isProcessingRef.current) {
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             processAccumulatedTranscript();
           }
         }, silenceThreshold);
@@ -199,16 +181,11 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
       // Restart if we're still listening and not processing/speaking
       if (isListening && !isProcessingRef.current && !isSpeaking) {
         setTimeout(() => {
-<<<<<<< HEAD
           if (recognitionRef.current && isListening && !isRecording) {
-=======
-          if (recognitionRef.current && isListening) {
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             try {
               recognitionRef.current.start();
             } catch (err) {
               console.error('Error restarting recognition:', err);
-<<<<<<< HEAD
               // Try again after a longer delay
               setTimeout(() => {
                 if (recognitionRef.current && isListening && !isRecording) {
@@ -219,8 +196,6 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
                   }
                 }
               }, 500);
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             }
           }
         }, 100);

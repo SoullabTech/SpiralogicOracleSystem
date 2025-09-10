@@ -111,11 +111,7 @@ function OraclePageInner() {
     // Welcome message from assigned agent
     setMessages([{
       role: 'assistant',
-<<<<<<< HEAD
       content: `Hey ${userData.username}, good to see you again. What's going on?`,
-=======
-      content: `Hey ${userData.username}, good to see you again. What&apos;s going on?`,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       timestamp: new Date().toISOString(),
       citations: [],
       metadata: {
@@ -426,7 +422,7 @@ function OraclePageInner() {
       setTimeout(() => {
         setFinalTranscript(""); // Clear final transcript after sending
         handleSend(transcript);
-      }, 500); // Brief delay to show final transcript
+      }, 200); // Reduced delay for faster response
     }
   };
 
@@ -568,9 +564,8 @@ function OraclePageInner() {
             <div className="flex justify-start animate-fade-in">
               <div className="bg-[#1A1F2E]/50 border border-gray-800 p-4 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse" />
-                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse delay-75" />
-                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-pulse delay-150" />
+                  <div className="w-1 h-1 bg-[#FFD700] rounded-full animate-pulse" />
+                  <span className="text-[#FFD700] text-sm">Thinking...</span>
                 </div>
               </div>
             </div>
@@ -647,8 +642,8 @@ function OraclePageInner() {
                 isSpeaking={isSpeaking}
                 autoStart={true}
                 silenceThreshold={settings.adaptiveMode 
-                  ? Math.min(settings.silenceTimeout, 4000) // Adaptive mode uses shorter timeout
-                  : settings.silenceTimeout
+                  ? Math.min(settings.silenceTimeout, 1200) // Much shorter for better responsiveness
+                  : Math.min(settings.silenceTimeout, 1500) // Reduced from 4000 to 1500
                 }
                 vadSensitivity={0.3}
               />

@@ -61,7 +61,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [isResponding, setIsResponding] = useState(false);
   
   // UI states
-  const [showChatInterface, setShowChatInterface] = useState(false);
+  const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
   
   // Conversation context
   const contextRef = useRef<ConversationContext>({
@@ -111,17 +111,21 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
-      const response = await fetch('/api/oracle/unified', {
+      const response = await fetch('/api/oracle/personal/consult', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           input: transcript,
-          type: 'voice',
           userId: userId || 'anonymous',
           sessionId,
           context: {
-            element: 'aether',
-            previousInteractions: messages.length
+            previousInteractions: messages.length,
+            userPreferences: {
+              voice: {
+                enabled: voiceEnabled,
+                autoSpeak: true
+              }
+            }
           }
         }),
         signal: controller.signal
@@ -131,21 +135,23 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       const responseData = await response.json();
       
-      // Extract text from response - handle both formats
-      let responseText = responseData.message || responseData.mayaResponse || 'I am here with you.';
+      // Handle PersonalOracleAgent response format
+      const oracleResponse = responseData.data || responseData;
+      let responseText = oracleResponse.message || 'I am here with you.';
       
-      // Clean up response text - remove stage directions and formatting
-      responseText = responseText
-        .replace(/\*[^*]*\*/g, '') // Remove *stage directions*
-        .replace(/\[[^\]]*\]/g, '') // Remove [actions]
-        .replace(/\([^)]*\)/g, '') // Remove (side notes)
-        .replace(/\s+/g, ' ') // Normalize whitespace
-        .trim();
+      // Maya's responses should already be natural from canonical prompt
+      // No need to clean up - just ensure basic formatting
+      responseText = responseText.trim();
       
-      // Simplified motion mapping for faster response
-      setActiveFacetId(responseData.primaryFacetId || 'voice');
+      // Use the element and voice characteristics from PersonalOracleAgent
+      const element = oracleResponse.element || 'aether';
+      const voiceCharacteristics = oracleResponse.voiceCharacteristics;
+      const audioUrl = oracleResponse.audio; // Audio URL from Sesame generation
+      
+      // Map element to facet for holoflower visualization
+      setActiveFacetId(element);
       setCurrentMotionState('responding');
-      setCoherenceLevel(0.7); // Default good coherence
+      setCoherenceLevel(oracleResponse.confidence || 0.85);
       
       // Add oracle message
       const oracleMessage: ConversationMessage = {
@@ -153,9 +159,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         role: 'oracle',
         text: responseText,
         timestamp: new Date(),
-        facetId: responseData.primaryFacetId || 'voice',
+        facetId: element,
         motionState: 'responding',
-        coherenceLevel: 0.7
+        coherenceLevel: oracleResponse.confidence || 0.85
       };
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
@@ -163,25 +169,52 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       // Update context
       contextRef.current.previousResponses.push({
         text: responseText,
-        primaryFacetId: responseData.primaryFacetId || 'voice',
-        ...responseData
+        primaryFacetId: element,
+        element,
+        voiceCharacteristics,
+        confidence: oracleResponse.confidence
       });
-      contextRef.current.coherenceHistory.push(0.7);
+      contextRef.current.coherenceHistory.push(oracleResponse.confidence || 0.85);
       
       // Set responding state
       setIsResponding(true);
       setCurrentMotionState('responding');
       
-      // Play Maya's voice response immediately (non-blocking)
+      // Play Maya's voice response - use backend audio if available
       if (voiceEnabled && mayaReady) {
-        // Start voice playback without waiting to reduce lag
-        mayaSpeak(responseText, {
-          facetId: responseData.primaryFacetId,
-          coherenceLevel: 0.7,
-          motionState: 'responding'
-        }).catch(error => {
-          console.error('Maya voice failed:', error);
-        });
+        if (audioUrl && audioUrl !== 'web-speech-fallback') {
+          // Play the Sesame-generated audio directly
+          try {
+            const audio = new Audio(audioUrl);
+            audio.volume = 0.8;
+            audio.play().catch(error => {
+              console.error('Audio playback failed, falling back to Maya voice:', error);
+              // Fallback to Maya voice synthesis
+              mayaSpeak(responseText, {
+                element,
+                tone: voiceCharacteristics?.tone,
+                masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
+              });
+            });
+          } catch (error) {
+            console.error('Audio creation failed:', error);
+            // Fallback to Maya voice synthesis
+            mayaSpeak(responseText, {
+              element,
+              tone: voiceCharacteristics?.tone,
+              masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
+            });
+          }
+        } else {
+          // Use Maya voice synthesis with element characteristics
+          mayaSpeak(responseText, {
+            element,
+            tone: voiceCharacteristics?.tone,
+            masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
+          }).catch(error => {
+            console.error('Maya voice failed:', error);
+          });
+        }
       }
       
     } catch (error) {
