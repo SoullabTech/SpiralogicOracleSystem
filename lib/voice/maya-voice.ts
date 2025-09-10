@@ -35,13 +35,13 @@ export class MayaVoiceSystem {
 
   constructor(config?: Partial<MayaVoiceConfig>) {
     this.config = {
-      voiceId: 'EXAVITQu4vr4xnSDxMaL', // Aunt Annie default voice ID
+      voiceId: 'EXAVITQu4vr4xnSDxMaL', // Aunt Annie default voice ID - to be replaced with Sesame
       fallbackToWebSpeech: true,
       naturalSettings: {
         rate: 1.0,     // Natural conversational pace
         pitch: 1.0,    // Natural pitch for everyday conversation
         volume: 0.9,   // Clear and present
-        stability: 0.8, // ElevenLabs stability for natural flow
+        stability: 0.8, // For ElevenLabs compatibility
         clarity: 0.9    // High clarity for intelligent conversation
       },
       ...config
@@ -52,7 +52,7 @@ export class MayaVoiceSystem {
       isPaused: false,
       isLoading: false,
       currentText: '',
-      voiceType: 'elevenlabs'
+      voiceType: 'sesame' // Default to Sesame instead of ElevenLabs
     };
 
     // Initialize audio context for better browser compatibility
@@ -483,6 +483,84 @@ export class MayaVoiceSystem {
       webSpeech: 'speechSynthesis' in window,
       audioContext: !!this.audioContext
     };
+  }
+
+  /**
+   * Detect if running on mobile device
+   */
+  private isMobileDevice(): boolean {
+    if (typeof navigator === 'undefined') return false;
+    
+    const userAgent = navigator.userAgent.toLowerCase();
+    const mobileKeywords = ['mobile', 'android', 'iphone', 'ipad', 'ipod', 'blackberry', 'opera mini'];
+    
+    return mobileKeywords.some(keyword => userAgent.includes(keyword)) ||
+           ('ontouchstart' in window) ||
+           (window.innerWidth <= 768);
+  }
+
+  /**
+   * Generate speech with automatic mobile optimization
+   */
+  async generateSpeech(text: string, options?: any): Promise<string> {
+    // Use mobile-optimized version on mobile devices
+    if (this.isMobileDevice()) {
+      const MayaVoiceMobile = await import('./maya-voice-mobile');
+      const mobileVoice = new MayaVoiceMobile.default();
+      return await mobileVoice.generateSpeech(text, options);
+    }
+
+    // Desktop version - use Sesame directly
+    try {
+      const response = await fetch('/api/voice/sesame-tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: this.enhanceTextForSpeech(text),
+          voice: 'maya_natural',
+          ...options,
+          naturalSettings: this.config.naturalSettings
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Sesame TTS failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      return URL.createObjectURL(audioBlob);
+    } catch (error) {
+      console.warn('Sesame TTS failed, falling back to Web Speech:', error);
+      
+      // Fallback to Web Speech API
+      await this.speakWithWebSpeech(text);
+      return 'web-speech-fallback';
+    }
+  }
+
+  /**
+   * Get current state for external components
+   */
+  getState(): VoiceState {
+    return { ...this.state };
+  }
+
+  /**
+   * Cleanup resources
+   */
+  dispose(): void {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio = undefined;
+    }
+    
+    if (this.audioContext?.state !== 'closed') {
+      this.audioContext?.close();
+    }
+    
+    this.listeners = [];
   }
 }
 

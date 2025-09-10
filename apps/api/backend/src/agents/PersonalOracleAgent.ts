@@ -19,6 +19,8 @@ import {
 import { logOracleInsight } from "../utils/oracleLogger";
 import { FileMemoryIntegration } from "../../../../../lib/services/FileMemoryIntegration";
 import type { StandardAPIResponse } from "../utils/sharedUtilities";
+import { applyMasteryVoiceIfAppropriate, type MasteryVoiceContext } from "../config/mayaPromptLoader";
+import { MayaVoiceSystem } from "../../../../../lib/voice/maya-voice";
 
 export interface PersonalOracleQuery {
   input: string;
@@ -34,6 +36,7 @@ export interface PersonalOracleQuery {
 
 export interface PersonalOracleResponse {
   message: string;
+  audio?: string; // Sesame-generated audio URL
   element: string;
   archetype: string;
   confidence: number;
@@ -48,6 +51,11 @@ export interface PersonalOracleResponse {
     relevance: number;
     chunkIndex: number;
   }[];
+  voiceCharacteristics?: {
+    tone: 'energetic' | 'flowing' | 'grounded' | 'clear' | 'contemplative';
+    masteryVoiceApplied: boolean;
+    elementalVoicing: boolean;
+  };
   metadata: {
     sessionId?: string;
     symbols?: string[];
@@ -60,7 +68,15 @@ export interface PersonalOracleResponse {
 
 export interface PersonalOracleSettings {
   name?: string;
-  voice?: string;
+  voice?: {
+    enabled: boolean;
+    autoSpeak: boolean;
+    sesameVoiceId?: string;
+    rate: number;
+    pitch: number;
+    volume: number;
+    elementalVoicing: boolean; // Whether to use element-specific voice characteristics
+  };
   persona?: "warm" | "formal" | "playful";
   preferredElements?: string[];
   interactionStyle?: "brief" | "detailed" | "comprehensive";
@@ -129,6 +145,16 @@ export class PersonalOracleAgent {
         userSettings,
         query.userId,
       );
+
+      // Process voice if enabled
+      if (userSettings.voice?.enabled) {
+        await this.processVoiceResponse(
+          personalizedResponse,
+          targetElement,
+          query.userId,
+          userSettings
+        );
+      }
 
       // Store interaction in memory
       await this.storeInteraction(query, personalizedResponse, requestId);
@@ -227,7 +253,14 @@ export class PersonalOracleAgent {
     // Default settings for new users
     const defaultSettings: PersonalOracleSettings = {
       name: "Oracle",
-      voice: "wise_guide",
+      voice: {
+        enabled: false, // Default to disabled for new users
+        autoSpeak: false,
+        rate: 1.0,
+        pitch: 1.0,
+        volume: 0.9,
+        elementalVoicing: true
+      },
       persona: "warm",
       preferredElements: [],
       interactionStyle: "detailed",
@@ -577,6 +610,122 @@ export class PersonalOracleAgent {
       message +
       `\n\nAs we explore this ${element} energy together, remember that growth comes from embracing both the light and shadow aspects of your journey.`
     );
+  }
+
+  /**
+   * Process voice response generation with Mastery Voice and elemental characteristics
+   */
+  private async processVoiceResponse(
+    response: PersonalOracleResponse,
+    element: string,
+    userId: string,
+    userSettings: PersonalOracleSettings
+  ): Promise<void> {
+    try {
+      logger.info("Processing voice response", { userId, element });
+
+      // Apply Mastery Voice processing if appropriate
+      let processedMessage = response.message;
+      let masteryApplied = false;
+
+      const voiceContext = await this.buildMasteryVoiceContext(userId);
+      if (voiceContext) {
+        const masteryProcessedMessage = applyMasteryVoiceIfAppropriate(
+          response.message,
+          voiceContext
+        );
+        
+        if (masteryProcessedMessage !== response.message) {
+          processedMessage = masteryProcessedMessage;
+          masteryApplied = true;
+          logger.info("Mastery Voice applied", { userId });
+        }
+      }
+
+      // Generate voice with elemental characteristics
+      const voiceSystem = new MayaVoiceSystem();
+      const voiceCharacteristics = this.getElementalVoiceCharacteristics(element);
+      
+      // Generate audio using Sesame
+      const audioUrl = await voiceSystem.generateSpeech(
+        processedMessage,
+        {
+          ...voiceCharacteristics,
+          rate: userSettings.voice?.rate ?? 1.0,
+          pitch: userSettings.voice?.pitch ?? 1.0,
+          volume: userSettings.voice?.volume ?? 0.9
+        }
+      );
+
+      // Update response with voice data
+      response.audio = audioUrl;
+      response.voiceCharacteristics = {
+        tone: voiceCharacteristics.tone,
+        masteryVoiceApplied: masteryApplied,
+        elementalVoicing: userSettings.voice?.elementalVoicing ?? true
+      };
+
+      logger.info("Voice response generated successfully", { 
+        userId, 
+        element, 
+        masteryApplied,
+        hasAudio: !!audioUrl 
+      });
+
+    } catch (error) {
+      logger.error("Voice processing failed", { 
+        userId, 
+        element, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+      // Voice failure should not break the Oracle response
+      // Continue without audio
+    }
+  }
+
+  /**
+   * Build Mastery Voice context from user progression data
+   */
+  private async buildMasteryVoiceContext(userId: string): Promise<MasteryVoiceContext | null> {
+    try {
+      // TODO: Implement actual user progression tracking
+      // For now, return null to skip Mastery Voice processing
+      // In production, this would pull from user stage/trust/engagement metrics
+      
+      // Example implementation would be:
+      // const userProgress = await this.getUserProgression(userId);
+      // return {
+      //   stage: userProgress.stage,
+      //   trustLevel: userProgress.trustLevel,
+      //   engagement: userProgress.engagement,
+      //   confidence: userProgress.confidence,
+      //   sessionCount: userProgress.sessionCount
+      // };
+
+      return null;
+    } catch (error) {
+      logger.error("Failed to build Mastery Voice context", { userId, error });
+      return null;
+    }
+  }
+
+  /**
+   * Get voice characteristics based on elemental energy
+   */
+  private getElementalVoiceCharacteristics(element: string): {
+    tone: 'energetic' | 'flowing' | 'grounded' | 'clear' | 'contemplative';
+    voiceId?: string;
+  } {
+    const characteristics = {
+      fire: { tone: 'energetic' as const },
+      water: { tone: 'flowing' as const },
+      earth: { tone: 'grounded' as const },
+      air: { tone: 'clear' as const },
+      aether: { tone: 'contemplative' as const }
+    };
+
+    return characteristics[element as keyof typeof characteristics] || 
+           characteristics.aether;
   }
 
   // Integration Service Methods for Step 2 API Gateway
