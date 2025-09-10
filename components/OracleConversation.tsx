@@ -89,6 +89,24 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
   }, [userVoiceState]);
 
+  // Handle petal state updates from interactive system
+  const handlePetalUpdate = useCallback((facetId: string, extension: number) => {
+    setCheckIns(prev => ({
+      ...prev,
+      [facetId]: extension
+    }));
+    
+    // Update context with new petal position
+    contextRef.current.checkIns = {
+      ...contextRef.current.checkIns,
+      [facetId]: extension
+    };
+    
+    // Trigger motion state based on interaction
+    setCurrentMotionState('processing');
+    setTimeout(() => setCurrentMotionState('idle'), 500);
+  }, []);
+
   // Listen for petal adjustment events from InteractiveHoloflowerPetals
   useEffect(() => {
     const handlePetalAdjusted = (event: CustomEvent) => {
@@ -264,25 +282,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     // Use the same handler as voice transcript
     handleVoiceTranscript(messageText);
   }, [handleVoiceTranscript]);
-
-
-  // Handle petal state updates from interactive system
-  const handlePetalUpdate = useCallback((facetId: string, extension: number) => {
-    setCheckIns(prev => ({
-      ...prev,
-      [facetId]: extension
-    }));
-    
-    // Update context with new petal position
-    contextRef.current.checkIns = {
-      ...contextRef.current.checkIns,
-      [facetId]: extension
-    };
-    
-    // Trigger motion state based on interaction
-    setCurrentMotionState('processing');
-    setTimeout(() => setCurrentMotionState('idle'), 500);
-  }, []);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {
