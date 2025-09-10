@@ -22,13 +22,13 @@ interface InteractiveHoloflowerProps {
   initialStates?: Record<string, number>;
 }
 
-export function InteractiveHoloflowerPetals({
+export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> = ({
   size = 600,
   onReadingUpdate,
   showInterpretation = true,
   mode = 'guided',
   initialStates = {}
-}: InteractiveHoloflowerProps) {
+}: InteractiveHoloflowerProps) => {
   const { setState, setElements, coherenceLevel } = useMaiaState();
   const [petalStates, setPetalStates] = useState<Record<string, PetalState>>({});
   const [hoveredPetal, setHoveredPetal] = useState<string | null>(null);
@@ -398,6 +398,4 @@ export function InteractiveHoloflowerPetals({
       )}
     </div>
   );
-}
-
-export default InteractiveHoloflowerPetals;
+};
