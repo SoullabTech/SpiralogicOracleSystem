@@ -1,10 +1,7 @@
 // OracleVoicePlayer.tsx - React component for playing Oracle voice responses
 
 import React, { useState, useRef } from "react";
-<<<<<<< HEAD
 import { Analytics } from "./lib/analytics/supabaseAnalytics";
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 interface OracleVoicePlayerProps {
   audioUrl?: string;
@@ -26,7 +23,6 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
   const handlePlay = async () => {
     if (!audioUrl) {
       console.warn("No audio URL available for Oracle response");
-<<<<<<< HEAD
       Analytics.ttsError('unknown', {
         type: 'audio_file_missing',
         message: 'No audio URL provided'
@@ -41,12 +37,6 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
       voice_profile: voiceProfile,
       text_length: text.length
     });
-
-=======
-      return;
-    }
-
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     try {
       setIsLoading(true);
 
@@ -57,7 +47,6 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
       }
     } catch (error) {
       console.error("Error playing Oracle voice:", error);
-<<<<<<< HEAD
       
       // Track playback error
       Analytics.playbackError(getTTSProvider(audioUrl), {
@@ -65,8 +54,6 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
         message: error instanceof Error ? error.message : 'Unknown playback error',
         duration_ms: Date.now() - playbackStartTime
       });
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +68,6 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
 
   const handleEnded = () => {
     setIsPlaying(false);
-<<<<<<< HEAD
     
     // Track successful playback completion
     if (audioRef.current && audioUrl) {
@@ -98,8 +84,6 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
     if (url.includes('sesame') || url.includes('northflank')) return 'Sesame';
     if (url.includes('elevenlabs')) return 'ElevenLabs';
     return 'fallback_failed';
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   };
 
   const getVoiceIcon = () => {
@@ -141,23 +125,14 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
           <button
             onClick={isPlaying ? handlePause : handlePlay}
             disabled={isLoading}
-<<<<<<< HEAD
-            className="flex items-center gap-2 px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200
-                       text-blue-800 rounded-full transition-colors duration-200
-=======
             className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 hover:bg-purple-200
                        text-purple-800 rounded-full transition-colors duration-200
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                        disabled:opacity-50 disabled:cursor-not-allowed"
             title={`${isPlaying ? "Pause" : "Play"} Oracle voice`}
           >
             <span className="text-lg">{getVoiceIcon()}</span>
             {isLoading && (
-<<<<<<< HEAD
-              <div className="animate-spin w-3 h-3 border border-blue-600 border-t-transparent rounded-full" />
-=======
               <div className="animate-spin w-3 h-3 border border-purple-600 border-t-transparent rounded-full" />
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             )}
             {!isLoading && (
               <span className="text-xs font-medium">
@@ -181,13 +156,8 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
 
       {/* Visual feedback for Matrix Oracle */}
       {isPlaying && voiceProfile === "oracle_matrix" && (
-<<<<<<< HEAD
-        <div className="mt-2 text-xs text-blue-700 italic">
-          💬 Audio playback in progress...
-=======
         <div className="mt-2 text-xs text-purple-700 italic">
           🌀 The Oracle speaks with Matrix wisdom...
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         </div>
       )}
     </div>
@@ -206,11 +176,7 @@ export const OracleResponseWithVoice: React.FC<{
   };
 }> = ({ response }) => {
   return (
-<<<<<<< HEAD
-    <div className="oracle-response p-4 bg-gradient-to-r from-blue-50 to-gray-50 rounded-lg">
-=======
-    <div className="oracle-response p-4  from-purple-50 to-blue-50 rounded-lg">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
+    <div className="oracle-response p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
       {/* Oracle text response */}
       <div className="oracle-text mb-3 text-gray-800 leading-relaxed">
         {response.content}
@@ -226,11 +192,7 @@ export const OracleResponseWithVoice: React.FC<{
       {/* Voice synthesis indicator */}
       {response.metadata?.voice_synthesis && (
         <div className="mt-2 text-xs text-gray-500 border-t pt-2">
-<<<<<<< HEAD
-          🎤 Audio synthesis enabled
-=======
           ✨ Enhanced with Matrix Oracle voice synthesis
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         </div>
       )}
     </div>

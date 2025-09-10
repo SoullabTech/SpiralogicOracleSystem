@@ -67,11 +67,7 @@ const HEXAGRAM_DATABASE: Record<string, HexagramReading> = {
     interpretation:
       "The need for learning, teaching, and guidance. Inexperience seeking wisdom.",
     guidance:
-<<<<<<< HEAD
       "Embrace beginner's mind. Seek mentorship. Learn from mistakes with humility.",
-=======
-      "Embrace beginner&apos;s mind. Seek mentorship. Learn from mistakes with humility.",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   },
   "䷄": {
     hexagram: "䷄",
@@ -182,11 +178,7 @@ export function getDailyIChingGuidance(): {
   const hexagram =
     getHexagramByNumber(hexagramNumber) || HEXAGRAM_DATABASE["䷀"];
 
-<<<<<<< HEAD
   const dailyMessage = `Today's energy reflects ${hexagram.name} (${hexagram.keyword}). ${hexagram.interpretation}`;
-=======
-  const dailyMessage = `Today&apos;s energy reflects ${hexagram.name} (${hexagram.keyword}). ${hexagram.interpretation}`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   const action = getActionFromHexagram(hexagram);
 
   return {
@@ -201,11 +193,7 @@ export function getDailyIChingGuidance(): {
  */
 function getActionFromHexagram(hexagram: HexagramReading): string {
   const actionMap: Record<string, string> = {
-<<<<<<< HEAD
     Creative: "Take bold initiative on a project you've been considering.",
-=======
-    Creative: "Take bold initiative on a project you&apos;ve been considering.",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     Receptive: "Practice active listening and support someone in need.",
     "Difficulty at Beginning": "Start something new despite initial obstacles.",
     "Youthful Folly": "Ask questions and seek guidance from a mentor.",
@@ -337,11 +325,7 @@ function adaptHexagramToQuestion(
 function generateTrigramRitual(trigram: any): string {
   const ritualMap: Record<string, string> = {
     Thunder:
-<<<<<<< HEAD
       "Practice energizing movement - yoga, qigong, or dance to channel Thunder's dynamic force.",
-=======
-      "Practice energizing movement - yoga, qigong, or dance to channel Thunder&apos;s dynamic force.",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     Wind: "Engage in breathwork or gentle flow meditation to align with Wind's subtle influence.",
     Fire: "Light a candle and practice visualization to amplify Fire's illuminating consciousness.",
     Earth:

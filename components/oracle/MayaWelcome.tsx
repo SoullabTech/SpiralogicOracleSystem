@@ -72,10 +72,10 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
 
   const generateAnonymousGreeting = () => {
     const greetings = [
-      "Welcome, sacred being. I am Maya, and I sense you carry questions that yearn for dialogue.",
-      "Greetings, fellow traveler. Something has called you here to this threshold of conversation.",
-      "Hello, wise one. I feel the stirring of curiosity in your presence. What seeks expression?",
-      "Welcome to this sacred space. I am here to listen, to reflect, and to explore the mysteries you carry."
+      "What's alive for you right now?",
+      "What wants to emerge today?",
+      "What are you sitting with?",
+      "What needs attention?"
     ];
     
     setGreeting(greetings[Math.floor(Math.random() * greetings.length)]);
@@ -111,7 +111,7 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           className="flex justify-center"
         >
-          <img src="/holoflower.png" alt="Holoflower" className="w-16 h-16" />
+          <img src="/holoflower.svg" alt="Sacred Holoflower" className="w-16 h-16" />
         </motion.div>
       </div>
     );
@@ -138,17 +138,13 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
           }}
           className="flex justify-center"
         >
-          <img src="/holoflower.png" alt="Holoflower" className="w-32 h-32 object-contain" />
+          <img src="/holoflower.svg" alt="Sacred Holoflower" className="w-32 h-32 object-contain" />
         </motion.div>
 
         <div className="space-y-4">
-          <h1 className="text-2xl font-light text-white/90">
-            Dialogue with Maya
-          </h1>
-          
           <div className="max-w-2xl mx-auto">
-            <p className="text-lg text-white/80 leading-relaxed italic">
-              "{greeting}"
+            <p className="text-lg text-white/80 leading-relaxed">
+              {greeting}
             </p>
           </div>
         </div>
@@ -234,15 +230,8 @@ export function MayaWelcome({ onConversationStart }: MayaWelcomeProps) {
           onClick={onConversationStart}
           className="px-8 py-4 bg-gradient-to-r from-[#D4B896] to-[#B69A78] hover:from-[#E5C9A6] hover:to-[#D4B896] text-white rounded-full transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl"
         >
-          {isAuthenticated ? 'Continue Our Dialogue' : 'Begin Conversation'}
+          Begin
         </button>
-        
-        <p className="mt-4 text-white/60 text-sm">
-          {isAuthenticated 
-            ? 'Your reflections will be woven into our ongoing exploration'
-            : 'Speak with Maya and discover the option to save your journey'
-          }
-        </p>
       </motion.div>
     </div>
   );

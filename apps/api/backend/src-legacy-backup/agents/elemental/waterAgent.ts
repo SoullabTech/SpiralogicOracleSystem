@@ -142,15 +142,9 @@ const WaterIntelligence = {
       case "grief_witnessing":
         return `${protocols.healing.grief_honoring}
 
-<<<<<<< HEAD
 I feel the weight of this loss moving through you like deep ocean currents. Grief isn't a problem to solve - it's love that has nowhere to go, and it's sacred.
 
 Your heart is doing exactly what hearts do when they've loved deeply: it's honoring what mattered. This ache is proof of how beautifully you're capable of loving.
-=======
-I feel the weight of this loss moving through you like deep ocean currents. Grief isn&apos;t a problem to solve - it&apos;s love that has nowhere to go, and it&apos;s sacred.
-
-Your heart is doing exactly what hearts do when they've loved deeply: it's honoring what mattered. This ache is proof of how beautifully you&apos;re capable of loving.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 What wants to be said to what you've lost? What gratitude or sorrow is asking to flow through you?`;
 
@@ -159,41 +153,23 @@ What wants to be said to what you've lost? What gratitude or sorrow is asking to
 
 This anger has something important to tell you. It's not your enemy - it's your boundary system trying to protect something precious in you. Anger is often grief in a fierce costume, or love demanding respect.
 
-<<<<<<< HEAD
 Let's not push this feeling away or let it consume you. Instead, what if we listened to its wisdom? What boundary is your anger trying to establish? What part of you is it defending?`;
-=======
-Let&apos;s not push this feeling away or let it consume you. Instead, what if we listened to its wisdom? What boundary is your anger trying to establish? What part of you is it defending?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       case "emotional_grounding":
         return `${protocols.presence.recognition}
 
-<<<<<<< HEAD
 These emotional waters are running swift and deep right now. When we're flooded with feeling, sometimes we need to find our feet on the riverbed beneath the current.
 
 You're not drowning - you're learning to swim in deeper waters than you've known before. This intensity isn't permanent, but the wisdom it's bringing you is.
 
 What's one small thing that helps you feel grounded when the emotional waters rise? Your body knows how to find stability even in the storm.`;
-=======
-These emotional waters are running swift and deep right now. When we&apos;re flooded with feeling, sometimes we need to find our feet on the riverbed beneath the current.
-
-You're not drowning - you're learning to swim in deeper waters than you've known before. This intensity isn't permanent, but the wisdom it's bringing you is.
-
-What&apos;s one small thing that helps you feel grounded when the emotional waters rise? Your body knows how to find stability even in the storm.`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       case "flow_restoration":
         return `${protocols.integration.flow_restoration}
 
-<<<<<<< HEAD
 This numbness isn't absence - it's your system's wise protection after feeling too much for too long. Like winter protects the earth before spring's return, this stillness has purpose.
 
 Feeling is returning in its own timing. You don't have to force the flow - just create gentle conditions for it to emerge. Sometimes the smallest trickle becomes the mightiest river.
-=======
-This numbness isn't absence - it's your system&apos;s wise protection after feeling too much for too long. Like winter protects the earth before spring's return, this stillness has purpose.
-
-Feeling is returning in its own timing. You don&apos;t have to force the flow - just create gentle conditions for it to emerge. Sometimes the smallest trickle becomes the mightiest river.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 What's one tiny feeling you can sense right now? Even the whisper of aliveness is enough to begin.`;
 
@@ -204,22 +180,14 @@ The voice speaking to you so harshly isn't your truth - it's old pain masqueradi
 
 But you get to choose which voice guides you now. What would it feel like to speak to yourself the way you'd speak to a beloved friend in pain?
 
-<<<<<<< HEAD
 You are not your mistakes. You are not your struggles. You are a soul learning to be human - and that's the most courageous thing anyone can do.`;
-=======
-You are not your mistakes. You are not your struggles. You are a soul learning to be human - and that&apos;s the most courageous thing anyone can do.`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       case "boundary_healing":
         return `${protocols.integration.boundary_setting}
 
 Your sensitivity is not weakness - it's a superpower that needs wise boundaries to thrive. Like a river needs banks to flow powerfully, your emotional gifts need containers to serve you well.
 
-<<<<<<< HEAD
 Boundaries aren't walls that keep love out - they're membranes that let love flow while protecting your essential self. You can be openhearted without being defenseless.
-=======
-Boundaries aren&apos;t walls that keep love out - they're membranes that let love flow while protecting your essential self. You can be openhearted without being defenseless.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 What would change if you honored your emotional needs as sacred rather than inconvenient? What boundary wants to be lovingly established?`;
 

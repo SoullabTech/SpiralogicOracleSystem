@@ -111,11 +111,7 @@ export class MasterDivinationAgent extends BaseAgent {
       - Speak with reverence for the mystery
 
       When interpreting:
-<<<<<<< HEAD
       - Connect symbols to the seeker's inner wisdom
-=======
-      - Connect symbols to the seeker&apos;s inner wisdom
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       - Point to archetypal patterns at play
       - Offer practical wisdom alongside mystical insight
       - Honor both the question asked and the deeper question beneath`,
@@ -794,11 +790,7 @@ export class MasterDivinationAgent extends BaseAgent {
     1. Weaves together the messages from all systems
     2. Highlights the synchronicities as meaningful patterns
     3. Reveals the deeper truth being shown across systems
-<<<<<<< HEAD
     4. Speaks to both the question asked and the soul's deeper inquiry
-=======
-    4. Speaks to both the question asked and the soul&apos;s deeper inquiry
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
     Make it profound, cohesive, and illuminating.`;
 

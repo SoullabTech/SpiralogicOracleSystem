@@ -1,5 +1,6 @@
 // Oracle Conversation - Voice-synchronized sacred dialogue
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflowerWithAudio } from './sacred/SacredHoloflowerWithAudio';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
@@ -269,41 +270,71 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black">
       {/* Sacred Holoflower - Always centered */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <SacredHoloflowerWithAudio
-            size={400}
-            activeFacetId={activeFacetId}
-            userCheckIns={checkIns}
-            onPetalClick={handlePetalClick}
-            showLabels={false}
-            interactive={!isProcessing}
-            audioEnabled={true}
-            audioVolume={0.4}
-            motionState={currentMotionState}
-            coherenceLevel={coherenceLevel}
-            coherenceShift={coherenceShift}
-            isListening={isListening}
-            isProcessing={isProcessing}
-            isResponding={isResponding || mayaVoiceState.isPlaying}
-            showBreakthrough={showBreakthrough}
-          />
+        {/* Container with orbital circles and holoflower */}
+        <div className="relative" style={{ width: 400, height: 400 }}>
+          {/* Outer orbital circle */}
+          <div className="absolute inset-0 rounded-full border border-[#D4B896]/20" 
+               style={{ borderStyle: 'dashed' }} />
           
-          {/* Shadow petal overlay */}
-          {shadowPetals.length > 0 && (
-            <div className="absolute inset-0 pointer-events-none">
-              {shadowPetals.map(petalId => (
-                <div
-                  key={petalId}
-                  className="absolute inset-0 bg-black/20 rounded-full"
-                  style={{
-                    clipPath: `polygon(50% 50%, ${Math.random() * 100}% 0%, ${Math.random() * 100}% 100%)`
-                  }}
-                />
-              ))}
-            </div>
-          )}
+          {/* Middle orbital circle */}
+          <div className="absolute inset-8 rounded-full border border-purple-400/20" 
+               style={{ borderStyle: 'dashed' }} />
+          
+          {/* Inner orbital circle */}
+          <div className="absolute inset-16 rounded-full border border-blue-300/20" />
+          
+          {/* Full-size Interactive Layer - for petal clicking/dragging */}
+          <div className="absolute inset-0 pointer-events-auto" style={{ opacity: 0.001 }}>
+            <SacredHoloflowerWithAudio
+              size={400}
+              activeFacetId={activeFacetId}
+              userCheckIns={checkIns}
+              onPetalClick={handlePetalClick}
+              showLabels={false}
+              interactive={!isProcessing}
+              audioEnabled={true}
+              audioVolume={0.4}
+              motionState={currentMotionState}
+              coherenceLevel={coherenceLevel}
+              coherenceShift={coherenceShift}
+              isListening={isListening}
+              isProcessing={isProcessing}
+              isResponding={isResponding || mayaVoiceState.isPlaying}
+              showBreakthrough={showBreakthrough}
+            />
+          </div>
+          
+          {/* Small Visual Holoflower - centered in inner circle */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Image
+              src="/holoflower.svg"
+              alt="Spiralogic Holoflower"
+              width={120}
+              height={120}
+              className="object-contain"
+              priority
+            />
+          </div>
         </div>
+          
       </div>
+      
+      {/* Shadow petal overlay */}
+      {shadowPetals.length > 0 && (
+        <div className="fixed inset-0 pointer-events-none flex items-center justify-center">
+          <div className="relative" style={{ width: 400, height: 400 }}>
+            {shadowPetals.map(petalId => (
+              <div
+                key={petalId}
+                className="absolute inset-0 bg-black/20 rounded-full"
+                style={{
+                  clipPath: `polygon(50% 50%, ${Math.random() * 100}% 0%, ${Math.random() * 100}% 100%)`
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Message overlay - minimal, non-intrusive */}
       <AnimatePresence>

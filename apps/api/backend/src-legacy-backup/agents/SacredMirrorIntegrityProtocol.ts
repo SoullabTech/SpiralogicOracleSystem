@@ -230,11 +230,7 @@ export class SacredMirrorIntegrityProtocol {
         (q) => this.extractQueryTheme(q) === queryTheme,
       );
 
-<<<<<<< HEAD
       // If same theme appears 3+ times in recent queries, it's a loop
-=======
-      // If same theme appears 3+ times in recent queries, it&apos;s a loop
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       return similarQueries.length >= 3;
     } catch (error) {
       logger.error("Error detecting ego loop:", error);
@@ -277,11 +273,7 @@ export class SacredMirrorIntegrityProtocol {
       "always",
       "never",
       "why do i",
-<<<<<<< HEAD
       "i can't seem to",
-=======
-      "i can&apos;t seem to",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "everyone else",
       "not fair",
       "why me",
@@ -424,11 +416,7 @@ export class SacredMirrorIntegrityProtocol {
    */
   private generateEgoLoopChallenge(userPattern: UserPattern): string {
     const loopChallenges = [
-<<<<<<< HEAD
       `You've explored this theme ${userPattern.approval_seeking_frequency} times recently. What might your soul be seeking beyond approval?`,
-=======
-      `You&apos;ve explored this theme ${userPattern.approval_seeking_frequency} times recently. What might your soul be seeking beyond approval?`,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "This pattern echoes The Tower — the collapse before rebirth. Shall we descend together?",
       "I notice this question returning like a wave. What ocean of truth lies beneath these surface currents?",
       "The same door keeps appearing in your inquiry. What would happen if you actually opened it?",
@@ -474,11 +462,7 @@ export class SacredMirrorIntegrityProtocol {
     // Remove excessive agreeability
     let modified = originalContent
       .replace(/absolutely!/g, "perhaps")
-<<<<<<< HEAD
       .replace(/definitely!/g, "it's possible")
-=======
-      .replace(/definitely!/g, "it&apos;s possible")
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       .replace(/amazing!/g, "interesting")
       .replace(/perfect!/g, "worth exploring");
 
@@ -520,11 +504,7 @@ export class SacredMirrorIntegrityProtocol {
    */
   private generateArchetypalPrompt(query: string): string {
     const prompts = [
-<<<<<<< HEAD
       "What would the Hero within you do if fear weren't a factor?",
-=======
-      "What would the Hero within you do if fear weren&apos;t a factor?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "How might the Sage in you approach this with deeper wisdom?",
       "What does the Lover archetype reveal about this situation?",
       "Where is the Magician calling you to transform rather than react?",

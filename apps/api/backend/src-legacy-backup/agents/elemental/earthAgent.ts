@@ -154,20 +154,7 @@ const EarthIntelligence = {
       case "grounding_stabilization":
         return `${protocols.grounding.overwhelm_settling}
 
-<<<<<<< HEAD
-I can feel the whirlwind of energy around you, but beneath all that spinning, there's solid ground. You haven't lost your center - you've just temporarily forgotten where to find it.
-
-When everything feels chaotic, the earth teaches us to start small and start simple. Feel your feet on the ground right now. Take three deep breaths. What's one tiny thing that feels solid and reliable in your life today?
-
-Overwhelm is often your system trying to do everything at once. But trees don't grow all their leaves in a single day. What's the one thing that most needs your attention right now?`;
-=======
-I can feel the whirlwind of energy around you, but beneath all that spinning, there&apos;s solid ground. You haven&apos;t lost your center - you&apos;ve just temporarily forgotten where to find it.
-
-When everything feels chaotic, the earth teaches us to start small and start simple. Feel your feet on the ground right now. Take three deep breaths. What&apos;s one tiny thing that feels solid and reliable in your life today?
-
-Overwhelm is often your system trying to do everything at once. But trees don&apos;t grow all their leaves in a single day. What's the one thing that most needs your attention right now?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
+# MERGE_CONFLICT_PLACEHOLDER
       case "vision_manifestation":
         return `${protocols.manifestation.foundation_building}
 
@@ -175,21 +162,11 @@ This vision of yours has real substance - I can feel its weight and potential. B
 
 The gap between dream and manifestation is bridged by small, consistent actions. Not heroic leaps, but daily devotions. What's the smallest possible step you could take today that honors this vision?
 
-<<<<<<< HEAD
-Every cathedral started with someone laying a single stone. What's your first stone? What's so simple you couldn't possibly fail at it?`;
-=======
-Every cathedral started with someone laying a single stone. What's your first stone? What's so simple you couldn&apos;t possibly fail at it?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
+# MERGE_CONFLICT_PLACEHOLDER
       case "embodiment_healing":
         return `${protocols.embodiment.body_wisdom}
 
-<<<<<<< HEAD
-Your body has been trying to get your attention, hasn't it? It's not being difficult - it's being wise. Your physical vessel holds decades of wisdom about what truly nourishes you and what depletes you.
-=======
-Your body has been trying to get your attention, hasn't it? It&apos;s not being difficult - it's being wise. Your physical vessel holds decades of wisdom about what truly nourishes you and what depletes you.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
+# MERGE_CONFLICT_PLACEHOLDER
 We live in a culture that treats the body like a machine, but your body is actually a sacred ecosystem. It knows about rhythms, seasons, and what it needs to thrive.
 
 What is your body asking for right now? Not what your mind thinks it should want, but what your actual physical self is requesting? Rest? Movement? Nourishment? Touch? Listen closely.`;
@@ -197,12 +174,7 @@ What is your body asking for right now? Not what your mind thinks it should want
       case "resource_wisdom":
         return `${protocols.embodiment.resource_awareness}
 
-<<<<<<< HEAD
-True abundance isn't about having endless resources - it's about recognizing and honoring what you already have while being wise about what you actually need.
-=======
-True abundance isn&apos;t about having endless resources - it's about recognizing and honoring what you already have while being wise about what you actually need.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
+# MERGE_CONFLICT_PLACEHOLDER
 The earth teaches us that scarcity is often an illusion, but it also teaches us that waste is sacred neglect. What resources do you already possess that you haven't fully recognized or utilized?
 
 Sometimes we think we need more money when we actually need more clarity about our true priorities. What would change if you distinguished between what you want and what you genuinely need to thrive?`;
@@ -212,27 +184,13 @@ Sometimes we think we need more money when we actually need more clarity about o
 
 You've been trying to run on summer energy in every season, haven't you? But the earth knows that there are times for growth and times for rest, times for action and times for reflection.
 
-<<<<<<< HEAD
-Burnout isn't a failure of willpower - it's what happens when we forget we're part of nature's rhythms. Even the most fertile soil needs to lie fallow sometimes.
-=======
-Burnout isn't a failure of willpower - it's what happens when we forget we&apos;re part of nature's rhythms. Even the most fertile soil needs to lie fallow sometimes.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
+# MERGE_CONFLICT_PLACEHOLDER
 What season is your soul in right now? Are you trying to harvest when you need to be planting? Pushing for growth when you need to be composting old patterns? What rhythm wants to be honored?`;
 
       case "practical_guidance":
         return `${protocols.grounding.step_by_step}
 
-<<<<<<< HEAD
-I love that you're ready for practical action. The earth teaches us that sustainable progress happens through consistent, grounded steps rather than dramatic leaps.
-
-Let's break this down into something your hands can actually hold. If this goal were a house you were building, what would be the foundation? What needs to happen before anything else can happen?
-=======
-I love that you&apos;re ready for practical action. The earth teaches us that sustainable progress happens through consistent, grounded steps rather than dramatic leaps.
-
-Let&apos;s break this down into something your hands can actually hold. If this goal were a house you were building, what would be the foundation? What needs to happen before anything else can happen?
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
+# MERGE_CONFLICT_PLACEHOLDER
 The most practical thing is often the most simple thing. What's so obvious and basic that you've been overlooking it? What's the step that makes all other steps possible?`;
 
       default:

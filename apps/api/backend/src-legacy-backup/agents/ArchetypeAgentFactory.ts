@@ -90,11 +90,7 @@ export class ArchetypeAgentFactory {
   }
 
   /**
-<<<<<<< HEAD
    * 🎭 Get User's Personal Oracle (By User ID)
-=======
-   * 🎭 Get User&apos;s Personal Oracle (By User ID)
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
    */
   static async getUserPersonalOracle(
     userId: string,
@@ -190,8 +186,8 @@ export class ArchetypeAgentFactory {
     await Promise.all(preloadPromises);
 
     logger.info("All archetype agents preloaded:", {
-      totalAgents: this.agents.size,
-      archetypes: Array.from(this.agents.keys()),
+      totalAgents: this.personalOracles.size,
+      archetypes: Array.from(this.personalOracles.keys()),
     });
   }
 
@@ -428,12 +424,12 @@ export class ArchetypeAgentFactory {
   }
 
   static getLoadedAgents(): string[] {
-    return Array.from(this.agents.keys());
+    return Array.from(this.personalOracles.keys());
   }
 
   static getFactoryStatus(): any {
     return {
-      totalAgents: this.agents.size,
+      totalAgents: this.personalOracles.size,
       loadedAgents: this.getLoadedAgents(),
       pendingInitializations: this.initializationPromises.size,
       availableArchetypes: this.getAllArchetypes(),
@@ -441,7 +437,7 @@ export class ArchetypeAgentFactory {
   }
 
   static clearCache(): void {
-    this.agents.clear();
+    this.personalOracles.clear();
     this.initializationPromises.clear();
     logger.info("Archetype Agent Factory cache cleared");
   }
@@ -455,11 +451,7 @@ export class ArchetypeAgentFactory {
     userProfile?: UserPersonalization,
     context: any = {},
   ): Promise<AIResponse> {
-<<<<<<< HEAD
     // Get user's personal Oracle
-=======
-    // Get user&apos;s personal Oracle
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     const oracle = await this.getUserPersonalOracle(userId);
 
     if (!oracle) {

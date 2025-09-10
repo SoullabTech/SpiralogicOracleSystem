@@ -261,15 +261,9 @@ export class PersonalizedOracleAgent extends BaseAgent {
         case "trauma_indicators":
           return /trauma|abuse|hurt|pain|wounded/i.test(lowerQuery);
         case "overwhelm_signals":
-<<<<<<< HEAD
           return /overwhelmed|too much|can't handle|breaking/i.test(lowerQuery);
         case "spiritual_emergency":
           return /losing myself|can't ground|spinning|dissolving/i.test(
-=======
-          return /overwhelmed|too much|can&apos;t handle|breaking/i.test(lowerQuery);
-        case "spiritual_emergency":
-          return /losing myself|can&apos;t ground|spinning|dissolving/i.test(
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             lowerQuery,
           );
         case "substance_concerns":
@@ -366,11 +360,7 @@ export class PersonalizedOracleAgent extends BaseAgent {
   // Relationship dynamic methods
   private addTrustBuildingElements(response: string): string {
     const trustPhrases = [
-<<<<<<< HEAD
       "I'm here when you're ready",
-=======
-      "I&apos;m here when you&apos;re ready",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "Take your time with this",
       "You're safe to explore this at your own pace",
     ];

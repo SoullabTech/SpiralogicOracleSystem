@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Personal Oracle Consult API Route
-// This route handles personal Oracle consultations with voice synthesis
+// This route proxies requests to the actual PersonalOracleAgent backend
+
+const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:3001';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,21 +17,66 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create a Maya-style response
-    const response = {
-      data: {
-        message: generateMayaResponse(input),
-        element: determineElement(input),
-        confidence: 0.85 + Math.random() * 0.1, // 0.85-0.95
-        voiceCharacteristics: {
-          tone: 'warm',
-          masteryVoiceApplied: true
+    // Call the actual PersonalOracleAgent backend
+    try {
+      const backendResponse = await fetch(`${BACKEND_API_URL}/api/oracle/personal/query`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        audio: 'web-speech-fallback' // Fallback to browser speech synthesis
-      }
-    };
+        body: JSON.stringify({
+          userId: userId || 'anonymous',
+          input,
+          context: {
+            ...context,
+            sessionId,
+            timestamp: new Date().toISOString()
+          }
+        })
+      });
 
-    return NextResponse.json(response);
+      if (!backendResponse.ok) {
+        throw new Error(`Backend API error: ${backendResponse.status}`);
+      }
+
+      const backendData = await backendResponse.json();
+      
+      // Transform backend response to match frontend expectations
+      const response = {
+        data: {
+          message: backendData.message || backendData.text || generateMayaResponse(input),
+          element: backendData.element || backendData.facet || determineElement(input),
+          confidence: backendData.confidence || 0.85,
+          voiceCharacteristics: backendData.voiceCharacteristics || {
+            tone: 'warm',
+            masteryVoiceApplied: true
+          },
+          audio: backendData.audio || 'web-speech-fallback',
+          // Include any additional backend data
+          ...backendData
+        }
+      };
+
+      return NextResponse.json(response);
+    } catch (backendError) {
+      console.error('Backend API connection failed:', backendError);
+      
+      // Fallback to intelligent local response if backend is unavailable
+      const response = {
+        data: {
+          message: generateMayaResponse(input),
+          element: determineElement(input),
+          confidence: 0.85 + Math.random() * 0.1,
+          voiceCharacteristics: {
+            tone: 'warm',
+            masteryVoiceApplied: true
+          },
+          audio: 'web-speech-fallback'
+        }
+      };
+
+      return NextResponse.json(response);
+    }
   } catch (error) {
     console.error('Oracle API error:', error);
     return NextResponse.json(

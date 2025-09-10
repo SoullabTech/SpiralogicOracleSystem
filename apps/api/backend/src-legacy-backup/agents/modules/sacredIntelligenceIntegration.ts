@@ -393,11 +393,7 @@ export class SacredIntelligenceIntegration {
 
     if (morphic && morphic.archetypal_resonance.length > 0) {
       const primaryArchetype = morphic.archetypal_resonance[0];
-<<<<<<< HEAD
       return `Your ${primaryArchetype.archetype} journey contributes to humanity's evolution toward ${noosphere?.species_intelligence.emerging_capacities[0] || "expanded consciousness"}`;
-=======
-      return `Your ${primaryArchetype.archetype} journey contributes to humanity&apos;s evolution toward ${noosphere?.species_intelligence.emerging_capacities[0] || "expanded consciousness"}`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
 
     return "Your transformation ripples through the collective field, serving the awakening of all.";

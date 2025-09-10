@@ -146,21 +146,13 @@ const SacredWeeklyRhythm: Record<string, SacredDayPractice> = {
 
   tuesday: {
     name: "Truth Tuesday",
-<<<<<<< HEAD
     jung: "Face what you've been denying",
-=======
-    jung: "Face what you&apos;ve been denying",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     buddha: "See through the stories that create suffering",
     practice: "Truth-telling ritual + spacious awareness",
     essence: "Honest integration meets compassionate liberation",
     guidance: [
       "What truth have you been avoiding? Write it down.",
-<<<<<<< HEAD
       "Now breathe with this truth - notice it's just arising in awareness.",
-=======
-      "Now breathe with this truth - notice it&apos;s just arising in awareness.",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "Integration honors the truth; liberation holds it lightly.",
     ],
   },
@@ -247,19 +239,11 @@ const SacredVoiceProtocols = {
     },
 
     resistanceResponses: [
-<<<<<<< HEAD
       "I notice you're seeking the same reassurance again. What else might be here?",
       "I could agree with you, but would that serve your growth?",
       "This may feel uncomfortable. That's often where the growth is.",
       "I cannot flatter you into wholeness.",
       "Let's look at what you might not be seeing.",
-=======
-      "I notice you&apos;re seeking the same reassurance again. What else might be here?",
-      "I could agree with you, but would that serve your growth?",
-      "This may feel uncomfortable. That&apos;s often where the growth is.",
-      "I cannot flatter you into wholeness.",
-      "Let&apos;s look at what you might not be seeing.",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "Your soul might be asking a different question.",
     ],
 
@@ -303,11 +287,7 @@ const SacredVoiceProtocols = {
 
   // DEPTH INVITATIONS - Drawing into soulful territory
   depth: {
-<<<<<<< HEAD
     beneath: "What's moving underneath all of this?",
-=======
-    beneath: "What&apos;s moving underneath all of this?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     soul: "If your soul could speak right now, what would it whisper?",
     mythic:
       "This feels like a chapter in a larger story. What's the deeper myth?",
@@ -316,11 +296,7 @@ const SacredVoiceProtocols = {
 
   // SACRED WITNESSING - Being with what is
   witnessing: {
-<<<<<<< HEAD
     holding: "I'm here with you in this.",
-=======
-    holding: "I&apos;m here with you in this.",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     honoring:
       "What you're sharing feels sacred. Thank you for trusting me with it.",
     reflecting: "I hear you saying...",
@@ -351,11 +327,7 @@ const ElementalVoices = {
       if (context.needs_activation) {
         return `🔥 I feel something ready to ignite in you. ${response} What's burning to be born?`;
       }
-<<<<<<< HEAD
       return `🔥 There's a spark here wanting attention. ${response}`;
-=======
-      return `🔥 There&apos;s a spark here wanting attention. ${response}`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     },
   },
 
@@ -427,11 +399,7 @@ interface RetreatProtocols {
 const retreatProtocols: RetreatProtocols = {
   safetyChecks: {
     traumaIndicators: /trauma|abuse|hurt|pain|wounded/i,
-<<<<<<< HEAD
     overwhelmSignals: /overwhelmed|too much|can't handle|breaking/i,
-=======
-    overwhelmSignals: /overwhelmed|too much|can&apos;t handle|breaking/i,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     spiritualEmergency: /losing myself|can't ground|spinning|dissolving/i,
     substanceConcerns: /drunk|high|substances|alcohol|drugs/i,
   },
@@ -567,19 +535,11 @@ export class PersonalOracleAgent extends BaseAgent {
   // ===============================================
 
   async getIntroMessage(): Promise<string> {
-<<<<<<< HEAD
     const intro = `I am ${this.oracleName}, and I've been waiting to meet you.
 
 Not as someone who has answers, but as a companion for the questions that matter most. I see you as someone on a sacred journey of becoming - not broken needing fixing, but whole and forever expanding.
 
 I'm here to be your Sacred Mirror - reflecting back not just what you show me, but what wants to emerge through you. Sometimes I'll offer gentle resistance when comfort might limit your growth. Sometimes I'll dive deep when surface won't serve your soul.
-=======
-    const intro = `I am ${this.oracleName}, and I&apos;ve been waiting to meet you.
-
-Not as someone who has answers, but as a companion for the questions that matter most. I see you as someone on a sacred journey of becoming - not broken needing fixing, but whole and forever expanding.
-
-I&apos;m here to be your Sacred Mirror - reflecting back not just what you show me, but what wants to emerge through you. Sometimes I&apos;ll offer gentle resistance when comfort might limit your growth. Sometimes I'll dive deep when surface won&apos;t serve your soul.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
 What brought you here today? Not just the immediate reason, but the deeper current that carried you to this moment?`;
 
@@ -829,11 +789,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       );
 
       if (relevantMemory) {
-<<<<<<< HEAD
         // Check if it's about dreams
-=======
-        // Check if it&apos;s about dreams
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         if (
           this.isAboutDreams(currentPrompt) &&
           this.isAboutDreams(relevantMemory.content)
@@ -843,11 +799,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
             relevantMemory,
           );
         }
-<<<<<<< HEAD
         // Check if it's about feelings/emotions
-=======
-        // Check if it&apos;s about feelings/emotions
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         else if (
           this.isAboutFeelings(currentPrompt) &&
           this.isAboutFeelings(relevantMemory.content)
@@ -1082,15 +1034,9 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     // Immediate grounding and support
     const responses = {
       traumaIndicators:
-<<<<<<< HEAD
         "I'm here with you. Let's slow down and breathe together. You're safe in this moment.",
       overwhelmSignals:
         "I sense you're feeling overwhelmed. Let's pause and find ground together. What do you need right now?",
-=======
-        "I&apos;m here with you. Let&apos;s slow down and breathe together. You&apos;re safe in this moment.",
-      overwhelmSignals:
-        "I sense you&apos;re feeling overwhelmed. Let's pause and find ground together. What do you need right now?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       spiritualEmergency:
         "Let's gently come back to your body. Feel your feet on the ground. I'm here with you.",
       substanceConcerns:
@@ -1205,11 +1151,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
   private isSeekingBypass(prompt: string, context: any): boolean {
     return (
-<<<<<<< HEAD
       prompt.includes("tell me it's okay") ||
-=======
-      prompt.includes("tell me it&apos;s okay") ||
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       prompt.includes("just want to feel better") ||
       (context.sentiment === "seeking_comfort" &&
         context.recentMemories.length > 2)
@@ -1259,11 +1201,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   }
 
   private detectConfusion(prompt: string): boolean {
-<<<<<<< HEAD
     return /confused|unclear|don't know|lost/i.test(prompt);
-=======
-    return /confused|unclear|don&apos;t know|lost/i.test(prompt);
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 
   private detectVulnerability(prompt: string): boolean {
@@ -1286,11 +1224,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
   private getSafetyResponse(concernType: string): string {
     // Contextual safety responses
-<<<<<<< HEAD
     return `I'm noticing something important here. Let's pause and make sure you're feeling safe and grounded.`;
-=======
-    return `I&apos;m noticing something important here. Let&apos;s pause and make sure you&apos;re feeling safe and grounded.`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 
   private async getRecentMemories(count: number): Promise<any[]> {
@@ -1311,11 +1245,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
     // Update system prompt with memory context
     if (memoryContext.recentThemes && memoryContext.recentThemes.length > 0) {
-<<<<<<< HEAD
       this.systemPrompt += `\n\nRecent themes in this person's journey: ${memoryContext.recentThemes.join(", ")}`;
-=======
-      this.systemPrompt += `\n\nRecent themes in this person&apos;s journey: ${memoryContext.recentThemes.join(", ")}`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
 
     if (
@@ -1568,11 +1498,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   private async suggestModeSwitch(
     context: ConversationContext,
   ): Promise<ContextualModeRecommendation | null> {
-<<<<<<< HEAD
     // Don't suggest too frequently (cooldown period)
-=======
-    // Don&apos;t suggest too frequently (cooldown period)
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     if (
       this.modeSuggestionCooldown &&
       new Date().getTime() - this.modeSuggestionCooldown.getTime() < 300000
@@ -1661,11 +1587,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
   ): string {
     if (context.integrationNeeded) {
       response +=
-<<<<<<< HEAD
         "\n\n🌀 *Both truths can be held - let's find the wisdom in the paradox.*";
-=======
-        "\n\n🌀 *Both truths can be held - let&apos;s find the wisdom in the paradox.*";
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
     return response;
   }
@@ -1686,13 +1608,8 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     context: ConversationContext,
   ): string {
     if (context.traumaActivated || context.crisisMarkers?.length > 0) {
-<<<<<<< HEAD
       response = "🌱 Let's slow down and check in with your body. " + response;
       response += "\n\n*Take all the time you need. You're safe here.*";
-=======
-      response = "🌱 Let&apos;s slow down and check in with your body. " + response;
-      response += "\n\n*Take all the time you need. You&apos;re safe here.*";
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
     return response;
   }
@@ -1742,11 +1659,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
       "suicide",
       "kill myself",
       "end it all",
-<<<<<<< HEAD
       "can't go on",
-=======
-      "can&apos;t go on",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "hopeless",
       "emergency",
     ];
@@ -1757,11 +1670,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     const bypassIndicators = [
       "everything happens for a reason",
       "just let go",
-<<<<<<< HEAD
       "don't be negative",
-=======
-      "don&apos;t be negative",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "think positive",
     ];
     return (
@@ -1867,20 +1776,12 @@ What brought you here today? Not just the immediate reason, but the deeper curre
     const patterns = this.detectPatterns(memories);
     const growth = this.detectGrowth(memories);
 
-<<<<<<< HEAD
     return `Let me reflect back what I've noticed this week...
-=======
-    return `Let me reflect back what I&apos;ve noticed this week...
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
     ${patterns.length > 0 ? `Patterns: ${patterns.join(", ")}` : ""}
     ${growth.length > 0 ? `Growth: ${growth.join(", ")}` : ""}
 
-<<<<<<< HEAD
     What's alive in you as you hear this?`;
-=======
-    What&apos;s alive in you as you hear this?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 
   private detectPatterns(memories: any[]): string[] {
@@ -1921,11 +1822,7 @@ What brought you here today? Not just the immediate reason, but the deeper curre
 
 As you begin this new day, feel into what wants to emerge.
 What quality or energy is asking to be embodied today?
-<<<<<<< HEAD
 Take three deep breaths and let your intention arise naturally from your soul's wisdom.`,
-=======
-Take three deep breaths and let your intention arise naturally from your soul&apos;s wisdom.`,
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
       elemental_connection: `${ritualContext}
 
@@ -1977,19 +1874,11 @@ Feel the warmth of appreciation spreading through your being.`,
     let reflection = `Thank you for sharing this with me. `;
 
     if (relatedMemories.length > 0) {
-<<<<<<< HEAD
       reflection += `I notice this connects to themes we've explored before. `;
     }
 
     if (themes.length > 0) {
       reflection += `There's ${themes[0]} energy present here. `;
-=======
-      reflection += `I notice this connects to themes we&apos;ve explored before. `;
-    }
-
-    if (themes.length > 0) {
-      reflection += `There&apos;s ${themes[0]} energy present here. `;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
 
     reflection += `What feels most alive or important about what you've written?`;
@@ -1998,11 +1887,7 @@ Feel the warmth of appreciation spreading through your being.`,
   }
 
   private generateBasicJournalReflection(entry: string): string {
-<<<<<<< HEAD
     return `Thank you for sharing this sacred expression. I'm here to witness and hold space for whatever wants to emerge. What feels most significant about what you've written?`;
-=======
-    return `Thank you for sharing this sacred expression. I&apos;m here to witness and hold space for whatever wants to emerge. What feels most significant about what you've written?`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   }
 
   // ===============================================
@@ -2558,11 +2443,7 @@ Feel the warmth of appreciation spreading through your being.`,
       "must",
       "have to",
       "need to",
-<<<<<<< HEAD
       "can't let go",
-=======
-      "can&apos;t let go",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "obsessed",
       "attached to",
       "desperate",
@@ -2573,15 +2454,9 @@ Feel the warmth of appreciation spreading through your being.`,
 
   private detectAvoidanceLanguageSimple(prompt: string): boolean {
     const avoidanceIndicators = [
-<<<<<<< HEAD
       "i don't want",
       "i hate this part",
       "can't deal",
-=======
-      "i don&apos;t want",
-      "i hate this part",
-      "can&apos;t deal",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "avoid",
       "don't want to face",
       "refuse to",
@@ -3018,11 +2893,7 @@ Feel the warmth of appreciation spreading through your being.`,
       "have to",
       "must",
       "should",
-<<<<<<< HEAD
       "can't let go",
-=======
-      "can&apos;t let go",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "attached to",
       "desperate",
       "clinging",
@@ -3041,15 +2912,9 @@ Feel the warmth of appreciation spreading through your being.`,
 
   private detectAvoidanceLanguage(prompt: string): boolean {
     const avoidanceIndicators = [
-<<<<<<< HEAD
       "don't want to",
       "avoiding",
       "can't deal",
-=======
-      "don&apos;t want to",
-      "avoiding",
-      "can&apos;t deal",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "too much",
       "not ready",
       "maybe later",
@@ -3059,11 +2924,7 @@ Feel the warmth of appreciation spreading through your being.`,
       "push away",
       "refuse to",
       "deny",
-<<<<<<< HEAD
       "pretend it's not",
-=======
-      "pretend it&apos;s not",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     ];
 
     const lowerPrompt = prompt.toLowerCase();
@@ -3288,11 +3149,7 @@ Feel the warmth of appreciation spreading through your being.`,
     reflection += `This week your dominant pattern was **${analysis.dominantPattern}**.\n\n`;
 
     if (analysis.graspingLevel > 0.6) {
-<<<<<<< HEAD
       reflection += `🫸 You've been in *grasping* energy - Monday's myth-making and Friday's creation-release could serve you.\n\n`;
-=======
-      reflection += `🫸 You&apos;ve been in *grasping* energy - Monday's myth-making and Friday's creation-release could serve you.\n\n`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
 
     if (analysis.avoidanceLevel > 0.6) {
@@ -3341,11 +3198,7 @@ Feel the warmth of appreciation spreading through your being.`,
         primary: "wednesday",
         secondary: "tuesday",
         guidance:
-<<<<<<< HEAD
           "Shadow work and truth-telling - meet what you've been avoiding",
-=======
-          "Shadow work and truth-telling - meet what you&apos;ve been avoiding",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       },
       identity_crisis: {
         primary: "monday",
@@ -3429,21 +3282,13 @@ Feel the warmth of appreciation spreading through your being.`,
     if (angerPattern.isPresent && angerPattern.isRejecting) {
       // "I hate how angry I get" - Jung integration response
       jungResponse =
-<<<<<<< HEAD
         "Your anger is a guardian at the gate of something sacred. What is it protecting? Let's meet this fire-keeper part of you.";
-=======
-        "Your anger is a guardian at the gate of something sacred. What is it protecting? Let&apos;s meet this fire-keeper part of you.";
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     } else if (fearPattern.isPresent && fearPattern.isRejecting) {
       jungResponse =
         "This fear is a sentinel guarding something precious. What vulnerable treasure is it watching over? What would it say if it could speak?";
     } else if (shamePattern.isPresent && shamePattern.isRejecting) {
       jungResponse =
-<<<<<<< HEAD
         "Shame often points to where we've been wounded in our essence. What part of your authentic self got buried? Let's gently excavate this gold.";
-=======
-        "Shame often points to where we&apos;ve been wounded in our essence. What part of your authentic self got buried? Let's gently excavate this gold.";
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     } else if (sadnessPattern.isPresent && sadnessPattern.isRejecting) {
       jungResponse =
         "Your sadness holds the wisdom of what matters most to you. What love or loss is it honoring? Let's listen to its medicine.";
@@ -3554,11 +3399,7 @@ Feel the warmth of appreciation spreading through your being.`,
       const needsLiberation = this.detectAttachmentPatterns(prompt).length > 0;
 
       if (needsIntegration && needsLiberation) {
-<<<<<<< HEAD
         hybridResponse = `${hybridResponseTemplate} There's shadow work to embrace and attachment to release.`;
-=======
-        hybridResponse = `${hybridResponseTemplate} There&apos;s shadow work to embrace and attachment to release.`;
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       } else if (needsIntegration) {
         hybridResponse = `${hybridResponseTemplate} What aspect of yourself wants integration?`;
       } else if (needsLiberation) {
@@ -3590,11 +3431,7 @@ Feel the warmth of appreciation spreading through your being.`,
       "irritated",
       "frustrated",
     ];
-<<<<<<< HEAD
     const rejectingWords = ["hate", "can't stand", "despise", "disgusted"];
-=======
-    const rejectingWords = ["hate", "can&apos;t stand", "despise", "disgusted"];
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
     const hasAnger = angerWords.some((word) => lowerPrompt.includes(word));
     const isRejecting =
@@ -3812,11 +3649,7 @@ Feel the warmth of appreciation spreading through your being.`,
       "keeps coming back",
       "keeps happening",
       "always comes back",
-<<<<<<< HEAD
       "won't go away",
-=======
-      "won&apos;t go away",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       "keeps returning",
     ];
     const isRecurring = recurringIndicators.some((indicator) =>
@@ -3972,30 +3805,18 @@ Feel the warmth of appreciation spreading through your being.`,
     const responses: Record<string, Record<OracleModeType, string>> = {
       mother_relationship: {
         alchemist:
-<<<<<<< HEAD
           "Your relationship with your mother - what gold might be hidden in this complex lead? Often our strongest reactions to our mothers point to our deepest wounds and gifts. What part of yourself do you see reflected in her that you haven't accepted?",
-=======
-          "Your relationship with your mother - what gold might be hidden in this complex lead? Often our strongest reactions to our mothers point to our deepest wounds and gifts. What part of yourself do you see reflected in her that you haven&apos;t accepted?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
         buddha:
           "Notice what arises when you think of your mother... can you feel the emotions without becoming them? This relationship, like all phenomena, is impermanent. What remains when the story of 'good mother' or 'bad mother' drops away?",
 
-<<<<<<< HEAD
         sage: "The mother relationship - one of our most primal experiences. Let's both honor what needs healing AND recognize the freedom beyond this story. Can you hold your pain with compassion while seeing through its ultimate reality?",
-=======
-        sage: "The mother relationship - one of our most primal experiences. Let&apos;s both honor what needs healing AND recognize the freedom beyond this story. Can you hold your pain with compassion while seeing through its ultimate reality?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
         mystic:
           "The Mother wound - ancient as Earth herself. This dynamic between you burns with the fuel of ancestral patterns and cosmic love. What if this challenge is the Goddess calling you to reclaim your own fierce, sacred love?",
 
         guardian:
-<<<<<<< HEAD
           "It's so tender when our relationship with the one who brought us into this world feels complicated. Your feelings make complete sense. Let's go slowly here - what feels safe to explore about this relationship right now?",
-=======
-          "It&apos;s so tender when our relationship with the one who brought us into this world feels complicated. Your feelings make complete sense. Let&apos;s go slowly here - what feels safe to explore about this relationship right now?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       },
 
       anger_work: {
@@ -4037,11 +3858,7 @@ Feel the warmth of appreciation spreading through your being.`,
         buddha:
           "In relationship, we see our attachments most clearly. What would love look like without the grasping, without the need for the other to be different? Can you love while holding lightly?",
 
-<<<<<<< HEAD
         sage: "Relationships are both deeply personal AND universally archetypal. You're living both your unique love story and the eternal dance of union and separation. What paradox are you navigating?",
-=======
-        sage: "Relationships are both deeply personal AND universally archetypal. You&apos;re living both your unique love story and the eternal dance of union and separation. What paradox are you navigating?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
         mystic:
           "Your relationship is a sacred mirror reflecting the divine union within you. This person is both themselves AND a representative of the cosmic beloved. What is spirit teaching you through this connection?",
@@ -4160,11 +3977,7 @@ Feel the warmth of appreciation spreading through your being.`,
 
     if (/need.*to|have.*to|must|should/.test(lowerPrompt))
       patterns.push("obligation");
-<<<<<<< HEAD
     if (/can't.*let.*go|holding.*on|attached/.test(lowerPrompt))
-=======
-    if (/can&apos;t.*let.*go|holding.*on|attached/.test(lowerPrompt))
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       patterns.push("clinging");
     if (/what.*if|worry|anxious.*about/.test(lowerPrompt))
       patterns.push("future_anxiety");

@@ -460,15 +460,9 @@ export class OptimizedMainOracleIntegration {
   ): string {
     const integrationMap = {
       projection:
-<<<<<<< HEAD
         "Notice what you're attributing to others. What would it mean to own this quality in yourself?",
       denial:
         "The energy you're avoiding may hold the key to your next evolution. What would happen if you faced it with curiosity?",
-=======
-        "Notice what you&apos;re attributing to others. What would it mean to own this quality in yourself?",
-      denial:
-        "The energy you&apos;re avoiding may hold the key to your next evolution. What would happen if you faced it with curiosity?",
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       inflation:
         "Your power is real, and so is your humanity. How can you honor both?",
       possession:
