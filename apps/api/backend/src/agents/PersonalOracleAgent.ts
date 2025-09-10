@@ -19,7 +19,7 @@ import {
 import { logOracleInsight } from "../utils/oracleLogger";
 import { FileMemoryIntegration } from "../../../../../lib/services/FileMemoryIntegration";
 import type { StandardAPIResponse } from "../utils/sharedUtilities";
-import { applyMasteryVoiceIfAppropriate, type MasteryVoiceContext } from "../config/mayaPromptLoader";
+import { applyMasteryVoiceIfAppropriate, type MasteryVoiceContext, loadMayaCanonicalPrompt, getMayaElementalPrompt } from "../config/mayaPromptLoader";
 import { MayaVoiceSystem } from "../../../../../lib/voice/maya-voice";
 
 export interface PersonalOracleQuery {
@@ -344,14 +344,23 @@ export class PersonalOracleAgent {
     memories: any[],
     fileContexts?: any[],
   ): Promise<PersonalOracleResponse> {
-    // Get agent from registry
-    const agent = this.agentRegistry.createAgent(element);
+    // Use Maya's canonical prompt with elemental attunement
+    const mayaPrompt = getMayaElementalPrompt(element);
 
-    // Prepare context with file knowledge
+    // Prepare context with file knowledge and memories
     let contextualInput = query.input;
+    let contextPrompt = '';
+
+    // Add memory context
+    if (memories && memories.length > 0) {
+      const recentMemories = memories.slice(0, 3).map(m => `- ${m.content}`).join('\n');
+      contextPrompt += `\nRecent conversation context:\n${recentMemories}\n`;
+    }
+
+    // Add file context
     if (fileContexts && fileContexts.length > 0) {
       const fileContextPrompt = this.fileMemory.formatFileContextForPrompt(fileContexts);
-      contextualInput = query.input + fileContextPrompt;
+      contextPrompt += fileContextPrompt;
       
       logger.info("File contexts integrated into query", {
         userId: query.userId,
@@ -359,27 +368,102 @@ export class PersonalOracleAgent {
       });
     }
 
-    // Call the elemental agent with enhanced context
-    const response = await agent.processQuery(contextualInput);
+    // Create the complete prompt for Maya
+    const fullPrompt = `${mayaPrompt}\n\n## Current Context\n${contextPrompt}\n\n## User Message\n${query.input}\n\n## Maya's Response\nRespond as Maya, using your sacred mirror approach with ${element} elemental attunement:`;
 
-    // Generate citations from file contexts
-    const citations = this.fileMemory.formatCitationMetadata(fileContexts);
+    try {
+      // Call OpenAI/Claude API directly with Maya's prompt
+      const response = await this.callLLMWithMayaPrompt(fullPrompt);
 
-    return {
-      message: response.content,
-      element,
-      archetype: response.metadata?.archetype || "Unknown",
-      confidence: response.confidence,
-      citations,
-      metadata: {
-        sessionId: query.sessionId,
-        symbols: response.metadata?.symbols || [],
-        phase: response.metadata?.phase,
-        recommendations: response.metadata?.reflections || [],
-        nextSteps: [],
-        fileContextsUsed: fileContexts.length,
-      },
+      // Generate citations from file contexts
+      const citations = this.fileMemory.formatCitationMetadata(fileContexts);
+
+      return {
+        message: response,
+        element,
+        archetype: this.getElementArchetype(element),
+        confidence: 0.85, // High confidence for Maya responses
+        citations,
+        metadata: {
+          sessionId: query.sessionId,
+          symbols: [], // TODO: Extract symbols from response
+          phase: element,
+          recommendations: [],
+          nextSteps: [],
+          fileContextsUsed: fileContexts?.length || 0,
+        },
+      };
+    } catch (error) {
+      logger.error("Maya response generation failed", { error, element, userId: query.userId });
+      
+      // Fallback to a simple Maya-style response
+      return {
+        message: "I'm here with you. Tell me what's on your mind right now?",
+        element,
+        archetype: this.getElementArchetype(element),
+        confidence: 0.5,
+        citations: [],
+        metadata: {
+          sessionId: query.sessionId,
+          symbols: [],
+          phase: element,
+          recommendations: [],
+          nextSteps: [],
+          fileContextsUsed: 0,
+        },
+      };
+    }
+  }
+
+  /**
+   * Call LLM with Maya's canonical prompt
+   */
+  private async callLLMWithMayaPrompt(prompt: string): Promise<string> {
+    // TODO: Replace with your actual LLM API call (OpenAI, Claude, etc.)
+    // For now, using a mock response that follows Maya's style
+    
+    try {
+      // Example using OpenAI API (replace with your actual implementation)
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [{ role: 'system', content: prompt }],
+          max_tokens: 500,
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`LLM API call failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0]?.message?.content || "I'm here with you. What's on your mind?";
+    } catch (error) {
+      logger.error("LLM API call failed", { error });
+      // Fallback to Maya-style response
+      return "I'm here with you. What would you like to explore together?";
+    }
+  }
+
+  /**
+   * Get archetype for element
+   */
+  private getElementArchetype(element: string): string {
+    const archetypes = {
+      fire: 'The Catalyst',
+      water: 'The Flow',
+      earth: 'The Foundation', 
+      air: 'The Messenger',
+      aether: 'The Mystery'
     };
+    
+    return archetypes[element as keyof typeof archetypes] || 'The Guide';
   }
 
   /**
