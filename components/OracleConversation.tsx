@@ -318,7 +318,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               {messages.slice(-1).map(message => (
                 <div key={message.id} className="space-y-2">
                   <div className="text-xs text-purple-300 uppercase tracking-wider">
-                    {message.role === 'user' ? 'You' : 'Oracle'}
+                    {message.role === 'user' ? 'You' : 'Maya'}
                   </div>
                   <div className="text-sm leading-relaxed">
                     {message.text}
