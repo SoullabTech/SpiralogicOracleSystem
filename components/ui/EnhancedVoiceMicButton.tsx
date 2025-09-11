@@ -125,13 +125,13 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       setIsProcessing(true);
       onTranscript?.(finalTranscriptRef.current.trim());
       
-      // Clear transcripts after sending
+      // Clear transcripts after sending - increased delay to prevent race condition
       setTimeout(() => {
         setTranscript('');
         setInterimTranscript('');
         finalTranscriptRef.current = '';
         setIsProcessing(false);
-      }, 500);
+      }, 1500); // Increased from 500ms to 1.5s to ensure transcript is fully processed
     }
     
     // Clear timer

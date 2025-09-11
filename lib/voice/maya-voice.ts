@@ -39,9 +39,9 @@ export class MayaVoiceSystem {
       elevenLabsApiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
       fallbackToWebSpeech: true,
       naturalSettings: {
-        rate: 1.0,     // Natural conversational pace
-        pitch: 1.0,    // Natural pitch for everyday conversation
-        volume: 0.9,   // Clear and present
+        rate: 0.95,    // Slightly slower for naturalness
+        pitch: 1.05,   // Slightly higher for warmth  
+        volume: 0.85,  // Softer and more comfortable
         stability: 0.8, // For ElevenLabs compatibility
         clarity: 0.9    // High clarity for intelligent conversation
       },
@@ -233,9 +233,10 @@ export class MayaVoiceSystem {
         const utterance = new SpeechSynthesisUtterance(this.enhanceTextForSpeech(text));
         
         // Configure Maya's natural voice characteristics
-        utterance.rate = this.config.naturalSettings.rate;
-        utterance.pitch = this.config.naturalSettings.pitch;
-        utterance.volume = this.config.naturalSettings.volume;
+        // Optimize for naturalness - override config for better quality
+        utterance.rate = 0.95; // Slightly slower for better clarity
+        utterance.pitch = 1.05; // Slightly higher pitch for warmth
+        utterance.volume = 0.85; // Softer for comfort
         utterance.lang = 'en-US';
 
         // Try to select the best available female voice
@@ -292,35 +293,50 @@ export class MayaVoiceSystem {
 
   // Select the best available voice for Maya
   private selectBestVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
-    // Priority order for Maya's voice
-    const voicePriority = [
-      'Samantha',       // macOS - warm, clear
-      'Victoria',       // macOS - sophisticated
-      'Allison',        // macOS - pleasant
-      'Ava',           // macOS - modern
-      'Karen',         // Windows - clear
-      'Hazel',         // Windows - warm
-      'Zira',          // Windows - professional
-      'Google UK English Female', // Chrome
-      'Microsoft Aria Online',     // Edge
-    ];
-
-    // First, try to find exact matches
-    for (const preferred of voicePriority) {
-      const voice = voices.find(v => v.name === preferred);
-      if (voice) return voice;
+    if (voices.length === 0) return null;
+    
+    // Score voices based on quality factors
+    const scoredVoices = voices.map(voice => {
+      let score = 0;
+      
+      // Strongly prefer local voices (much better quality)
+      if (voice.localService) score += 100;
+      
+      // Prefer English voices
+      if (voice.lang.startsWith('en')) score += 50;
+      
+      // Prefer known high-quality voices
+      const highQualityVoices = ['Samantha', 'Victoria', 'Allison', 'Ava', 'Karen', 'Hazel', 'Susan', 'Kate'];
+      const voiceName = voice.name;
+      if (highQualityVoices.some(name => voiceName.includes(name))) {
+        score += 40;
+      }
+      
+      // Prefer female voices for Maya
+      if (voiceName.toLowerCase().includes('female') || 
+          voiceName.toLowerCase().includes('woman') ||
+          ['Samantha', 'Victoria', 'Allison', 'Ava', 'Karen', 'Hazel', 'Zira', 'Susan', 'Kate'].some(name => voiceName.includes(name))) {
+        score += 20;
+      }
+      
+      // Avoid known robotic voices
+      const roboticVoices = ['Alex', 'Fred', 'Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos', 'Deranged'];
+      if (roboticVoices.some(name => voiceName.includes(name))) {
+        score -= 50;
+      }
+      
+      return { voice, score };
+    });
+    
+    // Sort by score and return best
+    scoredVoices.sort((a, b) => b.score - a.score);
+    const selected = scoredVoices[0]?.voice || null;
+    
+    if (selected) {
+      console.log('Selected voice:', selected.name, 'Local:', selected.localService, 'Score:', scoredVoices[0].score);
     }
-
-    // Then try partial matches for female voices
-    const femaleVoice = voices.find(voice => 
-      voice.name.toLowerCase().includes('female') ||
-      voice.name.toLowerCase().includes('woman') ||
-      (voice.name.toLowerCase().includes('en') && voice.name.toLowerCase().includes('female'))
-    );
-    if (femaleVoice) return femaleVoice;
-
-    // Finally, any English voice
-    return voices.find(voice => voice.lang.startsWith('en')) || null;
+    
+    return selected;
   }
 
   // Play audio from URL
