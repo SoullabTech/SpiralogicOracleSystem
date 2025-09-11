@@ -769,7 +769,9 @@ export class SentimentAnalyzer {
   // Save sentiment history to database
   async saveSentimentHistory(userId: string) {
     if (!supabase) {
-      localStorage.setItem(`sentiment-history-${userId}`, JSON.stringify(this.conversationHistory));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(`sentiment-history-${userId}`, JSON.stringify(this.conversationHistory));
+      }
       return;
     }
     
@@ -783,7 +785,9 @@ export class SentimentAnalyzer {
         });
     } catch (error) {
       console.error('Error saving sentiment history:', error);
-      localStorage.setItem(`sentiment-history-${userId}`, JSON.stringify(this.conversationHistory));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(`sentiment-history-${userId}`, JSON.stringify(this.conversationHistory));
+      }
     }
   }
   
@@ -808,8 +812,10 @@ export class SentimentAnalyzer {
       }
     }
     
-    // Check localStorage
-    const saved = localStorage.getItem(`sentiment-history-${userId}`);
+    // Check localStorage (only in browser)
+    const saved = (typeof window !== 'undefined' && window.localStorage)
+      ? localStorage.getItem(`sentiment-history-${userId}`)
+      : null;
     if (saved) {
       analyzer.conversationHistory = JSON.parse(saved);
     }
