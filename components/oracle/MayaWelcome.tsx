@@ -308,7 +308,7 @@ export function MayaWelcome({ onConversationStart, intakeData }: MayaWelcomeProp
           onClick={onConversationStart}
           className="px-10 py-4 bg-white/10 backdrop-blur-sm hover:bg-white/15 text-white/90 rounded-full transition-all duration-300 font-light text-lg border border-white/20 hover:border-white/30 shadow-lg hover:shadow-xl"
         >
-          Let's talk
+          Begin
         </button>
       </motion.div>
     </div>
