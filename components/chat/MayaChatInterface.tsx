@@ -138,8 +138,12 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
     
     // Send voice transcript if we have it
     if (voiceTranscript.trim()) {
-      onVoiceTranscript?.(voiceTranscript.trim());
-      handleSend(voiceTranscript.trim());
+      // Only call onVoiceTranscript if provided, otherwise use handleSend
+      if (onVoiceTranscript) {
+        onVoiceTranscript(voiceTranscript.trim());
+      } else {
+        handleSend(voiceTranscript.trim());
+      }
     }
     
     setInputMode('text');
