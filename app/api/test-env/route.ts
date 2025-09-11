@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
       // List all env vars that start with ANTHROPIC or CLAUDE (without values)
       envKeys: Object.keys(process.env).filter(key => 
         key.includes('ANTHROPIC') || key.includes('CLAUDE')
-      )
+      ),
+      deploymentId: process.env.VERCEL_DEPLOYMENT_ID,
+      gitCommit: process.env.VERCEL_GIT_COMMIT_SHA
     }
   });
 }
