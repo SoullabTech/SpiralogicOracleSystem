@@ -32,7 +32,7 @@ export default function NotFound() {
               Go Home
             </Button>
             <Button 
-              onClick={() => router.push('/oracle')}
+              onClick={() => router.push('/oracle-conversation')}
               variant="outline"
               className="border-amber-500/20 hover:bg-amber-500/10"
             >
@@ -45,7 +45,7 @@ export default function NotFound() {
             <p className="text-xs text-muted-foreground">
               Need help? Try our{' '}
               <button 
-                onClick={() => router.push('/oracle')}
+                onClick={() => router.push('/oracle-conversation')}
                 className="text-amber-400 hover:text-amber-300 underline"
               >
                 oracle chat
