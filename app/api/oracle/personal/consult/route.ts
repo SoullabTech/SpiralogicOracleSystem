@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     // Call MainOracleAgent which communicates with PersonalOracleAgent
     try {
       console.log('Calling MainOracleAgent with input:', input);
+      console.log('About to call processInteraction...');
       
       const oracleResult = await mainOracle.processInteraction(
         userId || 'anonymous',
@@ -49,7 +50,8 @@ export async function POST(request: NextRequest) {
         }
       );
       
-      console.log('MainOracle response:', oracleResult);
+      console.log('MainOracle response received:', !!oracleResult);
+      console.log('Response has message:', !!oracleResult?.response);
       
       // Transform MainOracleAgent response to match frontend expectations
       const response = {

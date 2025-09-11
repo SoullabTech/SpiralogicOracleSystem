@@ -29,9 +29,10 @@ export class ClaudeService {
   constructor(config: ClaudeConfig) {
     this.client = new Anthropic({
       apiKey: config.apiKey,
+      timeout: 8000, // 8 second timeout to fit within Vercel's 10 second limit
     });
-    this.model = config.model || 'claude-3-opus-20240229';
-    this.maxTokens = config.maxTokens || 1500;
+    this.model = config.model || 'claude-3-haiku-20240307'; // Use faster Haiku model
+    this.maxTokens = config.maxTokens || 500; // Reduce tokens for faster response
     this.temperature = config.temperature || 0.8;
   }
   
@@ -231,9 +232,9 @@ export function initializeClaudeService(apiKey: string): ClaudeService {
   if (!claudeService) {
     claudeService = new ClaudeService({
       apiKey,
-      model: 'claude-3-opus-20240229',
+      model: 'claude-3-haiku-20240307', // Use faster Haiku model
       temperature: 0.8,
-      maxTokens: 1500
+      maxTokens: 500
     });
   }
   return claudeService;
