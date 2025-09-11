@@ -22,6 +22,11 @@ export async function POST(request: NextRequest) {
     const { input, userId, sessionId, context } = body;
     
     console.log('Oracle consult request:', { input, userId, sessionId });
+    console.log('Environment check:', {
+      apiMode: process.env.NEXT_PUBLIC_API_MODE,
+      mockSupabase: process.env.NEXT_PUBLIC_MOCK_SUPABASE,
+      hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY
+    });
 
     if (!input) {
       return NextResponse.json(
@@ -65,8 +70,10 @@ export async function POST(request: NextRequest) {
       };
 
       return NextResponse.json(response);
-    } catch (oracleError) {
+    } catch (oracleError: any) {
       console.error('MainOracleAgent error:', oracleError);
+      console.error('Error details:', oracleError.message);
+      console.error('API Key status:', process.env.ANTHROPIC_API_KEY ? 'Present' : 'Missing');
       
       // Fallback to intelligent local response if backend is unavailable
       const response = {
