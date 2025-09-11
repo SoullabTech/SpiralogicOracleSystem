@@ -609,8 +609,10 @@ export class PersonalOracleAgent {
   // Save agent state to database
   private async saveState() {
     if (!supabase) {
-      // Save to localStorage as fallback
-      localStorage.setItem(`oracle-agent-${this.userId}`, JSON.stringify(this.state));
+      // Save to localStorage as fallback (only in browser)
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(`oracle-agent-${this.userId}`, JSON.stringify(this.state));
+      }
       return;
     }
     
@@ -624,8 +626,10 @@ export class PersonalOracleAgent {
         });
     } catch (error) {
       console.error('Error saving agent state:', error);
-      // Fallback to localStorage
-      localStorage.setItem(`oracle-agent-${this.userId}`, JSON.stringify(this.state));
+      // Fallback to localStorage (only in browser)
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(`oracle-agent-${this.userId}`, JSON.stringify(this.state));
+      }
     }
   }
   
@@ -647,8 +651,10 @@ export class PersonalOracleAgent {
       }
     }
     
-    // Check localStorage
-    const savedState = localStorage.getItem(`oracle-agent-${userId}`);
+    // Check localStorage (only in browser)
+    const savedState = (typeof window !== 'undefined' && window.localStorage) 
+      ? localStorage.getItem(`oracle-agent-${userId}`)
+      : null;
     if (savedState) {
       return new PersonalOracleAgent(userId, JSON.parse(savedState));
     }
