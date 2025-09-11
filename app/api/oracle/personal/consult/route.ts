@@ -1,14 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { MainOracleAgent } from '@/lib/agents/MainOracleAgent';
 
 // Personal Oracle Consult API Route
-// This route proxies requests to the actual PersonalOracleAgent backend
+// This route uses MainOracleAgent which communicates with PersonalOracleAgent
 
-const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:3001';
+const mainOracle = new MainOracleAgent();
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 }
+      );
+    }
+    
     const { input, userId, sessionId, context } = body;
+    
+    console.log('Oracle consult request:', { input, userId, sessionId });
 
     if (!input) {
       return NextResponse.json(
@@ -17,49 +30,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call the actual PersonalOracleAgent backend
+    // Call MainOracleAgent which communicates with PersonalOracleAgent
     try {
-      const backendResponse = await fetch(`${BACKEND_API_URL}/api/oracle/personal/query`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: userId || 'anonymous',
-          input,
-          context: {
-            ...context,
-            sessionId,
-            timestamp: new Date().toISOString()
-          }
-        })
-      });
-
-      if (!backendResponse.ok) {
-        throw new Error(`Backend API error: ${backendResponse.status}`);
-      }
-
-      const backendData = await backendResponse.json();
+      console.log('Calling MainOracleAgent with input:', input);
       
-      // Transform backend response to match frontend expectations
+      const oracleResult = await mainOracle.processInteraction(
+        userId || 'anonymous',
+        input,
+        {
+          ...context,
+          sessionId,
+          timestamp: new Date().toISOString()
+        }
+      );
+      
+      console.log('MainOracle response:', oracleResult);
+      
+      // Transform MainOracleAgent response to match frontend expectations
       const response = {
         data: {
-          message: backendData.message || backendData.text || generateMayaResponse(input),
-          element: backendData.element || backendData.facet || determineElement(input),
-          confidence: backendData.confidence || 0.85,
-          voiceCharacteristics: backendData.voiceCharacteristics || {
+          message: oracleResult.response || generateMayaResponse(input),
+          element: oracleResult.dominantElement || determineElement(input),
+          confidence: oracleResult.confidence || 0.85,
+          voiceCharacteristics: oracleResult.voiceCharacteristics || {
             tone: 'warm',
             masteryVoiceApplied: true
           },
-          audio: backendData.audio || 'web-speech-fallback',
-          // Include any additional backend data
-          ...backendData
+          audio: 'web-speech-fallback',
+          // Include sentiment and collective insights
+          sentiment: oracleResult.sentimentAnalysis,
+          collectiveInsight: oracleResult.collectiveInsight,
+          elementalReflection: oracleResult.elementalReflection
         }
       };
 
       return NextResponse.json(response);
-    } catch (backendError) {
-      console.error('Backend API connection failed:', backendError);
+    } catch (oracleError) {
+      console.error('MainOracleAgent error:', oracleError);
       
       // Fallback to intelligent local response if backend is unavailable
       const response = {
@@ -134,27 +141,27 @@ function determineElement(input: string): string {
   // Fire element - passion, energy, transformation
   if (lowerInput.includes('passion') || lowerInput.includes('energy') || lowerInput.includes('fire') || 
       lowerInput.includes('transform') || lowerInput.includes('power') || lowerInput.includes('vision')) {
-    return 'fire-1';
+    return 'fire';
   }
   
   // Water element - emotions, flow, intuition
   if (lowerInput.includes('feel') || lowerInput.includes('emotion') || lowerInput.includes('heart') || 
       lowerInput.includes('flow') || lowerInput.includes('dream') || lowerInput.includes('intuition')) {
-    return 'water-1';
+    return 'water';
   }
   
   // Earth element - grounding, practical, body
   if (lowerInput.includes('ground') || lowerInput.includes('body') || lowerInput.includes('practical') || 
       lowerInput.includes('stable') || lowerInput.includes('foundation') || lowerInput.includes('physical')) {
-    return 'earth-1';
+    return 'earth';
   }
   
   // Air element - thoughts, communication, ideas
   if (lowerInput.includes('think') || lowerInput.includes('idea') || lowerInput.includes('mind') || 
       lowerInput.includes('communicate') || lowerInput.includes('clarity') || lowerInput.includes('understand')) {
-    return 'air-1';
+    return 'air';
   }
   
   // Default to aether for spiritual/transcendent content
-  return 'aether-1';
+  return 'aether';
 }

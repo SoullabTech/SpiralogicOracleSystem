@@ -416,14 +416,61 @@ export class PersonalOracleAgent {
   }
 
   /**
-   * Call LLM with Maya's canonical prompt
+   * Call LLM with Maya's canonical prompt - Using Claude for intelligence
    */
   private async callLLMWithMayaPrompt(prompt: string): Promise<string> {
-    // TODO: Replace with your actual LLM API call (OpenAI, Claude, etc.)
-    // For now, using a mock response that follows Maya's style
-    
     try {
-      // Example using OpenAI API (replace with your actual implementation)
+      // Use Claude API for Maia's intelligent responses
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-opus-20240229',
+          max_tokens: 1500,
+          temperature: 0.8,
+          system: prompt,
+          messages: [
+            {
+              role: 'user',
+              content: 'Begin your response as Maia.'
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        logger.error(`Claude API call failed: ${response.status}`, { error: errorData });
+        
+        // Fallback to OpenAI if Claude fails
+        return this.callOpenAIFallback(prompt);
+      }
+
+      const data = await response.json();
+      const content = data.content?.[0]?.text;
+      
+      if (!content) {
+        logger.warn("Empty response from Claude, using fallback");
+        return this.callOpenAIFallback(prompt);
+      }
+      
+      return content;
+    } catch (error) {
+      logger.error("Claude API call failed", { error });
+      // Fallback to OpenAI
+      return this.callOpenAIFallback(prompt);
+    }
+  }
+  
+  /**
+   * Fallback to OpenAI if Claude is unavailable
+   */
+  private async callOpenAIFallback(prompt: string): Promise<string> {
+    try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -439,14 +486,14 @@ export class PersonalOracleAgent {
       });
 
       if (!response.ok) {
-        throw new Error(`LLM API call failed: ${response.status}`);
+        throw new Error(`OpenAI API call failed: ${response.status}`);
       }
 
       const data = await response.json();
       return data.choices[0]?.message?.content || "I'm here with you. What's on your mind?";
     } catch (error) {
-      logger.error("LLM API call failed", { error });
-      // Fallback to Maya-style response
+      logger.error("OpenAI fallback also failed", { error });
+      // Final fallback to Maia-style response
       return "I'm here with you. What would you like to explore together?";
     }
   }

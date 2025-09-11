@@ -171,15 +171,7 @@ export const SacredHoloflower: React.FC<SacredHoloflowerProps> = ({
         }`}
         style={{ width: size, height: size }}
       >
-        {/* Base Holoflower Image - Your sacred asset */}
-        <Image
-          src="/holoflower.svg"
-          alt="Spiralogic Holoflower"
-          width={size}
-          height={size}
-          className="absolute inset-0 object-contain"
-          priority
-        />
+        {/* Removed large holoflower image - keeping only animations and central logo */}
 
       {/* Interactive Overlay */}
       <svg

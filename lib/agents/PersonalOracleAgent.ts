@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient';
 import type { Element, EnergyState, Mood } from '@/lib/types/oracle';
+import { getClaudeService } from '@/lib/services/ClaudeService';
 
 // Agent Personality Archetypes
 export type AgentArchetype = 
@@ -345,23 +346,65 @@ export class PersonalOracleAgent {
     const soulDepth = memory.soulRecognition > 50 ? 'ancient' : 'awakening';
     const resonanceLevel = memory.polarisState.harmonicResonance > 70 ? 'attuned' : 'tuning';
     
-    // Generate response aware of both worlds
-    let response = this.generatePolarisResponse(input, context, soulDepth, resonanceLevel);
+    let response: string;
     
-    // If not in polaris mode, fall back to archetype responses
-    if (!response) {
-      switch (personality.archetype) {
-        case 'sage':
-          response = this.generateSageResponse(input, soulDepth);
-          break;
-        case 'mystic':
-          response = this.generateMysticResponse(input, soulDepth);
-          break;
-        case 'guardian':
-          response = this.generateGuardianResponse(input, resonanceLevel);
-          break;
-        default:
-          response = this.generateOracleResponse(input, context);
+    try {
+      // Use Claude AI for intelligent response generation
+      const claudeService = getClaudeService();
+      
+      // Build conversation history for context
+      const conversationHistory = memory.currentConversationThread.map((msg, idx) => ({
+        role: idx % 2 === 0 ? 'user' as const : 'assistant' as const,
+        content: msg.replace(/^(You|Oracle): /, '')
+      }));
+      
+      // Generate response using Claude
+      response = await claudeService.generateChatResponse(input, {
+        element: memory.dominantElement,
+        userState: {
+          mood: context.currentMood,
+          energy: context.currentEnergy,
+          soulDepth,
+          resonanceLevel,
+          polarisState: memory.polarisState,
+          trustLevel: memory.trustLevel,
+          currentPhase: memory.currentPhase
+        },
+        conversationHistory,
+        sessionContext: {
+          personality,
+          realityAwareness,
+          soulSignature: memory.soulSignature,
+          bridgePoints: realityAwareness.bridgePoints
+        }
+      });
+      
+      // If Claude response is too generic, augment with polaris awareness
+      const polarisResponse = this.generatePolarisResponse(input, context, soulDepth, resonanceLevel);
+      if (polarisResponse && memory.polarisState.harmonicResonance > 60) {
+        response = `${response}\n\n${polarisResponse}`;
+      }
+      
+    } catch (error) {
+      console.error('Claude service error, falling back to local generation:', error);
+      
+      // Fallback to local response generation
+      response = this.generatePolarisResponse(input, context, soulDepth, resonanceLevel) || '';
+      
+      if (!response) {
+        switch (personality.archetype) {
+          case 'sage':
+            response = this.generateSageResponse(input, soulDepth);
+            break;
+          case 'mystic':
+            response = this.generateMysticResponse(input, soulDepth);
+            break;
+          case 'guardian':
+            response = this.generateGuardianResponse(input, resonanceLevel);
+            break;
+          default:
+            response = this.generateOracleResponse(input, context);
+        }
       }
     }
     

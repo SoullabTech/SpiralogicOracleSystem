@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle Beta - Sacred Intake Flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #2e3a4b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            position: relative;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e5e5e5;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: #1a1a1a;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .progress-dot.completed {
+            background: #c9b037;
+        }
+
+        /* Sacred Spiral Progress (Alternative) */
+        .spiral-progress {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .holoflower {
+            width: 100%;
+            height: 100%;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #c9b037;
+            box-shadow: 0 0 0 3px rgba(201, 176, 55, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            margin-top: 2px;
+            accent-color: #c9b037;
+        }
+
+        .checkbox-text {
+            flex: 1;
+        }
+
+        .checkbox-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .checkbox-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* Focus Area Cards */
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .focus-card {
+            padding: 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .focus-card:hover {
+            border-color: #c9b037;
+            background: rgba(201, 176, 55, 0.05);
+        }
+
+        .focus-card.selected {
+            border-color: #c9b037;
+            background: rgba(201, 176, 55, 0.1);
+            border-width: 2px;
+        }
+
+        .focus-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .focus-label {
+            font-size: 13px;
+            color: #333;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .btn-skip {
+            background: none;
+            border: none;
+            color: #c9b037;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-skip:hover,
+        .btn-back:hover {
+            opacity: 0.7;
+        }
+
+        .btn-continue {
+            padding: 12px 28px;
+            background: #c9b037;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-continue:hover {
+            background: #b39f2e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(201, 176, 55, 0.3);
+        }
+
+        .btn-continue:disabled {
+            background: #e5e5e5;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Step Screens */
+        .step {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Welcome Screen Special */
+        .welcome-center {
+            text-align: center;
+        }
+
+        .sacred-symbol {
+            font-size: 48px;
+            margin-bottom: 24px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(201, 176, 55, 0.1);
+            border: 1px solid rgba(201, 176, 55, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-box p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .focus-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-dot active" data-step="0"></div>
+            <div class="progress-dot" data-step="1"></div>
+            <div class="progress-dot" data-step="2"></div>
+            <div class="progress-dot" data-step="3"></div>
+            <div class="progress-dot" data-step="4"></div>
+            <div class="progress-dot" data-step="5"></div>
+        </div>
+
+        <!-- Step 0: Welcome -->
+        <div class="step active" id="step-0">
+            <div class="welcome-center">
+                <div class="sacred-symbol">✦</div>
+                <h1>Welcome to the Oracle Beta</h1>
+                <p class="subtitle">
+                    Join us in exploring consciousness evolution<br>
+                    through AI-guided wisdom.<br><br>
+                    Your privacy is sacred.<br>
+                    All data is encrypted and never shared.
+                </p>
+            </div>
+            <div class="button-group">
+                <span></span>
+                <button class="btn-continue" onclick="nextStep()">Begin Sacred Journey</button>
+            </div>
+        </div>
+
+        <!-- Step 1: Basic Info -->
+        <div class="step" id="step-1">
+            <h1>Onboarding</h1>
+            <p class="subtitle">
+                To personalize your experience, I'd like to learn<br>
+                a bit about you. Your answers are<br>
+                encrypted and never shared.
+            </p>
+            
+            <div class="form-group">
+                <label>Name or nickname</label>
+                <input type="text" id="name" placeholder="What should I call you?">
+            </div>
+
+            <div class="form-group">
+                <label>Age range</label>
+                <select id="age">
+                    <option value="">Select...</option>
+                    <option value="18-24">18-24</option>
+                    <option value="25-34">25-34</option>
+                    <option value="35-44">35-44</option>
+                    <option value="45-54">45-54</option>
+                    <option value="55-64">55-64</option>
+                    <option value="65+">65+</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Pronouns</label>
+                <select id="pronouns">
+                    <option value="">Select...</option>
+                    <option value="she/her">she/her</option>
+                    <option value="he/him">he/him</option>
+                    <option value="they/them">they/them</option>
+                    <option value="she/they">she/they</option>
+                    <option value="he/they">he/they</option>
+                    <option value="other">other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="location" placeholder="City, Country">
+            </div>
+
+            <div class="button-group">
+                <button class="btn-skip" onclick="skipStep()">Skip for now</button>
+                <button class="btn-continue" onclick="nextStep()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Birth Information -->
+        <div class="step" id="step-2">
+            <h1>Cosmic Blueprint</h1>
+            <p class="subtitle">
+                For astrological insights and archetypal wisdom.<br>
+                This step is optional but adds depth.
+            </p>
+            
+            <div class="form-group">
+                <label>Date of birth</label>
+                <input type="date" id="birthDate">
+            </div>
+
+            <div class="form-group">
+                <label>Time of birth (if known)</label>
+                <input type="time" id="birthTime">
+            </div>
+
+            <div class="form-group">
+                <label>Place of birth</label>
+                <input type="text" id="birthPlace" placeholder="City, Country">
+            </div>
+
+            <div class="button-group">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-continue" onclick="nextStep()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Life Context -->
+        <div class="step" id="step-3">
+            <h1>What calls to your soul?</h1>
+            <p class="subtitle">
+                Select all areas that resonate with you now.
+            </p>
+            
+            <div class="focus-grid">
+                <div class="focus-card" data-focus="purpose">
+                    <div class="focus-icon">🧭</div>
+                    <div class="focus-label">Life Purpose</div>
+                </div>
+                <div class="focus-card" data-focus="relationships">
+                    <div class="focus-icon">💝</div>
+                    <div class="focus-label">Relationships</div>
+                </div>
+                <div class="focus-card" data-focus="creativity">
+                    <div class="focus-icon">✨</div>
+                    <div class="focus-label">Creativity</div>
+                </div>
+                <div class="focus-card" data-focus="spirituality">
+                    <div class="focus-icon">🌙</div>
+                    <div class="focus-label">Spiritual Growth</div>
+                </div>
+                <div class="focus-card" data-focus="career">
+                    <div class="focus-icon">🌍</div>
+                    <div class="focus-label">Career Path</div>
+                </div>
+                <div class="focus-card" data-focus="healing">
+                    <div class="focus-icon">☀️</div>
+                    <div class="focus-label">Inner Healing</div>
+                </div>
+                <div class="focus-card" data-focus="shadow">
+                    <div class="focus-icon">⛰️</div>
+                    <div class="focus-label">Shadow Work</div>
+                </div>
+                <div class="focus-card" data-focus="wisdom">
+                    <div class="focus-icon">📖</div>
+                    <div class="focus-label">Ancient Wisdom</div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-continue" onclick="nextStep()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Spiritual Background -->
+        <div class="step" id="step-4">
+            <h1>Your Spiritual Journey</h1>
+            <p class="subtitle">
+                Understanding your practices helps shape guidance.
+            </p>
+            
+            <div class="form-group">
+                <label>Current practices</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="meditation">
+                        <span class="checkbox-text">Meditation</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="yoga">
+                        <span class="checkbox-text">Yoga</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="prayer">
+                        <span class="checkbox-text">Prayer</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="breathwork">
+                        <span class="checkbox-text">Breathwork</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="dreamwork">
+                        <span class="checkbox-text">Dreamwork</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="ritual">
+                        <span class="checkbox-text">Ritual/Ceremony</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Meditation experience</label>
+                <select id="meditation">
+                    <option value="">Select...</option>
+                    <option value="none">No experience</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="regular">Regular practice</option>
+                    <option value="advanced">Advanced practitioner</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-continue" onclick="nextStep()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Research Consent -->
+        <div class="step" id="step-5">
+            <h1>Research Participation</h1>
+            <p class="subtitle">
+                Help us understand consciousness evolution.
+            </p>
+            
+            <div class="info-box">
+                <p>
+                    We're conducting heuristic research on elemental alchemy, 
+                    depth psychology, and archetypal patterns. Your data is 
+                    always anonymized and we'll contact you before any use 
+                    beyond internal analysis.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="consent-analytics">
+                        <div class="checkbox-text">
+                            <div class="checkbox-title">Usage Analytics</div>
+                            <div class="checkbox-description">Anonymous session patterns and feature usage</div>
+                        </div>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="consent-interviews">
+                        <div class="checkbox-text">
+                            <div class="checkbox-title">Interview Invitations</div>
+                            <div class="checkbox-description">Optional 30-minute conversations</div>
+                        </div>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="consent-transcripts">
+                        <div class="checkbox-text">
+                            <div class="checkbox-title">Conversation Analysis</div>
+                            <div class="checkbox-description">Anonymized themes and patterns</div>
+                        </div>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="consent-publications">
+                        <div class="checkbox-text">
+                            <div class="checkbox-title">Academic Publications</div>
+                            <div class="checkbox-description">Anonymized insights in research papers</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-continue" onclick="completeIntake()">Complete Sacred Intake</button>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="step" id="step-complete">
+            <div class="welcome-center">
+                <div class="sacred-symbol">🌸</div>
+                <h1>Welcome, <span id="userName">friend</span></h1>
+                <p class="subtitle">
+                    Your sacred journey begins now.<br><br>
+                    Maia is ready to hold space for you.
+                </p>
+            </div>
+            <div class="button-group">
+                <span></span>
+                <button class="btn-continue" onclick="goToOracle()">Enter the Oracle</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 6;
+        const intakeData = {};
+
+        function updateProgress() {
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index < currentStep) {
+                    dot.classList.add('completed');
+                } else if (index === currentStep) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(s => {
+                s.classList.remove('active');
+            });
+            document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Update progress dots
+            updateProgress();
+        }
+
+        function nextStep() {
+            // Save current step data
+            saveStepData();
+            
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function skipStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function saveStepData() {
+            // Save data based on current step
+            switch(currentStep) {
+                case 1:
+                    intakeData.name = document.getElementById('name').value;
+                    intakeData.age = document.getElementById('age').value;
+                    intakeData.pronouns = document.getElementById('pronouns').value;
+                    intakeData.location = document.getElementById('location').value;
+                    break;
+                case 2:
+                    intakeData.birthDate = document.getElementById('birthDate').value;
+                    intakeData.birthTime = document.getElementById('birthTime').value;
+                    intakeData.birthPlace = document.getElementById('birthPlace').value;
+                    break;
+                case 3:
+                    intakeData.focusAreas = Array.from(document.querySelectorAll('.focus-card.selected'))
+                        .map(card => card.dataset.focus);
+                    break;
+                case 4:
+                    intakeData.practices = Array.from(document.querySelectorAll('#step-4 input[type="checkbox"]:checked'))
+                        .map(cb => cb.value);
+                    intakeData.meditation = document.getElementById('meditation').value;
+                    break;
+                case 5:
+                    intakeData.consent = {
+                        analytics: document.getElementById('consent-analytics').checked,
+                        interviews: document.getElementById('consent-interviews').checked,
+                        transcripts: document.getElementById('consent-transcripts').checked,
+                        publications: document.getElementById('consent-publications').checked
+                    };
+                    break;
+            }
+        }
+
+        function completeIntake() {
+            saveStepData();
+            
+            // Show completion screen with user's name
+            const userName = intakeData.name || 'friend';
+            document.getElementById('userName').textContent = userName;
+            
+            currentStep = 'complete';
+            showStep('complete');
+            
+            // Hide progress dots
+            document.querySelector('.progress-container').style.display = 'none';
+            
+            console.log('Intake completed:', intakeData);
+        }
+
+        function goToOracle() {
+            // In real implementation, this would navigate to the Oracle
+            alert('Welcome to the Oracle! (In production, this would navigate to the main app)');
+        }
+
+        // Focus card selection
+        document.querySelectorAll('.focus-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // Validate name field for continue button
+        document.getElementById('name')?.addEventListener('input', function(e) {
+            const continueBtn = document.querySelector('#step-1 .btn-continue');
+            if (e.target.value.trim()) {
+                continueBtn.disabled = false;
+            } else {
+                continueBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

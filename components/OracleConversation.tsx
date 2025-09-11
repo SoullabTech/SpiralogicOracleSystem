@@ -2,8 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SacredHoloflowerWithAudio } from './sacred/SacredHoloflowerWithAudio';
-import { InteractiveHoloflowerPetals } from './sacred/InteractiveHoloflowerPetals';
+import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import MayaChatInterface from './chat/MayaChatInterface';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
@@ -89,42 +88,17 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
   }, [userVoiceState]);
 
-  // Handle petal state updates from interactive system
-  const handlePetalUpdate = useCallback((facetId: string, extension: number) => {
-    setCheckIns(prev => ({
-      ...prev,
-      [facetId]: extension
-    }));
-    
-    // Update context with new petal position
-    contextRef.current.checkIns = {
-      ...contextRef.current.checkIns,
-      [facetId]: extension
+  // Helper function to map element to facet ID (using SPIRALOGIC_FACETS IDs)
+  const mapElementToFacetId = (element: string): string => {
+    const elementToFacetMap: { [key: string]: string } = {
+      'air': 'air-1',
+      'fire': 'fire-1', 
+      'water': 'water-1',
+      'earth': 'earth-1',
+      'aether': 'earth-1' // Default to earth for aether
     };
-    
-    // Trigger motion state based on interaction
-    setCurrentMotionState('processing');
-    setTimeout(() => setCurrentMotionState('idle'), 500);
-  }, []);
-
-  // Listen for petal adjustment events from InteractiveHoloflowerPetals
-  useEffect(() => {
-    const handlePetalAdjusted = (event: CustomEvent) => {
-      const { facetId, extension, interpretation } = event.detail;
-      handlePetalUpdate(facetId, extension);
-      
-      // Optionally trigger Oracle response for significant changes
-      if (Math.abs(extension - 0.5) > 0.3) {
-        // User has moved petal significantly from center
-        setActiveFacetId(facetId);
-      }
-    };
-
-    window.addEventListener('holoflower:petal-adjusted', handlePetalAdjusted as EventListener);
-    return () => {
-      window.removeEventListener('holoflower:petal-adjusted', handlePetalAdjusted as EventListener);
-    };
-  }, [handlePetalUpdate]);
+    return elementToFacetMap[element] || 'earth-1';
+  };
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
@@ -172,7 +146,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       
       clearTimeout(timeoutId);
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const responseData = await response.json();
+      console.log('Oracle response:', responseData);
       
       // Handle PersonalOracleAgent response format
       const oracleResponse = responseData.data || responseData;
@@ -188,7 +167,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       const audioUrl = oracleResponse.audio; // Audio URL from Sesame generation
       
       // Map element to facet for holoflower visualization
-      setActiveFacetId(element);
+      const facetId = mapElementToFacetId(element);
+      setActiveFacetId(facetId);
       setCurrentMotionState('responding');
       setCoherenceLevel(oracleResponse.confidence || 0.85);
       
@@ -258,6 +238,17 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       
     } catch (error) {
       console.error('Oracle API error:', error);
+      
+      // Add an error message to the conversation
+      const errorMessage: ConversationMessage = {
+        id: `msg-${Date.now()}-error`,
+        role: 'oracle',
+        text: 'I apologize, I\'m having trouble connecting right now. Please try again.',
+        timestamp: new Date(),
+        motionState: 'idle'
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      onMessageAdded?.(errorMessage);
     } finally {
       setIsProcessing(false);
       setIsResponding(false);
@@ -267,7 +258,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         setCurrentMotionState('idle');
       }, 500);
     }
-  }, [isProcessing, messages.length, sessionId, userId, voiceEnabled, onMessageAdded]);
+  }, [isProcessing, sessionId, userId, voiceEnabled, onMessageAdded, mayaReady, mayaSpeak]);
 
   // Handle text messages from chat interface
   const handleTextMessage = useCallback(async (text: string, attachments?: File[]) => {
@@ -291,28 +282,172 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   return (
     <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black">
-      {/* Sacred Holoflower with Interactive Petals - Always centered */}
-      <div className="fixed inset-0 flex items-center justify-center">
-        {/* Interactive Holoflower Petals System */}
-        <div className="relative pointer-events-auto">
-          <InteractiveHoloflowerPetals
+      {/* Beautiful Sacred Holoflower - Always centered */}
+      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative">
+          {/* Non-interactive Sacred Holoflower with animations */}
+          <SacredHoloflower
             size={500}
-            initialStates={checkIns}
-            onReadingUpdate={(reading) => {
-              // Update context with holoflower reading
-              contextRef.current.coherenceHistory.push(reading.balanceScore);
-              
-              // Send reading to Oracle for interpretation
-              window.dispatchEvent(new CustomEvent('holoflower:reading-update', {
-                detail: { reading, sessionId, userId }
-              }));
-            }}
-            showInterpretation={true}
-            mode={showChatInterface ? 'guided' : 'intuitive'}
+            interactive={false}
+            showLabels={false}
+            motionState={currentMotionState}
+            coherenceLevel={coherenceLevel}
+            coherenceShift={coherenceShift}
+            isListening={isListening}
+            isProcessing={isProcessing}
+            isResponding={isResponding}
+            showBreakthrough={showBreakthrough}
           />
           
-          {/* Central Holoflower Logo */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {/* Central Holoflower Logo with Glow and Sparkles */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            {/* Radiant glow behind the holoflower - ENHANCED */}
+            <motion.div
+              className="absolute"
+              animate={{
+                scale: [1, 1.4, 1],
+                opacity: [0.6, 0.9, 0.6]
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <div
+                className="w-48 h-48 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(212, 184, 150, 1) 0%, rgba(212, 184, 150, 0.7) 30%, rgba(212, 184, 150, 0.3) 60%, transparent 100%)',
+                  filter: 'blur(30px)'
+                }}
+              />
+            </motion.div>
+            
+            {/* Secondary outer glow layer for extra radiance */}
+            <motion.div
+              className="absolute"
+              animate={{
+                scale: [1.2, 1.6, 1.2],
+                opacity: [0.3, 0.5, 0.3]
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5
+              }}
+            >
+              <div
+                className="w-64 h-64 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(212, 184, 150, 0.6) 0%, rgba(212, 184, 150, 0.2) 50%, transparent 100%)',
+                  filter: 'blur(40px)'
+                }}
+              />
+            </motion.div>
+
+            {/* Sparkles emanating from center - ULTRA SLOW & EPHEMERAL */}
+            <div className="absolute pointer-events-none">
+              {/* Main radial sparkles - slower drift */}
+              {[...Array(12)].map((_, i) => (
+                <motion.div
+                  key={`sparkle-${i}`}
+                  className="absolute w-0.5 h-0.5 bg-white/80 rounded-full"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    filter: 'blur(0.5px)'
+                  }}
+                  animate={{
+                    x: [0, Math.cos(i * Math.PI / 6) * 100],
+                    y: [0, Math.sin(i * Math.PI / 6) * 100],
+                    opacity: [0, 0.7, 0.3, 0],
+                    scale: [0, 1.2, 0.8, 0]
+                  }}
+                  transition={{
+                    duration: 10 + Math.random() * 5, // 10-15 seconds
+                    repeat: Infinity,
+                    delay: i * 1.5 + Math.random() * 5, // Very sporadic
+                    ease: "easeInOut",
+                    repeatDelay: Math.random() * 5 // Long pauses
+                  }}
+                />
+              ))}
+              
+              {/* Spiraling sparkles - dreamy drift */}
+              {[...Array(16)].map((_, i) => {
+                const angle = (i * Math.PI * 2) / 16;
+                const spiralRotation = i * 30;
+                const randomDuration = 12 + Math.random() * 6; // 12-18 seconds
+                const randomDelay = Math.random() * 10; // 0-10 second random delay
+                return (
+                  <motion.div
+                    key={`sparkle-spiral-${i}`}
+                    className="absolute w-0.5 h-0.5 rounded-full"
+                    style={{
+                      left: '50%',
+                      top: '50%',
+                      background: 'radial-gradient(circle, rgba(255,255,200,0.9) 0%, transparent 70%)',
+                      filter: 'blur(0.3px)'
+                    }}
+                    animate={{
+                      x: [
+                        0,
+                        Math.cos(angle) * 20,
+                        Math.cos(angle + 0.5) * 50,
+                        Math.cos(angle + 1) * 80,
+                        Math.cos(angle + 1.5) * 100
+                      ],
+                      y: [
+                        0,
+                        Math.sin(angle) * 20,
+                        Math.sin(angle + 0.5) * 50,
+                        Math.sin(angle + 1) * 80,
+                        Math.sin(angle + 1.5) * 100
+                      ],
+                      opacity: [0, 0.6, 0.4, 0.2, 0],
+                      scale: [0, 1, 0.8, 0.5, 0],
+                      rotate: [0, spiralRotation]
+                    }}
+                    transition={{
+                      duration: randomDuration,
+                      repeat: Infinity,
+                      delay: randomDelay + i * 0.5,
+                      ease: "easeInOut",
+                      repeatDelay: Math.random() * 8 // Very long pauses
+                    }}
+                  />
+                );
+              })}
+              
+              {/* Tiny twinkling sparkles - ultra gentle */}
+              {[...Array(25)].map((_, i) => (
+                <motion.div
+                  key={`sparkle-tiny-${i}`}
+                  className="absolute w-px h-px rounded-full"
+                  style={{
+                    left: `${35 + Math.random() * 30}%`,
+                    top: `${35 + Math.random() * 30}%`,
+                    background: 'white',
+                    boxShadow: '0 0 2px rgba(255,255,255,0.5)'
+                  }}
+                  animate={{
+                    opacity: [0, 0, Math.random() * 0.6 + 0.2, 0, 0],
+                    scale: [0, 0, Math.random() + 0.5, 0, 0],
+                  }}
+                  transition={{
+                    duration: 8 + Math.random() * 7, // 8-15 seconds
+                    repeat: Infinity,
+                    delay: Math.random() * 15, // 0-15 second random start
+                    ease: "easeInOut",
+                    repeatDelay: Math.random() * 10, // Very long pauses between twinkles
+                    times: [0, 0.3, 0.5, 0.7, 1] // Quick twinkle in the middle
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* The holoflower logo itself */}
             <motion.div
               animate={{
                 scale: [1, 1.05, 1],
@@ -323,6 +458,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
+              style={{ zIndex: 10 }}
             >
               <Image
                 src="/holoflower.svg"
@@ -367,7 +503,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               {messages.slice(-1).map(message => (
                 <div key={message.id} className="space-y-2">
                   <div className="text-xs text-purple-300 uppercase tracking-wider">
-                    {message.role === 'user' ? 'You' : 'Maia'}
+                    {message.role === 'user' ? 'You' : 'Maya'}
                   </div>
                   <div className="text-sm leading-relaxed">
                     {message.text}

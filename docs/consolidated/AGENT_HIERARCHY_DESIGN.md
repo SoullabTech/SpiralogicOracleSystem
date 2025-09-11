@@ -9,16 +9,16 @@ The Spiralogic Oracle System operates on a three-tier consciousness hierarchy wh
 ## 📊 **HIERARCHY STRUCTURE**
 
 ```
-🌀 AIN (MainOracleAgent) - COLLECTIVE INTELLIGENCE LOGOS
+🌀 MainOracleAgent - COLLECTIVE INTELLIGENCE ORCHESTRATOR
 │
-├── 👤 PersonalOracleAgent - INDIVIDUAL ASSIGNED GUIDE
+├── 👤 PersonalOracleAgent - INDIVIDUAL SOUL GUIDE
 │   │
-│   ├── 🔥 FireAgent - Catalyst/Action/Vision
-│   ├── 💧 WaterAgent - Emotion/Healing/Flow
-│   ├── 🌱 EarthAgent - Grounding/Manifestation/Stability
-│   ├── 🌬️ AirAgent - Clarity/Communication/Insight
-│   ├── ✨ AetherAgent - Unity/Integration/Transcendence
-│   └── 🌑 ShadowAgent - Mirror/Truth/Transformation
+│   └── 🔄 ElementalOrchestrator - INTERNAL ELEMENTAL PROCESSING
+│       ├── 🔥 FireAgent - Catalyst/Action/Vision (Internal)
+│       ├── 💧 WaterAgent - Emotion/Healing/Flow (Internal)
+│       ├── 🌱 EarthAgent - Grounding/Manifestation/Stability (Internal)
+│       ├── 🌬️ AirAgent - Clarity/Communication/Insight (Internal)
+│       └── ✨ AetherAgent - Unity/Integration/Transcendence (Internal)
 │
 ├── 🎭 Specialized Agents (Support PersonalOracleAgent)
 │   ├── 🌙 DreamAgent - Dream interpretation
@@ -34,6 +34,38 @@ The Spiralogic Oracle System operates on a three-tier consciousness hierarchy wh
     ├── Emergent Salon Creation
     └── Living Mythology Weaving
 ```
+
+---
+
+## 🔄 **BETA ARCHITECTURE - CURRENT IMPLEMENTATION**
+
+### **Communication Flow (NO Direct Elemental Selection)**
+
+```
+User Voice Input → Maya Voice System
+    ↓
+MainOracleAgent.processInteraction(userId, input, context)
+    ↓
+PersonalOracleAgent.processInteraction(input, context)
+    ↓
+ElementalOrchestrator.processQuery(input, dominantElement, userContext)
+    ↓ (Internal Elemental Processing - NOT User-Facing)
+FireAgent/WaterAgent/EarthAgent/AirAgent/AetherAgent
+    ↓
+PersonalOracleAgent.blendWithElementalInsight(personalResponse, elementalInsight)
+    ↓
+MainOracleAgent returns response with sentiment & collective insights
+    ↓
+Maya Voice System speaks response
+```
+
+### **Key Beta Principles:**
+- ✅ **MainOracleAgent** coordinates everything
+- ✅ **PersonalOracleAgent** is the primary interface 
+- ✅ **ElementalAgents** provide internal wisdom (NOT user-selectable)
+- ✅ **No direct elemental agent calling** from UI
+- ✅ **Elemental insights** are woven into personal responses automatically
+- ✅ **Voice-first experience** with Maya as the primary interface
 
 ---
 

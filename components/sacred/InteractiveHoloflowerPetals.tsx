@@ -2,8 +2,8 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useAnimation, PanInfo } from 'framer-motion';
-import { SPIRALOGIC_FACETS_COMPLETE, getFacetById, calculateElementalBalance } from '@/data/spiralogic-facets-complete';
-import { interpretPetalPosition, getHoloflowerReading } from '@/lib/holoflower/facets-interpretation';
+import { TWELVE_FACETS, interpretPetalPosition, getHoloflowerReading } from '@/lib/holoflower/facets-interpretation';
+import { calculateElementalBalance } from '@/data/spiralogic-facets-complete';
 import { useMaiaState } from '@/lib/hooks/useMaiaState';
 import Image from 'next/image';
 
@@ -28,7 +28,7 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
   showInterpretation = true,
   mode = 'guided',
   initialStates = {}
-}: InteractiveHoloflowerProps) => {
+}) => {
   const { setState, setElements, coherenceLevel } = useMaiaState();
   const [petalStates, setPetalStates] = useState<Record<string, PetalState>>({});
   const [hoveredPetal, setHoveredPetal] = useState<string | null>(null);
@@ -43,7 +43,7 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
   // Initialize petal states
   useEffect(() => {
     const states: Record<string, PetalState> = {};
-    SPIRALOGIC_FACETS_COMPLETE.forEach(facet => {
+    TWELVE_FACETS.forEach(facet => {
       states[facet.id] = {
         facetId: facet.id,
         extension: initialStates[facet.id] || 0.5, // Default to balanced middle position
@@ -56,17 +56,17 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
 
   // Calculate petal visual properties based on extension
   const getPetalTransform = (facet: any, extension: number) => {
-    const angle = facet.angle.start + (facet.angle.end - facet.angle.start) / 2;
+    const angleInRadians = (facet.angle * Math.PI) / 180; // Convert degrees to radians
     const distance = innerRadius + (outerRadius - innerRadius) * extension;
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
+    const x = Math.cos(angleInRadians) * distance;
+    const y = Math.sin(angleInRadians) * distance;
     
-    return { x, y, angle, distance };
+    return { x, y, angle: angleInRadians, distance };
   };
 
   // Handle radial dragging (in/out from center)
   const handlePetalDrag = useCallback((facetId: string, event: any, info: PanInfo) => {
-    const facet = getFacetById(facetId);
+    const facet = TWELVE_FACETS.find(f => f.id === facetId);
     if (!facet) return;
 
     // Calculate drag position relative to center
@@ -211,7 +211,7 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
 
         <g transform={`translate(${centerX}, ${centerY})`}>
           {/* Render 12 Petals */}
-          {SPIRALOGIC_FACETS_COMPLETE.map((facet, index) => {
+          {TWELVE_FACETS.map((facet, index) => {
             const state = petalStates[facet.id];
             if (!state) return null;
             
@@ -238,7 +238,7 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
                   d={createPetalPath(state.extension)}
                   fill={`url(#${facet.element}Gradient)`}
                   fillOpacity={state.extension * 0.4 + 0.4}
-                  stroke={facet.color.glow}
+                  stroke={facet.color}
                   strokeWidth={isHovered ? 2 : 1}
                   strokeOpacity={isHovered ? 0.8 : 0.3}
                   filter={state.isActive ? "url(#petalGlow)" : undefined}
@@ -261,7 +261,7 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
                   cx={0}
                   cy={0}
                   r={4}
-                  fill={facet.color.glow}
+                  fill={facet.color}
                   animate={{
                     cx: x,
                     cy: y,
@@ -304,7 +304,7 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
                      bg-black/80 backdrop-blur-lg border border-white/20"
         >
           {(() => {
-            const facet = getFacetById(selectedPetal);
+            const facet = TWELVE_FACETS.find(f => f.id === selectedPetal);
             const state = petalStates[selectedPetal];
             const interpretation = interpretPetalPosition(selectedPetal, state.extension);
             
@@ -312,8 +312,8 @@ export const InteractiveHoloflowerPetals: React.FC<InteractiveHoloflowerProps> =
               <div className="space-y-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-white font-semibold">{facet?.facet}</h3>
-                    <p className="text-white/60 text-sm">{facet?.essence}</p>
+                    <h3 className="text-white font-semibold">{facet?.name}</h3>
+                    <p className="text-white/60 text-sm">{facet?.domain}</p>
                   </div>
                   <div className="text-right">
                     <div className="text-white/80 text-sm font-medium">
