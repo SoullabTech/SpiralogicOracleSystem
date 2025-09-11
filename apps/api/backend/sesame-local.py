@@ -403,4 +403,4 @@ async def root():
 
 if __name__ == "__main__":
     logger.info("Starting Sesame CSM Local service with CI shaping...")
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=8001, log_level="info")

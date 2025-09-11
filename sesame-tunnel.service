@@ -1,0 +1,13 @@
+[Unit]
+Description=Cloudflare Tunnel for Sesame
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USER
+ExecStart=/usr/local/bin/cloudflared tunnel run sesame
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

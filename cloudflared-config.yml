@@ -1,0 +1,7 @@
+tunnel: sesame
+credentials-file: ~/.cloudflared/[TUNNEL_ID].json
+
+ingress:
+  - hostname: sesame.yourdomain.com
+    service: http://localhost:8000
+  - service: http_status:404
