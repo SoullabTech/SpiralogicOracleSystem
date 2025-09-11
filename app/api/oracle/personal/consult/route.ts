@@ -52,12 +52,13 @@ export async function POST(request: NextRequest) {
       
       console.log('MainOracle response received:', !!oracleResult);
       console.log('Response has message:', !!oracleResult?.response);
+      console.log('Full response structure:', JSON.stringify(oracleResult).substring(0, 200));
       
       // Transform MainOracleAgent response to match frontend expectations
       const response = {
         data: {
-          message: oracleResult.response || generateMayaResponse(input),
-          element: oracleResult.dominantElement || determineElement(input),
+          message: oracleResult.personalResponse?.response || oracleResult.response || generateMayaResponse(input),
+          element: oracleResult.personalResponse?.element || oracleResult.dominantElement || determineElement(input),
           confidence: oracleResult.confidence || 0.85,
           voiceCharacteristics: oracleResult.voiceCharacteristics || {
             tone: 'warm',
