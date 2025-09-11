@@ -1,86 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { UnifiedHistoryPage } from "@/components/beta/UnifiedHistoryPage";
 import { History, Upload } from "lucide-react";
 import { MayaWelcome } from "@/components/oracle/MayaWelcome";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function MaiaPage() {
-  const router = useRouter();
   const [showHistory, setShowHistory] = useState(false);
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);
-  const [intakeData, setIntakeData] = useState<any>(null);
-
-  useEffect(() => {
-    checkOnboardingStatus();
-  }, []);
-
-  const checkOnboardingStatus = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        router.push('/auth/login');
-        return;
-      }
-
-      // Check if user has completed onboarding
-      const { data: intake, error } = await supabase
-        .from('beta_intake')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (error || !intake || !intake.intake_part1_completed_at) {
-        // User hasn't completed onboarding
-        router.push('/onboarding');
-        return;
-      }
-
-      setIntakeData(intake);
-      setHasCompletedOnboarding(true);
-
-      // Check if it's been 1 week since part 1 and part 2 hasn't been completed
-      if (intake.intake_part1_completed_at && !intake.intake_part2_completed_at) {
-        const part1Date = new Date(intake.intake_part1_completed_at);
-        const oneWeekLater = new Date(part1Date.getTime() + 7 * 24 * 60 * 60 * 1000);
-        const now = new Date();
-
-        if (now >= oneWeekLater) {
-          // Prompt for Part 2 intake
-          router.push('/onboarding?part=2');
-        }
-      }
-    } catch (error) {
-      console.error('Error checking onboarding status:', error);
-    }
-  };
-
-  // Show loading while checking onboarding status
-  if (hasCompletedOnboarding === null) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{
-        background: 'linear-gradient(135deg, #1e293b 0%, #2e3a4b 100%)'
-      }}>
-        <div className="text-center">
-          <img src="/holoflower.svg" alt="Loading" className="w-16 h-16 mx-auto animate-spin" />
-          <p className="text-white/60 mt-4">Preparing your sacred space...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!hasCompletedOnboarding) {
-    return null; // Will redirect to onboarding
-  }
 
   // Swipe Navigation
   useSwipeNavigation({
@@ -111,10 +38,7 @@ export default function MaiaPage() {
       <div className="container mx-auto px-4 py-12 relative z-10">
         {/* Main Content Area */}
         <div className="max-w-3xl mx-auto">
-          <MayaWelcome 
-            onConversationStart={handleConversationStart} 
-            intakeData={intakeData}
-          />
+          <MayaWelcome onConversationStart={handleConversationStart} />
         </div>
 
         {/* Floating Action Buttons */}
