@@ -241,7 +241,9 @@ export function initializeClaudeService(apiKey: string): ClaudeService {
 
 export function getClaudeService(): ClaudeService {
   if (!claudeService) {
-    const apiKey = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
+    const apiKey = process.env.ANTHROPIC_API_KEY || 
+                   process.env.CLAUDE_API_KEY || 
+                   process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY;
     if (!apiKey) {
       throw new Error('Claude API key not configured');
     }
