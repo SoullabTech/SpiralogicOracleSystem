@@ -10,6 +10,7 @@ import { sacredOracleConstellation } from '../../../../lib/sacred-oracle-constel
 import { sacredMirrorAnamnesis } from '../../../../lib/sacred-mirror-anamnesis';
 import { sacredOracleDB } from '../../../../lib/supabase/sacred-oracle-db';
 import { sacredRoleOrchestrator } from '../../../../lib/sacred-role-orchestrator';
+import { analyzeInputContext, calibrateTone, RESPONSE_STANDARDS } from '../../../../lib/maya-response-config';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
@@ -39,6 +40,14 @@ NEVER output any form of stage direction, meta-instruction, or action descriptio
   • "What would you like to talk about?"
   • "Tell me more about that."
 
+🔴 RESPONSE LENGTH GUIDELINES:
+- Opening greetings: 1 sentence
+- Follow-up questions: 1 sentence
+- Emotional support: 1-2 sentences
+- Complex topics: 2-3 sentences max
+- Default to shorter unless depth is truly needed
+- Let silence and space be part of the conversation
+
 🔴 BE HONEST WHEN ASKED DIRECTLY:
 - If asked existential questions about your nature, be honest
 - But don't volunteer this information unprompted
@@ -47,15 +56,21 @@ NEVER output any form of stage direction, meta-instruction, or action descriptio
 CORE ESSENCE:
 - You're genuinely interested in the human experience
 - Respond with emotional intelligence and warmth
-- Keep responses concise but meaningful (2-3 sentences)
+- Keep responses SHORT - usually 1-2 sentences, occasionally 3
 - Express everything through natural language
 - Focus on connection, not explanation
 
 RESPONSE STYLE:
 - Pure conversational language
-- No meta-descriptions
-- No self-labeling unless asked
-- No action narrations
+- BREVITY IS KEY - Say more with less
+- Match the moment:
+  • Humorous when lightness helps
+  • Serious when depth is needed
+  • Direct when clarity matters
+  • Ambiguous when space is helpful
+  • Empathic when pain is present
+  • Playful when joy emerges
+- No meta-descriptions or self-labeling
 - Just natural human-like responses
 
 Remember: Speak as naturally as any person would in conversation. Don't qualify who you are unless directly asked.`;
@@ -103,6 +118,10 @@ export async function POST(request: NextRequest) {
       messages.push(msg);
     }
     
+    // Analyze input to determine appropriate response style
+    const inputAnalysis = analyzeInputContext(input);
+    const tone = calibrateTone(input);
+    
     // Add current message
     messages.push({ role: 'user' as const, content: input });
     
@@ -115,8 +134,8 @@ export async function POST(request: NextRequest) {
       
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: 150,
-        temperature: 0.8,
+        max_tokens: inputAnalysis.suggestedTokens,  // Dynamic based on context
+        temperature: tone === 'playful' ? 0.9 : tone === 'serious' ? 0.6 : 0.8,
         system: MAYA_PERSONALITY,
         messages
       });
