@@ -254,11 +254,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setCurrentMotionState('responding');
       setCoherenceLevel(oracleResponse.confidence || 0.85);
       
-      // Add oracle message with empty text initially for streaming
+      // Add oracle message with empty text initially
       const oracleMessage: ConversationMessage = {
         id: `msg-${Date.now()}-oracle`,
         role: 'oracle',
-        text: '',  // Start with empty text for streaming
+        text: '',  // Start with empty text
         timestamp: new Date(),
         facetId: element,
         motionState: 'responding',
@@ -267,10 +267,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
       
-      // Start streaming text effect
-      setIsStreaming(true);
-      setStreamingText('');
-      await streamText(responseText, oracleMessage.id);
+      // DON'T start streaming yet - wait for audio to begin
       
       // Update context
       contextRef.current.previousResponses.push({
@@ -298,6 +295,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             setIsAudioPlaying(true);
             voiceMicRef.current?.stopListening?.();
             
+            // Start streaming text when audio begins playing
+            audio.addEventListener('play', () => {
+              setIsStreaming(true);
+              setStreamingText('');
+              streamText(responseText, oracleMessage.id);
+            });
+            
             audio.addEventListener('ended', () => {
               setIsAudioPlaying(false);
               setIsResponding(false);
@@ -312,6 +316,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             audio.play().catch(error => {
               console.error('Audio playback failed, falling back to Maya voice:', error);
               setIsAudioPlaying(false);
+              // Start streaming text immediately for fallback
+              setIsStreaming(true);
+              setStreamingText('');
+              streamText(responseText, oracleMessage.id);
               // Fallback to Maya voice synthesis
               mayaSpeak(responseText, {
                 element,
@@ -321,6 +329,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             });
           } catch (error) {
             console.error('Audio creation failed:', error);
+            // Start streaming text immediately for fallback
+            setIsStreaming(true);
+            setStreamingText('');
+            streamText(responseText, oracleMessage.id);
             // Fallback to Maya voice synthesis - clean stage directions
             mayaSpeak(cleanMessageForVoice(responseText), {
               element,
@@ -332,6 +344,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           // Use Maya voice synthesis with element characteristics - clean stage directions
           setIsAudioPlaying(true);
           voiceMicRef.current?.stopListening?.();
+          
+          // Start streaming text when voice begins
+          setIsStreaming(true);
+          setStreamingText('');
+          streamText(responseText, oracleMessage.id);
           
           mayaSpeak(cleanMessageForVoice(responseText), {
             element,
@@ -352,6 +369,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             setIsStreaming(false);
           });
         }
+      } else {
+        // No voice - show text immediately
+        setIsStreaming(true);
+        setStreamingText('');
+        await streamText(responseText, oracleMessage.id);
+        setIsResponding(false);
+        setCurrentMotionState('listening');
       }
       
     } catch (error) {

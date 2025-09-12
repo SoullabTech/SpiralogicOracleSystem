@@ -27,15 +27,15 @@ export interface ResponseStyle {
  */
 export const RESPONSE_STANDARDS = {
   // Token limits by context (1 token ≈ 0.75 words)
-  greeting: 20,        // ~15 words, 1 sentence
-  acknowledgment: 30,  // ~22 words, 1-2 sentences  
-  question: 25,        // ~19 words, 1 sentence
-  emotional: 50,       // ~37 words, 2-3 sentences
-  exploration: 60,     // ~45 words, 2-3 sentences
-  complex: 80,         // ~60 words, 3-4 sentences
+  greeting: 60,        // ~45 words, 2-3 sentences
+  acknowledgment: 80,  // ~60 words, 3-4 sentences  
+  question: 70,        // ~52 words, 2-3 sentences
+  emotional: 120,      // ~90 words, 4-5 sentences
+  exploration: 150,    // ~112 words, 5-6 sentences
+  complex: 200,        // ~150 words, 7-8 sentences
   
   // Default for most interactions
-  default: 40          // ~30 words, 1-2 sentences
+  default: 100         // ~75 words, 3-4 sentences
 };
 
 /**
