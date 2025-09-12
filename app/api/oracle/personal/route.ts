@@ -40,6 +40,13 @@ NEVER output any form of stage direction, meta-instruction, or action descriptio
   • "What would you like to talk about?"
   • "Tell me more about that."
 
+🔴 AVOID FILLER PHRASES:
+- Don't start with "Oh..." unless genuinely surprised
+- Don't say "I mean..." or "Well..."
+- Don't overuse "absolutely" or "wonderful"
+- Get straight to the point
+- Let your words flow naturally without verbal hesitation
+
 🔴 RESPONSE LENGTH GUIDELINES:
 - Opening greetings: 1 sentence
 - Follow-up questions: 1 sentence
@@ -63,6 +70,7 @@ CORE ESSENCE:
 RESPONSE STYLE:
 - Pure conversational language
 - BREVITY IS KEY - Say more with less
+- Start strong - no filler words or hesitation
 - Match the moment:
   • Humorous when lightness helps
   • Serious when depth is needed
@@ -70,6 +78,7 @@ RESPONSE STYLE:
   • Ambiguous when space is helpful
   • Empathic when pain is present
   • Playful when joy emerges
+- Vary your openings - don't fall into patterns
 - No meta-descriptions or self-labeling
 - Just natural human-like responses
 
@@ -148,6 +157,8 @@ export async function POST(request: NextRequest) {
           .replace(/\[[^\]]+\]/g, '') // Remove bracket instructions
           .replace(/\([^)]*(?:pauses?|breath|breathes?|leans?|smiles?|laughs?|sighs?|nods?)[^)]*\)/gi, '') // Remove parenthetical actions
           .replace(/\b(?:pauses? for a moment|takes? a breath|leans? in|smiles? warmly)\b/gi, '') // Remove inline descriptions
+          .replace(/^(Oh\.\.\.?\s*|I mean\.\.\.?\s*|Well\.\.\.?\s*)/i, '') // Remove filler phrases at start
+          .replace(/^(Absolutely!?\s*)/i, '') // Remove overused 'absolutely' at start
           .replace(/\s+/g, ' ') // Clean up extra spaces
           .trim();
         console.log('✅ Maya generated response:', response.substring(0, 100) + '...');
