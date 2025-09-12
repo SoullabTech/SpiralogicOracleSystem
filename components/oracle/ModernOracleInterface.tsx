@@ -390,7 +390,40 @@ export function ModernOracleInterface({
 
       // Play audio response if available
       if (voiceEnabled) {
-        await playAudioResponse(mayaMessage.audioUrl || '', cleanedText);
+        console.log('[VOICE] Audio URL:', mayaMessage.audioUrl);
+        console.log('[VOICE] Clean text:', cleanedText);
+        
+        // Always use Web Speech API fallback for now since ElevenLabs might not be configured
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(cleanedText);
+          utterance.rate = 0.9;
+          utterance.pitch = 1.0;
+          utterance.volume = 0.8;
+          utterance.lang = 'en-US';
+          
+          // Select a female voice if available
+          const voices = window.speechSynthesis.getVoices();
+          const femaleVoice = voices.find(voice => 
+            voice.name.includes('Female') || 
+            voice.name.includes('Samantha') || 
+            voice.name.includes('Victoria') ||
+            voice.name.includes('Karen') ||
+            voice.name.includes('Zira')
+          );
+          
+          if (femaleVoice) {
+            utterance.voice = femaleVoice;
+          }
+          
+          utterance.onend = () => {
+            setVoiceState(prev => ({ ...prev, isPlaying: false }));
+          };
+          
+          window.speechSynthesis.speak(utterance);
+          console.log('[VOICE] Using Web Speech API for voice synthesis');
+        } else {
+          console.warn('[VOICE] Web Speech API not available');
+        }
       }
 
       if (debugMode && data.data?.consciousnessProfile) {
