@@ -7,8 +7,8 @@ export function cleanMessage(text: string): string {
   if (!text) return "";
   
   return text
-    // Remove stage directions like *Settling in with a warm presence* or *laughs warmly*
-    .replace(/\*[^*]+\*/g, "")
+    // Keep stage directions for now - they provide important context
+    // We'll only remove them for voice synthesis
     // Remove pause tags in multiple formats
     .replace(/<pause-\d+ms>/g, "")  // <pause-200ms>
     .replace(/<pause\s+duration="[^"]+"\s*\/>/gi, "") // <pause duration="600ms"/>
@@ -50,6 +50,24 @@ export function cleanMessageWithDebug(text: string, showProsody = false): string
   }
   
   return cleanMessage(text);
+}
+
+/**
+ * Format message for display - converts stage directions to italics
+ * @param text The message text with stage directions
+ * @returns HTML string with stage directions in italics
+ */
+export function formatMessageForDisplay(text: string): string {
+  if (!text) return "";
+  
+  // First clean any voice markup
+  let formatted = cleanMessage(text);
+  
+  // Convert stage directions to italics for visual distinction
+  // *laughs warmly* becomes <em>laughs warmly</em>
+  formatted = formatted.replace(/\*([^*]+)\*/g, '<em style="opacity: 0.8; font-style: italic;">$1</em>');
+  
+  return formatted;
 }
 
 /**
