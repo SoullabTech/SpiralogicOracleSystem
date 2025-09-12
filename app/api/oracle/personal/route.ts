@@ -260,8 +260,8 @@ export async function POST(request: NextRequest) {
       try {
         // Select voice ID based on agent
         const voiceId = agentVoice === 'anthony' 
-          ? 'pNInz6obpgDQGcFmaJgB'  // Adam - deep male voice
-          : 'EXAVITQu4vr4xnSDxMaL'; // Sarah - female voice
+          ? 'PIGsltMj3gFMR34aFDI3'  // Anthony's custom male voice
+          : 'EXAVITQu4vr4xnSDxMaL'; // Sarah - female voice (Maya)
         
         const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
           method: 'POST',

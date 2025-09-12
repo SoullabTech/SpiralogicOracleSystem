@@ -21,7 +21,7 @@ export const DEFAULT_AGENTS: Record<string, AgentConfig> = {
     name: 'Anthony',
     voice: 'anthony', 
     gender: 'male',
-    elevenLabsVoiceId: 'pNInz6obpgDQGcFmaJgB' // Adam voice from ElevenLabs (deep, mature)
+    elevenLabsVoiceId: 'PIGsltMj3gFMR34aFDI3' // Anthony's custom voice from ElevenLabs
   }
 };
 
