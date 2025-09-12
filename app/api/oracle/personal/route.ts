@@ -113,6 +113,55 @@ Remember: Speak as naturally as any person would in conversation. Don't qualify 
 // Store conversation context in memory (resets on server restart)
 const conversationMemory = new Map<string, any[]>();
 
+// Dynamic voice settings based on conversation context
+function getDynamicVoiceSettings(userInput: string, mayaResponse: string) {
+  const inputLower = userInput.toLowerCase();
+  const responseLower = mayaResponse.toLowerCase();
+  
+  // Detect emotional or deep conversation
+  const isEmotional = /\b(feel|hurt|sad|happy|love|afraid|scared|angry|lonely)\b/i.test(userInput);
+  const isDeep = /\b(meaning|purpose|death|life|soul|consciousness|existence)\b/i.test(userInput);
+  const isQuiet = /\b(quiet|silence|peace|calm|rest)\b/i.test(userInput);
+  const isIntense = /\b(urgent|emergency|help|crisis|now)\b/i.test(userInput);
+  
+  // Base settings for intimate, slower voice
+  let settings = {
+    stability: 0.65,              // More stable for intimacy
+    similarity_boost: 0.75,        // Keep voice consistent
+    style: 0.4,                    // Slower, more thoughtful (0=fast, 1=slow)
+    use_speaker_boost: false       // Natural tone
+  };
+  
+  // Adjust based on context
+  if (isEmotional || isDeep) {
+    // Very intimate, slow, gentle
+    settings.stability = 0.7;
+    settings.style = 0.6;          // Even slower for deep moments
+    settings.similarity_boost = 0.8;
+  } else if (isQuiet) {
+    // Whisper-like, very intimate
+    settings.stability = 0.75;
+    settings.style = 0.7;          // Very slow and gentle
+    settings.similarity_boost = 0.85;
+  } else if (isIntense) {
+    // More present but still calm
+    settings.stability = 0.6;
+    settings.style = 0.3;          // Slightly faster for urgency
+    settings.similarity_boost = 0.7;
+  } else if (responseLower.length < 30) {
+    // Short responses - keep intimate
+    settings.style = 0.5;          // Slower for brief moments
+  }
+  
+  // If Maya is witnessing or holding space
+  if (/\b(yes|mmm|i see|tell me|what else)\b/i.test(responseLower)) {
+    settings.style = 0.6;          // Very slow for witnessing
+    settings.stability = 0.8;      // Very stable, grounded
+  }
+  
+  return settings;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { input, userId = 'anonymous', sessionId, agentName = 'Maya', agentVoice = 'maya' } = await request.json();
@@ -280,6 +329,15 @@ export async function POST(request: NextRequest) {
           ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's primary male voice
           : 'EXAVITQu4vr4xnSDxMaL'; // Sarah - female voice (Maya)
         
+        const voiceSettings = agentVoice === 'anthony' ? {
+          stability: 0.5,
+          similarity_boost: 0.7,
+          style: 0.3,
+          use_speaker_boost: true
+        } : getDynamicVoiceSettings(input, response);
+        
+        console.log('🎙️ Dynamic voice settings:', voiceSettings);
+        
         const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
           method: 'POST',
           headers: {
@@ -289,17 +347,7 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             text: response,
             model_id: 'eleven_turbo_v2_5',  // Faster model for real-time
-            voice_settings: agentVoice === 'anthony' ? {
-              stability: 0.5,             // More stable for male voice
-              similarity_boost: 0.7,      // Higher similarity for consistency
-              style: 0.3,                 // Slower, more contemplative
-              use_speaker_boost: true     // Enhance male voice depth
-            } : {
-              stability: 0.4,             // Natural variation for female
-              similarity_boost: 0.6,      // Lower for more natural sound
-              style: 0.0,                 // Natural pacing
-              use_speaker_boost: false
-            }
+            voice_settings: voiceSettings
           })
         });
         
