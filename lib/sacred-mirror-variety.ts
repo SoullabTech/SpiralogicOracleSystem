@@ -161,7 +161,7 @@ export class SacredMirrorVariety {
     const wondering = this.selectUnused(wonderings);
     
     if (variation.depth === 'deep') {
-      return `${opening} There's something profound here about ${keyPhrases[0] || 'what you're experiencing'}. ${wondering}`;
+      return `${opening} There's something profound here about ${keyPhrases[0] || 'what you\'re experiencing'}. ${wondering}`;
     } else {
       return `${opening} ${wondering}`;
     }
@@ -234,7 +234,7 @@ export class SacredMirrorVariety {
   }
   
   private reflectPhrase(phrases: string[]): string {
-    if (phrases.length === 0) return 'What you're sharing';
+    if (phrases.length === 0) return 'What you\'re sharing';
     
     const reflectionTemplates = [
       `${phrases[0]}`,
@@ -251,7 +251,7 @@ export class SacredMirrorVariety {
     const openings = {
       quick: ['Oh -', 'Ah,', 'Yes,', 'Mmm,'],
       measured: ['I see.', 'Interesting.', 'I notice that.', 'Thank you.'],
-      spacious: ['', 'Let me sit with that.', 'What you're sharing...', '...']
+      spacious: ['', 'Let me sit with that.', 'What you\'re sharing...', '...']
     };
     
     const options = openings[rhythm];

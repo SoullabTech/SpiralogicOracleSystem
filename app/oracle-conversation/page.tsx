@@ -1,6 +1,6 @@
 'use client';
 
-import { ModernOracleInterface } from '@/components/oracle/ModernOracleInterface';
+import { OracleConversation } from '@/components/OracleConversation';
 import { useEffect, useState } from 'react';
 
 export default function OracleConversationPage() {
@@ -9,13 +9,13 @@ export default function OracleConversationPage() {
 
   useEffect(() => {
     // Generate session ID
-    const sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const sessionId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     setSessionId(sessionId);
 
     // Get or generate user ID
     let userId = localStorage.getItem('userId');
     if (!userId) {
-      userId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      userId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
       localStorage.setItem('userId', userId);
     }
     setUserId(userId);
@@ -29,5 +29,10 @@ export default function OracleConversationPage() {
     );
   }
 
-  return <ModernOracleInterface userId={userId} sessionId={sessionId} />;
+  return <OracleConversation 
+    userId={userId} 
+    sessionId={sessionId} 
+    voiceEnabled={true}
+    showAnalytics={false}
+  />;
 }

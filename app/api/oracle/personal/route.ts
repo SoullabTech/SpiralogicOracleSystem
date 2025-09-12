@@ -173,8 +173,25 @@ export async function POST(request: NextRequest) {
       response = (content && 'text' in content) ? content.text : response;
     }
 
-      // Optional Sesame CI refinement for voice characteristics
-      try {
+    // Clean up any voice command artifacts from the response
+    const cleanResponse = (text: string): string => {
+      // Remove SSML and voice command tags
+      return text
+        .replace(/<pause\s+duration="[^"]+"\s*\/>/gi, '') // Remove pause tags
+        .replace(/<break\s+time="[^"]+"\s*\/>/gi, '')     // Remove break tags
+        .replace(/<prosody[^>]*>(.*?)<\/prosody>/gi, '$1') // Remove prosody tags but keep content
+        .replace(/<emphasis[^>]*>(.*?)<\/emphasis>/gi, '$1') // Remove emphasis tags but keep content
+        .replace(/<\/?speak>/gi, '')                      // Remove speak tags
+        .replace(/<\/?voice[^>]*>/gi, '')                 // Remove voice tags
+        .replace(/\s+/g, ' ')                             // Normalize whitespace
+        .trim();
+    };
+    
+    // Clean the response before any further processing
+    response = cleanResponse(response);
+    
+    // Optional Sesame CI refinement for voice characteristics
+    try {
         const shapeResponse = await fetch('https://soullab.life/api/sesame/ci/shape', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -189,17 +206,17 @@ export async function POST(request: NextRequest) {
         if (shapeResponse.ok) {
           const shapeData = await shapeResponse.json();
           if (shapeData.shaped && !shapeData.fallbackUsed) {
-            response = shapeData.shaped;
+            response = cleanResponse(shapeData.shaped); // Clean shaped response too
             console.log(`✅ Sesame voice refinement: ${shapeData.responseTime}ms`);
           }
         }
-      } catch (shapeError) {
-        // Sesame is now optional - don't log errors as Sacred Oracle is primary
-        console.log('Sesame CI refinement unavailable, continuing with Sacred Oracle response');
-      }
+    } catch (shapeError) {
+      // Sesame is now optional - don't log errors as Sacred Oracle is primary
+      console.log('Sesame CI refinement unavailable, continuing with Sacred Oracle response');
+    }
 
-      // Final response enhancement maintains sacred attending principles  
-      try {
+    // Final response enhancement maintains sacred attending principles  
+    try {
         const enhanced = await responseEnhancer.enhanceResponse({
           userInput: input,
           originalResponse: response,
@@ -215,14 +232,8 @@ export async function POST(request: NextRequest) {
           console.log(`✨ Response enhanced while maintaining sacred mirror (${enhanced.processingTime}ms)`);
         }
         
-      } catch (enhanceError) {
-        console.warn('Response enhancement failed, using sacred oracle response:', enhanceError);
-      }
-      
-    } catch (error) {
-      console.error('Error in sacred oracle processing:', error);
-      // Sacred attending fallback
-      response = "I'm curious - what wants your attention right now?";
+    } catch (enhanceError) {
+      console.warn('Response enhancement failed, using sacred oracle response:', enhanceError);
     }
     
     // Update conversation history
@@ -289,7 +300,6 @@ export async function POST(request: NextRequest) {
         })
       }
     });
-    
   } catch (error: any) {
     console.error('Oracle error:', error);
     return NextResponse.json(

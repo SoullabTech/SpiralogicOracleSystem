@@ -31,6 +31,16 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
 
   // Initialize speech recognition
   useEffect(() => {
+    // Check for HTTPS or localhost
+    const isSecureContext = window.location.protocol === 'https:' || 
+                           window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1';
+    
+    if (!isSecureContext) {
+      setError('Voice requires HTTPS connection');
+      return;
+    }
+    
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
       const SpeechRecognition = (window as any).webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
@@ -98,7 +108,27 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
-        setError(`Error: ${event.error}`);
+        
+        // Handle specific error types with user-friendly messages
+        let errorMessage = '';
+        switch(event.error) {
+          case 'not-allowed':
+            errorMessage = 'Microphone access denied. Please allow microphone permissions.';
+            break;
+          case 'no-speech':
+            errorMessage = 'No speech detected. Please try again.';
+            break;
+          case 'audio-capture':
+            errorMessage = 'Microphone not available. Check your device settings.';
+            break;
+          case 'network':
+            errorMessage = 'Network error. Check your connection.';
+            break;
+          default:
+            errorMessage = `Voice error: ${event.error}`;
+        }
+        
+        setError(errorMessage);
         setIsListening(false);
       };
       
@@ -203,15 +233,30 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
         clarity: 0
       });
     } else {
-      // Start listening
-      try {
-        recognitionRef.current.start();
-        setIsListening(true);
-        lastSpeechTimeRef.current = Date.now();
-      } catch (err) {
-        console.error('Failed to start recognition:', err);
-        setError('Failed to start voice recognition');
-      }
+      // Request microphone permissions first
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(() => {
+          // Start listening after permissions granted
+          try {
+            recognitionRef.current.start();
+            setIsListening(true);
+            lastSpeechTimeRef.current = Date.now();
+            setError(null);
+          } catch (err) {
+            console.error('Failed to start recognition:', err);
+            setError('Failed to start voice recognition');
+          }
+        })
+        .catch((err) => {
+          console.error('Microphone permission denied:', err);
+          if (err.name === 'NotAllowedError') {
+            setError('Microphone access denied. Please allow permissions in your browser.');
+          } else if (err.name === 'NotFoundError') {
+            setError('No microphone found. Please connect a microphone.');
+          } else {
+            setError('Unable to access microphone. Check your settings.');
+          }
+        });
     }
   }, [isListening, silenceTimer, onVoiceStateChange]);
 

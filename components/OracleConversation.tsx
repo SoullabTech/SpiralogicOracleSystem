@@ -10,6 +10,7 @@ import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
 import { VoiceState } from '@/lib/voice/voice-capture';
 import { useMayaVoice } from '@/hooks/useMayaVoice';
+import { cleanMessage } from '@/lib/cleanMessage';
 
 interface OracleConversationProps {
   userId?: string;
@@ -42,6 +43,26 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 }) => {
   // Maya Voice Integration
   const { speak: mayaSpeak, voiceState: mayaVoiceState, isReady: mayaReady } = useMayaVoice();
+  
+  // Responsive holoflower size
+  const [holoflowerSize, setHoloflowerSize] = useState(400);
+  
+  useEffect(() => {
+    const updateSize = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setHoloflowerSize(Math.min(width - 64, 350)); // Mobile
+      } else if (width < 1024) {
+        setHoloflowerSize(400); // Tablet
+      } else {
+        setHoloflowerSize(500); // Desktop
+      }
+    };
+    
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
   
   // Core state
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
@@ -105,11 +126,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     // Debounce rapid calls
     if (isProcessing) return;
     
+    // Clean the transcript of any artifacts
+    const cleanedTranscript = cleanMessage(transcript);
+    
     // Add user message immediately for responsiveness
     const userMessage: ConversationMessage = {
       id: `msg-${Date.now()}`,
       role: 'user',
-      text: transcript,
+      text: cleanedTranscript,
       timestamp: new Date()
     };
     setMessages(prev => [...prev, userMessage]);
@@ -128,7 +152,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          input: transcript,
+          input: cleanedTranscript,
           userId: userId || 'anonymous',
           sessionId,
           context: {
@@ -157,9 +181,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       const oracleResponse = responseData.data || responseData;
       let responseText = oracleResponse.message || 'I am here with you.';
       
-      // Maya's responses should already be natural from canonical prompt
-      // No need to clean up - just ensure basic formatting
-      responseText = responseText.trim();
+      // Clean any voice command artifacts from the response text
+      responseText = cleanMessage(responseText);
       
       // Use the element and voice characteristics from PersonalOracleAgent
       const element = oracleResponse.element || 'aether';
@@ -281,13 +304,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   }, []);
 
   return (
-    <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black">
-      {/* Beautiful Sacred Holoflower - Always centered */}
+    <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black overflow-hidden">
+      {/* Beautiful Sacred Holoflower - Responsive sizing */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        <div className="relative">
+        <div className="relative w-full max-w-[500px] px-4">
           {/* Non-interactive Sacred Holoflower with animations */}
           <SacredHoloflower
-            size={500}
+            size={holoflowerSize}
             interactive={false}
             showLabels={false}
             motionState={currentMotionState}
@@ -490,39 +513,49 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Message overlay - minimal, non-intrusive */}
-      <AnimatePresence>
-        {messages.length > 0 && (
-          <motion.div
-            className="fixed top-8 left-1/2 transform -translate-x-1/2 max-w-md"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-          >
-            <div className="bg-black/60 backdrop-blur-md rounded-2xl p-4 text-white">
-              {messages.slice(-1).map(message => (
-                <div key={message.id} className="space-y-2">
-                  <div className="text-xs text-purple-300 uppercase tracking-wider">
+      {/* Message flow - Mobile: Bottom sheet, Desktop: Right side */}
+      <div className="fixed md:right-8 md:top-1/2 md:transform md:-translate-y-1/2 md:w-96 
+                      bottom-0 left-0 right-0 md:left-auto md:bottom-auto
+                      max-h-[40vh] md:max-h-[70vh] overflow-y-auto
+                      bg-black/60 md:bg-transparent backdrop-blur-lg md:backdrop-blur-none
+                      rounded-t-3xl md:rounded-none p-4 md:p-0">
+        <AnimatePresence>
+          {messages.length > 0 && (
+            <div className="space-y-3">
+              {messages.slice(-5).map((message, index) => (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`bg-black/40 md:bg-black/40 backdrop-blur-md rounded-2xl p-3 md:p-4 text-white border ${
+                    message.role === 'user' 
+                      ? 'border-blue-500/20' 
+                      : 'border-purple-500/20'
+                  }`}
+                >
+                  <div className="text-xs uppercase tracking-wider mb-1 opacity-60">
                     {message.role === 'user' ? 'You' : 'Maya'}
                   </div>
                   <div className="text-sm leading-relaxed">
                     {message.text}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
         <>
-          {/* Mode Toggle */}
-          <div className="fixed top-8 left-8 flex gap-2">
+          {/* Mode Toggle - Mobile positioned */}
+          <div className="fixed top-4 md:top-8 left-4 md:left-8 flex gap-2 z-40">
             <button
               onClick={() => setShowChatInterface(false)}
-              className={`px-3 py-1 rounded-full text-xs transition-colors ${
+              className={`px-2 md:px-3 py-1 rounded-full text-xs transition-colors ${
                 !showChatInterface 
                   ? 'bg-[#D4B896] text-white' 
                   : 'bg-white/10 text-white/60 hover:bg-white/20'
@@ -532,7 +565,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </button>
             <button
               onClick={() => setShowChatInterface(true)}
-              className={`px-3 py-1 rounded-full text-xs transition-colors ${
+              className={`px-2 md:px-3 py-1 rounded-full text-xs transition-colors ${
                 showChatInterface 
                   ? 'bg-[#D4B896] text-white' 
                   : 'bg-white/10 text-white/60 hover:bg-white/20'
@@ -543,8 +576,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           </div>
 
           {showChatInterface ? (
-            /* Text Chat Interface */
-            <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
+            /* Text Chat Interface - Mobile optimized */
+            <div className="fixed bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
               <MayaChatInterface
                 onSendMessage={handleTextMessage}
                 onVoiceTranscript={handleVoiceTranscript}
@@ -570,6 +603,27 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </>
       )}
 
+
+      {/* Session Controls - Mobile optimized */}
+      <div className="fixed top-4 md:top-8 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 z-50">
+        <button
+          onClick={() => {
+            if (window.confirm('Are you sure you want to end this conversation?')) {
+              onSessionEnd?.('user_ended');
+              window.location.href = '/';
+            }
+          }}
+          className="px-3 md:px-4 py-1.5 md:py-2 bg-white/10 backdrop-blur-sm text-white text-xs md:text-sm rounded-full
+                     hover:bg-white/20 transition-all duration-300 border border-white/20"
+        >
+          End Conversation
+        </button>
+        <div className="px-3 md:px-4 py-1.5 md:py-2 bg-green-500/20 backdrop-blur-sm text-green-300 text-xs md:text-sm rounded-full
+                        border border-green-500/30 flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          Session Active
+        </div>
+      </div>
 
       {/* Analytics toggle */}
       {showAnalytics && (

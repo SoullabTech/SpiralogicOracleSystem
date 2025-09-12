@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { EnhancedVoiceMicButton } from '@/components/ui/EnhancedVoiceMicButton';
 import { TranscriptPreview } from '@/components/TranscriptPreview';
 import { Mic, MicOff, Send, RotateCcw, Settings, Volume2, VolumeX } from 'lucide-react';
+import { cleanMessage } from '@/lib/cleanMessage';
 
 interface Message {
   id: string;
@@ -107,10 +108,13 @@ export function ModernOracleInterface({
     }
   };
 
-  // Clean response text - remove any command artifacts
+  // Clean response text - remove any command artifacts and SSML tags
   const cleanResponseText = (text: string): string => {
-    // Remove common command patterns that might leak through
-    let cleaned = text
+    // First apply the comprehensive SSML cleaning
+    let cleaned = cleanMessage(text);
+    
+    // Then remove any additional command patterns that might leak through
+    cleaned = cleaned
       .replace(/\$\{[^}]*\}/g, '') // Remove template literals
       .replace(/`[^`]*`/g, '') // Remove backtick strings
       .replace(/\[VOICE\]/gi, '') // Remove debug markers
@@ -121,7 +125,7 @@ export function ModernOracleInterface({
     
     // Ensure we have meaningful content
     if (!cleaned || cleaned.length < 10) {
-      return text.trim(); // Fallback to original if cleaning was too aggressive
+      return cleanMessage(text.trim()); // Fallback to just SSML cleaning if too aggressive
     }
     
     return cleaned;
