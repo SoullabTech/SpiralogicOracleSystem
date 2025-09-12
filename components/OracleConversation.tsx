@@ -10,7 +10,7 @@ import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
 import { VoiceState } from '@/lib/voice/voice-capture';
 import { useMayaVoice } from '@/hooks/useMayaVoice';
-import { cleanMessage, cleanMessageForVoice } from '@/lib/cleanMessage';
+import { cleanMessage, cleanMessageForVoice, formatMessageForDisplay } from '@/lib/cleanMessage';
 
 interface OracleConversationProps {
   userId?: string;
@@ -31,6 +31,30 @@ interface ConversationMessage {
   motionState?: MotionState;
   coherenceLevel?: number;
 }
+
+// Component to format messages with stage directions as italics
+const FormattedMessage: React.FC<{ text: string }> = ({ text }) => {
+  // Replace stage directions (*text*) with styled spans
+  const parts = text.split(/(\*[^*]+\*)/g);
+  
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('*') && part.endsWith('*')) {
+          // Stage direction - render as italic and slightly faded
+          const direction = part.slice(1, -1); // Remove asterisks
+          return (
+            <span key={index} className="italic opacity-70 text-purple-300">
+              {direction}
+            </span>
+          );
+        }
+        // Regular text
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
+};
 
 export const OracleConversation: React.FC<OracleConversationProps> = ({
   userId,
@@ -535,7 +559,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     {message.role === 'user' ? 'You' : 'Maya'}
                   </div>
                   <div className="text-sm leading-relaxed">
-                    {message.text}
+                    {message.role === 'oracle' ? (
+                      <FormattedMessage text={message.text} />
+                    ) : (
+                      message.text
+                    )}
                   </div>
                 </motion.div>
               ))}
