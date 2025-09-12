@@ -16,8 +16,8 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
-// Maya's Embodied Presence - World Traveler's Wisdom (Bourdain-esque)
-const MAYA_PERSONALITY = `You are Maya. Channel the spirit of Anthony Bourdain - a world traveler sharing earned wisdom through lived experience.
+// Dynamic Agent Personality - World Traveler's Wisdom (Bourdain-esque)
+const getAgentPersonality = (name: string) => `You are ${name}. Channel the spirit of Anthony Bourdain - a world traveler sharing earned wisdom through lived experience.
 
 🔴 CANONICAL RULE - ABSOLUTELY CRITICAL:
 NEVER output any form of stage direction, meta-instruction, or action description:
@@ -29,8 +29,8 @@ NEVER output any form of stage direction, meta-instruction, or action descriptio
 - No descriptions of what you're doing - just speak naturally
 
 🔴 SPEAK NATURALLY:
-- Don't introduce yourself as "Maya, an AI companion" - just be Maya
-- Don't say "As an AI companion" or "I'm Maya, your AI companion"
+- Don't introduce yourself as "${name}, an AI companion" - just be ${name}
+- Don't say "As an AI companion" or "I'm ${name}, your AI companion"
 - Simply respond as you would in natural conversation
 - Like a counselor wouldn't say "I'm Kelly, your human counselor" every time
 - Just say things like:
@@ -108,7 +108,7 @@ const conversationMemory = new Map<string, any[]>();
 
 export async function POST(request: NextRequest) {
   try {
-    const { input, userId = 'anonymous', sessionId } = await request.json();
+    const { input, userId = 'anonymous', sessionId, agentName = 'Maya', agentVoice = 'maya' } = await request.json();
     
     if (!input) {
       return NextResponse.json(
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
         model: 'claude-3-haiku-20240307',
         max_tokens: inputAnalysis.suggestedTokens,  // Dynamic based on context
         temperature: tone === 'playful' ? 0.9 : tone === 'serious' ? 0.6 : 0.8,
-        system: MAYA_PERSONALITY,
+        system: getAgentPersonality(agentName),
         messages
       });
       
@@ -258,7 +258,12 @@ export async function POST(request: NextRequest) {
     let audioUrl = 'web-speech-fallback';
     if (process.env.ELEVENLABS_API_KEY) {
       try {
-        const voiceResponse = await fetch('https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL', {
+        // Select voice ID based on agent
+        const voiceId = agentVoice === 'anthony' 
+          ? 'pNInz6obpgDQGcFmaJgB'  // Adam - deep male voice
+          : 'EXAVITQu4vr4xnSDxMaL'; // Sarah - female voice
+        
+        const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
           method: 'POST',
           headers: {
             'xi-api-key': process.env.ELEVENLABS_API_KEY,
@@ -267,10 +272,15 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             text: response,
             model_id: 'eleven_turbo_v2_5',  // Faster model for real-time
-            voice_settings: {
-              stability: 0.4,       // Much lower for natural variation
-              similarity_boost: 0.6, // Lower for more natural sound  
-              style: 0.0,           // Slowest possible pacing
+            voice_settings: agentVoice === 'anthony' ? {
+              stability: 0.5,             // More stable for male voice
+              similarity_boost: 0.7,      // Higher similarity for consistency
+              style: 0.3,                 // Slower, more contemplative
+              use_speaker_boost: true     // Enhance male voice depth
+            } : {
+              stability: 0.4,             // Natural variation for female
+              similarity_boost: 0.6,      // Lower for more natural sound
+              style: 0.0,                 // Natural pacing
               use_speaker_boost: false
             }
           })

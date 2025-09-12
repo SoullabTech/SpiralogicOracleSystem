@@ -5,12 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import MayaChatInterface from './chat/MayaChatInterface';
+import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
 import { VoiceState } from '@/lib/voice/voice-capture';
 import { useMayaVoice } from '@/hooks/useMayaVoice';
 import { cleanMessage, cleanMessageForVoice, formatMessageForDisplay } from '@/lib/cleanMessage';
+import { getAgentConfig, AgentConfig } from '@/lib/agent-config';
 
 interface OracleConversationProps {
   userId?: string;
@@ -110,6 +112,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [isStreaming, setIsStreaming] = useState(false);
   const voiceMicRef = useRef<any>(null);
   
+  // Agent configuration
+  const [agentConfig, setAgentConfig] = useState<AgentConfig>(getAgentConfig());
+  
   // UI states
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
   
@@ -206,12 +211,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           input: cleanedTranscript,
           userId: userId || 'anonymous',
           sessionId,
+          agentName: agentConfig.name,
+          agentVoice: agentConfig.voice,
           context: {
             previousInteractions: messages.length,
             userPreferences: {
               voice: {
                 enabled: voiceEnabled,
-                autoSpeak: true
+                autoSpeak: true,
+                agentConfig
               }
             }
           }
@@ -392,6 +400,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   return (
     <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black overflow-hidden">
+      {/* Agent Customizer - Orbital position */}
+      <AgentCustomizer 
+        position="top-right"
+        onConfigChange={(config) => {
+          setAgentConfig(config);
+          // Refresh conversation with new agent
+          console.log('Agent changed to:', config.name);
+        }}
+      />
+
       {/* Beautiful Sacred Holoflower - Responsive sizing */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
         <div className="flex items-center justify-center" style={{ width: holoflowerSize, height: holoflowerSize }}>
