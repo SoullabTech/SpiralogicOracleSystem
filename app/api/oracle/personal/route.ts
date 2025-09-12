@@ -71,16 +71,53 @@ export async function POST(request: NextRequest) {
     // Add current message
     messages.push({ role: 'user' as const, content: input });
     
-    // Generate intelligent response
-    const completion = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
-      max_tokens: 150,
-      temperature: 0.8,
-      system: ORACLE_INTELLIGENCE,
-      messages
-    });
+    // Use Sesame for intelligent conversation
+    let response = "I'm listening. Tell me more about what's on your mind.";
+    
+    try {
+      // Call Sesame API via tunnel
+      const sesameResponse = await fetch('https://sesame.soullab.life/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: input,
+          conversation_id: memoryKey,
+          user_id: userId || 'anonymous',
+          context: {
+            recent_messages: recentHistory,
+            mode: 'intimate_conversation',
+            personality: 'intelligent_companion'
+          }
+        }),
+        signal: AbortSignal.timeout(8000) // 8 second timeout
+      });
 
-    const response = completion.content[0]?.text || "I'm listening. Tell me more about what's on your mind.";
+      if (sesameResponse.ok) {
+        const data = await sesameResponse.json();
+        response = data.response || response;
+      } else {
+        // Fallback to Claude if Sesame is unavailable
+        const completion = await anthropic.messages.create({
+          model: 'claude-3-haiku-20240307',
+          max_tokens: 150,
+          temperature: 0.8,
+          system: ORACLE_INTELLIGENCE,
+          messages
+        });
+        response = completion.content[0]?.text || response;
+      }
+    } catch (error) {
+      console.error('Sesame API error, falling back to Claude:', error);
+      // Fallback to Claude
+      const completion = await anthropic.messages.create({
+        model: 'claude-3-haiku-20240307',
+        max_tokens: 150,
+        temperature: 0.8,
+        system: ORACLE_INTELLIGENCE,
+        messages
+      });
+      response = completion.content[0]?.text || response;
+    }
     
     // Update conversation history
     history.push({ role: 'user', content: input });
@@ -105,10 +142,10 @@ export async function POST(request: NextRequest) {
             text: response,
             model_id: 'eleven_multilingual_v2',
             voice_settings: {
-              stability: 0.75,
-              similarity_boost: 0.85,
-              style: 0.3,  // Slower, more conversational pacing
-              use_speaker_boost: true
+              stability: 0.65,      // Reduced for more natural variation
+              similarity_boost: 0.75, // Reduced for less robotic sound
+              style: 0.2,           // Even slower pacing
+              use_speaker_boost: false // Disable to avoid over-processing
             }
           })
         });
