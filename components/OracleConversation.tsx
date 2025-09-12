@@ -106,6 +106,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [isListening, setIsListening] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [streamingText, setStreamingText] = useState<string>('');
+  const [isStreaming, setIsStreaming] = useState(false);
   const voiceMicRef = useRef<any>(null);
   
   // UI states
@@ -146,6 +148,29 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     };
     return elementToFacetMap[element] || 'earth-1';
   };
+
+  // Stream text word by word as Maya speaks
+  const streamText = useCallback(async (fullText: string, messageId: string) => {
+    const words = fullText.split(' ');
+    let currentText = '';
+    
+    for (let i = 0; i < words.length; i++) {
+      currentText += (i > 0 ? ' ' : '') + words[i];
+      
+      // Update the specific message with streaming text
+      setMessages(prev => prev.map(msg => 
+        msg.id === messageId 
+          ? { ...msg, text: currentText }
+          : msg
+      ));
+      
+      // Adjust delay based on word length for natural pacing
+      const delay = Math.max(50, Math.min(150, words[i].length * 20));
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    
+    setIsStreaming(false);
+  }, []);
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
@@ -221,11 +246,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setCurrentMotionState('responding');
       setCoherenceLevel(oracleResponse.confidence || 0.85);
       
-      // Add oracle message
+      // Add oracle message with empty text initially for streaming
       const oracleMessage: ConversationMessage = {
         id: `msg-${Date.now()}-oracle`,
         role: 'oracle',
-        text: responseText,
+        text: '',  // Start with empty text for streaming
         timestamp: new Date(),
         facetId: element,
         motionState: 'responding',
@@ -233,6 +258,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       };
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
+      
+      // Start streaming text effect
+      setIsStreaming(true);
+      setStreamingText('');
+      await streamText(responseText, oracleMessage.id);
       
       // Update context
       contextRef.current.previousResponses.push({
@@ -263,6 +293,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             audio.addEventListener('ended', () => {
               setIsAudioPlaying(false);
               setIsResponding(false);
+              setIsStreaming(false);
               setCurrentMotionState('listening');
               // Resume listening after audio ends
               setTimeout(() => {
@@ -301,6 +332,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           }).then(() => {
             setIsAudioPlaying(false);
             setIsResponding(false);
+            setIsStreaming(false);
             setCurrentMotionState('listening');
             // Resume listening after speech ends
             setTimeout(() => {
@@ -309,6 +341,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           }).catch(error => {
             console.error('Maya voice failed:', error);
             setIsAudioPlaying(false);
+            setIsStreaming(false);
           });
         }
       }
