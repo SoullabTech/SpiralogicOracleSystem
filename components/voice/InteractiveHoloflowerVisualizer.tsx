@@ -199,15 +199,14 @@ export default function InteractiveHoloflowerVisualizer({
         </svg>
 
         {/* Center Holoflower Image */}
-        <div 
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          style={{ width: size * 0.2, height: size * 0.2 }}
-        >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <img 
             src="/holoflower.png" 
             alt="Holoflower"
-            className="w-full h-full object-contain"
-            style={{
+            className="object-contain"
+            style={{ 
+              width: size * 0.2, 
+              height: size * 0.2,
               filter: isProcessing ? 'brightness(1.5)' : 'brightness(1)',
               transition: 'filter 0.3s ease'
             }}
@@ -217,13 +216,12 @@ export default function InteractiveHoloflowerVisualizer({
         {/* Processing Animation */}
         {isProcessing && (
           <motion.div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
               style={{
                 width: size * 0.6,
                 height: size * 0.6,
@@ -243,24 +241,25 @@ export default function InteractiveHoloflowerVisualizer({
 
         {/* Listening Pulse */}
         {isListening && (
-          <motion.div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            style={{
-              width: size * 0.5,
-              height: size * 0.5,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(212, 184, 150, 0.3) 0%, transparent 70%)'
-            }}
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.5, 0.2, 0.5]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut'
-            }}
-          />
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <motion.div
+              style={{
+                width: size * 0.5,
+                height: size * 0.5,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(212, 184, 150, 0.3) 0%, transparent 70%)'
+              }}
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.2, 0.5]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut'
+              }}
+            />
+          </div>
         )}
 
         {/* Status Text */}

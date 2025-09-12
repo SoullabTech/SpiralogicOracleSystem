@@ -59,6 +59,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if API key is available
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('ANTHROPIC_API_KEY is not set');
+      return NextResponse.json({
+        data: {
+          message: "I'm having trouble with my configuration right now. My API key isn't set up properly.",
+          audio: 'web-speech-fallback',
+          element: 'balanced',
+          confidence: 0.0
+        }
+      });
+    }
+
     // Get or create conversation history
     const memoryKey = userId || sessionId || 'default';
     if (!conversationMemory.has(memoryKey)) {
@@ -79,7 +92,11 @@ export async function POST(request: NextRequest) {
     messages.push({ role: 'user' as const, content: input });
     
     // Use Claude with Maya personality directly (Sacred Oracle system seems to be failing)  
+    let response = "I'm curious - what's alive for you right now?";
+    
     try {
+      console.log('Making Claude API call with key:', process.env.ANTHROPIC_API_KEY?.substring(0, 20) + '...');
+      
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
         max_tokens: 150,  // Enough for natural responses but not too long
@@ -87,11 +104,27 @@ export async function POST(request: NextRequest) {
         system: MAYA_PERSONALITY,
         messages
       });
+      
+      console.log('Claude API response received:', completion);
       const content = completion.content[0];
       response = (content && 'text' in content) ? content.text : "I'm here with you - what's on your mind?";
-    } catch (claudeError) {
-      console.error('Claude API error:', claudeError);
-      response = "I'm having trouble connecting right now, but I'm here. What would you like to talk about?";
+    } catch (claudeError: any) {
+      console.error('Claude API error details:', {
+        message: claudeError.message,
+        status: claudeError.status,
+        type: claudeError.type,
+        error: claudeError
+      });
+      
+      if (claudeError.status === 401) {
+        response = "I'm having authentication issues with my AI service. My API key might be invalid.";
+      } else if (claudeError.status === 429) {
+        response = "I'm getting rate limited right now. Please try again in a moment.";
+      } else if (claudeError.status >= 500) {
+        response = "The AI service seems to be down right now. Please try again later.";
+      } else {
+        response = `I'm having trouble connecting (error ${claudeError.status || 'unknown'}). Please try again.`;
+      }
     }
 
     // Clean up any voice command artifacts from the response

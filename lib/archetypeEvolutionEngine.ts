@@ -353,3 +353,6 @@ export class ArchetypeEvolutionEngine {
     }
   }
 }
+
+// Export default instance
+export const archetypeEvolutionEngine = new ArchetypeEvolutionEngine();

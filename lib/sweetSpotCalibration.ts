@@ -192,3 +192,6 @@ export class SweetSpotCalibrator {
     return 'quick_check';
   }
 }
+
+// Export default instance
+export const sweetSpotCalibration = new SweetSpotCalibration();

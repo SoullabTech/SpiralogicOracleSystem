@@ -129,3 +129,6 @@ export class ResonanceEngine {
     this.lastDominant = null;
   }
 }
+
+// Export default instance
+export const resonanceEngine = new ResonanceEngine();

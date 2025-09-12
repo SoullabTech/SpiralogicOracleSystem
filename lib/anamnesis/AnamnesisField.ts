@@ -7,32 +7,17 @@
  */
 
 import { EventEmitter } from 'events';
-// import { MemoryClient } from 'mem0ai'; // TODO: Add to package.json
-const MemoryClient: any = {}; // Temporary stub
-// import { ChatOpenAI } from '@langchain/openai'; // TODO: Add to package.json
-// import { VectorStoreIndex } from 'llamaindex'; // TODO: Install llamaindex
-// import { 
-//   PromptTemplate,
-//   ChatPromptTemplate,
-//   MessagesPlaceholder 
-// } from '@langchain/core/prompts'; // TODO: Add to package.json
-// import { 
-//   RunnableSequence,
-//   RunnablePassthrough 
-// } from '@langchain/core/runnables'; // TODO: Add to package.json
-
 // Core Memory Architecture
 import { MemoryManager, CoreMemory, RecallMemory } from '../memory/core/MemoryCore';
-// import { SQLiteMemoryStore } from '../memory/stores/SQLiteMemoryStore'; // TODO: Install better-sqlite3
-// import { LlamaIndexService } from '../memory/semantic/LlamaIndexService'; // TODO: Install llamaindex
-import { OpenAIEmbedder } from '../memory/embeddings/OpenAIEmbedder';
-import { MemoryCompressorService } from '../memory/compression/MemoryCompressor';
+import { SimpleMemoryStore } from '../memory/stores/SimpleMemoryStore';
+import { SimpleEmbedder } from '../memory/embeddings/SimpleEmbedder';
+import { SimpleCompressor } from '../memory/compression/SimpleCompressor';
 
 // Maya Memory Systems
 import { MayaMemorySystem } from '../../apps/web/lib/memory/MayaMemorySystem';
-// import { MayaReasoningChains, ReasoningMode } from '../../apps/web/lib/langchain/MayaReasoningChains'; // TODO: Fix langchain deps
-const MayaReasoningChains: any = {}; // Temporary stub
-const ReasoningMode: any = {}; // Temporary stub
+// Temporary stubs for reasoning chains (to be implemented later)
+const MayaReasoningChains: any = {};
+const ReasoningMode: any = {};
 
 // Agent Integration
 import { PersonalOracleAgent } from '../agents/PersonalOracleAgent';

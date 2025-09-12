@@ -251,3 +251,6 @@ export class StyleResonanceCalibrator {
     return Math.min((sentences * 0.1) + (avgWordLength * 0.05), 1);
   }
 }
+
+// Export default instance
+export const styleResonanceCalibrator = new StyleResonanceCalibrator();
