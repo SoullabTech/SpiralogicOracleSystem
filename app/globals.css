@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom animations for onboarding */
+/* Custom animations for onboarding and voice interface */
 @layer utilities {
   @keyframes spin-slow {
     from {
@@ -13,7 +13,61 @@
     }
   }
   .animate-spin-slow {
-    animation: spin-slow 6s linear infinite;
+    animation: spin-slow 8s linear infinite;
+  }
+
+  /* Tesla-style pulsing torus animations */
+  @keyframes pulse-ring-outer {
+    0%, 100% { 
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+      border-color: rgb(245 158 11 / 0.3);
+    }
+    50% { 
+      transform: scale(1.1) rotate(180deg);
+      opacity: 0.6;
+      border-color: rgb(245 158 11 / 0.6);
+    }
+  }
+
+  @keyframes pulse-ring-middle {
+    0%, 100% { 
+      transform: scale(1) rotate(0deg);
+      opacity: 0.8;
+      border-color: rgb(251 191 36 / 0.5);
+    }
+    50% { 
+      transform: scale(1.2) rotate(-90deg);
+      opacity: 0.4;
+      border-color: rgb(251 191 36 / 0.8);
+    }
+  }
+
+  @keyframes pulse-core {
+    0%, 100% { 
+      transform: scale(1);
+      box-shadow: 0 0 20px rgb(245 158 11 / 0.5);
+    }
+    50% { 
+      transform: scale(1.1);
+      box-shadow: 0 0 40px rgb(245 158 11 / 0.8), 0 0 60px rgb(245 158 11 / 0.4);
+    }
+  }
+
+  .animate-pulse-ring-outer {
+    animation: pulse-ring-outer 2s ease-in-out infinite;
+  }
+
+  .animate-pulse-ring-middle {
+    animation: pulse-ring-middle 2s ease-in-out infinite 0.3s;
+  }
+
+  .animate-pulse-core {
+    animation: pulse-core 2s ease-in-out infinite 0.1s;
+  }
+
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-from), var(--tw-gradient-to));
   }
 }
 

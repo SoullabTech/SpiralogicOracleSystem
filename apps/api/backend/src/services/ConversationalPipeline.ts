@@ -2771,15 +2771,125 @@ Respond as Maya with appropriate depth and memory integration.`;
   }
 
   /**
-   * Draft text using memory-enhanced context
+   * GUARANTEED Memory Injection - Never allows generic responses
+   */
+  private async injectMemoryContext(userId: string, inputText: string, sessionId?: string): Promise<string> {
+    logger.info('[MEMORY INJECTION] 🧠 Building guaranteed context for user:', userId);
+    
+    try {
+      const memoryContext = await this.memoryOrchestrator.buildContext({
+        userId,
+        userText: inputText,
+        sessionId,
+        threadId: sessionId
+      });
+      
+      // Enhanced memory recall
+      const enhancedMemories = await this.memoryCoreIndex.recall({
+        query: inputText,
+        userId,
+        sessionId,
+        element: 'aether',
+        limit: 5,
+        includeRituals: true,
+        includeReflections: true
+      });
+      
+      if (process.env.MAYA_DEBUG_MEMORY === 'true') {
+        logger.info('[MEMORY DEBUG] 📊 Context built successfully:', {
+          sessionCount: memoryContext.conversationHistory?.length || 0,
+          journalCount: memoryContext.journal?.length || 0,
+          profileKeys: Object.keys(memoryContext.profile || {}),
+          enhancedCount: enhancedMemories.results.length,
+          patternsFound: enhancedMemories.patterns
+        });
+      }
+      
+      return this.formatMemoryForPrompt(memoryContext, enhancedMemories);
+      
+    } catch (error) {
+      logger.error('[MEMORY INJECTION] ❌ Error building context:', error);
+      
+      // BULLETPROOF FALLBACK - Never fail completely
+      const fallbackContext = {
+        conversationHistory: [],
+        journal: [],
+        profile: { userId },
+        rituals: [],
+        reflections: []
+      };
+      
+      const fallbackMemories = {
+        results: [],
+        summary: `User ${userId} is engaging with Maya`,
+        patterns: []
+      };
+      
+      logger.warn('[MEMORY INJECTION] ⚠️ Using bulletproof fallback context');
+      return this.formatMemoryForPrompt(fallbackContext, fallbackMemories);
+    }
+  }
+
+  /**
+   * Format memory context for LLM prompt injection
+   */
+  private formatMemoryForPrompt(memoryContext: any, enhancedMemories: any): string {
+    const sections = [];
+    
+    // Session conversation history
+    if (memoryContext.conversationHistory?.length > 0) {
+      const recentHistory = memoryContext.conversationHistory.slice(-6).map((msg: any) => 
+        `${msg.role}: ${msg.content}`
+      );
+      sections.push(`RECENT CONVERSATION:\n${recentHistory.join('\n')}`);
+    }
+    
+    // Enhanced memory insights
+    if (enhancedMemories.results?.length > 0) {
+      const insights = enhancedMemories.results.slice(0, 3).map((memory: any) => 
+        `- ${memory.content} (${memory.type})`
+      );
+      sections.push(`MEMORY INSIGHTS:\n${insights.join('\n')}`);
+    }
+    
+    // User profile information
+    if (memoryContext.profile && Object.keys(memoryContext.profile).length > 0) {
+      const profileItems = Object.entries(memoryContext.profile).map(([key, value]) => 
+        `- ${key}: ${value}`
+      );
+      sections.push(`USER PROFILE:\n${profileItems.join('\n')}`);
+    }
+    
+    // Journal patterns
+    if (memoryContext.journal?.length > 0) {
+      const journalEntries = memoryContext.journal.slice(0, 2).map((entry: any) => 
+        `- ${entry.insight || entry.content || entry.text}`
+      );
+      sections.push(`JOURNAL PATTERNS:\n${journalEntries.join('\n')}`);
+    }
+    
+    // Enhanced patterns from MemoryCoreIndex
+    if (enhancedMemories.patterns?.length > 0) {
+      sections.push(`RECURRING THEMES:\n${enhancedMemories.patterns.map((p: string) => `- ${p}`).join('\n')}`);
+    }
+    
+    // Summary context
+    if (enhancedMemories.summary) {
+      sections.push(`CONTEXT SUMMARY:\n${enhancedMemories.summary}`);
+    }
+    
+    return sections.length > 0 ? `\n\nMEMORY CONTEXT:\n${sections.join('\n\n')}\n` : '';
+  }
+
+  /**
+   * Draft text using GUARANTEED memory-enhanced context
    */
   private async draftTextWithMemory(ctx: ConversationalContext, memoryContext: any, fileContexts?: any[]): Promise<string> {
     const mayaMode = getMayaMode();
     const systemPrompt = mayaMode === 'full' ? MAYA_PROMPT_FULL : MAYA_PROMPT_BETA;
     
-    // Format memory context for prompt injection - ALWAYS called
-    const semanticMemory = (memoryContext as any).semanticMemoryContext;
-    const memoryPrompt = this.memoryOrchestrator.formatForPrompt(memoryContext, semanticMemory);
+    // GUARANTEE: Always inject memory context - never skip this step
+    const guaranteedMemoryContext = await this.injectMemoryContext(ctx.userId, ctx.userText, ctx.sessionId);
     
     // Format file contexts if available
     let filePrompt = '';
@@ -2790,27 +2900,69 @@ Respond as Maya with appropriate depth and memory integration.`;
       filePrompt = `\nRelevant files from user's library:\n${fileReferences}\n`;
     }
     
-    const fullPrompt = `${systemPrompt}
+    // Build enhanced system prompt with guaranteed memory injection
+    const enhancedSystemPrompt = `${systemPrompt}${guaranteedMemoryContext}${filePrompt}
 
-${memoryPrompt}${filePrompt}
+CRITICAL INSTRUCTIONS:
+- You MUST reference specific details from the MEMORY CONTEXT above
+- Never give generic responses - personalize based on user's history
+- If no specific context exists, ask thoughtful questions to build understanding
+- Show that you remember previous conversations and patterns
 
 Current User Message: ${ctx.userText}
 
-Respond as Maya with appropriate depth, memory integration, and reference to uploaded files when relevant.`;
+Respond as Maya with deep memory integration and personalized insight:`;
+
+    if (process.env.MAYA_DEBUG_MEMORY === 'true') {
+      logger.info('[MEMORY DEBUG] 📝 Enhanced prompt length:', enhancedSystemPrompt.length);
+    }
 
     // Ensure we have just the element string, not the whole context
     const element = typeof ctx.element === 'string' ? ctx.element : 'aether';
-    logger.debug('draftTextWithMemory routing to element:', { element, ctxElement: ctx.element });
+    logger.debug('[MEMORY INJECTION] 🔄 Routing to model:', { element, ctxElement: ctx.element });
     
     const model = routeToModel(element);
     const response = await model.generateResponse({
-      system: "You are Maya, a wise and empathetic AI companion.",
-      user: fullPrompt,
+      system: "You are Maya, a wise and empathetic AI companion with perfect memory.",
+      user: enhancedSystemPrompt,
       temperature: 0.7,
       maxTokens: 300
     });
 
-    return response?.content?.trim() || getMayaBetaFallback();
+    const result = response?.content?.trim();
+    
+    // Validate response isn't too generic before returning
+    if (this.isResponseTooGeneric(result)) {
+      logger.warn('[MEMORY INJECTION] ⚠️ Detected generic response, triggering redraft');
+      return this.redraftWithFreshness(ctx, result, { guaranteedMemoryContext });
+    }
+
+    return result || getMayaBetaFallback();
+  }
+  
+  /**
+   * Check if response is too generic and needs memory enhancement
+   */
+  private isResponseTooGeneric(response: string): boolean {
+    if (!response || response.length < 20) return true;
+    
+    const genericPhrases = [
+      "I'm here to help",
+      "How can I assist you",
+      "What would you like to know",
+      "I'd be happy to help",
+      "That's interesting",
+      "Thank you for sharing",
+      "I understand you're feeling"
+    ];
+    
+    const lowerResponse = response.toLowerCase();
+    const genericCount = genericPhrases.filter(phrase => 
+      lowerResponse.includes(phrase.toLowerCase())
+    ).length;
+    
+    // If response contains 2+ generic phrases, it's too generic
+    return genericCount >= 2;
   }
 
   /**

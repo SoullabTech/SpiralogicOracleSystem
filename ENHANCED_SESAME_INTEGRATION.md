@@ -1,6 +1,14 @@
-# Enhanced Sesame Integration with Advanced Dialogue State Tracking
+# ⚠️ DEPRECATED: Enhanced Sesame Integration
 
-## Overview
+## ⚡ **NEW SYSTEM AVAILABLE**
+
+**This document is deprecated as of September 2025.**
+
+**→ See [SESAME_HYBRID_SYSTEM_2025.md](./SESAME_HYBRID_SYSTEM_2025.md) for the current implementation**
+
+---
+
+## Overview (Historical)
 
 The Enhanced Sesame Integration significantly improves the conversational AI capabilities of the Spiralogic Oracle System by adding comprehensive dialogue state tracking, intent detection, emotion analysis, and topic management. This creates a more intelligent, context-aware, and emotionally responsive conversational experience.
 

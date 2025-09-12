@@ -30,8 +30,8 @@ export default function HomePage() {
   // Show loading while checking onboarding status
   if (isOnboarded === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#1e293b] to-[#2e3a4b] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
   }
@@ -43,8 +43,11 @@ export default function HomePage() {
 
   // Show loading while redirecting
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1e293b] to-[#2e3a4b] flex items-center justify-center">
-      <p className="text-white text-xl">Loading your sacred space...</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <p className="text-white text-xl">Loading Maya...</p>
+      </div>
     </div>
   );
 }

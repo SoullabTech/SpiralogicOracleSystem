@@ -16,7 +16,7 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
   onVoiceStateChange,
   size = 64,
   position = 'bottom-center',
-  silenceThreshold = 2000 // 2 seconds of silence triggers response
+  silenceThreshold = 800 // 0.8 seconds of silence triggers response
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -143,14 +143,14 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       setIsProcessing(true);
       onTranscript?.(finalTranscriptRef.current.trim());
       
-      // Clear transcripts after sending - increased delay to prevent race condition
+      // Clear transcripts after sending
       setTimeout(() => {
         setTranscript('');
         setInterimTranscript('');
         finalTranscriptRef.current = '';
         setIsProcessing(false);
         console.log('✅ Transcript cleared, ready for next input');
-      }, 1500); // Increased from 500ms to 1.5s to ensure transcript is fully processed
+      }, 300); // Quick clear to prevent text disappearing
     } else {
       console.log('⚠️ No transcript to send (empty or whitespace only)');
     }
@@ -160,7 +160,7 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       clearTimeout(silenceTimer);
       setSilenceTimer(null);
     }
-  }, [onTranscript, silenceTimer, handleSilenceDetected]);
+  }, [onTranscript, silenceTimer]);
 
   const toggleListening = useCallback(() => {
     if (!recognitionRef.current) {
@@ -188,7 +188,7 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
           setInterimTranscript('');
           finalTranscriptRef.current = '';
         }
-      }, 2000);
+      }, 500);
       
       if (silenceTimer) {
         clearTimeout(silenceTimer);

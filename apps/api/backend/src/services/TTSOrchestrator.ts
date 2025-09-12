@@ -67,20 +67,34 @@ export class TTSOrchestrator {
    */
   private initializeHealthChecks() {
     // Check immediately on startup
-    this.checkSesameHealth();
-    this.checkElevenLabsHealth();
+    this.checkSesameHealthInternal();
+    this.checkElevenLabsHealthInternal();
 
     // Then periodically
     setInterval(() => {
-      this.checkSesameHealth();
-      this.checkElevenLabsHealth();
+      this.checkSesameHealthInternal();
+      this.checkElevenLabsHealthInternal();
     }, this.HEALTH_CHECK_INTERVAL);
   }
 
   /**
-   * Check Sesame service health
+   * Public method to trigger Sesame health check
    */
-  private async checkSesameHealth(): Promise<boolean> {
+  public async checkSesameHealth(): Promise<boolean> {
+    return this.checkSesameHealthInternal();
+  }
+
+  /**
+   * Public method to trigger ElevenLabs health check  
+   */
+  public async checkElevenLabsHealth(): Promise<boolean> {
+    return this.checkElevenLabsHealthInternal();
+  }
+
+  /**
+   * Check Sesame service health (Internal)
+   */
+  private async checkSesameHealthInternal(): Promise<boolean> {
     if (!this.config.sesameUrl) {
       this.healthStatus.sesame.available = false;
       return false;
@@ -109,9 +123,9 @@ export class TTSOrchestrator {
   }
 
   /**
-   * Check ElevenLabs service health
+   * Check ElevenLabs service health (Internal)
    */
-  private async checkElevenLabsHealth(): Promise<boolean> {
+  private async checkElevenLabsHealthInternal(): Promise<boolean> {
     if (!this.config.elevenlabsApiKey) {
       this.healthStatus.elevenlabs.available = false;
       return false;
@@ -187,57 +201,101 @@ export class TTSOrchestrator {
                   (this.config.enableFallback && this.healthStatus.elevenlabs.available) ? 'elevenlabs' : 'text-only'
     });
 
-    // Try Sesame first
+    // Try Sesame first (Primary Provider)
     if (this.healthStatus.sesame.available) {
       try {
-        this.logger.debug('Attempting Sesame TTS generation...');
+        this.logger.info('[TTS ORCHESTRATOR] ✨ Attempting Sesame (Primary)...', {
+          textLength: cleanText.length,
+          voice,
+          endpoint: this.config.sesameUrl
+        });
+        
         const result = await this.generateWithSesame(cleanText, voice);
-        if (result.audioUrl) {
+        
+        if (result.audioUrl && result.audioUrl.length > 0) {
           this.cacheAudio(cleanText, result.audioUrl);
-          this.logger.info('✓ TTS Generated via Sesame', {
+          this.logger.info('[TTS ORCHESTRATOR] ✅ Sesame succeeded!', {
             processingTime: Date.now() - startTime,
             voice,
-            textLength: cleanText.length
+            textLength: cleanText.length,
+            audioLength: result.audioUrl.length
           });
+          
           return {
             ...result,
             processingTime: Date.now() - startTime
           };
+        } else {
+          throw new Error('Sesame returned empty audio URL');
         }
+        
       } catch (error) {
-        console.warn('[TTS Orchestrator] Sesame TTS failed, falling back to ElevenLabs:', error.message);
-        this.logger.error('Sesame TTS failed:', error);
-        // Mark as unhealthy for next attempt
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        this.logger.error('[TTS ORCHESTRATOR] ❌ Sesame failed:', {
+          error: errorMessage,
+          voice,
+          textLength: cleanText.length,
+          fallbackAvailable: this.config.enableFallback && this.healthStatus.elevenlabs.available
+        });
+        
+        // Mark as unhealthy for faster future failover
         this.healthStatus.sesame.available = false;
+        
+        // Continue to fallback...
       }
+    } else {
+      this.logger.info('[TTS ORCHESTRATOR] ⚠️ Sesame unavailable, skipping to ElevenLabs');
     }
 
-    // Fallback to ElevenLabs
+    // Fallback to ElevenLabs (Secondary Provider)
     if (this.config.enableFallback && this.healthStatus.elevenlabs.available) {
       try {
-        this.logger.debug('Attempting ElevenLabs TTS generation (fallback)...');
+        this.logger.info('[TTS ORCHESTRATOR] 🔄 Falling back to ElevenLabs...', {
+          textLength: cleanText.length,
+          voice,
+          reason: 'Sesame unavailable'
+        });
+        
         const result = await this.generateWithElevenLabs(cleanText, voice);
-        if (result.audioUrl) {
+        
+        if (result.audioUrl && result.audioUrl.length > 0) {
           this.cacheAudio(cleanText, result.audioUrl);
-          this.logger.info('✓ TTS Generated via ElevenLabs (fallback)', {
+          this.logger.info('[TTS ORCHESTRATOR] ✅ ElevenLabs fallback succeeded!', {
             processingTime: Date.now() - startTime,
             voice,
-            textLength: cleanText.length
+            textLength: cleanText.length,
+            audioLength: result.audioUrl.length
           });
+          
           return {
             ...result,
             processingTime: Date.now() - startTime
           };
+        } else {
+          throw new Error('ElevenLabs returned empty audio URL');
         }
+        
       } catch (error) {
-        console.warn('[TTS Orchestrator] ElevenLabs TTS failed:', error.message);
-        this.logger.error('ElevenLabs TTS failed:', error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        this.logger.error('[TTS ORCHESTRATOR] ❌ ElevenLabs fallback failed:', {
+          error: errorMessage,
+          voice,
+          textLength: cleanText.length
+        });
+        
+        // Mark as unhealthy
         this.healthStatus.elevenlabs.available = false;
+        
+        // Continue to emergency mock...
       }
+    } else if (this.config.enableFallback) {
+      this.logger.warn('[TTS ORCHESTRATOR] ⚠️ ElevenLabs fallback unavailable');
+    } else {
+      this.logger.info('[TTS ORCHESTRATOR] ⚠️ Fallback disabled, proceeding to emergency mock');
     }
 
-    // If all else fails, return text-only response
-    this.logger.warn('All TTS services failed, returning text-only response');
+    // Final emergency fallback - this guarantees Maya never fails completely
+    this.logger.error('[TTS ORCHESTRATOR] 🚨 All TTS providers failed! Using emergency mock audio');
     return this.generateTextOnlyResponse(cleanText);
   }
 
@@ -330,16 +388,34 @@ export class TTSOrchestrator {
   }
 
   /**
-   * Generate text-only response when no TTS is available
+   * Generate emergency mock audio when all TTS services fail
    */
   private generateTextOnlyResponse(text: string): TTSResponse {
-    // Return null audio with text-only service indicator
+    this.logger.warn('All TTS providers failed! Generating emergency mock audio');
+    
+    // Create a minimal WAV file that won't break frontend audio players
+    const emergencyAudioUrl = this.createEmergencyMockAudio(text);
+    
     return {
-      audioUrl: null,
+      audioUrl: emergencyAudioUrl,
       service: 'text-only',
       cached: false,
-      error: 'No TTS service available'
+      error: 'All TTS services unavailable, using emergency mock audio'
     };
+  }
+
+  /**
+   * Create emergency mock audio that frontend can handle gracefully
+   */
+  private createEmergencyMockAudio(text: string): string {
+    // Generate a minimal silent WAV file as base64 data URL
+    // This prevents frontend audio components from breaking
+    const silentWavHeader = 'UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj';
+    
+    const mockId = Date.now().toString();
+    this.logger.warn(`Created emergency mock audio for text: "${text.slice(0, 50)}..." (ID: ${mockId})`);
+    
+    return `data:audio/wav;base64,${silentWavHeader}`;
   }
 
   /**

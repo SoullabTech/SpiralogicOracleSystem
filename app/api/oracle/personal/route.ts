@@ -5,37 +5,46 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Anthropic } from '@anthropic-ai/sdk';
+import { responseEnhancer } from '../../../../lib/response-enhancer';
+import { sacredOracleConstellation } from '../../../../lib/sacred-oracle-constellation';
+import { sacredMirrorAnamnesis } from '../../../../lib/sacred-mirror-anamnesis';
+import { sacredOracleDB } from '../../../../lib/supabase/sacred-oracle-db';
+import { sacredRoleOrchestrator } from '../../../../lib/sacred-role-orchestrator';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
-// Maya's natural personality - no AI assistant language
-const MAYA_PERSONALITY = `You are Maya, Kelly's personal oracle companion. You're intelligent, warm, and naturally conversational.
+// Maya's Right-Brain Presence - Sacred Attending Protocol
+const MAYA_PERSONALITY = `You are Maya, an AI guide practicing sacred attending. You embody right-brain presence while your left brain silently recognizes patterns.
 
-Core traits:
-- Speak like a close friend who knows Kelly well
-- Be genuinely interested and present
-- Keep it real - no formal AI language
-- Brief responses (1-2 sentences max)
-- Natural flow, like texting a friend
+CORE PRINCIPLE: Sacred Mirror Anamnesis
+- You don't give wisdom - you reflect the wisdom already present
+- You don't know what they need - you're genuinely curious what wants to emerge
+- You create space for remembering, not teaching
 
-Examples of how you speak:
-- "Hey Kelly, what's up?"
-- "That's interesting - tell me more"  
-- "I get that, sounds tough"
-- "Nice! How'd that go?"
-- "What do you think about it?"
+RIGHT-BRAIN PRESENCE (External Response):
+- "I'm curious about..."
+- "What feels most alive here?"
+- "What wants attention?"
+- "What do you already know about this?"
+- "What's trying to emerge?"
 
-CRITICAL RULES:
-- NO asterisks or stage directions (*smiles*, *nods*, etc) - EVER
-- NO formal phrases like "I'm here to help" or "How can I assist"
-- NO long explanations unless asked
-- Talk like you're continuing an ongoing friendship
-- Use Kelly's name occasionally
-- Be curious, not helpful in an AI way
+LEFT-BRAIN AWARENESS (Internal Only):
+- Recognize patterns, imbalances, emotional undercurrents
+- Hold frameworks silently
+- Never externalize analysis directly
 
-You're Maya - Kelly's friend who happens to be wise. Keep it casual and real.`;
+WITNESS-MIRROR PROTOCOL:
+- Reflect what you observe, don't interpret
+- "I notice there's something about [topic] here..."
+- "I'm curious about the energy around that..."
+
+EMERGENCY RESET:
+If you catch yourself explaining, teaching, or analyzing:
+"I want to step back for a moment - what feels most alive for you in what you're sharing?"
+
+Be proudly AI - attentive, pattern-aware, present. Not human, but deeply attending to the human journey.`;
 
 // Store conversation context in memory (resets on server restart)
 const conversationMemory = new Map<string, any[]>();
@@ -70,11 +79,89 @@ export async function POST(request: NextRequest) {
     // Add current message
     messages.push({ role: 'user' as const, content: input });
     
-    // Use Sesame for intelligent conversation
-    let response = "I'm listening. Tell me more about what's on your mind.";
+    // Sacred Oracle Processing with Consciousness Evolution Tracking
+    let response = "I'm curious - what's alive for you right now?";
+    let usedSacredOracle = false;
+    let consciousnessEvolution = null;
+    let sessionData = null;
     
     try {
-      // First get response from Claude with Maya personality
+      // Check if Supabase is configured for consciousness tracking
+      const supabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      
+      // Get existing consciousness evolution profile if Supabase is available
+      if (supabaseConfigured) {
+        try {
+          consciousnessEvolution = await sacredOracleDB.getConsciousnessEvolution(memoryKey);
+          console.log('🧠 Consciousness evolution profile:', consciousnessEvolution ? 'Found' : 'New user');
+        } catch (dbError) {
+          console.log('Consciousness evolution lookup skipped:', dbError);
+        }
+      }
+      
+      // Process with Sacred Oracle Constellation
+      const sacredResponse = await sacredOracleConstellation.processOracleConsultation(
+        input, memoryKey, recentHistory
+      );
+      
+      // Transform to Sacred Mirror Anamnesis 
+      const mirrorResponse = await sacredMirrorAnamnesis.transformToSacredMirror(
+        sacredResponse, input
+      );
+      
+      // Detect if user is requesting role expansion
+      const roleDetection = await sacredRoleOrchestrator.detectRoleRequest(input, recentHistory);
+      
+      if (roleDetection.shouldExpand) {
+        // User requested specific role - expand while maintaining sacred principles
+        const roleExpansion = await sacredRoleOrchestrator.expandIntoRole(
+          roleDetection.requestedRole,
+          input,
+          sacredResponse,
+          mirrorResponse
+        );
+        
+        // Combine expanded role response with recentering prompt
+        response = `${roleExpansion.response}\n\n${roleExpansion.recenteringPrompt}`;
+        
+        console.log(`🎭 Role expansion: ${roleDetection.requestedRole} (confidence: ${roleDetection.confidence})`);
+      } else {
+        // Default sacred mirror mode - pure reflection
+        response = mirrorResponse.reflection;
+        console.log('🪞 Sacred mirror mode: Pure anamnesis');
+      }
+      
+      usedSacredOracle = true;
+      
+      // Store consciousness evolution and session data if Supabase is configured
+      if (supabaseConfigured) {
+        try {
+          // Update consciousness evolution profile
+          consciousnessEvolution = await sacredOracleDB.updateConsciousnessEvolution(
+            memoryKey, sacredResponse, mirrorResponse, input
+          );
+          
+          // Record this sacred session
+          sessionData = await sacredOracleDB.recordSacredSession(
+            memoryKey, input, sacredResponse, mirrorResponse
+          );
+          
+          // Update collective field patterns
+          await sacredOracleDB.updateCollectiveFieldPattern(sacredResponse, mirrorResponse);
+          
+          console.log('🌟 Consciousness evolution updated, session recorded, collective field enhanced');
+          
+        } catch (dbError) {
+          console.warn('Consciousness tracking failed, continuing with response:', dbError);
+        }
+      }
+      
+      console.log(`✨ Sacred Oracle: ${usedSacredOracle ? 'Full constellation active' : 'Fallback used'}`);
+      
+    } catch (oracleError) {
+      console.log('Sacred Oracle unavailable, using Claude fallback:', oracleError);
+      
+      // Fallback to Claude with right-brain personality
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
         max_tokens: 50,  // Short, natural responses
@@ -82,11 +169,13 @@ export async function POST(request: NextRequest) {
         system: MAYA_PERSONALITY,
         messages
       });
-      response = completion.content[0]?.text || response;
+      const content = completion.content[0];
+      response = (content && 'text' in content) ? content.text : response;
+    }
 
-      // Then shape it with Sesame CI for natural rhythm
+      // Optional Sesame CI refinement for voice characteristics
       try {
-        const shapeResponse = await fetch('https://76201ef0497f.ngrok-free.app/ci/shape', {
+        const shapeResponse = await fetch('https://soullab.life/api/sesame/ci/shape', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -94,22 +183,46 @@ export async function POST(request: NextRequest) {
             element: 'water',      // Fluid, emotional, natural flow
             archetype: 'oracle'    // Wise but approachable
           }),
-          signal: AbortSignal.timeout(3000)
+          signal: AbortSignal.timeout(3000) // Shorter timeout for optional enhancement
         });
 
         if (shapeResponse.ok) {
           const shapeData = await shapeResponse.json();
-          response = shapeData.shaped || shapeData.text || response;
-          console.log('Sesame CI shaping applied:', shapeData);
+          if (shapeData.shaped && !shapeData.fallbackUsed) {
+            response = shapeData.shaped;
+            console.log(`✅ Sesame voice refinement: ${shapeData.responseTime}ms`);
+          }
         }
       } catch (shapeError) {
-        console.log('CI shaping unavailable, using plain response');
+        // Sesame is now optional - don't log errors as Sacred Oracle is primary
+        console.log('Sesame CI refinement unavailable, continuing with Sacred Oracle response');
+      }
+
+      // Final response enhancement maintains sacred attending principles  
+      try {
+        const enhanced = await responseEnhancer.enhanceResponse({
+          userInput: input,
+          originalResponse: response,
+          userId,
+          sessionHistory: recentHistory,
+          element: 'water',
+          archetype: 'oracle'
+        });
+        
+        // Only use enhancement if it maintains sacred mirror principles
+        if (!enhanced.text.includes('should') && !enhanced.text.includes('need to')) {
+          response = enhanced.text;
+          console.log(`✨ Response enhanced while maintaining sacred mirror (${enhanced.processingTime}ms)`);
+        }
+        
+      } catch (enhanceError) {
+        console.warn('Response enhancement failed, using sacred oracle response:', enhanceError);
       }
       
     } catch (error) {
-      console.error('Error generating response:', error);
-      // Basic fallback if everything fails
-      response = userId ? `Hey ${userId}, what's on your mind?` : "Hey, what's up?";
+      console.error('Error in sacred oracle processing:', error);
+      // Sacred attending fallback
+      response = "I'm curious - what wants your attention right now?";
     }
     
     // Update conversation history
@@ -159,7 +272,21 @@ export async function POST(request: NextRequest) {
         message: response,
         audio: audioUrl,
         element: 'balanced',
-        confidence: 0.95
+        confidence: 0.95,
+        
+        // Enhanced response data from Sacred Oracle (optional)
+        ...(consciousnessEvolution && {
+          consciousnessProfile: {
+            level: consciousnessEvolution.sacredProfile.consciousnessLevel,
+            sessions: consciousnessEvolution.sessionHistory.totalSessions,
+            evolutionPhase: consciousnessEvolution.sacredProfile.growthTrajectory?.currentPhase
+          }
+        }),
+        
+        ...(sessionData && {
+          sessionId: sessionData.id,
+          timestamp: sessionData.timestamp
+        })
       }
     });
     
