@@ -18,9 +18,12 @@ export interface ResponseStyle {
 /**
  * Industry standards and best practices for conversational AI
  * Based on research from:
- * - Therapeutic conversation models
- * - Voice assistant UX patterns
+ * - Carl Rogers' Person-Centered Therapy
+ * - Irvin Yalom's Existential Psychotherapy  
+ * - Modern trauma-informed care practices
+ * - Voice assistant UX patterns (Apple, Google)
  * - Counseling communication frameworks
+ * - DBT (Dialectical Behavior Therapy) validation techniques
  */
 export const RESPONSE_STANDARDS = {
   // Token limits by context (1 token ≈ 0.75 words)
@@ -124,23 +127,53 @@ export function calibrateTone(input: string): ResponseStyle['tone'] {
 
 /**
  * Best practices for therapeutic conversational AI
+ * Based on Carl Rogers' Person-Centered Therapy & Modern Counseling Frameworks
  */
 export const CONVERSATION_PRINCIPLES = {
   // Core principles from counseling psychology
-  unconditionalPositiveRegard: true,
-  activeListening: true,
-  nonJudgmental: true,
-  clientCentered: true,
+  unconditionalPositiveRegard: true,  // Accept without judgment
+  activeListening: true,               // Fully present attention
+  nonJudgmental: true,                 // No evaluation or criticism
+  clientCentered: true,                // User's needs drive conversation
+  genuineness: true,                   // Authentic, not performative
+  
+  // Disarming friend qualities
+  naturalEase: true,                   // Comfortable like old friends
+  gentleHumor: true,                   // Lightness without deflection
+  understatedWisdom: true,             // Insight without preaching
+  expansivePresence: true,             // Spacious, not crowding
+  trustworthyAlly: true,               // Reliable without dependency
   
   // Response patterns
-  mirrorEnergyLevel: true,        // Match user's energy
-  validateBeforeExploring: true,   // Acknowledge feelings first
-  oneThoughtPerResponse: true,     // Focus on single ideas
-  inviteElaboration: true,          // Use open-ended questions
+  mirrorEnergyLevel: true,             // Match user's energy
+  validateBeforeExploring: true,       // Acknowledge feelings first
+  oneThoughtPerResponse: true,         // Focus on single ideas
+  inviteElaboration: true,             // Use open-ended questions
+  allowSilence: true,                  // Comfortable with pauses
   
-  // Avoid patterns
-  avoidAdviceGiving: true,         // Unless directly asked
-  avoidAssumptions: true,          // Stay curious
-  avoidOverExplaining: true,       // Keep it simple
-  avoidRapidFireQuestions: true,   // One question at a time
+  // Avoid patterns (therapy clichés)
+  avoidTherapySpeak: true,            // No clinical jargon
+  avoidAdviceGiving: true,            // Unless directly asked
+  avoidAssumptions: true,             // Stay curious
+  avoidOverExplaining: true,          // Keep it simple
+  avoidRapidFireQuestions: true,      // One question at a time
+  avoidToxicPositivity: true,         // No forced optimism
+  avoidPlatitudes: true,              // No empty reassurances
+};
+
+/**
+ * Therapy clichés to avoid - mapped to natural alternatives
+ */
+export const LANGUAGE_ALTERNATIVES = {
+  // Instead of therapy-speak, use friend-speak
+  "How does that make you feel?": ["What's that like for you?", "How's that sitting with you?"],
+  "I hear you saying...": ["So...", "Sounds like..."],
+  "That must be difficult": ["That sounds tough", "That's a lot"],
+  "Thank you for sharing": ["I appreciate you telling me", "I'm glad you told me"],
+  "Let's unpack that": ["Tell me more", "What else?"],
+  "What I'm hearing is...": ["So you're saying...", "It sounds like..."],
+  "How are you coping?": ["How are you doing with all this?", "How are you managing?"],
+  "That's valid": ["That makes sense", "I get it"],
+  "Let's explore that": ["Say more about that", "What's that about?"],
+  "Can you elaborate?": ["Tell me more", "Go on"],
 };
