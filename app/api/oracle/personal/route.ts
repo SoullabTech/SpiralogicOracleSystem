@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
 
       // Then shape it with Sesame CI for natural rhythm
       try {
-        const shapeResponse = await fetch('https://sesame.soullab.life/ci/shape', {
+        const shapeResponse = await fetch('https://76201ef0497f.ngrok-free.app/ci/shape', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
