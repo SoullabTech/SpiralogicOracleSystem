@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, personality, context, voice_config } = await request.json();
+    const body = await request.json();
+    const { text, personality, context, voice_config } = body;
 
     // Get Sesame API key from headers or environment
     const sesameApiKey = request.headers.get('Authorization')?.replace('Bearer ', '') 
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     
     // Graceful fallback - return original text
     return NextResponse.json({
-      enhanced_text: (await request.json()).text,
+      enhanced_text: text || 'Hello. How are you today?',
       improvements: [],
       confidence: 0.0,
       error: 'Enhancement service unavailable, using original text',
