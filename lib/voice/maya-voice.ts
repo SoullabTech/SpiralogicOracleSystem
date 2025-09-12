@@ -3,11 +3,14 @@
  * Modern, everyday, soulful, intelligent voice for the Oracle
  */
 
+import { AgentConfig } from '../agent-config';
+
 interface MayaVoiceConfig {
   elevenLabsApiKey?: string;
-  voiceId: string; // Aunt Annie voice ID
+  voiceId: string; // Dynamic based on agent
   sesameApiKey?: string;
   fallbackToWebSpeech: boolean;
+  agentConfig?: AgentConfig; // Agent configuration for voice selection
   naturalSettings: {
     rate: number;
     pitch: number;
@@ -34,16 +37,29 @@ export class MayaVoiceSystem {
   private listeners: ((state: VoiceState) => void)[] = [];
 
   constructor(config?: Partial<MayaVoiceConfig>) {
+    // Determine voice settings based on agent
+    const isAnthony = config?.agentConfig?.voice === 'anthony';
+    const defaultVoiceId = isAnthony 
+      ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's voice
+      : 'EXAVITQu4vr4xnSDxMaL'; // Maya's voice
+    
     this.config = {
-      voiceId: process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID_AUNT_ANNIE || 'y2TOWGCXSYEgBanvKsYJ', // Aunt Annie voice from env
+      voiceId: config?.voiceId || defaultVoiceId,
       elevenLabsApiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
       fallbackToWebSpeech: true,
-      naturalSettings: {
-        rate: 0.95,    // Slightly slower for naturalness
+      agentConfig: config?.agentConfig,
+      naturalSettings: isAnthony ? {
+        rate: 0.9,     // Slower for male voice
+        pitch: 0.85,   // Lower pitch for male  
+        volume: 0.9,   // Slightly louder
+        stability: 0.85, // More stable for deeper voice
+        clarity: 0.95   // High clarity for gravitas
+      } : {
+        rate: 0.95,    // Natural female pace
         pitch: 1.05,   // Slightly higher for warmth  
         volume: 0.85,  // Softer and more comfortable
-        stability: 0.8, // For ElevenLabs compatibility
-        clarity: 0.9    // High clarity for intelligent conversation
+        stability: 0.8, // Natural variation
+        clarity: 0.9    // High clarity
       },
       ...config
     };
@@ -217,7 +233,7 @@ export class MayaVoiceSystem {
     }
   }
 
-  // Web Speech API fallback with Maya characteristics
+  // Web Speech API fallback with agent-appropriate characteristics
   private async speakWithWebSpeech(text: string): Promise<void> {
     if (!('speechSynthesis' in window)) {
       throw new Error('Web Speech API not supported');
@@ -232,16 +248,25 @@ export class MayaVoiceSystem {
 
         const utterance = new SpeechSynthesisUtterance(this.enhanceTextForSpeech(text));
         
-        // Configure Maya's natural voice characteristics
-        // Optimize for naturalness - override config for better quality
-        utterance.rate = 0.95; // Slightly slower for better clarity
-        utterance.pitch = 1.05; // Slightly higher pitch for warmth
-        utterance.volume = 0.85; // Softer for comfort
+        // Configure voice based on agent
+        const isAnthony = this.config.agentConfig?.voice === 'anthony';
+        
+        if (isAnthony) {
+          // Anthony's voice characteristics
+          utterance.rate = 0.9;   // Slower, more deliberate
+          utterance.pitch = 0.8;  // Lower pitch for male voice
+          utterance.volume = 0.9; // Slightly louder
+        } else {
+          // Maya's voice characteristics  
+          utterance.rate = 0.95;  // Natural female pace
+          utterance.pitch = 1.05;  // Slightly higher for warmth
+          utterance.volume = 0.85; // Softer for comfort
+        }
         utterance.lang = 'en-US';
 
-        // Try to select the best available female voice
+        // Try to select the best available voice based on gender
         const voices = window.speechSynthesis.getVoices();
-        const preferredVoice = this.selectBestVoice(voices);
+        const preferredVoice = this.selectBestVoice(voices, isAnthony ? 'male' : 'female');
         if (preferredVoice) {
           utterance.voice = preferredVoice;
         }
@@ -291,8 +316,8 @@ export class MayaVoiceSystem {
     });
   }
 
-  // Select the best available voice for Maya
-  private selectBestVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
+  // Select the best available voice for the agent
+  private selectBestVoice(voices: SpeechSynthesisVoice[], gender: 'male' | 'female' = 'female'): SpeechSynthesisVoice | null {
     if (voices.length === 0) return null;
     
     // Score voices based on quality factors
@@ -305,22 +330,38 @@ export class MayaVoiceSystem {
       // Prefer English voices
       if (voice.lang.startsWith('en')) score += 50;
       
-      // Prefer known high-quality voices
-      const highQualityVoices = ['Samantha', 'Victoria', 'Allison', 'Ava', 'Karen', 'Hazel', 'Susan', 'Kate'];
+      // Prefer known high-quality voices based on gender
+      const highQualityFemaleVoices = ['Samantha', 'Victoria', 'Allison', 'Ava', 'Karen', 'Hazel', 'Susan', 'Kate'];
+      const highQualityMaleVoices = ['Alex', 'Daniel', 'Fred', 'Gordon', 'Lee', 'Oliver', 'Thomas', 'Tom'];
       const voiceName = voice.name;
-      if (highQualityVoices.some(name => voiceName.includes(name))) {
-        score += 40;
+      
+      if (gender === 'male') {
+        if (highQualityMaleVoices.some(name => voiceName.includes(name))) {
+          score += 40;
+        }
+      } else {
+        if (highQualityFemaleVoices.some(name => voiceName.includes(name))) {
+          score += 40;
+        }
       }
       
-      // Prefer female voices for Maya
-      if (voiceName.toLowerCase().includes('female') || 
+      // Prefer voices matching the desired gender
+      const isFemaleVoice = voiceName.toLowerCase().includes('female') || 
           voiceName.toLowerCase().includes('woman') ||
-          ['Samantha', 'Victoria', 'Allison', 'Ava', 'Karen', 'Hazel', 'Zira', 'Susan', 'Kate'].some(name => voiceName.includes(name))) {
-        score += 20;
+          highQualityFemaleVoices.some(name => voiceName.includes(name));
+      
+      const isMaleVoice = voiceName.toLowerCase().includes('male') || 
+          voiceName.toLowerCase().includes('man') ||
+          highQualityMaleVoices.some(name => voiceName.includes(name));
+      
+      if (gender === 'male' && isMaleVoice) {
+        score += 30;
+      } else if (gender === 'female' && isFemaleVoice) {
+        score += 30;
       }
       
       // Avoid known robotic voices
-      const roboticVoices = ['Alex', 'Fred', 'Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos', 'Deranged'];
+      const roboticVoices = ['Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos', 'Deranged'];
       if (roboticVoices.some(name => voiceName.includes(name))) {
         score -= 50;
       }

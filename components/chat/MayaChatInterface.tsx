@@ -23,6 +23,7 @@ interface MayaChatInterfaceProps {
   onSendMessage: (text: string, attachments?: File[]) => void;
   onVoiceTranscript?: (text: string) => void;
   messages?: ChatMessage[];
+  agentName?: string;
   isProcessing?: boolean;
   disabled?: boolean;
   className?: string;
@@ -32,6 +33,7 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
   onSendMessage,
   onVoiceTranscript,
   messages = [],
+  agentName = 'Maya',
   isProcessing = false,
   disabled = false,
   className = ''
@@ -337,7 +339,7 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={attachedFiles.length > 0 ? "Ask Maya about your files..." : "Type your message..."}
+                  placeholder={attachedFiles.length > 0 ? `Ask ${agentName} about your files...` : "Type your message..."}
                   disabled={disabled}
                   className="w-full min-h-[44px] max-h-[120px] p-3 pr-12 bg-white/5 border border-white/20 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#D4B896]/50 focus:border-[#D4B896]/50 text-white placeholder-white/40"
                 />
@@ -378,7 +380,7 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
             <div className="w-2 h-2 bg-[#D4B896] rounded-full animate-bounce" />
             <div className="w-2 h-2 bg-[#D4B896] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
             <div className="w-2 h-2 bg-[#D4B896] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-            <span className="text-sm">Maya is thinking...</span>
+            <span className="text-sm">{agentName} is thinking...</span>
           </div>
         )}
 

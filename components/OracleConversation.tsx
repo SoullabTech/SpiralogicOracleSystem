@@ -637,7 +637,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }`}
                 >
                   <div className="text-xs uppercase tracking-wider mb-1 opacity-60">
-                    {message.role === 'user' ? 'You' : 'Maya'}
+                    {message.role === 'user' ? 'You' : agentConfig.name}
                   </div>
                   <div className="text-sm leading-relaxed">
                     {message.role === 'oracle' ? (
@@ -692,6 +692,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   text: msg.text,
                   timestamp: msg.timestamp
                 }))}
+                agentName={agentConfig.name}
                 isProcessing={isProcessing}
                 disabled={isProcessing}
               />

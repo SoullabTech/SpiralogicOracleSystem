@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { getMayaVoice, MayaVoiceSystem } from '@/lib/voice/maya-voice';
+import { getAgentConfig } from '@/lib/agent-config';
 
 interface VoiceState {
   isPlaying: boolean;
@@ -12,6 +13,7 @@ interface VoiceState {
 
 export function useMayaVoice() {
   const mayaVoiceRef = useRef<MayaVoiceSystem | null>(null);
+  const [agentConfig] = useState(() => getAgentConfig());
   const [voiceState, setVoiceState] = useState<VoiceState>({
     isPlaying: false,
     isPaused: false,
@@ -30,7 +32,8 @@ export function useMayaVoice() {
       mayaVoiceRef.current = getMayaVoice({
         elevenLabsApiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
         sesameApiKey: process.env.NEXT_PUBLIC_SESAME_API_KEY,
-        fallbackToWebSpeech: true
+        fallbackToWebSpeech: true,
+        agentConfig // Pass agent configuration for voice selection
       });
 
       // Subscribe to voice state changes
