@@ -10,7 +10,7 @@ import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
 import { VoiceState } from '@/lib/voice/voice-capture';
 import { useMayaVoice } from '@/hooks/useMayaVoice';
-import { cleanMessage } from '@/lib/cleanMessage';
+import { cleanMessage, cleanMessageForVoice } from '@/lib/cleanMessage';
 
 interface OracleConversationProps {
   userId?: string;
@@ -240,16 +240,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             });
           } catch (error) {
             console.error('Audio creation failed:', error);
-            // Fallback to Maya voice synthesis
-            mayaSpeak(responseText, {
+            // Fallback to Maya voice synthesis - clean stage directions
+            mayaSpeak(cleanMessageForVoice(responseText), {
               element,
               tone: voiceCharacteristics?.tone,
               masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
             });
           }
         } else {
-          // Use Maya voice synthesis with element characteristics
-          mayaSpeak(responseText, {
+          // Use Maya voice synthesis with element characteristics - clean stage directions
+          mayaSpeak(cleanMessageForVoice(responseText), {
             element,
             tone: voiceCharacteristics?.tone,
             masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { EnhancedVoiceMicButton } from '@/components/ui/EnhancedVoiceMicButton';
 import { TranscriptPreview } from '@/components/TranscriptPreview';
 import { Mic, MicOff, Send, RotateCcw, Settings, Volume2, VolumeX } from 'lucide-react';
-import { cleanMessage } from '@/lib/cleanMessage';
+import { cleanMessage, cleanMessageForVoice } from '@/lib/cleanMessage';
 
 interface Message {
   id: string;
@@ -390,12 +390,16 @@ export function ModernOracleInterface({
 
       // Play audio response if available
       if (voiceEnabled) {
+        // Use aggressive cleaning for voice synthesis to remove ALL stage directions
+        const voiceText = cleanMessageForVoice(cleanedText);
+        
         console.log('[VOICE] Audio URL:', mayaMessage.audioUrl);
-        console.log('[VOICE] Clean text:', cleanedText);
+        console.log('[VOICE] Text for display:', cleanedText);
+        console.log('[VOICE] Text for speech:', voiceText);
         
         // Always use Web Speech API fallback for now since ElevenLabs might not be configured
-        if ('speechSynthesis' in window) {
-          const utterance = new SpeechSynthesisUtterance(cleanedText);
+        if ('speechSynthesis' in window && voiceText) {
+          const utterance = new SpeechSynthesisUtterance(voiceText);
           utterance.rate = 0.9;
           utterance.pitch = 1.0;
           utterance.volume = 0.8;

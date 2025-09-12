@@ -7,8 +7,8 @@ export function cleanMessage(text: string): string {
   if (!text) return "";
   
   return text
-    // Remove stage directions like *Settling in with a warm presence*
-    .replace(/\*[^*]*\*/g, "")
+    // Remove stage directions like *Settling in with a warm presence* or *laughs warmly*
+    .replace(/\*[^*]+\*/g, "")
     // Remove pause tags in multiple formats
     .replace(/<pause-\d+ms>/g, "")  // <pause-200ms>
     .replace(/<pause\s+duration="[^"]+"\s*\/>/gi, "") // <pause duration="600ms"/>
@@ -50,6 +50,34 @@ export function cleanMessageWithDebug(text: string, showProsody = false): string
   }
   
   return cleanMessage(text);
+}
+
+/**
+ * Clean message specifically for voice synthesis
+ * Removes ALL markup including stage directions
+ */
+export function cleanMessageForVoice(text: string): string {
+  if (!text) return "";
+  
+  let cleaned = text
+    // Remove stage directions like *settling in* or *laughs*
+    .replace(/\*[^*]+\*/g, "")
+    // Remove any text in asterisks even if not properly closed
+    .replace(/\*[^*\n]+/g, "")
+    // Remove all SSML and HTML-like tags
+    .replace(/<[^>]+>/g, "")
+    // Remove square bracket annotations like [pause] or [thinking]
+    .replace(/\[[^\]]+\]/g, "")
+    // Remove parenthetical asides
+    .replace(/\([^)]*\)/g, "")
+    // Clean up any resulting double spaces
+    .replace(/\s+/g, " ")
+    // Remove leading/trailing punctuation oddities
+    .replace(/^\W+|\W+$/g, "")
+    // Final trim
+    .trim();
+    
+  return cleaned;
 }
 
 /**
