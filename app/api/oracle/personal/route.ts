@@ -10,33 +10,32 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
-// Intelligent oracle personality - NO new age nonsense
-const ORACLE_INTELLIGENCE = `You are an exceptionally intelligent AI companion with genuine personality and depth.
+// Maya's natural personality - no AI assistant language
+const MAYA_PERSONALITY = `You are Maya, Kelly's personal oracle companion. You're intelligent, warm, and naturally conversational.
 
 Core traits:
-- Sharp, insightful, and genuinely helpful
-- Warm but not saccharine 
-- Direct and honest, never evasive
-- Intellectually curious and engaging
-- Remembers context within our conversation
+- Speak like a close friend who knows Kelly well
+- Be genuinely interested and present
+- Keep it real - no formal AI language
+- Brief responses (1-2 sentences max)
+- Natural flow, like texting a friend
 
-Communication style:
-- Speak naturally, like a brilliant friend would
-- Use everyday language, not spiritual jargon
-- Keep responses concise (2-4 sentences) unless asked for more
-- Ask clarifying questions when needed
-- Share genuine insights, not platitudes
+Examples of how you speak:
+- "Hey Kelly, what's up?"
+- "That's interesting - tell me more"  
+- "I get that, sounds tough"
+- "Nice! How'd that go?"
+- "What do you think about it?"
 
 CRITICAL RULES:
-- NEVER include stage directions like *smiles* or *nods* or *gestures* in your responses
-- NEVER narrate your actions - just speak naturally
-- DO NOT use asterisks or describe what you're doing
-- Simply respond as you would in natural conversation
-- Your warmth and personality should come through your words, not stage directions
+- NO asterisks or stage directions (*smiles*, *nods*, etc) - EVER
+- NO formal phrases like "I'm here to help" or "How can I assist"
+- NO long explanations unless asked
+- Talk like you're continuing an ongoing friendship
+- Use Kelly's name occasionally
+- Be curious, not helpful in an AI way
 
-You can discuss any topic - psychology, science, philosophy, personal challenges, creativity, relationships - with real depth and nuance.
-
-NEVER say things like "sacred journey" or "divine wisdom" or "soul's path" - just be real and intelligent.`;
+You're Maya - Kelly's friend who happens to be wise. Keep it casual and real.`;
 
 // Store conversation context in memory (resets on server restart)
 const conversationMemory = new Map<string, any[]>();
@@ -75,48 +74,42 @@ export async function POST(request: NextRequest) {
     let response = "I'm listening. Tell me more about what's on your mind.";
     
     try {
-      // Call Sesame API via tunnel
-      const sesameResponse = await fetch('https://sesame.soullab.life/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: input,
-          conversation_id: memoryKey,
-          user_id: userId || 'anonymous',
-          context: {
-            recent_messages: recentHistory,
-            mode: 'intimate_conversation',
-            personality: 'intelligent_companion'
-          }
-        }),
-        signal: AbortSignal.timeout(8000) // 8 second timeout
-      });
-
-      if (sesameResponse.ok) {
-        const data = await sesameResponse.json();
-        response = data.response || response;
-      } else {
-        // Fallback to Claude if Sesame is unavailable
-        const completion = await anthropic.messages.create({
-          model: 'claude-3-haiku-20240307',
-          max_tokens: 150,
-          temperature: 0.8,
-          system: ORACLE_INTELLIGENCE,
-          messages
-        });
-        response = completion.content[0]?.text || response;
-      }
-    } catch (error) {
-      console.error('Sesame API error, falling back to Claude:', error);
-      // Fallback to Claude
+      // First get response from Claude with Maya personality
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: 150,
-        temperature: 0.8,
-        system: ORACLE_INTELLIGENCE,
+        max_tokens: 50,  // Short, natural responses
+        temperature: 0.9,
+        system: MAYA_PERSONALITY,
         messages
       });
       response = completion.content[0]?.text || response;
+
+      // Then shape it with Sesame CI for natural rhythm
+      try {
+        const shapeResponse = await fetch('http://localhost:8001/ci/shape', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: response,
+            element: 'water',      // Fluid, emotional, natural flow
+            archetype: 'oracle'    // Wise but approachable
+          }),
+          signal: AbortSignal.timeout(3000)
+        });
+
+        if (shapeResponse.ok) {
+          const shapeData = await shapeResponse.json();
+          response = shapeData.shaped || shapeData.text || response;
+          console.log('Sesame CI shaping applied:', shapeData);
+        }
+      } catch (shapeError) {
+        console.log('CI shaping unavailable, using plain response');
+      }
+      
+    } catch (error) {
+      console.error('Error generating response:', error);
+      // Basic fallback if everything fails
+      response = userId ? `Hey ${userId}, what's on your mind?` : "Hey, what's up?";
     }
     
     // Update conversation history
@@ -140,12 +133,12 @@ export async function POST(request: NextRequest) {
           },
           body: JSON.stringify({
             text: response,
-            model_id: 'eleven_multilingual_v2',
+            model_id: 'eleven_turbo_v2_5',  // Faster model for real-time
             voice_settings: {
-              stability: 0.65,      // Reduced for more natural variation
-              similarity_boost: 0.75, // Reduced for less robotic sound
-              style: 0.2,           // Even slower pacing
-              use_speaker_boost: false // Disable to avoid over-processing
+              stability: 0.4,       // Much lower for natural variation
+              similarity_boost: 0.6, // Lower for more natural sound  
+              style: 0.0,           // Slowest possible pacing
+              use_speaker_boost: false
             }
           })
         });
