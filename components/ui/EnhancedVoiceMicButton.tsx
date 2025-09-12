@@ -103,10 +103,20 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       };
       
       recognition.onend = () => {
-        console.log('Voice recognition ended');
+        console.log('Voice recognition ended, final transcript:', finalTranscriptRef.current);
+        
+        // Send any remaining transcript before restarting
+        if (finalTranscriptRef.current.trim() && isListening) {
+          console.log('🔴 Sending final transcript before restart:', finalTranscriptRef.current);
+          handleSilenceDetected();
+        }
+        
         if (isListening) {
           // Restart if still supposed to be listening
-          recognition.start();
+          setTimeout(() => {
+            console.log('🔄 Restarting recognition...');
+            recognition.start();
+          }, 100);
         }
       };
       
@@ -150,7 +160,7 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       clearTimeout(silenceTimer);
       setSilenceTimer(null);
     }
-  }, [onTranscript, silenceTimer]);
+  }, [onTranscript, silenceTimer, handleSilenceDetected]);
 
   const toggleListening = useCallback(() => {
     if (!recognitionRef.current) {
@@ -159,12 +169,26 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
     }
     
     if (isListening) {
+      console.log('⏹️ Stopping recognition, current transcript:', finalTranscriptRef.current);
+      
+      // Send any pending transcript before stopping
+      if (finalTranscriptRef.current.trim()) {
+        console.log('📤 Sending transcript before stop:', finalTranscriptRef.current);
+        handleSilenceDetected();
+      }
+      
       // Stop listening
       recognitionRef.current.stop();
       setIsListening(false);
-      setTranscript('');
-      setInterimTranscript('');
-      finalTranscriptRef.current = '';
+      
+      // Don't clear transcript immediately - let handleSilenceDetected do it
+      setTimeout(() => {
+        if (!isProcessing) {
+          setTranscript('');
+          setInterimTranscript('');
+          finalTranscriptRef.current = '';
+        }
+      }, 2000);
       
       if (silenceTimer) {
         clearTimeout(silenceTimer);
