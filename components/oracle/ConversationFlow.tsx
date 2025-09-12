@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useConversationMemory } from '@/lib/hooks/useConversationMemory';
-import { MemorySavePrompt } from '@/components/auth/MemorySavePrompt';
+// import { MemorySavePrompt } from '@/components/auth/MemorySavePrompt'; // DISABLED - Legacy
 import { MayaWelcome } from './MayaWelcome';
 import { OracleConversation } from '@/components/OracleConversation';
 
@@ -135,13 +135,16 @@ export function ConversationFlow({ initialMode = 'welcome' }: ConversationFlowPr
       const conversationSummary = generateConversationSummary(endedSession, reason);
       setConversationToSave(conversationSummary);
 
-      // Auto-save for authenticated users, prompt for anonymous users
-      if (isAuthenticated) {
-        await saveMemoryFromConversation(conversationSummary, endedSession.id);
-        setMode('reflection');
-      } else {
-        setShowMemorySavePrompt(true);
-      }
+      // Skip authentication for now - allow anonymous use
+      // if (isAuthenticated) {
+      //   await saveMemoryFromConversation(conversationSummary, endedSession.id);
+      //   setMode('reflection');
+      // } else {
+      //   setShowMemorySavePrompt(true);
+      // }
+      
+      // Just go to reflection mode without saving
+      setMode('reflection');
     } else {
       // No meaningful conversation, just go back to welcome
       setMode('welcome');
@@ -402,13 +405,13 @@ export function ConversationFlow({ initialMode = 'welcome' }: ConversationFlowPr
         )}
       </AnimatePresence>
 
-      {/* Memory Save Prompt for Anonymous Users */}
-      <MemorySavePrompt
+      {/* Memory Save Prompt DISABLED - Legacy code to be removed */}
+      {/* <MemorySavePrompt
         isOpen={showMemorySavePrompt}
         onClose={() => setShowMemorySavePrompt(false)}
         conversationContent={conversationToSave}
         onSave={handleMemorySaved}
-      />
+      /> */}
     </div>
   );
 }

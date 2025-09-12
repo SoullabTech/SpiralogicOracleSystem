@@ -71,6 +71,40 @@ export async function POST(request: NextRequest) {
       // Determine dominant element from response
       const element = determineElement(input, response);
       
+      // Generate voice audio using ElevenLabs
+      let audioUrl = 'web-speech-fallback';
+      
+      if (process.env.ELEVENLABS_API_KEY) {
+        try {
+          const voiceResponse = await fetch('https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL', {
+            method: 'POST',
+            headers: {
+              'xi-api-key': process.env.ELEVENLABS_API_KEY,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              text: response,
+              model_id: 'eleven_multilingual_v2',
+              voice_settings: {
+                stability: 0.75,
+                similarity_boost: 0.85,
+                style: 0.3,
+                use_speaker_boost: true
+              }
+            })
+          });
+          
+          if (voiceResponse.ok) {
+            const audioBlob = await voiceResponse.blob();
+            const buffer = await audioBlob.arrayBuffer();
+            const base64 = Buffer.from(buffer).toString('base64');
+            audioUrl = `data:audio/mpeg;base64,${base64}`;
+          }
+        } catch (error) {
+          console.error('ElevenLabs voice synthesis failed:', error);
+        }
+      }
+      
       // Return structured response
       return NextResponse.json({
         data: {
@@ -82,6 +116,7 @@ export async function POST(request: NextRequest) {
             pace: 'natural',
             emotion: detectEmotion(response)
           },
+          audio: audioUrl,
           source: 'claude-direct'
         }
       });
