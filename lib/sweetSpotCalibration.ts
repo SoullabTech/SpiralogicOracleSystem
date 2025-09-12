@@ -194,4 +194,4 @@ export class SweetSpotCalibrator {
 }
 
 // Export default instance
-export const sweetSpotCalibration = new SweetSpotCalibration();
+export const sweetSpotCalibration = new SweetSpotCalibrator();

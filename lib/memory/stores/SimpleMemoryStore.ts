@@ -242,7 +242,7 @@ export class SimpleMemoryStore implements MemoryStore {
     return balance;
   }
 
-  private createEmotionalJourney(memories: RecallMemory[]): Array<{date: Date; mood: any; energy: any}> {
+  private createEmotionalJourney(memories: RecallMemory[]): Array<{date: Date; mood: string; energy: string}> {
     return memories
       .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())
       .map(memory => ({

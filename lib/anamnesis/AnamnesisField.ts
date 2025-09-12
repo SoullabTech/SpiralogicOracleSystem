@@ -13,11 +13,19 @@ import { SimpleMemoryStore } from '../memory/stores/SimpleMemoryStore';
 import { SimpleEmbedder } from '../memory/embeddings/SimpleEmbedder';
 import { SimpleCompressor } from '../memory/compression/SimpleCompressor';
 
-// Maya Memory Systems
-import { MayaMemorySystem } from '../../apps/web/lib/memory/MayaMemorySystem';
+// Maya Memory Systems (commented out to fix path issues - to be implemented)
+// import { MayaMemorySystem } from '../../apps/web/lib/memory/MayaMemorySystem';
 // Temporary stubs for reasoning chains (to be implemented later)
-const MayaReasoningChains: any = {};
-const ReasoningMode: any = {};
+interface ReasoningChains {
+  [key: string]: any;
+}
+
+interface ReasoningModeType {
+  [key: string]: string;
+}
+
+const MayaReasoningChains: ReasoningChains = {};
+const ReasoningMode: ReasoningModeType = {};
 
 // Agent Integration
 import { PersonalOracleAgent } from '../agents/PersonalOracleAgent';
