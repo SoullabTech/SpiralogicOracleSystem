@@ -21,11 +21,12 @@ export const DEFAULT_AGENTS: Record<string, AgentConfig> = {
     name: 'Anthony',
     voice: 'anthony', 
     gender: 'male',
-    elevenLabsVoiceId: 'PIGsltMj3gFMR34aFDI3' // Anthony's custom voice from ElevenLabs
+    elevenLabsVoiceId: 'c6SfcYrb2t09NHXiT80T' // Anthony's primary voice from ElevenLabs
   }
 };
 
 // Alternative male voices to consider:
+// 'PIGsltMj3gFMR34aFDI3' - Anthony's fallback voice
 // 'pNInz6obpgDQGcFmaJgB' - Adam (deep)
 // 'VR6AewLTigWG4xSOukaG' - Arnold (strong)
 // 'yoZ06aMxZJJ28mfd3POQ' - Sam (raspy)
