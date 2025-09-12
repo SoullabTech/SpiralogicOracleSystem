@@ -105,6 +105,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [userVoiceState, setUserVoiceState] = useState<VoiceState | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const voiceMicRef = useRef<any>(null);
   
   // UI states
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
@@ -253,8 +255,24 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           try {
             const audio = new Audio(audioUrl);
             audio.volume = 0.8;
+            
+            // Stop listening while audio plays to prevent feedback loop
+            setIsAudioPlaying(true);
+            voiceMicRef.current?.stopListening?.();
+            
+            audio.addEventListener('ended', () => {
+              setIsAudioPlaying(false);
+              setIsResponding(false);
+              setCurrentMotionState('listening');
+              // Resume listening after audio ends
+              setTimeout(() => {
+                voiceMicRef.current?.startListening?.();
+              }, 500);
+            });
+            
             audio.play().catch(error => {
               console.error('Audio playback failed, falling back to Maya voice:', error);
+              setIsAudioPlaying(false);
               // Fallback to Maya voice synthesis
               mayaSpeak(responseText, {
                 element,
@@ -273,12 +291,24 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           }
         } else {
           // Use Maya voice synthesis with element characteristics - clean stage directions
+          setIsAudioPlaying(true);
+          voiceMicRef.current?.stopListening?.();
+          
           mayaSpeak(cleanMessageForVoice(responseText), {
             element,
             tone: voiceCharacteristics?.tone,
             masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
+          }).then(() => {
+            setIsAudioPlaying(false);
+            setIsResponding(false);
+            setCurrentMotionState('listening');
+            // Resume listening after speech ends
+            setTimeout(() => {
+              voiceMicRef.current?.startListening?.();
+            }, 500);
           }).catch(error => {
             console.error('Maya voice failed:', error);
+            setIsAudioPlaying(false);
           });
         }
       }
@@ -618,10 +648,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           ) : (
             /* Voice-Only Interface */
             <EnhancedVoiceMicButton
+              ref={voiceMicRef}
               onVoiceStateChange={setUserVoiceState}
               onTranscript={handleVoiceTranscript}
               position="bottom-center"
               silenceThreshold={1000}  // Reduced from 3000ms to 1000ms for faster response
+              pauseListening={isAudioPlaying}
             />
           )}
         </>

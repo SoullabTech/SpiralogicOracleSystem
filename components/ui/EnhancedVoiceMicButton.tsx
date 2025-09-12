@@ -1,5 +1,5 @@
 // Enhanced Voice Mic Button with Visual Transcript Display
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
 
@@ -9,15 +9,17 @@ interface EnhancedVoiceMicButtonProps {
   size?: number;
   position?: 'bottom-center' | 'bottom-right' | 'floating';
   silenceThreshold?: number; // milliseconds of silence before triggering
+  pauseListening?: boolean; // External control to pause listening
 }
 
-export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
+export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProps>(({
   onTranscript,
   onVoiceStateChange,
   size = 64,
   position = 'bottom-center',
-  silenceThreshold = 800 // 0.8 seconds of silence triggers response
-}) => {
+  silenceThreshold = 800, // 0.8 seconds of silence triggers response
+  pauseListening = false
+}, ref) => {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
@@ -28,6 +30,7 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef<string>('');
   const lastSpeechTimeRef = useRef<number>(Date.now());
+  const wasListeningBeforePause = useRef<boolean>(false);
 
   // Initialize speech recognition
   useEffect(() => {
@@ -165,6 +168,28 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
     };
   }, [silenceThreshold, onVoiceStateChange]);
 
+  // Handle external pause control
+  useEffect(() => {
+    if (pauseListening && isListening) {
+      wasListeningBeforePause.current = true;
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      }
+    } else if (!pauseListening && wasListeningBeforePause.current) {
+      wasListeningBeforePause.current = false;
+      // Resume listening if we were listening before
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+        } catch (error) {
+          console.error('Failed to resume listening:', error);
+        }
+      }
+    }
+  }, [pauseListening, isListening]);
+
   const handleSilenceDetected = useCallback(() => {
     console.log('🎤 Silence detected, processing transcript:', finalTranscriptRef.current);
     
@@ -191,6 +216,26 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       setSilenceTimer(null);
     }
   }, [onTranscript, silenceTimer]);
+
+  // Expose control methods via ref
+  useImperativeHandle(ref, () => ({
+    startListening: () => {
+      if (!isListening && recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+        } catch (error) {
+          console.error('Failed to start listening:', error);
+        }
+      }
+    },
+    stopListening: () => {
+      if (isListening && recognitionRef.current) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      }
+    }
+  }), [isListening]);
 
   const toggleListening = useCallback(() => {
     if (!recognitionRef.current) {
@@ -446,6 +491,8 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
       </AnimatePresence>
     </div>
   );
-};
+});
+
+EnhancedVoiceMicButton.displayName = 'EnhancedVoiceMicButton';
 
 export default EnhancedVoiceMicButton;
