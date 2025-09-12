@@ -78,21 +78,15 @@ export async function POST(request: NextRequest) {
       console.error('Error details:', oracleError.message);
       console.error('API Key status:', process.env.ANTHROPIC_API_KEY ? 'Present' : 'Missing');
       
-      // Fallback to intelligent local response if backend is unavailable
-      const response = {
-        data: {
-          message: generateMayaResponse(input),
-          element: determineElement(input),
-          confidence: 0.85 + Math.random() * 0.1,
-          voiceCharacteristics: {
-            tone: 'warm',
-            masteryVoiceApplied: true
-          },
-          audio: 'web-speech-fallback'
-        }
-      };
-
-      return NextResponse.json(response);
+      // Don't fallback - show the actual error
+      return NextResponse.json(
+        { 
+          error: 'Oracle service unavailable',
+          details: oracleError.message,
+          apiKeyStatus: process.env.ANTHROPIC_API_KEY ? 'Present' : 'Missing'
+        },
+        { status: 503 }
+      );
     }
   } catch (error) {
     console.error('Oracle API error:', error);
