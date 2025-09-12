@@ -91,39 +91,44 @@ export async function POST(request: NextRequest) {
     // Add current message
     messages.push({ role: 'user' as const, content: input });
     
-    // Use Claude with Maya personality directly (Sacred Oracle system seems to be failing)  
+    // Use Claude with Maya personality directly - with comprehensive error handling
     let response = "I'm curious - what's alive for you right now?";
     
     try {
-      console.log('Making Claude API call with key:', process.env.ANTHROPIC_API_KEY?.substring(0, 20) + '...');
+      console.log('🤖 Maya processing request:', { input: input.substring(0, 100), userId, sessionId });
+      console.log('🔑 API Key configured:', !!process.env.ANTHROPIC_API_KEY);
       
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: 150,  // Enough for natural responses but not too long
-        temperature: 0.8,  // Natural variation without being too random
+        max_tokens: 150,
+        temperature: 0.8,
         system: MAYA_PERSONALITY,
         messages
       });
       
-      console.log('Claude API response received:', completion);
       const content = completion.content[0];
-      response = (content && 'text' in content) ? content.text : "I'm here with you - what's on your mind?";
+      if (content && 'text' in content && content.text) {
+        response = content.text;
+        console.log('✅ Maya generated response:', response.substring(0, 100) + '...');
+      } else {
+        console.warn('⚠️ Claude returned empty or invalid content:', content);
+        response = "*settling in with genuine warmth* I'm here with you. What's on your heart right now?";
+      }
     } catch (claudeError: any) {
-      console.error('Claude API error details:', {
+      console.error('❌ Claude API error:', {
         message: claudeError.message,
         status: claudeError.status,
-        type: claudeError.type,
-        error: claudeError
+        type: claudeError.type
       });
       
       if (claudeError.status === 401) {
-        response = "I'm having authentication issues with my AI service. My API key might be invalid.";
+        response = "*gentle presence* I'm having some authentication challenges right now. Let me try to reconnect.";
       } else if (claudeError.status === 429) {
-        response = "I'm getting rate limited right now. Please try again in a moment.";
+        response = "*patient smile* I need to slow down for just a moment. Please try again?";
       } else if (claudeError.status >= 500) {
-        response = "The AI service seems to be down right now. Please try again later.";
+        response = "*staying present* My connection is having trouble right now. I'm still here with you though.";
       } else {
-        response = `I'm having trouble connecting (error ${claudeError.status || 'unknown'}). Please try again.`;
+        response = `*warm attention* I'm having some connection issues (${claudeError.status || 'unknown'}). What would you like to talk about while I work on this?`;
       }
     }
 
@@ -144,30 +149,9 @@ export async function POST(request: NextRequest) {
     // Clean the response before any further processing
     response = cleanResponse(response);
     
-    // Optional Sesame CI refinement for voice characteristics
-    try {
-        const shapeResponse = await fetch('https://soullab.life/api/sesame/ci/shape', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            text: response,
-            element: 'water',      // Fluid, emotional, natural flow
-            archetype: 'oracle'    // Wise but approachable
-          }),
-          signal: AbortSignal.timeout(3000) // Shorter timeout for optional enhancement
-        });
-
-        if (shapeResponse.ok) {
-          const shapeData = await shapeResponse.json();
-          if (shapeData.shaped && !shapeData.fallbackUsed) {
-            response = cleanResponse(shapeData.shaped); // Clean shaped response too
-            console.log(`✅ Sesame voice refinement: ${shapeData.responseTime}ms`);
-          }
-        }
-    } catch (shapeError) {
-      // Sesame is now optional - don't log errors as Sacred Oracle is primary
-      console.log('Sesame CI refinement unavailable, continuing with Sacred Oracle response');
-    }
+    // Optional Sesame CI refinement - disabled to prevent failures
+    // Sesame CI is experiencing issues, skipping for now
+    console.log('Sesame CI disabled to prevent deployment issues');
 
     // Final response enhancement maintains sacred attending principles  
     try {
@@ -232,28 +216,25 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    return NextResponse.json({
+    const finalResponse = {
       data: {
         message: response,
         audio: audioUrl,
         element: 'balanced',
-        confidence: 0.95,
+        confidence: 0.95
         
-        // Enhanced response data from Sacred Oracle (optional)
-        ...(consciousnessEvolution && {
-          consciousnessProfile: {
-            level: consciousnessEvolution.sacredProfile.consciousnessLevel,
-            sessions: consciousnessEvolution.sessionHistory.totalSessions,
-            evolutionPhase: consciousnessEvolution.sacredProfile.growthTrajectory?.currentPhase
-          }
-        }),
-        
-        ...(sessionData && {
-          sessionId: sessionData.id,
-          timestamp: sessionData.timestamp
-        })
+        // Consciousness tracking disabled for simplified version
       }
+    };
+    
+    console.log('📤 Sending Maya response:', {
+      messageLength: response.length,
+      hasAudio: !!audioUrl,
+      userId,
+      sessionId
     });
+    
+    return NextResponse.json(finalResponse);
   } catch (error: any) {
     console.error('Oracle error:', error);
     return NextResponse.json(
