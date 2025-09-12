@@ -564,7 +564,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               onVoiceStateChange={setUserVoiceState}
               onTranscript={handleVoiceTranscript}
               position="bottom-center"
-              silenceThreshold={3000}
+              silenceThreshold={1000}  // Reduced from 3000ms to 1000ms for faster response
             />
           )}
         </>

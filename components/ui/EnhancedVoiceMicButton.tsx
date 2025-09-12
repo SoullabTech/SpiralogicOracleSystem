@@ -49,6 +49,8 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
         let interimText = '';
         let finalText = '';
         
+        console.log('🎙️ Speech recognition event received');
+        
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
@@ -59,6 +61,7 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
         }
         
         if (finalText) {
+          console.log('📝 Final transcript received:', finalText);
           finalTranscriptRef.current += finalText;
           setTranscript(finalTranscriptRef.current);
           lastSpeechTimeRef.current = Date.now();
@@ -69,9 +72,13 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
           }
           
           // Start new silence timer
+          console.log(`⏱️ Starting silence timer (${silenceThreshold}ms)...`);
           const timer = setTimeout(() => {
+            console.log('⏰ Timer expired, checking transcript...');
             if (finalTranscriptRef.current.trim()) {
               handleSilenceDetected();
+            } else {
+              console.log('❌ Timer expired but no transcript to send');
             }
           }, silenceThreshold);
           setSilenceTimer(timer);
@@ -119,9 +126,10 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
   }, [silenceThreshold, onVoiceStateChange]);
 
   const handleSilenceDetected = useCallback(() => {
-    console.log('Silence detected, processing transcript:', finalTranscriptRef.current);
+    console.log('🎤 Silence detected, processing transcript:', finalTranscriptRef.current);
     
     if (finalTranscriptRef.current.trim()) {
+      console.log('🚀 Sending transcript to oracle:', finalTranscriptRef.current.trim());
       setIsProcessing(true);
       onTranscript?.(finalTranscriptRef.current.trim());
       
@@ -131,7 +139,10 @@ export const EnhancedVoiceMicButton: React.FC<EnhancedVoiceMicButtonProps> = ({
         setInterimTranscript('');
         finalTranscriptRef.current = '';
         setIsProcessing(false);
+        console.log('✅ Transcript cleared, ready for next input');
       }, 1500); // Increased from 500ms to 1.5s to ensure transcript is fully processed
+    } else {
+      console.log('⚠️ No transcript to send (empty or whitespace only)');
     }
     
     // Clear timer
