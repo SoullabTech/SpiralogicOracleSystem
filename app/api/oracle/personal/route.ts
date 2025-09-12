@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
       
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: Math.max(200, inputAnalysis.suggestedTokens || 150),  // Minimum 200 tokens to complete thoughts
+        max_tokens: Math.max(300, inputAnalysis.suggestedTokens || 200),  // Increased minimum to ensure complete responses
         temperature: tone === 'playful' ? 0.9 : tone === 'serious' ? 0.6 : 0.8,
         system: getAgentPersonality(agentName),
         messages
@@ -243,8 +243,15 @@ export async function POST(request: NextRequest) {
         console.log('✅ Maya generated response:', {
           original_length: content.text.length,
           cleaned_length: response.length,
-          preview: response.substring(0, 100) + '...'
+          preview: response.substring(0, 100) + '...',
+          full_response: response.length < 50 ? response : response.substring(0, 200) + '...'
         });
+        
+        // Emergency fallback if response is too short
+        if (response.length < 10) {
+          console.warn('⚠️ Response too short, using fallback');
+          response = "What's on your mind today?";
+        }
       } else {
         console.warn('⚠️ Claude returned empty or invalid content:', content);
         response = "I'm here with you. What's on your heart right now?";
