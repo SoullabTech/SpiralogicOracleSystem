@@ -17,7 +17,7 @@ export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProp
   onVoiceStateChange,
   size = 64,
   position = 'bottom-center',
-  silenceThreshold = 800, // 0.8 seconds of silence triggers response
+  silenceThreshold = 1500, // 1.5 seconds of silence triggers response
   pauseListening = false
 }, ref) => {
   const [isListening, setIsListening] = useState(false);
@@ -88,8 +88,10 @@ export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProp
           console.log(`⏱️ Starting silence timer (${silenceThreshold}ms)...`);
           const timer = setTimeout(() => {
             console.log('⏰ Timer expired, checking transcript...');
-            if (finalTranscriptRef.current.trim()) {
+            if (finalTranscriptRef.current.trim() && !pauseListening) {
               handleSilenceDetected();
+            } else if (pauseListening) {
+              console.log('❌ Timer expired but microphone is paused (audio playing)');
             } else {
               console.log('❌ Timer expired but no transcript to send');
             }
@@ -139,16 +141,20 @@ export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProp
         console.log('Voice recognition ended, final transcript:', finalTranscriptRef.current);
         
         // Send any remaining transcript before restarting
-        if (finalTranscriptRef.current.trim() && isListening) {
+        if (finalTranscriptRef.current.trim() && isListening && !pauseListening) {
           console.log('🔴 Sending final transcript before restart:', finalTranscriptRef.current);
           handleSilenceDetected();
         }
         
-        if (isListening) {
-          // Restart if still supposed to be listening
+        if (isListening && !pauseListening) {
+          // Restart if still supposed to be listening AND not paused
           setTimeout(() => {
             console.log('🔄 Restarting recognition...');
-            recognition.start();
+            try {
+              recognition.start();
+            } catch (e) {
+              console.log('Recognition already started');
+            }
           }, 100);
         }
       };

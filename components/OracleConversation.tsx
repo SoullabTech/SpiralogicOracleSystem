@@ -110,6 +110,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [streamingText, setStreamingText] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
   const voiceMicRef = useRef<any>(null);
   
   // Agent configuration
@@ -180,7 +181,17 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
     // Debounce rapid calls
-    if (isProcessing) return;
+    if (isProcessing || isAudioPlaying) {
+      console.log('⚠️ Ignoring transcript - processing or audio playing');
+      return;
+    }
+    
+    // Stop microphone immediately to prevent multiple inputs
+    console.log('🛑 Stopping microphone to process user input');
+    if (voiceMicRef.current?.stopListening) {
+      voiceMicRef.current.stopListening();
+    }
+    setIsMicrophonePaused(true);
     
     // Clean the transcript of any artifacts
     const cleanedTranscript = cleanMessage(transcript);
@@ -292,25 +303,48 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             audio.volume = 0.8;
             
             // Stop listening while audio plays to prevent feedback loop
+            console.log('🔇 Stopping mic for audio playback');
             setIsAudioPlaying(true);
-            voiceMicRef.current?.stopListening?.();
+            setIsMicrophonePaused(true);
+            if (voiceMicRef.current?.stopListening) {
+              voiceMicRef.current.stopListening();
+            }
+            
+            // Add loadeddata event to ensure audio is ready
+            audio.addEventListener('loadeddata', () => {
+              console.log('🔊 Audio loaded, stopping mic completely');
+              setIsAudioPlaying(true); // Ensure it's set
+            });
             
             // Start streaming text when audio begins playing
             audio.addEventListener('play', () => {
+              console.log('🔊 Audio playing, mic should be stopped');
+              setIsAudioPlaying(true); // Double ensure
               setIsStreaming(true);
               setStreamingText('');
               streamText(responseText, oracleMessage.id);
             });
             
             audio.addEventListener('ended', () => {
+              console.log('🔊 Audio ended, waiting before resuming mic');
               setIsAudioPlaying(false);
               setIsResponding(false);
               setIsStreaming(false);
+              setIsMicrophonePaused(false);
               setCurrentMotionState('listening');
-              // Resume listening after audio ends
+              setIsProcessing(false); // Clear processing state
+              // Resume listening after a longer delay to ensure audio is fully done
               setTimeout(() => {
-                voiceMicRef.current?.startListening?.();
-              }, 500);
+                // Only resume if not currently playing audio and not processing
+                if (!isAudioPlaying && !isProcessing) {
+                  console.log('🎤 Resuming microphone after safety check');
+                  if (voiceMicRef.current?.startListening) {
+                    voiceMicRef.current.startListening();
+                  }
+                } else {
+                  console.log('⚠️ Not resuming mic - still processing or playing');
+                }
+              }, 2000); // Increased to 2 seconds for safety
             });
             
             audio.play().catch(error => {
@@ -342,8 +376,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           }
         } else {
           // Use Maya voice synthesis with element characteristics - clean stage directions
+          console.log('🔊 Using Web Speech API');
           setIsAudioPlaying(true);
-          voiceMicRef.current?.stopListening?.();
+          setIsMicrophonePaused(true);
+          if (voiceMicRef.current?.stopListening) {
+            voiceMicRef.current.stopListening();
+          }
           
           // Start streaming text when voice begins
           setIsStreaming(true);
@@ -355,14 +393,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             tone: voiceCharacteristics?.tone,
             masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
           }).then(() => {
+            console.log('🔊 Web Speech ended');
             setIsAudioPlaying(false);
             setIsResponding(false);
             setIsStreaming(false);
+            setIsMicrophonePaused(false);
             setCurrentMotionState('listening');
-            // Resume listening after speech ends
+            setIsProcessing(false); // Clear processing state
+            // Resume listening after speech ends with longer delay
             setTimeout(() => {
-              voiceMicRef.current?.startListening?.();
-            }, 500);
+              if (!isAudioPlaying && !isProcessing) {
+                console.log('🎤 Resuming microphone after Web Speech');
+                if (voiceMicRef.current?.startListening) {
+                  voiceMicRef.current.startListening();
+                }
+              }
+            }, 2000); // Increased to 2 seconds
           }).catch(error => {
             console.error('Maya voice failed:', error);
             setIsAudioPlaying(false);
