@@ -78,89 +78,8 @@ export async function POST(request: NextRequest) {
     // Add current message
     messages.push({ role: 'user' as const, content: input });
     
-    // Sacred Oracle Processing with Consciousness Evolution Tracking
-    let response = "I'm curious - what's alive for you right now?";
-    let usedSacredOracle = false;
-    let consciousnessEvolution = null;
-    let sessionData = null;
-    
+    // Use Claude with Maya personality directly (Sacred Oracle system seems to be failing)  
     try {
-      // Check if Supabase is configured for consciousness tracking
-      const supabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      
-      // Get existing consciousness evolution profile if Supabase is available
-      if (supabaseConfigured) {
-        try {
-          consciousnessEvolution = await sacredOracleDB.getConsciousnessEvolution(memoryKey);
-          console.log('🧠 Consciousness evolution profile:', consciousnessEvolution ? 'Found' : 'New user');
-        } catch (dbError) {
-          console.log('Consciousness evolution lookup skipped:', dbError);
-        }
-      }
-      
-      // Process with Sacred Oracle Constellation
-      const sacredResponse = await sacredOracleConstellation.processOracleConsultation(
-        input, memoryKey, recentHistory
-      );
-      
-      // Transform to Sacred Mirror Anamnesis 
-      const mirrorResponse = await sacredMirrorAnamnesis.transformToSacredMirror(
-        sacredResponse, input
-      );
-      
-      // Detect if user is requesting role expansion
-      const roleDetection = await sacredRoleOrchestrator.detectRoleRequest(input, recentHistory);
-      
-      if (roleDetection.shouldExpand) {
-        // User requested specific role - expand while maintaining sacred principles
-        const roleExpansion = await sacredRoleOrchestrator.expandIntoRole(
-          roleDetection.requestedRole,
-          input,
-          sacredResponse,
-          mirrorResponse
-        );
-        
-        // Combine expanded role response with recentering prompt
-        response = `${roleExpansion.response}\n\n${roleExpansion.recenteringPrompt}`;
-        
-        console.log(`🎭 Role expansion: ${roleDetection.requestedRole} (confidence: ${roleDetection.confidence})`);
-      } else {
-        // Default sacred mirror mode - pure reflection
-        response = mirrorResponse.reflection;
-        console.log('🪞 Sacred mirror mode: Pure anamnesis');
-      }
-      
-      usedSacredOracle = true;
-      
-      // Store consciousness evolution and session data if Supabase is configured
-      if (supabaseConfigured) {
-        try {
-          // Update consciousness evolution profile
-          consciousnessEvolution = await sacredOracleDB.updateConsciousnessEvolution(
-            memoryKey, sacredResponse, mirrorResponse, input
-          );
-          
-          // Record this sacred session
-          sessionData = await sacredOracleDB.recordSacredSession(
-            memoryKey, input, sacredResponse, mirrorResponse
-          );
-          
-          // Update collective field patterns
-          await sacredOracleDB.updateCollectiveFieldPattern(sacredResponse, mirrorResponse);
-          
-          console.log('🌟 Consciousness evolution updated, session recorded, collective field enhanced');
-          
-        } catch (dbError) {
-          console.warn('Consciousness tracking failed, continuing with response:', dbError);
-        }
-      }
-      
-      console.log(`✨ Sacred Oracle: ${usedSacredOracle ? 'Full constellation active' : 'Fallback used'}`);
-      
-    } catch (oracleError) {
-      console.log('Sacred Oracle unavailable, using Claude fallback:', oracleError);
-      
-      // Fallback to Claude with natural conversational personality
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
         max_tokens: 150,  // Enough for natural responses but not too long
@@ -169,7 +88,10 @@ export async function POST(request: NextRequest) {
         messages
       });
       const content = completion.content[0];
-      response = (content && 'text' in content) ? content.text : response;
+      response = (content && 'text' in content) ? content.text : "I'm here with you - what's on your mind?";
+    } catch (claudeError) {
+      console.error('Claude API error:', claudeError);
+      response = "I'm having trouble connecting right now, but I'm here. What would you like to talk about?";
     }
 
     // Clean up any voice command artifacts from the response
