@@ -21,9 +21,9 @@ export default function HomePage() {
     
     setIsOnboarded(true);
     
-    // If onboarded, go to maia
+    // If onboarded, go directly to oracle conversation
     if (betaOnboarded || legacyOnboarded) {
-      router.push('/maia');
+      router.push('/oracle-conversation');
     }
   }, [router]);
 
