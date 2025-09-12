@@ -307,7 +307,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black overflow-hidden">
       {/* Beautiful Sacred Holoflower - Responsive sizing */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        <div className="relative w-full max-w-[500px] px-4">
+        <div className="flex items-center justify-center" style={{ width: holoflowerSize, height: holoflowerSize }}>
           {/* Non-interactive Sacred Holoflower with animations */}
           <SacredHoloflower
             size={holoflowerSize}
@@ -326,7 +326,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           <div className="absolute inset-0 flex items-center justify-center">
             {/* Radiant glow behind the holoflower - ENHANCED */}
             <motion.div
-              className="absolute"
+              className="absolute flex items-center justify-center"
               animate={{
                 scale: [1, 1.4, 1],
                 opacity: [0.6, 0.9, 0.6]
@@ -348,7 +348,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             
             {/* Secondary outer glow layer for extra radiance */}
             <motion.div
-              className="absolute"
+              className="absolute flex items-center justify-center"
               animate={{
                 scale: [1.2, 1.6, 1.2],
                 opacity: [0.3, 0.5, 0.3]
@@ -370,15 +370,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </motion.div>
 
             {/* Sparkles emanating from center - ULTRA SLOW & EPHEMERAL */}
-            <div className="absolute pointer-events-none">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               {/* Main radial sparkles - slower drift */}
               {[...Array(12)].map((_, i) => (
                 <motion.div
                   key={`sparkle-${i}`}
                   className="absolute w-0.5 h-0.5 bg-white/80 rounded-full"
                   style={{
-                    left: '50%',
-                    top: '50%',
                     filter: 'blur(0.5px)'
                   }}
                   animate={{
@@ -408,8 +406,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     key={`sparkle-spiral-${i}`}
                     className="absolute w-0.5 h-0.5 rounded-full"
                     style={{
-                      left: '50%',
-                      top: '50%',
                       background: 'radial-gradient(circle, rgba(255,255,200,0.9) 0%, transparent 70%)',
                       filter: 'blur(0.3px)'
                     }}
