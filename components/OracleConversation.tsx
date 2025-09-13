@@ -299,9 +299,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         if (audioUrl && audioUrl !== 'web-speech-fallback') {
           // Play the Sesame-generated audio directly
           try {
+            console.log('🎵 Attempting to play audio:', audioUrl.substring(0, 100) + '...');
             const audio = new Audio(audioUrl);
             audio.volume = 0.8;
-            
+
             // Stop listening while audio plays to prevent feedback loop
             console.log('🔇 Stopping mic for audio playback');
             setIsAudioPlaying(true);
@@ -309,7 +310,24 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             if (voiceMicRef.current?.stopListening) {
               voiceMicRef.current.stopListening();
             }
-            
+
+            // Add error handler BEFORE attempting to play
+            audio.addEventListener('error', (e) => {
+              console.error('❌ Audio error event:', e);
+              console.log('🔄 Resetting states after audio error');
+              setIsAudioPlaying(false);
+              setIsMicrophonePaused(false);
+              setIsProcessing(false);
+              setIsResponding(false);
+              setIsStreaming(false);
+              setCurrentMotionState('listening');
+
+              // Stream text as fallback
+              setIsStreaming(true);
+              setStreamingText('');
+              streamText(responseText, oracleMessage.id);
+            });
+
             // Add loadeddata event to ensure audio is ready
             audio.addEventListener('loadeddata', () => {
               console.log('🔊 Audio loaded, stopping mic completely');
