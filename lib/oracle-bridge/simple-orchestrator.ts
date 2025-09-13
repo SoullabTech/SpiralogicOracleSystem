@@ -127,6 +127,14 @@ export class SimpleOrchestrator {
       };
     }
 
+    // Check for greetings
+    if (analysis.input.toLowerCase().match(/^(hi|hello|hey|good morning|good evening|greetings)/)) {
+      return {
+        systemPrompt: 'User is greeting. Return greeting warmly and establish rapport. Do NOT immediately ask how they are. Let them share what brings them here. You might say "Hello. It\'s good to see you." or simply "Hello." and wait.',
+        responseStyle: 'warm_greeting'
+      };
+    }
+
     // Default witness
     return {
       systemPrompt: 'Witness and reflect with presence and depth.',
