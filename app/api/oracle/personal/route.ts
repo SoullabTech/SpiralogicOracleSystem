@@ -135,50 +135,50 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
   const isIntense = /\b(urgent|emergency|help|crisis|now)\b/i.test(userInput);
   const isStory = /\b(remember|when i|story|once|used to|childhood|dream|imagine)\b/i.test(userInput);
   
-  // Base settings - Natural warm presence  
+  // Base settings - Aunt Annie's warm, emotionally aware presence  
   let settings = {
-    stability: 0.45,              // More variation for natural emotion
-    similarity_boost: 0.65,        // Less robotic, more human
-    style: 0.55,                   // Natural conversational pace
-    use_speaker_boost: true        // Warmer, fuller tone
+    stability: 0.38,              // Natural emotional variation
+    similarity_boost: 0.58,        // Warm, human quality
+    style: 0.68,                   // Slower, more thoughtful pace
+    use_speaker_boost: true        // Fuller, warmer tone
   };
   
   // Maya's voice - feminine witnessing presence
   if (agentVoice === 'maya') {
-    // Adjust based on context - warm and natural
+    // Adjust based on context - Aunt Annie's emotionally aware style
     if (isEmotional || isDeep) {
-      // Warm, empathetic presence
-      settings.stability = 0.50;        // Natural emotional variation
-      settings.style = 0.65;             // Thoughtful but not robotic
-      settings.similarity_boost = 0.70;  // Warm human quality
+      // Deep emotional awareness
+      settings.stability = 0.42;        // Gentle variation
+      settings.style = 0.75;             // Slow, thoughtful, caring
+      settings.similarity_boost = 0.62;  // Warm, motherly quality
     } else if (isStory) {
-      // Engaged, interested listener
-      settings.stability = 0.48;        // Dynamic, responsive
-      settings.style = 0.58;             // Natural story-listening pace
-      settings.similarity_boost = 0.68;  // Warm, inviting
+      // Engaged, patient listener
+      settings.stability = 0.40;        // Natural responsiveness
+      settings.style = 0.70;             // Patient, unhurried for stories
+      settings.similarity_boost = 0.60;  // Warm, inviting
     } else if (isQuiet) {
       // Gentle, soft presence
-      settings.stability = 0.55;        // Soft but natural
-      settings.style = 0.70;             // Slower, gentler
-      settings.similarity_boost = 0.72;  // Consistent warmth
+      settings.stability = 0.45;        // Very gentle
+      settings.style = 0.78;             // Very slow, peaceful
+      settings.similarity_boost = 0.65;  // Soft warmth
     } else if (isIntense) {
-      // Present and responsive
-      settings.stability = 0.42;        // More dynamic for urgency
-      settings.style = 0.45;             // Natural urgency response
-      settings.similarity_boost = 0.65;  // Clear but warm
+      // Calm in urgency
+      settings.stability = 0.38;        // Steady presence
+      settings.style = 0.58;             // Not rushed even in urgency
+      settings.similarity_boost = 0.58;  // Clear but warm
     }
     
     // Special quality for witnessing moments
     if (/\b(yes|mmm|i see|tell me|what else|go on)\b/i.test(responseLower)) {
-      settings.style = 0.60;             // Natural witnessing pace
-      settings.stability = 0.52;         // Warm, present
-      settings.similarity_boost = 0.68;  // Consistent but human
+      settings.style = 0.72;             // Slow, patient witnessing
+      settings.stability = 0.44;         // Gentle, warm presence
+      settings.similarity_boost = 0.60;  // Consistent warmth
     }
     
-    // Brief responses need warmth not stiffness
+    // Brief responses need thoughtfulness
     if (responseLower.length < 30) {
-      settings.style = 0.55;             // Natural brief response
-      settings.stability = 0.48;         // Dynamic, not flat
+      settings.style = 0.70;             // Even short words are unhurried
+      settings.stability = 0.40;         // Warm, not flat
     }
   }
   
@@ -384,7 +384,7 @@ export async function POST(request: NextRequest) {
         // Select voice ID based on agent
         const voiceId = agentVoice === 'anthony' 
           ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's primary male voice
-          : 'EXAVITQu4vr4xnSDxMaL'; // Sarah - female voice (Maya)
+          : 'y2TOWGCXSYEgBanvKsYJ'; // Aunt Annie - warm, emotionally aware voice (Maya)
         
         const voiceSettings = agentVoice === 'anthony' ? {
           stability: 0.5,
