@@ -384,11 +384,14 @@ Match their ${responseEnergy.pace < 0.4 ? 'slow, thoughtful' : responseEnergy.pa
 Respond with ${responseEnergy.depth > 0.7 ? 'profound depth' : responseEnergy.depth > 0.4 ? 'meaningful presence' : 'gentle lightness'}.
 ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : userEnergy.openness > 0.7 ? 'They are vulnerable - honor this with gentle presence.' : ''}`;
       
+      // Add orchestration context to personality
+      const orchestratedPersonality = `${enhancedPersonality}\n\n${orchestration.context.systemPrompt}`;
+
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
         max_tokens: Math.max(300, inputAnalysis.suggestedTokens || 200),  // Increased minimum to ensure complete responses
         temperature: tone === 'playful' ? 0.9 : tone === 'serious' ? 0.6 : 0.8,
-        system: enhancedPersonality,
+        system: orchestratedPersonality,
         messages
       });
       
@@ -560,9 +563,16 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
       data: {
         message: response,
         audio: audioUrl,
-        element: 'balanced',
-        confidence: 0.95
-        
+        element: analysis.element || 'balanced',
+        confidence: 0.95,
+        metadata: {
+          orchestrated: true,
+          priority: priority,
+          hasCrisis: analysis.hasCrisis,
+          hasUrgency: analysis.hasUrgency,
+          needsLooping: analysis.needsLooping,
+          responseStyle: orchestration.context.responseStyle
+        }
         // Consciousness tracking disabled for simplified version
       }
     };
