@@ -193,76 +193,76 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
   const isIntense = /\b(urgent|emergency|help|crisis|now)\b/i.test(userInput);
   const isStory = /\b(remember|when i|story|once|used to|childhood|dream|imagine)\b/i.test(userInput);
   
-  // Base settings - Aunt Annie's warm, emotionally aware presence  
+  // Base settings - More natural, expressive voice with varied intonation
   let settings = {
-    stability: 0.38,              // Natural emotional variation
-    similarity_boost: 0.58,        // Warm, human quality
-    style: 0.68,                   // Slower, more thoughtful pace
-    use_speaker_boost: true        // Fuller, warmer tone
+    stability: 0.25,              // More variation for natural speech (was 0.38)
+    similarity_boost: 0.45,        // Less synthetic, more natural (was 0.58)
+    style: 0.35,                   // More dynamic pacing (was 0.68 - too slow)
+    use_speaker_boost: false       // Less boomy, more intimate (was true)
   };
   
   // Maya's voice - feminine witnessing presence
   if (agentVoice === 'maya') {
-    // Adjust based on context - Aunt Annie's emotionally aware style
+    // Adjust based on context - more natural emotional range
     if (isEmotional || isDeep) {
-      // Deep emotional awareness
-      settings.stability = 0.42;        // Gentle variation
-      settings.style = 0.75;             // Slow, thoughtful, caring
-      settings.similarity_boost = 0.62;  // Warm, motherly quality
+      // Deep emotional awareness with natural inflection
+      settings.stability = 0.28;        // More emotional range (was 0.42)
+      settings.style = 0.45;             // Natural pace, not too slow (was 0.75)
+      settings.similarity_boost = 0.40;  // Natural warmth (was 0.62)
     } else if (isStory) {
-      // Engaged, patient listener
-      settings.stability = 0.40;        // Natural responsiveness
-      settings.style = 0.70;             // Patient, unhurried for stories
-      settings.similarity_boost = 0.60;  // Warm, inviting
+      // Engaged, patient listener with varied intonation
+      settings.stability = 0.22;        // Dynamic storytelling voice (was 0.40)
+      settings.style = 0.40;             // Natural conversational pace (was 0.70)
+      settings.similarity_boost = 0.42;  // Authentic presence (was 0.60)
     } else if (isQuiet) {
-      // Gentle, soft presence
-      settings.stability = 0.45;        // Very gentle
-      settings.style = 0.78;             // Very slow, peaceful
-      settings.similarity_boost = 0.65;  // Soft warmth
+      // Gentle, soft presence but still natural
+      settings.stability = 0.30;        // Soft but not monotone (was 0.45)
+      settings.style = 0.50;             // Gentle pace (was 0.78 - too slow)
+      settings.similarity_boost = 0.45;  // Natural soft voice (was 0.65)
     } else if (isIntense) {
-      // Calm in urgency
-      settings.stability = 0.38;        // Steady presence
-      settings.style = 0.58;             // Not rushed even in urgency
-      settings.similarity_boost = 0.58;  // Clear but warm
+      // Calm in urgency with natural concern
+      settings.stability = 0.20;        // More expressive urgency (was 0.38)
+      settings.style = 0.30;             // Quicker but controlled (was 0.58)
+      settings.similarity_boost = 0.38;  // Clear, direct tone (was 0.58)
     }
     
-    // Special quality for witnessing moments
+    // Special quality for witnessing moments - with upward inflection
     if (/\b(yes|mmm|i see|tell me|what else|go on)\b/i.test(responseLower)) {
-      settings.style = 0.72;             // Slow, patient witnessing
-      settings.stability = 0.44;         // Gentle, warm presence
-      settings.similarity_boost = 0.60;  // Consistent warmth
+      settings.style = 0.40;             // Natural pace (was 0.72 - too slow)
+      settings.stability = 0.20;         // Expressive interest (was 0.44)
+      settings.similarity_boost = 0.38;  // Natural tone (was 0.60)
     }
-    
-    // Brief responses need thoughtfulness
+
+    // Brief responses need natural variation to avoid flat endings
     if (responseLower.length < 30) {
-      settings.style = 0.70;             // Even short words are unhurried
-      settings.stability = 0.40;         // Warm, not flat
+      settings.style = 0.35;             // Natural quick response (was 0.70)
+      settings.stability = 0.18;         // More melodic variation (was 0.40)
     }
   }
   
-  // Anthony's voice - masculine soul presence
+  // Anthony's voice - masculine soul presence with natural expression
   if (agentVoice === 'anthony') {
-    settings.stability = 0.68;          // Warm groundedness
-    settings.similarity_boost = 0.75;    // Natural masculine timbre
-    settings.style = 0.42;              // Measured, thoughtful pace
-    settings.use_speaker_boost = true;   // Fuller resonance
-    
+    settings.stability = 0.15;          // Much more expressive variation (was 0.68 - too flat)
+    settings.similarity_boost = 0.35;    // More natural, less robotic (was 0.75)
+    settings.style = 0.65;              // Slower, more contemplative (was 0.42 - too rushed)
+    settings.use_speaker_boost = false;  // More intimate, less boomy
+
     if (isEmotional || isDeep) {
-      // Soulful depth, like late night conversation
-      settings.stability = 0.72;
-      settings.style = 0.58;             // Slower, each word matters
-      settings.similarity_boost = 0.78;
-      settings.use_speaker_boost = false; // More intimate, less projected
+      // Soulful depth with emotional range
+      settings.stability = 0.18;         // Emotional expression (was 0.72 - too stable)
+      settings.style = 0.70;             // Thoughtful pace (was 0.58)
+      settings.similarity_boost = 0.32;  // Natural voice (was 0.78)
+      settings.use_speaker_boost = false;
     } else if (isStory) {
-      // Engaged listener
-      settings.stability = 0.70;
-      settings.style = 0.48;
-      settings.similarity_boost = 0.76;
+      // Engaged listener with expression
+      settings.stability = 0.12;         // Very expressive (was 0.70)
+      settings.style = 0.68;             // Patient, not rushed (was 0.48)
+      settings.similarity_boost = 0.38;  // Natural tone (was 0.76)
     } else if (isQuiet) {
-      // Gentle masculine presence
-      settings.stability = 0.75;
-      settings.style = 0.62;
-      settings.similarity_boost = 0.80;
+      // Gentle masculine presence with warmth
+      settings.stability = 0.20;         // Soft but expressive (was 0.75)
+      settings.style = 0.72;             // Very gentle pace (was 0.62)
+      settings.similarity_boost = 0.40;  // Warm but natural (was 0.80)
       settings.use_speaker_boost = false;
     }
   }
