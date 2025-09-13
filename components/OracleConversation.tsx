@@ -118,6 +118,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   
   // UI states
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
+  const [showCaptions, setShowCaptions] = useState(false); // Default to no captions in voice mode
   
   // Conversation context
   const contextRef = useRef<ConversationContext>({
@@ -246,18 +247,25 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       const responseData = await response.json();
       console.log('Oracle response:', responseData);
-      
+
       // Handle PersonalOracleAgent response format
       const oracleResponse = responseData.data || responseData;
       let responseText = oracleResponse.message || 'I am here with you.';
-      
+
       // Clean any voice command artifacts from the response text
       responseText = cleanMessage(responseText);
-      
+
       // Use the element and voice characteristics from PersonalOracleAgent
       const element = oracleResponse.element || 'aether';
       const voiceCharacteristics = oracleResponse.voiceCharacteristics;
       const audioUrl = oracleResponse.audio; // Audio URL from Sesame generation
+
+      console.log('🎤 Audio response details:', {
+        hasAudio: !!audioUrl,
+        audioType: audioUrl === 'web-speech-fallback' ? 'fallback' : 'elevenlabs',
+        audioLength: audioUrl ? audioUrl.length : 0,
+        inputSource: showChatInterface ? 'text' : 'voice'
+      });
       
       // Map element to facet for holoflower visualization
       const facetId = mapElementToFacetId(element);
@@ -739,14 +747,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Message flow - Mobile: Bottom sheet, Desktop: Right side */}
-      <div className="fixed md:right-8 md:top-1/2 md:transform md:-translate-y-1/2 md:w-96 
-                      bottom-0 left-0 right-0 md:left-auto md:bottom-auto
-                      max-h-[40vh] md:max-h-[70vh] overflow-y-auto
-                      bg-black/60 md:bg-transparent backdrop-blur-lg md:backdrop-blur-none
-                      rounded-t-3xl md:rounded-none p-4 md:p-0">
-        <AnimatePresence>
-          {messages.length > 0 && (
+      {/* Message flow - Only show in chat mode or when captions enabled */}
+      {(showChatInterface || showCaptions) && (
+        <div className="fixed md:right-8 md:top-1/2 md:transform md:-translate-y-1/2 md:w-96
+                        bottom-0 left-0 right-0 md:left-auto md:bottom-auto
+                        max-h-[40vh] md:max-h-[70vh] overflow-y-auto
+                        bg-black/60 md:bg-transparent backdrop-blur-lg md:backdrop-blur-none
+                        rounded-t-3xl md:rounded-none p-4 md:p-0">
+          <AnimatePresence>
+            {messages.length > 0 && (
             <div className="space-y-3">
               {messages.slice(-5).map((message, index) => (
                 <motion.div
@@ -777,6 +786,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           )}
         </AnimatePresence>
       </div>
+      )}
 
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
@@ -836,6 +846,28 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </>
       )}
 
+
+      {/* CC/Transcript Toggle - Only in voice mode */}
+      {!showChatInterface && (
+        <button
+          onClick={() => setShowCaptions(!showCaptions)}
+          className="fixed bottom-24 right-4 p-2 bg-white/10 backdrop-blur-sm rounded-full
+                     hover:bg-white/20 transition-all duration-300 border border-white/20"
+          title={showCaptions ? "Hide transcript" : "Show transcript"}
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {showCaptions ? (
+              // CC On icon
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+            ) : (
+              // CC Off icon
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            )}
+          </svg>
+        </button>
+      )}
 
       {/* Session Controls - Mobile optimized */}
       <div className="fixed top-4 md:top-8 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 z-50">
