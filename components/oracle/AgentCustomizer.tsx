@@ -188,15 +188,50 @@ export const AgentCustomizer: React.FC<AgentCustomizerProps> = ({
 
               {/* Voice Preview */}
               <button
-                onClick={() => {
-                  const utterance = new SpeechSynthesisUtterance(
-                    `Hello, I'm ${customName}. ${config.voice === 'maya' 
-                      ? "What's on your mind today?" 
-                      : "Pull up a chair. Let's talk."}`
-                  );
-                  utterance.pitch = config.voice === 'maya' ? 1.1 : 0.8;
-                  utterance.rate = config.voice === 'maya' ? 1.0 : 0.95;
-                  speechSynthesis.speak(utterance);
+                onClick={async () => {
+                  try {
+                    // Use ElevenLabs for preview
+                    const text = `Hello, I'm ${customName}. ${config.voice === 'maya'
+                      ? "It's good to see you."
+                      : "Good to meet you."}`;
+
+                    const response = await fetch('/api/oracle/preview-voice', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        text,
+                        voice: config.voice
+                      })
+                    });
+
+                    if (response.ok) {
+                      const data = await response.json();
+                      if (data.audio && data.audio !== 'web-speech-fallback') {
+                        const audio = new Audio(data.audio);
+                        audio.volume = 0.8;
+                        audio.play().catch(() => {
+                          // Fallback to Web Speech if audio fails
+                          const utterance = new SpeechSynthesisUtterance(text);
+                          utterance.pitch = config.voice === 'maya' ? 1.1 : 0.8;
+                          utterance.rate = config.voice === 'maya' ? 1.0 : 0.95;
+                          speechSynthesis.speak(utterance);
+                        });
+                      }
+                    } else {
+                      // Fallback to Web Speech
+                      const utterance = new SpeechSynthesisUtterance(text);
+                      utterance.pitch = config.voice === 'maya' ? 1.1 : 0.8;
+                      utterance.rate = config.voice === 'maya' ? 1.0 : 0.95;
+                      speechSynthesis.speak(utterance);
+                    }
+                  } catch (error) {
+                    // Fallback to Web Speech on any error
+                    const text = `Hello, I'm ${customName}.`;
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.pitch = config.voice === 'maya' ? 1.1 : 0.8;
+                    utterance.rate = config.voice === 'maya' ? 1.0 : 0.95;
+                    speechSynthesis.speak(utterance);
+                  }
                 }}
                 className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/20
                          text-white/80 hover:bg-white/10 transition-all flex items-center
