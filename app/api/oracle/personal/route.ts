@@ -193,12 +193,12 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
   const isIntense = /\b(urgent|emergency|help|crisis|now)\b/i.test(userInput);
   const isStory = /\b(remember|when i|story|once|used to|childhood|dream|imagine)\b/i.test(userInput);
   
-  // Base settings - More natural, expressive voice with varied intonation
+  // Base settings - Natural, expressive voice with good pacing
   let settings = {
-    stability: 0.25,              // More variation for natural speech (was 0.38)
-    similarity_boost: 0.45,        // Less synthetic, more natural (was 0.58)
-    style: 0.35,                   // More dynamic pacing (was 0.68 - too slow)
-    use_speaker_boost: false       // Less boomy, more intimate (was true)
+    stability: 0.25,              // More variation for natural speech
+    similarity_boost: 0.45,        // Less synthetic, more natural
+    style: 0.25,                   // Slightly faster, more conversational (was 0.35)
+    use_speaker_boost: false       // Less boomy, more intimate
   };
   
   // Maya's voice - feminine witnessing presence
