@@ -117,50 +117,90 @@ Remember: Speak as naturally as any person would in conversation. Don't qualify 
 // Store conversation context in memory (resets on server restart)
 const conversationMemory = new Map<string, any[]>();
 
-// Dynamic voice settings based on conversation context
-function getDynamicVoiceSettings(userInput: string, mayaResponse: string) {
+// Dynamic voice settings - sculpting presence through sound
+function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentVoice: string = 'maya') {
   const inputLower = userInput.toLowerCase();
   const responseLower = mayaResponse.toLowerCase();
   
-  // Detect emotional or deep conversation
+  // Detect conversation qualities
   const isEmotional = /\b(feel|hurt|sad|happy|love|afraid|scared|angry|lonely)\b/i.test(userInput);
-  const isDeep = /\b(meaning|purpose|death|life|soul|consciousness|existence)\b/i.test(userInput);
-  const isQuiet = /\b(quiet|silence|peace|calm|rest)\b/i.test(userInput);
+  const isDeep = /\b(meaning|purpose|death|life|soul|consciousness|existence|dream|inner|wisdom)\b/i.test(userInput);
+  const isQuiet = /\b(quiet|silence|peace|calm|rest|still)\b/i.test(userInput);
   const isIntense = /\b(urgent|emergency|help|crisis|now)\b/i.test(userInput);
+  const isStory = /\b(remember|when i|story|once|used to|childhood|dream|imagine)\b/i.test(userInput);
   
-  // Base settings for intimate, slower voice
+  // Base settings - Sacred witnessing presence
   let settings = {
-    stability: 0.65,              // More stable for intimacy
-    similarity_boost: 0.75,        // Keep voice consistent
-    style: 0.4,                    // Slower, more thoughtful (0=fast, 1=slow)
-    use_speaker_boost: false       // Natural tone
+    stability: 0.72,              // Grounded, consistent presence
+    similarity_boost: 0.78,        // Natural voice character
+    style: 0.45,                   // Unhurried pace, space between words (0=fast, 1=slow)
+    use_speaker_boost: false       // Pure, unprocessed quality
   };
   
-  // Adjust based on context
-  if (isEmotional || isDeep) {
-    // Very intimate, slow, gentle
-    settings.stability = 0.7;
-    settings.style = 0.6;          // Even slower for deep moments
-    settings.similarity_boost = 0.8;
-  } else if (isQuiet) {
-    // Whisper-like, very intimate
-    settings.stability = 0.75;
-    settings.style = 0.7;          // Very slow and gentle
-    settings.similarity_boost = 0.85;
-  } else if (isIntense) {
-    // More present but still calm
-    settings.stability = 0.6;
-    settings.style = 0.3;          // Slightly faster for urgency
-    settings.similarity_boost = 0.7;
-  } else if (responseLower.length < 30) {
-    // Short responses - keep intimate
-    settings.style = 0.5;          // Slower for brief moments
+  // Maya's voice - feminine witnessing presence
+  if (agentVoice === 'maya') {
+    // Adjust based on context
+    if (isEmotional || isDeep) {
+      // Deep presence, like sitting by a fire at night
+      settings.stability = 0.78;        // Very grounded
+      settings.style = 0.65;             // Slow like honey
+      settings.similarity_boost = 0.82;  // Warm consistency
+    } else if (isStory) {
+      // Drawing out their inner world
+      settings.stability = 0.74;        // Stable but responsive
+      settings.style = 0.55;             // Gentle pacing for stories
+      settings.similarity_boost = 0.80;  // Inviting tone
+    } else if (isQuiet) {
+      // Almost whispered presence
+      settings.stability = 0.80;        // Stillness itself
+      settings.style = 0.72;             // Very slow, each word placed
+      settings.similarity_boost = 0.85;  // Intimate consistency
+    } else if (isIntense) {
+      // Present urgency without panic
+      settings.stability = 0.68;        // Responsive but centered
+      settings.style = 0.38;             // Quicker but not rushed
+      settings.similarity_boost = 0.75;  // Clear presence
+    }
+    
+    // Special quality for witnessing moments
+    if (/\b(yes|mmm|i see|tell me|what else|go on)\b/i.test(responseLower)) {
+      settings.style = 0.68;             // Each word a held space
+      settings.stability = 0.82;         // Absolute groundedness
+      settings.similarity_boost = 0.80;  // Consistent witnessing
+    }
+    
+    // Brief responses need more presence, not speed
+    if (responseLower.length < 30) {
+      settings.style = 0.58;             // Let short words land fully
+      settings.stability = 0.75;         // Solid even in brevity
+    }
   }
   
-  // If Maya is witnessing or holding space
-  if (/\b(yes|mmm|i see|tell me|what else)\b/i.test(responseLower)) {
-    settings.style = 0.6;          // Very slow for witnessing
-    settings.stability = 0.8;      // Very stable, grounded
+  // Anthony's voice - masculine soul presence
+  if (agentVoice === 'anthony') {
+    settings.stability = 0.68;          // Warm groundedness
+    settings.similarity_boost = 0.75;    // Natural masculine timbre
+    settings.style = 0.42;              // Measured, thoughtful pace
+    settings.use_speaker_boost = true;   // Fuller resonance
+    
+    if (isEmotional || isDeep) {
+      // Soulful depth, like late night conversation
+      settings.stability = 0.72;
+      settings.style = 0.58;             // Slower, each word matters
+      settings.similarity_boost = 0.78;
+      settings.use_speaker_boost = false; // More intimate, less projected
+    } else if (isStory) {
+      // Engaged listener
+      settings.stability = 0.70;
+      settings.style = 0.48;
+      settings.similarity_boost = 0.76;
+    } else if (isQuiet) {
+      // Gentle masculine presence
+      settings.stability = 0.75;
+      settings.style = 0.62;
+      settings.similarity_boost = 0.80;
+      settings.use_speaker_boost = false;
+    }
   }
   
   return settings;
@@ -345,7 +385,7 @@ export async function POST(request: NextRequest) {
           similarity_boost: 0.7,
           style: 0.3,
           use_speaker_boost: true
-        } : getDynamicVoiceSettings(input, response);
+        } : getDynamicVoiceSettings(input, response, agentVoice);
         
         console.log('🎙️ Dynamic voice settings:', voiceSettings);
         
