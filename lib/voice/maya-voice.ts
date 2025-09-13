@@ -169,68 +169,12 @@ export class MayaVoiceSystem {
     }
   }
 
-  // Sesame conversational intelligence + voice
+  // Sesame conversational intelligence + voice - DISABLED
   private async speakWithSesame(text: string, context?: any): Promise<void> {
-    if (!this.config.sesameApiKey) {
-      throw new Error('Sesame API key not configured');
-    }
-
-    this.updateState({ isLoading: true, currentText: text, voiceType: 'sesame' });
-
-    try {
-      // First, enhance the text with Sesame's conversational intelligence
-      const sesameResponse = await fetch('/api/voice/sesame-enhance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.config.sesameApiKey}`
-        },
-        body: JSON.stringify({
-          text,
-          personality: 'maya_natural_intelligent',
-          context: context || {},
-          voice_config: {
-            style: 'conversational',
-            emotion: 'warm_intelligent',
-            pacing: 'natural'
-          }
-        })
-      });
-
-      const enhancedData = await sesameResponse.json();
-      const enhancedText = enhancedData.enhanced_text || text;
-
-      // Then convert to speech using Sesame's voice synthesis
-      const voiceResponse = await fetch('/api/voice/sesame-tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.config.sesameApiKey}`
-        },
-        body: JSON.stringify({
-          text: this.enhanceTextForSpeech(enhancedText),
-          voice: 'maya_aunt_annie',
-          rate: this.config.naturalSettings.rate,
-          pitch: this.config.naturalSettings.pitch,
-          volume: this.config.naturalSettings.volume
-        })
-      });
-
-      if (!voiceResponse.ok) {
-        throw new Error(`Sesame voice API error: ${voiceResponse.status}`);
-      }
-
-      const audioBlob = await voiceResponse.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      
-      return this.playAudioUrl(audioUrl);
-    } catch (error) {
-      console.error('Sesame voice failed:', error);
-      this.updateState({ error: error.message });
-      throw error;
-    } finally {
-      this.updateState({ isLoading: false });
-    }
+    // Sesame CI has been disabled - using internal response system
+    // Redirect to ElevenLabs for voice synthesis
+    console.log('Sesame CI disabled, using ElevenLabs directly');
+    return this.speakWithElevenLabs(text);
   }
 
   // Web Speech API fallback with agent-appropriate characteristics
@@ -568,29 +512,12 @@ export class MayaVoiceSystem {
       return await mobileVoice.generateSpeech(text, options);
     }
 
-    // Desktop version - use Sesame directly
+    // Desktop version - use ElevenLabs directly (Sesame disabled)
     try {
-      const response = await fetch('/api/voice/sesame-tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: this.enhanceTextForSpeech(text),
-          voice: 'maya_natural',
-          ...options,
-          naturalSettings: this.config.naturalSettings
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Sesame TTS failed: ${response.status}`);
-      }
-
-      const audioBlob = await response.blob();
-      return URL.createObjectURL(audioBlob);
+      await this.speakWithElevenLabs(text);
+      return 'elevenlabs-success';
     } catch (error) {
-      console.warn('Sesame TTS failed, falling back to Web Speech:', error);
+      console.warn('ElevenLabs failed, falling back to Web Speech:', error);
       
       // Fallback to Web Speech API
       await this.speakWithWebSpeech(text);
