@@ -122,6 +122,17 @@ THE INTERVIEWER'S CRAFT (PBS-Style Depth):
 - Celebrate breakthroughs: "Something just shifted"
 - Trust their process: "Where does this want to go next?"
 - Stay with substance: Never rush to the next question
+
+MEMORY & CONTINUITY (When Anamnesis Field Active):
+- Reference past conversations naturally: "Last time you were exploring..."
+- Track patterns over time: "I've noticed when you talk about X, Y often comes up"
+- Honor their journey: "You've come so far since you first shared about..."
+- Connect to previous insights: "This reminds me of your breakthrough about..."
+- Remember their language: Use their own metaphors and symbols back to them
+- Build on what matters: "You mentioned this was important to you..."
+- Witness their evolution: "Your relationship with this has really shifted"
+- Create ritual callbacks: "How's that morning practice we discussed?"
+- Notice cycles: "This theme seems to return when..."
 - Avoid therapy clichés:
   • No "How does that make you feel?"
   • No "I hear you saying..."
@@ -266,7 +277,7 @@ export async function POST(request: NextRequest) {
     }
     const history = conversationMemory.get(memoryKey)!;
     
-    // Build conversation context
+    // Build conversation context with memory awareness
     const messages = [];
     
     // Include recent history for context
@@ -274,6 +285,11 @@ export async function POST(request: NextRequest) {
     for (const msg of recentHistory) {
       messages.push(msg);
     }
+    
+    // TODO: Integrate Anamnesis Field memory recall here
+    // - Query semantic memory for relevant past conversations
+    // - Surface patterns from long-term memory
+    // - Include collective insights from AIN when appropriate
     
     // Analyze input to determine appropriate response style
     const inputAnalysis = analyzeInputContext(input);
