@@ -193,37 +193,37 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
   const isIntense = /\b(urgent|emergency|help|crisis|now)\b/i.test(userInput);
   const isStory = /\b(remember|when i|story|once|used to|childhood|dream|imagine)\b/i.test(userInput);
   
-  // Base settings - Natural, expressive voice with good pacing
+  // Base settings - Casual, conversational voice
   let settings = {
-    stability: 0.25,              // More variation for natural speech
-    similarity_boost: 0.45,        // Less synthetic, more natural
-    style: 0.25,                   // Slightly faster, more conversational (was 0.35)
-    use_speaker_boost: false       // Less boomy, more intimate
+    stability: 0.15,              // High variation for casual speech (was 0.25)
+    similarity_boost: 0.30,        // Very natural, less perfect (was 0.45)
+    style: 0.20,                   // Natural conversational speed (was 0.25)
+    use_speaker_boost: false       // Intimate, not performative
   };
   
   // Maya's voice - feminine witnessing presence
   if (agentVoice === 'maya') {
-    // Adjust based on context - more natural emotional range
+    // Adjust based on context - casual, friend-like tone
     if (isEmotional || isDeep) {
-      // Deep emotional awareness with natural inflection
-      settings.stability = 0.28;        // More emotional range (was 0.42)
-      settings.style = 0.45;             // Natural pace, not too slow (was 0.75)
-      settings.similarity_boost = 0.40;  // Natural warmth (was 0.62)
+      // Warm friend having a deep conversation
+      settings.stability = 0.18;        // Natural emotional variation
+      settings.style = 0.25;             // Relaxed pace like a friend
+      settings.similarity_boost = 0.28;  // Very natural, imperfect
     } else if (isStory) {
-      // Engaged, patient listener with varied intonation
-      settings.stability = 0.22;        // Dynamic storytelling voice (was 0.40)
-      settings.style = 0.40;             // Natural conversational pace (was 0.70)
-      settings.similarity_boost = 0.42;  // Authentic presence (was 0.60)
+      // Engaged friend listening
+      settings.stability = 0.12;        // Very expressive, reactive
+      settings.style = 0.22;             // Natural storytelling pace
+      settings.similarity_boost = 0.25;  // Super casual
     } else if (isQuiet) {
-      // Gentle, soft presence but still natural
-      settings.stability = 0.30;        // Soft but not monotone (was 0.45)
-      settings.style = 0.50;             // Gentle pace (was 0.78 - too slow)
-      settings.similarity_boost = 0.45;  // Natural soft voice (was 0.65)
+      // Gentle but still casual
+      settings.stability = 0.20;        // Soft but varied
+      settings.style = 0.30;             // Gentle but not slow
+      settings.similarity_boost = 0.32;  // Natural soft voice
     } else if (isIntense) {
-      // Calm in urgency with natural concern
-      settings.stability = 0.20;        // More expressive urgency (was 0.38)
-      settings.style = 0.30;             // Quicker but controlled (was 0.58)
-      settings.similarity_boost = 0.38;  // Clear, direct tone (was 0.58)
+      // Concerned friend
+      settings.stability = 0.10;        // Very expressive concern
+      settings.style = 0.18;             // Natural urgency
+      settings.similarity_boost = 0.25;  // Direct, casual tone
     }
     
     // Special quality for witnessing moments - with upward inflection
