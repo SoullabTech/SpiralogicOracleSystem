@@ -641,13 +641,8 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
           ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's primary male voice
           : 'y2TOWGCXSYEgBanvKsYJ'; // Aunt Annie - warm, emotionally aware voice (Maya)
         
-        // Merge energetic attunement with voice settings
-        const baseVoiceSettings = agentVoice === 'anthony' ? {
-          stability: 0.5,
-          similarity_boost: 0.7,
-          style: 0.3,
-          use_speaker_boost: true
-        } : getDynamicVoiceSettings(input, response, agentVoice);
+        // Use dynamic voice settings for both Maya and Anthony
+        const baseVoiceSettings = getDynamicVoiceSettings(input, response, agentVoice);
         
         // Apply energetic modulation (simplified without EnergeticAttunement)
         const voiceSettings = {

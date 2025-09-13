@@ -112,8 +112,17 @@ export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProp
       };
       
       recognition.onerror = (event: any) => {
+        console.log('Speech recognition event:', event.error);
+
+        // Don't show error for intentional stops (aborted is normal when we stop recognition)
+        if (event.error === 'aborted') {
+          console.log('Voice recognition stopped (intentional)');
+          setIsListening(false);
+          return;
+        }
+
         console.error('Speech recognition error:', event.error);
-        
+
         // Handle specific error types with user-friendly messages
         let errorMessage = '';
         switch(event.error) {
@@ -132,7 +141,7 @@ export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProp
           default:
             errorMessage = `Voice error: ${event.error}`;
         }
-        
+
         setError(errorMessage);
         setIsListening(false);
       };
