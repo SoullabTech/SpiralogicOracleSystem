@@ -181,19 +181,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
+    const startTime = Date.now();
+    console.log('⏱️ Voice processing started');
+
     // Debounce rapid calls
     if (isProcessing || isAudioPlaying) {
       console.log('⚠️ Ignoring transcript - processing or audio playing');
       return;
     }
-    
+
     // Stop microphone immediately to prevent multiple inputs
     console.log('🛑 Stopping microphone to process user input');
     if (voiceMicRef.current?.stopListening) {
       voiceMicRef.current.stopListening();
     }
     setIsMicrophonePaused(true);
-    
+
     // Clean the transcript of any artifacts
     const cleanedTranscript = cleanMessage(transcript);
     
@@ -246,7 +249,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       }
 
       const responseData = await response.json();
-      console.log('Oracle response:', responseData);
+      const apiTime = Date.now() - startTime;
+      console.log(`⏱️ API response received in ${apiTime}ms`);
 
       // Handle PersonalOracleAgent response format
       const oracleResponse = responseData.data || responseData;
@@ -264,7 +268,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         hasAudio: !!audioUrl,
         audioType: audioUrl === 'web-speech-fallback' ? 'fallback' : 'elevenlabs',
         audioLength: audioUrl ? audioUrl.length : 0,
-        inputSource: showChatInterface ? 'text' : 'voice'
+        inputSource: showChatInterface ? 'text' : 'voice',
+        totalTime: `${(Date.now() - startTime) / 1000}s`
       });
       
       // Map element to facet for holoflower visualization
@@ -867,7 +872,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               onVoiceStateChange={setUserVoiceState}
               onTranscript={handleVoiceTranscript}
               position="bottom-center"
-              silenceThreshold={1000}  // Reduced from 3000ms to 1000ms for faster response
+              silenceThreshold={700}  // Reduced to 700ms for faster response
               pauseListening={isAudioPlaying}
             />
           )}
