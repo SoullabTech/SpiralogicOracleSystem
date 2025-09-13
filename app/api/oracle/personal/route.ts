@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Anthropic } from '@anthropic-ai/sdk';
+import { SimpleOrchestrator } from '../../../../lib/oracle-bridge/simple-orchestrator';
 // Simplified imports - removing non-existent dependencies
 // import { responseEnhancer } from '../../../../lib/response-enhancer';
 // import { sacredOracleConstellation } from '../../../../lib/sacred-oracle-constellation';
@@ -181,7 +182,6 @@ const conversationMemory = new Map<string, any[]>();
 
 // Dynamic voice settings - sculpting presence through sound
 function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentVoice: string = 'maya') {
-  const inputLower = userInput.toLowerCase();
   const responseLower = mayaResponse.toLowerCase();
   
   // Detect conversation qualities
@@ -298,6 +298,13 @@ export async function POST(request: NextRequest) {
       conversationMemory.set(memoryKey, []);
     }
     const history = conversationMemory.get(memoryKey)!;
+
+    // Initialize orchestrator for this session
+    const orchestrator = new SimpleOrchestrator({
+      name: agentName,
+      userId,
+      sessionId
+    });
     
     // Build conversation context with memory awareness
     const messages = [];
@@ -309,13 +316,27 @@ export async function POST(request: NextRequest) {
     }
     
     // Simplified energy analysis (removed EnergeticAttunement dependency)
-    const userEnergy = { level: 0.5, type: 'balanced' };
+    const userEnergy = {
+      level: 0.5,
+      type: 'balanced',
+      element: 'water',
+      mode: 'receptive',
+      intensity: 0.5,
+      pace: 0.5,
+      depth: 0.5,
+      openness: 0.5
+    };
     const relationship = {
       trustLevel: history.length > 10 ? 0.7 : 0.5,
       conversationCount: Math.floor(history.length / 2)
     };
-    const responseEnergy = { level: 0.5, type: 'balanced' };
-    const energyGuidance = '';
+    const responseEnergy = {
+      level: 0.5,
+      type: 'balanced',
+      pace: 0.5,
+      depth: 0.5
+    };
+    const energyGuidance: string[] = [];
     
     console.log('🌌 Anamnesis Field Active:', {
       userEnergy,
@@ -323,10 +344,22 @@ export async function POST(request: NextRequest) {
       relationship
     });
     
+    // Use orchestrator to analyze input
+    const orchestration = await orchestrator.orchestrateResponse(input);
+    const { analysis, priority } = orchestration;
+
+    console.log('🎯 Orchestration:', {
+      priority,
+      element: analysis.element,
+      hasCrisis: analysis.hasCrisis,
+      hasUrgency: analysis.hasUrgency,
+      needsLooping: analysis.needsLooping
+    });
+
     // Simplified input analysis (removed missing dependencies)
-    // const inputAnalysis = analyzeInputContext(input);
-    // const tone = calibrateTone(input);
-    
+    const inputAnalysis = { suggestedTokens: 200 };
+    const tone = analysis.element || 'balanced';
+
     // Add current message
     messages.push({ role: 'user' as const, content: input });
     
@@ -479,14 +512,10 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
           use_speaker_boost: true
         } : getDynamicVoiceSettings(input, response, agentVoice);
         
-        // Apply energetic modulation
-        const energeticVoiceSettings = EnergeticAttunement.energyToVoiceSettings(responseEnergy);
+        // Apply energetic modulation (simplified without EnergeticAttunement)
         const voiceSettings = {
           ...baseVoiceSettings,
-          // Blend base settings with energetic attunement
-          stability: (baseVoiceSettings.stability + energeticVoiceSettings.stability) / 2,
-          style: (baseVoiceSettings.style + energeticVoiceSettings.style) / 2,
-          similarity_boost: (baseVoiceSettings.similarity_boost + energeticVoiceSettings.similarity_boost) / 2,
+          // Use base settings directly
           use_speaker_boost: userEnergy.depth > 0.6 || baseVoiceSettings.use_speaker_boost
         };
         
