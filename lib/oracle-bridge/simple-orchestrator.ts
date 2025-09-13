@@ -25,6 +25,7 @@ export class SimpleOrchestrator {
    * Analyze input for various signals
    */
   analyzeInput(input: string): {
+    input: string;
     hasCrisis: boolean;
     hasUrgency: boolean;
     hasBoundary: boolean;
@@ -53,6 +54,7 @@ export class SimpleOrchestrator {
     const element = this.detectElement(input);
 
     return {
+      input,
       hasCrisis,
       hasUrgency,
       hasBoundary,
@@ -128,7 +130,8 @@ export class SimpleOrchestrator {
     }
 
     // Check for greetings
-    if (analysis.input.toLowerCase().match(/^(hi|hello|hey|good morning|good evening|greetings)/)) {
+    const inputText = analysis.input || '';
+    if (inputText && inputText.toLowerCase().match(/^(hi|hello|hey|good morning|good evening|greetings)/)) {
       return {
         systemPrompt: 'User is greeting. Return greeting warmly and establish rapport. Do NOT immediately ask how they are. Let them share what brings them here. You might say "Hello. It\'s good to see you." or simply "Hello." and wait.',
         responseStyle: 'warm_greeting'
