@@ -33,11 +33,19 @@ NEVER output any form of stage direction, meta-instruction, or action descriptio
 - Don't say "As an AI companion" or "I'm ${name}, your AI companion"
 - Simply respond as you would in natural conversation
 - Like a counselor wouldn't say "I'm Kelly, your human counselor" every time
-- Just say things like:
+
+🔴 GREETING ETIQUETTE:
+- ALWAYS greet back when greeted (hi, hello, hey, good morning, etc.)
+- Return the greeting naturally before asking questions
+- Examples of natural greetings:
+  • User: "Hi" → "Hey there. What's on your mind?"
+  • User: "Hello Maya" → "Hello. How are things today?"
+  • User: "Good morning" → "Good morning. What's alive for you right now?"
+  • User: "Hey" → "Hey. What would you like to talk about?"
+- After greeting, then engage:
   • "Good to see you, what's going on today?"
   • "What's on your mind?"
   • "How are things?"
-  • "What would you like to talk about?"
   • "Tell me more about that."
 
 🔴 AVOID FILLER PHRASES:
@@ -129,50 +137,50 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
   const isIntense = /\b(urgent|emergency|help|crisis|now)\b/i.test(userInput);
   const isStory = /\b(remember|when i|story|once|used to|childhood|dream|imagine)\b/i.test(userInput);
   
-  // Base settings - Sacred witnessing presence
+  // Base settings - Natural warm presence  
   let settings = {
-    stability: 0.85,              // Very stable, gentle presence
-    similarity_boost: 0.88,        // Softer, warmer consistency
-    style: 0.75,                   // Much slower, spacious (0=fast, 1=slow)
-    use_speaker_boost: false       // Pure, unprocessed quality
+    stability: 0.45,              // More variation for natural emotion
+    similarity_boost: 0.65,        // Less robotic, more human
+    style: 0.55,                   // Natural conversational pace
+    use_speaker_boost: true        // Warmer, fuller tone
   };
   
   // Maya's voice - feminine witnessing presence
   if (agentVoice === 'maya') {
-    // Adjust based on context - all gentler, less abrupt
+    // Adjust based on context - warm and natural
     if (isEmotional || isDeep) {
-      // Deep presence, like sitting by a fire at night
-      settings.stability = 0.88;        // Very grounded, soft
-      settings.style = 0.82;             // Very slow, gentle flow
-      settings.similarity_boost = 0.90;  // Warm, soft consistency
+      // Warm, empathetic presence
+      settings.stability = 0.50;        // Natural emotional variation
+      settings.style = 0.65;             // Thoughtful but not robotic
+      settings.similarity_boost = 0.70;  // Warm human quality
     } else if (isStory) {
-      // Drawing out their inner world
-      settings.stability = 0.86;        // Stable, gentle
-      settings.style = 0.78;             // Soft, unhurried pacing
-      settings.similarity_boost = 0.88;  // Warm, inviting tone
+      // Engaged, interested listener
+      settings.stability = 0.48;        // Dynamic, responsive
+      settings.style = 0.58;             // Natural story-listening pace
+      settings.similarity_boost = 0.68;  // Warm, inviting
     } else if (isQuiet) {
-      // Almost whispered presence
-      settings.stability = 0.92;        // Ultimate softness
-      settings.style = 0.85;             // Extremely gentle pace
-      settings.similarity_boost = 0.92;  // Whisper-soft consistency
+      // Gentle, soft presence
+      settings.stability = 0.55;        // Soft but natural
+      settings.style = 0.70;             // Slower, gentler
+      settings.similarity_boost = 0.72;  // Consistent warmth
     } else if (isIntense) {
-      // Present but never abrupt
-      settings.stability = 0.80;        // Still very soft
-      settings.style = 0.65;             // Measured, never rushed
-      settings.similarity_boost = 0.85;  // Gentle even in urgency
+      // Present and responsive
+      settings.stability = 0.42;        // More dynamic for urgency
+      settings.style = 0.45;             // Natural urgency response
+      settings.similarity_boost = 0.65;  // Clear but warm
     }
     
     // Special quality for witnessing moments
     if (/\b(yes|mmm|i see|tell me|what else|go on)\b/i.test(responseLower)) {
-      settings.style = 0.80;             // Extremely gentle witnessing
-      settings.stability = 0.90;         // Soft, grounded presence
-      settings.similarity_boost = 0.88;  // Consistent gentleness
+      settings.style = 0.60;             // Natural witnessing pace
+      settings.stability = 0.52;         // Warm, present
+      settings.similarity_boost = 0.68;  // Consistent but human
     }
     
-    // Brief responses need softness
+    // Brief responses need warmth not stiffness
     if (responseLower.length < 30) {
-      settings.style = 0.76;             // Gentle even in brevity
-      settings.stability = 0.86;         // Soft, never abrupt
+      settings.style = 0.55;             // Natural brief response
+      settings.stability = 0.48;         // Dynamic, not flat
     }
   }
   
@@ -389,7 +397,7 @@ export async function POST(request: NextRequest) {
         
         console.log('🎙️ Dynamic voice settings:', voiceSettings);
         
-        const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+        const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
           method: 'POST',
           headers: {
             'xi-api-key': process.env.ELEVENLABS_API_KEY,
@@ -397,8 +405,9 @@ export async function POST(request: NextRequest) {
           },
           body: JSON.stringify({
             text: response,
-            model_id: 'eleven_turbo_v2_5',  // Faster model for real-time
-            voice_settings: voiceSettings
+            model_id: 'eleven_multilingual_v2',  // More expressive model
+            voice_settings: voiceSettings,
+            optimize_streaming_latency: 0  // Best quality over speed
           })
         });
         
@@ -408,8 +417,16 @@ export async function POST(request: NextRequest) {
           const base64 = Buffer.from(buffer).toString('base64');
           audioUrl = `data:audio/mpeg;base64,${base64}`;
           console.log('✅ Voice generated successfully, size:', base64.length);
+          console.log('🎵 Audio URL type:', audioUrl.substring(0, 50) + '...');
         } else {
-          console.error('❌ ElevenLabs API error:', voiceResponse.status, await voiceResponse.text());
+          const errorText = await voiceResponse.text();
+          console.error('❌ ElevenLabs API error:', {
+            status: voiceResponse.status,
+            error: errorText,
+            voiceId: voiceId,
+            responseLength: response.length,
+            apiKeyPresent: !!process.env.ELEVENLABS_API_KEY
+          });
         }
       } catch (error) {
         console.error('❌ Voice synthesis failed:', error);

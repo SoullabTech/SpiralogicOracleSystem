@@ -326,40 +326,41 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             });
             
             audio.addEventListener('ended', () => {
-              console.log('🔊 Audio ended, waiting before resuming mic');
+              console.log('🔊 Audio ended, resuming mic');
               setIsAudioPlaying(false);
               setIsResponding(false);
               setIsStreaming(false);
               setIsMicrophonePaused(false);
               setCurrentMotionState('listening');
-              setIsProcessing(false); // Clear processing state
-              // Resume listening after a longer delay to ensure audio is fully done
+              setIsProcessing(false);
+              
+              // Simple resume with shorter delay
               setTimeout(() => {
-                // Only resume if not currently playing audio and not processing
-                if (!isAudioPlaying && !isProcessing) {
-                  console.log('🎤 Resuming microphone after safety check');
-                  if (voiceMicRef.current?.startListening) {
-                    voiceMicRef.current.startListening();
-                  }
-                } else {
-                  console.log('⚠️ Not resuming mic - still processing or playing');
+                console.log('🎤 Resuming microphone after audio ended');
+                if (voiceMicRef.current?.startListening) {
+                  voiceMicRef.current.startListening();
                 }
-              }, 2000); // Increased to 2 seconds for safety
+              }, 1000);
             });
             
             audio.play().catch(error => {
               console.error('Audio playback failed, falling back to Maya voice:', error);
               setIsAudioPlaying(false);
+              setIsMicrophonePaused(false);
+              setIsProcessing(false);
+              
               // Start streaming text immediately for fallback
               setIsStreaming(true);
               setStreamingText('');
               streamText(responseText, oracleMessage.id);
-              // Fallback to Maya voice synthesis
-              mayaSpeak(responseText, {
-                element,
-                tone: voiceCharacteristics?.tone,
-                masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
-              });
+              
+              // Resume mic immediately since ElevenLabs failed
+              setTimeout(() => {
+                console.log('🎤 Resuming microphone after ElevenLabs failure');
+                if (voiceMicRef.current?.startListening) {
+                  voiceMicRef.current.startListening();
+                }
+              }, 500);
             });
           } catch (error) {
             console.error('Audio creation failed:', error);
@@ -399,20 +400,29 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             setIsStreaming(false);
             setIsMicrophonePaused(false);
             setCurrentMotionState('listening');
-            setIsProcessing(false); // Clear processing state
-            // Resume listening after speech ends with longer delay
+            setIsProcessing(false);
+            
+            // Simple resume after Web Speech
             setTimeout(() => {
-              if (!isAudioPlaying && !isProcessing) {
-                console.log('🎤 Resuming microphone after Web Speech');
-                if (voiceMicRef.current?.startListening) {
-                  voiceMicRef.current.startListening();
-                }
+              console.log('🎤 Resuming microphone after Web Speech');
+              if (voiceMicRef.current?.startListening) {
+                voiceMicRef.current.startListening();
               }
-            }, 2000); // Increased to 2 seconds
+            }, 1000);
           }).catch(error => {
             console.error('Maya voice failed:', error);
             setIsAudioPlaying(false);
             setIsStreaming(false);
+            setIsMicrophonePaused(false);
+            setIsProcessing(false);
+            
+            // Resume mic even on error
+            setTimeout(() => {
+              console.log('🎤 Resuming microphone after voice error');
+              if (voiceMicRef.current?.startListening) {
+                voiceMicRef.current.startListening();
+              }
+            }, 1000);
           });
         }
       } else {
