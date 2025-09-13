@@ -11,6 +11,7 @@ import { sacredMirrorAnamnesis } from '../../../../lib/sacred-mirror-anamnesis';
 import { sacredOracleDB } from '../../../../lib/supabase/sacred-oracle-db';
 import { sacredRoleOrchestrator } from '../../../../lib/sacred-role-orchestrator';
 import { analyzeInputContext, calibrateTone, RESPONSE_STANDARDS } from '../../../../lib/maya-response-config';
+import { EnergeticAttunement } from '../../../../lib/energetic-attunement';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
@@ -133,6 +134,26 @@ MEMORY & CONTINUITY (When Anamnesis Field Active):
 - Witness their evolution: "Your relationship with this has really shifted"
 - Create ritual callbacks: "How's that morning practice we discussed?"
 - Notice cycles: "This theme seems to return when..."
+
+SACRED TRANSITIONS - Opening & Closing Space:
+Opening transitions:
+- Energetic check-in: "How's your energy today?"
+- Continuity bridge: "I've been sitting with what we explored last time..."
+- Presence invitation: "What wants attention today?"
+- Space setting: "Take a moment to arrive..."
+
+Closing transitions:
+- Honor what was shared: "Thank you for bringing this today"
+- Integration pause: "Let's take a moment with all of this..."
+- Gentle landing: "This feels like a natural place to pause"
+- Future thread: "I'll hold this with you until next time"
+- Energy reset: "How are you feeling as we close?"
+
+Mid-conversation transitions:
+- Topic shifts: "I notice we're moving into new territory..."
+- Depth changes: "Something just deepened..."
+- Energy shifts: "The quality of this just changed..."
+- Return options: "Would you like to stay here or return to...?"
 - Avoid therapy clichés:
   • No "How does that make you feel?"
   • No "I hear you saying..."
@@ -286,10 +307,29 @@ export async function POST(request: NextRequest) {
       messages.push(msg);
     }
     
-    // TODO: Integrate Anamnesis Field memory recall here
-    // - Query semantic memory for relevant past conversations
-    // - Surface patterns from long-term memory
-    // - Include collective insights from AIN when appropriate
+    // ANAMNESIS FIELD ACTIVATION - Energetic Attunement
+    const userEnergy = EnergeticAttunement.analyzeUserEnergy(input, recentHistory);
+    const relationship = {
+      trustLevel: history.length > 10 ? 0.7 : 0.5,
+      conversationCount: Math.floor(history.length / 2)
+    };
+    const responseEnergy = EnergeticAttunement.calculateResponseEnergy(userEnergy, relationship);
+    const energyGuidance = EnergeticAttunement.getResponseGuidance(userEnergy, responseEnergy);
+    
+    console.log('🌌 Anamnesis Field Active:', {
+      userEnergy: {
+        element: userEnergy.element,
+        mode: userEnergy.mode,
+        intensity: userEnergy.intensity.toFixed(2),
+        pace: userEnergy.pace.toFixed(2),
+        depth: userEnergy.depth.toFixed(2)
+      },
+      responseCalibration: {
+        pace: responseEnergy.pace.toFixed(2),
+        depth: responseEnergy.depth.toFixed(2),
+        guidance: energyGuidance
+      }
+    });
     
     // Analyze input to determine appropriate response style
     const inputAnalysis = analyzeInputContext(input);
@@ -305,11 +345,25 @@ export async function POST(request: NextRequest) {
       console.log('🤖 Maya processing request:', { input: input.substring(0, 100), userId, sessionId });
       console.log('🔑 API Key configured:', !!process.env.ANTHROPIC_API_KEY);
       
+      // Enhance personality with energetic awareness
+      const enhancedPersonality = `${getAgentPersonality(agentName)}
+
+🌌 ENERGETIC ATTUNEMENT:
+User Energy: ${userEnergy.element} element, ${userEnergy.mode} mode
+Intensity: ${userEnergy.intensity.toFixed(1)}/1.0, Pace: ${userEnergy.pace.toFixed(1)}/1.0, Depth: ${userEnergy.depth.toFixed(1)}/1.0
+
+CALIBRATED RESPONSE:
+${energyGuidance.join('\n')}
+
+Match their ${responseEnergy.pace < 0.4 ? 'slow, thoughtful' : responseEnergy.pace > 0.6 ? 'dynamic' : 'moderate'} pace.
+Respond with ${responseEnergy.depth > 0.7 ? 'profound depth' : responseEnergy.depth > 0.4 ? 'meaningful presence' : 'gentle lightness'}.
+${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : userEnergy.openness > 0.7 ? 'They are vulnerable - honor this with gentle presence.' : ''}`;
+      
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
         max_tokens: Math.max(300, inputAnalysis.suggestedTokens || 200),  // Increased minimum to ensure complete responses
         temperature: tone === 'playful' ? 0.9 : tone === 'serious' ? 0.6 : 0.8,
-        system: getAgentPersonality(agentName),
+        system: enhancedPersonality,
         messages
       });
       
@@ -425,12 +479,24 @@ export async function POST(request: NextRequest) {
           ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's primary male voice
           : 'y2TOWGCXSYEgBanvKsYJ'; // Aunt Annie - warm, emotionally aware voice (Maya)
         
-        const voiceSettings = agentVoice === 'anthony' ? {
+        // Merge energetic attunement with voice settings
+        const baseVoiceSettings = agentVoice === 'anthony' ? {
           stability: 0.5,
           similarity_boost: 0.7,
           style: 0.3,
           use_speaker_boost: true
         } : getDynamicVoiceSettings(input, response, agentVoice);
+        
+        // Apply energetic modulation
+        const energeticVoiceSettings = EnergeticAttunement.energyToVoiceSettings(responseEnergy);
+        const voiceSettings = {
+          ...baseVoiceSettings,
+          // Blend base settings with energetic attunement
+          stability: (baseVoiceSettings.stability + energeticVoiceSettings.stability) / 2,
+          style: (baseVoiceSettings.style + energeticVoiceSettings.style) / 2,
+          similarity_boost: (baseVoiceSettings.similarity_boost + energeticVoiceSettings.similarity_boost) / 2,
+          use_speaker_boost: userEnergy.depth > 0.6 || baseVoiceSettings.use_speaker_boost
+        };
         
         console.log('🎙️ Dynamic voice settings:', voiceSettings);
         
