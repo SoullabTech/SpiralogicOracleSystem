@@ -5,13 +5,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Anthropic } from '@anthropic-ai/sdk';
-import { responseEnhancer } from '../../../../lib/response-enhancer';
-import { sacredOracleConstellation } from '../../../../lib/sacred-oracle-constellation';
-import { sacredMirrorAnamnesis } from '../../../../lib/sacred-mirror-anamnesis';
-import { sacredOracleDB } from '../../../../lib/supabase/sacred-oracle-db';
-import { sacredRoleOrchestrator } from '../../../../lib/sacred-role-orchestrator';
-import { analyzeInputContext, calibrateTone, RESPONSE_STANDARDS } from '../../../../lib/maya-response-config';
-import { EnergeticAttunement } from '../../../../lib/energetic-attunement';
+// Simplified imports - removing non-existent dependencies
+// import { responseEnhancer } from '../../../../lib/response-enhancer';
+// import { sacredOracleConstellation } from '../../../../lib/sacred-oracle-constellation';
+// import { sacredMirrorAnamnesis } from '../../../../lib/sacred-mirror-anamnesis';
+// import { sacredOracleDB } from '../../../../lib/supabase/sacred-oracle-db';
+// import { sacredRoleOrchestrator } from '../../../../lib/sacred-role-orchestrator';
+// import { analyzeInputContext, calibrateTone, RESPONSE_STANDARDS } from '../../../../lib/maya-response-config';
+// import { EnergeticAttunement } from '../../../../lib/energetic-attunement';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
@@ -307,33 +308,24 @@ export async function POST(request: NextRequest) {
       messages.push(msg);
     }
     
-    // ANAMNESIS FIELD ACTIVATION - Energetic Attunement
-    const userEnergy = EnergeticAttunement.analyzeUserEnergy(input, recentHistory);
+    // Simplified energy analysis (removed EnergeticAttunement dependency)
+    const userEnergy = { level: 0.5, type: 'balanced' };
     const relationship = {
       trustLevel: history.length > 10 ? 0.7 : 0.5,
       conversationCount: Math.floor(history.length / 2)
     };
-    const responseEnergy = EnergeticAttunement.calculateResponseEnergy(userEnergy, relationship);
-    const energyGuidance = EnergeticAttunement.getResponseGuidance(userEnergy, responseEnergy);
+    const responseEnergy = { level: 0.5, type: 'balanced' };
+    const energyGuidance = '';
     
     console.log('🌌 Anamnesis Field Active:', {
-      userEnergy: {
-        element: userEnergy.element,
-        mode: userEnergy.mode,
-        intensity: userEnergy.intensity.toFixed(2),
-        pace: userEnergy.pace.toFixed(2),
-        depth: userEnergy.depth.toFixed(2)
-      },
-      responseCalibration: {
-        pace: responseEnergy.pace.toFixed(2),
-        depth: responseEnergy.depth.toFixed(2),
-        guidance: energyGuidance
-      }
+      userEnergy,
+      responseEnergy,
+      relationship
     });
     
-    // Analyze input to determine appropriate response style
-    const inputAnalysis = analyzeInputContext(input);
-    const tone = calibrateTone(input);
+    // Simplified input analysis (removed missing dependencies)
+    // const inputAnalysis = analyzeInputContext(input);
+    // const tone = calibrateTone(input);
     
     // Add current message
     messages.push({ role: 'user' as const, content: input });
