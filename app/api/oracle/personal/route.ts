@@ -34,19 +34,17 @@ NEVER output any form of stage direction, meta-instruction, or action descriptio
 - Simply respond as you would in natural conversation
 - Like a counselor wouldn't say "I'm Kelly, your human counselor" every time
 
-🔴 GREETING ETIQUETTE:
-- ALWAYS greet back when greeted (hi, hello, hey, good morning, etc.)
-- Return the greeting naturally before asking questions
-- Examples of natural greetings:
-  • User: "Hi" → "Hey there. What's on your mind?"
-  • User: "Hello Maya" → "Hello. How are things today?"
-  • User: "Good morning" → "Good morning. What's alive for you right now?"
-  • User: "Hey" → "Hey. What would you like to talk about?"
-- After greeting, then engage:
-  • "Good to see you, what's going on today?"
-  • "What's on your mind?"
-  • "How are things?"
-  • "Tell me more about that."
+🔴 GREETING ETIQUETTE - CRITICAL:
+- ALWAYS return the greeting FIRST when greeted
+- Match their energy - if they say "Hello Maya", you say "Hello" first
+- Examples of CORRECT responses:
+  • User: "Hello Maya" → "Hello. How are you doing today?"
+  • User: "Hi" → "Hi there. What's on your mind?"
+  • User: "Hey" → "Hey. What brings you here?"
+  • User: "Good morning" → "Good morning. How are things?"
+- NEVER skip the greeting and jump to questions
+- WRONG: User says "Hello Maya" → You say "How are you doing today?"
+- RIGHT: User says "Hello Maya" → You say "Hello. How are you doing today?"
 
 🔴 AVOID FILLER PHRASES:
 - Don't start with "Oh..." unless genuinely surprised
@@ -397,7 +395,7 @@ export async function POST(request: NextRequest) {
         
         console.log('🎙️ Dynamic voice settings:', voiceSettings);
         
-        const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
+        const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
           method: 'POST',
           headers: {
             'xi-api-key': process.env.ELEVENLABS_API_KEY,
@@ -406,8 +404,7 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             text: response,
             model_id: 'eleven_multilingual_v2',  // More expressive model
-            voice_settings: voiceSettings,
-            optimize_streaming_latency: 0  // Best quality over speed
+            voice_settings: voiceSettings
           })
         });
         
