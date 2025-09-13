@@ -299,7 +299,23 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         if (audioUrl && audioUrl !== 'web-speech-fallback') {
           // Play the Sesame-generated audio directly
           try {
-            console.log('🎵 Attempting to play audio:', audioUrl.substring(0, 100) + '...');
+            console.log('🎵 Attempting to play audio, length:', audioUrl.length);
+            console.log('🎵 Audio URL preview:', audioUrl.substring(0, 100) + '...');
+
+            // Validate data URL format
+            if (audioUrl.startsWith('data:audio/mpeg;base64,')) {
+              const base64Part = audioUrl.substring(23);
+              console.log('📊 Base64 audio size:', base64Part.length, 'characters');
+
+              // Check if base64 is valid
+              try {
+                atob(base64Part.substring(0, 100)); // Test decode first 100 chars
+                console.log('✅ Base64 format appears valid');
+              } catch (e) {
+                console.error('❌ Invalid base64 encoding:', e);
+              }
+            }
+
             const audio = new Audio(audioUrl);
             audio.volume = 0.8;
 

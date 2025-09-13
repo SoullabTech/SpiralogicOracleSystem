@@ -530,12 +530,14 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
           method: 'POST',
           headers: {
             'xi-api-key': process.env.ELEVENLABS_API_KEY,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'audio/mpeg'
           },
           body: JSON.stringify({
             text: response,
             model_id: 'eleven_multilingual_v2',  // More expressive model
-            voice_settings: voiceSettings
+            voice_settings: voiceSettings,
+            output_format: 'mp3_44100_128'  // Specify format explicitly
           })
         });
         
@@ -543,9 +545,16 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
           const audioBlob = await voiceResponse.blob();
           const buffer = await audioBlob.arrayBuffer();
           const base64 = Buffer.from(buffer).toString('base64');
-          audioUrl = `data:audio/mpeg;base64,${base64}`;
-          console.log('✅ Voice generated successfully, size:', base64.length);
-          console.log('🎵 Audio URL type:', audioUrl.substring(0, 50) + '...');
+
+          // Check if base64 is too large (>1MB tends to cause issues)
+          if (base64.length > 1000000) {
+            console.warn('⚠️ Audio base64 too large:', base64.length, 'bytes - using fallback');
+            audioUrl = 'web-speech-fallback';
+          } else {
+            audioUrl = `data:audio/mpeg;base64,${base64}`;
+            console.log('✅ Voice generated successfully, size:', base64.length);
+            console.log('🎵 Audio URL type:', audioUrl.substring(0, 50) + '...');
+          }
         } else {
           const errorText = await voiceResponse.text();
           console.error('❌ ElevenLabs API error:', {
