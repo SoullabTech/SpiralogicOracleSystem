@@ -531,6 +531,34 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     contextRef.current.checkIns = {};
   }, []);
 
+  // Download conversation transcript
+  const downloadTranscript = useCallback(() => {
+    // Create a formatted transcript with markdown
+    const header = `# Conversation with ${agentConfig.name}\n`;
+    const date = `Date: ${new Date().toLocaleString()}\n`;
+    const sessionInfo = `Session ID: ${sessionId}\n`;
+    const separator = `${'='.repeat(50)}\n\n`;
+
+    const transcript = messages.map(msg => {
+      const timestamp = msg.timestamp?.toLocaleString() || '';
+      const speaker = msg.role === 'user' ? '**You**' : `**${agentConfig.name}**`;
+      return `### ${speaker}\n*${timestamp}*\n\n${msg.text}\n`;
+    }).join('\n---\n\n');
+
+    const fullContent = header + date + sessionInfo + separator + transcript;
+
+    // Save as markdown file
+    const blob = new Blob([fullContent], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `conversation-${agentConfig.name}-${new Date().toISOString().split('T')[0]}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [messages, agentConfig.name, sessionId]);
+
   return (
     <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black overflow-hidden">
       {/* Agent Customizer - Orbital position */}
@@ -847,30 +875,63 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       )}
 
 
-      {/* CC/Transcript Toggle - Only in voice mode */}
+      {/* Voice Mode Controls */}
       {!showChatInterface && (
-        <button
-          onClick={() => setShowCaptions(!showCaptions)}
-          className="fixed bottom-24 right-4 p-2 bg-white/10 backdrop-blur-sm rounded-full
-                     hover:bg-white/20 transition-all duration-300 border border-white/20"
-          title={showCaptions ? "Hide transcript" : "Show transcript"}
-        >
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {showCaptions ? (
-              // CC On icon
+        <div className="fixed bottom-24 right-4 flex flex-col gap-2">
+          {/* Download Transcript Button */}
+          <button
+            onClick={downloadTranscript}
+            className="p-2 bg-white/10 backdrop-blur-sm rounded-full
+                       hover:bg-white/20 transition-all duration-300 border border-white/20"
+            title="Download conversation"
+            disabled={messages.length === 0}
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-            ) : (
-              // CC Off icon
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            )}
-          </svg>
-        </button>
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+
+          {/* CC/Transcript Toggle */}
+          <button
+            onClick={() => setShowCaptions(!showCaptions)}
+            className="p-2 bg-white/10 backdrop-blur-sm rounded-full
+                       hover:bg-white/20 transition-all duration-300 border border-white/20"
+            title={showCaptions ? "Hide transcript" : "Show transcript"}
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {showCaptions ? (
+                // CC On icon
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+              ) : (
+                // CC Off icon
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              )}
+            </svg>
+          </button>
+        </div>
       )}
 
       {/* Session Controls - Mobile optimized */}
       <div className="fixed top-4 md:top-8 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 z-50">
+        {/* Download button for all modes */}
+        {messages.length > 0 && (
+          <button
+            onClick={downloadTranscript}
+            className="px-3 md:px-4 py-1.5 md:py-2 bg-white/10 backdrop-blur-sm text-white text-xs md:text-sm rounded-full
+                       hover:bg-white/20 transition-all duration-300 border border-white/20 flex items-center gap-2"
+            title="Download conversation transcript"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span className="hidden md:inline">Download</span>
+          </button>
+        )}
+
         <button
           onClick={() => {
             if (window.confirm('Are you sure you want to end this conversation?')) {
