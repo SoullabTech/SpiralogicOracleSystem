@@ -131,48 +131,48 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
   
   // Base settings - Sacred witnessing presence
   let settings = {
-    stability: 0.72,              // Grounded, consistent presence
-    similarity_boost: 0.78,        // Natural voice character
-    style: 0.45,                   // Unhurried pace, space between words (0=fast, 1=slow)
+    stability: 0.85,              // Very stable, gentle presence
+    similarity_boost: 0.88,        // Softer, warmer consistency
+    style: 0.75,                   // Much slower, spacious (0=fast, 1=slow)
     use_speaker_boost: false       // Pure, unprocessed quality
   };
   
   // Maya's voice - feminine witnessing presence
   if (agentVoice === 'maya') {
-    // Adjust based on context
+    // Adjust based on context - all gentler, less abrupt
     if (isEmotional || isDeep) {
       // Deep presence, like sitting by a fire at night
-      settings.stability = 0.78;        // Very grounded
-      settings.style = 0.65;             // Slow like honey
-      settings.similarity_boost = 0.82;  // Warm consistency
+      settings.stability = 0.88;        // Very grounded, soft
+      settings.style = 0.82;             // Very slow, gentle flow
+      settings.similarity_boost = 0.90;  // Warm, soft consistency
     } else if (isStory) {
       // Drawing out their inner world
-      settings.stability = 0.74;        // Stable but responsive
-      settings.style = 0.55;             // Gentle pacing for stories
-      settings.similarity_boost = 0.80;  // Inviting tone
+      settings.stability = 0.86;        // Stable, gentle
+      settings.style = 0.78;             // Soft, unhurried pacing
+      settings.similarity_boost = 0.88;  // Warm, inviting tone
     } else if (isQuiet) {
       // Almost whispered presence
-      settings.stability = 0.80;        // Stillness itself
-      settings.style = 0.72;             // Very slow, each word placed
-      settings.similarity_boost = 0.85;  // Intimate consistency
+      settings.stability = 0.92;        // Ultimate softness
+      settings.style = 0.85;             // Extremely gentle pace
+      settings.similarity_boost = 0.92;  // Whisper-soft consistency
     } else if (isIntense) {
-      // Present urgency without panic
-      settings.stability = 0.68;        // Responsive but centered
-      settings.style = 0.38;             // Quicker but not rushed
-      settings.similarity_boost = 0.75;  // Clear presence
+      // Present but never abrupt
+      settings.stability = 0.80;        // Still very soft
+      settings.style = 0.65;             // Measured, never rushed
+      settings.similarity_boost = 0.85;  // Gentle even in urgency
     }
     
     // Special quality for witnessing moments
     if (/\b(yes|mmm|i see|tell me|what else|go on)\b/i.test(responseLower)) {
-      settings.style = 0.68;             // Each word a held space
-      settings.stability = 0.82;         // Absolute groundedness
-      settings.similarity_boost = 0.80;  // Consistent witnessing
+      settings.style = 0.80;             // Extremely gentle witnessing
+      settings.stability = 0.90;         // Soft, grounded presence
+      settings.similarity_boost = 0.88;  // Consistent gentleness
     }
     
-    // Brief responses need more presence, not speed
+    // Brief responses need softness
     if (responseLower.length < 30) {
-      settings.style = 0.58;             // Let short words land fully
-      settings.stability = 0.75;         // Solid even in brevity
+      settings.style = 0.76;             // Gentle even in brevity
+      settings.stability = 0.86;         // Soft, never abrupt
     }
   }
   
