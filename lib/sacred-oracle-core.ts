@@ -453,11 +453,16 @@ export class SacredOracleCore {
 }
 
 // Lazy-loaded singleton to avoid initialization issues
+import { createLazyGetter } from './lazy-loader';
+
 let _sacredOracleCore: SacredOracleCore | null = null;
 
-export const getSacredOracleCore = (): SacredOracleCore => {
-  if (!_sacredOracleCore) {
-    _sacredOracleCore = new SacredOracleCore();
-  }
-  return _sacredOracleCore;
-};
+export const getSacredOracleCore = createLazyGetter(
+  () => {
+    if (!_sacredOracleCore) {
+      _sacredOracleCore = new SacredOracleCore();
+    }
+    return _sacredOracleCore;
+  },
+  'SacredOracleCore'
+);

@@ -625,11 +625,16 @@ Remember: Even in this mode, maintain the witnessing foundation. Don't analyze o
 }
 
 // Lazy-loaded singleton to avoid initialization issues
+import { createLazyGetter } from './lazy-loader';
+
 let _integratedOracleSystem: IntegratedOracleSystem | null = null;
 
-export const getIntegratedOracleSystem = (): IntegratedOracleSystem => {
-  if (!_integratedOracleSystem) {
-    _integratedOracleSystem = new IntegratedOracleSystem();
-  }
-  return _integratedOracleSystem;
-};
+export const getIntegratedOracleSystem = createLazyGetter(
+  () => {
+    if (!_integratedOracleSystem) {
+      _integratedOracleSystem = new IntegratedOracleSystem();
+    }
+    return _integratedOracleSystem;
+  },
+  'IntegratedOracleSystem'
+);
