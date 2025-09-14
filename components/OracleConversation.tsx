@@ -388,13 +388,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setCurrentMotionState('responding');
       
       // Safety timeout to ensure processing state is reset
-      const safetyTimeout = setTimeout(() => {
-        console.warn('⚠️ Processing stuck, forcing reset after 10 seconds');
-        setIsProcessing(false);
-        setIsAudioPlaying(false);
-        setIsResponding(false);
-        setIsMicrophonePaused(false);
-      }, 10000);
+      // Only apply for voice mode, not text chat
+      let safetyTimeout: NodeJS.Timeout | null = null;
+      if (!showChatInterface && voiceEnabled) {
+        safetyTimeout = setTimeout(() => {
+          console.warn('⚠️ Voice processing stuck, forcing reset after 15 seconds');
+          resetAllStates();
+        }, 15000);
+      }
 
       // Play Maya's voice response - use backend audio if available
       if (voiceEnabled && mayaReady) {
@@ -477,7 +478,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             
             audio.addEventListener('ended', () => {
               console.log('🔊 Audio ended event fired, resetting all states');
-              clearTimeout(safetyTimeout); // Clear safety timeout
+              if (safetyTimeout) clearTimeout(safetyTimeout); // Clear safety timeout if exists
               setIsAudioPlaying(false);
               setIsResponding(false);
               setIsStreaming(false);
