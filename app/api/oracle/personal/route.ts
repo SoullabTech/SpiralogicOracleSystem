@@ -327,11 +327,11 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
 
   // MAYA - Pattern Weaver: Quick, playful, finds connections everywhere
   if (agentVoice === 'maya') {
-    // Base Maya: Natural conversational pace (not too fast, not too slow)
+    // Base Maya with Emily: Quicker, more animated pace
     settings = {
-      stability: 0.20,              // Good variation for natural speech
-      similarity_boost: 0.25,        // Natural, warm quality
-      style: 0.18,                   // Balanced pace - not rushed, not slow
+      stability: 0.25,              // More variation for playful energy
+      similarity_boost: 0.20,        // Very natural, conversational
+      style: 0.12,                   // Quicker pace for Emily's natural rhythm
       use_speaker_boost: false       // Friend energy, not presenter
     };
 
@@ -659,8 +659,8 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
         if (agentVoice === 'anthony') {
           voiceId = 'c6SfcYrb2t09NHXiT80T';  // Anthony's consistent male voice
         } else {
-          // Maya ALWAYS uses Aunt Annie (not Emily)
-          voiceId = 'y2TOWGCXSYEgBanvKsYJ'; // Aunt Annie - consistent voice for Maya
+          // Maya now using Emily for better pacing
+          voiceId = 'LcfcDJNUP1GQjkzn1xUU'; // Emily - quicker, more natural pace
         }
 
         console.log('🎤 Using voice:', { agent: agentVoice, voiceId });
