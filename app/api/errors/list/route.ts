@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRecentErrors } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic'; // Force dynamic rendering
+
 export async function GET(request: NextRequest) {
   try {
     // Check for admin auth later - for now allow access
