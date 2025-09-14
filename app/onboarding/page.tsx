@@ -5,10 +5,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Lazy-load supabase client to avoid initialization issues
+const getSupabase = () => {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+};
 
 interface IntakeData {
   name?: string;
@@ -46,6 +49,7 @@ export default function OnboardingPage() {
 
   const loadExistingData = async () => {
     try {
+      const supabase = getSupabase();
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: intake } = await supabase
@@ -87,6 +91,7 @@ export default function OnboardingPage() {
   const completeIntake = async () => {
     // Save to Supabase
     try {
+      const supabase = getSupabase();
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
