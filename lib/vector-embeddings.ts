@@ -176,6 +176,10 @@ export class VectorEmbeddingService extends EventEmitter {
       });
 
       const data = await response.json();
+      if (!data.data || !data.data[0] || !data.data[0].embedding) {
+        console.error('Invalid OpenAI response structure:', data);
+        return this.generateLocalEmbedding(text);
+      }
       return data.data[0].embedding;
     } catch (error) {
       console.error('OpenAI embedding failed, falling back to local', error);

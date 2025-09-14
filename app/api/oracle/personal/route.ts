@@ -655,24 +655,20 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
         const voiceElement = elementMapping[analysis.element as keyof typeof elementMapping] || 'water';
         const voiceArchetype = agentVoice === 'anthony' ? 'sage' : 'oracle';
 
-        // Use local Sacred Oracle for consciousness-aware text shaping
-        const sacredOracle = new SacredOracleCore();
-        const oracleResponse = await sacredOracle.generateResponse(
-          response,
-          userId,
-          { element: voiceElement, archetype: voiceArchetype }
-        );
+        // Don't use Sacred Oracle to re-process Claude's response
+        // Sacred Oracle should only process user input, not AI responses
+        // Keep the original Claude response intact
 
-        // Format for voice synthesis
+        // Log voice characteristics without modifying text
         const voiceResult = {
-          shaped: oracleResponse.message,
-          source: 'sacred-oracle-local',
+          shaped: response, // Keep original response
+          source: 'claude-original',
           responseTime: Date.now() - startTime,
           fallbackUsed: false
         };
 
         if (voiceResult.shaped && !voiceResult.fallbackUsed) {
-          response = voiceResult.shaped;
+          // response stays the same - no corruption
           console.log('✨ Sacred Oracle (local) applied:', {
             source: voiceResult.source,
             responseTime: voiceResult.responseTime + 'ms',

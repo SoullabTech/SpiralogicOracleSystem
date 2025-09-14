@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Mic, MicOff, Paperclip, X, Keyboard } from 'lucide-react';
+import { Send, Mic, MicOff, Paperclip, X, Keyboard, Volume2, VolumeX } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 interface ChatMessage {
@@ -17,26 +17,33 @@ interface ChatMessage {
     size: number;
     url?: string;
   }[];
+  isPlaying?: boolean; // Track if this message is being spoken
 }
 
 interface MayaChatInterfaceProps {
   onSendMessage: (text: string, attachments?: File[]) => void;
   onVoiceTranscript?: (text: string) => void;
+  onSpeakMessage?: (text: string, messageId: string) => Promise<void>;
+  onStopSpeaking?: () => void;
   messages?: ChatMessage[];
   agentName?: string;
   isProcessing?: boolean;
   disabled?: boolean;
   className?: string;
+  currentlySpeakingId?: string; // Track which message is being spoken
 }
 
 export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
   onSendMessage,
   onVoiceTranscript,
+  onSpeakMessage,
+  onStopSpeaking,
   messages = [],
   agentName = 'Maya',
   isProcessing = false,
   disabled = false,
-  className = ''
+  className = '',
+  currentlySpeakingId
 }) => {
   // Input states
   const [inputText, setInputText] = useState('');
@@ -241,8 +248,8 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
         <div className="p-4 max-h-60 overflow-y-auto space-y-3">
           {messages.slice(-3).map((message) => (
             <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                message.role === 'user' 
+              <div className={`relative max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                message.role === 'user'
                   ? 'bg-[#D4B896]/80 text-white'
                   : 'bg-white/10 text-white'
               }`}>
@@ -253,6 +260,26 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
                       <div key={file.id} className="text-xs opacity-75">{file.name}</div>
                     ))}
                   </div>
+                )}
+                {/* Voice Synthesis Button for Maya's messages */}
+                {message.role === 'maya' && onSpeakMessage && (
+                  <button
+                    onClick={() => {
+                      if (currentlySpeakingId === message.id) {
+                        onStopSpeaking?.();
+                      } else {
+                        onSpeakMessage(message.text, message.id);
+                      }
+                    }}
+                    className="absolute -right-2 -top-2 p-1.5 bg-[#D4B896]/80 hover:bg-[#D4B896] rounded-full transition-colors"
+                    title={currentlySpeakingId === message.id ? "Stop speaking" : "Speak message"}
+                  >
+                    {currentlySpeakingId === message.id ? (
+                      <VolumeX size={14} className="text-white" />
+                    ) : (
+                      <Volume2 size={14} className="text-white" />
+                    )}
+                  </button>
                 )}
               </div>
             </div>

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
+import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
 import MayaChatInterface from './chat/MayaChatInterface';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
@@ -13,6 +14,7 @@ import { VoiceState } from '@/lib/voice/voice-capture';
 import { useMayaVoice } from '@/hooks/useMayaVoice';
 import { cleanMessage, cleanMessageForVoice, formatMessageForDisplay } from '@/lib/cleanMessage';
 import { getAgentConfig, AgentConfig } from '@/lib/agent-config';
+import { toast } from 'react-hot-toast';
 
 interface OracleConversationProps {
   userId?: string;
@@ -242,6 +244,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
+    // If we're in text chat mode, handle voice input differently
+    if (showChatInterface) {
+      console.log('🎤 Voice input in text chat mode:', transcript);
+      // Simply send the voice transcript as a text message
+      await handleTextMessage(transcript);
+      return;
+    }
+
+    // Original voice-only mode handling
     const startTime = Date.now();
     console.log('⏱️ Voice processing started');
     console.log('Current states:', { isProcessing, isAudioPlaying, isResponding });
@@ -811,7 +822,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setIsResponding(false);
       setCurrentMotionState('idle');
     }
-  }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length]);
+  }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length, showChatInterface, handleTextMessage]);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {
@@ -846,6 +857,69 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }, [messages, agentConfig.name, sessionId]);
+
+  // Voice synthesis for text chat
+  const [currentlySpeakingId, setCurrentlySpeakingId] = useState<string | undefined>();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleSpeakMessage = useCallback(async (text: string, messageId: string) => {
+    try {
+      // Stop any currently playing audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+
+      setCurrentlySpeakingId(messageId);
+
+      // Clean text for voice
+      const cleanText = cleanMessageForVoice(text);
+
+      // Call ElevenLabs API to synthesize voice
+      const response = await fetch('/api/voice/synthesize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: cleanText,
+          voiceId: agentConfig.voice?.voiceId || 'Xb7hH8MSUJpSbSDYk0k2', // Maya's default voice
+          modelId: 'eleven_turbo_v2_5',
+          stability: 0.75,
+          similarityBoost: 0.85
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Voice synthesis failed');
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      // Play audio
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setCurrentlySpeakingId(undefined);
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+      };
+
+      await audio.play();
+    } catch (error) {
+      console.error('Error speaking message:', error);
+      toast.error('Failed to speak message');
+      setCurrentlySpeakingId(undefined);
+    }
+  }, [agentConfig.voice]);
+
+  const handleStopSpeaking = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    setCurrentlySpeakingId(undefined);
+  }, []);
 
   return (
     <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black overflow-hidden">
@@ -1143,6 +1217,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               <MayaChatInterface
                 onSendMessage={handleTextMessage}
                 onVoiceTranscript={handleVoiceTranscript}
+                onSpeakMessage={handleSpeakMessage}
+                onStopSpeaking={handleStopSpeaking}
                 messages={messages.map(msg => ({
                   id: msg.id,
                   role: msg.role === 'oracle' ? 'maya' : 'user',
@@ -1152,16 +1228,17 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 agentName={agentConfig.name}
                 isProcessing={isProcessing}
                 disabled={isProcessing}
+                currentlySpeakingId={currentlySpeakingId}
               />
             </div>
           ) : (
-            /* Voice-Only Interface */
-            <EnhancedVoiceMicButton
+            /* Voice-Only Interface - Adaptive for intimate conversations */
+            <AdaptiveVoiceMicButton
               ref={voiceMicRef}
               onVoiceStateChange={setUserVoiceState}
               onTranscript={handleVoiceTranscript}
               position="bottom-center"
-              silenceThreshold={1800}  // 1.8 seconds - natural pause for thinking
+              conversationMode="intimate"  // Thoughtful, unhurried conversation
               pauseListening={isAudioPlaying}
             />
           )}

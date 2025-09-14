@@ -492,16 +492,12 @@ Remember: Even in this mode, maintain the witnessing foundation. Don't analyze o
 
     const archetype = archetypeMap[mode] || 'oracle';
 
-    // Use local Sacred Oracle instead of external Sesame
-    const sacredOracle = new SacredOracleCore();
-    const oracleResponse = await sacredOracle.generateResponse(
-      message,
-      undefined, // userId
-      { element, archetype }
-    );
+    // Don't use Sacred Oracle to re-process already generated messages
+    // This was causing text corruption by processing complete responses as queries
+    // Sacred Oracle should only process user input, not AI responses
     return {
-      shaped: oracleResponse.message,
-      source: 'sacred-oracle-local',
+      shaped: message, // Return original message unmodified
+      source: 'original-preserved',
       responseTime: 0,
       fallbackUsed: false,
       success: true

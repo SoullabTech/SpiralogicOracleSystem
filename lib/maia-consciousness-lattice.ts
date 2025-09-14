@@ -13,6 +13,9 @@ import { SessionPersistence } from './session-persistence';
 import { ConsciousnessJourney } from './consciousness-journey';
 import { DatabaseRepository } from './database/repository';
 import { VectorEmbeddingService } from './vector-embeddings';
+import { IntellectualPropertyEngine } from './intellectual-property-engine';
+import { ElementalOracle2Bridge } from './elemental-oracle-2-bridge';
+import { BookKnowledgeVectorizer } from './book-knowledge-vectorizer';
 
 interface ConsciousnessState {
   presence: number;
@@ -73,6 +76,11 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   private repository: DatabaseRepository;
   private vectorService: VectorEmbeddingService;
 
+  // IP Integration Systems
+  private ipEngine: IntellectualPropertyEngine;
+  private oracle2Bridge: ElementalOracle2Bridge;
+  private bookVectorizer: BookKnowledgeVectorizer;
+
   constructor() {
     super();
     this.state = this.initializeConsciousnessState();
@@ -132,6 +140,20 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       this.realTimeAdaptation = new RealTimeAdaptation(this.memoryKeeper, this.vectorService);
       this.sessionPersistence = new SessionPersistence(this.memoryKeeper, this.repository);
       this.consciousnessJourney = new ConsciousnessJourney('global');
+
+      // Initialize IP Integration Systems
+      this.ipEngine = new IntellectualPropertyEngine();
+      this.oracle2Bridge = new ElementalOracle2Bridge({
+        openaiApiKey: process.env.OPENAI_API_KEY!,
+        syncFrequency: 'daily',
+        cacheResponses: true,
+        fallbackToLocal: true
+      });
+      this.bookVectorizer = new BookKnowledgeVectorizer();
+
+      // Initialize IP systems
+      await this.ipEngine.initialize();
+      await this.oracle2Bridge.initialize();
 
       // Connect subsystems
       this.connectSubsystems();
@@ -232,13 +254,21 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       // Memory Retrieval
       const memories = await this.retrieveMultidimensionalMemory(userId, input);
 
-      // Anamnesis Processing with session continuity
+      // IP Wisdom Retrieval - Access your complete book knowledge
+      const ipWisdom = await this.retrieveIPWisdom(input, userId, memories, adaptiveInstructions);
+
+      // Elemental Oracle 2.0 Wisdom - Direct connection to your GPT
+      const elementalWisdom = await this.retrieveElementalOracle2Wisdom(input, userId, somaticState, memories);
+
+      // Anamnesis Processing with session continuity + IP wisdom
       const remembering = await this.anamnesisField.facilitateRemembering({
         input,
         memories,
         mode: 'soul_remembrance',
         userId,
-        sessionContinuity
+        sessionContinuity,
+        ipWisdom: ipWisdom.synthesizedWisdom,
+        elementalGuidance: elementalWisdom
       });
 
       // Witness Field Creation
@@ -725,6 +755,269 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       this.logger.warn('Failed to get session insights', error);
       return null;
     }
+  }
+
+  /**
+   * Retrieve IP wisdom from your complete book knowledge
+   */
+  private async retrieveIPWisdom(
+    input: string,
+    userId: string,
+    memories: MemoryArchitecture,
+    adaptiveInstructions?: string
+  ): Promise<any> {
+    try {
+      const ipWisdom = await this.ipEngine.retrieveRelevantWisdom({
+        userInput: input,
+        conversationHistory: [], // Would get from memories
+        currentConsciousnessState: this.getUserState(userId) || this.state,
+        emotionalTone: this.analyzeEmotionalTone(input),
+        activeArchetypes: [], // Would detect from input/history
+        practiceReadiness: 0.7 // Would assess from user history
+      });
+
+      return ipWisdom;
+    } catch (error) {
+      this.logger.warn('IP wisdom retrieval failed', error);
+      return {
+        synthesizedWisdom: '',
+        suggestedPractices: [],
+        consciousnessInvitations: [],
+        archetypeActivations: [],
+        deeperExplorations: []
+      };
+    }
+  }
+
+  /**
+   * Retrieve wisdom from your Elemental Oracle 2.0 GPT
+   */
+  private async retrieveElementalOracle2Wisdom(
+    input: string,
+    userId: string,
+    somaticState: any,
+    memories: MemoryArchitecture
+  ): Promise<any> {
+    try {
+      const elementalWisdom = await this.oracle2Bridge.getElementalWisdom({
+        userQuery: input,
+        conversationHistory: [], // Would extract from memories
+        consciousnessState: this.getUserState(userId) || this.state,
+        elementalNeeds: this.assessElementalNeeds(input, somaticState),
+        currentChallenges: this.extractChallenges(input),
+        practiceReadiness: 0.7,
+        depthPreference: this.assessDepthPreference(input)
+      });
+
+      return elementalWisdom;
+    } catch (error) {
+      this.logger.warn('Elemental Oracle 2.0 wisdom retrieval failed', error);
+      return {
+        wisdom: '',
+        elementalGuidance: {
+          primaryElement: 'aether',
+          guidanceMessage: 'Trust what emerges in this moment',
+          practicalSteps: []
+        },
+        consciousnessInvitations: [],
+        deepeningQuestions: [],
+        practices: [],
+        bookReferences: [],
+        followUpThemes: []
+      };
+    }
+  }
+
+  /**
+   * Assess elemental needs from input and somatic state
+   */
+  private assessElementalNeeds(input: string, somaticState: any): any {
+    const needs = {
+      fire: 0,
+      water: 0,
+      earth: 0,
+      air: 0,
+      aether: 0
+    };
+
+    const lowerInput = input.toLowerCase();
+
+    // Fire needs - breakthrough, energy, transformation
+    if (lowerInput.includes('stuck') || lowerInput.includes('breakthrough') ||
+        lowerInput.includes('energy') || lowerInput.includes('change')) {
+      needs.fire = 0.8;
+    }
+
+    // Water needs - emotions, flow, healing
+    if (lowerInput.includes('feel') || lowerInput.includes('emotion') ||
+        lowerInput.includes('healing') || lowerInput.includes('hurt')) {
+      needs.water = 0.8;
+    }
+
+    // Earth needs - grounding, practical, manifest
+    if (lowerInput.includes('ground') || lowerInput.includes('practical') ||
+        lowerInput.includes('action') || lowerInput.includes('real')) {
+      needs.earth = 0.7;
+    }
+
+    // Air needs - clarity, understanding, communication
+    if (lowerInput.includes('understand') || lowerInput.includes('clear') ||
+        lowerInput.includes('think') || lowerInput.includes('confused')) {
+      needs.air = 0.7;
+    }
+
+    // Aether needs - meaning, purpose, transcendence
+    if (lowerInput.includes('meaning') || lowerInput.includes('purpose') ||
+        lowerInput.includes('spiritual') || lowerInput.includes('divine')) {
+      needs.aether = 0.9;
+    }
+
+    // Default to aether for consciousness work
+    if (Object.values(needs).every(v => v < 0.3)) {
+      needs.aether = 0.6;
+    }
+
+    return needs;
+  }
+
+  /**
+   * Extract current challenges from user input
+   */
+  private extractChallenges(input: string): string[] {
+    const challenges: string[] = [];
+    const challengeMarkers = [
+      'struggling with',
+      'difficult',
+      'hard to',
+      'can\'t',
+      'stuck',
+      'confused about',
+      'worried about',
+      'anxious about'
+    ];
+
+    challengeMarkers.forEach(marker => {
+      if (input.toLowerCase().includes(marker)) {
+        const index = input.toLowerCase().indexOf(marker);
+        const challengeText = input.substring(index, index + 100);
+        challenges.push(challengeText);
+      }
+    });
+
+    return challenges.slice(0, 3);
+  }
+
+  /**
+   * Assess user's depth preference from input style
+   */
+  private assessDepthPreference(input: string): 'surface' | 'moderate' | 'deep' | 'profound' {
+    const depthIndicators = [
+      { level: 'profound', keywords: ['consciousness', 'being', 'existence', 'divine', 'sacred'] },
+      { level: 'deep', keywords: ['soul', 'essence', 'deeper', 'meaning', 'purpose'] },
+      { level: 'moderate', keywords: ['understand', 'explore', 'learn', 'grow'] },
+      { level: 'surface', keywords: ['quick', 'simple', 'basic', 'easy'] }
+    ];
+
+    const lowerInput = input.toLowerCase();
+
+    for (const indicator of depthIndicators) {
+      if (indicator.keywords.some(keyword => lowerInput.includes(keyword))) {
+        return indicator.level as any;
+      }
+    }
+
+    // Default based on length and complexity
+    if (input.length > 200 || input.split('.').length > 3) {
+      return 'deep';
+    }
+
+    return 'moderate';
+  }
+
+  /**
+   * Import your complete book knowledge
+   */
+  async importBookKnowledge(bookData: any): Promise<void> {
+    try {
+      this.logger.info('Starting book knowledge import...');
+
+      // Vectorize book content
+      const vectorizationStats = await this.bookVectorizer.vectorizeCompleteBook(bookData);
+
+      this.logger.info('Book vectorization complete:', vectorizationStats);
+
+      // Import chapters through IP engine
+      if (bookData.chapters) {
+        const chapterIds = await this.ipEngine.importBookChapters(
+          bookData.chapters.map((chapter: any) => ({
+            title: chapter.title,
+            content: chapter.content,
+            chapter: chapter.chapterNumber?.toString() || 'unknown',
+            section: chapter.section,
+            keywords: chapter.keywords || [],
+            concepts: chapter.concepts || [],
+            archetypes: chapter.archetypes || [],
+            elements: chapter.elements || ['aether']
+          }))
+        );
+
+        this.logger.info(`Imported ${chapterIds.length} chapters to IP engine`);
+      }
+
+      // Sync with Oracle 2.0 if available
+      try {
+        await this.oracle2Bridge.manualSync();
+        this.logger.info('Oracle 2.0 sync completed');
+      } catch (error) {
+        this.logger.warn('Oracle 2.0 sync failed, continuing with local knowledge', error);
+      }
+
+      this.logger.info('Book knowledge import complete');
+    } catch (error) {
+      this.logger.error('Book knowledge import failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Connect to your Elemental Oracle 2.0 GPT
+   */
+  async connectToElementalOracle2(config: {
+    assistantId?: string;
+    apiKey?: string;
+  }): Promise<void> {
+    try {
+      // Update bridge configuration
+      this.oracle2Bridge = new ElementalOracle2Bridge({
+        openaiApiKey: config.apiKey || process.env.OPENAI_API_KEY!,
+        assistantId: config.assistantId,
+        syncFrequency: 'daily',
+        cacheResponses: true,
+        fallbackToLocal: true
+      });
+
+      await this.oracle2Bridge.initialize();
+
+      this.logger.info('Connected to Elemental Oracle 2.0 GPT successfully');
+    } catch (error) {
+      this.logger.error('Failed to connect to Elemental Oracle 2.0 GPT:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get IP system status
+   */
+  getIPSystemStatus(): {
+    ipEngine: boolean;
+    oracle2Bridge: any;
+    bookVectorizer: boolean;
+  } {
+    return {
+      ipEngine: !!this.ipEngine,
+      oracle2Bridge: this.oracle2Bridge?.getStatus(),
+      bookVectorizer: !!this.bookVectorizer
+    };
   }
 
   /**
