@@ -208,5 +208,12 @@ export class UserReadinessService {
   }
 }
 
-// Export singleton instance
-export const userReadinessService = new UserReadinessService();
+// Lazy-loaded singleton to avoid initialization issues
+let _userReadinessService: UserReadinessService | null = null;
+
+export const getUserReadinessService = (): UserReadinessService => {
+  if (!_userReadinessService) {
+    _userReadinessService = new UserReadinessService();
+  }
+  return _userReadinessService;
+};

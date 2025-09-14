@@ -15,7 +15,7 @@
 
 import { getSacredOracleCore, SacredOracleResponse } from './sacred-oracle-core';
 import { ClaudeService, getClaudeService } from './services/ClaudeService';
-import { userReadinessService } from './services/UserReadinessService';
+import { getUserReadinessService } from './services/UserReadinessService';
 
 // Memory system imports
 import { UnifiedMemoryInterface } from './anamnesis/UnifiedMemoryInterface';
@@ -149,7 +149,7 @@ export class IntegratedOracleSystem {
       servicesUsed.push('memory');
 
       // 3. Check user readiness level
-      const userReadiness = await userReadinessService.assessReadiness(request.userId, {
+      const userReadiness = await getUserReadinessService().assessReadiness(request.userId, {
         interactionCount: agent.getState().memory.interactionCount,
         trustLevel: agent.getState().memory.trustLevel,
         currentPhase: agent.getState().memory.currentPhase
