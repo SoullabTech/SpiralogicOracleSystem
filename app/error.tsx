@@ -17,11 +17,11 @@ export default function Error({
   }, [error])
 
   return (
-    <div className="min-h-screen  from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-background/80 backdrop-blur-xl border-red-500/20">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-tesla-900/80 backdrop-blur-xl border-tesla-red/20">
         <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
-            <AlertTriangle className="w-6 h-6 text-red-400" />
+          <div className="mx-auto w-12 h-12 bg-tesla-red/20 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="w-6 h-6 text-tesla-red" />
           </div>
           <CardTitle className="text-xl font-semibold">Something went wrong</CardTitle>
         </CardHeader>
@@ -32,10 +32,10 @@ export default function Error({
           
           {process.env.NODE_ENV === 'development' && (
             <details className="text-left">
-              <summary className="cursor-pointer text-xs text-red-400 hover:text-red-300">
+              <summary className="cursor-pointer text-xs text-tesla-red hover:text-tesla-red/80">
                 Error Details (Development)
               </summary>
-              <pre className="mt-2 p-2 bg-red-900/20 rounded text-xs text-red-200 overflow-auto">
+              <pre className="mt-2 p-2 bg-tesla-red/10 rounded text-xs text-tesla-red/80 overflow-auto">
                 {error.message}
               </pre>
             </details>
@@ -44,7 +44,7 @@ export default function Error({
           <div className="flex flex-col sm:flex-row gap-2 justify-center">
             <Button 
               onClick={reset}
-              className=" from-amber-600 to-yellow-500 hover:from-amber-700 hover:to-yellow-600"
+              className="bg-gold-divine text-black hover:bg-gold-amber transition-colors"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Try Again
@@ -52,7 +52,7 @@ export default function Error({
             <Button 
               variant="outline" 
               onClick={() => window.location.href = '/'}
-              className="border-amber-500/20 hover:bg-amber-500/10"
+              className="border-gold-divine/20 hover:bg-gold-divine/10 text-white"
             >
               Go Home
             </Button>

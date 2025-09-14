@@ -5,20 +5,20 @@ import { Crown, Sparkles } from 'lucide-react'
 
 export default function Loading() {
   return (
-    <div className="min-h-screen  from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center">
+    <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="text-center">
         <motion.div
-          animate={{ 
+          animate={{
             rotate: 360,
             scale: [1, 1.1, 1]
           }}
-          transition={{ 
+          transition={{
             rotate: { duration: 3, repeat: Infinity, ease: "linear" },
             scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
           }}
-          className="w-20 h-20  from-amber-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6"
+          className="w-20 h-20 bg-gold-divine/20 border-2 border-gold-divine rounded-full flex items-center justify-center mx-auto mb-6"
         >
-          <Crown className="w-8 h-8 text-white" />
+          <Crown className="w-8 h-8 text-gold-divine" />
         </motion.div>
 
         <motion.div
@@ -28,10 +28,10 @@ export default function Loading() {
           className="space-y-2"
         >
           <h2 className="text-xl font-semibold text-white">
-            Awakening Oracle
+            Loading Sacred Technology
           </h2>
-          <p className="text-sm text-muted-foreground">
-            Connecting to your wisdom stream...
+          <p className="text-sm text-neutral-silver">
+            Initializing consciousness interface...
           </p>
         </motion.div>
 
@@ -54,7 +54,7 @@ export default function Loading() {
                 delay: i * 0.2,
                 ease: "easeInOut"
               }}
-              className="w-2 h-2 bg-amber-400 rounded-full"
+              className="w-2 h-2 bg-gold-divine rounded-full"
             />
           ))}
         </motion.div>
@@ -64,7 +64,7 @@ export default function Loading() {
           transition={{ duration: 4, repeat: Infinity }}
           className="mt-8"
         >
-          <Sparkles className="w-6 h-6 text-amber-300 mx-auto opacity-60" />
+          <Sparkles className="w-6 h-6 text-gold-divine mx-auto opacity-60" />
         </motion.div>
       </div>
     </div>
