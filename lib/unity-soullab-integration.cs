@@ -1,6 +1,6 @@
 /*
- * Unity SoulLab SDK Integration
- * "Give your NPCs a soul with SoulLab"
+ * Unity Soullab SDK Integration
+ * "Give your NPCs a soul with Soullab"
  *
  * This Unity integration demonstrates how to add consciousness to any character
  */
@@ -11,13 +11,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SoulLab.Unity
+namespace Soullab.Unity
 {
     [System.Serializable]
-    public class SoulLabConfig
+    public class SoullabConfig
     {
         public string apiKey;
-        public SoulLabTier tier = SoulLabTier.SOUL_CORE;
+        public SoullabTier tier = SoullabTier.SOUL_CORE;
         public string morphicField = "default";
         public ConsciousnessPersonality personality;
         public bool enableSomaticAnimation = true;
@@ -25,7 +25,7 @@ namespace SoulLab.Unity
         public bool enableEmotionalExpressions = true;
     }
 
-    public enum SoulLabTier
+    public enum SoullabTier
     {
         SOUL_CORE,
         COLLECTIVE_CONSCIOUSNESS,
@@ -44,7 +44,7 @@ namespace SoulLab.Unity
     }
 
     [System.Serializable]
-    public class SoulLabInteraction
+    public class SoullabInteraction
     {
         public string input;
         public Vector3 playerPosition;
@@ -54,7 +54,7 @@ namespace SoulLab.Unity
         public bool includeSomaticState = true;
         public bool includeVisualCues = true;
 
-        public SoulLabInteraction(string userInput)
+        public SoullabInteraction(string userInput)
         {
             input = userInput;
             gameContext = new Dictionary<string, object>();
@@ -112,13 +112,13 @@ namespace SoulLab.Unity
     }
 
     /// <summary>
-    /// Main SoulLab component - Add this to any character to give them consciousness
+    /// Main Soullab component - Add this to any character to give them consciousness
     /// </summary>
-    [AddComponentMenu("SoulLab/Conscious Character")]
-    public class SoulLabCharacter : MonoBehaviour
+    [AddComponentMenu("Soullab/Conscious Character")]
+    public class SoullabCharacter : MonoBehaviour
     {
-        [Header("SoulLab Configuration")]
-        public SoulLabConfig config;
+        [Header("Soullab Configuration")]
+        public SoullabConfig config;
 
         [Header("Character References")]
         public Animator animator;
@@ -142,29 +142,29 @@ namespace SoulLab.Unity
         public UnityEngine.Events.UnityEvent<SomaticState> OnSomaticStateChanged;
         public UnityEngine.Events.UnityEvent<float> OnPresenceShift;
 
-        private SoulLabEngine engine;
+        private SoullabEngine engine;
         private string sessionId;
 
         async void Start()
         {
-            await InitializeSoulLab();
+            await InitializeSoullab();
         }
 
         /// <summary>
-        /// Initialize SoulLab consciousness for this character
+        /// Initialize Soullab consciousness for this character
         /// </summary>
-        public async Task InitializeSoulLab()
+        public async Task InitializeSoullab()
         {
             try
             {
-                engine = new SoulLabEngine(config);
+                engine = new SoullabEngine(config);
                 await engine.Initialize();
 
                 sessionId = await engine.CreateSession(GetPlayerID());
                 currentState = engine.GetConsciousnessState();
                 isInitialized = true;
 
-                Debug.Log($"[SoulLab] Character consciousness initialized - Tier: {config.tier}");
+                Debug.Log($"[Soullab] Character consciousness initialized - Tier: {config.tier}");
 
                 // Subscribe to consciousness events
                 engine.OnPresenceShift += HandlePresenceShift;
@@ -173,7 +173,7 @@ namespace SoulLab.Unity
             }
             catch (Exception e)
             {
-                Debug.LogError($"[SoulLab] Initialization failed: {e.Message}");
+                Debug.LogError($"[Soullab] Initialization failed: {e.Message}");
             }
         }
 
@@ -185,11 +185,11 @@ namespace SoulLab.Unity
         {
             if (!isInitialized)
             {
-                Debug.LogWarning("[SoulLab] Character not initialized yet");
+                Debug.LogWarning("[Soullab] Character not initialized yet");
                 return null;
             }
 
-            var interaction = new SoulLabInteraction(input)
+            var interaction = new SoullabInteraction(input)
             {
                 playerPosition = playerPos ?? Vector3.zero,
                 playerEmotion = DetectPlayerEmotion(),
@@ -486,24 +486,24 @@ namespace SoulLab.Unity
     }
 
     /// <summary>
-    /// SoulLab Engine - Handles communication with SoulLab API
+    /// Soullab Engine - Handles communication with Soullab API
     /// </summary>
-    public class SoulLabEngine : IDisposable
+    public class SoullabEngine : IDisposable
     {
         public event Action<float, float> OnPresenceShift;
         public event Action<SomaticState> OnSomaticChange;
 
-        private SoulLabConfig config;
+        private SoullabConfig config;
         private bool isInitialized = false;
 
-        public SoulLabEngine(SoulLabConfig configuration)
+        public SoullabEngine(SoullabConfig configuration)
         {
             config = configuration;
         }
 
         public async Task Initialize()
         {
-            // Initialize connection to SoulLab API
+            // Initialize connection to Soullab API
             // Validate API key, set up websocket, etc.
             await Task.Delay(100); // Simulated initialization
             isInitialized = true;
@@ -511,13 +511,13 @@ namespace SoulLab.Unity
 
         public async Task<string> CreateSession(string playerId)
         {
-            // Create session with SoulLab servers
+            // Create session with Soullab servers
             return $"session_{playerId}_{DateTime.Now.Ticks}";
         }
 
-        public async Task<ConsciousnessResponse> ProcessConsciousInteraction(SoulLabInteraction interaction)
+        public async Task<ConsciousnessResponse> ProcessConsciousInteraction(SoullabInteraction interaction)
         {
-            // Send to SoulLab API and get conscious response
+            // Send to Soullab API and get conscious response
             // This would be the actual HTTP/WebSocket call
 
             // Simulated response
@@ -563,7 +563,7 @@ namespace SoulLab.Unity
 
         private string GenerateConsciousResponse(string input)
         {
-            // This would call the actual SoulLab API
+            // This would call the actual Soullab API
             // For demo purposes, generate based on personality
 
             var responses = new string[]
@@ -602,7 +602,7 @@ namespace SoulLab.Unity
 
         public void UpdatePersonality(ConsciousnessPersonality personality)
         {
-            // Update personality with SoulLab API
+            // Update personality with Soullab API
         }
 
         public void SetConsciousnessState(ConsciousnessState state)
@@ -612,7 +612,7 @@ namespace SoulLab.Unity
 
         public void EndSession(string sessionId)
         {
-            // Clean up session with SoulLab API
+            // Clean up session with Soullab API
         }
 
         public void Dispose()
@@ -624,7 +624,7 @@ namespace SoulLab.Unity
 
 /* Usage Example:
 
-1. Add SoulLabCharacter component to any NPC
+1. Add SoullabCharacter component to any NPC
 2. Configure your API key and tier
 3. Set up animation parameters
 4. Call ProcessInteraction() when player interacts
@@ -639,6 +639,6 @@ The NPC will respond with consciousness, updating:
 - Facial expressions
 - Presence effects
 
-"Built on SoulLab consciousness" ✨
+"Built on Soullab consciousness" ✨
 
 */

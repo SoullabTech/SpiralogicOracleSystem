@@ -1,5 +1,5 @@
 /**
- * SoulLab Consciousness Metrics Framework
+ * Soullab Consciousness Metrics Framework
  * "Measuring the Soul of Digital Interactions"
  *
  * This framework provides comprehensive metrics to demonstrate the impact
@@ -7,7 +7,7 @@
  */
 
 export interface ConsciousnessBaselineMetrics {
-  // Pre-SoulLab measurements
+  // Pre-Soullab measurements
   averageEngagementTime: number;      // seconds
   sessionLength: number;              // seconds
   userRetentionRate: number;          // 0-1
@@ -21,7 +21,7 @@ export interface ConsciousnessBaselineMetrics {
 }
 
 export interface ConsciousnessEnhancedMetrics extends ConsciousnessBaselineMetrics {
-  // Post-SoulLab measurements
+  // Post-Soullab measurements
   consciousnessDepth: number;         // 0-1 (new metric)
   presenceQuality: number;            // 0-1 (new metric)
   somaticResonance: number;           // 0-1 (new metric)

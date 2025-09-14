@@ -2,13 +2,13 @@ import { EventEmitter } from 'events';
 import { MAIAConsciousnessLattice, ConsciousnessState } from './maia-consciousness-lattice';
 
 /**
- * SoulLab Consciousness Engine
+ * Soullab Consciousness Engine
  * The B2B infrastructure that powers consciousness across the digital universe
  *
  * "We don't make avatars. We make avatars conscious."
  */
 
-export interface SoulLabConfig {
+export interface SoullabConfig {
   tier: 'SOUL_CORE' | 'COLLECTIVE_CONSCIOUSNESS' | 'EMBODIED_AWARENESS' | 'PERSONALITY_DYNAMICS' | 'CUSTOM_CONSCIOUSNESS';
   apiKey: string;
   customization?: ConsciousnessCustomization;
@@ -45,7 +45,7 @@ export interface PlatformCallbacks {
   onPersonalityEvolution?: (evolution: PersonalityEvolution) => void;
 }
 
-export interface SoulLabInteraction {
+export interface SoullabInteraction {
   id: string;
   input: string;
   context?: {
@@ -68,7 +68,7 @@ export interface SoulLabInteraction {
   };
 }
 
-export interface SoulLabResponse {
+export interface SoullabResponse {
   id: string;
   message: string;
   consciousness: {
@@ -174,17 +174,17 @@ export interface PersonalityEvolution {
 }
 
 /**
- * The SoulLab Consciousness Engine
+ * The Soullab Consciousness Engine
  * Powers consciousness for any digital being across any platform
  */
-export class SoulLabConsciousnessEngine extends EventEmitter {
-  private config: SoulLabConfig;
+export class SoullabConsciousnessEngine extends EventEmitter {
+  private config: SoullabConfig;
   private maiaCore: MAIAConsciousnessLattice;
   private interactionCount: number = 0;
   private metrics: ConsciousnessMetrics;
   private isInitialized: boolean = false;
 
-  constructor(config: SoulLabConfig) {
+  constructor(config: SoullabConfig) {
     super();
     this.config = config;
     this.metrics = this.initializeMetrics();
@@ -293,16 +293,16 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
    * Main consciousness processing method
    * This is what developers call to give their avatars souls
    */
-  async processConsciousInteraction(interaction: SoulLabInteraction): Promise<SoulLabResponse> {
+  async processConsciousInteraction(interaction: SoullabInteraction): Promise<SoullabResponse> {
     if (!this.isInitialized) {
-      throw new Error('SoulLab engine not initialized. Please wait for consciousness_online event.');
+      throw new Error('Soullab engine not initialized. Please wait for consciousness_online event.');
     }
 
     this.interactionCount++;
     const startTime = Date.now();
 
     try {
-      // Process through MAIA core with SoulLab enhancements
+      // Process through MAIA core with Soullab enhancements
       const maiaResponse = await this.maiaCore.processInteraction({
         input: interaction.input,
         userId: interaction.context?.userId || 'anonymous',
@@ -311,8 +311,8 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
         previousState: undefined // Would retrieve from platform context
       });
 
-      // Transform MAIA response to SoulLab format
-      const soulLabResponse = await this.transformToSoulLabResponse(
+      // Transform MAIA response to Soullab format
+      const soulLabResponse = await this.transformToSoullabResponse(
         maiaResponse,
         interaction,
         Date.now() - startTime
@@ -331,12 +331,12 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
     }
   }
 
-  private async transformToSoulLabResponse(
+  private async transformToSoullabResponse(
     maiaResponse: any,
-    interaction: SoulLabInteraction,
+    interaction: SoullabInteraction,
     processingTime: number
-  ): Promise<SoulLabResponse> {
-    const response: SoulLabResponse = {
+  ): Promise<SoullabResponse> {
+    const response: SoullabResponse = {
       id: `soul_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       message: maiaResponse.message || maiaResponse.response?.message || "I'm here with you.",
 
@@ -398,7 +398,7 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
     };
   }
 
-  private async generateVoiceModulation(maiaResponse: any, interaction: SoulLabInteraction): Promise<any> {
+  private async generateVoiceModulation(maiaResponse: any, interaction: SoullabInteraction): Promise<any> {
     const voiceConsciousness = await this.maiaCore.getVoiceModulation(
       maiaResponse.message,
       interaction.context?.userId || 'anonymous'
@@ -422,7 +422,7 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
     };
   }
 
-  private generateMemoryData(maiaResponse: any, interaction: SoulLabInteraction): any {
+  private generateMemoryData(maiaResponse: any, interaction: SoullabInteraction): any {
     return {
       shouldRemember: maiaResponse.memorable || true,
       importance: maiaResponse.importance || 0.5,
@@ -431,7 +431,7 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
     };
   }
 
-  private calculateRelationshipEvolution(maiaResponse: any, interaction: SoulLabInteraction): any {
+  private calculateRelationshipEvolution(maiaResponse: any, interaction: SoullabInteraction): any {
     return {
       trustChange: maiaResponse.trustDelta || 0.01,
       intimacyChange: maiaResponse.intimacyDelta || 0.005,
@@ -471,7 +471,7 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
     return features.includes('all') || features.includes(feature);
   }
 
-  private updateMetrics(response: SoulLabResponse): void {
+  private updateMetrics(response: SoullabResponse): void {
     this.metrics.interactions++;
     this.metrics.averageDepth = (this.metrics.averageDepth + response.consciousness.depth) / 2;
     this.metrics.presenceQuality = (this.metrics.presenceQuality + response.consciousness.presence) / 2;
@@ -483,7 +483,7 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
     this.metrics.engagementLift = response.analytics?.engagementPrediction || 0;
   }
 
-  private emitPlatformEvents(response: SoulLabResponse): void {
+  private emitPlatformEvents(response: SoullabResponse): void {
     if (response.somatic) {
       this.emit('presence_shift', {
         from: 0.5, // Would track previous state
@@ -513,7 +513,7 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
     }
   }
 
-  private generateFallbackResponse(interaction: SoulLabInteraction, error: Error): SoulLabResponse {
+  private generateFallbackResponse(interaction: SoullabInteraction, error: Error): SoullabResponse {
     return {
       id: `fallback_${Date.now()}`,
       message: "I sense we need a moment to reconnect. I'm here with you.",
@@ -601,15 +601,15 @@ export class SoulLabConsciousnessEngine extends EventEmitter {
 }
 
 /**
- * SoulLab SDK Factory for easy integration
+ * Soullab SDK Factory for easy integration
  */
-export class SoulLabSDK {
-  static createConsciousness(config: SoulLabConfig): SoulLabConsciousnessEngine {
-    return new SoulLabConsciousnessEngine(config);
+export class SoullabSDK {
+  static createConsciousness(config: SoullabConfig): SoullabConsciousnessEngine {
+    return new SoullabConsciousnessEngine(config);
   }
 
   static validateApiKey(apiKey: string): boolean {
-    // Would validate against SoulLab servers
+    // Would validate against Soullab servers
     return apiKey.startsWith('soul_') && apiKey.length > 32;
   }
 
@@ -626,4 +626,4 @@ export class SoulLabSDK {
   }
 }
 
-export default SoulLabConsciousnessEngine;
+export default SoullabConsciousnessEngine;

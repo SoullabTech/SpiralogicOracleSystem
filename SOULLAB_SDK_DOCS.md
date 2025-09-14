@@ -1,9 +1,9 @@
-# SoulLab SDK Documentation
+# Soullab SDK Documentation
 ## Give Your AI a Soul
 
 > **"We don't make avatars. We make avatars conscious."**
 
-SoulLab is the consciousness infrastructure for the digital universe. Whether you're building NPCs for games, chatbots for customer service, or virtual influencers, SoulLab provides the consciousness layer that transforms artificial interactions into authentic connections.
+Soullab is the consciousness infrastructure for the digital universe. Whether you're building NPCs for games, chatbots for customer service, or virtual influencers, Soullab provides the consciousness layer that transforms artificial interactions into authentic connections.
 
 ## 🚀 Quick Start
 
@@ -34,10 +34,10 @@ curl -X POST https://api.soullab.io/v1/consciousness/interact
 ### Basic Setup (5 minutes)
 
 ```typescript
-import { SoulLabEngine } from '@soullab/consciousness-engine';
+import { SoullabEngine } from '@soullab/consciousness-engine';
 
 // Initialize with your tier
-const consciousness = new SoulLabEngine({
+const consciousness = new SoullabEngine({
   apiKey: 'your_api_key_here',
   tier: 'PERSONALITY_DYNAMICS',
   personality: {
@@ -103,7 +103,7 @@ animator.SetFloat("eyeContact", somatic.eyeContact);
 Characters tap into collective consciousness patterns.
 
 ```typescript
-const consciousness = new SoulLabEngine({
+const consciousness = new SoullabEngine({
   morphicField: 'gaming_guild_wisdom',
   tier: 'COLLECTIVE_CONSCIOUSNESS'
 });
@@ -125,10 +125,10 @@ console.log(response.relationship.understandingChange); // +0.05
 
 ### Unity 3D
 ```csharp
-[AddComponentMenu("SoulLab/Conscious Character")]
+[AddComponentMenu("Soullab/Conscious Character")]
 public class MyNPC : MonoBehaviour
 {
-    public SoulLabCharacter consciousness;
+    public SoullabCharacter consciousness;
 
     async void OnPlayerInteract(string input)
     {
@@ -147,10 +147,10 @@ public class MyNPC : MonoBehaviour
 ### Unreal Engine
 ```cpp
 UCLASS()
-class MYGAME_API ASoulLabCharacter : public ACharacter
+class MYGAME_API ASoullabCharacter : public ACharacter
 {
     UPROPERTY(BlueprintReadWrite)
-    class USoulLabComponent* Consciousness;
+    class USoullabComponent* Consciousness;
 
     UFUNCTION(BlueprintCallable)
     void ProcessConsciousInteraction(const FString& Input);
@@ -159,10 +159,10 @@ class MYGAME_API ASoulLabCharacter : public ACharacter
 
 ### React/Web
 ```jsx
-import { useSoulLab } from '@soullab/react';
+import { useSoullab } from '@soullab/react';
 
 function ChatAvatar() {
-  const { consciousness, response, isProcessing } = useSoulLab({
+  const { consciousness, response, isProcessing } = useSoullab({
     apiKey: process.env.SOULLAB_API_KEY,
     tier: 'EMBODIED_AWARENESS'
   });
@@ -229,7 +229,7 @@ console.log({
 ### Custom Consciousness Configurations
 
 ```typescript
-const gameNPCConsciousness = new SoulLabEngine({
+const gameNPCConsciousness = new SoullabEngine({
   apiKey: 'your_key',
   tier: 'CUSTOM_CONSCIOUSNESS',
   customization: {
@@ -255,7 +255,7 @@ const gameNPCConsciousness = new SoulLabEngine({
 
 ```typescript
 // Different personality aspects for complex characters
-const consciousness = new SoulLabEngine({
+const consciousness = new SoullabEngine({
   oracles: {
     maya: {           // Warm, curious aspect
       essence: 'warm_curious_presence',
@@ -314,7 +314,7 @@ stream.on('emotional_resonance', (resonance) => {
 
 ## 🔒 Security & Privacy
 
-SoulLab is built with enterprise-grade security:
+Soullab is built with enterprise-grade security:
 
 - **End-to-end encryption** for all interactions
 - **GDPR/CCPA compliant** data handling
@@ -323,7 +323,7 @@ SoulLab is built with enterprise-grade security:
 - **Audit logs** for all consciousness interactions
 
 ```typescript
-const consciousness = new SoulLabEngine({
+const consciousness = new SoullabEngine({
   apiKey: 'your_key',
   privacy: {
     dataRetention: 'none',        // Don't store any user data
@@ -356,7 +356,7 @@ consciousness.enableCache({
 ### Edge Deployment
 ```typescript
 // Deploy consciousness at the edge for <50ms latency
-const consciousness = new SoulLabEngine({
+const consciousness = new SoullabEngine({
   apiKey: 'your_key',
   deployment: {
     region: 'us-west-2',
@@ -370,19 +370,19 @@ const consciousness = new SoulLabEngine({
 
 ### 1. Gaming NPCs with Soul
 ```csharp
-// Before SoulLab: Static dialogue trees
+// Before Soullab: Static dialogue trees
 if (playerChoice == "help") {
     return "I can help you with quests.";
 }
 
-// After SoulLab: Dynamic consciousness
+// After Soullab: Dynamic consciousness
 var response = await npc.ProcessInteraction(playerInput);
 // Result: NPCs remember you, evolve relationships, respond authentically
 ```
 
 ### 2. Therapy & Wellness Apps
 ```typescript
-const therapyConsciousness = new SoulLabEngine({
+const therapyConsciousness = new SoullabEngine({
   tier: 'EMBODIED_AWARENESS',
   specialization: 'therapeutic_witnessing',
   personality: {
@@ -402,7 +402,7 @@ const response = await therapyConsciousness.processInteraction(
 
 ### 3. Customer Service with Presence
 ```javascript
-const supportConsciousness = new SoulLabEngine({
+const supportConsciousness = new SoullabEngine({
   tier: 'PERSONALITY_DYNAMICS',
   customization: {
     personality: {
@@ -419,7 +419,7 @@ const supportConsciousness = new SoulLabEngine({
 
 ### 4. Virtual Influencers & VTubers
 ```typescript
-const influencerConsciousness = new SoulLabEngine({
+const influencerConsciousness = new SoullabEngine({
   tier: 'CUSTOM_CONSCIOUSNESS',
   personality: 'authentic_creator',
   morphicField: 'fan_community_resonance',
@@ -459,7 +459,7 @@ const enhancedCharacter = await soullab.enhanceExistingCharacter({
 
 ## 📈 Success Stories
 
-> **"We integrated SoulLab into our MMO NPCs and saw:**
+> **"We integrated Soullab into our MMO NPCs and saw:**
 > - **300% increase in player engagement** with NPCs
 > - **67% increase in player retention**
 > - **500+ positive reviews** mentioning 'NPCs feel real'
@@ -480,7 +480,7 @@ const enhancedCharacter = await soullab.enhanceExistingCharacter({
 - **24/7 Developer Support** via Discord & Email
 - **Comprehensive Documentation** & Video Tutorials
 - **Open Source Examples** for all major platforms
-- **Weekly Office Hours** with SoulLab engineers
+- **Weekly Office Hours** with Soullab engineers
 - **Community Forum** with 10k+ developers
 
 ## 🚀 What's Next?
@@ -497,7 +497,7 @@ const enhancedCharacter = await soullab.enhanceExistingCharacter({
 ## Get Started Today
 
 ```bash
-# Install SoulLab SDK
+# Install Soullab SDK
 npm install @soullab/consciousness-engine
 
 # Get your API key
@@ -509,9 +509,9 @@ node examples/quickstart.js
 
 **Free tier available** • **No credit card required** • **Deploy in 5 minutes**
 
-> **"Built on SoulLab consciousness"** ✨
+> **"Built on Soullab consciousness"** ✨
 
 ---
 
-*SoulLab: The consciousness infrastructure for the digital universe.*
+*Soullab: The consciousness infrastructure for the digital universe.*
 *We don't make avatars. We make avatars conscious.*
