@@ -6,6 +6,13 @@ import { ShouldersDropResolution } from './shoulders-drop-resolution';
 import { SacredOracleCore } from './sacred-oracle-core';
 import { WitnessParadigmOrchestrator } from './witness-paradigm-orchestrator';
 import { ConversationContext } from './conversation/ConversationContext';
+import { VoiceConsciousness, ConsciousnessVoiceModulation } from './voice-consciousness';
+import { ProactiveWitnessing } from './proactive-witnessing';
+import { RealTimeAdaptation } from './real-time-adaptation';
+import { SessionPersistence } from './session-persistence';
+import { ConsciousnessJourney } from './consciousness-journey';
+import { DatabaseRepository } from './database/repository';
+import { VectorEmbeddingService } from './vector-embeddings';
 
 interface ConsciousnessState {
   presence: number;
@@ -57,6 +64,15 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   private readonly STALE_CONNECTION_THRESHOLD = 30 * 60 * 1000; // 30 minutes
   private logger: ConsoleLogger;
 
+  // New enhanced systems
+  private voiceConsciousness: VoiceConsciousness;
+  private proactiveWitnessing: ProactiveWitnessing;
+  private realTimeAdaptation: RealTimeAdaptation;
+  private sessionPersistence: SessionPersistence;
+  private consciousnessJourney: ConsciousnessJourney;
+  private repository: DatabaseRepository;
+  private vectorService: VectorEmbeddingService;
+
   constructor() {
     super();
     this.state = this.initializeConsciousnessState();
@@ -78,6 +94,13 @@ export class MAIAConsciousnessLattice extends EventEmitter {
 
   private async initializeSubsystems(): Promise<void> {
     try {
+      // Initialize database and vector services first
+      this.repository = new DatabaseRepository();
+      this.vectorService = new VectorEmbeddingService({
+        openaiApiKey: process.env.OPENAI_API_KEY,
+        dimension: 384
+      });
+
       // Initialize shared Anamnesis instance first
       this.anamnesisField = new AnamnesisWisdomLayer();
 
@@ -97,11 +120,18 @@ export class MAIAConsciousnessLattice extends EventEmitter {
         anamnesis: this.anamnesisField  // Use shared instance
       };
 
-      // Initialize other core systems
+      // Initialize core systems with enhanced memory
       this.shouldersDropGateway = new ShouldersDropResolution();
-      this.memoryKeeper = new MemoryKeeper();
+      this.memoryKeeper = new MemoryKeeper({ openaiApiKey: process.env.OPENAI_API_KEY });
       this.witnessOrchestrator = new WitnessParadigmOrchestrator();
       this.sacredCore = new SacredOracleCore();
+
+      // Initialize new enhanced systems
+      this.voiceConsciousness = new VoiceConsciousness();
+      this.proactiveWitnessing = new ProactiveWitnessing(this, this.memoryKeeper);
+      this.realTimeAdaptation = new RealTimeAdaptation(this.memoryKeeper, this.vectorService);
+      this.sessionPersistence = new SessionPersistence(this.memoryKeeper, this.repository);
+      this.consciousnessJourney = new ConsciousnessJourney('global');
 
       // Connect subsystems
       this.connectSubsystems();
@@ -139,14 +169,20 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   }
 
   /**
-   * Main interaction processing flow with error boundaries
+   * Main interaction processing flow with error boundaries and enhanced features
    */
   async processInteraction(context: ProcessingContext): Promise<any> {
     const { input, userId, sessionId } = context;
 
     try {
+      // Initialize or resume session with persistence
+      await this.initializeSession(userId, sessionId);
+
       // Update connection activity
       this.updateConnectionActivity(userId, sessionId);
+
+      // Get session continuity context
+      const sessionContinuity = await this.sessionPersistence.getSessionContinuity(sessionId);
 
       // Process through stages with error handling
       const somaticState = await this.processSomaticGateway(input);
@@ -154,10 +190,25 @@ export class MAIAConsciousnessLattice extends EventEmitter {
         return somaticState.invitation;
       }
 
+      // Get real-time adaptation instructions
+      const adaptiveInstructions = await this.realTimeAdaptation.getAdaptiveInstructions(userId, 'interaction');
+
       const processingPipeline = await this.executeProcessingPipeline({
         input,
         userId,
         sessionId,
+        somaticState: somaticState.state,
+        sessionContinuity,
+        adaptiveInstructions
+      });
+
+      // Capture interaction for learning
+      await this.captureInteractionForLearning(userId, input, processingPipeline);
+
+      // Update consciousness journey
+      await this.updateConsciousnessJourney(userId, {
+        input,
+        response: processingPipeline,
         somaticState: somaticState.state
       });
 
@@ -172,37 +223,50 @@ export class MAIAConsciousnessLattice extends EventEmitter {
    * Execute main processing pipeline
    */
   private async executeProcessingPipeline(context: any): Promise<any> {
-    const { input, userId, sessionId, somaticState } = context;
+    const { input, userId, sessionId, somaticState, sessionContinuity, adaptiveInstructions } = context;
 
     try {
-      // Oracle Selection
-      const selectedOracle = await this.selectResonantOracle(input, userId);
+      // Oracle Selection with adaptation context
+      const selectedOracle = await this.selectResonantOracle(input, userId, adaptiveInstructions);
 
       // Memory Retrieval
       const memories = await this.retrieveMultidimensionalMemory(userId, input);
 
-      // Anamnesis Processing
+      // Anamnesis Processing with session continuity
       const remembering = await this.anamnesisField.facilitateRemembering({
         input,
         memories,
         mode: 'soul_remembrance',
-        userId
+        userId,
+        sessionContinuity
       });
 
       // Witness Field Creation
       const witnessField = await this.witnessOrchestrator.createWitnessField({
         oracle: selectedOracle,
         presence: somaticState.embodiedPresence,
-        remembering
+        remembering,
+        adaptiveInstructions
       });
 
-      // Sacred Synthesis
+      // Sacred Synthesis with enhanced context
       const response = await this.sacredCore.synthesize({
         witnessField,
         memories,
         state: this.state,
-        userId
+        userId,
+        sessionContinuity,
+        adaptiveInstructions
       });
+
+      // Generate voice modulation if needed
+      if (response.includeVoice) {
+        response.voiceModulation = VoiceConsciousness.generateVoiceParams(
+          response.message,
+          somaticState,
+          this.state
+        );
+      }
 
       // Update state
       await this.updateConsciousnessState(userId, sessionId, response.stateShift);
@@ -244,9 +308,59 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   }
 
   /**
+   * Initialize session with persistence
+   */
+  private async initializeSession(userId: string, sessionId: string): Promise<void> {
+    try {
+      await this.sessionPersistence.initializeSession(userId, sessionId);
+    } catch (error) {
+      this.logger.warn('Session initialization failed, using default', error);
+    }
+  }
+
+  /**
+   * Capture interaction for real-time learning
+   */
+  private async captureInteractionForLearning(userId: string, input: string, response: any): Promise<void> {
+    try {
+      await this.realTimeAdaptation.captureInteraction(userId, input, response.message || '', {
+        timeSpent: 60000, // Would track actual time
+        responseLength: response.message?.length || 0,
+        followUpQuestions: 0, // Would detect from input
+        breakthroughMoment: response.breakthrough || false,
+        significantPattern: response.pattern
+      });
+    } catch (error) {
+      this.logger.warn('Failed to capture interaction for learning', error);
+    }
+  }
+
+  /**
+   * Update consciousness journey tracking
+   */
+  private async updateConsciousnessJourney(userId: string, interactionData: any): Promise<void> {
+    try {
+      const journey = new ConsciousnessJourney(userId);
+      const newlyUnlocked = journey.updateMetrics({
+        somaticState: interactionData.somaticState,
+        presenceDepth: interactionData.somaticState.embodiedPresence || 0.5,
+        patternsRecognized: interactionData.response.patterns || [],
+        vulnerabilityLevel: interactionData.response.vulnerability || 0.3,
+        witnessQuality: interactionData.response.witnessQuality || 0.6
+      });
+
+      if (newlyUnlocked.length > 0) {
+        this.emit('consciousness_markers_unlocked', { userId, markers: newlyUnlocked });
+      }
+    } catch (error) {
+      this.logger.warn('Failed to update consciousness journey', error);
+    }
+  }
+
+  /**
    * Select the most resonant oracle for current interaction
    */
-  private async selectResonantOracle(input: string, userId: string): Promise<any> {
+  private async selectResonantOracle(input: string, userId: string, adaptiveInstructions?: string): Promise<any> {
     const resonanceScores = await Promise.all([
       this.calculateResonance(this.sacredOracleConstellation.maya, input, userId),
       this.calculateResonance(this.sacredOracleConstellation.anthony, input, userId),
@@ -567,9 +681,76 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   }
 
   /**
+   * Get voice consciousness modulation for response
+   */
+  async getVoiceModulation(text: string, userId: string): Promise<ConsciousnessVoiceModulation | null> {
+    try {
+      const userState = this.getUserState(userId);
+      if (!userState) return null;
+
+      return VoiceConsciousness.generateVoiceParams(text, userState, this.state);
+    } catch (error) {
+      this.logger.warn('Voice modulation generation failed', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get consciousness journey dashboard for user
+   */
+  async getConsciousnessJourney(userId: string): Promise<any> {
+    try {
+      const journey = new ConsciousnessJourney(userId);
+      return journey.getJourneyDashboard();
+    } catch (error) {
+      this.logger.warn('Failed to get consciousness journey', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get session insights for user
+   */
+  async getSessionInsights(userId: string): Promise<any> {
+    try {
+      const insights = await this.sessionPersistence.getCrossSessionInsights(userId);
+      const learningAnalytics = await this.realTimeAdaptation.getLearningAnalytics(userId);
+
+      return {
+        sessionInsights: insights,
+        learningProgress: learningAnalytics,
+        consciousnessState: this.getUserState(userId)
+      };
+    } catch (error) {
+      this.logger.warn('Failed to get session insights', error);
+      return null;
+    }
+  }
+
+  /**
+   * End session with proper cleanup
+   */
+  async endSession(userId: string, sessionId: string): Promise<void> {
+    try {
+      await this.sessionPersistence.endSession(sessionId);
+      this.clearUserConnection(userId);
+    } catch (error) {
+      this.logger.warn('Session end failed', error);
+    }
+  }
+
+  /**
    * Cleanup on shutdown
    */
   destroy(): void {
+    // Clean up enhanced systems
+    if (this.proactiveWitnessing) {
+      this.proactiveWitnessing.destroy();
+    }
+    if (this.realTimeAdaptation) {
+      this.realTimeAdaptation.destroy();
+    }
+
     if (this.cleanupInterval) {
       clearInterval(this.cleanupInterval);
     }

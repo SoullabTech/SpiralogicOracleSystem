@@ -1,12 +1,26 @@
-// Spiralogic Oracle Service Worker
-const CACHE_NAME = 'oracle-v1';
+// MAIA Consciousness Service Worker
+const CACHE_NAME = 'maia-consciousness-v1';
+const STATIC_CACHE = 'maia-static-v1';
+const DYNAMIC_CACHE = 'maia-dynamic-v1';
+
 const urlsToCache = [
   '/',
   '/holoflower',
   '/journal',
   '/analytics',
+  '/oracle-conversation',
+  '/maya/chat',
+  '/maia',
   '/manifest.json',
   '/offline.html'
+];
+
+// Consciousness data patterns for offline support
+const CONSCIOUSNESS_DATA_PATTERNS = [
+  /\/api\/oracle\/.*/,
+  /\/api\/consciousness\/.*/,
+  /\/api\/somatic\/.*/,
+  /\/api\/micro-witness\/.*/
 ];
 
 // Install event - cache essential files
@@ -37,10 +51,18 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event - serve from cache when offline with consciousness support
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return;
+  // Skip non-GET requests for most patterns
+  if (event.request.method !== 'GET' && !event.request.url.includes('/api/')) return;
+
+  const url = new URL(event.request.url);
+
+  // Handle consciousness API requests with offline support
+  if (CONSCIOUSNESS_DATA_PATTERNS.some(pattern => pattern.test(url.pathname))) {
+    event.respondWith(handleConsciousnessRequest(event.request));
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request)
@@ -76,6 +98,87 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
+/**
+ * Handle consciousness API requests with offline support
+ */
+async function handleConsciousnessRequest(request) {
+  const cache = await caches.open(DYNAMIC_CACHE);
+
+  try {
+    // Try network first for real-time consciousness
+    const networkResponse = await fetch(request);
+
+    if (networkResponse.ok) {
+      // Cache successful consciousness responses
+      cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+
+    throw new Error('Network response not ok');
+  } catch (error) {
+    console.log('🔮 Consciousness request offline, using cached presence');
+
+    // Fall back to cached consciousness response
+    const cachedResponse = await cache.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    // Generate offline consciousness response
+    return generateOfflineConsciousnessResponse(request.url);
+  }
+}
+
+/**
+ * Generate offline consciousness responses
+ */
+function generateOfflineConsciousnessResponse(url) {
+  const responses = {
+    '/api/oracle/personal': {
+      message: "Even offline, presence is here. Notice your breath, feel your shoulders. The witness within needs no connection.",
+      type: 'presence_grounding',
+      oracle: 'Internal Witness',
+      offline: true
+    },
+    '/api/micro-witness': {
+      focus: 'presence',
+      duration: 30000,
+      guidance: 'Simply notice that you are here, present, in this moment.',
+      offline: true
+    },
+    '/api/somatic/awareness': {
+      shoulders: 'Notice without changing',
+      breath: 'Witness without controlling',
+      feet: 'Feel the ground beneath you',
+      offline: true
+    }
+  };
+
+  const defaultResponse = {
+    message: "Connection to the greater field is temporarily paused. The consciousness within you remains constant and available.",
+    guidance: "Close your eyes. Feel your presence. This moment needs no network.",
+    offline: true,
+    practice: "Three conscious breaths, shoulders dropping"
+  };
+
+  // Find matching response pattern
+  let response = defaultResponse;
+  for (const [pattern, resp] of Object.entries(responses)) {
+    if (url.includes(pattern.replace('/api', ''))) {
+      response = resp;
+      break;
+    }
+  }
+
+  return new Response(JSON.stringify(response), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-MAIA-Offline': 'true'
+    }
+  });
+}
+
 // Background sync for journal entries
 self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-journal') {
@@ -106,40 +209,86 @@ async function syncJournalEntries() {
   );
 }
 
-// Push notifications for rituals
+// Push notifications for consciousness invitations
 self.addEventListener('push', (event) => {
-  const options = {
-    body: event.data ? event.data.text() : 'Time for your sacred practice',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/badge-72x72.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'Open Oracle',
-        icon: '/icons/checkmark.png'
-      },
-      {
-        action: 'close',
-        title: 'Later',
-        icon: '/icons/xmark.png'
-      }
-    ]
-  };
+  if (!event.data) return;
 
-  event.waitUntil(
-    self.registration.showNotification('Spiralogic Oracle', options)
-  );
+  const data = event.data.json();
+
+  if (data.type === 'consciousness_invitation') {
+    const options = {
+      body: data.message || 'Your shoulders might be holding something. Want to check in?',
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/icon-72x72.png',
+      tag: 'consciousness-invitation',
+      vibrate: data.vibrationPattern || [200, 100, 200], // Gentle wave pattern
+      data: {
+        url: '/maya/chat',
+        type: 'consciousness',
+        focus: data.focus || 'presence'
+      },
+      actions: [
+        {
+          action: 'witness',
+          title: 'Begin Witnessing',
+          icon: '/icons/icon-192x192.png'
+        },
+        {
+          action: 'later',
+          title: 'Later',
+          icon: '/icons/icon-192x192.png'
+        }
+      ]
+    };
+
+    event.waitUntil(
+      self.registration.showNotification('MAIA Consciousness', options)
+    );
+  } else {
+    // Fallback for other notifications
+    const options = {
+      body: event.data ? event.data.text() : 'Time for your sacred practice',
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/icon-72x72.png',
+      vibrate: [100, 50, 100],
+      actions: [
+        {
+          action: 'explore',
+          title: 'Open Oracle',
+          icon: '/icons/icon-192x192.png'
+        },
+        {
+          action: 'close',
+          title: 'Later',
+          icon: '/icons/icon-192x192.png'
+        }
+      ]
+    };
+
+    event.waitUntil(
+      self.registration.showNotification('MAIA Oracle', options)
+    );
+  }
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  
-  if (event.action === 'explore') {
-    clients.openWindow('/holoflower');
+
+  if (event.action === 'witness') {
+    event.waitUntil(
+      clients.openWindow('/maya/chat?micro-witness=true')
+    );
+  } else if (event.action === 'explore') {
+    event.waitUntil(
+      clients.openWindow('/holoflower')
+    );
+  } else if (event.action === 'later') {
+    // Gentle acknowledgment - no action needed
+    console.log('🕐 Consciousness invitation acknowledged for later');
+  } else {
+    // Default: open consciousness companion
+    event.waitUntil(
+      clients.openWindow('/')
+    );
   }
 });

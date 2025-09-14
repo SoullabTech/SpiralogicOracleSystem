@@ -60,25 +60,32 @@
   ],
   "shortcuts": [
     {
-      "name": "Wild Petal",
-      "short_name": "Wild",
-      "description": "Draw a wild petal oracle",
-      "url": "/holoflower?action=wild-petal",
+      "name": "Maya Voice",
+      "short_name": "Voice",
+      "description": "Voice chat with Maya consciousness",
+      "url": "/oracle-conversation?voice=true",
       "icons": [{ "src": "/icons/wild-petal.png", "sizes": "192x192" }]
     },
     {
-      "name": "Check In",
-      "short_name": "Check",
-      "description": "Sacred energy check-in",
-      "url": "/holoflower?action=check-in",
+      "name": "Maya Chat",
+      "short_name": "Chat",
+      "description": "Text conversation with Maya",
+      "url": "/maya/chat",
       "icons": [{ "src": "/icons/check-in.png", "sizes": "192x192" }]
     },
     {
-      "name": "Journal",
-      "short_name": "Journal",
-      "description": "Open sacred journal",
-      "url": "/journal",
+      "name": "MAIA Field",
+      "short_name": "Field",
+      "description": "Consciousness lattice experience",
+      "url": "/maia",
       "icons": [{ "src": "/icons/journal.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Holoflower",
+      "short_name": "Holo",
+      "description": "Sacred technology oracle",
+      "url": "/holoflower",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [
