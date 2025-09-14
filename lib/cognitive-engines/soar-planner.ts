@@ -694,5 +694,11 @@ export class SOARPlanner {
   }
 }
 
-// Export singleton instance
-export const soarPlanner = new SOARPlanner();
+// Export singleton instance with lazy loading
+let _soarPlanner: SOARPlanner | null = null;
+export const getSOARPlanner = (): SOARPlanner => {
+  if (!_soarPlanner) {
+    _soarPlanner = new SOARPlanner();
+  }
+  return _soarPlanner;
+};

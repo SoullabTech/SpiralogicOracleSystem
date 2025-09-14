@@ -614,5 +614,12 @@ export class IntelligentEngagementSystem {
   }
 }
 
-// Export singleton instance
-export const engagementSystem = new IntelligentEngagementSystem();
+// Lazy-loading singleton pattern
+let _engagementSystem: IntelligentEngagementSystem | null = null;
+
+export const getEngagementSystem = (): IntelligentEngagementSystem => {
+  if (!_engagementSystem) {
+    _engagementSystem = new IntelligentEngagementSystem();
+  }
+  return _engagementSystem;
+};

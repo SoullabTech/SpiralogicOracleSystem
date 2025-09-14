@@ -193,5 +193,11 @@ export class SweetSpotCalibrator {
   }
 }
 
-// Export default instance
-export const sweetSpotCalibration = new SweetSpotCalibrator();
+// Export default instance with lazy loading
+let _sweetSpotCalibration: SweetSpotCalibrator | null = null;
+export const getSweetSpotCalibration = (): SweetSpotCalibrator => {
+  if (!_sweetSpotCalibration) {
+    _sweetSpotCalibration = new SweetSpotCalibrator();
+  }
+  return _sweetSpotCalibration;
+};

@@ -607,4 +607,10 @@ export class NDContemplativeIntegration {
 /**
  * Export configured instance
  */
-export const ndContemplativeIntegration = new NDContemplativeIntegration();
+let _ndContemplativeIntegration: NDContemplativeIntegration | null = null;
+export const getNdContemplativeIntegration = (): NDContemplativeIntegration => {
+  if (!_ndContemplativeIntegration) {
+    _ndContemplativeIntegration = new NDContemplativeIntegration();
+  }
+  return _ndContemplativeIntegration;
+};

@@ -252,5 +252,11 @@ export class StyleResonanceCalibrator {
   }
 }
 
-// Export default instance
-export const styleResonanceCalibrator = new StyleResonanceCalibrator();
+// Export default instance with lazy loading
+let _styleResonanceCalibrator: StyleResonanceCalibrator | null = null;
+export const getStyleResonanceCalibrator = (): StyleResonanceCalibrator => {
+  if (!_styleResonanceCalibrator) {
+    _styleResonanceCalibrator = new StyleResonanceCalibrator();
+  }
+  return _styleResonanceCalibrator;
+};

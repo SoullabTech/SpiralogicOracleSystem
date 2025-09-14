@@ -2,11 +2,11 @@
 // Intelligent activation, consistent experience, predictable performance, feature discovery
 
 import { NextRequest, NextResponse } from 'next/server';
-import { completeSacredOracle } from '@/lib/complete-sacred-oracle';
-import { activationIntelligence } from '@/lib/activation-intelligence';
-import { uxConsistencyManager } from '@/lib/ux-consistency-manager';
-import { betaUserControls } from '@/lib/beta-user-controls';
-import { progressiveFeedback } from '@/lib/progressive-feedback';
+import { getCompleteSacredOracle } from '@/lib/complete-sacred-oracle';
+import { getActivationIntelligence } from '@/lib/activation-intelligence';
+import { getUxConsistencyManager } from '@/lib/ux-consistency-manager';
+import { getBetaUserControls } from '@/lib/beta-user-controls';
+import { getProgressiveFeedback } from '@/lib/progressive-feedback';
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -31,9 +31,9 @@ export async function POST(request: NextRequest) {
     console.log(`🎯 Production Oracle: ${agentName} | ${input.slice(0, 50)}...`);
 
     // === 1. GET USER PREFERENCES & A/B TEST VARIANTS ===
-    const baseUserPreferences = betaUserControls.getUserPreferences(userId);
-    const abTestVariants = progressiveFeedback.getTestVariantPreferences(userId);
-    const realTimeAdjusted = progressiveFeedback.applyRealTimeAdjustments(userId, {
+    const baseUserPreferences = getBetaUserControls().getUserPreferences(userId);
+    const abTestVariants = getProgressiveFeedback().getTestVariantPreferences(userId);
+    const realTimeAdjusted = getProgressiveFeedback().applyRealTimeAdjustments(userId, {
       ...baseUserPreferences,
       ...abTestVariants
     });
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     });
 
     // === 2. INTELLIGENT ACTIVATION ANALYSIS ===
-    const rawActivationDecisions = activationIntelligence.analyzeActivationNeed(
+    const rawActivationDecisions = getActivationIntelligence().analyzeActivationNeed(
       userId,
       input,
       history,
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Apply user customizations to activation decisions
-    const activationDecisions = betaUserControls.customizeActivationDecisions(
+    const activationDecisions = getBetaUserControls().customizeActivationDecisions(
       userId,
       rawActivationDecisions,
       { input, history, preferences: realTimeAdjusted }
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       .map(d => d.feature);
 
     const inputComplexity = calculateInputComplexity(input);
-    const timePredict = uxConsistencyManager.predictResponseTime(
+    const timePredict = getUxConsistencyManager().predictResponseTime(
       activatedFeatures,
       inputComplexity,
       history
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     console.log(`⏱️ Predicted time: ${timePredict.estimated}ms, showing indicator: ${timePredict.showIndicator}`);
 
     // === 3. UX CONSISTENCY CHECK ===
-    const consistencyResult = uxConsistencyManager.ensureConsistency(
+    const consistencyResult = getUxConsistencyManager().ensureConsistency(
       userId,
       activatedFeatures,
       { input, history }
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     // === 4. GRACEFUL TRANSITION PLANNING ===
     const previousFeatures = getPreviousFeatures(userId); // Would store in session
-    const transition = uxConsistencyManager.planFeatureTransition(
+    const transition = getUxConsistencyManager().planFeatureTransition(
       previousFeatures,
       finalFeatures,
       userId
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     // === 6. GENERATE RESPONSE WITH SELECTED FEATURES ===
-    const sacredResponse = await completeSacredOracle.generateCompleteSacredResponse({
+    const sacredResponse = await getCompleteSacredOracle().generateCompleteSacredResponse({
       input,
       userId,
       sessionId,
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
 
     // === 7. UPDATE USER EXPECTATIONS ===
     const userSatisfaction = sacredResponse.metadata.flowQuality; // Use flow quality as satisfaction proxy
-    uxConsistencyManager.updateExpectation(
+    getUxConsistencyManager().updateExpectation(
       userId,
       actualTime,
       userSatisfaction,
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
     );
 
     // === 8. FEATURE DISCOVERY PROMPTS ===
-    const discovery = uxConsistencyManager.generateDiscoveryPrompts(
+    const discovery = getUxConsistencyManager().generateDiscoveryPrompts(
       userId,
       ['looping_protocol', 'contemplative_space', 'consciousness_profiling', 'morphic_resonance'],
       { input, history }
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
     const conversationOutcome = userSatisfaction > 0.8 ? 'helpful' :
                                userSatisfaction < 0.6 ? 'confusing' : 'neutral';
 
-    activationIntelligence.updateUserProfile(
+    getActivationIntelligence().updateUserProfile(
       userId,
       finalFeatures,
       userSatisfaction,
@@ -146,7 +146,7 @@ export async function POST(request: NextRequest) {
     );
 
     // === 10. ENHANCE RESPONSE WITH USER PREFERENCES ===
-    const enhancedResponse = betaUserControls.generateDebugResponse(
+    const enhancedResponse = getBetaUserControls().generateDebugResponse(
       userId,
       sacredResponse.text,
       {
@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
     );
 
     // === 11. GENERATE ONE-CLICK ADJUSTMENTS ===
-    const oneClickAdjustments = progressiveFeedback.generateOneClickAdjustments(
+    const oneClickAdjustments = getProgressiveFeedback().generateOneClickAdjustments(
       userId,
       { features: finalFeatures, processingTime: actualTime }
     );

@@ -553,5 +553,11 @@ export class SacredOracleDB {
   }
 }
 
-// Export singleton instance
-export const sacredOracleDB = new SacredOracleDB();
+// Lazy-loading singleton instance
+let _sacredOracleDB: SacredOracleDB | null = null;
+export const getSacredOracleDB = (): SacredOracleDB => {
+  if (!_sacredOracleDB) {
+    _sacredOracleDB = new SacredOracleDB();
+  }
+  return _sacredOracleDB;
+};

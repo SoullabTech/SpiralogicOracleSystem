@@ -553,4 +553,10 @@ export class NeurodivergentSupportController {
 /**
  * Export configured instance
  */
-export const neurodivergentSupport = new NeurodivergentSupportController();
+let _neurodivergentSupport: NeurodivergentSupportController | null = null;
+export const getNeurodivergentSupport = (): NeurodivergentSupportController => {
+  if (!_neurodivergentSupport) {
+    _neurodivergentSupport = new NeurodivergentSupportController();
+  }
+  return _neurodivergentSupport;
+};

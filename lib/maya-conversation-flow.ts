@@ -13,7 +13,7 @@ import type {
 } from './types/soullab-metadata';
 
 import { conversationQueries } from './supabase/soullab-queries';
-import { sweetSpotCalibration } from './sweetSpotCalibration';
+// Note: sweetSpotCalibration import removed as it was unused
 
 export type FlowState = 'opening' | 'building' | 'sustaining' | 'completing' | 'closing';
 export type FlowAction = 'continue' | 'deepen' | 'redirect' | 'complete' | 'close';

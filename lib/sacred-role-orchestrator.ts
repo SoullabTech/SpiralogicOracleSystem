@@ -482,5 +482,12 @@ export class SacredRoleOrchestrator {
   }
 }
 
-// Export singleton instance
-export const sacredRoleOrchestrator = new SacredRoleOrchestrator();
+// Lazy-loading singleton pattern
+let _sacredRoleOrchestrator: SacredRoleOrchestrator | null = null;
+
+export const getSacredRoleOrchestrator = (): SacredRoleOrchestrator => {
+  if (!_sacredRoleOrchestrator) {
+    _sacredRoleOrchestrator = new SacredRoleOrchestrator();
+  }
+  return _sacredRoleOrchestrator;
+};

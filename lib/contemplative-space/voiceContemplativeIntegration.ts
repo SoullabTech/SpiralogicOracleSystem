@@ -486,4 +486,10 @@ export class VoiceContemplativeController {
 /**
  * Export configured instance
  */
-export const voiceContemplative = new VoiceContemplativeController();
+let _voiceContemplative: VoiceContemplativeController | null = null;
+export const getVoiceContemplative = (): VoiceContemplativeController => {
+  if (!_voiceContemplative) {
+    _voiceContemplative = new VoiceContemplativeController();
+  }
+  return _voiceContemplative;
+};

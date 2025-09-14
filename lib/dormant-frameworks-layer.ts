@@ -358,5 +358,12 @@ export class DormantFrameworksLayer {
   }
 }
 
-// Export singleton instance
-export const dormantFrameworks = new DormantFrameworksLayer();
+// Lazy-loading singleton pattern
+let _dormantFrameworks: DormantFrameworksLayer | null = null;
+
+export const getDormantFrameworks = (): DormantFrameworksLayer => {
+  if (!_dormantFrameworks) {
+    _dormantFrameworks = new DormantFrameworksLayer();
+  }
+  return _dormantFrameworks;
+};

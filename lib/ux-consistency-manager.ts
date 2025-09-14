@@ -360,4 +360,10 @@ export class UXConsistencyManager {
   }
 }
 
-export const uxConsistencyManager = new UXConsistencyManager();
+let _uxConsistencyManager: UXConsistencyManager | null = null;
+export const getUxConsistencyManager = (): UXConsistencyManager => {
+  if (!_uxConsistencyManager) {
+    _uxConsistencyManager = new UXConsistencyManager();
+  }
+  return _uxConsistencyManager;
+};

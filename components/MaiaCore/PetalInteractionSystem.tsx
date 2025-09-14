@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMaiaState } from '@/lib/hooks/useMaiaState';
-import { offeringService } from '@/lib/services/offering-session-service';
+import { getOfferingService } from '@/lib/services/offering-session-service';
 import { PETAL_ELEMENTS } from '@/lib/types/offering-sessions';
 
 type OfferingState = 'invitation' | 'offering' | 'resting' | 'completed';
@@ -166,7 +166,7 @@ export function PetalInteractionSystem({
     try {
       if (userId) {
         // Save rest session to Supabase
-        const restSession = await offeringService.createRestSession(userId);
+        const restSession = await getOfferingService().createRestSession(userId);
         
         const localSession: OfferingSession = {
           date: restSession.session_date,
@@ -197,7 +197,7 @@ export function PetalInteractionSystem({
         const selectedPetals = PETAL_ELEMENTS.filter((_, index) => petalScores[index] > 0);
         
         // Save offering session to Supabase
-        const supabaseSession = await offeringService.createOfferingSession(
+        const supabaseSession = await getOfferingService().createOfferingSession(
           userId,
           petalScores,
           selectedPetals,

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { offeringService } from '@/lib/services/offering-session-service';
+import { getOfferingService } from '@/lib/services/offering-session-service';
 
 interface ProgressiveRevelationProps {
   userId: string;
@@ -119,9 +119,9 @@ export function ProgressiveRevelationSystem({ userId, children }: ProgressiveRev
   const loadPersonalInsight = async () => {
     try {
       const [timeline, stats, streak] = await Promise.all([
-        offeringService.getUserTimeline(userId, 14),
-        offeringService.getUserStats(userId),
-        offeringService.getOfferingStreak(userId)
+        getOfferingService().getUserTimeline(userId, 14),
+        getOfferingService().getUserStats(userId),
+        getOfferingService().getOfferingStreak(userId)
       ]);
 
       // Generate contextual insight based on their patterns

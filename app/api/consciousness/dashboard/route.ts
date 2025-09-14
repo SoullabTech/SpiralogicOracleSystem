@@ -1,5 +1,5 @@
 // app/api/consciousness/dashboard/route.ts
-import { consciousnessIntelligenceManager } from '../../../../lib/consciousness-intelligence-manager';
+import { getConsciousnessIntelligenceManager } from '../../../../lib/consciousness-intelligence-manager';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,7 +43,7 @@ let startTime = Date.now();
 export async function GET() {
   try {
     // Get current health status
-    const healthStatus = await consciousnessIntelligenceManager.getHealthStatus();
+    const healthStatus = await getConsciousnessIntelligenceManager().getHealthStatus();
     
     // Calculate uptime
     const currentUptime = Date.now() - startTime;
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     
     if (action === 'recover' && endpoint) {
       // Force recovery of a specific endpoint
-      consciousnessIntelligenceManager.forceRecoverEndpoint(endpoint);
+      getConsciousnessIntelligenceManager().forceRecoverEndpoint(endpoint);
       
       return new Response(JSON.stringify({
         success: true,

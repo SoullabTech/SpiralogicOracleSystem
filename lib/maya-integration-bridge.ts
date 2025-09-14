@@ -22,8 +22,8 @@ import type {
 
 import { resonanceEngine } from './resonanceEngine';
 import { archetypeEvolutionEngine } from './archetypeEvolutionEngine';
-import { styleResonanceCalibrator } from './styleResonanceCalibrator';
-import { sweetSpotCalibration } from './sweetSpotCalibration';
+import { getStyleResonanceCalibrator } from './styleResonanceCalibrator';
+import { getSweetSpotCalibration } from './sweetSpotCalibration';
 import { journalQueries, storyQueries, momentQueries, threadQueries, profileQueries, conversationQueries, patternQueries } from './supabase/soullab-queries';
 
 /**
@@ -105,7 +105,7 @@ export class MayaIntegrationBridge {
    */
   async calibrateStyle(input: string): Promise<"technical" | "philosophical" | "dramatic" | "soulful"> {
     const userStyle = this.userProfile?.preferred_style || "soulful";
-    const contextStyle = await styleResonanceCalibrator.calibrate(input);
+    const contextStyle = await getStyleResonanceCalibrator().calibrate(input);
     
     // Blend user preference with context
     return this.blendStyles(userStyle, contextStyle);
@@ -243,7 +243,7 @@ export class MayaIntegrationBridge {
     const momentum = this.conversationState?.momentum || "building";
     
     // Use sweet spot calibration
-    const flowDecision = await sweetSpotCalibration.calibrate({
+    const flowDecision = await getSweetSpotCalibration().calibrate({
       exchangeCount,
       momentum,
       lastElement: this.conversationState?.last_element

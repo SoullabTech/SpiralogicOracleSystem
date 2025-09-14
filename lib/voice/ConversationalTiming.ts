@@ -316,5 +316,11 @@ export class ConversationalTimingEngine {
   }
 }
 
-// Export singleton instance
-export const conversationalTiming = new ConversationalTimingEngine();
+// Export singleton instance - Lazy-loading pattern
+let _conversationalTiming: ConversationalTimingEngine | null = null;
+export const getConversationalTiming = (): ConversationalTimingEngine => {
+  if (!_conversationalTiming) {
+    _conversationalTiming = new ConversationalTimingEngine();
+  }
+  return _conversationalTiming;
+};

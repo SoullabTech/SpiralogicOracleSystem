@@ -441,12 +441,25 @@ export class HybridMemorySystem {
 }
 
 /**
- * Export configured instances
+ * Export configured instances - Lazy-loading pattern
  */
-export const decentralizedMemory = new DecentralizedMemoryLayer();
-export const hybridMemory = new HybridMemorySystem('hybrid');
+let _decentralizedMemory: DecentralizedMemoryLayer | null = null;
+export const getDecentralizedMemory = (): DecentralizedMemoryLayer => {
+  if (!_decentralizedMemory) {
+    _decentralizedMemory = new DecentralizedMemoryLayer();
+  }
+  return _decentralizedMemory;
+};
 
-// Auto-initialize if AGIX endpoint is configured
-if (process.env.AGIX_ENDPOINT) {
-  hybridMemory.initialize().catch(console.error);
-}
+let _hybridMemory: HybridMemorySystem | null = null;
+export const getHybridMemory = (): HybridMemorySystem => {
+  if (!_hybridMemory) {
+    _hybridMemory = new HybridMemorySystem('hybrid');
+
+    // Auto-initialize if AGIX endpoint is configured
+    if (process.env.AGIX_ENDPOINT) {
+      _hybridMemory.initialize().catch(console.error);
+    }
+  }
+  return _hybridMemory;
+};

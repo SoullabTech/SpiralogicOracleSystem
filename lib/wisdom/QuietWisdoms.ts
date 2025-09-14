@@ -467,5 +467,11 @@ The quiet wisdoms are speaking. The question is: are you listening?
   }
 }
 
-// Singleton instance
-export const quietWisdoms = new QuietWisdoms();
+// Singleton instance with lazy loading
+let _quietWisdoms: QuietWisdoms | null = null;
+export const getQuietWisdoms = (): QuietWisdoms => {
+  if (!_quietWisdoms) {
+    _quietWisdoms = new QuietWisdoms();
+  }
+  return _quietWisdoms;
+};

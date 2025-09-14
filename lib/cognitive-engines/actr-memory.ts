@@ -695,5 +695,11 @@ export class ACTRMemory {
   }
 }
 
-// Export singleton instance
-export const actrMemory = new ACTRMemory();
+// Export singleton instance with lazy loading
+let _actrMemory: ACTRMemory | null = null;
+export const getACTRMemory = (): ACTRMemory => {
+  if (!_actrMemory) {
+    _actrMemory = new ACTRMemory();
+  }
+  return _actrMemory;
+};

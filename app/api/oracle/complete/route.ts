@@ -2,7 +2,7 @@
 // Priority: Transformative conversational flow over speed optimization
 
 import { NextRequest, NextResponse } from 'next/server';
-import { completeSacredOracle, CompleteSacredOracle } from '@/lib/complete-sacred-oracle';
+import { getCompleteSacredOracle, CompleteSacredOracle } from '@/lib/complete-sacred-oracle';
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const experienceConfig = CompleteSacredOracle.getConfigForExperience(experienceLevel);
 
     // Generate complete sophisticated response
-    const result = await completeSacredOracle.generateCompleteSacredResponse({
+    const result = await getCompleteSacredOracle().generateCompleteSacredResponse({
       input,
       userId: userId || 'anonymous',
       sessionId: sessionId || 'default',

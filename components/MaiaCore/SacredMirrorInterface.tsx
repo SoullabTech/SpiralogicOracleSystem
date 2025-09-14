@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PetalInteractionSystem } from './PetalInteractionSystem';
 import { OfferingTimeline } from './OfferingTimeline';
-import { offeringService } from '@/lib/services/offering-session-service';
+import { getOfferingService } from '@/lib/services/offering-session-service';
 
 interface SacredMirrorProps {
   userId: string;
@@ -24,8 +24,8 @@ export function SacredMirrorInterface({ userId, userLevel = 'first_bloom' }: Sac
   const loadPersonalPatterns = async () => {
     try {
       const [timeline, stats] = await Promise.all([
-        offeringService.getUserTimeline(userId, 30),
-        offeringService.getUserStats(userId)
+        getOfferingService().getUserTimeline(userId, 30),
+        getOfferingService().getUserStats(userId)
       ]);
       
       setPersonalPatterns({ timeline, stats });

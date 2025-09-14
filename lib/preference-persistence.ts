@@ -367,4 +367,10 @@ export class PreferencePersistenceManager {
   }
 }
 
-export const preferencePersistence = new PreferencePersistenceManager();
+let _preferencePersistence: PreferencePersistenceManager | null = null;
+export const getPreferencePersistence = (): PreferencePersistenceManager => {
+  if (!_preferencePersistence) {
+    _preferencePersistence = new PreferencePersistenceManager();
+  }
+  return _preferencePersistence;
+};

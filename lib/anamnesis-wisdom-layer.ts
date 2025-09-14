@@ -428,5 +428,12 @@ export class AnamnesisWisdomLayer {
   }
 }
 
-// Export singleton instance
-export const anamnesisLayer = new AnamnesisWisdomLayer();
+// Lazy-loading singleton pattern
+let _anamnesisLayer: AnamnesisWisdomLayer | null = null;
+
+export const getAnamnesisLayer = (): AnamnesisWisdomLayer => {
+  if (!_anamnesisLayer) {
+    _anamnesisLayer = new AnamnesisWisdomLayer();
+  }
+  return _anamnesisLayer;
+};

@@ -472,5 +472,11 @@ export class LIDAWorkspace {
   }
 }
 
-// Export singleton instance
-export const lidaWorkspace = new LIDAWorkspace();
+// Export singleton instance with lazy loading
+let _lidaWorkspace: LIDAWorkspace | null = null;
+export const getLIDAWorkspace = (): LIDAWorkspace => {
+  if (!_lidaWorkspace) {
+    _lidaWorkspace = new LIDAWorkspace();
+  }
+  return _lidaWorkspace;
+};

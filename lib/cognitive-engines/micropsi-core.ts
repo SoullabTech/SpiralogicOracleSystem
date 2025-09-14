@@ -809,5 +809,11 @@ export class MicroPsiCore {
   private calculateConsciousnessAlignment(state: EmotionalState, consciousness: ConsciousnessProfile): number { return 0.8; }
 }
 
-// Export singleton instance
-export const microPsiCore = new MicroPsiCore();
+// Export singleton instance with lazy loading
+let _microPsiCore: MicroPsiCore | null = null;
+export const getMicroPsiCore = (): MicroPsiCore => {
+  if (!_microPsiCore) {
+    _microPsiCore = new MicroPsiCore();
+  }
+  return _microPsiCore;
+};

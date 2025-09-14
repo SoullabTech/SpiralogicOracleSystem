@@ -302,8 +302,14 @@ class LayeredSacredOracle {
   }
 }
 
-// Export singleton
-export const layeredSacredOracle = new LayeredSacredOracle();
+// Export singleton with lazy loading
+let _layeredSacredOracle: LayeredSacredOracle | null = null;
+export const getLayeredSacredOracle = (): LayeredSacredOracle => {
+  if (!_layeredSacredOracle) {
+    _layeredSacredOracle = new LayeredSacredOracle();
+  }
+  return _layeredSacredOracle;
+};
 
 /*
 PERFORMANCE TARGETS:

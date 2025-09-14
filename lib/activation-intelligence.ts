@@ -327,4 +327,10 @@ export class ActivationIntelligence {
   }
 }
 
-export const activationIntelligence = new ActivationIntelligence();
+let _activationIntelligence: ActivationIntelligence | null = null;
+export const getActivationIntelligence = (): ActivationIntelligence => {
+  if (!_activationIntelligence) {
+    _activationIntelligence = new ActivationIntelligence();
+  }
+  return _activationIntelligence;
+};

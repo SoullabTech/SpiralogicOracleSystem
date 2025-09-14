@@ -9,7 +9,7 @@
 
 import type { SacredOracleResponse } from './sacred-oracle-constellation';
 import type { ConsciousnessProfile } from './types/cognitive-types';
-import { sacredMirrorVariety } from './sacred-mirror-variety';
+import { getSacredMirrorVariety } from './sacred-mirror-variety';
 
 export interface SacredMirrorResponse {
   // Sacred Mirror Core
@@ -60,7 +60,7 @@ export class SacredMirrorAnamnesis {
     );
     
     // Apply variety engine to maintain genuine curiosity
-    const reflection = await sacredMirrorVariety.generateVariedMirror(
+    const reflection = await getSacredMirrorVariety().generateVariedMirror(
       userInput,
       baseReflection,
       consciousnessProfile,
@@ -357,5 +357,11 @@ export const SACRED_MIRROR_PATTERNS = {
   transformShould: (shouldStatement: string) => `I recognize something in you that's already aware of this... what does your deepest self know?`
 };
 
-// Export the sacred mirror transformer
-export const sacredMirrorAnamnesis = new SacredMirrorAnamnesis();
+// Export the sacred mirror transformer - Lazy-loading singleton
+let _sacredMirrorAnamnesis: SacredMirrorAnamnesis | null = null;
+export const getSacredMirrorAnamnesis = (): SacredMirrorAnamnesis => {
+  if (!_sacredMirrorAnamnesis) {
+    _sacredMirrorAnamnesis = new SacredMirrorAnamnesis();
+  }
+  return _sacredMirrorAnamnesis;
+};

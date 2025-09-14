@@ -317,13 +317,19 @@ export class StoryIntegrationManager {
 /**
  * Export configured instance for use in main system
  */
-export const storyIntegration = new StoryIntegrationManager({
-  maxStoriesPerSession: 3,
-  minExchangesBetweenStories: 5,
-  culturalAdaptation: true,
-  densityAdaptation: true,
-  quoteFrequency: 'occasional'
-});
+let _storyIntegration: StoryIntegrationManager | null = null;
+export const getStoryIntegration = (): StoryIntegrationManager => {
+  if (!_storyIntegration) {
+    _storyIntegration = new StoryIntegrationManager({
+      maxStoriesPerSession: 3,
+      minExchangesBetweenStories: 5,
+      culturalAdaptation: true,
+      densityAdaptation: true,
+      quoteFrequency: 'occasional'
+    });
+  }
+  return _storyIntegration;
+};
 
 /**
  * Integration with main Maya system:

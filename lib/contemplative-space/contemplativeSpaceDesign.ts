@@ -634,4 +634,10 @@ export class ContemplativeSpaceController {
   }
 }
 
-export const contemplativeSpace = new ContemplativeSpaceController();
+let _contemplativeSpace: ContemplativeSpaceController | null = null;
+export const getContemplativeSpace = (): ContemplativeSpaceController => {
+  if (!_contemplativeSpace) {
+    _contemplativeSpace = new ContemplativeSpaceController();
+  }
+  return _contemplativeSpace;
+};

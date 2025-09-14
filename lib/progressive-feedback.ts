@@ -379,4 +379,10 @@ export class ProgressiveFeedbackSystem {
   }
 }
 
-export const progressiveFeedback = new ProgressiveFeedbackSystem();
+let _progressiveFeedback: ProgressiveFeedbackSystem | null = null;
+export const getProgressiveFeedback = (): ProgressiveFeedbackSystem => {
+  if (!_progressiveFeedback) {
+    _progressiveFeedback = new ProgressiveFeedbackSystem();
+  }
+  return _progressiveFeedback;
+};

@@ -550,8 +550,14 @@ class CompleteSacredOracle {
   }
 }
 
-// Export singleton and class
-export const completeSacredOracle = new CompleteSacredOracle();
+// Export singleton with lazy loading and class
+let _completeSacredOracle: CompleteSacredOracle | null = null;
+export const getCompleteSacredOracle = (): CompleteSacredOracle => {
+  if (!_completeSacredOracle) {
+    _completeSacredOracle = new CompleteSacredOracle();
+  }
+  return _completeSacredOracle;
+};
 export { CompleteSacredOracle };
 
 /*

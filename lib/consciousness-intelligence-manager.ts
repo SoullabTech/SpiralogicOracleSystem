@@ -204,8 +204,15 @@ class ConsciousnessIntelligenceManager {
   }
 }
 
-// Export singleton instance
-export const consciousnessIntelligenceManager = new ConsciousnessIntelligenceManager();
+// Lazy-loading singleton pattern
+let _consciousnessIntelligenceManager: ConsciousnessIntelligenceManager | null = null;
+
+export const getConsciousnessIntelligenceManager = (): ConsciousnessIntelligenceManager => {
+  if (!_consciousnessIntelligenceManager) {
+    _consciousnessIntelligenceManager = new ConsciousnessIntelligenceManager();
+  }
+  return _consciousnessIntelligenceManager;
+};
 
 // Backward compatibility alias
-export const sesameHybridManager = consciousnessIntelligenceManager;
+export const getSesameHybridManager = getConsciousnessIntelligenceManager;

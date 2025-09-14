@@ -165,4 +165,10 @@ export class SupabaseOfferingService implements OfferingSessionService {
 }
 
 // Export singleton instance
-export const offeringService = new SupabaseOfferingService();
+let _offeringService: SupabaseOfferingService | null = null;
+export const getOfferingService = (): SupabaseOfferingService => {
+  if (!_offeringService) {
+    _offeringService = new SupabaseOfferingService();
+  }
+  return _offeringService;
+};

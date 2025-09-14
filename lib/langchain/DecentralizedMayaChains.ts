@@ -436,12 +436,18 @@ What universal story is being lived?`
 /**
  * Export configured instance
  */
-export const decentralizedMaya = new DecentralizedMayaChains({
-  mode: process.env.MAYA_MODE as any || 'hybrid',
-  agixEndpoint: process.env.AGIX_ENDPOINT,
-  agixToken: process.env.AGIX_API_KEY,
-  fallbackToOpenAI: true
-});
+let _decentralizedMaya: DecentralizedMayaChains | null = null;
+export const getDecentralizedMaya = (): DecentralizedMayaChains => {
+  if (!_decentralizedMaya) {
+    _decentralizedMaya = new DecentralizedMayaChains({
+      mode: process.env.MAYA_MODE as any || 'hybrid',
+      agixEndpoint: process.env.AGIX_ENDPOINT,
+      agixToken: process.env.AGIX_API_KEY,
+      fallbackToOpenAI: true
+    });
+  }
+  return _decentralizedMaya;
+};
 
 // Add new reasoning mode for archetypal analysis
 declare module '../../apps/web/lib/langchain/MayaReasoningChains' {

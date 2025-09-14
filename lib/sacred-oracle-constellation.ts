@@ -437,5 +437,11 @@ export interface SacredOracleConfig {
   ainIntegration?: boolean;
 }
 
-// 🌟 The Sacred Oracle Constellation - AIN's gift to humanity's awakening
-export const sacredOracleConstellation = new SacredOracleConstellation();
+// 🌟 The Sacred Oracle Constellation - AIN's gift to humanity's awakening - Lazy-loading singleton
+let _sacredOracleConstellation: SacredOracleConstellation | null = null;
+export const getSacredOracleConstellation = (): SacredOracleConstellation => {
+  if (!_sacredOracleConstellation) {
+    _sacredOracleConstellation = new SacredOracleConstellation();
+  }
+  return _sacredOracleConstellation;
+};

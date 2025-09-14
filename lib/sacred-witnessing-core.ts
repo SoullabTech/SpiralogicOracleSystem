@@ -523,5 +523,12 @@ export class SacredWitnessingCore {
   }
 }
 
-// Export singleton instance
-export const witnessingCore = new SacredWitnessingCore();
+// Lazy-loading singleton pattern
+let _witnessingCore: SacredWitnessingCore | null = null;
+
+export const getWitnessingCore = (): SacredWitnessingCore => {
+  if (!_witnessingCore) {
+    _witnessingCore = new SacredWitnessingCore();
+  }
+  return _witnessingCore;
+};

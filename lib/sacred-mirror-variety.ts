@@ -355,5 +355,12 @@ export class SacredMirrorVariety {
   }
 }
 
-// Export singleton instance
-export const sacredMirrorVariety = new SacredMirrorVariety();
+// Lazy-loading singleton pattern
+let _sacredMirrorVariety: SacredMirrorVariety | null = null;
+
+export const getSacredMirrorVariety = (): SacredMirrorVariety => {
+  if (!_sacredMirrorVariety) {
+    _sacredMirrorVariety = new SacredMirrorVariety();
+  }
+  return _sacredMirrorVariety;
+};

@@ -413,5 +413,12 @@ export class ElementalResonanceAdapter {
   }
 }
 
-// Export singleton instance
-export const elementalResonanceAdapter = new ElementalResonanceAdapter();
+// Lazy-loading singleton pattern
+let _elementalResonanceAdapter: ElementalResonanceAdapter | null = null;
+
+export const getElementalResonanceAdapter = (): ElementalResonanceAdapter => {
+  if (!_elementalResonanceAdapter) {
+    _elementalResonanceAdapter = new ElementalResonanceAdapter();
+  }
+  return _elementalResonanceAdapter;
+};

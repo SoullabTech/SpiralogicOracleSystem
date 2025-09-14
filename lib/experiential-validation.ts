@@ -381,4 +381,10 @@ export class ExperientialValidationFramework {
   }
 }
 
-export const experientialValidator = new ExperientialValidationFramework();
+let _experientialValidator: ExperientialValidationFramework | null = null;
+export const getExperientialValidator = (): ExperientialValidationFramework => {
+  if (!_experientialValidator) {
+    _experientialValidator = new ExperientialValidationFramework();
+  }
+  return _experientialValidator;
+};

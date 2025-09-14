@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { offeringService } from '@/lib/services/offering-session-service';
+import { getOfferingService } from '@/lib/services/offering-session-service';
 import { OfferingTimelineItem, OfferingStats } from '@/lib/types/offering-sessions';
 
 interface OfferingTimelineProps {
@@ -35,9 +35,9 @@ export function OfferingTimeline({
       setIsLoading(true);
       
       const [timelineData, statsData, streakData] = await Promise.all([
-        offeringService.getUserTimeline(userId, limit),
-        showStats ? offeringService.getUserStats(userId) : null,
-        offeringService.getOfferingStreak(userId)
+        getOfferingService().getUserTimeline(userId, limit),
+        showStats ? getOfferingService().getUserStats(userId) : null,
+        getOfferingService().getOfferingStreak(userId)
       ]);
 
       setTimeline(timelineData);

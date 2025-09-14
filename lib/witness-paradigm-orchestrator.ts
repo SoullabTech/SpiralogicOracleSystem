@@ -306,5 +306,12 @@ export class WitnessParadigmOrchestrator {
   }
 }
 
-// Export singleton instance
-export const witnessOrchestrator = new WitnessParadigmOrchestrator();
+// Lazy-loading singleton pattern
+let _witnessOrchestrator: WitnessParadigmOrchestrator | null = null;
+
+export const getWitnessOrchestrator = (): WitnessParadigmOrchestrator => {
+  if (!_witnessOrchestrator) {
+    _witnessOrchestrator = new WitnessParadigmOrchestrator();
+  }
+  return _witnessOrchestrator;
+};

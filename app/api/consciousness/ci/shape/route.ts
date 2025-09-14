@@ -1,5 +1,5 @@
 // app/api/consciousness/ci/shape/route.ts
-import { consciousnessIntelligenceManager } from '../../../../../lib/consciousness-intelligence-manager';
+import { getConsciousnessIntelligenceManager, getSesameHybridManager } from '../../../../../lib/consciousness-intelligence-manager';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     }
 
     // Use the hybrid manager for intelligent endpoint selection and failover
-    const result = await consciousnessIntelligenceManager.shapeText(
+    const result = await getConsciousnessIntelligenceManager().shapeText(
       text,
       element || 'water',
       archetype || 'oracle'
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 // Add a GET endpoint to check Sesame health status
 export async function GET() {
   try {
-    const healthStatus = await sesameHybridManager.getHealthStatus();
+    const healthStatus = await getSesameHybridManager().getHealthStatus();
     
     return new Response(JSON.stringify({
       timestamp: Date.now(),

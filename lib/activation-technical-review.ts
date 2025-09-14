@@ -892,4 +892,10 @@ export class TechnicalActivationEngine {
   }
 }
 
-export const technicalActivationEngine = new TechnicalActivationEngine();
+let _technicalActivationEngine: TechnicalActivationEngine | null = null;
+export const getTechnicalActivationEngine = (): TechnicalActivationEngine => {
+  if (!_technicalActivationEngine) {
+    _technicalActivationEngine = new TechnicalActivationEngine();
+  }
+  return _technicalActivationEngine;
+};

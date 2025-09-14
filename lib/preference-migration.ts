@@ -2,7 +2,7 @@
 // Handles updates to defaults, preference conflicts, and user guidance
 
 import { BetaUserPreferences } from './beta-user-controls';
-import { preferencePersistence } from './preference-persistence';
+import { getPreferencePersistence } from './preference-persistence';
 
 interface MigrationPlan {
   userId: string;
@@ -31,7 +31,7 @@ export class PreferenceMigrationManager {
     newRecommendedDefaults: Partial<BetaUserPreferences>,
     reason: MigrationPlan['migrationReason']
   ): MigrationPlan {
-    const current = preferencePersistence.loadUserPreferences(userId);
+    const current = getPreferencePersistence().loadUserPreferences(userId);
     if (!current) {
       // New user - no migration needed
       return {
@@ -71,7 +71,7 @@ export class PreferenceMigrationManager {
         plan.recommendedChanges
       );
 
-      preferencePersistence.saveUserPreferences(
+      getPreferencePersistence().saveUserPreferences(
         plan.userId,
         migrated,
         'account'
@@ -223,7 +223,7 @@ export class PreferenceMigrationManager {
     const targetIndex = Math.max(0, history.length - stepsBack - 1);
     const target = history[targetIndex];
 
-    preferencePersistence.saveUserPreferences(userId, target, 'account');
+    getPreferencePersistence().saveUserPreferences(userId, target, 'account');
 
     return {
       success: true,
@@ -441,4 +441,10 @@ export class PreferenceMigrationManager {
   }
 }
 
-export const migrationManager = new PreferenceMigrationManager();
+let _migrationManager: PreferenceMigrationManager | null = null;
+export const getMigrationManager = (): PreferenceMigrationManager => {
+  if (!_migrationManager) {
+    _migrationManager = new PreferenceMigrationManager();
+  }
+  return _migrationManager;
+};

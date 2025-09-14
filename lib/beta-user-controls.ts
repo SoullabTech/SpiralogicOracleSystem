@@ -362,4 +362,10 @@ export class BetaUserControlSystem {
   }
 }
 
-export const betaUserControls = new BetaUserControlSystem();
+let _betaUserControls: BetaUserControlSystem | null = null;
+export const getBetaUserControls = (): BetaUserControlSystem => {
+  if (!_betaUserControls) {
+    _betaUserControls = new BetaUserControlSystem();
+  }
+  return _betaUserControls;
+};

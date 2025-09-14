@@ -320,5 +320,12 @@ export class SacredMirrorMetricsTracker {
   }
 }
 
-// Export singleton instance
-export const sacredMirrorMetrics = new SacredMirrorMetricsTracker();
+// Lazy-loading singleton pattern
+let _sacredMirrorMetrics: SacredMirrorMetricsTracker | null = null;
+
+export const getSacredMirrorMetrics = (): SacredMirrorMetricsTracker => {
+  if (!_sacredMirrorMetrics) {
+    _sacredMirrorMetrics = new SacredMirrorMetricsTracker();
+  }
+  return _sacredMirrorMetrics;
+};

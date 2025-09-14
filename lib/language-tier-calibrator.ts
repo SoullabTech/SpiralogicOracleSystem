@@ -345,5 +345,11 @@ export class LanguageTierCalibrator {
   }
 }
 
-// Export singleton instance
-export const languageTierCalibrator = new LanguageTierCalibrator();
+// Export singleton instance with lazy loading
+let _languageTierCalibrator: LanguageTierCalibrator | null = null;
+export const getLanguageTierCalibrator = (): LanguageTierCalibrator => {
+  if (!_languageTierCalibrator) {
+    _languageTierCalibrator = new LanguageTierCalibrator();
+  }
+  return _languageTierCalibrator;
+};
