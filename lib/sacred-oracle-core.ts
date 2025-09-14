@@ -452,5 +452,12 @@ export class SacredOracleCore {
   }
 }
 
-// Export singleton instance
-export const sacredOracleCore = new SacredOracleCore();
+// Lazy-loaded singleton to avoid initialization issues
+let _sacredOracleCore: SacredOracleCore | null = null;
+
+export const getSacredOracleCore = (): SacredOracleCore => {
+  if (!_sacredOracleCore) {
+    _sacredOracleCore = new SacredOracleCore();
+  }
+  return _sacredOracleCore;
+};

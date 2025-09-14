@@ -8,7 +8,7 @@ import { Anthropic } from '@anthropic-ai/sdk';
 import { SimpleOrchestrator } from '../../../../lib/oracle-bridge/simple-orchestrator';
 import { ConversationContextManager } from '../../../../lib/conversation/ConversationContext';
 // Use local Sacred Oracle system instead of external Sesame
-import { SacredOracleCore } from '../../../../lib/sacred-oracle-core';
+// Import class directly to avoid initialization issues
 import { responseEnhancer } from '../../../../lib/response-enhancer';
 // Simplified imports - removing non-existent dependencies
 // import { responseEnhancer } from '../../../../lib/response-enhancer';

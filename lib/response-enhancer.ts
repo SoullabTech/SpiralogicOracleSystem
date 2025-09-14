@@ -266,4 +266,14 @@ class ResponseEnhancer {
 }
 
 // Export singleton instance
-export const responseEnhancer = new ResponseEnhancer();
+// Lazy-load singleton to avoid initialization issues
+let _responseEnhancer: ResponseEnhancer | null = null;
+
+export const responseEnhancer = {
+  enhanceResponse: async (context: EnhancementContext): Promise<EnhancedResponse> => {
+    if (!_responseEnhancer) {
+      _responseEnhancer = new ResponseEnhancer();
+    }
+    return _responseEnhancer.enhanceResponse(context);
+  }
+};
