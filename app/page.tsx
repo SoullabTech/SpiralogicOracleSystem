@@ -22,7 +22,7 @@ export default function HomePage() {
 
     // If onboarded, go directly to oracle conversation
     if (betaOnboarded || legacyOnboarded) {
-      router.push('/oracle-conversation');
+      router.push('/sacred-oracle');
     }
   }, [router]);
 

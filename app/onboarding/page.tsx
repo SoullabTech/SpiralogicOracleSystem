@@ -132,7 +132,7 @@ export default function OnboardingPage() {
   };
 
   const goToOracle = () => {
-    router.push('/maia');
+    router.push('/sacred-oracle');
   };
 
   const renderStep = () => {
