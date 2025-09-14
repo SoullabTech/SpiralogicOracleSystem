@@ -16,20 +16,25 @@ interface EnhancedResponse {
 }
 
 class ResponseEnhancer {
-  private mayaPersonalityTouches = [
-    // Natural conversation starters and connectors
-    { pattern: /^(.*?)$/g, replacement: (match: string, input: string) => {
-      const starters = ['', 'You know, ', 'I think ', 'Maybe ', 'It seems like '];
-      const connectors = ['', ' - ', ', ', '... '];
-      
-      // Add natural hesitations and thinking patterns occasionally
-      if (Math.random() < 0.3) {
-        const hesitations = ['hmm, ', 'well, ', 'I mean, ', 'actually, '];
-        return hesitations[Math.floor(Math.random() * hesitations.length)] + input.toLowerCase();
-      }
-      
-      return input;
-    }},
+  private mayaPersonalityTouches: any[];
+  private conversationalFillers: string[];
+  private emotionalResonators: Record<string, string[]>;
+
+  constructor() {
+    this.mayaPersonalityTouches = [
+      // Natural conversation starters and connectors
+      { pattern: /^(.*?)$/g, replacement: (match: string, input: string) => {
+        const starters = ['', 'You know, ', 'I think ', 'Maybe ', 'It seems like '];
+        const connectors = ['', ' - ', ', ', '... '];
+
+        // Add natural hesitations and thinking patterns occasionally
+        if (Math.random() < 0.3) {
+          const hesitations = ['hmm, ', 'well, ', 'I mean, ', 'actually, '];
+          return hesitations[Math.floor(Math.random() * hesitations.length)] + input.toLowerCase();
+        }
+
+        return input;
+      }},
     
     // Make questions more conversational
     { pattern: /What (do you think|are your thoughts) about/gi, replacement: 'What\'s your take on' },
@@ -42,22 +47,23 @@ class ResponseEnhancer {
     { pattern: /It is important/gi, replacement: 'It might help' },
     
     // Add emotional warmth
-    { pattern: /\. That sounds/gi, replacement: '. That really sounds' },
-    { pattern: /I understand/gi, replacement: 'I totally get that' },
-    { pattern: /That makes sense/gi, replacement: 'Yeah, that makes total sense' }
-  ];
+      { pattern: /\. That sounds/gi, replacement: '. That really sounds' },
+      { pattern: /I understand/gi, replacement: 'I totally get that' },
+      { pattern: /That makes sense/gi, replacement: 'Yeah, that makes total sense' }
+    ];
 
-  private conversationalFillers = [
-    'you know', 'I mean', 'like', 'actually', 'honestly', 'totally', 'really'
-  ];
+    this.conversationalFillers = [
+      'you know', 'I mean', 'like', 'actually', 'honestly', 'totally', 'really'
+    ];
 
-  private emotionalResonators = {
-    joy: ['amazing', 'wonderful', 'fantastic', 'brilliant'],
-    sadness: ['tough', 'heavy', 'difficult', 'hard'],
-    anger: ['frustrating', 'annoying', 'maddening'],
-    fear: ['scary', 'overwhelming', 'intense'],
-    surprise: ['wild', 'crazy', 'unexpected', 'interesting']
-  };
+    this.emotionalResonators = {
+      joy: ['amazing', 'wonderful', 'fantastic', 'brilliant'],
+      sadness: ['tough', 'heavy', 'difficult', 'hard'],
+      anger: ['frustrating', 'annoying', 'maddening'],
+      fear: ['scary', 'overwhelming', 'intense'],
+      surprise: ['wild', 'crazy', 'unexpected', 'interesting']
+    };
+  }
 
   async enhanceResponse(context: EnhancementContext): Promise<EnhancedResponse> {
     const startTime = Date.now();
