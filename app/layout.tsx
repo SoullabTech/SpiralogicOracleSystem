@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { BetaBanner } from "@/components/ui/BetaBanner";
+import { FeedbackWidget } from "@/components/ui/FeedbackWidget";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -34,9 +36,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-900 text-white`}>
+      <body className={`${inter.className} bg-black text-white`}>
         <AuthProvider>
+          <BetaBanner />
           {children}
+          <FeedbackWidget />
         </AuthProvider>
       </body>
     </html>
