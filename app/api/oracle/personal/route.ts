@@ -327,11 +327,11 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
 
   // MAYA - Pattern Weaver: Quick, playful, finds connections everywhere
   if (agentVoice === 'maya') {
-    // Base Maya with Emily: Quicker, more animated pace
+    // Base Maya with Emily: Lively, animated energy
     settings = {
-      stability: 0.25,              // More variation for playful energy
-      similarity_boost: 0.20,        // Very natural, conversational
-      style: 0.12,                   // Quicker pace for Emily's natural rhythm
+      stability: 0.35,              // Higher variation for more liveliness
+      similarity_boost: 0.15,        // Less constrained, more expressive
+      style: 0.08,                   // Even quicker, more energetic pace
       use_speaker_boost: false       // Friend energy, not presenter
     };
 
