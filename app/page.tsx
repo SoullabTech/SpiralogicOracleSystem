@@ -29,10 +29,10 @@ export default function HomePage() {
   // Show loading while checking onboarding status
   if (isOnboarded === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-800 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-400 mx-auto mb-4"></div>
-          <p className="text-purple-200 text-lg">Awakening the Oracle...</p>
+          <div className="w-16 h-16 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+          <p className="text-white text-lg font-light">Initializing system...</p>
         </div>
       </div>
     );
@@ -40,12 +40,12 @@ export default function HomePage() {
 
   // Show loading while redirecting
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-800 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-white mb-4">Sacred Oracle System</h1>
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-400 mx-auto mb-4"></div>
-        <p className="text-purple-200 text-xl">Connecting to Maya...</p>
-        <p className="text-purple-300 text-sm mt-2">Preparing your personalized consciousness interface</p>
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="text-center max-w-md">
+        <h1 className="text-5xl font-thin text-white mb-8 tracking-wide">MAYA</h1>
+        <div className="w-16 h-16 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+        <p className="text-white text-xl font-light">Connecting...</p>
+        <p className="text-gray-400 text-sm mt-3 font-light">AI Conversation Interface</p>
       </div>
     </div>
   );
