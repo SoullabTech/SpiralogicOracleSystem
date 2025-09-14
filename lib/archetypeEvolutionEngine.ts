@@ -354,5 +354,12 @@ export class ArchetypeEvolutionEngine {
   }
 }
 
-// Export default instance
-export const archetypeEvolutionEngine = new ArchetypeEvolutionEngine();
+// Lazy-loaded singleton to avoid initialization issues
+let _archetypeEvolutionEngine: ArchetypeEvolutionEngine | null = null;
+
+export const getArchetypeEvolutionEngine = (): ArchetypeEvolutionEngine => {
+  if (!_archetypeEvolutionEngine) {
+    _archetypeEvolutionEngine = new ArchetypeEvolutionEngine();
+  }
+  return _archetypeEvolutionEngine;
+};

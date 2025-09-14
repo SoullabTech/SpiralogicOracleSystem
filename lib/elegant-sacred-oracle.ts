@@ -287,8 +287,15 @@ These services have trained crisis counselors who can provide the support you ne
   }
 }
 
-// Export singleton
-export const elegantSacredOracle = new ElegantSacredOracle();
+// Lazy-loaded singleton to avoid initialization issues
+let _elegantSacredOracle: ElegantSacredOracle | null = null;
+
+export const getElegantSacredOracle = (): ElegantSacredOracle => {
+  if (!_elegantSacredOracle) {
+    _elegantSacredOracle = new ElegantSacredOracle();
+  }
+  return _elegantSacredOracle;
+};
 
 // Performance targets:
 // - Input analysis: <50ms

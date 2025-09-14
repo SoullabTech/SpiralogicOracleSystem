@@ -130,5 +130,12 @@ export class ResonanceEngine {
   }
 }
 
-// Export default instance
-export const resonanceEngine = new ResonanceEngine();
+// Lazy-loaded singleton to avoid initialization issues
+let _resonanceEngine: ResonanceEngine | null = null;
+
+export const getResonanceEngine = (): ResonanceEngine => {
+  if (!_resonanceEngine) {
+    _resonanceEngine = new ResonanceEngine();
+  }
+  return _resonanceEngine;
+};

@@ -3,7 +3,7 @@
 // All sophisticated features integrated with intelligent activation
 
 import { Anthropic } from '@anthropic-ai/sdk';
-import { elegantSacredOracle } from './elegant-sacred-oracle';
+import { getElegantSacredOracle } from './elegant-sacred-oracle';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
@@ -169,7 +169,7 @@ class CompleteSacredOracle {
     const activatedFeatures: string[] = [];
 
     // Always start with elegant base (ensures nothing breaks)
-    const baseResponse = await elegantSacredOracle.generateElegantResponse(context);
+    const baseResponse = await getElegantSacredOracle().generateElegantResponse(context);
 
     // === SOPHISTICATED FEATURE ACTIVATION ===
 

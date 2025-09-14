@@ -363,5 +363,12 @@ export class ResonanceMap {
   }
 }
 
-// Export singleton instance
-export const resonanceMap = new ResonanceMap();
+// Lazy-loaded singleton to avoid initialization issues
+let _resonanceMap: ResonanceMap | null = null;
+
+export const getResonanceMap = (): ResonanceMap => {
+  if (!_resonanceMap) {
+    _resonanceMap = new ResonanceMap();
+  }
+  return _resonanceMap;
+};

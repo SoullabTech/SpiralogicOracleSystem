@@ -2,7 +2,7 @@
 // Core focus: Pleasant companion, witness paradigm, minimal latency
 
 import { NextRequest, NextResponse } from 'next/server';
-import { elegantSacredOracle } from '@/lib/elegant-sacred-oracle';
+import { getElegantSacredOracle } from '@/lib/elegant-sacred-oracle';
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       : [];
 
     // Generate elegant response
-    const result = await elegantSacredOracle.generateElegantResponse({
+    const result = await getElegantSacredOracle().generateElegantResponse({
       input,
       userId: userId || 'anonymous',
       sessionId: sessionId || 'default',
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Check for cached audio
-    const cachedAudio = elegantSacredOracle.getCachedAudio(result.text, userId || 'anonymous');
+    const cachedAudio = getElegantSacredOracle().getCachedAudio(result.text, userId || 'anonymous');
 
     const totalTime = Date.now() - startTime;
     console.log(`✨ Elegant Oracle complete: ${totalTime}ms total, ${result.processingTime}ms processing`);
