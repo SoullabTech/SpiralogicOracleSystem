@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { onboardingFlow, OnboardingOrchestrator, OnboardingResponse } from '@/lib/maya-onboarding-questionnaire';
+import { onboardingFlow, OnboardingOrchestrator, OnboardingResponse, QuestionOption } from '@/lib/maya-onboarding-questionnaire';
 import { CohortTracker } from '@/lib/maya-cohort-tracker';
 import { ContemplativeSpace } from '@/components/contemplative/ContemplativeSpace';
 
@@ -20,14 +20,15 @@ export function MayaOnboardingFlow({ userId, onComplete, onExit }: OnboardingFlo
   const [isProcessing, setIsProcessing] = useState(false);
   const [depth, setDepth] = useState<'surface' | 'middle' | 'deep'>('middle');
   const [density, setDensity] = useState<'haiku' | 'flowing' | 'spacious'>('flowing');
+  const [orchestrator] = useState(() => new OnboardingOrchestrator());
+  const [cohortTracker] = useState(() => new CohortTracker());
 
-  const orchestrator = new OnboardingOrchestrator();
-  const cohortTracker = new CohortTracker();
-
-  const currentQuestion = onboardingFlow.screeningQuestions[currentStep];
-  const isLastQuestion = currentStep === onboardingFlow.screeningQuestions.length - 1;
+  const currentQuestion = onboardingFlow.screeningQuestions?.[currentStep];
+  const isLastQuestion = currentStep === (onboardingFlow.screeningQuestions?.length ?? 0) - 1;
 
   const handleResponse = async (value: string | number | string[]) => {
+    if (!currentQuestion) return;
+
     const response: OnboardingResponse = {
       questionId: currentQuestion.id,
       response: value,
@@ -128,7 +129,7 @@ export function MayaOnboardingFlow({ userId, onComplete, onExit }: OnboardingFlo
       case 'choice':
         return (
           <div className="choices">
-            {currentQuestion.options?.map((option) => (
+            {(currentQuestion.options as QuestionOption[])?.map((option) => (
               <button
                 key={option.value}
                 onClick={() => handleResponse(option.value)}
@@ -170,7 +171,7 @@ export function MayaOnboardingFlow({ userId, onComplete, onExit }: OnboardingFlo
         const [selected, setSelected] = useState<string[]>([]);
         return (
           <div className="multi-select">
-            {currentQuestion.options?.map((option) => (
+            {(currentQuestion.options as string[])?.map((option) => (
               <label key={option} className="checkbox-label">
                 <input
                   type="checkbox"
@@ -218,9 +219,13 @@ export function MayaOnboardingFlow({ userId, onComplete, onExit }: OnboardingFlo
     }
   };
 
-  if (showRedirect) {
-    const redirectMessage = onboardingFlow.redirectMessages[redirectType as keyof typeof onboardingFlow.redirectMessages];
-    
+  if (showRedirect && onboardingFlow.redirectMessages) {
+    const redirectMessage = onboardingFlow.redirectMessages[redirectType];
+
+    if (!redirectMessage) {
+      return null;
+    }
+
     return (
       <ContemplativeSpace
         isActive={true}

@@ -1,6 +1,6 @@
 export interface OnboardingResponse {
   questionId: string;
-  response: string | number;
+  response: string | number | string[] | boolean;
   metadata?: {
     responseTime?: number;
     skipped?: boolean;
@@ -19,7 +19,46 @@ export interface UserProfile {
   contraindications: string[];
 }
 
-export const onboardingFlow = {
+export interface QuestionOption {
+  value: string;
+  label: string;
+  profile?: Partial<UserProfile> & {
+    contraindication?: string;
+  };
+}
+
+export interface Question {
+  id: string;
+  question: string;
+  type: 'choice' | 'scale' | 'multi-select' | 'boolean' | 'text';
+  options?: QuestionOption[] | string[];
+  scale?: {
+    min: number;
+    max: number;
+    labels: Record<number, string>;
+  };
+  threshold?: {
+    below: number;
+    action: string;
+  };
+  optional?: boolean;
+  criticalPath?: {
+    if: boolean;
+    response: string;
+  };
+}
+
+export const onboardingFlow: {
+  welcome: {
+    message: string;
+    options: QuestionOption[];
+  };
+  screeningQuestions: Question[];
+  redirectMessages?: Record<string, {
+    message: string;
+    options: QuestionOption[];
+  }>;
+} = {
   welcome: {
     message: `Welcome. I'm Maya.
     
