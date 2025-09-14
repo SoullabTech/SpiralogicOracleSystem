@@ -1,24 +1,73 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { MayaChatInterface } from '@/components/chat/MayaChatInterface';
+
 export default function OracleConversationPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-white text-4xl mb-4">Maya Chat Interface</h1>
-        <p className="text-gray-300 text-lg">Voice and chat functionality will be restored shortly.</p>
-        <div className="mt-8 p-6 bg-slate-800 rounded-lg max-w-md">
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Type your message to Maya..."
-              className="w-full p-3 bg-slate-700 text-white rounded border-none"
-            />
-          </div>
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
-            Send to Maya
-          </button>
-        </div>
+  const [userId, setUserId] = useState<string>();
+  const [sessionId, setSessionId] = useState<string>();
+
+  useEffect(() => {
+    // Generate session ID
+    const sessionId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    setSessionId(sessionId);
+
+    // Get or generate user ID
+    let userId = localStorage.getItem('userId');
+    if (!userId) {
+      userId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+      localStorage.setItem('userId', userId);
+    }
+    setUserId(userId);
+  }, []);
+
+  const handleSendMessage = async (text: string, attachments?: File[]) => {
+    if (!userId || !sessionId) return;
+
+    try {
+      const response = await fetch('/api/oracle/personal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: text,
+          userId,
+          sessionId,
+          agentName: 'Maya',
+          agentVoice: 'maya'
+        }),
+      });
+
+      const data = await response.json();
+      return {
+        message: data.data?.message || "I'm here with you.",
+        audio: data.data?.audio || 'web-speech-fallback'
+      };
+    } catch (error) {
+      console.error('Error sending message:', error);
+      return {
+        message: "I'm having trouble connecting right now, but I'm still here with you.",
+        audio: 'web-speech-fallback'
+      };
+    }
+  };
+
+  if (!userId || !sessionId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+      <MayaChatInterface
+        onSendMessage={handleSendMessage}
+        agentName="Maya"
+        messages={[]}
+      />
     </div>
   );
 }
