@@ -7,6 +7,7 @@ import { getActivationIntelligence } from '@/lib/activation-intelligence';
 import { getUxConsistencyManager } from '@/lib/ux-consistency-manager';
 import { getBetaUserControls } from '@/lib/beta-user-controls';
 import { getProgressiveFeedback } from '@/lib/progressive-feedback';
+import { logServerError } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -252,6 +253,17 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     const totalTime = Date.now() - startTime;
+
+    // Log error with full context
+    await logServerError(error, 'api/oracle/production', {
+      input: input?.slice(0, 100),
+      userId,
+      sessionId,
+      agentName,
+      processingTime: totalTime,
+      url: request.url
+    });
+
     console.error('❌ Production Oracle error:', error);
 
     // Sophisticated production-ready fallback
