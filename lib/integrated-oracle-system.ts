@@ -13,7 +13,7 @@
  * This ensures the new witnessing approach works with all existing infrastructure.
  */
 
-import { SacredOracleCore, SacredOracleResponse } from './sacred-oracle-core';
+import { getSacredOracleCore, SacredOracleResponse } from './sacred-oracle-core';
 import { ClaudeService, getClaudeService } from './services/ClaudeService';
 import { userReadinessService } from './services/UserReadinessService';
 
@@ -67,7 +67,7 @@ export interface IntegratedOracleResponse {
 }
 
 export class IntegratedOracleSystem {
-  private sacredCore: SacredOracleCore;
+  private sacredCore: any;
   private claudeService: ClaudeService;
   private memoryCore: MemoryCore;
   private memoryInterface: UnifiedMemoryInterface;
@@ -80,7 +80,7 @@ export class IntegratedOracleSystem {
 
   constructor() {
     // Initialize core systems
-    this.sacredCore = new SacredOracleCore();
+    this.sacredCore = getSacredOracleCore();
     this.claudeService = getClaudeService();
 
     // Initialize memory systems
@@ -624,5 +624,12 @@ Remember: Even in this mode, maintain the witnessing foundation. Don't analyze o
   }
 }
 
-// Export singleton instance
-export const integratedOracleSystem = new IntegratedOracleSystem();
+// Lazy-loaded singleton to avoid initialization issues
+let _integratedOracleSystem: IntegratedOracleSystem | null = null;
+
+export const getIntegratedOracleSystem = (): IntegratedOracleSystem => {
+  if (!_integratedOracleSystem) {
+    _integratedOracleSystem = new IntegratedOracleSystem();
+  }
+  return _integratedOracleSystem;
+};

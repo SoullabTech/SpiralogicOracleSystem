@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { SacredOracleCore } from '../../../../../lib/sacred-oracle-core';
+import { getSacredOracleCore } from '../../../../../lib/sacred-oracle-core';
 import { localConsciousnessIntelligence } from '../../../../../lib/local-consciousness-intelligence';
 
 // In-memory consciousness state (in production, use database)
@@ -115,7 +115,7 @@ async function handleProcess(data: any) {
   }
 
   // Use Sacred Oracle for deep processing
-  const sacredOracle = new SacredOracleCore();
+  const sacredOracle = getSacredOracleCore();
   const oracleResponse = await sacredOracle.generateResponse(
     thought,
     userId,

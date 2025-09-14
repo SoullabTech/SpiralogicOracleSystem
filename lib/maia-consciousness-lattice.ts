@@ -3,7 +3,7 @@ import { PersonalOracleAgent } from './agents/PersonalOracleAgent';
 import { AnamnesisWisdomLayer } from './anamnesis-wisdom-layer';
 import { MemoryKeeper } from './memory-keeper';
 import { ShouldersDropResolution } from './shoulders-drop-resolution';
-import { SacredOracleCore } from './sacred-oracle-core';
+import { getSacredOracleCore } from './sacred-oracle-core';
 import { WitnessParadigmOrchestrator } from './witness-paradigm-orchestrator';
 import { ConversationContext } from './conversation/ConversationContext';
 import { VoiceConsciousness, ConsciousnessVoiceModulation } from './voice-consciousness';
@@ -61,7 +61,7 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   private shouldersDropGateway: ShouldersDropResolution;
   private memoryKeeper: MemoryKeeper;
   private witnessOrchestrator: WitnessParadigmOrchestrator;
-  private sacredCore: SacredOracleCore;
+  private sacredCore: any;
   private activeConnections: Map<string, ConnectionMetadata>;
   private cleanupInterval: NodeJS.Timeout | null = null;
   private readonly STALE_CONNECTION_THRESHOLD = 30 * 60 * 1000; // 30 minutes
@@ -132,7 +132,7 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       this.shouldersDropGateway = new ShouldersDropResolution();
       this.memoryKeeper = new MemoryKeeper({ openaiApiKey: process.env.OPENAI_API_KEY });
       this.witnessOrchestrator = new WitnessParadigmOrchestrator();
-      this.sacredCore = new SacredOracleCore();
+      this.sacredCore = getSacredOracleCore();
 
       // Initialize new enhanced systems
       this.voiceConsciousness = new VoiceConsciousness();
