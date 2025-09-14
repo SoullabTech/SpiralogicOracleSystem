@@ -327,11 +327,11 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
 
   // MAYA - Pattern Weaver: Quick, playful, finds connections everywhere
   if (agentVoice === 'maya') {
-    // Base Maya: Animated everyday friend energy
+    // Base Maya: Natural conversational pace (not too fast, not too slow)
     settings = {
-      stability: 0.25,              // Higher variation for playfulness
-      similarity_boost: 0.20,        // Maximum naturalness, casual friend
-      style: 0.10,                   // Quick, animated, alive
+      stability: 0.20,              // Good variation for natural speech
+      similarity_boost: 0.25,        // Natural, warm quality
+      style: 0.18,                   // Balanced pace - not rushed, not slow
       use_speaker_boost: false       // Friend energy, not presenter
     };
 
@@ -654,10 +654,16 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
     console.log('🎤 ElevenLabs configured:', !!process.env.ELEVENLABS_API_KEY);
     if (process.env.ELEVENLABS_API_KEY) {
       try {
-        // Select voice ID based on agent
-        const voiceId = agentVoice === 'anthony' 
-          ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's primary male voice
-          : 'y2TOWGCXSYEgBanvKsYJ'; // Aunt Annie - warm, emotionally aware voice (Maya)
+        // Select voice ID based on agent - ALWAYS use consistent voices
+        let voiceId;
+        if (agentVoice === 'anthony') {
+          voiceId = 'c6SfcYrb2t09NHXiT80T';  // Anthony's consistent male voice
+        } else {
+          // Maya ALWAYS uses Aunt Annie (not Emily)
+          voiceId = 'y2TOWGCXSYEgBanvKsYJ'; // Aunt Annie - consistent voice for Maya
+        }
+
+        console.log('🎤 Using voice:', { agent: agentVoice, voiceId });
         
         // Use dynamic voice settings for both Maya and Anthony
         const baseVoiceSettings = getDynamicVoiceSettings(input, response, agentVoice);
