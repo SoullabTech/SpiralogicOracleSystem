@@ -11,11 +11,10 @@ const OracleConversation = dynamic(
   {
     ssr: false, // NO server-side rendering - fixes ReferenceError issues
     loading: () => (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">🔮</div>
-          <div className="text-xl text-white">Loading Oracle...</div>
-          <div className="text-sm text-purple-300 mt-2">Initializing sacred systems</div>
+          <div className="w-16 h-16 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+          <p className="text-white text-lg font-light">Connecting to Maya...</p>
         </div>
       </div>
     )
@@ -53,8 +52,8 @@ export default function OracleConversationPage() {
 
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
-        <div className="text-white text-xl">Preparing sacred space...</div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-xl">Initializing...</div>
       </div>
     }>
       <OracleConversation
