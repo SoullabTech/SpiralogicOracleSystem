@@ -119,6 +119,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   // UI states
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
   const [showCaptions, setShowCaptions] = useState(false); // Default to no captions in voice mode
+  const [audioEnabled, setAudioEnabled] = useState(false); // Track if user has enabled audio
+  const audioContextRef = useRef<AudioContext | null>(null);
   
   // Conversation context
   const contextRef = useRef<ConversationContext>({
@@ -155,6 +157,32 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     };
     return elementToFacetMap[element] || 'earth-1';
   };
+
+  // Enable audio on user interaction
+  const enableAudio = useCallback(() => {
+    if (!audioEnabled) {
+      console.log('🔊 Enabling audio context on user interaction');
+
+      // Create or resume AudioContext
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+
+      // Resume if suspended
+      if (audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume().then(() => {
+          console.log('🎵 Audio context resumed in enableAudio');
+        });
+      }
+
+      // Play silent audio to unlock
+      const silentAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k');
+      silentAudio.volume = 0.001;
+      silentAudio.play().catch(() => {});
+
+      setAudioEnabled(true);
+    }
+  }, [audioEnabled]);
 
   // Stream text word by word as Maya speaks
   const streamText = useCallback(async (fullText: string, messageId: string) => {
@@ -278,7 +306,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         audioType: audioUrl === 'web-speech-fallback' ? 'fallback' : 'elevenlabs',
         audioLength: audioUrl ? audioUrl.length : 0,
         inputSource: showChatInterface ? 'text' : 'voice',
-        totalTime: `${(Date.now() - startTime) / 1000}s`
+        totalTime: `${(Date.now() - startTime) / 1000}s`,
+        audioUrl: audioUrl ? audioUrl.substring(0, 50) + '...' : 'null',
+        oracleResponse: Object.keys(oracleResponse)
       });
       
       // Map element to facet for holoflower visualization
@@ -350,6 +380,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             const audio = new Audio(audioUrl);
             audio.volume = 0.8;
 
+            // Set audio to muted initially to bypass autoplay restrictions
+            // Will unmute after user interaction
+            if (!document.hasFocus() || !window.navigator.userActivation?.hasBeenActive) {
+              console.log('⚠️ No user interaction yet, muting audio initially');
+              audio.muted = true;
+            }
+
             // Stop listening while audio plays to prevent feedback loop
             console.log('🔇 Stopping mic for audio playback');
             setIsAudioPlaying(true);
@@ -419,14 +456,41 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             
             // Attempt to play audio with better error handling
             console.log('🔊 Attempting to play ElevenLabs audio');
-            audio.play()
-              .then(() => {
-                console.log('✅ Audio playback started successfully');
-              })
-              .catch(error => {
-                console.error('❌ Audio playback failed:', error);
 
-                // Reset all states immediately
+            // Only play audio if enabled and ensure user interaction
+            if (audioEnabled) {
+              // Try to enable audio context first
+              if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+                audioContextRef.current.resume().then(() => {
+                  console.log('🔊 Audio context resumed');
+                });
+              }
+
+              audio.play()
+                .then(() => {
+                  console.log('✅ Audio playback started');
+                  setIsAudioPlaying(true);
+                  setIsResponding(false);
+                  setIsProcessing(false);
+                  // Resume microphone after audio finishes
+                  audio.onended = resumeMicrophone;
+                })
+                .catch(error => {
+                  console.error('❌ Audio playback failed:', error);
+                  if (error.name === 'NotAllowedError') {
+                    console.log('⚠️ Audio still blocked - need genuine user gesture');
+                    setAudioEnabled(false);
+                    // Try to play a click sound to unlock audio
+                    const unlockAudio = () => {
+                      const silent = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAAABAAEAAgABAAIAAwACAQADAAQAAwAEAAUABAAFAAAGAAUABgAFAAYABQAGAQcEBgEHAwcBCAMHAQgBCAEIAAAJBQgACQEIAQkBCAEJAQgBCQQI');
+                      silent.volume = 0;
+                      silent.play();
+                    };
+                    document.addEventListener('click', unlockAudio, { once: true });
+                    document.addEventListener('touchstart', unlockAudio, { once: true });
+                  }
+
+                  // Reset all states immediately
                 setIsAudioPlaying(false);
                 setIsMicrophonePaused(false);
                 setIsProcessing(false);
@@ -462,6 +526,26 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }, 500);
                 }
               });
+            } else {
+              // Audio not enabled - show text response immediately
+              console.log('🔇 Audio not enabled - showing text only');
+              setIsStreaming(true);
+              setStreamingText('');
+              streamText(responseText, oracleMessage.id);
+
+              // Reset states
+              setIsAudioPlaying(false);
+              setIsMicrophonePaused(false);
+              setIsProcessing(false);
+              setIsResponding(false);
+
+              // Resume microphone for next input
+              setTimeout(() => {
+                if (voiceMicRef.current?.startListening) {
+                  voiceMicRef.current.startListening();
+                }
+              }, 500);
+            }
           } catch (error) {
             console.error('Audio creation failed:', error);
             // Start streaming text immediately for fallback
@@ -560,6 +644,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   // Handle text messages from chat interface
   const handleTextMessage = useCallback(async (text: string, attachments?: File[]) => {
+    console.log('📝 Text message received:', { text, isProcessing, isAudioPlaying });
+
     // Process attachments first if any
     let messageText = text;
     if (attachments && attachments.length > 0) {
@@ -567,10 +653,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       const fileNames = attachments.map(f => f.name).join(', ');
       messageText = `${text}\n\n[Files attached: ${fileNames}]`;
     }
-    
+
     // Use the same handler as voice transcript
     handleVoiceTranscript(messageText);
-  }, [handleVoiceTranscript]);
+  }, [handleVoiceTranscript, isProcessing, isAudioPlaying]);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {
@@ -869,20 +955,26 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           {/* Mode Toggle - Mobile positioned */}
           <div className="fixed top-4 md:top-8 left-4 md:left-8 flex gap-2 z-40">
             <button
-              onClick={() => setShowChatInterface(false)}
+              onClick={() => {
+                setShowChatInterface(false);
+                enableAudio();
+              }}
               className={`px-2 md:px-3 py-1 rounded-full text-xs transition-colors ${
-                !showChatInterface 
-                  ? 'bg-[#D4B896] text-white' 
+                !showChatInterface
+                  ? 'bg-[#D4B896] text-white'
                   : 'bg-white/10 text-white/60 hover:bg-white/20'
               }`}
             >
               Voice
             </button>
             <button
-              onClick={() => setShowChatInterface(true)}
+              onClick={() => {
+                setShowChatInterface(true);
+                enableAudio();
+              }}
               className={`px-2 md:px-3 py-1 rounded-full text-xs transition-colors ${
-                showChatInterface 
-                  ? 'bg-[#D4B896] text-white' 
+                showChatInterface
+                  ? 'bg-[#D4B896] text-white'
                   : 'bg-white/10 text-white/60 hover:bg-white/20'
               }`}
             >

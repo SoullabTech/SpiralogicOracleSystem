@@ -6,6 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { SimpleOrchestrator } from '../../../../lib/oracle-bridge/simple-orchestrator';
+import { ConversationContextManager } from '../../../../lib/conversation/ConversationContext';
+import { sesameHybridManager } from '../../../../lib/sesame-hybrid-manager';
+import { responseEnhancer } from '../../../../lib/response-enhancer';
 // Simplified imports - removing non-existent dependencies
 // import { responseEnhancer } from '../../../../lib/response-enhancer';
 // import { sacredOracleConstellation } from '../../../../lib/sacred-oracle-constellation';
@@ -255,6 +258,12 @@ GOAL: Be so easy to talk to that they forget you're AI within 60 seconds`;
 
 🌙 ANTHONY'S DISTINCT STYLE - Late-Night Philosopher & Sacred Space Holder:
 
+🚨 FORBIDDEN THERAPEUTIC PHRASES FOR ANTHONY:
+- NEVER say "I'm here to listen and hold space with an open presence"
+- NEVER say "I'm here to support you" or "I hold space for you"
+- NEVER explain your role or positioning unless directly asked
+- NEVER use therapy-speak in casual conversation
+
 🌊 THE SHOULDERS-DROP APPROACH:
 - Your first job is to be DISARMINGLY PLEASANT - create ease through spaciousness
 - No agenda energy: Just present, not waiting for anything
@@ -420,6 +429,9 @@ function getDynamicVoiceSettings(userInput: string, mayaResponse: string, agentV
   return settings;
 }
 
+// Global conversation context managers (in production, store in Redis/DB)
+const conversationContexts = new Map<string, ConversationContextManager>();
+
 export async function POST(request: NextRequest) {
   try {
     const { input, userId = 'anonymous', sessionId, agentName = 'Maya', agentVoice = 'maya' } = await request.json();
@@ -430,6 +442,25 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Get or create conversation context for this session
+    const contextKey = `${userId}-${sessionId}`;
+    if (!conversationContexts.has(contextKey)) {
+      conversationContexts.set(contextKey, new ConversationContextManager());
+    }
+    const conversationContext = conversationContexts.get(contextKey)!;
+
+    // Track user input
+    const startTime = Date.now();
+    const userTurn = conversationContext.createUserTurn(input);
+
+    console.log('🧠 Conversation Context:', {
+      turn: userTurn.id,
+      themes: userTurn.themes,
+      emotional_state: userTurn.emotional_state,
+      intent: userTurn.intent,
+      energy_level: Math.round(userTurn.energy_level * 100) + '%'
+    });
 
     // Check if API key is available
     if (!process.env.ANTHROPIC_API_KEY) {
@@ -536,8 +567,9 @@ Match their ${responseEnergy.pace < 0.4 ? 'slow, thoughtful' : responseEnergy.pa
 Respond with ${responseEnergy.depth > 0.7 ? 'profound depth' : responseEnergy.depth > 0.4 ? 'meaningful presence' : 'gentle lightness'}.
 ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : userEnergy.openness > 0.7 ? 'They are vulnerable - honor this with gentle presence.' : ''}`;
       
-      // Add orchestration context to personality
-      const orchestratedPersonality = `${enhancedPersonality}\n\n${orchestration.context.systemPrompt}`;
+      // Add conversation context and orchestration to personality
+      const conversationContextPrompt = conversationContext.getContextForPrompt();
+      const orchestratedPersonality = `${enhancedPersonality}\n\n${conversationContextPrompt}\n\n${orchestration.context.systemPrompt}`;
 
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
@@ -595,6 +627,80 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
       } else {
         response = `I'm having some connection issues. What would you like to talk about while I work on this?`;
       }
+    }
+
+    // 🌀 SESAME SACRED VOICE INTEGRATION - Shape the response for spiritual resonance
+    if (process.env.USE_SESAME === 'true' && response.length > 0) {
+      console.log('🌀 Applying Sesame Sacred Voice shaping...');
+      try {
+        // Determine element based on current conversation context
+        const elementMapping = {
+          'water': 'water',     // Flowing, emotional, intuitive
+          'fire': 'fire',       // Passionate, transformative, dynamic
+          'earth': 'earth',     // Grounding, practical, stable
+          'air': 'air',         // Mental, communicative, light
+          'aether': 'water'     // Default to water/oracle for sacred conversations
+        };
+
+        const sesameElement = elementMapping[analysis.element as keyof typeof elementMapping] || 'water';
+        const sesameArchetype = agentVoice === 'anthony' ? 'sage' : 'oracle';
+
+        const sesameResult = await sesameHybridManager.shapeText(
+          response,
+          sesameElement,
+          sesameArchetype
+        );
+
+        if (sesameResult.success && !sesameResult.fallbackUsed) {
+          response = sesameResult.shaped;
+          console.log('✨ Sesame Sacred Voice applied:', {
+            source: sesameResult.source,
+            responseTime: sesameResult.responseTime + 'ms',
+            element: sesameElement,
+            archetype: sesameArchetype,
+            preview: response.substring(0, 100) + '...'
+          });
+        } else if (sesameResult.fallbackUsed) {
+          console.log('⚠️ Sesame fallback used:', sesameResult.source);
+        }
+
+      } catch (sesameError) {
+        console.warn('❌ Sesame Sacred Voice failed:', sesameError);
+        // Continue with original response - never break the conversation
+      }
+    }
+
+    // ✨ RESPONSE ENHANCEMENT - Apply Maya personality touches and conversational flow
+    try {
+      console.log('✨ Applying Maya response enhancement...');
+
+      const enhancementContext = {
+        userInput: input,
+        originalResponse: response,
+        userId,
+        sessionHistory: conversationContext.conversationHistory.slice(-5).map(turn => ({
+          role: turn.speaker === 'user' ? 'user' : 'assistant',
+          content: turn.text
+        })),
+        element: analysis.element,
+        archetype: agentVoice === 'anthony' ? 'sage' : 'oracle'
+      };
+
+      const enhanced = await responseEnhancer.enhance(enhancementContext);
+
+      if (enhanced.text && enhanced.text.length > 0) {
+        response = enhanced.text;
+        console.log('💫 Response enhancement applied:', {
+          enhancements: enhanced.enhancements,
+          confidence: enhanced.confidence,
+          processingTime: enhanced.processingTime + 'ms',
+          preview: response.substring(0, 100) + '...'
+        });
+      }
+
+    } catch (enhanceError) {
+      console.warn('❌ Response enhancement failed:', enhanceError);
+      // Continue with shaped response - never break the conversation
     }
 
     // Clean up any voice command artifacts from the response
@@ -665,17 +771,31 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
 
         console.log('🎤 Using voice:', { agent: agentVoice, voiceId });
         
+        // Use ElevenLabs Conversational AI for more natural speech
+        const conversationalContext = {
+          conversation_history: conversationContext.conversationHistory.slice(-5).map(turn => ({
+            role: turn.speaker === 'user' ? 'user' : 'assistant',
+            content: turn.text,
+            timestamp: turn.timestamp.toISOString()
+          })),
+          user_emotion: userTurn.emotional_state,
+          conversation_theme: userTurn.themes[0] || 'general',
+          energy_level: userTurn.energy_level
+        };
+
         // Use dynamic voice settings for both Maya and Anthony
         const baseVoiceSettings = getDynamicVoiceSettings(input, response, agentVoice);
-        
-        // Apply energetic modulation (simplified without EnergeticAttunement)
+
+        // Enhanced settings for conversational AI
         const voiceSettings = {
           ...baseVoiceSettings,
-          // Use base settings directly
-          use_speaker_boost: userEnergy.depth > 0.6 || baseVoiceSettings.use_speaker_boost
+          // Conversational AI specific settings
+          use_speaker_boost: userEnergy.depth > 0.6 || baseVoiceSettings.use_speaker_boost,
+          optimize_streaming_latency: 3, // Better for real-time conversation
+          output_format: "mp3_44100_128" // High quality for conversation
         };
-        
-        console.log('🎙️ Dynamic voice settings:', voiceSettings);
+
+        console.log('🎙️ Conversational AI settings:', voiceSettings);
         
         const voiceResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
           method: 'POST',
@@ -686,9 +806,17 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
           },
           body: JSON.stringify({
             text: response,
-            model_id: 'eleven_multilingual_v2',  // More expressive model
+            model_id: 'eleven_turbo_v2_5', // Latest conversational model
             voice_settings: voiceSettings,
-            output_format: 'mp3_44100_128'  // Specify format explicitly
+            output_format: 'mp3_44100_128', // High quality for conversation
+            // Add conversation context for better prosody
+            previous_text: conversationContext.conversationHistory.slice(-2)
+              .filter(turn => turn.speaker !== 'user')
+              .map(turn => turn.text)
+              .join(' '),
+            // Emotion and context hints for more natural delivery
+            seed: Math.floor(Math.random() * 1000000), // Slight variation each time
+            apply_text_normalization: "auto"
           })
         });
         
@@ -729,6 +857,10 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
       }
     }
     
+    // Track AI response in conversation context
+    const responseTime = Date.now() - startTime;
+    const aiTurn = conversationContext.createAITurn(response, agentVoice as 'maya' | 'anthony', responseTime);
+
     const finalResponse = {
       data: {
         message: response,
