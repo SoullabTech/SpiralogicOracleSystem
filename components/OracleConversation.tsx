@@ -183,6 +183,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
     const startTime = Date.now();
     console.log('⏱️ Voice processing started');
+    console.log('Current states:', { isProcessing, isAudioPlaying, isResponding });
+
+    // Force reset if stuck
+    if (isProcessing && !isResponding) {
+      console.warn('⚠️ Processing stuck - forcing reset');
+      setIsProcessing(false);
+      setIsAudioPlaying(false);
+      setIsMicrophonePaused(false);
+    }
 
     // Debounce rapid calls
     if (isProcessing || isAudioPlaying) {
@@ -352,6 +361,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             // Add error handler BEFORE attempting to play
             audio.addEventListener('error', (e) => {
               console.error('❌ Audio error event:', e);
+              const audioError = e.target as HTMLAudioElement;
+              console.error('Audio error details:', {
+                error: audioError.error,
+                src: audioError.src?.substring(0, 100),
+                readyState: audioError.readyState,
+                networkState: audioError.networkState
+              });
               console.log('🔄 Resetting states after audio error');
               setIsAudioPlaying(false);
               setIsMicrophonePaused(false);
@@ -401,25 +417,51 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               }, 1000);
             });
             
-            audio.play().catch(error => {
-              console.error('Audio playback failed, falling back to Maya voice:', error);
-              setIsAudioPlaying(false);
-              setIsMicrophonePaused(false);
-              setIsProcessing(false);
-              
-              // Start streaming text immediately for fallback
-              setIsStreaming(true);
-              setStreamingText('');
-              streamText(responseText, oracleMessage.id);
-              
-              // Resume mic immediately since ElevenLabs failed
-              setTimeout(() => {
-                console.log('🎤 Resuming microphone after ElevenLabs failure');
-                if (voiceMicRef.current?.startListening) {
-                  voiceMicRef.current.startListening();
+            // Attempt to play audio with better error handling
+            console.log('🔊 Attempting to play ElevenLabs audio');
+            audio.play()
+              .then(() => {
+                console.log('✅ Audio playback started successfully');
+              })
+              .catch(error => {
+                console.error('❌ Audio playback failed:', error);
+
+                // Reset all states immediately
+                setIsAudioPlaying(false);
+                setIsMicrophonePaused(false);
+                setIsProcessing(false);
+                setIsResponding(false);
+
+                // Start streaming text immediately for fallback
+                setIsStreaming(true);
+                setStreamingText('');
+                streamText(responseText, oracleMessage.id);
+
+                // Use Web Speech API as fallback
+                if (voiceEnabled && mayaReady) {
+                  console.log('🔊 Using Web Speech API as fallback');
+                  mayaSpeak(cleanMessageForVoice(responseText), {
+                    element,
+                    tone: voiceCharacteristics?.tone,
+                    masteryVoiceApplied: voiceCharacteristics?.masteryVoiceApplied
+                  }).then(() => {
+                    // Resume mic after speech
+                    if (voiceMicRef.current?.startListening) {
+                      voiceMicRef.current.startListening();
+                    }
+                    setIsMicrophonePaused(false);
+                  });
+                } else {
+                  // Just resume mic if no voice available
+                  setTimeout(() => {
+                    console.log('🎤 Resuming microphone after failure');
+                    if (voiceMicRef.current?.startListening) {
+                      voiceMicRef.current.startListening();
+                    }
+                    setIsMicrophonePaused(false);
+                  }, 500);
                 }
-              }, 500);
-            });
+              });
           } catch (error) {
             console.error('Audio creation failed:', error);
             // Start streaming text immediately for fallback
