@@ -571,12 +571,21 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
       const conversationContextPrompt = conversationContext.getContextForPrompt();
       const orchestratedPersonality = `${enhancedPersonality}\n\n${conversationContextPrompt}\n\n${orchestration.context.systemPrompt}`;
 
+      // Add STRICT length constraint to messages
+      const constrainedMessages = [
+        ...messages.slice(0, -1),
+        {
+          role: 'user' as const,
+          content: messages[messages.length - 1].content + '\n\n[IMPORTANT: Keep your response UNDER 50 words. Be conversational, not performative. One thought at a time.]'
+        }
+      ];
+
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: Math.max(300, inputAnalysis.suggestedTokens || 200),  // Increased minimum to ensure complete responses
+        max_tokens: 100,  // STRICT limit to prevent monologues
         temperature: tone === 'playful' ? 0.9 : tone === 'serious' ? 0.6 : 0.8,
-        system: orchestratedPersonality,
-        messages
+        system: orchestratedPersonality + '\n\nCRITICAL: You MUST respond in UNDER 50 words. Be conversational, not philosophical. One simple thought or question.',
+        messages: constrainedMessages
       });
       
       const content = completion.content[0];
