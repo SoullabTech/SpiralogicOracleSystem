@@ -1,129 +1,176 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, CheckCircle } from 'lucide-react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { MessageCircle, Send, X, Star, AlertCircle, Heart, Zap } from 'lucide-react';
 
-export const FeedbackWidget = () => {
+export function FeedbackWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [category, setCategory] = useState<'bug' | 'feature' | 'praise' | 'other'>('other');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const supabase = createClientComponentClient();
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!feedback.trim()) return;
 
     setIsSubmitting(true);
-    try {
-      // Store feedback in Supabase
-      const { error } = await supabase
-        .from('beta_feedback')
-        .insert({
-          feedback: feedback,
-          page_url: window.location.pathname,
-          user_agent: navigator.userAgent,
-          timestamp: new Date().toISOString()
-        });
 
-      if (!error) {
-        setIsSubmitted(true);
+    try {
+      // Store feedback in Supabase or your backend
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          feedback,
+          category,
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+          userAgent: navigator.userAgent
+        })
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
         setTimeout(() => {
           setIsOpen(false);
+          setSubmitted(false);
           setFeedback('');
-          setIsSubmitted(false);
+          setCategory('other');
         }, 2000);
       }
     } catch (error) {
-      console.error('Failed to submit feedback:', error);
+      console.error('Feedback submission error:', error);
+      // Still close to avoid frustration
+      alert('Thank you for your feedback! We\'ll review it soon.');
+      setIsOpen(false);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const categories = [
+    { value: 'bug', label: 'Bug Report', icon: AlertCircle, color: 'text-red-400' },
+    { value: 'feature', label: 'Feature Request', icon: Zap, color: 'text-gold-divine' },
+    { value: 'praise', label: 'Love It', icon: Heart, color: 'text-pink-400' },
+    { value: 'other', label: 'Other', icon: Star, color: 'text-neutral-silver' }
+  ];
+
   return (
     <>
       {/* Feedback Button */}
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1, type: 'spring' }}
+      <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-gold-divine text-black p-4 rounded-full shadow-lg hover:bg-gold-amber transition-colors z-40"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-40 bg-gold-divine text-black p-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 group"
+        aria-label="Send beta feedback"
       >
-        <MessageSquare className="w-5 h-5" />
-      </motion.button>
+        <MessageCircle className="w-5 h-5" />
+        <span className="absolute -top-8 right-0 bg-black text-gold-divine text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          Beta Feedback
+        </span>
+      </button>
 
       {/* Feedback Modal */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-24 right-6 w-96 bg-tesla-900 border border-gold-divine/20 rounded-lg shadow-2xl z-50"
-          >
-            <div className="p-4 border-b border-gold-divine/10">
-              <div className="flex items-center justify-between">
-                <h3 className="text-gold-divine font-light">Beta Feedback</h3>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="text-neutral-silver hover:text-white transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Modal */}
+          <div className="relative bg-tesla-900 border border-gold-divine/30 rounded-lg shadow-2xl max-w-md w-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gold-divine/20">
+              <h3 className="text-lg font-semibold text-gold-divine">
+                Sacred Beta Feedback
+              </h3>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-neutral-silver hover:text-gold-divine transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            <div className="p-4">
-              {isSubmitted ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-8"
-                >
-                  <CheckCircle className="w-12 h-12 text-gold-divine mx-auto mb-3" />
-                  <p className="text-white">Thank you for your feedback!</p>
-                  <p className="text-neutral-silver text-sm mt-1">
-                    Your input shapes Sacred Technology
-                  </p>
-                </motion.div>
-              ) : (
-                <>
+            {/* Content */}
+            {submitted ? (
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 bg-gold-divine/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Heart className="w-8 h-8 text-gold-divine animate-pulse" />
+                </div>
+                <p className="text-gold-divine text-lg mb-2">Thank you, Pioneer!</p>
+                <p className="text-neutral-silver text-sm">Your feedback shapes the future of Sacred Technology</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="p-4">
+                {/* Category Selection */}
+                <div className="mb-4">
+                  <label className="text-neutral-silver text-sm mb-2 block">
+                    What\'s on your mind?
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {categories.map(({ value, label, icon: Icon, color }) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => setCategory(value as any)}
+                        className={`p-3 rounded-lg border transition-all ${
+                          category === value
+                            ? 'bg-gold-divine/20 border-gold-divine'
+                            : 'bg-black/30 border-neutral-silver/20 hover:border-gold-divine/50'
+                        }`}
+                      >
+                        <Icon className={`w-4 h-4 ${color} mx-auto mb-1`} />
+                        <span className="text-xs text-neutral-silver">{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Feedback Text */}
+                <div className="mb-4">
+                  <label className="text-neutral-silver text-sm mb-2 block">
+                    Your Sacred Insight
+                  </label>
                   <textarea
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
+                    className="w-full px-3 py-2 bg-black/50 border border-gold-divine/30 rounded-lg text-white placeholder-neutral-silver/50 focus:outline-none focus:border-gold-divine focus:ring-1 focus:ring-gold-divine/50 resize-none"
+                    rows={4}
                     placeholder="Share your experience, report bugs, or suggest improvements..."
-                    className="w-full h-32 bg-black/50 border border-gold-divine/20 rounded-lg p-3 text-white placeholder-neutral-mystic focus:outline-none focus:border-gold-divine/40 resize-none"
-                    autoFocus
+                    required
                   />
+                </div>
 
-                  <div className="mt-3 flex items-center justify-between">
-                    <p className="text-neutral-silver text-xs">
-                      Help us evolve consciousness technology
-                    </p>
-                    <button
-                      onClick={handleSubmit}
-                      disabled={!feedback.trim() || isSubmitting}
-                      className="bg-gold-divine text-black px-4 py-2 rounded-lg font-medium hover:bg-gold-amber transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                    >
-                      {isSubmitting ? (
-                        <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <Send className="w-4 h-4" />
-                      )}
-                      Send
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !feedback.trim()}
+                  className="w-full py-3 bg-gold-divine text-black font-semibold rounded-lg hover:bg-gold-divine/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Send Feedback
+                    </>
+                  )}
+                </button>
+
+                <p className="text-xs text-neutral-silver/60 text-center mt-3">
+                  Your feedback is sacred and helps us evolve
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
-};
+}
