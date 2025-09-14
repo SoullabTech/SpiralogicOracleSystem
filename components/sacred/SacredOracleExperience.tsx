@@ -92,7 +92,7 @@ export const SacredOracleExperience: React.FC = () => {
   };
 
   return (
-    <div className="sacred-oracle-experience min-h-screen bg-gradient-to-b from-purple-50 via-white to-blue-50 relative overflow-hidden">
+    <div className="sacred-oracle-experience min-h-screen bg-black relative overflow-hidden">
       {/* Background Watermark */}
       <HoloflowerWatermark 
         mode={isMobile ? 'dark' : 'light'}
