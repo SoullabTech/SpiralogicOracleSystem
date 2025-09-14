@@ -132,12 +132,45 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     currentMotionState: 'idle'
   });
 
+  // Global state reset function for emergency recovery
+  const resetAllStates = useCallback(() => {
+    console.log('🔄 Emergency state reset triggered');
+    setIsProcessing(false);
+    setIsResponding(false);
+    setIsAudioPlaying(false);
+    setIsStreaming(false);
+    setIsMicrophonePaused(false);
+    setCurrentMotionState('idle');
+    setStreamingText('');
+
+    // Resume microphone if needed
+    setTimeout(() => {
+      if (voiceMicRef.current?.startListening && !showChatInterface) {
+        voiceMicRef.current.startListening();
+      }
+    }, 1000);
+  }, [showChatInterface]);
+
+  // Auto-recovery timer - if processing states are stuck for too long, reset
+  useEffect(() => {
+    if (isProcessing || isResponding) {
+      const recoveryTimer = setTimeout(() => {
+        if (isProcessing || isResponding) {
+          console.warn('⚠️ States stuck for >30s - auto-recovery triggered');
+          resetAllStates();
+        }
+      }, 30000); // 30 second recovery timeout
+
+      return () => clearTimeout(recoveryTimer);
+    }
+  }, [isProcessing, isResponding, resetAllStates]);
+
   // Update motion state based on voice activity
   useEffect(() => {
     if (userVoiceState?.isSpeaking) {
       setCurrentMotionState('listening');
       setIsListening(true);
-      
+
       // Map voice amplitude to petal breathing
       const breathingIntensity = userVoiceState.amplitude;
       // This will be picked up by the Holoflower's motion orchestrator
@@ -213,17 +246,23 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     console.log('⏱️ Voice processing started');
     console.log('Current states:', { isProcessing, isAudioPlaying, isResponding });
 
-    // Force reset if stuck
-    if (isProcessing && !isResponding) {
-      console.warn('⚠️ Processing stuck - forcing reset');
-      setIsProcessing(false);
-      setIsAudioPlaying(false);
-      setIsMicrophonePaused(false);
+    // Force reset if stuck - enhanced safety checks
+    if (isProcessing && !isResponding && !isAudioPlaying) {
+      const timeSinceStart = Date.now() - startTime;
+      if (timeSinceStart > 5000) { // If stuck for more than 5 seconds
+        console.warn('⚠️ Processing stuck for >5s - forcing complete reset');
+        setIsProcessing(false);
+        setIsResponding(false);
+        setIsAudioPlaying(false);
+        setIsMicrophonePaused(false);
+        setIsStreaming(false);
+        setCurrentMotionState('idle');
+      }
     }
 
     // Debounce rapid calls
     if (isProcessing || isAudioPlaying) {
-      console.log('⚠️ Ignoring transcript - processing or audio playing');
+      console.log('⚠️ Ignoring voice transcript - processing or audio playing');
       return;
     }
 
@@ -299,7 +338,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       // Use the element and voice characteristics from PersonalOracleAgent
       const element = oracleResponse.element || 'aether';
       const voiceCharacteristics = oracleResponse.voiceCharacteristics;
-      const audioUrl = oracleResponse.audio; // Audio URL from Sesame generation
+
+      // Fix audio URL access - it's in the data object
+      const audioUrl = responseData.data?.audio || oracleResponse.audio; // Audio URL from ElevenLabs generation
 
       console.log('🎤 Audio response details:', {
         hasAudio: !!audioUrl,
@@ -443,7 +484,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               setIsMicrophonePaused(false);
               setCurrentMotionState('listening');
               setIsProcessing(false);
-              console.log('✅ Processing state reset to false');
+              console.log('✅ Audio ended - processing state reset to false');
               
               // Simple resume with shorter delay
               setTimeout(() => {
@@ -472,8 +513,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   setIsAudioPlaying(true);
                   setIsResponding(false);
                   setIsProcessing(false);
-                  // Resume microphone after audio finishes
-                  audio.onended = resumeMicrophone;
+                  // The audio.addEventListener('ended') above handles microphone resume
+                  console.log('🎤 Audio playback started, ended handler is set');
                 })
                 .catch(error => {
                   console.error('❌ Audio playback failed:', error);
@@ -632,9 +673,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setMessages(prev => [...prev, errorMessage]);
       onMessageAdded?.(errorMessage);
     } finally {
+      // Always reset processing state for voice
+      console.log('🎤 Voice processing complete - resetting states');
       setIsProcessing(false);
       setIsResponding(false);
-      
+      setIsAudioPlaying(false);
+      setIsMicrophonePaused(false);
+
       // Return to idle quickly
       setTimeout(() => {
         setCurrentMotionState('idle');
@@ -644,19 +689,128 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   // Handle text messages from chat interface
   const handleTextMessage = useCallback(async (text: string, attachments?: File[]) => {
-    console.log('📝 Text message received:', { text, isProcessing, isAudioPlaying });
+    console.log('📝 Text message received:', { text, isProcessing, isAudioPlaying, isResponding });
+
+    // Prevent multiple processing
+    if (isProcessing) {
+      console.log('⚠️ Text message blocked - already processing');
+      return;
+    }
 
     // Process attachments first if any
     let messageText = text;
     if (attachments && attachments.length > 0) {
-      // For now, just mention the files - in a full implementation you'd upload them
       const fileNames = attachments.map(f => f.name).join(', ');
       messageText = `${text}\n\n[Files attached: ${fileNames}]`;
     }
 
-    // Use the same handler as voice transcript
-    handleVoiceTranscript(messageText);
-  }, [handleVoiceTranscript, isProcessing, isAudioPlaying]);
+    const startTime = Date.now();
+    const cleanedText = cleanMessage(messageText);
+
+    // Add user message immediately
+    const userMessage: ConversationMessage = {
+      id: `msg-${Date.now()}`,
+      role: 'user',
+      text: cleanedText,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, userMessage]);
+    onMessageAdded?.(userMessage);
+
+    // Set processing state for text chat
+    setIsProcessing(true);
+    setCurrentMotionState('processing');
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout for text
+
+      const response = await fetch('/api/oracle/personal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: cleanedText,
+          userId: userId || 'anonymous',
+          sessionId,
+          agentName: agentConfig.name,
+          agentVoice: agentConfig.voice,
+          context: {
+            previousInteractions: messages.length,
+            inputType: 'text', // Mark as text input
+            userPreferences: {
+              voice: {
+                enabled: false, // Disable voice for text responses
+                autoSpeak: false,
+                agentConfig
+              }
+            }
+          }
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      const apiTime = Date.now() - startTime;
+      console.log(`⏱️ Text API response received in ${apiTime}ms`);
+
+      const oracleResponse = responseData.data || responseData;
+      let responseText = oracleResponse.message || 'I am here with you.';
+      responseText = cleanMessage(responseText);
+
+      const element = oracleResponse.element || 'aether';
+      const facetId = mapElementToFacetId(element);
+      setActiveFacetId(facetId);
+      setCoherenceLevel(oracleResponse.confidence || 0.85);
+
+      // Add oracle message with full text immediately for text chat
+      const oracleMessage: ConversationMessage = {
+        id: `msg-${Date.now()}-oracle`,
+        role: 'oracle',
+        text: responseText,
+        timestamp: new Date(),
+        facetId: element,
+        motionState: 'responding',
+        coherenceLevel: oracleResponse.confidence || 0.85
+      };
+      setMessages(prev => [...prev, oracleMessage]);
+      onMessageAdded?.(oracleMessage);
+
+      // Update context
+      contextRef.current.previousResponses.push({
+        text: responseText,
+        primaryFacetId: element,
+        element,
+        voiceCharacteristics: oracleResponse.voiceCharacteristics,
+        confidence: oracleResponse.confidence
+      });
+      contextRef.current.coherenceHistory.push(oracleResponse.confidence || 0.85);
+
+    } catch (error) {
+      console.error('Text chat API error:', error);
+
+      const errorMessage: ConversationMessage = {
+        id: `msg-${Date.now()}-error`,
+        role: 'oracle',
+        text: 'I apologize, I\'m having trouble connecting right now. Please try again.',
+        timestamp: new Date(),
+        motionState: 'idle'
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      onMessageAdded?.(errorMessage);
+    } finally {
+      // Always reset processing state for text chat
+      console.log('📝 Text processing complete - resetting states');
+      setIsProcessing(false);
+      setIsResponding(false);
+      setCurrentMotionState('idle');
+    }
+  }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length]);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {

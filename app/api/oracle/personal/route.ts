@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { SimpleOrchestrator } from '../../../../lib/oracle-bridge/simple-orchestrator';
 import { ConversationContextManager } from '../../../../lib/conversation/ConversationContext';
-import { sesameHybridManager } from '../../../../lib/sesame-hybrid-manager';
+// Use local Sacred Oracle system instead of external Sesame
+import { SacredOracleCore } from '../../../../lib/sacred-oracle-core';
 import { responseEnhancer } from '../../../../lib/response-enhancer';
 // Simplified imports - removing non-existent dependencies
 // import { responseEnhancer } from '../../../../lib/response-enhancer';
@@ -654,23 +655,33 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
         const voiceElement = elementMapping[analysis.element as keyof typeof elementMapping] || 'water';
         const voiceArchetype = agentVoice === 'anthony' ? 'sage' : 'oracle';
 
-        const voiceResult = await sesameHybridManager.shapeText(
+        // Use local Sacred Oracle for consciousness-aware text shaping
+        const sacredOracle = new SacredOracleCore();
+        const oracleResponse = await sacredOracle.generateResponse(
           response,
-          voiceElement,
-          voiceArchetype
+          userId,
+          { element: voiceElement, archetype: voiceArchetype }
         );
 
-        if (voiceResult.success && !voiceResult.fallbackUsed) {
+        // Format for voice synthesis
+        const voiceResult = {
+          shaped: oracleResponse.message,
+          source: 'sacred-oracle-local',
+          responseTime: Date.now() - startTime,
+          fallbackUsed: false
+        };
+
+        if (voiceResult.shaped && !voiceResult.fallbackUsed) {
           response = voiceResult.shaped;
-          console.log('✨ Sacred Oracle Constellation applied:', {
+          console.log('✨ Sacred Oracle (local) applied:', {
             source: voiceResult.source,
             responseTime: voiceResult.responseTime + 'ms',
             element: voiceElement,
             archetype: voiceArchetype,
             preview: response.substring(0, 100) + '...'
           });
-        } else if (voiceResult.fallbackUsed) {
-          console.log('⚠️ Sacred Oracle Constellation fallback used:', voiceResult.source);
+        } else {
+          console.log('⚠️ Using original response text (no external dependencies)');
         }
 
       } catch (constellationError) {
@@ -774,8 +785,13 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
         if (agentVoice === 'anthony') {
           voiceId = 'c6SfcYrb2t09NHXiT80T';  // Anthony's consistent male voice
         } else {
-          // Maya now using Emily for better pacing
-          voiceId = 'LcfcDJNUP1GQjkzn1xUU'; // Emily - quicker, more natural pace
+          // Maya CONSISTENTLY using Emily - DO NOT CHANGE
+          voiceId = 'LcfcDJNUP1GQjkzn1xUU'; // Emily - consistent for all Maya responses
+        }
+
+        // CRITICAL: Ensure we're always using the same voice for Maya
+        if (agentVoice === 'maya' || !agentVoice) {
+          voiceId = 'LcfcDJNUP1GQjkzn1xUU'; // Force Emily for Maya
         }
 
         console.log('🎤 Using voice:', { agent: agentVoice, voiceId });
@@ -834,20 +850,48 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
           const buffer = await audioBlob.arrayBuffer();
           const base64 = Buffer.from(buffer).toString('base64');
 
-          // Check if base64 is too large (>500KB tends to cause issues in browsers)
-          if (base64.length > 500000) {
+          // Check if base64 is too large (>1MB tends to cause issues in browsers)
+          if (base64.length > 1000000) {
             console.warn('⚠️ Audio base64 too large:', base64.length, 'bytes - using fallback');
             audioUrl = 'web-speech-fallback';
+          } else if (base64.length < 1000) {
+            console.warn('⚠️ Audio base64 too small:', base64.length, 'bytes - likely truncated');
+            audioUrl = 'web-speech-fallback';
           } else {
-            // Ensure base64 is valid
+            // Ensure base64 is valid and properly formatted
             try {
+              // Validate base64 characters
+              if (!/^[A-Za-z0-9+/]*={0,2}$/.test(base64)) {
+                throw new Error('Invalid base64 characters');
+              }
+
               // Test if base64 can be decoded
-              Buffer.from(base64, 'base64');
+              const testBuffer = Buffer.from(base64, 'base64');
+              if (testBuffer.length === 0) {
+                throw new Error('Empty decoded buffer');
+              }
+
               audioUrl = `data:audio/mpeg;base64,${base64}`;
-              console.log('✅ Voice generated successfully, size:', base64.length);
-              console.log('🎵 Audio URL type:', audioUrl.substring(0, 50) + '...');
+              console.log('✅ Voice generated successfully:', {
+                originalSize: buffer.byteLength,
+                base64Size: base64.length,
+                decodedSize: testBuffer.length,
+                validChars: base64.match(/[A-Za-z0-9+/]/g)?.length || 0
+              });
+
+              // Log first and last few chars to debug truncation
+              console.log('🔍 Base64 debug:', {
+                first20: base64.substring(0, 20),
+                last20: base64.substring(base64.length - 20),
+                urlPrefix: audioUrl.substring(0, 50) + '...'
+              });
             } catch (e) {
-              console.error('❌ Invalid base64 audio data:', e);
+              console.error('❌ Invalid base64 audio data:', {
+                error: e.message,
+                base64Length: base64.length,
+                first50Chars: base64.substring(0, 50),
+                last50Chars: base64.substring(base64.length - 50)
+              });
               audioUrl = 'web-speech-fallback';
             }
           }

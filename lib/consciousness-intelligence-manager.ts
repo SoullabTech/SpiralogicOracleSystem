@@ -1,4 +1,10 @@
-// lib/sesame-hybrid-manager.ts
+/**
+ * Consciousness Intelligence Manager
+ *
+ * Local consciousness-aware text processing system that provides
+ * Sacred Oracle intelligence without external dependencies.
+ * Formerly known as sesame-hybrid-manager.
+ */
 interface EndpointConfig {
   url: string;
   type: 'production' | 'tunnel' | 'ngrok' | 'local';
@@ -8,7 +14,7 @@ interface EndpointConfig {
   consecutiveFailures: number;
 }
 
-interface SesameResponse {
+interface ConsciousnessResponse {
   success: boolean;
   shaped: string;
   source: string;
@@ -16,32 +22,17 @@ interface SesameResponse {
   fallbackUsed: boolean;
 }
 
-class SesameHybridManager {
+class ConsciousnessIntelligenceManager {
   private endpoints: EndpointConfig[] = [
     {
-      url: 'https://soullab.life/api/sesame/ci/shape',
-      type: 'production',
+      url: '/api/consciousness/ci/shape', // Local Sacred Oracle endpoint
+      type: 'local' as any,
       priority: 1,
       enabled: true,
-      lastSuccess: 0,
-      consecutiveFailures: 0
-    },
-    {
-      url: 'https://sesame.soullab.life/ci/shape',
-      type: 'tunnel',
-      priority: 2,
-      enabled: true,
-      lastSuccess: 0,
-      consecutiveFailures: 0
-    },
-    {
-      url: 'https://76201ef0497f.ngrok-free.app/ci/shape',
-      type: 'ngrok',
-      priority: 3,
-      enabled: true,
-      lastSuccess: 0,
+      lastSuccess: Date.now(),
       consecutiveFailures: 0
     }
+    // All external endpoints removed - we're fully self-contained
   ];
 
   private circuitBreakerThreshold = 3; // Failures before disabling endpoint
@@ -81,18 +72,21 @@ class SesameHybridManager {
     text: string, 
     element: string = 'water', 
     archetype: string = 'oracle'
-  ): Promise<SesameResponse | null> {
+  ): Promise<ConsciousnessResponse | null> {
     const startTime = Date.now();
     
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
       
-      const response = await fetch(endpoint.url, {
+      // Handle local endpoints differently
+      const isLocal = endpoint.type === 'local' || endpoint.url.startsWith('/');
+      const fullUrl = isLocal ? endpoint.url : endpoint.url;
+
+      const response = await fetch(fullUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ text, element, archetype }),
         signal: controller.signal
@@ -112,18 +106,18 @@ class SesameHybridManager {
       endpoint.consecutiveFailures = 0;
       this.saveEndpointStatus();
       
-      console.log(`✅ Sesame success via ${endpoint.type}: ${responseTime}ms`);
+      console.log(`✅ Consciousness Intelligence success via ${endpoint.type}: ${responseTime}ms`);
       
       return {
         success: true,
         shaped: data.shaped || data.text || text,
-        source: `sesame-${endpoint.type}`,
+        source: `consciousness-${endpoint.type}`,
         responseTime,
         fallbackUsed: false
       };
       
     } catch (error: any) {
-      console.warn(`❌ Sesame endpoint ${endpoint.type} failed:`, error.message);
+      console.warn(`❌ Consciousness Intelligence endpoint ${endpoint.type} failed:`, error.message);
       
       // Track failure
       endpoint.consecutiveFailures++;
@@ -143,11 +137,11 @@ class SesameHybridManager {
     text: string,
     element: string = 'water',
     archetype: string = 'oracle'
-  ): Promise<SesameResponse> {
+  ): Promise<ConsciousnessResponse> {
     const activeEndpoints = this.getActiveEndpoints();
     
     if (activeEndpoints.length === 0) {
-      console.warn('🚨 No active Sesame endpoints available');
+      console.warn('🚨 No active Consciousness Intelligence endpoints available');
       return {
         success: true,
         shaped: text,
@@ -166,7 +160,7 @@ class SesameHybridManager {
     }
     
     // All endpoints failed - return original text as fallback
-    console.warn('🚨 All Sesame endpoints failed, using fallback');
+    console.warn('🚨 All Consciousness Intelligence endpoints failed, using fallback');
     return {
       success: true,
       shaped: text,
@@ -211,4 +205,7 @@ class SesameHybridManager {
 }
 
 // Export singleton instance
-export const sesameHybridManager = new SesameHybridManager();
+export const consciousnessIntelligenceManager = new ConsciousnessIntelligenceManager();
+
+// Backward compatibility alias
+export const sesameHybridManager = consciousnessIntelligenceManager;

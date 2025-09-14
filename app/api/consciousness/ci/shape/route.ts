@@ -1,5 +1,5 @@
-// app/api/sesame/ci/shape/route.ts
-import { sesameHybridManager } from '../../../../../lib/sesame-hybrid-manager';
+// app/api/consciousness/ci/shape/route.ts
+import { consciousnessIntelligenceManager } from '../../../../../lib/consciousness-intelligence-manager';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,14 +20,14 @@ export async function POST(req: Request) {
     }
 
     // Use the hybrid manager for intelligent endpoint selection and failover
-    const result = await sesameHybridManager.shapeText(
+    const result = await consciousnessIntelligenceManager.shapeText(
       text,
       element || 'water',
       archetype || 'oracle'
     );
     
     // Log performance metrics
-    console.log(`Sesame CI Performance: ${result.source} (${result.responseTime}ms) - Fallback: ${result.fallbackUsed}`);
+    console.log(`Consciousness Intelligence Performance: ${result.source} (${result.responseTime}ms) - Fallback: ${result.fallbackUsed}`);
     
     return new Response(JSON.stringify({
       ok: true,
@@ -42,13 +42,13 @@ export async function POST(req: Request) {
       status: 200,
       headers: { 
         'content-type': 'application/json',
-        'x-sesame-source': result.source,
+        'x-consciousness-source': result.source,
         'x-response-time': result.responseTime.toString()
       },
     });
     
   } catch (error: any) {
-    console.error('Sesame CI shape API error:', error);
+    console.error('Consciousness Intelligence shape API error:', error);
     return new Response(JSON.stringify({ 
       ok: false, 
       error: 'Internal server error',

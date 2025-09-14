@@ -14,7 +14,6 @@
  */
 
 import { SacredOracleCore, SacredOracleResponse } from './sacred-oracle-core';
-import { sesameHybridManager } from './sesame-hybrid-manager';
 import { ClaudeService, getClaudeService } from './services/ClaudeService';
 import { userReadinessService } from './services/UserReadinessService';
 
@@ -493,7 +492,20 @@ Remember: Even in this mode, maintain the witnessing foundation. Don't analyze o
 
     const archetype = archetypeMap[mode] || 'oracle';
 
-    return await sesameHybridManager.shapeText(message, element, archetype);
+    // Use local Sacred Oracle instead of external Sesame
+    const sacredOracle = new SacredOracleCore();
+    const oracleResponse = await sacredOracle.generateResponse(
+      message,
+      undefined, // userId
+      { element, archetype }
+    );
+    return {
+      shaped: oracleResponse.message,
+      source: 'sacred-oracle-local',
+      responseTime: 0,
+      fallbackUsed: false,
+      success: true
+    };
   }
 
   /**
@@ -573,7 +585,19 @@ Remember: Even in this mode, maintain the witnessing foundation. Don't analyze o
    */
   async getSystemAnalytics(): Promise<any> {
     const sacredAnalytics = this.sacredCore.getAnalytics();
-    const sesameHealth = await sesameHybridManager.getHealthStatus();
+    // Local Sacred Oracle is always healthy (no external dependencies)
+    const sesameHealth = {
+      endpoints: [{
+        url: 'local://sacred-oracle',
+        type: 'local',
+        status: 'healthy',
+        lastSuccess: Date.now(),
+        averageResponseTime: 50
+      }],
+      activeEndpoints: 1,
+      totalEndpoints: 1,
+      healthScore: 1.0
+    };
     const conversationAnalytics = this.conversationManager.getAnalytics();
     const memoryStats = await this.memoryCore.getStatistics();
 

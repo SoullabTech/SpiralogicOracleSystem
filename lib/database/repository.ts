@@ -253,6 +253,33 @@ export class RepositoryFactory {
 }
 
 /**
+ * Main database repository class that MAIA components expect
+ * This is a convenience wrapper around RepositoryFactory
+ */
+export class DatabaseRepository {
+  private static instance: DatabaseRepository;
+
+  static getInstance(): DatabaseRepository {
+    if (!this.instance) {
+      this.instance = new DatabaseRepository();
+    }
+    return this.instance;
+  }
+
+  createRepository<T>(tableName: string): IRepository<T> {
+    return RepositoryFactory.createRepository<T>(tableName);
+  }
+
+  configure(config: DatabaseConfig): void {
+    RepositoryFactory.configure(config);
+  }
+
+  clearAll(): void {
+    RepositoryFactory.clearAll();
+  }
+}
+
+/**
  * Unit of Work pattern for transaction support
  */
 export class UnitOfWork {

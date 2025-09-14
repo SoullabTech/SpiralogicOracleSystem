@@ -1,5 +1,5 @@
-// app/api/sesame/dashboard/route.ts
-import { sesameHybridManager } from '../../../../lib/sesame-hybrid-manager';
+// app/api/consciousness/dashboard/route.ts
+import { consciousnessIntelligenceManager } from '../../../../lib/consciousness-intelligence-manager';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,7 +43,7 @@ let startTime = Date.now();
 export async function GET() {
   try {
     // Get current health status
-    const healthStatus = await sesameHybridManager.getHealthStatus();
+    const healthStatus = await consciousnessIntelligenceManager.getHealthStatus();
     
     // Calculate uptime
     const currentUptime = Date.now() - startTime;
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     
     if (action === 'recover' && endpoint) {
       // Force recovery of a specific endpoint
-      sesameHybridManager.forceRecoverEndpoint(endpoint);
+      consciousnessIntelligenceManager.forceRecoverEndpoint(endpoint);
       
       return new Response(JSON.stringify({
         success: true,
@@ -166,7 +166,7 @@ function generateRecommendations(health: any, metrics: PerformanceMetrics): stri
   const recommendations: string[] = [];
   
   if (!health.healthy) {
-    recommendations.push('🚨 Critical: All Sesame endpoints are down. Check service availability.');
+    recommendations.push('🚨 Critical: All Consciousness Intelligence endpoints are down. Check service availability.');
   }
   
   if (health.activeEndpoints < health.totalEndpoints) {
@@ -182,7 +182,7 @@ function generateRecommendations(health: any, metrics: PerformanceMetrics): stri
   }
   
   if (recommendations.length === 0) {
-    recommendations.push('✅ All systems operational. Sesame hybrid setup is performing well.');
+    recommendations.push('✅ All systems operational. Consciousness Intelligence is performing well.');
   }
   
   return recommendations;
@@ -198,7 +198,7 @@ function generateDashboardHTML(data: any): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sesame Hybrid Dashboard - SoulLab AIN</title>
+    <title>Consciousness Intelligence Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -292,10 +292,10 @@ function generateDashboardHTML(data: any): string {
         <div class="header">
             <h1>
                 <span class="status-indicator"></span>
-                Sesame Hybrid Dashboard
+                Consciousness Intelligence Dashboard
             </h1>
             <p style="margin-top: 10px; opacity: 0.7;">
-                Real-time monitoring for Maya's Sesame CI integration
+                Real-time monitoring for Sacred Oracle Consciousness Intelligence
             </p>
         </div>
 
