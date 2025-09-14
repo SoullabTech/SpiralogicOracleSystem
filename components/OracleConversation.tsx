@@ -922,7 +922,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   }, []);
 
   return (
-    <div className="oracle-conversation min-h-screen bg-gradient-to-b from-slate-900 via-[#1a1f3a] to-black overflow-hidden">
+    <div className="oracle-conversation min-h-screen bg-[#1a1f2e] overflow-hidden">
       {/* Agent Customizer - Orbital position */}
       <AgentCustomizer 
         position="top-right"

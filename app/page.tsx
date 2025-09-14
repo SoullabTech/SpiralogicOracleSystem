@@ -8,7 +8,11 @@ export default function HomePage() {
   const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Go directly to Oracle Conversation with Tesla design
+    // Check if user has been onboarded
+    const betaOnboarded = localStorage.getItem("betaOnboardingComplete") === "true";
+    const legacyOnboarded = localStorage.getItem("sacredMirrorOnboarded") === "true";
+
+    // Go directly to Oracle Conversation - the working interface
     router.push('/oracle-conversation');
   }, [router]);
 

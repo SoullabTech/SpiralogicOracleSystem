@@ -132,7 +132,7 @@ export default function OnboardingPage() {
   };
 
   const goToOracle = () => {
-    router.push('/sacred-oracle');
+    router.push('/oracle-conversation');
   };
 
   const renderStep = () => {
