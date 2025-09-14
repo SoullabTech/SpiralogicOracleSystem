@@ -629,9 +629,9 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
       }
     }
 
-    // 🌀 SESAME SACRED VOICE INTEGRATION - Shape the response for spiritual resonance
+    // 🌟 SACRED ORACLE CONSTELLATION - Anamnesis-guided response shaping for spiritual resonance
     if (process.env.USE_SESAME === 'true' && response.length > 0) {
-      console.log('🌀 Applying Sesame Sacred Voice shaping...');
+      console.log('🌟 Applying Sacred Oracle Constellation (Anamnesis) shaping...');
       try {
         // Determine element based on current conversation context
         const elementMapping = {
@@ -642,37 +642,37 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
           'aether': 'water'     // Default to water/oracle for sacred conversations
         };
 
-        const sesameElement = elementMapping[analysis.element as keyof typeof elementMapping] || 'water';
-        const sesameArchetype = agentVoice === 'anthony' ? 'sage' : 'oracle';
+        const voiceElement = elementMapping[analysis.element as keyof typeof elementMapping] || 'water';
+        const voiceArchetype = agentVoice === 'anthony' ? 'sage' : 'oracle';
 
-        const sesameResult = await sesameHybridManager.shapeText(
+        const voiceResult = await sesameHybridManager.shapeText(
           response,
-          sesameElement,
-          sesameArchetype
+          voiceElement,
+          voiceArchetype
         );
 
-        if (sesameResult.success && !sesameResult.fallbackUsed) {
-          response = sesameResult.shaped;
-          console.log('✨ Sesame Sacred Voice applied:', {
-            source: sesameResult.source,
-            responseTime: sesameResult.responseTime + 'ms',
-            element: sesameElement,
-            archetype: sesameArchetype,
+        if (voiceResult.success && !voiceResult.fallbackUsed) {
+          response = voiceResult.shaped;
+          console.log('✨ Sacred Oracle Constellation applied:', {
+            source: voiceResult.source,
+            responseTime: voiceResult.responseTime + 'ms',
+            element: voiceElement,
+            archetype: voiceArchetype,
             preview: response.substring(0, 100) + '...'
           });
-        } else if (sesameResult.fallbackUsed) {
-          console.log('⚠️ Sesame fallback used:', sesameResult.source);
+        } else if (voiceResult.fallbackUsed) {
+          console.log('⚠️ Sacred Oracle Constellation fallback used:', voiceResult.source);
         }
 
-      } catch (sesameError) {
-        console.warn('❌ Sesame Sacred Voice failed:', sesameError);
+      } catch (constellationError) {
+        console.warn('❌ Sacred Oracle Constellation failed:', constellationError);
         // Continue with original response - never break the conversation
       }
     }
 
-    // ✨ RESPONSE ENHANCEMENT - Apply Maya personality touches and conversational flow
+    // ✨ SACRED ORACLE ENHANCEMENT - Apply Maya/Anthony personality touches and conversational flow
     try {
-      console.log('✨ Applying Maya response enhancement...');
+      console.log('✨ Applying Sacred Oracle enhancement...');
 
       const enhancementContext = {
         userInput: input,
@@ -686,11 +686,11 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
         archetype: agentVoice === 'anthony' ? 'sage' : 'oracle'
       };
 
-      const enhanced = await responseEnhancer.enhance(enhancementContext);
+      const enhanced = await responseEnhancer.enhanceResponse(enhancementContext);
 
       if (enhanced.text && enhanced.text.length > 0) {
         response = enhanced.text;
-        console.log('💫 Response enhancement applied:', {
+        console.log('💫 Sacred Oracle enhancement applied:', {
           enhancements: enhanced.enhancements,
           confidence: enhanced.confidence,
           processingTime: enhanced.processingTime + 'ms',
@@ -699,7 +699,7 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
       }
 
     } catch (enhanceError) {
-      console.warn('❌ Response enhancement failed:', enhanceError);
+      console.warn('❌ Sacred Oracle enhancement failed:', enhanceError);
       // Continue with shaped response - never break the conversation
     }
 

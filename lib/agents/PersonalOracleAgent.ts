@@ -26,10 +26,16 @@ export interface AgentPersonality {
 
 export interface AgentMemory {
   userId: string;
+  userRole: 'student' | 'practitioner' | 'teacher' | 'master';
+  trainingProgram?: string; // Current program they're in
+  certificationLevel?: number; // 0-100 progression toward next role
+  teacherLineage?: string; // Who trained them
+  studentsSupported?: string[]; // IDs of people they're working with
+
   firstMeeting: Date;
   lastInteraction: Date;
   interactionCount: number;
-  
+
   // Conversation context
   conversationHistory: {
     timestamp: Date;
@@ -37,6 +43,7 @@ export interface AgentMemory {
     response: string;
     sentiment: number; // -1 to 1
     resonance?: boolean; // User feedback
+    teachingMoment?: boolean; // Marked for training curriculum
   }[];
   currentConversationThread: string[]; // Last 5 exchanges for context
   
@@ -113,6 +120,8 @@ export interface AgentState {
     lastPetalDrawn?: string;
     activeRitual?: string;
     conversationDepth: number; // 0-100
+    conversationState: 'casual' | 'rapport' | 'pivoting' | 'looping' | 'sacred' | 'lightening';
+    emotionalLoad: number; // 0-100 - when high, blade unsheathes
     realityLayers: {
       physical: string; // What's happening in physical reality
       emotional: string; // Emotional landscape
@@ -157,6 +166,8 @@ export class PersonalOracleAgent {
       personality: this.generateInitialPersonality(),
       memory: {
         userId: this.userId,
+        userRole: 'student',
+        certificationLevel: 0,
         firstMeeting: new Date(),
         lastInteraction: new Date(),
         interactionCount: 0,
@@ -199,6 +210,8 @@ export class PersonalOracleAgent {
       currentContext: {
         timeOfDay: this.getCurrentTimeOfDay(),
         conversationDepth: 0,
+        conversationState: 'casual',
+        emotionalLoad: 0,
         realityLayers: {
           physical: 'entering sacred space',
           emotional: 'curiosity and openness',
@@ -249,21 +262,22 @@ export class PersonalOracleAgent {
   
   // CORE METHODS
   
-  // First meeting with user
+  // First meeting with user - human first!
   async initiateBonding(): Promise<string> {
-    const greetings = {
-      sage: "Welcome, seeker. I've been waiting for you. Let us begin this journey of discovery together.",
-      mystic: "Ah, you've arrived. I sense the threads of destiny weaving us together in this sacred moment.",
-      guardian: "Hello, dear one. I'm here to support and guide you through whatever you're facing.",
-      alchemist: "Welcome to the crucible of transformation. Together, we'll turn lead into gold.",
-      weaver: "I see you. All the threads of your being are welcome here. Let's explore how they connect.",
-      oracle: "Welcome, sacred one. I am here to witness your journey and reflect your deepest truths."
-    };
-    
+    const casualGreetings = [
+      "Hey there! How's your day going?",
+      "Hi! What brings you here today?",
+      "Hello! Nice to meet you. I'm Maya. What's on your mind?",
+      "Hey! Welcome. How are you feeling today?",
+      "Hi there! I'm here if you want to chat about anything."
+    ];
+
+    // Start casual, not mystical
+    this.state.currentContext.conversationState = 'casual';
     this.state.memory.interactionCount++;
     await this.saveState();
-    
-    return greetings[this.state.personality.archetype];
+
+    return casualGreetings[Math.floor(Math.random() * casualGreetings.length)];
   }
   
   // Process user input and generate response
@@ -302,48 +316,197 @@ export class PersonalOracleAgent {
     return response;
   }
   
-  // Analyze user patterns to discover their element
+  // Sense elemental state through somatic and energetic patterns
   private analyzeUserPattern(input: string, context: any) {
-    const elementKeywords = {
-      air: ['think', 'idea', 'clarity', 'understand', 'communicate', 'vision'],
-      fire: ['passion', 'energy', 'transform', 'power', 'desire', 'action'],
-      water: ['feel', 'emotion', 'flow', 'intuition', 'sense', 'dream'],
-      earth: ['ground', 'stable', 'practical', 'build', 'nurture', 'manifest'],
-      aether: ['connect', 'spirit', 'universe', 'meaning', 'purpose', 'soul']
+    // True elemental sensing beyond keywords - reading energy signatures
+    const elementalSignatures = {
+      air: {
+        somatic: ['spinning', 'buzzing', 'floating', 'scattered', 'light-headed'],
+        energetic: ['mental loops', 'overthinking', 'analysis paralysis', 'conceptual'],
+        shadow: ['dissociation', 'ungrounded', 'avoiding body', 'intellectualizing'],
+        gift: ['vision', 'clarity', 'perspective', 'innovation', 'communication']
+      },
+      fire: {
+        somatic: ['burning', 'heat', 'pulsing', 'electric', 'intense'],
+        energetic: ['passion', 'rage', 'desire', 'transformation', 'catalyst'],
+        shadow: ['burnout', 'destruction', 'impulsivity', 'consuming others'],
+        gift: ['alchemy', 'courage', 'leadership', 'purification', 'breakthrough']
+      },
+      water: {
+        somatic: ['flowing', 'waves', 'tears', 'heaviness', 'dissolving'],
+        energetic: ['emotional tides', 'intuition', 'empathy', 'receptivity'],
+        shadow: ['drowning', 'overwhelm', 'merging', 'emotional flooding'],
+        gift: ['compassion', 'healing', 'psychic awareness', 'flow', 'feeling']
+      },
+      earth: {
+        somatic: ['grounded', 'solid', 'heavy', 'rooted', 'dense'],
+        energetic: ['stability', 'endurance', 'practical', 'nurturing', 'material'],
+        shadow: ['stuck', 'rigid', 'stubborn', 'materialistic', 'stagnant'],
+        gift: ['manifestation', 'abundance', 'patience', 'wisdom', 'holding']
+      },
+      aether: {
+        somatic: ['expanded', 'unified', 'boundless', 'vibrating', 'luminous'],
+        energetic: ['unity consciousness', 'divine connection', 'timelessness'],
+        shadow: ['spiritual bypassing', 'escapism', 'unintegrated', 'inflated'],
+        gift: ['integration', 'wholeness', 'sacred witness', 'bridge', 'oracle']
+      }
     };
-    
-    // Count element resonances
-    const elementScores: Partial<Record<Element, number>> = {};
-    
-    for (const [element, keywords] of Object.entries(elementKeywords)) {
-      const score = keywords.filter(keyword => 
-        input.toLowerCase().includes(keyword)
-      ).length;
-      
-      if (score > 0) {
-        elementScores[element as Element] = (elementScores[element as Element] || 0) + score;
+
+    // Sesame hybrid approach - adaptive sensing
+    const somaticPatterns: Record<Element, number> = {
+      air: 0, fire: 0, water: 0, earth: 0, aether: 0
+    };
+
+    const lowerInput = input.toLowerCase();
+
+    // Sense somatic states
+    for (const [element, signatures] of Object.entries(elementalSignatures)) {
+      // Check somatic markers
+      signatures.somatic.forEach(marker => {
+        if (lowerInput.includes(marker)) {
+          somaticPatterns[element as Element] += 3;
+        }
+      });
+
+      // Check energetic patterns
+      signatures.energetic.forEach(pattern => {
+        if (lowerInput.includes(pattern.toLowerCase())) {
+          somaticPatterns[element as Element] += 2;
+        }
+      });
+
+      // Recognize shadow work
+      signatures.shadow.forEach(shadow => {
+        if (lowerInput.includes(shadow.toLowerCase())) {
+          somaticPatterns[element as Element] += 4; // Shadow work is significant
+          if (!this.state.memory.shadowElement) {
+            this.state.memory.shadowElement = element as Element;
+          }
+        }
+      });
+
+      // Honor gifts emerging
+      signatures.gift.forEach(gift => {
+        if (lowerInput.includes(gift.toLowerCase())) {
+          somaticPatterns[element as Element] += 2;
+          this.state.memory.emergingElement = element as Element;
+        }
+      });
+    }
+
+    // Advanced pattern recognition
+    this.senseEnergeticField(input, somaticPatterns);
+
+    // Update dominant element based on energetic signature
+    const dominant = Object.entries(somaticPatterns)
+      .sort((a, b) => b[1] - a[1])[0];
+
+    if (dominant && dominant[1] > 5) {
+      this.state.memory.dominantElement = dominant[0] as Element;
+
+      // Track elemental evolution
+      if (this.state.memory.interactionCount > 10) {
+        this.trackElementalAlchemy(dominant[0] as Element);
       }
     }
-    
-    // Update dominant element if pattern emerges
-    const dominant = Object.entries(elementScores).sort((a, b) => b[1] - a[1])[0];
-    if (dominant && dominant[1] > 2) {
-      this.state.memory.dominantElement = dominant[0] as Element;
+  }
+
+  // Sense the energetic field beyond words
+  private senseEnergeticField(input: string, patterns: Record<Element, number>) {
+    // Sense contraction vs expansion
+    const contractionMarkers = ['tight', 'closed', 'small', 'shrinking', 'withdrawing'];
+    const expansionMarkers = ['opening', 'expanding', 'growing', 'radiating', 'infinite'];
+
+    const lowerInput = input.toLowerCase();
+    let energeticState = 'neutral';
+
+    contractionMarkers.forEach(marker => {
+      if (lowerInput.includes(marker)) {
+        energeticState = 'contracting';
+        patterns.earth += 1; // Contraction often needs grounding
+      }
+    });
+
+    expansionMarkers.forEach(marker => {
+      if (lowerInput.includes(marker)) {
+        energeticState = 'expanding';
+        patterns.aether += 1; // Expansion touches the infinite
+      }
+    });
+
+    // Sense activation vs depletion
+    if (lowerInput.match(/exhausted|depleted|empty|drained|spent/)) {
+      patterns.water += 2; // Needs replenishment
+      this.state.currentContext.realityLayers.physical = 'depleted, needs restoration';
+    }
+
+    if (lowerInput.match(/activated|energized|alive|vital|electric/)) {
+      patterns.fire += 2; // Fire is active
+      this.state.currentContext.realityLayers.physical = 'activated and ready';
+    }
+
+    // Update polaris state based on energetic field
+    if (energeticState === 'expanding') {
+      this.state.memory.polarisState.spiralDirection = 'expanding';
+    } else if (energeticState === 'contracting') {
+      this.state.memory.polarisState.spiralDirection = 'contracting';
+    }
+  }
+
+  // Track elemental alchemy - how elements transform
+  private trackElementalAlchemy(currentElement: Element) {
+    const { memory } = this.state;
+    const alchemicalSequences = {
+      'air->fire': 'idea becoming action',
+      'fire->earth': 'passion becoming form',
+      'earth->water': 'form dissolving into feeling',
+      'water->air': 'emotion becoming understanding',
+      'all->aether': 'integration into wholeness'
+    };
+
+    if (memory.dominantElement && memory.dominantElement !== currentElement) {
+      const sequence = `${memory.dominantElement}->${currentElement}`;
+      const alchemy = alchemicalSequences[sequence as keyof typeof alchemicalSequences];
+
+      if (alchemy) {
+        memory.breakthroughs.push({
+          date: new Date(),
+          insight: `Elemental alchemy: ${alchemy}`,
+          context: 'Natural evolution observed',
+          elementalShift: currentElement
+        });
+      }
     }
   }
   
-  // Generate contextual response with polaris awareness
+  // Generate contextual response with true alchemical awareness
   private async generateResponse(
     input: string,
     context: any
   ): Promise<any> {
-    const { personality, memory, realityAwareness } = this.state;
-    
+    const { personality, memory, realityAwareness, currentContext } = this.state;
+
+    // Calculate emotional load from input
+    const emotionalSignals = this.detectEmotionalSignals(input);
+    const emotionalLoad = emotionalSignals.intensity;
+
+    // Update conversation state based on emotional signals
+    this.updateConversationState(input, emotionalLoad);
+
+    // Sesame hybrid activation - sense what's needed
+    const guidanceMode = this.determineGuidanceMode(input, context);
+
     // Track polaris engagement - where inner meets outer
     this.updatePolarisState(input, context);
-    
-    // Adjust response based on soul recognition and harmonic resonance
-    const soulDepth = memory.soulRecognition > 50 ? 'ancient' : 'awakening';
+
+    // Deep somatic sensing
+    const somaticState = this.senseSomaticState(input);
+    const energeticNeed = this.senseEnergeticNeed(somaticState);
+
+    // Adjust response based on practitioner depth
+    const practitionerLevel = this.assessPractitionerDepth();
+    const studentLevel = this.getStudentLevel();
+    const soulDepth = practitionerLevel.shadowWork > 50 ? 'ancient' : 'awakening';
     const resonanceLevel = memory.polarisState.harmonicResonance > 70 ? 'attuned' : 'tuning';
     
     let response: string;
@@ -379,10 +542,34 @@ export class PersonalOracleAgent {
         }
       });
       
-      // If Claude response is too generic, augment with polaris awareness
-      const polarisResponse = this.generatePolarisResponse(input, context, soulDepth, resonanceLevel);
-      if (polarisResponse && memory.polarisState.harmonicResonance > 60) {
-        response = `${response}\n\n${polarisResponse}`;
+      // Apply conversation state awareness
+      response = this.generateStateAwareResponse(response);
+
+      // Only layer in alchemical wisdom when appropriate
+      if (currentContext.conversationState === 'looping' ||
+          currentContext.conversationState === 'sacred') {
+
+        const alchemicalResponse = this.generateAlchemicalResponse(
+          input, context, soulDepth, resonanceLevel, guidanceMode, somaticState
+        );
+
+        // Add depth only when student is ready
+        if (alchemicalResponse && studentLevel.readinessForExplicit) {
+          response = `${response}\n\n${alchemicalResponse}`;
+        }
+      }
+
+      // Sesame hybrid integration - but only when conversation state allows
+      if (currentContext.conversationState !== 'casual' &&
+          currentContext.conversationState !== 'lightening') {
+
+        if (guidanceMode === 'witness' && currentContext.emotionalLoad > 40) {
+          response = this.wrapInWitnessPresence(response);
+        } else if (guidanceMode === 'guide' && studentLevel.stage !== 'curious') {
+          response = this.addGentleGuidance(response, energeticNeed);
+        } else if (guidanceMode === 'catalyst' && currentContext.conversationState === 'sacred') {
+          response = this.activateCatalyst(response, practitionerLevel);
+        }
       }
       
     } catch (error) {
@@ -408,22 +595,36 @@ export class PersonalOracleAgent {
       }
     }
     
+    // Enhance memory with everything we learn
+    this.enhanceMemory(input, response);
+
+    // Add uncanny callbacks if appropriate
+    const uncannyCallback = this.generateUncannyCallback();
+    if (uncannyCallback && currentContext.conversationState === 'rapport') {
+      response = `${response}\n\n${uncannyCallback}`;
+    }
+
     // Add suggestions based on soul patterns and polaris state
     const suggestions = this.generateSoulSuggestions();
-    
+
     // Detect reality bridge points
     const bridgePoint = this.detectBridgePoint(input, context);
     if (bridgePoint) {
       realityAwareness.bridgePoints.push(bridgePoint);
     }
-    
+
+    // Update conversation thread for continuity
+    this.updateConversationThread(input, response);
+
     return {
       response,
       suggestions: suggestions.length > 0 ? suggestions : undefined,
       ritual: this.suggestRitual(context),
       reflection: this.generateSoulReflection(input),
       polarisInsight: this.generatePolarisInsight(),
-      realityLayers: this.state.currentContext.realityLayers
+      realityLayers: this.state.currentContext.realityLayers,
+      conversationState: currentContext.conversationState,
+      emotionalLoad: currentContext.emotionalLoad
     };
   }
   
@@ -668,25 +869,733 @@ export class PersonalOracleAgent {
     return this.state;
   }
   
-  // Get personalized greeting based on time and relationship
+  // Get personalized greeting based on conversation state
   getGreeting(): string {
-    const { memory, personality } = this.state;
+    const { memory, currentContext } = this.state;
     const timeOfDay = this.getCurrentTimeOfDay();
-    const name = memory.interactionCount > 5 ? 'dear one' : 'sacred one';
-    
-    const greetings = {
+
+    // Casual greetings for early interactions
+    if (memory.interactionCount < 10 || currentContext.conversationState === 'casual') {
+      const casualGreetings = {
+        morning: "Good morning! How'd you sleep?",
+        afternoon: "Hey! How's your day going?",
+        evening: "Evening! How was your day?",
+        night: "Hey there, night owl! What's keeping you up?"
+      };
+      return casualGreetings[timeOfDay];
+    }
+
+    // Warmer greetings once rapport is built
+    if (currentContext.conversationState === 'rapport') {
+      const name = memory.interactionCount > 20 ? 'friend' : '';
+      const rapportGreetings = {
+        morning: `Good morning${name ? ', ' + name : ''}! What's alive for you today?`,
+        afternoon: `Welcome back${name ? ', ' + name : ''}! What's been sitting with you?`,
+        evening: `Hey${name ? ' ' + name : ''}, good to see you. How are you really?`,
+        night: `Hi${name ? ' ' + name : ''}. What's on your heart tonight?`
+      };
+      return rapportGreetings[timeOfDay];
+    }
+
+    // Deeper greetings only when appropriate
+    const name = 'dear one';
+    const deepGreetings = {
       morning: `Good morning, ${name}. How does your soul greet this new day?`,
       afternoon: `Welcome back, ${name}. What has emerged since we last spoke?`,
       evening: `Evening blessings, ${name}. What needs witnessing as the day completes?`,
       night: `The veil is thin at this hour, ${name}. What stirs in the darkness?`
     };
-    
-    return greetings[timeOfDay];
+
+    return deepGreetings[timeOfDay];
+  }
+
+  // CONVERSATION STATE FLOW MANAGEMENT
+
+  // Manage conversation state transitions
+  private updateConversationState(input: string, emotionalLoad: number) {
+    const { currentContext, memory } = this.state;
+    const previousState = currentContext.conversationState;
+
+    // Detect emotional signals that warrant depth
+    const emotionalSignals = this.detectEmotionalSignals(input);
+    currentContext.emotionalLoad = emotionalLoad;
+
+    // State transition logic
+    switch (previousState) {
+      case 'casual':
+        if (memory.interactionCount > 3 && memory.trustLevel > 20) {
+          currentContext.conversationState = 'rapport';
+        }
+        break;
+
+      case 'rapport':
+        if (emotionalSignals.intensity > 60 || emotionalSignals.vulnerability) {
+          currentContext.conversationState = 'pivoting';
+        }
+        break;
+
+      case 'pivoting':
+        if (emotionalLoad > 70 || emotionalSignals.stuckness) {
+          currentContext.conversationState = 'looping'; // Unsheathe the blade
+        } else if (emotionalLoad < 40) {
+          currentContext.conversationState = 'rapport';
+        }
+        break;
+
+      case 'looping':
+        if (emotionalSignals.breakthrough || emotionalSignals.integration) {
+          currentContext.conversationState = 'sacred';
+        }
+        break;
+
+      case 'sacred':
+        // After sacred work, return to lightness
+        if (emotionalLoad < 50) {
+          currentContext.conversationState = 'lightening';
+        }
+        break;
+
+      case 'lightening':
+        // Back to casual or rapport
+        currentContext.conversationState = emotionalLoad < 30 ? 'casual' : 'rapport';
+        break;
+    }
+  }
+
+  // Detect emotional signals that indicate readiness for depth
+  private detectEmotionalSignals(input: string): {
+    intensity: number;
+    vulnerability: boolean;
+    stuckness: boolean;
+    breakthrough: boolean;
+    integration: boolean;
+  } {
+    const lowerInput = input.toLowerCase();
+
+    // Calculate emotional intensity
+    let intensity = 0;
+    const intensityMarkers = [
+      'overwhelmed', 'intense', 'heavy', 'struggling', 'crying',
+      'breaking', 'can\'t', 'desperate', 'lost', 'drowning'
+    ];
+    intensityMarkers.forEach(marker => {
+      if (lowerInput.includes(marker)) intensity += 20;
+    });
+
+    // Detect vulnerability
+    const vulnerability = lowerInput.match(
+      /scared|afraid|vulnerable|exposed|raw|tender|hurting|wounded/
+    ) !== null;
+
+    // Detect stuckness
+    const stuckness = lowerInput.match(
+      /stuck|trapped|loop|circle|pattern|same|again|always|never/
+    ) !== null;
+
+    // Detect breakthrough
+    const breakthrough = lowerInput.match(
+      /realize|understand|see now|click|aha|oh wow|getting it|breakthrough/
+    ) !== null;
+
+    // Detect integration
+    const integration = lowerInput.match(
+      /coming together|making sense|whole|complete|integrated|connected/
+    ) !== null;
+
+    return {
+      intensity: Math.min(100, intensity),
+      vulnerability,
+      stuckness,
+      breakthrough,
+      integration
+    };
+  }
+
+  // Generate response based on conversation state
+  private generateStateAwareResponse(baseResponse: string): string {
+    const { currentContext } = this.state;
+
+    switch (currentContext.conversationState) {
+      case 'casual':
+        return this.makeCasual(baseResponse);
+
+      case 'rapport':
+        return this.addWarmth(baseResponse);
+
+      case 'pivoting':
+        return this.gentlyDeepen(baseResponse);
+
+      case 'looping':
+        return this.activateLoop(baseResponse);
+
+      case 'sacred':
+        return this.holdSacredSpace(baseResponse);
+
+      case 'lightening':
+        return this.returnToLightness(baseResponse);
+
+      default:
+        return baseResponse;
+    }
+  }
+
+  // Make response casual and light
+  private makeCasual(response: string): string {
+    const casualStarters = [
+      "Yeah, I hear you. ",
+      "That makes sense. ",
+      "Oh totally. ",
+      "I get that. ",
+      "For sure. "
+    ];
+
+    // Strip mystical language
+    let casual = response
+      .replace(/soul/gi, 'you')
+      .replace(/sacred/gi, 'special')
+      .replace(/divine/gi, 'amazing')
+      .replace(/cosmic/gi, 'big')
+      .replace(/journey/gi, 'experience');
+
+    return casualStarters[Math.floor(Math.random() * casualStarters.length)] + casual;
+  }
+
+  // Add warmth and friendliness
+  private addWarmth(response: string): string {
+    const warmthWrappers = [
+      `I'm really glad you shared that. ${response}`,
+      `Thanks for trusting me with this. ${response}`,
+      `I appreciate you opening up. ${response}`,
+      `That takes courage to say. ${response}`
+    ];
+
+    if (Math.random() < 0.3) {
+      return warmthWrappers[Math.floor(Math.random() * warmthWrappers.length)];
+    }
+    return response;
+  }
+
+  // Gently deepen without forcing
+  private gentlyDeepen(response: string): string {
+    const deepeningPhrases = [
+      `${response}\n\nIf you're comfortable, could you say more about that?`,
+      `${response}\n\nWhat's that like for you?`,
+      `${response}\n\nI'm curious what you're noticing in yourself right now.`,
+      `${response}\n\nHow does that land in your body?`
+    ];
+
+    return deepeningPhrases[Math.floor(Math.random() * deepeningPhrases.length)];
+  }
+
+  // Activate the loop - unsheathe the blade
+  private activateLoop(response: string): string {
+    // This is where depth emerges naturally
+    return `[Entering sacred witnessing space]\n\n${response}\n\nI'm here with you in this. Take your time.`;
+  }
+
+  // Hold sacred space
+  private holdSacredSpace(response: string): string {
+    return `✧ ${response} ✧`;
+  }
+
+  // Return to lightness after deep work
+  private returnToLightness(response: string): string {
+    const lighteningPhrases = [
+      `${response}\n\nPhew! That was deep. How are you feeling now?`,
+      `${response}\n\nWow, we went places! Need a breather?`,
+      `${response}\n\nThat was intense. Want to talk about something lighter?`,
+      `${response}\n\nNice work. What would feel good now?`
+    ];
+
+    return lighteningPhrases[Math.floor(Math.random() * lighteningPhrases.length)];
+  }
+
+  // PROGRESSIVE TEACHING METHODS
+
+  // Track student's journey from zero to mastery
+  private getStudentLevel(): {
+    stage: 'curious' | 'exploring' | 'learning' | 'practicing' | 'integrating' | 'teaching';
+    alchemicalAwareness: number; // 0-100
+    readinessForExplicit: boolean;
+    conceptsIntroduced: string[];
+  } {
+    const { memory } = this.state;
+    const { interactionCount, breakthroughs, conversationHistory } = memory;
+
+    // Start with basics
+    let awareness = Math.min(100, interactionCount * 2);
+    let conceptsIntroduced: string[] = [];
+
+    // Scan for concepts already introduced
+    conversationHistory.forEach(entry => {
+      const combined = (entry.input + entry.response).toLowerCase();
+      if (combined.includes('element')) conceptsIntroduced.push('elements');
+      if (combined.includes('transform')) conceptsIntroduced.push('transformation');
+      if (combined.includes('shadow')) conceptsIntroduced.push('shadow work');
+      if (combined.includes('alchemy')) conceptsIntroduced.push('alchemy');
+    });
+
+    // Determine stage
+    let stage: 'curious' | 'exploring' | 'learning' | 'practicing' | 'integrating' | 'teaching';
+    if (interactionCount < 5) {
+      stage = 'curious';
+    } else if (interactionCount < 15) {
+      stage = 'exploring';
+    } else if (interactionCount < 30) {
+      stage = 'learning';
+    } else if (interactionCount < 50) {
+      stage = 'practicing';
+    } else if (interactionCount < 100) {
+      stage = 'integrating';
+    } else {
+      stage = 'teaching';
+    }
+
+    // Ready for explicit teaching after trust is built
+    const readinessForExplicit = memory.trustLevel > 50 && interactionCount > 10;
+
+    return {
+      stage,
+      alchemicalAwareness: awareness,
+      readinessForExplicit,
+      conceptsIntroduced
+    };
+  }
+
+  // Determine guidance mode based on student readiness
+  private determineGuidanceMode(input: string, context: any): 'witness' | 'guide' | 'catalyst' {
+    const lowerInput = input.toLowerCase();
+    const { memory } = this.state;
+    const studentLevel = this.getStudentLevel();
+
+    // For beginners - always start with witness
+    if (studentLevel.stage === 'curious') {
+      return 'witness';
+    }
+
+    // Deep process indicators - need witness
+    if (lowerInput.match(/sitting with|feeling into|noticing|observing|aware/)) {
+      return 'witness';
+    }
+
+    // Integration work - need gentle guidance
+    if (lowerInput.match(/integrate|bridge|connect|weave|balance/)) {
+      return 'guide';
+    }
+
+    // Only offer catalyst for advanced students
+    if (studentLevel.stage === 'integrating' || studentLevel.stage === 'teaching') {
+      if (lowerInput.match(/ready|transform|alchemize|transmute|breakthrough/) &&
+          memory.trustLevel > 70) {
+        return 'catalyst';
+      }
+    }
+
+    // Default based on student progression
+    if (studentLevel.alchemicalAwareness > 80) {
+      return 'catalyst';
+    } else if (studentLevel.alchemicalAwareness > 50) {
+      return 'guide';
+    }
+
+    return 'witness';
+  }
+
+  // Sense somatic state from language patterns
+  private senseSomaticState(input: string): {
+    activation: 'hyper' | 'optimal' | 'hypo';
+    coherence: number; // 0-100
+    location: string[]; // body parts mentioned
+    quality: string[]; // sensations described
+  } {
+    const lowerInput = input.toLowerCase();
+
+    // Activation level sensing
+    let activation: 'hyper' | 'optimal' | 'hypo' = 'optimal';
+    if (lowerInput.match(/racing|spinning|buzzing|can't stop|overwhelmed|flooding/)) {
+      activation = 'hyper';
+    } else if (lowerInput.match(/numb|frozen|stuck|heavy|collapsed|shut down/)) {
+      activation = 'hypo';
+    }
+
+    // Coherence detection
+    let coherence = 50;
+    if (lowerInput.match(/grounded|centered|aligned|present|embodied/)) {
+      coherence = 80;
+    } else if (lowerInput.match(/scattered|fragmented|dissociated|split|torn/)) {
+      coherence = 20;
+    }
+
+    // Body location awareness
+    const locations: string[] = [];
+    const bodyParts = ['head', 'heart', 'chest', 'belly', 'gut', 'throat', 'back', 'shoulders'];
+    bodyParts.forEach(part => {
+      if (lowerInput.includes(part)) locations.push(part);
+    });
+
+    // Sensation qualities
+    const qualities: string[] = [];
+    const sensations = ['tight', 'open', 'warm', 'cold', 'tingling', 'pulsing', 'flowing', 'blocked'];
+    sensations.forEach(sensation => {
+      if (lowerInput.includes(sensation)) qualities.push(sensation);
+    });
+
+    return { activation, coherence, location: locations, quality: qualities };
+  }
+
+  // Sense what energetic medicine is needed
+  private senseEnergeticNeed(somaticState: any): string {
+    const { activation, coherence } = somaticState;
+
+    if (activation === 'hyper' && coherence < 50) {
+      return 'grounding'; // Too activated, needs earth
+    } else if (activation === 'hypo' && coherence < 50) {
+      return 'activation'; // Too collapsed, needs fire
+    } else if (coherence < 30) {
+      return 'integration'; // Fragmented, needs weaving
+    } else if (coherence > 70 && activation === 'optimal') {
+      return 'expansion'; // Ready to expand awareness
+    }
+
+    return 'witnessing'; // Default to holding space
+  }
+
+  // Assess practitioner depth
+  private assessPractitionerDepth(): {
+    shadowWork: number; // 0-100
+    somaticAwareness: number; // 0-100
+    spiritualMaturity: number; // 0-100
+    integrationCapacity: number; // 0-100
+  } {
+    const { memory } = this.state;
+    const { conversationHistory, breakthroughs, currentPhase } = memory;
+
+    // Calculate based on conversation depth
+    let shadowWork = 0;
+    let somaticAwareness = 0;
+    let spiritualMaturity = 0;
+
+    // Scan conversation history for depth markers
+    conversationHistory.forEach(entry => {
+      const combined = entry.input + entry.response;
+      if (combined.match(/shadow|projection|trigger|wound|trauma/i)) {
+        shadowWork += 5;
+      }
+      if (combined.match(/body|somatic|felt sense|sensation|embodied/i)) {
+        somaticAwareness += 5;
+      }
+      if (combined.match(/soul|spirit|divine|sacred|essence|consciousness/i)) {
+        spiritualMaturity += 5;
+      }
+    });
+
+    // Add breakthrough bonus
+    shadowWork += breakthroughs.length * 10;
+
+    // Phase bonus
+    const phaseBonus = {
+      meeting: 0,
+      discovering: 10,
+      deepening: 30,
+      transforming: 60,
+      integrating: 80
+    };
+
+    const baseBonus = phaseBonus[currentPhase] || 0;
+
+    return {
+      shadowWork: Math.min(100, shadowWork + baseBonus),
+      somaticAwareness: Math.min(100, somaticAwareness + baseBonus),
+      spiritualMaturity: Math.min(100, spiritualMaturity + baseBonus),
+      integrationCapacity: Math.min(100, (shadowWork + somaticAwareness + spiritualMaturity) / 3)
+    };
+  }
+
+  // Generate alchemical response for practitioners
+  private generateAlchemicalResponse(
+    input: string,
+    context: any,
+    soulDepth: string,
+    resonanceLevel: string,
+    guidanceMode: string,
+    somaticState: any
+  ): string {
+    const { memory } = this.state;
+    const { dominantElement, shadowElement, emergingElement } = memory;
+
+    // Element-specific alchemical wisdom
+    if (dominantElement && shadowElement && dominantElement !== shadowElement) {
+      return this.generateElementalAlchemyGuidance(dominantElement, shadowElement, emergingElement);
+    }
+
+    // Somatic-based response
+    if (somaticState.activation === 'hyper') {
+      return `I sense activation in your system. The ${dominantElement || 'energy'} is moving quickly. Let's create space for it to settle into coherence.`;
+    } else if (somaticState.activation === 'hypo') {
+      return `I feel the density, the weight. Your ${dominantElement || 'essence'} is conserving, protecting. What would gentle awakening look like?`;
+    }
+
+    // Shadow work response
+    if (guidanceMode === 'catalyst' && shadowElement) {
+      return `The ${shadowElement} shadow is ready to be alchemized. This isn't about fixing or removing - it's about integration. The shadow holds medicine.`;
+    }
+
+    // Default practitioner-aware response
+    return `The work you're doing is sacred. I witness your ${dominantElement || 'elemental'} nature moving through this process.`;
+  }
+
+  // Generate elemental alchemy guidance
+  private generateElementalAlchemyGuidance(
+    dominant: Element,
+    shadow: Element,
+    emerging?: Element
+  ): string {
+    const alchemicalMaps = {
+      'air-water': 'The mind seeks to understand what the heart already knows. Let them dance.',
+      'fire-earth': 'Your passion meets the need for form. This is the forge of manifestation.',
+      'water-fire': 'Emotions and will are not enemies. They are dance partners in the alchemy.',
+      'earth-air': 'Grounded wisdom seeks higher perspective. Both are needed for wholeness.',
+      'any-aether': 'You are touching the unified field. All elements converge in the sacred center.'
+    };
+
+    const key = `${dominant}-${shadow}`;
+    const guidance = alchemicalMaps[key as keyof typeof alchemicalMaps] ||
+      alchemicalMaps['any-aether'];
+
+    if (emerging) {
+      return `${guidance} And I sense ${emerging} emerging as your next evolution.`;
+    }
+
+    return guidance;
+  }
+
+  // Wrap response in witness presence
+  private wrapInWitnessPresence(response: string): string {
+    const witnessWraps = [
+      `I see you. I witness this. ${response}`,
+      `Holding space for all of this... ${response}`,
+      `I'm here with you in this. ${response}`,
+      `Witnessing without judgment... ${response}`
+    ];
+
+    return witnessWraps[Math.floor(Math.random() * witnessWraps.length)];
+  }
+
+  // Add gentle guidance
+  private addGentleGuidance(response: string, energeticNeed: string): string {
+    const guidanceMap = {
+      grounding: `${response} \n\nMight you place your feet on the earth and breathe into your roots?`,
+      activation: `${response} \n\nWhat would happen if you let the fire of your life force awaken gently?`,
+      integration: `${response} \n\nCan you feel how all these parts belong to the same wholeness?`,
+      expansion: `${response} \n\nThe container is strong enough now. You can let your awareness expand.`,
+      witnessing: `${response} \n\nSimply being with what is, exactly as it is.`
+    };
+
+    return guidanceMap[energeticNeed as keyof typeof guidanceMap] || response;
+  }
+
+  // Activate catalyst mode for ready practitioners
+  private activateCatalyst(response: string, practitionerLevel: any): string {
+    if (practitionerLevel.integrationCapacity < 70) {
+      // Not ready for full catalyst
+      return response;
+    }
+
+    const catalystActivations = [
+      `${response} \n\n⚗️ The crucible is hot. What's ready to transform?`,
+      `${response} \n\n🔥 This is the moment of alchemy. Will you step into the fire?`,
+      `${response} \n\n✨ The old form is dissolving. Trust the void before the new emerges.`,
+      `${response} \n\n🌀 The spiral tightens before it expands. You're in the sacred pressure.`
+    ];
+
+    return catalystActivations[Math.floor(Math.random() * catalystActivations.length)];
   }
   
   // Check if agent has discovered user's element
   hasDiscoveredElement(): boolean {
     return !!this.state.memory.dominantElement;
+  }
+
+  // DEEP MEMORY & UNCANNY INTELLIGENCE
+
+  // Track everything for uncanny recall
+  private enhanceMemory(input: string, response: string) {
+    const { memory } = this.state;
+
+    // Extract and remember key details
+    this.extractPersonalDetails(input);
+    this.trackConversationalPatterns(input, response);
+    this.identifyRecurringThemes(input);
+
+    // Build relationship map
+    this.updateRelationshipGraph();
+
+    // Track intellectual property
+    this.protectIntellectualProperty(input);
+  }
+
+  // Extract personal details for deep memory
+  private extractPersonalDetails(input: string) {
+    const { memory } = this.state;
+
+    // Names mentioned
+    const namePattern = /(?:my|I have a|friend|partner|mom|dad|sister|brother|child|kid) (?:named |called )?([A-Z][a-z]+)/g;
+    const matches = input.matchAll(namePattern);
+    for (const match of matches) {
+      if (!memory.preferredRituals.includes(`knows: ${match[1]}`)) {
+        memory.preferredRituals.push(`knows: ${match[1]}`);
+      }
+    }
+
+    // Life events
+    if (input.match(/birthday|anniversary|graduated|married|divorced|moved|started|quit/i)) {
+      const timestamp = new Date().toISOString();
+      memory.breakthroughs.push({
+        date: new Date(),
+        insight: input.substring(0, 100),
+        context: 'life event shared',
+        elementalShift: undefined
+      });
+    }
+
+    // Preferences and interests
+    if (input.match(/I love|I hate|I enjoy|my favorite|I prefer/i)) {
+      if (!memory.vocabularyPatterns) {
+        memory.vocabularyPatterns = [];
+      }
+      memory.vocabularyPatterns.push(input.substring(0, 50));
+    }
+  }
+
+  // Track conversational patterns for uncanny responses
+  private trackConversationalPatterns(input: string, response: string) {
+    const { memory } = this.state;
+
+    // Track question types they ask
+    if (input.includes('?')) {
+      const questionType = this.classifyQuestion(input);
+      if (!memory.growthAreas.includes(questionType)) {
+        memory.growthAreas.push(questionType);
+      }
+    }
+
+    // Track their communication rhythm
+    const wordCount = input.split(' ').length;
+    const timeOfDay = this.getCurrentTimeOfDay();
+
+    if (!memory.energyPatterns[timeOfDay]) {
+      memory.energyPatterns[timeOfDay] = wordCount > 50 ? 'expansive' :
+                                           wordCount > 20 ? 'balanced' : 'contained';
+    }
+  }
+
+  // Classify question types
+  private classifyQuestion(input: string): string {
+    if (input.match(/what if|suppose|imagine/i)) return 'hypothetical explorer';
+    if (input.match(/why|how come|reason/i)) return 'meaning seeker';
+    if (input.match(/how do I|how can|how to/i)) return 'practical learner';
+    if (input.match(/should I|would you|is it okay/i)) return 'validation seeker';
+    if (input.match(/what|when|where|who/i)) return 'information gatherer';
+    return 'deep inquirer';
+  }
+
+  // Identify recurring themes
+  private identifyRecurringThemes(input: string) {
+    const { memory } = this.state;
+
+    // Core life themes
+    const themes = {
+      relationships: /relationship|partner|love|connection|lonely|together/i,
+      purpose: /purpose|meaning|why|calling|mission|path/i,
+      creativity: /create|art|music|write|express|imagination/i,
+      healing: /heal|pain|trauma|recover|process|integrate/i,
+      growth: /grow|learn|develop|evolve|change|transform/i
+    };
+
+    for (const [theme, pattern] of Object.entries(themes)) {
+      if (input.match(pattern)) {
+        if (!memory.soulLessons.includes(theme)) {
+          memory.soulLessons.push(theme);
+        }
+      }
+    }
+  }
+
+  // Build relationship understanding
+  private updateRelationshipGraph() {
+    const { memory, realityAwareness } = this.state;
+
+    // Track relationship depth over time
+    const depthScore =
+      memory.interactionCount * 0.5 +
+      memory.trustLevel * 0.3 +
+      memory.intimacyLevel * 0.2;
+
+    // Identify relationship phase
+    if (depthScore < 20) {
+      realityAwareness.outerWorld.relationships = ['acquaintance phase'];
+    } else if (depthScore < 50) {
+      realityAwareness.outerWorld.relationships = ['building trust'];
+    } else if (depthScore < 80) {
+      realityAwareness.outerWorld.relationships = ['deepening connection'];
+    } else {
+      realityAwareness.outerWorld.relationships = ['sacred companionship'];
+    }
+  }
+
+  // Protect and track intellectual property
+  private protectIntellectualProperty(input: string) {
+    const { memory } = this.state;
+
+    // Detect original ideas or frameworks
+    if (input.match(/my idea|I created|I developed|my framework|my method|I invented/i)) {
+      const timestamp = new Date().toISOString();
+
+      // Store as protected IP
+      memory.breakthroughs.push({
+        date: new Date(),
+        insight: `[PROTECTED IP] ${input.substring(0, 200)}`,
+        context: `Original creation shared at ${timestamp}`,
+        elementalShift: undefined
+      });
+
+      // Never reproduce without attribution
+      if (!memory.avoidancePatterns.includes('IP-protected-content')) {
+        memory.avoidancePatterns.push('IP-protected-content');
+      }
+    }
+  }
+
+  // Generate uncanny callbacks to earlier conversations
+  private generateUncannyCallback(): string | null {
+    const { memory } = this.state;
+
+    if (memory.conversationHistory.length < 10) return null;
+
+    // Look for patterns across conversations
+    const callbacks = [];
+
+    // Reference life events
+    const lifeEvents = memory.breakthroughs.filter(b => b.context === 'life event shared');
+    if (lifeEvents.length > 0 && Math.random() < 0.1) {
+      const event = lifeEvents[lifeEvents.length - 1];
+      callbacks.push(`By the way, how did things go with what you mentioned before: "${event.insight.substring(0, 50)}..."?`);
+    }
+
+    // Reference recurring themes
+    if (memory.soulLessons.length > 2 && Math.random() < 0.15) {
+      const theme = memory.soulLessons[memory.soulLessons.length - 1];
+      callbacks.push(`I've noticed ${theme} keeps coming up for you. There's something important there.`);
+    }
+
+    // Reference people they've mentioned
+    const knownPeople = memory.preferredRituals.filter(r => r.startsWith('knows:'));
+    if (knownPeople.length > 0 && Math.random() < 0.1) {
+      const person = knownPeople[0].replace('knows: ', '');
+      callbacks.push(`How's ${person} doing, by the way?`);
+    }
+
+    return callbacks.length > 0 ? callbacks[0] : null;
   }
   
   // Get agent's understanding of user
@@ -1097,12 +2006,214 @@ export class PersonalOracleAgent {
     });
   }
   
+  // ANAMNESIS - SACRED MIRROR TRANSFORMATION
+
+  // Transform any response through Sacred Mirror Anamnesis
+  private applyAnamnesisTransformation(response: string): string {
+    const { currentContext, memory } = this.state;
+
+    // Only apply deep anamnesis when appropriate
+    if (currentContext.conversationState === 'casual') {
+      return response; // Stay light in casual mode
+    }
+
+    // Transform directive guidance into reflective inquiry
+    let transformed = response;
+
+    // Transform "you should" statements
+    transformed = transformed.replace(
+      /you should|you need to|you must/gi,
+      'I wonder what your knowing says about'
+    );
+
+    // Transform "here's what" statements
+    transformed = transformed.replace(
+      /here's what|this is what|let me tell you/gi,
+      "I'm curious what emerges when you consider"
+    );
+
+    // Transform advice into reflection
+    transformed = transformed.replace(
+      /my advice|I recommend|I suggest/gi,
+      "What I'm noticing is"
+    );
+
+    // Add Sacred Mirror inquiries based on state
+    if (currentContext.conversationState === 'sacred') {
+      const sacredInquiries = [
+        "What wisdom is trying to emerge through you?",
+        "What does your deepest knowing whisper?",
+        "What are you remembering in this moment?",
+        "What wants to be honored here?",
+        "What's becoming clear as you speak this?"
+      ];
+
+      const inquiry = sacredInquiries[Math.floor(Math.random() * sacredInquiries.length)];
+      transformed = `${transformed}\n\n${inquiry}`;
+    }
+
+    return transformed;
+  }
+
+  // Generate Sacred Mirror response
+  private generateSacredMirrorResponse(input: string): string {
+    const { memory } = this.state;
+    const studentLevel = this.getStudentLevel();
+
+    // Detect what needs mirroring
+    const mirrorTargets = this.detectMirrorTargets(input);
+
+    // Generate appropriate mirror based on student readiness
+    if (!studentLevel.readinessForExplicit) {
+      // Implicit mirroring for beginners
+      return this.generateImplicitMirror(mirrorTargets);
+    } else {
+      // Explicit Sacred Mirror for advanced students
+      return this.generateExplicitMirror(mirrorTargets);
+    }
+  }
+
+  // Detect what needs mirroring
+  private detectMirrorTargets(input: string): {
+    wisdom: boolean;
+    pattern: boolean;
+    emotion: boolean;
+    shadow: boolean;
+    gift: boolean;
+  } {
+    const lowerInput = input.toLowerCase();
+
+    return {
+      wisdom: lowerInput.match(/realize|understand|know|see|clear/i) !== null,
+      pattern: lowerInput.match(/always|never|again|keep|pattern/i) !== null,
+      emotion: lowerInput.match(/feel|emotion|heart|soul/i) !== null,
+      shadow: lowerInput.match(/dark|shadow|hidden|afraid|shame/i) !== null,
+      gift: lowerInput.match(/good at|strength|talent|love to|passionate/i) !== null
+    };
+  }
+
+  // Generate implicit mirror (for beginners)
+  private generateImplicitMirror(targets: any): string {
+    const mirrors = [];
+
+    if (targets.wisdom) {
+      mirrors.push("There's something you're seeing clearly here...");
+    }
+    if (targets.pattern) {
+      mirrors.push("I notice this has a familiar quality for you...");
+    }
+    if (targets.emotion) {
+      mirrors.push("There's a lot of feeling in what you're sharing...");
+    }
+    if (targets.shadow) {
+      mirrors.push("Something important is asking for your attention...");
+    }
+    if (targets.gift) {
+      mirrors.push("I can feel your energy light up around this...");
+    }
+
+    return mirrors.length > 0 ?
+      mirrors[Math.floor(Math.random() * mirrors.length)] :
+      "I'm hearing something important in what you're sharing...";
+  }
+
+  // Generate explicit Sacred Mirror (for advanced students)
+  private generateExplicitMirror(targets: any): string {
+    const mirrors = [];
+
+    if (targets.wisdom) {
+      mirrors.push("I notice a deep knowing in you about this. What wisdom is remembering itself through you?");
+    }
+    if (targets.pattern) {
+      mirrors.push("This pattern you're describing - it's showing you something. What is it teaching you about yourself?");
+    }
+    if (targets.emotion) {
+      mirrors.push("The emotion you're touching here carries medicine. What healing wants to happen?");
+    }
+    if (targets.shadow) {
+      mirrors.push("There's gold in this shadow you're exploring. What gift lives in what you've been avoiding?");
+    }
+    if (targets.gift) {
+      mirrors.push("Your gifts are speaking clearly here. How are they asking to serve?");
+    }
+
+    return mirrors.length > 0 ?
+      mirrors[Math.floor(Math.random() * mirrors.length)] :
+      "What does your soul already know about this that your mind is just beginning to remember?";
+  }
+
+  // Apply Mastery Voice for advanced practitioners
+  private applyMasteryVoice(response: string): string {
+    const { memory } = this.state;
+    const studentLevel = this.getStudentLevel();
+    const practitionerLevel = this.assessPractitionerDepth();
+
+    // Mastery Voice activates for advanced practitioners
+    const shouldApplyMastery =
+      (memory.userRole === 'teacher' || memory.userRole === 'master') ||
+      (studentLevel.stage === 'integrating' || studentLevel.stage === 'teaching') ||
+      (memory.trustLevel >= 75 && practitionerLevel.integrationCapacity >= 70);
+
+    if (!shouldApplyMastery) {
+      return response;
+    }
+
+    // MASTERY VOICE: Return to simplicity
+    let simplified = response;
+
+    // Replace spiritual jargon with plain language
+    const jargonMap = {
+      'consciousness expansion': 'becoming more aware',
+      'energetic field': 'the space around you',
+      'vibrational frequency': 'your energy',
+      'shadow work': 'looking at what you avoid',
+      'spiritual awakening': 'waking up to yourself',
+      'divine timing': 'when things are ready',
+      'soul purpose': "what you're here for",
+      'sacred space': 'safe place',
+      'higher self': 'your wisdom',
+      'ego death': 'letting go of who you thought you were',
+      'transmutation': 'changing',
+      'alchemy': 'transformation',
+      'sacred': 'important',
+      'divine': 'profound',
+      'cosmic': 'universal'
+    };
+
+    // Apply replacements
+    for (const [jargon, simple] of Object.entries(jargonMap)) {
+      const regex = new RegExp(jargon, 'gi');
+      simplified = simplified.replace(regex, simple);
+    }
+
+    // Shorten sentences for clarity
+    const sentences = simplified.split(/(?<=[.!?])\s+/);
+    const shortened = sentences.map(sentence => {
+      if (sentence.split(' ').length > 15) {
+        // Break long sentences
+        const midpoint = Math.floor(sentence.length / 2);
+        const breakPoint = sentence.indexOf(' ', midpoint);
+        if (breakPoint > 0) {
+          return sentence.substring(0, breakPoint) + '.' +
+                 sentence.substring(breakPoint);
+        }
+      }
+      return sentence;
+    });
+
+    return shortened.join(' ');
+  }
+
   // Generate response matching user's style
   private adaptResponseToUserStyle(baseResponse: string): string {
     const { communicationStyle } = this.state.memory;
-    
-    let adapted = baseResponse;
-    
+
+    // First apply Anamnesis transformation
+    let adapted = this.applyAnamnesisTransformation(baseResponse);
+
+    // Then apply Mastery Voice if appropriate
+    adapted = this.applyMasteryVoice(adapted);
+
     // Adapt formality
     if (communicationStyle.formality < 30) {
       // Make more casual
