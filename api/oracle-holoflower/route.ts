@@ -319,8 +319,8 @@ async function processMerge(
     : `Your intuition explores ${userPetals.join(', ')} while the oracle suggests ${oraclePetal}.`;
     
   const tension = userElements.includes(oracleElement)
-    ? 'Minimal tension - you're already attuned to this elemental frequency.'
-    : `Creative tension between your ${userElements[0]} focus and the oracle's ${oracleElement} guidance.`;
+    ? 'Minimal tension - you\'re already attuned to this elemental frequency.'
+    : `Creative tension between your ${userElements[0]} focus and the oracle\'s ${oracleElement} guidance.`;
     
   const synthesis = generateSynthesis(userCheckin, oracleReading);
 
