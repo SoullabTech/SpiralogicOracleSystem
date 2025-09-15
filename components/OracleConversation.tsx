@@ -3,9 +3,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
-import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
-import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
-// EMERGENCY: Comment out problematic components
+// EMERGENCY: Disabled problematic components to prevent error loops
+// import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
+// import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
 // import MayaChatInterface from './chat/MayaChatInterface';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
@@ -115,7 +115,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [streamingText, setStreamingText] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
-  const voiceMicRef = useRef<any>(null);
+  // EMERGENCY: Disabled voice mic ref since component is disabled
+  // const voiceMicRef = useRef<any>(null);
   
   // Agent configuration
   const [agentConfig, setAgentConfig] = useState<AgentConfig>(getAgentConfig());
@@ -147,12 +148,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     setCurrentMotionState('idle');
     setStreamingText('');
 
-    // Resume microphone if needed
-    setTimeout(() => {
-      if (voiceMicRef.current?.startListening && !showChatInterface) {
-        voiceMicRef.current.startListening();
-      }
-    }, 1000);
+    // EMERGENCY: Disabled voice mic resume since component is disabled
+    // setTimeout(() => {
+    //   if (voiceMicRef.current?.startListening && !showChatInterface) {
+    //     voiceMicRef.current.startListening();
+    //   }
+    // }, 1000);
   }, [showChatInterface]);
 
   // Auto-recovery timer - if processing states are stuck for too long, reset
