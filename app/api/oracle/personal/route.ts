@@ -9,27 +9,37 @@ const elementalResponses = {
   fire: [
     "The friction here catalyzes transformation. What needs to burn away?",
     "I witness the heat of this moment. What's asking for change?",
-    "This energy wants to move. Where does it want to take you?"
+    "This energy wants to move. Where does it want to take you?",
+    "The urgency you bring forward is sacred. What action calls to you?",
+    "This fire seeks expression. How does it want to move through you?"
   ],
   water: [
     "These waters hold space for all that flows through you.",
     "I witness these emotions moving through. What wants to be felt?",
-    "The depths here are sacred. What's emerging from below?"
+    "The depths here are sacred. What's emerging from below?",
+    "Your feelings are the ocean's wisdom. What truth do they carry?",
+    "This tenderness deserves witnessing. What needs to be held?"
   ],
   earth: [
     "Let's ground this step by step, building a solid foundation.",
     "I witness the weight of this. What needs stable ground?",
-    "This calls for patience and presence. What's asking to be built?"
+    "This calls for patience and presence. What's asking to be built?",
+    "The practical wisdom here is valuable. What structure serves you?",
+    "Your grounding is a gift. What wants to take root?"
   ],
   air: [
     "I notice patterns emerging - what clarity seeks to arise?",
     "The space between thoughts holds wisdom. What wants to be seen?",
-    "These ideas are dancing. Which one calls to you most?"
+    "These ideas are dancing. Which one calls to you most?",
+    "Your mind's landscape is vast. What perspective opens here?",
+    "The clarity you seek is already emerging. What do you notice?"
   ],
   aether: [
     "All elements dance together in this moment of presence.",
     "I witness the fullness of what you're bringing forward.",
-    "This space holds all possibilities. What's calling to you?"
+    "This space holds all possibilities. What's calling to you?",
+    "The mystery here is sacred. What wants to unfold?",
+    "Your presence itself is the answer. What does it reveal?"
   ]
 };
 
@@ -92,14 +102,22 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { text, conversationHistory = [], userId = 'default' } = body;
+    console.log('📝 Full body received:', JSON.stringify(body));
 
-    console.log('📝 Input received:', text?.substring(0, 100));
+    // Try different field names that might be used
+    const text = body.text || body.message || body.content || body.userMessage || body.input || '';
+    const conversationHistory = body.conversationHistory || [];
+    const userId = body.userId || 'default';
+
+    console.log('📝 Extracted text:', text?.substring(0, 100));
 
     // Basic validation
-    if (!text || typeof text !== 'string') {
+    if (!text || typeof text !== 'string' || text.trim().length === 0) {
+      console.log('⚠️ Empty or invalid text received');
       return NextResponse.json({
-        text: "I'm here to witness what you'd like to share.",
+        text: "Share what's on your heart, and I'll witness it with you.",
+        content: "Share what's on your heart, and I'll witness it with you.",
+        message: "Share what's on your heart, and I'll witness it with you.",
         metadata: {
           element: 'water',
           error: false
