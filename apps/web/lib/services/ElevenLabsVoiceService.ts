@@ -95,7 +95,7 @@ export class ElevenLabsVoiceService {
     switch (element.toLowerCase()) {
       case 'water':
       case 'aether':
-        return this.auntAnnieVoiceId; // Nurturing voice for emotional/spiritual
+        return this.defaultVoiceId; // Emily voice for emotional/spiritual (was Aunt Annie)
       case 'fire':
       case 'air':
       case 'earth':

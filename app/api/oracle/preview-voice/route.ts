@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     // Select voice ID based on selection
     const voiceId = voice === 'anthony'
       ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's voice
-      : 'y2TOWGCXSYEgBanvKsYJ'; // Maya's voice (Aunt Annie)
+      : 'LcfcDJNUP1GQjkzn1xUU'; // Maya's voice (Emily)
 
     // Simple voice settings for preview
     const voiceSettings = {

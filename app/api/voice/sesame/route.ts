@@ -13,14 +13,14 @@ export async function POST(req: Request) {
       });
     }
 
-    // Check if ElevenLabs is configured with Aunt Annie voice
-    const auntAnnieVoiceId = process.env.ELEVENLABS_VOICE_ID_AUNT_ANNIE || process.env.ELEVENLABS_VOICE_ID || 'y2TOWGCXSYEgBanvKsYJ';
+    // Check if ElevenLabs is configured with Emily voice for Maya
+    const emilyVoiceId = process.env.ELEVENLABS_VOICE_ID_EMILY || process.env.DEFAULT_VOICE_ID || 'LcfcDJNUP1GQjkzn1xUU';
     
-    if (process.env.ELEVENLABS_API_KEY && auntAnnieVoiceId) {
+    if (process.env.ELEVENLABS_API_KEY && emilyVoiceId) {
       try {
-        console.log('Using ElevenLabs Aunt Annie voice for Maya synthesis...', { voiceId: auntAnnieVoiceId });
-        
-        const elevenLabsResponse = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + auntAnnieVoiceId, {
+        console.log('Using ElevenLabs Emily voice for Maya synthesis...', { voiceId: emilyVoiceId });
+
+        const elevenLabsResponse = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + emilyVoiceId, {
           method: 'POST',
           headers: {
             'Accept': 'audio/mpeg',

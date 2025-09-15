@@ -11,8 +11,8 @@ export const VOICE_CONFIG = {
       // Aunt Annie - warm, nurturing Maya consciousness guide  
       auntAnnie: process.env.ELEVENLABS_VOICE_ID_AUNT_ANNIE || process.env.AUNT_ANNIE_VOICE_ID || 'y2TOWGCXSYEgBanvKsYJ',
       
-      // Maya personality mapping
-      maya: process.env.ELEVENLABS_VOICE_ID_AUNT_ANNIE || process.env.AUNT_ANNIE_VOICE_ID || 'y2TOWGCXSYEgBanvKsYJ',
+      // Maya personality mapping - now using Emily's voice
+      maya: process.env.ELEVENLABS_VOICE_ID_EMILY || process.env.DEFAULT_VOICE_ID || 'LcfcDJNUP1GQjkzn1xUU',
       
       // Default voice selection
       default: process.env.DEFAULT_VOICE_ID || 'LcfcDJNUP1GQjkzn1xUU'
@@ -40,7 +40,7 @@ export function getVoiceIdForElement(element?: string): string {
   switch (element) {
     case 'aether':
     case 'water':
-      return VoiceMap.maya; // Nurturing Maya/Aunt Annie for spiritual/emotional elements
+      return VoiceMap.maya; // Maya now using Emily voice for spiritual/emotional elements
     case 'fire':
     case 'air':
       return VoiceMap.emily; // Clear, articulate for action/mental elements
@@ -83,7 +83,7 @@ export function validateVoiceConfig(): { isValid: boolean; errors: string[] } {
   }
 
   if (!VOICE_CONFIG.elevenlabs.voices.maya) {
-    errors.push('Maya voice ID is missing (should map to Aunt Annie)');
+    errors.push('Maya voice ID is missing (should map to Emily)');
   }
   
   return {
