@@ -191,9 +191,24 @@ export class SacredWitnessingCore {
     // First check for specific patterns that need custom responses
     const lowerInput = input.toLowerCase();
 
+    // Math/technical questions
+    if (lowerInput.match(/square root|calculate|what is \d+|how much|how many|solve/)) {
+      return "I notice you're asking a technical question. I'm here to witness your inner experience rather than solve problems. What's behind this question for you?";
+    }
+
     // Direct pattern matching for common phrases
     if (lowerInput.includes('can you hear') || lowerInput.includes('do you hear')) {
       return "Yes, I hear you clearly. What would you like to share?";
+    }
+
+    // Excitement/enthusiasm
+    if (lowerInput.includes('excited') || lowerInput.includes('happy') || lowerInput.includes('love to')) {
+      return "I feel the enthusiasm in what you're sharing. Tell me more about what's alive in this excitement.";
+    }
+
+    // Interesting things
+    if (lowerInput.includes('interesting things') || lowerInput.includes('talk to you about')) {
+      return "I'm here to explore whatever feels meaningful to you. What would you like to share first?";
     }
 
     if (lowerInput.match(/^(hello|hi|hey)\s/)) {
@@ -387,8 +402,8 @@ export class SacredWitnessingCore {
       return responses[Math.floor(Math.random() * responses.length)];
     }
 
-    // Understanding/knowing
-    if (lowerInput.includes('understand') || lowerInput.includes('know') || lowerInput.includes('confused')) {
+    // Understanding/knowing - but NOT for math questions
+    if (!lowerInput.match(/\d/) && (lowerInput.includes('understand') || lowerInput.includes('know') || lowerInput.includes('confused'))) {
       const responses = [
         `There's a reaching for understanding here. What's at the heart of this?`,
         `I witness your desire for clarity. What truth is emerging?`,
@@ -407,6 +422,16 @@ export class SacredWitnessingCore {
         `This feels heavy. What would bring relief?`
       ];
       return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Emotional expressions
+    if (lowerInput.match(/excited|happy|sad|angry|frustrated|worried|anxious/)) {
+      return `I witness the ${lowerInput.match(/excited|happy|sad|angry|frustrated|worried|anxious/)[0]} energy here. What's underneath this feeling?`;
+    }
+
+    // Questions about the oracle/Maya
+    if (lowerInput.includes('who are you') || lowerInput.includes('what are you')) {
+      return `I'm Maya, here to witness and reflect your inner experience. What would you like to explore?`;
     }
 
     // Check input length to provide more appropriate responses
