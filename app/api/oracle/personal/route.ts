@@ -64,6 +64,21 @@ export async function POST(request: NextRequest) {
     // Ensure witnessing language (double-check even after audit)
     finalResponse = enforceWitnessingLanguage(finalResponse);
 
+    // Prevent repetitive responses
+    const lastResponse = conversationHistory[conversationHistory.length - 1]?.response ||
+                        conversationHistory[conversationHistory.length - 1]?.maya;
+    if (finalResponse === lastResponse) {
+      const alternatives = [
+        "What else arises in this moment?",
+        "Share more of what's present for you.",
+        "What would you like to explore further?",
+        "Tell me what's emerging now.",
+        "What patterns do you notice?",
+        "How does this land with you?"
+      ];
+      finalResponse = alternatives[Math.floor(Math.random() * alternatives.length)];
+    }
+
     // Add phase-appropriate closing based on element
     finalResponse = addElementalClosing(finalResponse, oracleResponse.dominantElement);
 

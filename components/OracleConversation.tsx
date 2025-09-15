@@ -509,7 +509,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       {/* Beautiful Sacred Holoflower - Responsive sizing */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-        <div className="flex items-center justify-center" style={{ width: holoflowerSize, height: holoflowerSize }}>
+        {/* Adjusted container to shift light up and left */}
+        <div className="flex items-center justify-center"
+             style={{
+               width: holoflowerSize,
+               height: holoflowerSize,
+               transform: 'translate(-20px, -30px)' /* Shift left and up */
+             }}>
           {/* Non-interactive Sacred Holoflower with animations */}
           <SacredHoloflower
             size={holoflowerSize}
@@ -543,7 +549,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 className="w-48 h-48 rounded-full"
                 style={{
                   background: 'radial-gradient(circle, rgba(212, 184, 150, 1) 0%, rgba(212, 184, 150, 0.7) 30%, rgba(212, 184, 150, 0.3) 60%, transparent 100%)',
-                  filter: 'blur(30px)'
+                  filter: 'blur(30px)',
+                  transform: 'translate(0, 0)' /* Center the main glow */
                 }}
               />
             </motion.div>
@@ -566,7 +573,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 className="w-64 h-64 rounded-full"
                 style={{
                   background: 'radial-gradient(circle, rgba(212, 184, 150, 0.6) 0%, rgba(212, 184, 150, 0.2) 50%, transparent 100%)',
-                  filter: 'blur(40px)'
+                  filter: 'blur(40px)',
+                  transform: 'translate(0, 0)' /* Center the secondary glow */
                 }}
               />
             </motion.div>
