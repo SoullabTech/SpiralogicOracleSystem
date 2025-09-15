@@ -188,6 +188,23 @@ export class SacredWitnessingCore {
     presence: WitnessedPresence,
     witnessType: MirrorResponse['witnessType']
   ): string {
+    // First check for specific patterns that need custom responses
+    const lowerInput = input.toLowerCase();
+
+    // Direct pattern matching for common phrases
+    if (lowerInput.includes('can you hear') || lowerInput.includes('do you hear')) {
+      return "Yes, I hear you clearly. What would you like to share?";
+    }
+
+    if (lowerInput.match(/^(hello|hi|hey)\s/)) {
+      return "Hello, I'm here with you. What brings you to this moment?";
+    }
+
+    if (lowerInput === 'hamburgers' || lowerInput === 'pizza' || lowerInput.split(' ').length === 1) {
+      return `Interesting. What brings "${input}" to mind right now?`;
+    }
+
+    // Otherwise use the sophisticated witnessing system
     const opener = this.WITNESS_ONLY_PATTERNS[
       Math.floor(Math.random() * this.WITNESS_ONLY_PATTERNS.length)
     ];
@@ -274,7 +291,7 @@ export class SacredWitnessingCore {
       return `I'm here with you in this moment.`;
     }
 
-    // Don't just echo - create meaningful witnessing
+    // Don't use generic opener if we have better responses
     const lowerInput = input.toLowerCase();
 
     // Check for specific patterns first, regardless of length
