@@ -83,10 +83,10 @@ export class SacredWitnessingCore {
     // Safety check for undefined input
     if (!input || typeof input !== 'string') {
       return {
+        essence: 'presence',
         quality: 'neutral',
         depth: 0.3,
-        movement: 'still',
-        element: 'earth'
+        movement: 'still'
       };
     }
 
