@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SacredOracleCore } from '@/lib/sacred-oracle-core';
 
 // Simple response cache to prevent duplicates
 const responseCache = new Map<string, number>();
 const CACHE_DURATION = 10000; // 10 seconds
 
-// Elemental responses for basic oracle functionality
+// Elemental responses for basic oracle functionality (FALLBACK)
 const elementalResponses = {
   fire: [
     "The friction here catalyzes transformation. What needs to burn away?",
@@ -98,18 +99,43 @@ function checkAndCacheResponse(response: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  console.log('🌟 Oracle API: Processing request');
-
   try {
     const body = await request.json();
-    console.log('📝 Full body received:', JSON.stringify(body));
 
     // Try different field names that might be used
-    const text = body.text || body.message || body.content || body.userMessage || body.input || '';
-    const conversationHistory = body.conversationHistory || [];
-    const userId = body.userId || 'default';
+    const text = body.text || body.message || body.content || body.userMessage || body.input || body.prompt || '';
+    const conversationHistory = body.conversationHistory || body.history || [];
+    const userId = body.userId || body.user_id || 'default';
+    const sessionId = body.sessionId || body.session_id || 'default-session';
 
-    console.log('📝 Extracted text:', text?.substring(0, 100));
+
+    // TRY ACTUAL ORACLE SYSTEM FIRST
+    try {
+      const oracle = new SacredOracleCore();
+      const response = await oracle.generateResponse(text, {
+        sessionId,
+        conversationHistory,
+        userId
+      });
+
+      // Handle response whether it's a string or object
+      const responseText = typeof response === 'string' ? response :
+                          (response.text || response.content || response.message);
+
+      return NextResponse.json({
+        text: responseText,
+        content: responseText,
+        message: responseText,
+        metadata: {
+          ...((typeof response === 'object' && response.metadata) ? response.metadata : {}),
+          source: 'oracle-system',
+          element: detectElement(text)
+        }
+      });
+    } catch (oracleError: any) {
+      console.error('Oracle system error, using fallback:', oracleError.message);
+      // Fall through to elemental responses
+    }
 
     // Basic validation
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
@@ -133,13 +159,6 @@ export async function POST(request: NextRequest) {
 
     // Check for duplicates
     response = checkAndCacheResponse(response);
-
-    // Add witnessing framework
-    if (!response.startsWith('I witness') && !response.startsWith('I notice')) {
-      response = 'I witness this. ' + response;
-    }
-
-    console.log('✅ Response generated:', response.substring(0, 100));
 
     return NextResponse.json({
       text: response,
