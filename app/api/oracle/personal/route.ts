@@ -84,8 +84,8 @@ export async function POST(request: NextRequest) {
     // Single words
     else if (text.split(' ').length === 1) {
       const singles = [
-        `"${text}" - a single word can hold worlds. What's within it?",
-        `Interesting. What brings "${text}" to mind right now?",
+        `"${text}" - a single word can hold worlds. What's within it?`,
+        `Interesting. What brings "${text}" to mind right now?`,
         `Just "${text}". What lives in this word for you?`
       ];
       response = singles[Math.floor(Math.random() * singles.length)];
