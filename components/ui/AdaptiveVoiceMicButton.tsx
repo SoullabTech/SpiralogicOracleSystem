@@ -30,6 +30,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
   const [error, setError] = useState<string | null>(null);
   const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
   const [isThinking, setIsThinking] = useState(false); // Visual indicator for thinking pauses
+  const [permissionGranted, setPermissionGranted] = useState<boolean | null>(null);
 
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef<string>('');
@@ -39,6 +40,37 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
   const hasSentTranscriptRef = useRef<boolean>(false);
   const pauseCountRef = useRef<number>(0);
   const sentenceStartRef = useRef<number>(0);
+  const sentRef = useRef<boolean>(false);
+
+  // Request microphone permissions
+  const requestMicrophonePermission = useCallback(async () => {
+    try {
+      console.log('🎤 Requesting microphone permission...');
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Stop the stream immediately after getting permission
+      stream.getTracks().forEach(track => track.stop());
+
+      setPermissionGranted(true);
+      setError(null);
+      console.log('✅ Microphone permission granted');
+      return true;
+    } catch (err: any) {
+      console.error('❌ Microphone permission denied:', err);
+      setPermissionGranted(false);
+
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setError('Microphone access denied. Please allow microphone access in your browser settings.');
+      } else if (err.name === 'NotFoundError') {
+        setError('No microphone found. Please connect a microphone.');
+      } else if (err.name === 'NotReadableError') {
+        setError('Microphone is in use by another application.');
+      } else {
+        setError('Failed to access microphone. Please check your settings.');
+      }
+      return false;
+    }
+  }, []);
 
   // Adaptive silence threshold calculation
   const getAdaptiveSilenceThreshold = useCallback(() => {
@@ -135,11 +167,14 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       hostname: window.location.hostname,
       isSecureContext,
       hasWebkit: 'webkitSpeechRecognition' in window,
-      hasSpeechRecognition: 'SpeechRecognition' in window
+      hasSpeechRecognition: 'SpeechRecognition' in window,
+      nativeSecureContext: window.isSecureContext
     });
 
-    if (!isSecureContext) {
-      setError('Voice requires secure connection');
+    // More flexible secure context check for development
+    if (!isSecureContext && !window.isSecureContext) {
+      console.warn('⚠️ Not in secure context - voice features may be limited');
+      setError('Voice requires HTTPS connection. Please use https:// or localhost');
       return;
     }
 
@@ -156,8 +191,18 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       recognition.lang = 'en-US';
       recognition.maxAlternatives = 1;
 
+      // Add these to prevent abort issues
+      recognition.grammars = undefined;
+      recognition.interimResults = true;
+
       recognition.onstart = () => {
         console.log('🎤 Voice recognition started (intimate mode)');
+        console.log('Recognition settings:', {
+          continuous: recognition.continuous,
+          interimResults: recognition.interimResults,
+          lang: recognition.lang,
+          maxAlternatives: recognition.maxAlternatives
+        });
         setError(null);
         finalTranscriptRef.current = '';
         speechStartTimeRef.current = Date.now();
@@ -168,6 +213,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       };
 
       recognition.onresult = (event: any) => {
+        console.log('📝 Recognition result event, results:', event.results.length);
         let interimText = '';
         let finalText = '';
 
@@ -175,8 +221,10 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
           const result = event.results[i];
           if (result.isFinal) {
             finalText += result[0].transcript;
+            console.log('✅ Final transcript:', result[0].transcript);
           } else {
             interimText += result[0].transcript;
+            console.log('📝 Interim transcript:', result[0].transcript);
           }
         }
 
@@ -204,17 +252,27 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
           }
 
           // Start adaptive silence timer
-          const adaptiveThreshold = getAdaptiveSilenceThreshold();
+          const adaptiveThreshold = 1500; // TEMPORARY: Fixed 1.5 second for testing
           const speechLength = finalTranscriptRef.current.split(' ').length;
 
           console.log(`⏱️ Adaptive timer set: ${adaptiveThreshold}ms (${speechLength} words, ${pauseCountRef.current} pauses)`);
+          console.log('📝 Current transcript so far:', finalTranscriptRef.current);
 
           const timer = setTimeout(() => {
-            console.log('⏰ Natural pause complete, sending thought...');
+            console.log('⏰ Silence timer fired!');
+            console.log('Transcript available:', finalTranscriptRef.current);
+            console.log('Has sent:', hasSentTranscriptRef.current);
+            console.log('Paused:', pauseListening);
+
             if (finalTranscriptRef.current.trim() && !pauseListening && !hasSentTranscriptRef.current) {
+              console.log('✅ All conditions met, calling handleSilenceDetected');
               handleSilenceDetected();
-            } else if (pauseListening) {
-              console.log('⏸️ Waiting (Maya is speaking)');
+            } else {
+              console.log('❌ Conditions not met:', {
+                hasTranscript: !!finalTranscriptRef.current.trim(),
+                notPaused: !pauseListening,
+                notSent: !hasSentTranscriptRef.current
+              });
             }
           }, adaptiveThreshold);
           setSilenceTimer(timer);
@@ -233,8 +291,21 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       };
 
       recognition.onerror = (event: any) => {
+        console.log('Speech recognition error event:', event.error);
+
         if (event.error === 'aborted') {
-          console.log('Voice recognition paused');
+          console.log('Voice recognition aborted - restarting...');
+          // Restart recognition after abort
+          if (isListening && !pauseListening) {
+            setTimeout(() => {
+              try {
+                recognition.start();
+                console.log('🔄 Restarted after abort');
+              } catch (e) {
+                console.log('Already listening');
+              }
+            }, 100);
+          }
           return;
         }
 
@@ -314,12 +385,14 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
     }
 
     console.log('🌟 Complete thought detected:', thoughtText);
+    console.log('📤 onTranscript callback available:', !!onTranscript);
 
     if (thoughtText && onTranscript) {
       hasSentTranscriptRef.current = true;
       setIsProcessing(true);
       setIsThinking(false);
 
+      console.log('📤 Sending transcript to parent component:', thoughtText);
       // Send the complete thought
       onTranscript(thoughtText);
 
@@ -343,22 +416,59 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
   }, [onTranscript, silenceTimer]);
 
   // Start listening
-  const startListening = useCallback(() => {
+  const startListening = useCallback(async () => {
+    // Ensure audio context is unlocked (for playback later)
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume();
+        console.log('🔊 Audio context unlocked');
+      }
+    } catch (e) {
+      console.log('Audio context error:', e);
+    }
+
+    // First request microphone permission if not already granted
+    if (permissionGranted === false || permissionGranted === null) {
+      const hasPermission = await requestMicrophonePermission();
+      if (!hasPermission) {
+        console.error('❌ Microphone permission denied');
+        return;
+      }
+    }
+
     if (!recognitionRef.current) {
-      setError('Voice recognition not available');
+      console.error('❌ Recognition not initialized');
+      setError('Voice recognition not available. Please check your browser settings.');
       return;
     }
 
     console.log('🎙️ Starting intimate conversation mode');
     setIsListening(true);
     hasSentTranscriptRef.current = false;
+    sentRef.current = false;  // Reset send guard
 
     try {
       recognitionRef.current.start();
-    } catch (error) {
+      console.log('✅ Speech recognition started successfully');
+    } catch (error: any) {
       console.error('Failed to start recognition:', error);
+      setIsListening(false);
+
+      // Provide more helpful error messages
+      if (error.message && error.message.includes('not-allowed')) {
+        setError('Microphone access denied. Please allow microphone access and refresh.');
+      } else if (error.message && error.message.includes('service-not-allowed')) {
+        setError('Speech recognition service not available. Please try Chrome or Edge.');
+      } else if (error.message && error.message.includes('already started')) {
+        // Recognition already running, just set the state
+        console.log('⚠️ Recognition already running');
+        setIsListening(true);
+      } else {
+        setError(`Failed to start voice recognition: ${error.message || 'Unknown error'}`);
+      }
     }
-  }, []);
+  }, [permissionGranted, requestMicrophonePermission]);
 
   // Stop listening
   const stopListening = useCallback(() => {
@@ -417,7 +527,14 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
     <>
       {/* Main button */}
       <motion.button
-        onClick={isListening ? stopListening : startListening}
+        onClick={() => {
+          console.log('🔘 Mic button clicked, isListening:', isListening);
+          if (isListening) {
+            stopListening();
+          } else {
+            startListening();
+          }
+        }}
         className={`fixed ${positionStyles[position]} z-50 group`}
         whileHover={{
           scale: 1.05,
@@ -578,10 +695,14 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
+            className="fixed top-16 left-1/2 transform -translate-x-1/2 z-50 max-w-sm"
           >
-            <div className="bg-red-500/90 backdrop-blur-md text-white px-4 py-2 rounded-lg shadow-lg">
-              <p className="text-sm">{error}</p>
+            <div className="bg-red-500/90 backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-lg border border-red-400/30">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-red-300 rounded-full animate-pulse"></div>
+                <p className="text-sm font-medium">Voice System</p>
+              </div>
+              <p className="text-xs mt-1 opacity-90">{error}</p>
             </div>
           </motion.div>
         )}

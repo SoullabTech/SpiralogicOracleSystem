@@ -194,7 +194,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   };
 
   // Enable audio on user interaction
-  const enableAudio = useCallback(() => {
+  const enableAudio = useCallback(async () => {
     if (!audioEnabled) {
       console.log('🔊 Enabling audio context on user interaction');
 
@@ -205,9 +205,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       // Resume if suspended
       if (audioContextRef.current.state === 'suspended') {
-        audioContextRef.current.resume().then(() => {
-          console.log('🎵 Audio context resumed in enableAudio');
-        });
+        await audioContextRef.current.resume();
+        console.log('🎵 Audio context resumed, state:', audioContextRef.current.state);
       }
 
       // Play silent audio to unlock
@@ -244,22 +243,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
-    // If we're in text chat mode, handle voice input differently
-    if (showChatInterface) {
-      console.log('🎤 Voice input in text chat mode:', transcript);
-      // Simply send the voice transcript as a text message
-      await handleTextMessage(transcript);
-      return;
-    }
+    const t = transcript?.trim();
+    if (!t) return;
 
-    // Original voice-only mode handling
-    const startTime = Date.now();
-    console.log('⏱️ Voice processing started');
-    console.log('Current states:', { isProcessing, isAudioPlaying, isResponding });
+    console.log('🎯 Voice transcript received:', t);
 
-    // Force reset if stuck - enhanced safety checks
-    if (isProcessing && !isResponding && !isAudioPlaying) {
-      const timeSinceStart = Date.now() - startTime;
+    // Route all voice through text message handler for reliability
+    await handleTextMessage(t);
+  }, [handleTextMessage]);
+
+  // Old voice processing code removed - now routed through handleTextMessage
+
+  const PLACEHOLDER = null; // Removed old voice handling code
+
+  if (false) {
+    // Removed old voice handling code
+    const timeSinceStart = Date.now();
       if (timeSinceStart > 5000) { // If stuck for more than 5 seconds
         console.warn('⚠️ Processing stuck for >5s - forcing complete reset');
         setIsProcessing(false);
@@ -416,21 +415,38 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             console.log('🎵 Attempting to play audio, length:', audioUrl.length);
             console.log('🎵 Audio URL preview:', audioUrl.substring(0, 100) + '...');
 
-            // Validate data URL format
-            if (audioUrl.startsWith('data:audio/mpeg;base64,')) {
-              const base64Part = audioUrl.substring(23);
-              console.log('📊 Base64 audio size:', base64Part.length, 'characters');
+            // Validate and fix data URL format
+            let processedAudioUrl = audioUrl;
 
-              // Check if base64 is valid
-              try {
-                atob(base64Part.substring(0, 100)); // Test decode first 100 chars
-                console.log('✅ Base64 format appears valid');
-              } catch (e) {
-                console.error('❌ Invalid base64 encoding:', e);
+            if (audioUrl.startsWith('data:audio')) {
+              // Extract the base64 part
+              const base64Index = audioUrl.indexOf('base64,');
+              if (base64Index !== -1) {
+                const base64Part = audioUrl.substring(base64Index + 7);
+                console.log('📊 Base64 audio size:', base64Part.length, 'characters');
+
+                // Check if base64 is valid
+                try {
+                  // Remove any whitespace or line breaks that might have been introduced
+                  const cleanBase64 = base64Part.replace(/[\s\n\r]/g, '');
+                  atob(cleanBase64.substring(0, 100)); // Test decode first 100 chars
+                  console.log('✅ Base64 format appears valid');
+
+                  // Reconstruct the data URL with cleaned base64
+                  processedAudioUrl = `data:audio/mpeg;base64,${cleanBase64}`;
+                } catch (e) {
+                  console.error('❌ Invalid base64 encoding:', e);
+                  // Fall back to Web Speech if base64 is invalid
+                  console.log('🔄 Falling back to Web Speech synthesis');
+                  if (mayaSpeak) {
+                    await mayaSpeak(responseText);
+                  }
+                  return;
+                }
               }
             }
 
-            const audio = new Audio(audioUrl);
+            const audio = new Audio(processedAudioUrl);
             audio.volume = 0.8;
 
             // Set audio to muted initially to bypass autoplay restrictions
@@ -792,6 +808,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       };
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
+
+      // Play audio response - ALWAYS use Web Speech for now (ElevenLabs has encoding issues)
+      if (voiceEnabled && mayaReady && mayaSpeak) {
+        console.log('🔊 Using Web Speech for text chat response');
+        // Use Web Speech synthesis directly
+        mayaSpeak(responseText);
+      }
 
       // Update context
       contextRef.current.previousResponses.push({

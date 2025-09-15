@@ -7,9 +7,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { SimpleOrchestrator } from '../../../../lib/oracle-bridge/simple-orchestrator';
 import { ConversationContextManager } from '../../../../lib/conversation/ConversationContext';
-// Use local Sacred Oracle system instead of external Sesame
-// Import class directly to avoid initialization issues
 import { responseEnhancer } from '../../../../lib/response-enhancer';
+import { AudioHandler } from '../../../../lib/audio-handler';
+
 // Simplified imports - removing non-existent dependencies
 // import { responseEnhancer } from '../../../../lib/response-enhancer';
 // import { sacredOracleConstellation } from '../../../../lib/sacred-oracle-constellation';
@@ -844,10 +844,15 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
         if (voiceResponse.ok) {
           const audioBlob = await voiceResponse.blob();
           const buffer = await audioBlob.arrayBuffer();
-          const base64 = Buffer.from(buffer).toString('base64');
 
-          // Check if base64 is too large (>1MB tends to cause issues in browsers)
-          if (base64.length > 1000000) {
+          // Use AudioHandler for proper base64 encoding
+          try {
+            audioUrl = AudioHandler.createAudioDataUrl(buffer, 'audio/mpeg');
+            console.log('✅ Audio URL created successfully');
+
+            // Test if audio can play
+            const canPlay = await AudioHandler.testAudioPlayback(audioUrl);
+            if (!
             console.warn('⚠️ Audio base64 too large:', base64.length, 'bytes - using fallback');
             audioUrl = 'web-speech-fallback';
           } else if (base64.length < 1000) {

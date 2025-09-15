@@ -61,6 +61,8 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const voiceTranscriptRef = useRef<string>('');
+  const hasSentRef = useRef<boolean>(false);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -72,43 +74,70 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
 
   // Initialize speech recognition
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+    console.log('🎤 Initializing speech recognition in MayaChatInterface');
+
+    // Check for both standard and webkit versions
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      console.error('❌ Speech Recognition not available');
+      return;
+    }
+
+    console.log('✅ SpeechRecognition API found');
+
+    try {
       const recognition = new SpeechRecognition();
-      
-      recognition.continuous = true;
+
+      recognition.continuous = false;  // Simpler & reliable
       recognition.interimResults = true;
       recognition.lang = 'en-US';
-      
+
+      console.log('✅ Recognition configured');
+
       recognition.onstart = () => {
+        console.log('🎤 Recognition started event');
         setIsListening(true);
       };
       
       recognition.onresult = (event: any) => {
+        console.log('🎤 Chat interface voice result');
         let interim = '';
         let final = '';
-        
+
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
             final += transcript + ' ';
+            console.log('✅ Final text in chat:', transcript);
           } else {
             interim += transcript;
           }
         }
-        
-        if (final) {
-          setVoiceTranscript(prev => prev + final);
-          // Reset silence timer
-          if (silenceTimerRef.current) {
-            clearTimeout(silenceTimerRef.current);
-          }
-          silenceTimerRef.current = setTimeout(() => {
-            stopListening();
-          }, 3000); // 3 seconds of silence
-        }
-        
+
+        // Mirror UI
         setInterimTranscript(interim);
+
+        if (final) {
+          setVoiceTranscript(prev => {
+            const next = (prev + final).trim();
+            voiceTranscriptRef.current = next;
+            return next + ' '; // Keeps UI feeling live
+          });
+
+          // 🔑 Hot path: send once on first final
+          if (!hasSentRef.current) {
+            hasSentRef.current = true;
+            const utterance = (voiceTranscriptRef.current || final).trim();
+            if (utterance) {
+              console.log('📤 Sending immediately on final:', utterance);
+              // Stop recognition to avoid duplicate finals
+              try { recognition.stop(); } catch {}
+              // Hand to chat immediately - use onSendMessage directly
+              onSendMessage(utterance);
+            }
+          }
+        }
       };
       
       recognition.onerror = (event: any) => {
@@ -118,44 +147,89 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
       };
       
       recognition.onend = () => {
+        console.log('🔴 Recognition ended');
         setIsListening(false);
+
+        // Last-chance fallback
+        if (!hasSentRef.current) {
+          const utterance = (voiceTranscriptRef.current || '').trim();
+          if (utterance) {
+            console.log('📤 Fallback send on end:', utterance);
+            hasSentRef.current = true;
+            onSendMessage(utterance);
+          }
+        }
+
+        // Reset UI state
+        setInputMode('text');
+        setVoiceTranscript('');
+        setInterimTranscript('');
+        voiceTranscriptRef.current = '';
       };
       
       recognitionRef.current = recognition;
+      console.log('✅ Recognition ref saved');
+    } catch (error) {
+      console.error('❌ Failed to initialize recognition:', error);
     }
   }, []);
 
   const startListening = useCallback(() => {
+    console.log('🎤 StartListening called in MayaChatInterface');
+
     if (!recognitionRef.current) {
+      console.error('❌ No recognition ref');
       toast.error('Voice recognition not supported in this browser');
       return;
     }
 
+    console.log('🎤 Setting voice mode and starting recognition');
     setInputMode('voice');
     setVoiceTranscript('');
     setInterimTranscript('');
-    recognitionRef.current.start();
+    voiceTranscriptRef.current = '';
+    hasSentRef.current = false; // Reset guard
+
+    try {
+      recognitionRef.current.start();
+      console.log('✅ Recognition started successfully');
+    } catch (error) {
+      console.error('❌ Failed to start recognition:', error);
+      toast.error('Failed to start voice recognition');
+    }
   }, []);
 
   const stopListening = useCallback(() => {
+    console.log('🛑 StopListening called');
+    console.log('Current voice transcript state:', voiceTranscript);
+    console.log('Current voice transcript ref:', voiceTranscriptRef.current);
+
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
     }
-    
+
+    // Use ref value which is more reliable
+    const transcriptToSend = voiceTranscriptRef.current || voiceTranscript;
+
     // Send voice transcript if we have it
-    if (voiceTranscript.trim()) {
+    if (transcriptToSend.trim()) {
       // In chat mode, always use handleSend to treat voice as text input
-      console.log('🎤 Sending voice transcript as text message:', voiceTranscript.trim());
-      handleSend(voiceTranscript.trim());
+      console.log('🎤 Sending voice transcript as text message:', transcriptToSend.trim());
+
+      // Call onSendMessage directly since handleSend might not be defined yet
+      onSendMessage(transcriptToSend.trim());
+    } else {
+      console.log('⚠️ No transcript to send');
     }
-    
+
     setInputMode('text');
     setVoiceTranscript('');
     setInterimTranscript('');
-  }, [voiceTranscript, onVoiceTranscript]);
+    voiceTranscriptRef.current = '';
+  }, [voiceTranscript, onSendMessage]);
 
   const handleSend = useCallback((text?: string) => {
     const messageText = text || inputText.trim();
