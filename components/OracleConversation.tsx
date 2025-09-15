@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
-import MayaChatInterface from './chat/MayaChatInterface';
+// EMERGENCY: Comment out problematic components
+// import MayaChatInterface from './chat/MayaChatInterface';
+import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
@@ -783,34 +785,28 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
           {showChatInterface ? (
             /* Text Chat Interface - Mobile optimized */
-            <div className="fixed bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
-              <MayaChatInterface
-                onSendMessage={handleTextMessage}
-                onVoiceTranscript={handleVoiceTranscript}
-                onSpeakMessage={handleSpeakMessage}
-                onStopSpeaking={handleStopSpeaking}
-                messages={messages.map(msg => ({
-                  id: msg.id,
-                  role: msg.role === 'oracle' ? 'maya' : 'user',
-                  text: msg.text,
-                  timestamp: msg.timestamp
-                }))}
-                agentName={agentConfig.name}
-                isProcessing={isProcessing}
-                disabled={isProcessing}
-                currentlySpeakingId={currentlySpeakingId}
-              />
-            </div>
-          ) : (
-            /* Voice-Only Interface - Adaptive for intimate conversations */
-            <AdaptiveVoiceMicButton
-              ref={voiceMicRef}
-              onVoiceStateChange={setUserVoiceState}
-              onTranscript={handleVoiceTranscript}
-              position="bottom-center"
-              conversationMode="intimate"  // Thoughtful, unhurried conversation
-              pauseListening={isAudioPlaying}
+            <EmergencyChatInterface
+              onSendMessage={handleTextMessage}
+              isProcessing={isProcessing}
             />
+          ) : (
+            /* EMERGENCY: Simple voice fallback */
+            <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+              <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 text-center">
+                <p className="text-white/70 mb-2">Emergency Voice Mode</p>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full"
+                  onClick={() => {
+                    const text = prompt("Enter your message:");
+                    if (text?.trim()) {
+                      handleVoiceTranscript(text.trim());
+                    }
+                  }}
+                >
+                  🎤 Speak (Text Input)
+                </button>
+              </div>
+            </div>
           )}
         </>
       )}
