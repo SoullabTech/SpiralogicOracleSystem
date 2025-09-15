@@ -2,7 +2,7 @@
 // Integrates AIN/MAYA/Anamnesis frameworks with voice system
 
 import { NextRequest, NextResponse } from 'next/server';
-import { masterOracleOrchestrator } from '../../../../apps/api/backend/src/services/MasterOracleOrchestrator';
+import { masterOracleOrchestrator } from '@/lib/master-oracle-orchestrator';
 
 interface OracleRequest {
   message: string;
