@@ -8,6 +8,7 @@ import { SacredHoloflower } from './sacred/SacredHoloflower';
 // import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
 // import MayaChatInterface from './chat/MayaChatInterface';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
+import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
@@ -791,23 +792,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               isProcessing={isProcessing}
             />
           ) : (
-            /* EMERGENCY: Simple voice fallback */
-            <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
-              <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 text-center">
-                <p className="text-white/70 mb-2">Emergency Voice Mode</p>
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full"
-                  onClick={() => {
-                    const text = prompt("Enter your message:");
-                    if (text?.trim()) {
-                      handleVoiceTranscript(text.trim());
-                    }
-                  }}
-                >
-                  🎤 Speak (Text Input)
-                </button>
-              </div>
-            </div>
+            /* Simple Voice Recognition - No complex timing logic */
+            <SimpleVoiceMic
+              onTranscript={handleVoiceTranscript}
+              pauseListening={isAudioPlaying}
+            />
           )}
         </>
       )}
