@@ -4,4 +4,11 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   // Return a basic test sound as base64 (sine wave beep)
   // This is a minimal valid WAV file with a short beep
-  const testWavBase64 = 'UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBh
+  const testWavBase64 = 'UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k9j1mVQdBh1qs+3yvmwhBSxy0PDbmzMGGWS/7+OXLgcPVqzn77VjHAU7k';
+
+  return NextResponse.json({
+    success: true,
+    audio: `data:audio/wav;base64,${testWavBase64}`,
+    message: 'Test audio ready'
+  });
+}
