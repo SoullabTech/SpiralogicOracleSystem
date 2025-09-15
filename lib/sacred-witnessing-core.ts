@@ -277,6 +277,30 @@ export class SacredWitnessingCore {
     // Don't just echo - create meaningful witnessing
     const lowerInput = input.toLowerCase();
 
+    // Check for specific patterns first, regardless of length
+
+    // "Can you hear me" pattern
+    if (lowerInput.includes('can you hear') || lowerInput.includes('do you hear')) {
+      const responses = [
+        `Yes, I'm here with you. What would you like to share?`,
+        `I hear you clearly. What's present for you right now?`,
+        `I'm listening. What wants to be expressed?`,
+        `Yes, I'm receiving you. What's alive in this moment?`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Greetings with names
+    if (lowerInput.match(/^(hello|hi|hey)\s+(\w+)/)) {
+      const responses = [
+        `Hello. I'm here with you. What brings you to this moment?`,
+        `Welcome. What would you like to explore together?`,
+        `I see you. What's calling for attention?`,
+        `Hello, friend. What wants to emerge?`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
     // Handle single words or very short inputs
     if (input.split(' ').length <= 2) {
       // Food/objects
@@ -368,15 +392,37 @@ export class SacredWitnessingCore {
       return responses[Math.floor(Math.random() * responses.length)];
     }
 
-    // Default meaningful responses (don't echo input)
-    const defaults = [
-      `I'm here with you in whatever is present.`,
-      `Thank you for sharing this with me. What else wants to be said?`,
-      `I witness what you're bringing forward. Tell me more.`,
-      `There's something meaningful here. What would you like to explore?`,
-      `I'm listening deeply. What's most alive for you right now?`
+    // Check input length to provide more appropriate responses
+    if (input.length < 20) {
+      // Very short input - ask for more
+      const shortResponses = [
+        `Tell me more about what's present for you.`,
+        `I'm here. What would you like to explore?`,
+        `What's alive in this moment?`,
+        `I'm listening. What wants to be shared?`
+      ];
+      return shortResponses[Math.floor(Math.random() * shortResponses.length)];
+    }
+
+    // Medium length input - reflect depth
+    if (input.length < 100) {
+      const mediumResponses = [
+        `I hear what you're bringing forward. What else is here?`,
+        `There's something important in what you're sharing. Tell me more.`,
+        `I'm witnessing this with you. What wants to emerge?`,
+        `Thank you for sharing. What's at the heart of this?`
+      ];
+      return mediumResponses[Math.floor(Math.random() * mediumResponses.length)];
+    }
+
+    // Longer input - deeper witnessing
+    const deepResponses = [
+      `I'm receiving the fullness of what you're sharing. What resonates most?`,
+      `There's real depth here. What feels most alive?`,
+      `I witness the complexity of what you're bringing. What's essential?`,
+      `Thank you for this vulnerability. What wants attention?`
     ];
-    return defaults[Math.floor(Math.random() * defaults.length)];
+    return deepResponses[Math.floor(Math.random() * deepResponses.length)];
   }
 
   /**
