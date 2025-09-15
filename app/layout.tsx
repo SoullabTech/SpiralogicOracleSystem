@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { BetaBanner } from "@/components/ui/BetaBanner";
 import { FeedbackWidget } from "@/components/ui/FeedbackWidget";
+import VoiceDebugOverlay from "@/components/debug/VoiceDebugOverlay";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -41,6 +42,7 @@ export default function RootLayout({
           <BetaBanner />
           {children}
           <FeedbackWidget />
+          <VoiceDebugOverlay />
         </AuthProvider>
       </body>
     </html>

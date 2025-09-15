@@ -174,35 +174,83 @@ export class SesameMayaRefiner {
   }
 
   private tightenStyle(s: string) {
-    // remove modern filler words and hedge language for crisp communication
+    // Remove excessive qualifiers and explanatory phrases for intimate, soulful communication
     return s
+      // Core filler removal - expanded list
       .replace(/\b(kind of|sort of|a bit|just|really|like,|you know,)\b/gi, '')
-      .replace(/\bI\s+think\s+that\b/gi, 'I think')
+      .replace(/\bI\s+mean,?\s*/gi, '')
+      .replace(/\bactually,?\s*/gi, '')
+      .replace(/\bhonestly,?\s*/gi, '')
+      .replace(/\bliterally,?\s*/gi, '')
+      .replace(/\bI\s+guess\b/gi, '')
+      .replace(/\bI\s+suppose\b/gi, '')
+
+      // Remove explanatory/distancing phrases Maya uses too often
+      .replace(/\bI'm\s+here\s+to\s+(simply|just)?\s*/gi, '')
+      .replace(/\blet's\s+explore\s+that\s+together\b/gi, 'tell me more')
+      .replace(/\blet's\s+explore\b/gi, 'share with me')
+      .replace(/\bI'm\s+curious\s+about\s+how\b/gi, 'how')
+      .replace(/\bthat\s+sounds\s+ah\.\.\.\s*/gi, '')
+      .replace(/\bone\s+step\s+at\s+a\s+time\b/gi, '')
+      .replace(/\bwhat\s+would\s+you\s+like\s+to\s+start\s+with\b/gi, 'where shall we begin')
+
+      // Remove hedging
+      .replace(/\bit\s+seems\s+like\b/gi, '')
+      .replace(/\bit\s+appears\s+that\b/gi, '')
+      .replace(/\bmaybe\s+we\s+could\b/gi, "let's")
+      .replace(/\bperhaps\s+you\s+might\b/gi, 'you could')
+
+      // Remove redundant explanations
+      .replace(/\bwhat\s+I'm\s+hearing\s+is\b/gi, '')
+      .replace(/\bwhat\s+you're\s+saying\s+is\b/gi, '')
+      .replace(/\bif\s+I\s+understand\s+correctly\b/gi, '')
+      .replace(/\bto\s+reflect\s+on\b/gi, 'about')
+      .replace(/\bI'm\s+witnessing\b/gi, 'I see')
+      .replace(/\bwhat\s+insights\s+naturally\s+arise\b/gi, 'what comes up')
+
+      // Original cleanups
+      .replace(/\bI\s+think\s+that\b/gi, 'I sense')
       .replace(/\bthat\s+being\s+said\b/gi, '')
       .replace(/\byou\s+can\s+you\s+can\b/gi, 'you can')
       .replace(/\bat\s+the\s+end\s+of\s+the\s+day\b/gi, 'ultimately')
       .replace(/\bbasically\b/gi, '')
       .replace(/\bobviously\b/gi, '')
+      .replace(/\bsimply\b/gi, '')
+
+      // Clean up spacing and punctuation
       .replace(/\s{2,}/g, ' ')
-      .replace(/ ,/g, ',');
+      .replace(/ ,/g, ',')
+      .replace(/^\s*,\s*/gm, '') // Remove orphaned commas
+      .trim();
   }
 
   private softenEdges(s: string) {
-    // gentle but confident phrasing - modern and supportive
+    // Intimate, soulful phrasing - direct yet compassionate
     return s
-      .replace(/\b(you need to|you have to)\b/gi, 'you can')
-      .replace(/\byou should\b/gi, 'you might')
-      .replace(/\bdon\'t\s+([a-z]+)\b/gi, 'consider not $1ing')  // "don't worry" -> "consider not worrying"
-      .replace(/\b(always|never)\s+([a-z]+)\b/gi, 'often $2')  // More nuanced
-      .replace(/\byou must\b/gi, 'it helps to');
+      .replace(/\b(you need to|you have to)\b/gi, 'you might')
+      .replace(/\byou should\b/gi, 'consider')
+      .replace(/\bdon\'t\s+worry\b/gi, 'rest easy')
+      .replace(/\bdon\'t\s+be\s+afraid\b/gi, 'trust')
+      .replace(/\byou must\b/gi, 'you could')
+      // More natural, less clinical
+      .replace(/\bconsider not ([a-z]+)ing\b/gi, 'ease up on $1ing')
+      // Remove overly formal language
+      .replace(/\bit\s+is\s+important\s+to\s+note\s+that\b/gi, '')
+      .replace(/\bone\s+might\s+say\b/gi, '')
+      .replace(/\bin\s+other\s+words\b/gi, '')
+      .replace(/\blet\s+me\s+simply\b/gi, "I'll");
   }
 
   private addBreaths(s: string) {
-    // breath markers for TTS: insert subtle pauses at natural spots
+    // Optimized breath markers for natural, flowing speech
     return s
-      .replace(/—/g, ' — <breath/0.35> ')
-      .replace(/: /g, ': <breath/0.25>')
-      .replace(/, /g, ', <breath/0.2>');
+      .replace(/—/g, ' — <breath/0.25> ')  // Shorter em-dash pause
+      .replace(/: /g, ': <breath/0.15>')    // Minimal colon pause
+      .replace(/\. /g, '. <breath/0.25>')   // Natural sentence breaks
+      .replace(/, (?![<])/g, ', <breath/0.1>') // Very light comma pauses
+      .replace(/\?\s*/g, '? <breath/0.2>')  // Question pause
+      .replace(/!\s*/g, '! <breath/0.2>')   // Exclamation pause
+      .replace(/\.\.\./g, '... <breath/0.3>'); // Ellipsis pause
   }
 
   private ensureClosure(s: string) {

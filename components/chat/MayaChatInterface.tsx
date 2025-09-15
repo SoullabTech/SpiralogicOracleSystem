@@ -2,8 +2,11 @@
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Mic, MicOff, Paperclip, X, Keyboard, Volume2, VolumeX } from 'lucide-react';
+import { Send, Paperclip, X, Volume2, VolumeX } from 'lucide-react';
+import { SimpleVoiceMic } from '../ui/SimpleVoiceMic';
 import { toast } from 'react-hot-toast';
+import { logVoiceAttemptStarted, logVoiceTranscriptReceived, logTextFallbackUsed } from '../../utils/voiceAnalytics';
+import { logProductionVoiceAttempt, logProductionTranscriptReceived } from '../../utils/voiceTelemetry';
 
 interface ChatMessage {
   id: string;
@@ -31,6 +34,8 @@ interface MayaChatInterfaceProps {
   disabled?: boolean;
   className?: string;
   currentlySpeakingId?: string; // Track which message is being spoken
+  useArchetypalRouting?: boolean; // Enable sophisticated multi-agent routing
+  userId?: string; // For personalized archetypal experiences
 }
 
 export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
@@ -43,7 +48,9 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
   isProcessing = false,
   disabled = false,
   className = '',
-  currentlySpeakingId
+  currentlySpeakingId,
+  useArchetypalRouting = false,
+  userId
 }) => {
   // Input states
   const [inputText, setInputText] = useState('');
@@ -51,18 +58,16 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
   const [isDragOver, setIsDragOver] = useState(false);
   
   // Voice states
-  const [isListening, setIsListening] = useState(false);
-  const [voiceTranscript, setVoiceTranscript] = useState('');
-  const [interimTranscript, setInterimTranscript] = useState('');
-  const [inputMode, setInputMode] = useState<'text' | 'voice'>('text');
+  const [showVoiceMic, setShowVoiceMic] = useState(false);
+  const [enableVAD, setEnableVAD] = useState(true); // Enable voice activation by default
+
+  // Archetypal routing states
+  const [currentAgent, setCurrentAgent] = useState<string>('maya');
+  const [archetypalInsights, setArchetypalInsights] = useState<any>(null);
   
   // Refs
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<any>(null);
-  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const voiceTranscriptRef = useRef<string>('');
-  const hasSentRef = useRef<boolean>(false);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -72,173 +77,78 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
     }
   }, [inputText]);
 
-  // Initialize speech recognition
-  useEffect(() => {
-    console.log('🎤 Initializing speech recognition in MayaChatInterface');
+  // Handle voice transcript from SimpleVoiceMic
+  const handleVoiceTranscript = useCallback((transcript: string) => {
+    if (transcript.trim()) {
+      console.log('📤 Received voice transcript:', transcript);
 
-    // Check for both standard and webkit versions
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      // Analytics
+      logVoiceTranscriptReceived(transcript);
+      logProductionTranscriptReceived(Date.now() - performance.now(), transcript.length);
 
-    if (!SpeechRecognition) {
-      console.error('❌ Speech Recognition not available');
-      return;
+      // Send message
+      onSendMessage(transcript.trim());
+
+      // Hide voice mic after sending
+      setShowVoiceMic(false);
     }
+  }, [onSendMessage]);
 
-    console.log('✅ SpeechRecognition API found');
-
-    try {
-      const recognition = new SpeechRecognition();
-
-      recognition.continuous = false;  // Simpler & reliable
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-
-      console.log('✅ Recognition configured');
-
-      recognition.onstart = () => {
-        console.log('🎤 Recognition started event');
-        setIsListening(true);
-      };
-      
-      recognition.onresult = (event: any) => {
-        console.log('🎤 Chat interface voice result');
-        let interim = '';
-        let final = '';
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            final += transcript + ' ';
-            console.log('✅ Final text in chat:', transcript);
-          } else {
-            interim += transcript;
-          }
-        }
-
-        // Mirror UI
-        setInterimTranscript(interim);
-
-        if (final) {
-          setVoiceTranscript(prev => {
-            const next = (prev + final).trim();
-            voiceTranscriptRef.current = next;
-            return next + ' '; // Keeps UI feeling live
-          });
-
-          // 🔑 Hot path: send once on first final
-          if (!hasSentRef.current) {
-            hasSentRef.current = true;
-            const utterance = (voiceTranscriptRef.current || final).trim();
-            if (utterance) {
-              console.log('📤 Sending immediately on final:', utterance);
-              // Stop recognition to avoid duplicate finals
-              try { recognition.stop(); } catch {}
-              // Hand to chat immediately - use onSendMessage directly
-              onSendMessage(utterance);
-            }
-          }
-        }
-      };
-      
-      recognition.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
-        toast.error('Voice recognition error. Please try again.');
-        setIsListening(false);
-      };
-      
-      recognition.onend = () => {
-        console.log('🔴 Recognition ended');
-        setIsListening(false);
-
-        // Last-chance fallback
-        if (!hasSentRef.current) {
-          const utterance = (voiceTranscriptRef.current || '').trim();
-          if (utterance) {
-            console.log('📤 Fallback send on end:', utterance);
-            hasSentRef.current = true;
-            onSendMessage(utterance);
-          }
-        }
-
-        // Reset UI state
-        setInputMode('text');
-        setVoiceTranscript('');
-        setInterimTranscript('');
-        voiceTranscriptRef.current = '';
-      };
-      
-      recognitionRef.current = recognition;
-      console.log('✅ Recognition ref saved');
-    } catch (error) {
-      console.error('❌ Failed to initialize recognition:', error);
-    }
+  const toggleVoiceMic = useCallback(() => {
+    setShowVoiceMic(prev => !prev);
+    logVoiceAttemptStarted({ mode: 'chat' });
+    logProductionVoiceAttempt({ mode: 'chat' });
   }, []);
 
-  const startListening = useCallback(() => {
-    console.log('🎤 StartListening called in MayaChatInterface');
-
-    if (!recognitionRef.current) {
-      console.error('❌ No recognition ref');
-      toast.error('Voice recognition not supported in this browser');
-      return;
-    }
-
-    console.log('🎤 Setting voice mode and starting recognition');
-    setInputMode('voice');
-    setVoiceTranscript('');
-    setInterimTranscript('');
-    voiceTranscriptRef.current = '';
-    hasSentRef.current = false; // Reset guard
-
-    try {
-      recognitionRef.current.start();
-      console.log('✅ Recognition started successfully');
-    } catch (error) {
-      console.error('❌ Failed to start recognition:', error);
-      toast.error('Failed to start voice recognition');
-    }
-  }, []);
-
-  const stopListening = useCallback(() => {
-    console.log('🛑 StopListening called');
-    console.log('Current voice transcript state:', voiceTranscript);
-    console.log('Current voice transcript ref:', voiceTranscriptRef.current);
-
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-    }
-    if (silenceTimerRef.current) {
-      clearTimeout(silenceTimerRef.current);
-    }
-
-    // Use ref value which is more reliable
-    const transcriptToSend = voiceTranscriptRef.current || voiceTranscript;
-
-    // Send voice transcript if we have it
-    if (transcriptToSend.trim()) {
-      // In chat mode, always use handleSend to treat voice as text input
-      console.log('🎤 Sending voice transcript as text message:', transcriptToSend.trim());
-
-      // Call onSendMessage directly since handleSend might not be defined yet
-      onSendMessage(transcriptToSend.trim());
-    } else {
-      console.log('⚠️ No transcript to send');
-    }
-
-    setInputMode('text');
-    setVoiceTranscript('');
-    setInterimTranscript('');
-    voiceTranscriptRef.current = '';
-  }, [voiceTranscript, onSendMessage]);
-
-  const handleSend = useCallback((text?: string) => {
+  const handleSend = useCallback(async (text?: string) => {
     const messageText = text || inputText.trim();
     if (!messageText && attachedFiles.length === 0) return;
 
-    onSendMessage(messageText, attachedFiles.length > 0 ? attachedFiles : undefined);
+    // Enhanced archetypal routing if enabled
+    if (useArchetypalRouting && userId) {
+      try {
+        // Call the Master Oracle Orchestrator API endpoint
+        const response = await fetch('/api/oracle/process', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: messageText,
+            userId: userId,
+            options: {
+              voiceInput: inputMode === 'voice',
+              attachments: attachedFiles.length > 0 ? attachedFiles : undefined
+            }
+          })
+        });
+
+        if (response.ok) {
+          const oracleResponse = await response.json();
+
+          // Update current agent and insights
+          setCurrentAgent(oracleResponse.agentUsed);
+          setArchetypalInsights(oracleResponse.archetypalEnergies);
+
+          // Send the oracle response through the normal message flow
+          onSendMessage(messageText, attachedFiles.length > 0 ? attachedFiles : undefined);
+        } else {
+          // Fallback to normal message sending
+          onSendMessage(messageText, attachedFiles.length > 0 ? attachedFiles : undefined);
+        }
+      } catch (error) {
+        console.error('Archetypal routing failed, using fallback:', error);
+        // Fallback to normal message sending
+        onSendMessage(messageText, attachedFiles.length > 0 ? attachedFiles : undefined);
+      }
+    } else {
+      // Standard message sending
+      onSendMessage(messageText, attachedFiles.length > 0 ? attachedFiles : undefined);
+    }
+
     setInputText('');
     setAttachedFiles([]);
-  }, [inputText, attachedFiles, onSendMessage]);
+  }, [inputText, attachedFiles, onSendMessage, useArchetypalRouting, userId, inputMode]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -314,6 +224,29 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
 
   return (
     <div className={`maya-chat-interface bg-slate-900/50 backdrop-blur-sm rounded-xl border border-white/10 ${className}`}>
+      {/* Archetypal Agent Indicator */}
+      {useArchetypalRouting && (
+        <div className="px-4 py-2 bg-gradient-to-r from-[#D4B896]/20 to-[#D4B896]/10 border-b border-white/10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#D4B896] animate-pulse"></div>
+              <span className="text-xs text-white/80">
+                {currentAgent === 'maya' && '🔮 Maya - Divine Wisdom'}
+                {currentAgent === 'fire' && '🔥 Fire - Transformative Power'}
+                {currentAgent === 'water' && '💧 Water - Emotional Healing'}
+                {currentAgent === 'earth' && '🌱 Earth - Grounding Manifestation'}
+                {currentAgent === 'air' && '🌬️ Air - Clarity & Truth'}
+              </span>
+            </div>
+            {archetypalInsights && (
+              <div className="text-xs text-[#D4B896]">
+                {archetypalInsights.essence}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Messages Display */}
       {messages.length > 0 && (
         <div className="p-4 max-h-60 overflow-y-auto space-y-3">
@@ -359,118 +292,71 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
       )}
 
       {/* Input Area */}
-      <div 
+      <div
         className={`p-4 border-t border-white/10 ${isDragOver ? 'bg-[#D4B896]/10' : ''}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        {/* Voice Mode */}
-        {inputMode === 'voice' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mb-4 p-4 bg-[#D4B896]/20 rounded-xl border border-[#D4B896]/30"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${isListening ? 'bg-red-400 animate-pulse' : 'bg-gray-400'}`} />
-                <span className="text-white text-sm">
-                  {isListening ? 'Listening...' : 'Voice input ready'}
-                </span>
-              </div>
-              <button
-                onClick={stopListening}
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            
-            <div className="text-white min-h-[40px] p-2 bg-black/20 rounded border">
-              {voiceTranscript && <span>{voiceTranscript}</span>}
-              {interimTranscript && <span className="text-white/60">{interimTranscript}</span>}
-              {!voiceTranscript && !interimTranscript && (
-                <span className="text-white/40">Start speaking...</span>
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Text Input Mode */}
-        {inputMode === 'text' && (
-          <>
-            {/* Attached Files */}
-            {attachedFiles.length > 0 && (
-              <div className="mb-3 flex flex-wrap gap-2">
-                {attachedFiles.map((file, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-1">
-                    <span className="text-xs text-white">{file.name}</span>
-                    <button
-                      onClick={() => removeFile(index)}
-                      className="text-white/60 hover:text-white"
-                    >
-                      <X size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Input Row */}
-            <div className="flex items-end gap-3">
-              {/* File Upload Button */}
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={disabled || attachedFiles.length >= 5}
-                className="flex-shrink-0 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
-                title="Attach file"
-              >
-                <Paperclip size={16} className="text-white" />
-              </button>
-              
-              {/* Text Input */}
-              <div className="flex-1 relative">
-                <textarea
-                  ref={textareaRef}
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder={attachedFiles.length > 0 ? `Ask ${agentName} about your files...` : "Type your message..."}
-                  disabled={disabled}
-                  className="w-full min-h-[44px] max-h-[120px] p-3 pr-12 bg-white/5 border border-white/20 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#D4B896]/50 focus:border-[#D4B896]/50 text-white placeholder-white/40"
-                />
-              </div>
-
-              {/* Voice/Send Button */}
-              {inputText.trim() || attachedFiles.length > 0 ? (
-                <motion.button
-                  onClick={() => handleSend()}
-                  disabled={!canSend}
-                  whileTap={{ scale: 0.95 }}
-                  className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                    canSend
-                      ? 'bg-[#D4B896] hover:bg-[#D4B896]/80 text-white'
-                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  }`}
-                  title="Send message"
-                >
-                  <Send size={16} />
-                </motion.button>
-              ) : (
+        {/* Attached Files */}
+        {attachedFiles.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            {attachedFiles.map((file, index) => (
+              <div key={index} className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-1">
+                <span className="text-xs text-white">{file.name}</span>
                 <button
-                  onClick={startListening}
-                  disabled={disabled}
-                  className="flex-shrink-0 w-10 h-10 bg-[#D4B896] hover:bg-[#D4B896]/80 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
-                  title="Voice message"
+                  onClick={() => removeFile(index)}
+                  className="text-white/60 hover:text-white"
                 >
-                  <Mic size={16} className="text-white" />
+                  <X size={14} />
                 </button>
-              )}
-            </div>
-          </>
+              </div>
+            ))}
+          </div>
         )}
+
+        {/* Input Row */}
+        <div className="flex items-end gap-3">
+          {/* File Upload Button */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={disabled || attachedFiles.length >= 5}
+            className="flex-shrink-0 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
+            title="Attach file"
+          >
+            <Paperclip size={16} className="text-white" />
+          </button>
+
+          {/* Text Input */}
+          <div className="flex-1 relative">
+            <textarea
+              ref={textareaRef}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={attachedFiles.length > 0 ? `Ask ${agentName} about your files...` : "Type your message..."}
+              disabled={disabled || showVoiceMic}
+              className="w-full min-h-[44px] max-h-[120px] p-3 pr-12 bg-white/5 border border-white/20 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#D4B896]/50 focus:border-[#D4B896]/50 text-white placeholder-white/40 disabled:opacity-50"
+            />
+          </div>
+
+          {/* Send Button */}
+          {inputText.trim() || attachedFiles.length > 0 ? (
+            <motion.button
+              onClick={() => handleSend()}
+              disabled={!canSend}
+              whileTap={{ scale: 0.95 }}
+              className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                canSend
+                  ? 'bg-[#D4B896] hover:bg-[#D4B896]/80 text-white'
+                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+              }`}
+              title="Send message"
+            >
+              <Send size={16} />
+            </motion.button>
+          ) : null}
+        </div>
 
         {/* Processing Indicator */}
         {isProcessing && (
@@ -482,13 +368,52 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
           </div>
         )}
 
+        {/* Toggle Voice Mode Button */}
+        <div className="mt-3 flex justify-center">
+          <button
+            onClick={toggleVoiceMic}
+            className="px-4 py-2 bg-gradient-to-r from-[#D4B896]/20 to-[#8B7B6B]/20 hover:from-[#D4B896]/30 hover:to-[#8B7B6B]/30 rounded-full text-xs text-white/70 hover:text-white transition-all flex items-center gap-2 border border-white/10"
+          >
+            {showVoiceMic ? (
+              <>
+                <X size={14} />
+                Hide Voice Mode
+              </>
+            ) : (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 1C10.34 1 9 2.34 9 4V12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12V4C15 2.34 13.66 1 12 1Z" />
+                  <path d="M19 12C19 15.53 16.39 18.44 13 18.93V22H11V18.93C7.61 18.44 5 15.53 5 12H7C7 14.76 9.24 17 12 17C14.76 17 17 14.76 17 12H19Z" />
+                </svg>
+                {enableVAD ? 'Voice Activated Mode' : 'Voice Chat Mode'}
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* VAD Settings Toggle */}
+        {showVoiceMic && (
+          <div className="mt-2 flex justify-center">
+            <label className="flex items-center gap-2 text-xs text-white/60 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={enableVAD}
+                onChange={(e) => setEnableVAD(e.target.checked)}
+                className="w-3 h-3 rounded bg-white/10 border-white/20 text-[#D4B896] focus:ring-[#D4B896]/50"
+              />
+              <span>Auto-detect voice (hands-free)</span>
+            </label>
+          </div>
+        )}
+
         {/* Hints */}
         <div className="mt-2 text-xs text-white/40 text-center">
-          {inputMode === 'text' ? (
-            'Press Enter to send • Shift+Enter for new line • Drop files to attach'
-          ) : (
-            'Speak clearly • 3 seconds of silence will send your message'
-          )}
+          {showVoiceMic
+            ? enableVAD
+              ? 'Just start speaking - I\'ll listen automatically'
+              : 'Click the mic button to start/stop recording'
+            : 'Press Enter to send • Shift+Enter for new line'
+          }
         </div>
       </div>
 
@@ -501,6 +426,17 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
         accept=".txt,.md,.csv,.pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif"
         className="hidden"
       />
+    </div>
+
+      {/* Voice Mic Overlay */}
+      {showVoiceMic && (
+        <SimpleVoiceMic
+          onTranscript={handleVoiceTranscript}
+          pauseListening={isProcessing || disabled}
+          enableVAD={enableVAD}
+          className="z-50"
+        />
+      )}
     </div>
   );
 };

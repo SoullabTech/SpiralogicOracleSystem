@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Loader2, Pause, Play } from 'lucide-react';
+import { logVoiceAttemptStarted, logVoiceTranscriptReceived } from '../../utils/voiceAnalytics';
 
 interface AdaptiveVoiceMicButtonProps {
   onTranscript?: (text: string) => void;
@@ -239,9 +240,12 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
           console.log('📤 Transcript to send:', finalTranscriptRef.current);
           console.log('📤 Has already sent:', hasSentTranscriptRef.current);
 
-          if (!hasSentTranscriptRef.current && finalTranscriptRef.current.trim() && onTranscript) {
-            hasSentTranscriptRef.current = true;
+          if (!sentRef.current && finalTranscriptRef.current.trim() && onTranscript) {
+            sentRef.current = true;
             console.log('🎯 Sending immediately on final result:', finalTranscriptRef.current);
+
+            // Analytics: Track successful transcript
+            logVoiceTranscriptReceived(finalTranscriptRef.current);
 
             try {
               // Stop recognition to prevent multiple sends
@@ -263,7 +267,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
             setTimeout(() => {
               finalTranscriptRef.current = '';
               setTranscript('');
-              hasSentTranscriptRef.current = false;
+              sentRef.current = false;
               console.log('🔄 Reset for next input');
 
               // Restart listening if not paused
@@ -347,7 +351,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
         if (isListening && !pauseListening) {
           // Reset for next input
           finalTranscriptRef.current = '';
-          hasSentTranscriptRef.current = false;
+          sentRef.current = false;
 
           setTimeout(() => {
             console.log('🔄 Restarting recognition for next input...');
@@ -381,7 +385,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
     const thoughtText = finalTranscriptRef.current.trim();
 
     // Prevent duplicate sends
-    if (hasSentTranscriptRef.current) {
+    if (sentRef.current) {
       console.log('⚠️ Already sent this thought');
       return;
     }
@@ -456,6 +460,9 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
     hasSentTranscriptRef.current = false;
     sentRef.current = false;  // Reset send guard
 
+    // Analytics: Track voice attempt
+    logVoiceAttemptStarted({ mode: 'voice' });
+
     try {
       recognitionRef.current.start();
       console.log('✅ Speech recognition started successfully');
@@ -485,7 +492,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
     console.log('⏹️ Ending conversation');
 
     // Send any final thoughts
-    if (finalTranscriptRef.current.trim() && !hasSentTranscriptRef.current) {
+    if (finalTranscriptRef.current.trim() && !sentRef.current) {
       console.log('📤 Sending final thought before stopping');
       handleSilenceDetected();
     }

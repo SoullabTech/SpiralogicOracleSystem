@@ -84,7 +84,7 @@ export class ElevenLabsVoice implements IVoice {
       }
     };
 
-    const url = `${this.baseUrl}/text-to-speech/${voiceId}/stream?optimize_streaming_latency=3&output_format=${this.outputFormat}`;
+    const url = `${this.baseUrl}/text-to-speech/${voiceId}/stream?optimize_streaming_latency=4&output_format=${this.outputFormat}`;
     
     try {
       const response = await fetch(url, {

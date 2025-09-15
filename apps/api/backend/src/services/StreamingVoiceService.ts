@@ -205,8 +205,8 @@ export class StreamingVoiceService extends EventEmitter {
             text: text,
             voice: voiceId || 'maya',
             output_format: 'mp3_44100_128',
-            // Enable streaming optimization
-            optimize_streaming_latency: 3
+            // Maximum streaming optimization to reduce lag
+            optimize_streaming_latency: 4
           },
           {
             headers: { 'Content-Type': 'application/json' },
@@ -251,8 +251,8 @@ export class StreamingVoiceService extends EventEmitter {
             style: 0.65,
             use_speaker_boost: true
           },
-          model_id: 'eleven_turbo_v2', // Faster model for streaming
-          optimize_streaming_latency: 3
+          model_id: 'eleven_turbo_v2_5', // Latest fastest model
+          optimize_streaming_latency: 4  // Max optimization
         },
         {
           headers: {

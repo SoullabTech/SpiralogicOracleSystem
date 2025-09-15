@@ -9,7 +9,13 @@ const config: Config = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
-  safelist: [{ pattern: /bg-oracle-(50|100|200|300|400|500|600|700|800|900)/ }],
+  safelist: [
+    // Remove the oracle pattern that doesn't match any classes
+    // Instead, safelist any dynamic classes we actually use
+    'bg-fire-base', 'bg-water-base', 'bg-earth-base', 'bg-air-base',
+    'text-fire-base', 'text-water-base', 'text-earth-base', 'text-air-base',
+    'border-fire-base', 'border-water-base', 'border-earth-base', 'border-air-base'
+  ],
   theme: {
     extend: {
       backgroundImage: {
