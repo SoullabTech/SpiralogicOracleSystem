@@ -186,7 +186,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       const recognition = new SpeechRecognition();
       console.log('🎤 Created speech recognition instance');
 
-      recognition.continuous = true;
+      recognition.continuous = false; // CRITICAL: false for immediate send on final
       recognition.interimResults = true;
       recognition.lang = 'en-US';
       recognition.maxAlternatives = 1;
@@ -231,51 +231,52 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
         // Update final transcript
         if (finalText) {
           console.log('💭 Words spoken:', finalText);
-
-          // Track speech patterns for pause detection
-          const timeSinceLastSpeech = Date.now() - lastSpeechTimeRef.current;
-          if (timeSinceLastSpeech > 600 && lastSpeechTimeRef.current > speechStartTimeRef.current) {
-            pauseCountRef.current++;
-            console.log(`⏸️ Natural pause detected (#${pauseCountRef.current})`);
-          }
-
           finalTranscriptRef.current += finalText;
           setTranscript(finalTranscriptRef.current);
-          lastSpeechTimeRef.current = Date.now();
 
-          // Clear thinking indicator when speaking resumes
-          setIsThinking(false);
+          // IMMEDIATE SEND: Send as soon as we get a final result
+          console.log('🚀 IMMEDIATE SEND - Final result detected');
+          console.log('📤 Transcript to send:', finalTranscriptRef.current);
+          console.log('📤 Has already sent:', hasSentTranscriptRef.current);
 
-          // Reset silence timer on new speech
-          if (silenceTimer) {
-            clearTimeout(silenceTimer);
-          }
+          if (!hasSentTranscriptRef.current && finalTranscriptRef.current.trim() && onTranscript) {
+            hasSentTranscriptRef.current = true;
+            console.log('🎯 Sending immediately on final result:', finalTranscriptRef.current);
 
-          // Start adaptive silence timer
-          const adaptiveThreshold = 1500; // TEMPORARY: Fixed 1.5 second for testing
-          const speechLength = finalTranscriptRef.current.split(' ').length;
-
-          console.log(`⏱️ Adaptive timer set: ${adaptiveThreshold}ms (${speechLength} words, ${pauseCountRef.current} pauses)`);
-          console.log('📝 Current transcript so far:', finalTranscriptRef.current);
-
-          const timer = setTimeout(() => {
-            console.log('⏰ Silence timer fired!');
-            console.log('Transcript available:', finalTranscriptRef.current);
-            console.log('Has sent:', hasSentTranscriptRef.current);
-            console.log('Paused:', pauseListening);
-
-            if (finalTranscriptRef.current.trim() && !pauseListening && !hasSentTranscriptRef.current) {
-              console.log('✅ All conditions met, calling handleSilenceDetected');
-              handleSilenceDetected();
-            } else {
-              console.log('❌ Conditions not met:', {
-                hasTranscript: !!finalTranscriptRef.current.trim(),
-                notPaused: !pauseListening,
-                notSent: !hasSentTranscriptRef.current
-              });
+            try {
+              // Stop recognition to prevent multiple sends
+              recognition.stop();
+              console.log('🛑 Stopped recognition');
+            } catch (e) {
+              console.log('Recognition already stopped');
             }
-          }, adaptiveThreshold);
-          setSilenceTimer(timer);
+
+            // Send the transcript
+            try {
+              onTranscript(finalTranscriptRef.current.trim());
+              console.log('✅ Transcript sent successfully');
+            } catch (error) {
+              console.error('❌ Error sending transcript:', error);
+            }
+
+            // Clear for next input
+            setTimeout(() => {
+              finalTranscriptRef.current = '';
+              setTranscript('');
+              hasSentTranscriptRef.current = false;
+              console.log('🔄 Reset for next input');
+
+              // Restart listening if not paused
+              if (isListening && !pauseListening) {
+                try {
+                  recognition.start();
+                  console.log('🎤 Restarted listening');
+                } catch (e) {
+                  console.log('Already listening');
+                }
+              }
+            }, 100);
+          }
         }
 
         setInterimTranscript(interimText);
@@ -337,18 +338,19 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       };
 
       recognition.onend = () => {
-        console.log('Recognition cycle ended');
+        console.log('Recognition ended (continuous=false)');
 
-        // Send any remaining thoughts
-        if (finalTranscriptRef.current.trim() && isListening && !pauseListening && !hasSentTranscriptRef.current) {
-          console.log('💬 Sending final thought:', finalTranscriptRef.current);
-          handleSilenceDetected();
-        }
+        // With continuous=false, onend means user stopped speaking
+        // The transcript should have already been sent in onresult
 
-        // Restart if still in conversation
+        // Restart listening if still active and not paused
         if (isListening && !pauseListening) {
+          // Reset for next input
+          finalTranscriptRef.current = '';
+          hasSentTranscriptRef.current = false;
+
           setTimeout(() => {
-            console.log('🔄 Continuing to listen...');
+            console.log('🔄 Restarting recognition for next input...');
             try {
               recognition.start();
             } catch (e) {
@@ -393,8 +395,14 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       setIsThinking(false);
 
       console.log('📤 Sending transcript to parent component:', thoughtText);
+      console.log('📤 Callback function:', onTranscript.toString().substring(0, 100));
       // Send the complete thought
-      onTranscript(thoughtText);
+      try {
+        onTranscript(thoughtText);
+        console.log('✅ onTranscript callback completed successfully');
+      } catch (error) {
+        console.error('❌ Error calling onTranscript:', error);
+      }
 
       // Clear for next thought
       setTimeout(() => {

@@ -375,13 +375,23 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
+    console.log('🎤 handleVoiceTranscript called with:', transcript);
     const t = transcript?.trim();
-    if (!t) return;
+    if (!t) {
+      console.log('⚠️ Empty transcript, returning');
+      return;
+    }
 
     console.log('🎯 Voice transcript received:', t);
+    console.log('📞 Calling handleTextMessage...');
 
-    // Route all voice through text message handler for reliability
-    await handleTextMessage(t);
+    try {
+      // Route all voice through text message handler for reliability
+      await handleTextMessage(t);
+      console.log('✅ handleTextMessage completed');
+    } catch (error) {
+      console.error('❌ Error in handleTextMessage:', error);
+    }
   }, [handleTextMessage]);
 
   // Clear all check-ins
