@@ -810,10 +810,10 @@ ${userEnergy.openness < 0.3 ? 'They are guarded - be patient and consistent.' : 
       history.splice(0, 2);
     }
     
-    // Generate voice if ElevenLabs is configured
+    // TEMPORARY FIX: Always use web speech fallback to avoid base64 encoding issues
     let audioUrl = 'web-speech-fallback';
-    console.log('🎤 ElevenLabs configured:', !!process.env.ELEVENLABS_API_KEY);
-    if (process.env.ELEVENLABS_API_KEY) {
+    console.log('🎤 Using web speech fallback to avoid deployment issues');
+    if (false && process.env.ELEVENLABS_API_KEY) { // Disabled ElevenLabs
       try {
         // Select voice ID based on agent - ALWAYS use consistent voices
         let voiceId;
