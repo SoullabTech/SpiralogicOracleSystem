@@ -326,7 +326,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       console.log(`⏱️ Text API response received in ${apiTime}ms`);
 
       const oracleResponse = responseData.data || responseData;
-      let responseText = oracleResponse.message || 'I am here with you.';
+      let responseText = oracleResponse.message || oracleResponse.content || oracleResponse.text || 'I am here with you.';
       responseText = cleanMessage(responseText);
 
       const element = oracleResponse.element || 'aether';

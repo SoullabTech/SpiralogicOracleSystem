@@ -108,6 +108,11 @@ export class SacredWitnessingCore {
    * Determine when to hold pure space without reflecting
    */
   private needsPureSpaceHolding(input: string, presence: WitnessedPresence): boolean {
+    // Safety check for undefined input
+    if (!input || typeof input !== 'string') {
+      return false;
+    }
+
     const indicators = [
       presence.depth > 0.8, // Very deep sharing
       input.includes('...') && presence.quality === 'vulnerable', // Trailing off vulnerably
