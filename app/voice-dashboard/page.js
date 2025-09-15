@@ -1,3 +1,5 @@
+'use client';
+
 // Voice System Dashboard
 // Development-only page for monitoring voice analytics
 

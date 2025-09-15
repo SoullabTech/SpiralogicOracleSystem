@@ -1,8 +1,8 @@
 // API endpoint for Master Oracle Orchestrator - Sophisticated archetypal routing
 // Integrates AIN/MAYA/Anamnesis frameworks with voice system
 
-import { NextApiRequest, NextApiResponse } from 'next';
-import { masterOracleOrchestrator } from '../../../apps/api/backend/src/services/MasterOracleOrchestrator';
+import { NextRequest, NextResponse } from 'next/server';
+import { masterOracleOrchestrator } from '../../../../apps/api/backend/src/services/MasterOracleOrchestrator';
 
 interface OracleRequest {
   message: string;
@@ -44,35 +44,25 @@ interface OracleApiResponse {
   };
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<OracleApiResponse>
-) {
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({
-      success: false,
-      error: 'Method not allowed. Use POST.'
-    });
-  }
-
+export async function POST(request: NextRequest) {
   try {
-    const { message, userId, sessionId, options }: OracleRequest = req.body;
+    const body = await request.json();
+    const { message, userId, sessionId, options }: OracleRequest = body;
 
     // Validate required fields
     if (!message || !userId) {
-      return res.status(400).json({
+      return NextResponse.json({
         success: false,
         error: 'Missing required fields: message and userId are required'
-      });
+      }, { status: 400 });
     }
 
     // Validate message length
     if (message.length > 4000) {
-      return res.status(400).json({
+      return NextResponse.json({
         success: false,
         error: 'Message too long. Maximum 4000 characters.'
-      });
+      }, { status: 400 });
     }
 
     // Process message through Master Oracle Orchestrator
@@ -118,14 +108,11 @@ export default async function handler(
     // Determine if it's a client error or server error
     const isClientError = error.message.includes('validation') || error.message.includes('required');
 
-    res.status(isClientError ? 400 : 500).json({
+    return NextResponse.json({
       success: false,
       error: isClientError
         ? error.message
         : 'Internal server error processing your request. Please try again.'
-    });
+    }, { status: isClientError ? 400 : 500 });
   }
 }
-
-// Export the handler for use in other contexts
-export { handler };
