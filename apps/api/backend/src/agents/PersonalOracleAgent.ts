@@ -21,6 +21,14 @@ import { FileMemoryIntegration } from "../../../../../lib/services/FileMemoryInt
 import type { StandardAPIResponse } from "../utils/sharedUtilities";
 import { applyMasteryVoiceIfAppropriate, type MasteryVoiceContext, loadMayaCanonicalPrompt, getMayaElementalPrompt } from "../config/mayaPromptLoader";
 import { MayaVoiceSystem } from "../../../../../lib/voice/maya-voice";
+import {
+  applyConversationalRules,
+  getPhaseResponseStyle,
+  namePhaseTransition,
+  validateResponse,
+  type ConversationalContext,
+  type SpiralogicPhase
+} from "../config/conversationalRules";
 
 export interface PersonalOracleQuery {
   input: string;
@@ -87,6 +95,8 @@ export interface PersonalOracleSettings {
  * Orchestrates all elemental agents and provides personalized guidance
  */
 export class PersonalOracleAgent {
+  private sessionStartTimes = new Map<string, number>();
+  private lastUserElement = new Map<string, string>();
   private agentRegistry: AgentRegistry;
   private fileMemory: FileMemoryIntegration;
 
@@ -98,6 +108,39 @@ export class PersonalOracleAgent {
     this.fileMemory = new FileMemoryIntegration();
 
     logger.info("Personal Oracle Agent initialized with AgentRegistry and FileMemory");
+  }
+
+  private detectEmotionalIntensity(message: string): 'low' | 'medium' | 'high' {
+    // Simple heuristic - can be enhanced with sentiment analysis
+    const intensityMarkers = {
+      high: /urgent|crisis|emergency|desperate|overwhelmed|panic/gi,
+      medium: /anxious|worried|stressed|confused|stuck|frustrated/gi,
+      low: /curious|wondering|interested|exploring|contemplating/gi
+    };
+
+    if (intensityMarkers.high.test(message)) return 'high';
+    if (intensityMarkers.medium.test(message)) return 'medium';
+    return 'low';
+  }
+
+  private async assessDependencyRisk(userId: string): Promise<boolean> {
+    // Check frequency of interactions and dependency patterns
+    const recentInteractions = await getRelevantMemories(userId, '', 20);
+    const daysSinceFirstInteraction = (Date.now() - (recentInteractions[0]?.timestamp || Date.now())) / (1000 * 60 * 60 * 24);
+    const interactionsPerDay = recentInteractions.length / Math.max(daysSinceFirstInteraction, 1);
+
+    // High frequency (>10 per day) might indicate dependency
+    return interactionsPerDay > 10;
+  }
+
+  private refineForAuthenticity(message: string): string {
+    // Additional refinement to ensure authenticity
+    return message
+      .replace(/I understand exactly/gi, 'I witness')
+      .replace(/I feel your/gi, 'I sense the')
+      .replace(/I know how/gi, 'The pattern shows')
+      .replace(/trust me/gi, 'consider this')
+      .replace(/believe me/gi, 'notice how');
   }
 
   /**
@@ -565,10 +608,41 @@ export class PersonalOracleAgent {
     settings: PersonalOracleSettings,
     userId: string,
   ): Promise<PersonalOracleResponse> {
-    // Adjust response based on user preferences
-    let personalizedMessage = response.message;
+    // First, apply conversational rules for natural, authentic communication
+    const context: ConversationalContext = {
+      phase: (response.element || 'earth') as SpiralogicPhase,
+      userId,
+      sessionDuration: Date.now() - (this.sessionStartTimes.get(userId) || Date.now()),
+      emotionalIntensity: this.detectEmotionalIntensity(response.message),
+      dependencyRisk: await this.assessDependencyRisk(userId)
+    };
 
-    // Apply persona styling
+    // Apply conversational rules to ensure transparency and appropriate boundaries
+    let personalizedMessage = applyConversationalRules(response.message, context);
+
+    // Validate the response doesn't contain forbidden patterns
+    const validation = validateResponse(personalizedMessage);
+    if (!validation.isValid) {
+      logger.warn('Response contains forbidden patterns', { violations: validation.violations });
+      // Apply additional refinement if needed
+      personalizedMessage = this.refineForAuthenticity(personalizedMessage);
+    }
+
+    // Get phase-appropriate style
+    const phaseStyle = getPhaseResponseStyle(context.phase);
+
+    // Apply phase transition naming if element changed
+    if (this.lastUserElement.get(userId) && this.lastUserElement.get(userId) !== context.phase) {
+      const transitionStatement = namePhaseTransition(
+        this.lastUserElement.get(userId) as SpiralogicPhase,
+        context.phase,
+        'your energy shifted'
+      );
+      personalizedMessage = `${transitionStatement}\n\n${personalizedMessage}`;
+    }
+    this.lastUserElement.set(userId, context.phase);
+
+    // Apply persona styling (but more subtly)
     if (settings.persona === "formal") {
       personalizedMessage = this.makeMoreFormal(personalizedMessage);
     } else if (settings.persona === "playful") {
@@ -596,6 +670,12 @@ export class PersonalOracleAgent {
     return {
       ...response,
       message: personalizedMessage,
+      metadata: {
+        ...response.metadata,
+        conversationalPhase: context.phase,
+        phaseApproach: phaseStyle.approach,
+        voiceTone: phaseStyle.voiceTone
+      }
     };
   }
 

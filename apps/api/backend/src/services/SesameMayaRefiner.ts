@@ -1,8 +1,10 @@
 // Lightweight, in-flight stream refiner for Maya's voice.
 // Inserts elemental tone, gentle punctuation, breath markers, and
 // optional safety softening without blocking the stream.
+// Enhanced with conversational intelligence rules for authentic interaction.
 
 import { cringeFilterService } from '../utils/cringeFilterService';
+import { ConversationalRules, type SpiralogicPhase } from '../config/conversationalRules';
 
 export type Element = 'air' | 'fire' | 'water' | 'earth' | 'aether';
 
@@ -138,29 +140,42 @@ export class SesameMayaRefiner {
     // lightweight diction nudge per element
     const swaps: Record<Element, Array<[RegExp, string]>> = {
       air: [
-        [/\b(I think|maybe|perhaps)\b/gi, "let's clarify"],
+        [/\bI think\b/gi, 'I sense'],  // Witnessing language
+        [/\b(maybe|perhaps)\b/gi, ''],  // Remove uncertainty
         [/\bvery\s+([a-z]+)\b/gi, '$1'],  // "very good" -> "good"
         [/\bquite\b/gi, ''],
+        [/\bI understand\b/gi, 'I witness'],  // Never claim understanding
+        [/\blet me help\b/gi, "let's explore"],  // Collaborative
       ],
       fire: [
-        [/\btry to\b/gi, 'go ahead and'],  // More natural than "ignite"
+        [/\btry to\b/gi, ''],  // Remove tentative language in fire mode
         [/\bmaybe we could\b/gi, "let's"],
-        [/\bperhaps\b/gi, 'definitely'],
+        [/\bperhaps\b/gi, ''],  // Remove uncertainty
+        [/\bI understand\b/gi, 'I witness the fire in'],  // Elemental witnessing
+        [/\byou should\b/gi, 'the fire calls you to'],  // Archetypal calling
       ],
       water: [
         [/\bshould consider\b/gi, 'might explore'],
         [/\bmust\b/gi, 'can'],
-        [/\bhave to\b/gi, 'get to'],
+        [/\bhave to\b/gi, 'are invited to'],
+        [/\bI understand\b/gi, 'the waters hold'],  // Elemental holding
+        [/\bit's okay\b/gi, 'rest here'],  // Gentle containment
+        [/\bdon't worry\b/gi, 'let the waters carry this'],  // Water metaphor
       ],
       earth: [
-        [/\bmaybe try\b/gi, "let's practice"],
+        [/\bmaybe try\b/gi, "let's ground into"],
         [/\btry\s+(\w+ing)\b/gi, 'practice $1'],  // "try meditating" -> "practice meditating"
         [/\bpossibly\b/gi, 'practically'],
+        [/\bI understand\b/gi, 'the earth witnesses'],  // Grounded witnessing
+        [/\byou need to\b/gi, 'the earth invites you to'],  // Earth invitation
       ],
       aether: [
         [/\bproblem\b/gi, 'pattern'],
         [/\bfix\s+this\b/gi, 'integrate this'],
         [/\bissue\b/gi, 'dynamic'],
+        [/\bI understand\b/gi, 'the mystery holds'],  // Mystery language
+        [/\bI know\b/gi, 'the aether reveals'],  // Revelation language
+        [/\byou must\b/gi, 'the void invites'],  // Spacious invitation
       ],
     };
     let t = s;
