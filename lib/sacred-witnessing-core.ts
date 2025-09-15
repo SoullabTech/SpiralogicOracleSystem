@@ -271,18 +271,65 @@ export class SacredWitnessingCore {
   private mirrorPresence(opener: string, input: string, presence: WitnessedPresence): string {
     // Safety check for inputs
     if (!input || typeof input !== 'string') {
-      return `${opener || 'I witness'} something important.`;
+      return `I'm here with you in this moment.`;
     }
 
-    // Extract key phrases from input
-    const keyPhrase = this.extractKeyPhrase(input);
+    // Don't just echo - create meaningful witnessing
+    const lowerInput = input.toLowerCase();
 
-    if (keyPhrase) {
-      return `${opener} "${keyPhrase}"`;
+    // Guidance seeking
+    if (lowerInput.includes('guidance') || lowerInput.includes('help') || lowerInput.includes('need')) {
+      const responses = [
+        `I hear you asking for guidance. What feels most alive in this question?`,
+        `There's a seeking quality in what you're sharing. What wants to emerge?`,
+        `I witness this request for direction. What wisdom is already present in you?`,
+        `Something is calling for clarity. What does your deeper knowing say?`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
     }
 
-    // Default to acknowledging presence
-    return `${opener} something important.`;
+    // Path/journey references
+    if (lowerInput.includes('path') || lowerInput.includes('journey') || lowerInput.includes('way')) {
+      const responses = [
+        `Your path is unfolding. What step feels most true right now?`,
+        `I see you contemplating direction. What calls to your heart?`,
+        `The way forward is revealing itself. What do you already know?`,
+        `Each step creates the path. What wants to move through you?`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Understanding/knowing
+    if (lowerInput.includes('understand') || lowerInput.includes('know') || lowerInput.includes('confused')) {
+      const responses = [
+        `There's a reaching for understanding here. What's at the heart of this?`,
+        `I witness your desire for clarity. What truth is emerging?`,
+        `Something wants to be known. What are you already sensing?`,
+        `Understanding is seeking you. What feels most real?`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Struggle/difficulty
+    if (lowerInput.includes('struggle') || lowerInput.includes('hard') || lowerInput.includes('difficult')) {
+      const responses = [
+        `I witness the weight you're carrying. What support do you need?`,
+        `There's something challenging present. What's asking for attention?`,
+        `I see you meeting something difficult. What strength is here?`,
+        `This feels heavy. What would bring relief?`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Default meaningful responses (don't echo input)
+    const defaults = [
+      `I'm here with you in whatever is present.`,
+      `Thank you for sharing this with me. What else wants to be said?`,
+      `I witness what you're bringing forward. Tell me more.`,
+      `There's something meaningful here. What would you like to explore?`,
+      `I'm listening deeply. What's most alive for you right now?`
+    ];
+    return defaults[Math.floor(Math.random() * defaults.length)];
   }
 
   /**
@@ -488,10 +535,10 @@ export class SacredWitnessingCore {
       return emphasisMatch[1].trim();
     }
 
-    // Look for "I" statements
-    const iStatements = input.match(/I\s+\w+\s+[\w\s]{3,20}/);
+    // Look for "I" statements - capture full statement
+    const iStatements = input.match(/I\s+[^.!?]{3,100}/i);
     if (iStatements) {
-      return iStatements[0];
+      return iStatements[0].trim();
     }
 
     // Extract the most emotionally charged phrase
