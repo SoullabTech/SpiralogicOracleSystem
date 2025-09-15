@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
 
       // Handle response - SacredOracleCore returns object with 'message' property
       const responseText = typeof response === 'string' ? response :
-                          (response.message || response.text || response.content || 'I witness what you're sharing.');
+                          (response.message || response.text || response.content || 'I witness what you are sharing.');
 
       return NextResponse.json({
         text: responseText,
