@@ -4,9 +4,43 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { ConsciousnessIntelligenceManager } from '@/lib/consciousness-intelligence-manager';
+import { getConsciousnessIntelligenceManager } from '@/lib/consciousness-intelligence-manager';
 import { SacredOracleCore } from '@/lib/sacred-oracle-core';
 import { mayaEthicsAudit, ethicsMonitor } from '@/lib/maya-ethics-audit';
+
+// Response cache to prevent duplicates
+const responseCache = new Map<string, number>();
+const CACHE_DURATION = 10000; // 10 seconds
+const DUPLICATE_WINDOW = 5000; // 5 seconds
+
+function checkAndCacheResponse(response: string): string {
+  const now = Date.now();
+
+  // Clean old entries
+  for (const [key, timestamp] of responseCache.entries()) {
+    if (now - timestamp > CACHE_DURATION) {
+      responseCache.delete(key);
+    }
+  }
+
+  // Check if response was sent recently
+  const lastSent = responseCache.get(response);
+  if (lastSent && (now - lastSent) < DUPLICATE_WINDOW) {
+    // Return alternative response
+    const alternatives = [
+      "What else would you like to explore?",
+      "Tell me more about what's present for you.",
+      "What patterns are emerging?",
+      "How does this resonate with you?",
+      "What arises next in your awareness?"
+    ];
+    return alternatives[Math.floor(Math.random() * alternatives.length)];
+  }
+
+  // Cache the response
+  responseCache.set(response, now);
+  return response;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,7 +57,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Phase 2: Consciousness Intelligence Shaping
-    const consciousnessManager = new ConsciousnessIntelligenceManager();
+    const consciousnessManager = getConsciousnessIntelligenceManager();
     const shapedResponse = await consciousnessManager.shapeConsciousness(
       oracleResponse.text,
       {
@@ -117,6 +151,9 @@ export async function POST(request: NextRequest) {
 
     // Phase 6: Get current ethics health
     const ethicsHealth = ethicsMonitor.getAuditSummary();
+
+    // Check and prevent duplicate responses
+    finalResponse = checkAndCacheResponse(finalResponse);
 
     return NextResponse.json({
       text: finalResponse,

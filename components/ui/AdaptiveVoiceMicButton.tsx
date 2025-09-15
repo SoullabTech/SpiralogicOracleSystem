@@ -187,7 +187,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       const recognition = new SpeechRecognition();
       console.log('🎤 Created speech recognition instance');
 
-      recognition.continuous = false; // CRITICAL: false for immediate send on final
+      recognition.continuous = true; // Enable continuous recognition
       recognition.interimResults = true;
       recognition.lang = 'en-US';
       recognition.maxAlternatives = 1;
@@ -342,25 +342,28 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       };
 
       recognition.onend = () => {
-        console.log('Recognition ended (continuous=false)');
+        console.log('Recognition ended - checking if should restart');
 
-        // With continuous=false, onend means user stopped speaking
-        // The transcript should have already been sent in onresult
-
-        // Restart listening if still active and not paused
+        // With continuous=true, restart if still listening
         if (isListening && !pauseListening) {
-          // Reset for next input
-          finalTranscriptRef.current = '';
-          sentRef.current = false;
+          console.log('🔄 Restarting continuous recognition...');
+
+          // Reset for next input if needed
+          if (sentRef.current) {
+            finalTranscriptRef.current = '';
+            sentRef.current = false;
+          }
 
           setTimeout(() => {
-            console.log('🔄 Restarting recognition for next input...');
             try {
               recognition.start();
+              console.log('✅ Recognition restarted successfully');
             } catch (e) {
-              console.log('Already listening');
+              console.log('Already listening or error restarting:', e);
             }
           }, 100);
+        } else {
+          console.log('Not restarting - isListening:', isListening, 'pauseListening:', pauseListening);
         }
       };
 

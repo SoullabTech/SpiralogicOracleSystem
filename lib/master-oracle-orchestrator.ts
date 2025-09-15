@@ -18,7 +18,7 @@ export class MasterOracleOrchestrator {
     const agent = this.selectAgent(analysis);
 
     return {
-      response: `I witness your message through the ${agent} lens. ${this.getElementalResponse(agent, message)}`,
+      content: `I witness your message through the ${agent} lens. ${this.getElementalResponse(agent, message)}`,
       agentUsed: agent,
       supportingAgents: [],
       responseStyle: 'witnessing',

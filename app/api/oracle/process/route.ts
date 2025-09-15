@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     const sessionInsights = masterOracleOrchestrator.getSessionInsights(userId, sessionId);
 
     // Return successful response
-    res.status(200).json({
+    return NextResponse.json({
       success: true,
       response: {
         content: oracleResponse.content,

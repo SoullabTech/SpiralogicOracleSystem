@@ -119,8 +119,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   // EMERGENCY: Disabled voice mic ref since component is disabled
   // const voiceMicRef = useRef<any>(null);
   
-  // Agent configuration
-  const [agentConfig, setAgentConfig] = useState<AgentConfig>(getAgentConfig());
+  // Agent configuration with persistence
+  const [agentConfig, setAgentConfig] = useState<AgentConfig>(() => {
+    // Load saved voice preference from localStorage
+    if (typeof window !== 'undefined') {
+      const savedVoice = localStorage.getItem('selected_voice');
+      const config = getAgentConfig(savedVoice || undefined);
+      return config;
+    }
+    return getAgentConfig();
+  });
   
   // UI states
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
@@ -502,6 +510,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         position="top-right"
         onConfigChange={(config) => {
           setAgentConfig(config);
+          // Save voice preference to localStorage
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('selected_voice', config.name);
+            // Cancel any playing audio when voice changes
+            if (window.speechSynthesis) {
+              window.speechSynthesis.cancel();
+            }
+          }
           // Refresh conversation with new agent
           console.log('Agent changed to:', config.name);
         }}
