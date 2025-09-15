@@ -241,18 +241,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     setIsStreaming(false);
   }, []);
 
-  // Handle voice transcript from mic button
-  const handleVoiceTranscript = useCallback(async (transcript: string) => {
-    const t = transcript?.trim();
-    if (!t) return;
-
-    console.log('🎯 Voice transcript received:', t);
-
-    // Route all voice through text message handler for reliability
-    await handleTextMessage(t);
-  }, [handleTextMessage]);
-
-  // Handle text messages from chat interface
+  // Handle text messages from chat interface - MUST be defined before handleVoiceTranscript
   const handleTextMessage = useCallback(async (text: string, attachments?: File[]) => {
     console.log('📝 Text message received:', { text, isProcessing, isAudioPlaying, isResponding });
 
@@ -383,6 +372,17 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setCurrentMotionState('idle');
     }
   }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length, showChatInterface]);
+
+  // Handle voice transcript from mic button
+  const handleVoiceTranscript = useCallback(async (transcript: string) => {
+    const t = transcript?.trim();
+    if (!t) return;
+
+    console.log('🎯 Voice transcript received:', t);
+
+    // Route all voice through text message handler for reliability
+    await handleTextMessage(t);
+  }, [handleTextMessage]);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {
