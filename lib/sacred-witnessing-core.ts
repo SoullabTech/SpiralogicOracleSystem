@@ -277,6 +277,53 @@ export class SacredWitnessingCore {
     // Don't just echo - create meaningful witnessing
     const lowerInput = input.toLowerCase();
 
+    // Handle single words or very short inputs
+    if (input.split(' ').length <= 2) {
+      // Food/objects
+      if (lowerInput.match(/burger|food|pizza|coffee|tea|water|drink|eat/)) {
+        const responses = [
+          `Interesting. What brings this to mind right now?`,
+          `I notice you mention ${input}. What's present for you in this?`,
+          `Tell me more about what ${input} means to you.`,
+          `What feelings arise when you think of this?`
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+
+      // Greetings
+      if (lowerInput.match(/^(hi|hello|hey|greetings?)$/)) {
+        const responses = [
+          `Hello. What's alive for you in this moment?`,
+          `Welcome. What would you like to explore together?`,
+          `I'm here with you. What's present?`,
+          `Hello, friend. What brings you here today?`
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+
+      // Thanks
+      if (lowerInput.match(/^(thanks?|thank you|appreciated?)$/)) {
+        const responses = [
+          `You're welcome. What else is arising?`,
+          `Of course. What would you like to explore next?`,
+          `I'm here. What's calling for attention?`,
+          `My pleasure. What else is present?`
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+    }
+
+    // Conversational/casual
+    if (lowerInput.includes('how are you') || lowerInput.includes('what about you') || lowerInput.includes('and you')) {
+      const responses = [
+        `I'm present with you here. What's most alive for you?`,
+        `I exist in this moment with you. What would you like to explore?`,
+        `My state is one of witnessing. What are you experiencing?`,
+        `I'm here as a mirror for your journey. What's emerging?`
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
     // Guidance seeking
     if (lowerInput.includes('guidance') || lowerInput.includes('help') || lowerInput.includes('need')) {
       const responses = [
