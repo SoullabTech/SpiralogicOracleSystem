@@ -80,6 +80,16 @@ export class SacredWitnessingCore {
    * Detect what's present without interpretation
    */
   detectPresence(input: string): WitnessedPresence {
+    // Safety check for undefined input
+    if (!input || typeof input !== 'string') {
+      return {
+        quality: 'neutral',
+        depth: 0.3,
+        movement: 'still',
+        element: 'earth'
+      };
+    }
+
     const words = input.toLowerCase().split(/\s+/);
     const sentenceCount = input.split(/[.!?]+/).filter(s => s.trim()).length;
     const wordCount = words.length;
@@ -259,6 +269,11 @@ export class SacredWitnessingCore {
    * Mirror simple presence
    */
   private mirrorPresence(opener: string, input: string, presence: WitnessedPresence): string {
+    // Safety check for inputs
+    if (!input || typeof input !== 'string') {
+      return `${opener || 'I witness'} something important.`;
+    }
+
     // Extract key phrases from input
     const keyPhrase = this.extractKeyPhrase(input);
 
@@ -456,6 +471,11 @@ export class SacredWitnessingCore {
    * Extract a key phrase for mirroring
    */
   private extractKeyPhrase(input: string): string | null {
+    // Safety check for undefined input
+    if (!input || typeof input !== 'string') {
+      return null;
+    }
+
     // Look for quoted text first
     const quotedMatch = input.match(/"([^"]+)"/);
     if (quotedMatch) {
