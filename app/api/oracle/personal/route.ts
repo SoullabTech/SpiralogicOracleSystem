@@ -118,16 +118,17 @@ export async function POST(request: NextRequest) {
         userId
       });
 
-      // Handle response whether it's a string or object
+      // Handle response - SacredOracleCore returns object with 'message' property
       const responseText = typeof response === 'string' ? response :
-                          (response.text || response.content || response.message);
+                          (response.message || response.text || response.content || 'I witness what you're sharing.');
 
       return NextResponse.json({
         text: responseText,
         content: responseText,
         message: responseText,
         metadata: {
-          ...((typeof response === 'object' && response.metadata) ? response.metadata : {}),
+          mode: response.mode || 'witnessing',
+          depth: response.depth || 0,
           source: 'oracle-system',
           element: detectElement(text)
         }
