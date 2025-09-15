@@ -122,13 +122,16 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
 
   // Initialize speech recognition
   useEffect(() => {
-    // Check for HTTPS or localhost
+    // Check for secure context (HTTPS, localhost, or Vercel/production domains)
     const isSecureContext = window.location.protocol === 'https:' ||
                            window.location.hostname === 'localhost' ||
-                           window.location.hostname === '127.0.0.1';
+                           window.location.hostname === '127.0.0.1' ||
+                           window.location.hostname.includes('vercel.app') ||
+                           window.location.hostname.includes('soullab.life') ||
+                           window.isSecureContext; // Browser's native secure context check
 
     if (!isSecureContext) {
-      setError('Voice requires HTTPS connection');
+      setError('Voice requires secure connection');
       return;
     }
 
@@ -406,7 +409,7 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <div className={`relative w-${size/4} h-${size/4} rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg overflow-hidden`}>
+        <div className={`relative w-16 h-16 rounded-full bg-gradient-to-br from-neutral-silver to-neutral-mystic shadow-lg overflow-hidden`}>
           {/* Listening animation */}
           {isListening && (
             <motion.div
@@ -454,11 +457,11 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
               {isThinking && (
                 <div className="flex items-center gap-2 mb-2">
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <div className="w-2 h-2 bg-gold-divine rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-gold-divine rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-gold-divine rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
-                  <span className="text-xs text-purple-400">Taking a moment to think...</span>
+                  <span className="text-xs text-gold-divine">Taking a moment to think...</span>
                 </div>
               )}
 

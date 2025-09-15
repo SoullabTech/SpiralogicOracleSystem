@@ -822,7 +822,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setIsResponding(false);
       setCurrentMotionState('idle');
     }
-  }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length, showChatInterface, handleTextMessage]);
+  }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length, showChatInterface]);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {

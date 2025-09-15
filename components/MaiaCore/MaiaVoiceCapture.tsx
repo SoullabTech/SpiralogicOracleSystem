@@ -100,7 +100,7 @@ export function MaiaVoiceCapture({
       <div className="relative h-32 flex items-center justify-center">
         {/* Outer rings */}
         <motion.div
-          className="absolute w-32 h-32 rounded-full border-2 border-purple-300"
+          className="absolute w-32 h-32 rounded-full border-2 border-neutral-silver/30"
           animate={{
             scale: isListening ? [1, 1.2, 1] : 1,
             opacity: isListening ? [0.3, 0.6, 0.3] : 0.2
@@ -108,7 +108,7 @@ export function MaiaVoiceCapture({
           transition={{ duration: 2, repeat: Infinity }}
         />
         <motion.div
-          className="absolute w-24 h-24 rounded-full border-2 border-pink-300"
+          className="absolute w-24 h-24 rounded-full border-2 border-gold-divine/40"
           animate={{
             scale: isListening ? [1, 1.3, 1] : 1,
             opacity: isListening ? [0.4, 0.7, 0.4] : 0.3
@@ -119,9 +119,9 @@ export function MaiaVoiceCapture({
         {/* Center mic button */}
         <motion.button
           className={`relative z-10 w-16 h-16 rounded-full flex items-center justify-center ${
-            isListening 
-              ? "bg-gradient-to-r from-purple-500 to-pink-500" 
-              : "bg-gradient-to-r from-purple-400 to-pink-400"
+            isListening
+              ? "bg-gradient-to-r from-neutral-silver to-neutral-pure"
+              : "bg-gradient-to-r from-neutral-mystic to-neutral-silver"
           } shadow-lg`}
           animate={{
             scale: 1 + amplitude * 0.5
@@ -153,7 +153,7 @@ export function MaiaVoiceCapture({
             {[...Array(3)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-full h-full rounded-full border border-purple-400"
+                className="absolute w-full h-full rounded-full border border-gold-divine/50"
                 initial={{ scale: 0.5, opacity: 1 }}
                 animate={{
                   scale: [0.5, 2, 2],
@@ -179,7 +179,7 @@ export function MaiaVoiceCapture({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="text-purple-600 dark:text-purple-400 font-medium"
+              className="text-gold-divine font-medium"
             >
               I'm listening...
             </motion.p>

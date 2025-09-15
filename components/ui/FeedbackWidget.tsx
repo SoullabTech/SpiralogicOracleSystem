@@ -61,11 +61,11 @@ export function FeedbackWidget() {
       {/* Feedback Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 bg-gold-divine text-black p-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 group"
+        className="fixed bottom-6 right-6 z-40 bg-neutral-silver/20 backdrop-blur-md text-neutral-silver p-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 group border border-neutral-silver/20"
         aria-label="Send beta feedback"
       >
         <MessageCircle className="w-5 h-5" />
-        <span className="absolute -top-8 right-0 bg-black text-gold-divine text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        <span className="absolute -top-8 right-0 bg-black/80 backdrop-blur-sm text-neutral-silver text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
           Beta Feedback
         </span>
       </button>
