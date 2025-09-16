@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios'; // Commented out - using fetch instead
 import { EventEmitter } from 'events';
 
 export interface VoiceProfile {
@@ -88,88 +88,297 @@ export class SesameVoiceService extends EventEmitter {
   }
 
   private initializeDefaultProfiles() {
-    // Maya's elemental voice profiles
-    const elementalProfiles: Record<string, Partial<VoiceProfile>> = {
-      fire: {
-        id: 'maya-fire',
-        name: 'Maya Fire Voice',
-        baseVoice: 'fable',
+    // Character voice profiles menu
+    const characterProfiles: Record<string, Partial<VoiceProfile>> = {
+      // Maya - Primary Oracle Voice (warm, mystical, feminine)
+      'maya-default': {
+        id: 'maya-default',
+        name: 'Maya - Sacred Oracle',
+        baseVoice: 'nova', // Nova has warmth and clarity
         parameters: {
-          temperature: 0.8,
-          speed: 1.1,
-          pitch: 2,
-          consistency: 0.7,
-          emotionalDepth: 0.9,
-          resonance: 0.6,
-          clarity: 0.8,
-          breathiness: 0.2
+          temperature: 0.75,    // Expressive but controlled
+          speed: 0.95,          // Slightly slower for gravitas
+          pitch: 1,             // Slightly higher for feminine tone
+          consistency: 0.85,    // High consistency for trust
+          emotionalDepth: 0.9,  // Very emotionally expressive
+          resonance: 0.8,       // Rich, warm tone
+          clarity: 0.9,         // Clear articulation
+          breathiness: 0.35     // Soft, approachable quality
         }
       },
-      water: {
-        id: 'maya-water',
-        name: 'Maya Water Voice',
+
+      // Miles - Wise Guide Voice (deep, grounded, masculine)
+      'miles-default': {
+        id: 'miles-default',
+        name: 'Miles - Wisdom Guide',
+        baseVoice: 'onyx', // Onyx has depth and gravitas
+        parameters: {
+          temperature: 0.6,     // Measured, thoughtful
+          speed: 0.9,           // Deliberate pace
+          pitch: -3,            // Lower for masculine depth
+          consistency: 0.95,    // Very stable and reliable
+          emotionalDepth: 0.7,  // Present but contained emotion
+          resonance: 1.0,       // Maximum depth and warmth
+          clarity: 0.95,        // Crystal clear wisdom
+          breathiness: 0.1      // Minimal breathiness for authority
+        }
+      },
+
+      // Anthony - Modern Mystic (balanced, contemporary)
+      'anthony-default': {
+        id: 'anthony-default',
+        name: 'Anthony - Modern Mystic',
+        baseVoice: 'alloy', // Alloy is balanced and neutral
+        parameters: {
+          temperature: 0.7,
+          speed: 1.0,
+          pitch: 0,
+          consistency: 0.8,
+          emotionalDepth: 0.75,
+          resonance: 0.7,
+          clarity: 0.85,
+          breathiness: 0.25
+        }
+      },
+
+      // Aria - Ethereal Spirit (light, otherworldly)
+      'aria-default': {
+        id: 'aria-default',
+        name: 'Aria - Ethereal Spirit',
+        baseVoice: 'shimmer', // Shimmer for ethereal quality
+        parameters: {
+          temperature: 0.8,
+          speed: 1.05,
+          pitch: 4,
+          consistency: 0.6,
+          emotionalDepth: 0.85,
+          resonance: 0.5,
+          clarity: 0.8,
+          breathiness: 0.6
+        }
+      },
+
+      // Sage - Ancient Wisdom (timeless, androgynous)
+      'sage-default': {
+        id: 'sage-default',
+        name: 'Sage - Ancient Wisdom',
+        baseVoice: 'echo', // Echo for mystical quality
+        parameters: {
+          temperature: 0.65,
+          speed: 0.88,
+          pitch: -1,
+          consistency: 0.9,
+          emotionalDepth: 0.8,
+          resonance: 0.85,
+          clarity: 0.88,
+          breathiness: 0.3
+        }
+      },
+
+      // Luna - Night Oracle (mysterious, intuitive)
+      'luna-default': {
+        id: 'luna-default',
+        name: 'Luna - Night Oracle',
+        baseVoice: 'fable', // Fable for storytelling quality
+        parameters: {
+          temperature: 0.85,
+          speed: 0.92,
+          pitch: 2,
+          consistency: 0.7,
+          emotionalDepth: 0.95,
+          resonance: 0.75,
+          clarity: 0.75,
+          breathiness: 0.45
+        }
+      }
+    };
+
+    // Maya's elemental voice variations
+    const mayaElementalProfiles: Record<string, Partial<VoiceProfile>> = {
+      'maya-fire': {
+        id: 'maya-fire',
+        name: 'Maya - Fire Element',
         baseVoice: 'nova',
         parameters: {
-          temperature: 0.6,
-          speed: 0.9,
-          pitch: -1,
+          temperature: 0.85,
+          speed: 1.05,
+          pitch: 2,
+          consistency: 0.75,
+          emotionalDepth: 0.95,
+          resonance: 0.7,
+          clarity: 0.85,
+          breathiness: 0.25
+        }
+      },
+      'maya-water': {
+        id: 'maya-water',
+        name: 'Maya - Water Element',
+        baseVoice: 'nova',
+        parameters: {
+          temperature: 0.7,
+          speed: 0.88,
+          pitch: 0,
           consistency: 0.8,
-          emotionalDepth: 0.8,
+          emotionalDepth: 0.85,
           resonance: 0.9,
-          clarity: 0.7,
+          clarity: 0.75,
           breathiness: 0.5
         }
       },
-      earth: {
+      'maya-earth': {
         id: 'maya-earth',
-        name: 'Maya Earth Voice',
-        baseVoice: 'onyx',
+        name: 'Maya - Earth Element',
+        baseVoice: 'nova',
         parameters: {
-          temperature: 0.4,
+          temperature: 0.6,
           speed: 0.85,
-          pitch: -3,
-          consistency: 0.95,
-          emotionalDepth: 0.6,
-          resonance: 1.0,
-          clarity: 0.9,
-          breathiness: 0.1
-        }
-      },
-      air: {
-        id: 'maya-air',
-        name: 'Maya Air Voice',
-        baseVoice: 'shimmer',
-        parameters: {
-          temperature: 0.7,
-          speed: 1.05,
-          pitch: 3,
-          consistency: 0.6,
+          pitch: -1,
+          consistency: 0.9,
           emotionalDepth: 0.7,
-          resonance: 0.4,
-          clarity: 0.95,
-          breathiness: 0.7
+          resonance: 0.95,
+          clarity: 0.9,
+          breathiness: 0.2
         }
       },
-      aether: {
-        id: 'maya-aether',
-        name: 'Maya Aether Voice',
-        baseVoice: 'echo',
+      'maya-air': {
+        id: 'maya-air',
+        name: 'Maya - Air Element',
+        baseVoice: 'nova',
         parameters: {
-          temperature: 0.9,
-          speed: 1.0,
-          pitch: 0,
-          consistency: 0.5,
+          temperature: 0.75,
+          speed: 1.02,
+          pitch: 3,
+          consistency: 0.65,
+          emotionalDepth: 0.8,
+          resonance: 0.6,
+          clarity: 0.95,
+          breathiness: 0.6
+        }
+      },
+      'maya-aether': {
+        id: 'maya-aether',
+        name: 'Maya - Aether Element',
+        baseVoice: 'nova',
+        parameters: {
+          temperature: 0.8,
+          speed: 0.95,
+          pitch: 1,
+          consistency: 0.7,
           emotionalDepth: 1.0,
-          resonance: 0.8,
+          resonance: 0.85,
           clarity: 0.85,
           breathiness: 0.4
         }
       }
     };
 
-    Object.entries(elementalProfiles).forEach(([key, profile]) => {
+    // Miles' elemental voice variations
+    const milesElementalProfiles: Record<string, Partial<VoiceProfile>> = {
+      'miles-fire': {
+        id: 'miles-fire',
+        name: 'Miles - Fire Element',
+        baseVoice: 'onyx',
+        parameters: {
+          temperature: 0.7,
+          speed: 0.95,
+          pitch: -2,
+          consistency: 0.9,
+          emotionalDepth: 0.8,
+          resonance: 0.9,
+          clarity: 1.0,
+          breathiness: 0.05
+        }
+      },
+      'miles-water': {
+        id: 'miles-water',
+        name: 'Miles - Water Element',
+        baseVoice: 'onyx',
+        parameters: {
+          temperature: 0.55,
+          speed: 0.85,
+          pitch: -4,
+          consistency: 0.95,
+          emotionalDepth: 0.65,
+          resonance: 1.0,
+          clarity: 0.85,
+          breathiness: 0.15
+        }
+      },
+      'miles-earth': {
+        id: 'miles-earth',
+        name: 'Miles - Earth Element',
+        baseVoice: 'onyx',
+        parameters: {
+          temperature: 0.5,
+          speed: 0.82,
+          pitch: -5,
+          consistency: 1.0,
+          emotionalDepth: 0.6,
+          resonance: 1.0,
+          clarity: 0.95,
+          breathiness: 0.0
+        }
+      },
+      'miles-air': {
+        id: 'miles-air',
+        name: 'Miles - Air Element',
+        baseVoice: 'onyx',
+        parameters: {
+          temperature: 0.65,
+          speed: 0.92,
+          pitch: -2,
+          consistency: 0.85,
+          emotionalDepth: 0.75,
+          resonance: 0.85,
+          clarity: 0.98,
+          breathiness: 0.2
+        }
+      },
+      'miles-aether': {
+        id: 'miles-aether',
+        name: 'Miles - Aether Element',
+        baseVoice: 'onyx',
+        parameters: {
+          temperature: 0.6,
+          speed: 0.88,
+          pitch: -3,
+          consistency: 0.9,
+          emotionalDepth: 0.85,
+          resonance: 0.95,
+          clarity: 0.9,
+          breathiness: 0.1
+        }
+      }
+    };
+
+    // Add all profiles to the map
+    Object.entries({
+      ...characterProfiles,
+      ...mayaElementalProfiles,
+      ...milesElementalProfiles
+    }).forEach(([key, profile]) => {
       this.voiceProfiles.set(profile.id!, profile as VoiceProfile);
     });
+  }
+
+  // Get voice menu for UI
+  getVoiceMenu(): {
+    characters: VoiceProfile[];
+    mayaVariations: VoiceProfile[];
+    milesVariations: VoiceProfile[];
+    custom: VoiceProfile[];
+  } {
+    const allProfiles = Array.from(this.voiceProfiles.values());
+
+    return {
+      characters: allProfiles.filter(p =>
+        ['maya-default', 'miles-default', 'anthony-default', 'aria-default', 'sage-default', 'luna-default']
+          .includes(p.id)
+      ),
+      mayaVariations: allProfiles.filter(p => p.id.startsWith('maya-') && p.id !== 'maya-default'),
+      milesVariations: allProfiles.filter(p => p.id.startsWith('miles-') && p.id !== 'miles-default'),
+      custom: allProfiles.filter(p => p.clonedFrom !== undefined)
+    };
   }
 
   async generateSpeech(request: VoiceGenerationRequest): Promise<{
@@ -224,20 +433,35 @@ export class SesameVoiceService extends EventEmitter {
         intonation: request.prosodyHints?.intonation
       };
 
-      // Make API call
-      const response = await axios.post(
-        `${this.config.apiUrl}/v1/audio/speech`,
-        apiRequest,
-        {
-          headers: {
-            'Authorization': `Bearer ${this.config.apiKey}`,
-            'Content-Type': 'application/json'
-          },
-          responseType: request.stream ? 'stream' : 'arraybuffer'
-        }
-      );
+      // Use OpenAI TTS for actual voice generation
+      const openAIKey = process.env.OPENAI_API_KEY;
+      if (!openAIKey) {
+        throw new Error('OpenAI API key not configured');
+      }
 
-      const audioData = Buffer.from(response.data);
+      // Call OpenAI TTS API
+      const response = await fetch('https://api.openai.com/v1/audio/speech', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'tts-1-hd', // High quality model
+          input: request.text,
+          voice: voiceProfile.baseVoice,
+          response_format: request.format || 'mp3',
+          speed: modulatedParams.speed
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`OpenAI TTS failed: ${error}`);
+      }
+
+      // Get audio data as buffer
+      const audioData = Buffer.from(await response.arrayBuffer());
 
       // Cache the result
       if (this.config.cacheEnabled) {
@@ -252,11 +476,14 @@ export class SesameVoiceService extends EventEmitter {
 
       return {
         audioData,
-        duration: response.headers['x-audio-duration'],
+        duration: undefined, // OpenAI doesn't provide duration in headers
         metadata: {
           profile: voiceProfile.id,
           modulation: modulatedParams,
-          cached: false
+          cached: false,
+          provider: 'openai',
+          model: 'tts-1-hd',
+          voice: voiceProfile.baseVoice
         }
       };
 
@@ -286,19 +513,12 @@ export class SesameVoiceService extends EventEmitter {
       formData.append('preserve_age', String(request.preserveAge ?? true));
       formData.append('preserve_gender', String(request.preserveGender ?? true));
 
-      const response = await axios.post(
-        `${this.config.apiUrl}/v1/voice-cloning/clone`,
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${this.config.apiKey}`,
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
+      // Voice cloning placeholder - OpenAI doesn't support cloning yet
+      // Store the request for future implementation
+      const clonedId = `cloned-${Date.now()}`;
 
       const clonedProfile: VoiceProfile = {
-        id: response.data.voice_id,
+        id: clonedId,
         name: request.name,
         baseVoice: request.baseVoice || 'nova',
         clonedFrom: request.sourceUrl || 'uploaded_file',
@@ -473,8 +693,21 @@ export class SesameVoiceService extends EventEmitter {
   // Health check
   async healthCheck(): Promise<boolean> {
     try {
-      const response = await axios.get(`${this.config.apiUrl}/v1/audio/models`);
-      return response.status === 200;
+      // Check OpenAI API health
+      const openAIKey = process.env.OPENAI_API_KEY;
+      if (!openAIKey) return false;
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/models', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${openAIKey}`
+          }
+        });
+        return response.ok;
+      } catch {
+        return false;
+      }
     } catch {
       return false;
     }

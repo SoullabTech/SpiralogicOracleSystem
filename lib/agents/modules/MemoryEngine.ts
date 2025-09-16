@@ -13,7 +13,7 @@
  * Interfaces with the UnifiedMemorySystem for storage and retrieval.
  */
 
-import type { Element, EnergyState, Mood } from '@/lib/types/oracle';
+import type { Element, EnergyState, Mood } from '../../types/oracle';
 import { UnifiedMemoryInterface } from './UnifiedMemoryInterface';
 import type { AgentMemory, AgentState } from './types';
 

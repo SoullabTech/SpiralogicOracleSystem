@@ -1,6 +1,6 @@
 import { PersonalOracleAgent, type AgentState } from './PersonalOracleAgent';
-import type { Element } from '@/lib/types/oracle';
-import { SentimentAnalyzer, type SentimentResult, type ConversationSentiment } from '@/lib/analysis/SentimentAnalyzer';
+import type { Element } from '../types/oracle';
+import { SentimentAnalyzer, type SentimentResult, type ConversationSentiment } from '../analysis/SentimentAnalyzer';
 
 // Collective consciousness state
 export interface CollectiveField {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { PersonalOracleAgent } from '../../../../../lib/agents/PersonalOracleAgent'
 
 // Maia Canonical System Prompt - Sacred Mirror Professional Voice
 const MAIA_CANONICAL_SYSTEM_PROMPT = `
@@ -70,57 +71,53 @@ export async function POST(req: NextRequest) {
       )
     }
     
-    // Try the production Oracle service first
+    // Try PersonalOracleAgent first for personalized responses
     try {
-      const response = await fetch('http://localhost:3003/api/v1/converse/message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: userId || 'beta-user',
-          userText: userText,
-          element: 'aether'
-        })
+      const agent = await PersonalOracleAgent.loadAgent(userId || 'beta-user')
+
+      // Process through the agent
+      const agentResponse = await agent.processInteraction(userText, {
+        currentMood: { type: 'peaceful' } as any,
+        currentEnergy: 'balanced' as any
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        const responseText = data.response || data.message || "I hear you. Tell me more about what's on your mind."
-        
-        // Generate voice response if enabled
-        let audioUrl = null
-        if (enableVoice) {
-          try {
-            // Call Sesame TTS service
-            const ttsResponse = await fetch('http://localhost:3004/api/v1/tts', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                text: responseText,
-                voice: 'nova', // Use Nova voice for Maia
-                speed: 1.0
-              })
-            })
-            
-            if (ttsResponse.ok) {
-              const ttsData = await ttsResponse.json()
-              audioUrl = ttsData.audioUrl || ttsData.audio_url
-            }
-          } catch (ttsError) {
-            console.error('Sesame TTS error:', ttsError)
+      const responseText = agentResponse.response || "I hear you. Tell me more about what's on your mind."
+
+      // Generate voice response if enabled
+      let audioData = null
+      let audioUrl = null
+
+      if (enableVoice) {
+        try {
+          // Use internal voice generation
+          const voiceResult = await agent.generateVoiceResponse(responseText, {
+            element: 'aether',
+            voiceMaskId: 'maya-threshold'
+          })
+
+          if (voiceResult.audioData) {
+            // Convert Buffer to base64 for client
+            audioData = voiceResult.audioData.toString('base64')
+            // Create data URL
+            audioUrl = `data:audio/mp3;base64,${audioData}`
           }
+        } catch (voiceError) {
+          console.error('Voice generation error:', voiceError)
         }
-        
-        return NextResponse.json({
-          text: responseText,
-          message: responseText, // For compatibility
-          audioUrl,
-          element: data.element,
-          emotion: data.emotion,
-          source: 'oracle-backend'
-        })
       }
-    } catch (backendError) {
-      console.error('Oracle backend unavailable, using direct OpenAI:', backendError)
+
+      return NextResponse.json({
+        text: responseText,
+        message: responseText, // For compatibility
+        audioUrl,
+        audioData,
+        element: 'aether',
+        source: 'personal-oracle-agent',
+        suggestions: agentResponse.suggestions,
+        ritual: agentResponse.ritual
+      })
+    } catch (agentError) {
+      console.error('PersonalOracleAgent unavailable, using direct OpenAI:', agentError)
     }
     
     // Try direct OpenAI connection as fallback
@@ -154,24 +151,33 @@ export async function POST(req: NextRequest) {
         
         // Generate voice for fallback if enabled
         let audioUrl = null
-        if (enableVoice) {
+        let audioData = null
+
+        if (enableVoice && process.env.OPENAI_API_KEY) {
           try {
-            const ttsResponse = await fetch('http://localhost:3004/api/v1/tts', {
+            // Direct OpenAI TTS
+            const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+              },
               body: JSON.stringify({
-                text: responseText,
+                model: 'tts-1-hd',
+                input: responseText,
                 voice: 'nova',
+                response_format: 'mp3',
                 speed: 1.0
               })
             })
-            
+
             if (ttsResponse.ok) {
-              const ttsData = await ttsResponse.json()
-              audioUrl = ttsData.audioUrl || ttsData.audio_url
+              const audioBuffer = await ttsResponse.arrayBuffer()
+              audioData = Buffer.from(audioBuffer).toString('base64')
+              audioUrl = `data:audio/mp3;base64,${audioData}`
             }
           } catch (ttsError) {
-            console.error('Sesame TTS error in fallback:', ttsError)
+            console.error('OpenAI TTS error:', ttsError)
           }
         }
         
@@ -179,8 +185,9 @@ export async function POST(req: NextRequest) {
           text: responseText,
           message: responseText,
           audioUrl,
+          audioData,
           element: 'aether',
-          direct: true
+          source: 'openai-direct'
         })
       } else {
         console.error('OpenAI API error:', openaiResponse.status, openaiResponse.statusText)

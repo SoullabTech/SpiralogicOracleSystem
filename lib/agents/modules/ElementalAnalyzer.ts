@@ -1,4 +1,4 @@
-import type { Element, EnergyState, Mood } from '@/lib/types/oracle';
+import type { Element, EnergyState, Mood } from '../../types/oracle';
 import type { AgentMemory, ElementalAnalysis } from './types';
 
 export interface SomaticState {

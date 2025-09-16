@@ -211,17 +211,21 @@ export class SacredOracleCoreEnhanced {
 
     // 4. ANAMNESIS DEEP RECALL (wisdom memory)
     try {
-      const anamnesisResponse = await this.anamnesisLayer.recall(input, {
-        depth: presence.depth,
-        mode,
-        sessionContext
-      });
+      // Check if user is seeking wisdom
+      const seekingWisdom = this.detectWisdomSeeking(input);
 
-      if (anamnesisResponse && anamnesisResponse.wisdom) {
-        synthesis.anamnesisRecall = anamnesisResponse.wisdom;
+      // Generate anamnesis response using the correct method
+      const anamnesisResponse = this.anamnesisLayer.generateAnamnesisResponse(
+        input,
+        presence,
+        seekingWisdom
+      );
+
+      if (anamnesisResponse && anamnesisResponse.inquiry) {
+        synthesis.anamnesisRecall = anamnesisResponse.inquiry;
       }
     } catch (e) {
-      console.warn('Anamnesis recall failed:', e);
+      console.warn('Anamnesis layer failed:', e);
     }
 
     // 5. KNOWLEDGE INTEGRATION (Obsidian depth)
@@ -231,7 +235,17 @@ export class SacredOracleCoreEnhanced {
       const analytics = this.contextManager.getAnalytics();
       if (analytics && analytics.topThemes && analytics.topThemes.length > 0) {
         const topTheme = analytics.topThemes[0];
-        synthesis.knowledgeDepth = `This connects to the theme of ${topTheme.name}.`;
+        // Only add theme connection if it's relevant and not repetitive
+        if (topTheme.count > 2 && Math.random() > 0.7) {
+          // Vary the phrasing to avoid repetition
+          const phrasings = [
+            `This relates to what we've been exploring about ${topTheme.name}.`,
+            `I notice this connects with ${topTheme.name}.`,
+            `There's a thread here with ${topTheme.name}.`,
+            `This touches on ${topTheme.name} in a new way.`
+          ];
+          synthesis.knowledgeDepth = phrasings[Math.floor(Math.random() * phrasings.length)];
+        }
       }
     } catch (e) {
       console.warn('Knowledge integration failed:', e);
@@ -365,6 +379,21 @@ export class SacredOracleCoreEnhanced {
     if (synthesis.knowledgeDepth) depth += 0.05;
 
     return Math.min(depth, 1.0);
+  }
+
+  /**
+   * Detect if user is seeking wisdom
+   */
+  private detectWisdomSeeking(input: string): boolean {
+    const wisdomIndicators = [
+      'what should i', 'what do i', 'how can i', 'why do i',
+      'help me', 'I don\'t know', 'confused', 'lost', 'stuck',
+      'advice', 'guide', 'wisdom', 'truth', 'understand',
+      'meaning', 'purpose', 'should', 'right', 'wrong'
+    ];
+
+    const lower = input.toLowerCase();
+    return wisdomIndicators.some(indicator => lower.includes(indicator));
   }
 
   /**

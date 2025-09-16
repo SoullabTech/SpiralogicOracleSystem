@@ -1,6 +1,6 @@
 // Shared types and interfaces for PersonalOracleAgent modules
 
-import type { Element, EnergyState, Mood } from '@/lib/types/oracle';
+import type { Element, EnergyState, Mood } from '../../types/oracle';
 
 // Agent Personality Archetypes
 export type AgentArchetype =

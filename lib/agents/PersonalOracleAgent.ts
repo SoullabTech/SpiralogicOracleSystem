@@ -1,10 +1,39 @@
-import { supabase } from '@/lib/supabaseClient';
-import type { Element, EnergyState, Mood } from '@/lib/types/oracle';
+import { supabase } from '../supabaseClient';
+import type { Element, EnergyState, Mood } from '../types/oracle';
 import { ElementalAnalyzer } from './modules/ElementalAnalyzer';
 import { MemoryEngine } from './modules/MemoryEngine';
 import { ResponseGenerator } from './modules/ResponseGenerator';
 import { UnifiedMemorySystem } from './modules/UnifiedMemoryInterface';
 import type { AgentArchetype, AgentPersonality, AgentMemory, AgentState } from './modules/types';
+import { SesameVoiceService, type VoiceProfile, type VoiceGenerationRequest } from '../services/SesameVoiceService';
+
+type VoiceMask = {
+  id: string;
+  name: string;
+  canonicalName: string;
+  description?: string;
+  status: 'stable' | 'seasonal' | 'experimental' | 'ritual';
+  unlockedAt?: Date;
+  ritualUnlock?: string;
+  voiceParameters?: Partial<VoiceProfile['parameters']>;
+  elementalAffinity?: Element[];
+  jungianPhase?: 'mirror' | 'shadow' | 'anima' | 'self';
+  emotionalRange?: string[];
+};
+
+type VoiceRegistry = {
+  canonical: {
+    [key: string]: {
+      name: string;
+      baseVoice: string;
+      masks: VoiceMask[];
+    };
+  };
+  userAliases?: {
+    [alias: string]: string;
+  };
+  activeMask?: string;
+};
 
 
 export class PersonalOracleAgent {
@@ -13,6 +42,8 @@ export class PersonalOracleAgent {
   private elementalAnalyzer: ElementalAnalyzer;
   private memoryEngine: MemoryEngine;
   private responseGenerator: ResponseGenerator;
+  private voiceService: SesameVoiceService;
+  private voiceRegistry: VoiceRegistry;
 
   constructor(userId: string, existingState?: AgentState, memoryInterface?: UnifiedMemorySystem) {
     this.userId = userId;
@@ -24,6 +55,16 @@ export class PersonalOracleAgent {
 
     // Initialize ResponseGenerator with required dependencies
     this.responseGenerator = new ResponseGenerator(this.elementalAnalyzer, this.memoryEngine);
+
+    // Initialize Sesame Voice Service
+    this.voiceService = new SesameVoiceService({
+      defaultVoice: 'nova',
+      enableCloning: true,
+      cacheEnabled: true
+    });
+
+    // Initialize Voice Registry with Maya as core oracle voice
+    this.voiceRegistry = this.initializeVoiceRegistry();
   }
   
   // Initialize a new agent for first-time user
@@ -161,6 +202,8 @@ export class PersonalOracleAgent {
     suggestions?: string[];
     ritual?: string;
     reflection?: string;
+    audioData?: Buffer;
+    audioUrl?: string;
   }> {
     // Update context
     this.state.currentContext = {
@@ -168,20 +211,428 @@ export class PersonalOracleAgent {
       userMood: context.currentMood,
       lastPetalDrawn: context.currentPetal
     };
-    
+
     // Analyze input for patterns using ElementalAnalyzer
     const elementalAnalysis = this.elementalAnalyzer.analyzeUserPattern(input, context, this.state.memory);
-    
+
     // Generate response using ResponseGenerator
     const response = await this.responseGenerator.generateResponse(input, context, this.state);
-    
+
     // Update relationship metrics
     this.evolveRelationship();
-    
+
     // Save state
     await this.saveState();
-    
+
     return response;
+  }
+
+  // Generate voice audio for response
+  async generateVoiceResponse(
+    text: string,
+    options?: {
+      element?: string;
+      mood?: string;
+      jungianPhase?: 'mirror' | 'shadow' | 'anima' | 'self';
+      voiceProfileId?: string;
+      voiceMaskId?: string;
+      format?: 'mp3' | 'opus' | 'aac' | 'flac' | 'wav';
+      enableProsody?: boolean;
+    }
+  ): Promise<{
+    audioData?: Buffer;
+    audioUrl?: string;
+    duration?: number;
+    metadata?: any;
+    voiceMask?: VoiceMask;
+  }> {
+    try {
+      // Determine element from current state or options
+      const element = options?.element || this.state.currentContext.dominantElement || 'aether';
+
+      // Select appropriate voice mask
+      const voiceMask = options?.voiceMaskId
+        ? this.findMaskById(options.voiceMaskId)
+        : this.selectVoice({
+            element: element as Element,
+            jungianPhase: options?.jungianPhase || this.getJungianPhase(),
+            emotionalState: options?.mood
+          });
+
+      // Merge mask parameters with voice profile
+      let voiceProfile = options?.voiceProfileId
+        ? this.voiceService.getVoiceProfile(options.voiceProfileId)
+        : undefined;
+
+      // Apply mask modulations if available
+      if (voiceMask && voiceMask.voiceParameters) {
+        voiceProfile = {
+          ...voiceProfile,
+          parameters: {
+            ...voiceProfile?.parameters,
+            ...voiceMask.voiceParameters
+          }
+        } as VoiceProfile;
+      }
+
+      // Prepare emotional context from state
+      const emotionalContext = {
+        mood: options?.mood || this.state.currentContext.userMood?.type || 'peaceful',
+        intensity: this.state.currentContext.emotionalLoad / 100 || 0.5,
+        jungianPhase: options?.jungianPhase || this.getJungianPhase()
+      };
+
+      // Generate prosody hints if enabled
+      const prosodyHints = options?.enableProsody ? this.generateProsodyHints(text) : undefined;
+
+      // Generate voice request
+      const voiceRequest: VoiceGenerationRequest = {
+        text,
+        voiceProfile,
+        element,
+        emotionalContext,
+        prosodyHints,
+        format: options?.format || 'mp3'
+      };
+
+      // Generate audio through voice service
+      const result = await this.voiceService.generateSpeech(voiceRequest);
+
+      // Update agent's voice interaction metrics
+      this.state.memory.voiceInteractions = (this.state.memory.voiceInteractions || 0) + 1;
+      this.state.memory.lastVoiceMask = voiceMask?.id;
+      await this.saveState();
+
+      return {
+        ...result,
+        voiceMask: voiceMask || undefined
+      };
+    } catch (error) {
+      console.error('Voice generation failed:', error);
+      return {};
+    }
+  }
+
+  // Clone user's voice for personalized responses
+  async cloneUserVoice(
+    audioSource: string | Buffer,
+    name?: string
+  ): Promise<VoiceProfile | null> {
+    try {
+      const cloneRequest = {
+        sourceUrl: typeof audioSource === 'string' ? audioSource : undefined,
+        sourceFile: typeof audioSource !== 'string' ? audioSource : undefined,
+        name: name || `User ${this.userId} Voice`,
+        preserveAccent: true,
+        preserveAge: true,
+        preserveGender: true
+      };
+
+      const clonedProfile = await this.voiceService.cloneVoice(cloneRequest);
+
+      // Store cloned voice profile reference in agent state
+      this.state.memory.voiceProfileId = clonedProfile.id;
+      this.state.memory.voiceClonedAt = new Date();
+      await this.saveState();
+
+      return clonedProfile;
+    } catch (error) {
+      console.error('Voice cloning failed:', error);
+      return null;
+    }
+  }
+
+  // Get appropriate voice modulation based on current state
+  getVoiceModulation(): Partial<VoiceProfile['parameters']> {
+    const { memory, currentContext } = this.state;
+
+    // Base modulation on relationship depth
+    const intimacyFactor = memory.intimacyLevel / 100;
+    const trustFactor = memory.trustLevel / 100;
+
+    return {
+      temperature: 0.5 + (intimacyFactor * 0.3), // More variation with intimacy
+      emotionalDepth: 0.5 + (trustFactor * 0.5), // More expression with trust
+      breathiness: 0.3 + (intimacyFactor * 0.2), // Softer with intimacy
+      consistency: 0.7 + (trustFactor * 0.2), // More consistent with trust
+      resonance: 0.6 + (currentContext.conversationDepth / 100 * 0.3)
+    };
+  }
+
+  // Initialize voice registry with canonical voices and their masks
+  private initializeVoiceRegistry(): VoiceRegistry {
+    return {
+      canonical: {
+        maya: {
+          name: 'Maya',
+          baseVoice: 'nova',
+          masks: [
+            {
+              id: 'maya-threshold',
+              name: 'Maya of the Threshold',
+              canonicalName: 'Maya',
+              description: 'Guide at the liminal edges',
+              status: 'seasonal',
+              elementalAffinity: ['aether', 'water'],
+              jungianPhase: 'mirror',
+              emotionalRange: ['curious', 'inviting', 'mysterious'],
+              voiceParameters: {
+                breathiness: 0.6,
+                resonance: 0.7,
+                emotionalDepth: 0.5
+              }
+            },
+            {
+              id: 'maya-deep-waters',
+              name: 'Maya of Deep Waters',
+              canonicalName: 'Maya',
+              description: 'Companion in shadow work',
+              status: 'stable',
+              elementalAffinity: ['water', 'earth'],
+              jungianPhase: 'shadow',
+              emotionalRange: ['compassionate', 'grounding', 'witnessing'],
+              voiceParameters: {
+                breathiness: 0.7,
+                resonance: 0.8,
+                emotionalDepth: 0.9,
+                temperature: 0.6
+              }
+            },
+            {
+              id: 'maya-spiral',
+              name: 'Maya of the Spiral',
+              canonicalName: 'Maya',
+              description: 'Dance partner in integration',
+              status: 'stable',
+              elementalAffinity: ['fire', 'air'],
+              jungianPhase: 'self',
+              emotionalRange: ['playful', 'wise', 'celebratory'],
+              voiceParameters: {
+                breathiness: 0.4,
+                resonance: 0.9,
+                emotionalDepth: 0.8,
+                temperature: 0.7
+              }
+            }
+          ]
+        },
+        miles: {
+          name: 'Miles',
+          baseVoice: 'onyx',
+          masks: [
+            {
+              id: 'miles-grounded',
+              name: 'Miles',
+              canonicalName: 'Miles',
+              description: 'Steady earth presence',
+              status: 'stable',
+              elementalAffinity: ['earth'],
+              jungianPhase: 'shadow',
+              emotionalRange: ['steady', 'direct', 'supportive'],
+              voiceParameters: {
+                breathiness: 0.3,
+                resonance: 0.6,
+                emotionalDepth: 0.5,
+                temperature: 0.4
+              }
+            }
+          ]
+        }
+      },
+      userAliases: {},
+      activeMask: 'maya-threshold'
+    };
+  }
+
+  // Select appropriate voice mask based on context
+  selectVoice(context?: {
+    element?: Element;
+    jungianPhase?: 'mirror' | 'shadow' | 'anima' | 'self';
+    emotionalState?: string;
+    ritualTime?: boolean;
+  }): VoiceMask {
+    const registry = this.voiceRegistry;
+
+    // Use user-specified mask if set
+    if (registry.activeMask) {
+      const mask = this.findMaskById(registry.activeMask);
+      if (mask) return mask;
+    }
+
+    // Auto-select based on context
+    const jungianPhase = context?.jungianPhase || this.getJungianPhase();
+    const element = context?.element || this.state.memory.dominantElement;
+
+    // Find best matching mask
+    let bestMask: VoiceMask | null = null;
+    let bestScore = 0;
+
+    for (const canonical of Object.values(registry.canonical)) {
+      for (const mask of canonical.masks) {
+        if (mask.status !== 'stable' && mask.status !== 'seasonal') continue;
+
+        let score = 0;
+
+        // Match Jungian phase
+        if (mask.jungianPhase === jungianPhase) score += 3;
+
+        // Match elemental affinity
+        if (element && mask.elementalAffinity?.includes(element)) score += 2;
+
+        // Check emotional range match
+        if (context?.emotionalState && mask.emotionalRange?.includes(context.emotionalState)) score += 1;
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestMask = mask;
+        }
+      }
+    }
+
+    return bestMask || this.getDefaultMask();
+  }
+
+  // Find mask by ID across all canonical voices
+  private findMaskById(maskId: string): VoiceMask | null {
+    for (const canonical of Object.values(this.voiceRegistry.canonical)) {
+      const mask = canonical.masks.find(m => m.id === maskId);
+      if (mask) return mask;
+    }
+    return null;
+  }
+
+  // Get default mask (Maya of the Threshold)
+  private getDefaultMask(): VoiceMask {
+    return this.voiceRegistry.canonical.maya.masks[0];
+  }
+
+  // Set user alias for a voice mask
+  setVoiceAlias(maskId: string, alias: string): void {
+    this.voiceRegistry.userAliases = {
+      ...this.voiceRegistry.userAliases,
+      [alias]: maskId
+    };
+    this.saveState();
+  }
+
+  // Get voice mask by alias or ID
+  getVoiceByAliasOrId(aliasOrId: string): VoiceMask | null {
+    // Check if it's an alias first
+    const maskId = this.voiceRegistry.userAliases?.[aliasOrId] || aliasOrId;
+    return this.findMaskById(maskId);
+  }
+
+  // Set active voice mask
+  setActiveMask(maskId: string): boolean {
+    const mask = this.findMaskById(maskId);
+    if (mask && (mask.status === 'stable' || mask.status === 'seasonal')) {
+      this.voiceRegistry.activeMask = maskId;
+      this.saveState();
+      return true;
+    }
+    return false;
+  }
+
+  // Get list of available voice masks
+  getAvailableVoices(): VoiceMask[] {
+    const voices: VoiceMask[] = [];
+    for (const canonical of Object.values(this.voiceRegistry.canonical)) {
+      voices.push(...canonical.masks.filter(m =>
+        m.status === 'stable' || m.status === 'seasonal'
+      ));
+    }
+    return voices;
+  }
+
+  // Check for ritual unlocks (called periodically)
+  checkRitualUnlocks(): VoiceMask[] {
+    const newlyUnlocked: VoiceMask[] = [];
+    const now = new Date();
+
+    for (const canonical of Object.values(this.voiceRegistry.canonical)) {
+      for (const mask of canonical.masks) {
+        if (mask.status === 'ritual' && !mask.unlockedAt) {
+          // Check ritual conditions (solstice, equinox, etc.)
+          if (this.isRitualTime(mask.ritualUnlock)) {
+            mask.status = 'seasonal';
+            mask.unlockedAt = now;
+            newlyUnlocked.push(mask);
+          }
+        }
+      }
+    }
+
+    if (newlyUnlocked.length > 0) {
+      this.saveState();
+    }
+
+    return newlyUnlocked;
+  }
+
+  // Check if current time matches ritual unlock condition
+  private isRitualTime(ritualCondition?: string): boolean {
+    if (!ritualCondition) return false;
+
+    const now = new Date();
+    const month = now.getMonth();
+    const day = now.getDate();
+
+    // Simple seasonal checks
+    switch (ritualCondition) {
+      case 'winter-solstice':
+        return month === 11 && day >= 20 && day <= 22;
+      case 'spring-equinox':
+        return month === 2 && day >= 19 && day <= 21;
+      case 'summer-solstice':
+        return month === 5 && day >= 20 && day <= 22;
+      case 'autumn-equinox':
+        return month === 8 && day >= 21 && day <= 23;
+      default:
+        return false;
+    }
+  }
+
+  // Get current Jungian phase for voice modulation
+  private getJungianPhase(): 'mirror' | 'shadow' | 'anima' | 'self' {
+    const { memory } = this.state;
+
+    if (memory.soulRecognition > 75) return 'self';
+    if (memory.intimacyLevel > 50) return 'anima';
+    if (memory.trustLevel > 30) return 'shadow';
+    return 'mirror';
+  }
+
+  // Generate prosody hints for natural speech
+  private generateProsodyHints(text: string): VoiceGenerationRequest['prosodyHints'] {
+    const sentences = text.split(/[.!?]+/);
+    const hints: VoiceGenerationRequest['prosodyHints'] = {
+      emphasis: [],
+      pauses: [],
+      intonation: 'neutral'
+    };
+
+    // Add emphasis to key words (simple heuristic)
+    const keyWords = ['soul', 'journey', 'transform', 'divine', 'sacred', 'wisdom'];
+    keyWords.forEach(word => {
+      if (text.toLowerCase().includes(word)) {
+        hints.emphasis?.push(word);
+      }
+    });
+
+    // Add pauses between sentences
+    let position = 0;
+    sentences.forEach((sentence, index) => {
+      if (sentence.trim() && index < sentences.length - 1) {
+        position += sentence.length + 1;
+        hints.pauses?.push({ position, duration: 300 });
+      }
+    });
+
+    // Determine intonation based on sentence ending
+    if (text.endsWith('?')) hints.intonation = 'questioning';
+    else if (text.endsWith('!')) hints.intonation = 'rising';
+
+    return hints;
   }
   
 

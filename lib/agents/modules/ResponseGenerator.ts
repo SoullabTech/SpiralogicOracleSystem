@@ -1,4 +1,4 @@
-import { getClaudeService } from '@/lib/services/ClaudeService';
+import { getClaudeService } from '../../services/ClaudeService';
 import { ElementalAnalyzer } from './ElementalAnalyzer';
 import { MemoryEngine } from './MemoryEngine';
 import type {
@@ -7,7 +7,7 @@ import type {
   AgentMemory,
   AgentArchetype
 } from './types';
-import type { Element, EnergyState, Mood } from '@/lib/types/oracle';
+import type { Element, EnergyState, Mood } from '../../types/oracle';
 
 /**
  * ResponseGenerator - Handles all response generation logic for PersonalOracleAgent
