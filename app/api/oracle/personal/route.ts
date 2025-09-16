@@ -106,9 +106,8 @@ export async function POST(request: NextRequest) {
 
       if (body.enableVoice) {
         try {
-          // Import cleaning function and voice settings
+          // Import cleaning function
           const { cleanTextForSpeech } = require('@/lib/utils/cleanTextForSpeech');
-          const { getVoiceSettings } = require('@/lib/config/voiceSettings');
 
           // Clean the response text for speech (removes excessive punctuation for smoother flow)
           const cleanedResponse = cleanTextForSpeech(agentResponse.response);
@@ -119,8 +118,19 @@ export async function POST(request: NextRequest) {
             ? cleanedResponse.substring(0, maxInitialLength) + '.'
             : cleanedResponse;
 
-          // Get voice settings (Nova for smoother flow)
-          const voiceSettings = getVoiceSettings('maya', 'nova');
+          // Get voice settings with fallback
+          let voiceSettings;
+          try {
+            const { getVoiceSettings } = require('@/lib/config/voiceSettings');
+            voiceSettings = getVoiceSettings('maya', 'nova');
+          } catch (e) {
+            // Fallback voice settings
+            voiceSettings = {
+              provider: 'openai',
+              voiceId: 'nova',
+              speed: 1.0
+            };
+          }
 
           const voiceResult = await agent.generateVoiceResponse(
             spokenText,

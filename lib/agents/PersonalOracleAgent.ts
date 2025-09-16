@@ -224,22 +224,36 @@ export class PersonalOracleAgent {
     persona: 'maya' | 'anthony',
     ctx: SpiralogicContext
   ): Promise<any> {
-    // Import cleaning function and voice settings
+    // Import cleaning function
     const { cleanTextForSpeech } = require('@/lib/utils/cleanTextForSpeech');
-    const { getVoiceSettings } = require('@/lib/config/voiceSettings');
 
     // Clean text for speech - remove asterisks, stage directions, excessive punctuation
     const cleanedText = cleanTextForSpeech(text);
 
-    // Get voice settings (Nova for Maya, Onyx for Anthony)
-    const voiceSettings = getVoiceSettings(persona);
+    // Try to get voice settings, with fallback
+    let voiceSettings;
+    try {
+      const { getVoiceSettings } = require('@/lib/config/voiceSettings');
+      voiceSettings = getVoiceSettings(persona);
+    } catch (e) {
+      // Fallback if voice settings module not found
+      voiceSettings = {
+        provider: 'openai',
+        voiceId: persona === 'maya' ? 'nova' : 'onyx',
+        name: persona === 'maya' ? 'Maya' : 'Anthony',
+        speed: 1.0,
+        pitch: 1.0
+      };
+    }
 
     // Create voice profile from settings
     const voiceProfile = {
       id: persona,
       provider: voiceSettings.provider,
       baseVoiceId: voiceSettings.voiceId,  // Nova for Maya, Onyx for Anthony
-      name: voiceSettings.name
+      name: voiceSettings.name,
+      speed: voiceSettings.speed || 1.0,  // Add speed with default
+      pitch: voiceSettings.pitch || 1.0   // Add pitch with default
     };
 
     // Pick mask based on dominant current
