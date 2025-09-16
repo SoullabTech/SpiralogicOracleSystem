@@ -19,47 +19,7 @@ import {
   Info
 } from 'lucide-react';
 import { useMayaVoice, useVoiceCapabilities } from '@/hooks/useMayaVoice';
-<<<<<<< HEAD
 import { FullVoiceEngineStatus } from './VoiceEngineStatus';
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
-interface VoiceControlsProps {
-  className?: string;
-  showAdvanced?: boolean;
-  onAutoSpeakChange?: (enabled: boolean) => void;
-}
-
-export function VoiceControls({ className = "", showAdvanced = false, onAutoSpeakChange }: VoiceControlsProps) {
-  const { 
-    voiceState, 
-    isSupported, 
-    isLoading, 
-    error,
-    speak,
-    playGreeting,
-    pause,
-    resume,
-    stop,
-    getAvailableVoices 
-  } = useMayaVoice();
-
-  const capabilities = useVoiceCapabilities();
-  const [autoSpeak, setAutoSpeak] = useState(false);
-  const [showVoiceSelector, setShowVoiceSelector] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState<string>('');
-  
-  // Handle auto-speak toggle
-  const handleAutoSpeakChange = (enabled: boolean) => {
-    setAutoSpeak(enabled);
-    onAutoSpeakChange?.(enabled);
-  };
-
-<<<<<<< HEAD
-  // Test Maya's voice
-=======
-  // Test Maya&apos;s voice
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   const testVoice = async () => {
     try {
       await speak("I am Maya, your personal oracle. This is how I sound.");
@@ -89,11 +49,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-<<<<<<< HEAD
             Voice synthesis is not supported in this browser. Maya's text responses are still available.
-=======
-            Voice synthesis is not supported in this browser. Maya&apos;s text responses are still available.
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           </p>
         </CardContent>
       </Card>
@@ -101,19 +57,11 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
   }
 
   return (
-<<<<<<< HEAD
     <Card className={`bg-background/80 backdrop-blur-xl border-blue-500/20 ${className}`}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center space-x-2">
           <Volume2 className="w-5 h-5 text-blue-400" />
           <span>Maya's Voice</span>
-=======
-    <Card className={`bg-background/80 backdrop-blur-xl border-purple-500/20 ${className}`}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center space-x-2">
-          <Sparkles className="w-5 h-5 text-purple-400" />
-          <span>Maya&apos;s Voice</span>
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           <Badge variant={voiceState.isPlaying ? "success" : "secondary"} className="ml-auto">
             {voiceState.isPlaying ? 'Speaking' : voiceState.isPaused ? 'Paused' : 'Ready'}
           </Badge>
@@ -136,39 +84,18 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
           </span>
         </div>
 
-<<<<<<< HEAD
         {/* Voice Engine Status */}
         <FullVoiceEngineStatus className="mt-4" />
 
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-        {/* Current Activity */}
-        <AnimatePresence>
-          {voiceState.isPlaying && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-<<<<<<< HEAD
-              className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3"
-=======
-              className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             >
               <div className="flex items-center space-x-2 mb-2">
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
                 >
-<<<<<<< HEAD
                   <Volume2 className="w-4 h-4 text-blue-400" />
                 </motion.div>
                 <span className="text-sm font-medium text-blue-300">Maya is speaking</span>
-=======
-                  <Volume2 className="w-4 h-4 text-purple-400" />
-                </motion.div>
-                <span className="text-sm font-medium text-purple-300">Maya is speaking</span>
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
               </div>
               <p className="text-xs text-muted-foreground line-clamp-2">
                 {voiceState.currentText}
@@ -227,11 +154,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
               size="sm"
               onClick={playGreeting}
               disabled={isLoading || !capabilities.webSpeechSupported}
-<<<<<<< HEAD
               className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-=======
-              className="flex-1  from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             >
               {isLoading ? (
                 <>
@@ -275,11 +198,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
             variant={autoSpeak ? "default" : "outline"}
             onClick={() => handleAutoSpeakChange(!autoSpeak)}
             disabled={!capabilities.webSpeechSupported}
-<<<<<<< HEAD
             className={autoSpeak ? "bg-blue-600 hover:bg-blue-700" : ""}
-=======
-            className={autoSpeak ? "bg-purple-600 hover:bg-purple-700" : ""}
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           >
             {autoSpeak ? (
               <><Volume2 className="w-4 h-4 mr-2" />ON</>
@@ -294,11 +213,7 @@ export function VoiceControls({ className = "", showAdvanced = false, onAutoSpea
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-<<<<<<< HEAD
             className="space-y-3 pt-3 border-t border-blue-500/20"
-=======
-            className="space-y-3 pt-3 border-t border-purple-500/20"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Voice Settings</span>

@@ -19,7 +19,13 @@
     "vault:connect": "tsx scripts/start-obsidian-integration.ts",
     "vault:scan": "node scripts/connect-vault.js",
     "vault:sacred": "tsx scripts/sacred-vault-integration.ts",
-    "vault:sacred:simple": "tsx scripts/vault-sacred-simple.ts"
+    "vault:sacred:simple": "tsx scripts/vault-sacred-simple.ts",
+    "vault:configure": "tsx scripts/configure-obsidian-vault.ts",
+    "awaken-maya": "tsx lib/orchestration/awaken-maya.ts",
+    "maya": "tsx lib/orchestration/awaken-maya.ts",
+    "spiralogic:test": "tsx scripts/test-spiralogic-system.ts",
+    "spiralogic:init": "tsx scripts/configure-obsidian-vault.ts && npm run spiralogic:test",
+    "spiralogic:deploy": "npm run spiralogic:test && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",

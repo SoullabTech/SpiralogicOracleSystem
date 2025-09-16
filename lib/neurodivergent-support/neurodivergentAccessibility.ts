@@ -412,7 +412,7 @@ export class ProcessingStyleDetector {
 export class NeurodivergentSupportController {
   private adhdSupport = new ADHDSupport();
   private autismSupport = new AutismSupport();
-  private audhd Support = new AuDHDSupport();
+  private audhdSupport = new AuDHDSupport();
   private dyslexiaSupport = new DyslexiaSupport();
   private detector = new ProcessingStyleDetector();
   
@@ -464,7 +464,7 @@ export class NeurodivergentSupportController {
       case 'autistic':
         return this.autismSupport.generateInterfaceMode();
       case 'audhd':
-        return this.audhd Support.generateBalancedMode('regulated');
+        return this.audhdSupport.generateBalancedMode('regulated');
       case 'dyslexic':
         return this.dyslexiaSupport.generateTextFormat();
       default:

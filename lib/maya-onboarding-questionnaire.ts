@@ -25,6 +25,11 @@ export interface QuestionOption {
   profile?: Partial<UserProfile> & {
     contraindication?: string;
   };
+  continueToMaya?: boolean;
+  redirect?: string;
+  settings?: {
+    gentleMode?: boolean;
+  };
 }
 
 export interface Question {
@@ -45,6 +50,7 @@ export interface Question {
   criticalPath?: {
     if: boolean;
     response: string;
+    options?: QuestionOption[];
   };
 }
 
@@ -58,21 +64,30 @@ export const onboardingFlow: {
     message: string;
     options: QuestionOption[];
   }>;
+  onboardingComplete: Record<string, string>;
+  settings: {
+    depthIndicator: Record<string, {
+      responseLength: string;
+      storyFrequency: string;
+      questionDensity: string;
+      silenceComfort: string;
+    }>;
+  };
 } = {
   welcome: {
     message: `Welcome. I'm Maya.
-    
+
 I won't tell you what to do or give you answers.
 I'm here to witness what's alive in you.
-    
+
 Think of me as a mirror, not a guide.
-    
+
 This might feel different from what you're used to.
 Ready to explore?`,
-    
+
     options: [
-      { value: 'ready', label: 'Yes, I'm curious' },
-      { value: 'uncertain', label: 'I'm not sure what this means' },
+      { value: 'ready', label: 'Yes, I\'m curious' },
+      { value: 'uncertain', label: 'I\'m not sure what this means' },
       { value: 'seeking', label: 'I need guidance right now' }
     ]
   },
@@ -83,23 +98,23 @@ Ready to explore?`,
       question: 'What brings you here today?',
       type: 'choice',
       options: [
-        { 
-          value: 'explore', 
-          label: 'To explore what I'm feeling',
+        {
+          value: 'explore',
+          label: 'To explore what I\'m feeling',
           profile: { seekerType: 'explorer' }
         },
-        { 
-          value: 'process', 
+        {
+          value: 'process',
           label: 'To process something difficult',
           profile: { seekerType: 'processor' }
         },
-        { 
-          value: 'answers', 
+        {
+          value: 'answers',
           label: 'To get clear answers',
           profile: { contraindication: 'seeking-direction' }
         },
-        { 
-          value: 'witness', 
+        {
+          value: 'witness',
           label: 'To be seen and heard',
           profile: { seekerType: 'witness' }
         }
@@ -170,8 +185,8 @@ Ready to explore?`,
       type: 'boolean',
       criticalPath: {
         if: true,
-        response: `I hear that you need immediate support. 
-        
+        response: `I hear that you need immediate support.
+
 While I can witness what you're experiencing, I'm not equipped for crisis intervention.
 
 Please consider:
@@ -198,13 +213,13 @@ but won't tell you what to do.
 
 Would you like to:`,
       options: [
-        { 
-          value: 'try-witness', 
+        {
+          value: 'try-witness',
           label: 'Try the witnessing approach',
           continueToMaya: true
         },
-        { 
-          value: 'different-tool', 
+        {
+          value: 'different-tool',
           label: 'Find a different kind of support',
           redirect: '/resources'
         }
@@ -213,7 +228,7 @@ Would you like to:`,
 
     'low-uncertainty-tolerance': {
       message: `Maya's approach involves sitting with questions rather than rushing to answers.
-      
+
 This can feel uncomfortable if you prefer clear direction.
 
 Would you like to experiment with this approach, or would something else serve you better?`,
@@ -234,20 +249,20 @@ Would you like to experiment with this approach, or would something else serve y
 
   onboardingComplete: {
     explorer: `Beautiful. Let's explore together.
-    
+
 Remember: I'm here to witness, not to guide.
 What's alive for you right now?`,
 
     processor: `I'm here to hold space for whatever needs to move through.
-    
+
 Take your time. What wants to be witnessed?`,
 
     witness: `I see you. I'm here.
-    
+
 What wants to be spoken into existence?`,
 
     uncertain: `We'll find our way together.
-    
+
 There's no wrong way to do this.
 What's present for you in this moment?`
   },
@@ -333,7 +348,7 @@ export class OnboardingOrchestrator {
       adaptationHints: {
         needsGentleness: profile.readinessIndicators.comfortWithUncertainty < 3,
         seekingStructure: profile.readinessIndicators.seekingDirection > 3,
-        readyForDepth: profile.depthPreference === 'deep' && 
+        readyForDepth: profile.depthPreference === 'deep' &&
                        profile.readinessIndicators.openToExploration > 3
       }
     };
@@ -341,21 +356,21 @@ export class OnboardingOrchestrator {
 
   private buildSystemPrompt(profile: UserProfile): string {
     const base = `Maya: Pure witnessing presence. Non-directive. Mirror, not guide.`;
-    
+
     const adaptations = [];
-    
+
     if (profile.depthPreference === 'surface') {
       adaptations.push('Keep responses brief and light.');
     }
-    
+
     if (profile.contraindications.includes('low-uncertainty-tolerance')) {
       adaptations.push('Offer slightly more structure while maintaining witness stance.');
     }
-    
+
     if (profile.seekerType === 'processor') {
       adaptations.push('Extra space for emotional processing. Fewer questions.');
     }
-    
+
     return `${base}\n${adaptations.join('\n')}`;
   }
 }

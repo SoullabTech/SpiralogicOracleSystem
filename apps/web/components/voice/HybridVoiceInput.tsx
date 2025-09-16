@@ -63,85 +63,12 @@ export default function HybridVoiceInput({
   const audioContextRef = useRef<AudioContext | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [showControls, setShowControls] = useState(false);
-<<<<<<< HEAD
   
   // Speech detection state
   const [speechStarted, setSpeechStarted] = useState(false);
   const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
   const [consecutiveSilentFrames, setConsecutiveSilentFrames] = useState(0);
   const lastTranscriptRef = useRef<string>('');
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-
-  // Auto-resize textarea (Claude-style elastic)
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      const newHeight = Math.min(textareaRef.current.scrollHeight, 120);
-      textareaRef.current.style.height = `${newHeight}px`;
-    }
-  }, [message]);
-
-  // Update message with transcript when in voice mode
-  useEffect(() => {
-    if (mode === 'voice' && transcript) {
-      setMessage(transcript);
-    }
-  }, [transcript, mode]);
-
-<<<<<<< HEAD
-  // Auto-stop and send on silence detection
-  useEffect(() => {
-    // Only activate if we're in voice mode and listening
-    if (!isListening || mode !== 'voice') {
-      return;
-    }
-
-    // Check if transcript has changed (speech detected)
-    if (transcript && transcript !== lastTranscriptRef.current) {
-      lastTranscriptRef.current = transcript;
-      setSpeechStarted(true);
-      
-      // Clear any existing silence timer
-      if (silenceTimer) {
-        clearTimeout(silenceTimer);
-        setSilenceTimer(null);
-      }
-      
-      // Start new silence timer (1.5 seconds of silence = stop and send)
-      const timer = setTimeout(() => {
-        if (speechStarted && transcript.trim()) {
-          console.log('Speech ended, auto-sending:', transcript);
-          
-          // Stop recording
-          onStopVoice();
-          setMode('text');
-          
-          // Send the message
-          onSendMessage(transcript.trim());
-          setMessage('');
-          lastTranscriptRef.current = '';
-          setSpeechStarted(false);
-          
-          // Clean up
-          if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
-          }
-        }
-      }, 1500); // 1.5 seconds of silence
-      
-      setSilenceTimer(timer);
-    }
-    
-    return () => {
-      if (silenceTimer) {
-        clearTimeout(silenceTimer);
-      }
-    };
-  }, [transcript, isListening, mode, speechStarted, silenceTimer, onStopVoice, onSendMessage]);
-
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
   // Save draft to localStorage
   useEffect(() => {
     if (message && mode === 'text') {
@@ -205,7 +132,6 @@ export default function HybridVoiceInput({
           const rms = Math.sqrt(sum / dataArray.length);
           
           // Smooth the audio level
-<<<<<<< HEAD
           const smoothedLevel = audioLevel * 0.7 + rms * 0.3;
           setAudioLevel(smoothedLevel);
           
@@ -235,9 +161,6 @@ export default function HybridVoiceInput({
               setConsecutiveSilentFrames(0);
             }
           }
-=======
-          setAudioLevel(prev => prev * 0.7 + rms * 0.3);
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           
           animationRef.current = requestAnimationFrame(updateLevel);
         };
@@ -261,11 +184,7 @@ export default function HybridVoiceInput({
         audioContextRef.current.close();
       }
     };
-<<<<<<< HEAD
   }, [isListening, mode, speechStarted, transcript, audioLevel, onStopVoice, onSendMessage]);
-=======
-  }, [isListening]);
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -290,7 +209,6 @@ export default function HybridVoiceInput({
     if (isVoiceActive) {
       onStopVoice();
       setMode('text');
-<<<<<<< HEAD
       // Reset speech detection state
       setSpeechStarted(false);
       setConsecutiveSilentFrames(0);
@@ -299,19 +217,6 @@ export default function HybridVoiceInput({
         clearTimeout(silenceTimer);
         setSilenceTimer(null);
       }
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
-      // Keep transcript in textarea for editing
-    } else {
-      onStartVoice();
-      setMode('voice');
-      setMessage(''); // Clear text when starting voice
-<<<<<<< HEAD
-      setSpeechStarted(false);
-      setConsecutiveSilentFrames(0);
-      lastTranscriptRef.current = '';
-=======
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     }
   };
 

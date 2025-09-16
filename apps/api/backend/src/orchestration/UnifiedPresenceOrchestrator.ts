@@ -275,7 +275,7 @@ export class UnifiedPresenceOrchestrator {
   ): Promise<UnifiedResponse> {
     // Get primary response based on priority
     const primaryResponse = orchestration.responses.get(orchestration.priority) ||
-                           'I witness what you're sharing.';
+                           'I witness what you\'re sharing.';
 
     // Apply voice coherence
     const voicedResponse = this.applyVoiceCoherence(
@@ -316,11 +316,11 @@ export class UnifiedPresenceOrchestrator {
     // Each name has subtle voice variations
     const voiceVariations = {
       'Maya': {
-        opening: ['I witness', 'I see', 'I feel', 'I'm here with'],
+        opening: ['I witness', 'I see', 'I feel', 'I\'m here with'],
         closing: ['', '...', 'What else?', 'Tell me more?']
       },
       'Anthony': {
-        opening: ['I notice', 'I'm observing', 'I recognize', 'I'm aware of'],
+        opening: ['I notice', 'I\'m observing', 'I recognize', 'I\'m aware of'],
         closing: ['', '...', 'Continue?', 'And?']
       },
       'Oracle': {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Mic, MicOff, Sparkles, User, BookOpen, LogOut, Library, Settings } from "lucide-react";
+import { Send, Mic, MicOff, Sparkles, User, BookOpen, LogOut, Library, Settings, Database } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cleanMessage } from "@/lib/cleanMessage";
 import { MicrophoneCapture, MicrophoneCaptureRef } from "@/components/voice/MicrophoneCapture";
@@ -19,6 +19,7 @@ import MicTorusIndicator from "@/components/voice/MicTorusIndicator";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import VoiceSettingsPanel from "@/components/settings/VoiceSettingsPanel";
 import { VoiceSettingsProvider, useVoiceSettings } from "@/lib/contexts/VoiceSettingsContext";
+import ObsidianVaultPanel from "@/components/panels/ObsidianVaultPanel";
 
 // Inner component that uses voice settings
 function OraclePageInner() {
@@ -61,6 +62,7 @@ function OraclePageInner() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showFileUpload, setShowFileUpload] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showObsidianVault, setShowObsidianVault] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const microphoneRef = useRef<MicrophoneCaptureRef>(null);
   const continuousRef = useRef<ContinuousConversationRef>(null);
@@ -507,6 +509,13 @@ function OraclePageInner() {
               <Library className="w-5 h-5 text-gray-400 hover:text-sacred-gold" />
             </button>
             <button
+              onClick={() => setShowObsidianVault(true)}
+              className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
+              title="Obsidian Vault"
+            >
+              <Database className="w-5 h-5 text-gray-400 hover:text-purple-400" />
+            </button>
+            <button
               onClick={() => router.push('/journal')}
               className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
               title="Journal"
@@ -765,9 +774,15 @@ function OraclePageInner() {
         )}
 
         {/* Voice Settings */}
-        <VoiceSettingsPanel 
-          isOpen={showSettings} 
-          onClose={() => setShowSettings(false)} 
+        <VoiceSettingsPanel
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+        />
+
+        {/* Obsidian Vault Panel */}
+        <ObsidianVaultPanel
+          isOpen={showObsidianVault}
+          onClose={() => setShowObsidianVault(false)}
         />
 
         {/* Debug Panel - Development Only */}

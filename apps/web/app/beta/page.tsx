@@ -26,11 +26,7 @@ export default function BetaPage() {
 
   if (submitted) {
     return (
-<<<<<<< HEAD
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
-=======
-      <div className="min-h-screen  from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         <div className="text-center max-w-lg">
           <div className="mb-6">
             <div className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mx-auto shadow-lg">
@@ -44,11 +40,7 @@ export default function BetaPage() {
           </p>
           <Link
             href="/oracle"
-<<<<<<< HEAD
             className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
-=======
-            className=" from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           >
             🔮 Try Demo Oracle
           </Link>
@@ -58,19 +50,11 @@ export default function BetaPage() {
   }
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
       {/* Header */}
       <div className="text-center pt-12 pb-8">
         <h1 className="text-6xl font-bold mb-4">
           <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-=======
-    <div className="min-h-screen  from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
-      {/* Header */}
-      <div className="text-center pt-12 pb-8">
-        <h1 className="text-6xl font-bold mb-4">
-          <span className=" from-yellow-400 to-orange-500 bg-clip-text text-transparent">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             Soullab Oracle
           </span>
         </h1>
@@ -192,11 +176,7 @@ export default function BetaPage() {
               <button
                 type="submit"
                 disabled={loading}
-<<<<<<< HEAD
                 className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
-=======
-                className="w-full  from-yellow-400 to-orange-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
               >
                 {loading ? "Submitting..." : "🚀 Request Beta Access"}
               </button>

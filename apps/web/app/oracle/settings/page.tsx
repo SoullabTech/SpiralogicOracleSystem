@@ -102,11 +102,7 @@ export default function OracleSettingsPage() {
             >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-<<<<<<< HEAD
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br ${
-=======
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center  ${
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                     category.color === 'purple' ? 'from-purple-500 to-purple-600' :
                     category.color === 'orange' ? 'from-orange-500 to-orange-600' :
                     category.color === 'green' ? 'from-green-500 to-green-600' :
@@ -197,11 +193,7 @@ export default function OracleSettingsPage() {
 
         {/* Save Button */}
         <div className="flex justify-end">
-<<<<<<< HEAD
           <Button className="bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600">
-=======
-          <Button className=" from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             <Save className="w-4 h-4 mr-2" />
             Save Changes
           </Button>
@@ -211,11 +203,7 @@ export default function OracleSettingsPage() {
   );
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
-=======
-    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       {!activeCategory && renderMainSettings()}
       {activeCategory === 'oracle' && renderOracleSettings()}
       {/* Add other category views as needed */}

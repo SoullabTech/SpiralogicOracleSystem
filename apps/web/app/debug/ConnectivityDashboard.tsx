@@ -199,17 +199,10 @@ export default function ConnectivityDashboard() {
 
       {/* Tailwind visual sanity strip */}
       <div className="mt-6 grid grid-cols-4 gap-2">
-<<<<<<< HEAD
         <div className="h-2 rounded-full bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500" />
         <div className="h-2 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500" />
         <div className="h-2 rounded-full bg-gradient-to-r from-amber-500 via-lime-500 to-teal-500" />
         <div className="h-2 rounded-full bg-gradient-to-r from-slate-500 via-gray-500 to-zinc-500" />
-=======
-        <div className="h-2 rounded-full  from-indigo-500 via-sky-500 to-emerald-500" />
-        <div className="h-2 rounded-full  from-pink-500 via-rose-500 to-orange-500" />
-        <div className="h-2 rounded-full  from-amber-500 via-lime-500 to-teal-500" />
-        <div className="h-2 rounded-full  from-slate-500 via-gray-500 to-zinc-500" />
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       </div>
 
       <div className="mt-3 text-xs text-gray-500">

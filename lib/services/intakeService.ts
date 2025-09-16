@@ -169,7 +169,7 @@ export class IntakeService {
     }
 
     if (focusAreas.includes('spirituality') && focusAreas.includes('shadow')) {
-      insights.push('You're ready for deep spiritual work that embraces all aspects of self');
+      insights.push("You're ready for deep spiritual work that embraces all aspects of self");
     }
 
     if (focusAreas.includes('creativity')) {

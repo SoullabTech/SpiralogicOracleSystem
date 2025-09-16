@@ -251,11 +251,7 @@ export default function OracleBetaDashboard() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
-=======
-    <div className="min-h-screen  from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       {/* Header */}
       <div className="border-b border-white/10 bg-black/20">
         <div className="container mx-auto px-6 py-4">
@@ -337,11 +333,7 @@ export default function OracleBetaDashboard() {
                   <textarea
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
-<<<<<<< HEAD
                     placeholder="Share what's on your mind... your challenges, dreams, questions, or what guidance you're seeking..."
-=======
-                    placeholder="Share what&apos;s on your mind... your challenges, dreams, questions, or what guidance you&apos;re seeking..."
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                     rows={4}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/50 resize-none"
                     required
@@ -351,11 +343,7 @@ export default function OracleBetaDashboard() {
                 <button
                   type="submit"
                   disabled={loading || !userInput.trim()}
-<<<<<<< HEAD
                   className={`w-full px-6 py-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r ${agents[selectedAgent].color} text-white`}
-=======
-                  className={`w-full px-6 py-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed  ${agents[selectedAgent].color} text-white`}
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                 >
                   {loading ? (
                     <div className="flex items-center justify-center">

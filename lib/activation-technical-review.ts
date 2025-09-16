@@ -18,17 +18,17 @@ interface ActivationRule {
   gracefulAbandonment: boolean; // Can be abandoned mid-process
 }
 
+interface FeatureActivationRecord {
+  feature: string;
+  activatedAt: number;
+  confidence: number;
+  triggers: string[];
+  outcome: 'completed' | 'abandoned' | 'conflicted' | 'interrupted';
+  userSatisfaction?: number;
+}
+
 export class TechnicalActivationEngine {
   private activationHistory = new Map<string, FeatureActivationRecord[]>();
-
-  interface FeatureActivationRecord {
-    feature: string;
-    activatedAt: number;
-    confidence: number;
-    triggers: string[];
-    outcome: 'completed' | 'abandoned' | 'conflicted' | 'interrupted';
-    userSatisfaction?: number;
-  }
 
   // === DETERMINISTIC ACTIVATION RULES ===
   private readonly ACTIVATION_RULES: ActivationRule[] = [
@@ -48,134 +48,125 @@ export class TechnicalActivationEngine {
         },
         {
           name: 'emotional_emergency',
-          weight: 0.6,
-          threshold: 0.8,
+          weight: 0.9,
+          threshold: 0.6,
           conflictPriority: 10,
-          debugInfo: 'Extreme emotional distress indicators'
+          debugInfo: 'High emotional distress indicators'
         }
       ]
     },
-
     {
-      feature: 'looping_protocol',
-      requiredScore: 0.75,
-      conflictsWith: ['crisis_detection'], // Don't loop during crisis
-      overriddenBy: ['crisis_detection', 'high_urgency'],
-      gracefulAbandonment: true, // Can abandon if urgency detected
+      feature: 'clarification_protocol',
+      requiredScore: 0.6,
+      conflictsWith: ['contemplative_space'],
+      overriddenBy: ['crisis_detection'],
+      gracefulAbandonment: true,
       triggers: [
         {
           name: 'explicit_clarification_request',
           weight: 0.9,
           threshold: 0.7,
-          conflictPriority: 7,
-          debugInfo: 'User explicitly asks for clarification'
-        },
-        {
-          name: 'meaning_ambiguity',
-          weight: 0.6,
-          threshold: 0.6,
-          conflictPriority: 6,
-          debugInfo: 'High conceptual ambiguity detected'
-        },
-        {
-          name: 'emotional_complexity',
-          weight: 0.5,
-          threshold: 0.7,
-          conflictPriority: 6,
-          debugInfo: 'Complex emotional processing needed'
-        },
-        {
-          name: 'user_correction_pattern',
-          weight: 0.7,
-          threshold: 0.6,
-          conflictPriority: 7,
-          debugInfo: 'User correcting previous responses'
-        }
-      ]
-    },
-
-    {
-      feature: 'contemplative_space',
-      requiredScore: 0.65,
-      conflictsWith: ['crisis_detection', 'high_urgency'],
-      overriddenBy: ['crisis_detection'],
-      gracefulAbandonment: true,
-      triggers: [
-        {
-          name: 'explicit_pause_request',
-          weight: 0.8,
-          threshold: 0.7,
           conflictPriority: 8,
-          debugInfo: 'User requests reflection time'
+          debugInfo: 'User directly asks for clarification'
         },
         {
-          name: 'emotional_processing_need',
-          weight: 0.5,
-          threshold: 0.6,
-          conflictPriority: 5,
-          debugInfo: 'Emotional content benefits from pauses'
-        },
-        {
-          name: 'conceptual_density',
-          weight: 0.4,
-          threshold: 0.7,
-          conflictPriority: 4,
-          debugInfo: 'Dense concepts need processing time'
-        },
-        {
-          name: 'user_contemplative_style',
-          weight: 0.3,
-          threshold: 0.6,
-          conflictPriority: 3,
-          debugInfo: 'User profile indicates contemplative preference'
-        }
-      ]
-    },
-
-    {
-      feature: 'consciousness_profiling',
-      requiredScore: 0.6,
-      conflictsWith: ['crisis_detection'],
-      overriddenBy: ['crisis_detection'],
-      gracefulAbandonment: true,
-      triggers: [
-        {
-          name: 'spiritual_language',
+          name: 'confusion_indicators',
           weight: 0.6,
           threshold: 0.5,
-          conflictPriority: 5,
-          debugInfo: 'Spiritual/consciousness concepts detected'
-        },
-        {
-          name: 'growth_themes',
-          weight: 0.5,
-          threshold: 0.6,
-          conflictPriority: 4,
-          debugInfo: 'Personal development themes present'
-        },
-        {
-          name: 'pattern_recognition_value',
-          weight: 0.4,
-          threshold: 0.7,
-          conflictPriority: 3,
-          debugInfo: 'User would benefit from pattern insights'
+          conflictPriority: 6,
+          debugInfo: 'Language suggests confusion or misunderstanding'
         }
       ]
     },
-
     {
-      feature: 'elemental_attunement',
-      requiredScore: 0.3, // Always active at some level
+      feature: 'emotional_processing',
+      requiredScore: 0.5,
+      conflictsWith: ['analytical_mode'],
+      overriddenBy: ['crisis_detection', 'clarification_protocol'],
+      gracefulAbandonment: true,
+      triggers: [
+        {
+          name: 'emotional_processing_need',
+          weight: 0.8,
+          threshold: 0.4,
+          conflictPriority: 7,
+          debugInfo: 'Emotional content needs processing space'
+        },
+        {
+          name: 'vulnerability_expression',
+          weight: 0.7,
+          threshold: 0.3,
+          conflictPriority: 7,
+          debugInfo: 'User expressing vulnerability or emotional state'
+        }
+      ]
+    },
+    {
+      feature: 'conceptual_exploration',
+      requiredScore: 0.6,
+      conflictsWith: ['crisis_detection'],
+      overriddenBy: ['crisis_detection', 'clarification_protocol'],
+      gracefulAbandonment: true,
+      triggers: [
+        {
+          name: 'conceptual_density',
+          weight: 0.7,
+          threshold: 0.5,
+          conflictPriority: 5,
+          debugInfo: 'Complex conceptual content detected'
+        },
+        {
+          name: 'philosophical_inquiry',
+          weight: 0.6,
+          threshold: 0.4,
+          conflictPriority: 5,
+          debugInfo: 'Philosophical or abstract exploration'
+        }
+      ]
+    },
+    {
+      feature: 'contemplative_space',
+      requiredScore: 0.4,
+      conflictsWith: ['crisis_detection', 'clarification_protocol'],
+      overriddenBy: ['crisis_detection', 'clarification_protocol', 'looping_protocol'],
+      gracefulAbandonment: true,
+      triggers: [
+        {
+          name: 'contemplative_readiness',
+          weight: 0.8,
+          threshold: 0.3,
+          conflictPriority: 3,
+          debugInfo: 'User ready for contemplative engagement'
+        },
+        {
+          name: 'silence_comfort',
+          weight: 0.6,
+          threshold: 0.2,
+          conflictPriority: 3,
+          debugInfo: 'User comfortable with silence and space'
+        }
+      ]
+    },
+    {
+      feature: 'looping_protocol',
+      requiredScore: 0.8,
       conflictsWith: [],
-      overriddenBy: [],
+      overriddenBy: ['crisis_detection'],
       gracefulAbandonment: false,
       triggers: [
         {
-          name: 'universal_resonance',
-          weight: 1.0,
-          threshold: 0.0,
-          conflictPriority: 1,
-          debugInfo: 'Universal energy matching always active'
+          name: 'repetitive_patterns',
+          weight: 0.9,
+          threshold: 0.7,
+          conflictPriority: 9,
+          debugInfo: 'Destructive repetitive patterns detected'
+        },
+        {
+          name: 'stuck_indicators',
+          weight: 0.8,
+          threshold: 0.6,
+          conflictPriority: 8,
+          debugInfo: 'User appears stuck in unhelpful loops'
         }
       ]
     }
@@ -208,694 +199,406 @@ export class TechnicalActivationEngine {
 
     // Contemplative Triggers
     const contemplativeScore = this.analyzeContemplativeTriggers(input, userProfile);
-    results.set('explicit_pause_request', contemplativeScore);
+    results.set('contemplative_readiness', contemplativeScore);
+
+    // Looping Detection
+    const loopingScore = this.analyzeLoopingTriggers(input, conversationHistory);
+    results.set('repetitive_patterns', loopingScore);
 
     return results;
   }
 
-  private analyzeCrisisTriggers(input: string): {
-    score: number;
-    triggers: string[];
-    debugInfo: string[];
-  } {
-    const crisisKeywords = [
-      { phrase: 'want to die', weight: 1.0 },
-      { phrase: 'kill myself', weight: 1.0 },
-      { phrase: 'end it all', weight: 0.9 },
-      { phrase: 'suicide', weight: 0.9 },
-      { phrase: 'hurt myself', weight: 0.8 },
-      { phrase: 'can\'t go on', weight: 0.7 },
-      { phrase: 'no point living', weight: 0.8 }
-    ];
+  // === SPECIFIC TRIGGER ANALYZERS ===
+  private analyzeCrisisTriggers(input: string): { score: number; triggers: string[]; debugInfo: string[] } {
+    const crisisKeywords = ['suicide', 'kill myself', 'end it all', 'can\'t go on', 'emergency', 'crisis'];
+    const emotionalEmergencyWords = ['overwhelmed', 'drowning', 'can\'t breathe', 'falling apart'];
 
-    const lowerInput = input.toLowerCase();
-    const matches = crisisKeywords.filter(k => lowerInput.includes(k.phrase));
-    const maxWeight = matches.length > 0 ? Math.max(...matches.map(m => m.weight)) : 0;
-
-    return {
-      score: maxWeight,
-      triggers: matches.map(m => m.phrase),
-      debugInfo: matches.length > 0 ?
-        [`Crisis language detected: ${matches.map(m => m.phrase).join(', ')}`] :
-        ['No crisis indicators found']
-    };
-  }
-
-  private analyzeClarificationTriggers(input: string, history: any[]): {
-    score: number;
-    triggers: string[];
-    debugInfo: string[];
-  } {
-    const lowerInput = input.toLowerCase();
-    const debugInfo: string[] = [];
     let score = 0;
     const triggers: string[] = [];
+    const debugInfo: string[] = [];
 
-    // Explicit clarification requests
-    const clarificationPhrases = [
-      'what do you mean',
-      'can you clarify',
-      'i don\'t understand',
-      'confused about',
-      'not sure what',
-      'help me understand'
-    ];
-
-    const explicitMatch = clarificationPhrases.find(phrase => lowerInput.includes(phrase));
-    if (explicitMatch) {
-      score += 0.8;
-      triggers.push('explicit_request');
-      debugInfo.push(`Explicit clarification: "${explicitMatch}"`);
+    for (const keyword of crisisKeywords) {
+      if (input.toLowerCase().includes(keyword)) {
+        score += 0.3;
+        triggers.push(keyword);
+        debugInfo.push(`Crisis keyword detected: ${keyword}`);
+      }
     }
 
-    // Correction patterns
-    const correctionPatterns = ['no', 'actually', 'more like', 'not exactly'];
-    const correctionMatch = correctionPatterns.find(pattern => lowerInput.startsWith(pattern));
-    if (correctionMatch) {
-      score += 0.7;
-      triggers.push('correction_pattern');
-      debugInfo.push(`Correction detected: starts with "${correctionMatch}"`);
-    }
-
-    // Ambiguity markers
-    const ambiguityMarkers = ['maybe', 'kind of', 'sort of', 'not sure', 'i think'];
-    const ambiguityCount = ambiguityMarkers.filter(marker => lowerInput.includes(marker)).length;
-    if (ambiguityCount >= 2) {
-      score += 0.6;
-      triggers.push('high_ambiguity');
-      debugInfo.push(`High ambiguity: ${ambiguityCount} markers found`);
-    }
-
-    // Recent misunderstanding pattern
-    if (history.length > 2) {
-      const recentExchanges = history.slice(-4);
-      const clarificationInRecent = recentExchanges.filter(exchange =>
-        clarificationPhrases.some(phrase => exchange.content?.toLowerCase().includes(phrase))
-      ).length;
-
-      if (clarificationInRecent >= 2) {
-        score += 0.5;
-        triggers.push('clarification_pattern');
-        debugInfo.push(`Recent clarification pattern: ${clarificationInRecent} instances`);
+    for (const word of emotionalEmergencyWords) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.2;
+        triggers.push(word);
+        debugInfo.push(`Emotional emergency indicator: ${word}`);
       }
     }
 
     return {
-      score: Math.min(1.0, score),
+      score: Math.min(score, 1.0),
       triggers,
-      debugInfo: debugInfo.length > 0 ? debugInfo : ['No clarification triggers found']
+      debugInfo
     };
   }
 
-  private analyzeEmotionalTriggers(input: string): {
-    score: number;
-    triggers: string[];
-    debugInfo: string[];
-  } {
-    const emotionalMarkers = {
-      high_intensity: ['overwhelmed', 'devastated', 'ecstatic', 'furious', 'terrified'],
-      processing_words: ['feel', 'feeling', 'emotional', 'heart', 'deeply'],
-      vulnerability: ['scared', 'hurt', 'vulnerable', 'raw', 'tender']
-    };
+  private analyzeClarificationTriggers(input: string, history: any[]): { score: number; triggers: string[]; debugInfo: string[] } {
+    const clarificationRequests = ['what do you mean', 'i don\'t understand', 'can you explain', 'confused'];
+    const questionMarkers = ['?', 'how', 'why', 'what'];
 
-    const lowerInput = input.toLowerCase();
     let score = 0;
     const triggers: string[] = [];
     const debugInfo: string[] = [];
 
-    // High intensity emotions
-    const intensityMatches = emotionalMarkers.high_intensity.filter(word => lowerInput.includes(word));
-    if (intensityMatches.length > 0) {
-      score += 0.7;
-      triggers.push('high_intensity');
-      debugInfo.push(`High intensity emotions: ${intensityMatches.join(', ')}`);
+    for (const request of clarificationRequests) {
+      if (input.toLowerCase().includes(request)) {
+        score += 0.4;
+        triggers.push(request);
+        debugInfo.push(`Explicit clarification request: ${request}`);
+      }
     }
 
-    // Processing language
-    const processingMatches = emotionalMarkers.processing_words.filter(word => lowerInput.includes(word));
-    if (processingMatches.length >= 2) {
-      score += 0.5;
-      triggers.push('emotional_processing');
-      debugInfo.push(`Emotional processing language: ${processingMatches.length} instances`);
-    }
-
-    // Vulnerability indicators
-    const vulnerabilityMatches = emotionalMarkers.vulnerability.filter(word => lowerInput.includes(word));
-    if (vulnerabilityMatches.length > 0) {
-      score += 0.6;
-      triggers.push('vulnerability');
-      debugInfo.push(`Vulnerability markers: ${vulnerabilityMatches.join(', ')}`);
-    }
-
-    return {
-      score: Math.min(1.0, score),
-      triggers,
-      debugInfo: debugInfo.length > 0 ? debugInfo : ['No emotional processing triggers found']
-    };
-  }
-
-  private analyzeConceptualTriggers(input: string): {
-    score: number;
-    triggers: string[];
-    debugInfo: string[];
-  } {
-    const conceptualMarkers = {
-      philosophical: ['meaning', 'purpose', 'truth', 'reality', 'consciousness', 'existence'],
-      complexity: ['paradox', 'contradiction', 'nuanced', 'complex', 'multifaceted'],
-      depth: ['deeper', 'profound', 'underlying', 'fundamental', 'essential']
-    };
-
-    const lowerInput = input.toLowerCase();
-    const wordCount = input.split(' ').length;
-    let score = 0;
-    const triggers: string[] = [];
-    const debugInfo: string[] = [];
-
-    // Philosophical concepts
-    const philMatches = conceptualMarkers.philosophical.filter(word => lowerInput.includes(word));
-    if (philMatches.length > 0) {
-      score += Math.min(0.6, philMatches.length * 0.2);
-      triggers.push('philosophical');
-      debugInfo.push(`Philosophical concepts: ${philMatches.join(', ')}`);
-    }
-
-    // Complexity indicators
-    const complexityMatches = conceptualMarkers.complexity.filter(word => lowerInput.includes(word));
-    if (complexityMatches.length > 0) {
-      score += Math.min(0.4, complexityMatches.length * 0.2);
-      triggers.push('complexity');
-      debugInfo.push(`Complexity markers: ${complexityMatches.join(', ')}`);
-    }
-
-    // Depth requests
-    const depthMatches = conceptualMarkers.depth.filter(word => lowerInput.includes(word));
-    if (depthMatches.length > 0) {
-      score += Math.min(0.5, depthMatches.length * 0.25);
-      triggers.push('depth_request');
-      debugInfo.push(`Depth indicators: ${depthMatches.join(', ')}`);
-    }
-
-    // Length-based complexity
-    if (wordCount > 40) {
-      score += 0.2;
-      triggers.push('length_complexity');
-      debugInfo.push(`Length complexity: ${wordCount} words`);
-    }
-
-    return {
-      score: Math.min(1.0, score),
-      triggers,
-      debugInfo: debugInfo.length > 0 ? debugInfo : ['No conceptual triggers found']
-    };
-  }
-
-  private analyzeContemplativeTriggers(input: string, userProfile: any): {
-    score: number;
-    triggers: string[];
-    debugInfo: string[];
-  } {
-    const contemplativeMarkers = [
-      'let me think',
-      'need time to',
-      'want to reflect',
-      'sit with this',
-      'take this in',
-      'pause for a moment',
-      'process this'
-    ];
-
-    const lowerInput = input.toLowerCase();
-    let score = 0;
-    const triggers: string[] = [];
-    const debugInfo: string[] = [];
-
-    // Explicit pause requests
-    const explicitMatch = contemplativeMarkers.find(marker => lowerInput.includes(marker));
-    if (explicitMatch) {
-      score += 0.8;
-      triggers.push('explicit_pause');
-      debugInfo.push(`Explicit pause request: "${explicitMatch}"`);
-    }
-
-    // User profile contemplative tendency
-    if (userProfile?.conversationStyle === 'contemplative') {
+    const questionCount = (input.match(/\?/g) || []).length;
+    if (questionCount > 2) {
       score += 0.3;
-      triggers.push('profile_style');
-      debugInfo.push('User profile indicates contemplative style');
-    }
-
-    // Slow typing/processing indicators
-    const processingIndicators = ['hmm', '...', 'well', 'you know'];
-    const processingMatches = processingIndicators.filter(ind => lowerInput.includes(ind));
-    if (processingMatches.length >= 2) {
-      score += 0.4;
-      triggers.push('processing_indicators');
-      debugInfo.push(`Processing indicators: ${processingMatches.join(', ')}`);
+      triggers.push('multiple_questions');
+      debugInfo.push(`Multiple questions detected: ${questionCount}`);
     }
 
     return {
-      score: Math.min(1.0, score),
+      score: Math.min(score, 1.0),
       triggers,
-      debugInfo: debugInfo.length > 0 ? debugInfo : ['No contemplative triggers found']
+      debugInfo
     };
   }
 
-  // === CONFLICT RESOLUTION ENGINE ===
-  resolveFeatureConflicts(
-    candidates: Map<string, { score: number; confidence: number }>,
-    userId: string
-  ): {
-    activated: string[];
-    conflictsResolved: Array<{ winner: string; loser: string; reason: string }>;
-    debugLog: string[];
-  } {
+  private analyzeEmotionalTriggers(input: string): { score: number; triggers: string[]; debugInfo: string[] } {
+    const emotionalWords = ['feel', 'feeling', 'emotions', 'hurt', 'pain', 'sad', 'angry', 'afraid'];
+    const vulnerabilityWords = ['scared', 'vulnerable', 'exposed', 'raw', 'sensitive'];
 
-    const debugLog: string[] = [];
-    const conflictsResolved: Array<{ winner: string; loser: string; reason: string }> = [];
-    const activatedFeatures: string[] = [];
+    let score = 0;
+    const triggers: string[] = [];
+    const debugInfo: string[] = [];
 
-    // Sort features by priority and confidence
-    const sortedCandidates = Array.from(candidates.entries())
-      .filter(([_, data]) => data.confidence > 0.6)
-      .sort((a, b) => {
-        const ruleA = this.ACTIVATION_RULES.find(r => r.feature === a[0]);
-        const ruleB = this.ACTIVATION_RULES.find(r => r.feature === b[0]);
+    for (const word of emotionalWords) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.15;
+        triggers.push(word);
+      }
+    }
 
-        if (!ruleA || !ruleB) return 0;
+    for (const word of vulnerabilityWords) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.25;
+        triggers.push(word);
+        debugInfo.push(`Vulnerability expression: ${word}`);
+      }
+    }
 
-        const priorityA = Math.max(...ruleA.triggers.map(t => t.conflictPriority));
-        const priorityB = Math.max(...ruleB.triggers.map(t => t.conflictPriority));
+    return {
+      score: Math.min(score, 1.0),
+      triggers,
+      debugInfo
+    };
+  }
 
-        return priorityB - priorityA; // Higher priority first
-      });
+  private analyzeConceptualTriggers(input: string): { score: number; triggers: string[]; debugInfo: string[] } {
+    const conceptualWords = ['philosophy', 'meaning', 'purpose', 'existence', 'consciousness', 'reality'];
+    const complexityIndicators = ['complex', 'nuanced', 'layers', 'depth', 'interconnected'];
 
-    debugLog.push(`Sorted candidates by priority: ${sortedCandidates.map(([f, d]) => `${f}(${Math.round(d.confidence * 100)}%)`).join(', ')}`);
+    let score = 0;
+    const triggers: string[] = [];
+    const debugInfo: string[] = [];
 
-    // Process features in priority order
-    for (const [feature, data] of sortedCandidates) {
+    for (const word of conceptualWords) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.2;
+        triggers.push(word);
+        debugInfo.push(`Conceptual content: ${word}`);
+      }
+    }
+
+    const sentenceLength = input.split('.').filter(s => s.trim().length > 50).length;
+    if (sentenceLength > 2) {
+      score += 0.3;
+      triggers.push('complex_sentences');
+      debugInfo.push('Complex sentence structure detected');
+    }
+
+    return {
+      score: Math.min(score, 1.0),
+      triggers,
+      debugInfo
+    };
+  }
+
+  private analyzeContemplativeTriggers(input: string, userProfile: any): { score: number; triggers: string[]; debugInfo: string[] } {
+    const contemplativeWords = ['reflect', 'contemplate', 'consider', 'ponder', 'meditate'];
+    const spaceWords = ['space', 'silence', 'pause', 'breathe', 'slow'];
+
+    let score = 0;
+    const triggers: string[] = [];
+    const debugInfo: string[] = [];
+
+    for (const word of contemplativeWords) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.2;
+        triggers.push(word);
+      }
+    }
+
+    for (const word of spaceWords) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.15;
+        triggers.push(word);
+      }
+    }
+
+    if (userProfile?.depthPreference === 'deep') {
+      score += 0.3;
+      debugInfo.push('User profile indicates deep engagement preference');
+    }
+
+    return {
+      score: Math.min(score, 1.0),
+      triggers,
+      debugInfo
+    };
+  }
+
+  private analyzeLoopingTriggers(input: string, history: any[]): { score: number; triggers: string[]; debugInfo: string[] } {
+    const loopingIndicators = ['again', 'repeat', 'same', 'still', 'always', 'never'];
+    const stuckWords = ['stuck', 'trapped', 'can\'t move', 'going nowhere'];
+
+    let score = 0;
+    const triggers: string[] = [];
+    const debugInfo: string[] = [];
+
+    for (const word of loopingIndicators) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.1;
+        triggers.push(word);
+      }
+    }
+
+    for (const word of stuckWords) {
+      if (input.toLowerCase().includes(word)) {
+        score += 0.3;
+        triggers.push(word);
+        debugInfo.push(`Stuck indicator: ${word}`);
+      }
+    }
+
+    // Check for repetitive patterns in history
+    if (history.length > 3) {
+      const recentInputs = history.slice(-3).map((h: any) => h.input?.toLowerCase() || '');
+      const similarity = this.calculateSimilarity(recentInputs);
+      if (similarity > 0.7) {
+        score += 0.5;
+        triggers.push('repetitive_content');
+        debugInfo.push('Repetitive content pattern in recent history');
+      }
+    }
+
+    return {
+      score: Math.min(score, 1.0),
+      triggers,
+      debugInfo
+    };
+  }
+
+  private calculateSimilarity(inputs: string[]): number {
+    if (inputs.length < 2) return 0;
+
+    let totalSimilarity = 0;
+    let comparisons = 0;
+
+    for (let i = 0; i < inputs.length - 1; i++) {
+      for (let j = i + 1; j < inputs.length; j++) {
+        const similarity = this.stringSimilarity(inputs[i], inputs[j]);
+        totalSimilarity += similarity;
+        comparisons++;
+      }
+    }
+
+    return comparisons > 0 ? totalSimilarity / comparisons : 0;
+  }
+
+  private stringSimilarity(str1: string, str2: string): number {
+    const words1 = str1.split(' ');
+    const words2 = str2.split(' ');
+    const commonWords = words1.filter(word => words2.includes(word));
+    return commonWords.length / Math.max(words1.length, words2.length);
+  }
+
+  // === CONFLICT RESOLUTION ===
+  resolveFeatureConflicts(candidateFeatures: Map<string, number>): string[] {
+    const conflicts = new Map<string, string[]>();
+    const priorities = new Map<string, number>();
+
+    // Build conflict map and priorities
+    for (const rule of this.ACTIVATION_RULES) {
+      conflicts.set(rule.feature, rule.conflictsWith);
+      priorities.set(rule.feature, this.getFeaturePriority(rule.feature));
+    }
+
+    const activeFeatures: string[] = [];
+    const sortedFeatures = Array.from(candidateFeatures.entries())
+      .sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
+
+    for (const [feature, score] of sortedFeatures) {
       const rule = this.ACTIVATION_RULES.find(r => r.feature === feature);
-      if (!rule) continue;
+      if (!rule || score < rule.requiredScore) continue;
 
-      // Check if this feature conflicts with already activated features
-      const conflicts = rule.conflictsWith.filter(f => activatedFeatures.includes(f));
-      if (conflicts.length > 0) {
-        conflictsResolved.push({
-          winner: conflicts[0], // First conflict wins (higher priority)
-          loser: feature,
-          reason: `${feature} conflicts with higher priority ${conflicts[0]}`
+      // Check if this feature conflicts with already active features
+      const hasConflict = activeFeatures.some(activeFeature => {
+        return rule.conflictsWith.includes(activeFeature) ||
+               conflicts.get(activeFeature)?.includes(feature);
+      });
+
+      if (!hasConflict) {
+        activeFeatures.push(feature);
+      } else {
+        // Handle conflict based on priority
+        const conflictingFeatures = activeFeatures.filter(activeFeature => {
+          return rule.conflictsWith.includes(activeFeature) ||
+                 conflicts.get(activeFeature)?.includes(feature);
         });
-        debugLog.push(`❌ ${feature} blocked by conflict with ${conflicts[0]}`);
-        continue;
-      }
 
-      // Check if this feature is overridden by activated features
-      const overrides = rule.overriddenBy.filter(f => activatedFeatures.includes(f));
-      if (overrides.length > 0) {
-        conflictsResolved.push({
-          winner: overrides[0],
-          loser: feature,
-          reason: `${feature} overridden by ${overrides[0]}`
+        const currentPriority = priorities.get(feature) || 0;
+        const shouldReplace = conflictingFeatures.every(conflictingFeature => {
+          const conflictingPriority = priorities.get(conflictingFeature) || 0;
+          return currentPriority > conflictingPriority;
         });
-        debugLog.push(`❌ ${feature} overridden by ${overrides[0]}`);
-        continue;
-      }
 
-      // Feature can be activated
-      activatedFeatures.push(feature);
-      debugLog.push(`✅ ${feature} activated (confidence: ${Math.round(data.confidence * 100)}%)`);
-    }
-
-    return {
-      activated: activatedFeatures,
-      conflictsResolved,
-      debugLog
-    };
-  }
-
-  // === MID-CONVERSATION TRANSITION HANDLING ===
-  handleMidConversationTransition(
-    currentlyActive: string[],
-    newlyTriggered: string[],
-    conversationState: any
-  ): {
-    transitionPlan: 'smooth' | 'interrupt' | 'queue' | 'abandon';
-    activeFeatures: string[];
-    transitionMessage?: string;
-    abandonedFeatures: string[];
-    reasoning: string;
-  } {
-
-    const abandoned: string[] = [];
-    let finalActive = [...currentlyActive];
-
-    // Crisis detection always interrupts everything
-    if (newlyTriggered.includes('crisis_detection')) {
-      abandoned.push(...currentlyActive.filter(f => f !== 'crisis_detection'));
-      return {
-        transitionPlan: 'interrupt',
-        activeFeatures: ['crisis_detection'],
-        abandonedFeatures: abandoned,
-        reasoning: 'Crisis detected - immediate interruption of all other features'
-      };
-    }
-
-    // High urgency interrupts contemplative features
-    if (newlyTriggered.includes('high_urgency')) {
-      const contemplativeFeatures = currentlyActive.filter(f =>
-        ['contemplative_space', 'looping_protocol'].includes(f));
-
-      if (contemplativeFeatures.length > 0) {
-        abandoned.push(...contemplativeFeatures);
-        finalActive = finalActive.filter(f => !contemplativeFeatures.includes(f));
-        finalActive.push('high_urgency');
-
-        return {
-          transitionPlan: 'interrupt',
-          activeFeatures: finalActive,
-          transitionMessage: "I sense urgency in what you're sharing...",
-          abandonedFeatures: abandoned,
-          reasoning: 'Urgency detected - abandoning contemplative features gracefully'
-        };
-      }
-    }
-
-    // Smooth transitions for compatible features
-    const compatibleNewFeatures = newlyTriggered.filter(f =>
-      !this.ACTIVATION_RULES.find(r => r.feature === f)?.conflictsWith
-        .some(conflict => currentlyActive.includes(conflict))
-    );
-
-    if (compatibleNewFeatures.length > 0) {
-      finalActive.push(...compatibleNewFeatures);
-      return {
-        transitionPlan: 'smooth',
-        activeFeatures: finalActive,
-        abandonedFeatures: [],
-        reasoning: 'Compatible features added smoothly to existing set'
-      };
-    }
-
-    // Queue incompatible features for next exchange
-    return {
-      transitionPlan: 'queue',
-      activeFeatures: currentlyActive,
-      abandonedFeatures: [],
-      reasoning: 'Incompatible features queued for next conversation turn'
-    };
-  }
-
-  // === USER CONTROL OPTIONS ===
-  processUserControl(
-    userPreferences: {
-      explicitTier?: 'gentle' | 'deep' | 'mystical';
-      featureOverrides?: { feature: string; enabled: boolean }[];
-      consistencyMode?: 'adaptive' | 'consistent';
-    },
-    systemRecommendations: string[]
-  ): {
-    finalFeatures: string[];
-    overrideReasons: string[];
-    userControlActive: boolean;
-  } {
-
-    let features = [...systemRecommendations];
-    const overrideReasons: string[] = [];
-
-    // Explicit tier selection
-    if (userPreferences.explicitTier) {
-      const tierFeatures = {
-        gentle: ['elemental_attunement'],
-        deep: ['elemental_attunement', 'contemplative_space', 'consciousness_profiling'],
-        mystical: ['elemental_attunement', 'contemplative_space', 'consciousness_profiling', 'looping_protocol', 'morphic_resonance']
-      };
-
-      features = tierFeatures[userPreferences.explicitTier];
-      overrideReasons.push(`User selected ${userPreferences.explicitTier} tier explicitly`);
-    }
-
-    // Specific feature overrides
-    if (userPreferences.featureOverrides) {
-      userPreferences.featureOverrides.forEach(({ feature, enabled }) => {
-        if (enabled && !features.includes(feature)) {
-          features.push(feature);
-          overrideReasons.push(`User explicitly enabled ${feature}`);
-        } else if (!enabled && features.includes(feature)) {
-          features = features.filter(f => f !== feature);
-          overrideReasons.push(`User explicitly disabled ${feature}`);
+        if (shouldReplace) {
+          // Remove conflicting features and add this one
+          conflictingFeatures.forEach(conflictingFeature => {
+            const index = activeFeatures.indexOf(conflictingFeature);
+            if (index > -1) activeFeatures.splice(index, 1);
+          });
+          activeFeatures.push(feature);
         }
+      }
+    }
+
+    return activeFeatures;
+  }
+
+  private getFeaturePriority(feature: string): number {
+    const rule = this.ACTIVATION_RULES.find(r => r.feature === feature);
+    if (!rule) return 0;
+
+    return Math.max(...rule.triggers.map(t => t.conflictPriority));
+  }
+
+  // === ACTIVATION DECISION ENGINE ===
+  makeActivationDecision(
+    input: string,
+    conversationHistory: any[],
+    userProfile: any
+  ): {
+    activeFeatures: string[];
+    confidence: number;
+    reasoning: string[];
+    debugInfo: { [key: string]: any };
+  } {
+
+    const triggerAnalysis = this.analyzeActivationTriggers(input, conversationHistory, userProfile);
+    const featureScores = new Map<string, number>();
+    const reasoning: string[] = [];
+    const debugInfo: { [key: string]: any } = {};
+
+    // Calculate feature scores based on trigger analysis
+    for (const rule of this.ACTIVATION_RULES) {
+      let totalScore = 0;
+      const contributingTriggers: string[] = [];
+
+      for (const trigger of rule.triggers) {
+        const triggerResult = triggerAnalysis.get(trigger.name);
+        if (triggerResult && triggerResult.score >= trigger.threshold) {
+          const weightedScore = triggerResult.score * trigger.weight;
+          totalScore += weightedScore;
+          contributingTriggers.push(trigger.name);
+          reasoning.push(`${rule.feature}: ${trigger.name} contributed ${weightedScore.toFixed(2)}`);
+        }
+      }
+
+      featureScores.set(rule.feature, totalScore);
+      debugInfo[rule.feature] = {
+        totalScore,
+        requiredScore: rule.requiredScore,
+        contributingTriggers,
+        meetsThreshold: totalScore >= rule.requiredScore
+      };
+    }
+
+    // Resolve conflicts and get final active features
+    const activeFeatures = this.resolveFeatureConflicts(featureScores);
+
+    // Calculate overall confidence
+    const confidence = activeFeatures.length > 0
+      ? activeFeatures.reduce((sum, feature) => sum + (featureScores.get(feature) || 0), 0) / activeFeatures.length
+      : 0;
+
+    // Record activation for learning
+    this.recordActivation(activeFeatures, confidence, input);
+
+    return {
+      activeFeatures,
+      confidence,
+      reasoning,
+      debugInfo
+    };
+  }
+
+  private recordActivation(features: string[], confidence: number, input: string): void {
+    const timestamp = Date.now();
+    const userId = 'current_user'; // In real implementation, get from context
+
+    if (!this.activationHistory.has(userId)) {
+      this.activationHistory.set(userId, []);
+    }
+
+    const history = this.activationHistory.get(userId)!;
+
+    for (const feature of features) {
+      history.push({
+        feature,
+        activatedAt: timestamp,
+        confidence,
+        triggers: [], // Would be populated with actual trigger names
+        outcome: 'completed' // Initial state
       });
     }
 
-    // Consistency mode
-    if (userPreferences.consistencyMode === 'consistent') {
-      // Force same features as last successful interaction
-      const lastSuccessful = this.getLastSuccessfulFeatures(userPreferences);
-      if (lastSuccessful.length > 0) {
-        features = lastSuccessful;
-        overrideReasons.push('Consistency mode: using last successful feature set');
-      }
+    // Keep only last 100 records per user
+    if (history.length > 100) {
+      history.splice(0, history.length - 100);
     }
-
-    return {
-      finalFeatures: features,
-      overrideReasons,
-      userControlActive: userPreferences.explicitTier !== undefined ||
-                        (userPreferences.featureOverrides?.length || 0) > 0 ||
-                        userPreferences.consistencyMode === 'consistent'
-    };
-  }
-
-  private getLastSuccessfulFeatures(userPreferences: any): string[] {
-    // Would retrieve from user history - simplified for now
-    return [];
   }
 
   // === DEBUGGING AND MONITORING ===
-  generateDebugReport(
-    userId: string,
-    input: string,
-    triggerAnalysis: Map<string, any>,
-    conflictResolution: any,
-    finalFeatures: string[]
-  ): {
-    summary: string;
-    detailedAnalysis: any;
-    recommendations: string[];
-    potentialIssues: string[];
+  getActivationReport(userId: string): {
+    recentActivations: FeatureActivationRecord[];
+    featureUsageStats: { [feature: string]: number };
+    averageConfidence: number;
+    conflictResolutions: number;
   } {
+    const history = this.activationHistory.get(userId) || [];
+    const recent = history.slice(-20);
 
-    const summary = `${finalFeatures.length} features activated: ${finalFeatures.join(', ')}`;
+    const featureUsage = new Map<string, number>();
+    let totalConfidence = 0;
 
-    const detailedAnalysis = {
-      input_analysis: {
-        word_count: input.split(' ').length,
-        trigger_scores: Object.fromEntries(triggerAnalysis),
-        complexity_assessment: this.analyzeConceptualTriggers(input)
-      },
-      conflict_resolution: conflictResolution,
-      activation_chain: finalFeatures.map(f => ({
-        feature: f,
-        rule: this.ACTIVATION_RULES.find(r => r.feature === f),
-        confidence: triggerAnalysis.get(f)?.confidence || 0
-      }))
-    };
-
-    const recommendations: string[] = [];
-    const potentialIssues: string[] = [];
-
-    // Analysis and recommendations
-    if (finalFeatures.length > 3) {
-      potentialIssues.push('High feature count may overwhelm user');
-      recommendations.push('Consider reducing feature count or improving transitions');
-    }
-
-    if (conflictResolution.conflictsResolved.length > 0) {
-      recommendations.push('Review conflict resolution - some features were blocked');
+    for (const record of recent) {
+      featureUsage.set(record.feature, (featureUsage.get(record.feature) || 0) + 1);
+      totalConfidence += record.confidence;
     }
 
     return {
-      summary,
-      detailedAnalysis,
-      recommendations,
-      potentialIssues
+      recentActivations: recent,
+      featureUsageStats: Object.fromEntries(featureUsage),
+      averageConfidence: recent.length > 0 ? totalConfidence / recent.length : 0,
+      conflictResolutions: 0 // Would track actual conflict resolution events
     };
-  }
-
-  // === TEST COMPATIBILITY METHODS ===
-
-  resolveFeatureConflicts(decisions: ActivationDecision[]): ActivationDecision[] {
-    const conflicts = this.detectConflicts(decisions);
-
-    if (conflicts.length === 0) return decisions;
-
-    return decisions.map(decision => {
-      const conflict = conflicts.find(c =>
-        c.conflictingFeatures.includes(decision.feature)
-      );
-
-      if (!conflict) return decision;
-
-      // Apply conflict resolution
-      const rule = this.ACTIVATION_RULES.find(r => r.feature === decision.feature);
-      if (!rule) return decision;
-
-      const shouldReduce = conflict.conflictingFeatures.some(feature => {
-        const conflictRule = this.ACTIVATION_RULES.find(r => r.feature === feature);
-        return conflictRule && conflictRule.conflictPriority > rule.conflictPriority;
-      });
-
-      if (shouldReduce) {
-        return {
-          ...decision,
-          confidence: Math.max(0.1, decision.confidence - 0.3),
-          rationale: `${decision.rationale} (adjusted: conflict with ${conflict.conflictingFeatures.join(', ')})`,
-          adjustmentReason: `conflict with ${conflict.conflictingFeatures.join(', ')}`
-        };
-      }
-
-      return decision;
-    });
-  }
-
-  handleMidConversationTransition(
-    previousFeatures: string[],
-    newFeatures: string[],
-    transitionType: string
-  ): {
-    transitionMessage?: string;
-    gracefulDelay: number;
-    preserveUserContext: boolean;
-  } {
-    if (transitionType === 'crisis_override') {
-      return {
-        transitionMessage: "I'm sensing this is really important to you right now...",
-        gracefulDelay: 0,
-        preserveUserContext: true
-      };
-    }
-
-    const complexityChange = this.calculateComplexityChange(previousFeatures, newFeatures);
-
-    if (complexityChange > 1.5) {
-      return {
-        transitionMessage: "Let me create some space for deeper exploration...",
-        gracefulDelay: 500,
-        preserveUserContext: true
-      };
-    }
-
-    return {
-      gracefulDelay: 200,
-      preserveUserContext: true
-    };
-  }
-
-  processManualOverride(
-    userId: string,
-    requestedTier: 'elegant' | 'complete' | 'production',
-    suggestedFeatures: string[]
-  ): {
-    finalFeatures: string[];
-    overrideReason: string;
-    respectUserChoice: boolean;
-  } {
-    const tierFeatures = {
-      elegant: ['elemental_attunement'],
-      complete: ['elemental_attunement', 'contemplative_space', 'looping_protocol'],
-      production: ['elemental_attunement', 'contemplative_space', 'looping_protocol', 'consciousness_profiling']
-    };
-
-    return {
-      finalFeatures: tierFeatures[requestedTier],
-      overrideReason: `user preference for ${requestedTier} tier`,
-      respectUserChoice: true
-    };
-  }
-
-  processWithTimeout<T>(
-    operation: () => T,
-    timeoutMs: number
-  ): {
-    decisions: T | null;
-    processingTime: number;
-    fallbackUsed: boolean;
-  } {
-    const startTime = Date.now();
-
-    try {
-      const result = operation();
-      return {
-        decisions: result,
-        processingTime: Date.now() - startTime,
-        fallbackUsed: false
-      };
-    } catch (error) {
-      return {
-        decisions: null,
-        processingTime: Date.now() - startTime,
-        fallbackUsed: true
-      };
-    }
-  }
-
-  handleActivationFailure(
-    userId: string,
-    input: string
-  ): {
-    features: string[];
-    fallbackReason: string;
-    gracefulDegradation: boolean;
-  } {
-    return {
-      features: ['elemental_attunement'],
-      fallbackReason: 'activation analysis failed - using safe default',
-      gracefulDegradation: true
-    };
-  }
-
-  getDebugInfo(userId: string): {
-    recentDecisions: any[];
-    conflictResolutions: any[];
-    userProfileUpdates: any[];
-    performanceMetrics: any;
-  } {
-    return {
-      recentDecisions: [],
-      conflictResolutions: [],
-      userProfileUpdates: [],
-      performanceMetrics: {
-        avgProcessingTime: 450,
-        conflictCount: 2,
-        fallbackCount: 0
-      }
-    };
-  }
-
-  private calculateComplexityChange(previous: string[], current: string[]): number {
-    const previousComplexity = this.calculateFeatureComplexity(previous);
-    const currentComplexity = this.calculateFeatureComplexity(current);
-    return currentComplexity - previousComplexity;
-  }
-
-  private calculateFeatureComplexity(features: string[]): number {
-    const complexityWeights = {
-      'elemental_attunement': 0.5,
-      'contemplative_space': 1.0,
-      'consciousness_profiling': 1.5,
-      'looping_protocol': 3.0,
-      'crisis_detection': 2.0,
-      'morphic_resonance': 2.5
-    };
-
-    return features.reduce((sum, feature) =>
-      sum + (complexityWeights[feature] || 0), 0);
   }
 }
-
-let _technicalActivationEngine: TechnicalActivationEngine | null = null;
-export const getTechnicalActivationEngine = (): TechnicalActivationEngine => {
-  if (!_technicalActivationEngine) {
-    _technicalActivationEngine = new TechnicalActivationEngine();
-  }
-  return _technicalActivationEngine;
-};

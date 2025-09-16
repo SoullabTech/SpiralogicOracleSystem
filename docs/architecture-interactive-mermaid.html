@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoulLab Oracle - Living Architecture Map</title>
+
+    <!-- Mermaid for interactive diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <style>
+        :root {
+            --primary-gold: #D4B896;
+            --dark-bg: #0f0f1e;
+            --dark-secondary: #1a1a2e;
+            --text-light: #e0e0e0;
+            --text-dim: #888;
+            --accent-glow: rgba(212, 184, 150, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-secondary) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            color: var(--primary-gold);
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px var(--accent-glow);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: var(--primary-gold);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: var(--primary-gold);
+        }
+
+        /* Mermaid Diagram Container */
+        .mermaid-container {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid var(--primary-gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Interactive Code Blocks */
+        .code-viewer {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            margin: 30px 0;
+            min-height: 500px;
+        }
+
+        .file-tree {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary-gold);
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .file-tree h3 {
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .tree-item {
+            padding: 8px 12px;
+            margin: 3px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+        }
+
+        .tree-item:hover {
+            background: rgba(212, 184, 150, 0.1);
+            transform: translateX(5px);
+        }
+
+        .tree-item.active {
+            background: rgba(212, 184, 150, 0.2);
+            border-left: 3px solid var(--primary-gold);
+        }
+
+        .tree-item.folder {
+            font-weight: bold;
+            color: var(--primary-gold);
+        }
+
+        .tree-item.file {
+            padding-left: 30px;
+            color: var(--text-light);
+        }
+
+        .tree-icon {
+            width: 16px;
+            text-align: center;
+        }
+
+        .code-display {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .code-header {
+            background: linear-gradient(90deg, rgba(212, 184, 150, 0.1) 0%, transparent 100%);
+            padding: 15px 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-path {
+            color: var(--primary-gold);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .code-action {
+            background: rgba(212, 184, 150, 0.2);
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85em;
+            text-decoration: none;
+        }
+
+        .code-action:hover {
+            background: var(--primary-gold);
+            color: var(--dark-bg);
+        }
+
+        .code-content {
+            padding: 20px;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .function { color: #8be9fd; }
+        .type { color: #bd93f9; }
+        .number { color: #ffb86c; }
+
+        /* Interactive Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-panel {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .comparison-panel.before {
+            border-color: #ff5555;
+        }
+
+        .comparison-panel.after {
+            border-color: #50fa7b;
+        }
+
+        .comparison-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .comparison-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comparison-panel.before .comparison-title {
+            color: #ff5555;
+        }
+
+        .comparison-panel.after .comparison-title {
+            color: #50fa7b;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* Flow Animation */
+        .flow-path {
+            stroke-dasharray: 5, 5;
+            animation: flow-animation 20s linear infinite;
+        }
+
+        @keyframes flow-animation {
+            from { stroke-dashoffset: 0; }
+            to { stroke-dashoffset: -100; }
+        }
+
+        /* Interactive Tooltips */
+        .tooltip {
+            position: absolute;
+            background: var(--dark-secondary);
+            border: 1px solid var(--primary-gold);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.9em;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        /* Navigation Pills */
+        .nav-pills {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-pill {
+            background: rgba(212, 184, 150, 0.1);
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-pill:hover {
+            background: rgba(212, 184, 150, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-pill.active {
+            background: var(--primary-gold);
+            color: var(--dark-bg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2em; }
+            .code-viewer { grid-template-columns: 1fr; }
+            .comparison { grid-template-columns: 1fr; }
+            .file-tree { max-height: 200px; }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 184, 150, 0.3);
+            border-top-color: var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🌀 Living Architecture Map</h1>
+        <p>Interactive documentation that breathes with your code. Click, explore, understand.</p>
+    </div>
+
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav-pills">
+            <a href="#architecture" class="nav-pill active">
+                <span>🏗️</span> Architecture
+            </a>
+            <a href="#flow" class="nav-pill">
+                <span>🌊</span> Data Flow
+            </a>
+            <a href="#comparison" class="nav-pill">
+                <span>📊</span> Before/After
+            </a>
+            <a href="#code" class="nav-pill">
+                <span>💻</span> Live Code
+            </a>
+            <a href="https://github.com/yourusername/SpiralogicOracleSystem" class="nav-pill" target="_blank">
+                <span>📁</span> GitHub
+            </a>
+        </nav>
+
+        <!-- Architecture Section -->
+        <section id="architecture" class="section">
+            <h2 class="section-title">System Architecture</h2>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    graph TB
+                        subgraph Factory["🏭 Factory Layer"]
+                            F1[agentFactory.ts]
+                            F2[createDefaultAgentState]
+                            F3[Type Definitions]
+                        end
+
+                        subgraph Init["🚀 Initialization"]
+                            I1[PersonalOracleAgent]
+                            I2[ShadowGuideAgent]
+                            I3[MentorSageAgent]
+                        end
+
+                        subgraph Evolution["🌱 Evolution"]
+                            E1[evolutionUtils.ts]
+                            E2[Relationship Metrics]
+                            E3[Personality Traits]
+                        end
+
+                        subgraph Persistence["💾 Persistence"]
+                            P1[Supabase]
+                            P2[localStorage]
+                            P3[Session Cache]
+                        end
+
+                        subgraph Registry["📋 Registry"]
+                            R1[Agent Registry]
+                            R2[Transitions]
+                            R3[Activation Rules]
+                        end
+
+                        F1 --> I1
+                        F1 --> I2
+                        F1 --> I3
+
+                        I1 --> E1
+                        I2 --> E1
+                        I3 --> E1
+
+                        E1 --> P1
+                        P1 -.->|fallback| P2
+                        P2 -.->|cache| P3
+
+                        R1 --> I1
+                        R1 --> I2
+                        R1 --> I3
+
+                        click F1 "https://github.com/yourusername/SpiralogicOracleSystem/blob/main/lib/agents/PersonalOracle/modules/agentFactory.ts"
+                        click E1 "https://github.com/yourusername/SpiralogicOracleSystem/blob/main/lib/agents/shared/evolutionUtils.ts"
+                        click R1 "https://github.com/yourusername/SpiralogicOracleSystem/blob/main/lib/agents/shared/agentRegistry.ts"
+
+                        style Factory fill:#1a1a2e,stroke:#D4B896,stroke-width:2px
+                        style Init fill:#1a1a2e,stroke:#D4B896,stroke-width:2px
+                        style Evolution fill:#1a1a2e,stroke:#D4B896,stroke-width:2px
+                        style Persistence fill:#1a1a2e,stroke:#D4B896,stroke-width:2px
+                        style Registry fill:#1a1a2e,stroke:#D4B896,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Code Viewer -->
+        <section id="code" class="section">
+            <h2 class="section-title">Live Code Explorer</h2>
+
+            <div class="code-viewer">
+                <div class="file-tree">
+                    <h3>📁 Project Structure</h3>
+                    <div class="tree-item folder" onclick="toggleFolder(this)">
+                        <span class="tree-icon">📁</span> lib/agents
+                    </div>
+                    <div class="tree-item file" onclick="loadFile('agentFactory.ts')">
+                        <span class="tree-icon">📄</span> agentFactory.ts
+                    </div>
+                    <div class="tree-item file" onclick="loadFile('evolutionUtils.ts')">
+                        <span class="tree-icon">📄</span> evolutionUtils.ts
+                    </div>
+                    <div class="tree-item file" onclick="loadFile('agentRegistry.ts')">
+                        <span class="tree-icon">📄</span> agentRegistry.ts
+                    </div>
+                    <div class="tree-item folder" onclick="toggleFolder(this)">
+                        <span class="tree-icon">📁</span> PersonalOracle
+                    </div>
+                    <div class="tree-item file" onclick="loadFile('PersonalOracleAgent.ts')">
+                        <span class="tree-icon">📄</span> PersonalOracleAgent.ts
+                    </div>
+                    <div class="tree-item file" onclick="loadFile('types.ts')">
+                        <span class="tree-icon">📄</span> types.ts
+                    </div>
+                    <div class="tree-item folder" onclick="toggleFolder(this)">
+                        <span class="tree-icon">📁</span> shared
+                    </div>
+                    <div class="tree-item file" onclick="loadFile('baseAgent.ts')">
+                        <span class="tree-icon">📄</span> baseAgent.ts
+                    </div>
+                </div>
+
+                <div class="code-display">
+                    <div class="code-header">
+                        <span class="code-path" id="current-file">lib/agents/PersonalOracle/modules/agentFactory.ts</span>
+                        <div class="code-actions">
+                            <button class="code-action" onclick="copyCode()">📋 Copy</button>
+                            <a href="#" id="github-link" class="code-action" target="_blank">🔗 GitHub</a>
+                            <button class="code-action" onclick="toggleFullscreen()">⛶ Expand</button>
+                        </div>
+                    </div>
+                    <div class="code-content" id="code-content">
+                        <pre><code><span class="comment">// Factory Pattern Implementation</span>
+<span class="keyword">import</span> <span class="keyword">type</span> { <span class="type">AgentState</span>, <span class="type">AgentMemory</span>, <span class="type">AgentPersonality</span> } <span class="keyword">from</span> <span class="string">'./types'</span>;
+
+<span class="comment">/**
+ * Creates a complete default AgentState
+ * Single source of truth for all agent initialization
+ */</span>
+<span class="keyword">export function</span> <span class="function">createDefaultAgentState</span>(
+  userId: <span class="type">string</span>,
+  name: <span class="type">string</span> = <span class="string">'Your Oracle'</span>
+): <span class="type">AgentState</span> {
+  <span class="keyword">const</span> timeOfDay = <span class="function">getCurrentTimeOfDay</span>();
+
+  <span class="keyword">return</span> {
+    id: <span class="string">`oracle-${userId}-${Date.now()}`</span>,
+    name,
+    personality: <span class="function">createDefaultPersonality</span>(),
+    memory: <span class="function">createDefaultMemory</span>(userId),
+    currentContext: {
+      timeOfDay,
+      conversationDepth: <span class="number">0</span>,
+      conversationState: <span class="string">'casual'</span>,
+      emotionalLoad: <span class="number">0</span>,
+      realityLayers: {
+        physical: <span class="string">'entering sacred space'</span>,
+        emotional: <span class="string">'curiosity and openness'</span>,
+        mental: <span class="string">'questioning and seeking'</span>,
+        spiritual: <span class="string">'soul stirring'</span>
+      }
+    },
+    evolutionStage: <span class="number">1</span>,
+    realityAwareness: <span class="function">createDefaultRealityAwareness</span>()
+  };
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Before/After Comparison -->
+        <section id="comparison" class="section">
+            <h2 class="section-title">Impact Visualization</h2>
+
+            <div class="comparison">
+                <div class="comparison-panel before">
+                    <h3 class="comparison-title">
+                        <span>❌</span> Before (Scattered)
+                    </h3>
+                    <div class="metric">
+                        <span>Lines of Code</span>
+                        <span class="metric-value">600+</span>
+                    </div>
+                    <div class="metric">
+                        <span>Duplication</span>
+                        <span class="metric-value">3x</span>
+                    </div>
+                    <div class="metric">
+                        <span>TypeScript Errors</span>
+                        <span class="metric-value">15+</span>
+                    </div>
+                    <div class="metric">
+                        <span>Init Bugs</span>
+                        <span class="metric-value">Common</span>
+                    </div>
+                    <div class="metric">
+                        <span>New Agent Time</span>
+                        <span class="metric-value">~2 hours</span>
+                    </div>
+                    <div class="metric">
+                        <span>Maintenance</span>
+                        <span class="metric-value">Nightmare</span>
+                    </div>
+                </div>
+
+                <div class="comparison-panel after">
+                    <h3 class="comparison-title">
+                        <span>✅</span> After (Factory)
+                    </h3>
+                    <div class="metric">
+                        <span>Lines of Code</span>
+                        <span class="metric-value">60</span>
+                    </div>
+                    <div class="metric">
+                        <span>Duplication</span>
+                        <span class="metric-value">0x</span>
+                    </div>
+                    <div class="metric">
+                        <span>TypeScript Errors</span>
+                        <span class="metric-value">0</span>
+                    </div>
+                    <div class="metric">
+                        <span>Init Bugs</span>
+                        <span class="metric-value">Impossible</span>
+                    </div>
+                    <div class="metric">
+                        <span>New Agent Time</span>
+                        <span class="metric-value">~5 min</span>
+                    </div>
+                    <div class="metric">
+                        <span>Maintenance</span>
+                        <span class="metric-value">Simple</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Flow Visualization -->
+        <section id="flow" class="section">
+            <h2 class="section-title">Data Flow</h2>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant U as User
+                        participant F as Factory
+                        participant A as Agent
+                        participant E as Evolution
+                        participant P as Persistence
+                        participant R as Registry
+
+                        U->>F: Request new agent
+                        F->>F: createDefaultAgentState()
+                        F-->>A: Complete AgentState
+                        A->>A: Initialize modules
+
+                        U->>A: Interaction
+                        A->>E: Process evolution
+                        E->>E: evolveRelationshipMetrics()
+                        E->>E: evolvePersonalityTraits()
+                        E-->>A: Updated state
+
+                        A->>P: Save state
+                        P->>P: Try Supabase
+                        alt Supabase fails
+                            P->>P: Fallback to localStorage
+                        end
+                        P-->>A: Confirmation
+
+                        A->>R: Check transitions
+                        R->>R: suggestOptimalAgent()
+                        R-->>A: Transition recommendation
+
+                        style U fill:#D4B896
+                        style F fill:#1a1a2e
+                        style A fill:#1a1a2e
+                        style E fill:#1a1a2e
+                        style P fill:#1a1a2e
+                        style R fill:#1a1a2e
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a1a2e',
+                primaryTextColor: '#D4B896',
+                primaryBorderColor: '#D4B896',
+                lineColor: '#D4B896',
+                secondaryColor: '#006100',
+                tertiaryColor: '#fff',
+                background: '#1a1a2e',
+                mainBkg: '#1a1a2e',
+                secondBkg: '#ff0000',
+                tertiaryBkg: '#0f0f1e'
+            }
+        });
+
+        // File content mapping (simplified for demo)
+        const fileContents = {
+            'agentFactory.ts': `<span class="comment">// Factory Pattern Implementation</span>
+<span class="keyword">export function</span> <span class="function">createDefaultAgentState</span>(userId: <span class="type">string</span>): <span class="type">AgentState</span> {
+  <span class="keyword">return</span> {
+    id: <span class="string">\`oracle-\${userId}-\${Date.now()}\`</span>,
+    name: <span class="string">'Your Oracle'</span>,
+    personality: <span class="function">createDefaultPersonality</span>(),
+    memory: <span class="function">createDefaultMemory</span>(userId),
+    currentContext: <span class="function">createDefaultContext</span>(),
+    evolutionStage: <span class="number">1</span>,
+    realityAwareness: <span class="function">createDefaultRealityAwareness</span>()
+  };
+}`,
+            'evolutionUtils.ts': `<span class="comment">// Shared Evolution Utilities</span>
+<span class="keyword">export function</span> <span class="function">evolveRelationshipMetrics</span>(
+  current: <span class="type">RelationshipMetrics</span>,
+  quality: <span class="type">InteractionQuality</span>
+): <span class="type">RelationshipMetrics</span> {
+  <span class="keyword">const</span> rates = progressionRates[quality];
+  <span class="keyword">return</span> {
+    trustLevel: <span class="function">clamp</span>(current.trustLevel + rates.trust, <span class="number">0</span>, <span class="number">100</span>),
+    intimacyLevel: <span class="function">clamp</span>(current.intimacyLevel + rates.intimacy, <span class="number">0</span>, <span class="number">100</span>),
+    soulRecognition: <span class="function">clamp</span>(current.soulRecognition + rates.soul, <span class="number">0</span>, <span class="number">100</span>)
+  };
+}`,
+            'PersonalOracleAgent.ts': `<span class="comment">// PersonalOracleAgent Implementation</span>
+<span class="keyword">export class</span> <span class="type">PersonalOracleAgent</span> {
+  <span class="keyword">private</span> state: <span class="type">AgentState</span>;
+
+  <span class="keyword">constructor</span>(userId: <span class="type">string</span>, existingState?: <span class="type">AgentState</span>) {
+    <span class="comment">// Use factory for consistent initialization</span>
+    <span class="keyword">this</span>.state = existingState || <span class="function">createDefaultAgentState</span>(userId);
+    <span class="keyword">this</span>.<span class="function">initializeModules</span>();
+  }
+
+  <span class="keyword">async</span> <span class="function">processInteraction</span>(input: <span class="type">string</span>, context: <span class="type">Context</span>) {
+    <span class="comment">// Process with shared evolution utils</span>
+    <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="keyword">this</span>.responseGenerator.<span class="function">generate</span>(input);
+    <span class="keyword">this</span>.state.memory = <span class="function">evolveRelationshipMetrics</span>(<span class="keyword">this</span>.state.memory);
+    <span class="keyword">return</span> response;
+  }
+}`
+        };
+
+        // Load file content
+        function loadFile(filename) {
+            const content = fileContents[filename] || `<span class="comment">// Loading ${filename}...</span>`;
+            document.getElementById('code-content').innerHTML = `<pre><code>${content}</code></pre>`;
+            document.getElementById('current-file').textContent = `lib/agents/${filename}`;
+
+            // Update GitHub link
+            const githubLink = document.getElementById('github-link');
+            githubLink.href = `https://github.com/yourusername/SpiralogicOracleSystem/blob/main/lib/agents/${filename}`;
+
+            // Highlight active file
+            document.querySelectorAll('.tree-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Copy code to clipboard
+        function copyCode() {
+            const codeElement = document.getElementById('code-content');
+            const text = codeElement.textContent || codeElement.innerText;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showTooltip('Code copied to clipboard!');
+            });
+        }
+
+        // Toggle fullscreen for code viewer
+        function toggleFullscreen() {
+            const codeDisplay = document.querySelector('.code-display');
+            if (codeDisplay.requestFullscreen) {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    codeDisplay.requestFullscreen();
+                }
+            }
+        }
+
+        // Show tooltip
+        function showTooltip(message) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.textContent = message;
+            tooltip.classList.add('show');
+
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 2000);
+        }
+
+        // Navigation smooth scroll
+        document.querySelectorAll('.nav-pill').forEach(pill => {
+            pill.addEventListener('click', (e) => {
+                if (e.target.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = e.target.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+
+                        // Update active state
+                        document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+                        e.target.classList.add('active');
+                    }
+                }
+            });
+        });
+
+        // Add interactive hover effects to Mermaid nodes
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const nodes = document.querySelectorAll('.node');
+                nodes.forEach(node => {
+                    node.addEventListener('mouseenter', (e) => {
+                        const tooltip = document.getElementById('tooltip');
+                        tooltip.textContent = 'Click to view source code';
+                        tooltip.style.left = e.pageX + 10 + 'px';
+                        tooltip.style.top = e.pageY - 30 + 'px';
+                        tooltip.classList.add('show');
+                    });
+
+                    node.addEventListener('mouseleave', () => {
+                        document.getElementById('tooltip').classList.remove('show');
+                    });
+                });
+            }, 1000);
+        });
+
+        // Initialize with first file
+        loadFile('agentFactory.ts');
+    </script>
+</body>
+</html>

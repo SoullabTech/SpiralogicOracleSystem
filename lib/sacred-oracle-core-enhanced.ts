@@ -227,10 +227,11 @@ export class SacredOracleCoreEnhanced {
     // 5. KNOWLEDGE INTEGRATION (Obsidian depth)
     try {
       // This would integrate with Obsidian knowledge base
-      // For now, we'll use contextual knowledge from conversation
-      const relevantKnowledge = this.contextManager.getRelevantKnowledge(input);
-      if (relevantKnowledge) {
-        synthesis.knowledgeDepth = relevantKnowledge;
+      // For now, we'll use conversation analytics for contextual knowledge
+      const analytics = this.contextManager.getAnalytics();
+      if (analytics && analytics.topThemes && analytics.topThemes.length > 0) {
+        const topTheme = analytics.topThemes[0];
+        synthesis.knowledgeDepth = `This connects to the theme of ${topTheme.name}.`;
       }
     } catch (e) {
       console.warn('Knowledge integration failed:', e);

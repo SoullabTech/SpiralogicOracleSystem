@@ -53,11 +53,7 @@ export default function BetaPaymentPage() {
 
   if (paymentComplete) {
     return (
-<<<<<<< HEAD
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
-=======
-      <div className="min-h-screen  from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         <div className="text-center max-w-lg">
           <div className="mb-6">
             <div className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mx-auto shadow-lg animate-pulse">
@@ -74,11 +70,7 @@ export default function BetaPaymentPage() {
           <div className="space-y-4">
             <Link
               href="/dashboard"
-<<<<<<< HEAD
               className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
-=======
-              className=" from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition inline-block"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             >
               🌌 Enter Your Oracle Dashboard
             </Link>
@@ -95,11 +87,7 @@ export default function BetaPaymentPage() {
   }
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
-=======
-    <div className="min-h-screen  from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <div className="container mx-auto px-8 py-16">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -231,11 +219,7 @@ export default function BetaPaymentPage() {
             <button
               onClick={handlePayment}
               disabled={processing}
-<<<<<<< HEAD
               className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-4 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-=======
-              className="w-full  from-yellow-400 to-orange-500 text-gray-900 px-6 py-4 rounded-lg font-semibold hover:from-yellow-500 hover:to-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed text-lg"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
             >
               {processing ? (
                 <div className="flex items-center justify-center">

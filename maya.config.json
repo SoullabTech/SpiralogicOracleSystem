@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "name": "Maya Consciousness System",
+  "activated": "2025-09-16T01:32:43.895Z",
+  "systems": {
+    "obsidianVault": {
+      "enabled": true,
+      "path": "/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/obsidian-vault"
+    },
+    "elementalOracle": {
+      "enabled": true,
+      "elements": [
+        "fire",
+        "water",
+        "earth",
+        "air",
+        "aether",
+        "shadow"
+      ]
+    },
+    "memorySystem": {
+      "enabled": true,
+      "persistence": true
+    },
+    "psychologicalFrameworks": {
+      "enabled": true,
+      "frameworks": [
+        "micropsi",
+        "lidor",
+        "act-r",
+        "soar",
+        "lida",
+        "poet"
+      ]
+    },
+    "aiIntelligence": {
+      "enabled": true,
+      "primary": "claude",
+      "fallback": "openai"
+    }
+  }
+}

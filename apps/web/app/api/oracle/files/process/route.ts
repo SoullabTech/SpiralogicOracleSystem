@@ -6,12 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
-<<<<<<< HEAD
 import { parsePDF } from '@/lib/pdf-parse-wrapper';
-=======
-// @ts-ignore - pdf-parse doesn't have type definitions
-import * as pdf from 'pdf-parse';
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
 import { v4 as uuidv4 } from 'uuid';
 
 const supabase = createClient(
@@ -187,11 +182,7 @@ async function extractText(fileBuffer: Buffer, mimeType: string): Promise<string
       return JSON.stringify(jsonData, null, 2);
 
     case 'application/pdf':
-<<<<<<< HEAD
       const pdfData = await parsePDF(fileBuffer);
-=======
-      const pdfData = await pdf(fileBuffer);
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       return pdfData.text;
 
     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':

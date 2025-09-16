@@ -42,11 +42,7 @@ export default function SignInPage() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
-=======
-    <div className="min-h-screen  from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <div className="max-w-md w-full bg-white/10 rounded-xl border border-white/20 p-8 backdrop-blur-sm">
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
@@ -76,11 +72,7 @@ export default function SignInPage() {
           <button
             type="submit"
             disabled={loading || !email}
-<<<<<<< HEAD
             className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 font-semibold py-3 px-4 rounded-lg hover:from-yellow-500 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-=======
-            className="w-full  from-yellow-400 to-orange-500 text-gray-900 font-semibold py-3 px-4 rounded-lg hover:from-yellow-500 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           >
             {loading ? "Sending..." : "Send Magic Link"}
           </button>

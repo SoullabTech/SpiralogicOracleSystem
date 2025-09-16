@@ -237,11 +237,7 @@ const OracleCardTitle = React.forwardRef<
   React.HTMLAttributes<HTMLHeadingElement> & { mystical?: boolean }
 >(({ className = "", mystical = false, ...props }, ref) => {
   const titleClasses = mystical 
-<<<<<<< HEAD
     ? `text-xl font-semibold leading-none tracking-tight bg-gradient-to-r from-purple-400 to-orange-400 bg-clip-text text-transparent ${className}`
-=======
-    ? `text-xl font-semibold leading-none tracking-tight  from-purple-400 to-orange-400 bg-clip-text text-transparent ${className}`
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
     : `text-xl font-semibold leading-none tracking-tight text-white ${className}`;
   
   return (

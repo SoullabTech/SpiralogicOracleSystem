@@ -32,11 +32,7 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-<<<<<<< HEAD
             className={`bg-gradient-to-br from-${color}-500 to-${color === 'purple' ? 'orange' : 'purple'}-500 rounded-full flex items-center justify-center ${sizes[size]}`}
-=======
-            className={` from-${color}-500 to-${color === 'purple' ? 'orange' : 'purple'}-500 rounded-full flex items-center justify-center ${sizes[size]}`}
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           >
             <Crown className={`${size === 'sm' ? 'w-2 h-2' : size === 'md' ? 'w-3 h-3' : size === 'lg' ? 'w-4 h-4' : 'w-6 h-6'} text-white`} />
           </motion.div>

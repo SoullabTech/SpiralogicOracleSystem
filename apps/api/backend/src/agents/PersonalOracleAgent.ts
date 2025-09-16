@@ -144,6 +144,14 @@ export class PersonalOracleAgent {
   }
 
   /**
+   * Process method for backward compatibility with routes
+   * Maps simple input to full PersonalOracleQuery format
+   */
+  public async process({ userId, input }: { userId: string; input: string }): Promise<StandardAPIResponse<PersonalOracleResponse>> {
+    return this.consult({ userId, input });
+  }
+
+  /**
    * Main consultation method - processes user queries through elemental routing
    */
   public async consult(

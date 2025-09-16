@@ -80,11 +80,7 @@ export default function IChingAstroCard({
   };
 
   return (
-<<<<<<< HEAD
     <Card className="w-full bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 border-purple-200">
-=======
-    <Card className="w-full  from-purple-50 via-blue-50 to-indigo-50 border-purple-200">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -234,11 +230,7 @@ export default function IChingAstroCard({
         )}
 
         {/* Yearly Guidance */}
-<<<<<<< HEAD
         <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-100">
-=======
-        <div className=" from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-100">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           <h4 className="font-medium text-gray-900 mb-2 flex items-center">
             <Sparkles className="h-4 w-4 mr-2 text-purple-600" />
             Yearly Guidance

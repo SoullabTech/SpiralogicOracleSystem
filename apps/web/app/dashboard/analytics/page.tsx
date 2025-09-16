@@ -53,20 +53,12 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-<<<<<<< HEAD
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
-=======
-      <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-<<<<<<< HEAD
             className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
-=======
-            className="w-16 h-16  from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
           >
             <BarChart3 className="w-8 h-8 text-white" />
           </motion.div>
@@ -80,11 +72,7 @@ export default function AnalyticsPage() {
   const maxConversations = Math.max(...(analytics?.weeklyConversations || [1]));
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
-=======
-    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900">
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <motion.div 
@@ -201,11 +189,7 @@ export default function AnalyticsPage() {
                             initial={{ width: 0 }}
                             animate={{ width: `${width}%` }}
                             transition={{ delay: 0.3 + index * 0.1, duration: 0.8 }}
-<<<<<<< HEAD
                             className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
-=======
-                            className="h-full  from-purple-500 to-blue-500 rounded-full"
->>>>>>> f172a101063c5c79f1c63145b7c12589cf89ae26
                           />
                         </div>
                         <div className="w-8 text-sm text-white font-semibold">
