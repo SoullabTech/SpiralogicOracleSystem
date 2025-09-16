@@ -246,14 +246,21 @@ export class PersonalOracleAgent {
       };
     }
 
-    // Create voice profile from settings
+    // Create voice profile from settings (SesameVoiceService expects 'baseVoice' not 'baseVoiceId')
     const voiceProfile = {
       id: persona,
-      provider: voiceSettings.provider,
-      baseVoiceId: voiceSettings.voiceId,  // Nova for Maya, Onyx for Anthony
       name: voiceSettings.name,
-      speed: voiceSettings.speed || 1.0,  // Add speed with default
-      pitch: voiceSettings.pitch || 1.0   // Add pitch with default
+      baseVoice: voiceSettings.voiceId as any,  // Nova for Maya, Onyx for Anthony
+      parameters: {
+        temperature: 0.7,
+        speed: voiceSettings.speed || 1.0,
+        pitch: voiceSettings.pitch || 1.0,
+        consistency: 0.9,
+        emotionalDepth: 0.8,
+        resonance: 0.7,
+        clarity: 0.9,
+        breathiness: 0.2
+      }
     };
 
     // Pick mask based on dominant current
