@@ -53,7 +53,7 @@ export class PersonalOracleAgent {
     // Initialize MemoryEngine with memory interface (create default if not provided)
     this.memoryEngine = new MemoryEngine(userId, memoryInterface || new UnifiedMemorySystem());
 
-    // Initialize ResponseGenerator with required dependencies
+    // Initialize ResponseGenerator with required dependencies (but won't use it for primary responses)
     this.responseGenerator = new ResponseGenerator(this.elementalAnalyzer, this.memoryEngine);
 
     // Initialize Sesame Voice Service
@@ -205,26 +205,81 @@ export class PersonalOracleAgent {
     audioData?: Buffer;
     audioUrl?: string;
   }> {
-    // Update context
-    this.state.currentContext = {
-      ...this.state.currentContext,
-      userMood: context.currentMood,
-      lastPetalDrawn: context.currentPetal
-    };
+    // Update interaction count and basic context
+    this.state.memory.interactionCount++;
+    this.state.memory.lastInteraction = new Date();
 
-    // Analyze input for patterns using ElementalAnalyzer
-    const elementalAnalysis = this.elementalAnalyzer.analyzeUserPattern(input, context, this.state.memory);
+    // Add to conversation history for Claude context
+    this.state.memory.conversationHistory.push({
+      input,
+      response: '', // Will be filled after response generation
+      timestamp: new Date(),
+      mood: context.currentMood?.type,
+      energy: context.currentEnergy
+    });
 
-    // Generate response using ResponseGenerator
-    const response = await this.responseGenerator.generateResponse(input, context, this.state);
+    let response: string;
 
-    // Update relationship metrics
-    this.evolveRelationship();
+    try {
+      // PRIMARY: Use Claude AI for actual intelligence
+      const { getClaudeService } = await import('../services/ClaudeService');
+      const claudeService = getClaudeService();
+
+      // Build simple, effective context
+      const conversationHistory = this.state.memory.conversationHistory
+        .slice(-3) // Last 3 exchanges only
+        .map(entry => ({
+          role: 'user' as const,
+          content: entry.input
+        }));
+
+      response = await claudeService.generateChatResponse(input, {
+        element: context.currentMood?.type || 'receptive',
+        userState: {
+          interactionCount: this.state.memory.interactionCount,
+          currentPhase: this.state.memory.currentPhase,
+          trustLevel: this.state.memory.trustLevel
+        },
+        conversationHistory,
+        sessionContext: {
+          isFirstTime: this.state.memory.interactionCount === 1
+        }
+      });
+
+      console.log('[PersonalOracleAgent] Claude response generated successfully');
+
+    } catch (error) {
+      console.error('[PersonalOracleAgent] Claude failed, using simple fallback:', error);
+
+      // SIMPLE FALLBACK: Context-aware responses, not templates
+      if (this.state.memory.interactionCount === 1) {
+        response = "Hi! I'm Maya. I'm here to listen and explore things with you. What's on your mind today?";
+      } else if (input.toLowerCase().includes('feel') || input.toLowerCase().includes('feeling')) {
+        response = "I hear that there's something important you're feeling. Can you tell me more about what that's like for you?";
+      } else if (input.toLowerCase().includes('?')) {
+        response = "That's a really good question. What comes up for you when you sit with it?";
+      } else if (input.toLowerCase().includes('difficult') || input.toLowerCase().includes('hard')) {
+        response = "It sounds like you're going through something challenging. I'm here to explore it with you.";
+      } else {
+        response = `I'm tracking what you're sharing about ${input.split(' ').slice(0, 3).join(' ')}. What's most alive about this for you right now?`;
+      }
+    }
+
+    // Update conversation history with actual response
+    this.state.memory.conversationHistory[this.state.memory.conversationHistory.length - 1].response = response;
+
+    // Simple relationship evolution
+    this.state.memory.trustLevel = Math.min(100, this.state.memory.trustLevel + 1);
 
     // Save state
     await this.saveState();
 
-    return response;
+    return {
+      response,
+      suggestions: this.generateSimpleSuggestions(input),
+      ritual: this.suggestSimpleRitual(context),
+      reflection: this.generateSimpleReflection(input)
+    };
   }
 
   // Generate voice audio for response
@@ -830,11 +885,71 @@ export class PersonalOracleAgent {
     };
   }
 
-  
-  
-  
-  
-  
-  
-  
+  // Simple suggestion generator based on user input
+  private generateSimpleSuggestions(input: string): string[] {
+    const suggestions: string[] = [];
+
+    if (input.toLowerCase().includes('feel') || input.toLowerCase().includes('emotion')) {
+      suggestions.push("Take three deep breaths and notice what you feel in your body");
+    }
+
+    if (input.toLowerCase().includes('stuck') || input.toLowerCase().includes('confused')) {
+      suggestions.push("Try writing freely for 5 minutes without editing");
+    }
+
+    if (input.toLowerCase().includes('decision') || input.toLowerCase().includes('choose')) {
+      suggestions.push("What would you do if you knew you couldn't fail?");
+    }
+
+    // Always add one general suggestion
+    suggestions.push("What would it feel like to trust yourself completely here?");
+
+    return suggestions;
+  }
+
+  // Simple ritual suggestions
+  private suggestSimpleRitual(context: any): string | undefined {
+    if (context.currentMood?.type === 'dense' || context.currentEnergy === 'heavy') {
+      return "Grounding ritual: Place feet on earth and breathe deeply for 2 minutes";
+    }
+
+    if (context.currentMood?.type === 'radiant' || context.currentEnergy === 'excited') {
+      return "Celebration ritual: Dance to one favorite song";
+    }
+
+    // Default ritual based on time of day
+    const hour = new Date().getHours();
+    if (hour < 12) {
+      return "Morning intention: Set one word for today";
+    } else if (hour > 18) {
+      return "Evening reflection: Name one thing you appreciated about yourself today";
+    }
+
+    return undefined;
+  }
+
+  // Simple reflection questions
+  private generateSimpleReflection(input: string): string {
+    if (input.toLowerCase().includes('relationship')) {
+      return "How do you show up authentically in your relationships?";
+    }
+
+    if (input.toLowerCase().includes('work') || input.toLowerCase().includes('job')) {
+      return "What part of your work feels most aligned with who you are?";
+    }
+
+    if (input.toLowerCase().includes('future') || input.toLowerCase().includes('next')) {
+      return "What's one small step you could take toward what you want?";
+    }
+
+    // General reflections
+    const reflections = [
+      "What's trying to emerge through this experience?",
+      "If this challenge was a teacher, what would it want you to learn?",
+      "What would change if you trusted yourself completely?",
+      "How does your body wisdom respond to this situation?"
+    ];
+
+    return reflections[Math.floor(Math.random() * reflections.length)];
+  }
 }

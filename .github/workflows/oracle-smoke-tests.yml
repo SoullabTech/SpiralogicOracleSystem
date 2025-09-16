@@ -1,0 +1,102 @@
+name: Oracle Smoke Tests
+
+on:
+  push:
+    branches: [ main, staging, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      use_personal_oracle:
+        description: 'Use PersonalOracleAgent (AI)'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        npm install -g newman
+
+    - name: Set environment variables
+      run: |
+        if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+          echo "TEST_URL=${{ secrets.PRODUCTION_URL }}" >> $GITHUB_ENV
+        else
+          echo "TEST_URL=${{ secrets.STAGING_URL }}" >> $GITHUB_ENV
+        fi
+        echo "USE_PERSONAL_ORACLE=${{ github.event.inputs.use_personal_oracle || 'true' }}" >> $GITHUB_ENV
+        echo "CI=true" >> $GITHUB_ENV
+
+    - name: Run Oracle Smoke Tests
+      run: node scripts/newman-ci-tests.js
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.node-version }}
+        path: test-results/
+
+    - name: Parse Test Results
+      if: always()
+      uses: dorny/test-reporter@v1
+      with:
+        name: Oracle Test Report
+        path: 'test-results/oracle-smoke-tests.xml'
+        reporter: java-junit
+
+    - name: Comment PR with Results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const results = JSON.parse(fs.readFileSync('test-results/oracle-smoke-tests.json', 'utf8'));
+          const stats = results.run.stats;
+
+          const message = `## 🤖 Oracle Smoke Test Results
+
+          - **Total Tests:** ${stats.assertions.total}
+          - **Passed:** ${stats.assertions.total - stats.assertions.failed} ✅
+          - **Failed:** ${stats.assertions.failed} ${stats.assertions.failed > 0 ? '❌' : ''}
+          - **Success Rate:** ${((stats.assertions.total - stats.assertions.failed) / stats.assertions.total * 100).toFixed(1)}%
+
+          **PersonalOracle (AI):** ${process.env.USE_PERSONAL_ORACLE === 'false' ? 'DISABLED' : 'ENABLED'}
+
+          ${stats.assertions.failed === 0 ? '✅ **Ready for deployment**' : '⚠️ **Review failures before deploying**'}`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: message
+          });

@@ -1,0 +1,237 @@
+{
+  "info": {
+    "name": "SoulLab Mirror - Smoke Tests",
+    "description": "Critical path smoke tests for production deployment validation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Memory Retrieval Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Memories array exists\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('memories');",
+              "    pm.expect(jsonData.memories).to.be.an('array');",
+              "});",
+              "",
+              "pm.test(\"Response time < 3s\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/api/oracle/memories?userId=test-user-smoke",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "oracle", "memories"],
+          "query": [
+            {
+              "key": "userId",
+              "value": "test-user-smoke"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Claude API Integration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Claude response structure\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('response');",
+              "    pm.expect(jsonData).to.have.property('depth');",
+              "});",
+              "",
+              "pm.test(\"Depth is present\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.depth).to.be.oneOf(['surface', 'intermediate', 'depths', 'abyss']);",
+              "});",
+              "",
+              "pm.test(\"Response time < 10s\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(10000);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Hello, this is a smoke test\",\n  \"userId\": \"test-user-smoke\",\n  \"depth\": \"surface\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/oracle/chat",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "oracle", "chat"]
+        }
+      }
+    },
+    {
+      "name": "3. Fallback Response Test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200 (fallback triggered)\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Fallback response structure\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('response');",
+              "    pm.expect(jsonData.response).to.include.oneOf([",
+              "        'experiencing',",
+              "        'moment',",
+              "        'presence',",
+              "        'silence',",
+              "        'pause'",
+              "    ]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-test-mode",
+            "value": "fallback"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Test fallback mechanism\",\n  \"userId\": \"test-user-smoke\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/oracle/chat",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "oracle", "chat"]
+        }
+      }
+    },
+    {
+      "name": "4. Voice Initialization",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Voice menu structure\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('voices');",
+              "    pm.expect(jsonData.voices).to.be.an('array');",
+              "});",
+              "",
+              "pm.test(\"At least one voice available\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.voices.length).to.be.greaterThan(0);",
+              "});",
+              "",
+              "pm.test(\"Voice has required fields\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.voices.length > 0) {",
+              "        var voice = jsonData.voices[0];",
+              "        pm.expect(voice).to.have.property('id');",
+              "        pm.expect(voice).to.have.property('name');",
+              "        pm.expect(voice).to.have.property('description');",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/api/oracle/voices",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "oracle", "voices"]
+        }
+      }
+    },
+    {
+      "name": "5. Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Health status OK\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('status');",
+              "    pm.expect(jsonData.status).to.equal('ok');",
+              "});",
+              "",
+              "pm.test(\"Response time < 1s\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/api/health",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "health"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}

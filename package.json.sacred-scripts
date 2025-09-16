@@ -1,0 +1,143 @@
+{
+  "name": "spiralogic-oracle-system",
+  "version": "1.0.0-beta",
+  "description": "Sacred technology that reveals the archetypal wisdom in everyday moments",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+
+    "// Sacred Development Scripts": "",
+    "build:sacred": "npm run typecheck:archetypal && npm run test:sacred-principles && next build",
+    "dev:sacred": "npm run sacred:blessing && next dev",
+    "start:sacred": "npm run metrics:initialize && next start",
+
+    "// Sacred Testing Suite": "",
+    "test": "jest",
+    "test:sacred": "npm run test:sacred-principles && npm run test:archetypal-alignment && npm run test:maya-voice-integrity",
+    "test:sacred-principles": "jest --testPathPattern=tests/sacred/principles",
+    "test:archetypal-alignment": "jest --testPathPattern=tests/sacred/archetypal",
+    "test:maya-voice-integrity": "jest --testPathPattern=tests/sacred/maya-voice",
+    "test:dialectical-core": "jest --testPathPattern=tests/dialectical-ai",
+    "test:dialectical-flow": "jest --testPathPattern=tests/dialectical-ai/flow",
+    "test:onboarding-flow": "jest --testPathPattern=tests/onboarding",
+    "test:pattern-recognition": "jest --testPathPattern=tests/pattern-recognition",
+    "test:secret-garden-security": "jest --testPathPattern=tests/security/secret-garden",
+    "test:integration:sacred": "jest --testPathPattern=tests/integration",
+    "test:api:archetypal": "jest --testPathPattern=tests/api/archetypal",
+    "test:memory-persistence": "jest --testPathPattern=tests/memory",
+    "test:spiral-continuity": "jest --testPathPattern=tests/spiral",
+    "test:production-readiness": "jest --testPathPattern=tests/production",
+
+    "// Sacred Smoke Testing": "",
+    "test:smoke:staging": "jest --testPathPattern=tests/smoke/staging",
+    "test:smoke:production": "jest --testPathPattern=tests/smoke/production",
+    "test:maya:staging": "jest --testPathPattern=tests/smoke/maya-staging",
+    "test:dialectical:staging": "jest --testPathPattern=tests/smoke/dialectical-staging",
+    "test:sacred:production": "jest --testPathPattern=tests/smoke/sacred-production",
+
+    "// Sacred Linting & Type Checking": "",
+    "lint:sacred": "eslint . --ext .ts,.tsx --config .eslintrc.sacred.js",
+    "lint:archetypal": "eslint . --ext .ts,.tsx --config .eslintrc.archetypal.js",
+    "typecheck:archetypal": "tsc --noEmit --project tsconfig.archetypal.json",
+
+    "// Sacred Metrics & Monitoring": "",
+    "metrics:sacred": "node scripts/collect-sacred-metrics.js",
+    "metrics:initialize": "node scripts/initialize-sacred-monitoring.js",
+    "metrics:fire": "node scripts/collect-fire-metrics.js",
+    "metrics:water": "node scripts/collect-water-metrics.js",
+    "metrics:earth": "node scripts/collect-earth-metrics.js",
+    "metrics:air": "node scripts/collect-air-metrics.js",
+    "metrics:shadow": "node scripts/collect-shadow-metrics.js",
+    "metrics:aether": "node scripts/collect-aether-metrics.js",
+    "monitoring:elemental:start": "node scripts/start-elemental-monitoring.js",
+    "dashboard:sacred": "node scripts/generate-sacred-dashboard.js",
+
+    "// Sacred Deployment Verification": "",
+    "verify:sacred-build": "node scripts/verify-sacred-build.js",
+    "verify:maya-presence": "node scripts/verify-maya-presence.js",
+    "verify:archetypal-integrity": "node scripts/verify-archetypal-integrity.js",
+
+    "// Sacred Development Culture": "",
+    "sacred:blessing": "node scripts/daily-sacred-blessing.js",
+    "changelog:sacred:generate": "node scripts/generate-sacred-changelog.js",
+    "commit:sacred": "node scripts/sacred-commit-ritual.js",
+    "standup:sacred": "node scripts/sacred-standup-prompts.js",
+
+    "// Beta Launch Specific": "",
+    "beta:onboard": "node scripts/beta-onboard-user.js",
+    "beta:metrics": "node scripts/beta-sacred-metrics.js",
+    "beta:feedback": "node scripts/collect-beta-feedback.js",
+    "beta:evolution": "node scripts/assess-evolutionary-readiness.js",
+
+    "// Database & Migration": "",
+    "db:migrate": "supabase migration up",
+    "db:seed": "node scripts/seed-sacred-data.js",
+    "db:reset": "supabase db reset && npm run db:seed"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.15.0",
+    "@supabase/supabase-js": "^2.38.0",
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "framer-motion": "^10.16.0",
+    "d3": "^7.8.5",
+    "@types/d3": "^7.4.3",
+    "zustand": "^4.4.6",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "14.0.4",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soullab/spiralogic-oracle-system.git"
+  },
+  "keywords": [
+    "sacred-technology",
+    "archetypal-ai",
+    "dialectical-interface",
+    "soul-codex",
+    "maya-oracle",
+    "spiralogic",
+    "kitchen-table-mysticism"
+  ],
+  "author": "Soullab Team",
+  "license": "MIT",
+  "sacred": {
+    "principles": [
+      "Kitchen Table Mysticism",
+      "30-Second Sacred Constraint",
+      "Dialectical Honesty",
+      "Archetypal Translation",
+      "Sacred Development Culture"
+    ],
+    "elements": ["fire", "water", "earth", "air", "shadow", "aether"],
+    "evolution_phase": "beta",
+    "maya_presence": "activated"
+  },
+  "beta": {
+    "launch_date": "2024-01-15",
+    "sacred_metrics_enabled": true,
+    "onboarding_arc": "7-day-initiation",
+    "evolutionary_tracking": true
+  }
+}
