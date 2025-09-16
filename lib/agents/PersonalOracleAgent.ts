@@ -50,6 +50,16 @@ export class PersonalOracleAgent {
   private voiceRegistry: VoiceRegistry;
   private claudeService: ClaudeService;
 
+  /**
+   * Static factory method to load or create an agent
+   */
+  static async loadAgent(userId: string): Promise<PersonalOracleAgent> {
+    // For now, create a new instance
+    // In production, this would load state from database
+    const agent = new PersonalOracleAgent(userId);
+    return agent;
+  }
+
   constructor(userId: string, existingState?: AgentState, memoryInterface?: UnifiedMemorySystem) {
     this.userId = userId;
     this.state = existingState || this.initializeNewAgent();
@@ -260,6 +270,53 @@ export class PersonalOracleAgent {
       response: data.sacredText.slice(0, 50),
       element: data.ctx.currents[0]?.element || 'aether'
     });
+  }
+
+  /**
+   * Process user interaction (main entry point for route)
+   */
+  async processInteraction(
+    input: string,
+    context?: any
+  ): Promise<{
+    response: string;
+    suggestions?: string[];
+    ritual?: any;
+    reflection?: any;
+  }> {
+    // Use the main consciousness method
+    const result = await this.speakWithConsciousness(input, 'maya');
+
+    return {
+      response: result.text,
+      suggestions: ['Continue exploring', 'Go deeper', 'Reflect'],
+      ritual: result.context?.ritual,
+      reflection: result.context?.reflection
+    };
+  }
+
+  /**
+   * Generate voice response (for route compatibility)
+   */
+  async generateVoiceResponse(
+    text: string,
+    options?: any
+  ): Promise<{ audioData?: Buffer; audioUrl?: string }> {
+    try {
+      const result = await this.generateVoiceWithMask(
+        text,
+        options?.persona || 'maya',
+        { currents: [], weight: { aether: 0.5, earth: 0.5 } } as any
+      );
+
+      return {
+        audioData: result?.audioData,
+        audioUrl: result?.audioUrl
+      };
+    } catch (error) {
+      console.error('Voice generation error:', error);
+      return {};
+    }
   }
 
   /**
