@@ -106,25 +106,29 @@ export async function POST(request: NextRequest) {
 
       if (body.enableVoice) {
         try {
-          // Import cleaning function
+          // Import cleaning function and voice settings
           const { cleanTextForSpeech } = require('@/lib/utils/cleanTextForSpeech');
+          const { getVoiceSettings } = require('@/lib/config/voiceSettings');
 
-          // Clean the response text for speech
+          // Clean the response text for speech (removes excessive punctuation for smoother flow)
           const cleanedResponse = cleanTextForSpeech(agentResponse.response);
 
           // Shorten if it's too long for initial response
           const maxInitialLength = 150; // characters
           const spokenText = cleanedResponse.length > maxInitialLength && sessionState.turnCount <= 1
-            ? cleanedResponse.substring(0, maxInitialLength) + '...'
+            ? cleanedResponse.substring(0, maxInitialLength) + '.'
             : cleanedResponse;
+
+          // Get voice settings (Nova for smoother flow)
+          const voiceSettings = getVoiceSettings('maya', 'nova');
 
           const voiceResult = await agent.generateVoiceResponse(
             spokenText,
             {
               element: 'aether',
-              voiceMaskId: 'maya',  // Use main Maya voice (OpenAI Alloy)
-              provider: 'openai',
-              voiceId: 'alloy'
+              voiceMaskId: 'maya',
+              provider: voiceSettings.provider,
+              voiceId: voiceSettings.voiceId  // Nova voice
             }
           );
 

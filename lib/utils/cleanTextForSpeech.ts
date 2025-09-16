@@ -22,6 +22,29 @@ export function cleanTextForSpeech(text: string): string {
   // Remove markdown formatting
   cleaned = cleaned.replace(/[*_~`]/g, '');
 
+  // REDUCE BREATHING PAUSES: Simplify punctuation
+  // Replace ellipsis with single period (reduces dramatic pauses)
+  cleaned = cleaned.replace(/\.{3,}/g, '.');
+
+  // Replace multiple commas with single comma
+  cleaned = cleaned.replace(/,+/g, ',');
+
+  // Replace semicolons with commas (softer pause)
+  cleaned = cleaned.replace(/;/g, ',');
+
+  // Replace em-dashes with commas (less dramatic)
+  cleaned = cleaned.replace(/—|--/g, ',');
+
+  // Remove unnecessary periods from common abbreviations
+  cleaned = cleaned.replace(/\b(Dr|Mr|Mrs|Ms|Prof|Sr|Jr)\./g, '$1');
+
+  // Reduce multiple exclamation/question marks to single
+  cleaned = cleaned.replace(/!+/g, '!');
+  cleaned = cleaned.replace(/\?+/g, '?');
+
+  // Remove periods before conjunctions (smoother flow)
+  cleaned = cleaned.replace(/\.\s+(and|but|or|so|yet)\b/gi, ', $1');
+
   // Remove multiple spaces
   cleaned = cleaned.replace(/\s+/g, ' ');
 
