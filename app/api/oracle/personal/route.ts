@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SacredOracleCore } from '@/lib/sacred-oracle-core';
+import { SacredOracleCoreEnhanced } from '@/lib/sacred-oracle-core-enhanced';
 import { ConsciousnessIntelligenceManager } from '@/lib/consciousness-intelligence-manager';
 
-// Initialize core systems
-const sacredOracle = new SacredOracleCore();
+// Initialize ENHANCED core systems with full wisdom integration
+const sacredOracle = new SacredOracleCoreEnhanced();
 const consciousnessManager = new ConsciousnessIntelligenceManager();
 
 // Session tracking for advanced context
@@ -47,16 +47,17 @@ export async function POST(request: NextRequest) {
 
       sessionStates.set(sessionId, sessionState);
 
-      // Return the sophisticated response
+      // Return the ENHANCED multidimensional response
       return NextResponse.json({
         text: oracleResponse.message,
         content: oracleResponse.message,
         message: oracleResponse.message,
         metadata: {
           sessionId,
-          source: 'sacred-oracle-core',
+          source: 'sacred-oracle-core-enhanced',
           mode: oracleResponse.mode,
           depth: oracleResponse.depth,
+          wisdomSources: oracleResponse.wisdomSources,
           tracking: oracleResponse.tracking,
           ...oracleResponse.metadata
         }
