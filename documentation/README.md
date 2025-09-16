@@ -1,91 +1,64 @@
-# SpiralogicOracleSystem Documentation
+# 📚 Documentation Structure
 
-Welcome to the organized documentation for the Spiralogic Oracle System. All documentation has been categorized for easy navigation.
+This documentation is organized into the following categories:
 
-## 📁 Documentation Structure
+## 📁 Folder Organization
 
-### 🚀 [/deployment](./deployment/)
-Production deployment guides, checklists, and launch documentation.
+### 01-architecture/
+System architecture, technical blueprints, backend documentation, and consolidated docs
 
-### 🎯 [/beta](./beta/)
-Beta testing documentation, user guides, onboarding flows, and feedback systems.
+### 02-beta/
+Beta testing documentation, feedback forms, launch checklists, and user journey maps
 
-### 🤖 [/maya](./maya/)
-Maya AI system documentation, integration guides, and operational procedures.
+### 03-claude-tools/
+Claude Code prompts, playbooks, and implementation guides
 
-### 🔮 [/oracle](./oracle/)
-Sacred Oracle system, Anamnesis field, witness paradigm, and ritual documentation.
+### 04-deployment/
+Deployment guides, production runbooks, and operational procedures
 
-### 🎨 [/ui-ux](./ui-ux/)
-Design systems, UI components, Soullab branding, and Holoflower documentation.
+### 05-design-ui/
+UI/UX designs, wireframes, storyboards, Figma assets, and Soul Lab branding
 
-### 🔧 [/technical](./technical/)
-Technical architecture, database migrations, API documentation, and system integration.
+### 06-maya-oracle/
+Maya and Oracle system documentation, integration guides, and operational status
 
-### 🎙️ [/sesame](./sesame/)
-Sesame voice system, CSM integration, and audio processing documentation.
+### 07-qa-testing/
+Quality assurance procedures, test scripts, and testing templates
 
-### 🤖 [/claude](./claude/)
-Claude AI integration, prompts, commands, and macros documentation.
+### 08-sesame/
+Sesame integration, CI configuration, and related documentation
 
-### 📚 [/guides](./guides/)
-General guides, setup instructions, checklists, and README files.
+### 09-sacred-tech/
+Sacred technology, astrology, Jungian concepts, and spiritual tech documentation
 
-### 🏗️ [/architecture](./architecture/)
-System architecture diagrams, implementation plans, and architectural decisions.
+### 10-voice/
+Voice system documentation, audio processing, and prosody guides
 
-## 🔍 Quick Links
+### 11-guides/
+User guides, quick start documentation, onboarding materials, and general guides
 
-### Essential Documentation
-- [Beta Testing Guide](./beta/BETA_TESTING_GUIDE.md)
-- [Deployment Checklist](./deployment/DEPLOYMENT_CHECKLIST.md)
-- [Maya Integration](./maya/MAYA_INTEGRATION_COMPLETE.md)
-- [Sacred Oracle Implementation](./oracle/SACRED_ORACLE_CONSTELLATION.md)
+### 12-operations/
+Operational playbooks, protocols, rituals, and checklists
 
-### Technical References
-- [API Documentation](./technical/API_KEY_STATUS.md)
-- [Database Migration Guide](./technical/DATABASE_MIGRATION_GUIDE.md)
-- [Environment Configuration](./technical/ENV_CONFIGURATION_GUIDE.md)
+### 13-integrations/
+Integration documentation and connectivity guides
 
-### Development Guides
-- [Contributing Guidelines](./guides/CONTRIBUTING.md)
-- [Setup Instructions](./guides/SETUP.md)
-- [Quick Start Guide](./guides/QUICK_START.md)
+### 14-fixes/
+Bug fixes, diagnostic tools, and troubleshooting documentation
 
-## 📊 Documentation Statistics
+### 15-demos/
+Demo scripts, examples, and showcase materials
 
-- **Total Documentation Folders:** 18
-- **Beta Documentation:** Complete onboarding flows, testing guides, and user journeys
-- **Technical Documentation:** Architecture plans, integration guides, and API references
-- **Maya System:** Comprehensive AI implementation and operational procedures
-- **Oracle System:** Sacred technology, consciousness fields, and ritual frameworks
+## 🔍 Quick Navigation
 
-## 🔄 Recent Updates
+- For system architecture → `01-architecture/`
+- For beta testing info → `02-beta/`
+- For deployment guides → `04-deployment/`
+- For UI/UX resources → `05-design-ui/`
+- For Maya/Oracle docs → `06-maya-oracle/`
+- For voice features → `10-voice/`
+- For quick start guides → `11-guides/`
 
-- **Modularization:** PersonalOracleAgent refactored into focused modules
-- **Memory System:** Unified memory interface implementation
-- **Lazy Loading:** All 40 module-level instantiations converted to lazy-loading pattern
-- **Documentation:** Complete reorganization into categorical structure
+## 📈 Statistics
 
-## 🎯 Navigation Tips
-
-1. **By Feature:** Navigate to the specific feature folder (maya, oracle, sesame)
-2. **By Stage:** Use deployment, beta, or guides based on your current phase
-3. **By Role:**
-   - Developers → technical, architecture, guides
-   - Designers → ui-ux, maya, oracle
-   - Testers → beta, guides, deployment
-   - DevOps → deployment, sesame, technical
-
-## 📝 Documentation Standards
-
-All documentation follows these conventions:
-- **UPPERCASE.md** - Major system documentation
-- **lowercase.md** - Supporting documents and examples
-- **README.md** - Folder overview and navigation
-- Dated sections for version tracking
-- Clear headers and navigation structure
-
----
-
-*This documentation structure supports the Spiralogic Oracle System's mission to create consciousness-aware AI experiences through sacred technology and sophisticated soul-witnessing capabilities.*
+Total documentation files: ~600+ files organized across 15 main categories

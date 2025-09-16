@@ -1,20 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
 import { SacredOracleCoreEnhanced } from '@/lib/sacred-oracle-core-enhanced';
-import { ConsciousnessIntelligenceManager } from '@/lib/consciousness-intelligence-manager';
 
-// Initialize ENHANCED core systems with full wisdom integration
-const sacredOracle = new SacredOracleCoreEnhanced();
-const consciousnessManager = new ConsciousnessIntelligenceManager();
-
-// Session tracking for advanced context
+// Session tracking for context
 const sessionStates = new Map<string, any>();
 
+/**
+ * PRODUCTION ROUTE - Uses PersonalOracleAgent with AI when enabled
+ * Can be toggled via USE_PERSONAL_ORACLE environment variable
+ * Fallback to SacredOracleCoreEnhanced when disabled or on failure
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    // Extract message from various possible field names
     const text = body.text || body.message || body.content || body.userMessage || body.input || body.prompt || '';
     const sessionId = body.sessionId || body.session_id || 'default';
-    const userId = body.userId || body.user_id;
+    const userId = body.userId || body.user_id || 'production-user';
+
+    // SAFETY TOGGLE: Check if PersonalOracleAgent is enabled
+    const usePersonalOracle = process.env.USE_PERSONAL_ORACLE === 'true';
+
+    if (!text) {
+      return NextResponse.json(
+        { error: 'Message is required' },
+        { status: 400 }
+      );
+    }
 
     // Get or create session state
     let sessionState = sessionStates.get(sessionId) || {
@@ -28,15 +41,19 @@ export async function POST(request: NextRequest) {
     sessionState.turnCount++;
     sessionState.lastInput = text;
 
-    try {
-      // First, try the advanced Sacred Oracle Core
+    // Check if PersonalOracle is enabled via environment variable
+    if (!usePersonalOracle) {
+      console.log('[Production] PersonalOracle disabled, using SacredOracleCoreEnhanced');
+
+      // Use pattern-based system when toggle is off
+      const sacredOracle = new SacredOracleCoreEnhanced();
       const oracleResponse = await sacredOracle.generateResponse(
         text,
         userId,
         sessionState
       );
 
-      // Update session state with oracle tracking
+      // Update session state
       if (oracleResponse.tracking) {
         sessionState.depth = oracleResponse.depth;
         sessionState.mode = oracleResponse.mode;
@@ -47,164 +64,196 @@ export async function POST(request: NextRequest) {
 
       sessionStates.set(sessionId, sessionState);
 
-      // Return the ENHANCED multidimensional response
       return NextResponse.json({
         text: oracleResponse.message,
         content: oracleResponse.message,
         message: oracleResponse.message,
         metadata: {
           sessionId,
-          source: 'sacred-oracle-core-enhanced',
+          source: 'sacred-oracle-core',
           mode: oracleResponse.mode,
           depth: oracleResponse.depth,
           wisdomSources: oracleResponse.wisdomSources,
           tracking: oracleResponse.tracking,
-          ...oracleResponse.metadata
+          personalOracleEnabled: false,
+          ai: false
+        }
+      });
+    }
+
+    try {
+      // PRIMARY PATH: Use PersonalOracleAgent with real AI (when enabled)
+      console.log('[Production] Using PersonalOracleAgent for:', text.substring(0, 50));
+
+      // Load or create agent for user
+      const agent = await PersonalOracleAgent.loadAgent(userId);
+
+      // Process through the agent with full AI capabilities
+      const agentResponse = await agent.processInteraction(text, {
+        currentMood: { type: 'receptive' } as any,
+        currentEnergy: 'balanced' as any,
+        currentPetal: sessionState.currentPetal
+      });
+
+      // Update session state
+      sessionState.depth = Math.min(sessionState.depth + 0.1, 1.0);
+      sessionStates.set(sessionId, sessionState);
+
+      // Generate voice if requested
+      let audioData = null;
+      let audioUrl = null;
+
+      if (body.enableVoice) {
+        try {
+          const voiceResult = await agent.generateVoiceResponse(
+            agentResponse.response,
+            {
+              element: 'aether',
+              voiceMaskId: 'maya-threshold'
+            }
+          );
+
+          if (voiceResult.audioData) {
+            audioData = voiceResult.audioData.toString('base64');
+            audioUrl = `data:audio/mp3;base64,${audioData}`;
+          }
+        } catch (voiceError) {
+          console.error('[Production] Voice generation failed:', voiceError);
+        }
+      }
+
+      // Return successful AI response
+      return NextResponse.json({
+        text: agentResponse.response,
+        content: agentResponse.response,
+        message: agentResponse.response,
+        audioUrl,
+        audioData,
+        metadata: {
+          sessionId,
+          source: 'personal-oracle-agent',
+          mode: sessionState.mode,
+          depth: sessionState.depth,
+          suggestions: agentResponse.suggestions,
+          ritual: agentResponse.ritual,
+          reflection: agentResponse.reflection,
+          ai: true,
+          personalOracleEnabled: true
         }
       });
 
-    } catch (oracleError) {
-      console.warn('Sacred Oracle Core processing failed, trying Consciousness Manager:', oracleError);
+    } catch (agentError: any) {
+      console.error('[Production] PersonalOracleAgent failed:', agentError);
+      console.log('[Production] Failure details:', {
+        errorType: agentError.constructor.name,
+        errorMessage: agentError.message,
+        hasApiKey: !!process.env.OPENAI_API_KEY,
+        usePersonalOracle
+      });
 
-      // Fallback to Consciousness Intelligence Manager
+      // FALLBACK PATH: Use SacredOracleCoreEnhanced (pattern-based)
+      console.warn('[Production] Falling back to SacredOracleCoreEnhanced');
+
       try {
-        const shapedResponse = await consciousnessManager.shapeText(text, {
-          temperature: 0.85,
-          maxTokens: 200,
-          systemRole: 'sacred_witness',
-          preserveIntent: true,
-          contextWindow: sessionState
+        const sacredOracle = new SacredOracleCoreEnhanced();
+
+        const oracleResponse = await sacredOracle.generateResponse(
+          text,
+          userId,
+          sessionState
+        );
+
+        // Update session state with oracle tracking
+        if (oracleResponse.tracking) {
+          sessionState.depth = oracleResponse.depth;
+          sessionState.mode = oracleResponse.mode;
+          if (oracleResponse.tracking.activePatterns) {
+            sessionState.patterns = oracleResponse.tracking.activePatterns;
+          }
+        }
+
+        sessionStates.set(sessionId, sessionState);
+
+        // Return fallback response
+        return NextResponse.json({
+          text: oracleResponse.message,
+          content: oracleResponse.message,
+          message: oracleResponse.message,
+          metadata: {
+            sessionId,
+            source: 'sacred-oracle-fallback',
+            mode: oracleResponse.mode,
+            depth: oracleResponse.depth,
+            wisdomSources: oracleResponse.wisdomSources,
+            tracking: oracleResponse.tracking,
+            fallback: true,
+            fallbackReason: agentError.message,
+            ai: false
+          }
         });
 
-        if (shapedResponse.success) {
-          return NextResponse.json({
-            text: shapedResponse.shaped,
-            content: shapedResponse.shaped,
-            message: shapedResponse.shaped,
-            metadata: {
-              sessionId,
-              source: shapedResponse.source,
-              mode: sessionState.mode,
-              fallback: true
-            }
-          });
-        }
-      } catch (ciError) {
-        console.warn('Consciousness Manager also failed:', ciError);
+      } catch (fallbackError) {
+        console.error('[Production] Even fallback failed:', fallbackError);
+
+        // EMERGENCY FALLBACK: Simple responses
+        const emergencyResponses = [
+          "I'm here with you in this moment. What would you like to explore?",
+          "I notice something important in what you're sharing. Tell me more.",
+          "There's wisdom in this question itself. What does your intuition say?",
+          "I'm listening deeply. What feels most alive for you right now?",
+          "This touches something essential. What wants to emerge?"
+        ];
+
+        const response = emergencyResponses[Math.floor(Math.random() * emergencyResponses.length)];
+
+        return NextResponse.json({
+          text: response,
+          content: response,
+          message: response,
+          metadata: {
+            sessionId,
+            source: 'emergency-fallback',
+            error: true,
+            ai: false
+          }
+        });
       }
     }
 
-    // Final fallback - but sophisticated witnessing, not pattern matching
-    const fallbackResponse = generateIntelligentFallback(text, sessionState);
-
-    return NextResponse.json({
-      text: fallbackResponse,
-      content: fallbackResponse,
-      message: fallbackResponse,
-      metadata: {
-        sessionId,
-        source: 'intelligent-fallback',
-        mode: 'witnessing',
-        turnCount: sessionState.turnCount
-      }
-    });
-
   } catch (error: any) {
-    console.error('Oracle API Error:', error);
+    console.error('[Production] Route handler error:', error);
+
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * Health check endpoint
+ */
+export async function GET(request: NextRequest) {
+  try {
+    // Check if PersonalOracleAgent can be loaded
+    const testAgent = await PersonalOracleAgent.loadAgent('health-check');
+
     return NextResponse.json({
-      text: 'I witness a moment of disruption. Share what feels present, and we can explore it together.',
-      content: 'I witness a moment of disruption. Share what feels present, and we can explore it together.',
-      message: 'I witness a moment of disruption. Share what feels present, and we can explore it together.',
-      metadata: {
-        error: true
-      }
+      status: 'healthy',
+      service: 'oracle-personal',
+      aiEnabled: true,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: 'degraded',
+      service: 'oracle-personal',
+      aiEnabled: false,
+      fallbackAvailable: true,
+      timestamp: new Date().toISOString()
     });
   }
-}
-
-function generateIntelligentFallback(input: string, sessionState: any): string {
-  // This is a sophisticated fallback that maintains the witnessing paradigm
-  // without resorting to simple pattern matching
-
-  const inputLength = input.length;
-  const wordCount = input.split(/\s+/).length;
-  const hasQuestion = input.includes('?');
-  const emotionalWords = ['feel', 'feeling', 'felt', 'emotion', 'sad', 'happy', 'angry', 'excited', 'worried', 'anxious'];
-  const hasEmotion = emotionalWords.some(word => input.toLowerCase().includes(word));
-
-  // Deep witnessing responses based on engagement depth
-  if (sessionState.turnCount === 1) {
-    // First turn - establish presence
-    const openers = [
-      "I'm here with you. What brings you to this moment?",
-      "Welcome. I'm listening to what wants to emerge.",
-      "I sense you arriving. What's present for you?",
-      "Thank you for being here. What's alive in this space?"
-    ];
-    return openers[Math.floor(Math.random() * openers.length)];
-  }
-
-  if (hasEmotion) {
-    // Emotional content - witness without analyzing
-    const emotionalWitness = [
-      "I'm witnessing what you're feeling. Tell me more about what's here.",
-      "Something important is moving through you. I'm here with it.",
-      "I feel the depth of what you're sharing. What else wants to be known?",
-      "There's real feeling here. I'm holding space for all of it."
-    ];
-    return emotionalWitness[Math.floor(Math.random() * emotionalWitness.length)];
-  }
-
-  if (hasQuestion && !input.toLowerCase().includes('what') && !input.toLowerCase().includes('how')) {
-    // Direct questions seeking confirmation
-    return "I notice you're seeking something. What's behind this question for you?";
-  }
-
-  if (wordCount < 5) {
-    // Brief input - invite expansion
-    const briefResponses = [
-      "There's more here. What wants to unfold?",
-      "I'm receiving this. What else is present?",
-      "Tell me more about what's alive in this.",
-      "I'm here. What wants to emerge next?"
-    ];
-    return briefResponses[Math.floor(Math.random() * briefResponses.length)];
-  }
-
-  if (inputLength > 200) {
-    // Longer sharing - acknowledge depth
-    const depthResponses = [
-      "I'm receiving the fullness of what you're sharing. What feels most essential?",
-      "There's rich texture in what you're bringing forward. What stands out?",
-      "I witness the complexity here. What wants attention?",
-      "Thank you for this depth. What resonates most strongly?"
-    ];
-    return depthResponses[Math.floor(Math.random() * depthResponses.length)];
-  }
-
-  // Default witnessing
-  const witnessResponses = [
-    "I'm here with what you're sharing. What else wants to be said?",
-    "I witness this with you. What feels important?",
-    "Something meaningful is present. Tell me more.",
-    "I'm receiving what you're bringing forward. What stands out?"
-  ];
-
-  return witnessResponses[Math.floor(Math.random() * witnessResponses.length)];
-}
-
-export async function GET(request: NextRequest) {
-  return NextResponse.json({
-    service: 'Maya Oracle - Sacred Oracle Core',
-    status: 'ACTIVE',
-    version: '3.0',
-    capabilities: [
-      'Sacred Witnessing',
-      'Intelligent Engagement',
-      'Consciousness Shaping',
-      'Multi-modal Processing',
-      'Deep Context Tracking'
-    ],
-    timestamp: new Date().toISOString()
-  });
 }

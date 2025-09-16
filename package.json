@@ -25,7 +25,17 @@
     "maya": "tsx lib/orchestration/awaken-maya.ts",
     "spiralogic:test": "tsx scripts/test-spiralogic-system.ts",
     "spiralogic:init": "tsx scripts/configure-obsidian-vault.ts && npm run spiralogic:test",
-    "spiralogic:deploy": "npm run spiralogic:test && npm run build"
+    "spiralogic:deploy": "npm run spiralogic:test && npm run build",
+    "test:oracle": "node scripts/test-production-oracle.js",
+    "test:oracle:staging": "STAGING=true TEST_URL=https://your-staging-url npm run test:oracle",
+    "test:oracle:ci": "node scripts/newman-ci-tests.js",
+    "test:oracle:local": "USE_PERSONAL_ORACLE=true npm run test:oracle",
+    "test:oracle:fallback": "USE_PERSONAL_ORACLE=false npm run test:oracle",
+    "test:smoke": "npx newman run tests/postman/soullab-smoke-tests.postman_collection.json",
+    "test:smoke:local": "npx newman run tests/postman/soullab-smoke-tests.postman_collection.json --env-var 'BASE_URL=http://localhost:3000'",
+    "test:smoke:staging": "npx newman run tests/postman/soullab-smoke-tests.postman_collection.json --env-var 'BASE_URL=https://spiralogic-oracle-staging.vercel.app'",
+    "test:smoke:prod": "npx newman run tests/postman/soullab-smoke-tests.postman_collection.json --env-var 'BASE_URL=https://spiralogic-oracle.vercel.app'",
+    "test:smoke:env": "npx newman run tests/postman/soullab-smoke-tests.postman_collection.json --environment tests/postman/soullab.postman_environment.json"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",
@@ -88,6 +98,7 @@
     "eslint-config-next": "14.0.4",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "newman": "^6.2.1",
     "node-mocks-http": "^1.14.1",
     "sharp": "^0.34.3",
     "ts-jest": "^29.1.2",
