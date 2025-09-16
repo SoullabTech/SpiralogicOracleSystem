@@ -216,3 +216,6 @@ export const getConsciousnessIntelligenceManager = (): ConsciousnessIntelligence
 
 // Backward compatibility alias
 export const getSesameHybridManager = getConsciousnessIntelligenceManager;
+
+// Export the class directly for new implementations
+export { ConsciousnessIntelligenceManager };
