@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
     const userId = body.userId || body.user_id || 'production-user';
 
     // SAFETY TOGGLE: Check if PersonalOracleAgent is enabled
-    const usePersonalOracle = process.env.USE_PERSONAL_ORACLE === 'true';
+    // PRODUCTION FIX: Default to true if not explicitly disabled
+    const usePersonalOracle = process.env.USE_PERSONAL_ORACLE !== 'false';
 
     if (!text) {
       return NextResponse.json(
