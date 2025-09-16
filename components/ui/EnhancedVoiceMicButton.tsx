@@ -207,12 +207,12 @@ export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProp
 
   const handleSilenceDetected = useCallback(() => {
     console.log('🎤 Silence detected, processing transcript:', finalTranscriptRef.current);
-    
+
     if (finalTranscriptRef.current.trim()) {
       console.log('🚀 Sending transcript to oracle:', finalTranscriptRef.current.trim());
       setIsProcessing(true);
       onTranscript?.(finalTranscriptRef.current.trim());
-      
+
       // Clear transcripts after sending
       setTimeout(() => {
         setTranscript('');
@@ -220,11 +220,15 @@ export const EnhancedVoiceMicButton = forwardRef<any, EnhancedVoiceMicButtonProp
         finalTranscriptRef.current = '';
         setIsProcessing(false);
         console.log('✅ Transcript cleared, ready for next input');
+
+        // KEEP LISTENING - Don't stop the mic!
+        // The mic will be paused automatically when audio plays
+        console.log('🎙️ Continuing to listen...');
       }, 300); // Quick clear to prevent text disappearing
     } else {
       console.log('⚠️ No transcript to send (empty or whitespace only)');
     }
-    
+
     // Clear timer
     if (silenceTimer) {
       clearTimeout(silenceTimer);

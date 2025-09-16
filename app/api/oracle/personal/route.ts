@@ -106,11 +106,25 @@ export async function POST(request: NextRequest) {
 
       if (body.enableVoice) {
         try {
+          // Import cleaning function
+          const { cleanTextForSpeech } = require('@/lib/utils/cleanTextForSpeech');
+
+          // Clean the response text for speech
+          const cleanedResponse = cleanTextForSpeech(agentResponse.response);
+
+          // Shorten if it's too long for initial response
+          const maxInitialLength = 150; // characters
+          const spokenText = cleanedResponse.length > maxInitialLength && sessionState.turnCount <= 1
+            ? cleanedResponse.substring(0, maxInitialLength) + '...'
+            : cleanedResponse;
+
           const voiceResult = await agent.generateVoiceResponse(
-            agentResponse.response,
+            spokenText,
             {
               element: 'aether',
-              voiceMaskId: 'maya-threshold'
+              voiceMaskId: 'maya',  // Use main Maya voice (OpenAI Alloy)
+              provider: 'openai',
+              voiceId: 'alloy'
             }
           );
 

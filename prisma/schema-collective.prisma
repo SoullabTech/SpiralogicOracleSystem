@@ -1,0 +1,165 @@
+// prisma/schema-collective.prisma
+// Database schema for collective listening data (privacy-preserving)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Symbolic signals - no personal data, only patterns
+model SymbolicSignal {
+  id            String   @id @default(cuid())
+  teamId        String
+  anonId        String   // Anonymous session ID, not user ID
+  timestamp     DateTime @default(now())
+  mode          String   // conversation, meditation, guided
+
+  // Elemental composition (privacy-safe)
+  elements      Json     // Array of {name: Element, intensity: number}
+
+  // Archetypal motifs (controlled vocabulary)
+  motifs        String[] // ['threshold', 'release', 'transform']
+
+  // Coarse emotional field (no details)
+  affectValence Int      // -1, 0, or 1
+  affectArousal Int      // 0, 1, or 2
+
+  // Trust breathing pattern
+  trustBreath   String   // 'in', 'out', 'hold'
+
+  // Pattern flags
+  spiralFlag    Boolean  @default(false)
+
+  // Relations
+  team          Team     @relation(fields: [teamId], references: [id])
+  snapshot      CollectiveSnapshot? @relation(fields: [snapshotId], references: [id])
+  snapshotId    String?
+
+  @@index([teamId, timestamp])
+  @@index([anonId])
+}
+
+// Collective snapshots - aggregated patterns
+model CollectiveSnapshot {
+  id            String   @id @default(cuid())
+  teamId        String
+  windowStart   DateTime
+  windowEnd     DateTime
+  createdAt     DateTime @default(now())
+
+  // Aggregated patterns (no individual data)
+  topMotifs     Json     // Array of {key: string, count: number}
+  elements      Json     // Array of {name: Element, avg: number}
+  trustBreath   Json     // {in: number, out: number, hold: number}
+
+  // Resonance field metrics
+  coherence     Float    // 0-1 field harmony
+  emergence     Boolean  // New pattern detected
+  tension       String?  // Type of tension if present
+
+  // Relations
+  team          Team     @relation(fields: [teamId], references: [id])
+  signals       SymbolicSignal[]
+  insights      OrchestratorInsight[]
+
+  @@index([teamId, windowEnd])
+}
+
+// Orchestrator insights - mythic translations
+model OrchestratorInsight {
+  id            String   @id @default(cuid())
+  snapshotId    String
+  timestamp     DateTime @default(now())
+
+  type          String   // resonance, emergence, tension, coherence
+  message       String   // Poetic insight
+  elements      String[] // Active elements
+  strength      Float    // 0-1 intensity
+
+  // Personal mirrors sent (anonymous)
+  mirrorsSent   Int      @default(0)
+
+  // Relations
+  snapshot      CollectiveSnapshot @relation(fields: [snapshotId], references: [id])
+
+  @@index([snapshotId])
+}
+
+// Teams using collective listening
+model Team {
+  id            String   @id @default(cuid())
+  name          String
+  createdAt     DateTime @default(now())
+
+  // Configuration
+  collectiveEnabled Boolean @default(false)
+  privacyLevel  String   @default("maximum") // maximum, high, medium
+
+  // Relations
+  signals       SymbolicSignal[]
+  snapshots     CollectiveSnapshot[]
+  sessions      ListeningSession[]
+}
+
+// Listening sessions (for analytics, no personal data)
+model ListeningSession {
+  id            String   @id @default(cuid())
+  teamId        String
+  anonId        String   // Anonymous session ID
+  startTime     DateTime @default(now())
+  endTime       DateTime?
+
+  // Session metrics (privacy-safe)
+  mode          String   // conversation, meditation, guided
+  signalCount   Int      @default(0)
+  dominantElement String?
+
+  // Relations
+  team          Team     @relation(fields: [teamId], references: [id])
+
+  @@index([teamId, startTime])
+  @@index([anonId])
+}
+
+// Collective patterns over time (for trend analysis)
+model CollectivePattern {
+  id            String   @id @default(cuid())
+  teamId        String
+  patternType   String   // daily, weekly, seasonal
+  period        DateTime // Start of period
+
+  // Pattern data (aggregated, no personal info)
+  dominantElements Json   // Elements by frequency
+  recurringMotifs  Json   // Motifs that repeat
+  breathingPattern Json   // Trust breath distribution
+
+  // Insights
+  insights      String[] // Generated observations
+
+  createdAt     DateTime @default(now())
+
+  @@unique([teamId, patternType, period])
+  @@index([teamId, period])
+}
+
+// Privacy audit log
+model PrivacyAudit {
+  id            String   @id @default(cuid())
+  timestamp     DateTime @default(now())
+  action        String   // signal_extracted, snapshot_created, insight_generated
+
+  // Verification
+  personalDataPresent Boolean @default(false) // Should always be false
+  compressionRatio    Float?  // How much data was compressed
+
+  // Metadata
+  teamId        String?
+  anonId        String?
+
+  @@index([timestamp])
+  @@index([teamId])
+}

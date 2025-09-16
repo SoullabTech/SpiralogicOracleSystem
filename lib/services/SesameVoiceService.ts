@@ -1,5 +1,7 @@
 // import axios from 'axios'; // Commented out - using fetch instead
 import { EventEmitter } from 'events';
+import OpenAI from 'openai';
+import { VoiceProfile as ConfigVoiceProfile } from '../config/voiceProfiles';
 
 export interface VoiceProfile {
   id: string;
@@ -67,6 +69,7 @@ export class SesameVoiceService extends EventEmitter {
   private voiceProfiles: Map<string, VoiceProfile>;
   private audioCache: Map<string, Buffer>;
   private activeRequests: number = 0;
+  private openai?: OpenAI;
 
   constructor(config: Partial<SesameVoiceConfig> = {}) {
     super();
@@ -83,6 +86,12 @@ export class SesameVoiceService extends EventEmitter {
 
     this.voiceProfiles = new Map();
     this.audioCache = new Map();
+
+    // Initialize OpenAI client if API key is available
+    const openAIKey = process.env.OPENAI_API_KEY;
+    if (openAIKey) {
+      this.openai = new OpenAI({ apiKey: openAIKey });
+    }
 
     this.initializeDefaultProfiles();
   }
