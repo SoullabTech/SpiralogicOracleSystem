@@ -305,15 +305,35 @@ export class PersonalOracleAgent {
     ritual?: any;
     reflection?: any;
   }> {
-    // Use the main consciousness method
-    const result = await this.speakWithConsciousness(input, 'maya');
+    try {
+      // Use the Claude service directly for now
+      const response = await this.claudeService.generateOracleResponse(
+        input,
+        {
+          element: context?.element || 'aether',
+          userState: this.state,
+          fractalContext: await this.fractalIntegration.buildContext(input, this.state)
+        }
+      );
 
-    return {
-      response: result.text,
-      suggestions: ['Continue exploring', 'Go deeper', 'Reflect'],
-      ritual: result.context?.ritual,
-      reflection: result.context?.reflection
-    };
+      return {
+        response,
+        suggestions: ['Continue exploring', 'Go deeper', 'Reflect'],
+        ritual: context?.ritual,
+        reflection: context?.reflection
+      };
+    } catch (error) {
+      console.error('AI generation failed, using consciousness method:', error);
+
+      // Fallback to consciousness method
+      const result = await this.speakWithConsciousness(input, 'maya');
+      return {
+        response: result.text,
+        suggestions: ['Continue exploring', 'Go deeper', 'Reflect'],
+        ritual: result.context?.ritual,
+        reflection: result.context?.reflection
+      };
+    }
   }
 
   /**
