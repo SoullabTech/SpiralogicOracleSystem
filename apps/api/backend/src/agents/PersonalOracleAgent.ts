@@ -2503,8 +2503,8 @@ Welcome to your consciousness exploration journey.`;
           'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: 'claude-3-opus-20240229',
-          max_tokens: 400, // Allow natural conversational length
+          model: 'claude-3-5-sonnet-20241022',
+          max_tokens: 300, // Faster responses, still natural
           temperature: 0.85,
           system: prompt,
           messages: [

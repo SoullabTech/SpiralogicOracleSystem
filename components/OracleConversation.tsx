@@ -8,6 +8,7 @@ import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
 import MayaChatInterface from './chat/MayaChatInterface';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
+import { OrganicVoiceMaya } from './ui/OrganicVoiceMaya';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
@@ -817,10 +818,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               messages={messages}
             />
           ) : (
-            /* Simple Voice Recognition - No complex timing logic */
-            <SimpleVoiceMic
+            /* Organic Voice Maya - Full sophisticated voice experience */
+            <OrganicVoiceMaya
               onTranscript={handleVoiceTranscript}
-              pauseListening={isAudioPlaying}
+              isProcessing={isProcessing}
+              enabled={!isAudioPlaying}
+              onConversationPrompt={(prompt) => {
+                // Handle gentle presence prompts from Maya
+                console.log('Maya presence prompt:', prompt);
+              }}
             />
           )}
         </>

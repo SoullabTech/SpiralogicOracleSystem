@@ -24,9 +24,9 @@ class ClaudeService {
           'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: 'claude-3-opus-20240229',
-          max_tokens: options.max_tokens || 300,
-          temperature: options.temperature || 0.8,
+          model: 'claude-3-5-sonnet-20241022',
+          max_tokens: options.max_tokens || 200,
+          temperature: options.temperature || 0.85,
           system: prompt,
           messages: [{ role: 'user', content: 'Respond naturally and conversationally with 3-5 sentences. Be warm, engaging, and authentic like a wise friend. Avoid being clinical or therapeutic.' }]
         })
