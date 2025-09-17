@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PersonalOracleAgent } from '@/apps/api/backend/src/agents/PersonalOracleAgent';
+import { MayaOrchestrator } from '@/apps/api/backend/src/oracle/core/MayaOrchestrator';
 import { SacredOracleCoreEnhanced } from '@/lib/sacred-oracle-core-enhanced';
 
 // Session tracking for context
@@ -83,22 +83,23 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      // PRIMARY PATH: Use PersonalOracleAgent with real AI (when enabled)
-      console.log('[Production] Using PersonalOracleAgent for:', text.substring(0, 50));
+      // PRIMARY PATH: Use MayaOrchestrator - clean, magical, brief
+      console.log('[Production] Maya speaks:', text.substring(0, 50));
 
-      // Create agent instance
-      const agent = new PersonalOracleAgent();
+      // Let Maya speak with profound brevity
+      const maya = new MayaOrchestrator();
+      const response = await maya.speak(text, userId);
 
-      // Process through the agent with full AI capabilities
-      const agentResponse = await agent.consult({
-        userId,
-        input: text,
-        sessionId,
-        context: {
-          previousInteractions: sessionState.turnCount,
-          currentPhase: sessionState.phase
-        }
-      });
+      // Format for compatibility
+      const agentResponse = {
+        response: response.message,
+        message: response.message,
+        element: response.element,
+        confidence: 0.95,
+        suggestions: [],
+        ritual: null,
+        reflection: null
+      };
 
       // Update session state
       sessionState.depth = Math.min(sessionState.depth + 0.1, 1.0);
