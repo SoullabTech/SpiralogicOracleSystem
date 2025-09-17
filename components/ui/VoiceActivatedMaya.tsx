@@ -35,6 +35,7 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
   const VAD_THRESHOLD = 30; // Minimum audio level to consider as speech
   const SILENCE_DURATION = 1500; // ms of silence before processing
   const MIN_SPEECH_DURATION = 300; // Minimum ms of speech to process
+  const WAKE_WORDS = ['hey maya', 'maya', 'okay maya']; // Wake word activation
 
   const speechStartTimeRef = useRef<number>(0);
   const isSpeakingRef = useRef(false);
@@ -77,6 +78,21 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
       if (finalTranscript) {
         finalTranscriptRef.current += finalTranscript;
         setTranscript(finalTranscriptRef.current);
+
+        // Check for wake words
+        const transcriptLower = finalTranscriptRef.current.toLowerCase().trim();
+        const hasWakeWord = WAKE_WORDS.some(wake => transcriptLower.startsWith(wake));
+
+        if (hasWakeWord && transcriptLower.length > 10) {
+          // Remove wake word and process immediately
+          const withoutWake = WAKE_WORDS.reduce((text, wake) =>
+            text.replace(new RegExp(`^${wake}\\s*`, 'i'), ''), finalTranscriptRef.current);
+
+          if (withoutWake.trim()) {
+            processSpeech(withoutWake.trim());
+            return;
+          }
+        }
 
         // Reset silence timer on new final speech
         if (silenceTimeoutRef.current) {
@@ -314,6 +330,19 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
                 initial={{ scale: 1 }}
                 animate={{ scale: 1.3, opacity: 0 }}
                 transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+              />
+              {/* Ambient presence - subtle breathing effect */}
+              <motion.div
+                className="absolute inset-2 rounded-full bg-gradient-to-br from-purple-400/10 to-indigo-400/10"
+                animate={{
+                  scale: [1, 1.05, 1],
+                  opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               />
             </>
           )}

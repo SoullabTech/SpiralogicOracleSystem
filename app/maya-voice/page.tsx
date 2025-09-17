@@ -119,6 +119,16 @@ export default function MayaVoicePage() {
     window.speechSynthesis.cancel();
   };
 
+  // Privacy-first session reset
+  const resetSession = () => {
+    setMessages([]);
+    window.speechSynthesis.cancel();
+    // Create new session ID for privacy
+    const newSessionId = `voice-session-${Date.now()}`;
+    console.log('New private session:', newSessionId);
+    // No data is stored - everything stays local
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-4xl mx-auto p-6">
