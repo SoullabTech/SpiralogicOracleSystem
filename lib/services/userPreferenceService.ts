@@ -76,7 +76,7 @@ export class UserPreferenceService {
 
       return {
         userId: data.user_id,
-        voiceProfileId: data.voice_profile_id || 'maya-alloy',
+        voiceProfileId: data.voice_profile_id || 'maya-nova',
         voiceMode: data.voice_mode || 'push-to-talk',
         interactionMode: data.interaction_mode || 'conversational',
         customWakeWord: data.custom_wake_word,
@@ -240,7 +240,7 @@ export class UserPreferenceService {
   private getDefaultPreferences(userId: string): UserPreferences {
     return {
       userId,
-      voiceProfileId: 'maya-alloy',
+      voiceProfileId: 'maya-nova',
       voiceMode: 'push-to-talk',
       interactionMode: 'conversational',
       elementalAffinities: {

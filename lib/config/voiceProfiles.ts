@@ -42,9 +42,9 @@ const canonicalVoices: VoiceProfile[] = [
   {
     id: 'maya',
     provider: 'openai',
-    displayName: 'Maya (Alloy)',
+    displayName: 'Maya (Nova)',
     description: 'Warm oracle companion - sacred witness and guide',
-    baseVoiceId: 'alloy',  // OpenAI voice
+    baseVoiceId: 'nova',  // OpenAI Nova voice with sensitive tuning
     category: 'canonical',
     masks: ['fire', 'water', 'earth', 'air', 'aether'],
     personality: {

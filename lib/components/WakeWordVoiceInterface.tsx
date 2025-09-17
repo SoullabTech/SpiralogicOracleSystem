@@ -59,6 +59,17 @@ export const WakeWordVoiceInterface: React.FC<WakeWordVoiceInterfaceProps> = ({
   const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const silenceDetectionRef = useRef<{
+    silenceStart: number | null;
+    lastSpeechTime: number;
+    silenceThreshold: number;
+    maxSilenceDuration: number;
+  }>({
+    silenceStart: null,
+    lastSpeechTime: Date.now(),
+    silenceThreshold: 0.01, // Lower threshold for more sensitive speech detection
+    maxSilenceDuration: 4000 // 4 seconds of silence before stopping (was too aggressive before)
+  });
 
   // Initialize wake word detector
   useEffect(() => {
@@ -128,6 +139,77 @@ export const WakeWordVoiceInterface: React.FC<WakeWordVoiceInterfaceProps> = ({
     }
   }, [state.isRecording]);
 
+  // Setup intelligent silence detection during recording
+  const setupSilenceDetection = useCallback(() => {
+    if (!streamRef.current) return;
+
+    // Create audio context for monitoring during recording
+    const recordingAudioContext = new AudioContext({ sampleRate: 16000 });
+    const source = recordingAudioContext.createMediaStreamSource(streamRef.current);
+    const analyser = recordingAudioContext.createAnalyser();
+
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.8;
+    source.connect(analyser);
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    // Reset silence detection state
+    silenceDetectionRef.current = {
+      silenceStart: null,
+      lastSpeechTime: Date.now(),
+      silenceThreshold: 0.01,
+      maxSilenceDuration: 4000 // 4 seconds for thinking pauses
+    };
+
+    const checkAudioLevel = () => {
+      if (!state.isRecording) {
+        recordingAudioContext.close();
+        return;
+      }
+
+      analyser.getByteFrequencyData(dataArray);
+
+      // Calculate average volume
+      const average = dataArray.reduce((sum, value) => sum + value, 0) / bufferLength;
+      const normalizedVolume = average / 255;
+
+      const now = Date.now();
+      const silenceRef = silenceDetectionRef.current;
+
+      if (normalizedVolume > silenceRef.silenceThreshold) {
+        // Speech detected - reset silence tracking
+        silenceRef.silenceStart = null;
+        silenceRef.lastSpeechTime = now;
+      } else {
+        // Silence detected
+        if (silenceRef.silenceStart === null) {
+          silenceRef.silenceStart = now;
+        } else {
+          const silenceDuration = now - silenceRef.silenceStart;
+          const timeSinceLastSpeech = now - silenceRef.lastSpeechTime;
+
+          // Only auto-stop if we've had speech and then extended silence
+          if (timeSinceLastSpeech > 2000 && silenceDuration > silenceRef.maxSilenceDuration) {
+            console.log('Auto-stopping recording after natural pause');
+            stopRecording();
+            recordingAudioContext.close();
+            return;
+          }
+        }
+      }
+
+      // Continue monitoring
+      if (state.isRecording) {
+        requestAnimationFrame(checkAudioLevel);
+      }
+    };
+
+    // Start monitoring
+    requestAnimationFrame(checkAudioLevel);
+  }, [state.isRecording, stopRecording]);
+
   // Stop wake word listening
   const stopWakeWordListening = useCallback(() => {
     if (processorRef.current) {
@@ -152,13 +234,14 @@ export const WakeWordVoiceInterface: React.FC<WakeWordVoiceInterfaceProps> = ({
   const startRecording = useCallback(async () => {
     try {
       if (!streamRef.current) {
-        // For push-to-talk mode, request new stream
+        // For push-to-talk mode, request new stream with gentle noise suppression
         streamRef.current = await navigator.mediaDevices.getUserMedia({
           audio: {
             sampleRate: 44100,
             channelCount: 1,
             echoCancellation: true,
-            noiseSuppression: true
+            noiseSuppression: false, // Disable aggressive noise suppression that can cut off speech
+            autoGainControl: false   // Prevent automatic gain adjustments during pauses
           }
         });
       }
@@ -178,16 +261,19 @@ export const WakeWordVoiceInterface: React.FC<WakeWordVoiceInterfaceProps> = ({
         processRecording();
       };
 
+      // Setup intelligent silence detection for automatic stopping
+      setupSilenceDetection();
+
       mediaRecorderRef.current.start();
 
-      // Start recording timer
+      // Start recording timer with extended timeout for natural pauses
       let duration = 0;
       recordingTimerRef.current = setInterval(() => {
         duration += 1;
         setState(prev => ({ ...prev, recordingDuration: duration }));
 
-        // Auto-stop after 30 seconds
-        if (duration >= 30) {
+        // Auto-stop after 60 seconds (extended for thoughtful conversation)
+        if (duration >= 60) {
           stopRecording();
         }
       }, 1000);
@@ -467,9 +553,9 @@ export const WakeWordVoiceInterface: React.FC<WakeWordVoiceInterfaceProps> = ({
       {/* Instructions */}
       <div className="text-center text-xs text-gray-500 dark:text-gray-400 max-w-sm">
         {state.mode === 'push-to-talk' ? (
-          <p>Hold the microphone button to speak, release to send</p>
+          <p>Hold the microphone button to speak. Take your time - natural thinking pauses are welcome. Release when completely finished.</p>
         ) : (
-          <p>Say "{customWakeWord || `Hello ${voiceId === 'maya-alloy' ? 'Maya' : 'Anthony'}`}" to activate voice chat</p>
+          <p>Say "{customWakeWord || `Hello ${voiceId === 'maya-alloy' ? 'Maya' : 'Anthony'}`}" to start speaking. I'll automatically detect when you're finished after a natural pause.</p>
         )}
       </div>
 

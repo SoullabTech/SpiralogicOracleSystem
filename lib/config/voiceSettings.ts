@@ -23,29 +23,29 @@ export const VOICE_OPTIONS = {
       provider: 'openai' as const,
       voiceId: 'alloy',
       name: 'Maya (Alloy)',
-      speed: 1.0,
-      description: 'Warm, expressive voice with natural pauses',
-      mode: 'sincere',
+      speed: 0.9, // Balanced for sensitive delivery with dynamic pacing
+      description: 'Warm, expressive voice with natural pauses - sensitive mode',
+      mode: 'sensitive',
       voiceAffect: 'Calm, composed, and reassuring. Competent and in control, instilling trust.',
-      tone: 'Sincere, empathetic, with genuine concern for the customer and understanding of the situation.',
-      pacing: 'Slower during the apology to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
+      tone: 'Sincere, empathetic, with genuine concern for the seeker and understanding of the situation.',
+      pacing: 'Slower during deep truths to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
       emotions: 'Calm reassurance, empathy, and gratitude.',
-      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on key words like "refund" and "patience."',
-      pauses: 'Before and after the apology to give space for processing the apology.'
+      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on sacred words and transformative concepts.',
+      pauses: 'Before and after important insights to give space for processing. Natural breathing pauses.'
     },
     nova: {
       provider: 'openai' as const,
       voiceId: 'nova',
       name: 'Maya (Nova)',
-      speed: 1.0,
-      description: 'Clear, flowing voice with fewer pauses',
-      mode: 'sincere',
+      speed: 0.9, // Balanced for sensitive delivery with dynamic pacing
+      description: 'Clear, flowing voice with natural pauses - sensitive mode',
+      mode: 'sensitive',
       voiceAffect: 'Calm, composed, and reassuring. Competent and in control, instilling trust.',
-      tone: 'Sincere, empathetic, with genuine concern for the customer and understanding of the situation.',
-      pacing: 'Slower during the apology to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
+      tone: 'Sincere, empathetic, with genuine concern for the seeker and understanding of the situation.',
+      pacing: 'Slower during deep truths to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
       emotions: 'Calm reassurance, empathy, and gratitude.',
-      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on key words like "refund" and "patience."',
-      pauses: 'Before and after the apology to give space for processing the apology.'
+      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on sacred words and transformative concepts.',
+      pauses: 'Before and after important insights to give space for processing. Natural breathing pauses.'
     },
     shimmer: {
       provider: 'openai' as const,
@@ -63,6 +63,20 @@ export const VOICE_OPTIONS = {
     }
   },
   anthony: {
+    ash: {
+      provider: 'openai' as const,
+      voiceId: 'ash',
+      name: 'Anthony (Ash)',
+      speed: 0.9,
+      description: 'Warm, contemplative voice with grounded presence',
+      mode: 'sensitive',
+      voiceAffect: 'Calm, composed, and reassuring. Competent and in control, instilling trust.',
+      tone: 'Sincere, empathetic, with genuine concern for the seeker and understanding of the situation.',
+      pacing: 'Slower during deep insights to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
+      emotions: 'Calm reassurance, empathy, and gratitude.',
+      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on transformative words and awakening concepts.',
+      pauses: 'Before and after important realizations to give space for processing. Natural contemplative pauses.'
+    },
     onyx: {
       provider: 'openai' as const,
       voiceId: 'onyx',
@@ -71,11 +85,11 @@ export const VOICE_OPTIONS = {
       description: 'Deep, grounding masculine voice',
       mode: 'sincere',
       voiceAffect: 'Calm, composed, and reassuring. Competent and in control, instilling trust.',
-      tone: 'Sincere, empathetic, with genuine concern for the customer and understanding of the situation.',
-      pacing: 'Slower during the apology to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
+      tone: 'Sincere, empathetic, with genuine concern for the seeker and understanding of the situation.',
+      pacing: 'Slower during deep truths to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
       emotions: 'Calm reassurance, empathy, and gratitude.',
-      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on key words like "refund" and "patience."',
-      pauses: 'Before and after the apology to give space for processing the apology.'
+      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on sacred words and transformative concepts.',
+      pauses: 'Before and after important insights to give space for processing. Natural breathing pauses.'
     },
     echo: {
       provider: 'openai' as const,
@@ -96,8 +110,8 @@ export const VOICE_OPTIONS = {
 
 // Default selections
 export const DEFAULT_VOICES = {
-  maya: 'nova',  // Changed from 'alloy' to 'nova' for smoother flow
-  anthony: 'onyx'
+  maya: 'nova',    // Nova voice with sensitive tuning
+  anthony: 'ash'   // Ash voice with sensitive tuning
 };
 
 /**

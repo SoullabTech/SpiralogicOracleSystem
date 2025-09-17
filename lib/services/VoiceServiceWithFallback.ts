@@ -124,7 +124,7 @@ export class VoiceServiceWithFallback extends EventEmitter {
         voice: voiceProfile.baseVoiceId as any,
         input: text,
         response_format: format as any,
-        speed: speed
+        speed: Math.max(0.8, speed * 0.9) // Slightly slower for more natural, sensitive delivery
       });
 
       const audioData = Buffer.from(await response.arrayBuffer());

@@ -262,7 +262,7 @@ export default function BetaRitualFlow() {
 
     setRitualState({ ...ritualState, firstTruth, stage: 'seeded' });
 
-    // Log ritual completion
+    // Log ritual completion with enhanced depth analysis
     await ritualEventService.logCompletion({
       userId,
       completedAt: new Date(),
@@ -270,7 +270,8 @@ export default function BetaRitualFlow() {
       voiceChoice: ritualState.selectedCompanion || 'maya',
       modeChoice: ritualState.selectedVoiceMode || 'push-to-talk',
       skipped: false,
-      firstTruthWordCount: wordCount
+      firstTruthWordCount: wordCount,
+      firstTruthText: firstTruth  // Include the actual text for depth analysis
     });
 
     // Store in fractal memory

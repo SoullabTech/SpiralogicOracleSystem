@@ -164,7 +164,7 @@ export class VoicePreprocessor {
   }
 
   /**
-   * Clean up processed text
+   * Clean up processed text and optimize for smooth voice synthesis
    */
   private static cleanupText(text: string): string {
     let cleaned = text;
@@ -183,7 +183,50 @@ export class VoicePreprocessor {
     // Ensure sentences start properly
     cleaned = cleaned.replace(/^[,.]/, ''); // Remove leading punctuation
 
+    // Optimize for smoother voice synthesis flow
+    cleaned = this.optimizeForVoiceFlow(cleaned);
+
     return cleaned;
+  }
+
+  /**
+   * Optimize text for smooth voice synthesis flow
+   */
+  private static optimizeForVoiceFlow(text: string): string {
+    let optimized = text;
+
+    // Advanced conjunction smoothing - the key fix for choppy "and" transitions
+    // First pass: handle mid-sentence conjunctions with micro-pauses
+    optimized = optimized.replace(/\s+and\s+([aeiou])/gi, ', and $1'); // Vowel starts
+    optimized = optimized.replace(/\s+and\s+([^aeiou\s])/gi, ', and $1'); // Consonant starts
+    optimized = optimized.replace(/\s+but\s+/gi, ', but ');
+    optimized = optimized.replace(/\s+or\s+/gi, ', or ');
+    optimized = optimized.replace(/\s+so\s+/gi, ', so ');
+    optimized = optimized.replace(/\s+yet\s+/gi, ', yet ');
+
+    // Special handling for sentence-starting conjunctions (more natural flow)
+    optimized = optimized.replace(/\.\s*And\s+/g, '. And ');
+    optimized = optimized.replace(/\?\s*And\s+/g, '? And ');
+    optimized = optimized.replace(/!\s*And\s+/g, '! And ');
+
+    // Add micro-pauses before transitional phrases that can sound choppy
+    optimized = optimized.replace(/\s+(however|therefore|meanwhile|furthermore|moreover|nevertheless|nonetheless)\s+/gi, '. $1, ');
+
+    // Smooth out phrase boundaries that can sound abrupt
+    optimized = optimized.replace(/\s+(then|now|here|there)\s+/gi, ', $1 ');
+
+    // Clean up any excessive comma accumulation
+    optimized = optimized.replace(/,\s*,+/g, ',');
+    optimized = optimized.replace(/,\s*([.!?])/g, '$1');
+    optimized = optimized.replace(/^,\s*/, ''); // Remove leading comma
+
+    // Final pass: ensure natural breathing spaces around key transition words
+    optimized = optimized.replace(/,\s*,\s*and/gi, ', and'); // Remove double commas before and
+
+    // Add subtle pauses before emphatic words to prevent rushed delivery
+    optimized = optimized.replace(/\s+(really|truly|deeply|profoundly|absolutely|certainly|indeed)\s+/gi, ', $1 ');
+
+    return optimized;
   }
 
   /**
