@@ -5,23 +5,36 @@
 
 import React, { useState } from 'react';
 import { voiceConfig, type VoiceProfile, type VoiceMenuItem } from '@/lib/config/voiceProfiles';
-import { Play, Lock, Check, Sparkles } from 'lucide-react';
+import { Play, Lock, Check, Sparkles, Mic, MicIcon } from 'lucide-react';
+
+export type VoiceMode = 'push-to-talk' | 'wake-word';
+export type InteractionMode = 'conversational' | 'meditative' | 'guided';
 
 interface VoiceSelectionUIProps {
   currentVoiceId: string;
   userLevel: number;
   onVoiceSelect: (voiceId: string) => void;
   onPreviewVoice?: (voiceId: string) => void;
+  onModeChange?: (mode: VoiceMode) => void;
+  onInteractionModeChange?: (mode: InteractionMode) => void;
+  initialVoiceMode?: VoiceMode;
+  initialInteractionMode?: InteractionMode;
 }
 
 export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
   currentVoiceId,
   userLevel,
   onVoiceSelect,
-  onPreviewVoice
+  onPreviewVoice,
+  onModeChange,
+  onInteractionModeChange,
+  initialVoiceMode = 'push-to-talk',
+  initialInteractionMode = 'conversational'
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<'canonical' | 'alternative' | 'experimental'>('canonical');
   const [previewingVoice, setPreviewingVoice] = useState<string | null>(null);
+  const [voiceMode, setVoiceMode] = useState<VoiceMode>(initialVoiceMode);
+  const [interactionMode, setInteractionMode] = useState<InteractionMode>(initialInteractionMode);
 
   const menu = voiceConfig.buildMenu(currentVoiceId, userLevel);
 
@@ -29,6 +42,16 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
     setPreviewingVoice(voiceId);
     await onPreviewVoice?.(voiceId);
     setPreviewingVoice(null);
+  };
+
+  const handleVoiceModeToggle = (newMode: VoiceMode) => {
+    setVoiceMode(newMode);
+    onModeChange?.(newMode);
+  };
+
+  const handleInteractionModeChange = (newMode: InteractionMode) => {
+    setInteractionMode(newMode);
+    onInteractionModeChange?.(newMode);
   };
 
   const VoiceCard: React.FC<{ item: VoiceMenuItem }> = ({ item }) => {
@@ -164,6 +187,89 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
         ))}
       </div>
 
+      {/* Voice Mode Toggle */}
+      <div className="mt-6">
+        <h3 className="text-md font-semibold mb-3 text-gray-800 dark:text-gray-200">Voice Activation</h3>
+        <div className="flex gap-3">
+          <button
+            onClick={() => handleVoiceModeToggle('push-to-talk')}
+            className={`flex-1 py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all ${
+              voiceMode === 'push-to-talk'
+                ? 'bg-purple-600 text-white shadow-lg'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`}
+          >
+            <Mic className="w-4 h-4" />
+            <span className="text-sm font-medium">Push-to-Talk</span>
+          </button>
+          <button
+            onClick={() => handleVoiceModeToggle('wake-word')}
+            className={`flex-1 py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all ${
+              voiceMode === 'wake-word'
+                ? 'bg-purple-600 text-white shadow-lg'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`}
+          >
+            <MicIcon className="w-4 h-4" />
+            <span className="text-sm font-medium">Wake Word</span>
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          {voiceMode === 'push-to-talk'
+            ? 'Hold to speak, release to send'
+            : 'Say "Hello Maya" to activate'
+          }
+        </p>
+      </div>
+
+      {/* Interaction Mode Selection */}
+      <div className="mt-6">
+        <h3 className="text-md font-semibold mb-3 text-gray-800 dark:text-gray-200">Interaction Style</h3>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            onClick={() => handleInteractionModeChange('conversational')}
+            className={`py-3 px-3 rounded-lg text-center transition-all ${
+              interactionMode === 'conversational'
+                ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-2 border-green-500'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-transparent hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`}
+          >
+            <div className="text-lg mb-1">🗣️</div>
+            <div className="text-xs font-medium">Conversational</div>
+            <div className="text-xs text-gray-500 mt-1">Natural dialogue</div>
+          </button>
+          <button
+            onClick={() => handleInteractionModeChange('meditative')}
+            className={`py-3 px-3 rounded-lg text-center transition-all ${
+              interactionMode === 'meditative'
+                ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-2 border-blue-500'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-transparent hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`}
+          >
+            <div className="text-lg mb-1">🧘</div>
+            <div className="text-xs font-medium">Meditative</div>
+            <div className="text-xs text-gray-500 mt-1">Gentle presence</div>
+          </button>
+          <button
+            onClick={() => handleInteractionModeChange('guided')}
+            className={`py-3 px-3 rounded-lg text-center transition-all ${
+              interactionMode === 'guided'
+                ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 border-2 border-purple-500'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-transparent hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`}
+          >
+            <div className="text-lg mb-1">🌟</div>
+            <div className="text-xs font-medium">Guided</div>
+            <div className="text-xs text-gray-500 mt-1">Structured flow</div>
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          {interactionMode === 'conversational' && 'Back-and-forth natural conversation'}
+          {interactionMode === 'meditative' && 'Quiet presence with longer pauses'}
+          {interactionMode === 'guided' && 'Ritualized prompts and gentle leading'}
+        </p>
+      </div>
+
       {/* Trust Level Indicator */}
       <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
         <div className="flex items-center justify-between">
@@ -184,8 +290,19 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
           Higher trust levels unlock special voices and masks
         </p>
       </div>
+
+      {/* Current Selection Summary */}
+      <div className="mt-4 p-3 bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800 rounded-lg">
+        <h4 className="text-sm font-semibold text-purple-800 dark:text-purple-200 mb-2">Current Selection</h4>
+        <div className="text-xs text-purple-700 dark:text-purple-300 space-y-1">
+          <div>Voice: {voiceConfig.getProfile(currentVoiceId)?.displayName || 'Unknown'}</div>
+          <div>Activation: {voiceMode === 'push-to-talk' ? 'Push-to-Talk' : 'Wake Word'}</div>
+          <div>Style: {interactionMode.charAt(0).toUpperCase() + interactionMode.slice(1)}</div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default VoiceSelectionUI;
+export type { VoiceMode, InteractionMode };
