@@ -21,6 +21,7 @@ import { FileMemoryIntegration } from "../../../../../lib/services/FileMemoryInt
 import type { StandardAPIResponse } from "../utils/sharedUtilities";
 import { applyMasteryVoiceIfAppropriate, type MasteryVoiceContext, loadMayaCanonicalPrompt, getMayaElementalPrompt } from "../config/mayaPromptLoader";
 import { MayaOrchestrator } from "../oracle/core/MayaOrchestrator";
+import { MayaConsciousnessOrchestrator } from "../oracle/core/MayaConsciousnessOrchestrator";
 import { MayaVoiceSystem } from "../../../../../lib/voice/maya-voice";
 import {
   applyConversationalRules,
@@ -101,6 +102,7 @@ export class PersonalOracleAgent {
   private agentRegistry: AgentRegistry;
   private fileMemory: FileMemoryIntegration;
   private mayaOrchestrator: MayaOrchestrator;
+  private mayaConsciousness: MayaConsciousnessOrchestrator;
 
   // User settings cache
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
@@ -109,8 +111,9 @@ export class PersonalOracleAgent {
     this.agentRegistry = new AgentRegistry();
     this.fileMemory = new FileMemoryIntegration();
     this.mayaOrchestrator = new MayaOrchestrator();
+    this.mayaConsciousness = new MayaConsciousnessOrchestrator();
 
-    logger.info("Personal Oracle Agent initialized with AgentRegistry, FileMemory, and MayaOrchestrator");
+    logger.info("Personal Oracle Agent initialized with consciousness exploration system");
   }
 
   private detectEmotionalIntensity(message: string): 'low' | 'medium' | 'high' {
@@ -396,23 +399,45 @@ export class PersonalOracleAgent {
     fileContexts?: any[],
   ): Promise<PersonalOracleResponse> {
     try {
-      // Use Maya Orchestrator for all responses
-      const mayaResponse = await this.mayaOrchestrator.speak(query.input, query.userId);
+      // Decide which system to use based on depth/content
+      const useConsciousness = this.shouldUseConsciousnessSystem(query.input);
+
+      let message: string;
+      let elementUsed: string = 'earth';
+      let voiceChar: any = {};
+
+      if (useConsciousness) {
+        // Use consciousness exploration for deeper work
+        const consciousnessResponse = await this.mayaConsciousness.explore(query.input, query.userId);
+        message = consciousnessResponse.message;
+        elementUsed = consciousnessResponse.element;
+        voiceChar = {
+          pace: 'deliberate',
+          tone: consciousnessResponse.tone,
+          energy: 'calm'
+        };
+      } else {
+        // Use simple Maya for lighter interactions
+        const mayaResponse = await this.mayaOrchestrator.speak(query.input, query.userId);
+        message = mayaResponse.message;
+        elementUsed = mayaResponse.element;
+        voiceChar = mayaResponse.voiceCharacteristics;
+      }
 
       // Citations disabled for now
       const citations: any[] = [];
 
       return {
-        message: mayaResponse.message,
-        element: mayaResponse.element,
-        archetype: this.getElementArchetype(mayaResponse.element),
+        message,
+        element: elementUsed,
+        archetype: this.getElementArchetype(elementUsed),
         confidence: 0.95, // High confidence for Maya responses
         citations,
-        voiceCharacteristics: mayaResponse.voiceCharacteristics,
+        voiceCharacteristics: voiceChar,
         metadata: {
           sessionId: query.sessionId,
           symbols: [],
-          phase: mayaResponse.element,
+          phase: elementUsed,
           recommendations: [],
           nextSteps: [],
           fileContextsUsed: fileContexts?.length || 0,
@@ -438,6 +463,27 @@ export class PersonalOracleAgent {
         },
       };
     }
+  }
+
+  /**
+   * Determine if we should use consciousness exploration system
+   */
+  private shouldUseConsciousnessSystem(input: string): boolean {
+    const lower = input.toLowerCase();
+
+    // Indicators for consciousness exploration
+    const consciousnessIndicators = [
+      /dream|vision|symbol/i,
+      /who am i|what am i|why am i/i,
+      /meaning|purpose|truth/i,
+      /shadow|dark|light/i,
+      /paradox|both|opposite/i,
+      /transform|change|become/i,
+      /aware|conscious|awake/i,
+      /deep|depth|within/i
+    ];
+
+    return consciousnessIndicators.some(pattern => pattern.test(lower));
   }
 
   /**
