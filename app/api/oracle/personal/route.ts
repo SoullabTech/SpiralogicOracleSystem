@@ -146,6 +146,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       response,
+      message: response,  // Add message field for frontend compatibility
       element,
       archetype: 'maya',
       sessionId,
