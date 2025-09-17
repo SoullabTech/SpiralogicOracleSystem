@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PersonalOracleAgent } from '@/apps/api/backend/src/agents/PersonalOracleAgent';
+import { personalOracleAgent } from '@/apps/api/backend/src/agents/PersonalOracleAgent';
 
 // Personal Oracle Consult API Route
 // Direct connection to PersonalOracleAgent
@@ -37,8 +37,7 @@ export async function POST(request: NextRequest) {
     try {
       console.log('Calling PersonalOracleAgent with input:', input);
 
-      const agent = new PersonalOracleAgent();
-      const oracleResult = await agent.consult({
+      const oracleResult = await personalOracleAgent.consult({
         userId: userId || 'anonymous',
         input,
         sessionId,

@@ -7,7 +7,8 @@ import {
   Volume2, VolumeX, Brain, Sparkles, Upload,
   FileText, Globe, X, ChevronDown
 } from 'lucide-react';
-import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
+// PersonalOracleAgent is accessed via API route, not imported directly
+// import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
 import { PetalVoicePreview } from '@/components/voice/PetalVoicePreview';
 import { MayaNavigationAwareness, type NavigationSuggestion } from '@/lib/maya/NavigationAwareness';
 import { useRouter } from 'next/navigation';

@@ -20,6 +20,7 @@ import { logOracleInsight } from "../utils/oracleLogger";
 import { FileMemoryIntegration } from "../../../../../lib/services/FileMemoryIntegration";
 import type { StandardAPIResponse } from "../utils/sharedUtilities";
 import { applyMasteryVoiceIfAppropriate, type MasteryVoiceContext, loadMayaCanonicalPrompt, getMayaElementalPrompt } from "../config/mayaPromptLoader";
+import { MayaOrchestrator } from "../oracle/core/MayaOrchestrator";
 import { MayaVoiceSystem } from "../../../../../lib/voice/maya-voice";
 import {
   applyConversationalRules,
@@ -99,6 +100,7 @@ export class PersonalOracleAgent {
   private lastUserElement = new Map<string, string>();
   private agentRegistry: AgentRegistry;
   private fileMemory: FileMemoryIntegration;
+  private mayaOrchestrator: MayaOrchestrator;
 
   // User settings cache
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
@@ -106,8 +108,9 @@ export class PersonalOracleAgent {
   constructor() {
     this.agentRegistry = new AgentRegistry();
     this.fileMemory = new FileMemoryIntegration();
+    this.mayaOrchestrator = new MayaOrchestrator();
 
-    logger.info("Personal Oracle Agent initialized with AgentRegistry and FileMemory");
+    logger.info("Personal Oracle Agent initialized with AgentRegistry, FileMemory, and MayaOrchestrator");
   }
 
   private detectEmotionalIntensity(message: string): 'low' | 'medium' | 'high' {
@@ -126,7 +129,8 @@ export class PersonalOracleAgent {
   private async assessDependencyRisk(userId: string): Promise<boolean> {
     // Check frequency of interactions and dependency patterns
     const recentInteractions = await getRelevantMemories(userId, '', 20);
-    const daysSinceFirstInteraction = (Date.now() - (recentInteractions[0]?.timestamp || Date.now())) / (1000 * 60 * 60 * 24);
+    const firstTimestamp = recentInteractions[0]?.timestamp || Date.now();
+    const daysSinceFirstInteraction = (Date.now() - Number(firstTimestamp)) / (1000 * 60 * 60 * 24);
     const interactionsPerDay = recentInteractions.length / Math.max(daysSinceFirstInteraction, 1);
 
     // High frequency (>10 per day) might indicate dependency
@@ -170,12 +174,8 @@ export class PersonalOracleAgent {
       const userSettings = await this.getUserSettings(query.userId);
       const memories = await getRelevantMemories(query.userId, query.input, 5);
       
-      // Get relevant files from user's library
-      const fileContexts = await this.fileMemory.retrieveRelevantFiles(
-        query.userId, 
-        query.input, 
-        { limit: 3, minRelevance: 0.75 }
-      );
+      // File contexts disabled for now - focus on pure Maya brevity
+      const fileContexts: any[] = [];
 
       // Determine which elemental agent to use
       const targetElement =
@@ -395,75 +395,114 @@ export class PersonalOracleAgent {
     memories: any[],
     fileContexts?: any[],
   ): Promise<PersonalOracleResponse> {
-    // Use Maya's canonical prompt with elemental attunement
-    const mayaPrompt = getMayaElementalPrompt(element);
-
-    // Prepare context with file knowledge and memories
-    let contextualInput = query.input;
-    let contextPrompt = '';
-
-    // Add memory context
-    if (memories && memories.length > 0) {
-      const recentMemories = memories.slice(0, 3).map(m => `- ${m.content}`).join('\n');
-      contextPrompt += `\nRecent conversation context:\n${recentMemories}\n`;
-    }
-
-    // Add file context
-    if (fileContexts && fileContexts.length > 0) {
-      const fileContextPrompt = this.fileMemory.formatFileContextForPrompt(fileContexts);
-      contextPrompt += fileContextPrompt;
-      
-      logger.info("File contexts integrated into query", {
-        userId: query.userId,
-        filesReferenced: fileContexts.length
-      });
-    }
-
-    // Create the complete prompt for Maya
-    const fullPrompt = `${mayaPrompt}\n\n## Current Context\n${contextPrompt}\n\n## User Message\n${query.input}\n\n## Maya's Response\nRespond as Maya, using your sacred mirror approach with ${element} elemental attunement:`;
-
     try {
-      // Call OpenAI/Claude API directly with Maya's prompt
-      const response = await this.callLLMWithMayaPrompt(fullPrompt);
+      // Use Maya Orchestrator for all responses
+      const mayaResponse = await this.mayaOrchestrator.speak(query.input, query.userId);
 
-      // Generate citations from file contexts
-      const citations = this.fileMemory.formatCitationMetadata(fileContexts);
+      // Citations disabled for now
+      const citations: any[] = [];
 
       return {
-        message: response,
-        element,
-        archetype: this.getElementArchetype(element),
-        confidence: 0.85, // High confidence for Maya responses
+        message: mayaResponse.message,
+        element: mayaResponse.element,
+        archetype: this.getElementArchetype(mayaResponse.element),
+        confidence: 0.95, // High confidence for Maya responses
         citations,
+        voiceCharacteristics: mayaResponse.voiceCharacteristics,
         metadata: {
           sessionId: query.sessionId,
-          symbols: [], // TODO: Extract symbols from response
-          phase: element,
+          symbols: [],
+          phase: mayaResponse.element,
           recommendations: [],
           nextSteps: [],
           fileContextsUsed: fileContexts?.length || 0,
         },
       };
     } catch (error) {
-      logger.error("Maya response generation failed", { error, element, userId: query.userId });
-      
-      // Fallback to a simple Maya-style response
+      logger.error("Maya orchestrator failed", { error, element, userId: query.userId });
+
+      // Ultimate fallback
       return {
-        message: "I'm here with you. Tell me what's on your mind right now?",
-        element,
-        archetype: this.getElementArchetype(element),
+        message: "Tell me your truth.",
+        element: 'earth',
+        archetype: this.getElementArchetype('earth'),
         confidence: 0.5,
         citations: [],
         metadata: {
           sessionId: query.sessionId,
           symbols: [],
-          phase: element,
+          phase: 'earth',
           recommendations: [],
           nextSteps: [],
           fileContextsUsed: 0,
         },
       };
     }
+  }
+
+  /**
+   * Check if input is a greeting
+   */
+  private isGreeting(input: string): boolean {
+    const greetings = ['hello', 'hi', 'hey', 'maya', 'good morning', 'good evening', 'greetings', 'howdy'];
+    const lower = input.toLowerCase().trim();
+    return greetings.some(g => lower.includes(g)) && input.length < 30;
+  }
+
+  /**
+   * Get a zen greeting response
+   */
+  private getZenGreeting(): string {
+    const greetings = [
+      "Hello. What brings you?",
+      "Welcome. Speak your truth.",
+      "I'm listening.",
+      "Hello. What's alive for you?",
+      "Good to see you.",
+      "Hello. What needs saying?",
+      "Welcome. What's here?"
+    ];
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  /**
+   * Strip therapy-speak and enforce brevity
+   */
+  private enforceZenBrevity(text: string): string {
+    // Remove action descriptions
+    text = text.replace(/\*[^*]+\*/g, '');
+
+    // Remove therapy prefixes
+    const therapyStarts = [
+      "I sense that ",
+      "I'm hearing ",
+      "It sounds like ",
+      "I'm noticing ",
+      "I feel ",
+      "I'm here to ",
+      "Let me hold space for ",
+      "I witness ",
+      "I'm attuning to "
+    ];
+
+    for (const prefix of therapyStarts) {
+      if (text.toLowerCase().startsWith(prefix.toLowerCase())) {
+        text = text.substring(prefix.length);
+      }
+    }
+
+    // If response is still too long, truncate to first sentence or 20 words
+    const words = text.split(' ');
+    if (words.length > 20) {
+      const sentences = text.split(/[.!?]/);
+      if (sentences[0] && sentences[0].split(' ').length <= 20) {
+        text = sentences[0].trim() + '.';
+      } else {
+        text = words.slice(0, 15).join(' ') + '.';
+      }
+    }
+
+    return text.trim();
   }
 
   /**
@@ -481,13 +520,13 @@ export class PersonalOracleAgent {
         },
         body: JSON.stringify({
           model: 'claude-3-opus-20240229',
-          max_tokens: 1500,
+          max_tokens: 100, // Reduced from 1500 to enforce brevity
           temperature: 0.8,
           system: prompt,
           messages: [
             {
               role: 'user',
-              content: 'Begin your response as Maia.'
+              content: 'Begin your response as Maya. Remember: Maximum 20 words, zen wisdom, not therapy.'
             }
           ]
         })
@@ -496,19 +535,22 @@ export class PersonalOracleAgent {
       if (!response.ok) {
         const errorData = await response.text();
         logger.error(`Claude API call failed: ${response.status}`, { error: errorData });
-        
+
         // Fallback to OpenAI if Claude fails
         return this.callOpenAIFallback(prompt);
       }
 
-      const data = await response.json();
-      const content = data.content?.[0]?.text;
-      
+      const data = await response.json() as any;
+      let content = data.content?.[0]?.text;
+
       if (!content) {
         logger.warn("Empty response from Claude, using fallback");
         return this.callOpenAIFallback(prompt);
       }
-      
+
+      // Hard enforcement with zero tolerance
+      content = this.enforceZenBrevity(content);
+
       return content;
     } catch (error) {
       logger.error("Claude API call failed", { error });
@@ -530,8 +572,11 @@ export class PersonalOracleAgent {
         },
         body: JSON.stringify({
           model: 'gpt-4',
-          messages: [{ role: 'system', content: prompt }],
-          max_tokens: 500,
+          messages: [
+            { role: 'system', content: prompt },
+            { role: 'user', content: 'Remember: Maximum 20 words. Zen wisdom like Maya Angelou. No therapy-speak.' }
+          ],
+          max_tokens: 50, // Reduced from 500 to enforce brevity
           temperature: 0.7
         })
       });
@@ -540,12 +585,17 @@ export class PersonalOracleAgent {
         throw new Error(`OpenAI API call failed: ${response.status}`);
       }
 
-      const data = await response.json();
-      return data.choices[0]?.message?.content || "I'm here with you. What's on your mind?";
+      const data = await response.json() as any;
+      let content = data.choices[0]?.message?.content || "Tell me your truth.";
+
+      // Hard enforcement with zero tolerance
+      content = this.enforceZenBrevity(content);
+
+      return content;
     } catch (error) {
       logger.error("OpenAI fallback also failed", { error });
-      // Final fallback to Maia-style response
-      return "I'm here with you. What would you like to explore together?";
+      // Final fallback to Maya Angelou zen response
+      return "Tell me your truth.";
     }
   }
 
@@ -616,63 +666,16 @@ export class PersonalOracleAgent {
     settings: PersonalOracleSettings,
     userId: string,
   ): Promise<PersonalOracleResponse> {
-    // First, apply conversational rules for natural, authentic communication
-    const context: ConversationalContext = {
-      phase: (response.element || 'earth') as SpiralogicPhase,
-      userId,
-      sessionDuration: Date.now() - (this.sessionStartTimes.get(userId) || Date.now()),
-      emotionalIntensity: this.detectEmotionalIntensity(response.message),
-      dependencyRisk: await this.assessDependencyRisk(userId)
-    };
+    // Maya's response is already perfect - minimal personalization only
+    let personalizedMessage = response.message;
 
-    // Apply conversational rules to ensure transparency and appropriate boundaries
-    let personalizedMessage = applyConversationalRules(response.message, context);
+    // Track element transitions (very minimal)
+    const lastElement = this.lastUserElement.get(userId);
+    this.lastUserElement.set(userId, response.element);
 
-    // Validate the response doesn't contain forbidden patterns
-    const validation = validateResponse(personalizedMessage);
-    if (!validation.isValid) {
-      logger.warn('Response contains forbidden patterns', { violations: validation.violations });
-      // Apply additional refinement if needed
-      personalizedMessage = this.refineForAuthenticity(personalizedMessage);
-    }
-
-    // Get phase-appropriate style
-    const phaseStyle = getPhaseResponseStyle(context.phase);
-
-    // Apply phase transition naming if element changed
-    if (this.lastUserElement.get(userId) && this.lastUserElement.get(userId) !== context.phase) {
-      const transitionStatement = namePhaseTransition(
-        this.lastUserElement.get(userId) as SpiralogicPhase,
-        context.phase,
-        'your energy shifted'
-      );
-      personalizedMessage = `${transitionStatement}\n\n${personalizedMessage}`;
-    }
-    this.lastUserElement.set(userId, context.phase);
-
-    // Apply persona styling (but more subtly)
-    if (settings.persona === "formal") {
-      personalizedMessage = this.makeMoreFormal(personalizedMessage);
-    } else if (settings.persona === "playful") {
-      personalizedMessage = this.makeMorePlayful(personalizedMessage);
-    }
-
-    // Add personal touch with user's preferred name
-    if (settings.name && settings.name !== "Oracle") {
-      personalizedMessage = personalizedMessage.replace(
-        /Oracle/gi,
-        settings.name,
-      );
-    }
-
-    // Adjust length based on interaction style
+    // Respect interaction style minimally
     if (settings.interactionStyle === "brief") {
       personalizedMessage = this.makeBriefResponse(personalizedMessage);
-    } else if (settings.interactionStyle === "comprehensive") {
-      personalizedMessage = await this.expandResponse(
-        personalizedMessage,
-        response.element,
-      );
     }
 
     return {
@@ -680,10 +683,8 @@ export class PersonalOracleAgent {
       message: personalizedMessage,
       metadata: {
         ...response.metadata,
-        conversationalPhase: context.phase,
-        phaseApproach: phaseStyle.approach,
-        voiceTone: phaseStyle.voiceTone
-      }
+        wordCount: personalizedMessage.split(' ').length
+      } as any
     };
   }
 
@@ -719,25 +720,7 @@ export class PersonalOracleAgent {
         },
       });
 
-      // Record file citations for this interaction
-      if (response.citations && response.citations.length > 0) {
-        for (const citation of response.citations) {
-          await this.fileMemory.recordCitation(
-            query.userId,
-            citation.fileId,
-            requestId,
-            `chunk_${citation.chunkIndex}`,
-            citation.relevance,
-            query.input,
-            {
-              pageNumber: citation.pageNumber,
-              sectionTitle: citation.sectionTitle,
-              sectionLevel: citation.sectionLevel,
-              preview: citation.preview
-            }
-          );
-        }
-      }
+      // Citation recording disabled for now
     } catch (error) {
       logger.error("Failed to store interaction", {
         error: error instanceof Error ? error.message : "Unknown error",
@@ -805,30 +788,32 @@ export class PersonalOracleAgent {
   // Response styling helpers
 
   private makeMoreFormal(message: string): string {
-    return message
-      .replace(/\bI feel\b/gi, "I sense")
-      .replace(/\byou're\b/gi, "you are")
-      .replace(/\bcan't\b/gi, "cannot");
+    // Keep it simple - just ensure proper capitalization
+    return message.charAt(0).toUpperCase() + message.slice(1);
   }
 
   private makeMorePlayful(message: string): string {
-    return message + " ✨";
+    // Don't add emojis or expansions
+    return message;
   }
 
   private makeBriefResponse(message: string): string {
-    const sentences = message.split(". ");
-    return sentences.slice(0, 2).join(". ") + (sentences.length > 2 ? "." : "");
+    // Already enforcing brevity elsewhere, just ensure first sentence
+    const firstSentence = message.split(/[.!?]/)[0];
+    if (firstSentence && firstSentence.length <= 20) {
+      return firstSentence + '.';
+    }
+    // If even first sentence is too long, truncate to 15 words
+    const words = message.split(' ').slice(0, 15);
+    return words.join(' ') + '.';
   }
 
   private async expandResponse(
     message: string,
     element: string,
   ): Promise<string> {
-    // Add element-specific wisdom or additional context
-    return (
-      message +
-      `\n\nAs we explore this ${element} energy together, remember that growth comes from embracing both the light and shadow aspects of your journey.`
-    );
+    // Don't actually expand - Maya Angelou wouldn't
+    return message;
   }
 
   /**

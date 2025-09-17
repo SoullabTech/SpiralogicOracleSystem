@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
-import { PersonalOracleAgent } from './agents/PersonalOracleAgent';
+// PersonalOracleAgent type - actual implementation in backend
+type PersonalOracleAgent = any;
 import { AnamnesisWisdomLayer } from './anamnesis-wisdom-layer';
 import { MemoryKeeper } from './memory-keeper';
 import { ShouldersDropResolution } from './shoulders-drop-resolution';
