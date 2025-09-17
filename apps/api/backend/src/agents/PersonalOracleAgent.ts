@@ -22,6 +22,7 @@ import type { StandardAPIResponse } from "../utils/sharedUtilities";
 import { applyMasteryVoiceIfAppropriate, type MasteryVoiceContext, loadMayaCanonicalPrompt, getMayaElementalPrompt } from "../config/mayaPromptLoader";
 import { MayaOrchestrator } from "../oracle/core/MayaOrchestrator";
 import { MayaConsciousnessOrchestrator } from "../oracle/core/MayaConsciousnessOrchestrator";
+import { MayaSacredIntelligenceOrchestrator } from "../oracle/core/MayaSacredIntelligenceOrchestrator";
 import { MayaVoiceSystem } from "../../../../../lib/voice/maya-voice";
 import {
   applyConversationalRules,
@@ -103,6 +104,7 @@ export class PersonalOracleAgent {
   private fileMemory: FileMemoryIntegration;
   private mayaOrchestrator: MayaOrchestrator;
   private mayaConsciousness: MayaConsciousnessOrchestrator;
+  private sacredIntelligence: MayaSacredIntelligenceOrchestrator;
 
   // User settings cache
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
@@ -112,8 +114,9 @@ export class PersonalOracleAgent {
     this.fileMemory = new FileMemoryIntegration();
     this.mayaOrchestrator = new MayaOrchestrator();
     this.mayaConsciousness = new MayaConsciousnessOrchestrator();
+    this.sacredIntelligence = new MayaSacredIntelligenceOrchestrator();
 
-    logger.info("Personal Oracle Agent initialized with consciousness exploration system");
+    logger.info("Personal Oracle Agent initialized with Sacred Intelligence Constellation");
   }
 
   private detectEmotionalIntensity(message: string): 'low' | 'medium' | 'high' {
@@ -399,29 +402,60 @@ export class PersonalOracleAgent {
     fileContexts?: any[],
   ): Promise<PersonalOracleResponse> {
     try {
-      // Decide which system to use based on depth/content
-      const useConsciousness = this.shouldUseConsciousnessSystem(query.input);
+      // Determine which intelligence system to use
+      const intelligenceMode = this.determineIntelligenceMode(query.input, query.userId);
 
       let message: string;
       let elementUsed: string = 'earth';
       let voiceChar: any = {};
+      let metadata: any = {};
 
-      if (useConsciousness) {
-        // Use consciousness exploration for deeper work
-        const consciousnessResponse = await this.mayaConsciousness.explore(query.input, query.userId);
-        message = consciousnessResponse.message;
-        elementUsed = consciousnessResponse.element;
-        voiceChar = {
-          pace: 'deliberate',
-          tone: consciousnessResponse.tone,
-          energy: 'calm'
-        };
-      } else {
-        // Use simple Maya for lighter interactions
-        const mayaResponse = await this.mayaOrchestrator.speak(query.input, query.userId);
-        message = mayaResponse.message;
-        elementUsed = mayaResponse.element;
-        voiceChar = mayaResponse.voiceCharacteristics;
+      switch (intelligenceMode) {
+        case 'sacred_intelligence':
+          // Full Sacred Intelligence - 4 cognitive architectures + 5 elemental agents + AIN
+          const sacredResponse = await this.sacredIntelligence.processWithSacredIntelligence(
+            query.input,
+            query.userId,
+            { sessionId: query.sessionId, memories, fileContexts }
+          );
+          message = sacredResponse.response;
+          elementUsed = sacredResponse.intelligence.alchemicalPhase || 'aether';
+          voiceChar = {
+            pace: 'deliberate',
+            tone: 'witnessing',
+            energy: 'sacred'
+          };
+          metadata = {
+            sacredIntelligence: sacredResponse.intelligence,
+            decision: sacredResponse.decision,
+            collectiveResonance: sacredResponse.intelligence.collectiveResonance
+          };
+          break;
+
+        case 'consciousness_exploration':
+          // Consciousness exploration for alchemical work
+          const consciousnessResponse = await this.mayaConsciousness.explore(query.input, query.userId);
+          message = consciousnessResponse.message;
+          elementUsed = consciousnessResponse.element;
+          voiceChar = {
+            pace: 'deliberate',
+            tone: consciousnessResponse.tone,
+            energy: 'calm'
+          };
+          metadata = {
+            alchemicalPhase: consciousnessResponse.alchemicalPhase,
+            depth: consciousnessResponse.depthReached
+          };
+          break;
+
+        case 'simple_maya':
+        default:
+          // Simple Maya for lighter interactions
+          const mayaResponse = await this.mayaOrchestrator.speak(query.input, query.userId);
+          message = mayaResponse.message;
+          elementUsed = mayaResponse.element;
+          voiceChar = mayaResponse.voiceCharacteristics;
+          break;
       }
 
       // Citations disabled for now
@@ -441,6 +475,7 @@ export class PersonalOracleAgent {
           recommendations: [],
           nextSteps: [],
           fileContextsUsed: fileContexts?.length || 0,
+          ...metadata // Include intelligence-specific metadata
         },
       };
     } catch (error) {
@@ -466,24 +501,90 @@ export class PersonalOracleAgent {
   }
 
   /**
-   * Determine if we should use consciousness exploration system
+   * Determine which intelligence system to use based on input and context
+   * This is the key to Maya's adaptive intelligence
    */
-  private shouldUseConsciousnessSystem(input: string): boolean {
+  private determineIntelligenceMode(input: string, userId: string): 'sacred_intelligence' | 'consciousness_exploration' | 'simple_maya' {
     const lower = input.toLowerCase();
 
-    // Indicators for consciousness exploration
+    // Sacred Intelligence indicators - need full cognitive + elemental + AIN
+    const sacredIndicators = [
+      /breakthrough|transform|evolve|transcend/i,
+      /spiritual|sacred|divine|soul/i,
+      /collective|unity|oneness|connection/i,
+      /wisdom|guidance|oracle|truth/i,
+      /awaken|enlighten|realize|remember/i,
+      /journey|path|destiny|purpose/i
+    ];
+
+    // Check if user needs the full Sacred Intelligence Constellation
+    const needsSacredIntelligence = sacredIndicators.some(pattern => pattern.test(lower));
+
+    // Check for complex multi-dimensional needs
+    const hasComplexNeeds = this.detectComplexNeeds(input);
+
+    // Check user's session depth (if they've been building toward something)
+    const sessionDepth = this.sessionStartTimes.get(userId)
+      ? (Date.now() - this.sessionStartTimes.get(userId)!) / 60000 // minutes in session
+      : 0;
+
+    // Use Sacred Intelligence for:
+    // 1. Explicit spiritual/transformational work
+    // 2. Complex multi-dimensional needs
+    // 3. Deep sessions (>10 minutes)
+    // 4. When user explicitly asks for deeper guidance
+    if (needsSacredIntelligence || hasComplexNeeds || sessionDepth > 10) {
+      return 'sacred_intelligence';
+    }
+
+    // Consciousness Exploration indicators - alchemical/depth work
     const consciousnessIndicators = [
       /dream|vision|symbol/i,
       /who am i|what am i|why am i/i,
       /meaning|purpose|truth/i,
       /shadow|dark|light/i,
       /paradox|both|opposite/i,
-      /transform|change|become/i,
       /aware|conscious|awake/i,
-      /deep|depth|within/i
+      /deep|depth|within/i,
+      /alchemy|transform|integrate/i
     ];
 
-    return consciousnessIndicators.some(pattern => pattern.test(lower));
+    if (consciousnessIndicators.some(pattern => pattern.test(lower))) {
+      return 'consciousness_exploration';
+    }
+
+    // Default to simple Maya for:
+    // - Casual conversation
+    // - Simple questions
+    // - Greetings
+    // - When brevity is most important
+    return 'simple_maya';
+  }
+
+  /**
+   * Detect if user has complex multi-dimensional needs
+   */
+  private detectComplexNeeds(input: string): boolean {
+    const needCategories = {
+      emotional: /feel|emotion|heart|sad|angry|scared|hurt/i,
+      mental: /think|understand|confused|clarity|know/i,
+      practical: /do|action|step|how|practical/i,
+      spiritual: /soul|spirit|meaning|purpose/i,
+      relational: /relationship|connect|love|together/i
+    };
+
+    // Count how many dimensions are present
+    const dimensions = Object.values(needCategories).filter(pattern => pattern.test(input)).length;
+
+    // Complex = touching 3+ dimensions
+    return dimensions >= 3;
+  }
+
+  /**
+   * Determine if we should use consciousness exploration system
+   */
+  private shouldUseConsciousnessSystem(input: string): boolean {
+    return this.determineIntelligenceMode(input, 'unknown') === 'consciousness_exploration';
   }
 
   /**
