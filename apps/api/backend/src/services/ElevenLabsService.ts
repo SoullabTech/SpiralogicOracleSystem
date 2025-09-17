@@ -6,6 +6,7 @@
 import axios from "axios";
 import FormData from "form-data";
 import { logger } from "../utils/logger";
+import { VoicePreprocessor } from "../../../../../lib/voice/VoicePreprocessor";
 
 export class ElevenLabsService {
   private apiKey: string | undefined;
@@ -49,10 +50,15 @@ export class ElevenLabsService {
     }
     
     try {
+      // Preprocess text to remove stage directions before synthesis
+      const cleanText = VoicePreprocessor.extractSpokenContent(text);
+
+      logger.info(`Voice synthesis: "${text.substring(0, 50)}..." -> "${cleanText.substring(0, 50)}..."`);
+
       const response = await axios.post(
         `${this.baseUrl}/text-to-speech/${voiceId}`,
         {
-          text,
+          text: cleanText,
           model_id: "eleven_multilingual_v2",
           voice_settings: voiceSettings,
         },

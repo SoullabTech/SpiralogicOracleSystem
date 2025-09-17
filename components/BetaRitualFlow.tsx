@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
 import { VoiceServiceWithFallback } from '@/lib/services/VoiceServiceWithFallback';
 import { userPreferenceService } from '@/lib/services/userPreferenceService';
+import { ritualEventService } from '@/lib/services/ritualEventService';
 import type { VoiceMode } from '@/lib/agents/modules/VoiceSelectionUI';
 
 interface RitualState {
@@ -28,6 +29,7 @@ export default function BetaRitualFlow() {
   const [showElements, setShowElements] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [userId, setUserId] = useState<string>('');
+  const [ritualStartTime, setRitualStartTime] = useState<number>(Date.now());
 
   const voiceService = useRef(new VoiceServiceWithFallback());
   const oracleAgent = useRef<PersonalOracleAgent | null>(null);
@@ -38,7 +40,15 @@ export default function BetaRitualFlow() {
     const id = localStorage.getItem('userId') || `seeker-${Date.now()}`;
     localStorage.setItem('userId', id);
     setUserId(id);
+    setRitualStartTime(Date.now());
     oracleAgent.current = new PersonalOracleAgent(id);
+
+    // Log ritual start
+    ritualEventService.logEvent({
+      userId: id,
+      step: 'threshold',
+      metadata: { timeSpent: 0 }
+    });
   }, []);
 
   // Breathing animation
@@ -161,6 +171,14 @@ export default function BetaRitualFlow() {
    * Stage 5.5: Voice Mode Selection
    */
   const selectVoiceCompanion = async (companion: 'maya' | 'anthony') => {
+    // Log voice choice
+    await ritualEventService.logEvent({
+      userId,
+      step: 'voice_choice',
+      choice: companion,
+      metadata: { timeSpent: Math.round((Date.now() - ritualStartTime) / 1000) }
+    });
+
     setRitualState({ ...ritualState, selectedCompanion: companion, stage: 'voice_selection' });
 
     const prompt = companion === 'maya'
@@ -178,6 +196,28 @@ export default function BetaRitualFlow() {
     const finalCompanion = ritualState.selectedCompanion || 'maya';
     const finalVoiceMode = voiceMode || 'push-to-talk';
     const finalVoiceProfile = finalCompanion === 'maya' ? 'maya-alloy' : 'anthony-onyx';
+    const wasSkipped = !ritualState.selectedCompanion || !voiceMode;
+
+    // Log mode choice
+    if (voiceMode) {
+      await ritualEventService.logEvent({
+        userId,
+        step: 'mode_choice',
+        choice: voiceMode,
+        metadata: { timeSpent: Math.round((Date.now() - ritualStartTime) / 1000) }
+      });
+    } else {
+      // User skipped voice mode selection
+      await ritualEventService.logEvent({
+        userId,
+        step: 'skip',
+        choice: 'voice_mode',
+        metadata: {
+          timeSpent: Math.round((Date.now() - ritualStartTime) / 1000),
+          skippedFromStep: 'voice_selection'
+        }
+      });
+    }
 
     // Save preferences to Supabase
     try {
@@ -217,7 +257,21 @@ export default function BetaRitualFlow() {
    * Stage 7: Memory Seeding
    */
   const seedMemory = async (firstTruth: string) => {
+    const totalTimeSeconds = Math.round((Date.now() - ritualStartTime) / 1000);
+    const wordCount = firstTruth.split(' ').length;
+
     setRitualState({ ...ritualState, firstTruth, stage: 'seeded' });
+
+    // Log ritual completion
+    await ritualEventService.logCompletion({
+      userId,
+      completedAt: new Date(),
+      totalTimeSeconds,
+      voiceChoice: ritualState.selectedCompanion || 'maya',
+      modeChoice: ritualState.selectedVoiceMode || 'push-to-talk',
+      skipped: false,
+      firstTruthWordCount: wordCount
+    });
 
     // Store in fractal memory
     if (oracleAgent.current) {

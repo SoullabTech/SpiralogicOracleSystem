@@ -4,6 +4,7 @@
  */
 
 import { AgentConfig } from '../agent-config';
+import { VoicePreprocessor } from './VoicePreprocessor';
 
 interface MayaVoiceConfig {
   elevenLabsApiKey?: string;
@@ -97,7 +98,11 @@ export class MayaVoiceSystem {
 
   // Enhance text for natural conversation flow
   private enhanceTextForSpeech(text: string): string {
-    return text
+    // First, remove stage directions that shouldn't be spoken
+    let processedText = VoicePreprocessor.extractSpokenContent(text);
+
+    // Then apply natural conversation enhancements
+    return processedText
       // Add natural breathing pauses
       .replace(/\. /g, '. ')
       .replace(/\? /g, '? ')

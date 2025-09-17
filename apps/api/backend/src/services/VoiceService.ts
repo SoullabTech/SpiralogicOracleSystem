@@ -4,6 +4,7 @@ import { VoiceQueue } from './VoiceQueue';
 import { VoiceGuards } from '../core/guards/VoiceGuards';
 import { VoiceEventBus } from '../core/events/VoiceEventBus';
 import { getPresetForContext } from '../adapters/voice/voicePresets';
+import { VoicePreprocessor } from '../../../../../lib/voice/VoicePreprocessor';
 
 interface VoiceRequest {
   userId: string;
@@ -45,8 +46,11 @@ export class VoiceService {
       // Apply security guards
       await this.voiceGuards.checkText(request.userId, request.text);
 
-      // Scrub PII from text
-      const cleanText = this.voiceGuards.scrubPii(request.text);
+      // First remove stage directions and narrative text that shouldn't be spoken
+      const preprocessedText = VoicePreprocessor.extractSpokenContent(request.text);
+
+      // Then scrub PII from the spoken content
+      const cleanText = this.voiceGuards.scrubPii(preprocessedText);
 
       // Select appropriate voice preset
       const preset = getPresetForContext(
