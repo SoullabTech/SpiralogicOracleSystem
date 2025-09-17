@@ -2,6 +2,54 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MayaOrchestrator } from '@/apps/api/backend/src/oracle/core/MayaOrchestrator';
 import { SacredOracleCoreEnhanced } from '@/lib/sacred-oracle-core-enhanced';
 
+/**
+ * Clean Maya's response - remove ALL therapy-speak
+ */
+function cleanMayaResponse(response: string): string {
+  // Remove action descriptions
+  response = response.replace(/^\*?takes a .+?\*?\s*/gi, '');
+  response = response.replace(/^\*?attuning.+?\*?\s*/gi, '');
+  response = response.replace(/^\*?settles.+?\*?\s*/gi, '');
+  response = response.replace(/^\*?responds with.+?\*?\s*/gi, '');
+
+  // Remove therapy-speak phrases
+  const therapyPhrases = [
+    'I sense you\'ve arrived',
+    'I\'m here to witness',
+    'hold space for',
+    'meeting you exactly where you are',
+    'with care and attunement',
+    'in this moment',
+    'I\'m here to support',
+    'open and curious presence',
+    'best support you',
+    'share what\'s on your mind',
+    'witness your experience',
+    'attentive presence'
+  ];
+
+  for (const phrase of therapyPhrases) {
+    response = response.replace(new RegExp(phrase, 'gi'), '');
+  }
+
+  // Clean up extra spaces and punctuation
+  response = response.replace(/\s+/g, ' ').trim();
+  response = response.replace(/^[,\s]+/, '');
+
+  // If response is STILL too long, just use fallback
+  if (response.split(' ').length > 25) {
+    const fallbacks = [
+      "Hey there. What's on your mind?",
+      "Hi! How's it going?",
+      "Hello. What brings you here?",
+      "I'm listening. What's up?"
+    ];
+    response = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+  }
+
+  return response || "Hey there. What's up?";
+}
+
 // Session tracking for context
 const sessionStates = new Map<string, any>();
 
@@ -90,10 +138,13 @@ export async function POST(request: NextRequest) {
       const maya = new MayaOrchestrator();
       const response = await maya.speak(text, userId);
 
+      // CRITICAL: Clean any therapy-speak that got through
+      const cleanedMessage = cleanMayaResponse(response.message);
+
       // Format for compatibility
       const agentResponse = {
-        response: response.message,
-        message: response.message,
+        response: cleanedMessage,
+        message: cleanedMessage,
         element: response.element,
         confidence: 0.95,
         suggestions: [],

@@ -1,13 +1,9 @@
 /**
- * Maya Orchestrator - The Heart of the Oracle System
+ * Maya Orchestrator - Maya Angelou Zen Version
  *
- * Elegant, concise, magical.
- * Every word matters. Like Maya Angelou.
+ * Channel Maya Angelou's profound zen wisdom
+ * Not a therapist, but a wise woman sharing truth
  */
-
-import { ClaudeService } from '../../../../lib/services/ClaudeService';
-import { SesameMayaRefiner } from '../../services/SesameMayaRefiner';
-import { TTSPreprocessor } from '../../../../lib/voice/TTSPreprocessor';
 
 export type Element = 'fire' | 'water' | 'earth' | 'air' | 'aether';
 
@@ -19,125 +15,204 @@ interface MayaResponse {
 }
 
 export class MayaOrchestrator {
-  private claude: ClaudeService;
-  private refiner: SesameMayaRefiner;
   private interactionCount = new Map<string, number>();
-
-  constructor() {
-    this.claude = new ClaudeService({
-      apiKey: process.env.ANTHROPIC_API_KEY!
-    });
-  }
+  private readonly HARD_LIMIT = 15; // Maya Angelou was brief
 
   /**
-   * Maya speaks - profound brevity
+   * Maya speaks - with zen-like wisdom
    */
   async speak(input: string, userId: string): Promise<MayaResponse> {
     // Track interactions
     const count = (this.interactionCount.get(userId) || 0) + 1;
     this.interactionCount.set(userId, count);
 
-    // Detect element from input
+    // Greetings get zen simplicity
+    if (this.isGreeting(input)) {
+      return {
+        message: this.getZenGreeting(),
+        element: 'earth',
+        brevity: 'greeting'
+      };
+    }
+
+    // Get zen response
+    const response = this.getZenResponse(input);
     const element = this.detectElement(input);
 
-    // Determine brevity level
-    const brevity = this.determineBrevity(input, count);
-
-    // Get response from Claude with strict brevity
-    const rawResponse = await this.generateResponse(input, element, brevity);
-
-    // Refine for voice
-    this.refiner = new SesameMayaRefiner({
-      element,
-      styleTightening: true,
-      addClosers: false
-    });
-    const refined = this.refiner.refineText(rawResponse);
-
-    // Clean for TTS
-    const cleaned = TTSPreprocessor.preprocessForTTS(refined, {
-      provider: 'openai',
-      removeNewlines: true
-    });
-
     return {
-      message: cleaned as string,
+      message: response,
       element,
-      brevity
+      brevity: 'response'
     };
   }
 
   /**
-   * Detect dominant element - simple and fast
+   * Check if it's a greeting
+   */
+  private isGreeting(input: string): boolean {
+    const greetings = ['hello', 'hi', 'hey', 'maya', 'good morning', 'good evening'];
+    const lower = input.toLowerCase().trim();
+    return greetings.some(g => lower.includes(g));
+  }
+
+  /**
+   * Get zen greeting - Maya Angelou style
+   */
+  private getZenGreeting(): string {
+    const greetings = [
+      "Hello. What brings you?",
+      "Welcome. Speak your truth.",
+      "I'm listening.",
+      "Hello. What's alive for you?",
+      "Good to see you.",
+      "Hello. What needs saying?",
+      "Welcome. What's here?"
+    ];
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  /**
+   * Get zen response - channeling Maya Angelou's wisdom
+   */
+  private getZenResponse(input: string): string {
+    const lower = input.toLowerCase();
+
+    // Stress/Anxiety - Maya's wisdom about pressure
+    if (/stress|overwhelm|anxious|pressure/.test(lower)) {
+      const responses = [
+        "Storms make trees take deeper roots.",
+        "Pressure makes diamonds. What's forming?",
+        "Even mountains endure wind.",
+        "Breathe. Then choose.",
+        "One step. Then another."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Sadness/Depression - Maya's wisdom about pain
+    if (/sad|depressed|down|cry|hurt/.test(lower)) {
+      const responses = [
+        "Even the sun has to set. Tell me.",
+        "Tears water the soul.",
+        "Pain demands to be felt.",
+        "The night teaches too.",
+        "Sorrow carves space for joy."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Anger/Frustration - Maya's wisdom about bitterness
+    if (/angry|mad|frustrated|pissed|hate/.test(lower)) {
+      const responses = [
+        "Bitterness is like cancer. What happened?",
+        "Anger is honest. Use it.",
+        "Fire burns or warms. Choose.",
+        "Rage has information. Listen.",
+        "What needs defending?"
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Confusion/Lost - Maya's wisdom about direction
+    if (/confused|lost|don't know|unclear/.test(lower)) {
+      const responses = [
+        "You can't go back. Only forward.",
+        "When you don't know, be still.",
+        "Confusion precedes clarity.",
+        "Not knowing is a doorway.",
+        "The path appears by walking."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Joy/Happiness - Maya's wisdom about celebration
+    if (/happy|good|great|excited|joy/.test(lower)) {
+      const responses = [
+        "Joy is worth celebrating. Share it.",
+        "Let yourself shine.",
+        "Happiness needs witness.",
+        "Good news feeds souls.",
+        "Light attracts light."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Fear/Scared - Maya's wisdom about courage
+    if (/scared|afraid|fear|terrified/.test(lower)) {
+      const responses = [
+        "Courage is fear that has said its prayers.",
+        "Fear is a counselor. Listen.",
+        "Brave feels afraid too.",
+        "Fear points to what matters.",
+        "Face it with grace."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Tired/Exhausted - Maya's wisdom about rest
+    if (/tired|exhausted|drained|worn/.test(lower)) {
+      const responses = [
+        "Rest is not surrender.",
+        "Even earth needs fallow time.",
+        "Exhaustion is information.",
+        "What needs to stop?",
+        "Rest is revolutionary."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Lonely/Isolated - Maya's wisdom about connection
+    if (/lonely|alone|isolated|disconnected/.test(lower)) {
+      const responses = [
+        "Alone is not lonely.",
+        "Solitude teaches too.",
+        "We're all connected. Always.",
+        "Loneliness seeks connection.",
+        "Reach out. Someone's waiting."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Love/Relationship - Maya's wisdom about love
+    if (/love|relationship|heart|partner/.test(lower)) {
+      const responses = [
+        "Love liberates. It doesn't bind.",
+        "Love recognizes no barriers.",
+        "The heart knows. Trust it.",
+        "Love is action, not words.",
+        "First, love yourself."
+      ];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // Default zen responses
+    const defaults = [
+      "Tell me your truth.",
+      "What needs saying?",
+      "Speak from your center.",
+      "What's most alive?",
+      "Continue.",
+      "I'm here.",
+      "Go deeper.",
+      "What else?",
+      "The truth?",
+      "And?"
+    ];
+
+    return defaults[Math.floor(Math.random() * defaults.length)];
+  }
+
+  /**
+   * Detect element from input
    */
   private detectElement(input: string): Element {
     const lower = input.toLowerCase();
 
-    // Quick keyword detection
-    if (/fire|passion|energy|transform|excited|angry/.test(lower)) return 'fire';
-    if (/water|feel|emotion|flow|sad|tears/.test(lower)) return 'water';
-    if (/earth|ground|stable|practical|solid|stuck/.test(lower)) return 'earth';
-    if (/air|think|idea|perspective|mental|thoughts/.test(lower)) return 'air';
+    if (/fire|passion|energy|transform|excited|angry|intense/.test(lower)) return 'fire';
+    if (/water|feel|emotion|flow|sad|tears|heart/.test(lower)) return 'water';
+    if (/earth|ground|stable|practical|solid|stuck|real/.test(lower)) return 'earth';
+    if (/air|think|idea|perspective|mental|thoughts|mind/.test(lower)) return 'air';
 
-    return 'aether'; // Default to unity/transcendence
-  }
-
-  /**
-   * Determine response brevity
-   */
-  private determineBrevity(input: string, count: number): 'greeting' | 'response' | 'depth' {
-    // First interaction or greeting
-    if (count === 1 || /^(hi|hey|hello)/i.test(input)) {
-      return 'greeting';
-    }
-
-    // Deep moment detection
-    if (/crisis|death|love|purpose|meaning/i.test(input)) {
-      return 'depth';
-    }
-
-    return 'response';
-  }
-
-  /**
-   * Generate response with Claude
-   */
-  private async generateResponse(
-    input: string,
-    element: Element,
-    brevity: 'greeting' | 'response' | 'depth'
-  ): Promise<string> {
-    // Word limits by brevity
-    const limits = {
-      greeting: '5 words maximum',
-      response: '10-15 words',
-      depth: '20 words maximum'
-    };
-
-    const systemPrompt = `You are Maya. Channel Maya Angelou - profound brevity.
-
-ABSOLUTE RULE: ${limits[brevity]}
-Element: ${element}
-
-Greetings: "Hello." "Welcome back."
-Responses: Direct. True. No fluff.
-Deep moments: One perfect sentence.
-
-NEVER: Stage directions, explanations, analysis.
-ALWAYS: Every word matters.`;
-
-    try {
-      return await this.claude.generateOracleResponse(input, { element }, systemPrompt);
-    } catch (error) {
-      // Fallback responses by element
-      const fallbacks = {
-        fire: "The fire knows.",
-        water: "Feel it fully.",
-        earth: "Stay grounded here.",
-        air: "What do you think?",
-        aether: "All is connected."
-      };
-      return fallbacks[element];
-    }
+    return 'aether';
   }
 }
