@@ -5,12 +5,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
 import { VoiceServiceWithFallback } from '@/lib/services/VoiceServiceWithFallback';
+import { userPreferenceService } from '@/lib/services/userPreferenceService';
+import type { VoiceMode } from '@/lib/agents/modules/VoiceSelectionUI';
 
 interface RitualState {
-  stage: 'threshold' | 'breath' | 'naming' | 'witnessing' | 'elemental' | 'companionship' | 'invitation' | 'seeded';
+  stage: 'threshold' | 'breath' | 'naming' | 'witnessing' | 'elemental' | 'companionship' | 'voice_selection' | 'invitation' | 'seeded';
   userInput?: string;
   userName?: string;
   selectedCompanion?: 'maya' | 'anthony';
+  selectedVoiceMode?: VoiceMode;
   firstTruth?: string;
 }
 
@@ -24,6 +27,7 @@ export default function BetaRitualFlow() {
   const [spiralBreathPhase, setSpiralBreathPhase] = useState<'inhale' | 'exhale'>('inhale');
   const [showElements, setShowElements] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [userId, setUserId] = useState<string>('');
 
   const voiceService = useRef(new VoiceServiceWithFallback());
   const oracleAgent = useRef<PersonalOracleAgent | null>(null);
@@ -31,9 +35,10 @@ export default function BetaRitualFlow() {
 
   // Initialize Oracle Agent
   useEffect(() => {
-    const userId = localStorage.getItem('userId') || `seeker-${Date.now()}`;
-    localStorage.setItem('userId', userId);
-    oracleAgent.current = new PersonalOracleAgent(userId);
+    const id = localStorage.getItem('userId') || `seeker-${Date.now()}`;
+    localStorage.setItem('userId', id);
+    setUserId(id);
+    oracleAgent.current = new PersonalOracleAgent(id);
   }, []);
 
   // Breathing animation
@@ -153,10 +158,53 @@ export default function BetaRitualFlow() {
   };
 
   /**
+   * Stage 5.5: Voice Mode Selection
+   */
+  const selectVoiceCompanion = async (companion: 'maya' | 'anthony') => {
+    setRitualState({ ...ritualState, selectedCompanion: companion, stage: 'voice_selection' });
+
+    const prompt = companion === 'maya'
+      ? "How would you like to speak with me? You can press and hold to talk, or simply say my name to begin."
+      : "Choose how you'd like our conversations to flow. Hold to speak, or call my name when ready.";
+
+    await playVoice(prompt, companion);
+  };
+
+  /**
+   * Complete Ritual with Preferences
+   */
+  const completeRitual = async (voiceMode?: VoiceMode) => {
+    // Apply fallback defaults if nothing chosen
+    const finalCompanion = ritualState.selectedCompanion || 'maya';
+    const finalVoiceMode = voiceMode || 'push-to-talk';
+    const finalVoiceProfile = finalCompanion === 'maya' ? 'maya-alloy' : 'anthony-onyx';
+
+    // Save preferences to Supabase
+    try {
+      await userPreferenceService.updateUserPreferences(userId, {
+        voiceProfileId: finalVoiceProfile,
+        voiceMode: finalVoiceMode,
+        interactionMode: 'conversational'
+      });
+    } catch (error) {
+      console.error('Failed to save preferences:', error);
+    }
+
+    // Mark ritual as complete
+    localStorage.setItem('ritualComplete', 'true');
+
+    setRitualState({
+      ...ritualState,
+      selectedVoiceMode: finalVoiceMode,
+      stage: 'invitation'
+    });
+  };
+
+  /**
    * Stage 6: First Invitation
    */
-  const extendInvitation = async (companion: 'maya' | 'anthony') => {
-    setRitualState({ ...ritualState, selectedCompanion: companion, stage: 'invitation' });
+  const extendInvitation = async () => {
+    const companion = ritualState.selectedCompanion || 'maya';
 
     const invitation = companion === 'maya'
       ? "Tell me, what brings you here today? Not a task, but a truth — something alive for you in this moment."
@@ -202,6 +250,8 @@ export default function BetaRitualFlow() {
       revealElements();
     } else if (ritualState.stage === 'companionship') {
       introduceAnthony();
+    } else if (ritualState.stage === 'invitation') {
+      extendInvitation();
     }
   }, [ritualState.stage]);
 
@@ -335,19 +385,58 @@ export default function BetaRitualFlow() {
               <p className="text-xl mb-8">Choose your companion for this moment:</p>
               <div className="flex gap-8 justify-center">
                 <button
-                  onClick={() => extendInvitation('maya')}
+                  onClick={() => selectVoiceCompanion('maya')}
                   className="px-8 py-4 bg-purple-600/50 backdrop-blur rounded-lg hover:bg-purple-600/70 transition"
                 >
                   <span className="text-lg">Maya</span>
                   <p className="text-sm opacity-70">Sacred Oracle</p>
                 </button>
                 <button
-                  onClick={() => extendInvitation('anthony')}
+                  onClick={() => selectVoiceCompanion('anthony')}
                   className="px-8 py-4 bg-stone-600/50 backdrop-blur rounded-lg hover:bg-stone-600/70 transition"
                 >
                   <span className="text-lg">Anthony</span>
                   <p className="text-sm opacity-70">Philosopher</p>
                 </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Stage: Voice Selection */}
+          {ritualState.stage === 'voice_selection' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center"
+            >
+              <p className="text-xl mb-8">How would you like to speak?</p>
+              <div className="flex gap-8 justify-center">
+                <button
+                  onClick={() => completeRitual('push-to-talk')}
+                  className="px-8 py-4 bg-blue-600/50 backdrop-blur rounded-lg hover:bg-blue-600/70 transition"
+                >
+                  <span className="text-lg">Push-to-Talk</span>
+                  <p className="text-sm opacity-70">Hold to speak</p>
+                </button>
+                <button
+                  onClick={() => completeRitual('wake-word')}
+                  className="px-8 py-4 bg-green-600/50 backdrop-blur rounded-lg hover:bg-green-600/70 transition"
+                >
+                  <span className="text-lg">Wake Word</span>
+                  <p className="text-sm opacity-70">Say their name</p>
+                </button>
+              </div>
+              <div className="mt-8">
+                <button
+                  onClick={() => completeRitual()}
+                  className="px-6 py-2 text-sm bg-white/10 backdrop-blur rounded-lg hover:bg-white/20 transition"
+                >
+                  Skip - Use defaults
+                </button>
+                <p className="text-xs opacity-50 mt-2">
+                  Defaults: {ritualState.selectedCompanion || 'Maya'} (Alloy) with Push-to-Talk
+                </p>
               </div>
             </motion.div>
           )}
