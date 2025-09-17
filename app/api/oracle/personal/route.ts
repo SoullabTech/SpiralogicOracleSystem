@@ -63,11 +63,18 @@ function cleanMayaResponse(response: string): string {
 
     for (const sentence of sentences) {
       const sentenceWords = sentence.trim().split(/\s+/).length;
-      if (wordCount + sentenceWords <= 100) {
+      if (wordCount + sentenceWords <= 110) { // Increased from 100 to 110
         truncated += sentence.trim() + '. ';
         wordCount += sentenceWords;
       } else {
-        break;
+        // If we have at least one complete sentence, stop there
+        if (truncated.length > 0) {
+          break;
+        } else {
+          // If the first sentence is too long, include it anyway
+          truncated = sentence.trim() + '. ';
+          break;
+        }
       }
     }
 

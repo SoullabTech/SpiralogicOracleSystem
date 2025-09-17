@@ -3,10 +3,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
-// EMERGENCY: Disabled problematic components to prevent error loops
-// import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
-// import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
-// import MayaChatInterface from './chat/MayaChatInterface';
+import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
+import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
+import MayaChatInterface from './chat/MayaChatInterface';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
@@ -810,10 +809,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           </div>
 
           {showChatInterface ? (
-            /* Text Chat Interface - Mobile optimized */
-            <EmergencyChatInterface
+            /* Maya Chat Interface - Full voice and text support */
+            <MayaChatInterface
               onSendMessage={handleTextMessage}
               isProcessing={isProcessing}
+              voiceEnabled={voiceEnabled}
+              messages={messages}
             />
           ) : (
             /* Simple Voice Recognition - No complex timing logic */
