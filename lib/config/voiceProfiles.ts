@@ -41,10 +41,10 @@ export interface VoiceProfile {
 const canonicalVoices: VoiceProfile[] = [
   {
     id: 'maya',
-    provider: 'openai',
-    displayName: 'Maya (Nova)',
+    provider: 'elevenlabs',
+    displayName: 'Maya (Emily)',
     description: 'Warm oracle companion - sacred witness and guide',
-    baseVoiceId: 'nova',  // OpenAI Nova voice with sensitive tuning
+    baseVoiceId: 'MF3mGyEYCl7XYWbV9V6O',  // ElevenLabs Emily - smooth, natural delivery
     category: 'canonical',
     masks: ['fire', 'water', 'earth', 'air', 'aether'],
     personality: {
@@ -54,15 +54,15 @@ const canonicalVoices: VoiceProfile[] = [
       groundedness: 0.7
     },
     technicalParams: {
-      speed: 0.95,
-      pitch: 1.1,
-      stability: 0.85,
-      similarity: 0.9
+      speed: 1.0,
+      pitch: 1.0,
+      stability: 0.75,  // Balanced for natural flow
+      similarity: 0.85   // Slightly lower for more variation
     },
     unlockLevel: 0,
     fallback: {
-      provider: 'elevenlabs',
-      baseVoiceId: process.env.MAYA_ELEVENLABS_ID || '21m00Tcm4TlvDq8ikWAM' // Aunt Annie backup
+      provider: 'openai',
+      baseVoiceId: 'nova' // Nova as fallback
     }
   },
   {

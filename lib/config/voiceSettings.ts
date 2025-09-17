@@ -110,8 +110,8 @@ export const VOICE_OPTIONS = {
 
 // Default selections
 export const DEFAULT_VOICES = {
-  maya: 'nova',    // Nova voice with sensitive tuning
-  anthony: 'ash'   // Ash voice with sensitive tuning
+  maya: 'emily',    // ElevenLabs Emily for smooth, natural delivery
+  anthony: 'ash'     // Ash voice with sensitive tuning
 };
 
 /**

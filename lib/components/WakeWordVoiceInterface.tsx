@@ -67,8 +67,8 @@ export const WakeWordVoiceInterface: React.FC<WakeWordVoiceInterfaceProps> = ({
   }>({
     silenceStart: null,
     lastSpeechTime: Date.now(),
-    silenceThreshold: 0.01, // Lower threshold for more sensitive speech detection
-    maxSilenceDuration: 4000 // 4 seconds of silence before stopping (was too aggressive before)
+    silenceThreshold: 0.005, // Even lower threshold to detect quieter speech
+    maxSilenceDuration: 6000 // 6 seconds of silence before stopping (more patient)
   });
 
   // Initialize wake word detector

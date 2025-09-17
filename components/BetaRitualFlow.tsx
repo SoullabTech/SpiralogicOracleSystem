@@ -378,7 +378,7 @@ export default function BetaRitualFlow() {
               exit={{ opacity: 0 }}
               className="text-center max-w-lg"
             >
-              <p className="text-xl mb-8">How shall I know you?</p>
+              <p className="text-xl mb-8">What's your name?</p>
               <input
                 type="text"
                 className="w-full p-4 bg-white/10 backdrop-blur rounded-lg text-white placeholder-white/50 border border-white/20"
@@ -402,7 +402,7 @@ export default function BetaRitualFlow() {
               className="text-center max-w-2xl"
             >
               <p className="text-2xl font-light">
-                {ritualState.userName ? `${ritualState.userName}, you are witnessed.` : 'You are witnessed.'}
+                {ritualState.userName ? `Hey ${ritualState.userName}.` : 'Hey there.'}
               </p>
             </motion.div>
           )}
@@ -437,21 +437,21 @@ export default function BetaRitualFlow() {
               exit={{ opacity: 0 }}
               className="text-center"
             >
-              <p className="text-xl mb-8">Choose your companion for this moment:</p>
+              <p className="text-xl mb-8">Who do you want to talk with?</p>
               <div className="flex gap-8 justify-center">
                 <button
                   onClick={() => selectVoiceCompanion('maya')}
                   className="px-8 py-4 bg-purple-600/50 backdrop-blur rounded-lg hover:bg-purple-600/70 transition"
                 >
                   <span className="text-lg">Maya</span>
-                  <p className="text-sm opacity-70">Sacred Oracle</p>
+                  <p className="text-sm opacity-70">Warm & intuitive</p>
                 </button>
                 <button
                   onClick={() => selectVoiceCompanion('anthony')}
                   className="px-8 py-4 bg-stone-600/50 backdrop-blur rounded-lg hover:bg-stone-600/70 transition"
                 >
                   <span className="text-lg">Anthony</span>
-                  <p className="text-sm opacity-70">Philosopher</p>
+                  <p className="text-sm opacity-70">Thoughtful & grounded</p>
                 </button>
               </div>
             </motion.div>
@@ -465,7 +465,7 @@ export default function BetaRitualFlow() {
               exit={{ opacity: 0 }}
               className="text-center"
             >
-              <p className="text-xl mb-8">How would you like to speak?</p>
+              <p className="text-xl mb-8">How do you want to talk?</p>
               <div className="flex gap-8 justify-center">
                 <button
                   onClick={() => completeRitual('push-to-talk')}
