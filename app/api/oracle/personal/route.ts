@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MayaOrchestrator } from '@/apps/api/backend/src/oracle/core/MayaOrchestrator';
+// Use relative import path from app/api directory
+import { MayaOrchestrator } from '../../../../apps/api/backend/src/oracle/core/MayaOrchestrator';
 import { SacredOracleCoreEnhanced } from '@/lib/sacred-oracle-core-enhanced';
 
 /**

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { personalOracleAgent } from '@/apps/api/backend/src/agents/PersonalOracleAgent';
+// Use relative import path from app/api directory
+import { personalOracleAgent } from '../../../../../apps/api/backend/src/agents/PersonalOracleAgent';
 
 // Personal Oracle Consult API Route
 // Direct connection to PersonalOracleAgent
