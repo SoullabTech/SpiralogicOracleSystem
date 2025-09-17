@@ -3,7 +3,7 @@ import type { AgentState } from './modules/types';
 import type { Element } from '../types/oracle';
 import { SentimentAnalyzer, type SentimentResult, type ConversationSentiment } from '../analysis/SentimentAnalyzer';
 
-// Collective consciousness state
+// Collective consciousness state with soulful interaction tracking
 export interface CollectiveField {
   activeMembers: number;
   dominantElement: Element;
@@ -23,6 +23,14 @@ export interface CollectiveField {
     strength: number; // 0-100
     quality: 'harmonious' | 'dissonant' | 'evolving';
     bridges: string[]; // Connection points between souls
+  };
+  // NEW: Soulful interaction quality tracking
+  soulfulMetrics: {
+    averageSessionDepth: number; // How deep conversations go
+    stickinessIndex: number; // User return rate and engagement
+    vulnerabilityShared: number; // How much users open up
+    transformativeExchanges: number; // Conversations that changed someone
+    collectiveWisdom: string[]; // Emergent insights from all interactions
   };
 }
 
@@ -48,6 +56,26 @@ export class MainOracleAgent {
     dominantEmotion: string;
     volatilityIndex: number;
     needsSupportCount: number;
+  };
+  private soulfulLearning: {
+    deepestConversations: Array<{
+      userId: string;
+      depth: number;
+      breakthrough: string;
+      mayaResponse: string;
+      timestamp: Date;
+    }>;
+    stickiestPatterns: Array<{
+      pattern: string;
+      successRate: number;
+      userTypes: string[];
+    }>;
+    collectiveEvolution: Array<{
+      insight: string;
+      emergedFrom: string[];
+      adoptedBy: number;
+      timestamp: Date;
+    }>;
   };
   
   constructor() {
@@ -80,6 +108,14 @@ export class MainOracleAgent {
         strength: 0,
         quality: 'evolving',
         bridges: []
+      },
+      // Initialize soulful metrics
+      soulfulMetrics: {
+        averageSessionDepth: 0,
+        stickinessIndex: 0,
+        vulnerabilityShared: 0,
+        transformativeExchanges: 0,
+        collectiveWisdom: []
       }
     };
   }
@@ -475,7 +511,163 @@ export class MainOracleAgent {
     
     return false;
   }
-  
+
+  /**
+   * Record a soulful interaction that creates stickiness
+   * Called by PersonalOracleAgents when deep connection occurs
+   */
+  recordSoulfulInteraction(userId: string, interaction: {
+    depth: number; // 0-100 how deep the conversation went
+    vulnerability: number; // 0-100 how much user opened up
+    breakthrough: boolean; // Did user have insight/realization?
+    sessionLength: number; // How long they stayed
+    followUpLikely: boolean; // Will they come back?
+    mayaResponse: string; // What Maya said that worked
+    userFeedback?: string; // Explicit or implicit feedback
+    transformativeElement?: string; // What created the shift
+  }) {
+    // Update collective soulful metrics
+    this.updateSoulfulMetrics(interaction);
+
+    // Learn from this interaction pattern
+    this.learnFromSoulfulPattern(userId, interaction);
+
+    // If this was a breakthrough, record it for collective learning
+    if (interaction.breakthrough) {
+      this.recordBreakthrough(userId, interaction);
+    }
+
+    // Update stickiness patterns
+    this.updateStickinessPatterns(interaction);
+  }
+
+  private updateSoulfulMetrics(interaction: any) {
+    const metrics = this.collectiveField.soulfulMetrics;
+    const count = this.personalOracles.size || 1;
+
+    // Rolling average of session depth
+    metrics.averageSessionDepth =
+      (metrics.averageSessionDepth * (count - 1) + interaction.depth) / count;
+
+    // Track vulnerability sharing (key stickiness indicator)
+    metrics.vulnerabilityShared =
+      (metrics.vulnerabilityShared * (count - 1) + interaction.vulnerability) / count;
+
+    // Count transformative exchanges
+    if (interaction.breakthrough) {
+      metrics.transformativeExchanges += 1;
+    }
+
+    // Calculate stickiness index based on multiple factors
+    const stickinessScore = (
+      interaction.depth * 0.3 +
+      interaction.vulnerability * 0.3 +
+      interaction.sessionLength * 0.2 +
+      (interaction.followUpLikely ? 50 : 0) * 0.2
+    );
+
+    metrics.stickinessIndex =
+      (metrics.stickinessIndex * (count - 1) + stickinessScore) / count;
+  }
+
+  private learnFromSoulfulPattern(userId: string, interaction: any) {
+    // Identify what made this interaction soulful
+    const pattern = this.extractSoulfulPattern(interaction);
+
+    // Add to collective learning
+    const existingPattern = this.soulfulLearning.stickiestPatterns
+      .find(p => p.pattern === pattern);
+
+    if (existingPattern) {
+      // Update success rate
+      existingPattern.successRate =
+        (existingPattern.successRate + interaction.depth) / 2;
+    } else {
+      // New successful pattern discovered
+      this.soulfulLearning.stickiestPatterns.push({
+        pattern,
+        successRate: interaction.depth,
+        userTypes: [this.getUserType(userId)]
+      });
+    }
+  }
+
+  private extractSoulfulPattern(interaction: any): string {
+    // Analyze what made this interaction work
+    if (interaction.transformativeElement) {
+      return `transformative_${interaction.transformativeElement}`;
+    }
+    if (interaction.vulnerability > 70) {
+      return `deep_vulnerability_response`;
+    }
+    if (interaction.depth > 80) {
+      return `profound_depth_reached`;
+    }
+    return `authentic_connection_${Math.floor(interaction.depth / 20) * 20}`;
+  }
+
+  private getUserType(userId: string): string {
+    const oracle = this.personalOracles.get(userId);
+    if (!oracle) return 'unknown';
+
+    const state = oracle.getState();
+    return state.memory.dominantElement || 'exploring';
+  }
+
+  private recordBreakthrough(userId: string, interaction: any) {
+    this.soulfulLearning.deepestConversations.push({
+      userId,
+      depth: interaction.depth,
+      breakthrough: interaction.transformativeElement || 'profound_insight',
+      mayaResponse: interaction.mayaResponse,
+      timestamp: new Date()
+    });
+
+    // Keep only the top 50 deepest conversations for learning
+    this.soulfulLearning.deepestConversations
+      .sort((a, b) => b.depth - a.depth)
+      .splice(50);
+  }
+
+  private updateStickinessPatterns(interaction: any) {
+    // Track what creates return engagement
+    if (interaction.followUpLikely && interaction.depth > 60) {
+      const wisdom = `Deep ${interaction.depth}% conversation creates lasting connection`;
+
+      if (!this.collectiveField.soulfulMetrics.collectiveWisdom.includes(wisdom)) {
+        this.collectiveField.soulfulMetrics.collectiveWisdom.push(wisdom);
+      }
+    }
+  }
+
+  /**
+   * Get collective wisdom to share with PersonalOracleAgents
+   * This feeds back the learnings to improve future interactions
+   */
+  getCollectiveWisdom(): {
+    stickiestPatterns: string[];
+    depthInvitations: string[];
+    vulnerabilityApproaches: string[];
+    breakthroughCatalysts: string[];
+  } {
+    return {
+      stickiestPatterns: this.soulfulLearning.stickiestPatterns
+        .filter(p => p.successRate > 70)
+        .map(p => p.pattern),
+
+      depthInvitations: this.soulfulLearning.deepestConversations
+        .slice(0, 10)
+        .map(c => c.mayaResponse),
+
+      vulnerabilityApproaches: this.collectiveField.soulfulMetrics.collectiveWisdom
+        .filter(w => w.includes('vulnerability') || w.includes('openness')),
+
+      breakthroughCatalysts: this.soulfulLearning.deepestConversations
+        .filter(c => c.breakthrough.includes('transformative'))
+        .map(c => c.breakthrough)
+    };
+  }
+
   // Describe how this member contributes to collective
   private describeMemberContribution(userId: string): string {
     const oracle = this.personalOracles.get(userId);

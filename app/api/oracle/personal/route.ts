@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MayaOrchestrator } from '@/lib/oracle/MayaOrchestrator';
+import { organicPromptSystem } from '@/lib/maya/OrganicPromptSystem';
 
 /**
  * Maya Personal Oracle Route
- * Full MayaOrchestrator functionality
+ * Enhanced with organic learning system
  */
 
 const mayaOrchestrator = new MayaOrchestrator();
@@ -52,10 +53,25 @@ function cleanMayaResponse(response: string): string {
     response = response.replace(new RegExp(phrase, 'gi'), '');
   });
 
-  // Ensure maximum 20 words
+  // Allow natural conversation length (up to 120 words)
   const words = response.split(/\s+/);
-  if (words.length > 20) {
-    response = words.slice(0, 15).join(' ') + '.';
+  if (words.length > 120) {
+    // Only truncate if extremely long - find natural stopping point
+    const sentences = response.split(/[.!?]/);
+    let truncated = '';
+    let wordCount = 0;
+
+    for (const sentence of sentences) {
+      const sentenceWords = sentence.trim().split(/\s+/).length;
+      if (wordCount + sentenceWords <= 100) {
+        truncated += sentence.trim() + '. ';
+        wordCount += sentenceWords;
+      } else {
+        break;
+      }
+    }
+
+    response = truncated.trim();
   }
 
   return response.trim();

@@ -25,10 +25,10 @@ class ClaudeService {
         },
         body: JSON.stringify({
           model: 'claude-3-opus-20240229',
-          max_tokens: options.max_tokens || 50,
-          temperature: options.temperature || 0.7,
+          max_tokens: options.max_tokens || 300,
+          temperature: options.temperature || 0.8,
           system: prompt,
-          messages: [{ role: 'user', content: 'Respond with zen brevity.' }]
+          messages: [{ role: 'user', content: 'Respond naturally and conversationally with 3-5 sentences. Be warm, engaging, and authentic like a wise friend. Avoid being clinical or therapeutic.' }]
         })
       });
       if (response.ok) {
@@ -51,8 +51,8 @@ class ClaudeService {
 }
 
 export class MayaOrchestrator {
-  private readonly HARD_WORD_LIMIT = 25;
-  private readonly TARGET_WORD_RANGE = [5, 15];
+  private readonly HARD_WORD_LIMIT = 120;
+  private readonly TARGET_WORD_RANGE = [40, 80];
   private claude: ClaudeService;
 
   // Forbidden therapy-speak patterns

@@ -22,6 +22,7 @@ const ELEMENT_COLORS = {
 export default function BetaRitualDashboard() {
   const [metrics, setMetrics] = useState<any>(null);
   const [advancedMetrics, setAdvancedMetrics] = useState<any>(null);
+  const [nudgeMetrics, setNudgeMetrics] = useState<any>(null);
   const [timeframe, setTimeframe] = useState<'today' | 'week' | 'month'>('week');
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'basic' | 'advanced'>('basic');
@@ -35,12 +36,14 @@ export default function BetaRitualDashboard() {
   const fetchMetrics = async () => {
     setLoading(true);
     try {
-      const [basicData, advancedData] = await Promise.all([
+      const [basicData, advancedData, nudgeData] = await Promise.all([
         ritualEventService.getRitualMetrics(timeframe),
-        ritualEventService.getAdvancedMetrics(timeframe)
+        ritualEventService.getAdvancedMetrics(timeframe),
+        ritualEventService.getNudgeMetrics()
       ]);
       setMetrics(basicData);
       setAdvancedMetrics(advancedData);
+      setNudgeMetrics(nudgeData);
     } catch (error) {
       console.error('Failed to fetch metrics:', error);
     } finally {
@@ -150,8 +153,64 @@ export default function BetaRitualDashboard() {
             <MetricCard title="Avg Journey Time" value={`${Math.floor(metrics.avgCompletionTime / 60)}m ${metrics.avgCompletionTime % 60}s`} icon="⏱️" />
           </div>
 
+          {/* Nudge Preferences */}
+          {nudgeMetrics && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <MetricCard
+                title="Nudges Enabled"
+                value={`${nudgeMetrics.nudgeOnCount}`}
+                icon="🔔"
+                subtitle="Users who keep gentle nudges on"
+                color="text-purple-400"
+              />
+              <MetricCard
+                title="Nudges Disabled"
+                value={`${nudgeMetrics.nudgeOffCount}`}
+                icon="🔕"
+                subtitle="Users who prefer silence"
+                color="text-gray-400"
+              />
+              <MetricCard
+                title="Toggle Rate"
+                value={`${(nudgeMetrics.nudgeToggleFrequency * 100).toFixed(1)}%`}
+                icon="🔄"
+                subtitle="Users who changed nudge setting"
+                color="text-blue-400"
+              />
+            </div>
+          )}
+
           {/* Voice & Mode Splits */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {nudgeMetrics && (
+              <ChartCard title="Nudge Preferences" subtitle="Gentle presence vs silence">
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: "Nudges On 🔔", value: nudgeMetrics.nudgeOnCount, color: "#8b5cf6" },
+                        { name: "Nudges Off 🔕", value: nudgeMetrics.nudgeOffCount, color: "#6b7280" }
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ name, value, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {[
+                        { name: "Nudges On 🔔", value: nudgeMetrics.nudgeOnCount, color: "#8b5cf6" },
+                        { name: "Nudges Off 🔕", value: nudgeMetrics.nudgeOffCount, color: "#6b7280" }
+                      ].map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartCard>
+            )}
             <ChartCard title="Voice Companion Choice" subtitle="Heart vs Mind resonance">
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>

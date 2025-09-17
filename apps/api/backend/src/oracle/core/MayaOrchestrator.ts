@@ -2,8 +2,8 @@ import { OracleResponse } from '../../types/personalOracle';
 import { ClaudeService } from '../../services/claude.service';
 
 export class MayaOrchestrator {
-  private readonly HARD_WORD_LIMIT = 25;
-  private readonly TARGET_WORD_RANGE = [5, 15];
+  private readonly HARD_WORD_LIMIT = 200;
+  private readonly TARGET_WORD_RANGE = [30, 120];
   private claude: ClaudeService;
 
   // Forbidden therapy-speak patterns

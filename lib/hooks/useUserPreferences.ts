@@ -11,6 +11,7 @@ interface UseUserPreferencesReturn {
   voiceMode: VoiceMode;
   interactionMode: InteractionMode;
   customWakeWord?: string;
+  nudgesEnabled: boolean;
   elementalAffinities: Record<string, number>;
   journeyProgress: {
     daysCompleted: number;
@@ -27,6 +28,7 @@ interface UseUserPreferencesReturn {
   setVoiceMode: (mode: VoiceMode) => Promise<void>;
   setInteractionMode: (mode: InteractionMode) => Promise<void>;
   setCustomWakeWord: (word: string) => Promise<void>;
+  setNudgesEnabled: (enabled: boolean) => Promise<void>;
   updateElementalAffinity: (element: string, delta: number) => Promise<void>;
   updateJourneyProgress: (progress: Partial<UserPreferences['journeyProgress']>) => Promise<void>;
 
@@ -99,6 +101,10 @@ export function useUserPreferences(userId: string): UseUserPreferencesReturn {
     await updatePreferences({ customWakeWord });
   }, [updatePreferences]);
 
+  const setNudgesEnabled = useCallback(async (nudgesEnabled: boolean) => {
+    await updatePreferences({ nudgesEnabled });
+  }, [updatePreferences]);
+
   const updateElementalAffinity = useCallback(async (element: string, delta: number) => {
     if (!userId) return;
     await userPreferenceService.updateElementalAffinities(userId, element, delta);
@@ -147,6 +153,7 @@ export function useUserPreferences(userId: string): UseUserPreferencesReturn {
     voiceId: 'maya-alloy',
     voiceMode: 'push-to-talk' as VoiceMode,
     interactionMode: 'conversational' as InteractionMode,
+    nudgesEnabled: true,
     elementalAffinities: { fire: 0, water: 0, earth: 0, air: 0, aether: 0 },
     journeyProgress: { daysCompleted: 0, currentPhase: 'initiation' }
   };
@@ -157,6 +164,7 @@ export function useUserPreferences(userId: string): UseUserPreferencesReturn {
     voiceMode: preferences?.voiceMode || defaultPrefs.voiceMode,
     interactionMode: preferences?.interactionMode || defaultPrefs.interactionMode,
     customWakeWord: preferences?.customWakeWord,
+    nudgesEnabled: preferences?.nudgesEnabled ?? defaultPrefs.nudgesEnabled,
     elementalAffinities: preferences?.elementalAffinities || defaultPrefs.elementalAffinities,
     journeyProgress: preferences?.journeyProgress || defaultPrefs.journeyProgress,
 
@@ -169,6 +177,7 @@ export function useUserPreferences(userId: string): UseUserPreferencesReturn {
     setVoiceMode,
     setInteractionMode,
     setCustomWakeWord,
+    setNudgesEnabled,
     updateElementalAffinity,
     updateJourneyProgress,
 
@@ -189,10 +198,12 @@ export function useVoiceConfig(userId: string) {
     voiceMode,
     interactionMode,
     customWakeWord,
+    nudgesEnabled,
     setVoiceId,
     setVoiceMode,
     setInteractionMode,
     setCustomWakeWord,
+    setNudgesEnabled,
     loading,
     error
   } = useUserPreferences(userId);
@@ -202,10 +213,12 @@ export function useVoiceConfig(userId: string) {
     voiceMode,
     interactionMode,
     customWakeWord,
+    nudgesEnabled,
     setVoiceId,
     setVoiceMode,
     setInteractionMode,
     setCustomWakeWord,
+    setNudgesEnabled,
     loading,
     error
   };

@@ -5,6 +5,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { VoiceMode, InteractionMode } from '../agents/modules/VoiceSelectionUI';
+import { ritualEventService } from './ritualEventService';
 
 // Types for user preferences
 export interface UserPreferences {
@@ -13,6 +14,7 @@ export interface UserPreferences {
   voiceMode: VoiceMode;
   interactionMode: InteractionMode;
   customWakeWord?: string;
+  nudgesEnabled?: boolean;
   elementalAffinities?: {
     fire: number;
     water: number;
@@ -34,6 +36,7 @@ interface PreferenceUpdate {
   voiceMode?: VoiceMode;
   interactionMode?: InteractionMode;
   customWakeWord?: string;
+  nudgesEnabled?: boolean;
   elementalAffinities?: UserPreferences['elementalAffinities'];
   journeyProgress?: UserPreferences['journeyProgress'];
 }
@@ -80,6 +83,7 @@ export class UserPreferenceService {
         voiceMode: data.voice_mode || 'push-to-talk',
         interactionMode: data.interaction_mode || 'conversational',
         customWakeWord: data.custom_wake_word,
+        nudgesEnabled: data.nudges_enabled !== false,
         elementalAffinities: data.elemental_affinities || {
           fire: 0, water: 0, earth: 0, air: 0, aether: 0
         },
@@ -120,6 +124,7 @@ export class UserPreferenceService {
           voice_mode: updates.voiceMode,
           interaction_mode: updates.interactionMode,
           custom_wake_word: updates.customWakeWord,
+          nudges_enabled: updates.nudgesEnabled,
           elemental_affinities: updates.elementalAffinities,
           journey_progress: updates.journeyProgress,
           updated_at: new Date().toISOString()
@@ -132,17 +137,23 @@ export class UserPreferenceService {
         throw error;
       }
 
-      return {
+      const updatedPreferences = {
         userId: data.user_id,
         voiceProfileId: data.voice_profile_id,
         voiceMode: data.voice_mode,
         interactionMode: data.interaction_mode,
         customWakeWord: data.custom_wake_word,
+        nudgesEnabled: data.nudges_enabled !== false,
         elementalAffinities: data.elemental_affinities,
         journeyProgress: data.journey_progress,
         createdAt: new Date(data.created_at),
         updatedAt: new Date(data.updated_at)
       };
+
+      // Log preference update for analytics
+      await ritualEventService.logUserPreferenceUpdate(userId, updatedPreferences);
+
+      return updatedPreferences;
     } catch (error) {
       console.error('Error updating user preferences:', error);
       throw error;
@@ -221,6 +232,7 @@ export class UserPreferenceService {
             voice_profile_id: defaults.voiceProfileId,
             voice_mode: defaults.voiceMode,
             interaction_mode: defaults.interactionMode,
+            nudges_enabled: defaults.nudgesEnabled,
             elemental_affinities: defaults.elementalAffinities,
             journey_progress: defaults.journeyProgress,
             created_at: new Date().toISOString(),
@@ -243,6 +255,7 @@ export class UserPreferenceService {
       voiceProfileId: 'maya-nova',
       voiceMode: 'push-to-talk',
       interactionMode: 'conversational',
+      nudgesEnabled: true,
       elementalAffinities: {
         fire: 0,
         water: 0,

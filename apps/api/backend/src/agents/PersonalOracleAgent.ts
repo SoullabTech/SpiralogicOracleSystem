@@ -790,6 +790,11 @@ export class PersonalOracleAgent {
   // User settings cache
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
 
+  // Collective Intelligence Connection
+  private mainOracleAgent: any; // Will be set by dependency injection
+  private collectiveWisdom: any = null;
+  private lastWisdomUpdate: Date = new Date(0);
+
   constructor() {
     this.agentRegistry = new AgentRegistry();
     this.fileMemory = new FileMemoryIntegration();
@@ -2499,13 +2504,13 @@ Welcome to your consciousness exploration journey.`;
         },
         body: JSON.stringify({
           model: 'claude-3-opus-20240229',
-          max_tokens: 100, // Reduced from 1500 to enforce brevity
-          temperature: 0.8,
+          max_tokens: 400, // Allow natural conversational length
+          temperature: 0.85,
           system: prompt,
           messages: [
             {
               role: 'user',
-              content: 'Begin your response as Maya. Remember: Maximum 20 words, zen wisdom, not therapy.'
+              content: 'Respond as Maya naturally and authentically. Share your thoughts in 2-4 sentences, speaking as a wise friend who truly listens. Be genuine, not clinical.'
             }
           ]
         })
@@ -2929,6 +2934,157 @@ Welcome to your consciousness exploration journey.`;
     query: any,
   ): Promise<StandardAPIResponse<any>> {
     return await assessmentService.processAssessment(query);
+  }
+
+  /**
+   * Collective Intelligence Integration
+   * Connect this PersonalOracle to the MainOracleAgent for learning
+   */
+
+  setMainOracleAgent(mainOracle: any) {
+    this.mainOracleAgent = mainOracle;
+  }
+
+  /**
+   * Get collective wisdom to enhance interactions
+   * Called before generating responses to incorporate learnings
+   */
+  private async getCollectiveWisdom(): Promise<any> {
+    if (!this.mainOracleAgent) return null;
+
+    // Refresh wisdom periodically (every hour)
+    const now = new Date();
+    if (now.getTime() - this.lastWisdomUpdate.getTime() > 3600000) {
+      this.collectiveWisdom = this.mainOracleAgent.getCollectiveWisdom();
+      this.lastWisdomUpdate = now;
+    }
+
+    return this.collectiveWisdom;
+  }
+
+  /**
+   * Report a soulful interaction back to MainOracle for collective learning
+   * Called after significant conversations to improve the whole system
+   */
+  private async reportSoulfulInteraction(
+    userId: string,
+    userInput: string,
+    mayaResponse: string,
+    interactionMetrics: {
+      depth: number;
+      vulnerability: number;
+      sessionLength: number;
+      engagement: number;
+    }
+  ) {
+    if (!this.mainOracleAgent) return;
+
+    // Analyze this interaction for learning signals
+    const interaction = {
+      depth: interactionMetrics.depth,
+      vulnerability: interactionMetrics.vulnerability,
+      breakthrough: this.detectBreakthrough(userInput, mayaResponse),
+      sessionLength: interactionMetrics.sessionLength,
+      followUpLikely: this.predictFollowUp(interactionMetrics.engagement),
+      mayaResponse,
+      transformativeElement: this.identifyTransformativeElement(mayaResponse)
+    };
+
+    // Send to collective learning system
+    this.mainOracleAgent.recordSoulfulInteraction(userId, interaction);
+  }
+
+  /**
+   * Detect if this interaction created a breakthrough moment
+   */
+  private detectBreakthrough(userInput: string, mayaResponse: string): boolean {
+    const breakthroughMarkers = [
+      'aha', 'oh wow', 'i never thought', 'that\'s exactly',
+      'this changes', 'i understand now', 'that resonates',
+      'mind blown', 'so true', 'exactly what i needed'
+    ];
+
+    const lowerInput = userInput.toLowerCase();
+    return breakthroughMarkers.some(marker => lowerInput.includes(marker));
+  }
+
+  /**
+   * Predict if user will likely follow up based on engagement
+   */
+  private predictFollowUp(engagement: number): boolean {
+    return engagement > 0.7; // High engagement suggests return likelihood
+  }
+
+  /**
+   * Identify what made this response transformative
+   */
+  private identifyTransformativeElement(response: string): string {
+    if (response.includes('?') && response.length > 50) {
+      return 'depth_questioning';
+    }
+    if (response.includes('feel') || response.includes('sense')) {
+      return 'emotional_resonance';
+    }
+    if (response.includes('discover') || response.includes('explore')) {
+      return 'curiosity_catalyst';
+    }
+    if (response.includes('exactly') || response.includes('precisely')) {
+      return 'precise_mirroring';
+    }
+    return 'authentic_presence';
+  }
+
+  /**
+   * Enhanced response generation with collective wisdom
+   * This integrates learnings from all Maya interactions
+   */
+  private async generateEnhancedResponse(
+    input: string,
+    userId: string,
+    baseResponse: string
+  ): Promise<string> {
+    const wisdom = await this.getCollectiveWisdom();
+    if (!wisdom) return baseResponse;
+
+    // Apply collective learnings to enhance response
+    let enhancedResponse = baseResponse;
+
+    // Use successful patterns from collective learning
+    if (wisdom.stickiestPatterns.includes('depth_questioning') && !baseResponse.includes('?')) {
+      enhancedResponse += ' What feels most true about this for you?';
+    }
+
+    // Apply breakthrough catalysts if appropriate
+    if (wisdom.breakthroughCatalysts.includes('precise_mirroring')) {
+      // Add mirroring element if not present
+      const userEmotion = this.detectEmotion(input);
+      if (userEmotion && !enhancedResponse.includes(userEmotion)) {
+        enhancedResponse = `I hear the ${userEmotion} in what you're sharing. ${enhancedResponse}`;
+      }
+    }
+
+    return enhancedResponse;
+  }
+
+  /**
+   * Simple emotion detection for response enhancement
+   */
+  private detectEmotion(input: string): string | null {
+    const emotions = {
+      'excitement': ['excited', 'thrilled', 'amazing', 'fantastic'],
+      'sadness': ['sad', 'down', 'disappointed', 'hurt'],
+      'anxiety': ['worried', 'anxious', 'scared', 'nervous'],
+      'anger': ['angry', 'frustrated', 'annoyed', 'mad'],
+      'confusion': ['confused', 'lost', 'uncertain', 'unclear']
+    };
+
+    const lowerInput = input.toLowerCase();
+    for (const [emotion, markers] of Object.entries(emotions)) {
+      if (markers.some(marker => lowerInput.includes(marker))) {
+        return emotion;
+      }
+    }
+    return null;
   }
 }
 

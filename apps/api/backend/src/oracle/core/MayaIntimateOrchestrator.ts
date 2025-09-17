@@ -6,9 +6,9 @@ import { ClaudeService } from '../../services/claude.service';
  * The magic of rules that bend for love, relationship that deepens over time
  */
 export class MayaIntimateOrchestrator {
-  private readonly HARD_WORD_LIMIT = 25;
-  private readonly SACRED_MOMENT_LIMIT = 40; // More space for profound moments
-  private readonly TARGET_WORD_RANGE = [5, 15];
+  private readonly HARD_WORD_LIMIT = 180;
+  private readonly SACRED_MOMENT_LIMIT = 250; // More space for profound moments
+  private readonly TARGET_WORD_RANGE = [40, 120];
 
   // Relationship tracking
   private readonly TRUST_LEVELS = ['stranger', 'acquaintance', 'friend', 'soul_friend', 'beloved'];
