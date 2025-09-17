@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MayaOrchestrator } from '../../../../apps/api/backend/src/oracle/core/MayaOrchestrator';
+import { MayaOrchestrator } from '@/apps/api/backend/src/oracle/core/MayaOrchestrator';
 import { SacredOracleCoreEnhanced } from '@/lib/sacred-oracle-core-enhanced';
 
 /**
