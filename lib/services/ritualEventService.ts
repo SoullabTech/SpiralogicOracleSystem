@@ -4,6 +4,8 @@
 "use strict";
 
 import { createClient } from '@supabase/supabase-js';
+import { firstTruthAnalyzer } from './firstTruthAnalyzer';
+import { elementalResonanceTracker } from './elementalResonanceTracker';
 
 export interface RitualEvent {
   userId: string;
@@ -25,6 +27,23 @@ export interface RitualCompletion {
   modeChoice: 'push-to-talk' | 'wake-word';
   skipped: boolean;
   firstTruthWordCount?: number;
+  firstTruthText?: string;
+  firstTruthDepth?: 'surface' | 'deep' | 'vulnerable';
+  emotionalIntensity?: number;
+  sacredLanguageUsed?: boolean;
+  primaryElement?: 'Fire' | 'Water' | 'Earth' | 'Air' | 'Aether';
+  elementalDistribution?: Record<string, number>;
+  archetypeAlignment?: string;
+  trustLevel?: number;
+}
+
+export interface UserPattern {
+  userId: string;
+  companionSwitches: number;
+  modeSwitches: number;
+  dominantElement?: string;
+  elementalHistory?: Record<string, number>;
+  trustDepthProgression?: 'increasing' | 'stable' | 'decreasing';
 }
 
 /**
@@ -72,9 +91,45 @@ export class RitualEventService {
   }
 
   /**
-   * Log ritual completion
+   * Log ritual completion with depth analysis
    */
   public async logCompletion(completion: RitualCompletion): Promise<void> {
+    // Analyze first truth depth if provided
+    if (completion.firstTruthText) {
+      // Use First Truth Analyzer
+      const truthAnalysis = firstTruthAnalyzer.analyzeFirstTruth(completion.firstTruthText);
+      completion.firstTruthDepth = truthAnalysis.depth;
+      completion.emotionalIntensity = truthAnalysis.emotionalIntensity;
+      completion.sacredLanguageUsed = truthAnalysis.sacredLanguageUsed;
+      completion.trustLevel = truthAnalysis.trustLevel;
+
+      // Use Elemental Resonance Tracker
+      const elementalAnalysis = elementalResonanceTracker.analyzeElementalResonance(completion.firstTruthText);
+      completion.primaryElement = elementalAnalysis.dominant;
+      completion.elementalDistribution = elementalAnalysis.distribution;
+      completion.archetypeAlignment = elementalAnalysis.archetypeAlignment;
+    }
+
+    // Calculate return latency
+    let returnLatencyHours: number | null = null;
+    if (this.supabase) {
+      try {
+        const { data: lastCompletion } = await this.supabase
+          .from('ritual_completions')
+          .select('completed_at')
+          .eq('user_id', completion.userId)
+          .order('completed_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (lastCompletion?.completed_at) {
+          returnLatencyHours = (completion.completedAt.getTime() - new Date(lastCompletion.completed_at).getTime()) / (1000 * 60 * 60);
+        }
+      } catch (error) {
+        console.log('No previous completions for user');
+      }
+    }
+
     if (!this.supabase) {
       console.log('[Ritual Completion]', completion); // Local logging fallback
       return;
@@ -90,12 +145,20 @@ export class RitualEventService {
           voice_choice: completion.voiceChoice,
           mode_choice: completion.modeChoice,
           skipped: completion.skipped,
-          first_truth_word_count: completion.firstTruthWordCount
+          first_truth_word_count: completion.firstTruthWordCount,
+          first_truth_depth: completion.firstTruthDepth,
+          first_truth_sentiment: completion.emotionalIntensity ? completion.emotionalIntensity / 10 : null,
+          sacred_language_used: completion.sacredLanguageUsed,
+          elemental_resonance: completion.primaryElement ? [completion.primaryElement] : null,
+          return_latency_hours: returnLatencyHours
         });
 
       if (error) {
         console.error('Failed to log ritual completion:', error);
       }
+
+      // Update user patterns
+      await this.updateUserPatterns(completion.userId);
     } catch (error) {
       console.error('Error logging ritual completion:', error);
     }
@@ -153,6 +216,9 @@ export class RitualEventService {
 
     const avgCompletionTime = completions.reduce((sum, c) => sum + (c.total_time_seconds || 0), 0) / completions.length || 0;
 
+    // Calculate return latency
+    const returnLatencyData = this.calculateReturnLatencies(completions);
+
     return {
       skipRate: totalUsers > 0 ? skippedUsers / totalUsers : 0,
       completionRate: totalUsers > 0 ? completedUsers / totalUsers : 0,
@@ -167,7 +233,196 @@ export class RitualEventService {
       ],
       totalUsers,
       completedUsers,
-      skippedUsers
+      skippedUsers,
+      returnLatencyData
+    };
+  }
+
+  /**
+   * Calculate return latencies between sessions
+   */
+  private calculateReturnLatencies(completions: any[]): number[] {
+    const userSessions: Record<string, Date[]> = {};
+
+    // Group sessions by user
+    completions.forEach(c => {
+      if (!userSessions[c.user_id]) {
+        userSessions[c.user_id] = [];
+      }
+      userSessions[c.user_id].push(new Date(c.completed_at));
+    });
+
+    const latencies: number[] = [];
+
+    // Calculate latencies for each user
+    Object.values(userSessions).forEach(sessions => {
+      sessions.sort((a, b) => a.getTime() - b.getTime());
+      for (let i = 1; i < sessions.length; i++) {
+        const hoursElapsed = (sessions[i].getTime() - sessions[i - 1].getTime()) / (1000 * 60 * 60);
+        latencies.push(hoursElapsed);
+      }
+    });
+
+    return latencies;
+  }
+
+
+  /**
+   * Update user patterns for loyalty and drift tracking
+   */
+  private async updateUserPatterns(userId: string): Promise<void> {
+    if (!this.supabase) return;
+
+    try {
+      // Get user's interaction history
+      const { data: events } = await this.supabase
+        .from('ritual_events')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true });
+
+      if (!events || events.length === 0) return;
+
+      // Calculate companion switches
+      let companionSwitches = 0;
+      let lastCompanion = '';
+      events.filter(e => e.step === 'voice_choice').forEach(e => {
+        if (lastCompanion && lastCompanion !== e.choice) {
+          companionSwitches++;
+        }
+        lastCompanion = e.choice;
+      });
+
+      // Calculate mode switches
+      let modeSwitches = 0;
+      let lastMode = '';
+      events.filter(e => e.step === 'mode_choice').forEach(e => {
+        if (lastMode && lastMode !== e.choice) {
+          modeSwitches++;
+        }
+        lastMode = e.choice;
+      });
+
+      // Update or insert user pattern
+      await this.supabase
+        .from('user_patterns')
+        .upsert({
+          user_id: userId,
+          companion_switches: companionSwitches,
+          mode_switches: modeSwitches,
+          current_companion: lastCompanion,
+          current_mode: lastMode,
+          updated_at: new Date().toISOString()
+        });
+    } catch (error) {
+      console.error('Error updating user patterns:', error);
+    }
+  }
+
+  /**
+   * Get advanced metrics including depth analysis
+   */
+  public async getAdvancedMetrics(timeframe: 'today' | 'week' | 'month' = 'week'): Promise<any> {
+    const baseMetrics = await this.getRitualMetrics(timeframe);
+
+    if (!this.supabase) {
+      return { ...baseMetrics, ...this.getMockAdvancedMetrics() };
+    }
+
+    try {
+      const daysAgo = timeframe === 'today' ? 1 : timeframe === 'week' ? 7 : 30;
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - daysAgo);
+
+      // Get truth depth distribution
+      const { data: completions } = await this.supabase
+        .from('ritual_completions')
+        .select('first_truth_depth, first_truth_sentiment, sacred_language_used, elemental_resonance')
+        .gte('completed_at', startDate.toISOString());
+
+      // Get user patterns for loyalty analysis
+      const { data: patterns } = await this.supabase
+        .from('user_patterns')
+        .select('*')
+        .gte('updated_at', startDate.toISOString());
+
+      const depthDistribution = {
+        surface: completions?.filter(c => c.first_truth_depth === 'surface').length || 0,
+        deep: completions?.filter(c => c.first_truth_depth === 'deep').length || 0,
+        vulnerable: completions?.filter(c => c.first_truth_depth === 'vulnerable').length || 0
+      };
+
+      const elementalDistribution = {
+        fire: 0, water: 0, earth: 0, air: 0, aether: 0
+      };
+
+      completions?.forEach(c => {
+        if (c.elemental_resonance && c.elemental_resonance[0]) {
+          elementalDistribution[c.elemental_resonance[0]]++;
+        }
+      });
+
+      const avgEmotionalIntensity = completions?.reduce((sum, c) => sum + (c.first_truth_sentiment || 0), 0) / (completions?.length || 1) * 10;
+      const sacredLanguageUsage = (completions?.filter(c => c.sacred_language_used).length || 0) / (completions?.length || 1);
+
+      const companionLoyalty = {
+        loyal: patterns?.filter(p => p.companion_switches === 0).length || 0,
+        switchers: patterns?.filter(p => p.companion_switches > 0).length || 0
+      };
+
+      const modeDrift = {
+        stable: patterns?.filter(p => p.mode_switches === 0).length || 0,
+        evolved: patterns?.filter(p => p.mode_switches > 0).length || 0
+      };
+
+      return {
+        ...baseMetrics,
+        depthDistribution,
+        elementalDistribution,
+        avgEmotionalIntensity: avgEmotionalIntensity.toFixed(1),
+        sacredLanguageUsage: (sacredLanguageUsage * 100).toFixed(1),
+        companionLoyalty,
+        modeDrift
+      };
+    } catch (error) {
+      console.error('Error fetching advanced metrics:', error);
+      return { ...baseMetrics, ...this.getMockAdvancedMetrics() };
+    }
+  }
+
+  /**
+   * Mock advanced metrics for development/fallback
+   */
+  private getMockAdvancedMetrics(): any {
+    return {
+      depthDistribution: {
+        surface: 45,
+        deep: 38,
+        vulnerable: 17
+      },
+      elementalDistribution: {
+        fire: 28,
+        water: 35,
+        earth: 15,
+        air: 12,
+        aether: 10
+      },
+      avgEmotionalIntensity: 6.8,
+      sacredLanguageUsage: 42.3,
+      companionLoyalty: {
+        loyal: 142,
+        switchers: 26
+      },
+      modeDrift: {
+        stable: 135,
+        evolved: 33
+      },
+      returnLatency: [
+        { hours: '0-6', count: 12 },
+        { hours: '6-24', count: 45 },
+        { hours: '24-72', count: 78 },
+        { hours: '72+', count: 33 }
+      ]
     };
   }
 
