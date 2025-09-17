@@ -189,7 +189,7 @@ export class SesameMayaRefiner {
   }
 
   private tightenStyle(s: string) {
-    // Remove excessive qualifiers and explanatory phrases for intimate, soulful communication
+    // Aggressive removal for true economy of words
     return s
       // Core filler removal - expanded list
       .replace(/\b(kind of|sort of|a bit|just|really|like,|you know,)\b/gi, '')
@@ -200,14 +200,16 @@ export class SesameMayaRefiner {
       .replace(/\bI\s+guess\b/gi, '')
       .replace(/\bI\s+suppose\b/gi, '')
 
-      // Remove explanatory/distancing phrases Maya uses too often
-      .replace(/\bI'm\s+here\s+to\s+(simply|just)?\s*/gi, '')
-      .replace(/\blet's\s+explore\s+that\s+together\b/gi, 'tell me more')
-      .replace(/\blet's\s+explore\b/gi, 'share with me')
+      // Remove ALL explanatory phrases - be ruthless
+      .replace(/\bI'm\s+here\s+to\s+[^.!?]*\./gi, '')
+      .replace(/\blet's\s+explore\s+that\s+together\b/gi, 'tell me')
+      .replace(/\blet's\s+explore\b/gi, 'tell me')
       .replace(/\bI'm\s+curious\s+about\s+how\b/gi, 'how')
-      .replace(/\bthat\s+sounds\s+ah\.\.\.\s*/gi, '')
+      .replace(/\bthat\s+sounds\s+[^.!?]+\./gi, 'I hear you.')
       .replace(/\bone\s+step\s+at\s+a\s+time\b/gi, '')
-      .replace(/\bwhat\s+would\s+you\s+like\s+to\s+start\s+with\b/gi, 'where shall we begin')
+      .replace(/\bwhat\s+would\s+you\s+like\s+to\s+start\s+with\b/gi, 'where to begin?')
+      .replace(/\bPlease\s+feel\s+free\s+to\s+share\s+[^.!?]+\./gi, 'Share with me.')
+      .replace(/\bI'm\s+ready\s+to\s+[^.!?]+\./gi, '')
 
       // Remove hedging
       .replace(/\bit\s+seems\s+like\b/gi, '')
@@ -222,6 +224,15 @@ export class SesameMayaRefiner {
       .replace(/\bto\s+reflect\s+on\b/gi, 'about')
       .replace(/\bI'm\s+witnessing\b/gi, 'I see')
       .replace(/\bwhat\s+insights\s+naturally\s+arise\b/gi, 'what comes up')
+
+      // Maya Angelou mode - remove everything that isn't essential
+      .replace(/\bHow\s+are\s+you\s+feeling\s+in\s+this\s+moment\?/gi, 'How are you?')
+      .replace(/\bI'm\s+here\s+to\s+listen\s+without\s+[^.!?]+\./gi, '')
+      .replace(/\bwhatever\s+it\s+may\s+be\b/gi, '')
+      .replace(/\bPlease\s+feel\s+free\s+to\b/gi, '')
+      .replace(/\bI'm\s+ready\s+to\s+hold\s+space\s+[^.!?]+\./gi, '')
+      .replace(/\bwith\s+compassion\b/gi, '')
+      .replace(/\bwithout\s+judgment\b/gi, '')
 
       // Original cleanups
       .replace(/\bI\s+think\s+that\b/gi, 'I sense')

@@ -23,15 +23,15 @@ export const VOICE_OPTIONS = {
       provider: 'openai' as const,
       voiceId: 'alloy',
       name: 'Maya (Alloy)',
-      speed: 0.9, // Balanced for sensitive delivery with dynamic pacing
-      description: 'Warm, expressive voice with natural pauses - sensitive mode',
-      mode: 'sensitive',
-      voiceAffect: 'Calm, composed, and reassuring. Competent and in control, instilling trust.',
-      tone: 'Sincere, empathetic, with genuine concern for the seeker and understanding of the situation.',
-      pacing: 'Slower during deep truths to allow for clarity and processing. Faster when offering solutions to signal action and resolution.',
-      emotions: 'Calm reassurance, empathy, and gratitude.',
-      pronunciation: 'Clear, precise: Ensures clarity, especially with key details. Focus on sacred words and transformative concepts.',
-      pauses: 'Before and after important insights to give space for processing. Natural breathing pauses.'
+      speed: 0.95, // Natural conversational pace
+      description: 'Warm, intimate voice - Maya Angelou-inspired brevity',
+      mode: 'sincere',
+      voiceAffect: 'Present, grounded, soulful. Every word matters.',
+      tone: 'Warm but not overwhelming. Direct but kind. Real.',
+      pacing: 'Natural rhythm. Space between thoughts. Comfortable silence.',
+      emotions: 'Authentic presence. Quiet strength. Deep listening.',
+      pronunciation: 'Clear, simple. No flourish. Truth in plainness.',
+      pauses: 'Natural breathing. Space for their words. Silence is sacred.'
     },
     nova: {
       provider: 'openai' as const,
@@ -110,7 +110,7 @@ export const VOICE_OPTIONS = {
 
 // Default selections
 export const DEFAULT_VOICES = {
-  maya: 'emily',    // ElevenLabs Emily for smooth, natural delivery
+  maya: 'alloy',    // OpenAI Alloy - warm, natural, economical
   anthony: 'ash'     // Ash voice with sensitive tuning
 };
 

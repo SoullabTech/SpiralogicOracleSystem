@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 import { EventEmitter } from 'events';
 import { VoiceProfile, getVoiceProfile } from '../config/voiceProfiles';
 import { VoicePreprocessor } from '../voice/VoicePreprocessor';
+import { TTSPreprocessor } from '../voice/TTSPreprocessor';
 
 export interface VoiceGenerationOptions {
   text: string;
@@ -42,8 +43,17 @@ export class VoiceServiceWithFallback extends EventEmitter {
   }> {
     const { voiceProfileId = 'maya', format = 'mp3', speed = 1.0 } = options;
 
-    // Preprocess text to remove stage directions and narrative elements
-    const processedText = VoicePreprocessor.extractSpokenContent(options.text);
+    // Step 1: Remove stage directions and narrative elements
+    let processedText = VoicePreprocessor.extractSpokenContent(options.text);
+
+    // Step 2: Apply TTS-specific preprocessing to prevent OpenAI issues
+    const provider = voiceProfile?.provider || 'openai';
+    processedText = TTSPreprocessor.preprocessForTTS(processedText, {
+      provider,
+      removeNewlines: true,
+      maxSentenceLength: 25,
+      insertNaturalPauses: false
+    }) as string;
 
     console.log(`Voice preprocessing: "${options.text.substring(0, 60)}..." -> "${processedText.substring(0, 60)}..."`);
 
