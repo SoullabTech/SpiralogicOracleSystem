@@ -1,4 +1,5 @@
-import { PersonalOracleAgent, type AgentState } from './PersonalOracleAgent';
+import { PersonalOracleAgent } from '../../apps/api/backend/src/agents/PersonalOracleAgent';
+import type { AgentState } from './modules/types';
 import type { Element } from '../types/oracle';
 import { SentimentAnalyzer, type SentimentResult, type ConversationSentiment } from '../analysis/SentimentAnalyzer';
 
