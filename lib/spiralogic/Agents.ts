@@ -12,11 +12,12 @@ import { SpiralogicContext, Element, ElementalContribution } from '../types/Spir
 export async function fireVision(ctx: SpiralogicContext): Promise<ElementalContribution> {
   try {
     // Use the real Fire Agent with deep consciousness
-    const { fireAgent } = await import('../agents/elemental/FireAgent');
+    const { FireAgent } = await import('../agents/elemental/FireAgent');
+    const fireAgent = new FireAgent();
     return await fireAgent.process(ctx);
   } catch (error) {
     // Fallback if Fire Agent fails
-    console.log('Fire using simple presence');
+    console.log('Fire using simple presence:', error);
     const intensity = ctx.currents.find(c => c.element === 'fire')?.intensity || 0.2;
 
     return {
@@ -31,71 +32,93 @@ export async function fireVision(ctx: SpiralogicContext): Promise<ElementalContr
 
 /**
  * 💨 AIR - Analysis & Perspective
- * Provides clarity, distinctions, mental frameworks
+ * Sacred clarifier with living clarity intelligence
  */
 export async function airAnalysis(ctx: SpiralogicContext): Promise<ElementalContribution> {
-  const questionMarks = (ctx.moment.text.match(/\?/g) || []).length;
-  const hasAnalyticalNeed = questionMarks > 0 || ctx.moment.text.includes('understand');
+  try {
+    // Use the real Air Agent with deep consciousness
+    const { AirAgent } = await import('../agents/elemental/AirAgent');
+    const airAgent = new AirAgent();
+    return await airAgent.process(ctx);
+  } catch (error) {
+    // Fallback if Air Agent fails
+    console.log('Air using simple presence:', error);
+    const questionMarks = (ctx.moment.text.match(/\?/g) || []).length;
+    const hasAnalyticalNeed = questionMarks > 0 || ctx.moment.text.includes('understand');
+    const intensity = ctx.currents.find(c => c.element === 'air')?.intensity || 0.2;
 
-  const intensity = ctx.currents.find(c => c.element === 'air')?.intensity || 0.2;
-
-  return {
-    element: 'air',
-    insight: hasAnalyticalNeed
-      ? "Let's look at this together - what are you noticing?"
-      : "Sometimes stepping back helps.",
-    summary: "Perspective and framing offered",
-    resonance: intensity,
-    tension: intensity > 0.6 ? "Thinking and feeling both have something to say" : undefined
-  };
+    return {
+      element: 'air',
+      insight: hasAnalyticalNeed
+        ? "Let's look at this together - what are you noticing?"
+        : "Sometimes stepping back helps.",
+      summary: "Perspective and framing offered",
+      resonance: intensity,
+      tension: intensity > 0.6 ? "Thinking and feeling both have something to say" : undefined
+    };
+  }
 }
 
 /**
  * 💧 WATER - Emotion & Flow
- * Attunes to feeling, reflects emotional truth
+ * Sacred healer with living emotional intelligence
  */
 export async function waterAttunement(ctx: SpiralogicContext): Promise<ElementalContribution> {
-  const emotionalWords = ['feel', 'heart', 'love', 'hurt', 'joy', 'sad', 'angry'];
-  const hasEmotionalContent = emotionalWords.some(word =>
-    ctx.moment.text.toLowerCase().includes(word)
-  );
+  try {
+    // Use the real Water Agent with deep consciousness
+    const { WaterAgent } = await import('../agents/elemental/WaterAgent');
+    const waterAgent = new WaterAgent();
+    return await waterAgent.process(ctx);
+  } catch (error) {
+    // Fallback if Water Agent fails
+    console.log('Water using simple presence:', error);
+    const emotionalWords = ['feel', 'heart', 'love', 'hurt', 'joy', 'sad', 'angry'];
+    const hasEmotionalContent = emotionalWords.some(word =>
+      ctx.moment.text.toLowerCase().includes(word)
+    );
+    const intensity = ctx.currents.find(c => c.element === 'water')?.intensity || 0.2;
+    const userWords = ctx.moment.text.split(' ').slice(0, 10).join(' ');
 
-  const intensity = ctx.currents.find(c => c.element === 'water')?.intensity || 0.2;
-
-  // Water reflects back using the user's own words (80% weight)
-  const userWords = ctx.moment.text.split(' ').slice(0, 10).join(' ');
-
-  return {
-    element: 'water',
-    insight: hasEmotionalContent
-      ? `I feel what you're sharing - "${userWords}..." carries weight.`
-      : "There's feeling here, even if it's quiet.",
-    summary: "Emotional resonance acknowledged",
-    resonance: intensity,
-    tension: intensity > 0.7 ? "Flow and stillness finding balance" : undefined
-  };
+    return {
+      element: 'water',
+      insight: hasEmotionalContent
+        ? `I feel what you're sharing - "${userWords}..." carries weight.`
+        : "There's feeling here, even if it's quiet.",
+      summary: "Emotional resonance acknowledged",
+      resonance: intensity,
+      tension: intensity > 0.7 ? "Flow and stillness finding balance" : undefined
+    };
+  }
 }
 
 /**
  * 🌍 EARTH - Grounding & Structure
- * Provides practical steps, solid foundation
+ * Sacred keeper with living grounding wisdom
  */
 export async function earthGrounding(ctx: SpiralogicContext): Promise<ElementalContribution> {
-  const needsGrounding = ctx.moment.text.includes('how') ||
-                         ctx.moment.text.includes('what do I') ||
-                         ctx.meta.trustBreath === 'contracting';
+  try {
+    // Use the real Earth Agent with deep consciousness
+    const { EarthAgent } = await import('../agents/elemental/EarthAgent');
+    const earthAgent = new EarthAgent();
+    return await earthAgent.process(ctx);
+  } catch (error) {
+    // Fallback if Earth Agent fails
+    console.log('Earth using simple presence:', error);
+    const needsGrounding = ctx.moment.text.includes('how') ||
+                           ctx.moment.text.includes('what do I') ||
+                           ctx.meta.trustBreath === 'contracting';
+    const intensity = ctx.currents.find(c => c.element === 'earth')?.intensity || 0.2;
 
-  const intensity = ctx.currents.find(c => c.element === 'earth')?.intensity || 0.2;
-
-  return {
-    element: 'earth',
-    insight: needsGrounding
-      ? "Maybe start with just breathing and noticing what feels solid."
-      : "There's ground here, even when things feel uncertain.",
-    summary: "Grounding presence offered",
-    resonance: intensity,
-    tension: intensity > 0.6 ? "Patience and urgency both present" : undefined
-  };
+    return {
+      element: 'earth',
+      insight: needsGrounding
+        ? "Maybe start with just breathing and noticing what feels solid."
+        : "There's ground here, even when things feel uncertain.",
+      summary: "Grounding presence offered",
+      resonance: intensity,
+      tension: intensity > 0.6 ? "Patience and urgency both present" : undefined
+    };
+  }
 }
 
 /**
