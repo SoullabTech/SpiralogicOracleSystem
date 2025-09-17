@@ -82,3 +82,6 @@ export class PersonalOracleAgentBridge {
 
 // Export singleton instance as personalOracle for backward compatibility
 export const personalOracle = new PersonalOracleAgentBridge();
+
+// Export PersonalOracleAgent alias for routes that expect it
+export const PersonalOracleAgent = PersonalOracleAgentBridge;
