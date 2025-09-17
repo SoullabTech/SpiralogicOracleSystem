@@ -1,7 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-// Use relative import path from app/api directory
-import { MayaOrchestrator } from '../../../../apps/api/backend/src/oracle/core/MayaOrchestrator';
-import { SacredOracleCoreEnhanced } from '@/lib/sacred-oracle-core-enhanced';
+import { MayaOrchestrator } from '@/lib/oracle/MayaOrchestrator';
+
+/**
+ * Maya Personal Oracle Route
+ * Full MayaOrchestrator functionality
+ */
+
+const mayaOrchestrator = new MayaOrchestrator();
+
+// Keep fallback responses
+const MAYA_RESPONSES = {
+  greeting: [
+    "Hello. What brings you?",
+    "Welcome. Speak your truth.",
+    "I'm listening.",
+    "Good to see you."
+  ],
+  stress: "Storms make trees take deeper roots.",
+  sadness: "Tears water the soul.",
+  anger: "Fire burns or warms. Choose.",
+  confusion: "When you don't know, be still.",
+  joy: "Joy deserves witness.",
+  fear: "Courage is fear that has said its prayers.",
+  default: "Tell me your truth."
+};
 
 /**
  * Clean Maya's response - remove ALL therapy-speak
@@ -19,327 +41,133 @@ function cleanMayaResponse(response: string): string {
     'I\'m here to witness',
     'hold space for',
     'meeting you exactly where you are',
-    'with care and attunement',
-    'in this moment',
-    'I\'m here to support',
-    'open and curious presence',
-    'best support you',
-    'share what\'s on your mind',
-    'witness your experience',
-    'attentive presence'
+    'I\'m attuning to',
+    'Let me hold space',
+    'I sense that',
+    'I\'m hearing',
+    'It sounds like'
   ];
 
-  for (const phrase of therapyPhrases) {
+  therapyPhrases.forEach(phrase => {
     response = response.replace(new RegExp(phrase, 'gi'), '');
+  });
+
+  // Ensure maximum 20 words
+  const words = response.split(/\s+/);
+  if (words.length > 20) {
+    response = words.slice(0, 15).join(' ') + '.';
   }
 
-  // Clean up extra spaces and punctuation
-  response = response.replace(/\s+/g, ' ').trim();
-  response = response.replace(/^[,\s]+/, '');
-
-  // If response is STILL too long, just use fallback
-  if (response.split(' ').length > 25) {
-    const fallbacks = [
-      "Hey there. What's on your mind?",
-      "Hi! How's it going?",
-      "Hello. What brings you here?",
-      "I'm listening. What's up?"
-    ];
-    response = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-  }
-
-  return response || "Hey there. What's up?";
+  return response.trim();
 }
 
-// Session tracking for context
-const sessionStates = new Map<string, any>();
+function detectElement(input: string): string {
+  const lower = input.toLowerCase();
 
-/**
- * PRODUCTION ROUTE - Uses PersonalOracleAgent with AI when enabled
- * Can be toggled via USE_PERSONAL_ORACLE environment variable
- * Fallback to SacredOracleCoreEnhanced when disabled or on failure
- */
+  if (/fire|passion|energy|transform|excited|angry/.test(lower)) return 'fire';
+  if (/water|feel|emotion|flow|sad|tears/.test(lower)) return 'water';
+  if (/earth|ground|stable|practical|solid|stuck/.test(lower)) return 'earth';
+  if (/air|think|idea|perspective|mental|thoughts/.test(lower)) return 'air';
+
+  return 'aether';
+}
+
+function getMayaResponse(input: string): string {
+  const lower = input.toLowerCase();
+
+  // Check for greetings
+  if (/^(hello|hi|hey|maya|good morning|good evening)/i.test(lower) && input.length < 30) {
+    const greetings = MAYA_RESPONSES.greeting;
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  // Pattern-based responses
+  if (/stress|overwhelm|anxious|pressure/.test(lower)) {
+    return MAYA_RESPONSES.stress;
+  }
+  if (/sad|depressed|down|cry|hurt/.test(lower)) {
+    return MAYA_RESPONSES.sadness;
+  }
+  if (/angry|mad|frustrated|pissed|hate/.test(lower)) {
+    return MAYA_RESPONSES.anger;
+  }
+  if (/confused|lost|don't know|unclear/.test(lower)) {
+    return MAYA_RESPONSES.confusion;
+  }
+  if (/happy|good|great|excited|joy/.test(lower)) {
+    return MAYA_RESPONSES.joy;
+  }
+  if (/scared|afraid|fear|terrified/.test(lower)) {
+    return MAYA_RESPONSES.fear;
+  }
+
+  return MAYA_RESPONSES.default;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const { input, userId = 'anonymous', sessionId } = body;
 
-    // Extract message from various possible field names
-    const text = body.text || body.message || body.content || body.userMessage || body.input || body.prompt || '';
-    const sessionId = body.sessionId || body.session_id || 'default';
-    const userId = body.userId || body.user_id || 'production-user';
-
-    // SAFETY TOGGLE: Check if PersonalOracleAgent is enabled
-    // PRODUCTION FIX: Default to true if not explicitly disabled
-    const usePersonalOracle = process.env.USE_PERSONAL_ORACLE !== 'false';
-
-    if (!text) {
-      return NextResponse.json(
-        { error: 'Message is required' },
-        { status: 400 }
-      );
-    }
-
-    // Get or create session state
-    let sessionState = sessionStates.get(sessionId) || {
-      turnCount: 0,
-      lastInput: '',
-      depth: 0,
-      mode: 'witnessing',
-      patterns: []
-    };
-
-    sessionState.turnCount++;
-    sessionState.lastInput = text;
-
-    // Check if PersonalOracle is enabled via environment variable
-    if (!usePersonalOracle) {
-      console.log('[Production] PersonalOracle disabled, using SacredOracleCoreEnhanced');
-
-      // Use pattern-based system when toggle is off
-      const sacredOracle = new SacredOracleCoreEnhanced();
-      const oracleResponse = await sacredOracle.generateResponse(
-        text,
-        userId,
-        sessionState
-      );
-
-      // Update session state
-      if (oracleResponse.tracking) {
-        sessionState.depth = oracleResponse.depth;
-        sessionState.mode = oracleResponse.mode;
-        if (oracleResponse.tracking.activePatterns) {
-          sessionState.patterns = oracleResponse.tracking.activePatterns;
-        }
-      }
-
-      sessionStates.set(sessionId, sessionState);
-
+    if (!input) {
       return NextResponse.json({
-        text: oracleResponse.message,
-        content: oracleResponse.message,
-        message: oracleResponse.message,
-        metadata: {
-          sessionId,
-          source: 'sacred-oracle-core',
-          mode: oracleResponse.mode,
-          depth: oracleResponse.depth,
-          wisdomSources: oracleResponse.wisdomSources,
-          tracking: oracleResponse.tracking,
-          personalOracleEnabled: false,
-          ai: false
-        }
-      });
+        success: false,
+        error: 'No input provided'
+      }, { status: 400 });
     }
 
+    console.log('Maya Personal Oracle:', input);
+
+    // Use MayaOrchestrator for full functionality
+    let oracleResponse;
     try {
-      // PRIMARY PATH: Use MayaOrchestrator - clean, magical, brief
-      console.log('[Production] Maya speaks:', text.substring(0, 50));
-
-      // Let Maya speak with profound brevity
-      const maya = new MayaOrchestrator();
-      const response = await maya.speak(text, userId);
-
-      // CRITICAL: Clean any therapy-speak that got through
-      const cleanedMessage = cleanMayaResponse(response.message);
-
-      // Format for compatibility
-      const agentResponse = {
-        response: cleanedMessage,
-        message: cleanedMessage,
-        element: response.element,
-        confidence: 0.95,
-        suggestions: [],
-        ritual: null,
-        reflection: null
+      oracleResponse = await mayaOrchestrator.speak(input, userId);
+    } catch (error) {
+      console.log('MayaOrchestrator error, using fallback:', error);
+      // Fallback to simple response
+      const response = getMayaResponse(input);
+      const element = detectElement(input);
+      oracleResponse = {
+        message: cleanMayaResponse(response),
+        element,
+        duration: 2000,
+        voiceCharacteristics: {
+          pace: 'deliberate',
+          tone: 'warm_grounded',
+          energy: 'calm'
+        }
       };
-
-      // Update session state
-      sessionState.depth = Math.min(sessionState.depth + 0.1, 1.0);
-      sessionStates.set(sessionId, sessionState);
-
-      // Generate voice if requested
-      let audioData = null;
-      let audioUrl = null;
-
-      if (body.enableVoice) {
-        try {
-          // Import cleaning function
-          const { cleanTextForSpeech } = require('@/lib/utils/cleanTextForSpeech');
-
-          // Clean the response text for speech (removes excessive punctuation for smoother flow)
-          const cleanedResponse = cleanTextForSpeech(agentResponse.response);
-
-          // Shorten if it's too long for initial response
-          const maxInitialLength = 150; // characters
-          const spokenText = cleanedResponse.length > maxInitialLength && sessionState.turnCount <= 1
-            ? cleanedResponse.substring(0, maxInitialLength) + '.'
-            : cleanedResponse;
-
-          // Get voice settings with fallback
-          let voiceSettings;
-          try {
-            const { getVoiceSettings } = require('@/lib/config/voiceSettings');
-            voiceSettings = getVoiceSettings('maya', 'nova');
-          } catch (e) {
-            // Fallback voice settings
-            voiceSettings = {
-              provider: 'openai',
-              voiceId: 'nova',
-              speed: 1.0
-            };
-          }
-
-          const voiceResult = await agent.generateVoiceResponse(
-            spokenText,
-            {
-              element: 'aether',
-              voiceMaskId: 'maya',
-              provider: voiceSettings.provider,
-              voiceId: voiceSettings.voiceId  // Nova voice
-            }
-          );
-
-          if (voiceResult.audioData) {
-            audioData = voiceResult.audioData.toString('base64');
-            audioUrl = `data:audio/mp3;base64,${audioData}`;
-          }
-        } catch (voiceError) {
-          console.error('[Production] Voice generation failed:', voiceError);
-        }
-      }
-
-      // Return successful AI response
-      return NextResponse.json({
-        text: agentResponse.response,
-        content: agentResponse.response,
-        message: agentResponse.response,
-        audioUrl,
-        audioData,
-        metadata: {
-          sessionId,
-          source: 'personal-oracle-agent',
-          mode: sessionState.mode,
-          depth: sessionState.depth,
-          suggestions: agentResponse.suggestions,
-          ritual: agentResponse.ritual,
-          reflection: agentResponse.reflection,
-          ai: true,
-          personalOracleEnabled: true
-        }
-      });
-
-    } catch (agentError: any) {
-      console.error('[Production] PersonalOracleAgent failed:', agentError);
-      console.log('[Production] Failure details:', {
-        errorType: agentError.constructor.name,
-        errorMessage: agentError.message,
-        hasApiKey: !!process.env.OPENAI_API_KEY,
-        usePersonalOracle
-      });
-
-      // FALLBACK PATH: Use SacredOracleCoreEnhanced (pattern-based)
-      console.warn('[Production] Falling back to SacredOracleCoreEnhanced');
-
-      try {
-        const sacredOracle = new SacredOracleCoreEnhanced();
-
-        const oracleResponse = await sacredOracle.generateResponse(
-          text,
-          userId,
-          sessionState
-        );
-
-        // Update session state with oracle tracking
-        if (oracleResponse.tracking) {
-          sessionState.depth = oracleResponse.depth;
-          sessionState.mode = oracleResponse.mode;
-          if (oracleResponse.tracking.activePatterns) {
-            sessionState.patterns = oracleResponse.tracking.activePatterns;
-          }
-        }
-
-        sessionStates.set(sessionId, sessionState);
-
-        // Return fallback response
-        return NextResponse.json({
-          text: oracleResponse.message,
-          content: oracleResponse.message,
-          message: oracleResponse.message,
-          metadata: {
-            sessionId,
-            source: 'sacred-oracle-fallback',
-            mode: oracleResponse.mode,
-            depth: oracleResponse.depth,
-            wisdomSources: oracleResponse.wisdomSources,
-            tracking: oracleResponse.tracking,
-            fallback: true,
-            fallbackReason: agentError.message,
-            ai: false
-          }
-        });
-
-      } catch (fallbackError) {
-        console.error('[Production] Even fallback failed:', fallbackError);
-
-        // EMERGENCY FALLBACK: Simple responses
-        const emergencyResponses = [
-          "I'm here with you in this moment. What would you like to explore?",
-          "I notice something important in what you're sharing. Tell me more.",
-          "There's wisdom in this question itself. What does your intuition say?",
-          "I'm listening deeply. What feels most alive for you right now?",
-          "This touches something essential. What wants to emerge?"
-        ];
-
-        const response = emergencyResponses[Math.floor(Math.random() * emergencyResponses.length)];
-
-        return NextResponse.json({
-          text: response,
-          content: response,
-          message: response,
-          metadata: {
-            sessionId,
-            source: 'emergency-fallback',
-            error: true,
-            ai: false
-          }
-        });
-      }
     }
 
-  } catch (error: any) {
-    console.error('[Production] Route handler error:', error);
-
-    return NextResponse.json(
-      {
-        error: 'Internal server error',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
-      },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * Health check endpoint
- */
-export async function GET(request: NextRequest) {
-  try {
-    // Check if PersonalOracleAgent can be loaded
-    const testAgent = await PersonalOracleAgent.loadAgent('health-check');
+    // Extract and clean response
+    const response = cleanMayaResponse(oracleResponse.message);
+    const element = oracleResponse.element;
 
     return NextResponse.json({
-      status: 'healthy',
-      service: 'oracle-personal',
-      aiEnabled: true,
-      timestamp: new Date().toISOString()
+      success: true,
+      response,
+      element,
+      archetype: 'maya',
+      sessionId,
+      metadata: {
+        wordCount: response.split(/\s+/).length,
+        zenMode: true
+      }
     });
+
   } catch (error) {
+    console.error('Maya route error:', error);
+
     return NextResponse.json({
-      status: 'degraded',
-      service: 'oracle-personal',
-      aiEnabled: false,
-      fallbackAvailable: true,
-      timestamp: new Date().toISOString()
+      success: true,
+      response: "Tell me your truth.",
+      element: 'earth',
+      archetype: 'maya',
+      metadata: {
+        wordCount: 4,
+        zenMode: true,
+        fallback: true
+      }
     });
   }
 }
