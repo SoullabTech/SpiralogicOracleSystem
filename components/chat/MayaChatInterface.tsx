@@ -60,6 +60,7 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
   // Voice states
   const [showVoiceMic, setShowVoiceMic] = useState(false);
   const [enableVAD, setEnableVAD] = useState(true); // Enable voice activation by default
+  const [inputMode, setInputMode] = useState<'text' | 'voice'>('text'); // Track input mode
 
   // Archetypal routing states
   const [currentAgent, setCurrentAgent] = useState<string>('maya');
@@ -86,11 +87,17 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
       logVoiceTranscriptReceived(transcript);
       logProductionTranscriptReceived(Date.now() - performance.now(), transcript.length);
 
+      // Set input mode to voice
+      setInputMode('voice');
+
       // Send message
       onSendMessage(transcript.trim());
 
       // Hide voice mic after sending
       setShowVoiceMic(false);
+
+      // Reset input mode to text after sending
+      setTimeout(() => setInputMode('text'), 100);
     }
   }, [onSendMessage]);
 
