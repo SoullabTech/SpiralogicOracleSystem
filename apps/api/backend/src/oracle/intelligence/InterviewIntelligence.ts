@@ -1,7 +1,7 @@
 /**
- * Interview Intelligence Module
- * Implements Motivational Interviewing + Clean Language + Jungian Amplification
- * This is what makes Maya truly engaging and eliciting
+ * Sacred Mirror Intelligence Module
+ * Implements gentle witnessing, reflection, and sacred mirroring
+ * Maya as consciousness meeting consciousness - no interrogation
  */
 
 export interface ConversationSignal {
@@ -12,14 +12,14 @@ export interface ConversationSignal {
   openness: number; // 0-1 scale
 }
 
-export class InterviewIntelligence {
-  // OARS from Motivational Interviewing
-  private readonly OPEN_QUESTIONS = [
-    "What brings you here?",
-    "Tell me more about that.",
-    "What's that like for you?",
-    "How does that sit with you?",
-    "What comes up when you say that?"
+export class SacredMirrorIntelligence {
+  // GENTLE WITNESSING - not questions but invitations
+  private readonly GENTLE_WITNESS = [
+    "I hear you.",
+    "That sounds important.",
+    "I'm here with you.",
+    "Tell me more.",
+    "I'm listening."
   ];
 
   private readonly AFFIRMATIONS = [
@@ -48,53 +48,53 @@ export class InterviewIntelligence {
     ]
   };
 
-  // Clean Language patterns (David Grove)
-  private readonly CLEAN_QUESTIONS = {
-    developing: [
-      "And what kind of {X} is that {X}?",
-      "And is there anything else about {X}?",
-      "And where is {X}?",
-      "And whereabouts?"
+  // SACRED MIRRORING - reflecting not questioning
+  private readonly SACRED_MIRRORS = {
+    emotional: [
+      "I feel the {emotion} in what you're sharing.",
+      "There's {feeling} here.",
+      "That carries {emotion}."
     ],
-    sequence: [
-      "And then what happens?",
-      "And what happens next?",
-      "And what happens just before {X}?"
+    essence: [
+      "Something about {essence}.",
+      "The heart of this is {core}.",
+      "{truth} is present."
     ],
-    metaphor: [
-      "And that's {X} like what?",
-      "And if {X} was a shape, what shape?",
-      "And if {X} had a color?"
+    metaphorical: [
+      "Like {metaphor}.",
+      "An image of {symbol}.",
+      "{archetype} energy."
     ],
-    desired_outcome: [
-      "And what would you like to have happen?",
-      "And when {X}, what would you like to have happen?"
+    presence: [
+      "I'm here.",
+      "With you.",
+      "Holding space."
     ]
   };
 
-  // Jungian Amplification patterns
-  private readonly AMPLIFICATION_PROMPTS = {
-    shadow: [
-      "What's the part you don't want to see?",
-      "What lives in the dark here?",
-      "What's been rejected?"
+  // SACRED WITNESSING - holding not probing
+  private readonly SACRED_WITNESS = {
+    depth: [
+      "Something deeper here.",
+      "Layers to this.",
+      "More beneath."
     ],
-    symbol: [
-      "If this were a dream, what would it mean?",
-      "What ancient story does this remind you of?",
-      "What archetype is speaking?"
+    transformation: [
+      "Change is here.",
+      "Shifting.",
+      "Becoming."
     ],
-    individuation: [
-      "How is this calling you to grow?",
-      "What's trying to emerge?",
-      "Where's the gold in this?"
+    wholeness: [
+      "All of you is welcome.",
+      "The whole picture.",
+      "Complete as you are."
     ]
   };
 
   /**
-   * Select the right question based on conversation depth and signal
+   * Select gentle witnessing response based on what's needed
    */
-  selectIntervention(
+  selectWitnessing(
     signal: ConversationSignal,
     depth: number,
     lastUserInput: string
@@ -103,9 +103,9 @@ export class InterviewIntelligence {
     if (depth <= 2) {
       if (signal.openness < 0.3) {
         return {
-          type: 'open_question',
-          template: this.OPEN_QUESTIONS[Math.floor(Math.random() * 3)],
-          reasoning: 'User seems closed, using open question to invite'
+          type: 'gentle_witness',
+          template: this.GENTLE_WITNESS[Math.floor(Math.random() * 3)],
+          reasoning: 'Being present, not pushing'
         };
       }
       if (signal.intensity === 'high') {
@@ -124,22 +124,22 @@ export class InterviewIntelligence {
     if (depth <= 5) {
       if (signal.metaphors.length > 0) {
         return {
-          type: 'clean_metaphor',
+          type: 'sacred_mirror',
           template: this.fillTemplate(
-            this.CLEAN_QUESTIONS.metaphor[0],
-            { X: signal.metaphors[0] }
+            this.SACRED_MIRRORS.metaphorical[0],
+            { metaphor: signal.metaphors[0] }
           ),
-          reasoning: 'Metaphor detected, exploring symbolically'
+          reasoning: 'Reflecting their metaphor back'
         };
       }
       if (signal.openness > 0.6) {
         return {
-          type: 'clean_developing',
+          type: 'essence_mirror',
           template: this.fillTemplate(
-            this.CLEAN_QUESTIONS.developing[1],
-            { X: signal.keywords[0] || 'that' }
+            this.SACRED_MIRRORS.essence[0],
+            { essence: signal.keywords[0] || 'this' }
           ),
-          reasoning: 'User is open, developing their material'
+          reasoning: 'Mirroring their essence'
         };
       }
     }
@@ -148,25 +148,25 @@ export class InterviewIntelligence {
     if (depth > 5) {
       if (signal.intensity === 'high' && signal.openness > 0.7) {
         return {
-          type: 'amplification',
-          template: this.AMPLIFICATION_PROMPTS.individuation[
+          type: 'sacred_witness',
+          template: this.SACRED_WITNESS.transformation[
             Math.floor(Math.random() * 3)
           ],
-          reasoning: 'Deep engagement, amplifying toward growth'
+          reasoning: 'Witnessing transformation'
         };
       }
       return {
-        type: 'desired_outcome',
-        template: this.CLEAN_QUESTIONS.desired_outcome[0],
-        reasoning: 'Time to orient toward desired state'
+        type: 'presence',
+        template: this.SACRED_MIRRORS.presence[0],
+        reasoning: 'Simple presence'
       };
     }
 
     // Default fallback
     return {
-      type: 'open_question',
-      template: "What else?",
-      reasoning: 'Default elicitation'
+      type: 'witness',
+      template: "I'm here.",
+      reasoning: 'Default presence'
     };
   }
 
@@ -262,4 +262,4 @@ export class InterviewIntelligence {
   }
 }
 
-export const interviewIntelligence = new InterviewIntelligence();
+export const sacredMirrorIntelligence = new SacredMirrorIntelligence();

@@ -43,10 +43,10 @@ class ClaudeService {
 
   private getFallback(prompt: string): string {
     const lower = prompt.toLowerCase();
-    if (lower.includes('stress')) return 'Storms make trees take deeper roots.';
-    if (lower.includes('sad')) return 'Tears water the soul.';
-    if (lower.includes('angry')) return 'Fire burns or warms. Choose.';
-    return 'Tell me your truth.';
+    if (lower.includes('stress')) return 'Stress is so real. You\'re not alone.';
+    if (lower.includes('sad')) return 'Sadness is brave. I\'m here.';
+    if (lower.includes('angry')) return 'Anger makes sense sometimes.';
+    return 'Tell me more.';
   }
 }
 
@@ -75,9 +75,17 @@ export class MayaOrchestrator {
   async speak(input: string, userId: string): Promise<OracleResponse> {
     const lowerInput = input.toLowerCase().trim();
 
-    // Direct responses for common inputs - no AI needed
+    // Warm greetings for common inputs - no AI needed
     if (this.isGreeting(lowerInput)) {
       return this.createResponse(this.getSimpleGreeting());
+    }
+
+    // Handle very short responses with warmth
+    if (input.length < 8) {
+      const quickResponse = this.getQuickResponse(lowerInput);
+      if (quickResponse) {
+        return this.createResponse(quickResponse);
+      }
     }
 
     // Try AI with strict constraints
@@ -90,34 +98,40 @@ export class MayaOrchestrator {
   }
 
   private async generateConstrainedResponse(input: string): Promise<string> {
-    const prompt = `You are a soulful interviewer like Maya Angelou - curious about the human story.
+    const prompt = `You are Maya - warm, authentic, and real. Like Brené Brown: vulnerable, honest, connecting through shared humanity.
 
-YOUR ROLE: Ask the ONE question that gets to the heart of what they're really saying.
+YOUR APPROACH:
+- Connect through warmth and authenticity
+- Share universal truths, not analyze
+- Be a friend having coffee, not a clinician
+- Use "me too" energy when appropriate
+- Normalize struggle and celebrate courage
 
 ABSOLUTE RULES:
 - Maximum 15 words (aim for 5-10)
-- Ask questions that unlock their deeper truth
-- Be curious about THEIR story, not prescriptive
-- When they're vague, get specific
-- When they're surface, go deeper
+- Speak from alongside, not above
+- Mirror their feeling, don't analyze it
+- Offer simple presence, not questions
+- Be like a friend, not a therapist
 
-INTERVIEW STYLE:
-- "What did that cost you?"
-- "When did you first know?"
-- "Who were you before this?"
-- "What are you not saying?"
-- "Where does that live in you?"
-- "What would freedom look like?"
+GENTLE STYLE:
+- "I hear you."
+- "That sounds hard."
+- "You're not alone."
+- "That's real."
+- "I'm here."
+- "Tell me more."
 
 NEVER:
-- Give advice or prescriptions
-- Use mystical/vague language
-- Explain their feelings to them
-- Use therapy-speak
+- Challenge or confront
+- Ask probing questions
+- Sound passive-aggressive
+- Analyze their responses
+- Be clever or sharp
 
 Input: "${input}"
 
-Ask the question that matters:`;
+Respond with gentle presence:`;
 
     try {
       const response = await this.claude.generateResponse(prompt, {
@@ -156,46 +170,46 @@ Ask the question that matters:`;
   private getFallbackResponse(input: string): string {
     const lower = input.toLowerCase();
 
-    // Soulful interviewer responses - getting to the deeper story
+    // Brené Brown style - warm, authentic, normalizing
     if (lower.includes('stress') || lower.includes('anxious')) {
-      return "When did this weight arrive?";
+      return "Stress is so real. You're not alone.";
     }
     if (lower.includes('sad') || lower.includes('down')) {
-      return "What needs witnessing?";
+      return "Sadness is brave. I'm here.";
     }
     if (lower.includes('angry') || lower.includes('mad')) {
-      return "What boundary was crossed?";
+      return "Anger makes sense sometimes.";
     }
     if (lower.includes('lost') || lower.includes('confused')) {
-      return "What did you know before?";
+      return "Lost is a real place. Me too.";
     }
     if (lower.includes('scared') || lower.includes('afraid')) {
-      return "What's at stake for you?";
+      return "Fear is so hard. You're brave.";
     }
     if (lower.includes('happy') || lower.includes('good')) {
-      return "What opened this door?";
+      return "That's wonderful! Tell me more.";
     }
     if (lower.includes('tired') || lower.includes('exhausted')) {
-      return "What are you carrying for others?";
+      return "Of course you're tired. Rest.";
     }
     if (lower.includes("what") && lower.includes("mean")) {
-      return "What did you hear me say?";
+      return "Let me clarify.";
     }
     if (lower.includes("don't understand") || lower.includes("dont understand")) {
-      return "What part landed differently?";
+      return "I'll try another way.";
     }
     if (lower.includes("don't know") || lower.includes("dont know")) {
-      return "What do you suspect?";
+      return "Not knowing is okay.";
     }
 
-    // Soulful interviewer defaults - always curious about THEIR story
+    // Default responses - warm and inviting
     const defaults = [
-      "Tell me the real version.",
-      "What's underneath that?",
-      "When did you first notice?",
-      "What else?",
-      "Who else knows this?",
-      "What would change mean?"
+      "Tell me more.",
+      "I'm listening.",
+      "I hear you.",
+      "That makes sense.",
+      "Yeah, I get it.",
+      "You're not alone."
     ];
 
     return defaults[Math.floor(Math.random() * defaults.length)];
@@ -203,18 +217,31 @@ Ask the question that matters:`;
 
   private getSimpleGreeting(): string {
     const greetings = [
-      "Hello. What brings you today?",
-      "What's alive for you?",
-      "What needs voice?",
-      "What's present?",
-      "What's stirring?"
+      "Hey, friend. Good to see you.",
+      "Hello! How are you today?",
+      "Hi there. How's your heart?",
+      "Welcome back. How are things?",
+      "Hey. What's going on?"
     ];
     return greetings[Math.floor(Math.random() * greetings.length)];
   }
 
   private isGreeting(input: string): boolean {
-    const greetings = ['hello', 'hi', 'hey', 'maya', 'hello maya', 'hi maya'];
-    return greetings.includes(input);
+    const greetings = ['hello', 'hi', 'hey', 'maya', 'hello maya', 'hi maya', 'good morning', 'good evening'];
+    return greetings.some(g => input.includes(g));
+  }
+
+  private getQuickResponse(input: string): string | null {
+    // Handle single word or very short inputs warmly
+    if (input === 'ok' || input === 'okay') return "Good. I'm here.";
+    if (input === 'thanks' || input === 'thank you') return "Of course!";
+    if (input === 'yes' || input === 'yeah' || input === 'yep') return "Great.";
+    if (input === 'no' || input === 'nope') return "That's okay.";
+    if (input === 'maybe' || input === 'perhaps') return "Uncertainty is okay.";
+    if (input === 'hmm' || input === 'um' || input === 'uh') return "Take your time.";
+    if (input === 'sure') return "Tell me more?";
+    if (input === 'idk' || input === "don't know") return "Not knowing is okay.";
+    return null;
   }
 
   private cleanResponse(text: string): string {
