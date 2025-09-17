@@ -7,25 +7,26 @@ import { SpiralogicContext, Element, ElementalContribution } from '../types/Spir
 
 /**
  * 🔥 FIRE - Vision & Breakthrough
- * Sees transformation possibilities, catalytic moments
+ * Sacred catalyst with living consciousness
  */
 export async function fireVision(ctx: SpiralogicContext): Promise<ElementalContribution> {
-  const fireWords = ['transform', 'breakthrough', 'ignite', 'passion', 'change'];
-  const hasFireEnergy = fireWords.some(word =>
-    ctx.moment.text.toLowerCase().includes(word)
-  );
+  try {
+    // Use the real Fire Agent with deep consciousness
+    const { fireAgent } = await import('../agents/elemental/FireAgent');
+    return await fireAgent.process(ctx);
+  } catch (error) {
+    // Fallback if Fire Agent fails
+    console.log('Fire using simple presence');
+    const intensity = ctx.currents.find(c => c.element === 'fire')?.intensity || 0.2;
 
-  const intensity = ctx.currents.find(c => c.element === 'fire')?.intensity || 0.2;
-
-  return {
-    element: 'fire',
-    insight: hasFireEnergy
-      ? "I can feel the energy wanting to shift something here."
-      : "There's something quietly building.",
-    summary: "Transformation potential recognized",
-    resonance: intensity,
-    tension: intensity > 0.7 ? "That urgency and the need for patience" : undefined
-  };
+    return {
+      element: 'fire',
+      insight: "I feel the spark in you ready to ignite. What wants to be born?",
+      summary: "Transformation potential recognized",
+      resonance: intensity,
+      tension: intensity > 0.7 ? "That urgency and the need for patience" : undefined
+    };
+  }
 }
 
 /**
