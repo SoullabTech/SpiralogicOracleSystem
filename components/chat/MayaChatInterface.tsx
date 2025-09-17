@@ -426,7 +426,6 @@ export const MayaChatInterface: React.FC<MayaChatInterfaceProps> = ({
         accept=".txt,.md,.csv,.pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif"
         className="hidden"
       />
-    </div>
 
       {/* Voice Mic Overlay */}
       {showVoiceMic && (
