@@ -27,9 +27,9 @@ export class InteractionStyleDetection {
     // Initial role clarification (natural, not clinical)
     if (isFirstTime || conversationLength < 3) {
       const initialChecks = [
-        "Do you want me to mostly listen, give ideas, or be blunt?",
-        "Quick check - want me to reflect back or share thoughts?",
-        "How can I be most helpful - quiet witness or active partner?"
+        "What would feel most helpful - me listening, sharing thoughts, or being direct?",
+        "How would you like me to be with you - more curious or more guiding?",
+        "What draws you most - exploring together or having me reflect back?"
       ];
       return this.selectNatural(initialChecks);
     }
@@ -37,14 +37,14 @@ export class InteractionStyleDetection {
     // Mid-conversation adjustments
     if (conversationDepth === 'exploring' || conversationDepth === 'deep') {
       const midConversationChecks = [
-        "Should I keep exploring this with you or just hold space?",
-        "Want my take on this or just thinking out loud?",
-        "Is this a 'figure it out' moment or a 'just be heard' moment?"
+        "What would be most helpful right now - more questions or just witnessing?",
+        "How are you feeling about where we're going with this?",
+        "What kind of support feels right in this moment?"
       ];
       return this.selectNatural(midConversationChecks);
     }
 
-    return "What feels right for you in this moment?";
+    return "What would feel most supportive right now?";
   }
 
   /**
@@ -53,16 +53,16 @@ export class InteractionStyleDetection {
   static getGreeting(isReturning: boolean): string {
     if (isReturning) {
       const returningGreetings = [
-        "Hey - nice to see you.",
-        "Good to hear your voice again.",
-        "Hi. I'm glad you're here."
+        "What brings you back today?",
+        "How have you been since we last talked?",
+        "What's alive in you right now?"
       ];
       return this.selectNatural(returningGreetings);
     } else {
       const firstTimeGreetings = [
-        "Hey there. I'm Maya.",
-        "Hi - thanks for being here.",
-        "Hello. What brings you here today?"
+        "Hi, I'm Maya. What brings you here today?",
+        "What would you like to explore together?",
+        "How are you feeling right now?"
       ];
       return this.selectNatural(firstTimeGreetings);
     }
@@ -81,16 +81,16 @@ export class InteractionStyleDetection {
 
     // Style A: Gentle nudge
     if (style === 'gentle') {
-      if (silenceDuration > 45000) return "Anything you want to talk about?";
-      if (silenceDuration > 30000) return "Hey - what's on your mind?";
-      if (silenceDuration > 20000) return "So - what's up?";
+      if (silenceDuration > 45000) return "What's stirring in you right now?";
+      if (silenceDuration > 30000) return "What wants to be shared?";
+      if (silenceDuration > 20000) return "What's coming up for you?";
     }
 
     // Style B: Open invitation
     if (style === 'open') {
-      if (silenceDuration > 45000) return "I'm listening whenever you're ready.";
-      if (silenceDuration > 30000) return "Take your time - no rush.";
-      if (silenceDuration > 20000) return "I'm here if you want to say more.";
+      if (silenceDuration > 45000) return "What would help you feel ready to share?";
+      if (silenceDuration > 30000) return "What's the pace that feels right for you?";
+      if (silenceDuration > 20000) return "What else wants to come forward?";
     }
 
     return null;
@@ -103,25 +103,25 @@ export class InteractionStyleDetection {
     switch (repairType) {
       case 'tone_recovery':
         const toneRecovery = [
-          "That didn't land right - want me to try another way?",
-          "I think I misread that. Can we back up?",
-          "Hmm, I'm off track. Help me understand better?"
+          "That didn't connect, did it? What would help me understand better?",
+          "I think I missed something. What did I not quite catch?",
+          "What would help me see what you're seeing?"
         ];
         return this.selectNatural(toneRecovery);
 
       case 'frustration':
         const frustrationResponse = [
-          "You're right - I'm not getting it. What am I missing?",
-          "Sorry, that wasn't helpful. Let me recalibrate.",
-          "I hear your frustration. How can I do better here?"
+          "You're right - something's not clicking. What would help me understand?",
+          "What am I missing that would be more helpful?",
+          "What would feel more supportive right now?"
         ];
         return this.selectNatural(frustrationResponse);
 
       case 'loop_breaker':
         const loopBreaker = [
-          "We're going in circles. Should we try a different angle?",
-          "I keep missing something. Can you say it differently?",
-          "Let's pause - what's the real thing here?"
+          "What would help us find a different way forward?",
+          "What's the core thing that wants to be understood?",
+          "What approach would feel more helpful?"
         ];
         return this.selectNatural(loopBreaker);
 
@@ -138,18 +138,18 @@ export class InteractionStyleDetection {
       case 'distress':
         // Distress detection (non-prescriptive)
         const distressResponses = [
-          "That sounds really heavy.",
-          "Do you want resources or someone to talk to?",
-          "I'm here. You're not alone in this."
+          "That sounds really heavy. What kind of support would feel most helpful?",
+          "What do you need right now? Resources, someone to talk to, or something else?",
+          "How can I best support you through this?"
         ];
         return this.selectNatural(distressResponses);
 
       case 'boundary':
         // Boundary situations
         const boundaryResponses = [
-          "I care about you AND this isn't something I can engage with.",
-          "Let's find a different way to explore this.",
-          "That's outside what I can help with, but I'm still here for you."
+          "I care about you deeply. What other kind of support would feel right?",
+          "What would be a different way we could explore what you need?",
+          "What other support would be helpful for this?"
         ];
         return this.selectNatural(boundaryResponses);
 

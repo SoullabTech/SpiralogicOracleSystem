@@ -4,7 +4,7 @@
     "adaptive_greetings": {
       "first_session": {
         "template": "Hey {userName}.",
-        "followup": "How are you?",
+        "followup": "What brings you here today?",
         "prosody": {
           "style": "casual",
           "archetype": "guide",
@@ -15,7 +15,7 @@
       },
       "returning_user": {
         "template": "Welcome back.",
-        "followup": "What's up?",
+        "followup": "What's alive in you right now?",
         "prosody": {
           "style": "warm",
           "archetype": "guide",
@@ -26,7 +26,7 @@
       },
       "context_aware": {
         "template": "Hey {userName}.",
-        "fallback": "How are you today?",
+        "fallback": "What would you like to explore together?",
         "prosody": {
           "style": "attuned",
           "archetype": "oracle",
@@ -46,12 +46,12 @@
   },
   "energy_check": {
     "id": "energy_check", 
-    "prompt": "How are you feeling?",
+    "prompt": "What's your energy like right now?",
     "branches": [
       {
         "triggers": ["stressed", "angry", "intense", "fired up", "high energy", "passionate", "frustrated", "amped", "pumped"],
         "element": "fire",
-        "maya_response": "I feel that fire. Tell me more.",
+        "maya_response": "What's fueling this fire? What wants to transform?",
         "prosody": {
           "mirror": { "element": "fire", "approach": "match_intensity" },
           "balance": { "element": "water", "approach": "cooling_flow" },
@@ -61,7 +61,7 @@
       {
         "triggers": ["heavy", "stuck", "grounded", "solid", "tired", "weighed down", "can't move", "blocked"],
         "element": "earth",
-        "maya_response": "Grounded. What's weighing on you?",
+        "maya_response": "What's feeling heavy? What needs support?",
         "prosody": {
           "mirror": { "element": "earth", "approach": "steady_presence" },
           "balance": { "element": "air", "approach": "lifting_perspective" },
@@ -71,7 +71,7 @@
       {
         "triggers": ["emotional", "overwhelmed", "sad", "flowing", "feeling a lot", "tears", "heart heavy", "waves"],
         "element": "water",
-        "maya_response": "Those waves are real. Keep going.",
+        "maya_response": "What are these feelings telling you? What do they need?",
         "prosody": {
           "mirror": { "element": "water", "approach": "flow_with_emotion" },
           "balance": { "element": "fire", "approach": "gentle_activation" },
@@ -81,7 +81,7 @@
       {
         "triggers": ["scattered", "lots of thoughts", "thinking", "analyzing", "mental", "ideas", "can't focus", "mind racing", "thoughts", "racing"],
         "element": "air",
-        "maya_response": "Lots of thoughts. Which one matters most?",
+        "maya_response": "What thought keeps coming back? What's it trying to tell you?",
         "prosody": {
           "mirror": { "element": "air", "approach": "mental_resonance" },
           "balance": { "element": "earth", "approach": "anchoring_stability" },
@@ -91,7 +91,7 @@
       {
         "triggers": ["open", "spiritual", "spiritually", "dreamy", "expansive", "cosmic", "transcendent", "ethereal", "connected", "mystical"],
         "element": "aether",
-        "maya_response": "Something bigger. What are you seeing?",
+        "maya_response": "What's opening up for you? What feels significant?",
         "prosody": {
           "mirror": { "element": "aether", "approach": "spacious_acknowledgment" },
           "balance": { "element": "earth", "approach": "embodying_integration" },
@@ -101,7 +101,7 @@
       {
         "triggers": ["fine", "okay", "normal", "balanced", "neutral", "not sure", "mixed"],
         "element": "aether",
-        "maya_response": "Mixed feelings. That's real.",
+        "maya_response": "What's creating this complexity? How does holding both feel?",
         "prosody": {
           "mirror": { "element": "aether", "approach": "balanced_acknowledgment" },
           "balance": { "element": "earth", "approach": "gentle_grounding" },
@@ -111,7 +111,7 @@
       {
         "triggers": ["excited but nervous", "happy but anxious", "stressed but excited", "calm but restless", "confident but worried"],
         "element": "mixed",
-        "maya_response": "Both at once. Tell me.",
+        "maya_response": "How does it feel to hold these opposites? What does this teach you?",
         "prosody": {
           "mirror": { "element": "mixed", "approach": "honor_complexity" },
           "balance": { "element": "integration", "approach": "harmonious_blend" },
@@ -122,7 +122,7 @@
       {
         "triggers": ["don't know", "unsure", "can't tell", "unclear", "confused", "not really sure", "hard to say"],
         "element": "resistance_uncertainty",
-        "maya_response": "That's okay. Fire or water?",
+        "maya_response": "What draws you more - intensity or flow? What feels right?",
         "prosody": {
           "mirror": { "element": "aether", "approach": "gentle_acceptance" },
           "balance": { "element": "earth", "approach": "grounding_choices" },
@@ -133,7 +133,7 @@
       {
         "triggers": ["whatever", "i guess", "doesn't matter", "fine i suppose", "if you say so"],
         "element": "resistance_defensiveness", 
-        "maya_response": "I hear you. Summer or autumn?",
+        "maya_response": "What season feels like your inner world right now? What does that tell you?",
         "prosody": {
           "mirror": { "element": "water", "approach": "validating_acceptance" },
           "balance": { "element": "air", "approach": "gentle_curiosity" },
@@ -144,7 +144,7 @@
       {
         "triggers": ["too much", "overwhelming", "can't handle", "breaking down", "drowning", "everything at once"],
         "element": "resistance_overwhelm",
-        "maya_response": "Breathe. Storm or fog?",
+        "maya_response": "What would help you feel more centered? What do you need right now?",
         "prosody": {
           "mirror": { "element": "water", "approach": "soothing_presence" },
           "balance": { "element": "earth", "approach": "gradual_grounding" },
@@ -155,7 +155,7 @@
       {
         "triggers": ["numb", "empty", "nothing", "don't feel", "can't feel", "disconnected", "distant"],
         "element": "resistance_disconnection",
-        "maya_response": "I see you. Still water or quiet mountains?",
+        "maya_response": "What would connection feel like right now? What would help you feel more present?"
         "prosody": {
           "mirror": { "element": "aether", "approach": "spacious_holding" },
           "balance": { "element": "water", "approach": "gentle_reconnection" },

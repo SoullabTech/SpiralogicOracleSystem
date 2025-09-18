@@ -259,24 +259,24 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-      {/* Holoflower-like background glow - softer */}
+      {/* Holoflower-like background glow - voice reactive */}
       <div className="absolute inset-0 -z-10">
         <motion.div
           className="w-48 h-48 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           style={{
             background: isListening
-              ? 'radial-gradient(ellipse, rgba(251,191,36,0.15) 0%, rgba(251,191,36,0.05) 40%, transparent 70%)'
+              ? `radial-gradient(ellipse, rgba(251,191,36,${0.15 + audioLevel * 0.3}) 0%, rgba(251,191,36,${0.05 + audioLevel * 0.2}) 40%, transparent 70%)`
               : 'radial-gradient(ellipse, rgba(251,191,36,0.03) 0%, transparent 70%)',
             filter: 'blur(40px)',
           }}
           animate={{
-            scale: isListening ? [1, 1.4, 1] : 1,
-            opacity: isListening ? [0.3, 0.6, 0.3] : 0.1,
+            scale: isListening ? (audioLevel > 0.1 ? 1 + audioLevel * 0.8 : [1, 1.4, 1]) : 1,
+            opacity: isListening ? (audioLevel > 0.1 ? 0.3 + audioLevel * 0.5 : [0.3, 0.6, 0.3]) : 0.1,
           }}
           transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
+            duration: audioLevel > 0.1 ? 0.1 : 3,
+            repeat: audioLevel > 0.1 ? 0 : Infinity,
+            ease: audioLevel > 0.1 ? "linear" : "easeInOut"
           }}
         />
 

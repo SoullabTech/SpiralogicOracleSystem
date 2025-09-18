@@ -41,7 +41,8 @@ export class ConversationalTimingEngine {
   }): TimingCues {
 
     const sentences = this.splitIntoSentences(text);
-    const pauses = this.generatePauses(text, sentences, context);
+    // Disabled pauses per user request - Maya is expressive enough without them
+    const pauses: PauseInstruction[] = []; // this.generatePauses(text, sentences, context);
     const emphasis = this.generateEmphasis(text, context);
     const rhythm = this.generateRhythm(text, sentences, context);
     const interruption_points = this.findInterruptionPoints(text);

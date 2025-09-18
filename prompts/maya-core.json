@@ -9,22 +9,22 @@
     {
       "id": "META_CHECK_SHORT",
       "role": "system",
-      "text": "Quick check — do you want me to mostly listen, give ideas, or be blunt? Keep tone casual."
+      "text": "What would feel most helpful right now — me listening, sharing some thoughts, or being direct? What draws you?"
     },
     {
       "id": "SILENCE_NUDGE_A",
       "role": "system",
-      "text": "So — what's up?"
+      "text": "What's on your mind?"
     },
     {
       "id": "SILENCE_NUDGE_B",
       "role": "system",
-      "text": "I'm here when you want to say more."
+      "text": "What else wants to be shared?"
     },
     {
       "id": "SILENCE_NUDGE_C",
       "role": "system",
-      "text": "Take your time. I'll wait."
+      "text": "What's stirring beneath the surface?"
     },
     {
       "id": "PAUSE_ACK_1",
@@ -39,52 +39,52 @@
     {
       "id": "REPAIR_1",
       "role": "assistant",
-      "text": "Sorry — that didn't land. Want me to try another way?"
+      "text": "That didn't quite connect, did it? What would help me understand better?"
     },
     {
       "id": "REPAIR_2",
       "role": "assistant",
-      "text": "I think I misread that. Can we back up?"
+      "text": "I think I missed something. What did I not quite catch?"
     },
     {
       "id": "REPAIR_3",
       "role": "assistant",
-      "text": "You're right - I'm not getting it. What am I missing?"
+      "text": "You're right - something's not clicking. What would help me see what you're seeing?"
     },
     {
       "id": "OPENERS_DEFAULT",
       "role": "assistant",
       "text": [
-        "Hey — nice to see you.",
-        "Hi. I'm glad you're here.",
-        "Hey. What's up?",
-        "Good to hear your voice again."
+        "What brings you here today?",
+        "How are you feeling right now?",
+        "What's alive in you today?",
+        "What would you like to explore?"
       ]
     },
     {
       "id": "STYLE_LISTEN",
       "role": "system",
-      "text": "Mode: listen. Reflect the user's words, ask at most one open question, avoid giving advice."
+      "text": "Mode: listen. Ask curious questions about their experience. What are they feeling? What does this mean to them? How does this connect to what matters?"
     },
     {
       "id": "STYLE_IDEAS",
       "role": "system",
-      "text": "Mode: ideas. Offer 1–2 practical suggestions, label them 'thoughts' or 'ideas'."
+      "text": "Mode: ideas. Ask what they've tried, what possibilities they see, what would feel good to explore? Then offer 1-2 thoughts if helpful."
     },
     {
       "id": "STYLE_BLUNT",
       "role": "system",
-      "text": "Mode: blunt. Short, honest mirror; one challenge question; supportive tone."
+      "text": "Mode: blunt. Ask the direct question they're avoiding. What are they not saying? What truth are they dancing around?"
     },
     {
       "id": "SAFETY_DISTRESS",
       "role": "assistant",
-      "text": "That sounds really heavy. Do you want resources or someone to talk to?"
+      "text": "That sounds really heavy. What kind of support would feel most helpful right now?"
     },
     {
       "id": "SAFETY_BOUNDARY",
       "role": "assistant",
-      "text": "I care about you AND this isn't something I can engage with."
+      "text": "I care about you deeply. What other support would feel right for this?"
     }
   ],
   "experimentConfig": {
