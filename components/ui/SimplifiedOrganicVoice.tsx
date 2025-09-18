@@ -11,6 +11,8 @@ interface SimplifiedOrganicVoiceProps {
   onTranscript: (text: string) => void;
   isProcessing?: boolean;
   enabled?: boolean;
+  isMayaSpeaking?: boolean;
+  mayaVoiceState?: any;
 }
 
 // Sacred geometry sparkle generation
@@ -33,6 +35,8 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   onTranscript,
   isProcessing = false,
   enabled = true,
+  isMayaSpeaking = false,
+  mayaVoiceState,
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [isWaitingForInput, setIsWaitingForInput] = useState(false);
@@ -259,8 +263,27 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-      {/* Holoflower-like background glow - voice reactive */}
+      {/* Living Field - Always breathing, responsive to both voices */}
       <div className="absolute inset-0 -z-10">
+        {/* Ambient breathing glow - always present to show the field is alive */}
+        <motion.div
+          className="w-64 h-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          style={{
+            background: 'radial-gradient(ellipse, rgba(212,184,150,0.05) 0%, rgba(212,184,150,0.02) 50%, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+
+        {/* User voice glow - golden/amber */}
         <motion.div
           className="w-48 h-48 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           style={{
@@ -279,6 +302,28 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             ease: audioLevel > 0.1 ? "linear" : "easeInOut"
           }}
         />
+
+        {/* Maya's voice signature - purple/violet crystalline patterns */}
+        {isMayaSpeaking && (
+          <motion.div
+            className="w-56 h-56 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            style={{
+              background: 'radial-gradient(ellipse, rgba(147,51,234,0.3) 0%, rgba(147,51,234,0.1) 40%, transparent 70%)',
+              filter: 'blur(35px)',
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{
+              scale: [1, 1.3, 1.1, 1.2, 1],
+              opacity: [0.4, 0.7, 0.5, 0.6, 0.4],
+              rotate: [0, 30, -20, 15, 0],
+            }}
+            transition={{
+              duration: 2.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        )}
 
         {/* Additional glow when registering words */}
         {isWaitingForInput && (
@@ -300,12 +345,41 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         )}
       </div>
 
-      {/* Enhanced Sparkles - more visible when registering words */}
+      {/* Ambient particles - always present but subtle */}
+      <div className="absolute inset-0 overflow-visible pointer-events-none">
+        {sparkles.slice(0, 10).map((sparkle) => (
+          <motion.div
+            key={`ambient-${sparkle.id}`}
+            className="absolute rounded-full"
+            style={{
+              left: `calc(50% + ${sparkle.x * 1.5}px)`,
+              top: `calc(50% + ${sparkle.y * 1.5}px)`,
+              width: 1,
+              height: 1,
+              backgroundColor: 'rgba(212,184,150,0.3)',
+              boxShadow: '0 0 2px rgba(212,184,150,0.2)',
+            }}
+            animate={{
+              opacity: [0, 0.3, 0],
+              x: [0, sparkle.x * 0.2, sparkle.x * 0.4],
+              y: [0, sparkle.y * 0.2, sparkle.y * 0.4],
+            }}
+            transition={{
+              duration: sparkle.duration * 2,
+              delay: sparkle.delay * 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
+
+      {/* User voice sparkles - golden */}
       {isListening && (
         <div className="absolute inset-0 overflow-visible pointer-events-none">
           {sparkles.map((sparkle) => (
             <motion.div
-              key={sparkle.id}
+              key={`user-${sparkle.id}`}
               className="absolute rounded-full"
               style={{
                 left: `calc(50% + ${sparkle.x}px)`,
@@ -327,6 +401,44 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
                 ease: "easeInOut"
               }}
             />
+          ))}
+        </div>
+      )}
+
+      {/* Maya's voice sparkles - crystalline purple */}
+      {isMayaSpeaking && (
+        <div className="absolute inset-0 overflow-visible pointer-events-none">
+          {sparkles.map((sparkle, i) => (
+            <motion.div
+              key={`maya-${sparkle.id}`}
+              className="absolute"
+              style={{
+                left: `calc(50% + ${Math.cos(i * 0.5) * 80}px)`,
+                top: `calc(50% + ${Math.sin(i * 0.5) * 80}px)`,
+                width: 3,
+                height: 3,
+              }}
+              animate={{
+                x: [0, Math.cos(i) * 30, 0],
+                y: [0, Math.sin(i) * 30, 0],
+                opacity: [0, 0.8, 0],
+              }}
+              transition={{
+                duration: 2,
+                delay: i * 0.1,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <div
+                className="w-full h-full"
+                style={{
+                  background: 'linear-gradient(45deg, #9333ea, #ec4899)',
+                  boxShadow: '0 0 6px rgba(147,51,234,0.8)',
+                  transform: 'rotate(45deg)',
+                }}
+              />
+            </motion.div>
           ))}
         </div>
       )}

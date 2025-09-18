@@ -831,6 +831,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               onTranscript={handleVoiceTranscript}
               isProcessing={isProcessing}
               enabled={!isAudioPlaying}
+              isMayaSpeaking={isResponding || isAudioPlaying}
+              mayaVoiceState={mayaVoiceState}
             />
           )}
         </>
