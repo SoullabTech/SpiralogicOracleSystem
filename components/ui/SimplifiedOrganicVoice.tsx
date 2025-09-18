@@ -119,10 +119,10 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
       const hasWakeWord = WAKE_WORDS.some(word => lowerTranscript.includes(word));
 
       if (hasWakeWord && !isWaitingForInput) {
-        console.log('Wake word detected! Listening for input...');
+        console.log('🎯 Wake word detected:', lowerTranscript);
         setIsWaitingForInput(true);
         accumulatedTranscriptRef.current = '';
-        setTranscript('Listening...');
+        setTranscript('✨ Listening...');
 
         // Clear any existing silence timer
         if (silenceTimerRef.current) {
@@ -146,7 +146,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
           silenceTimerRef.current = setTimeout(() => {
             const finalMessage = accumulatedTranscriptRef.current.trim();
             if (finalMessage) {
-              console.log('Processing:', finalMessage);
+              console.log('🚀 Sending to Maya:', finalMessage);
               onTranscript(finalMessage);
               setIsWaitingForInput(false);
               accumulatedTranscriptRef.current = '';
@@ -160,13 +160,21 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
     recognition.onerror = (event: any) => {
       console.error('Speech recognition error:', event.error);
       // Auto-restart on certain errors
-      if (event.error === 'no-speech' || event.error === 'aborted') {
+      if (event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') {
         setTimeout(() => {
           if (recognitionRef.current && isListening) {
             try {
-              recognitionRef.current.start();
+              recognitionRef.current.stop();
+              setTimeout(() => {
+                try {
+                  recognitionRef.current.start();
+                  console.log('Speech recognition restarted after error');
+                } catch (e) {
+                  console.log('Could not restart speech recognition:', e);
+                }
+              }, 500);
             } catch (e) {
-              // Already started
+              // Already stopped
             }
           }
         }, 100);
@@ -174,17 +182,19 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
     };
 
     recognition.onend = () => {
+      console.log('Speech recognition ended');
       // Auto-restart for continuous listening
       if (isListening) {
         setTimeout(() => {
           if (recognitionRef.current) {
             try {
               recognitionRef.current.start();
+              console.log('Speech recognition restarted');
             } catch (e) {
-              // Already started
+              console.log('Could not restart:', e);
             }
           }
-        }, 100);
+        }, 500);
       }
     };
 
@@ -248,30 +258,49 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   }, []);
 
   return (
-    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-      {/* Holoflower-like background glow */}
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+      {/* Holoflower-like background glow - softer */}
       <div className="absolute inset-0 -z-10">
         <motion.div
           className="w-48 h-48 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           style={{
             background: isListening
-              ? 'radial-gradient(ellipse, rgba(251,191,36,0.2) 0%, rgba(251,191,36,0.1) 40%, transparent 70%)'
-              : 'radial-gradient(ellipse, rgba(251,191,36,0.05) 0%, transparent 70%)',
-            filter: 'blur(30px)',
+              ? 'radial-gradient(ellipse, rgba(251,191,36,0.15) 0%, rgba(251,191,36,0.05) 40%, transparent 70%)'
+              : 'radial-gradient(ellipse, rgba(251,191,36,0.03) 0%, transparent 70%)',
+            filter: 'blur(40px)',
           }}
           animate={{
-            scale: isListening ? [1, 1.3, 1] : 1,
-            opacity: isListening ? [0.3, 0.5, 0.3] : 0.2,
+            scale: isListening ? [1, 1.4, 1] : 1,
+            opacity: isListening ? [0.3, 0.6, 0.3] : 0.1,
           }}
           transition={{
-            duration: 4,
+            duration: 3,
             repeat: Infinity,
             ease: "easeInOut"
           }}
         />
+
+        {/* Additional glow when registering words */}
+        {isWaitingForInput && (
+          <motion.div
+            className="w-64 h-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            style={{
+              background: 'radial-gradient(ellipse, rgba(251,191,36,0.2) 0%, transparent 60%)',
+              filter: 'blur(50px)',
+            }}
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0, 0.4, 0],
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+            }}
+          />
+        )}
       </div>
 
-      {/* Sparkles */}
+      {/* Enhanced Sparkles - more visible when registering words */}
       {isListening && (
         <div className="absolute inset-0 overflow-visible pointer-events-none">
           {sparkles.map((sparkle) => (
@@ -281,18 +310,19 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
               style={{
                 left: `calc(50% + ${sparkle.x}px)`,
                 top: `calc(50% + ${sparkle.y}px)`,
-                width: sparkle.size,
-                height: sparkle.size,
-                backgroundColor: '#fbbf24',
-                boxShadow: `0 0 ${sparkle.size * 2}px #fbbf24`,
+                width: isWaitingForInput ? sparkle.size * 2 : sparkle.size,
+                height: isWaitingForInput ? sparkle.size * 2 : sparkle.size,
+                backgroundColor: isWaitingForInput ? '#fbbf24' : 'rgba(251,191,36,0.6)',
+                boxShadow: `0 0 ${sparkle.size * 3}px ${isWaitingForInput ? '#fbbf24' : 'rgba(251,191,36,0.4)'}`,
               }}
               animate={{
-                opacity: [0, 0.8, 0],
-                scale: [0, 1, 0],
+                opacity: isWaitingForInput ? [0, 1, 0] : [0, 0.6, 0],
+                scale: isWaitingForInput ? [0, 1.5, 0] : [0, 1, 0],
+                rotate: isWaitingForInput ? [0, 180, 360] : 0,
               }}
               transition={{
-                duration: sparkle.duration,
-                delay: sparkle.delay,
+                duration: isWaitingForInput ? sparkle.duration * 0.5 : sparkle.duration,
+                delay: isWaitingForInput ? sparkle.delay * 0.5 : sparkle.delay,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -301,41 +331,86 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         </div>
       )}
 
-      {/* Golden Mic Button */}
+      {/* Golden Mic Button - More transparent and animated */}
       <motion.button
         onClick={toggleListening}
-        className="relative w-16 h-16 rounded-full flex items-center justify-center"
+        className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center backdrop-blur-md"
         style={{
           background: isListening
-            ? 'linear-gradient(135deg, #fbbf24, #f59e0b)'
-            : 'linear-gradient(135deg, #d4d4d8, #a1a1aa)',
+            ? 'linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.3))'
+            : 'linear-gradient(135deg, rgba(212,212,216,0.2), rgba(161,161,170,0.2))',
+          border: isListening ? '1px solid rgba(251,191,36,0.4)' : '1px solid rgba(255,255,255,0.1)',
           boxShadow: isListening
-            ? '0 0 30px rgba(251,191,36,0.5), 0 4px 15px rgba(0,0,0,0.2)'
+            ? '0 0 20px rgba(251,191,36,0.3), inset 0 0 20px rgba(251,191,36,0.1)'
             : '0 4px 15px rgba(0,0,0,0.1)',
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         animate={{
-          scale: isWaitingForInput ? [1, 1.1, 1] : 1,
+          scale: isListening ? [1, 1.05, 1] : 1,
         }}
         transition={{
-          duration: 1,
-          repeat: isWaitingForInput ? Infinity : 0,
+          duration: 2,
+          repeat: isListening ? Infinity : 0,
+          ease: "easeInOut"
         }}
       >
         {isListening ? (
-          <Mic className="w-6 h-6 text-white" />
+          <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
         ) : (
-          <MicOff className="w-6 h-6 text-gray-600" />
+          <MicOff className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
         )}
 
-        {/* Audio level indicator */}
+        {/* Pulse animation when listening */}
         {isListening && (
+          <>
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(251,191,36,0.4), transparent)',
+              }}
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.2, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+
+            {/* Audio level indicator - ripples */}
+            <motion.div
+              className="absolute inset-0 rounded-full border border-amber-400/50"
+              style={{
+                scale: 1 + audioLevel * 0.3,
+              }}
+              animate={{
+                opacity: audioLevel > 0.1 ? [0.6, 0.2] : 0,
+              }}
+              transition={{
+                duration: 0.3,
+                repeat: audioLevel > 0.1 ? Infinity : 0,
+              }}
+            />
+          </>
+        )}
+
+        {/* Sparkle effect when registering words */}
+        {isWaitingForInput && (
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-amber-400"
-            style={{
-              scale: 1 + audioLevel * 0.5,
-              opacity: 0.3 + audioLevel * 0.7,
+            className="absolute inset-0 rounded-full"
+            animate={{
+              boxShadow: [
+                '0 0 10px rgba(251,191,36,0.5)',
+                '0 0 20px rgba(251,191,36,0.8)',
+                '0 0 10px rgba(251,191,36,0.5)',
+              ],
+            }}
+            transition={{
+              duration: 0.5,
+              repeat: Infinity,
             }}
           />
         )}
@@ -348,9 +423,9 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+            className="absolute bottom-16 sm:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           >
-            <div className="bg-gray-900/80 backdrop-blur-sm text-amber-400 px-4 py-2 rounded-full text-sm">
+            <div className="bg-gray-900/80 backdrop-blur-sm text-amber-400 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm">
               {isWaitingForInput ? '✨ Listening...' : transcript}
             </div>
           </motion.div>
