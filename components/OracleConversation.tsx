@@ -349,11 +349,21 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
 
-      // Play audio response - ALWAYS use Web Speech for now (ElevenLabs has encoding issues)
+      // Play audio response with Maya's voice
       if (voiceEnabled && mayaReady && mayaSpeak) {
-        console.log('🔊 Using Web Speech for text chat response');
-        // Use Web Speech synthesis directly
-        mayaSpeak(responseText);
+        console.log('🔊 Maya speaking response');
+        // Set speaking state for visual feedback
+        setIsResponding(true);
+        setIsAudioPlaying(true);
+
+        // Speak the response
+        await mayaSpeak(responseText);
+
+        // Reset states after speaking
+        setTimeout(() => {
+          setIsResponding(false);
+          setIsAudioPlaying(false);
+        }, 500);
       }
 
       // Update context

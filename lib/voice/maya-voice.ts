@@ -96,22 +96,14 @@ export class MayaVoiceSystem {
     this.listeners.forEach(listener => listener(this.state));
   }
 
-  // Enhance text for natural conversation flow
+  // Clean text for speech without artificial pauses
   private enhanceTextForSpeech(text: string): string {
-    // First, remove stage directions that shouldn't be spoken
+    // Remove stage directions that shouldn't be spoken
     let processedText = VoicePreprocessor.extractSpokenContent(text);
 
-    // Then apply natural conversation enhancements
-    return processedText
-      // Add natural breathing pauses
-      .replace(/\. /g, '. ')
-      .replace(/\? /g, '? ')
-      .replace(/! /g, '! ')
-      // Add brief pauses for emphasis
-      .replace(/\b(but|however|and|so|now|listen|look|here's the thing)\b/gi, '$1... ')
-      // Natural conversation flow
-      .replace(/\b(well|you know|I mean|actually|honestly)\b/gi, '$1, ')
-      .trim();
+    // Simply return the clean text without adding pauses
+    // Let the TTS engine handle natural pacing
+    return processedText.trim();
   }
 
   // Generate Maya's natural greeting
