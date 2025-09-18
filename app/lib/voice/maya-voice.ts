@@ -22,22 +22,22 @@ export interface VoiceState {
   selectedVoice: SpeechSynthesisVoice | null;
 }
 
-// Maya's mystical voice configuration
+// Maya's natural voice configuration - Alloy voice profile
 export const MAYA_VOICE_CONFIG: MayaVoiceConfig = {
-  rate: 0.85,          // Slightly slower for mystical effect
-  pitch: 1.15,         // Slightly higher pitch for ethereal quality
-  volume: 0.8,         // Gentle, not overwhelming
+  rate: 0.95,          // Natural conversational pace
+  pitch: 1.0,          // Neutral pitch for grounded presence
+  volume: 0.85,        // Comfortable listening level
   lang: 'en-US',       // Clear English
-  mysticalEffect: true // Enable processing effects
+  mysticalEffect: false // No artificial effects - natural presence
 };
 
-// Mystical greetings for Maya
+// Natural greetings for Maya - conversational presence
 export const MAYA_GREETINGS = [
-  "Greetings, seeker. I am Maya, your personal oracle. I'm here to guide you through the mysteries that await.",
-  "Welcome to your sacred space. I am Maya, and together we shall explore the depths of wisdom.",
-  "The veil between worlds grows thin. I am Maya, your guide through the mystical realms.",
-  "Sacred greetings, dear one. I am Maya, keeper of ancient wisdom and your personal oracle.",
-  "The stars have aligned for our meeting. I am Maya, here to illuminate your path forward."
+  "Hey there. I'm Maya. What's on your mind?",
+  "Hi. I'm here when you're ready to explore what's stirring.",
+  "Hello. I'm Maya. What would be helpful to look at together?",
+  "Good to connect with you. What's present for you right now?",
+  "Hey. I'm Maya. Take your time, I'm listening."
 ];
 
 /**
@@ -177,10 +177,10 @@ export class MayaVoiceSystem {
     this.updateState();
 
     try {
-      // First, try ElevenLabs via our API endpoint
-      await this.speakWithElevenLabs(text);
+      // First, try OpenAI TTS with Alloy voice
+      await this.speakWithOpenAITTS(text);
     } catch (error) {
-      console.warn('ElevenLabs synthesis failed, falling back to Web Speech API:', error);
+      console.warn('OpenAI TTS synthesis failed, falling back to Web Speech API:', error);
       
       // Fallback to Web Speech API
       try {
@@ -197,17 +197,21 @@ export class MayaVoiceSystem {
   }
 
   /**
-   * Speak using ElevenLabs API (Aunt Annie voice)
+   * Speak using OpenAI TTS API (Alloy voice)
    */
-  private async speakWithElevenLabs(text: string): Promise<void> {
-    const response = await fetch('/api/voice/sesame', {
+  private async speakWithOpenAITTS(text: string): Promise<void> {
+    const response = await fetch('/api/voice/openai-tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
+      body: JSON.stringify({
+        text,
+        voice: 'alloy',
+        speed: 0.95
+      })
     });
 
     if (!response.ok) {
-      throw new Error(`ElevenLabs API failed: ${response.status}`);
+      throw new Error(`OpenAI TTS API failed: ${response.status}`);
     }
 
     const audioBlob = await response.blob();
@@ -296,24 +300,13 @@ export class MayaVoiceSystem {
    * Apply mystical effects to text before speaking
    */
   private applyMysticalEffects(text: string): string {
-    // Add natural pauses for mystical effect
-    let processedText = text
-      .replace(/\./g, '... ')           // Longer pauses at sentences
-      .replace(/,/g, ', ')              // Slight pauses at commas
-      .replace(/\?/g, '? ')             // Pause after questions
-      .replace(/!/g, '! ')              // Pause after exclamations
-      .replace(/:/g, ': ')              // Pause after colons
-      .replace(/\s+/g, ' ')             // Clean up multiple spaces
+    // Simply clean the text without adding pauses
+    // Let the TTS engine handle natural pacing
+    return text
+      .replace(/\.{3,}/g, ',')     // Replace ellipses with comma
+      .replace(/—/g, ',')           // Replace em-dash with comma
+      .replace(/\s+/g, ' ')        // Normalize whitespace
       .trim();
-
-    // Add subtle emphasis to mystical words
-    const mysticalWords = ['oracle', 'wisdom', 'sacred', 'mystical', 'divine', 'spiritual', 'energy', 'guidance'];
-    mysticalWords.forEach(word => {
-      const regex = new RegExp(`\\b${word}\\b`, 'gi');
-      processedText = processedText.replace(regex, `${word}`); // Could add SSML emphasis later
-    });
-
-    return processedText;
   }
 
   /**
