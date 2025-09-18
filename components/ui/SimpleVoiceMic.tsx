@@ -196,7 +196,7 @@ export const SimpleVoiceMic: React.FC<SimpleVoiceMicProps> = ({
   }));
 
   return (
-    <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 ${className}`}>
+    <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${className}`}>
       <AnimatePresence>
         {/* Transcript Display */}
         {transcript && (

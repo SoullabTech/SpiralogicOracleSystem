@@ -134,6 +134,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   // UI states
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
   const [showCaptions, setShowCaptions] = useState(false); // Default to no captions in voice mode
+  const [showCustomizer, setShowCustomizer] = useState(false); // Settings panel
   const [audioEnabled, setAudioEnabled] = useState(false); // Track if user has enabled audio
   const audioContextRef = useRef<AudioContext | null>(null);
   
@@ -396,6 +397,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
 
     console.log('🎯 Voice transcript received:', t);
+    console.log('📊 Current states:', { isProcessing, isResponding, isAudioPlaying });
     console.log('📞 Calling handleTextMessage...');
 
     try {
@@ -404,8 +406,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       console.log('✅ handleTextMessage completed');
     } catch (error) {
       console.error('❌ Error in handleTextMessage:', error);
+      // Reset states on error
+      setIsProcessing(false);
+      setIsResponding(false);
     }
-  }, [handleTextMessage]);
+  }, [handleTextMessage, isProcessing, isResponding, isAudioPlaying]);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {
@@ -739,8 +744,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Message flow - Only show in chat mode or when captions enabled */}
       {(showChatInterface || showCaptions) && (
         <div className="fixed md:right-8 md:top-1/2 md:transform md:-translate-y-1/2 md:w-96
-                        bottom-0 left-0 right-0 md:left-auto md:bottom-auto
-                        max-h-[40vh] md:max-h-[70vh] overflow-y-auto
+                        bottom-20 sm:bottom-0 left-0 right-0 md:left-auto md:bottom-auto
+                        max-h-[30vh] sm:max-h-[40vh] md:max-h-[70vh] overflow-y-auto
                         bg-black/60 md:bg-transparent backdrop-blur-lg md:backdrop-blur-none
                         rounded-t-3xl md:rounded-none p-4 md:p-0">
           <AnimatePresence>
@@ -780,8 +785,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
         <>
-          {/* Mode Toggle - Mobile positioned */}
-          <div className="fixed top-4 md:top-8 left-4 md:left-8 flex gap-2 z-40">
+          {/* Mode Toggle - Moved to bottom left for mobile, top left for desktop */}
+          <div className="fixed bottom-4 sm:top-4 md:top-8 left-4 md:left-8 flex gap-2 z-40">
             <button
               onClick={() => {
                 setShowChatInterface(false);
@@ -812,12 +817,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
           {showChatInterface ? (
             /* Maya Chat Interface - Full voice and text support */
-            <MayaChatInterface
-              onSendMessage={handleTextMessage}
-              isProcessing={isProcessing}
-              voiceEnabled={voiceEnabled}
-              messages={messages}
-            />
+            <div className="fixed bottom-0 left-0 right-0 z-40 pb-safe">
+              <MayaChatInterface
+                onSendMessage={handleTextMessage}
+                isProcessing={isProcessing}
+                voiceEnabled={voiceEnabled}
+                messages={messages}
+              />
+            </div>
           ) : (
             /* Simplified Organic Voice - Golden mic at bottom with beautiful visuals */
             <SimplifiedOrganicVoice
@@ -869,42 +876,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Session Controls - Mobile optimized */}
-      <div className="fixed top-4 md:top-8 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 z-50">
-        {/* Download button for all modes */}
-        {messages.length > 0 && (
-          <button
-            onClick={downloadTranscript}
-            className="px-3 md:px-4 py-1.5 md:py-2 bg-white/10 backdrop-blur-sm text-white text-xs md:text-sm rounded-full
-                       hover:bg-white/20 transition-all duration-300 border border-white/20 flex items-center gap-2"
-            title="Download conversation transcript"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span className="hidden md:inline">Download</span>
-          </button>
-        )}
-
-        <button
-          onClick={() => {
-            if (window.confirm('Are you sure you want to end this conversation?')) {
-              onSessionEnd?.('user_ended');
-              window.location.href = '/';
-            }
-          }}
-          className="px-3 md:px-4 py-1.5 md:py-2 bg-white/10 backdrop-blur-sm text-white text-xs md:text-sm rounded-full
-                     hover:bg-white/20 transition-all duration-300 border border-white/20"
-        >
-          End Conversation
-        </button>
-        <div className="px-3 md:px-4 py-1.5 md:py-2 bg-green-500/20 backdrop-blur-sm text-green-300 text-xs md:text-sm rounded-full
-                        border border-green-500/30 flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          Session Active
-        </div>
-      </div>
 
       {/* Analytics toggle */}
       {showAnalytics && (
