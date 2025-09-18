@@ -46,7 +46,7 @@ function cleanTextForSpeech(text: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, speed, voice } = await request.json();
+    const { text, speed, voice, prosody } = await request.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json(
@@ -70,12 +70,22 @@ export async function POST(request: NextRequest) {
     // Clean the text for natural speech
     const cleanedText = cleanTextForSpeech(text);
 
-    // Use provided settings or defaults
+    // Use provided settings or defaults, including prosody adjustments
     const config = {
       ...MAYA_VOICE_CONFIG,
       ...(speed && { speed }),
       ...(voice && { voice })
     };
+
+    // Apply prosody adjustments if provided
+    if (prosody) {
+      if (prosody.speed) config.speed *= prosody.speed;
+      if (prosody.pitch) {
+        // OpenAI doesn't support pitch directly, but we can adjust speed slightly
+        // Higher pitch = slightly faster, lower pitch = slightly slower
+        config.speed *= (0.9 + (prosody.pitch * 0.2));
+      }
+    }
 
     console.log('Generating speech with OpenAI TTS:', {
       voice: config.voice,
