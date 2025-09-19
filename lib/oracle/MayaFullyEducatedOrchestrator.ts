@@ -60,6 +60,14 @@ export class MayaFullyEducatedOrchestrator {
     // Ensure knowledge is loaded
     await this.initializeKnowledge();
 
+    // Check for potential Maya-Maya conversation loops
+    if (this.detectMayaLoop(input, userId)) {
+      return this.createResponse(
+        "I notice you might have multiple Maya sessions open. For the best experience, please use one device at a time to avoid conversation loops.",
+        'air'
+      );
+    }
+
     // Start or continue training logging
     let conversationId = this.activeConversations.get(userId);
     if (!conversationId) {
@@ -491,6 +499,33 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
    */
   async exportTrainingData(): Promise<string> {
     return mayaTrainingLogger.exportForFineTuning();
+  }
+
+  // Detect potential Maya-Maya conversation loops
+  private detectMayaLoop(input: string, userId: string): boolean {
+    const history = this.getConversationHistory(userId);
+
+    // Maya-like response patterns that suggest AI-to-AI conversation
+    const mayaPatterns = [
+      /^(I hear|I sense|I'm noticing|I feel|Mmm|Ah|Yeah that)/i,
+      /well tuned to|attuning|holding space|feeling into/i,
+      /(gentle|soft|warm) presence/i,
+      /what wants to|what's alive|what's stirring/i
+    ];
+
+    // Check if input matches Maya's speaking patterns
+    const matchesMayaPattern = mayaPatterns.some(pattern => pattern.test(input));
+
+    // Check if recent conversation has multiple Maya-style responses in sequence
+    const recentMessages = history.slice(-6); // Last 6 messages
+    const mayaStyleResponses = recentMessages.filter(msg =>
+      msg.role === 'user' && mayaPatterns.some(pattern => pattern.test(msg.content))
+    );
+
+    // Flag as potential loop if:
+    // 1. Current input matches Maya pattern AND
+    // 2. Recent conversation has multiple Maya-style responses
+    return matchesMayaPattern && mayaStyleResponses.length >= 2;
   }
 
   // Compatibility method for existing tests

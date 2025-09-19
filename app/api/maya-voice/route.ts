@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMayaOrchestrator } from '@/lib/oracle/MayaFullyEducatedOrchestrator';
 import { getSessionStorage } from '@/lib/storage/session-storage';
+import { getUserSessionCoordinator } from '@/lib/session/UserSessionCoordinator';
 import OpenAI from 'openai';
 
 // Initialize services
 const orchestrator = getMayaOrchestrator();
 const sessionStorage = getSessionStorage();
+const sessionCoordinator = getUserSessionCoordinator();
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 }) : null;
@@ -23,6 +25,23 @@ export async function POST(request: NextRequest) {
 
     // Get or create session
     const session = sessionStorage.getOrCreateSession(sessionId || 'default');
+
+    // Register session with coordinator
+    sessionCoordinator.registerSession(session.id, session.id, request);
+    sessionCoordinator.updateActivity(session.id);
+
+    // Check for potential conversation loops
+    const loopDetection = sessionCoordinator.detectPotentialLoop(session.id, transcript);
+    if (loopDetection.isLikelyLoop) {
+      return NextResponse.json({
+        success: true,
+        response: loopDetection.suggestion,
+        element: 'air',
+        sessionId: session.id,
+        timestamp: new Date().toISOString(),
+        warning: 'multi_session_detected'
+      });
+    }
 
     // Add user message to history
     sessionStorage.addMessage(session.id, {
