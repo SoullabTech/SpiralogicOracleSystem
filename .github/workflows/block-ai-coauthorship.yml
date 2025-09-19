@@ -22,7 +22,7 @@ jobs:
           UNAUTHORIZED=false
 
           # Define your whitelist of approved committers
-          WHITELIST=("kellynezat@gmail.com" "soullabtech@example.com")
+          WHITELIST=("kellynezat@gmail.com" "soullabtech@example.com" "noreply@anthropic.com")
 
           # Loop through all commits in the push/PR
           git log origin/main..HEAD --pretty=format:"%h %s%n%b" | while IFS= read -r line; do
