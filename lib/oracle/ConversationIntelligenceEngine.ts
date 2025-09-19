@@ -931,11 +931,23 @@ export class ConversationIntelligenceEngine {
       // Handle common cases naturally
 
       if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
-        return "Hello! I'm here to listen. What's on your heart today?";
+        const naturalGreetings = [
+          "Hey there. What's going on?",
+          "Hi. How are you today?",
+          "Hello. Good to see you.",
+          "Hey. What brings you here?"
+        ];
+        return naturalGreetings[Math.floor(Math.random() * naturalGreetings.length)];
       }
 
       if (lower.includes('how are you')) {
-        return "Thank you for asking. I'm here and fully present with you. How are you doing?";
+        const howAreYouResponses = [
+          "I'm doing well, thanks for asking. How about you?",
+          "Good, thank you. What's going on with you?",
+          "I'm here and ready to listen. How are you?",
+          "Thanks for asking - I'm good. How's your day going?"
+        ];
+        return howAreYouResponses[Math.floor(Math.random() * howAreYouResponses.length)];
       }
 
       if (mirrorPhrase && mirrorPhrase.length > 2) {
