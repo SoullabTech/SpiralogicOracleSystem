@@ -905,14 +905,40 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           {showChatInterface ? (
             /* Maya Chat Interface - Full voice and text support */
             <div className="fixed bottom-0 left-0 right-0 z-40 pb-safe">
-              {/* <MaiaChatInterface
-                onSendMessage={handleTextMessage}
-                isProcessing={isProcessing}
-                voiceEnabled={voiceEnabled}
-                messages={messages}
-              /> */}
-              <div className="p-4 text-center text-[#D4B896]/60">
-                Chat interface temporarily disabled
+              {/* Simple Chat Input */}
+              <div className="bg-black/80 backdrop-blur-lg border-t border-[#D4B896]/20 p-4">
+                <div className="max-w-4xl mx-auto">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const input = e.currentTarget.elements.namedItem('message') as HTMLInputElement;
+                      if (input?.value.trim()) {
+                        handleTextMessage(input.value);
+                        input.value = '';
+                      }
+                    }}
+                    className="flex gap-3"
+                  >
+                    <input
+                      name="message"
+                      type="text"
+                      placeholder="Type your message..."
+                      disabled={isProcessing}
+                      className="flex-1 px-4 py-3 bg-black/50 border border-[#D4B896]/30 rounded-full text-[#D4B896] placeholder-[#D4B896]/40 focus:outline-none focus:border-[#D4B896]/60 disabled:opacity-50"
+                      autoComplete="off"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isProcessing}
+                      className="px-6 py-3 bg-gradient-to-r from-[#D4B896]/20 to-[#B69A78]/20 border border-[#D4B896]/30 rounded-full text-[#D4B896] hover:from-[#D4B896]/30 hover:to-[#B69A78]/30 transition-all disabled:opacity-50"
+                    >
+                      Send
+                    </button>
+                  </form>
+                  {isProcessing && (
+                    <p className="text-xs text-[#D4B896]/50 mt-2 text-center">Maia is thinking...</p>
+                  )}
+                </div>
               </div>
             </div>
           ) : (
