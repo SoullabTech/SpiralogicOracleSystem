@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {
+  // DEPLOYMENT TEST - 1:05AM - If you see this comment in browser dev tools, deployment is working
   const router = useRouter();
   const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
 

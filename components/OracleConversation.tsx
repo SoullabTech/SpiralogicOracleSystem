@@ -846,8 +846,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
         <>
-          {/* Mode Toggle - Small compact buttons at top left - UPDATED */}
-          <div className="fixed top-4 left-4 flex gap-2 z-50" title="Voice/Chat Toggle - Updated at 11:30PM">
+          {/* Mode Toggle - TESTING DEPLOYMENT 1:05AM */}
+          <div className="fixed top-4 left-4 flex gap-2 z-50" title="DEPLOYMENT TEST 1:05AM - If you see this, it's working!" style={{border: '2px solid red'}}>
             <button
               onClick={() => {
                 setShowChatInterface(false);
