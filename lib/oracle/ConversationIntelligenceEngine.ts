@@ -935,7 +935,8 @@ export class ConversationIntelligenceEngine {
           "Hey there. What's going on?",
           "Hi. How are you today?",
           "Hello. Good to see you.",
-          "Hey. What brings you here?"
+          "Hey. What brings you here?",
+          "Hi! What's happening?"
         ];
         return naturalGreetings[Math.floor(Math.random() * naturalGreetings.length)];
       }

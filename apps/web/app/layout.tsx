@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "../styles/ios-fallbacks.css";
 import { ErrorOverlay } from "@/components/system/ErrorOverlay";
 import { AudioUnlockBanner } from "@/components/system/AudioUnlockBanner";
 import { ToastProvider } from "@/components/system/ToastProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import Link from "next/link";
+import IOSFixInitializer from "@/components/system/IOSFixInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +27,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-white dark:bg-black text-neutral-900 dark:text-white transition-colors duration-200`}>
         <ThemeProvider>
+          <IOSFixInitializer />
           <ToastProvider>
             {/* Global Header with Theme Toggle */}
             <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-neutral-900">

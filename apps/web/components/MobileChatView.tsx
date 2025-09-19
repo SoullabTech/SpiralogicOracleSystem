@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { smoothScrollPolyfill, preventIOSZoom, isIOS } from '../utils/ios-fixes';
 import {
   Mic, Send, Sparkles, Pause, Play,
   Volume2, VolumeX, ChevronUp, Square
@@ -35,10 +36,19 @@ export default function MobileChatView({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom - iOS compatible
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      smoothScrollPolyfill(messagesEndRef.current, { behavior: 'smooth' });
+    }
   }, [messages]);
+
+  // Apply iOS fixes when component mounts
+  useEffect(() => {
+    if (isIOS() && inputRef.current) {
+      preventIOSZoom(inputRef.current);
+    }
+  }, []);
 
   const handleSend = () => {
     if (inputText.trim()) {
@@ -97,10 +107,9 @@ export default function MobileChatView({
         <motion.div
           className="w-32 h-32 rounded-full bg-gradient-to-r from-emerald-400/20 to-orange-400/20 border-2 border-emerald-400/40 flex items-center justify-center"
           animate={{
-            scale: isRecording ? [1, 1.1, 1] : 1,
-            borderColor: isRecording ? ['rgba(52, 211, 153, 0.4)', 'rgba(251, 146, 60, 0.6)', 'rgba(52, 211, 153, 0.4)'] : 'rgba(52, 211, 153, 0.4)'
+            scale: isRecording ? [1, 1.05, 1] : 1,
           }}
-          transition={{ duration: 1, repeat: isRecording ? Infinity : 0 }}
+          transition={{ duration: 2, repeat: isRecording ? Infinity : 0, ease: "easeInOut" }}
         >
           <Mic className="w-12 h-12 text-emerald-400" />
         </motion.div>
@@ -186,8 +195,8 @@ export default function MobileChatView({
               <div className={`
                 max-w-[85%] px-4 py-3 rounded-2xl
                 ${message.role === 'user' 
-                  ? 'bg-gradient-to-r from-orange-600 to-red-500 text-white' 
-                  : 'bg-white/10 backdrop-blur text-white border border-emerald-500/20'}
+                  ? 'bg-gradient-to-r from-orange-600 to-red-500 text-white'
+                  : 'bg-white/15 text-white border border-emerald-500/20'}
               `}>
                 {message.role === 'assistant' && (
                   <div className="flex items-center gap-2 mb-2 text-emerald-300">
@@ -221,7 +230,7 @@ export default function MobileChatView({
             animate={{ opacity: 1 }}
             className="flex justify-start"
           >
-            <div className="bg-white/10 backdrop-blur px-4 py-3 rounded-2xl">
+            <div className="bg-white/15 px-4 py-3 rounded-2xl">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-3 h-3 text-emerald-300 animate-pulse" />
                 <div className="flex gap-1">
@@ -255,7 +264,7 @@ export default function MobileChatView({
                     setShowQuickActions(false);
                     inputRef.current?.focus();
                   }}
-                  className="px-4 py-2.5 bg-white/10 backdrop-blur rounded-full text-sm text-white/80 hover:bg-white/20 active:scale-95 transition-all duration-150 flex items-center gap-2 min-h-[44px] touch-none select-none"
+                  className="px-4 py-2.5 bg-white/10 rounded-full text-sm text-white/80 hover:bg-white/20 active:scale-95 transition-all duration-150 flex items-center gap-2 min-h-[44px] select-none"
                 >
                   <span>{prompt.emoji}</span>
                   <span>{prompt.text}</span>
@@ -267,12 +276,12 @@ export default function MobileChatView({
       </AnimatePresence>
 
       {/* Input area */}
-      <div className="p-4 bg-gradient-to-t from-black/30 to-transparent backdrop-blur-lg">
+      <div className="p-4 bg-gradient-to-t from-black/60 to-transparent ios-safe-bottom">
         <div className="flex items-end gap-2">
           {/* Quick actions toggle */}
           <button
             onClick={() => setShowQuickActions(!showQuickActions)}
-            className="p-3 rounded-full bg-white/10 text-white/60 hover:bg-white/20 active:scale-95 transition-all duration-150 min-w-[48px] min-h-[48px] touch-none"
+            className="p-3 rounded-full bg-white/10 text-white/60 hover:bg-white/20 active:scale-95 transition-all duration-150 min-w-[48px] min-h-[48px]"
             aria-label="Toggle quick actions"
           >
             <ChevronUp className={`w-5 h-5 transition-transform ${showQuickActions ? 'rotate-180' : ''}`} />
@@ -281,7 +290,7 @@ export default function MobileChatView({
           {/* Audio toggle */}
           <button
             onClick={() => setAudioEnabled(!audioEnabled)}
-            className="p-3 rounded-full bg-white/10 text-white/60 hover:bg-white/20 active:scale-95 transition-all duration-150 min-w-[48px] min-h-[48px] touch-none"
+            className="p-3 rounded-full bg-white/10 text-white/60 hover:bg-white/20 active:scale-95 transition-all duration-150 min-w-[48px] min-h-[48px]"
             aria-label={audioEnabled ? 'Disable audio' : 'Enable audio'}
           >
             {audioEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
@@ -300,7 +309,7 @@ export default function MobileChatView({
                 }
               }}
               placeholder="Share what&apos;s present..."
-              className="w-full px-4 py-3 bg-white/10 backdrop-blur rounded-2xl text-white placeholder-white/40 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50 min-h-[48px] max-h-[120px] text-base leading-relaxed"
+              className="w-full px-4 py-3 bg-white/15 rounded-2xl text-white placeholder-white/40 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50 min-h-[48px] max-h-[120px] text-base leading-relaxed"
               rows={1}
             />
           </div>
@@ -310,7 +319,7 @@ export default function MobileChatView({
             <button
               onClick={handleSend}
               disabled={isLoading}
-              className="p-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:shadow-lg active:scale-95 transition-all duration-150 disabled:opacity-50 min-w-[56px] min-h-[56px] touch-none shadow-lg"
+              className="p-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:shadow-lg active:scale-95 transition-all duration-150 disabled:opacity-50 min-w-[56px] min-h-[56px] shadow-lg"
               aria-label="Send message"
             >
               <Send className="w-6 h-6" />
@@ -319,7 +328,7 @@ export default function MobileChatView({
             <button
               onClick={handleStartVoice}
               disabled={isLoading}
-              className={`p-4 rounded-full text-white hover:shadow-lg active:scale-95 transition-all duration-150 disabled:opacity-50 min-w-[56px] min-h-[56px] touch-none shadow-lg ${
+              className={`p-4 rounded-full text-white hover:shadow-lg active:scale-95 transition-all duration-150 disabled:opacity-50 min-w-[56px] min-h-[56px] shadow-lg ${
                 isRecording
                   ? 'bg-gradient-to-r from-red-500 to-red-600 animate-pulse'
                   : 'bg-gradient-to-r from-emerald-500 to-teal-500'
