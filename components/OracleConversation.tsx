@@ -268,6 +268,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const handleTextMessage = useCallback(async (text: string, attachments?: File[]) => {
     console.log('📝 Text message received:', { text, isProcessing, isAudioPlaying, isResponding });
 
+    // IMMEDIATELY mute microphone to prevent Maya from hearing herself
+    if (voiceMicRef.current && voiceMicRef.current.muteImmediately) {
+      voiceMicRef.current.muteImmediately();
+      console.log('🔇 PREEMPTIVE MUTE: Microphone disabled before processing');
+    }
+
     // Prevent multiple processing
     if (isProcessing) {
       console.log('⚠️ Text message blocked - already processing');
