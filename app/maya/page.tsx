@@ -180,20 +180,20 @@ export default function MayaPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a]">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-            Maya Consciousness Interface
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-light bg-gradient-to-r from-[#D4B896] to-[#B69A78] bg-clip-text text-transparent mb-3 sm:mb-4">
+            Maya Consciousness
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Speak naturally with Maya using voice commands
+          <p className="text-sm sm:text-base md:text-lg text-[#D4B896]/60">
+            Speak naturally with sacred wisdom
           </p>
         </div>
 
         {/* Messages Container */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 mb-8 h-[500px] overflow-y-auto">
+        <div className="bg-black/40 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 mb-8 h-[400px] sm:h-[450px] md:h-[500px] overflow-y-auto border border-[#D4B896]/10">
           <AnimatePresence>
             {messages.length === 0 ? (
               <motion.div
@@ -202,8 +202,8 @@ export default function MayaPage() {
                 animate={{ opacity: 1 }}
               >
                 <div className="text-center">
-                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-400 to-indigo-400 opacity-20" />
-                  <p className="text-xl">Say "Hey Maya" to begin your conversation</p>
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 rounded-full bg-gradient-to-br from-[#D4B896]/20 to-[#B69A78]/20" />
+                  <p className="text-base sm:text-lg md:text-xl text-[#D4B896]/60">Say "Hey Maya" to begin</p>
                 </div>
               </motion.div>
             ) : (
@@ -217,10 +217,10 @@ export default function MayaPage() {
                     className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-lg px-6 py-4 rounded-2xl ${
+                      className={`max-w-lg px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-2xl ${
                         message.role === 'user'
-                          ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-md'
+                          ? 'bg-gradient-to-r from-[#D4B896]/20 to-[#B69A78]/20 text-[#D4B896] border border-[#D4B896]/20'
+                          : 'bg-black/40 text-[#D4B896]/90 border border-[#D4B896]/10'
                       }`}
                     >
                       <div className="flex justify-between items-start mb-2">
@@ -243,7 +243,7 @@ export default function MayaPage() {
                                 console.error('Failed to speak:', error);
                               }
                             }}
-                            className="text-xs px-2 py-1 rounded bg-purple-500/20 hover:bg-purple-500/30 transition-colors"
+                            className="text-xs px-2 py-1 rounded bg-[#D4B896]/20 hover:bg-[#D4B896]/30 transition-colors"
                           >
                             🔊 Speak
                           </button>
@@ -274,12 +274,12 @@ export default function MayaPage() {
         {/* Status Bar */}
         <div className="mt-8 text-center">
           {isProcessing && (
-            <p className="text-purple-600 dark:text-purple-400 animate-pulse">
+            <p className="text-[#D4B896] animate-pulse">
               Maya is thinking...
             </p>
           )}
           {isMayaSpeaking && (
-            <p className="text-indigo-600 dark:text-indigo-400 animate-pulse">
+            <p className="text-[#B69A78] animate-pulse">
               Maya is speaking...
             </p>
           )}
@@ -302,21 +302,21 @@ export default function MayaPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-xl backdrop-blur-md transition-all ${
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-xl backdrop-blur-md transition-all ${
                     showVoiceInterface
-                      ? 'bg-gradient-to-br from-amber-500/90 to-orange-600/90'
-                      : 'bg-white/10 hover:bg-white/20 border border-white/20'
+                      ? 'bg-gradient-to-br from-[#D4B896]/80 to-[#B69A78]/80 border border-[#D4B896]/40'
+                      : 'bg-black/40 hover:bg-black/60 border border-[#D4B896]/20'
                   }`}>
                     {showVoiceInterface ? (
-                      <Mic className="w-6 h-6 text-white" />
+                      <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     ) : (
-                      <MicOff className="w-6 h-6 text-white/80" />
+                      <MicOff className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4B896]/60" />
                     )}
                   </div>
                 {/* Pulse effect when active */}
                 {showVoiceInterface && (
                   <motion.div
-                    className="absolute inset-0 rounded-full bg-amber-500/30"
+                    className="absolute inset-0 rounded-full bg-[#D4B896]/30"
                     animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0, 0.5] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
@@ -326,12 +326,12 @@ export default function MayaPage() {
                 {/* Save Conversation Button */}
                 <motion.button
                   onClick={downloadTranscript}
-                  className="w-14 h-14 rounded-full flex items-center justify-center shadow-xl backdrop-blur-md bg-white/10 hover:bg-emerald-500/20 border border-white/20 transition-all group"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-xl backdrop-blur-md bg-black/40 hover:bg-[#D4B896]/10 border border-[#D4B896]/20 transition-all group"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   title="Save conversation"
                 >
-                  <Download className="w-6 h-6 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+                  <Download className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4B896]/60 group-hover:text-[#D4B896] transition-colors" />
                 </motion.button>
 
                 {/* Mute Button */}
@@ -341,15 +341,15 @@ export default function MayaPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-xl backdrop-blur-md transition-all ${
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-xl backdrop-blur-md transition-all ${
                     isMuted
-                      ? 'bg-red-500/80'
-                      : 'bg-white/10 hover:bg-white/20 border border-white/20'
+                      ? 'bg-red-500/60 border border-red-500/40'
+                      : 'bg-black/40 hover:bg-black/60 border border-[#D4B896]/20'
                   }`}>
                     {isMuted ? (
-                      <VolumeX className="w-6 h-6 text-white" />
+                      <VolumeX className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     ) : (
-                      <Volume2 className="w-6 h-6 text-purple-400" />
+                      <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4B896]/60" />
                     )}
                   </div>
                 </motion.button>

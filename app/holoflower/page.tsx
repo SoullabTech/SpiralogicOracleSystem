@@ -155,17 +155,17 @@ export default function HoloflowerExperience() {
       />
 
       {/* Energy State Controls (overlay on Holoflower) */}
-      <div className="absolute top-4 left-4 z-20">
-        <div className="bg-black/60 backdrop-blur-lg rounded-xl p-3">
-          <p className="text-white/60 text-xs mb-2">Your Energy</p>
-          <div className="flex gap-2">
+      <div className="absolute top-[calc(env(safe-area-inset-top,0px)+3rem)] sm:top-4 left-4 z-20">
+        <div className="bg-black/60 backdrop-blur-lg rounded-xl p-2 sm:p-3">
+          <p className="text-white/60 text-[10px] sm:text-xs mb-1 sm:mb-2">Your Energy</p>
+          <div className="flex gap-1 sm:gap-2">
             {(['dense', 'emerging', 'radiant'] as const).map(state => (
               <button
                 key={state}
                 onClick={() => handleEnergyChange(state)}
-                className={`px-3 py-1 rounded-lg text-sm transition-all ${
-                  energyState === state 
-                    ? 'bg-purple-600 text-white' 
+                className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all ${
+                  energyState === state
+                    ? 'bg-purple-600 text-white'
                     : 'bg-white/10 text-white/60 hover:bg-white/20'
                 }`}
               >
@@ -200,11 +200,12 @@ export default function HoloflowerExperience() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
+            className="px-4"
           >
-            <h1 className="text-white text-3xl font-light text-center">
+            <h1 className="text-white text-xl sm:text-2xl md:text-3xl font-light text-center">
               Welcome to Your Sacred Space
             </h1>
-            <p className="text-white/70 text-center mt-2">
+            <p className="text-white/70 text-center mt-2 text-sm sm:text-base">
               Touch a petal to begin
             </p>
           </motion.div>

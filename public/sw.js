@@ -1,7 +1,7 @@
 // MAIA Consciousness Service Worker
-const CACHE_NAME = 'maia-consciousness-v1';
-const STATIC_CACHE = 'maia-static-v1';
-const DYNAMIC_CACHE = 'maia-dynamic-v1';
+const CACHE_NAME = 'maia-consciousness-v2';
+const STATIC_CACHE = 'maia-static-v2';
+const DYNAMIC_CACHE = 'maia-dynamic-v2';
 
 const urlsToCache = [
   '/',

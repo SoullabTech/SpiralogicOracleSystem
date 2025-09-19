@@ -411,12 +411,12 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   }, []);
 
   return (
-    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+    <div className="fixed bottom-20 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-50">
       {/* Living Field - Always breathing, responsive to both voices */}
       <div className="absolute inset-0 -z-10">
         {/* Ambient breathing glow - always present to show the field is alive */}
         <motion.div
-          className="w-64 h-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           style={{
             background: 'radial-gradient(ellipse, rgba(212,184,150,0.05) 0%, rgba(212,184,150,0.02) 50%, transparent 70%)',
             filter: 'blur(60px)',
@@ -434,7 +434,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
         {/* User voice glow - golden/amber */}
         <motion.div
-          className="w-48 h-48 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          className="w-36 h-36 sm:w-40 sm:h-40 md:w-48 md:h-48 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           style={{
             background: isListening
               ? `radial-gradient(ellipse, rgba(251,191,36,${0.15 + audioLevel * 0.3}) 0%, rgba(251,191,36,${0.05 + audioLevel * 0.2}) 40%, transparent 70%)`
@@ -455,7 +455,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         {/* Maya's voice signature - purple/violet crystalline patterns */}
         {isMayaSpeaking && (
           <motion.div
-            className="w-56 h-56 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             style={{
               background: 'radial-gradient(ellipse, rgba(147,51,234,0.3) 0%, rgba(147,51,234,0.1) 40%, transparent 70%)',
               filter: 'blur(35px)',
@@ -477,7 +477,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         {/* Additional glow when registering words */}
         {isWaitingForInput && (
           <motion.div
-            className="w-64 h-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             style={{
               background: 'radial-gradient(ellipse, rgba(251,191,36,0.2) 0%, transparent 60%)',
               filter: 'blur(50px)',
@@ -595,7 +595,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
       {/* Mute Button */}
       <motion.button
         onClick={() => setIsMuted(!isMuted)}
-        className="absolute -left-16 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center"
+        className="absolute -left-14 sm:-left-16 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
         style={{
           background: isMuted
             ? 'linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.25))'
@@ -612,16 +612,16 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         title={isMuted ? "Unmute (⌘+M)" : "Mute (⌘+M)"}
       >
         {isMuted ? (
-          <VolumeX className="w-4 h-4" style={{ color: 'rgba(239,68,68,0.8)' }} />
+          <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: 'rgba(239,68,68,0.8)' }} />
         ) : (
-          <Volume2 className="w-4 h-4" style={{ color: 'rgba(212,184,150,0.6)' }} />
+          <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: 'rgba(212,184,150,0.6)' }} />
         )}
       </motion.button>
 
       {/* Golden Mic Button - Subtle and elegant */}
       <motion.button
         onClick={() => !isMuted && toggleListening()}
-        className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center"
+        className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center"
         style={{
           background: isListening
             ? 'linear-gradient(135deg, rgba(212,184,150,0.15), rgba(212,184,150,0.25))'
@@ -649,11 +649,11 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         }}
       >
         {isMuted ? (
-          <MicOff className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(239,68,68,0.6)' }} />
+          <MicOff className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" style={{ color: 'rgba(239,68,68,0.6)' }} />
         ) : isListening ? (
-          <Mic className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(212,184,150,0.9)' }} />
+          <Mic className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" style={{ color: 'rgba(212,184,150,0.9)' }} />
         ) : (
-          <MicOff className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(212,184,150,0.5)' }} />
+          <MicOff className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" style={{ color: 'rgba(212,184,150,0.5)' }} />
         )}
 
         {/* Pulse animation when listening */}
@@ -718,9 +718,9 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute bottom-16 sm:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+            className="absolute bottom-14 sm:bottom-16 md:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           >
-            <div className="backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm" style={{
+            <div className="backdrop-blur-md px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-full text-[10px] sm:text-xs md:text-sm" style={{
               background: 'rgba(239,68,68,0.2)',
               border: '1px solid rgba(239,68,68,0.25)',
               color: '#ef4444'
@@ -734,9 +734,9 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute bottom-16 sm:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+            className="absolute bottom-14 sm:bottom-16 md:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           >
-            <div className="backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm" style={{
+            <div className="backdrop-blur-md px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-full text-[10px] sm:text-xs md:text-sm" style={{
               background: 'rgba(30,30,40,0.3)',
               border: '1px solid rgba(212,184,150,0.15)',
               color: '#d4b896'
