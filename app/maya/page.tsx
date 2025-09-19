@@ -11,6 +11,7 @@ interface Message {
   content: string;
   timestamp: Date;
   element?: string;
+  spoken?: boolean;
 }
 
 export default function MayaPage() {
@@ -68,19 +69,30 @@ export default function MayaPage() {
         role: 'maya',
         content: data.response || "I'm here to listen. Tell me more.",
         element: data.element,
-        timestamp: new Date()
+        timestamp: new Date(),
+        spoken: false
       };
       setMessages(prev => [...prev, mayaMessage]);
 
       // Play Maya's voice response using TTS
       if (data.response) {
-        MayaVoiceSynthesis.speak(data.response, data.element || 'earth');
-        setIsMayaSpeaking(true);
+        try {
+          await MayaVoiceSynthesis.speak(data.response, data.element || 'earth');
+          setIsMayaSpeaking(true);
 
-        // Set a timeout to clear speaking state
-        setTimeout(() => {
+          // Mark as spoken
+          setMessages(prev => prev.map(msg =>
+            msg.id === mayaMessage.id ? { ...msg, spoken: true } : msg
+          ));
+
+          // Set a timeout to clear speaking state
+          setTimeout(() => {
+            setIsMayaSpeaking(false);
+          }, Math.max(2000, data.response.length * 50)); // Estimate duration
+        } catch (error) {
+          console.error('Failed to speak Maya response:', error);
           setIsMayaSpeaking(false);
-        }, Math.max(2000, data.response.length * 50)); // Estimate duration
+        }
       }
 
     } catch (err) {
@@ -153,9 +165,28 @@ export default function MayaPage() {
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-md'
                       }`}
                     >
-                      <p className="text-sm font-semibold mb-2 opacity-80">
-                        {message.role === 'user' ? 'You' : 'Maya'}
-                      </p>
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="text-sm font-semibold opacity-80">
+                          {message.role === 'user' ? 'You' : 'Maya'}
+                        </p>
+                        {message.role === 'maya' && !message.spoken && (
+                          <button
+                            onClick={async () => {
+                              try {
+                                await MayaVoiceSynthesis.speak(message.content, message.element || 'earth');
+                                setMessages(prev => prev.map(msg =>
+                                  msg.id === message.id ? { ...msg, spoken: true } : msg
+                                ));
+                              } catch (error) {
+                                console.error('Failed to speak:', error);
+                              }
+                            }}
+                            className="text-xs px-2 py-1 rounded bg-purple-500/20 hover:bg-purple-500/30 transition-colors"
+                          >
+                            🔊 Speak
+                          </button>
+                        )}
+                      </div>
                       <p className="text-base leading-relaxed">{message.content}</p>
                     </div>
                   </motion.div>

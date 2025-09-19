@@ -16,17 +16,29 @@ export class MayaVoiceSynthesis {
     if (!cleanText) return;
 
     try {
-      // Try OpenAI TTS first
-      const audioUrl = await this.generateTTS(cleanText, element);
-      if (audioUrl) {
-        await this.playAudio(audioUrl);
+      // For desktop browsers, prefer browser speech synthesis due to autoplay restrictions
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        // Mobile: Try OpenAI TTS first
+        const audioUrl = await this.generateTTS(cleanText, element);
+        if (audioUrl) {
+          await this.playAudio(audioUrl);
+        } else {
+          await this.speakWithBrowser(cleanText, element);
+        }
       } else {
-        // Fallback to browser speech synthesis
+        // Desktop: Use browser speech synthesis directly
         await this.speakWithBrowser(cleanText, element);
       }
     } catch (error) {
       console.error('Voice synthesis error:', error);
-      // Silent fallback - don't interrupt conversation
+      // Try browser speech as final fallback
+      try {
+        await this.speakWithBrowser(text, element);
+      } catch (e) {
+        console.error('Browser speech also failed:', e);
+      }
     }
   }
 
@@ -95,8 +107,20 @@ export class MayaVoiceSynthesis {
       return;
     }
 
+    // Cancel any ongoing speech
+    speechSynthesis.cancel();
+
     return new Promise((resolve) => {
-      const utterance = new SpeechSynthesisUtterance(text);
+      // Wait for voices to load
+      const loadVoices = () => {
+        const voices = speechSynthesis.getVoices();
+        if (voices.length === 0) {
+          // Voices not loaded yet, try again
+          setTimeout(loadVoices, 100);
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
 
       // Configure voice based on element
       utterance.rate = element === 'fire' ? 1.1 :
@@ -110,17 +134,21 @@ export class MayaVoiceSynthesis {
 
       utterance.volume = 0.85;
 
-      // Try to select a female voice
-      const voices = speechSynthesis.getVoices();
-      const femaleVoice = voices.find(v =>
-        v.name.toLowerCase().includes('female') ||
-        v.name.toLowerCase().includes('samantha') ||
-        v.name.toLowerCase().includes('victoria') ||
-        v.name.toLowerCase().includes('allison')
-      );
-      if (femaleVoice) {
-        utterance.voice = femaleVoice;
-      }
+        // Try to select a female voice
+        const voices = speechSynthesis.getVoices();
+        const femaleVoice = voices.find(v =>
+          v.name.toLowerCase().includes('female') ||
+          v.name.toLowerCase().includes('samantha') ||
+          v.name.toLowerCase().includes('victoria') ||
+          v.name.toLowerCase().includes('allison') ||
+          v.name.toLowerCase().includes('karen') ||
+          v.name.toLowerCase().includes('moira') ||
+          v.name.toLowerCase().includes('tessa')
+        );
+        if (femaleVoice) {
+          utterance.voice = femaleVoice;
+          console.log('Selected voice:', femaleVoice.name);
+        }
 
       utterance.onend = () => {
         this.isSpeaking = false;
@@ -132,8 +160,12 @@ export class MayaVoiceSynthesis {
         resolve();
       };
 
-      this.isSpeaking = true;
-      speechSynthesis.speak(utterance);
+        this.isSpeaking = true;
+        speechSynthesis.speak(utterance);
+      };
+
+      // Start loading voices
+      loadVoices();
     });
   }
 
