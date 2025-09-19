@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     let checkInContext = '';
     if (Object.keys(checkIns).length > 0) {
       const activeFacets = Object.entries(checkIns)
-        .filter(([_, intensity]) => intensity > 0)
+        .filter(([_, intensity]) => (intensity as number) > 0)
         .map(([facetId, intensity]) => {
           const facet = getFacetById(facetId);
           return facet ? `${facetId}: ${facet.essence} (intensity: ${intensity})` : null;
@@ -100,10 +100,11 @@ export async function POST(req: NextRequest) {
       ]
     });
 
-    // Parse Claude's response
-    const responseText = response.content[0].text;
+    // Parse Claude's response (handle both text and object types)
+    const content = response.content[0];
+    const responseText = typeof content === 'string' ? content : (content as any).text || JSON.stringify(content);
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-    
+
     if (!jsonMatch) {
       throw new Error('Failed to extract JSON from Oracle response');
     }
@@ -168,7 +169,7 @@ export async function POST(req: NextRequest) {
 // Generate synthesis between check-ins and oracle reading
 async function generateSynthesis(checkIns: Record<string, number>, oracleResponse: any) {
   const checkInFacets = Object.entries(checkIns)
-    .filter(([_, intensity]) => intensity > 0)
+    .filter(([_, intensity]) => (intensity as number) > 0)
     .map(([facetId]) => getFacetById(facetId))
     .filter(Boolean);
 
@@ -177,7 +178,7 @@ async function generateSynthesis(checkIns: Record<string, number>, oracleRespons
   const synthesisPrompt = `
 Compare user check-ins with oracle reading:
 
-Check-ins: ${checkInFacets.map(f => `${f.id}: ${f.essence}`).join(', ')}
+Check-ins: ${checkInFacets.map(f => f ? `${f.id}: ${f.essence}` : '').filter(Boolean).join(', ')}
 Oracle: ${oracleFacet?.id}: ${oracleFacet?.essence}
 
 Identify:
@@ -206,7 +207,9 @@ Respond with JSON:
       ]
     });
 
-    const jsonMatch = response.content[0].text.match(/\{[\s\S]*\}/);
+    const content = response.content[0];
+    const responseText = typeof content === 'string' ? content : (content as any).text || JSON.stringify(content);
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }

@@ -2,12 +2,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import OraclePipeline from '@/services/oracle-pipeline';
-import { ElementalContentService } from '@/services/ElementalContentService';
+// import { ElementalContentService } from '@/services/ElementalContentService'; // Service not implemented
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize services
 const pipeline = new OraclePipeline(process.env.ANTHROPIC_API_KEY!);
-const elementalService = new ElementalContentService();
+// const elementalService = new ElementalContentService(); // Service not implemented
 
 // Supabase for persistence
 const supabase = createClient(
@@ -66,9 +66,14 @@ export async function POST(req: NextRequest) {
       }
 
       case 'elemental': {
-        // Use existing ElementalContentService for quick elemental mapping
-        const elements = await elementalService.generateElementalInsights(query);
-        
+        // ElementalContentService not implemented - returning placeholder
+        const elements = {
+          fire: 'Action awaits',
+          water: 'Emotions flow',
+          earth: 'Ground yourself',
+          air: 'New perspectives'
+        };
+
         return NextResponse.json({
           response: formatElementalResponse(elements),
           elements
@@ -121,7 +126,7 @@ export async function GET(req: NextRequest) {
       .limit(20);
 
     // Analyze patterns
-    const patterns = analyzeUserPatterns(sessions);
+    const patterns = analyzeUserPatterns(sessions || []);
 
     return NextResponse.json({
       patterns,

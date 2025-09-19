@@ -78,10 +78,11 @@ export async function POST(req: NextRequest) {
       ]
     });
 
-    // Parse response
-    const responseText = response.content[0].text;
+    // Parse response (handle both text and object types)
+    const content = response.content[0];
+    const responseText = typeof content === 'string' ? content : (content as any).text || JSON.stringify(content);
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-    
+
     if (!jsonMatch) {
       throw new Error('Failed to extract JSON from response');
     }
@@ -123,7 +124,8 @@ export async function POST(req: NextRequest) {
     console.error('Sacred Oracle error:', error);
     
     // Fallback to divination based on query keywords
-    const fallbackFacet = selectFallbackFacet(req.body?.query || '');
+    const body = await req.json().catch(() => ({}));
+    const fallbackFacet = selectFallbackFacet(body?.query || '');
     
     return NextResponse.json({
       primaryFacetId: fallbackFacet.id,

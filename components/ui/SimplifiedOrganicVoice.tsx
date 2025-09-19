@@ -5,14 +5,12 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 
 interface SimplifiedOrganicVoiceProps {
   onTranscript: (text: string) => void;
-  isProcessing?: boolean;
   enabled?: boolean;
   isMayaSpeaking?: boolean;
-  mayaVoiceState?: any;
 }
 
 // Sacred geometry sparkle generation
@@ -33,10 +31,8 @@ const generateSparkles = (count: number) => {
 
 export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   onTranscript,
-  isProcessing = false,
   enabled = true,
   isMayaSpeaking = false,
-  mayaVoiceState,
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [isWaitingForInput, setIsWaitingForInput] = useState(false);
@@ -44,6 +40,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   const [transcript, setTranscript] = useState('');
   const [sparkles] = useState(() => generateSparkles(30));
   const [audioLevel, setAudioLevel] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
 
   const recognitionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -286,12 +283,49 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
     }
   }, [isListening, initializeAudioContext, initializeSpeechRecognition]);
 
-  // Auto-start listening when enabled
+  // Auto-start listening when enabled and not muted
   useEffect(() => {
-    if (enabled && !isListening && !isMayaSpeaking) {
+    if (enabled && !isListening && !isMayaSpeaking && !isMuted) {
       toggleListening();
     }
   }, [enabled]);
+
+  // Stop listening when muted
+  useEffect(() => {
+    if (isMuted && isListening) {
+      // Stop listening
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (micStreamRef.current) {
+        micStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+      setIsListening(false);
+      setIsWaitingForInput(false);
+      setTranscript('');
+      console.log('🔇 Muted - stopped listening');
+    } else if (!isMuted && !isListening && enabled && !isMayaSpeaking) {
+      // Resume listening when unmuted
+      toggleListening();
+    }
+  }, [isMuted, enabled, isMayaSpeaking]);
+
+  // Keyboard shortcut for muting (Cmd/Ctrl + M)
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'm') {
+        e.preventDefault();
+        setIsMuted(prev => !prev);
+        console.log('🎛️ Toggled mute via keyboard');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
 
   // Pause/resume listening when Maya is speaking to prevent feedback loop
   useEffect(() => {
@@ -558,9 +592,35 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         </div>
       )}
 
+      {/* Mute Button */}
+      <motion.button
+        onClick={() => setIsMuted(!isMuted)}
+        className="absolute -left-16 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center"
+        style={{
+          background: isMuted
+            ? 'linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.25))'
+            : 'linear-gradient(135deg, rgba(212,184,150,0.05), rgba(212,184,150,0.1))',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: isMuted ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(212,184,150,0.1)',
+          boxShadow: isMuted
+            ? '0 0 20px rgba(239,68,68,0.15)'
+            : '0 4px 15px rgba(0,0,0,0.1)',
+        }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        title={isMuted ? "Unmute (⌘+M)" : "Mute (⌘+M)"}
+      >
+        {isMuted ? (
+          <VolumeX className="w-4 h-4" style={{ color: 'rgba(239,68,68,0.8)' }} />
+        ) : (
+          <Volume2 className="w-4 h-4" style={{ color: 'rgba(212,184,150,0.6)' }} />
+        )}
+      </motion.button>
+
       {/* Golden Mic Button - Subtle and elegant */}
       <motion.button
-        onClick={toggleListening}
+        onClick={() => !isMuted && toggleListening()}
         className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center"
         style={{
           background: isListening
@@ -569,9 +629,13 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           border: isListening ? '1px solid rgba(212,184,150,0.3)' : '1px solid rgba(212,184,150,0.15)',
-          boxShadow: isListening
+          boxShadow: isMuted
+            ? '0 4px 15px rgba(0,0,0,0.1)'
+            : isListening
             ? '0 0 30px rgba(212,184,150,0.2), inset 0 0 20px rgba(212,184,150,0.1)'
             : '0 4px 20px rgba(0,0,0,0.2)',
+          opacity: isMuted ? 0.5 : 1,
+          cursor: isMuted ? 'not-allowed' : 'pointer',
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -584,14 +648,16 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
           ease: "easeInOut"
         }}
       >
-        {isListening ? (
+        {isMuted ? (
+          <MicOff className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(239,68,68,0.6)' }} />
+        ) : isListening ? (
           <Mic className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(212,184,150,0.9)' }} />
         ) : (
           <MicOff className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(212,184,150,0.5)' }} />
         )}
 
         {/* Pulse animation when listening */}
-        {isListening && (
+        {isListening && !isMuted && (
           <>
             <motion.div
               className="absolute inset-0 rounded-full"
@@ -627,7 +693,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         )}
 
         {/* Sparkle effect when registering words */}
-        {isWaitingForInput && (
+        {isWaitingForInput && !isMuted && (
           <motion.div
             className="absolute inset-0 rounded-full"
             animate={{
@@ -647,7 +713,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
       {/* Status text */}
       <AnimatePresence>
-        {transcript && (
+        {isMuted && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -655,8 +721,24 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             className="absolute bottom-16 sm:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           >
             <div className="backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm" style={{
-              background: 'rgba(30,30,40,0.7)',
-              border: '1px solid rgba(212,184,150,0.2)',
+              background: 'rgba(239,68,68,0.2)',
+              border: '1px solid rgba(239,68,68,0.25)',
+              color: '#ef4444'
+            }}>
+              🔇 Muted - Press ⌘+M to unmute
+            </div>
+          </motion.div>
+        )}
+        {transcript && !isMuted && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute bottom-16 sm:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+          >
+            <div className="backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm" style={{
+              background: 'rgba(30,30,40,0.3)',
+              border: '1px solid rgba(212,184,150,0.15)',
               color: '#d4b896'
             }}>
               {isWaitingForInput ? '✨ Listening...' : transcript}

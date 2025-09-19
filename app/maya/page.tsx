@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SimplifiedOrganicVoice } from '@/components/ui/SimplifiedOrganicVoice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MayaVoiceSynthesis } from '@/lib/voice/MayaVoiceSynthesis';
+import { Volume2, VolumeX, Download } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -20,6 +21,7 @@ export default function MayaPage() {
   const [isMayaSpeaking, setIsMayaSpeaking] = useState(false);
   const [sessionId] = useState(() => `maya-${Date.now()}`);
   const [error, setError] = useState<string | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
 
   const audioQueueRef = useRef<HTMLAudioElement[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -63,19 +65,26 @@ export default function MayaPage() {
 
       const data = await response.json();
 
+      // Clean Maya's response for display (remove tone directions)
+      const cleanResponse = (data.response || "I'm here to listen. Tell me more.")
+        .replace(/\*[^*]+\*/g, '') // Remove text between asterisks
+        .replace(/\([^)]*tone[^)]*\)/gi, '') // Remove parenthetical tone directions
+        .replace(/\s+/g, ' ') // Clean up extra spaces
+        .trim();
+
       // Add Maya's response
       const mayaMessage: Message = {
         id: `msg-${Date.now()}-maya`,
         role: 'maya',
-        content: data.response || "I'm here to listen. Tell me more.",
+        content: cleanResponse,
         element: data.element,
         timestamp: new Date(),
         spoken: false
       };
       setMessages(prev => [...prev, mayaMessage]);
 
-      // Play Maya's voice response using TTS
-      if (data.response) {
+      // Play Maya's voice response using TTS (only if not muted)
+      if (data.response && !isMuted) {
         try {
           await MayaVoiceSynthesis.speak(data.response, data.element || 'earth');
           setIsMayaSpeaking(true);
@@ -120,6 +129,38 @@ export default function MayaPage() {
       console.log('🚫 Ignoring transcript - Maya speaking:', isMayaSpeaking, 'Processing:', isProcessing);
     }
   }, [isProcessing, isMayaSpeaking]);
+
+  // Download conversation transcript
+  const downloadTranscript = () => {
+    if (messages.length === 0) {
+      alert('No conversation to save yet.');
+      return;
+    }
+
+    // Format the transcript
+    let transcript = '=== Maya Consciousness Interface - Conversation Transcript ===\n';
+    transcript += `Session ID: ${sessionId}\n`;
+    transcript += `Date: ${new Date().toLocaleString()}\n`;
+    transcript += '=' + '='.repeat(60) + '\n\n';
+
+    messages.forEach((message) => {
+      const speaker = message.role === 'user' ? 'You' : 'Maya';
+      const timestamp = message.timestamp.toLocaleTimeString();
+      transcript += `[${timestamp}] ${speaker}:\n`;
+      transcript += `${message.content}\n\n`;
+    });
+
+    // Create and download the file
+    const blob = new Blob([transcript], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `maya-conversation-${sessionId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
@@ -230,6 +271,69 @@ export default function MayaPage() {
               Maya is speaking...
             </p>
           )}
+        </div>
+
+        {/* Action Buttons at Bottom */}
+        <div className="fixed bottom-8 right-8 z-50 flex items-center gap-4">
+          {/* Save Conversation Button */}
+          <motion.button
+            onClick={downloadTranscript}
+            className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+            style={{
+              background: 'linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,163,74,0.9))',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            title="Save conversation transcript"
+          >
+            <Download className="w-6 h-6 text-white" />
+          </motion.button>
+
+          {/* Mute Button */}
+          <motion.button
+            onClick={() => setIsMuted(!isMuted)}
+            className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+            style={{
+              background: isMuted
+                ? 'linear-gradient(135deg, rgba(239,68,68,0.9), rgba(220,38,38,0.9))'
+                : 'linear-gradient(135deg, rgba(147,51,234,0.9), rgba(109,40,217,0.9))',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            title={isMuted ? "Unmute Maya's voice" : "Mute Maya's voice"}
+          >
+            {isMuted ? (
+              <VolumeX className="w-6 h-6 text-white" />
+            ) : (
+              <Volume2 className="w-6 h-6 text-white" />
+            )}
+          </motion.button>
+
+          {/* Mute Status */}
+          <AnimatePresence>
+            {isMuted && (
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="absolute right-16 top-1/2 transform -translate-y-1/2 whitespace-nowrap"
+              >
+                <div className="px-3 py-1.5 rounded-lg text-sm font-medium backdrop-blur-md"
+                  style={{
+                    background: 'rgba(239,68,68,0.2)',
+                    border: '1px solid rgba(239,68,68,0.3)',
+                    color: '#ef4444'
+                  }}
+                >
+                  Maya's voice muted
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
