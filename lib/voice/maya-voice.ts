@@ -321,7 +321,7 @@ export class MayaVoiceSystem {
     return selected;
   }
 
-  // Play audio from URL
+  // Play audio from URL with feedback prevention
   private async playAudioUrl(audioUrl: string): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
@@ -334,6 +334,32 @@ export class MayaVoiceSystem {
         const audio = new Audio(audioUrl);
         this.currentAudio = audio;
 
+        // Configure audio element to prevent feedback
+        audio.crossOrigin = 'anonymous';
+        audio.preload = 'metadata';
+
+        // Connect to AudioContext for better control if available
+        if (this.audioContext) {
+          try {
+            const source = this.audioContext.createMediaElementSource(audio);
+
+            // Create a gain node to control volume more precisely
+            const gainNode = this.audioContext.createGain();
+            gainNode.gain.value = this.config.naturalSettings.volume;
+
+            // Connect: source -> gain -> destination (speakers)
+            source.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+
+            console.log('🔊 Audio connected through AudioContext for better isolation');
+          } catch (contextError) {
+            console.warn('Could not use AudioContext, using direct audio:', contextError);
+            audio.volume = this.config.naturalSettings.volume;
+          }
+        } else {
+          audio.volume = this.config.naturalSettings.volume;
+        }
+
         audio.onloadstart = () => {
           this.updateState({ isLoading: true });
         };
@@ -343,24 +369,30 @@ export class MayaVoiceSystem {
         };
 
         audio.onplay = () => {
-          this.updateState({ 
-            isPlaying: true, 
-            isPaused: false 
+          this.updateState({
+            isPlaying: true,
+            isPaused: false
           });
+          console.log('🎵 Maya audio started playing');
         };
 
         audio.onended = () => {
-          this.updateState({ 
-            isPlaying: false, 
-            currentText: '' 
+          this.updateState({
+            isPlaying: false,
+            currentText: ''
           });
+          console.log('🎵 Maya audio finished playing');
           URL.revokeObjectURL(audioUrl); // Clean up blob URL
-          resolve();
+
+          // Add a small delay before resolving to ensure audio has fully stopped
+          setTimeout(() => {
+            resolve();
+          }, 100);
         };
 
         audio.onerror = (error) => {
-          this.updateState({ 
-            isPlaying: false, 
+          this.updateState({
+            isPlaying: false,
             isLoading: false,
             error: 'Audio playback failed'
           });
@@ -372,12 +404,14 @@ export class MayaVoiceSystem {
           this.updateState({ isPaused: true });
         };
 
-        audio.volume = this.config.naturalSettings.volume;
-        audio.play();
+        audio.play().catch(error => {
+          console.error('Audio play failed:', error);
+          reject(error);
+        });
       } catch (error) {
-        this.updateState({ 
-          isLoading: false, 
-          error: error.message 
+        this.updateState({
+          isLoading: false,
+          error: error.message
         });
         reject(error);
       }

@@ -178,9 +178,13 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             const words = finalMessage.split(' ');
             const isLongEnough = words.length >= 3; // At least 3 words for a meaningful sentence
             const isNotJustRepeats = !(/^(\w+\s*)\1+$/.test(finalMessage)); // Not just repeated words
-            const isNotCommonFragment = !['fuck', 'mirror', 'hear', 'what', 'you', 'the', 'and', 'or', 'but'].includes(finalMessage.toLowerCase());
 
-            if (finalMessage && isLongEnough && isNotJustRepeats && isNotCommonFragment) {
+            // Enhanced filtering to prevent feedback loops
+            const commonFeedbackWords = ['fuck', 'mirror', 'hear', 'what', 'you', 'the', 'and', 'or', 'but', 'maya', 'speaking', 'response', 'paused', 'finished'];
+            const isNotCommonFragment = !commonFeedbackWords.includes(finalMessage.toLowerCase().trim());
+            const isNotSelfReference = !finalMessage.toLowerCase().includes('maya is') && !finalMessage.toLowerCase().includes('speaking') && !finalMessage.toLowerCase().includes('paused');
+
+            if (finalMessage && isLongEnough && isNotJustRepeats && isNotCommonFragment && isNotSelfReference) {
               console.log('🚀 Sending to Maya:', finalMessage);
               onTranscript(finalMessage);
               setIsWaitingForInput(false);
@@ -297,6 +301,15 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
       setIsWaitingForInput(false);
       setTranscript('🔇 Paused while Maya speaks...');
 
+      // Clear any pending silence timers
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+
+      // Reset accumulated transcript to prevent old text from being sent
+      accumulatedTranscriptRef.current = '';
+
       // Stop recognition while Maya speaks
       if (recognitionRef.current) {
         try {
@@ -317,6 +330,9 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
       setIsPausedForMaya(false);
       setTranscript('');
 
+      // Clear any accumulated text to prevent sending old speech
+      accumulatedTranscriptRef.current = '';
+
       // Re-enable microphone
       if (micStreamRef.current) {
         micStreamRef.current.getAudioTracks().forEach(track => {
@@ -334,7 +350,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             console.log('Could not resume recognition:', e);
           }
         }
-      }, 2000); // 2 second delay to ensure Maya's audio has completely stopped
+      }, 4000); // Increased to 4 second delay to ensure Maya's audio has completely stopped
     }
   }, [isMayaSpeaking, isListening, enabled, isPausedForMaya]);
 

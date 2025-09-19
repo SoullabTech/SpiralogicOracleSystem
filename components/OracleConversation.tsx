@@ -75,7 +75,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 }) => {
   // Maya Voice Integration
   const { speak: mayaSpeak, voiceState: mayaVoiceState, isReady: mayaReady } = useMayaVoice();
-  
+
   // Responsive holoflower size
   const [holoflowerSize, setHoloflowerSize] = useState(400);
   
@@ -179,6 +179,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       return () => clearTimeout(recoveryTimer);
     }
   }, [isProcessing, isResponding, resetAllStates]);
+
+  // Sync local audio state with Maya voice state to prevent conflicts
+  useEffect(() => {
+    if (mayaVoiceState?.isPlaying !== isAudioPlaying) {
+      setIsAudioPlaying(mayaVoiceState?.isPlaying || false);
+    }
+    if (mayaVoiceState?.isPlaying !== isResponding) {
+      setIsResponding(mayaVoiceState?.isPlaying || false);
+    }
+  }, [mayaVoiceState?.isPlaying, isAudioPlaying, isResponding]);
 
   // Update motion state based on voice activity
   useEffect(() => {
@@ -358,11 +368,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         // Speak the response
         await mayaSpeak(responseText);
 
-        // Reset states after speaking
+        // Wait for voice to completely finish before resetting states
+        // This prevents microphone from resuming too early
         setTimeout(() => {
           setIsResponding(false);
           setIsAudioPlaying(false);
-        }, 500);
+          console.log('🔇 Maya finished speaking, states reset');
+        }, 3000); // Increased delay to ensure audio is completely done
       }
 
       // Update context
@@ -834,8 +846,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
         <>
-          {/* Mode Toggle - Small compact buttons at top left */}
-          <div className="fixed top-4 left-4 flex gap-2 z-50">
+          {/* Mode Toggle - Small compact buttons at top left - UPDATED */}
+          <div className="fixed top-4 left-4 flex gap-2 z-50" title="Voice/Chat Toggle - Updated at 11:30PM">
             <button
               onClick={() => {
                 setShowChatInterface(false);
@@ -880,8 +892,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ref={voiceMicRef}
               onTranscript={handleVoiceTranscript}
               isProcessing={isProcessing}
-              enabled={!isAudioPlaying}
-              isMayaSpeaking={isResponding || isAudioPlaying}
+              enabled={!isAudioPlaying && !isResponding && !mayaVoiceState?.isPlaying}
+              isMayaSpeaking={isResponding || isAudioPlaying || mayaVoiceState?.isPlaying}
               mayaVoiceState={mayaVoiceState}
             />
           )}

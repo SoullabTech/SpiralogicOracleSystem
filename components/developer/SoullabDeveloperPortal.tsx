@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Soullab Developer Portal - Sacred Minimalism Design
 // API key management with generous whitespace and elemental harmony
 
