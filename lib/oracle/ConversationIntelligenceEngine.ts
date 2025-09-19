@@ -928,8 +928,22 @@ export class ConversationIntelligenceEngine {
         return "Oh that cringe feeling is so visceral, right? Like your whole body is trying to escape a memory. What triggered that for you?";
       }
 
-      // Default to a more natural response
-      return `I hear you on the ${mirrorPhrase} part. What's that been like for you?`;
+      // Handle common cases naturally
+
+      if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+        return "Hello! I'm here to listen. What's on your heart today?";
+      }
+
+      if (lower.includes('how are you')) {
+        return "Thank you for asking. I'm here and fully present with you. How are you doing?";
+      }
+
+      if (mirrorPhrase && mirrorPhrase.length > 2) {
+        return `I hear "${mirrorPhrase}" - tell me more about that.`;
+      }
+
+      // Fallback to open-ended invitation
+      return "What's most present for you right now?";
     }
 
     // For longer phrases, make them conversational

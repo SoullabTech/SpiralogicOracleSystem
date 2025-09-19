@@ -99,7 +99,7 @@ export class ActiveListeningCore {
           confidence: 0.8,
           element: 'air'
         },
-        response: "Let's slow down.",
+        response: "Let me slow down and meet you where you are. What would be most helpful right now?",
         silenceDuration: 800,
         followUp: "Do you want me to explain differently, or listen more closely?"
       };

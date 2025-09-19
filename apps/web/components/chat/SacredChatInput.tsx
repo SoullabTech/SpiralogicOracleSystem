@@ -258,7 +258,7 @@ export default function SacredChatInput({
               )}
             </AnimatePresence>
 
-            {/* Recording State Indicator */}
+            {/* Enhanced Recording State with Sparkles */}
             <AnimatePresence>
               {isRecording && (
                 <motion.div
@@ -267,12 +267,64 @@ export default function SacredChatInput({
                   exit={{ opacity: 0, y: -10 }}
                   className="absolute -top-8 right-3 flex items-center gap-2 text-xs text-amber-400"
                 >
+                  {/* Sparkle animations */}
+                  <div className="relative">
+                    <motion.div
+                      className="absolute -left-6 -top-1"
+                      animate={{
+                        scale: [0, 1, 0],
+                        rotate: [0, 180, 360],
+                        opacity: [0, 1, 0]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: 0
+                      }}
+                    >
+                      <Sparkles className="w-3 h-3 text-amber-300" />
+                    </motion.div>
+                    <motion.div
+                      className="absolute -right-4 -top-2"
+                      animate={{
+                        scale: [0, 1, 0],
+                        rotate: [0, -180, -360],
+                        opacity: [0, 1, 0]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: 0.7
+                      }}
+                    >
+                      <Sparkles className="w-2 h-2 text-cyan-300" />
+                    </motion.div>
+                    <motion.div
+                      className="absolute -left-3 -bottom-1"
+                      animate={{
+                        scale: [0, 1, 0],
+                        rotate: [0, 90, 180],
+                        opacity: [0, 1, 0]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: 1.3
+                      }}
+                    >
+                      <Sparkles className="w-2 h-2 text-purple-300" />
+                    </motion.div>
+                  </div>
+
                   <motion.div
                     className="w-2 h-2 rounded-full bg-red-400"
-                    animate={{ opacity: [1, 0.3, 1] }}
+                    animate={{
+                      opacity: [1, 0.3, 1],
+                      scale: [1, 1.2, 1]
+                    }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   />
-                  <span>Recording...</span>
+                  <span>Listening...</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -298,15 +350,99 @@ export default function SacredChatInput({
               style={{ height: 'auto' }}
             />
 
-            {/* Voice Recording Overlay */}
+            {/* Enhanced Voice Recording Overlay with Cloud Pulses */}
             <AnimatePresence>
               {isRecording && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute inset-0 bg-neutral-800/90 backdrop-blur-sm rounded-xl border border-amber-400/40 flex flex-col items-center justify-center"
+                  className="absolute inset-0 bg-neutral-800/90 backdrop-blur-sm rounded-xl border border-amber-400/40 flex flex-col items-center justify-center overflow-hidden"
                 >
+                  {/* Floating cloud pulse effects */}
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    {/* Cloud pulse 1 */}
+                    <motion.div
+                      className="absolute top-2 left-4 w-8 h-4 bg-amber-400/20 rounded-full blur-sm"
+                      animate={{
+                        scale: [1, 1.5, 1],
+                        opacity: [0.3, 0.7, 0.3],
+                        x: [0, 20, 0]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    {/* Cloud pulse 2 */}
+                    <motion.div
+                      className="absolute top-6 right-6 w-6 h-3 bg-cyan-400/20 rounded-full blur-sm"
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.4, 0.8, 0.4],
+                        x: [0, -15, 0]
+                      }}
+                      transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.8
+                      }}
+                    />
+                    {/* Cloud pulse 3 */}
+                    <motion.div
+                      className="absolute bottom-4 left-6 w-5 h-3 bg-purple-400/20 rounded-full blur-sm"
+                      animate={{
+                        scale: [1, 1.4, 1],
+                        opacity: [0.2, 0.6, 0.2],
+                        x: [0, 25, 0]
+                      }}
+                      transition={{
+                        duration: 3.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1.5
+                      }}
+                    />
+                    {/* Floating sparkles */}
+                    <motion.div
+                      className="absolute top-8 left-8"
+                      animate={{
+                        y: [0, -10, 0],
+                        rotate: [0, 360],
+                        opacity: [0, 1, 0]
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <Sparkles className="w-2 h-2 text-amber-300/60" />
+                    </motion.div>
+                    <motion.div
+                      className="absolute bottom-6 right-4"
+                      animate={{
+                        y: [0, -8, 0],
+                        rotate: [0, -360],
+                        opacity: [0, 1, 0]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1
+                      }}
+                    >
+                      <Sparkles className="w-3 h-3 text-cyan-300/60" />
+                    </motion.div>
+                  </motion.div>
+
                   {/* Voice Recording UI */}
                   <VoiceRecorder
                     userId={userId}
@@ -334,21 +470,107 @@ export default function SacredChatInput({
           {/* Dual-Mode Action Button */}
           <div className="self-end pb-2">
             {message.trim().length === 0 ? (
-              // Mic button when no text - toggles recording
-              <motion.button
-                variants={buttonVariants}
-                initial="idle"
-                whileHover={!isRecording ? "hover" : "idle"}
-                whileTap={!isRecording ? "tap" : "idle"}
-                onClick={isRecording ? handleStopVoice : handleStartVoice}
-                disabled={disabled}
-                className={`w-12 h-12 sm:w-12 sm:h-12 min-w-[48px] min-h-[48px] rounded-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg active:scale-95 ${
-                  isRecording
-                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-400 hover:to-red-500'
-                    : 'bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-900 hover:from-amber-300 hover:to-amber-400'
-                }`}
-                title={isRecording ? "Stop recording" : "Sacred voice offering"}
-              >
+              // Enhanced Mic button with sparkle effects
+              <div className="relative">
+                {/* Sparkle effects around voice button */}
+                <AnimatePresence>
+                  {isRecording && (
+                    <>
+                      <motion.div
+                        className="absolute -top-2 -left-2"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                      >
+                        <motion.div
+                          animate={{
+                            rotate: [0, 360],
+                            scale: [0.8, 1.2, 0.8]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <Sparkles className="w-3 h-3 text-amber-300" />
+                        </motion.div>
+                      </motion.div>
+                      <motion.div
+                        className="absolute -bottom-1 -right-1"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                      >
+                        <motion.div
+                          animate={{
+                            rotate: [0, -360],
+                            scale: [1, 1.3, 1]
+                          }}
+                          transition={{
+                            duration: 1.8,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: 0.5
+                          }}
+                        >
+                          <Sparkles className="w-2 h-2 text-cyan-300" />
+                        </motion.div>
+                      </motion.div>
+                      <motion.div
+                        className="absolute -top-1 -right-2"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                      >
+                        <motion.div
+                          animate={{
+                            rotate: [0, 180],
+                            scale: [0.9, 1.1, 0.9]
+                          }}
+                          transition={{
+                            duration: 2.2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: 1
+                          }}
+                        >
+                          <Sparkles className="w-2 h-2 text-purple-300" />
+                        </motion.div>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+
+                <motion.button
+                  variants={buttonVariants}
+                  initial="idle"
+                  whileHover={!isRecording ? "hover" : "idle"}
+                  whileTap={!isRecording ? "tap" : "idle"}
+                  onClick={isRecording ? handleStopVoice : handleStartVoice}
+                  disabled={disabled}
+                  className={`w-12 h-12 sm:w-12 sm:h-12 min-w-[48px] min-h-[48px] rounded-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg active:scale-95 relative overflow-hidden ${
+                    isRecording
+                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-400 hover:to-red-500'
+                      : 'bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-900 hover:from-amber-300 hover:to-amber-400'
+                  }`}
+                  title={isRecording ? "Stop recording" : "Sacred voice offering"}
+                  animate={{
+                    boxShadow: isRecording
+                      ? [
+                          '0 0 0 0 rgba(239, 68, 68, 0.4)',
+                          '0 0 0 8px rgba(239, 68, 68, 0)',
+                          '0 0 0 0 rgba(239, 68, 68, 0.4)'
+                        ]
+                      : '0 0 0 0 rgba(239, 68, 68, 0)'
+                  }}
+                  transition={{
+                    boxShadow: {
+                      duration: 2,
+                      repeat: isRecording ? Infinity : 0
+                    }
+                  }}
+                >
                 <AnimatePresence mode="wait">
                   {isRecording ? (
                     <motion.div
@@ -372,7 +594,8 @@ export default function SacredChatInput({
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.button>
+                </motion.button>
+              </div>
             ) : (
               // Send button when text exists
               <motion.button
