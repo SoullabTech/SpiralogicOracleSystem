@@ -952,7 +952,15 @@ export class ConversationIntelligenceEngine {
       }
 
       if (mirrorPhrase && mirrorPhrase.length > 2) {
-        return `I hear "${mirrorPhrase}" - tell me more about that.`;
+        // Use natural conversational responses instead of robotic mirroring
+        const naturalResponses = [
+          `That sounds important. What's that like for you?`,
+          `I'm curious about what you just shared. Tell me more?`,
+          `There's something in what you said that feels significant.`,
+          `What stands out to you about that?`,
+          `I'd love to hear more about your experience with that.`
+        ];
+        return naturalResponses[Math.floor(Math.random() * naturalResponses.length)];
       }
 
       // Fallback to open-ended invitation
