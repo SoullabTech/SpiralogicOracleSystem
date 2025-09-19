@@ -1,0 +1,30 @@
+[
+  {
+    "turn": 1,
+    "timestamp": "2025-09-18T20:53:07.373Z",
+    "user": "I'm struggling with making decisions",
+    "maya": "What feels most challenging about making decisions right now?",
+    "analysis": {
+      "overall": 0.26666666666666666,
+      "byElement": {
+        "fire": 0,
+        "water": 0.3333333333333333,
+        "earth": 0.5,
+        "air": 0.5,
+        "aether": 0
+      },
+      "cuesHit": 3,
+      "totalCues": 10,
+      "recommendations": [
+        "Add meaningful challenges connected to their values",
+        "Increase emotional attunement and mirroring",
+        "Connect to deeper meaning and transformation"
+      ]
+    },
+    "improvements": [
+      "Acknowledge their emotional tone",
+      "Create more spaciousness for difficult feelings",
+      "Offer gentle reframes or new angles"
+    ]
+  }
+]

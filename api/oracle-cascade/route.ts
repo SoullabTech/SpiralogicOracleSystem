@@ -155,7 +155,8 @@ Generate one clear insight for each element.`;
     max_tokens: 500,
     messages: [{ role: 'user', content: ontologicalPrompt }]
   });
-  stages.ontological = response1.content[0].text;
+  const content1 = response1.content[0];
+  stages.ontological = content1.type === 'text' ? content1.text : '';
 
   // Stage 2: Temporal
   const temporalPrompt = `
@@ -171,7 +172,8 @@ Expand temporally:
     max_tokens: 500,
     messages: [{ role: 'user', content: temporalPrompt }]
   });
-  stages.temporal = response2.content[0].text;
+  const content2 = response2.content[0];
+  stages.temporal = content2.type === 'text' ? content2.text : '';
 
   // Stage 3: Implicit
   const implicitPrompt = `
@@ -189,7 +191,8 @@ Identify dimensions:
     max_tokens: 500,
     messages: [{ role: 'user', content: implicitPrompt }]
   });
-  stages.implicit = response3.content[0].text;
+  const content3 = response3.content[0];
+  stages.implicit = content3.type === 'text' ? content3.text : '';
 
   // Stage 4: Spiralogic
   const spiralogicPrompt = `
@@ -209,7 +212,8 @@ Create a narrative through these stages.`;
     max_tokens: 500,
     messages: [{ role: 'user', content: spiralogicPrompt }]
   });
-  stages.spiralogic = response4.content[0].text;
+  const content4 = response4.content[0];
+  stages.spiralogic = content4.type === 'text' ? content4.text : '';
 
   // Stage 5: Output
   const outputPrompt = `
@@ -227,7 +231,8 @@ Format each clearly labeled.`;
     max_tokens: 300,
     messages: [{ role: 'user', content: outputPrompt }]
   });
-  stages.output = response5.content[0].text;
+  const content5 = response5.content[0];
+  stages.output = content5.type === 'text' ? content5.text : '';
 
   return stages;
 }
@@ -258,7 +263,9 @@ Respond ONLY with JSON:
   });
 
   try {
-    const jsonMatch = response.content[0].text.match(/\{[\s\S]*\}/);
+    const content = response.content[0];
+    const responseText = content.type === 'text' ? content.text : '';
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }
@@ -296,7 +303,9 @@ Respond ONLY with JSON:
   });
 
   try {
-    const jsonMatch = response.content[0].text.match(/\{[\s\S]*\}/);
+    const content = response.content[0];
+    const responseText = content.type === 'text' ? content.text : '';
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }

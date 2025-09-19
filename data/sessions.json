@@ -1,0 +1,86 @@
+[
+  {
+    "id": "test-session-1758248749",
+    "createdAt": "2025-09-19T02:25:49.413Z",
+    "updatedAt": "2025-09-19T02:25:51.754Z",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Test message for session",
+        "metadata": {},
+        "id": "msg-1758248749413-d0k2d3rs5",
+        "timestamp": "2025-09-19T02:25:49.413Z"
+      },
+      {
+        "role": "maya",
+        "content": "[mirror] I hear you on the test message part. What's that been like for you?",
+        "metadata": {
+          "element": "water"
+        },
+        "id": "msg-1758248749419-q5klfq54o",
+        "timestamp": "2025-09-19T02:25:49.419Z"
+      }
+    ],
+    "metadata": {
+      "emotionalState": "water"
+    }
+  },
+  {
+    "id": "test-session-1758248746",
+    "createdAt": "2025-09-19T02:25:46.863Z",
+    "updatedAt": "2025-09-19T02:25:48.706Z",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello Maya, how are you today?",
+        "metadata": {
+          "timestamp": "2025-09-19T02:25:46Z",
+          "source": "test"
+        },
+        "id": "msg-1758248746863-u0s149szu",
+        "timestamp": "2025-09-19T02:25:46.863Z"
+      },
+      {
+        "role": "maya",
+        "content": "[mirror] I hear you on the hello maya, part. What's that been like for you?",
+        "metadata": {
+          "element": "water"
+        },
+        "id": "msg-1758248746876-7i9y1aofz",
+        "timestamp": "2025-09-19T02:25:46.876Z"
+      }
+    ],
+    "metadata": {
+      "emotionalState": "water"
+    }
+  },
+  {
+    "id": "test-session",
+    "createdAt": "2025-09-19T02:25:32.705Z",
+    "updatedAt": "2025-09-19T02:25:34.558Z",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello Maya, how are you today?",
+        "metadata": {
+          "timestamp": "2025-01-18T12:00:00Z",
+          "source": "test"
+        },
+        "id": "msg-1758248732705-2wiqm12v2",
+        "timestamp": "2025-09-19T02:25:32.705Z"
+      },
+      {
+        "role": "maya",
+        "content": "[mirror] I hear you on the hello maya, part. What's that been like for you?",
+        "metadata": {
+          "element": "water"
+        },
+        "id": "msg-1758248732717-wrp2xhwsu",
+        "timestamp": "2025-09-19T02:25:32.717Z"
+      }
+    ],
+    "metadata": {
+      "emotionalState": "water"
+    }
+  }
+]

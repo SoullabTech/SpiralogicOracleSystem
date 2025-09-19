@@ -9,7 +9,7 @@ import MayaChatInterface from './chat/MayaChatInterface';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
 import { OrganicVoiceMaya } from './ui/OrganicVoiceMaya';
-import { SimplifiedOrganicVoice } from './ui/SimplifiedOrganicVoice';
+import { VoiceActivatedMaya as SimplifiedOrganicVoice } from './ui/VoiceActivatedMayaFixed';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';

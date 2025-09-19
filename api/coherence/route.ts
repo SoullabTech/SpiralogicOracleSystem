@@ -92,11 +92,13 @@ export async function POST(req: NextRequest) {
       }]
     });
 
-    const sentimentData = parseJSON(sentimentResponse.content[0].text);
+    const firstContent = sentimentResponse.content[0];
+    const sentimentText = firstContent.type === 'text' ? firstContent.text : '';
+    const sentimentData = parseJSON(sentimentText);
 
     // Step 2: Analyze alignment with check-ins and oracle
     const checkInFacets = Object.entries(checkIns)
-      .filter(([_, intensity]) => intensity > 0)
+      .filter(([_, intensity]) => (intensity as number) > 0)
       .map(([facetId, intensity]) => {
         const facet = getFacetById(facetId);
         return facet ? `${facetId}: ${facet.essence} (${intensity})` : null;
@@ -120,7 +122,9 @@ export async function POST(req: NextRequest) {
       }]
     });
 
-    const alignmentData = parseJSON(alignmentResponse.content[0].text);
+    const alignmentContent = alignmentResponse.content[0];
+    const alignmentText = alignmentContent.type === 'text' ? alignmentContent.text : '';
+    const alignmentData = parseJSON(alignmentText);
 
     // Step 3: Calculate coherence index
     const coherencePrompt = COHERENCE_CALCULATION_PROMPT
@@ -140,7 +144,9 @@ export async function POST(req: NextRequest) {
       }]
     });
 
-    const coherenceData = parseJSON(coherenceResponse.content[0].text);
+    const coherenceContent = coherenceResponse.content[0];
+    const coherenceText = coherenceContent.type === 'text' ? coherenceContent.text : '';
+    const coherenceData = parseJSON(coherenceText);
 
     // Calculate trend if we have previous coherence
     let trend = 'stable';

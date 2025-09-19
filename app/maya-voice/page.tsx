@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { VoiceActivatedMaya } from '@/components/ui/VoiceActivatedMaya';
+import { VoiceActivatedMaya } from '@/components/ui/VoiceActivatedMayaFixed';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {

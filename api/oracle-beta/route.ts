@@ -1,6 +1,7 @@
 // Oracle Beta API - Simplified cascade with direct JSON response
 import { NextRequest, NextResponse } from 'next/server';
 import { Anthropic } from '@anthropic-ai/sdk';
+import { sessionStorage } from '@/lib/services/sessionStorage';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!
@@ -74,7 +75,8 @@ export async function POST(req: NextRequest) {
     });
 
     // Extract JSON from response
-    const responseText = response.content[0].text;
+    const firstContent = response.content[0];
+    const responseText = firstContent.type === 'text' ? firstContent.text : '';
     
     // Clean the response (remove any markdown or extra text)
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -102,12 +104,35 @@ export async function POST(req: NextRequest) {
       archetype: result.archetype || 'The Seeker at the threshold.'
     };
 
-    // Optional: Store in database if userId provided
-    if (userId && process.env.SUPABASE_URL) {
-      await persistSession(userId, text, sessionPayload);
+    // Always attempt to store session for beta tracking
+    if (userId) {
+      const storageResult = await sessionStorage.storeSession(
+        userId,
+        text,
+        sessionPayload,
+        {
+          mode: 'beta',
+          metadata: {
+            model: 'claude-3-opus-20240229',
+            temperature: 0.7,
+            promptVersion: 'beta-1.0'
+          }
+        }
+      );
+
+      if (storageResult.success) {
+        console.log(`[Oracle Beta] Session stored: ${storageResult.sessionId}`);
+      } else {
+        console.warn(`[Oracle Beta] Failed to store session: ${storageResult.error}`);
+      }
+    } else {
+      console.warn('[Oracle Beta] No userId provided - session not persisted');
     }
 
-    return NextResponse.json(sessionPayload);
+    return NextResponse.json({
+      ...sessionPayload,
+      persisted: userId ? true : false
+    });
 
   } catch (error) {
     console.error('Oracle beta error:', error);
@@ -174,30 +199,4 @@ function validateSpiralStage(stage: any): { element: string; stage: number } {
   return { element, stage: stageNum };
 }
 
-async function persistSession(userId: string, query: string, payload: any) {
-  try {
-    // Import Supabase client
-    const { createClient } = await import('@supabase/supabase-js');
-    
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    );
-
-    await supabase.from('oracle_sessions').insert({
-      user_id: userId,
-      session_id: payload.sessionId,
-      query,
-      response: JSON.stringify(payload),
-      elements: payload.elementalBalance,
-      spiral_stage: payload.spiralStage,
-      reflection: payload.reflection,
-      practice: payload.practice,
-      archetype: payload.archetype,
-      created_at: payload.timestamp
-    });
-  } catch (error) {
-    console.error('Failed to persist session:', error);
-    // Don't throw - persistence is optional
-  }
-}
+// Session persistence is now handled by sessionStorage service

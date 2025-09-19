@@ -52,13 +52,21 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const accumulatedTranscriptRef = useRef<string>('');
 
-  const WAKE_WORDS = ['hey maya', 'maya', 'okay maya', 'hi maya', 'hello maya'];
+  const WAKE_WORDS = ['hey maya', 'maya', 'okay maya', 'hi maya', 'hello maya', 'hey', 'hello', 'hi'];
   const SILENCE_THRESHOLD = 1500; // 1.5 seconds of silence to process
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('📡 Requesting microphone permission...');
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
+      console.log('✅ Microphone permission granted');
       micStreamRef.current = stream;
 
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -91,7 +99,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
   // Initialize speech recognition
   const initializeSpeechRecognition = useCallback(() => {
-    const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
     if (!SpeechRecognition) {
       console.error('Speech recognition not supported');
       return false;
@@ -101,13 +109,28 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      console.log('🟢 Speech recognition started');
+    };
+
+    recognition.onspeechstart = () => {
+      console.log('🎙️ Speech detected');
+    };
+
+    recognition.onaudiostart = () => {
+      console.log('🔊 Audio capture started');
+    };
 
     recognition.onresult = (event: any) => {
+      console.log('🎤 Speech recognition event:', event);
       let interimTranscript = '';
       let finalTranscript = '';
 
-      for (let i = 0; i < event.results.length; i++) {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
+        console.log(`📝 Result ${i}:`, transcript, 'isFinal:', event.results[i].isFinal);
         if (event.results[i].isFinal) {
           finalTranscript += transcript + ' ';
         } else {
@@ -209,14 +232,21 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   // Start/stop listening
   const toggleListening = useCallback(async () => {
     if (!isListening) {
+      console.log('🎤 Starting voice recognition...');
       // Start listening
       const audioInit = await initializeAudioContext();
       const speechInit = initializeSpeechRecognition();
 
-      if (audioInit && speechInit) {
-        recognitionRef.current.start();
-        setIsListening(true);
-        console.log('Started listening...');
+      if (audioInit && speechInit && recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+          console.log('✅ Voice recognition started successfully');
+        } catch (error) {
+          console.error('❌ Failed to start recognition:', error);
+        }
+      } else {
+        console.error('❌ Failed to initialize:', { audioInit, speechInit, hasRecognition: !!recognitionRef.current });
       }
     } else {
       // Stop listening
@@ -262,7 +292,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   }, []);
 
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
       {/* Living Field - Always breathing, responsive to both voices */}
       <div className="absolute inset-0 -z-10">
         {/* Ambient breathing glow - always present to show the field is alive */}
@@ -443,18 +473,20 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         </div>
       )}
 
-      {/* Golden Mic Button - More transparent and animated */}
+      {/* Golden Mic Button - Subtle and elegant */}
       <motion.button
         onClick={toggleListening}
-        className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center backdrop-blur-md"
+        className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center"
         style={{
           background: isListening
-            ? 'linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.3))'
-            : 'linear-gradient(135deg, rgba(212,212,216,0.2), rgba(161,161,170,0.2))',
-          border: isListening ? '1px solid rgba(251,191,36,0.4)' : '1px solid rgba(255,255,255,0.1)',
+            ? 'linear-gradient(135deg, rgba(212,184,150,0.15), rgba(212,184,150,0.25))'
+            : 'linear-gradient(135deg, rgba(212,184,150,0.08), rgba(212,184,150,0.12))',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: isListening ? '1px solid rgba(212,184,150,0.3)' : '1px solid rgba(212,184,150,0.15)',
           boxShadow: isListening
-            ? '0 0 20px rgba(251,191,36,0.3), inset 0 0 20px rgba(251,191,36,0.1)'
-            : '0 4px 15px rgba(0,0,0,0.1)',
+            ? '0 0 30px rgba(212,184,150,0.2), inset 0 0 20px rgba(212,184,150,0.1)'
+            : '0 4px 20px rgba(0,0,0,0.2)',
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -468,9 +500,9 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         }}
       >
         {isListening ? (
-          <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <Mic className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(212,184,150,0.9)' }} />
         ) : (
-          <MicOff className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+          <MicOff className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'rgba(212,184,150,0.5)' }} />
         )}
 
         {/* Pulse animation when listening */}
@@ -537,7 +569,11 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
             exit={{ opacity: 0, y: -10 }}
             className="absolute bottom-16 sm:bottom-20 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           >
-            <div className="bg-gray-900/80 backdrop-blur-sm text-amber-400 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm">
+            <div className="backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm" style={{
+              background: 'rgba(30,30,40,0.7)',
+              border: '1px solid rgba(212,184,150,0.2)',
+              color: '#d4b896'
+            }}>
               {isWaitingForInput ? '✨ Listening...' : transcript}
             </div>
           </motion.div>
