@@ -54,7 +54,7 @@ type MasteryVoiceContext = { stage: number; trustLevel: number; engagement: numb
 const applyMasteryVoiceIfAppropriate = (text: string, context: MasteryVoiceContext) => text;
 const loadMayaCanonicalPrompt = () => 'You are Maya. Brief. True. Clear.';
 const getMayaElementalPrompt = (element: string) => `You are Maya with ${element} energy. Maximum 20 words.`;
-import { MayaOrchestrator } from "./MayaOrchestrator";
+import { MaiaOrchestrator } from "./MaiaOrchestrator";
 // MayaVoiceSystem stub for lib version
 class MayaVoiceSystem {
   async generateSpeech(text: string, options: any) { return ''; }
@@ -136,7 +136,7 @@ export class PersonalOracleAgent {
   private lastUserElement = new Map<string, string>();
   private agentRegistry: AgentRegistry;
   private fileMemory: FileMemoryIntegration;
-  private mayaOrchestrator: MayaOrchestrator;
+  private maiaOrchestrator: MaiaOrchestrator;
 
   // User settings cache
   private userSettings: Map<string, PersonalOracleSettings> = new Map();
@@ -144,9 +144,9 @@ export class PersonalOracleAgent {
   constructor() {
     this.agentRegistry = new AgentRegistry();
     this.fileMemory = new FileMemoryIntegration();
-    this.mayaOrchestrator = new MayaOrchestrator();
+    this.maiaOrchestrator = new MaiaOrchestrator();
 
-    logger.info("Personal Oracle Agent initialized with AgentRegistry, FileMemory, and MayaOrchestrator");
+    logger.info("Personal Oracle Agent initialized with AgentRegistry, FileMemory, and MaiaOrchestrator");
   }
 
   private detectEmotionalIntensity(message: string): 'low' | 'medium' | 'high' {

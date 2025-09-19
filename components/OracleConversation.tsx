@@ -5,11 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
-import MaiaChatInterface from './chat/MaiaChatInterface';
+// import MaiaChatInterface from './chat/MaiaChatInterface'; // File doesn't exist
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
 import { OrganicVoiceMaia } from './ui/OrganicVoiceMaia';
-import { VoiceActivatedMaia as SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/VoiceActivatedMaiaFixed';
+// import { VoiceActivatedMaia as SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/VoiceActivatedMaiaFixed'; // File doesn't exist
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';

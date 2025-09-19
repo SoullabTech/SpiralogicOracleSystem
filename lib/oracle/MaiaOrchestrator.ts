@@ -60,7 +60,7 @@ class ClaudeService {
   }
 }
 
-export class MayaOrchestrator {
+export class MaiaOrchestrator {
   private readonly HARD_WORD_LIMIT = 150;
   private readonly TARGET_WORD_RANGE = [50, 100];
   private claude: ClaudeService;

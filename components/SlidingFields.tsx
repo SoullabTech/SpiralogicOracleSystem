@@ -8,8 +8,8 @@ import {
   Sun, Moon, Star, Compass
 } from 'lucide-react';
 
-// Import Maya chat
-import MayaChatInterface from '@/app/maya/chat/page';
+// Import Maia chat
+import MaiaChatInterface from '@/app/maia/chat/page';
 
 interface SlidingFieldsState {
   currentView: 'center' | 'left' | 'right' | 'bottom';

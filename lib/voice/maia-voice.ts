@@ -6,7 +6,7 @@
 import { AgentConfig } from '../agent-config';
 import { VoicePreprocessor } from './VoicePreprocessor';
 
-interface MayaVoiceConfig {
+interface MaiaVoiceConfig {
   elevenLabsApiKey?: string;
   voiceId: string; // Dynamic based on agent
   sesameApiKey?: string;
@@ -30,14 +30,14 @@ interface VoiceState {
   error?: string;
 }
 
-export class MayaVoiceSystem {
-  private config: MayaVoiceConfig;
+export class MaiaVoiceSystem {
+  private config: MaiaVoiceConfig;
   private state: VoiceState;
   private audioContext?: AudioContext;
   private currentAudio?: HTMLAudioElement;
   private listeners: ((state: VoiceState) => void)[] = [];
 
-  constructor(config?: Partial<MayaVoiceConfig>) {
+  constructor(config?: Partial<MaiaVoiceConfig>) {
     // Determine voice settings based on agent
     const isAnthony = config?.agentConfig?.voice === 'anthony';
     const defaultVoiceId = isAnthony 
@@ -538,8 +538,8 @@ export class MayaVoiceSystem {
   async generateSpeech(text: string, options?: any): Promise<string> {
     // Use mobile-optimized version on mobile devices
     if (this.isMobileDevice()) {
-      const MayaVoiceMobile = await import('./maya-voice-mobile');
-      const mobileVoice = new MayaVoiceMobile.default();
+      const MaiaVoiceMobile = await import('./maia-voice-mobile');
+      const mobileVoice = new MaiaVoiceMobile.default();
       return await mobileVoice.generateSpeech(text, options);
     }
 
@@ -581,22 +581,22 @@ export class MayaVoiceSystem {
 }
 
 // Global Maya voice instance
-let mayaVoiceInstance: MayaVoiceSystem | null = null;
+let maiaVoiceInstance: MaiaVoiceSystem | null = null;
 
-export function getMayaVoice(config?: Partial<MayaVoiceConfig>): MayaVoiceSystem {
+export function getMaiaVoice(config?: Partial<MaiaVoiceConfig>): MaiaVoiceSystem {
   if (!mayaVoiceInstance) {
-    mayaVoiceInstance = new MayaVoiceSystem(config);
+    maiaVoiceInstance = new MaiaVoiceSystem(config);
   }
-  return mayaVoiceInstance;
+  return maiaVoiceInstance;
 }
 
 // Configuration helper
-export function configureMayaVoice(config: Partial<MayaVoiceConfig>): void {
+export function configureMaiaVoice(config: Partial<MaiaVoiceConfig>): void {
   if (mayaVoiceInstance) {
     // Update existing instance
     Object.assign(mayaVoiceInstance['config'], config);
   } else {
     // Create new instance with config
-    mayaVoiceInstance = new MayaVoiceSystem(config);
+    maiaVoiceInstance = new MaiaVoiceSystem(config);
   }
 }

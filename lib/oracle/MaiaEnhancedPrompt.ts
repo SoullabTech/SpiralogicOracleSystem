@@ -22,7 +22,7 @@ export interface ConversationContext {
   breakthroughPotential: boolean;
 }
 
-export function getMayaEnhancedPrompt(
+export function getMaiaEnhancedPrompt(
   userJourney?: UserJourney,
   conversationContext?: ConversationContext,
   timeOfDay?: string

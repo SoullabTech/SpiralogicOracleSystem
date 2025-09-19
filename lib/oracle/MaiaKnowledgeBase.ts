@@ -22,7 +22,7 @@ export interface KnowledgeCategory {
   subcategories?: KnowledgeCategory[];
 }
 
-export class MayaKnowledgeBase {
+export class MaiaKnowledgeBase {
   private knowledge: Map<string, KnowledgeDocument> = new Map();
   private categories: Map<string, KnowledgeCategory> = new Map();
   private knowledgeIndex: Map<string, Set<string>> = new Map(); // keyword -> document paths
@@ -379,4 +379,4 @@ ${this.extractKeyPassages(doc.content, topics).slice(0, 500)}...
 }
 
 // Singleton instance
-export const mayaKnowledgeBase = new MayaKnowledgeBase();
+export const maiaKnowledgeBase = new MaiaKnowledgeBase();

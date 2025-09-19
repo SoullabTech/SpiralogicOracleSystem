@@ -51,7 +51,7 @@ export interface TrainingExchange {
   };
 }
 
-export class MayaTrainingLogger {
+export class MaiaTrainingLogger {
   private trainingDataPath = process.env.NODE_ENV === 'production'
     ? null  // No file system in serverless
     : '/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/training_data';
@@ -454,4 +454,4 @@ ${ex.annotations?.notes ? `Notes: ${ex.annotations.notes}` : ''}
 }
 
 // Singleton instance
-export const mayaTrainingLogger = new MayaTrainingLogger();
+export const maiaTrainingLogger = new MaiaTrainingLogger();

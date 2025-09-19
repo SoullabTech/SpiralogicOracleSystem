@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { getMayaVoice, MayaVoiceSystem } from '@/lib/voice/maya-voice';
+import { getMaiaVoice, MaiaVoiceSystem } from '@/lib/voice/maia-voice';
 import { getAgentConfig } from '@/lib/agent-config';
 
 interface VoiceState {
@@ -11,8 +11,8 @@ interface VoiceState {
   error?: string;
 }
 
-export function useMayaVoice() {
-  const mayaVoiceRef = useRef<MayaVoiceSystem | null>(null);
+export function useMaiaVoice() {
+  const maiaVoiceRef = useRef<MaiaVoiceSystem | null>(null);
   const [agentConfig] = useState(() => getAgentConfig());
   const [voiceState, setVoiceState] = useState<VoiceState>({
     isPlaying: false,
@@ -29,7 +29,7 @@ export function useMayaVoice() {
   useEffect(() => {
     // Initialize Maya Voice System
     try {
-      mayaVoiceRef.current = getMayaVoice({
+      maiaVoiceRef.current = getMaiaVoice({
         elevenLabsApiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
         sesameApiKey: process.env.NEXT_PUBLIC_SESAME_API_KEY,
         fallbackToWebSpeech: true,
@@ -37,10 +37,10 @@ export function useMayaVoice() {
       });
 
       // Subscribe to voice state changes
-      const unsubscribe = mayaVoiceRef.current.subscribe(setVoiceState);
+      const unsubscribe = maiaVoiceRef.current.subscribe(setVoiceState);
       
       // Check capabilities
-      const capabilities = mayaVoiceRef.current.getCapabilities();
+      const capabilities = maiaVoiceRef.current.getCapabilities();
       setIsSupported(capabilities.webSpeech || capabilities.elevenLabs || capabilities.sesame);
       setIsReady(true);
 
@@ -53,40 +53,40 @@ export function useMayaVoice() {
   }, []);
 
   const speak = useCallback(async (text: string, context?: any): Promise<void> => {
-    if (!mayaVoiceRef.current || !isReady) return;
+    if (!maiaVoiceRef.current || !isReady) return;
 
     try {
-      await mayaVoiceRef.current.speak(text, context);
+      await maiaVoiceRef.current.speak(text, context);
     } catch (error) {
       console.error('Maya speak failed:', error);
     }
   }, [isReady]);
 
   const playGreeting = useCallback(async (): Promise<void> => {
-    if (!mayaVoiceRef.current || !isReady) return;
+    if (!maiaVoiceRef.current || !isReady) return;
 
     try {
-      await mayaVoiceRef.current.playGreeting();
+      await maiaVoiceRef.current.playGreeting();
     } catch (error) {
       console.error('Maya greeting failed:', error);
     }
   }, [isReady]);
 
   const pause = useCallback(() => {
-    if (mayaVoiceRef.current) {
-      mayaVoiceRef.current.pause();
+    if (maiaVoiceRef.current) {
+      maiaVoiceRef.current.pause();
     }
   }, []);
 
   const resume = useCallback(() => {
-    if (mayaVoiceRef.current) {
-      mayaVoiceRef.current.resume();
+    if (maiaVoiceRef.current) {
+      maiaVoiceRef.current.resume();
     }
   }, []);
 
   const stop = useCallback(() => {
-    if (mayaVoiceRef.current) {
-      mayaVoiceRef.current.stop();
+    if (maiaVoiceRef.current) {
+      maiaVoiceRef.current.stop();
     }
   }, []);
 
