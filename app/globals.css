@@ -76,9 +76,128 @@
   input, textarea, select {
     @apply text-gray-900 bg-white;
   }
-  
+
   :root.dark input, :root.dark textarea, :root.dark select,
   html.dark input, html.dark textarea, html.dark select {
     @apply text-gray-100 bg-gray-900;
+  }
+}
+
+/* PWA Mobile Optimizations */
+@layer base {
+  /* iOS Safe Area Support */
+  html {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  /* Optimize for mobile without breaking desktop */
+  body {
+    width: 100%;
+    min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Main app container with better mobile handling */
+  #__next, main {
+    min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Only apply strict viewport lock in standalone mode */
+  @media all and (display-mode: standalone) {
+    body {
+      position: fixed;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    #__next, main {
+      height: 100vh;
+      overflow-y: auto;
+    }
+  }
+
+  /* Disable user selection on UI elements */
+  button, a, nav {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Remove tap highlight on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Smooth momentum scrolling on iOS */
+  .scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+  }
+
+  /* Fix for iOS keyboard pushing content up */
+  @supports (height: 100dvh) {
+    body, #__next {
+      height: 100dvh;
+    }
+  }
+
+  /* iOS Notch Support - iPhone X and later */
+  @supports (padding: max(0px)) {
+    .safe-top {
+      padding-top: max(1rem, env(safe-area-inset-top));
+    }
+
+    .safe-bottom {
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .safe-left {
+      padding-left: max(1rem, env(safe-area-inset-left));
+    }
+
+    .safe-right {
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* iOS Standalone Mode Adjustments */
+  @media all and (display-mode: standalone) {
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    /* Hide scrollbars in standalone */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    * {
+      scrollbar-width: none;
+    }
+  }
+
+  /* Landscape orientation fixes */
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .fixed.bottom-8 {
+      bottom: 1rem;
+    }
+
+    .h-screen {
+      height: 100vh;
+      max-height: 100vh;
+    }
   }
 }

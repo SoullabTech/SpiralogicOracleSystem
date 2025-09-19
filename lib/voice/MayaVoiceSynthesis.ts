@@ -122,20 +122,19 @@ export class MayaVoiceSynthesis {
 
         const utterance = new SpeechSynthesisUtterance(text);
 
-      // Configure voice based on element
-      utterance.rate = element === 'fire' ? 1.1 :
-                      element === 'water' ? 0.95 :
-                      element === 'earth' ? 0.9 :
-                      element === 'air' ? 1.05 : 1.0;
+        // Configure voice based on element
+        utterance.rate = element === 'fire' ? 1.1 :
+                        element === 'water' ? 0.95 :
+                        element === 'earth' ? 0.9 :
+                        element === 'air' ? 1.05 : 1.0;
 
-      utterance.pitch = element === 'water' ? 1.1 :
-                       element === 'earth' ? 0.95 :
-                       element === 'air' ? 1.05 : 1.0;
+        utterance.pitch = element === 'water' ? 1.1 :
+                         element === 'earth' ? 0.95 :
+                         element === 'air' ? 1.05 : 1.0;
 
-      utterance.volume = 0.85;
+        utterance.volume = 0.85;
 
         // Try to select a female voice
-        const voices = speechSynthesis.getVoices();
         const femaleVoice = voices.find(v =>
           v.name.toLowerCase().includes('female') ||
           v.name.toLowerCase().includes('samantha') ||
