@@ -65,7 +65,7 @@ export class MayaOrchestrator {
   private readonly TARGET_WORD_RANGE = [50, 100];
   private claude: ClaudeService;
   private conversationIntelligence: ConversationIntelligenceEngine;
-  private conversationHistory: Array<{input: string, response: string, topics: string[]}> = [];
+  private conversationHistories: Map<string, Array<{input: string, response: string, topics: string[]}>> = new Map();
 
   // Forbidden therapy-speak patterns
   private readonly FORBIDDEN_PATTERNS = [
@@ -83,6 +83,13 @@ export class MayaOrchestrator {
   constructor() {
     this.claude = new ClaudeService();
     this.conversationIntelligence = new ConversationIntelligenceEngine();
+  }
+
+  private getConversationHistory(userId: string): Array<{input: string, response: string, topics: string[]}> {
+    if (!this.conversationHistories.has(userId)) {
+      this.conversationHistories.set(userId, []);
+    }
+    return this.conversationHistories.get(userId)!;
   }
 
   // Alias for compatibility with test scripts
@@ -117,7 +124,8 @@ export class MayaOrchestrator {
         // Clean and validate response
         const cleanedResponse = this.cleanResponse(intelligentResponse.message);
         if (cleanedResponse && cleanedResponse.length > 20 && !intelligentResponse.message.includes('[')) {
-          this.conversationHistory.push({
+          const conversationHistory = this.getConversationHistory(userId);
+          conversationHistory.push({
             input,
             response: cleanedResponse,
             topics: this.extractTopics(input)
@@ -291,22 +299,12 @@ export class MayaOrchestrator {
       }
     }
 
-    // Enhanced active listening response with better technique mapping
-    if (listeningResponse.technique.confidence > 0.6) {
-      const response = this.enhanceListeningResponse(listeningResponse, input);
-
-      const finalResponse = this.createResponse(response, listeningResponse.silenceDuration, listeningResponse.technique.element);
-
-      // Store conversation history for context retention
-      const topics = this.extractTopics(input);
-      this.conversationHistory.push({
-        input,
-        response: finalResponse.message,
-        topics
-      });
-
-      return finalResponse;
-    }
+    // DISABLED: Active listening mirror creates robotic responses
+    // Only use as absolute final fallback when Claude and all other systems fail
+    // if (listeningResponse.technique.confidence > 0.9) { // Raised threshold to almost never trigger
+    //   const response = this.enhanceListeningResponse(listeningResponse, input);
+    //   return this.createResponse(response, listeningResponse.silenceDuration, listeningResponse.technique.element);
+    // }
 
     // Try AI with both sacred listening AND active listening awareness
     let message = await this.generateIntegratedResponse(input, strategy, listeningResponse);
