@@ -9,22 +9,7 @@ import { organicPromptSystem } from '@/lib/maya/OrganicPromptSystem';
 
 const mayaOrchestrator = new MayaOrchestrator();
 
-// Keep fallback responses
-const MAYA_RESPONSES = {
-  greeting: [
-    "Hello. What brings you?",
-    "Welcome. Speak your truth.",
-    "I'm listening.",
-    "Good to see you."
-  ],
-  stress: "Storms make trees take deeper roots.",
-  sadness: "Tears water the soul.",
-  anger: "Fire burns or warms. Choose.",
-  confusion: "When you don't know, be still.",
-  joy: "Joy deserves witness.",
-  fear: "Courage is fear that has said its prayers.",
-  default: "Tell me your truth."
-};
+// Removed robotic fallback responses - MayaOrchestrator handles all conversation
 
 /**
  * Clean Maya's response - remove ALL therapy-speak
@@ -95,37 +80,7 @@ function detectElement(input: string): string {
   return 'aether';
 }
 
-function getMayaResponse(input: string): string {
-  const lower = input.toLowerCase();
-
-  // Check for greetings
-  if (/^(hello|hi|hey|maya|good morning|good evening)/i.test(lower) && input.length < 30) {
-    const greetings = MAYA_RESPONSES.greeting;
-    return greetings[Math.floor(Math.random() * greetings.length)];
-  }
-
-  // Pattern-based responses
-  if (/stress|overwhelm|anxious|pressure/.test(lower)) {
-    return MAYA_RESPONSES.stress;
-  }
-  if (/sad|depressed|down|cry|hurt/.test(lower)) {
-    return MAYA_RESPONSES.sadness;
-  }
-  if (/angry|mad|frustrated|pissed|hate/.test(lower)) {
-    return MAYA_RESPONSES.anger;
-  }
-  if (/confused|lost|don't know|unclear/.test(lower)) {
-    return MAYA_RESPONSES.confusion;
-  }
-  if (/happy|good|great|excited|joy/.test(lower)) {
-    return MAYA_RESPONSES.joy;
-  }
-  if (/scared|afraid|fear|terrified/.test(lower)) {
-    return MAYA_RESPONSES.fear;
-  }
-
-  return MAYA_RESPONSES.default;
-}
+// Removed getMayaResponse - MayaOrchestrator handles all conversation logic
 
 export async function POST(request: NextRequest) {
   try {
@@ -146,12 +101,11 @@ export async function POST(request: NextRequest) {
     try {
       oracleResponse = await mayaOrchestrator.speak(input, userId);
     } catch (error) {
-      console.log('MayaOrchestrator error, using fallback:', error);
-      // Fallback to simple response
-      const response = getMayaResponse(input);
+      console.error('MayaOrchestrator error:', error);
+      // Use a better fallback that maintains personality
       const element = detectElement(input);
       oracleResponse = {
-        message: cleanMayaResponse(response),
+        message: "I'm here. Tell me what's on your mind.",
         element,
         duration: 2000,
         voiceCharacteristics: {
