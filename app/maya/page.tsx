@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SimplifiedOrganicVoice } from '@/components/ui/SimplifiedOrganicVoice';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MayaVoiceSynthesis } from '@/lib/voice/MayaVoiceSynthesis';
+import { useMayaVoice } from '@/hooks/useMayaVoice';
 import { Volume2, VolumeX, Download, Mic, MicOff } from 'lucide-react';
 
 interface Message {
@@ -27,13 +27,28 @@ export default function MayaPage() {
   const [isDemoMode, setIsDemoMode] = useState(false);
   const [currentDemo, setCurrentDemo] = useState<string | null>(null);
 
-  const audioQueueRef = useRef<HTMLAudioElement[]>([]);
+  // Use the sophisticated Maya Voice system
+  const { speak: mayaSpeak, voiceState, isReady: mayaReady } = useMayaVoice();
+
+  const audioContextRef = useRef<AudioContext | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Initialize audio context on user interaction (required for mobile)
+  const initAudioContext = useCallback(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      console.log('Audio context initialized');
+    }
+    // Resume if suspended (iOS requirement)
+    if (audioContextRef.current?.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+  }, []);
 
   // Process Maya's response
   const processMayaResponse = async (userText: string) => {
@@ -69,11 +84,16 @@ export default function MayaPage() {
 
       const data = await response.json();
 
-      // Clean Maya's response for display (remove tone directions)
+      // Clean Maya's response for display (remove ALL tone directions and stage directions)
       const cleanResponse = (data.response || "I'm here to listen. Tell me more.")
-        .replace(/\*[^*]+\*/g, '') // Remove text between asterisks
-        .replace(/\([^)]*tone[^)]*\)/gi, '') // Remove parenthetical tone directions
+        .replace(/\*[^*]*\*/g, '') // Remove all text between single asterisks
+        .replace(/\*\*[^*]*\*\*/g, '') // Remove all text between double asterisks
+        .replace(/\*{1,}[^*]+\*{1,}/g, '') // Remove any asterisk-wrapped content
+        .replace(/\([^)]*\)/gi, '') // Remove ALL parenthetical content (often contains directions)
+        .replace(/\[[^\]]*\]/g, '') // Remove bracketed content
+        .replace(/\{[^}]*\}/g, '') // Remove content in curly braces
         .replace(/\s+/g, ' ') // Clean up extra spaces
+        .replace(/^\s*[,;.]\s*/, '') // Remove leading punctuation from cleaning
         .trim();
 
       // Add Maya's response
@@ -87,54 +107,23 @@ export default function MayaPage() {
       };
       setMessages(prev => [...prev, mayaMessage]);
 
-      // Play Maya's voice response using OpenAI TTS (only if not muted)
-      if (data.response && !isMuted) {
+      // Use sophisticated Maya Voice system with multiple providers
+      if (data.response && !isMuted && mayaReady) {
         try {
-          // Use OpenAI TTS with Alloy voice
-          const ttsResponse = await fetch('/api/voice/openai-tts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              text: data.response,
-              voice: 'alloy',
-              speed: 0.95
-            })
+          initAudioContext();
+          setIsMayaSpeaking(true);
+
+          // Use the sophisticated voice system with proper provider fallback
+          await mayaSpeak(data.response, {
+            element: data.element,
+            voice: 'alloy', // Explicitly request Alloy voice
+            speed: 0.95
           });
 
-          if (ttsResponse.ok) {
-            const audioBlob = await ttsResponse.blob();
-            const audioUrl = URL.createObjectURL(audioBlob);
-            const audio = new Audio(audioUrl);
-
-            setIsMayaSpeaking(true);
-
-            audio.onended = () => {
-              setIsMayaSpeaking(false);
-              URL.revokeObjectURL(audioUrl);
-            };
-
-            await audio.play();
-
-            // Mark as spoken
-            setMessages(prev => prev.map(msg =>
-              msg.id === mayaMessage.id ? { ...msg, spoken: true } : msg
-            ));
-          } else {
-            // Fallback to browser TTS if OpenAI fails
-            await MayaVoiceSynthesis.speak(data.response, data.element || 'earth');
-            setIsMayaSpeaking(true);
-
-            setMessages(prev => prev.map(msg =>
-              msg.id === mayaMessage.id ? { ...msg, spoken: true } : msg
-            ));
-          }
-
-          // Set a timeout to clear speaking state
-          setTimeout(() => {
-            setIsMayaSpeaking(false);
-          }, Math.max(2000, data.response.length * 50)); // Estimate duration
+          // Voice state will be managed by the hook
+          setIsMayaSpeaking(false);
         } catch (error) {
-          console.error('Failed to speak Maya response:', error);
+          console.error('Maya voice error:', error);
           setIsMayaSpeaking(false);
         }
       }
@@ -146,13 +135,6 @@ export default function MayaPage() {
       setIsProcessing(false);
     }
   };
-
-  // Clean up voice on unmount
-  useEffect(() => {
-    return () => {
-      MayaVoiceSynthesis.stop();
-    };
-  }, []);
 
   // Handle voice transcript from SimplifiedOrganicVoice
   const handleVoiceTranscript = useCallback((transcript: string) => {
@@ -245,11 +227,15 @@ export default function MayaPage() {
                         <p className="text-sm font-semibold opacity-80">
                           {message.role === 'user' ? 'You' : 'Maya'}
                         </p>
-                        {message.role === 'maya' && !message.spoken && (
+                        {message.role === 'maya' && !message.spoken && mayaReady && (
                           <button
                             onClick={async () => {
                               try {
-                                await MayaVoiceSynthesis.speak(message.content, message.element || 'earth');
+                                await mayaSpeak(message.content, {
+                                  element: message.element || 'earth',
+                                  voice: 'alloy',
+                                  speed: 0.95
+                                });
                                 setMessages(prev => prev.map(msg =>
                                   msg.id === message.id ? { ...msg, spoken: true } : msg
                                 ));
@@ -308,7 +294,10 @@ export default function MayaPage() {
               <div className="flex gap-4 md:gap-3">
                 {/* Voice Chat Button - 48px minimum touch target */}
                 <motion.button
-                  onClick={() => setShowVoiceInterface(!showVoiceInterface)}
+                  onClick={() => {
+                    initAudioContext(); // Initialize audio on user interaction
+                    setShowVoiceInterface(!showVoiceInterface);
+                  }}
                   className="relative group"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

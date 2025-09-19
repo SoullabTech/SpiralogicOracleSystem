@@ -40,28 +40,21 @@ interface ConversationMessage {
   coherenceLevel?: number;
 }
 
-// Component to format messages with stage directions as italics
+// Component to clean messages by removing stage directions
 const FormattedMessage: React.FC<{ text: string }> = ({ text }) => {
-  // Replace stage directions (*text*) with styled spans
-  const parts = text.split(/(\*[^*]+\*)/g);
-  
-  return (
-    <>
-      {parts.map((part, index) => {
-        if (part.startsWith('*') && part.endsWith('*')) {
-          // Stage direction - render as italic and slightly faded
-          const direction = part.slice(1, -1); // Remove asterisks
-          return (
-            <span key={index} className="italic opacity-70 text-purple-300">
-              {direction}
-            </span>
-          );
-        }
-        // Regular text
-        return <span key={index}>{part}</span>;
-      })}
-    </>
-  );
+  // Remove ALL stage directions and tone markers
+  const cleanedText = text
+    .replace(/\*[^*]*\*/g, '') // Remove single asterisk content
+    .replace(/\*\*[^*]*\*\*/g, '') // Remove double asterisk content
+    .replace(/\*{1,}[^*]+\*{1,}/g, '') // Remove any asterisk-wrapped content
+    .replace(/\([^)]*\)/gi, '') // Remove ALL parenthetical content
+    .replace(/\[[^\]]*\]/g, '') // Remove bracketed content
+    .replace(/\{[^}]*\}/g, '') // Remove content in curly braces
+    .replace(/\s+/g, ' ') // Clean up extra spaces
+    .replace(/^\s*[,;.]\s*/, '') // Remove leading punctuation
+    .trim();
+
+  return <span>{cleanedText}</span>;
 };
 
 export const OracleConversation: React.FC<OracleConversationProps> = ({
