@@ -28,12 +28,17 @@ export const PWAInstallPrompt: React.FC = () => {
     registerServiceWorker();
   }, [registerServiceWorker]);
 
-  // Show prompt after delay
+  // Show prompt after delay - only on main pages
   useEffect(() => {
-    if (isInstallable && shouldShowPrompt() && !isInstalled) {
+    // Only show on specific pages
+    const allowedPaths = ['/maya', '/holoflower', '/pwa-test'];
+    const currentPath = window.location.pathname;
+    const shouldShowOnThisPage = allowedPaths.some(path => currentPath.startsWith(path));
+
+    if (isInstallable && shouldShowPrompt() && !isInstalled && shouldShowOnThisPage) {
       const timer = setTimeout(() => {
         setShowPrompt(true);
-      }, 5000); // Show after 5 seconds
+      }, 15000); // Show after 15 seconds (increased from 5)
 
       return () => clearTimeout(timer);
     }
@@ -68,7 +73,7 @@ export const PWAInstallPrompt: React.FC = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:w-96 z-50"
+          className="fixed top-4 right-4 left-4 md:left-auto md:w-96 z-40"
         >
           <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl shadow-2xl p-4 text-white">
             {/* Close button */}

@@ -117,6 +117,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [streamingText, setStreamingText] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
+  const [isMuted, setIsMuted] = useState(false); // Mute state for holoflower toggle
   const voiceMicRef = useRef<VoiceActivatedMayaRef>(null);
   
   // Agent configuration with persistence
@@ -725,11 +726,19 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ))}
             </div>
 
-            {/* The holoflower logo itself - Clickable for voice input */}
+            {/* The holoflower logo itself - Clickable to toggle mute in voice mode */}
             <motion.button
               onClick={() => {
-                if (!showChatInterface && voiceMicRef.current) {
-                  voiceMicRef.current.toggleListening();
+                if (!showChatInterface && voiceEnabled) {
+                  setIsMuted(!isMuted);
+                  // Stop listening if muting
+                  if (!isMuted && voiceMicRef.current?.isListening) {
+                    voiceMicRef.current.stopListening();
+                  }
+                  // Start listening if unmuting
+                  else if (isMuted && voiceMicRef.current && !isProcessing && !isResponding) {
+                    voiceMicRef.current.startListening();
+                  }
                   enableAudio();
                 }
               }}
@@ -760,19 +769,34 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             >
               <Image
                 src="/holoflower.svg"
-                alt="Spiralogic Holoflower - Click to speak"
+                alt={!showChatInterface && voiceEnabled ? (isMuted ? "Click to unmute" : "Click to mute") : "Spiralogic Holoflower"}
                 width={80}
                 height={80}
-                className={`object-contain transition-opacity duration-300 ${
+                className={`object-contain transition-all duration-300 ${
                   !showChatInterface && voiceEnabled
-                    ? 'opacity-80 hover:opacity-100'
+                    ? isMuted
+                      ? 'opacity-40 grayscale hover:opacity-60'
+                      : 'opacity-80 hover:opacity-100'
                     : 'opacity-80'
                 }`}
                 priority
               />
 
+              {/* Mute indicator overlay */}
+              {!showChatInterface && voiceEnabled && isMuted && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3}
+                          d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                          clipRule="evenodd" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3}
+                          d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                  </svg>
+                </div>
+              )}
+
               {/* Voice state indicator ring around holoflower */}
-              {!showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && (
+              {!showChatInterface && voiceEnabled && !isMuted && voiceMicRef.current?.isListening && (
                 <motion.div
                   className="absolute inset-0 rounded-full border-2 border-[#D4B896]"
                   animate={{
@@ -852,34 +876,37 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
         <>
-          {/* Mode Toggle */}
-          <div className="fixed top-4 left-4 flex gap-2 z-50">
-            <button
-              onClick={() => {
-                setShowChatInterface(false);
-                enableAudio();
-              }}
-              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm max-w-[70px] max-h-[32px] ${
-                !showChatInterface
-                  ? 'bg-[#D4B896]/90 text-white border border-[#D4B896]/30'
-                  : 'bg-black/20 text-white/60 hover:bg-black/30 border border-white/10'
-              }`}
-            >
-              Voice
-            </button>
-            <button
-              onClick={() => {
-                setShowChatInterface(true);
-                enableAudio();
-              }}
-              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm max-w-[70px] max-h-[32px] ${
-                showChatInterface
-                  ? 'bg-[#64748b]/90 text-white border border-[#64748b]/30'
-                  : 'bg-black/20 text-white/60 hover:bg-black/30 border border-white/10'
-              }`}
-            >
-              Chat
-            </button>
+          {/* Mode Toggle - Compact bottom-right with proper spacing */}
+          <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 flex flex-col gap-3 items-end z-50">
+            {/* Mode switcher */}
+            <div className="flex gap-2 bg-black/20 backdrop-blur-md rounded-full p-1">
+              <button
+                onClick={() => {
+                  setShowChatInterface(false);
+                  enableAudio();
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  !showChatInterface
+                    ? 'bg-amber-500/80 text-white shadow-sm'
+                    : 'text-white/60 hover:text-white/80'
+                }`}
+              >
+                Voice
+              </button>
+              <button
+                onClick={() => {
+                  setShowChatInterface(true);
+                  enableAudio();
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  showChatInterface
+                    ? 'bg-blue-500/80 text-white shadow-sm'
+                    : 'text-white/60 hover:text-white/80'
+                }`}
+              >
+                Chat
+              </button>
+            </div>
           </div>
 
           {showChatInterface ? (
@@ -898,7 +925,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ref={voiceMicRef}
               onTranscript={handleVoiceTranscript}
               isProcessing={isProcessing}
-              enabled={!isAudioPlaying && !isResponding && !mayaVoiceState?.isPlaying}
+              enabled={!isMuted && !isAudioPlaying && !isResponding && !mayaVoiceState?.isPlaying}
               isMayaSpeaking={isResponding || isAudioPlaying || mayaVoiceState?.isPlaying}
               mayaVoiceState={mayaVoiceState}
             />
@@ -949,7 +976,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       {/* Analytics toggle */}
       {showAnalytics && (
-        <div className="fixed top-8 right-8">
+        <div className="fixed top-[calc(env(safe-area-inset-top,0px)+2rem)] right-8">
           <button
             className="bg-white/10 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full
                        hover:bg-white/20 transition-colors"
@@ -962,7 +989,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       {/* Voice state visualization (development) */}
       {process.env.NODE_ENV === 'development' && userVoiceState && (
-        <div className="fixed top-8 left-8 bg-black/80 text-white text-xs p-3 rounded-lg">
+        <div className="fixed top-[calc(env(safe-area-inset-top,0px)+2rem)] left-8 bg-black/80 text-white text-xs p-3 rounded-lg">
           <div className="font-bold mb-2">Voice State</div>
           <div>Amplitude: {(userVoiceState.amplitude * 100).toFixed(0)}%</div>
           <div>Emotion: {userVoiceState.emotion}</div>
