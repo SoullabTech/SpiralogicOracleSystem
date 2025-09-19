@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SimplifiedMayaOrchestrator } from '@/lib/oracle/SimplifiedMayaOrchestrator';
+import { getMayaOrchestrator } from '@/lib/oracle/MayaFullyEducatedOrchestrator';
 import { getSessionStorage } from '@/lib/storage/session-storage';
 import OpenAI from 'openai';
 
 // Initialize services
-const orchestrator = new SimplifiedMayaOrchestrator();
+const orchestrator = getMayaOrchestrator();
 const sessionStorage = getSessionStorage();
-const openai = new OpenAI({
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+}) : null;
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,24 +53,30 @@ export async function POST(request: NextRequest) {
 
     // Generate TTS audio
     let audioUrl = null;
-    try {
-      const mp3Response = await openai.audio.speech.create({
-        model: 'tts-1',
-        voice: 'alloy',
-        input: responseText,
-        speed: mayaResponse.element === 'fire' ? 1.1 :
-               mayaResponse.element === 'water' ? 0.95 :
-               mayaResponse.element === 'earth' ? 0.9 :
-               mayaResponse.element === 'air' ? 1.05 : 1.0
-      });
+    if (openai) {
+      try {
+        console.log('🎤 Generating TTS for Maya response...');
+        const mp3Response = await openai.audio.speech.create({
+          model: 'tts-1-hd',  // Use HD model for better quality
+          voice: 'alloy',
+          input: responseText,
+          speed: mayaResponse.element === 'fire' ? 1.1 :
+                 mayaResponse.element === 'water' ? 0.95 :
+                 mayaResponse.element === 'earth' ? 0.9 :
+                 mayaResponse.element === 'air' ? 1.05 : 1.0
+        });
 
-      const buffer = Buffer.from(await mp3Response.arrayBuffer());
-      const base64Audio = buffer.toString('base64');
-      audioUrl = `data:audio/mp3;base64,${base64Audio}`;
+        const buffer = Buffer.from(await mp3Response.arrayBuffer());
+        const base64Audio = buffer.toString('base64');
+        audioUrl = `data:audio/mp3;base64,${base64Audio}`;
+        console.log('✅ TTS generated successfully');
 
-    } catch (ttsError) {
-      console.error('TTS generation failed:', ttsError);
-      // Continue without audio
+      } catch (ttsError) {
+        console.error('❌ TTS generation failed:', ttsError);
+        // Fall back to browser TTS by not sending audioUrl
+      }
+    } else {
+      console.log('⚠️ OpenAI API key not configured - voice synthesis disabled');
     }
 
     // Update session metadata

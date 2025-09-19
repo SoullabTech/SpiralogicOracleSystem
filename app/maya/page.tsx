@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SimplifiedOrganicVoice } from '@/components/ui/SimplifiedOrganicVoice';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MayaVoiceSynthesis } from '@/lib/voice/MayaVoiceSynthesis';
 
 interface Message {
   id: string;
@@ -71,9 +72,15 @@ export default function MayaPage() {
       };
       setMessages(prev => [...prev, mayaMessage]);
 
-      // Play Maya's voice response
-      if (data.audioUrl) {
-        playAudioResponse(data.audioUrl);
+      // Play Maya's voice response using TTS
+      if (data.response) {
+        MayaVoiceSynthesis.speak(data.response, data.element || 'earth');
+        setIsMayaSpeaking(true);
+
+        // Set a timeout to clear speaking state
+        setTimeout(() => {
+          setIsMayaSpeaking(false);
+        }, Math.max(2000, data.response.length * 50)); // Estimate duration
       }
 
     } catch (err) {
@@ -84,62 +91,12 @@ export default function MayaPage() {
     }
   };
 
-  // Play audio response
-  const playAudioResponse = async (audioUrl: string) => {
-    try {
-      console.log('🔊 Maya starting to speak...');
-      setIsMayaSpeaking(true);
-      const audio = new Audio(audioUrl);
-      audioQueueRef.current.push(audio);
-
-      // Add event listeners
-      audio.onloadstart = () => {
-        console.log('🎵 Audio loading started');
-      };
-
-      audio.oncanplay = () => {
-        console.log('🎵 Audio can start playing');
-      };
-
-      audio.onplaying = () => {
-        console.log('🎵 Audio is playing');
-      };
-
-      audio.onended = () => {
-        console.log('🔇 Maya finished speaking');
-        setIsMayaSpeaking(false);
-        audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
-      };
-
-      audio.onerror = (e) => {
-        console.error('❌ Audio playback error:', e);
-        setIsMayaSpeaking(false);
-        audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
-      };
-
-      audio.onabort = () => {
-        console.log('⏹️ Audio playback aborted');
-        setIsMayaSpeaking(false);
-        audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
-      };
-
-      // Ensure we have a fallback timeout in case events don't fire
-      const timeoutId = setTimeout(() => {
-        console.log('⏰ Audio timeout - forcing Maya speaking state to false');
-        setIsMayaSpeaking(false);
-        audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
-      }, 30000); // 30 second timeout
-
-      // Clear timeout when audio ends
-      audio.addEventListener('ended', () => clearTimeout(timeoutId));
-      audio.addEventListener('error', () => clearTimeout(timeoutId));
-
-      await audio.play();
-    } catch (err) {
-      console.error('❌ Error playing audio:', err);
-      setIsMayaSpeaking(false);
-    }
-  };
+  // Clean up voice on unmount
+  useEffect(() => {
+    return () => {
+      MayaVoiceSynthesis.stop();
+    };
+  }, []);
 
   // Handle voice transcript from SimplifiedOrganicVoice
   const handleVoiceTranscript = useCallback((transcript: string) => {

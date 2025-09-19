@@ -54,7 +54,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   const accumulatedTranscriptRef = useRef<string>('');
 
   const WAKE_WORDS = ['hey maya', 'maya', 'okay maya', 'hi maya', 'hello maya', 'hey', 'hello', 'hi'];
-  const SILENCE_THRESHOLD = 3000; // 3 seconds of silence to process (allow for complete thoughts)
+  const SILENCE_THRESHOLD = 5000; // 5 seconds of silence to process (allow for complete thoughts and pauses)
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
