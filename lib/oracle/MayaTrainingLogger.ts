@@ -52,13 +52,21 @@ export interface TrainingExchange {
 }
 
 export class MayaTrainingLogger {
-  private trainingDataPath = '/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/training_data';
+  private trainingDataPath = process.env.NODE_ENV === 'production'
+    ? null  // No file system in serverless
+    : '/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/training_data';
   private currentConversations = new Map<string, TrainingConversation>();
+  private inMemoryTrainingData: TrainingConversation[] = [];
 
   constructor() {
-    // Ensure training data directory exists
-    if (!fs.existsSync(this.trainingDataPath)) {
-      fs.mkdirSync(this.trainingDataPath, { recursive: true });
+    // Only create directory in development
+    try {
+      if (process.env.NODE_ENV !== 'production' && this.trainingDataPath && !fs.existsSync(this.trainingDataPath)) {
+        fs.mkdirSync(this.trainingDataPath, { recursive: true });
+      }
+    } catch (error) {
+      console.log('Training data will be stored in memory only');
+      this.trainingDataPath = null;
     }
   }
 
@@ -281,61 +289,79 @@ export class MayaTrainingLogger {
    * Save training data in multiple formats
    */
   private async saveTrainingData(conversation: TrainingConversation): Promise<void> {
-    const date = new Date().toISOString().split('T')[0];
-
-    // Save as JSON for easy processing
-    const jsonPath = path.join(
-      this.trainingDataPath,
-      `${date}_${conversation.conversationId}.json`
-    );
-    fs.writeFileSync(jsonPath, JSON.stringify(conversation, null, 2));
-
-    // Save as JSONL for model training
-    const jsonlPath = path.join(
-      this.trainingDataPath,
-      `training_${date}.jsonl`
-    );
-
-    // Format for fine-tuning
-    const trainingExamples = conversation.exchanges.map(exchange => ({
-      messages: [
-        {
-          role: 'system',
-          content: this.generateSystemPromptForTraining(conversation.context)
-        },
-        {
-          role: 'user',
-          content: exchange.userInput
-        },
-        {
-          role: 'assistant',
-          content: exchange.mayaResponse
-        }
-      ],
-      metadata: {
-        element: exchange.responseMetadata.element,
-        technique: exchange.responseMetadata.technique,
-        effectiveness: exchange.responseMetadata.effectiveness
+    // In production, store in memory only
+    if (!this.trainingDataPath) {
+      this.inMemoryTrainingData.push(conversation);
+      // Keep only last 100 conversations in memory
+      if (this.inMemoryTrainingData.length > 100) {
+        this.inMemoryTrainingData.shift();
       }
-    }));
+      console.log(`💾 Stored training data in memory: ${conversation.conversationId}`);
+      return;
+    }
 
-    // Append to JSONL file
-    const jsonlContent = trainingExamples
-      .map(example => JSON.stringify(example))
-      .join('\n') + '\n';
+    // In development, save to file system
+    try {
+      const date = new Date().toISOString().split('T')[0];
 
-    fs.appendFileSync(jsonlPath, jsonlContent);
+      // Save as JSON for easy processing
+      const jsonPath = path.join(
+        this.trainingDataPath,
+        `${date}_${conversation.conversationId}.json`
+      );
+      fs.writeFileSync(jsonPath, JSON.stringify(conversation, null, 2));
 
-    // Save human-readable markdown for review
-    const mdPath = path.join(
-      this.trainingDataPath,
-      `conversation_${conversation.conversationId}.md`
-    );
+      // Save as JSONL for model training
+      const jsonlPath = path.join(
+        this.trainingDataPath,
+        `training_${date}.jsonl`
+      );
 
-    const mdContent = this.formatAsMarkdown(conversation);
-    fs.writeFileSync(mdPath, mdContent);
+      // Format for fine-tuning
+      const trainingExamples = conversation.exchanges.map(exchange => ({
+        messages: [
+          {
+            role: 'system',
+            content: this.generateSystemPromptForTraining(conversation.context)
+          },
+          {
+            role: 'user',
+            content: exchange.userInput
+          },
+          {
+            role: 'assistant',
+            content: exchange.mayaResponse
+          }
+        ],
+        metadata: {
+          element: exchange.responseMetadata.element,
+          technique: exchange.responseMetadata.technique,
+          effectiveness: exchange.responseMetadata.effectiveness
+        }
+      }));
 
-    console.log(`💾 Saved training data: ${conversation.conversationId}`);
+      // Append to JSONL file
+      const jsonlContent = trainingExamples
+        .map(example => JSON.stringify(example))
+        .join('\n') + '\n';
+
+      fs.appendFileSync(jsonlPath, jsonlContent);
+
+      // Save human-readable markdown for review
+      const mdPath = path.join(
+        this.trainingDataPath,
+        `conversation_${conversation.conversationId}.md`
+      );
+
+      const mdContent = this.formatAsMarkdown(conversation);
+      fs.writeFileSync(mdPath, mdContent);
+
+      console.log(`💾 Saved training data to disk: ${conversation.conversationId}`);
+    } catch (error) {
+      // If file save fails, store in memory as fallback
+      this.inMemoryTrainingData.push(conversation);
+      console.log(`💾 Saved training data to memory (file error): ${conversation.conversationId}`);
+    }
   }
 
   private generateSystemPromptForTraining(context: any): string {
@@ -391,15 +417,26 @@ ${ex.annotations?.notes ? `Notes: ${ex.annotations.notes}` : ''}
    * Export training data for model fine-tuning
    */
   async exportForFineTuning(): Promise<string> {
-    const allFiles = fs.readdirSync(this.trainingDataPath)
-      .filter(f => f.endsWith('.json'))
-      .map(f => path.join(this.trainingDataPath, f));
+    let allConversations: TrainingConversation[] = [];
 
-    const allConversations: TrainingConversation[] = [];
+    // In production, use in-memory data
+    if (!this.trainingDataPath) {
+      allConversations = [...this.inMemoryTrainingData];
+    } else {
+      // In development, read from files
+      try {
+        const allFiles = fs.readdirSync(this.trainingDataPath)
+          .filter(f => f.endsWith('.json'))
+          .map(f => path.join(this.trainingDataPath, f));
 
-    for (const file of allFiles) {
-      const content = fs.readFileSync(file, 'utf-8');
-      allConversations.push(JSON.parse(content));
+        for (const file of allFiles) {
+          const content = fs.readFileSync(file, 'utf-8');
+          allConversations.push(JSON.parse(content));
+        }
+      } catch (error) {
+        console.log('Using in-memory training data for export');
+        allConversations = [...this.inMemoryTrainingData];
+      }
     }
 
     // Filter for high-quality conversations

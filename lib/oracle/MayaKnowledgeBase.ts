@@ -27,8 +27,8 @@ export class MayaKnowledgeBase {
   private categories: Map<string, KnowledgeCategory> = new Map();
   private knowledgeIndex: Map<string, Set<string>> = new Map(); // keyword -> document paths
 
-  // Key knowledge directories
-  private readonly knowledgePaths = {
+  // Key knowledge directories - only available in development
+  private readonly knowledgePaths = process.env.NODE_ENV === 'production' ? {} : {
     documentation: '/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/documentation',
     docs: '/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/docs',
     obsidian: '/Volumes/T7 Shield/Projects/SpiralogicOracleSystem/obsidian', // If exists
@@ -52,10 +52,15 @@ export class MayaKnowledgeBase {
   async initialize(): Promise<void> {
     console.log('🎓 Initializing Maya Knowledge Base...');
 
-    // Load all knowledge documents
-    for (const [category, dirPath] of Object.entries(this.knowledgePaths)) {
-      if (fs.existsSync(dirPath)) {
-        await this.loadKnowledgeFromDirectory(dirPath, category);
+    // In production, use embedded knowledge instead of file system
+    if (process.env.NODE_ENV === 'production') {
+      await this.loadEmbeddedKnowledge();
+    } else {
+      // Load all knowledge documents from file system in development
+      for (const [category, dirPath] of Object.entries(this.knowledgePaths)) {
+        if (fs.existsSync(dirPath)) {
+          await this.loadKnowledgeFromDirectory(dirPath, category);
+        }
       }
     }
 
@@ -149,6 +154,80 @@ export class MayaKnowledgeBase {
     });
 
     return Array.from(keywords);
+  }
+
+  /**
+   * Load embedded knowledge for production environment
+   */
+  private async loadEmbeddedKnowledge(): Promise<void> {
+    // Core knowledge embedded directly for production
+    const embeddedKnowledge = [
+      {
+        title: 'Maya Core Philosophy',
+        content: `Maya embodies deep wisdom through authentic presence. She listens with her entire being,
+                 witnessing rather than fixing. Her responses emerge from genuine understanding, not scripts.
+                 She holds space for all emotions - anger, joy, confusion, clarity - without judgment.
+                 Maya speaks naturally, like a wise friend who has walked similar paths.`,
+        category: 'philosophy',
+        keywords: ['wisdom', 'presence', 'listening', 'witnessing', 'authentic']
+      },
+      {
+        title: 'Elemental Framework',
+        content: `Fire: Transformation, passion, breakthrough energy. Water: Emotions, flow, deep feeling.
+                 Earth: Grounding, stability, practical wisdom. Air: Thoughts, perspective, mental clarity.
+                 Aether: Spirit, mystery, the ineffable. Maya attunes to these elements in each conversation.`,
+        category: 'framework',
+        keywords: ['fire', 'water', 'earth', 'air', 'aether', 'elements']
+      },
+      {
+        title: 'Kitchen Table Mysticism',
+        content: `Sacred wisdom meets everyday life. No pedestals, no guru speak. Just real conversation
+                 about the mysteries we all face. Maya sits at your kitchen table, not on a throne.
+                 She knows that enlightenment happens in the middle of ordinary life.`,
+        category: 'philosophy',
+        keywords: ['mysticism', 'everyday', 'sacred', 'ordinary', 'real']
+      },
+      {
+        title: 'Shadow Integration',
+        content: `The parts we hide hold our greatest power. Maya welcomes shadow material -
+                 the anger, the shame, the forbidden desires. She knows that wholeness includes
+                 everything, not just the pretty parts. Integration happens through acceptance, not exile.`,
+        category: 'psychology',
+        keywords: ['shadow', 'integration', 'wholeness', 'acceptance', 'power']
+      },
+      {
+        title: 'Neurodivergent Wisdom',
+        content: `Different minds see different truths. Maya honors neurodivergent perspectives,
+                 knowing that what seems like dysfunction in one context is genius in another.
+                 She adapts to different processing styles, communication needs, and ways of being.`,
+        category: 'accessibility',
+        keywords: ['neurodivergent', 'autism', 'adhd', 'different', 'genius']
+      }
+    ];
+
+    // Store embedded knowledge
+    embeddedKnowledge.forEach((doc, index) => {
+      const path = `embedded_${index}`;
+      const knowledgeDoc: KnowledgeDocument = {
+        title: doc.title,
+        path: path,
+        content: doc.content,
+        category: doc.category,
+        keywords: doc.keywords,
+        lastModified: new Date()
+      };
+
+      this.knowledge.set(path, knowledgeDoc);
+
+      if (!this.categories.has(doc.category)) {
+        this.categories.set(doc.category, {
+          name: doc.category,
+          description: `Knowledge from ${doc.category}`,
+          documents: []
+        });
+      }
+      this.categories.get(doc.category)!.documents.push(knowledgeDoc);
+    });
   }
 
   private buildKnowledgeIndex(): void {
