@@ -905,12 +905,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           {showChatInterface ? (
             /* Maya Chat Interface - Full voice and text support */
             <div className="fixed bottom-0 left-0 right-0 z-40 pb-safe">
-              <MaiaChatInterface
+              {/* <MaiaChatInterface
                 onSendMessage={handleTextMessage}
                 isProcessing={isProcessing}
                 voiceEnabled={voiceEnabled}
                 messages={messages}
-              />
+              /> */}
+              <div className="p-4 text-center text-[#D4B896]/60">
+                Chat interface temporarily disabled
+              </div>
             </div>
           ) : (
             /* Simplified Organic Voice - No visual mic, just voice logic */
