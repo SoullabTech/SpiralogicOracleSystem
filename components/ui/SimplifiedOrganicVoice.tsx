@@ -295,8 +295,10 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
   // Pause/resume listening when Maya is speaking to prevent feedback loop
   useEffect(() => {
-    if (isMayaSpeaking && isListening && !isPausedForMaya) {
-      console.log('🔇 Pausing voice recognition - Maya is speaking');
+    console.log('🔄 Voice state check:', { isMayaSpeaking, isListening, isPausedForMaya, enabled });
+
+    if (isMayaSpeaking && !isPausedForMaya) {
+      console.log('🔇 IMMEDIATELY Pausing voice recognition - Maya is speaking');
       setIsPausedForMaya(true);
       setIsWaitingForInput(false);
       setTranscript('🔇 Paused while Maya speaks...');
@@ -310,19 +312,21 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
       // Reset accumulated transcript to prevent old text from being sent
       accumulatedTranscriptRef.current = '';
 
-      // Stop recognition while Maya speaks
+      // IMMEDIATELY stop recognition while Maya speaks
       if (recognitionRef.current) {
         try {
           recognitionRef.current.stop();
+          console.log('🛑 Recognition stopped for Maya');
         } catch (e) {
           console.log('Recognition already stopped');
         }
       }
 
-      // Mute microphone stream temporarily
+      // IMMEDIATELY mute microphone stream to prevent feedback
       if (micStreamRef.current) {
         micStreamRef.current.getAudioTracks().forEach(track => {
           track.enabled = false;
+          console.log('🔇 Microphone track disabled');
         });
       }
     } else if (!isMayaSpeaking && isPausedForMaya && enabled) {
