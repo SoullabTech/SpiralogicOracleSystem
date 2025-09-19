@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SimplifiedMayaOrchestrator } from '@/lib/oracle/SimplifiedMayaOrchestrator';
+import { MayaOrchestrator } from '@/lib/oracle/MayaOrchestrator';
 import { organicPromptSystem } from '@/lib/maya/OrganicPromptSystem';
 
 /**
@@ -7,7 +7,7 @@ import { organicPromptSystem } from '@/lib/maya/OrganicPromptSystem';
  * Enhanced with organic learning system
  */
 
-const mayaOrchestrator = new SimplifiedMayaOrchestrator();
+const mayaOrchestrator = new MayaOrchestrator();
 
 // Keep fallback responses
 const MAYA_RESPONSES = {
