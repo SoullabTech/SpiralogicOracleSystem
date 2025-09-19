@@ -13,8 +13,17 @@ export default function HomePage() {
     const betaOnboarded = localStorage.getItem("betaOnboardingComplete") === "true";
     const legacyOnboarded = localStorage.getItem("sacredMirrorOnboarded") === "true";
 
-    // Go directly to Oracle Conversation - the working interface
-    router.push('/oracle-conversation');
+    // Detect if running as PWA (standalone mode)
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+                  window.navigator.standalone === true ||
+                  document.referrer.includes('android-app://');
+
+    // If PWA, go to Maya interface; otherwise Oracle Conversation
+    if (isPWA) {
+      router.push('/maya');
+    } else {
+      router.push('/oracle-conversation');
+    }
   }, [router]);
 
   // Show loading while checking onboarding status
