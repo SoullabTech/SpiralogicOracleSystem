@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MayaOrchestrator } from '@/lib/oracle/MayaOrchestrator';
+import { SimplifiedMayaOrchestrator } from '@/lib/oracle/SimplifiedMayaOrchestrator';
 import { getSessionStorage } from '@/lib/storage/session-storage';
 import OpenAI from 'openai';
 
 // Initialize services
-const orchestrator = new MayaOrchestrator();
+const orchestrator = new SimplifiedMayaOrchestrator();
 const sessionStorage = getSessionStorage();
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

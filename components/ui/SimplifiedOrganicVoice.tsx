@@ -40,6 +40,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [isWaitingForInput, setIsWaitingForInput] = useState(false);
+  const [isPausedForMaya, setIsPausedForMaya] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [sparkles] = useState(() => generateSparkles(30));
   const [audioLevel, setAudioLevel] = useState(0);
@@ -53,7 +54,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
   const accumulatedTranscriptRef = useRef<string>('');
 
   const WAKE_WORDS = ['hey maya', 'maya', 'okay maya', 'hi maya', 'hello maya', 'hey', 'hello', 'hi'];
-  const SILENCE_THRESHOLD = 1500; // 1.5 seconds of silence to process
+  const SILENCE_THRESHOLD = 3000; // 3 seconds of silence to process (allow for complete thoughts)
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
@@ -172,9 +173,22 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
           // Set timer to process after silence
           silenceTimerRef.current = setTimeout(() => {
             const finalMessage = accumulatedTranscriptRef.current.trim();
-            if (finalMessage) {
+
+            // Filter out problematic patterns and ensure meaningful messages
+            const words = finalMessage.split(' ');
+            const isLongEnough = words.length >= 3; // At least 3 words for a meaningful sentence
+            const isNotJustRepeats = !(/^(\w+\s*)\1+$/.test(finalMessage)); // Not just repeated words
+            const isNotCommonFragment = !['fuck', 'mirror', 'hear', 'what', 'you', 'the', 'and', 'or', 'but'].includes(finalMessage.toLowerCase());
+
+            if (finalMessage && isLongEnough && isNotJustRepeats && isNotCommonFragment) {
               console.log('🚀 Sending to Maya:', finalMessage);
               onTranscript(finalMessage);
+              setIsWaitingForInput(false);
+              accumulatedTranscriptRef.current = '';
+              setTranscript('');
+            } else {
+              console.log('⚠️ Ignoring fragment/repeat:', finalMessage, { isLongEnough, isNotJustRepeats, isNotCommonFragment });
+              // Reset but don't send
               setIsWaitingForInput(false);
               accumulatedTranscriptRef.current = '';
               setTranscript('');
@@ -186,16 +200,18 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
     recognition.onerror = (event: any) => {
       console.error('Speech recognition error:', event.error);
-      // Auto-restart on certain errors
-      if (event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') {
+      // Auto-restart on certain errors only if not paused
+      if ((event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') && !isPausedForMaya) {
         setTimeout(() => {
-          if (recognitionRef.current && isListening) {
+          if (recognitionRef.current && isListening && !isPausedForMaya) {
             try {
               recognitionRef.current.stop();
               setTimeout(() => {
                 try {
-                  recognitionRef.current.start();
-                  console.log('Speech recognition restarted after error');
+                  if (!isPausedForMaya) {
+                    recognitionRef.current.start();
+                    console.log('Speech recognition restarted after error');
+                  }
                 } catch (e) {
                   console.log('Could not restart speech recognition:', e);
                 }
@@ -210,10 +226,10 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
     recognition.onend = () => {
       console.log('Speech recognition ended');
-      // Auto-restart for continuous listening
-      if (isListening) {
+      // Auto-restart for continuous listening only if Maya is not speaking and not paused
+      if (isListening && !isMayaSpeaking && !isPausedForMaya) {
         setTimeout(() => {
-          if (recognitionRef.current) {
+          if (recognitionRef.current && !isMayaSpeaking && !isPausedForMaya) {
             try {
               recognitionRef.current.start();
               console.log('Speech recognition restarted');
@@ -227,7 +243,7 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
     recognitionRef.current = recognition;
     return true;
-  }, [isWaitingForInput, isListening, onTranscript]);
+  }, [isWaitingForInput, isListening, onTranscript, isMayaSpeaking, isPausedForMaya]);
 
   // Start/stop listening
   const toggleListening = useCallback(async () => {
@@ -268,10 +284,59 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
 
   // Auto-start listening when enabled
   useEffect(() => {
-    if (enabled && !isListening) {
+    if (enabled && !isListening && !isMayaSpeaking) {
       toggleListening();
     }
   }, [enabled]);
+
+  // Pause/resume listening when Maya is speaking to prevent feedback loop
+  useEffect(() => {
+    if (isMayaSpeaking && isListening && !isPausedForMaya) {
+      console.log('🔇 Pausing voice recognition - Maya is speaking');
+      setIsPausedForMaya(true);
+      setIsWaitingForInput(false);
+      setTranscript('🔇 Paused while Maya speaks...');
+
+      // Stop recognition while Maya speaks
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          console.log('Recognition already stopped');
+        }
+      }
+
+      // Mute microphone stream temporarily
+      if (micStreamRef.current) {
+        micStreamRef.current.getAudioTracks().forEach(track => {
+          track.enabled = false;
+        });
+      }
+    } else if (!isMayaSpeaking && isPausedForMaya && enabled) {
+      console.log('🔊 Resuming voice recognition - Maya finished speaking');
+      setIsPausedForMaya(false);
+      setTranscript('');
+
+      // Re-enable microphone
+      if (micStreamRef.current) {
+        micStreamRef.current.getAudioTracks().forEach(track => {
+          track.enabled = true;
+        });
+      }
+
+      // Resume recognition after a longer delay to ensure audio has fully stopped
+      setTimeout(() => {
+        if (recognitionRef.current && !isMayaSpeaking && isListening) {
+          try {
+            recognitionRef.current.start();
+            console.log('Voice recognition resumed after Maya finished');
+          } catch (e) {
+            console.log('Could not resume recognition:', e);
+          }
+        }
+      }, 2000); // 2 second delay to ensure Maya's audio has completely stopped
+    }
+  }, [isMayaSpeaking, isListening, enabled, isPausedForMaya]);
 
   // Cleanup on unmount
   useEffect(() => {

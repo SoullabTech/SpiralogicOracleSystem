@@ -183,8 +183,8 @@ export default function SacredChatInput({
   };
 
   return (
-    <div className="p-6 border-t border-amber-400/20 bg-neutral-900/80 backdrop-blur-xl">
-      {/* Sacred Input Container */}
+    <div className="p-4 sm:p-6 border-t border-amber-400/20 bg-neutral-900/80 backdrop-blur-xl">
+      {/* Sacred Input Container - Mobile Optimized */}
       <motion.div
         ref={containerRef}
         variants={containerVariants}
@@ -206,9 +206,9 @@ export default function SacredChatInput({
           )}
         </AnimatePresence>
 
-        <div className="flex items-end gap-4">
-          {/* Mode Toggle Buttons */}
-          <div className="flex flex-col gap-2 self-end pb-2">
+        <div className="flex items-end gap-2 sm:gap-4">
+          {/* Mode Toggle Buttons - Mobile Responsive */}
+          <div className="flex flex-col sm:flex-col gap-1 sm:gap-2 self-end pb-2">
             {/* Journal Mode Toggle */}
             <motion.button
               variants={buttonVariants}
@@ -217,14 +217,14 @@ export default function SacredChatInput({
               whileTap="tap"
               onClick={() => setIsJournalMode(!isJournalMode)}
               disabled={disabled}
-              className={`p-3 rounded-xl border transition-all ${
+              className={`p-2 sm:p-3 rounded-xl border transition-all min-w-[44px] min-h-[44px] ${
                 isJournalMode
                   ? 'bg-amber-400/20 border-amber-400/60 text-amber-400'
                   : 'bg-neutral-800/60 border-neutral-700/50 text-neutral-400 hover:border-amber-400/30 hover:text-amber-400'
               }`}
               title={isJournalMode ? "Switch to conversation" : "Switch to journal mode"}
             >
-              <BookOpen className="w-5 h-5" />
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
             </motion.button>
 
             {/* File Upload */}
@@ -234,10 +234,10 @@ export default function SacredChatInput({
               whileHover="hover"
               whileTap="tap"
               disabled={disabled}
-              className="p-3 rounded-xl bg-neutral-800/60 border border-neutral-700/50 text-neutral-400 hover:border-amber-400/30 hover:text-amber-400 transition-all"
+              className="p-2 sm:p-3 rounded-xl bg-neutral-800/60 border border-neutral-700/50 text-neutral-400 hover:border-amber-400/30 hover:text-amber-400 transition-all min-w-[44px] min-h-[44px]"
               title="Upload files"
             >
-              <Upload className="w-5 h-5" />
+              <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
             </motion.button>
           </div>
 
@@ -294,7 +294,7 @@ export default function SacredChatInput({
                 filter: isRecording ? 'blur(1px)' : 'blur(0px)'
               }}
               transition={{ duration: 0.3 }}
-              className="w-full min-h-[56px] max-h-[120px] p-4 pr-16 bg-neutral-800/60 border border-neutral-700/50 rounded-xl resize-none focus:outline-none focus:border-amber-400/60 disabled:opacity-50 disabled:cursor-not-allowed text-white placeholder-neutral-400 font-light leading-relaxed transition-all backdrop-blur-sm"
+              className="w-full min-h-[48px] sm:min-h-[56px] max-h-[96px] sm:max-h-[120px] p-3 sm:p-4 pr-12 sm:pr-16 bg-neutral-800/60 border border-neutral-700/50 rounded-xl sm:rounded-xl resize-none focus:outline-none focus:border-amber-400/60 disabled:opacity-50 disabled:cursor-not-allowed text-white placeholder-neutral-400 font-light leading-relaxed transition-all backdrop-blur-sm text-base"
               style={{ height: 'auto' }}
             />
 
@@ -324,7 +324,7 @@ export default function SacredChatInput({
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute bottom-3 right-16 text-xs text-amber-400/60"
+                className="absolute bottom-3 right-12 sm:right-16 text-xs text-amber-400/60"
               >
                 {message.length}/{maxLength}
               </motion.div>
@@ -342,7 +342,7 @@ export default function SacredChatInput({
                 whileTap={!isRecording ? "tap" : "idle"}
                 onClick={isRecording ? handleStopVoice : handleStartVoice}
                 disabled={disabled}
-                className={`w-12 h-12 rounded-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg ${
+                className={`w-12 h-12 sm:w-12 sm:h-12 min-w-[48px] min-h-[48px] rounded-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg active:scale-95 ${
                   isRecording
                     ? 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-400 hover:to-red-500'
                     : 'bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-900 hover:from-amber-300 hover:to-amber-400'
@@ -358,7 +358,7 @@ export default function SacredChatInput({
                       exit={{ scale: 0, rotate: 90 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Square className="w-6 h-6" />
+                      <Square className="w-5 h-5 sm:w-6 sm:h-6" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -368,7 +368,7 @@ export default function SacredChatInput({
                       exit={{ scale: 0, rotate: 90 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Mic className="w-6 h-6" />
+                      <Mic className="w-5 h-5 sm:w-6 sm:h-6" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -382,14 +382,14 @@ export default function SacredChatInput({
                 whileTap="tap"
                 onClick={handleSendMessage}
                 disabled={!canSend}
-                className={`w-12 h-12 rounded-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400/50 transition-all shadow-lg ${
+                className={`w-12 h-12 sm:w-12 sm:h-12 min-w-[48px] min-h-[48px] rounded-xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400/50 transition-all shadow-lg active:scale-95 ${
                   canSend
                     ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-900 hover:from-amber-300 hover:to-amber-400'
                     : 'bg-neutral-700 text-neutral-500 cursor-not-allowed'
                 }`}
                 title={isJournalMode ? "Share sacred entry" : "Send offering"}
               >
-                <Send className="w-6 h-6" />
+                <Send className="w-5 h-5 sm:w-6 sm:h-6" />
               </motion.button>
             )}
           </div>
@@ -400,7 +400,7 @@ export default function SacredChatInput({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-3 text-center text-xs text-neutral-500 font-light"
+          className="mt-2 sm:mt-3 text-center text-xs text-neutral-500 font-light px-2"
         >
           <AnimatePresence mode="wait">
             {isRecording ? (
@@ -419,8 +419,9 @@ export default function SacredChatInput({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -5 }}
               >
-                Type to write • Click mic to speak • Enter to send • Shift+Enter for new line
-                {isJournalMode && ' • Your sacred thoughts are witnessed'}
+                <span className="hidden sm:inline">Type to write • Click mic to speak • Enter to send • Shift+Enter for new line</span>
+                <span className="sm:hidden">Tap mic to speak • Type to write • Tap to send</span>
+                {isJournalMode && <span className="hidden sm:inline"> • Your sacred thoughts are witnessed</span>}
               </motion.span>
             )}
           </AnimatePresence>

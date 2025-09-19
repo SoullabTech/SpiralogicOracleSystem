@@ -9,7 +9,7 @@ import MayaChatInterface from './chat/MayaChatInterface';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
 import { OrganicVoiceMaya } from './ui/OrganicVoiceMaya';
-import { VoiceActivatedMaya as SimplifiedOrganicVoice } from './ui/VoiceActivatedMayaFixed';
+import { VoiceActivatedMaya as SimplifiedOrganicVoice, VoiceActivatedMayaRef } from './ui/VoiceActivatedMayaFixed';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
@@ -117,8 +117,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [streamingText, setStreamingText] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
-  // EMERGENCY: Disabled voice mic ref since component is disabled
-  // const voiceMicRef = useRef<any>(null);
+  const voiceMicRef = useRef<VoiceActivatedMayaRef>(null);
   
   // Agent configuration with persistence
   const [agentConfig, setAgentConfig] = useState<AgentConfig>(() => {
@@ -708,8 +707,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ))}
             </div>
 
-            {/* The holoflower logo itself */}
-            <motion.div
+            {/* The holoflower logo itself - Clickable for voice input */}
+            <motion.button
+              onClick={() => {
+                if (!showChatInterface && voiceMicRef.current) {
+                  voiceMicRef.current.toggleListening();
+                  enableAudio();
+                }
+              }}
               animate={{
                 scale: [1, 1.05, 1],
                 rotate: [0, 5, -5, 0]
@@ -719,17 +724,51 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
+              whileHover={{
+                scale: !showChatInterface ? 1.1 : 1.05,
+                transition: { duration: 0.2 }
+              }}
+              whileTap={{
+                scale: !showChatInterface ? 0.95 : 1,
+                transition: { duration: 0.1 }
+              }}
+              className={`relative z-10 rounded-full p-4 transition-all duration-300 ${
+                !showChatInterface && voiceEnabled
+                  ? 'cursor-pointer hover:bg-white/5 active:bg-white/10'
+                  : 'cursor-default'
+              }`}
+              disabled={showChatInterface || !voiceEnabled}
               style={{ zIndex: 10 }}
             >
               <Image
                 src="/holoflower.svg"
-                alt="Spiralogic Holoflower"
+                alt="Spiralogic Holoflower - Click to speak"
                 width={80}
                 height={80}
-                className="object-contain opacity-80"
+                className={`object-contain transition-opacity duration-300 ${
+                  !showChatInterface && voiceEnabled
+                    ? 'opacity-80 hover:opacity-100'
+                    : 'opacity-80'
+                }`}
                 priority
               />
-            </motion.div>
+
+              {/* Voice state indicator ring around holoflower */}
+              {!showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && (
+                <motion.div
+                  className="absolute inset-0 rounded-full border-2 border-[#D4B896]"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.8, 0.3]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+              )}
+            </motion.button>
           </div>
         </div>
       </div>
@@ -836,8 +875,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               />
             </div>
           ) : (
-            /* Simplified Organic Voice - Golden mic at bottom with beautiful visuals */
+            /* Simplified Organic Voice - No visual mic, just voice logic */
             <SimplifiedOrganicVoice
+              ref={voiceMicRef}
               onTranscript={handleVoiceTranscript}
               isProcessing={isProcessing}
               enabled={!isAudioPlaying}

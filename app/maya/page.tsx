@@ -87,33 +87,70 @@ export default function MayaPage() {
   // Play audio response
   const playAudioResponse = async (audioUrl: string) => {
     try {
+      console.log('🔊 Maya starting to speak...');
       setIsMayaSpeaking(true);
       const audio = new Audio(audioUrl);
       audioQueueRef.current.push(audio);
 
+      // Add event listeners
+      audio.onloadstart = () => {
+        console.log('🎵 Audio loading started');
+      };
+
+      audio.oncanplay = () => {
+        console.log('🎵 Audio can start playing');
+      };
+
+      audio.onplaying = () => {
+        console.log('🎵 Audio is playing');
+      };
+
       audio.onended = () => {
+        console.log('🔇 Maya finished speaking');
         setIsMayaSpeaking(false);
         audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
       };
 
-      audio.onerror = () => {
+      audio.onerror = (e) => {
+        console.error('❌ Audio playback error:', e);
         setIsMayaSpeaking(false);
-        console.error('Error playing audio');
+        audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
       };
+
+      audio.onabort = () => {
+        console.log('⏹️ Audio playback aborted');
+        setIsMayaSpeaking(false);
+        audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
+      };
+
+      // Ensure we have a fallback timeout in case events don't fire
+      const timeoutId = setTimeout(() => {
+        console.log('⏰ Audio timeout - forcing Maya speaking state to false');
+        setIsMayaSpeaking(false);
+        audioQueueRef.current = audioQueueRef.current.filter(a => a !== audio);
+      }, 30000); // 30 second timeout
+
+      // Clear timeout when audio ends
+      audio.addEventListener('ended', () => clearTimeout(timeoutId));
+      audio.addEventListener('error', () => clearTimeout(timeoutId));
 
       await audio.play();
     } catch (err) {
-      console.error('Error playing audio:', err);
+      console.error('❌ Error playing audio:', err);
       setIsMayaSpeaking(false);
     }
   };
 
   // Handle voice transcript from SimplifiedOrganicVoice
   const handleVoiceTranscript = useCallback((transcript: string) => {
-    if (transcript.trim() && !isProcessing) {
+    // Prevent processing if Maya is speaking or currently processing
+    if (transcript.trim() && !isProcessing && !isMayaSpeaking) {
+      console.log('📝 Processing user transcript:', transcript);
       processMayaResponse(transcript);
+    } else {
+      console.log('🚫 Ignoring transcript - Maya speaking:', isMayaSpeaking, 'Processing:', isProcessing);
     }
-  }, [isProcessing]);
+  }, [isProcessing, isMayaSpeaking]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">

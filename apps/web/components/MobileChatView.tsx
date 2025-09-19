@@ -2,9 +2,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mic, Send, Sparkles, Pause, Play, 
-  Volume2, VolumeX, ChevronUp 
+import {
+  Mic, Send, Sparkles, Pause, Play,
+  Volume2, VolumeX, ChevronUp, Square
 } from 'lucide-react';
 import VoiceRecorder from './VoiceRecorder';
 import OracleVoicePlayer from './voice/OracleVoicePlayer';
@@ -31,6 +31,7 @@ export default function MobileChatView({
   const [isRecording, setIsRecording] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
+  const [showMobileVoiceMode, setShowMobileVoiceMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -47,6 +48,23 @@ export default function MobileChatView({
     }
   };
 
+  const handleStartVoice = () => {
+    setIsRecording(true);
+    setShowMobileVoiceMode(true);
+  };
+
+  const handleStopVoice = () => {
+    setIsRecording(false);
+    setShowMobileVoiceMode(false);
+  };
+
+  const handleVoiceTranscription = (transcript: string) => {
+    if (transcript.trim()) {
+      onSendMessage(transcript.trim());
+    }
+    handleStopVoice();
+  };
+
   const quickPrompts = [
     { text: "What&apos;s my elemental balance?", emoji: "🔥" },
     { text: "I need guidance", emoji: "✨" },
@@ -54,8 +72,106 @@ export default function MobileChatView({
     { text: "How am I growing?", emoji: "🌱" }
   ];
 
+  // Mobile Voice Mode Component
+  const MobileVoiceMode = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      className="fixed inset-0 z-50 bg-gradient-to-b from-neutral-900 to-black flex flex-col items-center justify-center p-6"
+    >
+      <motion.div
+        className="text-center mb-8"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Sparkles className="w-6 h-6 text-emerald-400" />
+          <h2 className="text-2xl font-light text-emerald-400">Maya is Listening</h2>
+        </div>
+        <p className="text-neutral-400">Speak your truth...</p>
+      </motion.div>
+
+      <div className="relative mb-8">
+        <motion.div
+          className="w-32 h-32 rounded-full bg-gradient-to-r from-emerald-400/20 to-orange-400/20 border-2 border-emerald-400/40 flex items-center justify-center"
+          animate={{
+            scale: isRecording ? [1, 1.1, 1] : 1,
+            borderColor: isRecording ? ['rgba(52, 211, 153, 0.4)', 'rgba(251, 146, 60, 0.6)', 'rgba(52, 211, 153, 0.4)'] : 'rgba(52, 211, 153, 0.4)'
+          }}
+          transition={{ duration: 1, repeat: isRecording ? Infinity : 0 }}
+        >
+          <Mic className="w-12 h-12 text-emerald-400" />
+        </motion.div>
+
+        {/* Recording pulse animation */}
+        {isRecording && (
+          <>
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-emerald-400"
+              animate={{ scale: [1, 1.5], opacity: [0.6, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute inset-0 rounded-full border border-orange-400"
+              animate={{ scale: [1, 1.8], opacity: [0.4, 0] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            />
+          </>
+        )}
+      </div>
+
+      {/* Voice visualization */}
+      <div className="flex items-center gap-1 mb-8">
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="w-1 bg-emerald-400 rounded-full"
+            animate={{
+              height: isRecording ? [4, 20, 4] : 4,
+              opacity: isRecording ? [0.3, 1, 0.3] : 0.3
+            }}
+            transition={{
+              duration: 0.5,
+              repeat: isRecording ? Infinity : 0,
+              delay: i * 0.1
+            }}
+          />
+        ))}
+      </div>
+
+      <VoiceRecorder
+        onTranscription={handleVoiceTranscription}
+        onRecordingChange={setIsRecording}
+        className="hidden" // Hide the actual recorder UI, we're providing our own
+      />
+
+      <motion.button
+        onClick={handleStopVoice}
+        className="px-8 py-4 bg-red-500/20 border border-red-400/40 rounded-2xl text-red-400 hover:bg-red-500/30 transition-all active:scale-95"
+        whileTap={{ scale: 0.95 }}
+      >
+        <div className="flex items-center gap-3">
+          <Square className="w-5 h-5" />
+          <span>Stop & Send</span>
+        </div>
+      </motion.button>
+
+      <p className="mt-4 text-xs text-neutral-500 text-center max-w-xs">
+        Tap to stop recording and send your message
+      </p>
+    </motion.div>
+  );
+
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-neutral-900 via-neutral-800 to-orange-900/20">
+    <>
+      {/* Mobile Voice Mode Overlay */}
+      <AnimatePresence>
+        {showMobileVoiceMode && <MobileVoiceMode />}
+      </AnimatePresence>
+
+      <div className="flex flex-col h-full bg-gradient-to-b from-neutral-900 via-neutral-800 to-orange-900/20">
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
         <AnimatePresence initial={false}>
@@ -189,27 +305,29 @@ export default function MobileChatView({
             />
           </div>
 
-          {/* Voice/Send button */}
+          {/* Enhanced Voice/Send button for mobile-first */}
           {inputText.trim() ? (
             <button
               onClick={handleSend}
               disabled={isLoading}
-              className="p-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:shadow-lg active:scale-95 transition-all duration-150 disabled:opacity-50 min-w-[48px] min-h-[48px] touch-none"
+              className="p-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:shadow-lg active:scale-95 transition-all duration-150 disabled:opacity-50 min-w-[56px] min-h-[56px] touch-none shadow-lg"
               aria-label="Send message"
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-6 h-6" />
             </button>
           ) : (
-            <VoiceRecorder
-              onTranscription={(text) => {
-                setInputText(text);
-                inputRef.current?.focus();
-              }}
-              onRecordingChange={setIsRecording}
-              className="p-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:shadow-lg active:scale-95 transition-all duration-150 min-w-[48px] min-h-[48px] touch-none"
+            <button
+              onClick={handleStartVoice}
+              disabled={isLoading}
+              className={`p-4 rounded-full text-white hover:shadow-lg active:scale-95 transition-all duration-150 disabled:opacity-50 min-w-[56px] min-h-[56px] touch-none shadow-lg ${
+                isRecording
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 animate-pulse'
+                  : 'bg-gradient-to-r from-emerald-500 to-teal-500'
+              }`}
+              aria-label={isRecording ? 'Stop recording' : 'Start voice recording'}
             >
-              <Mic className={`w-5 h-5 ${isRecording ? 'animate-pulse' : ''}`} />
-            </VoiceRecorder>
+              <Mic className={`w-6 h-6 ${isRecording ? 'animate-pulse' : ''}`} />
+            </button>
           )}
         </div>
 
@@ -221,7 +339,20 @@ export default function MobileChatView({
             </span>
           </div>
         )}
+
+        {/* Mobile Voice Hint */}
+        {!inputText && !showQuickActions && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-2 text-center"
+          >
+            <span className="text-xs text-emerald-400/60">
+              Tap the mic for voice • Type to write
+            </span>
+          </motion.div>
+        )}
       </div>
-    </div>
+    </>
   );
 }

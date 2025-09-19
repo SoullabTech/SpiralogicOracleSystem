@@ -10,13 +10,26 @@ interface VoiceActivatedMayaProps {
   onTranscript: (text: string) => void;
   isProcessing?: boolean;
   enabled?: boolean;
+  isMayaSpeaking?: boolean;
+  mayaVoiceState?: any;
 }
 
-export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
+export interface VoiceActivatedMayaRef {
+  toggleListening: () => void;
+  startListening: () => void;
+  stopListening: () => void;
+  isListening: boolean;
+  status: string;
+  audioLevel: number;
+}
+
+export const VoiceActivatedMaya = React.forwardRef<VoiceActivatedMayaRef, VoiceActivatedMayaProps>(({
   onTranscript,
   isProcessing = false,
-  enabled = true
-}) => {
+  enabled = true,
+  isMayaSpeaking = false,
+  mayaVoiceState
+}, ref) => {
   const [isListening, setIsListening] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [transcript, setTranscript] = useState('');
@@ -314,82 +327,32 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
     }
   }, [enabled]);
 
+  // Expose methods for external control
+  React.useImperativeHandle(ref, () => ({
+    toggleListening,
+    startListening: startRecognition,
+    stopListening: stopRecognition,
+    isListening,
+    status,
+    audioLevel
+  }), [toggleListening, startRecognition, stopRecognition, isListening, status, audioLevel]);
+
   return (
-    <div className="flex flex-col items-center space-y-4">
-      {/* Visual Feedback Ring */}
-      <div className="relative">
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: `radial-gradient(circle, rgba(147, 51, 234, ${audioLevel / 100}) 0%, transparent 70%)`,
-          }}
-          animate={{
-            scale: isListening ? [1, 1.2, 1] : 1,
-            opacity: isListening ? 1 : 0.3
-          }}
-          transition={{
-            scale: {
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }
-          }}
-        />
-
-        {/* Microphone Button */}
-        <motion.button
-          onClick={toggleListening}
-          className={`
-            relative z-10 w-24 h-24 rounded-full flex items-center justify-center
-            ${isListening
-              ? 'bg-purple-600 shadow-lg shadow-purple-600/50'
-              : 'bg-gray-700 hover:bg-gray-600'
-            }
-            transition-all duration-300
-          `}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          disabled={isProcessing}
-        >
-          {status === 'speaking' ? (
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 0.6, repeat: Infinity }}
-            >
-              <span className="text-3xl">🔊</span>
-            </motion.div>
-          ) : (
-            <svg
-              className={`w-10 h-10 ${isListening ? 'text-white' : 'text-gray-300'}`}
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
-            </svg>
-          )}
-        </motion.button>
-      </div>
-
-      {/* Status Text */}
+    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40">
+      {/* Status Text - Minimal UI */}
       <AnimatePresence mode="wait">
         <motion.div
           key={status}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="text-center"
+          className="text-center mb-2"
         >
-          {status === 'idle' && (
-            <p className="text-gray-400">Click microphone to start</p>
-          )}
           {status === 'listening' && (
-            <p className="text-purple-400 font-medium">Listening...</p>
+            <p className="text-white/80 text-sm font-medium">Listening...</p>
           )}
           {status === 'processing' && (
-            <p className="text-blue-400">Processing...</p>
-          )}
-          {status === 'speaking' && (
-            <p className="text-green-400">Maya is speaking...</p>
+            <p className="text-blue-400 text-sm">Processing...</p>
           )}
         </motion.div>
       </AnimatePresence>
@@ -400,13 +363,13 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="max-w-md mx-auto"
+          className="max-w-md mx-auto mb-2"
         >
-          <p className="text-sm text-gray-300 bg-gray-800/50 rounded-lg px-4 py-2">
+          <p className="text-sm text-white/80 bg-black/50 backdrop-blur-sm rounded-lg px-4 py-2">
             {transcript}
           </p>
         </motion.div>
       )}
     </div>
   );
-};
+});

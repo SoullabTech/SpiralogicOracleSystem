@@ -15,75 +15,55 @@ interface ModeSwitcherProps {
 export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onModeChange }) => {
   return (
     <>
-      {/* Desktop Version - Vertical tabs on left */}
-      <div className="hidden md:block fixed left-0 top-1/2 -translate-y-1/2 z-40">
-        <div className="flex flex-col">
-          {/* Voice Tab */}
+      {/* Desktop Version - Small buttons at top left */}
+      <div className="hidden md:block fixed left-4 top-4 z-40">
+        <div className="flex gap-2">
+          {/* Voice Button */}
           <motion.button
             onClick={() => onModeChange('voice')}
-            className="relative px-4 py-6 transition-all"
+            className="relative px-3 py-2 rounded-lg transition-all backdrop-blur-sm"
             style={{
               background: mode === 'voice'
-                ? 'linear-gradient(90deg, rgba(212,184,150,0.2), transparent)'
-                : 'transparent',
-              borderLeft: mode === 'voice' ? '2px solid #d4b896' : '2px solid transparent',
-              width: '120px',
-              writingMode: 'horizontal-tb'
+                ? 'linear-gradient(135deg, rgba(212,184,150,0.3), rgba(212,184,150,0.2))'
+                : 'rgba(0,0,0,0.2)',
+              border: mode === 'voice' ? '1px solid rgba(212,184,150,0.3)' : '1px solid rgba(255,255,255,0.1)',
             }}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <div className="flex items-center gap-2">
-              <Mic size={16} style={{ color: mode === 'voice' ? '#d4b896' : 'rgba(212,184,150,0.5)' }} />
+              <Mic size={14} style={{ color: mode === 'voice' ? '#d4b896' : 'rgba(212,184,150,0.7)' }} />
               <span
-                className="text-sm font-light tracking-wide"
-                style={{ color: mode === 'voice' ? '#d4b896' : 'rgba(212,184,150,0.5)' }}
+                className="text-xs font-light tracking-wide"
+                style={{ color: mode === 'voice' ? '#d4b896' : 'rgba(212,184,150,0.7)' }}
               >
                 Voice
               </span>
             </div>
-            {mode === 'voice' && (
-              <motion.div
-                className="absolute left-0 top-0 bottom-0 w-0.5"
-                style={{ background: '#d4b896' }}
-                layoutId="activeTab"
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
           </motion.button>
 
-          {/* Chat Tab */}
+          {/* Chat Button */}
           <motion.button
             onClick={() => onModeChange('chat')}
-            className="relative px-4 py-6 transition-all"
+            className="relative px-3 py-2 rounded-lg transition-all backdrop-blur-sm"
             style={{
               background: mode === 'chat'
-                ? 'linear-gradient(90deg, rgba(71,85,105,0.2), transparent)'
-                : 'transparent',
-              borderLeft: mode === 'chat' ? '2px solid #475569' : '2px solid transparent',
-              width: '120px',
-              writingMode: 'horizontal-tb'
+                ? 'linear-gradient(135deg, rgba(71,85,105,0.3), rgba(71,85,105,0.2))'
+                : 'rgba(0,0,0,0.2)',
+              border: mode === 'chat' ? '1px solid rgba(71,85,105,0.3)' : '1px solid rgba(255,255,255,0.1)',
             }}
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <div className="flex items-center gap-2">
-              <MessageSquare size={16} style={{ color: mode === 'chat' ? '#64748b' : 'rgba(71,85,105,0.5)' }} />
+              <MessageSquare size={14} style={{ color: mode === 'chat' ? '#64748b' : 'rgba(71,85,105,0.7)' }} />
               <span
-                className="text-sm font-light tracking-wide"
-                style={{ color: mode === 'chat' ? '#64748b' : 'rgba(71,85,105,0.5)' }}
+                className="text-xs font-light tracking-wide"
+                style={{ color: mode === 'chat' ? '#64748b' : 'rgba(71,85,105,0.7)' }}
               >
                 Chat
               </span>
             </div>
-            {mode === 'chat' && (
-              <motion.div
-                className="absolute left-0 top-0 bottom-0 w-0.5"
-                style={{ background: '#475569' }}
-                layoutId="activeTab"
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
           </motion.button>
         </div>
       </div>
