@@ -1,6 +1,7 @@
 /**
  * ModeSwitcher - Elegant Voice/Chat mode toggle
- * Responsive design for desktop and mobile
+ * Responsive design: small buttons top-left (desktop) and horizontal pills (mobile)
+ * Updated: Fixed positioning to be compact, not full-height sidebar
  */
 
 import React from 'react';
