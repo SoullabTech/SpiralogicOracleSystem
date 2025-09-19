@@ -43,7 +43,7 @@ export class ConversationFixes {
     }
 
     // Fallback to quadrantal response generation for lower confidence cases
-    const quadrantalResponse = this.quadrantalGenerator.generateResponse(userInput);
+    const quadrantalResponse = this.quadrantalGenerator.generate(userInput, {}, '', 1);
 
     return {
       response: this.debugMode ? `[quadrantal] ${quadrantalResponse.response}` : quadrantalResponse.response,
