@@ -149,10 +149,10 @@ export default function PWATestPage() {
             <h3 className="font-semibold mb-4">Debug Information</h3>
             <div className="space-y-2 text-sm text-white/70 font-mono">
               <div>standalone: {String(isInStandaloneMode)}</div>
-              <div>display-mode: {window.matchMedia('(display-mode: standalone)').matches ? 'standalone' : 'browser'}</div>
-              <div>navigator.standalone: {String((window.navigator as any).standalone || false)}</div>
+              <div>display-mode: {typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches ? 'standalone' : 'browser'}</div>
+              <div>navigator.standalone: {typeof window !== 'undefined' ? String((window.navigator as any).standalone || false) : 'n/a'}</div>
               <div>user-agent: {platform}</div>
-              <div>sw.controller: {navigator.serviceWorker?.controller ? 'active' : 'none'}</div>
+              <div>sw.controller: {typeof navigator !== 'undefined' && navigator.serviceWorker?.controller ? 'active' : 'none'}</div>
             </div>
           </div>
 

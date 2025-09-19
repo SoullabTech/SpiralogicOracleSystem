@@ -47,3 +47,19 @@ class VoiceAnalytics {
 }
 
 export const voiceAnalytics = new VoiceAnalytics();
+
+// Export helper functions for components
+export const logVoiceTranscriptReceived = (transcriptLength: number) => {
+  voiceAnalytics.track('voice_transcript_received', { transcriptLength });
+};
+
+export const logVoiceAttemptStarted = () => {
+  voiceAnalytics.track('voice_attempt_started');
+};
+
+// Debug exports
+export const debugEvents: VoiceEventData[] = [];
+export const getSessionSummary = () => ({
+  sessionId: voiceAnalytics['sessionId'],
+  events: debugEvents.length
+});
