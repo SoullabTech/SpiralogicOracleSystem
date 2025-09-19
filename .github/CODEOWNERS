@@ -1,0 +1,70 @@
+# CODEOWNERS file for SpiralogicOracleSystem
+# This file defines who is responsible for code review in different parts of the project
+# Each line is a file pattern followed by one or more owners
+
+# Default owners for everything in the repo (unless a later match takes precedence)
+* @SoullabTech
+
+# Frontend Components
+/components/ @SoullabTech
+/components/ui/ @SoullabTech
+/components/OracleConversation.tsx @SoullabTech
+
+# Maya Voice System - Critical Components
+/app/maya/ @SoullabTech
+/app/api/maya-voice/ @SoullabTech
+/app/api/tts/ @SoullabTech
+/lib/voice/ @SoullabTech
+/components/ui/SimplifiedOrganicVoice.tsx @SoullabTech
+/components/ui/MayaVoiceInterface.tsx @SoullabTech
+
+# Oracle Intelligence Engine
+/lib/oracle/ @SoullabTech
+/lib/oracle/MayaOrchestrator.ts @SoullabTech
+/lib/oracle/ConversationIntelligenceEngine.ts @SoullabTech
+/lib/oracle/ActiveListeningCore.ts @SoullabTech
+/lib/oracle/TransformationalConversationCore.ts @SoullabTech
+
+# API Routes
+/app/api/ @SoullabTech
+/api/ @SoullabTech
+
+# Configuration & Infrastructure
+/.github/ @SoullabTech
+/next.config.js @SoullabTech
+/package.json @SoullabTech
+/tsconfig.json @SoullabTech
+/.env.example @SoullabTech
+/middleware.ts @SoullabTech
+
+# Documentation
+/docs/ @SoullabTech
+/documentation/ @SoullabTech
+*.md @SoullabTech
+
+# Testing
+/test-*.js @SoullabTech
+/test-*.sh @SoullabTech
+/scripts/test*.ts @SoullabTech
+/.github/workflows/ @SoullabTech
+
+# Database & Storage
+/supabase/ @SoullabTech
+/lib/storage/ @SoullabTech
+/lib/services/sessionStorage.ts @SoullabTech
+
+# Security-sensitive files
+/.env* @SoullabTech
+/config/ @SoullabTech
+/lib/services/betaAnalytics.ts @SoullabTech
+
+# Build & Deploy
+/public/ @SoullabTech
+/styles/ @SoullabTech
+/.next/ @SoullabTech
+
+# Scripts & Automation
+/scripts/ @SoullabTech
+
+# Note: Kelly Nezat is the primary code owner for this project
+# Additional owners can be added as needed: @owner1 @owner2

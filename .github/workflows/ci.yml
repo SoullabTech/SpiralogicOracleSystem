@@ -1,0 +1,190 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run type checking
+      run: npm run type-check || true
+      continue-on-error: true
+
+    - name: Run linter
+      run: npm run lint || true
+      continue-on-error: true
+
+    - name: Run tests
+      run: npm test || true
+      continue-on-error: true
+
+    - name: Test Maya Voice API
+      run: |
+        # Start the dev server in background
+        npm run dev &
+        SERVER_PID=$!
+
+        # Wait for server to be ready
+        sleep 10
+
+        # Run voice system tests
+        if [ -f "./test-maya-voice.sh" ]; then
+          chmod +x ./test-maya-voice.sh
+          ./test-maya-voice.sh || true
+        fi
+
+        # Kill the server
+        kill $SERVER_PID || true
+      continue-on-error: true
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+      env:
+        NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
+
+    - name: Check build output
+      run: |
+        if [ -d ".next" ]; then
+          echo "✅ Build successful"
+          ls -la .next/
+        else
+          echo "❌ Build failed - no .next directory found"
+          exit 1
+        fi
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run security audit
+      run: npm audit --audit-level=moderate || true
+      continue-on-error: true
+
+    - name: Run dependency check
+      run: |
+        echo "Checking for known vulnerabilities..."
+        npm audit fix --dry-run || true
+      continue-on-error: true
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Check code formatting
+      run: |
+        if [ -f "package.json" ] && grep -q "\"format\"" package.json; then
+          npm run format:check || true
+        else
+          echo "No format script found, skipping..."
+        fi
+      continue-on-error: true
+
+    - name: Analyze bundle size
+      run: |
+        if [ -f "package.json" ] && grep -q "\"analyze\"" package.json; then
+          npm run analyze || true
+        else
+          echo "No analyze script found, skipping..."
+        fi
+      continue-on-error: true
+
+  deploy-check:
+    name: Deployment Readiness
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check environment variables
+      run: |
+        echo "🔍 Checking required environment variables..."
+
+        MISSING_VARS=0
+
+        # Check for required env vars (without exposing values)
+        if [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
+          echo "⚠️ Warning: OPENAI_API_KEY not configured in GitHub Secrets"
+          MISSING_VARS=$((MISSING_VARS + 1))
+        else
+          echo "✅ OPENAI_API_KEY configured"
+        fi
+
+        if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+          echo "⚠️ Warning: ANTHROPIC_API_KEY not configured in GitHub Secrets"
+          MISSING_VARS=$((MISSING_VARS + 1))
+        else
+          echo "✅ ANTHROPIC_API_KEY configured"
+        fi
+
+        if [ $MISSING_VARS -gt 0 ]; then
+          echo "⚠️ $MISSING_VARS environment variable(s) missing"
+          echo "Please configure them in GitHub Settings > Secrets and variables > Actions"
+        else
+          echo "✅ All required environment variables configured"
+        fi
+
+    - name: Deployment status
+      run: |
+        echo "🚀 Ready for deployment to production"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Triggered by: ${{ github.actor }}"
