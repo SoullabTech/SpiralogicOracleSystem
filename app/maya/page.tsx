@@ -24,6 +24,8 @@ export default function MayaPage() {
   const [isMuted, setIsMuted] = useState(false);
   const [isVoiceActive, setIsVoiceActive] = useState(false);
   const [showVoiceInterface, setShowVoiceInterface] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [currentDemo, setCurrentDemo] = useState<string | null>(null);
 
   const audioQueueRef = useRef<HTMLAudioElement[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -85,16 +87,47 @@ export default function MayaPage() {
       };
       setMessages(prev => [...prev, mayaMessage]);
 
-      // Play Maya's voice response using TTS (only if not muted)
+      // Play Maya's voice response using OpenAI TTS (only if not muted)
       if (data.response && !isMuted) {
         try {
-          await MayaVoiceSynthesis.speak(data.response, data.element || 'earth');
-          setIsMayaSpeaking(true);
+          // Use OpenAI TTS with Alloy voice
+          const ttsResponse = await fetch('/api/voice/openai-tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              text: data.response,
+              voice: 'alloy',
+              speed: 0.95
+            })
+          });
 
-          // Mark as spoken
-          setMessages(prev => prev.map(msg =>
-            msg.id === mayaMessage.id ? { ...msg, spoken: true } : msg
-          ));
+          if (ttsResponse.ok) {
+            const audioBlob = await ttsResponse.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+
+            setIsMayaSpeaking(true);
+
+            audio.onended = () => {
+              setIsMayaSpeaking(false);
+              URL.revokeObjectURL(audioUrl);
+            };
+
+            await audio.play();
+
+            // Mark as spoken
+            setMessages(prev => prev.map(msg =>
+              msg.id === mayaMessage.id ? { ...msg, spoken: true } : msg
+            ));
+          } else {
+            // Fallback to browser TTS if OpenAI fails
+            await MayaVoiceSynthesis.speak(data.response, data.element || 'earth');
+            setIsMayaSpeaking(true);
+
+            setMessages(prev => prev.map(msg =>
+              msg.id === mayaMessage.id ? { ...msg, spoken: true } : msg
+            ));
+          }
 
           // Set a timeout to clear speaking state
           setTimeout(() => {

@@ -876,8 +876,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
         <>
-          {/* Mode Toggle - Compact bottom-right with proper spacing */}
-          <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 flex flex-col gap-3 items-end z-50">
+          {/* Mode Toggle - Bottom-left to avoid text input overlap */}
+          <div className="fixed bottom-6 left-6 md:bottom-8 md:left-8 flex flex-col gap-3 items-start z-50">
             {/* Mode switcher */}
             <div className="flex gap-2 bg-black/20 backdrop-blur-md rounded-full p-1">
               <button
