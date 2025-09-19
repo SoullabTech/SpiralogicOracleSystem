@@ -834,17 +834,17 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Chat Interface or Voice Mic */}
       {voiceEnabled && (
         <>
-          {/* Mode Toggle - Moved to bottom left for mobile, top left for desktop */}
-          <div className="fixed bottom-4 sm:top-4 md:top-8 left-4 md:left-8 flex gap-2 z-40">
+          {/* Mode Toggle - Small compact buttons at top left */}
+          <div className="fixed top-4 left-4 flex gap-2 z-50">
             <button
               onClick={() => {
                 setShowChatInterface(false);
                 enableAudio();
               }}
-              className={`px-2 md:px-3 py-1 rounded-full text-xs transition-colors ${
+              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm max-w-[70px] max-h-[32px] ${
                 !showChatInterface
-                  ? 'bg-[#D4B896] text-white'
-                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+                  ? 'bg-[#D4B896]/90 text-white border border-[#D4B896]/30'
+                  : 'bg-black/20 text-white/60 hover:bg-black/30 border border-white/10'
               }`}
             >
               Voice
@@ -854,10 +854,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 setShowChatInterface(true);
                 enableAudio();
               }}
-              className={`px-2 md:px-3 py-1 rounded-full text-xs transition-colors ${
+              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all backdrop-blur-sm max-w-[70px] max-h-[32px] ${
                 showChatInterface
-                  ? 'bg-[#D4B896] text-white'
-                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+                  ? 'bg-[#64748b]/90 text-white border border-[#64748b]/30'
+                  : 'bg-black/20 text-white/60 hover:bg-black/30 border border-white/10'
               }`}
             >
               Chat
