@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Paperclip, X } from 'lucide-react';
+import { SimplifiedOrganicVoice } from './ui/SimplifiedOrganicVoice';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
@@ -912,9 +914,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     onSubmit={(e) => {
                       e.preventDefault();
                       const input = e.currentTarget.elements.namedItem('message') as HTMLInputElement;
-                      if (input?.value.trim()) {
-                        handleTextMessage(input.value);
+                      const fileInput = e.currentTarget.elements.namedItem('fileUpload') as HTMLInputElement;
+                      if (input?.value.trim() || fileInput?.files?.length) {
+                        const files = fileInput?.files ? Array.from(fileInput.files) : undefined;
+                        handleTextMessage(input.value || 'Please review this file', files);
                         input.value = '';
+                        if (fileInput) fileInput.value = '';
                       }
                     }}
                     className="flex gap-3"
@@ -927,6 +932,23 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       className="flex-1 px-4 py-3 bg-black/50 border border-[#D4B896]/30 rounded-full text-[#D4B896] placeholder-[#D4B896]/40 focus:outline-none focus:border-[#D4B896]/60 disabled:opacity-50"
                       autoComplete="off"
                     />
+
+                    {/* File Upload Button */}
+                    <input
+                      type="file"
+                      name="fileUpload"
+                      id="fileUpload"
+                      className="hidden"
+                      multiple
+                      accept="image/*,.pdf,.doc,.docx,.txt,.json,.csv"
+                    />
+                    <label
+                      htmlFor="fileUpload"
+                      className="px-4 py-3 bg-black/50 border border-[#D4B896]/30 rounded-full text-[#D4B896] hover:bg-[#D4B896]/10 cursor-pointer transition-all flex items-center"
+                    >
+                      <Paperclip className="w-5 h-5" />
+                    </label>
+
                     <button
                       type="submit"
                       disabled={isProcessing}
@@ -944,12 +966,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           ) : (
             /* Simplified Organic Voice - No visual mic, just voice logic */
             <SimplifiedOrganicVoice
-              ref={voiceMicRef}
               onTranscript={handleVoiceTranscript}
-              isProcessing={isProcessing}
               enabled={!isMuted && !isAudioPlaying && !isResponding && !maiaVoiceState?.isPlaying}
               isMaiaSpeaking={isResponding || isAudioPlaying || maiaVoiceState?.isPlaying}
-              maiaVoiceState={maiaVoiceState}
             />
           )}
         </>
