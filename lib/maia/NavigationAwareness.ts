@@ -24,7 +24,7 @@ export interface NavigationSuggestion {
   urgent: boolean;
 }
 
-export class MayaNavigationAwareness {
+export class MaiaNavigationAwareness {
   private contexts: NavigationContext[] = [
     {
       route: '/soul-map',

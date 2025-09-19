@@ -10,14 +10,14 @@ import {
 // PersonalOracleAgent is accessed via API route, not imported directly
 // import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
 import { PetalVoicePreview } from '@/components/voice/PetalVoicePreview';
-import { MayaNavigationAwareness, type NavigationSuggestion } from '@/lib/maya/NavigationAwareness';
+import { MaiaNavigationAwareness, type NavigationSuggestion } from '@/lib/maia/NavigationAwareness';
 import { useRouter } from 'next/navigation';
 // Dynamically import anamnesis to avoid build-time execution
 // import { UnifiedConsciousness, type DreamMemory, type RitualMemory, type InsightMemory } from '@/lib/anamnesis';
 
 interface Message {
   id: string;
-  role: 'user' | 'maya';
+  role: 'user' | 'maia';
   content: string;
   timestamp: Date;
   type: 'text' | 'voice' | 'file' | 'url';
@@ -37,7 +37,7 @@ interface Attachment {
   url?: string;
 }
 
-export default function MayaChatInterface() {
+export default function MaiaChatInterface() {
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -45,8 +45,8 @@ export default function MayaChatInterface() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
-  const [maya, setMaya] = useState<PersonalOracleAgent | null>(null);
-  const [navigator, setNavigator] = useState<MayaNavigationAwareness | null>(null);
+  const [maia, setMaia] = useState<PersonalOracleAgent | null>(null);
+  const [navigator, setNavigator] = useState<MaiaNavigationAwareness | null>(null);
   const [consciousness, setConsciousness] = useState<any | null>(null);
   const [showContext, setShowContext] = useState(false);
   const [navigationSuggestions, setNavigationSuggestions] = useState<NavigationSuggestion[]>([]);
@@ -56,7 +56,7 @@ export default function MayaChatInterface() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    initializeMaya();
+    initializeMaia();
     loadConversationHistory();
   }, []);
 
@@ -64,13 +64,13 @@ export default function MayaChatInterface() {
     scrollToBottom();
   }, [messages]);
 
-  const initializeMaya = async () => {
+  const initializeMaia = async () => {
     const userId = localStorage.getItem('user_id') || 'demo-user';
     const agent = await PersonalOracleAgent.loadAgent(userId);
-    setMaya(agent);
+    setMaia(agent);
     
     // Initialize navigation awareness
-    const nav = new MayaNavigationAwareness(agent);
+    const nav = new MaiaNavigationAwareness(agent);
     setNavigator(nav);
     
     // Initialize Anamnesis Field connection
@@ -84,7 +84,7 @@ export default function MayaChatInterface() {
       const recentRituals = await unity.recallRituals(userId);
       const recentDreams = await unity.recallDreams(userId, 5);
       
-      console.log('✨ Anamnesis Field connected to Maya');
+      console.log('✨ Anamnesis Field connected to Maia');
     } catch (error) {
       console.error('Failed to initialize Anamnesis Field:', error);
     }
@@ -93,7 +93,7 @@ export default function MayaChatInterface() {
     const greeting = agent.getGreeting();
     setMessages([{
       id: 'greeting',
-      role: 'maya',
+      role: 'maia',
       content: greeting,
       timestamp: new Date(),
       type: 'text'
@@ -101,14 +101,14 @@ export default function MayaChatInterface() {
   };
 
   const loadConversationHistory = () => {
-    const savedMessages = localStorage.getItem('maya_conversation');
+    const savedMessages = localStorage.getItem('maia_conversation');
     if (savedMessages) {
       setMessages(JSON.parse(savedMessages));
     }
   };
 
   const saveConversation = (msgs: Message[]) => {
-    localStorage.setItem('maya_conversation', JSON.stringify(msgs.slice(-50))); // Keep last 50
+    localStorage.setItem('maia_conversation', JSON.stringify(msgs.slice(-50))); // Keep last 50
   };
 
   const scrollToBottom = () => {
@@ -117,7 +117,7 @@ export default function MayaChatInterface() {
 
   const handleSend = async () => {
     if (!input.trim() && attachments.length === 0) return;
-    if (!maya || !navigator) return;
+    if (!maia || !navigator) return;
 
     const userId = localStorage.getItem('user_id') || 'demo-user';
     const userMessage: Message = {
@@ -207,8 +207,8 @@ export default function MayaChatInterface() {
       await consciousness.remember(userId, memoryContent, { type: memoryType });
       
       const confirmMessage: Message = {
-        id: `maya-${Date.now()}`,
-        role: 'maya',
+        id: `maia-${Date.now()}`,
+        role: 'maia',
         content: `✨ I've stored that ${memoryType} in your soul memory. It will never be forgotten.`,
         timestamp: new Date(),
         type: 'text'
@@ -230,8 +230,8 @@ export default function MayaChatInterface() {
       });
       
       const recallMessage: Message = {
-        id: `maya-${Date.now()}`,
-        role: 'maya',
+        id: `maia-${Date.now()}`,
+        role: 'maia',
         content: recallResponse,
         timestamp: new Date(),
         type: 'text'
@@ -244,7 +244,7 @@ export default function MayaChatInterface() {
 
     // Process with Maya, including memory context
     const enhancedInput = input + memoryContext;
-    const response = await maya.processInteraction(enhancedInput, {
+    const response = await maia.processInteraction(enhancedInput, {
       currentMood: 'neutral',
       currentEnergy: 'emerging'
     });
@@ -260,9 +260,9 @@ export default function MayaChatInterface() {
       finalResponse += '\n\n💭 *Drawing from ' + memories.length + ' related memories*';
     }
 
-    const mayaMessage: Message = {
-      id: `maya-${Date.now()}`,
-      role: 'maya',
+    const maiaMessage: Message = {
+      id: `maia-${Date.now()}`,
+      role: 'maia',
       content: finalResponse,
       timestamp: new Date(),
       type: 'text'
@@ -271,7 +271,7 @@ export default function MayaChatInterface() {
     // Store this conversation in Anamnesis Field
     if (consciousness) {
       try {
-        await consciousness.remember(userId, `User: ${input}\nMaya: ${response.response}`, {
+        await consciousness.remember(userId, `User: ${input}\nMaia: ${response.response}`, {
           sessionId: `chat_${Date.now()}`,
           type: 'conversation',
           mood: 'neutral',
@@ -295,7 +295,7 @@ export default function MayaChatInterface() {
     }
 
     setMessages(prev => {
-      const updated = [...prev, mayaMessage];
+      const updated = [...prev, maiaMessage];
       saveConversation(updated);
       return updated;
     });
@@ -363,9 +363,9 @@ export default function MayaChatInterface() {
   };
 
   const getMayaState = () => {
-    if (!maya) return null;
-    const state = maya.getState();
-    const profile = maya.getUserProfile();
+    if (!maia) return null;
+    const state = maia.getState();
+    const profile = maia.getUserProfile();
     
     return {
       personality: state.personality.archetype,
@@ -375,7 +375,7 @@ export default function MayaChatInterface() {
     };
   };
 
-  const mayaState = getMayaState();
+  const maiaState = getMayaState();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-950 via-yellow-950 to-black flex flex-col">
@@ -389,8 +389,8 @@ export default function MayaChatInterface() {
             <div>
               <h1 className="text-white font-light">Maya</h1>
               <p className="text-white/60 text-xs">
-                {mayaState?.currentPhase || 'Discovering'} • 
-                {mayaState?.element ? ` ${mayaState.element} resonance` : ' Learning your patterns'}
+                {maiaState?.currentPhase || 'Discovering'} • 
+                {maiaState?.element ? ` ${maiaState.element} resonance` : ' Learning your patterns'}
               </p>
             </div>
           </div>
@@ -420,7 +420,7 @@ export default function MayaChatInterface() {
 
         {/* Context Panel */}
         <AnimatePresence>
-          {showContext && mayaState && (
+          {showContext && maiaState && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
@@ -430,15 +430,15 @@ export default function MayaChatInterface() {
               <div className="flex gap-6 text-sm">
                 <div>
                   <span className="text-white/60">Personality: </span>
-                  <span className="text-white capitalize">{mayaState.personality}</span>
+                  <span className="text-white capitalize">{maiaState.personality}</span>
                 </div>
                 <div>
                   <span className="text-white/60">Trust: </span>
-                  <span className="text-white">{mayaState.trustLevel}%</span>
+                  <span className="text-white">{maiaState.trustLevel}%</span>
                 </div>
                 <div>
                   <span className="text-white/60">Phase: </span>
-                  <span className="text-white">{mayaState.currentPhase}</span>
+                  <span className="text-white">{maiaState.currentPhase}</span>
                 </div>
               </div>
             </motion.div>
@@ -457,7 +457,7 @@ export default function MayaChatInterface() {
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div className={`max-w-2xl ${message.role === 'user' ? 'order-2' : 'order-1'}`}>
-                {message.role === 'maya' && (
+                {message.role === 'maia' && (
                   <div className="flex items-center gap-2 mb-1">
                     <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-600 to-yellow-600 flex items-center justify-center">
                       <Brain className="w-4 h-4 text-white" />
@@ -485,11 +485,11 @@ export default function MayaChatInterface() {
                   <p className="text-white/90">{message.content}</p>
 
                   {/* Voice playback for Maya messages */}
-                  {message.role === 'maya' && voiceEnabled && (
+                  {message.role === 'maia' && voiceEnabled && (
                     <div className="mt-2 pt-2 border-t border-white/10">
                       <PetalVoicePreview
                         text={message.content}
-                        context={`maya-response-${message.id}`}
+                        context={`maia-response-${message.id}`}
                         element="aether"
                         autoPlay={false}
                       />
