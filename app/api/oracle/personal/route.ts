@@ -96,18 +96,37 @@ export async function POST(request: NextRequest) {
 
     console.log('Maya Personal Oracle:', input);
 
-    // Use MayaOrchestrator for full functionality
+    // Use MayaOrchestrator for full functionality with comprehensive error handling
     let oracleResponse;
     try {
+      console.log('Attempting MayaOrchestrator.speak with input:', input);
       oracleResponse = await mayaOrchestrator.speak(input, userId);
+      console.log('MayaOrchestrator response:', oracleResponse);
     } catch (error) {
-      console.error('MayaOrchestrator error:', error);
-      // Use a better fallback that maintains personality
+      console.error('MayaOrchestrator error details:', {
+        error: error.message,
+        stack: error.stack,
+        input,
+        userId
+      });
+
+      // Comprehensive fallback that prevents app crashes
       const element = detectElement(input);
+      const isGreeting = /^(hello|hi|hey|maya)/i.test(input.toLowerCase().trim());
+
+      let fallbackMessage;
+      if (isGreeting) {
+        fallbackMessage = "Hey there. What's going on?";
+      } else if (input.length < 10) {
+        fallbackMessage = "I hear you.";
+      } else {
+        fallbackMessage = "Tell me more about that.";
+      }
+
       oracleResponse = {
-        message: "I'm here. Tell me what's on your mind.",
+        message: fallbackMessage,
         element,
-        duration: 2000,
+        duration: 1500,
         voiceCharacteristics: {
           pace: 'deliberate',
           tone: 'warm_grounded',
@@ -134,17 +153,23 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Maya route error:', error);
+    console.error('Maya route catastrophic error:', {
+      error: error.message,
+      stack: error.stack,
+      input: body?.input || 'unknown'
+    });
 
+    // Final fallback to prevent complete app crashes
     return NextResponse.json({
       success: true,
-      response: "Tell me your truth.",
+      response: "I'm here. What would you like to talk about?",
+      message: "I'm here. What would you like to talk about?",
       element: 'earth',
       archetype: 'maya',
       metadata: {
-        wordCount: 4,
+        wordCount: 9,
         zenMode: true,
-        fallback: true
+        catastrophicFallback: true
       }
     });
   }
