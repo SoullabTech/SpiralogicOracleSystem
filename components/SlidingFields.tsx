@@ -157,7 +157,7 @@ export default function SlidingFields() {
   // Center view - Maya Chat
   const renderCenterView = () => (
     <div className="w-full h-full relative">
-      <MayaChatInterface />
+      <MaiaChatInterface />
       
       {/* Gentle slide hints */}
       <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-10">
