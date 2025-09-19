@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MayaIntelligentOrchestrator } from '@/lib/oracle/MayaIntelligentOrchestrator';
+import { getMayaOrchestrator } from '@/lib/oracle/MayaFullyEducatedOrchestrator';
 
 /**
  * Maya Personal Oracle Route
- * Powered by intelligent Claude + comprehensive context system
+ * Fully Educated Maya: Claude + Sesame Hybrid + 6000+ Knowledge Docs + Training System
  */
 
-const mayaOrchestrator = new MayaIntelligentOrchestrator();
+const mayaOrchestrator = getMayaOrchestrator();
 
 // Removed robotic fallback responses - MayaOrchestrator handles all conversation
 

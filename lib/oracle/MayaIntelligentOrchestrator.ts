@@ -1,9 +1,12 @@
 /**
  * Maya Intelligent Orchestrator
  * Simple, powerful architecture that gives Claude full intelligence to be Maya
+ * Enhanced with comprehensive knowledge base integration
  */
 
 import { getMayaSystemPrompt, getMayaGreeting } from './MayaSystemPrompt';
+import { getMayaEnhancedPrompt, getContextualGreeting, UserJourney, ConversationContext } from './MayaEnhancedPrompt';
+import { mayaKnowledgeBase } from './MayaKnowledgeBase';
 
 type ConversationEntry = {
   role: 'user' | 'assistant';
