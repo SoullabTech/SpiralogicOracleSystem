@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getMayaOrchestrator } from '@/lib/oracle/MayaFullyEducatedOrchestrator';
+import { getMaiaOrchestrator } from '@/lib/oracle/MaiaFullyEducatedOrchestrator';
 
 /**
- * Maya Personal Oracle Route
- * Fully Educated Maya: Claude + Sesame Hybrid + 6000+ Knowledge Docs + Training System
+ * Maia Personal Oracle Route
+ * Fully Educated Maia: Claude + Sesame Hybrid + 6000+ Knowledge Docs + Training System
  */
 
-const mayaOrchestrator = getMayaOrchestrator();
+const maiaOrchestrator = getMaiaOrchestrator();
 
-// Removed robotic fallback responses - MayaOrchestrator handles all conversation
+// Removed robotic fallback responses - MaiaOrchestrator handles all conversation
 
 /**
- * Clean Maya's response - remove ALL therapy-speak
+ * Clean Maia's response - remove ALL therapy-speak
  */
-function cleanMayaResponse(response: string): string {
+function cleanMaiaResponse(response: string): string {
   // Remove action descriptions
   response = response.replace(/^\*?takes a .+?\*?\s*/gi, '');
   response = response.replace(/^\*?attuning.+?\*?\s*/gi, '');
@@ -79,7 +79,7 @@ function detectElement(input: string): string {
   return 'aether';
 }
 
-// Removed getMayaResponse - MayaOrchestrator handles all conversation logic
+// Removed getMaiaResponse - MaiaOrchestrator handles all conversation logic
 
 export async function POST(request: NextRequest) {
   try {
@@ -93,16 +93,16 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    console.log('Maya Personal Oracle:', input);
+    console.log('Maia Personal Oracle:', input);
 
-    // Use MayaOrchestrator for full functionality with comprehensive error handling
+    // Use MaiaOrchestrator for full functionality with comprehensive error handling
     let oracleResponse;
     try {
-      console.log('Attempting MayaOrchestrator.speak with input:', input);
-      oracleResponse = await mayaOrchestrator.speak(input, userId);
-      console.log('MayaOrchestrator response:', oracleResponse);
+      console.log('Attempting MaiaOrchestrator.speak with input:', input);
+      oracleResponse = await maiaOrchestrator.speak(input, userId);
+      console.log('MaiaOrchestrator response:', oracleResponse);
     } catch (error) {
-      console.error('MayaOrchestrator error details:', {
+      console.error('MaiaOrchestrator error details:', {
         error: error.message,
         stack: error.stack,
         input,
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 
       // Comprehensive fallback that prevents app crashes
       const element = detectElement(input);
-      const isGreeting = /^(hello|hi|hey|maya)/i.test(input.toLowerCase().trim());
+      const isGreeting = /^(hello|hi|hey|maia)/i.test(input.toLowerCase().trim());
 
       let fallbackMessage;
       if (isGreeting) {
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract and clean response
-    const response = cleanMayaResponse(oracleResponse.message);
+    const response = cleanMaiaResponse(oracleResponse.message);
     const element = oracleResponse.element;
 
     return NextResponse.json({
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
       response,
       message: response,  // Add message field for frontend compatibility
       element,
-      archetype: 'maya',
+      archetype: 'maia',
       sessionId,
       metadata: {
         wordCount: response.split(/\s+/).length,
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Maya route catastrophic error:', {
+    console.error('Maia route catastrophic error:', {
       error: error.message,
       stack: error.stack,
       input: body?.input || 'unknown'
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
       response: "I'm here. What would you like to talk about?",
       message: "I'm here. What would you like to talk about?",
       element: 'earth',
-      archetype: 'maya',
+      archetype: 'maia',
       metadata: {
         wordCount: 9,
         zenMode: true,

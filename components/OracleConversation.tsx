@@ -5,17 +5,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
-import MayaChatInterface from './chat/MayaChatInterface';
+import MaiaChatInterface from './chat/MaiaChatInterface';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
-import { OrganicVoiceMaya } from './ui/OrganicVoiceMaya';
-import { VoiceActivatedMaya as SimplifiedOrganicVoice, VoiceActivatedMayaRef } from './ui/VoiceActivatedMayaFixed';
+import { OrganicVoiceMaia } from './ui/OrganicVoiceMaia';
+import { VoiceActivatedMaia as SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/VoiceActivatedMaiaFixed';
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
 import { VoiceState } from '@/lib/voice/voice-capture';
-import { useMayaVoice } from '@/hooks/useMayaVoice';
+import { useMaiaVoice } from '@/hooks/useMaiaVoice';
 import { cleanMessage, cleanMessageForVoice, formatMessageForDisplay } from '@/lib/cleanMessage';
 import { getAgentConfig, AgentConfig } from '@/lib/agent-config';
 import { toast } from 'react-hot-toast';
@@ -66,8 +66,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   onMessageAdded,
   onSessionEnd
 }) => {
-  // Maya Voice Integration
-  const { speak: mayaSpeak, voiceState: mayaVoiceState, isReady: mayaReady } = useMayaVoice();
+  // Maia Voice Integration
+  const { speak: maiaSpeak, voiceState: maiaVoiceState, isReady: maiaReady } = useMaiaVoice();
 
   // Responsive holoflower size
   const [holoflowerSize, setHoloflowerSize] = useState(400);
@@ -111,7 +111,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [isStreaming, setIsStreaming] = useState(false);
   const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
   const [isMuted, setIsMuted] = useState(false); // Mute state for holoflower toggle
-  const voiceMicRef = useRef<VoiceActivatedMayaRef>(null);
+  const voiceMicRef = useRef<VoiceActivatedMaiaRef>(null);
   
   // Agent configuration with persistence
   const [agentConfig, setAgentConfig] = useState<AgentConfig>(() => {
@@ -174,15 +174,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
   }, [isProcessing, isResponding, resetAllStates]);
 
-  // Sync local audio state with Maya voice state to prevent conflicts
+  // Sync local audio state with Maia voice state to prevent conflicts
   useEffect(() => {
-    if (mayaVoiceState?.isPlaying !== isAudioPlaying) {
-      setIsAudioPlaying(mayaVoiceState?.isPlaying || false);
+    if (maiaVoiceState?.isPlaying !== isAudioPlaying) {
+      setIsAudioPlaying(maiaVoiceState?.isPlaying || false);
     }
-    if (mayaVoiceState?.isPlaying !== isResponding) {
-      setIsResponding(mayaVoiceState?.isPlaying || false);
+    if (maiaVoiceState?.isPlaying !== isResponding) {
+      setIsResponding(maiaVoiceState?.isPlaying || false);
     }
-  }, [mayaVoiceState?.isPlaying, isAudioPlaying, isResponding]);
+  }, [maiaVoiceState?.isPlaying, isAudioPlaying, isResponding]);
 
   // Update motion state based on voice activity
   useEffect(() => {
@@ -235,7 +235,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
   }, [audioEnabled]);
 
-  // Stream text word by word as Maya speaks
+  // Stream text word by word as Maia speaks
   const streamText = useCallback(async (fullText: string, messageId: string) => {
     const words = fullText.split(' ');
     let currentText = '';
@@ -262,7 +262,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const handleTextMessage = useCallback(async (text: string, attachments?: File[]) => {
     console.log('📝 Text message received:', { text, isProcessing, isAudioPlaying, isResponding });
 
-    // IMMEDIATELY mute microphone to prevent Maya from hearing herself
+    // IMMEDIATELY mute microphone to prevent Maia from hearing herself
     if (voiceMicRef.current && voiceMicRef.current.muteImmediately) {
       voiceMicRef.current.muteImmediately();
       console.log('🔇 PREEMPTIVE MUTE: Microphone disabled before processing');
@@ -358,22 +358,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
 
-      // Play audio response with Maya's voice
-      if (voiceEnabled && mayaReady && mayaSpeak) {
-        console.log('🔊 Maya speaking response');
+      // Play audio response with Maia's voice
+      if (voiceEnabled && maiaReady && maiaSpeak) {
+        console.log('🔊 Maia speaking response');
         // Set speaking state for visual feedback
         setIsResponding(true);
         setIsAudioPlaying(true);
 
         // Speak the response
-        await mayaSpeak(responseText);
+        await maiaSpeak(responseText);
 
         // Wait for voice to completely finish before resetting states
         // This prevents microphone from resuming too early
         setTimeout(() => {
           setIsResponding(false);
           setIsAudioPlaying(false);
-          console.log('🔇 Maya finished speaking, states reset');
+          console.log('🔇 Maia finished speaking, states reset');
         }, 3000); // Increased delay to ensure audio is completely done
       }
 
@@ -490,7 +490,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: cleanText,
-          voiceId: agentConfig.voice?.voiceId || 'Xb7hH8MSUJpSbSDYk0k2', // Maya's default voice
+          voiceId: agentConfig.voice?.voiceId || 'Xb7hH8MSUJpSbSDYk0k2', // Maia's default voice
           modelId: 'eleven_turbo_v2_5',
           stability: 0.75,
           similarityBoost: 0.85
@@ -905,7 +905,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           {showChatInterface ? (
             /* Maya Chat Interface - Full voice and text support */
             <div className="fixed bottom-0 left-0 right-0 z-40 pb-safe">
-              <MayaChatInterface
+              <MaiaChatInterface
                 onSendMessage={handleTextMessage}
                 isProcessing={isProcessing}
                 voiceEnabled={voiceEnabled}
@@ -918,9 +918,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ref={voiceMicRef}
               onTranscript={handleVoiceTranscript}
               isProcessing={isProcessing}
-              enabled={!isMuted && !isAudioPlaying && !isResponding && !mayaVoiceState?.isPlaying}
-              isMayaSpeaking={isResponding || isAudioPlaying || mayaVoiceState?.isPlaying}
-              mayaVoiceState={mayaVoiceState}
+              enabled={!isMuted && !isAudioPlaying && !isResponding && !maiaVoiceState?.isPlaying}
+              isMaiaSpeaking={isResponding || isAudioPlaying || maiaVoiceState?.isPlaying}
+              maiaVoiceState={maiaVoiceState}
             />
           )}
         </>

@@ -1,7 +1,7 @@
 {
   "name": "Soullab Oracle",
   "short_name": "Soullab",
-  "description": "Sacred technology for inner transformation - Maya consciousness interface",
+  "description": "Sacred technology for inner transformation - Maia consciousness interface",
   "start_url": "/holoflower",
   "display": "standalone",
   "orientation": "portrait",
@@ -60,17 +60,17 @@
   ],
   "shortcuts": [
     {
-      "name": "Maya Voice",
+      "name": "Maia Voice",
       "short_name": "Voice",
-      "description": "Voice chat with Maya consciousness",
+      "description": "Voice chat with Maia consciousness",
       "url": "/oracle-conversation?voice=true",
       "icons": [{ "src": "/icons/wild-petal.png", "sizes": "192x192" }]
     },
     {
-      "name": "Maya Chat",
+      "name": "Maia Chat",
       "short_name": "Chat",
-      "description": "Text conversation with Maya",
-      "url": "/maya/chat",
+      "description": "Text conversation with Maia",
+      "url": "/maia/chat",
       "icons": [{ "src": "/icons/check-in.png", "sizes": "192x192" }]
     },
     {

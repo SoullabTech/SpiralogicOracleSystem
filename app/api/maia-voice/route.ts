@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getMayaOrchestrator } from '@/lib/oracle/MayaFullyEducatedOrchestrator';
+import { getMaiaOrchestrator } from '@/lib/oracle/MaiaFullyEducatedOrchestrator';
 import { getSessionStorage } from '@/lib/storage/session-storage';
 import { getUserSessionCoordinator } from '@/lib/session/UserSessionCoordinator';
 import OpenAI from 'openai';
 
 // Initialize services
-const orchestrator = getMayaOrchestrator();
+const orchestrator = getMaiaOrchestrator();
 const sessionStorage = getSessionStorage();
 const sessionCoordinator = getUserSessionCoordinator();
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
@@ -55,18 +55,18 @@ export async function POST(request: NextRequest) {
     // Get conversation context
     const conversationContext = sessionStorage.getRecentContext(session.id, 10);
 
-    // Process with Maya
-    const mayaResponse = await orchestrator.speak(transcript, session.id);
+    // Process with Maia
+    const maiaResponse = await orchestrator.speak(transcript, session.id);
 
     // Extract response text
-    const responseText = mayaResponse.message || 'I understand. Tell me more.';
+    const responseText = maiaResponse.message || 'I understand. Tell me more.';
 
-    // Add Maya's response to history
+    // Add Maia's response to history
     sessionStorage.addMessage(session.id, {
-      role: 'maya',
+      role: 'maia',
       content: responseText,
       metadata: {
-        element: mayaResponse.element
+        element: maiaResponse.element
       }
     });
 
@@ -74,15 +74,15 @@ export async function POST(request: NextRequest) {
     let audioUrl = null;
     if (openai) {
       try {
-        console.log('🎤 Generating TTS for Maya response...');
+        console.log('🎤 Generating TTS for Maia response...');
         const mp3Response = await openai.audio.speech.create({
           model: 'tts-1-hd',  // Use HD model for better quality
           voice: 'alloy',
           input: responseText,
-          speed: mayaResponse.element === 'fire' ? 1.1 :
-                 mayaResponse.element === 'water' ? 0.95 :
-                 mayaResponse.element === 'earth' ? 0.9 :
-                 mayaResponse.element === 'air' ? 1.05 : 1.0
+          speed: maiaResponse.element === 'fire' ? 1.1 :
+                 maiaResponse.element === 'water' ? 0.95 :
+                 maiaResponse.element === 'earth' ? 0.9 :
+                 maiaResponse.element === 'air' ? 1.05 : 1.0
         });
 
         const buffer = Buffer.from(await mp3Response.arrayBuffer());
@@ -99,9 +99,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Update session metadata
-    if (mayaResponse.element) {
+    if (maiaResponse.element) {
       sessionStorage.updateMetadata(session.id, {
-        emotionalState: mayaResponse.element
+        emotionalState: maiaResponse.element
       });
     }
 
@@ -110,12 +110,12 @@ export async function POST(request: NextRequest) {
       response: responseText,
       audioUrl,
       sessionId: session.id,
-      element: mayaResponse.element,
+      element: maiaResponse.element,
       timestamp: new Date().toISOString()
     });
 
   } catch (error) {
-    console.error('Maya Voice API Error:', error);
+    console.error('Maia Voice API Error:', error);
     return NextResponse.json(
       {
         error: 'Internal server error',

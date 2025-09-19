@@ -1,12 +1,12 @@
 /**
- * Maya Fully Educated Orchestrator
+ * Maia Fully Educated Orchestrator
  * Complete integration of Claude intelligence + Sesame Hybrid + Knowledge Base + Training Logger
- * This is the ultimate Maya implementation
+ * This is the ultimate Maia implementation
  */
 
-import { getMayaEnhancedPrompt, getContextualGreeting, UserJourney, ConversationContext } from './MayaEnhancedPrompt';
-import { mayaKnowledgeBase } from './MayaKnowledgeBase';
-import { mayaTrainingLogger } from './MayaTrainingLogger';
+import { getMaiaEnhancedPrompt, getContextualGreeting, UserJourney, ConversationContext } from './MaiaEnhancedPrompt';
+import { maiaKnowledgeBase } from './MaiaKnowledgeBase';
+import { maiaTrainingLogger } from './MaiaTrainingLogger';
 
 type ConversationEntry = {
   role: 'user' | 'assistant';
@@ -15,7 +15,7 @@ type ConversationEntry = {
   element?: string;
 };
 
-type MayaResponse = {
+type MaiaResponse = {
   message: string;
   element: 'fire' | 'water' | 'earth' | 'air' | 'aether';
   duration: number;
@@ -26,7 +26,7 @@ type MayaResponse = {
   };
 };
 
-export class MayaFullyEducatedOrchestrator {
+export class MaiaFullyEducatedOrchestrator {
   private conversations = new Map<string, ConversationEntry[]>();
   private userJourneys = new Map<string, UserJourney>();
   private activeConversations = new Map<string, string>(); // userId -> conversationId for training
@@ -42,11 +42,11 @@ export class MayaFullyEducatedOrchestrator {
     if (this.knowledgeInitialized) return;
 
     try {
-      console.log('🎓 Initializing Maya\'s knowledge base...');
-      await mayaKnowledgeBase.initialize();
+      console.log('🎓 Initializing Maia\'s knowledge base...');
+      await maiaKnowledgeBase.initialize();
 
-      const stats = mayaKnowledgeBase.getKnowledgeStats();
-      console.log('📚 Maya educated with:', stats);
+      const stats = maiaKnowledgeBase.getKnowledgeStats();
+      console.log('📚 Maia educated with:', stats);
 
       this.knowledgeInitialized = true;
     } catch (error) {
@@ -56,14 +56,14 @@ export class MayaFullyEducatedOrchestrator {
     }
   }
 
-  async speak(input: string, userId: string): Promise<MayaResponse> {
+  async speak(input: string, userId: string): Promise<MaiaResponse> {
     // Ensure knowledge is loaded
     await this.initializeKnowledge();
 
-    // Check for potential Maya-Maya conversation loops
-    if (this.detectMayaLoop(input, userId)) {
+    // Check for potential Maia-Maia conversation loops
+    if (this.detectMaiaLoop(input, userId)) {
       return this.createResponse(
-        "I notice you might have multiple Maya sessions open. For the best experience, please use one device at a time to avoid conversation loops.",
+        "I notice you might have multiple Maia sessions open. For the best experience, please use one device at a time to avoid conversation loops.",
         'air'
       );
     }
@@ -72,7 +72,7 @@ export class MayaFullyEducatedOrchestrator {
     let conversationId = this.activeConversations.get(userId);
     if (!conversationId) {
       const journey = this.getUserJourney(userId);
-      conversationId = mayaTrainingLogger.startConversation(userId, journey.sessionCount);
+      conversationId = maiaTrainingLogger.startConversation(userId, journey.sessionCount);
       this.activeConversations.set(userId, conversationId);
     }
 
@@ -88,7 +88,7 @@ export class MayaFullyEducatedOrchestrator {
       const response = this.createResponse(greeting, 'earth');
 
       // Log to training data
-      mayaTrainingLogger.logExchange(
+      maiaTrainingLogger.logExchange(
         conversationId,
         input,
         greeting,
@@ -104,7 +104,7 @@ export class MayaFullyEducatedOrchestrator {
 
     // Search knowledge base for relevant context
     const topics = this.extractTopics(input, conversationHistory);
-    const relevantKnowledge = await mayaKnowledgeBase.getContextualKnowledge(topics);
+    const relevantKnowledge = await maiaKnowledgeBase.getContextualKnowledge(topics);
 
     // Build comprehensive context for Claude
     const systemPrompt = await this.buildComprehensivePrompt(
@@ -126,12 +126,12 @@ export class MayaFullyEducatedOrchestrator {
     ];
 
     try {
-      // Get Maya's response from Claude with full context
+      // Get Maia's response from Claude with full context
       const response = await this.callClaude(systemPrompt, messages);
 
       // Detect if this is a breakthrough moment
       if (this.isBreakthroughMoment(input, response)) {
-        mayaTrainingLogger.markBreakthrough(conversationId);
+        maiaTrainingLogger.markBreakthrough(conversationId);
         userJourney.lastBreakthrough = response;
       }
 
@@ -145,7 +145,7 @@ export class MayaFullyEducatedOrchestrator {
       const element = this.detectElement(response);
 
       // Log to training data
-      mayaTrainingLogger.logExchange(
+      maiaTrainingLogger.logExchange(
         conversationId,
         input,
         response,
@@ -156,12 +156,12 @@ export class MayaFullyEducatedOrchestrator {
       return this.createResponse(response, element);
 
     } catch (error) {
-      console.error('Maya Intelligence Error:', error);
+      console.error('Maia Intelligence Error:', error);
 
       // Natural fallback using knowledge base
       const fallback = await this.generateKnowledgeBasedFallback(input, topics);
 
-      mayaTrainingLogger.logExchange(
+      maiaTrainingLogger.logExchange(
         conversationId,
         input,
         fallback,
@@ -179,10 +179,10 @@ export class MayaFullyEducatedOrchestrator {
     relevantKnowledge: string
   ): Promise<string> {
     // Get enhanced prompt with all context
-    let prompt = getMayaEnhancedPrompt(userJourney, conversationContext, this.getTimeOfDay());
+    let prompt = getMaiaEnhancedPrompt(userJourney, conversationContext, this.getTimeOfDay());
 
     // Add core philosophy from knowledge base
-    const corePhilosophy = await mayaKnowledgeBase.getCorePhilosophy();
+    const corePhilosophy = await maiaKnowledgeBase.getCorePhilosophy();
     if (corePhilosophy) {
       prompt += `\n\n# Core Soullab Philosophy\n${corePhilosophy}`;
     }
@@ -298,7 +298,7 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
 
   private async generateKnowledgeBasedFallback(input: string, topics: string[]): Promise<string> {
     // Search knowledge base for relevant wisdom
-    const relevantDocs = await mayaKnowledgeBase.searchKnowledge(input, 1);
+    const relevantDocs = await maiaKnowledgeBase.searchKnowledge(input, 1);
 
     if (relevantDocs.length > 0) {
       const wisdom = relevantDocs[0].content.slice(0, 200);
@@ -402,9 +402,9 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
     return this.conversations.get(userId)!;
   }
 
-  private storeConversation(userId: string, userInput: string, mayaResponse: string): void {
+  private storeConversation(userId: string, userInput: string, maiaResponse: string): void {
     const history = this.getConversationHistory(userId);
-    const element = this.detectElement(mayaResponse);
+    const element = this.detectElement(maiaResponse);
 
     history.push({
       role: 'user',
@@ -414,7 +414,7 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
 
     history.push({
       role: 'assistant',
-      content: mayaResponse,
+      content: maiaResponse,
       timestamp: new Date(),
       element
     });
@@ -427,7 +427,7 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
 
   private isSimpleGreeting(input: string): boolean {
     const greeting = input.toLowerCase().trim();
-    const simpleGreetings = ['hi', 'hello', 'hey', 'maya', 'hi maya', 'hello maya'];
+    const simpleGreetings = ['hi', 'hello', 'hey', 'maia', 'hi maia', 'hello maia'];
     return simpleGreetings.includes(greeting) && input.length < 20;
   }
 
@@ -457,7 +457,7 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
     return 'water';
   }
 
-  private createResponse(message: string, element: 'fire' | 'water' | 'earth' | 'air' | 'aether'): MayaResponse {
+  private createResponse(message: string, element: 'fire' | 'water' | 'earth' | 'air' | 'aether'): MaiaResponse {
     const voiceMapping = {
       fire: { pace: 'energetic', tone: 'encouraging', energy: 'dynamic' },
       water: { pace: 'flowing', tone: 'empathetic', energy: 'gentle' },
@@ -489,7 +489,7 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
   async endConversation(userId: string, satisfaction?: number): Promise<void> {
     const conversationId = this.activeConversations.get(userId);
     if (conversationId) {
-      await mayaTrainingLogger.endConversation(conversationId, satisfaction);
+      await maiaTrainingLogger.endConversation(conversationId, satisfaction);
       this.activeConversations.delete(userId);
     }
   }
@@ -498,34 +498,34 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
    * Export training data for future model development
    */
   async exportTrainingData(): Promise<string> {
-    return mayaTrainingLogger.exportForFineTuning();
+    return maiaTrainingLogger.exportForFineTuning();
   }
 
-  // Detect potential Maya-Maya conversation loops
-  private detectMayaLoop(input: string, userId: string): boolean {
+  // Detect potential Maia-Maia conversation loops
+  private detectMaiaLoop(input: string, userId: string): boolean {
     const history = this.getConversationHistory(userId);
 
-    // Maya-like response patterns that suggest AI-to-AI conversation
-    const mayaPatterns = [
+    // Maia-like response patterns that suggest AI-to-AI conversation
+    const maiaPatterns = [
       /^(I hear|I sense|I'm noticing|I feel|Mmm|Ah|Yeah that)/i,
       /well tuned to|attuning|holding space|feeling into/i,
       /(gentle|soft|warm) presence/i,
       /what wants to|what's alive|what's stirring/i
     ];
 
-    // Check if input matches Maya's speaking patterns
-    const matchesMayaPattern = mayaPatterns.some(pattern => pattern.test(input));
+    // Check if input matches Maia's speaking patterns
+    const matchesMaiaPattern = maiaPatterns.some(pattern => pattern.test(input));
 
-    // Check if recent conversation has multiple Maya-style responses in sequence
+    // Check if recent conversation has multiple Maia-style responses in sequence
     const recentMessages = history.slice(-6); // Last 6 messages
-    const mayaStyleResponses = recentMessages.filter(msg =>
-      msg.role === 'user' && mayaPatterns.some(pattern => pattern.test(msg.content))
+    const maiaStyleResponses = recentMessages.filter(msg =>
+      msg.role === 'user' && maiaPatterns.some(pattern => pattern.test(msg.content))
     );
 
     // Flag as potential loop if:
-    // 1. Current input matches Maya pattern AND
-    // 2. Recent conversation has multiple Maya-style responses
-    return matchesMayaPattern && mayaStyleResponses.length >= 2;
+    // 1. Current input matches Maia pattern AND
+    // 2. Recent conversation has multiple Maia-style responses
+    return matchesMaiaPattern && maiaStyleResponses.length >= 2;
   }
 
   // Compatibility method for existing tests
@@ -548,11 +548,11 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
 }
 
 // Singleton instance for optimal performance
-let instance: MayaFullyEducatedOrchestrator | null = null;
+let instance: MaiaFullyEducatedOrchestrator | null = null;
 
-export function getMayaOrchestrator(): MayaFullyEducatedOrchestrator {
+export function getMaiaOrchestrator(): MaiaFullyEducatedOrchestrator {
   if (!instance) {
-    instance = new MayaFullyEducatedOrchestrator();
+    instance = new MaiaFullyEducatedOrchestrator();
   }
   return instance;
 }
