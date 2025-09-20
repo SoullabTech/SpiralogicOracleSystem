@@ -1131,8 +1131,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 </motion.div>
               </div>
 
-              {/* Expanded text input area for mobile */}
-              <div className="fixed inset-x-0 bottom-0 sm:bottom-auto sm:top-auto z-40">
+              {/* Expanded text input area - always at bottom */}
+              <div className="fixed inset-x-0 bottom-0 z-40">
                 {/* Large transparent text area for mobile */}
                 <div className="bg-black/20 backdrop-blur-sm p-4 sm:p-4">
                   <form
