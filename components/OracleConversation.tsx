@@ -1147,10 +1147,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 </motion.div>
               </div>
 
-              {/* Expanded text input area - at bottom with padding for menu bar */}
-              <div className="fixed inset-x-0 bottom-20 sm:bottom-16 z-40 pb-safe">
-                {/* Large transparent text area */}
-                <div className="bg-black/20 backdrop-blur-sm p-4">
+              {/* Expanded text input area - at very bottom */}
+              <div className="fixed inset-x-0 bottom-0 z-40">
+                {/* Container with menu bar and text input */}
+                <div className="flex flex-col">
+                  {/* Text input area */}
+                  <div className="bg-black/20 backdrop-blur-sm p-4">
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -1197,6 +1199,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       </button>
                     </div>
                   </form>
+                  </div>
                 </div>
               </div>
             </>
