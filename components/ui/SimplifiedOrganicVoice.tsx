@@ -68,7 +68,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   // TEMPORARILY DISABLED
   // const [elementalMode, setElementalMode] = useState<ElementalMode>('water');
   // const [recentSilences, setRecentSilences] = useState<number[]>([]);
-  // const lastSpeechTime = useRef<number>(Date.now());
+  const lastSpeechTime = useRef<number>(Date.now()); // Uncommented - being used in code
   const [isActivelyExpressing, setIsActivelyExpressing] = useState(false);
   const expressionStartTime = useRef<number>(Date.now());
   const consecutiveWords = useRef<number>(0);
