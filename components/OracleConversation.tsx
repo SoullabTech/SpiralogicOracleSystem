@@ -961,10 +961,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }, 200);
                 }
               }}
-              className="relative z-20 cursor-pointer bg-transparent border-none p-8"
+              className="relative z-30 cursor-pointer bg-transparent border-none p-8 hover:bg-white/5 rounded-full"
               style={{
-                width: '160px',
-                height: '160px',
+                width: '200px',
+                height: '200px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -1147,12 +1147,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 </motion.div>
               </div>
 
-              {/* Expanded text input area - at very bottom */}
-              <div className="fixed inset-x-0 bottom-0 z-40">
-                {/* Container with menu bar and text input */}
-                <div className="flex flex-col">
-                  {/* Text input area */}
-                  <div className="bg-black/20 backdrop-blur-sm p-4">
+              {/* Expanded text input area - above menu bar */}
+              <div className="fixed inset-x-0 bottom-24 z-40">
+                {/* Text input area */}
+                <div className="bg-black/20 backdrop-blur-sm p-4">
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -1199,7 +1197,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       </button>
                     </div>
                   </form>
-                  </div>
                 </div>
               </div>
             </>
@@ -1311,8 +1308,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Redesigned Bottom Icon Bar - Sacred Style - Positioned above chat input */}
-      <div className={`fixed ${showChatInterface ? 'bottom-20' : 'bottom-6'} left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300`}>
+      {/* Redesigned Bottom Icon Bar - Sacred Style - Always at bottom */}
+      <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 pb-safe">
         <div className="flex justify-center items-center gap-8 py-4 px-8 bg-black/60 backdrop-blur-lg rounded-full border border-[#D4B896]/20">
           {/* Voice Toggle - Activate mic when switching to voice mode */}
           <button
