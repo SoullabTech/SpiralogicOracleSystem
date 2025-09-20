@@ -6,7 +6,6 @@ import { Paperclip, X } from 'lucide-react';
 import { SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/SimplifiedOrganicVoice';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
-import EnhancedVoiceHoloflower from './voice/EnhancedVoiceHoloflower';
 import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
 // import MaiaChatInterface from './chat/MaiaChatInterface'; // File doesn't exist
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
@@ -616,8 +615,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Beautiful Sacred Holoflower - Responsive sizing - Hide in voice mode when enhanced holoflower is shown */}
-      {(showChatInterface || isMuted) && (
+      {/* Beautiful Sacred Holoflower - Responsive sizing - Always show */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
         {/* Adjusted container to shift light up and left */}
         <div className="flex items-center justify-center"
@@ -981,7 +979,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           </div>
         </div>
       </div>
-      )}
 
       {/* Shadow petal overlay */}
       {shadowPetals.length > 0 && (
@@ -1179,37 +1176,52 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </>
           ) : (
             <>
-              {/* Enhanced Voice Holoflower with Text Display */}
-              <div className="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-40">
-                <EnhancedVoiceHoloflower
-                  isListening={!isMuted && voiceMicRef.current?.isListening}
-                  isSpeaking={isResponding || isAudioPlaying || maiaVoiceState?.isPlaying}
-                  audioLevel={voiceAudioLevel}
-                  size={300}
-                  userTranscript={userTranscript}
-                  maiaResponse={maiaResponseText || streamingText}
-                  isProcessing={isProcessing}
-                  onClick={() => {
-                    enableAudio();
-                    if (!isMuted) {
-                      // Currently listening, so stop
-                      setIsMuted(true);
-                      if (voiceMicRef.current?.stopListening) {
-                        voiceMicRef.current.stopListening();
-                        console.log('🔇 Voice stopped via enhanced holoflower click');
-                      }
-                    } else {
-                      // Currently muted, so start listening
-                      setIsMuted(false);
-                      setTimeout(() => {
-                        if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
-                          voiceMicRef.current.startListening();
-                          console.log('🎤 Voice started via enhanced holoflower click');
-                        }
-                      }, 100);
-                    }
-                  }}
-                />
+              {/* Voice Mode Text Display - Shows transcripts below main holoflower */}
+              <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-2xl px-4">
+                <div className="bg-black/30 backdrop-blur-md rounded-lg p-4 border border-gold-divine/20 shadow-lg">
+                  {/* Speaker indicator */}
+                  {(userTranscript || maiaResponseText) && (
+                    <div className={`text-xs font-medium mb-2 ${
+                      userTranscript && !maiaResponseText ? 'text-elemental-water' : 'text-gold-divine'
+                    }`}>
+                      {userTranscript && !maiaResponseText ? 'You' : 'Maya'}
+                    </div>
+                  )}
+
+                  {/* Main text display */}
+                  <div className="text-neutral-silver text-base leading-relaxed min-h-[50px]">
+                    {userTranscript || maiaResponseText || streamingText || (
+                      <span className="text-neutral-mystic italic">
+                        Ready to listen... Click the holoflower to start
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Audio level visualization bars */}
+                  {voiceAudioLevel > 0 && (!isMuted || isResponding) && (
+                    <div className="mt-3 flex items-center gap-1 justify-center">
+                      {Array.from({ length: 10 }).map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="w-1 bg-gradient-to-t"
+                          style={{
+                            background: i < voiceAudioLevel * 10
+                              ? `linear-gradient(to top, ${!isMuted ? '#6B9BD1' : '#D4B896'}, transparent)`
+                              : 'rgba(255,255,255,0.1)',
+                            height: '12px',
+                          }}
+                          animate={{
+                            scaleY: i < voiceAudioLevel * 10 ? [1, 1.5, 1] : 1,
+                          }}
+                          transition={{
+                            duration: 0.3,
+                            delay: i * 0.05,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Simplified Organic Voice - No visual mic, just voice logic */}
