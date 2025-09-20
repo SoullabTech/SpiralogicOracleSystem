@@ -922,9 +922,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               </div>
             )}
 
-            {/* Sacred Holoflower Image with click area for voice activation */}
-            <motion.div
+            {/* Larger clickable area for holoflower voice activation */}
+            <motion.button
               onClick={() => {
+                console.log('🌸 Holoflower clicked!');
                 // Always enable audio first
                 enableAudio();
 
@@ -960,15 +961,23 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }, 200);
                 }
               }}
-              className="relative z-10 cursor-pointer"
+              className="relative z-20 cursor-pointer bg-transparent border-none p-8"
+              style={{
+                width: '160px',
+                height: '160px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              type="button"
             >
               {/* The actual holoflower image */}
               <img
                 src="/holoflower.svg"
                 alt="Sacred Holoflower"
-                className="w-24 h-24 object-contain"
+                className="w-24 h-24 object-contain pointer-events-none"
                 style={{
                   filter: voiceMicRef.current?.isListening
                     ? 'brightness(1.2)'
@@ -979,7 +988,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               />
 
               {/* Mic status indicator - positioned at edge */}
-              <div className="absolute bottom-0 right-0 w-4 h-4">
+              <div className="absolute bottom-4 right-4 w-4 h-4 pointer-events-none">
                 <motion.div
                   className={`w-full h-full rounded-full ${
                     !showChatInterface && voiceEnabled && !isMuted
@@ -996,7 +1005,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }}
                 />
               </div>
-            </motion.div>
+            </motion.button>
           </div>
         </div>
       </div>
