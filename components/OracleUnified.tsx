@@ -237,55 +237,82 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
           </div>
         )}
 
-        {/* Control Buttons - Right Side */}
-        <div className="absolute right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-3">
-          {/* Mic/Mute Button */}
-          <motion.button
-            onClick={() => {
-              if (!showChatInterface) {
-                // In voice mode, toggle listening
+        {/* Control Bar - Clean icon style at right */}
+        <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
+          <div className="bg-black/60 backdrop-blur-lg rounded-full p-2 flex flex-col gap-2">
+            {/* Voice Button */}
+            <motion.button
+              onClick={() => {
+                setShowChatInterface(false);
                 initAudioContext();
                 setIsListening(!isListening);
-                setIsMuted(false); // Unmute when activating voice
-              } else {
-                // In chat mode, toggle mute for responses
-                setIsMuted(!isMuted);
-              }
-            }}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-              isListening && !showChatInterface
-                ? 'bg-gradient-to-br from-[#D4B896]/70 to-[#B69A78]/70 shadow-lg'
-                : isMuted
-                ? 'bg-red-500/30 border border-red-500/40'
-                : 'bg-black/50 border border-[#D4B896]/30 hover:bg-[#D4B896]/10'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {!showChatInterface ? (
-              isListening ? (
-                <Mic className="w-5 h-5 text-white" />
-              ) : (
-                <MicOff className="w-5 h-5 text-[#D4B896]/60" />
-              )
-            ) : (
-              isMuted ? (
-                <VolumeX className="w-5 h-5 text-red-400" />
-              ) : (
-                <Volume2 className="w-5 h-5 text-[#D4B896]/60" />
-              )
-            )}
-          </motion.button>
+              }}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                !showChatInterface && isListening
+                  ? 'bg-[#D4B896]/20 text-[#D4B896]'
+                  : 'text-[#D4B896]/40 hover:text-[#D4B896]/80'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Mic className="w-4 h-4" />
+            </motion.button>
 
-          {/* Download Button */}
-          <motion.button
-            onClick={downloadConversation}
-            className="w-12 h-12 rounded-full flex items-center justify-center bg-black/50 border border-[#D4B896]/30 hover:bg-[#D4B896]/10 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Download className="w-5 h-5 text-[#D4B896]/60" />
-          </motion.button>
+            {/* Chat Button */}
+            <motion.button
+              onClick={() => {
+                setShowChatInterface(true);
+                setIsListening(false);
+              }}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                showChatInterface
+                  ? 'bg-[#D4B896]/20 text-[#D4B896]'
+                  : 'text-[#D4B896]/40 hover:text-[#D4B896]/80'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <MessageSquare className="w-4 h-4" />
+            </motion.button>
+
+            {/* Upload Button */}
+            <motion.button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-[#D4B896]/40 hover:text-[#D4B896]/80 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Paperclip className="w-4 h-4" />
+            </motion.button>
+
+            {/* Download Button */}
+            <motion.button
+              onClick={downloadConversation}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-[#D4B896]/40 hover:text-[#D4B896]/80 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Download className="w-4 h-4" />
+            </motion.button>
+
+            {/* Mute Button */}
+            <motion.button
+              onClick={() => setIsMuted(!isMuted)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                isMuted
+                  ? 'bg-red-500/20 text-red-400'
+                  : 'text-[#D4B896]/40 hover:text-[#D4B896]/80'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isMuted ? (
+                <VolumeX className="w-4 h-4" />
+              ) : (
+                <Volume2 className="w-4 h-4" />
+              )}
+            </motion.button>
+          </div>
         </div>
 
         {/* Status Indicator */}
@@ -308,36 +335,10 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
       </div>
 
       {/* Bottom Input Area */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black/60 backdrop-blur-lg border-t border-[#D4B896]/10">
-        <div className="max-w-4xl mx-auto p-4">
-          {/* Voice/Chat Toggle */}
-          <div className="flex justify-center mb-3">
-            <div className="bg-black/50 backdrop-blur-lg rounded-full p-1 flex gap-1">
-              <button
-                onClick={() => setShowChatInterface(false)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  !showChatInterface
-                    ? 'bg-[#D4B896]/20 text-[#D4B896]'
-                    : 'text-[#D4B896]/60 hover:text-[#D4B896]/80'
-                }`}
-              >
-                Voice
-              </button>
-              <button
-                onClick={() => setShowChatInterface(true)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  showChatInterface
-                    ? 'bg-[#D4B896]/20 text-[#D4B896]'
-                    : 'text-[#D4B896]/60 hover:text-[#D4B896]/80'
-                }`}
-              >
-                Chat
-              </button>
-            </div>
-          </div>
-
-          {/* Chat Input */}
-          {showChatInterface && (
+      {showChatInterface && (
+        <div className="fixed bottom-0 left-0 right-0 bg-black/60 backdrop-blur-lg border-t border-[#D4B896]/10">
+          <div className="max-w-4xl mx-auto p-4">
+            {/* Chat Input */}
             <form onSubmit={handleSubmit} className="flex gap-2">
               <input
                 type="text"
@@ -374,9 +375,8 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
                 Send
               </button>
             </form>
-          )}
 
-          {/* Selected Files Display */}
+            {/* Selected Files Display */}
           {selectedFiles.length > 0 && (
             <div className="flex gap-2 mt-2 flex-wrap">
               {selectedFiles.map((file, idx) => (
@@ -394,6 +394,7 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
           )}
         </div>
       </div>
+      )}
 
       {/* Voice Interface (Hidden but active) */}
       {isListening && !showChatInterface && (
