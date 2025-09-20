@@ -1049,15 +1049,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       {/* Message flow - Clean display for Maya's responses */}
       {showChatInterface && messages.length > 0 && (
-        <div className="fixed inset-x-4 top-24 sm:top-1/2 sm:right-8 sm:left-auto sm:transform sm:-translate-y-1/2
-                        sm:w-96 max-h-[40vh] sm:max-h-[70vh] overflow-y-auto">
+        <div className="fixed inset-x-4 top-24 sm:top-16 sm:right-8 sm:left-auto sm:transform-none
+                        sm:w-96 max-h-[60vh] sm:max-h-[calc(100vh-200px)] overflow-y-auto z-30">
           <AnimatePresence>
             {messages.length > 0 && (
               <div className="space-y-3">
                 {/* On mobile, show only Maya's latest response; on desktop show last 5 messages */}
                 {messages
                   .filter(msg => window.innerWidth < 640 ? msg.role === 'oracle' : true)
-                  .slice(window.innerWidth < 640 ? -1 : -5)
+                  .slice(-8)
                   .map((message, index) => (
                     <motion.div
                       key={message.id}
@@ -1065,8 +1065,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-black/30 backdrop-blur-sm rounded-2xl p-4 text-white
-                               border border-gold-divine/20"
+                      className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 text-white
+                               border border-gold-divine/30 shadow-lg max-w-full"
                     >
                       {window.innerWidth >= 640 && (
                         <div className="text-xs text-gold-divine/60 mb-2">
@@ -1186,12 +1186,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       placeholder="Share your thoughts with Maya..."
                       disabled={isProcessing}
                       className="w-full min-h-[120px] sm:min-h-[60px] px-4 py-3
-                               bg-black/30 backdrop-blur-sm
-                               border border-gold-divine/20 rounded-2xl
-                               text-gold-divine placeholder-gold-divine/40
-                               text-base sm:text-sm
-                               focus:outline-none focus:border-gold-divine/40
-                               disabled:opacity-50 resize-none"
+                               bg-black/40 backdrop-blur-sm
+                               border border-gold-divine/30 rounded-2xl
+                               text-gold-divine placeholder-gold-divine/50
+                               text-base sm:text-sm leading-relaxed
+                               focus:outline-none focus:border-gold-divine/50 focus:ring-2 focus:ring-gold-divine/20
+                               disabled:opacity-50 resize-none
+                               touch-manipulation"
                       autoComplete="off"
                       autoFocus={false}
                     />

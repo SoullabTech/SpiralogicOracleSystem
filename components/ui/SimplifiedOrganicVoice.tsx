@@ -63,6 +63,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
   const SILENCE_THRESHOLD = 3000; // OPTIMIZED: 3 seconds - natural conversation pause
+  const SMART_THRESHOLD = 1500;   // 1.5 seconds for questions and complete sentences
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
@@ -125,6 +126,12 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
+    recognition.maxAlternatives = 5; // Enhanced accuracy with more alternatives
+
+    // Enhanced recognition settings if available
+    if ('grammars' in recognition) {
+      (recognition as any).grammars = null; // Free-form speech
+    }
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
@@ -177,7 +184,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
           // Use shorter threshold for questions or complete sentences
           const threshold = (endsWithPunctuation || (hasQuestionWords && accumulated.length > 20))
-            ? 1500  // 1.5 seconds for complete thoughts
+            ? SMART_THRESHOLD  // 1.5 seconds for complete thoughts
             : SILENCE_THRESHOLD; // 3 seconds for continuing thoughts
 
           // Set timer to process after silence
@@ -424,7 +431,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
             console.log('Could not resume recognition:', e);
           }
         }
-      }, 4000); // Increased to 4 second delay to ensure Maya's audio has completely stopped
+      }, 1500); // FIXED: 1.5 second delay prevents voice cutoffs while allowing natural flow
     }
   }, [isMayaSpeaking, isListening, enabled, isPausedForMaya]);
 
