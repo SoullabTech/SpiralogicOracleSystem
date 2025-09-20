@@ -166,12 +166,48 @@ export class MaiaVoiceSystem {
     }
   }
 
+  // OpenAI TTS with Alloy voice - PRIMARY METHOD
+  private async speakWithOpenAI(text: string): Promise<void> {
+    console.log('🎯 Attempting OpenAI TTS with Alloy voice...');
+    this.updateState({ isLoading: true, currentText: text, voiceType: 'elevenlabs' }); // Keep as 'elevenlabs' for compatibility
+
+    try {
+      const response = await fetch('/api/voice/openai-tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: this.enhanceTextForSpeech(text),
+          voice: 'alloy',     // Calm, composed, warm presence
+          speed: 0.95,        // Slightly slower for natural conversational pace
+          model: 'tts-1-hd'   // Higher quality for better clarity
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ OpenAI TTS API error:', response.status, errorText);
+        throw new Error(`OpenAI TTS error: ${response.status}`);
+      }
+
+      console.log('✅ OpenAI TTS response received, playing audio...');
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      return this.playAudioUrl(audioUrl);
+    } catch (error) {
+      console.error('❌ OpenAI TTS failed:', error);
+      this.updateState({ error: error.message });
+      throw error;
+    } finally {
+      this.updateState({ isLoading: false });
+    }
+  }
+
   // Sesame conversational intelligence + voice - DISABLED
   private async speakWithSesame(text: string, context?: any): Promise<void> {
-    // Sesame CI has been disabled - using internal response system
-    // Redirect to ElevenLabs for voice synthesis
-    console.log('Sesame CI disabled, using ElevenLabs directly');
-    return this.speakWithElevenLabs(text);
+    // Sesame CI has been disabled - using OpenAI TTS instead
+    console.log('Sesame CI disabled, using OpenAI TTS directly');
+    return this.speakWithOpenAI(text);
   }
 
   // Web Speech API fallback with agent-appropriate characteristics
@@ -420,40 +456,45 @@ export class MaiaVoiceSystem {
 
   // Main speak method with intelligent fallback
   async speak(text: string, context?: any): Promise<void> {
+    console.log('🔊 MaiaVoiceSystem.speak called with text:', text.substring(0, 50) + '...');
     try {
       // Reset error state
       this.updateState({ error: undefined });
 
-      // Try Sesame first (if configured)
-      if (this.config.sesameApiKey) {
-        try {
-          await this.speakWithSesame(text, context);
-          return;
-        } catch (error) {
-          console.warn('Sesame voice failed, trying ElevenLabs:', error);
-        }
+      // Try OpenAI TTS first (PRIMARY)
+      try {
+        console.log('🎙️ Trying OpenAI TTS first...');
+        await this.speakWithOpenAI(text);
+        console.log('✅ OpenAI TTS succeeded!');
+        return;
+      } catch (error) {
+        console.warn('⚠️ OpenAI TTS failed, trying ElevenLabs:', error);
       }
 
       // Try ElevenLabs second (if configured)
       if (this.config.elevenLabsApiKey) {
         try {
+          console.log('🎙️ Trying ElevenLabs as fallback...');
           await this.speakWithElevenLabs(text);
+          console.log('✅ ElevenLabs succeeded!');
           return;
         } catch (error) {
-          console.warn('ElevenLabs failed, falling back to Web Speech:', error);
+          console.warn('⚠️ ElevenLabs failed, falling back to Web Speech:', error);
         }
       }
 
       // Fallback to Web Speech API
       if (this.config.fallbackToWebSpeech) {
+        console.log('🤖 Using Web Speech API as final fallback...');
         await this.speakWithWebSpeech(text);
+        console.log('✅ Web Speech API succeeded!');
         return;
       }
 
       throw new Error('No voice services available');
     } catch (error) {
-      console.error('Maia voice system failed:', error);
-      this.updateState({ 
+      console.error('❌ Maia voice system completely failed:', error);
+      this.updateState({
         error: `Voice system error: ${error.message}`,
         isPlaying: false,
         isLoading: false
@@ -543,13 +584,13 @@ export class MaiaVoiceSystem {
       return await mobileVoice.generateSpeech(text, options);
     }
 
-    // Desktop version - use ElevenLabs directly (Sesame disabled)
+    // Desktop version - use OpenAI TTS primarily
     try {
-      await this.speakWithElevenLabs(text);
-      return 'elevenlabs-success';
+      await this.speakWithOpenAI(text);
+      return 'openai-tts-success';
     } catch (error) {
-      console.warn('ElevenLabs failed, falling back to Web Speech:', error);
-      
+      console.warn('OpenAI TTS failed, falling back to Web Speech:', error);
+
       // Fallback to Web Speech API
       await this.speakWithWebSpeech(text);
       return 'web-speech-fallback';

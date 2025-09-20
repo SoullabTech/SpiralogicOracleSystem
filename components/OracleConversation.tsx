@@ -113,7 +113,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [streamingText, setStreamingText] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
-  const [isMuted, setIsMuted] = useState(false); // Mute state for holoflower toggle
+  const [isMuted, setIsMuted] = useState(true); // Start muted - user must click holoflower to activate voice
   const voiceMicRef = useRef<VoiceActivatedMaiaRef>(null);
   
   // Agent configuration with persistence
@@ -131,6 +131,20 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
   const [showCaptions, setShowCaptions] = useState(false); // Default to no captions in voice mode
   const [showCustomizer, setShowCustomizer] = useState(false); // Settings panel
+
+  // Initialize voice when in voice mode
+  useEffect(() => {
+    if (!showChatInterface && voiceEnabled && !isMuted) {
+      // Delay to ensure component is ready
+      const timer = setTimeout(() => {
+        if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
+          voiceMicRef.current.startListening();
+          console.log('🎤 Voice auto-started in voice mode');
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [showChatInterface, voiceEnabled, isMuted, isProcessing, isResponding]);
   const [audioEnabled, setAudioEnabled] = useState(false); // Track if user has enabled audio
   const audioContextRef = useRef<AudioContext | null>(null);
   
@@ -279,9 +293,36 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
     // Process attachments first if any
     let messageText = text;
+    let fileContents: string[] = [];
+
     if (attachments && attachments.length > 0) {
       const fileNames = attachments.map(f => f.name).join(', ');
       messageText = `${text}\n\n[Files attached: ${fileNames}]`;
+
+      // Read text-based file contents
+      for (const file of attachments) {
+        if (file.type.startsWith('text/') ||
+            file.name.endsWith('.txt') ||
+            file.name.endsWith('.md') ||
+            file.name.endsWith('.json') ||
+            file.name.endsWith('.csv') ||
+            file.name.endsWith('.py') ||
+            file.name.endsWith('.js') ||
+            file.name.endsWith('.jsx') ||
+            file.name.endsWith('.ts') ||
+            file.name.endsWith('.tsx')) {
+          try {
+            const content = await file.text();
+            fileContents.push(`\n\nFile: ${file.name}\n${content}`);
+          } catch (err) {
+            console.error(`Failed to read file ${file.name}:`, err);
+          }
+        }
+      }
+
+      if (fileContents.length > 0) {
+        messageText += fileContents.join('');
+      }
     }
 
     const startTime = Date.now();
@@ -314,9 +355,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           sessionId,
           agentName: agentConfig.name,
           agentVoice: agentConfig.voice,
+          attachments: attachments ? attachments.map(f => ({
+            name: f.name,
+            type: f.type,
+            size: f.size
+          })) : undefined,
           context: {
             previousInteractions: messages.length,
             inputType: 'text', // Mark as text input
+            hasAttachments: attachments && attachments.length > 0,
             userPreferences: {
               voice: {
                 enabled: false, // Disable voice for text responses
@@ -487,16 +534,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       // Clean text for voice
       const cleanText = cleanMessageForVoice(text);
 
-      // Call ElevenLabs API to synthesize voice
-      const response = await fetch('/api/voice/synthesize', {
+      // Call OpenAI TTS API with Alloy voice
+      const response = await fetch('/api/voice/openai-tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: cleanText,
-          voiceId: agentConfig.voice?.voiceId || 'Xb7hH8MSUJpSbSDYk0k2', // Maia's default voice
-          modelId: 'eleven_turbo_v2_5',
-          stability: 0.75,
-          similarityBoost: 0.85
+          voice: 'alloy',     // Calm, composed, warm presence
+          speed: 0.95,        // Slightly slower for natural conversational pace
+          model: 'tts-1-hd'   // Higher quality for better clarity
         })
       });
 
@@ -535,23 +581,31 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   return (
     <div className="oracle-conversation min-h-screen bg-[#1a1f2e] overflow-hidden">
-      {/* Agent Customizer - Orbital position */}
-      <AgentCustomizer 
-        position="top-right"
-        onConfigChange={(config) => {
-          setAgentConfig(config);
-          // Save voice preference to localStorage
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('selected_voice', config.name);
-            // Cancel any playing audio when voice changes
-            if (window.speechSynthesis) {
-              window.speechSynthesis.cancel();
-            }
-          }
-          // Refresh conversation with new agent
-          console.log('Agent changed to:', config.name);
-        }}
-      />
+      {/* Agent Customizer - Only show when settings clicked */}
+      {showCustomizer && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setShowCustomizer(false)} />
+          <div className="relative z-10">
+            <AgentCustomizer
+              position="center"
+              onConfigChange={(config) => {
+                setAgentConfig(config);
+                // Save voice preference to localStorage
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('selected_voice', config.name);
+                  // Cancel any playing audio when voice changes
+                  if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                  }
+                }
+                // Refresh conversation with new agent
+                console.log('Agent changed to:', config.name);
+                setShowCustomizer(false); // Close after selection
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Beautiful Sacred Holoflower - Responsive sizing */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
@@ -825,16 +879,27 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             <motion.button
               onClick={() => {
                 if (!showChatInterface && voiceEnabled) {
-                  setIsMuted(!isMuted);
-                  // Stop listening if muting
-                  if (!isMuted && voiceMicRef.current?.isListening) {
-                    voiceMicRef.current.stopListening();
+                  enableAudio(); // Initialize audio context first
+
+                  // Toggle voice recognition
+                  if (!isMuted) {
+                    // Currently listening, so stop
+                    setIsMuted(true);
+                    if (voiceMicRef.current?.stopListening) {
+                      voiceMicRef.current.stopListening();
+                      console.log('🔇 Voice stopped via holoflower click');
+                    }
+                  } else {
+                    // Currently muted, so start listening
+                    setIsMuted(false);
+                    // Small delay to ensure component is ready
+                    setTimeout(() => {
+                      if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
+                        voiceMicRef.current.startListening();
+                        console.log('🎤 Voice started via holoflower click');
+                      }
+                    }, 100);
                   }
-                  // Start listening if unmuting
-                  else if (isMuted && voiceMicRef.current && !isProcessing && !isResponding) {
-                    voiceMicRef.current.startListening();
-                  }
-                  enableAudio();
                 }
               }}
               animate={{
@@ -877,15 +942,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 priority
               />
 
-              {/* Mute indicator overlay */}
-              {!showChatInterface && voiceEnabled && isMuted && (
+              {/* Mute indicator overlay - only show when truly muted and mic is initialized */}
+              {!showChatInterface && voiceEnabled && isMuted && voiceMicRef.current && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3}
-                          d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
-                          clipRule="evenodd" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3}
-                          d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                  <svg className="w-8 h-8 text-red-500/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          d="M5.586 15L7 16.414l1.414-1.414L7 13.586 5.586 15zM4 5l16 16m-7-7V7a3 3 0 00-6 0v4m0 4h.01M19 10a7 7 0 01-14 0" />
                   </svg>
                 </div>
               )}
@@ -1040,7 +1102,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       id="fileUpload"
                       className="hidden"
                       multiple
-                      accept="image/*,.pdf,.doc,.docx,.txt,.json,.csv"
+                      accept="*"
                     />
                     <label
                       htmlFor="fileUpload"
@@ -1077,9 +1139,42 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       )}
 
 
+      {/* Mic Hint Message */}
+      {!showChatInterface && voiceEnabled && isMuted && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50"
+        >
+          <div className="bg-white/10 backdrop-blur-md rounded-lg px-4 py-2 border border-white/20">
+            <p className="text-white/80 text-sm">Click the holoflower to activate voice</p>
+          </div>
+        </motion.div>
+      )}
+
       {/* Voice Mode Controls */}
       {!showChatInterface && (
         <div className="fixed bottom-24 right-4 flex flex-col gap-2">
+          {/* Mic Status Indicator */}
+          {voiceEnabled && (
+            <div className={`p-2 rounded-full backdrop-blur-sm border transition-all duration-300 ${
+              isMuted
+                ? 'bg-red-500/20 border-red-500/40'
+                : 'bg-green-500/20 border-green-500/40 animate-pulse'
+            }`}>
+              <svg className={`w-5 h-5 ${isMuted ? 'text-red-400' : 'text-green-400'}`}
+                   fill="currentColor" viewBox="0 0 24 24">
+                {isMuted ? (
+                  // Mic off icon
+                  <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z"/>
+                ) : (
+                  // Mic on icon
+                  <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                )}
+              </svg>
+            </div>
+          )}
           {/* Download Transcript Button */}
           <button
             onClick={downloadTranscript}
@@ -1141,12 +1236,23 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Redesigned Bottom Icon Bar - Sacred Style */}
-      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+      {/* Redesigned Bottom Icon Bar - Sacred Style - Positioned above chat input */}
+      <div className={`fixed ${showChatInterface ? 'bottom-20' : 'bottom-6'} left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300`}>
         <div className="flex justify-center items-center gap-8 py-4 px-8 bg-black/60 backdrop-blur-lg rounded-full border border-[#D4B896]/20">
-          {/* Voice Toggle */}
+          {/* Voice Toggle - Activate mic when switching to voice mode */}
           <button
-            onClick={() => setShowChatInterface(false)}
+            onClick={() => {
+              setShowChatInterface(false);
+              enableAudio();
+              // Start listening when switching to voice mode
+              setTimeout(() => {
+                if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
+                  voiceMicRef.current.startListening();
+                  console.log('🎤 Voice started via mode switch');
+                  setIsMuted(false);
+                }
+              }, 100);
+            }}
             className={`p-3 rounded-full transition-all duration-300 ${
               !showChatInterface
                 ? 'bg-[#D4B896]/20 text-[#D4B896]'
@@ -1193,7 +1299,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             id="maiaFileUpload"
             className="hidden"
             multiple
-            accept="image/*,.pdf,.doc,.docx,.txt,.json,.csv,.md,.py,.js,.tsx,.jsx"
+            accept="*"
             onChange={(e) => {
               const files = Array.from(e.target.files || []);
               if (files.length > 0) {
@@ -1214,10 +1320,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </svg>
           </label>
 
-          {/* Settings */}
+          {/* Settings - Opens voice selector */}
           <button
+            onClick={() => setShowCustomizer(!showCustomizer)}
             className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300"
-            title="Settings"
+            title="Settings & Voice Selection"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}

@@ -2,7 +2,7 @@
   "name": "Soullab Oracle",
   "short_name": "Soullab",
   "description": "Sacred technology for inner transformation - Maia consciousness interface",
-  "start_url": "/maia",
+  "start_url": "/oracle-conversation",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#D4B896",
@@ -59,13 +59,6 @@
     }
   ],
   "shortcuts": [
-    {
-      "name": "Maia Consciousness",
-      "short_name": "Maia",
-      "description": "Clean mobile interface with holoflower",
-      "url": "/maia",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
-    },
     {
       "name": "Oracle Unified",
       "short_name": "Unified",
