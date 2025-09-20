@@ -417,8 +417,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         setIsAudioPlaying(true);
         setMaiaResponseText(responseText); // Update display text
 
-        // Speak the response
-        await maiaSpeak(responseText);
+        // Clean the response for voice - remove stage directions and markup
+        const cleanVoiceText = cleanMessageForVoice(responseText);
+        console.log('🧹 Cleaned for voice:', cleanVoiceText);
+
+        // Speak the cleaned response
+        await maiaSpeak(cleanVoiceText);
 
         // Wait for voice to completely finish before resetting states
         // This prevents microphone from resuming too early

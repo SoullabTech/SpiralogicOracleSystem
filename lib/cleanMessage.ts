@@ -76,7 +76,7 @@ export function formatMessageForDisplay(text: string): string {
  */
 export function cleanMessageForVoice(text: string): string {
   if (!text) return "";
-  
+
   let cleaned = text
     // Remove stage directions like *settling in* or *laughs*
     .replace(/\*[^*]+\*/g, "")
@@ -86,15 +86,26 @@ export function cleanMessageForVoice(text: string): string {
     .replace(/<[^>]+>/g, "")
     // Remove square bracket annotations like [pause] or [thinking]
     .replace(/\[[^\]]+\]/g, "")
-    // Remove parenthetical asides
-    .replace(/\([^)]*\)/g, "")
+    // Remove parenthetical asides (but keep important content)
+    .replace(/\([^)]*subtext[^)]*\)/gi, "") // Remove subtext specifically
+    .replace(/\([^)]*direction[^)]*\)/gi, "") // Remove directions
+    .replace(/\([^)]*note[^)]*\)/gi, "") // Remove notes
+    .replace(/\([^)]*instruction[^)]*\)/gi, "") // Remove instructions
+    // Remove curly brace annotations
+    .replace(/\{[^}]+\}/g, "")
+    // Remove any markdown formatting
+    .replace(/[#*_~`]/g, "")
+    // Remove URLs and links
+    .replace(/https?:\/\/[^\s]+/g, "")
+    // Remove any remaining formatting symbols
+    .replace(/[<>]/g, "")
     // Clean up any resulting double spaces
     .replace(/\s+/g, " ")
     // Remove leading/trailing punctuation oddities
     .replace(/^\W+|\W+$/g, "")
     // Final trim
     .trim();
-    
+
   return cleaned;
 }
 
