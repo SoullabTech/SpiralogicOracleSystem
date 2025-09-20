@@ -82,6 +82,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [holoflowerSize, setHoloflowerSize] = useState(400);
   
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const updateSize = () => {
       const width = window.innerWidth;
       if (width < 640) {
@@ -92,7 +97,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         setHoloflowerSize(500); // Desktop
       }
     };
-    
+
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
@@ -249,7 +254,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       console.log('🔊 Enabling audio context on user interaction');
 
       // Create or resume AudioContext
-      if (!audioContextRef.current) {
+      if (!audioContextRef.current && typeof window !== 'undefined') {
         audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
 
@@ -526,16 +531,18 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
     const fullContent = header + date + sessionInfo + separator + transcript;
 
-    // Save as markdown file
-    const blob = new Blob([fullContent], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `conversation-${agentConfig.name}-${new Date().toISOString().split('T')[0]}.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // Save as markdown file (only on client side)
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      const blob = new Blob([fullContent], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `conversation-${agentConfig.name}-${new Date().toISOString().split('T')[0]}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
   }, [messages, agentConfig.name, sessionId]);
 
   // Voice synthesis for text chat
@@ -1147,7 +1154,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               <div className="space-y-3">
                 {/* On mobile, show only Maya's latest response; on desktop show last 5 messages */}
                 {messages
-                  .filter(msg => window.innerWidth < 640 ? msg.role === 'oracle' : true)
+                  .filter(msg => (typeof window !== 'undefined' && window.innerWidth < 640) ? msg.role === 'oracle' : true)
                   .slice(-8)
                   .map((message, index) => (
                     <motion.div
@@ -1159,7 +1166,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 text-white
                                border border-gold-divine/30 shadow-lg max-w-full"
                     >
-                      {window.innerWidth >= 640 && (
+                      {(typeof window !== 'undefined' && window.innerWidth >= 640) && (
                         <div className="text-xs text-gold-divine/60 mb-2">
                           {message.role === 'user' ? 'You' : agentConfig.name}
                         </div>
