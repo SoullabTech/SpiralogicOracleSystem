@@ -781,7 +781,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ))}
             </div>
 
-            {/* Voice Visualizer - User's voice (clean blue rings) */}
+            {/* Voice Visualizer - User's voice (elemental colored rings) */}
             {!showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && (
               <motion.div
                 className="absolute inset-0 pointer-events-none flex items-center justify-center"
@@ -789,7 +789,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {/* Clean blue pulsing rings - like the screenshot */}
+                {/* Elemental colored pulsing rings */}
                 {[...Array(2)].map((_, i) => (
                   <motion.div
                     key={`voice-ring-${i}`}
@@ -797,14 +797,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     style={{
                       width: `${200 + i * 100}px`,
                       height: `${200 + i * 100}px`,
-                      borderColor: '#6B9BD1', // Clean blue like screenshot
+                      borderColor: voiceMicRef.current?.elementalMode === 'fire' ? '#ef4444' :
+                        voiceMicRef.current?.elementalMode === 'water' ? '#6B9BD1' :
+                        voiceMicRef.current?.elementalMode === 'earth' ? '#a16207' :
+                        voiceMicRef.current?.elementalMode === 'air' ? '#D4B896' :
+                        '#9333ea', // aether
                     }}
                     animate={{
                       scale: [1, 1.1, 1],
                       opacity: [0.8, 0.4, 0.8],
                     }}
                     transition={{
-                      duration: 2 + i * 0.5,
+                      duration: voiceMicRef.current?.elementalMode === 'fire' ? 0.5 + i * 0.2 :
+                        voiceMicRef.current?.elementalMode === 'air' ? 1.5 + i * 0.3 :
+                        voiceMicRef.current?.elementalMode === 'water' ? 2 + i * 0.5 :
+                        voiceMicRef.current?.elementalMode === 'earth' ? 3 + i * 0.5 :
+                        4 + i * 0.5, // aether - slowest
                       repeat: Infinity,
                       delay: i * 0.3,
                       ease: "easeInOut"
@@ -885,9 +893,41 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               </motion.div>
             )}
 
-            {/* Status text below holoflower */}
+            {/* Status text below holoflower with elemental mode */}
             {!showChatInterface && voiceEnabled && (
               <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 text-center">
+                {/* Elemental Mode Indicator */}
+                {voiceMicRef.current?.elementalMode && (
+                  <motion.div
+                    className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full backdrop-blur-sm"
+                    style={{
+                      backgroundColor: `${voiceMicRef.current.elementalMode === 'fire' ? 'rgba(239, 68, 68, 0.2)' :
+                        voiceMicRef.current.elementalMode === 'water' ? 'rgba(107, 155, 209, 0.2)' :
+                        voiceMicRef.current.elementalMode === 'earth' ? 'rgba(161, 98, 7, 0.2)' :
+                        voiceMicRef.current.elementalMode === 'air' ? 'rgba(212, 184, 150, 0.2)' :
+                        'rgba(147, 51, 234, 0.2)'}`,
+                      border: `1px solid ${voiceMicRef.current.elementalMode === 'fire' ? 'rgba(239, 68, 68, 0.4)' :
+                        voiceMicRef.current.elementalMode === 'water' ? 'rgba(107, 155, 209, 0.4)' :
+                        voiceMicRef.current.elementalMode === 'earth' ? 'rgba(161, 98, 7, 0.4)' :
+                        voiceMicRef.current.elementalMode === 'air' ? 'rgba(212, 184, 150, 0.4)' :
+                        'rgba(147, 51, 234, 0.4)'}`
+                    }}
+                  >
+                    <span className="text-xs font-medium" style={{
+                      color: voiceMicRef.current.elementalMode === 'fire' ? '#ef4444' :
+                        voiceMicRef.current.elementalMode === 'water' ? '#6B9BD1' :
+                        voiceMicRef.current.elementalMode === 'earth' ? '#a16207' :
+                        voiceMicRef.current.elementalMode === 'air' ? '#D4B896' :
+                        '#9333ea'
+                    }}>
+                      {voiceMicRef.current.elementalMode === 'fire' ? '🔥 Fire' :
+                        voiceMicRef.current.elementalMode === 'water' ? '💧 Water' :
+                        voiceMicRef.current.elementalMode === 'earth' ? '🌍 Earth' :
+                        voiceMicRef.current.elementalMode === 'air' ? '🌬️ Air' :
+                        '✨ Aether'}
+                    </span>
+                  </motion.div>
+                )}
                 <AnimatePresence mode="wait">
                   {voiceMicRef.current?.isListening && !isResponding && (
                     <motion.div

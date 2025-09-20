@@ -6,6 +6,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import {
+  ElementalMode,
+  ELEMENTAL_TIMINGS,
+  detectElementalMode,
+  getActiveListeningPrompt
+} from '@/lib/elemental-timing';
 
 interface SimplifiedOrganicVoiceProps {
   onTranscript: (text: string) => void;
@@ -35,10 +41,12 @@ export interface VoiceActivatedMaiaRef {
   stopListening: () => void;
   muteImmediately: () => void;
   toggleContemplationMode: () => void;
+  switchElementalMode: (mode: ElementalMode) => void;
   isListening: boolean;
   audioLevel: number;
   isContemplationMode: boolean;
   conversationMode: 'active' | 'contemplating';
+  elementalMode: ElementalMode;
 }
 
 export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, SimplifiedOrganicVoiceProps>(({
@@ -56,6 +64,9 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const [isMuted, setIsMuted] = useState(false);
   const [isContemplationMode, setIsContemplationMode] = useState(false);
   const [conversationMode, setConversationMode] = useState<'active' | 'contemplating'>('active');
+  const [elementalMode, setElementalMode] = useState<ElementalMode>('water');
+  const [recentSilences, setRecentSilences] = useState<number[]>([]);
+  const lastSpeechTime = useRef<number>(Date.now());
 
   const recognitionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -67,11 +78,9 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
-  // Conversation timing - responsive and natural
-  const CONVERSATION_THRESHOLD = 2500; // 2.5 seconds - optimal for natural dialogue
-  const SMART_THRESHOLD = 1500;        // 1.5 seconds for questions and complete sentences
-  const CONTEMPLATION_THRESHOLD = 10000; // 10 seconds - auto-switch to contemplation mode
-  const BREATH_PAUSE_THRESHOLD = 8000;   // 8 seconds - natural breathing space
+  // Get timing based on current elemental mode
+  const currentTiming = ELEMENTAL_TIMINGS[elementalMode];
+  const SMART_THRESHOLD = 1500; // Always quick for questions
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
@@ -190,18 +199,25 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
           const endsWithPunctuation = /[.!?]$/.test(accumulated);
           const hasQuestionWords = /^(what|where|when|why|how|who|can|could|would|should|is|are|do|does)/i.test(accumulated);
 
-          // Intelligent timing based on conversation mode and content
+          // Track silence duration for elemental mode detection
+          const silenceDuration = Date.now() - lastSpeechTime.current;
+          lastSpeechTime.current = Date.now();
+
+          // Update recent silences for mode detection
+          setRecentSilences(prev => [...prev.slice(-4), silenceDuration]);
+
+          // Intelligent timing based on elemental mode and content
           let threshold;
 
           if (isContemplationMode) {
-            // In contemplation mode, wait much longer for user to indicate they're ready
-            threshold = CONTEMPLATION_THRESHOLD;
+            // In contemplation mode, use elemental contemplation threshold
+            threshold = currentTiming.contemplationThreshold;
           } else if (endsWithPunctuation || (hasQuestionWords && accumulated.length > 20)) {
             // Quick response for complete thoughts and questions
             threshold = SMART_THRESHOLD;
           } else {
-            // Normal conversation flow
-            threshold = CONVERSATION_THRESHOLD;
+            // Use elemental mode timing
+            threshold = currentTiming.silenceThreshold;
           }
 
           // Set timer to process after silence
@@ -223,12 +239,24 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
             }
           }, threshold);
 
-          // Auto-switch to contemplation mode after very long pauses
-          if (!isContemplationMode && threshold >= BREATH_PAUSE_THRESHOLD) {
-            setTimeout(() => {
-              setConversationMode('contemplating');
-              console.log('🧘 Auto-switched to contemplation mode for extended pause');
-            }, BREATH_PAUSE_THRESHOLD);
+          // Auto-detect elemental mode based on conversation pattern
+          if (recentSilences.length >= 3) {
+            const detectedMode = detectElementalMode(
+              recentSilences,
+              accumulated.split(' ').length,
+              0.5 // Default emotional intensity - could be enhanced with sentiment analysis
+            );
+
+            if (detectedMode !== elementalMode) {
+              console.log(`🔮 Elemental shift: ${elementalMode} → ${detectedMode}`);
+              setElementalMode(detectedMode);
+            }
+          }
+
+          // Auto-switch to contemplation in aether mode
+          if (elementalMode === 'aether' && silenceDuration > currentTiming.contemplationThreshold) {
+            setConversationMode('contemplating');
+            console.log('✨ Entered aether contemplation space');
           }
         }
       }
@@ -328,11 +356,22 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         silenceTimerRef.current = null;
       }
     },
+    switchElementalMode: (mode: ElementalMode) => {
+      console.log(`🔮 Switching to ${mode} mode`);
+      setElementalMode(mode);
+
+      // Clear timers to use new mode timing immediately
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+    },
     isListening,
     audioLevel,
     isContemplationMode,
-    conversationMode
-  }), [isListening, isPausedForMaya, audioLevel, isContemplationMode, conversationMode]);
+    conversationMode,
+    elementalMode
+  }), [isListening, isPausedForMaya, audioLevel, isContemplationMode, conversationMode, elementalMode]);
 
   // Start/stop listening
   const toggleListening = useCallback(async () => {
