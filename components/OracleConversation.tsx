@@ -67,8 +67,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   onMessageAdded,
   onSessionEnd
 }) => {
-  // Maia Voice Integration
+  // Maia Voice Integration - Initialize immediately for Voice mode
   const { speak: maiaSpeak, voiceState: maiaVoiceState, isReady: maiaReady } = useMaiaVoice();
+
+  // Ensure voice is ready when in Voice mode
+  useEffect(() => {
+    if (!showChatInterface && !maiaReady) {
+      console.log('🎤 Initializing voice for Voice mode');
+      // Voice will auto-initialize via the hook
+    }
+  }, [showChatInterface, maiaReady]);
 
   // Responsive holoflower size
   const [holoflowerSize, setHoloflowerSize] = useState(400);
@@ -130,7 +138,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   
   // UI states
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
-  const [showCaptions, setShowCaptions] = useState(false); // Default to no captions in voice mode
+  const [showCaptions, setShowCaptions] = useState(true); // Show text by default in voice mode
+  const [showVoiceText, setShowVoiceText] = useState(true); // Toggle for showing text in voice mode
   const [showCustomizer, setShowCustomizer] = useState(false); // Settings panel
 
   // Initialize voice when in voice mode
@@ -409,9 +418,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setMessages(prev => [...prev, oracleMessage]);
       onMessageAdded?.(oracleMessage);
 
-      // Play audio response with Maia's voice
-      if (voiceEnabled && maiaReady && maiaSpeak) {
-        console.log('🔊 Maia speaking response');
+      // Play audio response with Maia's voice - ALWAYS in voice mode
+      const shouldSpeak = !showChatInterface || (showChatInterface && voiceEnabled);
+
+      if (shouldSpeak && maiaReady && maiaSpeak) {
+        console.log('🔊 Maia speaking response in', showChatInterface ? 'Chat' : 'Voice', 'mode');
         // Set speaking state for visual feedback
         setIsResponding(true);
         setIsAudioPlaying(true);
@@ -460,7 +471,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setIsResponding(false);
       setCurrentMotionState('idle');
     }
-  }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length, showChatInterface]);
+  }, [isProcessing, isAudioPlaying, isResponding, sessionId, userId, onMessageAdded, agentConfig, messages.length, showChatInterface, voiceEnabled, maiaReady, maiaSpeak]);
 
   // Handle voice transcript from mic button
   const handleVoiceTranscript = useCallback(async (transcript: string) => {
@@ -1128,8 +1139,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Message flow - Clean display for Maya's responses */}
-      {showChatInterface && messages.length > 0 && (
+      {/* Message flow - Show in both Chat mode and optionally in Voice mode */}
+      {(showChatInterface || (!showChatInterface && showVoiceText)) && messages.length > 0 && (
         <div className="fixed inset-x-4 top-24 sm:top-16 sm:right-8 sm:left-auto sm:transform-none
                         sm:w-96 max-h-[60vh] sm:max-h-[calc(100vh-200px)] overflow-y-auto z-30">
           <AnimatePresence>
@@ -1205,8 +1216,20 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </div>
           </div>
 
+          {/* Text Display Toggle for Voice Mode */}
+          {!showChatInterface && (
+            <button
+              onClick={() => setShowVoiceText(!showVoiceText)}
+              className="px-3 py-1.5 rounded-full text-xs font-medium bg-black/20 backdrop-blur-md
+                       text-white/60 hover:text-white/80 transition-all ml-2"
+            >
+              {showVoiceText ? 'Hide Text' : 'Show Text'}
+            </button>
+          )}
+        </div>
+
           {showChatInterface ? (
-            /* Clean Mobile-Optimized Chat Interface */
+            /* Chat Interface - Only show text input in Chat mode */
             <>
               {/* Compact Holoflower at top for mobile */}
               <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-40 sm:hidden">
@@ -1246,7 +1269,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 </motion.div>
               </div>
 
-              {/* Expanded text input area - above menu bar */}
+              {/* Expanded text input area - only in Chat mode */}
+              {showChatInterface && (
               <div className="fixed inset-x-0 bottom-24 z-40">
                 {/* Text input area */}
                 <div className="bg-black/20 backdrop-blur-sm p-4">
@@ -1299,6 +1323,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   </form>
                 </div>
               </div>
+              )}
             </>
           ) : (
             <>
