@@ -62,7 +62,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
-  const SILENCE_THRESHOLD = 30000; // TRULY UNLEASHED: 30 seconds of silence - speak as long as you want with natural pauses
+  const SILENCE_THRESHOLD = 3000; // OPTIMIZED: 3 seconds - natural conversation pause
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
@@ -170,18 +170,28 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
             clearTimeout(silenceTimerRef.current);
           }
 
+          // Check if this looks like end of sentence/thought
+          const accumulated = accumulatedTranscriptRef.current.trim();
+          const endsWithPunctuation = /[.!?]$/.test(accumulated);
+          const hasQuestionWords = /^(what|where|when|why|how|who|can|could|would|should|is|are|do|does)/i.test(accumulated);
+
+          // Use shorter threshold for questions or complete sentences
+          const threshold = (endsWithPunctuation || (hasQuestionWords && accumulated.length > 20))
+            ? 1500  // 1.5 seconds for complete thoughts
+            : SILENCE_THRESHOLD; // 3 seconds for continuing thoughts
+
           // Set timer to process after silence
           silenceTimerRef.current = setTimeout(() => {
             const finalMessage = accumulatedTranscriptRef.current.trim();
 
             // Simple validation - just ensure it's not empty
             if (finalMessage && finalMessage.length > 0) {
-              console.log('🚀 Sending to Maia:', finalMessage);
+              console.log('🚀 Sending to Maya:', finalMessage);
               onTranscript(finalMessage);
               accumulatedTranscriptRef.current = '';
               setTranscript('');
             }
-          }, SILENCE_THRESHOLD);
+          }, threshold);
         }
       }
     };

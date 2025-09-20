@@ -1047,12 +1047,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Message flow - Clean display for Maya's responses only on mobile */}
-      {showChatInterface && (
-        <div className="fixed top-32 sm:top-auto sm:right-8 sm:bottom-1/2 sm:transform sm:-translate-y-1/2
-                        left-4 right-4 sm:left-auto sm:w-96
-                        max-h-[40vh] sm:max-h-[70vh] overflow-y-auto
-                        sm:block">
+      {/* Message flow - Clean display for Maya's responses */}
+      {showChatInterface && messages.length > 0 && (
+        <div className="fixed inset-x-4 top-24 sm:top-1/2 sm:right-8 sm:left-auto sm:transform sm:-translate-y-1/2
+                        sm:w-96 max-h-[40vh] sm:max-h-[70vh] overflow-y-auto">
           <AnimatePresence>
             {messages.length > 0 && (
               <div className="space-y-3">
