@@ -556,7 +556,7 @@ export class PersonalOracleAgent {
         },
         body: JSON.stringify({
           model: 'claude-3-opus-20240229',
-          max_tokens: 100, // Reduced from 1500 to enforce brevity
+          max_tokens: 2000, // UNLEASHED: Restored for complete expression
           temperature: 0.8,
           system: prompt,
           messages: [
@@ -612,7 +612,7 @@ export class PersonalOracleAgent {
             { role: 'system', content: prompt },
             { role: 'user', content: 'Remember: Maximum 20 words. Zen wisdom like Maya Angelou. No therapy-speak.' }
           ],
-          max_tokens: 50, // Reduced from 500 to enforce brevity
+          max_tokens: 2000, // UNLEASHED: Restored for complete expression
           temperature: 0.7
         })
       });
