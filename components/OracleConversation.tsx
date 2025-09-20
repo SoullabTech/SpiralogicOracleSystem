@@ -1153,63 +1153,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </motion.div>
       )}
 
-      {/* Voice Mode Controls */}
-      {!showChatInterface && (
-        <div className="fixed bottom-24 right-4 flex flex-col gap-2">
-          {/* Mic Status Indicator */}
-          {voiceEnabled && (
-            <div className={`p-2 rounded-full backdrop-blur-sm border transition-all duration-300 ${
-              isMuted
-                ? 'bg-red-500/20 border-red-500/40'
-                : 'bg-green-500/20 border-green-500/40 animate-pulse'
-            }`}>
-              <svg className={`w-5 h-5 ${isMuted ? 'text-red-400' : 'text-green-400'}`}
-                   fill="currentColor" viewBox="0 0 24 24">
-                {isMuted ? (
-                  // Mic off icon
-                  <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z"/>
-                ) : (
-                  // Mic on icon
-                  <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
-                )}
-              </svg>
-            </div>
-          )}
-          {/* Download Transcript Button */}
-          <button
-            onClick={downloadTranscript}
-            className="p-2 bg-white/10 backdrop-blur-sm rounded-full
-                       hover:bg-white/20 transition-all duration-300 border border-white/20"
-            title="Download conversation"
-            disabled={messages.length === 0}
-          >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </button>
-
-          {/* CC/Transcript Toggle */}
-          <button
-            onClick={() => setShowCaptions(!showCaptions)}
-            className="p-2 bg-white/10 backdrop-blur-sm rounded-full
-                       hover:bg-white/20 transition-all duration-300 border border-white/20"
-            title={showCaptions ? "Hide transcript" : "Show transcript"}
-          >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {showCaptions ? (
-                // CC On icon
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-              ) : (
-                // CC Off icon
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              )}
-            </svg>
-          </button>
-        </div>
-      )}
 
 
       {/* Analytics toggle */}

@@ -8,8 +8,8 @@ import {
   Sun, Moon, Star, Compass
 } from 'lucide-react';
 
-// Import Maia chat
-import MaiaChatInterface from '@/app/maia/chat/page';
+// Import Maia chat - commented out as file doesn't exist
+// import MaiaChatInterface from '@/app/maia/chat/page';
 
 interface SlidingFieldsState {
   currentView: 'center' | 'left' | 'right' | 'bottom';
@@ -157,7 +157,8 @@ export default function SlidingFields() {
   // Center view - Maya Chat
   const renderCenterView = () => (
     <div className="w-full h-full relative">
-      <MaiaChatInterface />
+      {/* <MaiaChatInterface /> */}
+      <div className="p-8 text-white">Maia Chat Interface - Component not available</div>
       
       {/* Gentle slide hints */}
       <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-10">
