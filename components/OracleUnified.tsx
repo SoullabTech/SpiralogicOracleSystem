@@ -239,24 +239,41 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
 
         {/* Control Buttons - Right Side */}
         <div className="absolute right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-3">
-          {/* Mic Button */}
+          {/* Mic/Mute Button */}
           <motion.button
             onClick={() => {
-              initAudioContext();
-              setIsListening(!isListening);
+              if (!showChatInterface) {
+                // In voice mode, toggle listening
+                initAudioContext();
+                setIsListening(!isListening);
+                setIsMuted(false); // Unmute when activating voice
+              } else {
+                // In chat mode, toggle mute for responses
+                setIsMuted(!isMuted);
+              }
             }}
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-              isListening
+              isListening && !showChatInterface
                 ? 'bg-gradient-to-br from-[#D4B896]/70 to-[#B69A78]/70 shadow-lg'
+                : isMuted
+                ? 'bg-red-500/30 border border-red-500/40'
                 : 'bg-black/50 border border-[#D4B896]/30 hover:bg-[#D4B896]/10'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {isListening ? (
-              <Mic className="w-5 h-5 text-white" />
+            {!showChatInterface ? (
+              isListening ? (
+                <Mic className="w-5 h-5 text-white" />
+              ) : (
+                <MicOff className="w-5 h-5 text-[#D4B896]/60" />
+              )
             ) : (
-              <MicOff className="w-5 h-5 text-[#D4B896]/60" />
+              isMuted ? (
+                <VolumeX className="w-5 h-5 text-red-400" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-[#D4B896]/60" />
+              )
             )}
           </motion.button>
 
@@ -268,24 +285,6 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
             whileTap={{ scale: 0.95 }}
           >
             <Download className="w-5 h-5 text-[#D4B896]/60" />
-          </motion.button>
-
-          {/* Mute Button */}
-          <motion.button
-            onClick={() => setIsMuted(!isMuted)}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-              isMuted
-                ? 'bg-red-500/30 border border-red-500/40'
-                : 'bg-black/50 border border-[#D4B896]/30 hover:bg-[#D4B896]/10'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isMuted ? (
-              <VolumeX className="w-5 h-5 text-red-400" />
-            ) : (
-              <Volume2 className="w-5 h-5 text-[#D4B896]/60" />
-            )}
           </motion.button>
         </div>
 
