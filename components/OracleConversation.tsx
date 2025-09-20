@@ -798,7 +798,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ))}
             </div>
 
-            {/* Voice Visualizer - User's voice (elemental colored rings) */}
+            {/* Voice Visualizer - User's voice (clean blue rings for now) */}
             {isMounted && !showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && (
               <motion.div
                 className="absolute inset-0 pointer-events-none flex items-center justify-center"
@@ -814,22 +814,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     style={{
                       width: `${200 + i * 100}px`,
                       height: `${200 + i * 100}px`,
-                      borderColor: isMounted ? (voiceMicRef.current?.elementalMode === 'fire' ? '#ef4444' :
-                        voiceMicRef.current?.elementalMode === 'water' ? '#6B9BD1' :
-                        voiceMicRef.current?.elementalMode === 'earth' ? '#a16207' :
-                        voiceMicRef.current?.elementalMode === 'air' ? '#D4B896' :
-                        '#9333ea') : '#6B9BD1', // default to water until mounted
+                      borderColor: '#6B9BD1', // Clean blue - temporarily disabled elemental colors
                     }}
                     animate={{
                       scale: [1, 1.1, 1],
                       opacity: [0.8, 0.4, 0.8],
                     }}
                     transition={{
-                      duration: isMounted ? (voiceMicRef.current?.elementalMode === 'fire' ? 0.5 + i * 0.2 :
-                        voiceMicRef.current?.elementalMode === 'air' ? 1.5 + i * 0.3 :
-                        voiceMicRef.current?.elementalMode === 'water' ? 2 + i * 0.5 :
-                        voiceMicRef.current?.elementalMode === 'earth' ? 3 + i * 0.5 :
-                        4 + i * 0.5) : 2 + i * 0.5, // default until mounted
+                      duration: 2 + i * 0.5, // Standard timing - temporarily disabled elemental timing
                       repeat: Infinity,
                       delay: i * 0.3,
                       ease: "easeInOut"
@@ -910,10 +902,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               </motion.div>
             )}
 
-            {/* Status text below holoflower with elemental mode */}
+            {/* Status text below holoflower */}
             {isMounted && !showChatInterface && voiceEnabled && (
               <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 text-center">
-                {/* Elemental Mode Indicator - positioned above status text */}
+                {/* Elemental Mode Indicator - TEMPORARILY DISABLED
                 {voiceMicRef.current?.elementalMode && (
                   <motion.div
                     className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full backdrop-blur-sm"
@@ -944,8 +936,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                         '✨ Aether'}
                     </span>
                   </motion.div>
-                )}
-                {/* Status messages below elemental indicator */}
+                )} */}
+                {/* Status messages */}
                 <AnimatePresence mode="wait">
                   {voiceMicRef.current?.isListening && !isResponding && (
                     <motion.div
