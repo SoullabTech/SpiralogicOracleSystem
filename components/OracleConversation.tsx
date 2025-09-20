@@ -345,7 +345,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout for text
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // UNLEASHED: 60 second timeout for longer conversations
 
       const response = await fetch('/api/oracle/personal', {
         method: 'POST',
@@ -424,18 +424,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         // Speak the cleaned response
         await maiaSpeak(cleanVoiceText);
 
-        // Wait for voice to completely finish before resetting states
-        // This prevents microphone from resuming too early
-        setTimeout(() => {
-          setIsResponding(false);
-          setIsAudioPlaying(false);
-          // Clear transcripts after a delay
-          setTimeout(() => {
-            setUserTranscript('');
-            setMaiaResponseText('');
-          }, 2000);
-          console.log('🔇 Maia finished speaking, states reset');
-        }, 3000); // Increased delay to ensure audio is completely done
+        // UNLEASHED: Let Maya speak as long as needed
+        // Reset states only after speech actually completes
+        setIsResponding(false);
+        setIsAudioPlaying(false);
+        console.log('🔇 Maia finished speaking naturally');
       }
 
       // Update context
