@@ -905,7 +905,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           </div>
 
           {showChatInterface ? (
-            /* Maya Chat Interface - Full voice and text support */
+            /* Maia Chat Interface - Full voice and text support */
             <div className="fixed bottom-0 left-0 right-0 z-40 pb-safe">
               {/* Simple Chat Input */}
               <div className="bg-black/80 backdrop-blur-lg border-t border-[#D4B896]/20 p-4">

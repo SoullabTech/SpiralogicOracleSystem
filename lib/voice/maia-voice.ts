@@ -1,5 +1,5 @@
 /**
- * Maya Voice System - ElevenLabs "Aunt Annie" + Sesame Intelligence
+ * Maia Voice System - ElevenLabs "Aunt Annie" + Sesame Intelligence
  * Modern, everyday, soulful, intelligent voice for the Oracle
  */
 
@@ -42,7 +42,7 @@ export class MaiaVoiceSystem {
     const isAnthony = config?.agentConfig?.voice === 'anthony';
     const defaultVoiceId = isAnthony 
       ? 'c6SfcYrb2t09NHXiT80T'  // Anthony's voice
-      : 'EXAVITQu4vr4xnSDxMaL'; // Maya's voice
+      : 'EXAVITQu4vr4xnSDxMaL'; // Maia's voice
     
     this.config = {
       voiceId: config?.voiceId || defaultVoiceId,
@@ -106,14 +106,14 @@ export class MaiaVoiceSystem {
     return processedText.trim();
   }
 
-  // Generate Maya's natural greeting
+  // Generate Maia's natural greeting
   getNaturalGreeting(): string {
     const greetings = [
-      "Hey there. I'm Maya. Good to connect with you.",
+      "Hey there. I'm Maia. Good to connect with you.",
       "Hi. I'm here when you're ready to explore what's on your mind.",
-      "Hello. I'm Maya, and I'm listening. What's stirring for you?",
+      "Hello. I'm Maia, and I'm listening. What's stirring for you?",
       "Hey. Let's see what we can discover together. How are you feeling?",
-      "Hi there. I'm Maya. What would it be helpful to talk about?"
+      "Hi there. I'm Maia. What would it be helpful to talk about?"
     ];
     
     return this.enhanceTextForSpeech(
@@ -198,7 +198,7 @@ export class MaiaVoiceSystem {
           utterance.pitch = 0.8;  // Lower pitch for male voice
           utterance.volume = 0.9; // Slightly louder
         } else {
-          // Maya's voice characteristics  
+          // Maia's voice characteristics  
           utterance.rate = 0.95;  // Natural female pace
           utterance.pitch = 1.05;  // Slightly higher for warmth
           utterance.volume = 0.85; // Softer for comfort
@@ -373,7 +373,7 @@ export class MaiaVoiceSystem {
             isPlaying: true,
             isPaused: false
           });
-          console.log('🎵 Maya audio started playing');
+          console.log('🎵 Maia audio started playing');
         };
 
         audio.onended = () => {
@@ -381,7 +381,7 @@ export class MaiaVoiceSystem {
             isPlaying: false,
             currentText: ''
           });
-          console.log('🎵 Maya audio finished playing');
+          console.log('🎵 Maia audio finished playing');
           URL.revokeObjectURL(audioUrl); // Clean up blob URL
 
           // Add a small delay before resolving to ensure audio has fully stopped
@@ -452,7 +452,7 @@ export class MaiaVoiceSystem {
 
       throw new Error('No voice services available');
     } catch (error) {
-      console.error('Maya voice system failed:', error);
+      console.error('Maia voice system failed:', error);
       this.updateState({ 
         error: `Voice system error: ${error.message}`,
         isPlaying: false,
@@ -462,7 +462,7 @@ export class MaiaVoiceSystem {
     }
   }
 
-  // Speak Maya's greeting
+  // Speak Maia's greeting
   async playGreeting(context?: any): Promise<void> {
     const greeting = this.getNaturalGreeting();
     return this.speak(greeting, { ...context, type: 'greeting' });
@@ -580,7 +580,7 @@ export class MaiaVoiceSystem {
   }
 }
 
-// Global Maya voice instance
+// Global Maia voice instance
 let maiaVoiceInstance: MaiaVoiceSystem | null = null;
 
 export function getMaiaVoice(config?: Partial<MaiaVoiceConfig>): MaiaVoiceSystem {
