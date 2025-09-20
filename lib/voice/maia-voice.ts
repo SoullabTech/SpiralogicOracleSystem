@@ -584,7 +584,7 @@ export class MaiaVoiceSystem {
 let maiaVoiceInstance: MaiaVoiceSystem | null = null;
 
 export function getMaiaVoice(config?: Partial<MaiaVoiceConfig>): MaiaVoiceSystem {
-  if (!mayaVoiceInstance) {
+  if (!maiaVoiceInstance) {
     maiaVoiceInstance = new MaiaVoiceSystem(config);
   }
   return maiaVoiceInstance;
@@ -592,9 +592,9 @@ export function getMaiaVoice(config?: Partial<MaiaVoiceConfig>): MaiaVoiceSystem
 
 // Configuration helper
 export function configureMaiaVoice(config: Partial<MaiaVoiceConfig>): void {
-  if (mayaVoiceInstance) {
+  if (maiaVoiceInstance) {
     // Update existing instance
-    Object.assign(mayaVoiceInstance['config'], config);
+    Object.assign(maiaVoiceInstance['config'], config);
   } else {
     // Create new instance with config
     maiaVoiceInstance = new MaiaVoiceSystem(config);
