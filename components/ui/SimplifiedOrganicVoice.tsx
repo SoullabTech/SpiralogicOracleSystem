@@ -136,7 +136,9 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         setAudioLevel(level);
         onAudioLevelChange?.(level);
 
-        animationFrameRef.current = requestAnimationFrame(monitorAudioLevel);
+        if (typeof window !== 'undefined') {
+          animationFrameRef.current = requestAnimationFrame(monitorAudioLevel);
+        }
       };
 
       monitorAudioLevel();
@@ -429,7 +431,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
-      if (animationFrameRef.current) {
+      if (animationFrameRef.current && typeof window !== 'undefined') {
         cancelAnimationFrame(animationFrameRef.current);
       }
       if (micStreamRef.current) {
@@ -456,7 +458,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
-      if (animationFrameRef.current) {
+      if (animationFrameRef.current && typeof window !== 'undefined') {
         cancelAnimationFrame(animationFrameRef.current);
       }
       if (micStreamRef.current) {
@@ -474,6 +476,11 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // Keyboard shortcut for muting (Cmd/Ctrl + M)
   useEffect(() => {
+    // Only add event listener on client side
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const handleKeyPress = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'm') {
         e.preventDefault();
@@ -554,13 +561,18 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      // Only cleanup on client side
+      if (typeof window === 'undefined') {
+        return;
+      }
+
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
       }
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
-      if (animationFrameRef.current) {
+      if (animationFrameRef.current && typeof window !== 'undefined') {
         cancelAnimationFrame(animationFrameRef.current);
       }
       if (micStreamRef.current) {
