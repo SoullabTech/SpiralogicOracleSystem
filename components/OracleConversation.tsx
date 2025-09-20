@@ -1209,7 +1209,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   <div className="text-neutral-silver text-base leading-relaxed min-h-[50px]">
                     {userTranscript || maiaResponseText || streamingText || (
                       <span className="text-neutral-mystic italic">
-                        Ready to listen... Click the holoflower to start
+                        {!isMuted && voiceEnabled ? 'Listening... speak freely' : 'Ready to listen... Click the holoflower to start'}
                       </span>
                     )}
                   </div>
@@ -1245,6 +1245,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               <SimplifiedOrganicVoice
                 ref={voiceMicRef}
                 onTranscript={(transcript) => {
+                  console.log('📝 Voice transcript received:', transcript);
                   setUserTranscript(transcript);
                   handleVoiceTranscript(transcript);
                 }}
