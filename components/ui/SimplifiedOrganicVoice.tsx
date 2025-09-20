@@ -90,6 +90,11 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
+    // Check if window exists (not on server)
+    if (typeof window === 'undefined' || !navigator?.mediaDevices) {
+      return false;
+    }
+
     try {
       console.log('📡 Requesting microphone permission...');
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -106,7 +111,12 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
       console.log('✅ Microphone permission granted');
       micStreamRef.current = stream;
 
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) {
+        console.error('AudioContext not supported');
+        return false;
+      }
+      audioContextRef.current = new AudioContextClass();
       analyserRef.current = audioContextRef.current.createAnalyser();
       analyserRef.current.fftSize = 256;
 
@@ -139,6 +149,11 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // Initialize speech recognition
   const initializeSpeechRecognition = useCallback(() => {
+    // Check if window exists (not on server)
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
     const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
     if (!SpeechRecognition) {
       console.error('Speech recognition not supported');
