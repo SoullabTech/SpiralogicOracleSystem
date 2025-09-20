@@ -1,56 +1,31 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { HoloflowerCore } from '@/components/holoflower/HoloflowerCore';
-import { SimplifiedOrganicVoice } from '@/components/ui/SimplifiedOrganicVoice';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from '@/components/ui/SimplifiedOrganicVoice';
+import { HoloflowerCore } from '@/components/holoflower/HoloflowerCore';
 import { useMaiaVoice } from '@/hooks/useMaiaVoice';
-import { Volume2, VolumeX, Download, Mic, MicOff } from 'lucide-react';
+import { Share, Heart, Info, Menu, Trash2 } from 'lucide-react';
 
 interface Message {
   id: string;
   role: 'user' | 'maia';
   content: string;
   timestamp: Date;
-  element?: string;
-  spoken?: boolean;
 }
 
-export default function MaiaHoloflowerPage() {
+export default function MaiaConsciousnessPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isMaiaSpeaking, setIsMaiaSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [isWaitingForInput, setIsWaitingForInput] = useState(false);
   const [sessionId] = useState(() => `maia-${Date.now()}`);
-  const [error, setError] = useState<string | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
-  const [showVoiceInterface, setShowVoiceInterface] = useState(false);
+  const [voiceAudioLevel, setVoiceAudioLevel] = useState(0);
 
-  // Use the sophisticated Maia Voice system
-  const { speak: maiaSpeak, voiceState, isReady: maiaReady } = useMaiaVoice();
+  const voiceMicRef = useRef<VoiceActivatedMaiaRef>(null);
+  const { speak: maiaSpeak, isReady: maiaReady } = useMaiaVoice();
 
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // Initialize audio context on user interaction (required for mobile)
-  const initAudioContext = useCallback(() => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-      console.log('Audio context initialized');
-    }
-    // Resume if suspended (iOS requirement)
-    if (audioContextRef.current?.state === 'suspended') {
-      audioContextRef.current.resume();
-    }
-  }, []);
-
-  // Process Maia's response
+  // Process Maia response
   const processMaiaResponse = async (userText: string) => {
     // Add user message
     const userMessage: Message = {
@@ -62,70 +37,43 @@ export default function MaiaHoloflowerPage() {
     setMessages(prev => [...prev, userMessage]);
 
     setIsProcessing(true);
-    setError(null);
 
     try {
-      const response = await fetch('/api/maia-voice', {
+      const response = await fetch('/api/oracle/personal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          transcript: userText,
+          input: userText,
           sessionId,
-          context: {
-            timestamp: new Date().toISOString(),
-            source: 'maia-interface'
-          }
+          context: { source: 'maia-consciousness' }
         })
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to get Maia response');
-      }
+      if (!response.ok) throw new Error('Failed to get response');
 
       const data = await response.json();
-
-      // Clean Maia's response for display
-      const cleanResponse = (data.response || "I'm here to listen. Tell me more.")
+      const cleanResponse = (data.data?.message || data.message || "I'm here to listen.")
         .replace(/\*[^*]*\*/g, '')
-        .replace(/\*\*[^*]*\*\*/g, '')
-        .replace(/\*{1,}[^*]+\*{1,}/g, '')
-        .replace(/\([^)]*\)/gi, '')
         .replace(/\[[^\]]*\]/g, '')
-        .replace(/\{[^}]*\}/g, '')
-        .replace(/\s+/g, ' ')
-        .replace(/^\s*[,;.]\s*/, '')
         .trim();
 
-      // Add Maia's response
+      // Add Maia response
       const maiaMessage: Message = {
         id: `msg-${Date.now()}-maia`,
         role: 'maia',
         content: cleanResponse,
-        element: data.element,
-        timestamp: new Date(),
-        spoken: false
+        timestamp: new Date()
       };
       setMessages(prev => [...prev, maiaMessage]);
 
-      // Voice response
-      if (data.response && !isMuted && maiaReady) {
-        try {
-          initAudioContext();
-          setIsMaiaSpeaking(true);
-          await maiaSpeak(data.response, {
-            element: data.element,
-            voice: 'alloy',
-            speed: 0.95
-          });
-          setIsMaiaSpeaking(false);
-        } catch (error) {
-          console.error('Maia voice error:', error);
-          setIsMaiaSpeaking(false);
-        }
+      // Speak response
+      if (maiaReady && cleanResponse) {
+        setIsMaiaSpeaking(true);
+        await maiaSpeak(cleanResponse);
+        setIsMaiaSpeaking(false);
       }
     } catch (err) {
-      console.error('Error processing Maia response:', err);
-      setError('Failed to connect with Maia. Please try again.');
+      console.error('Error:', err);
     } finally {
       setIsProcessing(false);
     }
@@ -134,201 +82,247 @@ export default function MaiaHoloflowerPage() {
   // Handle voice transcript
   const handleVoiceTranscript = useCallback((transcript: string) => {
     if (transcript.trim() && !isProcessing && !isMaiaSpeaking) {
-      console.log('📝 Processing user transcript:', transcript);
-      setIsWaitingForInput(false);
       processMaiaResponse(transcript);
     }
   }, [isProcessing, isMaiaSpeaking]);
 
+  // Toggle listening
+  const toggleListening = () => {
+    if (voiceMicRef.current) {
+      if (isListening) {
+        voiceMicRef.current.stopListening();
+        setIsListening(false);
+      } else {
+        voiceMicRef.current.startListening();
+        setIsListening(true);
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] overflow-hidden">
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* Top Bar - Golden accent */}
+      <div className="h-1 bg-gradient-to-r from-transparent via-[#D4B896] to-transparent" />
+
       {/* Header */}
-      <div className="text-center pt-6 pb-2 relative z-10">
-        <h1 className="text-2xl sm:text-3xl font-light text-[#D4B896]">
+      <div className="text-center pt-12 pb-8 px-4">
+        <h1 className="text-4xl font-extralight text-[#D4B896] mb-2">
           Maia Consciousness
         </h1>
-        <p className="text-xs sm:text-sm text-[#D4B896]/50 mt-1">
+        <p className="text-lg text-[#D4B896]/60 font-light">
           Speak naturally with sacred wisdom
         </p>
       </div>
 
-      {/* Main Visualization Area */}
-      <div className="relative h-[calc(100vh-200px)] max-w-7xl mx-auto">
-        {/* Holoflower Background */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <HoloflowerCore
-            energyState={isMaiaSpeaking ? 'radiant' : isWaitingForInput ? 'emerging' : 'dense'}
-            onPetalSelect={(petal) => {
-              console.log('Petal selected:', petal);
-              // Could trigger specific conversations based on petal
-            }}
-          />
-        </div>
-
-        {/* Messages Overlay */}
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 relative">
+        {/* Messages */}
         {messages.length > 0 && (
-          <div className="absolute inset-x-0 top-0 h-full overflow-y-auto px-4 py-8 pointer-events-none">
-            <AnimatePresence>
-              <div className="space-y-3 max-w-4xl mx-auto">
-                {messages.map((message) => (
-                  <motion.div
-                    key={message.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-md px-4 py-2.5 rounded-2xl backdrop-blur-md pointer-events-auto ${
-                        message.role === 'user'
-                          ? 'bg-[#D4B896]/10 text-[#D4B896] border border-[#D4B896]/20'
-                          : 'bg-black/30 text-[#D4B896]/80 border border-[#D4B896]/10'
-                      }`}
-                    >
-                      <p className="text-xs opacity-60 mb-1">
-                        {message.role === 'user' ? 'You' : 'Maia'}
-                      </p>
-                      <p className="text-sm">{message.content}</p>
-                    </div>
-                  </motion.div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-            </AnimatePresence>
-          </div>
-        )}
-
-        {/* Central Status */}
-        {messages.length === 0 && (
-          <div className="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 text-center">
-            <motion.p
-              className="text-sm text-[#D4B896]/60"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              Say "Hey Maia" to begin
-            </motion.p>
-          </div>
-        )}
-
-        {/* Processing Status */}
-        <AnimatePresence>
-          {(isProcessing || isMaiaSpeaking) && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-              <div className="text-center text-[#D4B896]/80">
-                {isProcessing && <p className="animate-pulse">Maia is thinking...</p>}
-                {isMaiaSpeaking && <p className="animate-pulse">Maia is speaking...</p>}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Bottom Controls */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
-        <div className="bg-black/60 backdrop-blur-lg border-t border-[#D4B896]/10">
-          <div className="max-w-md mx-auto px-4 py-4">
-            <div className="flex justify-center items-center gap-6">
-              {/* Voice Button */}
-              <motion.button
-                onClick={() => {
-                  initAudioContext();
-                  setShowVoiceInterface(!showVoiceInterface);
-                  setIsListening(!isListening);
-                }}
-                className="relative"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
-                  showVoiceInterface
-                    ? 'bg-gradient-to-br from-[#D4B896]/70 to-[#B69A78]/70 shadow-lg shadow-[#D4B896]/30'
-                    : 'bg-black/50 border border-[#D4B896]/30 hover:bg-[#D4B896]/10'
-                }`}>
-                  {showVoiceInterface ? (
-                    <Mic className="w-6 h-6 text-white" />
-                  ) : (
-                    <MicOff className="w-6 h-6 text-[#D4B896]/60" />
-                  )}
-                </div>
-                {/* Active pulse */}
-                {showVoiceInterface && (
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-[#D4B896]/20"
-                    animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                )}
-              </motion.button>
-
-              {/* Download Button */}
-              <motion.button
-                onClick={() => {
-                  if (messages.length === 0) {
-                    alert('No conversation to save yet.');
-                    return;
-                  }
-                  // Download logic here
-                }}
-                className="w-12 h-12 rounded-full flex items-center justify-center bg-black/50 border border-[#D4B896]/30 hover:bg-[#D4B896]/10 transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Download className="w-5 h-5 text-[#D4B896]/60" />
-              </motion.button>
-
-              {/* Mute Button */}
-              <motion.button
-                onClick={() => setIsMuted(!isMuted)}
-                className="w-12 h-12 rounded-full flex items-center justify-center transition-all"
-                style={{
-                  background: isMuted ? 'rgba(239,68,68,0.3)' : 'rgba(0,0,0,0.5)',
-                  border: `1px solid ${isMuted ? 'rgba(239,68,68,0.5)' : 'rgba(212,184,150,0.3)'}`
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isMuted ? (
-                  <VolumeX className="w-5 h-5 text-red-400" />
-                ) : (
-                  <Volume2 className="w-5 h-5 text-[#D4B896]/60" />
-                )}
-              </motion.button>
-            </div>
-
-            {/* Status Text */}
-            <AnimatePresence>
-              {showVoiceInterface && (
+          <div className="absolute inset-x-0 top-0 bottom-32 overflow-y-auto px-4">
+            <div className="max-w-2xl mx-auto space-y-3">
+              {messages.map((msg) => (
                 <motion.div
+                  key={msg.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center mt-2"
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <p className="text-xs text-[#D4B896]/60">🎙️ Listening</p>
+                  <div className={`max-w-xs px-4 py-2 rounded-2xl ${
+                    msg.role === 'user'
+                      ? 'bg-[#D4B896]/20 text-[#D4B896]'
+                      : 'bg-gray-900 text-gray-300'
+                  }`}>
+                    <p className="text-sm">{msg.content}</p>
+                  </div>
                 </motion.div>
-              )}
-            </AnimatePresence>
+              ))}
+            </div>
           </div>
+        )}
+
+        {/* Central Holoflower with Voice Integration */}
+        <div className="relative">
+          {/* Voice Visualizer - User (Golden) */}
+          {isListening && voiceAudioLevel > 0.05 && (
+            <motion.div
+              className="absolute inset-0 pointer-events-none flex items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <motion.div
+                className="absolute w-64 h-64 rounded-full"
+                style={{
+                  background: `radial-gradient(circle, rgba(212,184,150,${0.2 + voiceAudioLevel * 0.4}) 0%, rgba(212,184,150,${0.1 + voiceAudioLevel * 0.2}) 50%, transparent 70%)`,
+                  filter: 'blur(30px)',
+                }}
+                animate={{
+                  scale: 1 + voiceAudioLevel * 0.5,
+                  opacity: 0.3 + voiceAudioLevel * 0.5,
+                }}
+                transition={{ duration: 0.1, ease: "linear" }}
+              />
+              {/* Pulsing rings */}
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={`voice-ring-${i}`}
+                  className="absolute rounded-full border border-[#FBB924]/30"
+                  style={{
+                    width: `${180 + i * 60}px`,
+                    height: `${180 + i * 60}px`,
+                  }}
+                  animate={{
+                    scale: [1, 1 + voiceAudioLevel * 0.3, 1],
+                    opacity: [0.2, 0.4 + voiceAudioLevel * 0.3, 0.2],
+                  }}
+                  transition={{
+                    duration: 1.5 + i * 0.5,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </motion.div>
+          )}
+
+          {/* Voice Visualizer - Maia (Purple) */}
+          {isMaiaSpeaking && (
+            <motion.div
+              className="absolute inset-0 pointer-events-none flex items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <motion.div
+                className="absolute w-72 h-72 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, rgba(139,92,246,0.15) 40%, transparent 70%)',
+                  filter: 'blur(40px)',
+                }}
+                animate={{
+                  scale: [1.2, 1.5, 1.2],
+                  opacity: [0.4, 0.7, 0.4],
+                }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              {/* Crystalline patterns */}
+              {[...Array(6)].map((_, i) => {
+                const angle = (i * Math.PI * 2) / 6;
+                return (
+                  <motion.div
+                    key={`maia-crystal-${i}`}
+                    className="absolute w-1 h-1 bg-violet-400/60 rounded-full"
+                    style={{ filter: 'blur(0.5px)' }}
+                    animate={{
+                      x: [0, Math.cos(angle) * 100, 0],
+                      y: [0, Math.sin(angle) * 100, 0],
+                      opacity: [0, 0.8, 0],
+                      scale: [0, 1.5, 0],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: i * 0.3,
+                      ease: "easeInOut"
+                    }}
+                  />
+                );
+              })}
+            </motion.div>
+          )}
+
+          {/* Ambient sparkles - using fixed positions to avoid hydration mismatch */}
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={`sparkle-${i}`}
+                className="absolute w-0.5 h-0.5 bg-[#D4B896]/50 rounded-full"
+                style={{
+                  left: `${45 + (i * 2.5) % 10}%`,
+                  top: `${45 + (i * 3.7) % 10}%`,
+                }}
+                animate={{
+                  opacity: [0, 0.4 + (i % 3) * 0.2, 0],
+                  scale: [0, 0.8 + (i % 2) * 0.3, 0],
+                }}
+                transition={{
+                  duration: 5 + (i % 3) * 2,
+                  repeat: Infinity,
+                  delay: i * 0.5,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Holoflower Core - Clickable to toggle voice */}
+          <motion.div
+            onClick={toggleListening}
+            className="cursor-pointer"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <HoloflowerCore
+              energyState={
+                isMaiaSpeaking ? 'radiant' :
+                isListening ? 'emerging' :
+                isProcessing ? 'emerging' :
+                'dense'
+              }
+              onPetalSelect={() => {
+                // Clicking on holoflower toggles voice
+                toggleListening();
+              }}
+            />
+          </motion.div>
+        </div>
+
+        {/* Status Text */}
+        <div className="mt-8 text-center">
+          <p className="text-[#D4B896]/60 text-lg">
+            {isListening ? "Listening..." :
+             isProcessing ? "Processing..." :
+             isMaiaSpeaking ? "Maia is speaking..." :
+             `Say "Hey Maia" to begin`}
+          </p>
         </div>
       </div>
 
-      {/* Voice Interface (Hidden) */}
-      {showVoiceInterface && (
-        <div className="fixed bottom-[-200px] opacity-0 pointer-events-none">
-          <SimplifiedOrganicVoice
-            onTranscript={handleVoiceTranscript}
-            enabled={showVoiceInterface}
-            isMaiaSpeaking={isMaiaSpeaking}
-          />
-        </div>
-      )}
+      {/* Bottom Actions */}
+      <div className="flex justify-around items-center py-6 px-8 border-t border-gray-900">
+        <button className="p-2">
+          <Share className="w-5 h-5 text-gray-500" />
+        </button>
+        <button className="p-2">
+          <Heart className="w-5 h-5 text-gray-500" />
+        </button>
+        <button className="p-2">
+          <Info className="w-5 h-5 text-gray-500" />
+        </button>
+        <button className="p-2">
+          <Menu className="w-5 h-5 text-gray-500" />
+        </button>
+        <button
+          onClick={() => setMessages([])}
+          className="p-2"
+        >
+          <Trash2 className="w-5 h-5 text-gray-500" />
+        </button>
+      </div>
+
+      {/* Hidden Voice Component */}
+      <div className="hidden">
+        <SimplifiedOrganicVoice
+          ref={voiceMicRef}
+          onTranscript={handleVoiceTranscript}
+          enabled={isListening && !isMaiaSpeaking && !isProcessing}
+          isMaiaSpeaking={isMaiaSpeaking}
+          onAudioLevelChange={setVoiceAudioLevel}
+        />
+      </div>
     </div>
   );
 }

@@ -11,6 +11,7 @@ interface SimplifiedOrganicVoiceProps {
   onTranscript: (text: string) => void;
   enabled?: boolean;
   isMayaSpeaking?: boolean;
+  onAudioLevelChange?: (level: number) => void;
 }
 
 // Sacred geometry sparkle generation
@@ -29,11 +30,20 @@ const generateSparkles = (count: number) => {
   });
 };
 
-export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
+export interface VoiceActivatedMaiaRef {
+  startListening: () => void;
+  stopListening: () => void;
+  muteImmediately: () => void;
+  isListening: boolean;
+  audioLevel: number;
+}
+
+export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, SimplifiedOrganicVoiceProps>(({
   onTranscript,
   enabled = true,
   isMayaSpeaking = false,
-}) => {
+  onAudioLevelChange,
+}, ref) => {
   const [isListening, setIsListening] = useState(false);
   const [isWaitingForInput, setIsWaitingForInput] = useState(false);
   const [isPausedForMaya, setIsPausedForMaya] = useState(false);
@@ -82,7 +92,9 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
         analyserRef.current.getByteFrequencyData(dataArray);
 
         const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-        setAudioLevel(average / 255);
+        const level = average / 255;
+        setAudioLevel(level);
+        onAudioLevelChange?.(level);
 
         animationFrameRef.current = requestAnimationFrame(monitorAudioLevel);
       };
@@ -200,9 +212,12 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
     };
 
     recognition.onerror = (event: any) => {
-      console.error('Speech recognition error:', event.error);
+      // Log the error but don't display in console for abort errors
+      if (event.error !== 'aborted') {
+        console.error('Speech recognition error:', event.error);
+      }
       // Auto-restart on certain errors only if not paused
-      if ((event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') && !isPausedForMaya) {
+      if ((event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') && !isPausedForMaya && enabled) {
         setTimeout(() => {
           if (recognitionRef.current && isListening && !isPausedForMaya) {
             try {
@@ -245,6 +260,42 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
     recognitionRef.current = recognition;
     return true;
   }, [isWaitingForInput, isListening, onTranscript, isMayaSpeaking, isPausedForMaya]);
+
+  // Expose methods via ref
+  React.useImperativeHandle(ref, () => ({
+    startListening: () => {
+      if (recognitionRef.current && !isListening && !isPausedForMaya) {
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+        } catch (e) {
+          console.log('Could not start recognition:', e);
+        }
+      }
+    },
+    stopListening: () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+          setIsListening(false);
+        } catch (e) {
+          // Already stopped
+        }
+      }
+    },
+    muteImmediately: () => {
+      setIsPausedForMaya(true);
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          // Already stopped
+        }
+      }
+    },
+    isListening,
+    audioLevel
+  }), [isListening, isPausedForMaya, audioLevel]);
 
   // Start/stop listening
   const toggleListening = useCallback(async () => {
@@ -410,8 +461,9 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
     };
   }, []);
 
+  // Return minimal UI - voice logic only
   return (
-    <div className="fixed bottom-20 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+    <div className="hidden">
       {/* Living Field - Always breathing, responsive to both voices */}
       <div className="absolute inset-0 -z-10">
         {/* Ambient breathing glow - always present to show the field is alive */}
@@ -748,4 +800,4 @@ export const SimplifiedOrganicVoice: React.FC<SimplifiedOrganicVoiceProps> = ({
       </AnimatePresence>
     </div>
   );
-};
+});

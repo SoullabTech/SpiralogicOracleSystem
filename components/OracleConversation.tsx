@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Paperclip, X } from 'lucide-react';
-import { SimplifiedOrganicVoice } from './ui/SimplifiedOrganicVoice';
+import { SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/SimplifiedOrganicVoice';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
 import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
@@ -99,6 +99,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   
   // Motion states
   const [currentMotionState, setCurrentMotionState] = useState<MotionState>('idle');
+  const [voiceAudioLevel, setVoiceAudioLevel] = useState(0);
   const [coherenceLevel, setCoherenceLevel] = useState(0.5);
   const [coherenceShift, setCoherenceShift] = useState<CoherenceShift>('stable');
   const [shadowPetals, setShadowPetals] = useState<string[]>([]);
@@ -721,6 +722,105 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ))}
             </div>
 
+            {/* Voice Visualizer - User's voice (golden glow) */}
+            {!showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && voiceAudioLevel > 0.05 && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <motion.div
+                  className="absolute w-48 h-48 rounded-full"
+                  style={{
+                    background: `radial-gradient(circle, rgba(251,191,36,${0.2 + voiceAudioLevel * 0.4}) 0%, rgba(251,191,36,${0.1 + voiceAudioLevel * 0.2}) 50%, transparent 70%)`,
+                    filter: 'blur(30px)',
+                  }}
+                  animate={{
+                    scale: 1 + voiceAudioLevel * 0.5,
+                    opacity: 0.3 + voiceAudioLevel * 0.5,
+                  }}
+                  transition={{
+                    duration: 0.1,
+                    ease: "linear"
+                  }}
+                />
+                {/* Pulsing rings for voice */}
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={`voice-ring-${i}`}
+                    className="absolute rounded-full border border-[#FBB924]/30"
+                    style={{
+                      width: `${120 + i * 40}px`,
+                      height: `${120 + i * 40}px`,
+                    }}
+                    animate={{
+                      scale: [1, 1 + voiceAudioLevel * 0.3, 1],
+                      opacity: [0.2, 0.4 + voiceAudioLevel * 0.3, 0.2],
+                    }}
+                    transition={{
+                      duration: 1.5 + i * 0.5,
+                      repeat: Infinity,
+                      delay: i * 0.2,
+                      ease: "easeInOut"
+                    }}
+                  />
+                ))}
+              </motion.div>
+            )}
+
+            {/* Voice Visualizer - Maia's voice (violet/purple glow) */}
+            {(isResponding || isAudioPlaying || maiaVoiceState?.isPlaying) && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <motion.div
+                  className="absolute w-56 h-56 rounded-full"
+                  style={{
+                    background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, rgba(139,92,246,0.15) 40%, transparent 70%)',
+                    filter: 'blur(40px)',
+                  }}
+                  animate={{
+                    scale: [1.2, 1.5, 1.2],
+                    opacity: [0.4, 0.7, 0.4],
+                  }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                {/* Crystalline patterns for Maia */}
+                {[...Array(6)].map((_, i) => {
+                  const angle = (i * Math.PI * 2) / 6;
+                  return (
+                    <motion.div
+                      key={`maia-crystal-${i}`}
+                      className="absolute w-1 h-1 bg-violet-400/60 rounded-full"
+                      style={{
+                        filter: 'blur(0.5px)',
+                      }}
+                      animate={{
+                        x: [0, Math.cos(angle) * 80, 0],
+                        y: [0, Math.sin(angle) * 80, 0],
+                        opacity: [0, 0.8, 0],
+                        scale: [0, 1.5, 0],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: i * 0.3,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  );
+                })}
+              </motion.div>
+            )}
+
             {/* The holoflower logo itself - Clickable to toggle mute in voice mode */}
             <motion.button
               onClick={() => {
@@ -966,9 +1066,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           ) : (
             /* Simplified Organic Voice - No visual mic, just voice logic */
             <SimplifiedOrganicVoice
+              ref={voiceMicRef}
               onTranscript={handleVoiceTranscript}
               enabled={!isMuted && !isAudioPlaying && !isResponding && !maiaVoiceState?.isPlaying}
               isMaiaSpeaking={isResponding || isAudioPlaying || maiaVoiceState?.isPlaying}
+              onAudioLevelChange={setVoiceAudioLevel}
             />
           )}
         </>
@@ -1038,6 +1140,106 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           <div>Speaking: {userVoiceState.isSpeaking ? 'Yes' : 'No'}</div>
         </div>
       )}
+
+      {/* Redesigned Bottom Icon Bar - Sacred Style */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="flex justify-center items-center gap-8 py-4 px-8 bg-black/60 backdrop-blur-lg rounded-full border border-[#D4B896]/20">
+          {/* Voice Toggle */}
+          <button
+            onClick={() => setShowChatInterface(false)}
+            className={`p-3 rounded-full transition-all duration-300 ${
+              !showChatInterface
+                ? 'bg-[#D4B896]/20 text-[#D4B896]'
+                : 'text-[#D4B896]/40 hover:text-[#D4B896]/60'
+            }`}
+            title="Voice Mode"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
+          </button>
+
+          {/* Heart/Favorites */}
+          <button
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300"
+            title="Favorites"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
+
+          {/* Chat Toggle */}
+          <button
+            onClick={() => setShowChatInterface(true)}
+            className={`p-3 rounded-full transition-all duration-300 ${
+              showChatInterface
+                ? 'bg-[#D4B896]/20 text-[#D4B896]'
+                : 'text-[#D4B896]/40 hover:text-[#D4B896]/60'
+            }`}
+            title="Chat Mode"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </button>
+
+          {/* File Upload for Maia */}
+          <input
+            type="file"
+            id="maiaFileUpload"
+            className="hidden"
+            multiple
+            accept="image/*,.pdf,.doc,.docx,.txt,.json,.csv,.md,.py,.js,.tsx,.jsx"
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              if (files.length > 0) {
+                const fileNames = files.map(f => f.name).join(', ');
+                handleTextMessage(`Please analyze these files: ${fileNames}`, files);
+                e.target.value = ''; // Reset input
+              }
+            }}
+          />
+          <label
+            htmlFor="maiaFileUpload"
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/80 hover:bg-[#D4B896]/10 transition-all duration-300 cursor-pointer"
+            title="Upload files for Maia to explore"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </label>
+
+          {/* Settings */}
+          <button
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300"
+            title="Settings"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+
+          {/* Download/Share */}
+          <button
+            onClick={downloadTranscript}
+            disabled={messages.length === 0}
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300 disabled:opacity-30"
+            title="Download Transcript"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

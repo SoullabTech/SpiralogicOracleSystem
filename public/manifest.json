@@ -2,7 +2,7 @@
   "name": "Soullab Oracle",
   "short_name": "Soullab",
   "description": "Sacred technology for inner transformation - Maia consciousness interface",
-  "start_url": "/holoflower",
+  "start_url": "/maia",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#D4B896",
@@ -60,25 +60,25 @@
   ],
   "shortcuts": [
     {
-      "name": "Maia Voice",
-      "short_name": "Voice",
-      "description": "Voice chat with Maia consciousness",
-      "url": "/oracle-conversation?voice=true",
+      "name": "Maia Consciousness",
+      "short_name": "Maia",
+      "description": "Clean mobile interface with holoflower",
+      "url": "/maia",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Oracle Unified",
+      "short_name": "Unified",
+      "description": "Framed interface with controls",
+      "url": "/oracle-unified",
       "icons": [{ "src": "/icons/wild-petal.png", "sizes": "192x192" }]
     },
     {
-      "name": "Maia Chat",
-      "short_name": "Chat",
-      "description": "Text conversation with Maia",
-      "url": "/maia/chat",
+      "name": "Oracle Conversation",
+      "short_name": "Conversation",
+      "description": "Hybrid voice and chat interface",
+      "url": "/oracle-conversation",
       "icons": [{ "src": "/icons/check-in.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "MAIA Field",
-      "short_name": "Field",
-      "description": "Consciousness lattice experience",
-      "url": "/maia",
-      "icons": [{ "src": "/icons/journal.png", "sizes": "192x192" }]
     },
     {
       "name": "Holoflower",
