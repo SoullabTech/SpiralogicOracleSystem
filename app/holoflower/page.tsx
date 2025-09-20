@@ -121,6 +121,9 @@ export default function HoloflowerExperience() {
 
   // Listen for wild petal event from navigation
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
     const handleWildPetal = () => setShowWildPetal(true);
     window.addEventListener('drawWildPetal', handleWildPetal);
     return () => window.removeEventListener('drawWildPetal', handleWildPetal);
