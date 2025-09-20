@@ -906,11 +906,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
             {/* Status text below holoflower with elemental mode */}
             {!showChatInterface && voiceEnabled && (
-              <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 text-center">
-                {/* Elemental Mode Indicator */}
+              <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 text-center">
+                {/* Elemental Mode Indicator - positioned above status text */}
                 {voiceMicRef.current?.elementalMode && (
                   <motion.div
-                    className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full backdrop-blur-sm"
+                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full backdrop-blur-sm"
                     style={{
                       backgroundColor: `${voiceMicRef.current.elementalMode === 'fire' ? 'rgba(239, 68, 68, 0.2)' :
                         voiceMicRef.current.elementalMode === 'water' ? 'rgba(107, 155, 209, 0.2)' :
@@ -939,6 +939,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     </span>
                   </motion.div>
                 )}
+                {/* Status messages below elemental indicator */}
                 <AnimatePresence mode="wait">
                   {voiceMicRef.current?.isListening && !isResponding && (
                     <motion.div
