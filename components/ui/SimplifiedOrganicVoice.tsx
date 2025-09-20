@@ -6,12 +6,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
-import {
-  ElementalMode,
-  ELEMENTAL_TIMINGS,
-  detectElementalMode,
-  getActiveListeningPrompt
-} from '@/lib/elemental-timing';
+// TEMPORARILY DISABLED FOR PRODUCTION
+// import {
+//   ElementalMode,
+//   ELEMENTAL_TIMINGS,
+//   detectElementalMode,
+//   getActiveListeningPrompt
+// } from '@/lib/elemental-timing';
 
 interface SimplifiedOrganicVoiceProps {
   onTranscript: (text: string) => void;
@@ -41,12 +42,12 @@ export interface VoiceActivatedMaiaRef {
   stopListening: () => void;
   muteImmediately: () => void;
   toggleContemplationMode: () => void;
-  switchElementalMode: (mode: ElementalMode) => void;
+  // switchElementalMode: (mode: ElementalMode) => void; // TEMPORARILY DISABLED
   isListening: boolean;
   audioLevel: number;
   isContemplationMode: boolean;
   conversationMode: 'active' | 'contemplating';
-  elementalMode: ElementalMode;
+  // elementalMode: ElementalMode; // TEMPORARILY DISABLED
 }
 
 export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, SimplifiedOrganicVoiceProps>(({
@@ -64,9 +65,10 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const [isMuted, setIsMuted] = useState(false);
   const [isContemplationMode, setIsContemplationMode] = useState(false);
   const [conversationMode, setConversationMode] = useState<'active' | 'contemplating'>('active');
-  const [elementalMode, setElementalMode] = useState<ElementalMode>('water');
-  const [recentSilences, setRecentSilences] = useState<number[]>([]);
-  const lastSpeechTime = useRef<number>(Date.now());
+  // TEMPORARILY DISABLED
+  // const [elementalMode, setElementalMode] = useState<ElementalMode>('water');
+  // const [recentSilences, setRecentSilences] = useState<number[]>([]);
+  // const lastSpeechTime = useRef<number>(Date.now());
   const [isActivelyExpressing, setIsActivelyExpressing] = useState(false);
   const expressionStartTime = useRef<number>(Date.now());
   const consecutiveWords = useRef<number>(0);
@@ -81,9 +83,10 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
-  // Get timing based on current elemental mode
-  const currentTiming = ELEMENTAL_TIMINGS[elementalMode];
-  const SMART_THRESHOLD = 1500; // Always quick for questions
+  // TEMPORARILY USE FIXED TIMING
+  const SILENCE_THRESHOLD = 3000;
+  const SMART_THRESHOLD = 1500;
+  const CONTEMPLATION_THRESHOLD = 10000;
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
@@ -225,13 +228,13 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
           if (isContemplationMode) {
             // In contemplation mode, use elemental contemplation threshold
-            threshold = currentTiming.contemplationThreshold;
+            threshold = CONTEMPLATION_THRESHOLD;
           } else if (endsWithPunctuation || (hasQuestionWords && accumulated.length > 20)) {
             // Quick response for complete thoughts and questions
             threshold = SMART_THRESHOLD;
           } else {
             // Use elemental mode timing
-            threshold = currentTiming.silenceThreshold;
+            threshold = SILENCE_THRESHOLD;
           }
 
           // Set timer to process after silence
@@ -276,25 +279,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
             }
           }, threshold);
 
-          // Auto-detect elemental mode based on conversation pattern
-          if (recentSilences.length >= 3) {
-            const detectedMode = detectElementalMode(
-              recentSilences,
-              accumulated.split(' ').length,
-              0.5 // Default emotional intensity - could be enhanced with sentiment analysis
-            );
-
-            if (detectedMode !== elementalMode) {
-              console.log(`🔮 Elemental shift: ${elementalMode} → ${detectedMode}`);
-              setElementalMode(detectedMode);
-            }
-          }
-
-          // Auto-switch to contemplation in aether mode
-          if (elementalMode === 'aether' && silenceDuration > currentTiming.contemplationThreshold) {
-            setConversationMode('contemplating');
-            console.log('✨ Entered aether contemplation space');
-          }
+          // ELEMENTAL MODE DETECTION TEMPORARILY DISABLED
         }
       }
     };
@@ -393,22 +378,17 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         silenceTimerRef.current = null;
       }
     },
-    switchElementalMode: (mode: ElementalMode) => {
-      console.log(`🔮 Switching to ${mode} mode`);
-      setElementalMode(mode);
-
-      // Clear timers to use new mode timing immediately
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-        silenceTimerRef.current = null;
-      }
-    },
+    // TEMPORARILY DISABLED
+    // switchElementalMode: (mode: ElementalMode) => {
+    //   console.log(`🔮 Switching to ${mode} mode`);
+    //   setElementalMode(mode);
+    // },
     isListening,
     audioLevel,
     isContemplationMode,
     conversationMode,
-    elementalMode
-  }), [isListening, isPausedForMaya, audioLevel, isContemplationMode, conversationMode, elementalMode]);
+    // elementalMode // TEMPORARILY DISABLED
+  }), [isListening, isPausedForMaya, audioLevel, isContemplationMode, conversationMode]);
 
   // Start/stop listening
   const toggleListening = useCallback(async () => {
