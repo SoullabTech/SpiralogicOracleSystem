@@ -60,8 +60,9 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const accumulatedTranscriptRef = useRef<string>('');
 
-  const WAKE_WORDS = ['hey maya', 'maya', 'okay maya', 'hi maya', 'hello maya', 'hey', 'hello', 'hi'];
-  const SILENCE_THRESHOLD = 5000; // 5 seconds of silence to process (allow for complete thoughts and pauses)
+  // No wake words needed - always listening when active
+  const WAKE_WORDS: string[] = [];
+  const SILENCE_THRESHOLD = 2000; // 2 seconds of silence to process
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
@@ -151,25 +152,10 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
       const currentTranscript = finalTranscript || interimTranscript;
       setTranscript(currentTranscript);
 
-      // Check for wake word
-      const lowerTranscript = currentTranscript.toLowerCase().trim();
-      const hasWakeWord = WAKE_WORDS.some(word => lowerTranscript.includes(word));
-
-      if (hasWakeWord && !isWaitingForInput) {
-        console.log('🎯 Wake word detected:', lowerTranscript);
-        setIsWaitingForInput(true);
-        accumulatedTranscriptRef.current = '';
-        setTranscript('✨ Listening...');
-
-        // Clear any existing silence timer
-        if (silenceTimerRef.current) {
-          clearTimeout(silenceTimerRef.current);
-        }
-      } else if (isWaitingForInput && finalTranscript) {
-        // Accumulate transcript after wake word
-        const cleanTranscript = finalTranscript
-          .replace(new RegExp(WAKE_WORDS.join('|'), 'gi'), '')
-          .trim();
+      // Always process speech without wake word requirement
+      if (finalTranscript && !isPausedForMaya) {
+        // Accumulate transcript
+        const cleanTranscript = finalTranscript.trim();
 
         if (cleanTranscript) {
           accumulatedTranscriptRef.current += ' ' + cleanTranscript;
@@ -183,26 +169,10 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
           silenceTimerRef.current = setTimeout(() => {
             const finalMessage = accumulatedTranscriptRef.current.trim();
 
-            // Filter out problematic patterns and ensure meaningful messages
-            const words = finalMessage.split(' ');
-            const isLongEnough = words.length >= 3; // At least 3 words for a meaningful sentence
-            const isNotJustRepeats = !(/^(\w+\s*)\1+$/.test(finalMessage)); // Not just repeated words
-
-            // Enhanced filtering to prevent feedback loops
-            const commonFeedbackWords = ['fuck', 'mirror', 'hear', 'what', 'you', 'the', 'and', 'or', 'but', 'maya', 'speaking', 'response', 'paused', 'finished'];
-            const isNotCommonFragment = !commonFeedbackWords.includes(finalMessage.toLowerCase().trim());
-            const isNotSelfReference = !finalMessage.toLowerCase().includes('maya is') && !finalMessage.toLowerCase().includes('speaking') && !finalMessage.toLowerCase().includes('paused');
-
-            if (finalMessage && isLongEnough && isNotJustRepeats && isNotCommonFragment && isNotSelfReference) {
-              console.log('🚀 Sending to Maya:', finalMessage);
+            // Simple validation - just ensure it's not empty
+            if (finalMessage && finalMessage.length > 0) {
+              console.log('🚀 Sending to Maia:', finalMessage);
               onTranscript(finalMessage);
-              setIsWaitingForInput(false);
-              accumulatedTranscriptRef.current = '';
-              setTranscript('');
-            } else {
-              console.log('⚠️ Ignoring fragment/repeat:', finalMessage, { isLongEnough, isNotJustRepeats, isNotCommonFragment });
-              // Reset but don't send
-              setIsWaitingForInput(false);
               accumulatedTranscriptRef.current = '';
               setTranscript('');
             }
