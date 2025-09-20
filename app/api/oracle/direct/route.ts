@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       // Call Claude with Maya's personality - reduced tokens for brevity
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: 100,  // Much shorter responses
+        max_tokens: 2000,  // UNLEASHED: Increased from 100 for complete insights
         temperature: 0.7,
         system: MAYA_PROMPT,
         messages: [

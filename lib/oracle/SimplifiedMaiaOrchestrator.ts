@@ -103,7 +103,7 @@ ${this.getRecentContext()}`;
       try {
         const refinedResponse = await this.claude.generateResponse(refinementPrompt, {
           userInput: input,
-          max_tokens: 120,
+          max_tokens: 1500, // UNLEASHED: Increased from 120 for complete insights
           temperature: 0.6
         });
 
@@ -157,7 +157,7 @@ Respond naturally to: "${input}"`;
     try {
       const response = await this.claude.generateResponse(contextualPrompt, {
         userInput: input,
-        max_tokens: 100,
+        max_tokens: 1500, // UNLEASHED: Increased from 100 for complete insights
         temperature: 0.7
       });
 

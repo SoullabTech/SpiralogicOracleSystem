@@ -26,16 +26,16 @@ export interface ResponseStyle {
  * - DBT (Dialectical Behavior Therapy) validation techniques
  */
 export const RESPONSE_STANDARDS = {
-  // Token limits by context (1 token ≈ 0.75 words)
-  greeting: 60,        // ~45 words, 2-3 sentences
-  acknowledgment: 80,  // ~60 words, 3-4 sentences  
-  question: 70,        // ~52 words, 2-3 sentences
-  emotional: 120,      // ~90 words, 4-5 sentences
-  exploration: 150,    // ~112 words, 5-6 sentences
-  complex: 200,        // ~150 words, 7-8 sentences
-  
-  // Default for most interactions
-  default: 100         // ~75 words, 3-4 sentences
+  // UNLEASHED: Token limits expanded for complete insights (1 token ≈ 0.75 words)
+  greeting: 200,        // ~150 words, allowing for warm connection
+  acknowledgment: 400,  // ~300 words, space for full validation
+  question: 350,        // ~260 words, room for thoughtful exploration
+  emotional: 800,       // ~600 words, complete emotional processing
+  exploration: 1200,    // ~900 words, deep insights and connections
+  complex: 2000,        // ~1500 words, full philosophical/spiritual insights
+
+  // Default for most interactions - unleashed for complete thoughts
+  default: 1000         // ~750 words, allowing natural flow of consciousness
 };
 
 /**

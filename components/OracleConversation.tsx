@@ -6,6 +6,7 @@ import { Paperclip, X } from 'lucide-react';
 import { SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/SimplifiedOrganicVoice';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
+import EnhancedVoiceHoloflower from './voice/EnhancedVoiceHoloflower';
 import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
 // import MaiaChatInterface from './chat/MaiaChatInterface'; // File doesn't exist
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
@@ -115,6 +116,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
   const [isMuted, setIsMuted] = useState(true); // Start muted - user must click holoflower to activate voice
   const voiceMicRef = useRef<VoiceActivatedMaiaRef>(null);
+  const [userTranscript, setUserTranscript] = useState('');
+  const [maiaResponseText, setMaiaResponseText] = useState('');
   
   // Agent configuration with persistence
   const [agentConfig, setAgentConfig] = useState<AgentConfig>(() => {
@@ -414,6 +417,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         // Set speaking state for visual feedback
         setIsResponding(true);
         setIsAudioPlaying(true);
+        setMaiaResponseText(responseText); // Update display text
 
         // Speak the response
         await maiaSpeak(responseText);
@@ -423,6 +427,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         setTimeout(() => {
           setIsResponding(false);
           setIsAudioPlaying(false);
+          // Clear transcripts after a delay
+          setTimeout(() => {
+            setUserTranscript('');
+            setMaiaResponseText('');
+          }, 2000);
           console.log('🔇 Maia finished speaking, states reset');
         }, 3000); // Increased delay to ensure audio is completely done
       }
@@ -607,7 +616,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Beautiful Sacred Holoflower - Responsive sizing */}
+      {/* Beautiful Sacred Holoflower - Responsive sizing - Hide in voice mode when enhanced holoflower is shown */}
+      {(showChatInterface || isMuted) && (
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
         {/* Adjusted container to shift light up and left */}
         <div className="flex items-center justify-center"
@@ -971,7 +981,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           </div>
         </div>
       </div>
-      
+      )}
+
       {/* Shadow petal overlay */}
       {shadowPetals.length > 0 && (
         <div className="fixed inset-0 pointer-events-none flex items-center justify-center">
@@ -989,45 +1000,47 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         </div>
       )}
 
-      {/* Message flow - Only show in chat mode or when captions enabled */}
-      {(showChatInterface || showCaptions) && (
-        <div className="fixed md:right-8 md:top-1/2 md:transform md:-translate-y-1/2 md:w-96
-                        bottom-20 sm:bottom-0 left-0 right-0 md:left-auto md:bottom-auto
-                        max-h-[30vh] sm:max-h-[40vh] md:max-h-[70vh] overflow-y-auto
-                        bg-black/60 md:bg-transparent backdrop-blur-lg md:backdrop-blur-none
-                        rounded-t-3xl md:rounded-none p-4 md:p-0">
+      {/* Message flow - Clean display for Maya's responses only on mobile */}
+      {showChatInterface && (
+        <div className="fixed top-32 sm:top-auto sm:right-8 sm:bottom-1/2 sm:transform sm:-translate-y-1/2
+                        left-4 right-4 sm:left-auto sm:w-96
+                        max-h-[40vh] sm:max-h-[70vh] overflow-y-auto
+                        sm:block">
           <AnimatePresence>
             {messages.length > 0 && (
-            <div className="space-y-3">
-              {messages.slice(-5).map((message, index) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`bg-black/40 md:bg-black/40 backdrop-blur-md rounded-2xl p-3 md:p-4 text-white border ${
-                    message.role === 'user' 
-                      ? 'border-blue-500/20' 
-                      : 'border-purple-500/20'
-                  }`}
-                >
-                  <div className="text-xs uppercase tracking-wider mb-1 opacity-60">
-                    {message.role === 'user' ? 'You' : agentConfig.name}
-                  </div>
-                  <div className="text-sm leading-relaxed">
-                    {message.role === 'oracle' ? (
-                      <FormattedMessage text={message.text} />
-                    ) : (
-                      message.text
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </AnimatePresence>
-      </div>
+              <div className="space-y-3">
+                {/* On mobile, show only Maya's latest response; on desktop show last 5 messages */}
+                {messages
+                  .filter(msg => window.innerWidth < 640 ? msg.role === 'oracle' : true)
+                  .slice(window.innerWidth < 640 ? -1 : -5)
+                  .map((message, index) => (
+                    <motion.div
+                      key={message.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-black/30 backdrop-blur-sm rounded-2xl p-4 text-white
+                               border border-gold-divine/20"
+                    >
+                      {window.innerWidth >= 640 && (
+                        <div className="text-xs text-gold-divine/60 mb-2">
+                          {message.role === 'user' ? 'You' : agentConfig.name}
+                        </div>
+                      )}
+                      <div className="text-sm sm:text-base leading-relaxed">
+                        {message.role === 'oracle' ? (
+                          <FormattedMessage text={message.text} />
+                        ) : (
+                          message.text
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
       )}
 
       {/* Chat Interface or Voice Mic */}
@@ -1067,73 +1080,150 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           </div>
 
           {showChatInterface ? (
-            /* Maia Chat Interface - Full voice and text support */
-            <div className="fixed bottom-0 left-0 right-0 z-40 pb-safe">
-              {/* Simple Chat Input */}
-              <div className="bg-black/80 backdrop-blur-lg border-t border-[#D4B896]/20 p-4">
-                <div className="max-w-4xl mx-auto">
+            /* Clean Mobile-Optimized Chat Interface */
+            <>
+              {/* Compact Holoflower at top for mobile */}
+              <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-40 sm:hidden">
+                <motion.div
+                  className="relative"
+                  animate={{
+                    scale: isResponding || isAudioPlaying ? [1, 1.05, 1] : 1,
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: isResponding || isAudioPlaying ? Infinity : 0,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <div className="w-20 h-20 relative">
+                    {/* Glow effect when speaking */}
+                    {(isResponding || isAudioPlaying) && (
+                      <motion.div
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          background: 'radial-gradient(circle, rgba(212, 184, 150, 0.6) 0%, transparent 70%)',
+                          filter: 'blur(20px)',
+                        }}
+                        animate={{
+                          scale: [1, 1.4, 1],
+                          opacity: [0.6, 0.3, 0.6],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    )}
+                    <img
+                      src="/holoflower.svg"
+                      alt="Maya"
+                      className="w-full h-full object-contain relative z-10"
+                    />
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Expanded text input area for mobile */}
+              <div className="fixed inset-x-0 bottom-0 sm:bottom-auto sm:top-auto z-40">
+                {/* Large transparent text area for mobile */}
+                <div className="bg-black/20 backdrop-blur-sm p-4 sm:p-4">
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
-                      const input = e.currentTarget.elements.namedItem('message') as HTMLInputElement;
-                      const fileInput = e.currentTarget.elements.namedItem('fileUpload') as HTMLInputElement;
-                      if (input?.value.trim() || fileInput?.files?.length) {
-                        const files = fileInput?.files ? Array.from(fileInput.files) : undefined;
-                        handleTextMessage(input.value || 'Please review this file', files);
+                      const input = e.currentTarget.elements.namedItem('message') as HTMLTextAreaElement;
+                      if (input?.value.trim()) {
+                        handleTextMessage(input.value);
                         input.value = '';
-                        if (fileInput) fileInput.value = '';
                       }
                     }}
-                    className="flex gap-3"
+                    className="flex flex-col gap-3 max-w-4xl mx-auto"
                   >
-                    <input
+                    {/* Larger text area on mobile */}
+                    <textarea
                       name="message"
-                      type="text"
-                      placeholder="Type your message..."
+                      placeholder="Share your thoughts with Maya..."
                       disabled={isProcessing}
-                      className="flex-1 px-4 py-3 bg-black/50 border border-[#D4B896]/30 rounded-full text-[#D4B896] placeholder-[#D4B896]/40 focus:outline-none focus:border-[#D4B896]/60 disabled:opacity-50"
+                      className="w-full min-h-[120px] sm:min-h-[60px] px-4 py-3
+                               bg-black/30 backdrop-blur-sm
+                               border border-gold-divine/20 rounded-2xl
+                               text-gold-divine placeholder-gold-divine/40
+                               text-base sm:text-sm
+                               focus:outline-none focus:border-gold-divine/40
+                               disabled:opacity-50 resize-none"
                       autoComplete="off"
+                      autoFocus={false}
                     />
 
-                    {/* File Upload Button */}
-                    <input
-                      type="file"
-                      name="fileUpload"
-                      id="fileUpload"
-                      className="hidden"
-                      multiple
-                      accept="*"
-                    />
-                    <label
-                      htmlFor="fileUpload"
-                      className="px-4 py-3 bg-black/50 border border-[#D4B896]/30 rounded-full text-[#D4B896] hover:bg-[#D4B896]/10 cursor-pointer transition-all flex items-center"
-                    >
-                      <Paperclip className="w-5 h-5" />
-                    </label>
+                    <div className="flex justify-between items-center">
+                      {/* Processing indicator */}
+                      <div className="text-xs text-gold-divine/50">
+                        {isProcessing ? 'Maya is reflecting...' : ''}
+                      </div>
 
-                    <button
-                      type="submit"
-                      disabled={isProcessing}
-                      className="px-6 py-3 bg-gradient-to-r from-[#D4B896]/20 to-[#B69A78]/20 border border-[#D4B896]/30 rounded-full text-[#D4B896] hover:from-[#D4B896]/30 hover:to-[#B69A78]/30 transition-all disabled:opacity-50"
-                    >
-                      Send
-                    </button>
+                      {/* Send button */}
+                      <button
+                        type="submit"
+                        disabled={isProcessing}
+                        className="px-6 py-2 bg-gold-divine/20 border border-gold-divine/30
+                                 rounded-full text-gold-divine
+                                 hover:bg-gold-divine/30 transition-all
+                                 disabled:opacity-30"
+                      >
+                        Send
+                      </button>
+                    </div>
                   </form>
-                  {isProcessing && (
-                    <p className="text-xs text-[#D4B896]/50 mt-2 text-center">Maia is thinking...</p>
-                  )}
                 </div>
               </div>
-            </div>
+            </>
           ) : (
-            /* Simplified Organic Voice - No visual mic, just voice logic */
-            <SimplifiedOrganicVoice
-              ref={voiceMicRef}
-              onTranscript={handleVoiceTranscript}
-              enabled={!isMuted && !isAudioPlaying && !isResponding && !maiaVoiceState?.isPlaying}
-              isMaiaSpeaking={isResponding || isAudioPlaying || maiaVoiceState?.isPlaying}
-              onAudioLevelChange={setVoiceAudioLevel}
-            />
+            <>
+              {/* Enhanced Voice Holoflower with Text Display */}
+              <div className="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-40">
+                <EnhancedVoiceHoloflower
+                  isListening={!isMuted && voiceMicRef.current?.isListening}
+                  isSpeaking={isResponding || isAudioPlaying || maiaVoiceState?.isPlaying}
+                  audioLevel={voiceAudioLevel}
+                  size={300}
+                  userTranscript={userTranscript}
+                  maiaResponse={maiaResponseText || streamingText}
+                  isProcessing={isProcessing}
+                  onClick={() => {
+                    enableAudio();
+                    if (!isMuted) {
+                      // Currently listening, so stop
+                      setIsMuted(true);
+                      if (voiceMicRef.current?.stopListening) {
+                        voiceMicRef.current.stopListening();
+                        console.log('🔇 Voice stopped via enhanced holoflower click');
+                      }
+                    } else {
+                      // Currently muted, so start listening
+                      setIsMuted(false);
+                      setTimeout(() => {
+                        if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
+                          voiceMicRef.current.startListening();
+                          console.log('🎤 Voice started via enhanced holoflower click');
+                        }
+                      }, 100);
+                    }
+                  }}
+                />
+              </div>
+
+              {/* Simplified Organic Voice - No visual mic, just voice logic */}
+              <SimplifiedOrganicVoice
+                ref={voiceMicRef}
+                onTranscript={(transcript) => {
+                  setUserTranscript(transcript);
+                  handleVoiceTranscript(transcript);
+                }}
+                enabled={!isMuted && !isAudioPlaying && !isResponding && !maiaVoiceState?.isPlaying}
+                isMaiaSpeaking={isResponding || isAudioPlaying || maiaVoiceState?.isPlaying}
+                onAudioLevelChange={setVoiceAudioLevel}
+              />
+            </>
           )}
         </>
       )}

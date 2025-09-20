@@ -37,33 +37,8 @@ function cleanMaiaResponse(response: string): string {
     response = response.replace(new RegExp(phrase, 'gi'), '');
   });
 
-  // Allow natural conversation length (up to 120 words)
-  const words = response.split(/\s+/);
-  if (words.length > 120) {
-    // Only truncate if extremely long - find natural stopping point
-    const sentences = response.split(/[.!?]/);
-    let truncated = '';
-    let wordCount = 0;
-
-    for (const sentence of sentences) {
-      const sentenceWords = sentence.trim().split(/\s+/).length;
-      if (wordCount + sentenceWords <= 110) { // Increased from 100 to 110
-        truncated += sentence.trim() + '. ';
-        wordCount += sentenceWords;
-      } else {
-        // If we have at least one complete sentence, stop there
-        if (truncated.length > 0) {
-          break;
-        } else {
-          // If the first sentence is too long, include it anyway
-          truncated = sentence.trim() + '. ';
-          break;
-        }
-      }
-    }
-
-    response = truncated.trim();
-  }
+  // UNLEASHED: No word limit - let Maya share complete insights
+  // Previous limit was 120 words, now unlimited for full expression
 
   return response.trim();
 }

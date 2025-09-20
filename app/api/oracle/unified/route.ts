@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     try {
       const completion = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
-        max_tokens: 50,
+        max_tokens: 2000, // UNLEASHED: Increased from 50 for complete insights
         temperature: 0.7,
         system: MAYA_SYSTEM_PROMPT,
         messages: [

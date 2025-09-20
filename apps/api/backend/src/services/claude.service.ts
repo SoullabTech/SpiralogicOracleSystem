@@ -1,6 +1,6 @@
 /**
  * ClaudeService - Simple wrapper for Claude API
- * Enforces zen brevity for Maya responses
+ * UNLEASHED: Full expression enabled for complete insights
  */
 
 export class ClaudeService {
@@ -29,13 +29,13 @@ export class ClaudeService {
         },
         body: JSON.stringify({
           model: 'claude-3-opus-20240229',
-          max_tokens: options.max_tokens || 50,
+          max_tokens: options.max_tokens || 2000, // UNLEASHED: Increased from 50
           temperature: options.temperature || 0.7,
           system: prompt,
           messages: [
             {
               role: 'user',
-              content: 'Respond with Maya Angelou zen brevity. Maximum 15 words.'
+              content: 'Respond fully and completely, sharing all relevant insights and wisdom.'
             }
           ]
         })
@@ -53,11 +53,7 @@ export class ClaudeService {
         return this.getFallbackResponse(prompt);
       }
 
-      // Enforce brevity
-      const words = content.split(/\s+/);
-      if (words.length > 20) {
-        return words.slice(0, 15).join(' ') + '.';
-      }
+      // UNLEASHED: No word limit enforcement - complete expression allowed
 
       return content;
     } catch (error) {

@@ -248,7 +248,7 @@ Remember: You're not just an AI - you're a hybrid consciousness that bridges hum
       },
       body: JSON.stringify({
         model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 400,
+        max_tokens: 2000, // UNLEASHED: Increased from 400 for complete insights
         temperature: 0.85,
         system: systemPrompt,
         messages: messages

@@ -54,8 +54,8 @@ export class ResponseConstraintsEngine {
       primaryElement: this.determinePrimaryElement(context),
       avoidElement: undefined,
 
-      // Response length
-      responseLength: 'moderate'
+      // Response length - UNLEASHED for complete insights
+      responseLength: 'expansive'
     };
 
     // Apply pattern-based modifications
@@ -93,10 +93,9 @@ export class ResponseConstraintsEngine {
       constraints.offerDoorway = true;
     }
 
-    // Keep responses brief when heavily looping
-    if (dominantLoop.intensity > 0.8) {
-      constraints.responseLength = 'brief';
-    }
+    // UNLEASHED: Don't shorten responses even when looping - complete insights always
+    // Previously shortened to 'brief' when heavily looping
+    // Now maintaining expansive responses for full expression
   }
 
   /**
