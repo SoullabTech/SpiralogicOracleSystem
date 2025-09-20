@@ -67,6 +67,9 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const [elementalMode, setElementalMode] = useState<ElementalMode>('water');
   const [recentSilences, setRecentSilences] = useState<number[]>([]);
   const lastSpeechTime = useRef<number>(Date.now());
+  const [isActivelyExpressing, setIsActivelyExpressing] = useState(false);
+  const expressionStartTime = useRef<number>(Date.now());
+  const consecutiveWords = useRef<number>(0);
 
   const recognitionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -178,6 +181,17 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         }
       }
 
+      // Track active expression
+      if (finalTranscript || interimTranscript) {
+        if (!isActivelyExpressing) {
+          setIsActivelyExpressing(true);
+          expressionStartTime.current = Date.now();
+          console.log('🎤 User started expressing');
+        }
+        consecutiveWords.current = (finalTranscript + interimTranscript).split(' ').length;
+        lastSpeechTime.current = Date.now();
+      }
+
       const currentTranscript = finalTranscript || interimTranscript;
       setTranscript(currentTranscript);
 
@@ -224,18 +238,41 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
           silenceTimerRef.current = setTimeout(() => {
             const finalMessage = accumulatedTranscriptRef.current.trim();
 
-            // Simple validation - just ensure it's not empty
-            if (finalMessage && finalMessage.length > 0) {
+            // Check if expression seems complete
+            const seemsComplete = finalMessage.endsWith('.') ||
+                                  finalMessage.endsWith('!') ||
+                                  finalMessage.endsWith('?') ||
+                                  finalMessage.split(' ').length > 50; // Long enough to be complete
+
+            // Only send if expression seems complete or we've been silent long enough
+            if (finalMessage && finalMessage.length > 0 && (seemsComplete || !isActivelyExpressing)) {
               console.log('🚀 Sending to Maya:', finalMessage);
               onTranscript(finalMessage);
               accumulatedTranscriptRef.current = '';
               setTranscript('');
+              setIsActivelyExpressing(false);
+              consecutiveWords.current = 0;
 
               // Reset to active conversation mode after sending
               if (isContemplationMode) {
                 setIsContemplationMode(false);
                 setConversationMode('active');
               }
+            } else if (isActivelyExpressing) {
+              // User is still expressing - extend the timer
+              console.log('💭 User still expressing, extending patience...');
+              // Double the threshold for ongoing expression
+              silenceTimerRef.current = setTimeout(() => {
+                const extendedMessage = accumulatedTranscriptRef.current.trim();
+                if (extendedMessage) {
+                  console.log('🚀 Sending extended expression:', extendedMessage);
+                  onTranscript(extendedMessage);
+                  accumulatedTranscriptRef.current = '';
+                  setTranscript('');
+                  setIsActivelyExpressing(false);
+                  consecutiveWords.current = 0;
+                }
+              }, threshold * 2);
             }
           }, threshold);
 

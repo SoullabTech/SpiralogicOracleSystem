@@ -13,6 +13,8 @@ export interface ElementalTiming {
   color: string;                 // holoflower glow color
   description: string;           // mode description for users
   ritualCue: string;            // what this mode invites
+  allowOverflow: boolean;        // allow expression to continue beyond threshold
+  maxExpression: number;         // maximum time before gentle check-in (ms)
 }
 
 export const ELEMENTAL_TIMINGS: Record<ElementalMode, ElementalTiming> = {
@@ -23,7 +25,9 @@ export const ELEMENTAL_TIMINGS: Record<ElementalMode, ElementalTiming> = {
     pulseRate: 0.5,                // fast pulse
     color: '#ef4444',              // red-orange
     description: 'Quick, passionate exchange',
-    ritualCue: 'Speak your spark immediately'
+    ritualCue: 'Speak your spark immediately',
+    allowOverflow: true,            // never cut off passionate expression
+    maxExpression: 120000           // 2 minutes max before check-in
   },
 
   water: {
@@ -33,7 +37,9 @@ export const ELEMENTAL_TIMINGS: Record<ElementalMode, ElementalTiming> = {
     pulseRate: 2,                  // gentle wave
     color: '#6B9BD1',              // blue
     description: 'Flowing, emotional depth',
-    ritualCue: 'Let feelings flow naturally'
+    ritualCue: 'Let feelings flow naturally',
+    allowOverflow: true,            // emotions need full expression
+    maxExpression: 300000           // 5 minutes for deep processing
   },
 
   earth: {
@@ -43,7 +49,9 @@ export const ELEMENTAL_TIMINGS: Record<ElementalMode, ElementalTiming> = {
     pulseRate: 3,                  // slow, steady
     color: '#a16207',              // brown-amber
     description: 'Grounded, thoughtful presence',
-    ritualCue: 'Take time to ground your truth'
+    ritualCue: 'Take time to ground your truth',
+    allowOverflow: true,            // thoughtful expression takes time
+    maxExpression: 600000           // 10 minutes for deep grounding
   },
 
   air: {
@@ -53,7 +61,9 @@ export const ELEMENTAL_TIMINGS: Record<ElementalMode, ElementalTiming> = {
     pulseRate: 1.5,                // moderate flutter
     color: '#D4B896',              // golden
     description: 'Light, inspired dialogue',
-    ritualCue: 'Let ideas dance and play'
+    ritualCue: 'Let ideas dance and play',
+    allowOverflow: true,            // ideas need space to develop
+    maxExpression: 180000           // 3 minutes for exploration
   },
 
   aether: {
@@ -63,7 +73,9 @@ export const ELEMENTAL_TIMINGS: Record<ElementalMode, ElementalTiming> = {
     pulseRate: 4,                  // very slow, cosmic
     color: '#9333ea',              // purple
     description: 'Spacious, mystical communion',
-    ritualCue: 'Rest in the silence between words'
+    ritualCue: 'Rest in the silence between words',
+    allowOverflow: true,            // infinite expression allowed
+    maxExpression: Infinity         // no limits in the void
   }
 };
 
@@ -207,12 +219,56 @@ export function getRitualTransition(from: ElementalMode, to: ElementalMode): Rit
 }
 
 /**
- * AI Active Listening prompts based on mode
+ * Expression protection - ensures full thoughts are never cut off
+ */
+export interface ExpressionState {
+  isExpressing: boolean;
+  startTime: number;
+  wordCount: number;
+  lastActivity: number;
+  mode: ElementalMode;
+}
+
+export function shouldAllowContinuation(
+  state: ExpressionState,
+  currentMode: ElementalMode
+): boolean {
+  const timing = ELEMENTAL_TIMINGS[currentMode];
+  const expressionDuration = Date.now() - state.startTime;
+
+  // ALWAYS allow completion of active expression
+  if (state.isExpressing) {
+    // Only check if we've exceeded maximum expression time
+    if (expressionDuration > timing.maxExpression) {
+      return false; // Gentle transition opportunity
+    }
+    return true; // Keep listening
+  }
+
+  // If recently active (within 500ms), assume continuing thought
+  const silenceSinceLastActivity = Date.now() - state.lastActivity;
+  if (silenceSinceLastActivity < 500) {
+    return true;
+  }
+
+  // Check for incomplete thoughts (no ending punctuation)
+  // This would need the actual transcript to check properly
+  // For now, allow overflow by default
+  return timing.allowOverflow;
+}
+
+/**
+ * AI Active Listening prompts based on mode - NEVER INTERRUPTS
  */
 export function getActiveListeningPrompt(
   mode: ElementalMode,
-  silenceDuration: number
+  silenceDuration: number,
+  isUserExpressing: boolean = false
 ): string | null {
+  // NEVER prompt while user is actively expressing
+  if (isUserExpressing) {
+    return null;
+  }
   const timing = ELEMENTAL_TIMINGS[mode];
 
   // Don't prompt if within normal silence threshold
