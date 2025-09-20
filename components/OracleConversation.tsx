@@ -1,6 +1,5 @@
 // Oracle Conversation - Voice-synchronized sacred dialogue
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Paperclip, X } from 'lucide-react';
 import { SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/SimplifiedOrganicVoice';
@@ -926,8 +925,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               </div>
             )}
 
-            {/* The holoflower logo - Primary interaction point for voice connection */}
-            <motion.button
+            {/* Invisible click area over the existing holoflower for voice activation */}
+            <motion.div
               onClick={() => {
                 // Always enable audio first
                 enableAudio();
@@ -964,42 +963,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }, 200);
                 }
               }}
-              animate={{
-                scale: [1, 1.05, 1],
-                rotate: [0, 5, -5, 0]
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              whileHover={{
-                scale: 1.15,
-                transition: { duration: 0.2 }
-              }}
-              whileTap={{
-                scale: 0.95,
-                transition: { duration: 0.1 }
-              }}
-              className="relative z-10 rounded-full p-6 transition-all duration-300 cursor-pointer hover:bg-white/5 active:bg-white/10"
-              style={{ zIndex: 10 }}
+              className="relative z-10 w-32 h-32 cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Image
-                src="/holoflower.png"
-                alt="Click to connect with Maya"
-                width={100}
-                height={100}
-                className={`object-contain transition-all duration-300 ${
-                  voiceMicRef.current?.isListening
-                    ? 'opacity-100 brightness-110'
-                    : isResponding
-                      ? 'opacity-90 brightness-105'
-                      : 'opacity-80 hover:opacity-100'
-                }`}
-                priority
-              />
-
-              {/* Mic status indicator - subtle dot */}
+              {/* Mic status indicator - positioned at edge of click area */}
               <div className="absolute bottom-0 right-0 w-4 h-4">
                 <motion.div
                   className={`w-full h-full rounded-full ${
@@ -1017,7 +985,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }}
                 />
               </div>
-            </motion.button>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -1154,11 +1122,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                         }}
                       />
                     )}
-                    <img
-                      src="/holoflower.svg"
-                      alt="Maya"
-                      className="w-full h-full object-contain relative z-10"
-                    />
+                    {/* Empty - just show the glow effect */}
                   </div>
                 </motion.div>
               </div>
