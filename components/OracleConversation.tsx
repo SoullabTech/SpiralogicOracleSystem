@@ -933,13 +933,21 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   voiceEnabled,
                   isMuted,
                   isProcessing,
-                  isResponding
+                  isResponding,
+                  contemplationMode: voiceMicRef.current?.isContemplationMode
                 });
                 // Always enable audio first
                 enableAudio();
 
-                // In voice mode, toggle listening
+                // In voice mode, handle contemplation and listening modes
                 if (!showChatInterface && voiceEnabled) {
+                  // If in contemplation mode, exit it and resume normal conversation
+                  if (voiceMicRef.current?.isContemplationMode) {
+                    voiceMicRef.current.toggleContemplationMode();
+                    console.log('🔙 Exited contemplation mode - ready for conversation');
+                    return;
+                  }
+
                   if (!isMuted) {
                     // Currently listening, so stop
                     setIsMuted(true);
@@ -982,12 +990,41 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 touchAction: 'manipulation',
                 pointerEvents: 'auto'
               }}
+              onContextMenu={(e) => {
+                e.preventDefault(); // Prevent default context menu
+                if (!showChatInterface && voiceEnabled && voiceMicRef.current?.toggleContemplationMode) {
+                  voiceMicRef.current.toggleContemplationMode();
+                  console.log('🧘 Contemplation mode toggled via right-click');
+                }
+              }}
               onTouchStart={(e) => {
-                e.preventDefault();
-                console.log('🌸 Holoflower touched!');
-                // Trigger the click handler
-                const clickEvent = new MouseEvent('click', { bubbles: true });
-                e.currentTarget.dispatchEvent(clickEvent);
+                const touchStartTime = Date.now();
+                let longPressTimer: NodeJS.Timeout;
+
+                // Set up long press detection
+                longPressTimer = setTimeout(() => {
+                  if (!showChatInterface && voiceEnabled && voiceMicRef.current?.toggleContemplationMode) {
+                    e.preventDefault();
+                    voiceMicRef.current.toggleContemplationMode();
+                    console.log('🧘 Contemplation mode toggled via long press');
+                  }
+                }, 800);
+
+                // Clear timer on touch end or if touch moves
+                const clearTimer = () => {
+                  clearTimeout(longPressTimer);
+                  e.currentTarget.removeEventListener('touchend', clearTimer);
+                  e.currentTarget.removeEventListener('touchmove', clearTimer);
+                };
+
+                e.currentTarget.addEventListener('touchend', clearTimer);
+                e.currentTarget.addEventListener('touchmove', clearTimer);
+
+                // Also trigger normal click for short taps
+                setTimeout(() => {
+                  const clickEvent = new MouseEvent('click', { bubbles: true });
+                  e.currentTarget.dispatchEvent(clickEvent);
+                }, 50);
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -1011,15 +1048,19 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               <div className="absolute bottom-4 right-4 w-4 h-4 pointer-events-none">
                 <motion.div
                   className={`w-full h-full rounded-full ${
-                    !showChatInterface && voiceEnabled && !isMuted
+                    voiceMicRef.current?.isContemplationMode
+                      ? 'bg-purple-500'
+                      : !showChatInterface && voiceEnabled && !isMuted
                       ? 'bg-green-500'
                       : 'bg-red-500/60'
                   }`}
                   animate={{
-                    scale: voiceMicRef.current?.isListening ? [1, 1.2, 1] : 1,
+                    scale: voiceMicRef.current?.isContemplationMode
+                      ? [1, 1.3, 1] // Slower, deeper pulse for contemplation
+                      : voiceMicRef.current?.isListening ? [1, 1.2, 1] : 1,
                   }}
                   transition={{
-                    duration: 1.5,
+                    duration: voiceMicRef.current?.isContemplationMode ? 3 : 1.5,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}

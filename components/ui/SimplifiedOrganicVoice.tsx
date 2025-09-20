@@ -34,8 +34,11 @@ export interface VoiceActivatedMaiaRef {
   startListening: () => void;
   stopListening: () => void;
   muteImmediately: () => void;
+  toggleContemplationMode: () => void;
   isListening: boolean;
   audioLevel: number;
+  isContemplationMode: boolean;
+  conversationMode: 'active' | 'contemplating';
 }
 
 export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, SimplifiedOrganicVoiceProps>(({
@@ -51,6 +54,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const [sparkles] = useState(() => generateSparkles(30));
   const [audioLevel, setAudioLevel] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [isContemplationMode, setIsContemplationMode] = useState(false);
+  const [conversationMode, setConversationMode] = useState<'active' | 'contemplating'>('active');
 
   const recognitionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -62,8 +67,11 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
-  const SILENCE_THRESHOLD = 3000; // OPTIMIZED: 3 seconds - natural conversation pause
-  const SMART_THRESHOLD = 1500;   // 1.5 seconds for questions and complete sentences
+  // Conversation timing - responsive and natural
+  const CONVERSATION_THRESHOLD = 2500; // 2.5 seconds - optimal for natural dialogue
+  const SMART_THRESHOLD = 1500;        // 1.5 seconds for questions and complete sentences
+  const CONTEMPLATION_THRESHOLD = 10000; // 10 seconds - auto-switch to contemplation mode
+  const BREATH_PAUSE_THRESHOLD = 8000;   // 8 seconds - natural breathing space
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {
@@ -182,10 +190,19 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
           const endsWithPunctuation = /[.!?]$/.test(accumulated);
           const hasQuestionWords = /^(what|where|when|why|how|who|can|could|would|should|is|are|do|does)/i.test(accumulated);
 
-          // Use shorter threshold for questions or complete sentences
-          const threshold = (endsWithPunctuation || (hasQuestionWords && accumulated.length > 20))
-            ? SMART_THRESHOLD  // 1.5 seconds for complete thoughts
-            : SILENCE_THRESHOLD; // 3 seconds for continuing thoughts
+          // Intelligent timing based on conversation mode and content
+          let threshold;
+
+          if (isContemplationMode) {
+            // In contemplation mode, wait much longer for user to indicate they're ready
+            threshold = CONTEMPLATION_THRESHOLD;
+          } else if (endsWithPunctuation || (hasQuestionWords && accumulated.length > 20)) {
+            // Quick response for complete thoughts and questions
+            threshold = SMART_THRESHOLD;
+          } else {
+            // Normal conversation flow
+            threshold = CONVERSATION_THRESHOLD;
+          }
 
           // Set timer to process after silence
           silenceTimerRef.current = setTimeout(() => {
@@ -197,8 +214,22 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
               onTranscript(finalMessage);
               accumulatedTranscriptRef.current = '';
               setTranscript('');
+
+              // Reset to active conversation mode after sending
+              if (isContemplationMode) {
+                setIsContemplationMode(false);
+                setConversationMode('active');
+              }
             }
           }, threshold);
+
+          // Auto-switch to contemplation mode after very long pauses
+          if (!isContemplationMode && threshold >= BREATH_PAUSE_THRESHOLD) {
+            setTimeout(() => {
+              setConversationMode('contemplating');
+              console.log('🧘 Auto-switched to contemplation mode for extended pause');
+            }, BREATH_PAUSE_THRESHOLD);
+          }
         }
       }
     };
@@ -285,9 +316,23 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         }
       }
     },
+    toggleContemplationMode: () => {
+      const newMode = !isContemplationMode;
+      setIsContemplationMode(newMode);
+      setConversationMode(newMode ? 'contemplating' : 'active');
+      console.log(`🧘 Contemplation mode ${newMode ? 'ON' : 'OFF'} - ${newMode ? 'Extended listening for deep reflection' : 'Natural conversation timing'}`);
+
+      // Clear any pending timers when switching modes
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+    },
     isListening,
-    audioLevel
-  }), [isListening, isPausedForMaya, audioLevel]);
+    audioLevel,
+    isContemplationMode,
+    conversationMode
+  }), [isListening, isPausedForMaya, audioLevel, isContemplationMode, conversationMode]);
 
   // Start/stop listening
   const toggleListening = useCallback(async () => {
