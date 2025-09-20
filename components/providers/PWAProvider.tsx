@@ -4,6 +4,11 @@ import { useEffect } from 'react';
 
 export function PWAProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      return;
+    }
+
     // Register service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -37,12 +42,12 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
     }
 
     // iOS specific: Check if running in standalone mode
-    if ((window.navigator as any).standalone) {
+    if ((window.navigator as any).standalone && document?.documentElement) {
       document.documentElement.classList.add('ios-standalone');
     }
 
     // Add install state to body for CSS hooks
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (window.matchMedia('(display-mode: standalone)').matches && document?.documentElement) {
       document.documentElement.classList.add('pwa-installed');
     }
   }, []);
