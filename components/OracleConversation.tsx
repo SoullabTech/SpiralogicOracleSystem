@@ -1217,8 +1217,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </div>
           </div>
 
-        </div>
-
           {/* Text Display Toggle for Voice Mode */}
           {!showChatInterface && (
             <div className="fixed top-20 right-8 z-50">
