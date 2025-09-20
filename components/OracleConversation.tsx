@@ -799,7 +799,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </div>
 
             {/* Voice Visualizer - User's voice (elemental colored rings) */}
-            {!showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && (
+            {isMounted && !showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && (
               <motion.div
                 className="absolute inset-0 pointer-events-none flex items-center justify-center"
                 initial={{ opacity: 0 }}
@@ -814,22 +814,22 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     style={{
                       width: `${200 + i * 100}px`,
                       height: `${200 + i * 100}px`,
-                      borderColor: voiceMicRef.current?.elementalMode === 'fire' ? '#ef4444' :
+                      borderColor: isMounted ? (voiceMicRef.current?.elementalMode === 'fire' ? '#ef4444' :
                         voiceMicRef.current?.elementalMode === 'water' ? '#6B9BD1' :
                         voiceMicRef.current?.elementalMode === 'earth' ? '#a16207' :
                         voiceMicRef.current?.elementalMode === 'air' ? '#D4B896' :
-                        '#9333ea', // aether
+                        '#9333ea') : '#6B9BD1', // default to water until mounted
                     }}
                     animate={{
                       scale: [1, 1.1, 1],
                       opacity: [0.8, 0.4, 0.8],
                     }}
                     transition={{
-                      duration: voiceMicRef.current?.elementalMode === 'fire' ? 0.5 + i * 0.2 :
+                      duration: isMounted ? (voiceMicRef.current?.elementalMode === 'fire' ? 0.5 + i * 0.2 :
                         voiceMicRef.current?.elementalMode === 'air' ? 1.5 + i * 0.3 :
                         voiceMicRef.current?.elementalMode === 'water' ? 2 + i * 0.5 :
                         voiceMicRef.current?.elementalMode === 'earth' ? 3 + i * 0.5 :
-                        4 + i * 0.5, // aether - slowest
+                        4 + i * 0.5) : 2 + i * 0.5, // default until mounted
                       repeat: Infinity,
                       delay: i * 0.3,
                       ease: "easeInOut"
@@ -911,7 +911,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             )}
 
             {/* Status text below holoflower with elemental mode */}
-            {!showChatInterface && voiceEnabled && (
+            {isMounted && !showChatInterface && voiceEnabled && (
               <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 text-center">
                 {/* Elemental Mode Indicator - positioned above status text */}
                 {voiceMicRef.current?.elementalMode && (
@@ -1106,19 +1106,19 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               <div className="absolute bottom-4 right-4 w-4 h-4 pointer-events-none">
                 <motion.div
                   className={`w-full h-full rounded-full ${
-                    voiceMicRef.current?.isContemplationMode
+                    isMounted && voiceMicRef.current?.isContemplationMode
                       ? 'bg-purple-500'
                       : !showChatInterface && voiceEnabled && !isMuted
                       ? 'bg-green-500'
                       : 'bg-red-500/60'
                   }`}
                   animate={{
-                    scale: voiceMicRef.current?.isContemplationMode
+                    scale: isMounted && voiceMicRef.current?.isContemplationMode
                       ? [1, 1.3, 1] // Slower, deeper pulse for contemplation
-                      : voiceMicRef.current?.isListening ? [1, 1.2, 1] : 1,
+                      : isMounted && voiceMicRef.current?.isListening ? [1, 1.2, 1] : 1,
                   }}
                   transition={{
-                    duration: voiceMicRef.current?.isContemplationMode ? 3 : 1.5,
+                    duration: isMounted && voiceMicRef.current?.isContemplationMode ? 3 : 1.5,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
