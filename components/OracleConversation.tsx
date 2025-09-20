@@ -1217,17 +1217,20 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </div>
           </div>
 
+        </div>
+
           {/* Text Display Toggle for Voice Mode */}
           {!showChatInterface && (
-            <button
-              onClick={() => setShowVoiceText(!showVoiceText)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium bg-black/20 backdrop-blur-md
-                       text-white/60 hover:text-white/80 transition-all ml-2"
-            >
-              {showVoiceText ? 'Hide Text' : 'Show Text'}
-            </button>
+            <div className="fixed top-20 right-8 z-50">
+              <button
+                onClick={() => setShowVoiceText(!showVoiceText)}
+                className="px-3 py-1.5 rounded-full text-xs font-medium bg-black/20 backdrop-blur-md
+                         text-white/60 hover:text-white/80 transition-all"
+              >
+                {showVoiceText ? 'Hide Text' : 'Show Text'}
+              </button>
+            </div>
           )}
-        </div>
 
           {showChatInterface ? (
             /* Chat Interface - Only show text input in Chat mode */
