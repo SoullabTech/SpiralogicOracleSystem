@@ -62,7 +62,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
-  const SILENCE_THRESHOLD = 5000; // UNLEASHED: 5 seconds of silence - plenty of time to think and speak
+  const SILENCE_THRESHOLD = 8000; // UNLEASHED: 8 seconds of silence - even more time for natural pauses and thinking
 
   // Initialize audio context and analyzer
   const initializeAudioContext = useCallback(async () => {

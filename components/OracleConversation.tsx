@@ -929,7 +929,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               </div>
             )}
 
-            {/* Invisible click area over the existing holoflower for voice activation */}
+            {/* Sacred Holoflower Image with click area for voice activation */}
             <motion.div
               onClick={() => {
                 // Always enable audio first
@@ -967,11 +967,25 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }, 200);
                 }
               }}
-              className="relative z-10 w-32 h-32 cursor-pointer"
+              className="relative z-10 cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Mic status indicator - positioned at edge of click area */}
+              {/* The actual holoflower image */}
+              <img
+                src="/holoflower.svg"
+                alt="Sacred Holoflower"
+                className="w-24 h-24 object-contain"
+                style={{
+                  filter: voiceMicRef.current?.isListening
+                    ? 'brightness(1.2)'
+                    : isResponding
+                      ? 'brightness(1.1)'
+                      : 'brightness(1)',
+                }}
+              />
+
+              {/* Mic status indicator - positioned at edge */}
               <div className="absolute bottom-0 right-0 w-4 h-4">
                 <motion.div
                   className={`w-full h-full rounded-full ${
@@ -1131,10 +1145,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 </motion.div>
               </div>
 
-              {/* Expanded text input area - always at bottom */}
-              <div className="fixed inset-x-0 bottom-0 z-40">
-                {/* Large transparent text area for mobile */}
-                <div className="bg-black/20 backdrop-blur-sm p-4 sm:p-4">
+              {/* Expanded text input area - at bottom with padding for menu bar */}
+              <div className="fixed inset-x-0 bottom-20 sm:bottom-16 z-40 pb-safe">
+                {/* Large transparent text area */}
+                <div className="bg-black/20 backdrop-blur-sm p-4">
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
