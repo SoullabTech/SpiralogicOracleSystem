@@ -124,6 +124,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const voiceMicRef = useRef<VoiceActivatedMaiaRef>(null);
   const [userTranscript, setUserTranscript] = useState('');
   const [maiaResponseText, setMaiaResponseText] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Client-side only check
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   // Agent configuration with persistence
   const [agentConfig, setAgentConfig] = useState<AgentConfig>(() => {
