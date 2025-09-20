@@ -72,7 +72,11 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true
+          autoGainControl: true,
+          // ENHANCED SENSITIVITY: Better mic settings for normal speech levels
+          sampleRate: 44100,
+          channelCount: 1,
+          volume: 1.0
         }
       });
       console.log('✅ Microphone permission granted');
@@ -93,7 +97,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         analyserRef.current.getByteFrequencyData(dataArray);
 
         const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-        const level = average / 255;
+        // INCREASED SENSITIVITY: Multiply by 3 for better detection of normal speech
+        const level = Math.min(1, (average / 255) * 3);
         setAudioLevel(level);
         onAudioLevelChange?.(level);
 

@@ -1,17 +1,13 @@
-// MAIA Consciousness Service Worker
-const CACHE_NAME = 'maia-consciousness-v2';
-const STATIC_CACHE = 'maia-static-v2';
-const DYNAMIC_CACHE = 'maia-dynamic-v2';
+// MAYA Oracle Service Worker
+const CACHE_NAME = 'maya-oracle-v3';
+const STATIC_CACHE = 'maya-static-v3';
+const DYNAMIC_CACHE = 'maya-dynamic-v3';
 
 const urlsToCache = [
   '/',
-  '/holoflower',
-  '/journal',
-  '/analytics',
   '/oracle-conversation',
-  '/maya/chat',
-  '/maia',
   '/manifest.json',
+  '/holoflower.svg',
   '/offline.html'
 ];
 

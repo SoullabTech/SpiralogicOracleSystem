@@ -1222,54 +1222,6 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </>
           ) : (
             <>
-              {/* Voice Mode Text Display - Shows transcripts below main holoflower */}
-              <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-2xl px-4">
-                <div className="bg-black/30 backdrop-blur-md rounded-lg p-4 border border-gold-divine/20 shadow-lg">
-                  {/* Speaker indicator */}
-                  {(userTranscript || maiaResponseText) && (
-                    <div className={`text-xs font-medium mb-2 ${
-                      userTranscript && !maiaResponseText ? 'text-elemental-water' : 'text-gold-divine'
-                    }`}>
-                      {userTranscript && !maiaResponseText ? 'You' : 'Maya'}
-                    </div>
-                  )}
-
-                  {/* Main text display */}
-                  <div className="text-neutral-silver text-base leading-relaxed min-h-[50px]">
-                    {userTranscript || maiaResponseText || streamingText || (
-                      <span className="text-neutral-mystic italic">
-                        {!isMuted && voiceEnabled ? 'Listening... speak freely' : 'Ready to listen... Click the holoflower to start'}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Audio level visualization bars */}
-                  {voiceAudioLevel > 0 && (!isMuted || isResponding) && (
-                    <div className="mt-3 flex items-center gap-1 justify-center">
-                      {Array.from({ length: 10 }).map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="w-1 bg-gradient-to-t"
-                          style={{
-                            background: i < voiceAudioLevel * 10
-                              ? `linear-gradient(to top, ${!isMuted ? '#6B9BD1' : '#D4B896'}, transparent)`
-                              : 'rgba(255,255,255,0.1)',
-                            height: '12px',
-                          }}
-                          animate={{
-                            scaleY: i < voiceAudioLevel * 10 ? [1, 1.5, 1] : 1,
-                          }}
-                          transition={{
-                            duration: 0.3,
-                            delay: i * 0.05,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
               {/* Simplified Organic Voice - No visual mic, just voice logic */}
               <SimplifiedOrganicVoice
                 ref={voiceMicRef}

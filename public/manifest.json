@@ -1,12 +1,12 @@
 {
-  "name": "Soullab Oracle",
-  "short_name": "Soullab",
-  "description": "Sacred technology for inner transformation - Maia consciousness interface",
+  "name": "Spiralogic Oracle - Maya",
+  "short_name": "Maya Oracle",
+  "description": "Sacred conversation with Maya - Voice and consciousness interface",
   "start_url": "/oracle-conversation",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
-  "theme_color": "#D4B896",
-  "background_color": "#1A1A2E",
+  "theme_color": "#1a1f2e",
+  "background_color": "#1a1f2e",
   "categories": ["wellness", "lifestyle", "meditation"],
   "icons": [
     {
@@ -60,25 +60,18 @@
   ],
   "shortcuts": [
     {
-      "name": "Oracle Unified",
-      "short_name": "Unified",
-      "description": "Framed interface with controls",
-      "url": "/oracle-unified",
-      "icons": [{ "src": "/icons/wild-petal.png", "sizes": "192x192" }]
+      "name": "Voice Mode",
+      "short_name": "Voice",
+      "description": "Talk with Maya using voice",
+      "url": "/oracle-conversation?mode=voice",
+      "icons": [{ "src": "/holoflower.svg", "sizes": "192x192" }]
     },
     {
-      "name": "Oracle Conversation",
-      "short_name": "Conversation",
-      "description": "Hybrid voice and chat interface",
-      "url": "/oracle-conversation",
-      "icons": [{ "src": "/icons/check-in.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Holoflower",
-      "short_name": "Holo",
-      "description": "Sacred technology oracle",
-      "url": "/holoflower",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "name": "Chat Mode",
+      "short_name": "Chat",
+      "description": "Text conversation with Maya",
+      "url": "/oracle-conversation?mode=chat",
+      "icons": [{ "src": "/holoflower.svg", "sizes": "192x192" }]
     }
   ],
   "screenshots": [
