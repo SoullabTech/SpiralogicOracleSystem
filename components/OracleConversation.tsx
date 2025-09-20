@@ -612,13 +612,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       )}
 
       {/* Beautiful Sacred Holoflower - Responsive sizing - Always show */}
-      <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+      <div className="fixed inset-0 flex items-center justify-center" style={{ pointerEvents: 'none' }}>
         {/* Adjusted container to shift light up and left */}
         <div className="flex items-center justify-center"
              style={{
                width: holoflowerSize,
                height: holoflowerSize,
-               transform: 'translate(-20px, -30px)' /* Shift left and up */
+               transform: 'translate(-20px, -30px)', /* Shift left and up */
+               pointerEvents: 'none'
              }}>
           {/* Non-interactive Sacred Holoflower with animations */}
           <SacredHoloflower
@@ -924,8 +925,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
             {/* Larger clickable area for holoflower voice activation */}
             <motion.button
-              onClick={() => {
-                console.log('🌸 Holoflower clicked!');
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🌸 Holoflower clicked!', {
+                  showChatInterface,
+                  voiceEnabled,
+                  isMuted,
+                  isProcessing,
+                  isResponding
+                });
                 // Always enable audio first
                 enableAudio();
 
@@ -961,13 +970,24 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   }, 200);
                 }
               }}
-              className="relative z-30 cursor-pointer bg-transparent border-none p-8 hover:bg-white/5 rounded-full"
+              className="relative cursor-pointer bg-transparent border-none p-8 hover:bg-white/5 rounded-full touch-manipulation"
               style={{
                 width: '200px',
                 height: '200px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                zIndex: 100,
+                WebkitTapHighlightColor: 'transparent',
+                touchAction: 'manipulation',
+                pointerEvents: 'auto'
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                console.log('🌸 Holoflower touched!');
+                // Trigger the click handler
+                const clickEvent = new MouseEvent('click', { bubbles: true });
+                e.currentTarget.dispatchEvent(clickEvent);
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
