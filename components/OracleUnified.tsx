@@ -178,11 +178,12 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
     URL.revokeObjectURL(url);
   };
 
-  // Determine holoflower energy state
+  // Determine holoflower energy state based on voice activity
   const getEnergyState = () => {
-    if (isMaiaSpeaking) return 'radiant';
-    if (isListening || isProcessing) return 'emerging';
-    return 'dense';
+    if (isMaiaSpeaking) return 'radiant';  // Full glow when Maia speaks
+    if (isListening) return 'emerging';     // Medium glow when user speaks
+    if (isProcessing) return 'emerging';    // Processing state
+    return 'dense';                         // Idle state
   };
 
   return (
@@ -195,15 +196,181 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
 
       {/* Main Content Area */}
       <div className="relative h-[calc(100vh-140px)]">
-        {/* Holoflower Background */}
+        {/* Holoflower with Voice Visualizer */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <HoloflowerCore
-            energyState={getEnergyState()}
-            onPetalSelect={(petal) => {
-              // Could trigger specific oracle wisdom based on petal
-              console.log('Petal selected:', petal);
+          {/* Pulsing Light Cloud - Ambient breathing */}
+          <motion.div
+            className="absolute w-96 h-96 rounded-full"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{
+              background: 'radial-gradient(circle, rgba(212,184,150,0.2) 0%, transparent 70%)',
+              filter: 'blur(40px)'
             }}
           />
+
+          {/* User Voice Glow - Golden when speaking */}
+          {isListening && (
+            <motion.div
+              className="absolute w-80 h-80 rounded-full"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              style={{
+                background: 'radial-gradient(circle, rgba(212,184,150,0.4) 0%, rgba(182,154,120,0.2) 50%, transparent 70%)',
+                filter: 'blur(30px)'
+              }}
+            />
+          )}
+
+          {/* Maia Voice Signature - Purple/violet when speaking */}
+          {isMaiaSpeaking && (
+            <motion.div
+              className="absolute w-72 h-72 rounded-full"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.4, 0.6, 0.4],
+                rotate: [0, 180, 360],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              style={{
+                background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, rgba(168,85,247,0.2) 50%, transparent 70%)',
+                filter: 'blur(35px)'
+              }}
+            />
+          )}
+
+          {/* Sparkles Container */}
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Golden Sparkles for User Voice */}
+            {isListening && (
+              <>
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={`user-sparkle-${i}`}
+                    className="absolute w-1 h-1 bg-[#D4B896] rounded-full"
+                    initial={{
+                      x: 0,
+                      y: 0,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      x: [0, (Math.random() - 0.5) * 200],
+                      y: [0, (Math.random() - 0.5) * 200],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      delay: i * 0.2,
+                      repeat: Infinity,
+                      ease: "easeOut"
+                    }}
+                    style={{
+                      left: '50%',
+                      top: '50%',
+                      boxShadow: '0 0 6px rgba(212,184,150,0.8)'
+                    }}
+                  />
+                ))}
+              </>
+            )}
+
+            {/* Purple Sparkles for Maia Voice */}
+            {isMaiaSpeaking && (
+              <>
+                {[...Array(8)].map((_, i) => (
+                  <motion.div
+                    key={`maia-sparkle-${i}`}
+                    className="absolute w-1 h-1 bg-purple-400 rounded-full"
+                    initial={{
+                      x: 0,
+                      y: 0,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      x: [0, (Math.random() - 0.5) * 250],
+                      y: [0, (Math.random() - 0.5) * 250],
+                      opacity: [0, 1, 0],
+                      scale: [0, 1.5, 0],
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      delay: i * 0.15,
+                      repeat: Infinity,
+                      ease: "easeOut"
+                    }}
+                    style={{
+                      left: '50%',
+                      top: '50%',
+                      boxShadow: '0 0 8px rgba(168,85,247,0.9)'
+                    }}
+                  />
+                ))}
+              </>
+            )}
+          </div>
+
+          {/* Holoflower Core - Clickable Voice Button */}
+          <motion.div
+            onClick={() => {
+              if (!showChatInterface) {
+                // Toggle voice listening
+                initAudioContext();
+                setIsListening(!isListening);
+                setIsMuted(false);
+              }
+            }}
+            className="cursor-pointer"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <HoloflowerCore
+              energyState={getEnergyState()}
+              onPetalSelect={(petal) => {
+                // When clicking on the holoflower, activate voice
+                if (!showChatInterface) {
+                  initAudioContext();
+                  setIsListening(!isListening);
+                  setIsMuted(false);
+                }
+              }}
+            />
+          </motion.div>
+
+          {/* Voice Hint - Shows when hovering or first load */}
+          <AnimatePresence>
+            {!isListening && !isMaiaSpeaking && !showChatInterface && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute bottom-20 left-1/2 transform -translate-x-1/2 pointer-events-none"
+              >
+                <p className="text-xs text-[#D4B896]/40 animate-pulse">
+                  Tap to speak with Oracle
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Messages Overlay */}
