@@ -784,54 +784,59 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
               ))}
             </div>
 
-            {/* Voice Visualizer - User's voice (golden glow) */}
-            {!showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && voiceAudioLevel > 0.05 && (
+            {/* Voice Visualizer - User's voice (clean blue rings) */}
+            {!showChatInterface && voiceEnabled && voiceMicRef.current?.isListening && (
               <motion.div
                 className="absolute inset-0 pointer-events-none flex items-center justify-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                <motion.div
-                  className="absolute w-48 h-48 rounded-full"
-                  style={{
-                    background: `radial-gradient(circle, rgba(251,191,36,${0.2 + voiceAudioLevel * 0.4}) 0%, rgba(251,191,36,${0.1 + voiceAudioLevel * 0.2}) 50%, transparent 70%)`,
-                    filter: 'blur(30px)',
-                  }}
-                  animate={{
-                    scale: 1 + voiceAudioLevel * 0.5,
-                    opacity: 0.3 + voiceAudioLevel * 0.5,
-                  }}
-                  transition={{
-                    duration: 0.1,
-                    ease: "linear"
-                  }}
-                />
-                {/* Pulsing rings for voice */}
-                {[...Array(3)].map((_, i) => (
+                {/* Clean blue pulsing rings - like the screenshot */}
+                {[...Array(2)].map((_, i) => (
                   <motion.div
                     key={`voice-ring-${i}`}
-                    className="absolute rounded-full border border-[#FBB924]/30"
+                    className="absolute rounded-full border-2"
                     style={{
-                      width: `${120 + i * 40}px`,
-                      height: `${120 + i * 40}px`,
+                      width: `${200 + i * 100}px`,
+                      height: `${200 + i * 100}px`,
+                      borderColor: '#6B9BD1', // Clean blue like screenshot
                     }}
                     animate={{
-                      scale: [1, 1 + voiceAudioLevel * 0.3, 1],
-                      opacity: [0.2, 0.4 + voiceAudioLevel * 0.3, 0.2],
+                      scale: [1, 1.1, 1],
+                      opacity: [0.8, 0.4, 0.8],
                     }}
                     transition={{
-                      duration: 1.5 + i * 0.5,
+                      duration: 2 + i * 0.5,
                       repeat: Infinity,
-                      delay: i * 0.2,
+                      delay: i * 0.3,
                       ease: "easeInOut"
                     }}
                   />
                 ))}
+
+                {/* Audio level responsive inner ring */}
+                {voiceAudioLevel > 0.05 && (
+                  <motion.div
+                    className="absolute rounded-full border-2 border-[#6B9BD1]"
+                    style={{
+                      width: '180px',
+                      height: '180px',
+                    }}
+                    animate={{
+                      scale: 1 + voiceAudioLevel * 0.3,
+                      opacity: 0.5 + voiceAudioLevel * 0.5,
+                    }}
+                    transition={{
+                      duration: 0.1,
+                      ease: "linear"
+                    }}
+                  />
+                )}
               </motion.div>
             )}
 
-            {/* Voice Visualizer - Maia's voice (violet/purple glow) */}
+            {/* Voice Visualizer - Maya's voice (clean golden rings) */}
             {(isResponding || isAudioPlaying || maiaVoiceState?.isPlaying) && (
               <motion.div
                 className="absolute inset-0 pointer-events-none flex items-center justify-center"
@@ -839,57 +844,96 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
+                {/* Clean golden pulsing rings for Maya */}
+                {[...Array(2)].map((_, i) => (
+                  <motion.div
+                    key={`maya-ring-${i}`}
+                    className="absolute rounded-full border-2"
+                    style={{
+                      width: `${250 + i * 100}px`,
+                      height: `${250 + i * 100}px`,
+                      borderColor: '#D4B896', // Golden for Maya
+                    }}
+                    animate={{
+                      scale: [1, 1.15, 1],
+                      opacity: [0.7, 0.3, 0.7],
+                    }}
+                    transition={{
+                      duration: 2.5 + i * 0.5,
+                      repeat: Infinity,
+                      delay: i * 0.4,
+                      ease: "easeInOut"
+                    }}
+                  />
+                ))}
+
+                {/* Subtle inner glow */}
                 <motion.div
-                  className="absolute w-56 h-56 rounded-full"
+                  className="absolute rounded-full"
                   style={{
-                    background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, rgba(139,92,246,0.15) 40%, transparent 70%)',
-                    filter: 'blur(40px)',
+                    width: '200px',
+                    height: '200px',
+                    background: 'radial-gradient(circle, rgba(212, 184, 150, 0.2) 0%, transparent 60%)',
                   }}
                   animate={{
-                    scale: [1.2, 1.5, 1.2],
-                    opacity: [0.4, 0.7, 0.4],
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 0.8, 0.5],
                   }}
                   transition={{
-                    duration: 2.5,
+                    duration: 3,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
                 />
-                {/* Crystalline patterns for Maia */}
-                {[...Array(6)].map((_, i) => {
-                  const angle = (i * Math.PI * 2) / 6;
-                  return (
-                    <motion.div
-                      key={`maia-crystal-${i}`}
-                      className="absolute w-1 h-1 bg-violet-400/60 rounded-full"
-                      style={{
-                        filter: 'blur(0.5px)',
-                      }}
-                      animate={{
-                        x: [0, Math.cos(angle) * 80, 0],
-                        y: [0, Math.sin(angle) * 80, 0],
-                        opacity: [0, 0.8, 0],
-                        scale: [0, 1.5, 0],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        delay: i * 0.3,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  );
-                })}
               </motion.div>
             )}
 
-            {/* The holoflower logo itself - Clickable to toggle mute in voice mode */}
+            {/* Status text below holoflower */}
+            {!showChatInterface && voiceEnabled && (
+              <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 text-center">
+                <AnimatePresence mode="wait">
+                  {voiceMicRef.current?.isListening && !isResponding && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="text-[#6B9BD1] text-sm font-medium"
+                    >
+                      Listening...
+                    </motion.div>
+                  )}
+                  {(isResponding || isAudioPlaying) && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="text-[#D4B896] text-sm font-medium"
+                    >
+                      Speaking...
+                    </motion.div>
+                  )}
+                  {!voiceMicRef.current?.isListening && !isResponding && !isAudioPlaying && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="text-neutral-mystic text-sm"
+                    >
+                      Click to activate
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
+            {/* The holoflower logo - Primary interaction point for voice connection */}
             <motion.button
               onClick={() => {
-                if (!showChatInterface && voiceEnabled) {
-                  enableAudio(); // Initialize audio context first
+                // Always enable audio first
+                enableAudio();
 
-                  // Toggle voice recognition
+                // In voice mode, toggle listening
+                if (!showChatInterface && voiceEnabled) {
                   if (!isMuted) {
                     // Currently listening, so stop
                     setIsMuted(true);
@@ -908,6 +952,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       }
                     }, 100);
                   }
+                } else if (showChatInterface) {
+                  // In chat mode, switch to voice mode and activate
+                  setShowChatInterface(false);
+                  setIsMuted(false);
+                  setTimeout(() => {
+                    if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
+                      voiceMicRef.current.startListening();
+                      console.log('🎤 Voice started via mode switch from holoflower');
+                    }
+                  }, 200);
                 }
               }}
               animate={{
@@ -920,61 +974,49 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 ease: "easeInOut"
               }}
               whileHover={{
-                scale: !showChatInterface ? 1.1 : 1.05,
+                scale: 1.15,
                 transition: { duration: 0.2 }
               }}
               whileTap={{
-                scale: !showChatInterface ? 0.95 : 1,
+                scale: 0.95,
                 transition: { duration: 0.1 }
               }}
-              className={`relative z-10 rounded-full p-4 transition-all duration-300 ${
-                !showChatInterface && voiceEnabled
-                  ? 'cursor-pointer hover:bg-white/5 active:bg-white/10'
-                  : 'cursor-default'
-              }`}
-              disabled={showChatInterface || !voiceEnabled}
+              className="relative z-10 rounded-full p-6 transition-all duration-300 cursor-pointer hover:bg-white/5 active:bg-white/10"
               style={{ zIndex: 10 }}
             >
               <Image
-                src="/holoflower.svg"
-                alt={!showChatInterface && voiceEnabled ? (isMuted ? "Click to unmute" : "Click to mute") : "Spiralogic Holoflower"}
-                width={80}
-                height={80}
+                src="/holoflower.png"
+                alt="Click to connect with Maya"
+                width={100}
+                height={100}
                 className={`object-contain transition-all duration-300 ${
-                  !showChatInterface && voiceEnabled
-                    ? isMuted
-                      ? 'opacity-40 grayscale hover:opacity-60'
+                  voiceMicRef.current?.isListening
+                    ? 'opacity-100 brightness-110'
+                    : isResponding
+                      ? 'opacity-90 brightness-105'
                       : 'opacity-80 hover:opacity-100'
-                    : 'opacity-80'
                 }`}
                 priority
               />
 
-              {/* Mute indicator overlay - only show when truly muted and mic is initialized */}
-              {!showChatInterface && voiceEnabled && isMuted && voiceMicRef.current && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <svg className="w-8 h-8 text-red-500/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M5.586 15L7 16.414l1.414-1.414L7 13.586 5.586 15zM4 5l16 16m-7-7V7a3 3 0 00-6 0v4m0 4h.01M19 10a7 7 0 01-14 0" />
-                  </svg>
-                </div>
-              )}
-
-              {/* Voice state indicator ring around holoflower */}
-              {!showChatInterface && voiceEnabled && !isMuted && voiceMicRef.current?.isListening && (
+              {/* Mic status indicator - subtle dot */}
+              <div className="absolute bottom-0 right-0 w-4 h-4">
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-[#D4B896]"
+                  className={`w-full h-full rounded-full ${
+                    !showChatInterface && voiceEnabled && !isMuted
+                      ? 'bg-green-500'
+                      : 'bg-red-500/60'
+                  }`}
                   animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.8, 0.3]
+                    scale: voiceMicRef.current?.isListening ? [1, 1.2, 1] : 1,
                   }}
                   transition={{
-                    duration: 2,
+                    duration: 1.5,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
                 />
-              )}
+              </div>
             </motion.button>
           </div>
         </div>
