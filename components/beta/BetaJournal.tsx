@@ -21,6 +21,8 @@ const journalPrompts = [
 export default function BetaJournal({ isOpen, onClose, explorerName }: BetaJournalProps) {
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [journalEntries, setJournalEntries] = useState<any[]>([]);
+  const [viewMode, setViewMode] = useState<'write' | 'read'>('write');
   const randomPrompt = journalPrompts[Math.floor(Math.random() * journalPrompts.length)];
 
   const handleSave = async () => {
@@ -28,13 +30,34 @@ export default function BetaJournal({ isOpen, onClose, explorerName }: BetaJourn
 
     setIsSaving(true);
     try {
-      // Save to localStorage for now (can integrate with Supabase later)
+      const explorerId = sessionStorage.getItem('betaUserId') || sessionStorage.getItem('explorerId');
+      const sessionId = sessionStorage.getItem('sessionId');
+      const messageCount = parseInt(sessionStorage.getItem('messageCount') || '0');
+
+      // Save to Supabase via API
+      const response = await fetch('/api/beta/journal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: content.trim(),
+          prompt: randomPrompt,
+          explorerId: explorerId || 'anonymous',
+          explorerName: explorerName || sessionStorage.getItem('explorerName') || 'MAIA-EXPLORER',
+          sessionId,
+          messageCount
+        })
+      });
+
+      const result = await response.json();
+
+      // Also save to localStorage as backup
       const journalEntry = {
-        id: Date.now().toString(),
+        id: result.id || Date.now().toString(),
         content: content.trim(),
         explorerName,
         timestamp: new Date().toISOString(),
-        prompt: randomPrompt
+        prompt: randomPrompt,
+        saved: result.saved || 'local'
       };
 
       const existingEntries = JSON.parse(localStorage.getItem('maya-journal') || '[]');
@@ -46,6 +69,23 @@ export default function BetaJournal({ isOpen, onClose, explorerName }: BetaJourn
       onClose();
     } catch (error) {
       console.error('Error saving journal entry:', error);
+
+      // Fallback to localStorage only
+      const journalEntry = {
+        id: Date.now().toString(),
+        content: content.trim(),
+        explorerName,
+        timestamp: new Date().toISOString(),
+        prompt: randomPrompt,
+        saved: 'local'
+      };
+
+      const existingEntries = JSON.parse(localStorage.getItem('maya-journal') || '[]');
+      existingEntries.push(journalEntry);
+      localStorage.setItem('maya-journal', JSON.stringify(existingEntries));
+
+      setContent('');
+      onClose();
     } finally {
       setIsSaving(false);
     }
