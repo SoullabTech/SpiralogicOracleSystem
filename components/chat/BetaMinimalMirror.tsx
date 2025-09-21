@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import HybridInput from './HybridInput';
 import MaiaBubble from './MaiaBubble';
 import { useMaiaStream } from '@/hooks/useMayaStream';
-import { Info, Sparkles } from 'lucide-react';
+import { Info, Sparkles, BookOpen } from 'lucide-react';
 // import { ToastProvider } from '@/components/system/ToastProvider';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import PulseCheck from '@/components/maya/PulseCheck';
@@ -13,6 +13,7 @@ import EscapeHatch from '@/components/maya/EscapeHatch';
 import RealityAnchor from '@/components/maya/RealityAnchor';
 import { BetaAnalytics, SessionObserver } from '@/utils/beta-analytics';
 import { useSessionPersistence } from '@/hooks/useSessionPersistence';
+import BetaJournal from '@/components/beta/BetaJournal';
 
 interface Message {
   id: string;
@@ -42,6 +43,7 @@ export default function BetaMinimalMirror() {
   const [sessionCount, setSessionCount] = useState(1);
   const [messageCount, setMessageCount] = useState(0);
   const [hasRestored, setHasRestored] = useState(false);
+  const [showJournal, setShowJournal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Maya stream integration
@@ -323,6 +325,15 @@ export default function BetaMinimalMirror() {
           </div>
           
           <div className="flex items-center gap-3">
+            {/* Journal Button */}
+            <button
+              onClick={() => setShowJournal(true)}
+              className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/30 transition-colors"
+              title="Open Journal"
+            >
+              <BookOpen className="w-4 h-4" />
+            </button>
+
             {/* Element Selector (minimal) */}
             <select
               value={currentElement}
@@ -413,6 +424,13 @@ export default function BetaMinimalMirror() {
           <span>Session {sessionCount} • Message {messageCount}</span>
         </div>
       </motion.div>
+
+      {/* Journal Modal */}
+      <BetaJournal
+        isOpen={showJournal}
+        onClose={() => setShowJournal(false)}
+        explorerName={sessionStorage.getItem('explorerName') || undefined}
+      />
 
       {/* Reality Anchor - Context-aware reminders */}
       <RealityAnchor
