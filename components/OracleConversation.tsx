@@ -429,9 +429,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       // In Chat mode, add message immediately
       // In Voice mode, delay text until after speaking
-      const isVoiceMode = !showChatInterface;
+      const isInVoiceMode = !showChatInterface;
 
-      if (!isVoiceMode) {
+      if (!isInVoiceMode) {
         // Chat mode - show text immediately
         setMessages(prev => [...prev, oracleMessage]);
         onMessageAdded?.(oracleMessage);
@@ -478,14 +478,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           console.log(`🔇 Maia finished speaking after ${speakDuration}ms`);
 
           // In Voice mode, show text after speaking completes
-          if (isVoiceMode && showVoiceText) {
+          if (isInVoiceMode && showVoiceText) {
             setMessages(prev => [...prev, oracleMessage]);
             onMessageAdded?.(oracleMessage);
           }
         } catch (error) {
           console.error('❌ Speech error or timeout:', error);
           // Show text even if speech fails in Voice mode
-          if (isVoiceMode) {
+          if (isInVoiceMode) {
             setMessages(prev => [...prev, oracleMessage]);
             onMessageAdded?.(oracleMessage);
           }
