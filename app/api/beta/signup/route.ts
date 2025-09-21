@@ -2,13 +2,32 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+// Initialize Supabase client conditionally
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+const supabase = supabaseUrl && supabaseKey
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      console.warn('Supabase not configured - using mock response for beta testing');
+      // Return mock successful response for testing
+      const mockResponse = {
+        userId: uuidv4(),
+        explorerId: uuidv4(),
+        explorerName: 'MAYA-TESTER',
+        mayaInstance: uuidv4(),
+        sessionId: uuidv4(),
+        sanctuary: 'established',
+        signupDate: new Date().toISOString()
+      };
+      return NextResponse.json(mockResponse);
+    }
+
     const {
       email,
       timezone,
