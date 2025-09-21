@@ -77,6 +77,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const micStreamRef = useRef<MediaStream | null>(null);
+  const isStartingRef = useRef<boolean>(false); // Prevent multiple starts
   const animationFrameRef = useRef<number>(0);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const accumulatedTranscriptRef = useRef<string>('');
@@ -270,8 +271,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
           const silenceDuration = Date.now() - lastSpeechTime.current;
           lastSpeechTime.current = Date.now();
 
-          // Update recent silences for mode detection
-          setRecentSilences(prev => [...prev.slice(-4), silenceDuration]);
+          // Update recent silences for mode detection - DISABLED
+          // setRecentSilences(prev => [...prev.slice(-4), silenceDuration]);
 
           // Intelligent timing based on elemental mode and content
           let threshold;
@@ -343,18 +344,24 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         timeStamp: event.timeStamp
       });
       // Auto-restart on certain errors only if not paused
-      if ((event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') && !isPausedForMaya && enabled) {
+      if ((event.error === 'no-speech' || event.error === 'network') && !isPausedForMaya && enabled) {
+        // Don't auto-restart on 'aborted' - this usually means another instance is trying to start
         setTimeout(() => {
-          if (recognitionRef.current && isListening && !isPausedForMaya) {
+          if (recognitionRef.current && isListening && !isPausedForMaya && !isStartingRef.current) {
             try {
               recognitionRef.current.stop();
               setTimeout(() => {
                 try {
-                  if (!isPausedForMaya) {
+                  if (!isPausedForMaya && !isStartingRef.current) {
+                    isStartingRef.current = true;
                     recognitionRef.current.start();
                     console.log('Speech recognition restarted after error');
+                    setTimeout(() => {
+                      isStartingRef.current = false;
+                    }, 1000);
                   }
                 } catch (e) {
+                  isStartingRef.current = false;
                   console.log('Could not restart speech recognition:', e);
                 }
               }, 500);
@@ -368,14 +375,20 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
     recognition.onend = () => {
       console.log('Speech recognition ended');
+      isStartingRef.current = false; // Clear flag on end
       // Auto-restart for continuous listening only if Maya is not speaking and not paused
       if (isListening && !isMayaSpeaking && !isPausedForMaya) {
         setTimeout(() => {
-          if (recognitionRef.current && !isMayaSpeaking && !isPausedForMaya) {
+          if (recognitionRef.current && !isMayaSpeaking && !isPausedForMaya && !isStartingRef.current) {
             try {
+              isStartingRef.current = true;
               recognitionRef.current.start();
               console.log('Speech recognition restarted');
+              setTimeout(() => {
+                isStartingRef.current = false;
+              }, 1000);
             } catch (e) {
+              isStartingRef.current = false;
               console.log('Could not restart:', e);
             }
           }
@@ -453,12 +466,25 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
       const speechInit = initializeSpeechRecognition();
 
       if (audioInit && speechInit && recognitionRef.current) {
+        // Prevent multiple simultaneous starts
+        if (isStartingRef.current) {
+          console.log('⚠️ Recognition already starting, skipping...');
+          return;
+        }
+
         try {
+          isStartingRef.current = true;
           recognitionRef.current.start();
           setIsListening(true);
           console.log('✅ Voice recognition started successfully');
           console.log('Recognition object:', recognitionRef.current);
+
+          // Clear starting flag after a delay
+          setTimeout(() => {
+            isStartingRef.current = false;
+          }, 1000);
         } catch (error) {
+          isStartingRef.current = false;
           console.error('❌ Failed to start recognition:', error);
           if (error instanceof DOMException) {
             console.error('DOMException details:', {
