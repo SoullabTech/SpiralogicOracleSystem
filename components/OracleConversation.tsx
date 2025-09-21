@@ -416,7 +416,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setActiveFacetId(facetId);
       setCoherenceLevel(oracleResponse.confidence || 0.85);
 
-      // Add oracle message with full text immediately for text chat
+      // Create oracle message
       const oracleMessage: ConversationMessage = {
         id: `msg-${Date.now()}-oracle`,
         role: 'oracle',
@@ -426,8 +426,16 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         motionState: 'responding',
         coherenceLevel: oracleResponse.confidence || 0.85
       };
-      setMessages(prev => [...prev, oracleMessage]);
-      onMessageAdded?.(oracleMessage);
+
+      // In Chat mode, add message immediately
+      // In Voice mode, delay text until after speaking
+      const isVoiceMode = !showChatInterface;
+
+      if (!isVoiceMode) {
+        // Chat mode - show text immediately
+        setMessages(prev => [...prev, oracleMessage]);
+        onMessageAdded?.(oracleMessage);
+      }
 
       // Play audio response with Maia's voice - ALWAYS in voice mode
       const shouldSpeak = !showChatInterface || (showChatInterface && voiceEnabled && maiaReady);
@@ -452,19 +460,35 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         console.log('🧹 Cleaned for voice:', cleanVoiceText);
 
         try {
+          // Start speaking immediately
+          const startSpeakTime = Date.now();
+          console.log('⏱️ Starting speech at:', startSpeakTime);
+
           // Speak the cleaned response with timeout protection
           const speakPromise = maiaSpeak(cleanVoiceText);
 
-          // Add timeout to prevent infinite hanging (30 seconds max)
+          // Add timeout to prevent infinite hanging (15 seconds max for better UX)
           const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Speech timeout after 30s')), 30000);
+            setTimeout(() => reject(new Error('Speech timeout after 15s')), 15000);
           });
 
           await Promise.race([speakPromise, timeoutPromise]);
-          console.log('🔇 Maia finished speaking naturally');
+
+          const speakDuration = Date.now() - startSpeakTime;
+          console.log(`🔇 Maia finished speaking after ${speakDuration}ms`);
+
+          // In Voice mode, show text after speaking completes
+          if (isVoiceMode && showVoiceText) {
+            setMessages(prev => [...prev, oracleMessage]);
+            onMessageAdded?.(oracleMessage);
+          }
         } catch (error) {
           console.error('❌ Speech error or timeout:', error);
-          // Force recovery if speech fails or times out
+          // Show text even if speech fails in Voice mode
+          if (isVoiceMode) {
+            setMessages(prev => [...prev, oracleMessage]);
+            onMessageAdded?.(oracleMessage);
+          }
         } finally {
           // Always reset states to prevent getting stuck
           setIsResponding(false);
