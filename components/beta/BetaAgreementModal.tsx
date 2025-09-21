@@ -35,15 +35,15 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-gray-900/95 rounded-2xl border border-sacred-gold/20 shadow-2xl"
+        className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/95 backdrop-blur-xl rounded-2xl border border-amber-500/10 shadow-2xl"
       >
         {/* Header */}
-        <div className="sticky top-0 bg-gray-900/95 backdrop-blur-md p-6 border-b border-sacred-gold/10">
+        <div className="sticky top-0 bg-black/95 backdrop-blur-md p-6 border-b border-amber-500/10">
           <div className="flex items-center space-x-3">
-            <Shield className="w-8 h-8 text-sacred-gold" />
+            <Shield className="w-8 h-8 text-amber-500" />
             <div>
-              <h2 className="text-2xl font-bold text-sacred-gold">Maya Beta Explorer Agreement</h2>
-              <p className="text-sm text-gray-400 mt-1">Your commitment to the sacred container</p>
+              <h2 className="text-2xl font-light text-amber-50">Maia Beta Agreement</h2>
+              <p className="text-sm text-amber-200/60 mt-1">Early Access Terms</p>
             </div>
           </div>
         </div>
@@ -51,16 +51,16 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Introduction */}
-          <div className="bg-sacred-gold/5 rounded-lg p-4 border border-sacred-gold/10">
-            <p className="text-gray-300">
-              You've been selected as one of Maya's first explorers—a pioneer in consciousness technology.
+          <div className="bg-amber-500/5 rounded-lg p-4 border border-amber-500/10">
+            <p className="text-amber-50/80">
+              You've been selected as one of Maia's first explorers—a pioneer in AI conversation technology.
               This agreement protects both the sanctity of the work and the privacy of all participants.
             </p>
           </div>
 
           {/* Key Points */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-sacred-gold flex items-center">
+            <h3 className="text-lg font-light text-amber-400 flex items-center">
               <Lock className="w-5 h-5 mr-2" />
               During Beta Period
             </h3>
@@ -203,17 +203,17 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
           </div>
 
           {!allAgreed && (
-            <p className="text-xs text-gray-500 text-center mt-3">
-              Please check all agreement boxes to proceed
+            <p className="text-xs text-amber-400 text-center mt-3 font-medium">
+              ⚠️ Please check all 6 agreement boxes above to proceed
             </p>
           )}
           {allAgreed && !isValidName && explorerName.length > 0 && (
-            <p className="text-xs text-yellow-400 text-center mt-3">
+            <p className="text-xs text-amber-400 text-center mt-3">
               Explorer name must start with MAIA- (e.g., MAIA-APPRENTICE)
             </p>
           )}
           {allAgreed && explorerName.length === 0 && (
-            <p className="text-xs text-yellow-400 text-center mt-3">
+            <p className="text-xs text-amber-400 text-center mt-3">
               Please enter MAIA-APPRENTICE as your explorer name
             </p>
           )}
