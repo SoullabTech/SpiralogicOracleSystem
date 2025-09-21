@@ -150,13 +150,13 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
             </div>
           </div>
 
-          {/* Explorer Name - More prominent for mobile */}
-          <div className="space-y-2 bg-purple-900/30 p-4 rounded-lg border border-purple-500/30">
-            <label className="text-base font-medium text-sacred-gold">
-              Enter Your Explorer Name
+          {/* Explorer Name - Clean and simple */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">
+              Explorer Name
             </label>
-            <p className="text-xs text-gray-400 mb-2">
-              Must start with MAIA- (e.g., MAIA-APPRENTICE)
+            <p className="text-xs text-gray-500 mb-2">
+              Enter: MAIA-APPRENTICE
             </p>
             <input
               type="text"
@@ -167,15 +167,14 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
               autoCorrect="off"
               autoCapitalize="characters"
               spellCheck="false"
-              className="w-full px-4 py-3 bg-gray-800 border-2 border-sacred-gold/50 rounded-lg text-white placeholder-gray-400 focus:border-sacred-gold focus:outline-none text-[16px] font-mono"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-gray-500 focus:outline-none text-[16px] font-mono"
             />
           </div>
 
-          {/* Sacred Container Note */}
-          <div className="bg-purple-900/20 rounded-lg p-4 border border-purple-500/20">
-            <p className="text-sm text-purple-300 italic">
-              "You're not just testing software—you're pioneering a new form of consciousness technology.
-              Your discretion protects the profound experiences of your fellow explorers."
+          {/* Simple note */}
+          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+            <p className="text-sm text-gray-400">
+              This is an early access program. Please keep your participation private during the beta period.
             </p>
           </div>
         </div>

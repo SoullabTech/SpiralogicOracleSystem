@@ -82,11 +82,11 @@ export default function BetaSignup() {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-950 to-black">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-black">
         {/* Mobile-optimized container with safe areas for iPhone */}
         <div className="flex-1 flex items-center justify-center p-4 pt-safe pb-safe">
           <div className="w-full max-w-md">
-            <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 border border-purple-500/20">
+            <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 border border-gray-700">
               {/* Responsive header */}
               <div className="mb-6">
                 <h1 className="text-2xl sm:text-3xl font-light text-white mb-2">
@@ -110,7 +110,7 @@ export default function BetaSignup() {
                     autoComplete="email"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 text-[16px]"
+                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 text-[16px]"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -152,7 +152,7 @@ export default function BetaSignup() {
                     spellCheck="false"
                     value={formData.invitationCode}
                     onChange={(e) => setFormData({...formData, invitationCode: e.target.value.toUpperCase()})}
-                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 text-[16px]"
+                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 text-[16px]"
                     placeholder="Your access code"
                   />
                   <p className="text-xs text-gray-500 mt-1">Use: APPRENTICE-ACCESS</p>
@@ -167,7 +167,7 @@ export default function BetaSignup() {
                     type="text"
                     value={formData.referralCode}
                     onChange={(e) => setFormData({...formData, referralCode: e.target.value})}
-                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 text-[16px]"
+                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 text-[16px]"
                     placeholder="If someone invited you"
                   />
                 </div>
@@ -191,7 +191,7 @@ export default function BetaSignup() {
                 <button
                   type="submit"
                   disabled={loading || !formData.consent}
-                  className="w-full py-3.5 sm:py-3 bg-purple-600 hover:bg-purple-700 active:bg-purple-700 disabled:bg-purple-800/50 rounded-lg text-white font-medium transition-colors text-base"
+                  className="w-full py-3.5 sm:py-3 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 disabled:bg-gray-800/50 rounded-lg text-white font-medium transition-colors text-base"
                 >
                   {loading ? 'Creating Your Space...' : 'Begin Journey'}
                 </button>
