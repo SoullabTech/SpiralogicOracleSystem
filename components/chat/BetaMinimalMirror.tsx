@@ -296,7 +296,7 @@ export default function BetaMinimalMirror() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900 safe-top safe-bottom">
       {/* Header */}
       <motion.header 
         initial={{ opacity: 0, y: -20 }}

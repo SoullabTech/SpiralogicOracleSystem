@@ -7,6 +7,7 @@ import { FeedbackWidget } from "@/components/ui/FeedbackWidget";
 import { PWAInstallPrompt } from "@/components/ui/PWAInstallPrompt";
 import VoiceDebugOverlay from "@/components/debug/VoiceDebugOverlay";
 import "./globals.css";
+import "./globals-mobile.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
