@@ -18,8 +18,8 @@ interface MayaVoiceConfig {
 // Maya's natural voice configuration with Alloy
 const MAYA_VOICE_CONFIG: MayaVoiceConfig = {
   voice: 'alloy',     // Calm, composed, warm presence
-  speed: 0.95,        // Slightly slower for natural conversational pace
-  model: 'tts-1-hd'   // Higher quality for better clarity
+  speed: 1.0,         // Normal speed for better responsiveness (was 0.95)
+  model: 'tts-1'      // Faster model, still good quality (was tts-1-hd)
 };
 
 /**
