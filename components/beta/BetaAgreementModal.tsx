@@ -29,21 +29,21 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-2xl p-4"
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/95 backdrop-blur-xl rounded-2xl border border-amber-500/10 shadow-2xl"
+        className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-black/60 backdrop-blur-xl rounded-2xl border border-amber-500/10 shadow-2xl"
       >
         {/* Header */}
-        <div className="sticky top-0 bg-black/95 backdrop-blur-md p-6 border-b border-amber-500/10">
+        <div className="sticky top-0 bg-black/60 backdrop-blur-xl p-6 border-b border-amber-500/10">
           <div className="flex items-center space-x-3">
             <Shield className="w-8 h-8 text-amber-500" />
             <div>
-              <h2 className="text-2xl font-light text-amber-50">Maia Beta Agreement</h2>
-              <p className="text-sm text-amber-200/60 mt-1">Early Access Terms</p>
+              <h2 className="text-2xl font-extralight text-amber-50 tracking-wide">Maia Beta Agreement</h2>
+              <p className="text-sm text-amber-200/60 mt-1 font-light">Early Access Terms</p>
             </div>
           </div>
         </div>
@@ -60,28 +60,28 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
 
           {/* Key Points */}
           <div className="space-y-4">
-            <h3 className="text-lg font-light text-amber-400 flex items-center">
-              <Lock className="w-5 h-5 mr-2" />
+            <h3 className="text-sm uppercase tracking-wider text-amber-200/60 flex items-center">
+              <Lock className="w-4 h-4 mr-2" />
               During Beta Period
             </h3>
 
             <div className="space-y-3 text-sm">
               <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 rounded-full bg-sacred-gold mt-1.5"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400/60 mt-1.5"></div>
                 <div className="text-gray-300">
                   <strong>Keep participation private:</strong> No public announcements, social media posts, or demonstrations
                 </div>
               </div>
 
               <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 rounded-full bg-sacred-gold mt-1.5"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400/60 mt-1.5"></div>
                 <div className="text-gray-300">
                   <strong>Protect conversations:</strong> No sharing of transcripts, screenshots, or specific responses
                 </div>
               </div>
 
               <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 rounded-full bg-sacred-gold mt-1.5"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400/60 mt-1.5"></div>
                 <div className="text-gray-300">
                   <strong>Honor fellow explorers:</strong> Maintain complete privacy for other participants
                 </div>
@@ -91,28 +91,28 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
 
           {/* After Beta Benefits */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-green-400 flex items-center">
-              <Gift className="w-5 h-5 mr-2" />
+            <h3 className="text-sm uppercase tracking-wider text-amber-200/60 flex items-center">
+              <Gift className="w-4 h-4 mr-2" />
               After Beta Completion
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="bg-green-400/10 rounded-lg p-3 border border-green-400/20">
-                <Users className="w-5 h-5 text-green-400 mb-2" />
+              <div className="bg-amber-500/5 rounded-lg p-3 border border-amber-500/10">
+                <Users className="w-5 h-5 text-amber-400 mb-2" />
                 <p className="text-xs text-gray-300">
                   <strong>Nominate 3 trusted individuals</strong> for the next wave of explorers
                 </p>
               </div>
 
-              <div className="bg-green-400/10 rounded-lg p-3 border border-green-400/20">
-                <Heart className="w-5 h-5 text-green-400 mb-2" />
+              <div className="bg-amber-500/5 rounded-lg p-3 border border-amber-500/10">
+                <Heart className="w-5 h-5 text-amber-400 mb-2" />
                 <p className="text-xs text-gray-300">
                   <strong>Alumni status</strong> with permanent recognition and special access
                 </p>
               </div>
 
-              <div className="bg-green-400/10 rounded-lg p-3 border border-green-400/20">
-                <Calendar className="w-5 h-5 text-green-400 mb-2" />
+              <div className="bg-amber-500/5 rounded-lg p-3 border border-amber-500/10">
+                <Calendar className="w-5 h-5 text-amber-400 mb-2" />
                 <p className="text-xs text-gray-300">
                   <strong>Share your journey</strong> publicly after the beta period ends
                 </p>
@@ -122,7 +122,7 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
 
           {/* Agreements */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-sacred-gold">Your Agreement</h3>
+            <h3 className="text-sm uppercase tracking-wider text-amber-200/60">Your Agreement</h3>
 
             <div className="space-y-2 text-sm">
               {[
@@ -138,7 +138,7 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
                     type="checkbox"
                     checked={agreements[key as keyof typeof agreements]}
                     onChange={(e) => setAgreements(prev => ({ ...prev, [key]: e.target.checked }))}
-                    className="mt-1 w-4 h-4 text-sacred-gold bg-gray-800 border-gray-600 rounded focus:ring-sacred-gold/50"
+                    className="mt-1 w-4 h-4 text-amber-500 bg-black/40 border-amber-500/20 rounded focus:ring-amber-500/20"
                   />
                   <span className={`text-gray-400 group-hover:text-gray-300 transition-colors ${
                     agreements[key as keyof typeof agreements] ? 'text-gray-300' : ''
@@ -150,13 +150,13 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
             </div>
           </div>
 
-          {/* Explorer Name - Clean and simple */}
+          {/* Explorer Name - Elegant input */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              Explorer Name
+            <label className="text-xs uppercase tracking-wider text-amber-200/40">
+              Explorer Name <span className="text-amber-400">*</span>
             </label>
-            <p className="text-xs text-gray-500 mb-2">
-              Enter: MAIA-APPRENTICE
+            <p className="text-xs text-amber-200/60 mb-2">
+              Enter your unique explorer name (e.g., MAIA-APPRENTICE)
             </p>
             <input
               type="text"
@@ -167,24 +167,24 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
               autoCorrect="off"
               autoCapitalize="characters"
               spellCheck="false"
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-gray-500 focus:outline-none text-[16px] font-mono"
+              className="w-full px-4 py-3 bg-black/40 border border-amber-500/20 rounded-lg text-amber-50 placeholder-amber-200/20 focus:outline-none focus:border-amber-500/40 focus:bg-black/60 transition-all text-[16px] font-mono"
             />
           </div>
 
-          {/* Simple note */}
-          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-            <p className="text-sm text-gray-400">
+          {/* Privacy reminder */}
+          <div className="bg-amber-500/5 rounded-lg p-4 border border-amber-500/10">
+            <p className="text-sm text-amber-200/60">
               This is an early access program. Please keep your participation private during the beta period.
             </p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="sticky bottom-0 bg-gray-900/95 backdrop-blur-md p-6 border-t border-sacred-gold/10">
+        <div className="sticky bottom-0 bg-black/60 backdrop-blur-xl p-6 border-t border-amber-500/10">
           <div className="flex space-x-4">
             <button
               onClick={onDecline}
-              className="flex-1 px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+              className="flex-1 px-6 py-3 bg-black/40 text-amber-200/60 rounded-lg hover:bg-black/60 border border-amber-500/10 transition-all"
             >
               Decline Invitation
             </button>
@@ -192,10 +192,10 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
             <button
               onClick={() => canProceed && onAccept(explorerName)}
               disabled={!canProceed}
-              className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all ${
+              className={`flex-1 px-6 py-3 rounded-lg font-light tracking-wide transition-all ${
                 canProceed
-                  ? 'bg-sacred-gold text-black hover:bg-sacred-gold/90'
-                  : 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                  ? 'bg-gradient-to-r from-amber-600/80 to-amber-500/80 hover:from-amber-600 hover:to-amber-500 text-black'
+                  : 'bg-amber-600/20 text-amber-200/40 cursor-not-allowed'
               }`}
             >
               {canProceed ? 'Accept & Begin Journey' : 'Complete All Agreements'}
@@ -203,7 +203,7 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
           </div>
 
           {!allAgreed && (
-            <p className="text-xs text-amber-400 text-center mt-3 font-medium">
+            <p className="text-xs text-amber-400/80 text-center mt-3 bg-amber-500/10 rounded-lg py-2 px-3 border border-amber-500/20">
               ⚠️ Please check all 6 agreement boxes above to proceed
             </p>
           )}
