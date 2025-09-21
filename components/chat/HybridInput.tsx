@@ -80,10 +80,12 @@ export default function HybridInput({
     // Add silence timer to prevent premature cutoff
     let silenceTimer: NodeJS.Timeout;
     let lastSpeechTime = Date.now();
+    let hasSentMessage = false; // Flag to prevent double-sending
 
     recognition.onstart = () => {
       setError(null);
       lastSpeechTime = Date.now();
+      hasSentMessage = false; // Reset flag on new recognition start
     };
 
     recognition.onresult = (event: any) => {
@@ -113,12 +115,15 @@ export default function HybridInput({
         // This prevents cutting off mid-thought
         silenceTimer = setTimeout(() => {
           const fullTranscript = (transcript + ' ' + final).trim();
-          if (fullTranscript && Date.now() - lastSpeechTime > 2000) {
-            // Only send if there's been 2+ seconds of silence
+          if (fullTranscript && Date.now() - lastSpeechTime > 2000 && !hasSentMessage) {
+            // Only send if there's been 2+ seconds of silence AND we haven't already sent
+            hasSentMessage = true; // Set flag to prevent double-sending
             onSend(fullTranscript);
             setTranscript('');
             setInterimTranscript('');
-            // Keep listening for next input
+            // Stop listening after sending
+            setIsListening(false);
+            recognition.stop();
           }
         }, 2500); // Wait 2.5 seconds of silence before sending
       }
@@ -172,13 +177,10 @@ export default function HybridInput({
         }
       }
 
-      // Send any remaining transcript
-      const finalTranscript = (transcript + ' ' + interimTranscript).trim();
-      if (finalTranscript) {
-        onSend(finalTranscript);
-        setTranscript('');
-        setInterimTranscript('');
-      }
+      // Don't send transcript here - it's already handled in onresult
+      // This was causing the double-sending bug
+      setTranscript('');
+      setInterimTranscript('');
     };
 
     recognition.start();
