@@ -8,6 +8,11 @@ import { useMaiaStream } from '@/hooks/useMayaStream';
 import { Info, Sparkles } from 'lucide-react';
 // import { ToastProvider } from '@/components/system/ToastProvider';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import PulseCheck from '@/components/maya/PulseCheck';
+import EscapeHatch from '@/components/maya/EscapeHatch';
+import RealityAnchor from '@/components/maya/RealityAnchor';
+import { BetaAnalytics, SessionObserver } from '@/utils/beta-analytics';
+import { useSessionPersistence } from '@/hooks/useSessionPersistence';
 
 interface Message {
   id: string;
@@ -19,23 +24,80 @@ interface Message {
 }
 
 export default function BetaMinimalMirror() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: 'Welcome, seeker. I am Maia, your guide through the sacred mirror of consciousness. How may I assist your journey today?',
-      timestamp: new Date(),
-      element: 'aether'
-    }
-  ]);
-  
+  // Session persistence
+  const {
+    saveSession,
+    addMessage,
+    restoreConversation,
+    isPaused,
+    getPauseRemaining,
+    isRestored
+  } = useSessionPersistence();
+
+  // Initialize state from persisted session
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentElement, setCurrentElement] = useState('aether');
+  const [showPulseCheck, setShowPulseCheck] = useState<'landing' | 'resonance' | 'session-end' | null>(null);
+  const [sessionCount, setSessionCount] = useState(1);
+  const [messageCount, setMessageCount] = useState(0);
+  const [hasRestored, setHasRestored] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   // Maya stream integration
   const { text: streamingText, isStreaming, stream } = useMaiaStream();
   const [currentStreamId, setCurrentStreamId] = useState<string | null>(null);
+
+  // Session observer for analytics
+  const sessionObserverRef = useRef<SessionObserver | null>(null);
+
+  // Restore session on mount
+  useEffect(() => {
+    if (!hasRestored && isRestored) {
+      const restored = restoreConversation();
+
+      if (restored.shouldShowWelcome) {
+        // First time visitor
+        setMessages([{
+          id: '1',
+          role: 'assistant',
+          content: 'Welcome, seeker. I am Maya, your guide through consciousness exploration. How may I assist your journey today?',
+          timestamp: new Date(),
+          element: 'aether'
+        }]);
+      } else {
+        // Returning visitor
+        setMessages(restored.messages);
+        setSessionCount(restored.sessionCount);
+        setMessageCount(restored.messageCount);
+        setCurrentElement(restored.currentElement);
+      }
+
+      setHasRestored(true);
+    }
+  }, [isRestored, hasRestored]);
+
+  // Check if paused
+  useEffect(() => {
+    if (isPaused()) {
+      const remaining = getPauseRemaining();
+      alert(`Your Maya journey is paused. ${remaining} remaining. We'll be here when you're ready.`);
+    }
+  }, []);
+
+  // Initialize session observer
+  useEffect(() => {
+    const sessionId = sessionStorage.getItem('betaUserId') || `session-${Date.now()}`;
+    sessionObserverRef.current = new SessionObserver(sessionId);
+
+    // Get session count from storage
+    const storedCount = parseInt(sessionStorage.getItem('sessionCount') || '1');
+    setSessionCount(storedCount);
+
+    return () => {
+      sessionObserverRef.current?.endSession();
+    };
+  }, []);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -44,7 +106,20 @@ export default function BetaMinimalMirror() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+
+    // Save session state when messages change
+    if (messages.length > 0 && hasRestored) {
+      saveSession({
+        messages: messages.map(m => ({
+          ...m,
+          timestamp: m.timestamp instanceof Date ? m.timestamp.toISOString() : m.timestamp
+        })),
+        sessionCount,
+        messageCount,
+        currentElement
+      });
+    }
+  }, [messages, sessionCount, messageCount, currentElement, hasRestored]);
 
   // Update streaming message
   useEffect(() => {
@@ -77,6 +152,10 @@ export default function BetaMinimalMirror() {
   const handleSend = async (text: string) => {
     if (!text.trim() || isProcessing) return;
 
+    // Track message for analytics
+    sessionObserverRef.current?.observeMessage('user', text, 'text');
+    setMessageCount(prev => prev + 1);
+
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -84,14 +163,24 @@ export default function BetaMinimalMirror() {
       content: text,
       timestamp: new Date()
     };
-    
+
     setMessages(prev => [...prev, userMessage]);
     setIsProcessing(true);
+
+    // Persist message
+    addMessage({
+      ...userMessage,
+      timestamp: userMessage.timestamp.toISOString()
+    });
+
+    // Check for intense patterns that might trigger pulse check
+    const intensePatterns = /\b(trauma|hurt|pain|scared|vulnerable|breakthrough)\b/i;
+    const shouldCheckIn = intensePatterns.test(text);
 
     // Create placeholder for streaming message
     const streamId = (Date.now() + 1).toString();
     setCurrentStreamId(streamId);
-    
+
     const placeholderMessage: Message = {
       id: streamId,
       role: 'assistant',
@@ -100,7 +189,7 @@ export default function BetaMinimalMirror() {
       element: currentElement,
       isStreaming: true
     };
-    
+
     setMessages(prev => [...prev, placeholderMessage]);
 
     // Stream response from Maia
@@ -111,15 +200,48 @@ export default function BetaMinimalMirror() {
         userId: 'beta-user',
         lang: 'en-US'
       });
+
+      // Track Maya's response for analytics
+      sessionObserverRef.current?.observeMessage('maya', streamingText || '', 'text');
+
+      // Persist assistant message when streaming completes
+      if (!isStreaming && streamingText) {
+        addMessage({
+          id: responseId,
+          role: 'assistant',
+          content: streamingText,
+          timestamp: new Date().toISOString(),
+          element: currentElement
+        });
+      }
+
+      // Context-aware pulse check - only after intense moments AND natural pause
+      if (shouldCheckIn && messageCount > 5) {
+        // Wait for conversation pause (no new messages for 30 seconds)
+        const pulseCheckTimer = setTimeout(() => {
+          // Only show if not currently typing
+          if (!isProcessing) {
+            setShowPulseCheck('landing');
+          }
+        }, 30000); // 30 second pause before asking
+
+        // Store timer to cancel if new message comes
+        sessionStorage.setItem('pulseCheckTimer', pulseCheckTimer.toString());
+      }
+
+      // Session end check - only at natural stopping points
+      if (messageCount > 15 && text.toLowerCase().includes('thank') || text.toLowerCase().includes('bye')) {
+        setTimeout(() => setShowPulseCheck('session-end'), 2000);
+      }
     } catch (error) {
       console.error('Failed to stream response:', error);
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === streamId 
-            ? { 
-                ...msg, 
+      setMessages(prev =>
+        prev.map(msg =>
+          msg.id === streamId
+            ? {
+                ...msg,
                 content: 'I apologize, but I encountered an issue. Please try again.',
-                isStreaming: false 
+                isStreaming: false
               }
             : msg
         )
@@ -131,6 +253,46 @@ export default function BetaMinimalMirror() {
 
   const handleTranscript = (transcript: string) => {
     // Optional: Show live transcript preview
+  };
+
+  // Escape hatch handlers
+  const handlePause = () => {
+    sessionObserverRef.current?.markEvolution('threshold');
+    BetaAnalytics.trackError(sessionStorage.getItem('betaUserId') || '', 'session');
+    // Pause is handled by the breathing exercise in the component
+  };
+
+  const handleChangeTopic = () => {
+    const redirectMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: "Of course, let's explore something else. What would you like to talk about?",
+      timestamp: new Date(),
+      element: currentElement
+    };
+    setMessages(prev => [...prev, redirectMessage]);
+  };
+
+  const handleTooIntense = () => {
+    sessionObserverRef.current?.markEvolution('threshold');
+    const gentleMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: "I hear you. Let's slow down and take this more gently. There's no rush here.",
+      timestamp: new Date(),
+      element: 'water' // Switch to calming element
+    };
+    setMessages(prev => [...prev, gentleMessage]);
+    setCurrentElement('water');
+  };
+
+  // Pulse check response handler
+  const handlePulseResponse = (response: string) => {
+    BetaAnalytics.collectFeedback(
+      sessionStorage.getItem('betaUserId') || '',
+      { feelingSafe: response === 'Just right' ? 5 : response === 'Too much' ? 2 : 3 }
+    );
+    setShowPulseCheck(null);
   };
 
   return (
@@ -238,6 +400,42 @@ export default function BetaMinimalMirror() {
           />
         </div>
       </motion.div>
+
+      {/* Session Counter */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="absolute top-20 right-4 p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800"
+      >
+        <div className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400">
+          <Sparkles className="w-3 h-3" />
+          <span>Session {sessionCount} • Message {messageCount}</span>
+        </div>
+      </motion.div>
+
+      {/* Reality Anchor - Context-aware reminders */}
+      <RealityAnchor
+        messageCount={messageCount}
+        sessionNumber={sessionCount}
+      />
+
+      {/* Escape Hatch Buttons */}
+      <EscapeHatch
+        onPause={handlePause}
+        onChangeTopic={handleChangeTopic}
+        onTooIntense={handleTooIntense}
+        isVisible={!isProcessing}
+      />
+
+      {/* Pulse Check Modal */}
+      {showPulseCheck && (
+        <PulseCheck
+          type={showPulseCheck}
+          onResponse={handlePulseResponse}
+          onDismiss={() => setShowPulseCheck(null)}
+        />
+      )}
 
       {/* Performance Note (Beta) */}
       <motion.div

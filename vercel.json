@@ -40,5 +40,11 @@
   "github": {
     "silent": true,
     "autoJobCancelation": true
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/beta",
+      "destination": "/beta-signup"
+    }
+  ]
 }
