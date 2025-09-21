@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       const mockResponse = {
         userId: uuidv4(),
         explorerId: uuidv4(),
-        explorerName: 'MAYA-TESTER',
+        explorerName: 'MAIA-TESTER',
         mayaInstance: uuidv4(),
         sessionId: uuidv4(),
         sanctuary: 'established',
@@ -48,18 +48,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate explorer name
-    if (!explorerName || !explorerName.startsWith('MAYA-')) {
+    if (!explorerName || !explorerName.startsWith('MAIA-')) {
       return NextResponse.json(
-        { error: 'Valid explorer name required' },
+        { error: 'Valid explorer name required (must start with MAIA-)' },
         { status: 400 }
       );
     }
 
     // Validate invitation code (for beta access control)
     const VALID_CODES = [
-      'MAYA-BETA-2025',
+      'MAIA-BETA-2025',
       'SPIRALOGIC-SEED',
       'EARLY-EXPLORER',
+      'APPRENTICE-ACCESS', // Special for your early tester
       'TEST-ACCESS' // For testing
     ];
 
