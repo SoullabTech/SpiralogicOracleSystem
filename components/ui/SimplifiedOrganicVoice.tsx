@@ -156,9 +156,20 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
       return false;
     }
 
+    // Debug browser info
+    console.log('🌐 Browser info:', {
+      userAgent: navigator.userAgent,
+      vendor: navigator.vendor,
+      platform: navigator.platform
+    });
+
     const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
     if (!SpeechRecognition) {
-      console.error('Speech recognition not supported');
+      console.error('Speech recognition not supported in this browser');
+      console.log('Available:', {
+        webkitSpeechRecognition: !!(window as any).webkitSpeechRecognition,
+        SpeechRecognition: !!(window as any).SpeechRecognition
+      });
       return false;
     }
 
@@ -176,6 +187,12 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
     recognition.onstart = () => {
       console.log('🟢 Speech recognition started');
+      console.log('Recognition settings:', {
+        continuous: recognition.continuous,
+        interimResults: recognition.interimResults,
+        lang: recognition.lang,
+        maxAlternatives: recognition.maxAlternatives
+      });
     };
 
     recognition.onspeechstart = () => {
@@ -186,8 +203,24 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
       console.log('🔊 Audio capture started');
     };
 
+    recognition.onnomatch = () => {
+      console.log('⚠️ No speech match found');
+    };
+
+    recognition.onsoundstart = () => {
+      console.log('🔉 Sound detected');
+    };
+
+    recognition.onsoundend = () => {
+      console.log('🔇 Sound ended');
+    };
+
     recognition.onresult = (event: any) => {
-      console.log('🎤 Speech recognition event:', event);
+      console.log('🎤 Speech recognition event:', {
+        results: event.results,
+        resultIndex: event.resultIndex,
+        length: event.results.length
+      });
       let interimTranscript = '';
       let finalTranscript = '';
 
@@ -302,10 +335,13 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
     };
 
     recognition.onerror = (event: any) => {
-      // Log the error but don't display in console for abort errors
-      if (event.error !== 'aborted') {
-        console.error('Speech recognition error:', event.error);
-      }
+      // Always log errors for debugging
+      console.error('❌ Speech recognition error:', event.error, event);
+      console.log('Error details:', {
+        error: event.error,
+        message: event.message,
+        timeStamp: event.timeStamp
+      });
       // Auto-restart on certain errors only if not paused
       if ((event.error === 'no-speech' || event.error === 'aborted' || event.error === 'network') && !isPausedForMaya && enabled) {
         setTimeout(() => {
@@ -411,6 +447,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const toggleListening = useCallback(async () => {
     if (!isListening) {
       console.log('🎤 Starting voice recognition...');
+      console.log('Current state:', { enabled, isMuted, isMayaSpeaking, isListening });
       // Start listening
       const audioInit = await initializeAudioContext();
       const speechInit = initializeSpeechRecognition();
@@ -420,8 +457,16 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
           recognitionRef.current.start();
           setIsListening(true);
           console.log('✅ Voice recognition started successfully');
+          console.log('Recognition object:', recognitionRef.current);
         } catch (error) {
           console.error('❌ Failed to start recognition:', error);
+          if (error instanceof DOMException) {
+            console.error('DOMException details:', {
+              name: error.name,
+              message: error.message,
+              code: error.code
+            });
+          }
         }
       } else {
         console.error('❌ Failed to initialize:', { audioInit, speechInit, hasRecognition: !!recognitionRef.current });
