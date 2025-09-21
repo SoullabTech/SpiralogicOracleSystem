@@ -75,15 +75,25 @@ export default function HybridInput({
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
+    recognition.maxAlternatives = 1;
+
+    // Add silence timer to prevent premature cutoff
+    let silenceTimer: NodeJS.Timeout;
+    let lastSpeechTime = Date.now();
 
     recognition.onstart = () => {
       setError(null);
+      lastSpeechTime = Date.now();
     };
 
     recognition.onresult = (event: any) => {
       let interim = '';
       let final = '';
-      
+
+      // Clear any existing silence timer
+      clearTimeout(silenceTimer);
+      lastSpeechTime = Date.now();
+
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         const transcriptChunk = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
@@ -92,23 +102,25 @@ export default function HybridInput({
           interim += transcriptChunk;
         }
       }
-      
+
       setInterimTranscript(interim);
-      
+
       if (final.trim()) {
         setTranscript(prev => prev + ' ' + final);
         setInterimTranscript('');
-        
-        // Auto-send after a complete sentence
-        if (final.trim().match(/[.!?]$/)) {
+
+        // DON'T auto-send on sentence endings - wait for silence
+        // This prevents cutting off mid-thought
+        silenceTimer = setTimeout(() => {
           const fullTranscript = (transcript + ' ' + final).trim();
-          if (fullTranscript) {
+          if (fullTranscript && Date.now() - lastSpeechTime > 2000) {
+            // Only send if there's been 2+ seconds of silence
             onSend(fullTranscript);
             setTranscript('');
             setInterimTranscript('');
             // Keep listening for next input
           }
-        }
+        }, 2500); // Wait 2.5 seconds of silence before sending
       }
       
       // Notify parent of transcript updates
@@ -142,8 +154,24 @@ export default function HybridInput({
     };
 
     recognition.onend = () => {
-      setIsListening(false);
-      
+      // Clear silence timer on end
+      clearTimeout(silenceTimer);
+
+      // Only mark as not listening if we're actually stopping
+      // This prevents the recognition from ending prematurely
+      if (!isListening) {
+        setIsListening(false);
+      } else {
+        // Restart recognition if it ended unexpectedly
+        try {
+          recognition.start();
+          return;
+        } catch (e) {
+          // If restart fails, then stop
+          setIsListening(false);
+        }
+      }
+
       // Send any remaining transcript
       const finalTranscript = (transcript + ' ' + interimTranscript).trim();
       if (finalTranscript) {
