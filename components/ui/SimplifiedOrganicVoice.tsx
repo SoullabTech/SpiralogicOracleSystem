@@ -617,17 +617,32 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
       // Resume recognition after a longer delay to ensure audio has fully stopped
       setTimeout(() => {
-        if (recognitionRef.current && !isMayaSpeaking && isListening) {
+        if (recognitionRef.current && !isMayaSpeaking && !isStartingRef.current) {
           try {
-            recognitionRef.current.start();
-            console.log('Voice recognition resumed after Maya finished');
+            // Only start if we're enabled and not muted
+            if (enabled && !isMuted) {
+              isStartingRef.current = true;
+              recognitionRef.current.start();
+              setIsListening(true); // Ensure listening state is set
+              console.log('✅ Voice recognition resumed after Maya finished');
+              setTimeout(() => {
+                isStartingRef.current = false;
+              }, 1000);
+            }
           } catch (e) {
+            isStartingRef.current = false;
             console.log('Could not resume recognition:', e);
+            // Try starting fresh if resume fails
+            if (enabled && !isMuted) {
+              setTimeout(() => {
+                toggleListening();
+              }, 500);
+            }
           }
         }
       }, 1500); // FIXED: 1.5 second delay prevents voice cutoffs while allowing natural flow
     }
-  }, [isMayaSpeaking, isListening, enabled, isPausedForMaya]);
+  }, [isMayaSpeaking, isListening, enabled, isPausedForMaya, isMuted, toggleListening]);
 
   // Cleanup on unmount
   useEffect(() => {
