@@ -426,6 +426,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       // Play audio response with Maia's voice - ALWAYS in voice mode
       const shouldSpeak = !showChatInterface || (showChatInterface && voiceEnabled && maiaReady);
 
+      console.log('🎤 Voice response check:', {
+        shouldSpeak,
+        showChatInterface,
+        voiceEnabled,
+        maiaReady,
+        hasMaiaSpeak: !!maiaSpeak
+      });
+
       if (shouldSpeak && maiaSpeak) {
         console.log('🔊 Maia speaking response in', showChatInterface ? 'Chat' : 'Voice', 'mode');
         // Set speaking state for visual feedback
@@ -488,7 +496,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     }
 
     console.log('🎯 Voice transcript received:', t);
-    console.log('📊 Current states:', { isProcessing, isResponding, isAudioPlaying });
+    console.log('📊 Current states:', {
+      isProcessing,
+      isResponding,
+      isAudioPlaying,
+      showChatInterface,
+      voiceEnabled,
+      isMuted
+    });
     console.log('📞 Calling handleTextMessage...');
 
     try {
