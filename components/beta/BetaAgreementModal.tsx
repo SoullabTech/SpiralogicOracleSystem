@@ -21,7 +21,8 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
   });
 
   const allAgreed = Object.values(agreements).every(v => v);
-  const canProceed = allAgreed && explorerName.trim().length > 0;
+  const isValidName = explorerName.trim().startsWith('MAIA-') && explorerName.trim().length > 5;
+  const canProceed = allAgreed && isValidName;
 
   return (
     <motion.div
@@ -149,17 +150,24 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
             </div>
           </div>
 
-          {/* Explorer Name */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-sacred-gold">
-              Your Explorer Name (as it will appear in credits)
+          {/* Explorer Name - More prominent for mobile */}
+          <div className="space-y-2 bg-purple-900/30 p-4 rounded-lg border border-purple-500/30">
+            <label className="text-base font-medium text-sacred-gold">
+              Enter Your Explorer Name
             </label>
+            <p className="text-xs text-gray-400 mb-2">
+              Must start with MAIA- (e.g., MAIA-APPRENTICE)
+            </p>
             <input
               type="text"
               value={explorerName}
-              onChange={(e) => setExplorerName(e.target.value)}
-              placeholder="Enter your chosen explorer name..."
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 placeholder-gray-500 focus:border-sacred-gold/50 focus:outline-none"
+              onChange={(e) => setExplorerName(e.target.value.toUpperCase())}
+              placeholder="MAIA-APPRENTICE"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="characters"
+              spellCheck="false"
+              className="w-full px-4 py-3 bg-gray-800 border-2 border-sacred-gold/50 rounded-lg text-white placeholder-gray-400 focus:border-sacred-gold focus:outline-none text-[16px] font-mono"
             />
           </div>
 
@@ -198,6 +206,16 @@ export default function BetaAgreementModal({ onAccept, onDecline }: BetaAgreemen
           {!allAgreed && (
             <p className="text-xs text-gray-500 text-center mt-3">
               Please check all agreement boxes to proceed
+            </p>
+          )}
+          {allAgreed && !isValidName && explorerName.length > 0 && (
+            <p className="text-xs text-yellow-400 text-center mt-3">
+              Explorer name must start with MAIA- (e.g., MAIA-APPRENTICE)
+            </p>
+          )}
+          {allAgreed && explorerName.length === 0 && (
+            <p className="text-xs text-yellow-400 text-center mt-3">
+              Please enter MAIA-APPRENTICE as your explorer name
             </p>
           )}
         </div>
