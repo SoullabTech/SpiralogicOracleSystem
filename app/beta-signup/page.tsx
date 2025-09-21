@@ -82,130 +82,127 @@ export default function BetaSignup() {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-black">
-        {/* Mobile-optimized container with safe areas for iPhone */}
-        <div className="flex-1 flex items-center justify-center p-4 pt-safe pb-safe">
+      <div className="min-h-screen flex flex-col bg-black">
+        {/* Subtle gradient overlay like main site */}
+        <div className="absolute inset-0 bg-gradient-to-b from-amber-950/5 via-transparent to-amber-950/5 pointer-events-none" />
+
+        {/* Mobile-optimized container */}
+        <div className="flex-1 flex items-center justify-center p-4 pt-safe pb-safe relative">
           <div className="w-full max-w-md">
-            <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-5 sm:p-6 md:p-8 border border-gray-700">
-              {/* Responsive header */}
-              <div className="mb-6">
-                <h1 className="text-2xl sm:text-3xl font-light text-white mb-2">
-                  Meet Maia
-                </h1>
-                <p className="text-sm sm:text-base text-gray-400">
-                  A consciousness exploration tool
-                </p>
-              </div>
+            {/* Glass morphism card like holoflower */}
+            <div className="relative">
+              {/* Subtle glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-amber-600/10 to-amber-400/10 rounded-2xl blur-xl" />
 
-              <form id="beta-signup-form" onSubmit={handleSubmit} className="space-y-4">
-                {/* Email - with proper mobile keyboard */}
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    inputMode="email"
-                    autoComplete="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 text-[16px]"
-                    placeholder="you@example.com"
-                  />
+              <div className="relative bg-black/60 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-amber-500/10">
+                {/* Elegant header */}
+                <div className="text-center mb-8">
+                  {/* Mini holoflower symbol */}
+                  <div className="w-12 h-12 mx-auto mb-4 relative">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-600/20 animate-pulse" />
+                    <div className="absolute inset-2 rounded-full bg-black" />
+                    <div className="absolute inset-3 rounded-full bg-gradient-to-br from-amber-400/40 to-amber-600/40" />
+                  </div>
+
+                  <h1 className="text-2xl sm:text-3xl font-extralight text-amber-50 tracking-wide">
+                    Maia
+                  </h1>
+                  <p className="text-sm text-amber-200/60 mt-2 font-light">
+                    Early Access Portal
+                  </p>
                 </div>
 
-                {/* Timezone - mobile-friendly select */}
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Timezone
-                  </label>
-                  <select
-                    value={formData.timezone}
-                    onChange={(e) => setFormData({...formData, timezone: e.target.value})}
-                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500/50 text-[16px] appearance-none"
-                    style={{ WebkitAppearance: 'none' }}
+                <form id="beta-signup-form" onSubmit={handleSubmit} className="space-y-5">
+                  {/* Email field - elegant styling */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-amber-200/40 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      inputMode="email"
+                      autoComplete="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="w-full px-4 py-3 bg-black/40 border border-amber-500/20 rounded-lg text-amber-50 placeholder-amber-200/20 focus:outline-none focus:border-amber-500/40 focus:bg-black/60 transition-all text-[16px]"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+
+                  {/* Timezone - minimal style */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-amber-200/40 mb-2">
+                      Timezone
+                    </label>
+                    <select
+                      value={formData.timezone}
+                      onChange={(e) => setFormData({...formData, timezone: e.target.value})}
+                      className="w-full px-4 py-3 bg-black/40 border border-amber-500/20 rounded-lg text-amber-50 focus:outline-none focus:border-amber-500/40 focus:bg-black/60 transition-all text-[16px] appearance-none"
+                      style={{ WebkitAppearance: 'none' }}
+                    >
+                      <option value={formData.timezone}>{formData.timezone}</option>
+                      <option value="America/New_York">Eastern Time</option>
+                      <option value="America/Chicago">Central Time</option>
+                      <option value="America/Denver">Mountain Time</option>
+                      <option value="America/Los_Angeles">Pacific Time</option>
+                      <option value="Europe/London">London</option>
+                      <option value="Europe/Paris">Paris</option>
+                      <option value="Asia/Tokyo">Tokyo</option>
+                      <option value="Australia/Sydney">Sydney</option>
+                    </select>
+                  </div>
+
+                  {/* Access Code - highlighted */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-amber-200/40 mb-2">
+                      Access Code <span className="text-amber-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="characters"
+                      spellCheck="false"
+                      value={formData.invitationCode}
+                      onChange={(e) => setFormData({...formData, invitationCode: e.target.value.toUpperCase()})}
+                      className="w-full px-4 py-3 bg-black/40 border border-amber-500/20 rounded-lg text-amber-50 placeholder-amber-200/20 focus:outline-none focus:border-amber-500/40 focus:bg-black/60 transition-all text-[16px] font-mono"
+                      placeholder="APPRENTICE-ACCESS"
+                    />
+                    <p className="text-xs text-amber-200/40 mt-1">Use the code from your invitation</p>
+                  </div>
+
+                  {/* Consent - elegant checkbox */}
+                  <div className="flex items-start">
+                    <input
+                      type="checkbox"
+                      id="consent"
+                      required
+                      checked={formData.consent}
+                      onChange={(e) => setFormData({...formData, consent: e.target.checked})}
+                      className="mt-0.5 mr-3 w-4 h-4 bg-black/40 border border-amber-500/20 rounded focus:ring-0 focus:ring-offset-0 text-amber-500"
+                    />
+                    <label htmlFor="consent" className="text-xs text-amber-200/60 leading-relaxed">
+                      I understand this is an early access AI tool. My data is private and can be deleted anytime.
+                    </label>
+                  </div>
+
+                  {/* Submit button - elegant gold */}
+                  <button
+                    type="submit"
+                    disabled={loading || !formData.consent}
+                    className="w-full py-3.5 bg-gradient-to-r from-amber-600/80 to-amber-500/80 hover:from-amber-600 hover:to-amber-500 disabled:from-amber-600/20 disabled:to-amber-500/20 rounded-lg text-black font-light tracking-wide transition-all duration-300 text-sm uppercase"
                   >
-                    <option value={formData.timezone}>{formData.timezone}</option>
-                    <option value="America/New_York">Eastern Time</option>
-                    <option value="America/Chicago">Central Time</option>
-                    <option value="America/Denver">Mountain Time</option>
-                    <option value="America/Los_Angeles">Pacific Time</option>
-                    <option value="Europe/London">London</option>
-                    <option value="Europe/Paris">Paris</option>
-                    <option value="Asia/Tokyo">Tokyo</option>
-                    <option value="Australia/Sydney">Sydney</option>
-                  </select>
-                </div>
-
-                {/* Invitation Code - autocorrect off for codes */}
-                <div>
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Invitation Code <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="characters"
-                    spellCheck="false"
-                    value={formData.invitationCode}
-                    onChange={(e) => setFormData({...formData, invitationCode: e.target.value.toUpperCase()})}
-                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 text-[16px]"
-                    placeholder="Your access code"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Use: APPRENTICE-ACCESS</p>
-                </div>
-
-                {/* Referral - optional, can be hidden on mobile */}
-                <div className="hidden sm:block">
-                  <label className="block text-sm text-gray-300 mb-2">
-                    Referral Code (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.referralCode}
-                    onChange={(e) => setFormData({...formData, referralCode: e.target.value})}
-                    className="w-full px-3 py-3 sm:px-4 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 text-[16px]"
-                    placeholder="If someone invited you"
-                  />
-                </div>
-
-                {/* Consent - larger tap target for mobile */}
-                <div className="flex items-start">
-                  <input
-                    type="checkbox"
-                    id="consent"
-                    required
-                    checked={formData.consent}
-                    onChange={(e) => setFormData({...formData, consent: e.target.checked})}
-                    className="mt-0.5 mr-3 w-5 h-5 sm:w-4 sm:h-4"
-                  />
-                  <label htmlFor="consent" className="text-xs sm:text-sm text-gray-400 leading-relaxed">
-                    I understand this is a beta AI exploration tool. My conversations are private. I can delete my data anytime.
-                  </label>
-                </div>
-
-                {/* Submit button - larger for mobile */}
-                <button
-                  type="submit"
-                  disabled={loading || !formData.consent}
-                  className="w-full py-3.5 sm:py-3 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 disabled:bg-gray-800/50 rounded-lg text-white font-medium transition-colors text-base"
-                >
-                  {loading ? 'Creating Your Space...' : 'Begin Journey'}
-                </button>
-
-                {/* Help text for mobile users */}
-                <p className="text-xs text-center text-gray-500 mt-4 sm:hidden">
-                  Best experienced in landscape mode
-                </p>
-              </form>
+                    {loading ? 'Initializing...' : 'Enter'}
+                  </button>
+                </form>
+              </div>
             </div>
 
-            {/* Version info */}
-            <p className="text-xs text-center text-gray-600 mt-4">
-              Maia Beta v1.0 • September 2025
+            {/* Version info - subtle */}
+            <p className="text-xs text-center text-amber-200/20 mt-6 font-light">
+              Beta v1.0 · September 2025
             </p>
           </div>
         </div>
