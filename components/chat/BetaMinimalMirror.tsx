@@ -61,7 +61,7 @@ export default function BetaMinimalMirror() {
         setMessages([{
           id: '1',
           role: 'assistant',
-          content: 'Welcome, seeker. I am Maya, your guide through consciousness exploration. How may I assist your journey today?',
+          content: 'Hey there. I\'m Maia. What brings you here today?',
           timestamp: new Date(),
           element: 'aether'
         }]);
