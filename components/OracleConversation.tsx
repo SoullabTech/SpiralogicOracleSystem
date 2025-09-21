@@ -119,7 +119,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [streamingText, setStreamingText] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [isMicrophonePaused, setIsMicrophonePaused] = useState(false);
-  const [isMuted, setIsMuted] = useState(true); // Start muted - user must click holoflower to activate voice
+  const [isMuted, setIsMuted] = useState(false); // Start unmuted in voice mode for immediate use
   const voiceMicRef = useRef<VoiceActivatedMaiaRef>(null);
   const [userTranscript, setUserTranscript] = useState('');
   const [maiaResponseText, setMaiaResponseText] = useState('');
@@ -1393,15 +1393,15 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           <button
             onClick={() => {
               setShowChatInterface(false);
+              setIsMuted(false); // Unmute FIRST
               enableAudio();
               // Start listening when switching to voice mode
               setTimeout(() => {
                 if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
                   voiceMicRef.current.startListening();
                   console.log('🎤 Voice started via mode switch');
-                  setIsMuted(false);
                 }
-              }, 100);
+              }, 300); // Slightly longer delay to ensure state updates
             }}
             className={`p-3 rounded-full transition-all duration-300 ${
               !showChatInterface
