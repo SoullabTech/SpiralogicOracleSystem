@@ -22,9 +22,9 @@ interface SimplifiedOrganicVoiceProps {
 }
 
 // Silence detection thresholds (in milliseconds)
-const SMART_THRESHOLD = 800;        // Quick response for complete sentences (was probably 2000+)
-const SILENCE_THRESHOLD = 1200;     // Normal conversation pause (was probably 3000+)
-const CONTEMPLATION_THRESHOLD = 3000; // Extended pause for deep thought
+const SMART_THRESHOLD = 2000;        // Complete sentences with punctuation (2 seconds)
+const SILENCE_THRESHOLD = 2500;      // Normal conversation pause (2.5 seconds)
+const CONTEMPLATION_THRESHOLD = 5000; // Extended pause for deep thought (5 seconds)
 
 // Sacred geometry sparkle generation
 const generateSparkles = (count: number) => {
