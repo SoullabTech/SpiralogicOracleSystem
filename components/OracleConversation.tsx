@@ -102,6 +102,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [checkIns, setCheckIns] = useState<Record<string, number>>(initialCheckIns);
   const [activeFacetId, setActiveFacetId] = useState<string | undefined>();
   const [isProcessing, setIsProcessing] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Motion states
   const [currentMotionState, setCurrentMotionState] = useState<MotionState>('idle');
@@ -129,6 +130,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Auto-scroll to latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
   
   // Agent configuration with persistence
   const [agentConfig, setAgentConfig] = useState<AgentConfig>(() => {
@@ -445,14 +451,31 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         const cleanVoiceText = cleanMessageForVoice(responseText);
         console.log('🧹 Cleaned for voice:', cleanVoiceText);
 
-        // Speak the cleaned response
-        await maiaSpeak(cleanVoiceText);
+        try {
+          // Speak the cleaned response with timeout protection
+          const speakPromise = maiaSpeak(cleanVoiceText);
 
-        // UNLEASHED: Let Maya speak as long as needed
-        // Reset states only after speech actually completes
-        setIsResponding(false);
-        setIsAudioPlaying(false);
-        console.log('🔇 Maia finished speaking naturally');
+          // Add timeout to prevent infinite hanging (30 seconds max)
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Speech timeout after 30s')), 30000);
+          });
+
+          await Promise.race([speakPromise, timeoutPromise]);
+          console.log('🔇 Maia finished speaking naturally');
+        } catch (error) {
+          console.error('❌ Speech error or timeout:', error);
+          // Force recovery if speech fails or times out
+        } finally {
+          // Always reset states to prevent getting stuck
+          setIsResponding(false);
+          setIsAudioPlaying(false);
+        }
+      } else {
+        console.log('⚠️ Not speaking because:', {
+          shouldSpeak,
+          hasMaiaSpeak: !!maiaSpeak,
+          showChatInterface
+        });
       }
 
       // Update context
@@ -1157,30 +1180,32 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       {/* Message flow - Show in both Chat mode and optionally in Voice mode */}
       {(showChatInterface || (!showChatInterface && showVoiceText)) && messages.length > 0 && (
         <div className="fixed inset-x-4 top-24 sm:top-16 sm:right-8 sm:left-auto sm:transform-none
-                        sm:w-96 max-h-[60vh] sm:max-h-[calc(100vh-200px)] overflow-y-auto z-30">
-          <AnimatePresence>
-            {messages.length > 0 && (
-              <div className="space-y-3">
-                {/* On mobile, show only Maya's latest response; on desktop show last 5 messages */}
+                        sm:w-96 z-30 overflow-hidden"
+             style={{
+               height: showChatInterface ? 'calc(100vh - 380px)' : 'calc(100vh - 240px)',
+               bottom: showChatInterface ? '240px' : '120px'
+             }}>
+          <div className="h-full overflow-y-auto overflow-x-hidden pr-2"
+               style={{ scrollBehavior: 'smooth' }}>
+            <AnimatePresence>
+              {messages.length > 0 && (
+                <div className="space-y-3 pb-4">
+                {/* Show all messages with proper scrolling */}
                 {messages
-                  .filter(msg => (typeof window !== 'undefined' && window.innerWidth < 640) ? msg.role === 'oracle' : true)
-                  .slice(-8)
                   .map((message, index) => (
                     <motion.div
                       key={message.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ delay: Math.min(index * 0.05, 0.3) }}
                       className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 text-white
                                border border-gold-divine/30 shadow-lg max-w-full"
                     >
-                      {(typeof window !== 'undefined' && window.innerWidth >= 640) && (
-                        <div className="text-xs text-gold-divine/60 mb-2">
-                          {message.role === 'user' ? 'You' : agentConfig.name}
-                        </div>
-                      )}
-                      <div className="text-sm sm:text-base leading-relaxed">
+                      <div className="text-xs text-gold-divine/60 mb-2">
+                        {message.role === 'user' ? 'You' : agentConfig.name}
+                      </div>
+                      <div className="text-sm sm:text-base leading-relaxed break-words">
                         {message.role === 'oracle' ? (
                           <FormattedMessage text={message.text} />
                         ) : (
@@ -1189,9 +1214,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                       </div>
                     </motion.div>
                   ))}
-              </div>
-            )}
-          </AnimatePresence>
+                  {/* Scroll anchor */}
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       )}
 
