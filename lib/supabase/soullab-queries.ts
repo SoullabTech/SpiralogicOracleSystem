@@ -3,7 +3,7 @@
  * TypeScript helpers for interacting with the journaling/storytelling database
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase';
 import type {
   JournalEntry,
   StoryFragment,

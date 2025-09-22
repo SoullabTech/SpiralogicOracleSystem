@@ -3,7 +3,7 @@
  * Tracks patterns without storing personal content
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

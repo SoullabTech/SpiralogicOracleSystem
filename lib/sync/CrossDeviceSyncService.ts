@@ -4,7 +4,8 @@
  * Uses Supabase realtime subscriptions for instant updates
  */
 
-import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase';
+import type { SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
 import { PersonalizationSettings } from '../context/OraclePersonalizationContext';
 import { UnifiedEmotionalSignature } from '../voice/IntegratedEmotionalResonance';
 

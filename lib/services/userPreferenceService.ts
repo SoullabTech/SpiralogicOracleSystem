@@ -3,7 +3,7 @@
 
 "use strict";
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase';
 import type { VoiceMode, InteractionMode } from '../agents/modules/VoiceSelectionUI';
 import { ritualEventService } from './ritualEventService';
 

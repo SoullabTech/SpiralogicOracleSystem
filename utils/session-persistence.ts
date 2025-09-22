@@ -3,7 +3,7 @@
  * Bulletproof session storage to maintain continuity across conversations
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase';
 import Redis from 'ioredis';
 
 const supabase = createClient(

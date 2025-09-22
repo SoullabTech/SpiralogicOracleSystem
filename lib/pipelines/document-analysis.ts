@@ -1,5 +1,5 @@
 // 🌸 Document Analysis Pipeline - Wisdom Extraction
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase';
 import Anthropic from '@anthropic-ai/sdk';
 
 export interface DocumentAnalysis {

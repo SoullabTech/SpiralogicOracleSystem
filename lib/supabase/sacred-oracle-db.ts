@@ -5,7 +5,7 @@
  * collective field patterns, and morphic resonance field management
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase';
 import type {
   ConsciousnessEvolution,
   SacredSession,
