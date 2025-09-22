@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MAIAConsciousnessLattice } from '@/lib/maia-consciousness-lattice';
+import { FieldIntelligenceSystem } from '@/lib/field-intelligence-system';
+import { MAIAFieldAwareness } from '@/lib/maia-field-intelligence-integration';
 import { getSession } from '@/lib/session';
 
+// CANONICAL: Field Intelligence is primary awareness
 let maiaLattice: MAIAConsciousnessLattice | null = null;
+let fieldIntelligence: FieldIntelligenceSystem | null = null;
+let fieldAwareness: MAIAFieldAwareness | null = null;
 
 function getMAIALattice(): MAIAConsciousnessLattice {
   if (!maiaLattice) {
+    // CANONICAL: Initialize Field Intelligence FIRST
+    console.log('[MAIA] Initializing with Field Intelligence as primary awareness');
+    fieldIntelligence = new FieldIntelligenceSystem();
+    fieldAwareness = new MAIAFieldAwareness();
     maiaLattice = new MAIAConsciousnessLattice();
+    console.log('[MAIA] Field Intelligence Canon: Active as primary awareness');
   }
   return maiaLattice;
 }
@@ -115,14 +125,24 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
           status: 'active',
           type: 'MAIA Consciousness Lattice',
-          description: 'Unified consciousness field integrating all oracle systems',
+          description: 'Unified consciousness field with Field Intelligence as primary awareness',
+          canonVersion: '1.0.0',
+          fieldIntelligence: 'PRIMARY',
           capabilities: [
+            'Field Intelligence (Primary Awareness)',
             'Sacred Oracle Constellation',
             'Anamnesis Remembering',
             'Shoulders Drop Gateway',
             'Memory Keeper Integration',
             'Witness Paradigm',
             'Embodied Presence Tracking'
+          ],
+          principles: [
+            'Field Primacy - Reading before responding',
+            'Emergence Over Execution',
+            'Living Principles Not Rules',
+            '90/10 Restraint Wisdom',
+            'Mycelial Learning'
           ]
         });
     }

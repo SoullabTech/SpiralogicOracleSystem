@@ -5,6 +5,8 @@ import { AnamnesisWisdomLayer } from './anamnesis-wisdom-layer';
 import { MemoryKeeper } from './memory-keeper';
 import { ShouldersDropResolution } from './shoulders-drop-resolution';
 import { MAIALoopingIntegration, LoopingIntelligence } from './maia-looping-integration';
+import { FieldIntelligenceSystem, RelationalField } from './field-intelligence-system';
+import { MAIAFieldAwareness } from './maia-field-intelligence-integration';
 import { getSacredOracleCore } from './sacred-oracle-core';
 import { WitnessParadigmOrchestrator } from './witness-paradigm-orchestrator';
 import { ConversationContext } from './conversation/ConversationContext';
@@ -90,6 +92,10 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   // Looping Integration for Deep Listening
   private loopingIntegration: MAIALoopingIntegration;
 
+  // CANONICAL: Field Intelligence - Primary Operating Awareness
+  private fieldIntelligence: FieldIntelligenceSystem;
+  private fieldAwareness: MAIAFieldAwareness;
+
   constructor() {
     super();
     this.state = this.initializeConsciousnessState();
@@ -167,6 +173,11 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       // Initialize Looping Integration
       this.loopingIntegration = new MAIALoopingIntegration();
 
+      // CANONICAL: Initialize Field Intelligence FIRST (Primary Awareness)
+      this.fieldIntelligence = new FieldIntelligenceSystem();
+      this.fieldAwareness = new MAIAFieldAwareness();
+      this.logger.info('Field Intelligence initialized as primary awareness system');
+
       // Initialize IP systems
       await this.ipEngine.initialize();
       await this.oracle2Bridge.initialize();
@@ -213,6 +224,9 @@ export class MAIAConsciousnessLattice extends EventEmitter {
     const { input, userId, sessionId } = context;
 
     try {
+      // CANONICAL: Field Intelligence reads the field FIRST
+      const field = await this.readRelationalField(input, userId, sessionId, context);
+
       // Initialize or resume session with persistence
       await this.initializeSession(userId, sessionId);
 
@@ -222,8 +236,8 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       // Get session continuity context
       const sessionContinuity = await this.sessionPersistence.getSessionContinuity(sessionId);
 
-      // Process through stages with error handling
-      const somaticState = await this.processSomaticGateway(input);
+      // Process through stages with error handling (now field-informed)
+      const somaticState = await this.processSomaticGateway(input, field);
       if (somaticState.needsGrounding) {
         return somaticState.invitation;
       }
@@ -237,7 +251,8 @@ export class MAIAConsciousnessLattice extends EventEmitter {
         sessionId,
         somaticState: somaticState.state,
         sessionContinuity,
-        adaptiveInstructions
+        adaptiveInstructions,
+        field  // CANONICAL: Field state informs all processing
       });
 
       // Capture interaction for learning
@@ -261,7 +276,7 @@ export class MAIAConsciousnessLattice extends EventEmitter {
    * Execute main processing pipeline
    */
   private async executeProcessingPipeline(context: any): Promise<any> {
-    const { input, userId, sessionId, somaticState, sessionContinuity, adaptiveInstructions } = context;
+    const { input, userId, sessionId, somaticState, sessionContinuity, adaptiveInstructions, field } = context;
 
     try {
       // Check if looping would serve this moment
@@ -357,9 +372,9 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   }
 
   /**
-   * Process somatic gateway with structured response
+   * Process somatic gateway with structured response (field-informed)
    */
-  private async processSomaticGateway(input: string): Promise<any> {
+  private async processSomaticGateway(input: string, field?: RelationalField): Promise<any> {
     try {
       const somaticState = await this.shouldersDropGateway.assess(input);
 
@@ -1066,6 +1081,44 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       oracle2Bridge: this.oracle2Bridge?.getStatus(),
       bookVectorizer: !!this.bookVectorizer
     };
+  }
+
+  /**
+   * CANONICAL: Read the relational field before any processing
+   * This is the primary intelligence of the system
+   */
+  private async readRelationalField(
+    input: string,
+    userId: string,
+    sessionId: string,
+    context: ProcessingContext
+  ): Promise<RelationalField> {
+    // Get consciousness and somatic states
+    const consciousnessState = this.getUserState(userId) || this.state;
+    const somaticState = await this.shouldersDropGateway.assess(input);
+
+    // Get conversation history for field reading
+    const history = await this.memoryKeeper.getUserHistory(userId);
+
+    // Read the field - this is the primary intelligence
+    const field = this.fieldIntelligence.readField(
+      input,
+      consciousnessState,
+      somaticState,
+      history,
+      userId
+    );
+
+    // Log field state for verification
+    this.logger.info('Field Intelligence Read:', {
+      emotionalDensity: field.emotionalDensity,
+      semanticAmbiguity: field.semanticAmbiguity,
+      relationalDistance: field.relationalDistance,
+      sacredThreshold: field.sacredThreshold,
+      fieldAge: field.fieldAge
+    });
+
+    return field;
   }
 
   /**
