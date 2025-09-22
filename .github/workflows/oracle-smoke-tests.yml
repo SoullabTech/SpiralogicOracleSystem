@@ -68,7 +68,7 @@ jobs:
 
     - name: Parse Test Results
       if: always()
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v2
       with:
         name: Oracle Test Report
         path: 'test-results/oracle-smoke-tests.xml'
