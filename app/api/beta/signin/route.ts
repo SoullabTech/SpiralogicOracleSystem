@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { getSupabaseClient } from '@/lib/supabase-server';
+import { getSupabaseREST } from '@/lib/supabase-rest';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,38 +9,42 @@ export async function POST(request: NextRequest) {
 
     console.log('Beta signin for:', explorerName);
 
-    // Try to use Supabase if available
-    const supabase = await getSupabaseClient();
+    // Try to use Supabase REST API if available
+    const supabase = await getSupabaseREST();
 
     if (supabase) {
       try {
         // Look up explorer in database
-        const { data: explorer, error } = await supabase
+        const explorerQuery = await supabase
           .from('explorers')
-          .select('*')
           .eq('explorer_name', explorerName)
-          .eq('email', email)
           .single();
 
-        if (!error && explorer) {
-          // Look up beta user
-          const { data: betaUser } = await supabase
-            .from('beta_users')
-            .select('*')
-            .eq('email', email)
-            .single();
+        if (explorerQuery.data) {
+          const explorer = explorerQuery.data;
 
-          // Return successful signin from database
-          return NextResponse.json({
-            success: true,
-            userId: betaUser?.id || explorer.explorer_id,
-            explorerId: explorer.explorer_id,
-            explorerName: explorer.explorer_name,
-            mayaInstance: betaUser?.maya_instance || uuidv4(),
-            sessionId: uuidv4(),
-            sanctuary: 'established',
-            signupDate: explorer.signup_date
-          });
+          // Check if email matches
+          if (explorer.email === email) {
+            // Look up beta user (optional)
+            const betaUserQuery = await supabase
+              .from('beta_users')
+              .eq('email', email)
+              .single();
+
+            const betaUser = betaUserQuery.data;
+
+            // Return successful signin from database
+            return NextResponse.json({
+              success: true,
+              userId: betaUser?.id || explorer.explorer_id,
+              explorerId: explorer.explorer_id,
+              explorerName: explorer.explorer_name,
+              mayaInstance: betaUser?.maya_instance || uuidv4(),
+              sessionId: uuidv4(),
+              sanctuary: 'established',
+              signupDate: explorer.signup_date
+            });
+          }
         }
       } catch (dbError) {
         console.log('Database lookup failed, using mock signin:', dbError);

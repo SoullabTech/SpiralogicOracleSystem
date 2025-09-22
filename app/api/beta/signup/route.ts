@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { getSupabaseClient } from '@/lib/supabase-server';
+import { getSupabaseREST } from '@/lib/supabase-rest';
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,15 +56,14 @@ export async function POST(request: NextRequest) {
     const mayaInstance = uuidv4();
     const sessionId = uuidv4();
 
-    // Try to save to Supabase if available
-    const supabase = await getSupabaseClient();
+    // Try to save to Supabase using REST API
+    const supabase = await getSupabaseREST();
 
     if (supabase) {
       try {
         // Check if explorer already exists
         const { data: existingExplorer } = await supabase
           .from('explorers')
-          .select('*')
           .eq('explorer_name', explorerName)
           .single();
 
@@ -118,8 +117,7 @@ export async function POST(request: NextRequest) {
             evolution_level: 1.0,
             protection_patterns: [],
             session_count: 0
-          })
-          .catch((err: any) => console.log('Beta user creation skipped:', err));
+          });
 
         // Try to create sanctuary session (optional)
         await supabase
@@ -130,8 +128,7 @@ export async function POST(request: NextRequest) {
             maya_instance: mayaInstance,
             sanctuary_seal: Buffer.from(uuidv4()).toString('base64'),
             protection_active: true
-          })
-          .catch((err: any) => console.log('Sanctuary session creation skipped:', err));
+          });
 
         // Try to log metrics (optional)
         await supabase
@@ -143,8 +140,7 @@ export async function POST(request: NextRequest) {
             metadata: {
               explorer_name: explorerName
             }
-          })
-          .catch((err: any) => console.log('Metrics logging skipped:', err));
+          });
 
         console.log('Saved to Supabase successfully');
       } catch (dbError) {
