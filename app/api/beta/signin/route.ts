@@ -1,28 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-
-// Lazy load Supabase client
-let supabaseClient: any = null;
-
-async function getSupabase() {
-  if (supabaseClient) return supabaseClient;
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    return null;
-  }
-
-  try {
-    const { createClient } = await import('@supabase/supabase-js');
-    supabaseClient = createClient(supabaseUrl, supabaseKey);
-    return supabaseClient;
-  } catch (error) {
-    console.log('Supabase client creation failed:', error);
-    return null;
-  }
-}
+import { getSupabaseClient } from '@/lib/supabase-server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,7 +10,7 @@ export async function POST(request: NextRequest) {
     console.log('Beta signin for:', explorerName);
 
     // Try to use Supabase if available
-    const supabase = await getSupabase();
+    const supabase = await getSupabaseClient();
 
     if (supabase) {
       try {

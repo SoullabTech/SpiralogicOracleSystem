@@ -97,11 +97,17 @@ export default function BetaSignup() {
               <div className="relative bg-black/60 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-amber-500/10">
                 {/* Elegant header */}
                 <div className="text-center mb-8">
-                  {/* Mini holoflower symbol */}
-                  <div className="w-12 h-12 mx-auto mb-4 relative">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-600/20 animate-pulse" />
-                    <div className="absolute inset-2 rounded-full bg-black" />
-                    <div className="absolute inset-3 rounded-full bg-gradient-to-br from-amber-400/40 to-amber-600/40" />
+                  {/* Holoflower SVG */}
+                  <div className="w-20 h-20 mx-auto mb-4 relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-amber-600/10 rounded-full blur-2xl" />
+                    <img
+                      src="/holoflower.svg"
+                      alt="Holoflower"
+                      className="relative w-full h-full opacity-60"
+                      style={{
+                        filter: 'brightness(0) saturate(100%) invert(73%) sepia(76%) saturate(465%) hue-rotate(8deg) brightness(98%) contrast(95%)'
+                      }}
+                    />
                   </div>
 
                   <h1 className="text-2xl sm:text-3xl font-extralight text-amber-50 tracking-wide">
