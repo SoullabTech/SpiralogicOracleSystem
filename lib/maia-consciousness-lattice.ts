@@ -4,6 +4,7 @@ type PersonalOracleAgent = any;
 import { AnamnesisWisdomLayer } from './anamnesis-wisdom-layer';
 import { MemoryKeeper } from './memory-keeper';
 import { ShouldersDropResolution } from './shoulders-drop-resolution';
+import { MAIALoopingIntegration, LoopingIntelligence } from './maia-looping-integration';
 import { getSacredOracleCore } from './sacred-oracle-core';
 import { WitnessParadigmOrchestrator } from './witness-paradigm-orchestrator';
 import { ConversationContext } from './conversation/ConversationContext';
@@ -18,12 +19,16 @@ import { IntellectualPropertyEngine } from './intellectual-property-engine';
 import { ElementalOracle2Bridge } from './elemental-oracle-2-bridge';
 import { BookKnowledgeVectorizer } from './book-knowledge-vectorizer';
 
-interface ConsciousnessState {
+export interface ConsciousnessState {
   presence: number;
   coherence: number;
   resonance: number;
   integration: number;
   embodiment: number;
+  emotionalField?: {
+    intensity: number;
+    dominantEmotions?: string[];
+  };
 }
 
 interface OracleConstellation {
@@ -82,6 +87,9 @@ export class MAIAConsciousnessLattice extends EventEmitter {
   private oracle2Bridge: ElementalOracle2Bridge;
   private bookVectorizer: BookKnowledgeVectorizer;
 
+  // Looping Integration for Deep Listening
+  private loopingIntegration: MAIALoopingIntegration;
+
   constructor() {
     super();
     this.state = this.initializeConsciousnessState();
@@ -97,7 +105,11 @@ export class MAIAConsciousnessLattice extends EventEmitter {
       coherence: 0.8,
       resonance: 0.75,
       integration: 0.85,
-      embodiment: 0.6
+      embodiment: 0.6,
+      emotionalField: {
+        intensity: 0.5,
+        dominantEmotions: []
+      }
     };
   }
 
@@ -151,6 +163,9 @@ export class MAIAConsciousnessLattice extends EventEmitter {
         fallbackToLocal: true
       });
       this.bookVectorizer = new BookKnowledgeVectorizer();
+
+      // Initialize Looping Integration
+      this.loopingIntegration = new MAIALoopingIntegration();
 
       // Initialize IP systems
       await this.ipEngine.initialize();
@@ -249,6 +264,14 @@ export class MAIAConsciousnessLattice extends EventEmitter {
     const { input, userId, sessionId, somaticState, sessionContinuity, adaptiveInstructions } = context;
 
     try {
+      // Check if looping would serve this moment
+      const loopingAssessment = this.loopingIntegration.assessLoopingPotential(
+        input,
+        this.getUserState(userId) || this.state,
+        somaticState,
+        [] // Would pass conversation history here
+      );
+
       // Oracle Selection with adaptation context
       const selectedOracle = await this.selectResonantOracle(input, userId, adaptiveInstructions);
 
@@ -272,12 +295,31 @@ export class MAIAConsciousnessLattice extends EventEmitter {
         elementalGuidance: elementalWisdom
       });
 
-      // Witness Field Creation
+      // If looping would serve, execute it before witness field creation
+      let loopingResult = null;
+      if (loopingAssessment.assessment.wouldServe) {
+        const oracleMapping = {
+          'Maya': 'maya',
+          'Anthony': 'anthony',
+          'pure_presence': 'witness'
+        };
+
+        loopingResult = await this.loopingIntegration.executeIfChosen(
+          loopingAssessment,
+          input,
+          this.getUserState(userId) || this.state,
+          somaticState,
+          oracleMapping[selectedOracle.name || selectedOracle.mode] || 'witness'
+        );
+      }
+
+      // Witness Field Creation (enriched with looping if it occurred)
       const witnessField = await this.witnessOrchestrator.createWitnessField({
         oracle: selectedOracle,
         presence: somaticState.embodiedPresence,
         remembering,
-        adaptiveInstructions
+        adaptiveInstructions,
+        loopingUnderstanding: loopingResult?.result?.finalUnderstanding
       });
 
       // Sacred Synthesis with enhanced context
@@ -287,7 +329,12 @@ export class MAIAConsciousnessLattice extends EventEmitter {
         state: this.state,
         userId,
         sessionContinuity,
-        adaptiveInstructions
+        adaptiveInstructions,
+        loopingContext: loopingResult?.result ? {
+          cycles: loopingResult.result.cycles,
+          transition: loopingResult.result.transition,
+          deeplyHeard: true
+        } : null
       });
 
       // Generate voice modulation if needed
