@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Initialize Supabase client - make it optional for beta
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,8 +53,9 @@ export async function POST(request: NextRequest) {
     const sessionId = uuidv4();
 
     // If Supabase is configured, save to database
-    if (supabaseUrl && supabaseKey) {
-      const supabase = createClient(supabaseUrl, supabaseKey);
+    if (supabaseUrl && supabaseKey && supabaseUrl !== '' && supabaseKey !== '') {
+      try {
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
       // Create explorer record
       const { data: explorerData, error: explorerError } = await supabase
@@ -126,6 +127,12 @@ export async function POST(request: NextRequest) {
             explorer_name: explorerName
           }
         });
+      } catch (dbError) {
+        console.error('Supabase operations failed:', dbError);
+        // Continue without database - beta can work without it
+      }
+    } else {
+      console.log('Supabase not configured - using local storage mode');
     }
 
     // Return successful response
