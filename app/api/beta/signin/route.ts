@@ -8,54 +8,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Beta signin for:', explorerName);
 
-    // Try to use Supabase if available
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (supabaseUrl && supabaseKey) {
-      try {
-        // Dynamically import Supabase to avoid build errors
-        const supabaseModule = await import('@supabase/supabase-js').catch(() => null);
-
-        if (supabaseModule) {
-          const { createClient } = supabaseModule;
-          const supabase = createClient(supabaseUrl, supabaseKey);
-
-        // Look up explorer in database
-        const { data: explorer, error } = await supabase
-          .from('explorers')
-          .select('*')
-          .eq('explorer_name', explorerName)
-          .eq('email', email)
-          .single();
-
-        if (!error && explorer) {
-          // Look up beta user
-          const { data: betaUser } = await supabase
-            .from('beta_users')
-            .select('*')
-            .eq('email', email)
-            .single();
-
-          // Return successful signin from database
-          return NextResponse.json({
-            success: true,
-            userId: betaUser?.id || explorer.explorer_id,
-            explorerId: explorer.explorer_id,
-            explorerName: explorer.explorer_name,
-            mayaInstance: betaUser?.maya_instance || uuidv4(),
-            sessionId: uuidv4(),
-            sanctuary: 'established',
-            signupDate: explorer.signup_date
-          });
-        }
-      }
-      } catch (dbError) {
-        console.log('Database lookup failed, using mock signin:', dbError);
-      }
-    }
-
-    // Fallback: Mock signin for beta testing
+    // Mock signin for beta testing
     // This allows signin to work even without database
     const validExplorers = [
       'MAIA-ARCHITECT',
