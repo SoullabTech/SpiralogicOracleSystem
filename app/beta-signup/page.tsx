@@ -197,6 +197,16 @@ export default function BetaSignup() {
                     {loading ? 'Initializing...' : 'Enter'}
                   </button>
                 </form>
+
+                {/* Sign in link for existing users */}
+                <div className="text-center mt-4">
+                  <button
+                    onClick={() => router.push('/maya')}
+                    className="text-xs text-amber-200/60 hover:text-amber-200/80 transition-colors"
+                  >
+                    Already signed up? Enter Maya →
+                  </button>
+                </div>
               </div>
             </div>
 
