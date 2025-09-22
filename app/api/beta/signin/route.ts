@@ -1,6 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 
+// Lazy load Supabase client
+let supabaseClient: any = null;
+
+async function getSupabase() {
+  if (supabaseClient) return supabaseClient;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    return null;
+  }
+
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    supabaseClient = createClient(supabaseUrl, supabaseKey);
+    return supabaseClient;
+  } catch (error) {
+    console.log('Supabase client creation failed:', error);
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -8,7 +31,45 @@ export async function POST(request: NextRequest) {
 
     console.log('Beta signin for:', explorerName);
 
-    // Mock signin for beta testing
+    // Try to use Supabase if available
+    const supabase = await getSupabase();
+
+    if (supabase) {
+      try {
+        // Look up explorer in database
+        const { data: explorer, error } = await supabase
+          .from('explorers')
+          .select('*')
+          .eq('explorer_name', explorerName)
+          .eq('email', email)
+          .single();
+
+        if (!error && explorer) {
+          // Look up beta user
+          const { data: betaUser } = await supabase
+            .from('beta_users')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+          // Return successful signin from database
+          return NextResponse.json({
+            success: true,
+            userId: betaUser?.id || explorer.explorer_id,
+            explorerId: explorer.explorer_id,
+            explorerName: explorer.explorer_name,
+            mayaInstance: betaUser?.maya_instance || uuidv4(),
+            sessionId: uuidv4(),
+            sanctuary: 'established',
+            signupDate: explorer.signup_date
+          });
+        }
+      } catch (dbError) {
+        console.log('Database lookup failed, using mock signin:', dbError);
+      }
+    }
+
+    // Fallback: Mock signin for beta testing
     // This allows signin to work even without database
     const validExplorers = [
       'MAIA-ARCHITECT',
