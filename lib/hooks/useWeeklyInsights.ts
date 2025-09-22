@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/lib/supabase";
 import { weeklyInsightService } from "@/lib/services/longitudinal/WeeklyInsightService";
 import { WeeklyInsight } from "@/lib/spiralogic/types/LongitudinalTypes";
 import { useFeatureFlag } from "./useFeatureFlag";

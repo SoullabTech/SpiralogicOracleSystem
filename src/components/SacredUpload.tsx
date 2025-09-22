@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, FileAudio, FileVideo, FileImage, FileText, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient, useUser } from '@/lib/supabase';
 
 interface UploadFile {
   id: string;
@@ -155,7 +155,6 @@ export default function SacredUpload({
       setUploadFiles(prev => [...prev, uploadFile]);
       
       // Start upload
-      uploadFile.status = 'uploading';
       uploadFile(uploadFile);
     });
   }, [acceptTypes, maxSizeMB]);

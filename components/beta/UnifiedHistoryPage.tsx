@@ -17,7 +17,7 @@ import {
   Calendar,
   Activity
 } from 'lucide-react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClientComponentClient } from '@/lib/supabase';
 
 interface ConversationMessage {
   id: string;

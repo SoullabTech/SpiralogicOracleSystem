@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FEATURE_FLAGS, hasPhase2Access } from "@/config/features";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/lib/supabase";
 
 /**
  * Hook to check if a feature flag is enabled

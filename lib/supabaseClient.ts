@@ -25,19 +25,86 @@ export const supabase = (() => {
   // Return a REST-based client that mimics Supabase interface
   return {
     from: (table: string) => ({
-      select: async (columns = '*') => {
-        try {
-          const response = await fetch(`${url}/rest/v1/${table}?select=${columns}`, {
-            headers: {
-              'apikey': anonKey,
-              'Authorization': `Bearer ${anonKey}`,
+      select: (columns = '*') => {
+        let queryParams = `select=${columns}`;
+
+        return {
+          order: (column: string, options?: { ascending?: boolean }) => {
+            const direction = options?.ascending === false ? 'desc' : 'asc';
+            queryParams += `&order=${column}.${direction}`;
+
+            return {
+              limit: (count: number) => {
+                queryParams += `&limit=${count}`;
+
+                return {
+                  then: async () => {
+                    try {
+                      const response = await fetch(`${url}/rest/v1/${table}?${queryParams}`, {
+                        headers: {
+                          'apikey': anonKey,
+                          'Authorization': `Bearer ${anonKey}`,
+                        }
+                      });
+                      const data = await response.json();
+                      return { data: response.ok ? data : null, error: response.ok ? null : data };
+                    } catch (error) {
+                      return { data: null, error };
+                    }
+                  }
+                };
+              },
+              then: async () => {
+                try {
+                  const response = await fetch(`${url}/rest/v1/${table}?${queryParams}`, {
+                    headers: {
+                      'apikey': anonKey,
+                      'Authorization': `Bearer ${anonKey}`,
+                    }
+                  });
+                  const data = await response.json();
+                  return { data: response.ok ? data : null, error: response.ok ? null : data };
+                } catch (error) {
+                  return { data: null, error };
+                }
+              }
+            };
+          },
+          limit: (count: number) => {
+            queryParams += `&limit=${count}`;
+
+            return {
+              then: async () => {
+                try {
+                  const response = await fetch(`${url}/rest/v1/${table}?${queryParams}`, {
+                    headers: {
+                      'apikey': anonKey,
+                      'Authorization': `Bearer ${anonKey}`,
+                    }
+                  });
+                  const data = await response.json();
+                  return { data: response.ok ? data : null, error: response.ok ? null : data };
+                } catch (error) {
+                  return { data: null, error };
+                }
+              }
+            };
+          },
+          then: async () => {
+            try {
+              const response = await fetch(`${url}/rest/v1/${table}?${queryParams}`, {
+                headers: {
+                  'apikey': anonKey,
+                  'Authorization': `Bearer ${anonKey}`,
+                }
+              });
+              const data = await response.json();
+              return { data: response.ok ? data : null, error: response.ok ? null : data };
+            } catch (error) {
+              return { data: null, error };
             }
-          });
-          const data = await response.json();
-          return { data: response.ok ? data : null, error: response.ok ? null : data };
-        } catch (error) {
-          return { data: null, error };
-        }
+          }
+        };
       },
       insert: async (values: any) => {
         try {

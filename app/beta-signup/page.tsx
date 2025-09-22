@@ -100,14 +100,33 @@ export default function BetaSignup() {
                   {/* Holoflower SVG */}
                   <div className="w-20 h-20 mx-auto mb-4 relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-amber-600/10 rounded-full blur-2xl" />
-                    <img
-                      src="/holoflower.svg"
-                      alt="Holoflower"
+                    <svg
                       className="relative w-full h-full opacity-60"
-                      style={{
-                        filter: 'brightness(0) saturate(100%) invert(73%) sepia(76%) saturate(465%) hue-rotate(8deg) brightness(98%) contrast(95%)'
-                      }}
-                    />
+                      viewBox="0 0 793 840"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M456.4375 402.6875C459.875 403.25 459.875 403.25 462.25 404.875C464.23342363 407.77384992 464.73911447 409.7487473 464.875 413.25C463.9375 415.625 463.9375 415.625 462.875 417.25C463.42929687 417.42015625 463.98359375 417.5903125 464.5546875 417.765625C470.40381479 419.72227256 470.40381479 419.72227256 472.4375 422L472.4375 422"
+                        fill="#d97706"
+                        opacity="0.7"
+                      />
+                      <circle cx="396.5" cy="420" r="45" fill="url(#flowerGradient)" opacity="0.3"/>
+                      <circle cx="396.5" cy="420" r="25" fill="url(#centerGradient)" opacity="0.6"/>
+                      <circle cx="396.5" cy="420" r="12" fill="#fbbf24" opacity="0.8"/>
+
+                      <defs>
+                        <radialGradient id="flowerGradient" cx="0.5" cy="0.5" r="0.5">
+                          <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.6"/>
+                          <stop offset="50%" stopColor="#d97706" stopOpacity="0.4"/>
+                          <stop offset="100%" stopColor="#92400e" stopOpacity="0.2"/>
+                        </radialGradient>
+                        <radialGradient id="centerGradient" cx="0.5" cy="0.5" r="0.5">
+                          <stop offset="0%" stopColor="#fde047" stopOpacity="0.8"/>
+                          <stop offset="100%" stopColor="#d97706" stopOpacity="0.4"/>
+                        </radialGradient>
+                      </defs>
+                    </svg>
                   </div>
 
                   <h1 className="text-2xl sm:text-3xl font-extralight text-amber-50 tracking-wide">

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@/lib/supabase'
 import { motion, AnimatePresence } from 'framer-motion'
 import { trackEvent } from '@/lib/analytics/eventTracking'
 

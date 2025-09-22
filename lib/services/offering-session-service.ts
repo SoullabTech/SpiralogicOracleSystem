@@ -3,7 +3,7 @@
  * Service for managing Holoflower offering sessions with Supabase
  */
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClientComponentClient } from '@/lib/supabase';
 import { 
   OfferingSession, 
   OfferingTimelineItem, 

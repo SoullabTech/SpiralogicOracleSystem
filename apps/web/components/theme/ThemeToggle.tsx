@@ -5,8 +5,8 @@ import { useTheme } from 'next-themes'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sun, Moon, Monitor } from 'lucide-react'
 import { saveUserTheme, getUserTheme, getLocalTheme, ThemePreference } from '@/lib/theme/userTheme'
-import { useUser } from '@supabase/auth-helpers-react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useUser } from '@/lib/supabase'
+import { createClientComponentClient } from '@/lib/supabase'
 
 export default function ThemeToggle() {
   const { theme, setTheme, systemTheme } = useTheme()

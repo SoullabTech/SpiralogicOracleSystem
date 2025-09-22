@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient, useUser } from '@/lib/supabase';
 
 interface Document {
   id: string;
