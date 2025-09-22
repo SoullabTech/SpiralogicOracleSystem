@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Mic, MicOff, Keyboard, Loader2 } from 'lucide-react';
-import { unlockAudio } from '@/lib/audio/audioUnlock';
+import { unlockAudioContext as unlockAudio } from '@/lib/audio/audioUnlock';
 import { useToastContext } from '@/components/system/ToastProvider';
 
 interface HybridInputProps {

@@ -1,5 +1,6 @@
 // Comprehensive error logging for production debugging
-import { supabase } from './supabaseClient';
+// import { supabase } from './supabaseClient';
+const supabase = null; // Temporarily disabled
 
 export interface ErrorLog {
   message: string;
