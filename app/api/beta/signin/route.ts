@@ -14,8 +14,12 @@ export async function POST(request: NextRequest) {
 
     if (supabaseUrl && supabaseKey) {
       try {
-        const { createClient } = await import('@supabase/supabase-js');
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        // Dynamically import Supabase to avoid build errors
+        const supabaseModule = await import('@supabase/supabase-js').catch(() => null);
+
+        if (supabaseModule) {
+          const { createClient } = supabaseModule;
+          const supabase = createClient(supabaseUrl, supabaseKey);
 
         // Look up explorer in database
         const { data: explorer, error } = await supabase
@@ -45,6 +49,7 @@ export async function POST(request: NextRequest) {
             signupDate: explorer.signup_date
           });
         }
+      }
       } catch (dbError) {
         console.log('Database lookup failed, using mock signin:', dbError);
       }

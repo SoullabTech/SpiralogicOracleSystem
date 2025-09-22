@@ -59,10 +59,18 @@ export async function POST(request: NextRequest) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+    let savedToDatabase = false;
+
     if (supabaseUrl && supabaseKey) {
       try {
-        const { createClient } = await import('@supabase/supabase-js');
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        // Dynamically import Supabase to avoid build errors
+        const supabaseModule = await import('@supabase/supabase-js').catch(() => null);
+
+        if (!supabaseModule) {
+          console.log('Supabase module not available');
+        } else {
+          const { createClient } = supabaseModule;
+          const supabase = createClient(supabaseUrl, supabaseKey);
 
         // Check if explorer already exists
         const { data: existingExplorer } = await supabase
@@ -147,7 +155,9 @@ export async function POST(request: NextRequest) {
             }
           });
 
-        console.log('Saved to Supabase successfully');
+          savedToDatabase = true;
+          console.log('Saved to Supabase successfully');
+        }
       } catch (dbError) {
         console.log('Supabase operations failed, continuing without database:', dbError);
       }
