@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       stream: true,
     });
 
-    // Create a readable stream
+    // Create a readable stream with SSE format
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
@@ -53,9 +53,11 @@ export async function POST(req: Request) {
           for await (const chunk of stream) {
             const text = chunk.choices[0]?.delta?.content || '';
             if (text) {
-              controller.enqueue(encoder.encode(text));
+              const data = JSON.stringify({ content: text });
+              controller.enqueue(encoder.encode(`data: ${data}\n\n`));
             }
           }
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         } catch (error) {
           console.error('Stream error:', error);
           controller.error(error);
@@ -67,8 +69,9 @@ export async function POST(req: Request) {
 
     return new Response(readable, {
       headers: {
-        'Content-Type': 'text/plain',
+        'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
       },
     });
 

@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 // Dynamically import to avoid SSR issues
-const BetaMinimalMirror = dynamic(
-  () => import('@/components/chat/BetaMinimalMirror'),
+const MayaChat = dynamic(
+  () => import('@/components/maya/MayaChat'),
   {
     ssr: false,
     loading: () => (
@@ -42,5 +42,5 @@ export default function MayaPage() {
     );
   }
 
-  return <BetaMinimalMirror />;
+  return <MayaChat />;
 }
