@@ -6,6 +6,7 @@ import { BetaBanner } from "@/components/ui/BetaBanner";
 import { FeedbackWidget } from "@/components/ui/FeedbackWidget";
 import { PWAInstallPrompt } from "@/components/ui/PWAInstallPrompt";
 import VoiceDebugOverlay from "@/components/debug/VoiceDebugOverlay";
+import { Toaster } from 'react-hot-toast';
 import "./globals.css";
 import "./globals-mobile.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-black text-white`}>
         <PWAProvider>
           <AuthProvider>
+            <Toaster position="top-center" />
             <BetaBanner />
             {children}
             <PWAInstallPrompt />
