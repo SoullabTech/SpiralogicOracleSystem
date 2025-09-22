@@ -201,10 +201,10 @@ export default function BetaSignup() {
                 {/* Sign in link for existing users */}
                 <div className="text-center mt-4">
                   <button
-                    onClick={() => router.push('/maya')}
+                    onClick={() => router.push('/beta-signin')}
                     className="text-xs text-amber-200/60 hover:text-amber-200/80 transition-colors"
                   >
-                    Already signed up? Enter Maya →
+                    Already signed up? Sign in →
                   </button>
                 </div>
               </div>
