@@ -2,7 +2,7 @@
 // This file is for server-side use in API routes
 // Uses environment variables that are only available server-side
 
-import { createClient } from '@supabase/supabase-js';
+// import { createClient } from '@supabase/supabase-js';
 
 // Server-side environment variables (not exposed to browser)
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;

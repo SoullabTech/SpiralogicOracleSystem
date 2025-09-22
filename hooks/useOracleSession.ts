@@ -1,6 +1,6 @@
 // React Hooks for Oracle Session Management
 import { useState, useEffect, useCallback } from 'react';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+// import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
 interface ElementalBalance {
   fire: number;
