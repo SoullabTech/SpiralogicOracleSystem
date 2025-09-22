@@ -64,7 +64,31 @@ export async function POST(request: NextRequest) {
         const { createClient } = await import('@supabase/supabase-js');
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        // Create explorer record
+        // Check if explorer already exists
+        const { data: existingExplorer } = await supabase
+          .from('explorers')
+          .select('*')
+          .eq('explorer_name', explorerName)
+          .single();
+
+        if (existingExplorer) {
+          // Explorer already exists, return their info instead of creating new
+          console.log('Explorer already exists:', explorerName);
+
+          // Return existing explorer data
+          return NextResponse.json({
+            success: true,
+            userId: existingExplorer.explorer_id,
+            explorerId: existingExplorer.explorer_id,
+            explorerName: existingExplorer.explorer_name,
+            mayaInstance: uuidv4(),
+            sessionId: uuidv4(),
+            sanctuary: 'established',
+            signupDate: existingExplorer.signup_date || new Date().toISOString()
+          });
+        }
+
+        // Create new explorer record
         const { error: explorerError } = await supabase
           .from('explorers')
           .insert({
@@ -82,13 +106,7 @@ export async function POST(request: NextRequest) {
 
         if (explorerError) {
           console.error('Explorer creation error:', explorerError);
-          // Check if it's a duplicate
-          if (explorerError.code === '23505') {
-            return NextResponse.json(
-              { error: 'Explorer name already taken' },
-              { status: 409 }
-            );
-          }
+          throw explorerError;
         }
 
         // Create beta user record (optional, may fail)
