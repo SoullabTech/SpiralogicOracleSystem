@@ -149,3 +149,22 @@ DO $$
 BEGIN
   RAISE NOTICE 'Maia Beta database setup complete! All tables created successfully.';
 END $$;
+
+-- File uploads table (added after initial setup)
+CREATE TABLE IF NOT EXISTS file_uploads (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    explorer_id UUID NOT NULL,
+    explorer_name TEXT NOT NULL,
+    file_name TEXT NOT NULL,
+    file_path TEXT NOT NULL,
+    file_type TEXT,
+    file_size INTEGER,
+    upload_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create storage bucket for beta uploads (run in Supabase dashboard)
+-- INSERT INTO storage.buckets (id, name, public)
+-- VALUES ('beta-uploads', 'beta-uploads', true)
+-- ON CONFLICT DO NOTHING;
