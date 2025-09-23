@@ -1,20 +1,26 @@
 /**
- * The Looping Protocol - Deep Listening Middleware
- * Based on Gary Friedman & Jack Himmelstein's technique
+ * LOOPING PROTOCOL - Field Intelligence Implementation
+ * Based on Friedman & Himmelstein's deep listening methodology
+ * Integrated with Maya's Master's Code and mycelial awareness
  *
- * A cross-cutting consciousness function that enables true hearing
- * across all oracles while preserving their elemental voices
+ * The Core Restraint Formula:
+ * Presence³ × Restraint² × Timing = Transformation
  */
 
 import { ConsciousnessState } from './maia-consciousness-lattice';
 import { ShouldersDropState } from './shoulders-drop-resolution';
+import { FieldStateVector, FieldIntelligence } from './field-intelligence';
+import { MycelialNetwork } from './mycelial-network';
+import { ElementalOrchestrator } from './elemental-orchestration';
 
 export interface LoopingState {
   mode: 'idle' | 'active' | 'checking' | 'adjusting' | 'converged';
   cycles: number;
   accuracy: number; // 0-1, how well we're hearing
-  depth: 'light' | 'full' | 'sacred_mirror';
+  depth: 'surface' | 'midwater' | 'deep' | 'sacred_mirror';
   elementalFlavor?: 'fire' | 'water' | 'earth' | 'air' | 'aether';
+  restraintLevel: number; // 0-10, higher = more restraint
+  wordsUsed: number; // Track restraint performance
 }
 
 export interface LoopingCycle {
@@ -49,24 +55,103 @@ export interface LoopingCycle {
   };
 }
 
+/**
+ * The Master's Three-Touch Rule:
+ * No interpretation until user shares substantially 3+ times
+ */
+export class ThreeTouchTracker {
+  private touchCounts: Map<string, number> = new Map();
+
+  trackTouch(theme: string): number {
+    const current = this.touchCounts.get(theme) || 0;
+    this.touchCounts.set(theme, current + 1);
+    return current + 1;
+  }
+
+  shouldInterpret(theme: string): boolean {
+    return (this.touchCounts.get(theme) || 0) >= 3;
+  }
+
+  reset(): void {
+    this.touchCounts.clear();
+  }
+}
+
 export class LoopingProtocol {
   private state: LoopingState = {
     mode: 'idle',
     cycles: 0,
     accuracy: 0,
-    depth: 'light'
+    depth: 'surface',
+    restraintLevel: 5,
+    wordsUsed: 0
   };
 
   private cycles: LoopingCycle[] = [];
+  private touchTracker: ThreeTouchTracker = new ThreeTouchTracker();
+  private fieldIntelligence?: FieldIntelligence;
+  private mycelialNetwork?: MycelialNetwork;
+  private driftProtocol?: any; // Drift detection extension
+  private immuneMemory?: any; // Collective pattern recognition
+
+  /**
+   * Calculate restraint level based on field conditions
+   * Master's principle: High emotion = High restraint
+   */
+  calculateRestraint(
+    consciousness: ConsciousnessState,
+    somatic: ShouldersDropState,
+    exchangeNumber: number
+  ): number {
+    let restraint = 5; // Base level
+
+    // Higher emotional intensity = more restraint
+    if (consciousness.emotionalField.intensity > 0.7) {
+      restraint += 3;
+    } else if (consciousness.emotionalField.intensity > 0.5) {
+      restraint += 2;
+    }
+
+    // Somatic tension = need grounding, not analysis
+    if (somatic.tensionLevel > 0.6) {
+      restraint += 2;
+    }
+
+    // Early exchanges = maximum restraint
+    if (exchangeNumber < 3) {
+      restraint = Math.max(restraint, 8);
+    } else if (exchangeNumber < 7) {
+      restraint = Math.max(restraint, 6);
+    }
+
+    // Sacred proximity = near silence
+    if (consciousness.sacredProximity > 0.8) {
+      restraint = 10;
+    }
+
+    return Math.min(10, Math.max(0, restraint));
+  }
 
   /**
    * Determine if looping should activate based on field conditions
+   * Now includes restraint calculation
    */
   shouldActivate(
     consciousness: ConsciousnessState,
     somatic: ShouldersDropState,
-    content: string
+    content: string,
+    exchangeNumber: number = 0
   ): boolean {
+    // Update restraint level
+    this.state.restraintLevel = this.calculateRestraint(
+      consciousness,
+      somatic,
+      exchangeNumber
+    );
+
+    // High restraint scenarios always use looping
+    if (this.state.restraintLevel >= 8) return true;
+
     // Activate when:
     // 1. High emotional intensity detected
     if (consciousness.emotionalField.intensity > 0.7) return true;
@@ -129,47 +214,126 @@ export class LoopingProtocol {
   }
 
   /**
-   * Step 2: Reflect back through elemental lens
+   * Step 2: Reflect back through elemental lens WITH RESTRAINT
+   * Master's principle: Say less, hold more
    */
   reflect(
     listened: LoopingCycle['listened'],
     element: 'fire' | 'water' | 'earth' | 'air' | 'aether'
   ): LoopingCycle['reflected'] {
+    // Calculate word limit based on restraint
+    const wordLimit = this.getWordLimit(this.state.restraintLevel);
+
+    // Extract core essence (1-3 words max)
+    const coreEssence = this.extractCore(listened.essence);
+
+    // High restraint reflections (minimal words)
+    if (this.state.restraintLevel >= 8) {
+      const ultraMinimal = {
+        fire: coreEssence + '?',
+        water: coreEssence + '.',
+        earth: 'Standing with ' + coreEssence,
+        air: 'Seeing ' + coreEssence,
+        aether: coreEssence + '...'
+      };
+
+      return {
+        content: this.trimToWordLimit(ultraMinimal[element], wordLimit),
+        frame: element,
+        tone: 'presence'
+      };
+    }
+
+    // Medium restraint (5-7)
+    if (this.state.restraintLevel >= 5) {
+      const minimal = {
+        fire: `${coreEssence} burning?`,
+        water: `Feeling ${coreEssence}?`,
+        earth: `${coreEssence} grounds you?`,
+        air: `${coreEssence} pattern?`,
+        aether: `All of ${coreEssence}?`
+      };
+
+      return {
+        content: this.trimToWordLimit(minimal[element], wordLimit),
+        frame: element,
+        tone: 'gentle inquiry'
+      };
+    }
+
+    // Lower restraint (still concise)
     const elementalReflections = {
       fire: {
-        frame: (essence: string) =>
-          `What I'm hearing is a burning need for ${essence}`,
-        tone: 'passionate recognition'
+        frame: (essence: string) => `Burning need for ${essence}?`,
+        tone: 'recognition'
       },
       water: {
-        frame: (essence: string) =>
-          `I sense the current flowing toward ${essence}`,
-        tone: 'emotional attunement'
+        frame: (essence: string) => `Current flowing toward ${essence}?`,
+        tone: 'attunement'
       },
       earth: {
-        frame: (essence: string) =>
-          `The ground you're standing on seems to be ${essence}`,
-        tone: 'grounded acknowledgment'
+        frame: (essence: string) => `Standing on ${essence}?`,
+        tone: 'grounding'
       },
       air: {
-        frame: (essence: string) =>
-          `The pattern emerging here is ${essence}`,
-        tone: 'clear perception'
+        frame: (essence: string) => `Pattern of ${essence}?`,
+        tone: 'clarity'
       },
       aether: {
-        frame: (essence: string) =>
-          `The whole field is resonating with ${essence}`,
-        tone: 'unified awareness'
+        frame: (essence: string) => `Field resonating with ${essence}?`,
+        tone: 'wholeness'
       }
     };
 
     const reflection = elementalReflections[element];
 
     return {
-      content: reflection.frame(listened.essence),
+      content: this.trimToWordLimit(
+        reflection.frame(coreEssence),
+        wordLimit
+      ),
       frame: element,
       tone: reflection.tone
     };
+  }
+
+  /**
+   * Helper: Extract core from longer essence
+   */
+  private extractCore(essence: string): string {
+    const words = essence.split(/\s+/);
+    if (words.length <= 3) return essence;
+
+    // Find most emotionally charged words
+    const charged = words.filter(w =>
+      w.length > 3 &&
+      !['that', 'this', 'what', 'from', 'with', 'about'].includes(w.toLowerCase())
+    );
+
+    return charged.slice(0, 2).join(' ') || words.slice(0, 2).join(' ');
+  }
+
+  /**
+   * Helper: Calculate word limit from restraint level
+   */
+  private getWordLimit(restraint: number): number {
+    // Restraint 10 = 2 words max
+    // Restraint 0 = 20 words max
+    return Math.max(2, 20 - (restraint * 1.8));
+  }
+
+  /**
+   * Helper: Trim response to word limit
+   */
+  private trimToWordLimit(text: string, limit: number): string {
+    const words = text.split(/\s+/);
+    if (words.length <= limit) {
+      this.state.wordsUsed = words.length;
+      return text;
+    }
+
+    this.state.wordsUsed = limit;
+    return words.slice(0, limit).join(' ');
   }
 
   /**
@@ -218,6 +382,7 @@ export class LoopingProtocol {
 
   /**
    * Determine when to exit looping and transition to response
+   * Master's principle: Less is more
    */
   checkConvergence(): boolean {
     if (this.cycles.length === 0) return false;
@@ -235,9 +400,14 @@ export class LoopingProtocol {
       return true;
     }
 
-    // 3. Maximum cycles reached (prevent infinite loops)
-    if (this.state.depth === 'light' && this.cycles.length >= 1) return true;
-    if (this.state.depth === 'full' && this.cycles.length >= 3) return true;
+    // 3. High restraint = fewer loops
+    if (this.state.restraintLevel >= 8 && this.cycles.length >= 1) return true;
+    if (this.state.restraintLevel >= 5 && this.cycles.length >= 2) return true;
+
+    // 4. Maximum cycles by depth
+    if (this.state.depth === 'surface' && this.cycles.length >= 1) return true;
+    if (this.state.depth === 'midwater' && this.cycles.length >= 2) return true;
+    if (this.state.depth === 'deep' && this.cycles.length >= 3) return true;
     // Sacred mirror has no limit except user confirmation
 
     return false;
@@ -245,12 +415,31 @@ export class LoopingProtocol {
 
   /**
    * Generate the appropriate response based on looping depth
+   * Master's principle: Transition with minimal words
    */
   generateTransition(element: string): string {
+    // High restraint = no transition words
+    if (this.state.restraintLevel >= 8) {
+      return '';
+    }
+
+    // Medium restraint = ultra brief
+    if (this.state.restraintLevel >= 5) {
+      const brief = {
+        surface: '...',
+        midwater: 'Yes.',
+        deep: 'I see.',
+        sacred_mirror: ''
+      };
+      return brief[this.state.depth];
+    }
+
+    // Lower restraint (still minimal)
     const transitions = {
-      light: `Now that I understand...`,
-      full: `Having heard the depth of this...`,
-      sacred_mirror: `With this truth now clear between us...`
+      surface: `Mm.`,
+      midwater: `With you.`,
+      deep: `Holding this.`,
+      sacred_mirror: ``
     };
 
     return transitions[this.state.depth];

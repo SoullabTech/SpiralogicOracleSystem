@@ -9,6 +9,9 @@ import { MayaGreetingContainer } from './MayaGreeting';
 import SessionMemoryBanner from './SessionMemoryBanner';
 import MayaThinkingIndicator from './MayaThinkingIndicator';
 import SacredChatInput from './chat/SacredChatInput';
+import BetaJournal from './beta/BetaJournal';
+import BetaPhaseTransition from './beta/BetaPhaseTransition';
+import { useBetaPhaseManager } from '../hooks/useBetaPhaseManager';
 
 interface Message {
   id: string;
@@ -32,19 +35,22 @@ interface JournalEntry {
   processed: boolean;
 }
 
-export function SoullabChatInterface({ 
-  userId, 
+export function SoullabChatInterface({
+  userId,
   userName = 'Friend',
-  onboardingPrefs = { tone: 0.5, style: 'prose' }
-}: { 
-  userId: string; 
+  onboardingPrefs = { tone: 0.5, style: 'prose' },
+  betaMode = false
+}: {
+  userId: string;
   userName?: string;
   onboardingPrefs?: { tone: number; style: 'prose' | 'poetic' | 'auto' };
+  betaMode?: boolean;
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [showJournal, setShowJournal] = useState(false);
+  const [showBetaJournal, setShowBetaJournal] = useState(false);
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
   const [journalInput, setJournalInput] = useState('');
   const [journalTitle, setJournalTitle] = useState('');
@@ -57,13 +63,23 @@ export function SoullabChatInterface({
   const [showMemoryBanner, setShowMemoryBanner] = useState(true);
   const [interactionCount, setInteractionCount] = useState(0);
   const [isThinking, setIsThinking] = useState(false);
+  const [betaMetadata, setBetaMetadata] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Use live Oracle state from hook
+  const { sendMessage, isLoading, error, oracleState: liveOracleState, lastMessage, clearError } = useSoullabOracle();
   const oracleState = liveOracleState;
 
-  const { sendMessage, isLoading, error, oracleState: liveOracleState, lastMessage, clearError } = useSoullabOracle();
+  // Initialize beta phase manager
+  const {
+    betaState,
+    transitionToPhase,
+    skipPhase,
+    markPhaseComplete,
+    isInBetaMode,
+    getBetaContext
+  } = useBetaPhaseManager(userId, betaMode);
 
   // Handle retroactive journaling
   const handleRetroJournal = async (messageId: string, content: string) => {
@@ -152,45 +168,59 @@ export function SoullabChatInterface({
 
     try {
       // Send to PersonalOracleAgent via the enhanced API
-      const response = await fetch('/api/oracle/chat', {
+      const response = await fetch('/api/oracle/personal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-experiment-spiralogic': 'on' // Use full PersonalOracleAgent
         },
         body: JSON.stringify({
-          text: input,
+          input,
           userId,
-          sessionId: `soullab-${Date.now()}`
+          sessionId: `soullab-${Date.now()}`,
+          preferences: {
+            communicationStyle: onboardingPrefs.tone > 0.7 ? 'direct' : onboardingPrefs.tone < 0.3 ? 'gentle' : 'balanced',
+            explorationDepth: 'moderate',
+            practiceOpenness: true,
+            style: onboardingPrefs.style,
+            tone: onboardingPrefs.tone,
+            ...(betaMode && {
+              betaMode: true,
+              startDate: new Date(),
+              skipLevel: 'moderate',
+              preferredTransition: 'guided'
+            })
+          }
         })
       });
 
       const data = await response.json();
       
-      // Update oracle state from response
-      if (data.metadata) {
-        setOracleState({
-          currentStage: data.metadata.oracleStage || oracleState.currentStage,
-          trustLevel: data.metadata.relationshipMetrics?.trustLevel || oracleState.trustLevel,
-          stageProgress: data.metadata.stageProgress || oracleState.stageProgress,
-          safetyStatus: data.metadata.safetyStatus || oracleState.safetyStatus
-        });
-      }
+      // Note: Oracle state updates can be handled through the hook if needed
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.data?.message || data.text || 'I hear you...',
+        content: data.response || data.message || 'I hear you...',
         timestamp: new Date(),
         metadata: {
           oracleStage: data.metadata?.oracleStage,
           trustLevel: data.metadata?.relationshipMetrics?.trustLevel,
           emotionalState: data.metadata?.emotionalResonance?.dominantEmotion,
-          element: data.metadata?.element
+          element: data.element
         }
       };
 
+      // Update beta metadata if available
+      if (data.betaMetadata) {
+        setBetaMetadata(data.betaMetadata);
+      }
+
       setMessages(prev => [...prev, assistantMessage]);
+
+      // Mark beta phase as engaged if in chat phase
+      if (isInBetaMode && betaState?.currentPhase === 'chat') {
+        markPhaseComplete('chat', { chatEngaged: true });
+      }
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -245,6 +275,11 @@ export function SoullabChatInterface({
     setJournalTitle('');
     setShowJournal(false);
 
+    // Mark beta phase as complete if in journal phase
+    if (isInBetaMode && betaState?.currentPhase === 'journal') {
+      markPhaseComplete('journal', { entryResponse: entry.content });
+    }
+
     // Add confirmation message
     const confirmMessage: Message = {
       id: Date.now().toString(),
@@ -255,41 +290,81 @@ export function SoullabChatInterface({
     setMessages(prev => [...prev, confirmMessage]);
   };
 
-  // Handle file upload
-  const handleFileUpload = (files: FileList | null) => {
+  // Handle file upload for journals, transcripts, etc
+  const handleFileUpload = async (files: FileList | null) => {
     if (!files) return;
-    
+
     const newFiles = Array.from(files);
     setUploadQueue(prev => [...prev, ...newFiles]);
 
     // Process uploads
-    newFiles.forEach(async (file) => {
+    for (const file of newFiles) {
       try {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('userId', userId);
 
-        await fetch('/api/oracle/upload', {
+        // Check file type for appropriate processing
+        let endpoint = '/api/oracle/upload';
+        let processType = 'document';
+
+        if (file.type.includes('text') || file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+          processType = 'journal';
+          endpoint = '/api/oracle/journal/upload';
+        } else if (file.type.includes('audio')) {
+          processType = 'transcript';
+          endpoint = '/api/oracle/transcript/upload';
+        }
+
+        const response = await fetch(endpoint, {
           method: 'POST',
           body: formData
         });
 
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const result = await response.json();
+
         // Remove from queue and add confirmation
         setUploadQueue(prev => prev.filter(f => f !== file));
-        
+
+        // Different messages based on file type
+        let confirmContent = '';
+        if (processType === 'journal') {
+          confirmContent = `I've absorbed your journal entry from "${file.name}". The insights and reflections within are now woven into my understanding of your journey.`;
+        } else if (processType === 'transcript') {
+          confirmContent = `I've processed the transcript "${file.name}". The conversations and insights it contains now inform our dialogue.`;
+        } else {
+          confirmContent = `I've integrated "${file.name}" into our shared knowledge space. ${result.insights ? result.insights : ''}`;
+        }
+
         const confirmMessage: Message = {
           id: Date.now().toString(),
           role: 'assistant',
-          content: `I've processed "${file.name}" and integrated it into my understanding of you. ${file.type.includes('audio') ? 'I can hear the emotion in your voice.' : 'The insights from this document are now part of our conversation.'}`,
-          timestamp: new Date()
+          content: confirmContent,
+          timestamp: new Date(),
+          metadata: {
+            ...result.metadata,
+            uploadType: processType
+          }
         };
         setMessages(prev => [...prev, confirmMessage]);
 
       } catch (error) {
         console.error('Upload failed:', error);
         setUploadQueue(prev => prev.filter(f => f !== file));
+
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          role: 'assistant',
+          content: `I couldn't process "${file.name}" at the moment. Please try again or share it in a different format.`,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, errorMessage]);
       }
-    });
+    }
   };
 
   // Get stage display info
@@ -340,6 +415,16 @@ export function SoullabChatInterface({
             
             {/* Trust & Progress Indicators */}
             <div className="flex items-center space-x-4">
+              {/* Beta Status Indicator */}
+              {betaMode && betaMetadata && (
+                <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
+                  <span className="text-amber-400 text-sm">🌀</span>
+                  <span className="text-sm text-amber-200">
+                    Day {betaMetadata.currentDay}/7 • {betaMetadata.theme}
+                  </span>
+                </div>
+              )}
+
               <div className="flex items-center space-x-2">
                 <Heart className="w-4 h-4 text-pink-400" />
                 <span className="text-sm text-pink-200">
@@ -462,7 +547,7 @@ export function SoullabChatInterface({
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Sacred Chat Input */}
+          {/* Sacred Chat Input with Journal and Upload */}
           <SacredChatInput
             userId={userId}
             trustLevel={oracleState.trustLevel}
@@ -471,19 +556,21 @@ export function SoullabChatInterface({
             tone={onboardingPrefs.tone}
             style={onboardingPrefs.style}
             onSendMessage={(message, isJournal) => {
-              // Set the input to the message and trigger the existing handler
-              setInput(message);
-              
-              // Call the existing message handler which will process everything
-              setTimeout(() => {
-                handleSendMessage();
-              }, 0);
-              
-              // If it&apos;s a journal entry, also handle journal logic
               if (isJournal) {
-                // TODO: Integrate with journal processing
+                // Handle as journal entry
+                setJournalInput(message);
+                setJournalTitle(`Reflection - ${new Date().toLocaleDateString()}`);
+                handleJournalEntry();
+              } else {
+                // Handle as regular message
+                setInput(message);
+                setTimeout(() => {
+                  handleSendMessage();
+                }, 0);
               }
             }}
+            onFileUpload={handleFileUpload}
+            onOpenJournal={() => setShowBetaJournal(true)}
           />
         </div>
 
@@ -555,6 +642,40 @@ export function SoullabChatInterface({
         )}
       </div>
       
+      {/* Beta Journal Modal */}
+      <BetaJournal
+        isOpen={showBetaJournal}
+        onClose={() => setShowBetaJournal(false)}
+        explorerName={userName}
+      />
+
+      {/* Beta Phase Transition */}
+      {isInBetaMode && betaState && (
+        <BetaPhaseTransition
+          userId={userId}
+          currentPhase={betaState.currentPhase}
+          nextPhase={betaState.nextPhase}
+          currentDay={betaState.currentDay}
+          element={betaState.element}
+          theme={betaState.theme}
+          transitionPrompt={betaState.transitionPrompt}
+          canSkip={betaState.canSkip}
+          onTransition={transitionToPhase}
+          onSkip={skipPhase}
+          isVisible={betaState.showTransition}
+        />
+      )}
+
+      {/* Hidden file input for upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept=".txt,.md,.pdf,.doc,.docx,.mp3,.wav,.m4a,.json"
+        className="hidden"
+        onChange={(e) => handleFileUpload(e.target.files)}
+      />
+
       {/* Voice Pipeline Debug Overlay (dev only) */}
       {process.env.NODE_ENV === 'development' && showDebugPanel && (
         <VoicePipelineDebugOverlay />

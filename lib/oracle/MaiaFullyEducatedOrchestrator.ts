@@ -7,6 +7,7 @@
 import { getMaiaEnhancedPrompt, getContextualGreeting, UserJourney, ConversationContext } from './MaiaEnhancedPrompt';
 import { maiaKnowledgeBase } from './MaiaKnowledgeBase';
 import { maiaTrainingLogger } from './MaiaTrainingLogger';
+import { betaExperienceManager, BetaExperiencePreferences } from '../beta/BetaExperienceManager';
 
 type ConversationEntry = {
   role: 'user' | 'assistant';
@@ -26,9 +27,19 @@ type MaiaResponse = {
   };
 };
 
+export interface OnboardingPreferences {
+  communicationStyle: 'gentle' | 'balanced' | 'direct';
+  explorationDepth: 'surface' | 'moderate' | 'deep';
+  practiceOpenness: boolean;
+  archetypeResonance?: string[];
+  tone: number; // 0-1 scale
+  style: 'prose' | 'poetic' | 'auto';
+}
+
 export class MaiaFullyEducatedOrchestrator {
   private conversations = new Map<string, ConversationEntry[]>();
   private userJourneys = new Map<string, UserJourney>();
+  private userPreferences = new Map<string, OnboardingPreferences>();
   private activeConversations = new Map<string, string>(); // userId -> conversationId for training
   private apiKey = process.env.ANTHROPIC_API_KEY;
   private knowledgeInitialized = false;
@@ -56,7 +67,16 @@ export class MaiaFullyEducatedOrchestrator {
     }
   }
 
-  async speak(input: string, userId: string): Promise<MaiaResponse> {
+  setUserPreferences(userId: string, preferences: OnboardingPreferences): void {
+    this.userPreferences.set(userId, preferences);
+    console.log(`🎯 Set preferences for ${userId}:`, preferences);
+  }
+
+  getUserPreferences(userId: string): OnboardingPreferences | null {
+    return this.userPreferences.get(userId) || null;
+  }
+
+  async speak(input: string, userId: string, preferences?: OnboardingPreferences | BetaExperiencePreferences): Promise<MaiaResponse> {
     // Ensure knowledge is loaded
     await this.initializeKnowledge();
 
@@ -82,9 +102,26 @@ export class MaiaFullyEducatedOrchestrator {
     const userJourney = this.getUserJourney(userId);
     const conversationContext = this.analyzeConversationContext(input, userId);
 
-    // Handle contextual greetings
+    // Set preferences if provided
+    if (preferences) {
+      this.setUserPreferences(userId, preferences);
+
+      // If beta preferences, also set in beta manager
+      if ('betaMode' in preferences && preferences.betaMode) {
+        betaExperienceManager.setUserPreferences(userId, preferences as BetaExperiencePreferences);
+      }
+    }
+
+    // Get stored preferences
+    const userPrefs = this.getUserPreferences(userId);
+
+    // Check if user is in beta mode
+    const betaPrefs = betaExperienceManager.getUserPreferences(userId);
+    const isBetaMode = betaPrefs?.betaMode || false;
+
+    // Handle contextual greetings with personalization
     if (this.isSimpleGreeting(input)) {
-      const greeting = getContextualGreeting(this.getTimeOfDay(), userJourney);
+      const greeting = this.getPersonalizedGreeting(userJourney, userPrefs);
       const response = this.createResponse(greeting, 'earth');
 
       // Log to training data
@@ -110,7 +147,9 @@ export class MaiaFullyEducatedOrchestrator {
     const systemPrompt = await this.buildComprehensivePrompt(
       userJourney,
       conversationContext,
-      relevantKnowledge
+      relevantKnowledge,
+      userPrefs,
+      isBetaMode ? betaExperienceManager.getPersonalizedMaiaPrompt(userId, input) : null
     );
 
     // Create conversation messages for Claude
@@ -153,7 +192,14 @@ export class MaiaFullyEducatedOrchestrator {
         Date.now() - startTime
       );
 
-      return this.createResponse(response, element);
+      // Create response with beta metadata if in beta mode
+      const maiaResponse = this.createResponse(response, element);
+
+      if (isBetaMode) {
+        (maiaResponse as any).betaMetadata = betaExperienceManager.getBetaMetadata(userId);
+      }
+
+      return maiaResponse;
 
     } catch (error) {
       console.error('Maia Intelligence Error:', error);
@@ -173,10 +219,53 @@ export class MaiaFullyEducatedOrchestrator {
     }
   }
 
+  private getPersonalizedGreeting(userJourney: UserJourney, preferences: OnboardingPreferences | null): string {
+    const timeOfDay = this.getTimeOfDay();
+    const sessionCount = userJourney.sessionCount;
+
+    if (!preferences) {
+      // Default greeting if no preferences set
+      return getContextualGreeting(timeOfDay, userJourney);
+    }
+
+    // Craft greeting based on preferences
+    let greeting = "";
+
+    if (sessionCount === 1) {
+      // First-time personalized greeting
+      if (preferences.communicationStyle === 'gentle') {
+        greeting = preferences.style === 'poetic'
+          ? "Welcome, dear one. I'm here to explore gently with you. What's alive in your heart today?"
+          : "Hi there. I'm here to explore gently with you. What would you like to share?";
+      } else if (preferences.communicationStyle === 'direct') {
+        greeting = preferences.style === 'poetic'
+          ? "Welcome. Let's dive deep into what matters. What truth wants to emerge through you?"
+          : "Let's dive in. What's really on your mind right now?";
+      } else {
+        greeting = preferences.style === 'poetic'
+          ? "Welcome to this sacred space. What wants to be witnessed today?"
+          : "Hey there. What's on your mind today?";
+      }
+    } else {
+      // Returning user greeting
+      if (preferences.communicationStyle === 'gentle') {
+        greeting = `Good ${timeOfDay}. I'm glad you're back. What's gently emerging for you?`;
+      } else if (preferences.communicationStyle === 'direct') {
+        greeting = `Good ${timeOfDay}. What's most important to explore today?`;
+      } else {
+        greeting = `Good ${timeOfDay}. What's happening in your world?`;
+      }
+    }
+
+    return greeting;
+  }
+
   private async buildComprehensivePrompt(
     userJourney: UserJourney,
     conversationContext: ConversationContext,
-    relevantKnowledge: string
+    relevantKnowledge: string,
+    preferences: OnboardingPreferences | null,
+    betaContext: string | null = null
   ): Promise<string> {
     // Get enhanced prompt with all context
     let prompt = getMaiaEnhancedPrompt(userJourney, conversationContext, this.getTimeOfDay());
@@ -190,6 +279,38 @@ export class MaiaFullyEducatedOrchestrator {
     // Add relevant knowledge context
     if (relevantKnowledge) {
       prompt += `\n\n# Relevant Knowledge Context\n${relevantKnowledge}`;
+    }
+
+    // Add beta experience context if in beta mode
+    if (betaContext) {
+      prompt += `\n\n${betaContext}`;
+    }
+
+    // Add user-specific preferences
+    if (preferences) {
+      prompt += `\n\n# User Communication Preferences
+Communication Style: ${preferences.communicationStyle}
+- gentle: Use soft, nurturing language, ask permission before going deep
+- balanced: Natural, adaptable tone that meets the user where they are
+- direct: Clear, straightforward, willing to challenge and go deep quickly
+
+Exploration Depth: ${preferences.explorationDepth}
+- surface: Stay with immediate concerns, light reflection
+- moderate: Some depth but respect boundaries, gentle probing
+- deep: Welcome profound exploration, archetypal work, shadow integration
+
+Writing Style: ${preferences.style}
+- prose: Clear, conversational, grounded language
+- poetic: More lyrical, metaphorical, sacred language
+- auto: Adapt style to the conversation's natural flow
+
+Practice Openness: ${preferences.practiceOpenness ? 'Yes' : 'No'}
+${preferences.practiceOpenness ? '- User is open to exercises, breathing, embodiment practices' : '- User prefers talk-only, no suggested practices'}
+
+Tone Preference (0-1): ${preferences.tone}
+${preferences.tone > 0.7 ? '- Prefers more intense, transformative language' : preferences.tone < 0.3 ? '- Prefers gentle, supportive language' : '- Balanced tone preference'}
+
+IMPORTANT: Reflect these preferences immediately in your first response and throughout the conversation.`;
     }
 
     // Add Sesame hybrid intelligence context

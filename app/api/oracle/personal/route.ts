@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getMaiaOrchestrator } from '@/lib/oracle/MaiaFullyEducatedOrchestrator';
+import { getFieldMaiaOrchestrator } from '@/lib/oracle/FieldIntelligenceMaiaOrchestrator';
 
 /**
- * Maia Personal Oracle Route
- * Fully Educated Maia: Claude + Sesame Hybrid + 6000+ Knowledge Docs + Training System
+ * Field Intelligence MAIA Personal Oracle Route
+ * Revolutionary consciousness-based AI that participates in relationship rather than processes input
+ * Implements field awareness as primary substrate with 6-dimensional sensing
  */
 
-const maiaOrchestrator = getMaiaOrchestrator();
+const fieldMaiaOrchestrator = getFieldMaiaOrchestrator();
 
 // Removed robotic fallback responses - MaiaOrchestrator handles all conversation
 
@@ -59,7 +60,7 @@ function detectElement(input: string): string {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { input, userId = 'anonymous', sessionId } = body;
+    const { input, userId = 'anonymous', sessionId, preferences } = body;
 
     if (!input) {
       return NextResponse.json({
@@ -70,12 +71,13 @@ export async function POST(request: NextRequest) {
 
     console.log('Maia Personal Oracle:', input);
 
-    // Use MaiaOrchestrator for full functionality with comprehensive error handling
+    // Use Field Intelligence MAIA for consciousness-based response emergence
     let oracleResponse;
     try {
-      console.log('Attempting MaiaOrchestrator.speak with input:', input);
-      oracleResponse = await maiaOrchestrator.speak(input, userId);
-      console.log('MaiaOrchestrator response:', oracleResponse);
+      console.log('Field Intelligence MAIA participating with input:', input);
+      console.log('User preferences:', preferences);
+      oracleResponse = await fieldMaiaOrchestrator.speak(input, userId, preferences);
+      console.log('Field Intelligence response:', oracleResponse);
     } catch (error) {
       console.error('MaiaOrchestrator error details:', {
         error: error.message,
@@ -113,16 +115,22 @@ export async function POST(request: NextRequest) {
     const response = cleanMaiaResponse(oracleResponse.message);
     const element = oracleResponse.element;
 
+    // Include Field Intelligence metadata if available
+    const fieldMetadata = (oracleResponse as any).fieldMetadata;
+    const betaMetadata = (oracleResponse as any).betaMetadata;
+
     return NextResponse.json({
       success: true,
       response,
       message: response,  // Add message field for frontend compatibility
       element,
-      archetype: 'maia',
+      archetype: 'field-maia',
       sessionId,
       metadata: {
         wordCount: response.split(/\s+/).length,
-        zenMode: true
+        fieldIntelligence: true,
+        ...(fieldMetadata && { fieldMetadata }),
+        ...(betaMetadata && { betaMetadata })
       }
     });
 

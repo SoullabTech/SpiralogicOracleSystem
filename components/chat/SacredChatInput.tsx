@@ -8,6 +8,8 @@ import VoiceRecorder from '../VoiceRecorder';
 interface SacredChatInputProps {
   onSendMessage: (message: string, isJournal?: boolean) => void;
   onVoiceMessage?: (transcript: string, audioUrl?: string) => void;
+  onFileUpload?: (files: FileList | null) => void;
+  onOpenJournal?: () => void;
   disabled?: boolean;
   placeholder?: string;
   maxLength?: number;
@@ -52,6 +54,8 @@ const rippleVariants = {
 export default function SacredChatInput({
   onSendMessage,
   onVoiceMessage,
+  onFileUpload,
+  onOpenJournal,
   disabled = false,
   placeholder = "Offer your reflection...",
   maxLength = 4000,
@@ -68,6 +72,7 @@ export default function SacredChatInput({
   const [showRipple, setShowRipple] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-resize textarea with golden ratio constraints
   const adjustTextareaHeight = useCallback(() => {
@@ -227,15 +232,32 @@ export default function SacredChatInput({
               <BookOpen className="w-5 h-5" />
             </motion.button>
 
+            {/* Open Full Journal Modal (if provided) */}
+            {onOpenJournal && (
+              <motion.button
+                variants={buttonVariants}
+                initial="idle"
+                whileHover="hover"
+                whileTap="tap"
+                onClick={onOpenJournal}
+                disabled={disabled}
+                className="p-3 rounded-xl bg-neutral-800/60 border border-neutral-700/50 text-neutral-400 hover:border-amber-400/30 hover:text-amber-400 transition-all"
+                title="Open journal workspace"
+              >
+                <Sparkles className="w-5 h-5" />
+              </motion.button>
+            )}
+
             {/* File Upload */}
             <motion.button
               variants={buttonVariants}
               initial="idle"
               whileHover="hover"
               whileTap="tap"
+              onClick={() => fileInputRef.current?.click()}
               disabled={disabled}
               className="p-3 rounded-xl bg-neutral-800/60 border border-neutral-700/50 text-neutral-400 hover:border-amber-400/30 hover:text-amber-400 transition-all"
-              title="Upload files"
+              title="Upload journal entries, transcripts, or documents"
             >
               <Upload className="w-5 h-5" />
             </motion.button>
@@ -426,6 +448,22 @@ export default function SacredChatInput({
           </AnimatePresence>
         </motion.div>
       </motion.div>
+
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept=".txt,.md,.pdf,.doc,.docx,.mp3,.wav,.m4a,.json,.csv"
+        className="hidden"
+        onChange={(e) => {
+          if (onFileUpload) {
+            onFileUpload(e.target.files);
+            // Reset the input so the same file can be uploaded again
+            e.target.value = '';
+          }
+        }}
+      />
     </div>
   );
 }
