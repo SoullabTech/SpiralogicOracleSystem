@@ -223,7 +223,7 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
   ): Promise<EmergentResponse> {
 
     // If safety requires intervention, blend with field awareness
-    if (safetyAssessment.risk_level.value >= RiskLevels.CONCERN.value) {
+    if (safetyAssessment.risk_level === RiskLevel.CONCERN || safetyAssessment.risk_level === RiskLevel.HIGH || safetyAssessment.risk_level === RiskLevel.CRITICAL) {
 
       // Field-aware safety response for sacred/liminal states
       if (fieldState.sacredMarkers.liminal_quality > 0.7) {

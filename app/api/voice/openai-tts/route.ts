@@ -23,9 +23,9 @@ interface MayaVoiceConfig {
 // Pronunciation: Smooth, soft articulation - slightly elongated vowels for ease and flow
 // Pauses: Thoughtful pauses between insights - space for wisdom to settle naturally
 const MAYA_VOICE_CONFIG: MayaVoiceConfig = {
-  voice: 'alloy',     // Soft, serene voice with Oracle-like depth
-  speed: 0.88,        // Slower, more tranquil pacing for peaceful delivery
-  model: 'tts-1-hd'   // Highest quality for nuanced, serene wisdom
+  voice: 'alloy',     // CRITICAL: Must be 'alloy' voice - warm, knowing, maternal
+  speed: 0.95,        // Natural conversational pace (was too slow at 0.88)
+  model: 'tts-1-hd'   // HD quality for clear, natural voice
 };
 
 /**
@@ -76,11 +76,11 @@ export async function POST(request: NextRequest) {
     // Clean the text for natural speech
     const cleanedText = cleanTextForSpeech(text);
 
-    // Use provided settings or defaults, including prosody adjustments
+    // ALWAYS use Alloy voice, allow speed adjustments only
     const config = {
       ...MAYA_VOICE_CONFIG,
-      ...(speed && { speed }),
-      ...(voice && { voice })
+      ...(speed && { speed })
+      // NEVER override voice - always use Alloy
     };
 
     // Apply prosody adjustments if provided
@@ -100,20 +100,20 @@ export async function POST(request: NextRequest) {
         text.toLowerCase().includes('feel') ||
         text.toLowerCase().includes('heart') ||
         text.toLowerCase().includes('soul')) {
-      config.speed = 0.85; // Very gentle for emotional/spiritual moments
+      config.speed = 0.92; // Gentle but not too slow
     } else if (text.toLowerCase().includes('choice') ||
                text.toLowerCase().includes('path') ||
                text.toLowerCase().includes('already know') ||
                text.toLowerCase().includes('truth')) {
-      config.speed = 0.87; // Slower for profound wisdom
+      config.speed = 0.93; // Thoughtful but conversational
     } else if (text.toLowerCase().includes('dear') ||
                text.toLowerCase().includes('sweetheart') ||
                text.toLowerCase().includes('child')) {
-      config.speed = 0.89; // Warm, serene comfort
+      config.speed = 0.95; // Warm and natural
     } else if (text.toLowerCase().includes('transition') ||
                text.toLowerCase().includes('becoming') ||
                text.toLowerCase().includes('transform')) {
-      config.speed = 0.86; // Measured pace for transformative insights
+      config.speed = 0.94; // Clear and present
     }
 
     console.log('Generating speech with OpenAI TTS:', {

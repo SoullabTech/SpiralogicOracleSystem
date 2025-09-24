@@ -90,8 +90,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
   // Optimized timing for natural conversation flow
-  const SILENCE_THRESHOLD = 2000;  // Reduced from 3000 for faster response
-  const SMART_THRESHOLD = 1200;    // Reduced from 1500 for quicker detection
+  const SILENCE_THRESHOLD = 1800;  // Further reduced for even faster response
+  const SMART_THRESHOLD = 1000;    // Quick detection for natural conversation
   const CONTEMPLATION_THRESHOLD = 10000;
 
   // Initialize audio context and analyzer
@@ -348,8 +348,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         message: event.message,
         timeStamp: event.timeStamp
       });
-      // Auto-restart on ALL errors (including aborted) to maintain continuous listening
-      if (!isPausedForMaya && enabled) {
+      // Auto-restart on ALL errors to maintain continuous listening
+      if (!isPausedForMaya && enabled && !isMuted) {
         // Don't auto-restart on 'aborted' - this usually means another instance is trying to start
         setTimeout(() => {
           if (recognitionRef.current && isListening && !isPausedForMaya && !isStartingRef.current) {
@@ -645,7 +645,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
             }
           }
         }
-      }, 1500); // FIXED: 1.5 second delay prevents voice cutoffs while allowing natural flow
+      }, 500); // Reduced to 500ms for faster response after Maya speaks
     }
   }, [isMayaSpeaking, isListening, enabled, isPausedForMaya, isMuted, toggleListening]);
 
