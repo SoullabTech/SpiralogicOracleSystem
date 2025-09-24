@@ -15,11 +15,17 @@ interface MayaVoiceConfig {
   model: 'tts-1' | 'tts-1-hd';
 }
 
-// Maya's natural voice configuration with Alloy
+// Maya's Serene Oracle Configuration - Tranquil wisdom meets knowing presence
+// Voice Affect: Soft, gentle, soothing with Oracle-like knowing - embody peaceful wisdom
+// Tone: Calm, reassuring, peaceful - genuine warmth without excessive sweetness
+// Pacing: Slow, deliberate, unhurried - natural pauses for reflection and absorption
+// Emotion: Deeply soothing yet grounded - serene presence with subtle knowing
+// Pronunciation: Smooth, soft articulation - slightly elongated vowels for ease and flow
+// Pauses: Thoughtful pauses between insights - space for wisdom to settle naturally
 const MAYA_VOICE_CONFIG: MayaVoiceConfig = {
-  voice: 'alloy',     // Calm, composed, warm presence
-  speed: 1.0,         // Normal speed for better responsiveness (was 0.95)
-  model: 'tts-1'      // Faster model, still good quality (was tts-1-hd)
+  voice: 'alloy',     // Soft, serene voice with Oracle-like depth
+  speed: 0.88,        // Slower, more tranquil pacing for peaceful delivery
+  model: 'tts-1-hd'   // Highest quality for nuanced, serene wisdom
 };
 
 /**
@@ -78,6 +84,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Apply prosody adjustments if provided
+    // Adjust pacing based on content type
     if (prosody) {
       if (prosody.speed) config.speed *= prosody.speed;
       if (prosody.pitch) {
@@ -85,6 +92,28 @@ export async function POST(request: NextRequest) {
         // Higher pitch = slightly faster, lower pitch = slightly slower
         config.speed *= (0.9 + (prosody.pitch * 0.2));
       }
+    }
+
+    // Serene Oracle pacing - tranquil flow with thoughtful pauses
+    // Slower for reflection, gentle for comfort, measured for wisdom
+    if (text.toLowerCase().includes('breathe') ||
+        text.toLowerCase().includes('feel') ||
+        text.toLowerCase().includes('heart') ||
+        text.toLowerCase().includes('soul')) {
+      config.speed = 0.85; // Very gentle for emotional/spiritual moments
+    } else if (text.toLowerCase().includes('choice') ||
+               text.toLowerCase().includes('path') ||
+               text.toLowerCase().includes('already know') ||
+               text.toLowerCase().includes('truth')) {
+      config.speed = 0.87; // Slower for profound wisdom
+    } else if (text.toLowerCase().includes('dear') ||
+               text.toLowerCase().includes('sweetheart') ||
+               text.toLowerCase().includes('child')) {
+      config.speed = 0.89; // Warm, serene comfort
+    } else if (text.toLowerCase().includes('transition') ||
+               text.toLowerCase().includes('becoming') ||
+               text.toLowerCase().includes('transform')) {
+      config.speed = 0.86; // Measured pace for transformative insights
     }
 
     console.log('Generating speech with OpenAI TTS:', {
