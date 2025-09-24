@@ -223,7 +223,7 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
   ): Promise<EmergentResponse> {
 
     // If safety requires intervention, blend with field awareness
-    if (safetyAssessment.risk_level === RiskLevel.CONCERN || safetyAssessment.risk_level === RiskLevel.HIGH || safetyAssessment.risk_level === RiskLevel.CRITICAL) {
+    if (safetyAssessment.risk_level.value >= 2) { // CONCERN or higher
 
       // Field-aware safety response for sacred/liminal states
       if (fieldState.sacredMarkers.liminal_quality > 0.7) {
@@ -318,18 +318,17 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
   private async performSafetyCheck(userId: string, input: string): Promise<SafetyResponse> {
     try {
       const sessionId = `field-session-${Date.now()}`;
-      return await this.safetyOrchestrator.process_message(userId, input, sessionId);
+      return await this.safetyOrchestrator.performSafetyCheck(input, userId);
     } catch (error) {
       console.error('Safety check error:', error);
       // Default safe response
       return {
-        risk_level: RiskLevel.SAFE,
-        message_to_user: null,
-        allow_continuation: true,
-        show_resources: false,
-        assessment_prompt: null,
-        dashboard_update: {},
-        escalation_required: false
+        safe: true,
+        risk_level: { value: 0, name: 'SAFE' },
+        confidence: 0.95,
+        flags: [],
+        suggestions: [],
+        message_to_user: null
       };
     }
   }
