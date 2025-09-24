@@ -14,7 +14,7 @@ import {
   OnboardingPreferences,
   MaiaResponse
 } from './MaiaFullyEducatedOrchestrator';
-import { SafetyOrchestrator, SafetyResponse, RiskLevels } from '../safety/SafetyOrchestrator';
+import { SafetyOrchestrator, SafetyResponse, RiskLevel } from '../safety/SafetyOrchestrator';
 import { betaExperienceManager, BetaExperiencePreferences } from '../beta/BetaExperienceManager';
 import {
   FieldAwareness,

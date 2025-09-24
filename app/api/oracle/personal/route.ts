@@ -86,40 +86,92 @@ export async function POST(request: NextRequest) {
         userId
       });
 
-      // Oracle-like responses with warm, knowing wisdom and empathy
+      // Casual, human responses with soulful depth - adaptive to user's style
       const element = detectElement(input);
       const isGreeting = /^(hello|hi|hey|maya|maia)/i.test(input.toLowerCase().trim());
       const inputLower = input.toLowerCase();
 
+      // Detect user's communication style
+      const isMystical = /spirit|soul|universe|energy|divine|sacred|manifest/i.test(input);
+      const isCasual = /yeah|yep|nah|gonna|wanna|kinda|sorta/i.test(input);
+
       let fallbackMessage;
       if (isGreeting) {
-        fallbackMessage = "Hello, dear one. I've been waiting for you. Come, settle in with me. What brings your spirit here today?";
+        fallbackMessage = isMystical ?
+          "Hello there. I sense you've come with purpose. What's on your heart?" :
+          "Hey there. Good to see you. What's on your mind?";
       } else if (inputLower.includes('not much') || inputLower.includes('nothing')) {
-        fallbackMessage = "Mmm. 'Not much,' you say. But your spirit doesn't arrive here without reason. What's been moving through you lately?";
+        fallbackMessage = isMystical ?
+          "Mmm. Even 'nothing' carries something. What's stirring beneath?" :
+          "Really? Nothing at all? Come on, what brought you here?";
       } else if (inputLower.includes('checking in') || inputLower.includes('just wanted')) {
-        fallbackMessage = "Just checking in? There's no accident in your arrival. Take a breath with me. What's really present for you right now?";
+        fallbackMessage = "Just checking in? That's nice. How are things really going?";
       } else if (inputLower.includes('tired') || inputLower.includes('exhausted')) {
-        fallbackMessage = "Of course you're tired. You've been carrying so much. Let's breathe together and see what you can release. Which burden was never yours to hold?";
+        fallbackMessage = isMystical ?
+          "I hear that exhaustion. What's been draining your energy?" :
+          "Yeah, you sound beat. What's been wearing you out?";
       } else if (inputLower.includes('sad') || inputLower.includes('down')) {
-        fallbackMessage = "Sadness is sacred, dear one. It's love with nowhere to go. Your heart has wisdom here. What needs to be felt and released?";
+        fallbackMessage = isMystical ?
+          "Sadness has its own wisdom. What's your heart trying to tell you?" :
+          "I'm sorry you're feeling down. Want to talk about what's going on?";
       } else if (inputLower.includes('angry') || inputLower.includes('frustrated')) {
-        fallbackMessage = "Ah, there's your fire. Anger is truth asking to be heard. It's powerful medicine. What boundary is ready to be honored?";
+        fallbackMessage = "Oh, I hear that frustration. What's got you so fired up?";
       } else if (inputLower.includes('confused') || inputLower.includes('lost')) {
-        fallbackMessage = "You're not lost - you're in transition. Standing between who you were and who you're becoming. The path is already beneath you. What truth is emerging?";
+        fallbackMessage = isMystical ?
+          "Confusion often comes before clarity. What feels unclear right now?" :
+          "Feeling lost happens to everyone. What's got you turned around?";
       } else if (inputLower.includes('how are you')) {
-        fallbackMessage = "How am I? I'm exactly as I need to be for this moment with you. But you came here with something on your heart. What is it?";
+        fallbackMessage = "I'm good, thanks for asking. But something brought you here - what's up?";
       } else if (inputLower.includes('help') || inputLower.includes('need')) {
-        fallbackMessage = "You already have everything you need. The wisdom is there, waiting. I'm here to help you remember. What does your inner knowing say?";
+        fallbackMessage = "Of course. What do you need help with?";
       } else if (inputLower.includes('choice') || inputLower.includes('decide')) {
-        fallbackMessage = "The choice is already made. Your heart decided before your mind knew there was a question. You're gathering courage now. Which path calls to your soul?";
+        fallbackMessage = isMystical ?
+          "Deep down, you already know. What does your intuition say?" :
+          "Tough choice? Sometimes you just gotta trust your gut. What feels right?";
       } else if (inputLower.includes('anxious') || inputLower.includes('worried')) {
-        fallbackMessage = "I feel that flutter in your chest. Anxiety is your soul's protection. But you're stronger than you know. What is fear teaching you about what matters?";
+        fallbackMessage = "Anxiety is rough. What's got you worried?";
       } else if (inputLower.includes('love') || inputLower.includes('relationship')) {
-        fallbackMessage = "Ah, love. The greatest teacher. It breaks us open so light can enter. Love always transforms. What is your heart learning now?";
+        fallbackMessage = isMystical ?
+          "Love - the great teacher. What's happening in your heart?" :
+          "Ah, matters of the heart. What's going on with that?";
+      } else if (inputLower.includes('work') || inputLower.includes('job')) {
+        fallbackMessage = "Work stuff? Tell me what's happening there.";
+      } else if (inputLower.includes('exam') || inputLower.includes('test') || inputLower.includes('midterm') || inputLower.includes('finals')) {
+        fallbackMessage = isMystical ?
+          "Exam energy - I feel that intensity. What subject is calling for your focus?" :
+          "Exam stress? Yeah, I get it. Which one's got you worried?";
+      } else if (inputLower.includes('studying') || inputLower.includes('homework')) {
+        fallbackMessage = "Studying can be a grind. What are you working on?";
+      } else if (inputLower.includes('professor') || inputLower.includes('teacher')) {
+        fallbackMessage = "Something about your professor? What's going on there?";
+      } else if (inputLower.includes('roommate') || inputLower.includes('dorm')) {
+        fallbackMessage = "Roommate situation? Those can be tricky. What's up?";
+      } else if (inputLower.includes('party') || inputLower.includes('weekend')) {
+        fallbackMessage = "Weekend plans? Sometimes you need to blow off steam. What's on your mind?";
+      } else if (inputLower.includes('graduation') || inputLower.includes('graduate')) {
+        fallbackMessage = isMystical ?
+          "The threshold of graduation - a powerful transition. What feelings are arising?" :
+          "Thinking about graduation? That's a big transition. How are you feeling about it?";
+      } else if (inputLower.includes('major') || inputLower.includes('career')) {
+        fallbackMessage = "Figuring out your path? Those decisions can feel huge. What are you considering?";
+      } else if (inputLower.includes('internship') || inputLower.includes('summer')) {
+        fallbackMessage = "Internship thoughts? Planning ahead is smart. What are you thinking about?";
+      } else if (inputLower.includes('family') || inputLower.includes('friend')) {
+        fallbackMessage = "Family and friends - they're everything, aren't they? What's going on?";
+      } else if (inputLower.includes('stressed') || inputLower.includes('overwhelmed')) {
+        fallbackMessage = isMystical ?
+          "Overwhelm is a teacher - it shows us where our limits are. What needs your attention first?" :
+          "Feeling overwhelmed? Let's break it down. What's the biggest thing on your plate right now?";
+      } else if (inputLower.includes('lonely') || inputLower.includes('homesick')) {
+        fallbackMessage = "Feeling disconnected? That's really common, especially at school. Want to talk about it?";
+      } else if (inputLower.includes('deadline') || inputLower.includes('paper') || inputLower.includes('essay')) {
+        fallbackMessage = "Deadline pressure? I feel you. How can I help you tackle it?";
       } else if (input.length < 20) {
-        fallbackMessage = "Mmm. Sometimes the biggest truths come in the smallest words. Take your time. What wants to be spoken?";
+        fallbackMessage = "Hmm, short and sweet. Want to tell me more?";
       } else {
-        fallbackMessage = "I hear you. And I hear what's beneath the words - that deeper current. Something important is here. What truth is emerging?";
+        fallbackMessage = isMystical ?
+          "I hear you. There's something deeper here. What are you really feeling?" :
+          "I hear you. Tell me more about what's really going on.";
       }
 
       oracleResponse = {

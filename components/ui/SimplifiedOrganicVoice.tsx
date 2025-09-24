@@ -22,9 +22,9 @@ interface SimplifiedOrganicVoiceProps {
 }
 
 // Silence detection thresholds (in milliseconds)
-const SMART_THRESHOLD = 2000;        // Complete sentences with punctuation (2 seconds)
-const SILENCE_THRESHOLD = 2500;      // Normal conversation pause (2.5 seconds)
-const CONTEMPLATION_THRESHOLD = 5000; // Extended pause for deep thought (5 seconds)
+const SMART_THRESHOLD = 1200;        // Complete sentences with punctuation (1.2 seconds)
+const SILENCE_THRESHOLD = 2000;      // Normal conversation pause (2 seconds)
+const CONTEMPLATION_THRESHOLD = 4000; // Extended pause for deep thought (4 seconds)
 
 // Sacred geometry sparkle generation
 const generateSparkles = (count: number) => {
@@ -89,9 +89,9 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
-  // TEMPORARILY USE FIXED TIMING
-  const SILENCE_THRESHOLD = 3000;
-  const SMART_THRESHOLD = 1500;
+  // Optimized timing for natural conversation flow
+  const SILENCE_THRESHOLD = 2000;  // Reduced from 3000 for faster response
+  const SMART_THRESHOLD = 1200;    // Reduced from 1500 for quicker detection
   const CONTEMPLATION_THRESHOLD = 10000;
 
   // Initialize audio context and analyzer
@@ -348,8 +348,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         message: event.message,
         timeStamp: event.timeStamp
       });
-      // Auto-restart on certain errors only if not paused
-      if ((event.error === 'no-speech' || event.error === 'network') && !isPausedForMaya && enabled) {
+      // Auto-restart on ALL errors (including aborted) to maintain continuous listening
+      if (!isPausedForMaya && enabled) {
         // Don't auto-restart on 'aborted' - this usually means another instance is trying to start
         setTimeout(() => {
           if (recognitionRef.current && isListening && !isPausedForMaya && !isStartingRef.current) {
@@ -391,7 +391,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
               console.log('Speech recognition restarted');
               setTimeout(() => {
                 isStartingRef.current = false;
-              }, 1000);
+              }, 500); // Reduced for faster recovery
             } catch (e) {
               isStartingRef.current = false;
               console.log('Could not restart:', e);
@@ -632,7 +632,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
               console.log('✅ Voice recognition resumed after Maya finished');
               setTimeout(() => {
                 isStartingRef.current = false;
-              }, 1000);
+              }, 500); // Reduced for faster recovery
             }
           } catch (e) {
             isStartingRef.current = false;
