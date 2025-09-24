@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { HoloflowerCore } from '@/components/holoflower/HoloflowerCore';
 import { FloatingCheckIn } from '@/components/holoflower/FloatingCheckIn';
-import { BottomNavigation } from '@/components/holoflower/BottomNavigation';
+import { HoloflowerBottomNav } from '@/components/holoflower/HoloflowerBottomNav';
+import { InteractiveHoloflowerCheckIn } from '@/components/holoflower/InteractiveHoloflowerCheckIn';
+import { HoloflowerJournalFlow } from '@/components/holoflower/HoloflowerJournalFlow';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PetalVoicePreview } from '@/components/voice/PetalVoicePreview';
+import { Activity } from 'lucide-react';
 
 // Wild Petal draw functionality
 function WildPetalDraw({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -118,15 +121,31 @@ export default function HoloflowerExperience() {
   const [energyState, setEnergyState] = useState<'dense' | 'emerging' | 'radiant'>('emerging');
   const [showWildPetal, setShowWildPetal] = useState(false);
   const [selectedPetal, setSelectedPetal] = useState<any>(null);
+  const [showCheckIn, setShowCheckIn] = useState(false);
+  const [showJournal, setShowJournal] = useState(false);
+  const [checkInData, setCheckInData] = useState<any>(null);
 
-  // Listen for wild petal event from navigation
+  // Listen for events from navigation and check-in
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
     }
     const handleWildPetal = () => setShowWildPetal(true);
+    const handleCheckInComplete = (event: CustomEvent) => {
+      setCheckInData(event.detail);
+      setShowCheckIn(false);
+      setTimeout(() => {
+        setShowJournal(true);
+      }, 500);
+    };
+
     window.addEventListener('drawWildPetal', handleWildPetal);
-    return () => window.removeEventListener('drawWildPetal', handleWildPetal);
+    window.addEventListener('holoflowerCheckInComplete', handleCheckInComplete as EventListener);
+
+    return () => {
+      window.removeEventListener('drawWildPetal', handleWildPetal);
+      window.removeEventListener('holoflowerCheckInComplete', handleCheckInComplete as EventListener);
+    };
   }, []);
 
   // Welcome message on mount
@@ -157,8 +176,9 @@ export default function HoloflowerExperience() {
         onPetalSelect={handlePetalSelect}
       />
 
-      {/* Energy State Controls (overlay on Holoflower) */}
-      <div className="absolute top-[calc(env(safe-area-inset-top,0px)+3rem)] sm:top-4 left-4 z-20">
+      {/* Top Controls */}
+      <div className="absolute top-[calc(env(safe-area-inset-top,0px)+1rem)] sm:top-4 left-4 right-4 z-20 flex justify-between">
+        {/* Energy State Controls */}
         <div className="bg-black/60 backdrop-blur-lg rounded-xl p-2 sm:p-3">
           <p className="text-white/60 text-[10px] sm:text-xs mb-1 sm:mb-2">Your Energy</p>
           <div className="flex gap-1 sm:gap-2">
@@ -177,18 +197,49 @@ export default function HoloflowerExperience() {
             ))}
           </div>
         </div>
+
+        {/* Check-In Button */}
+        <button
+          onClick={() => setShowCheckIn(true)}
+          className="bg-purple-600/80 backdrop-blur-lg hover:bg-purple-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
+        >
+          <Activity className="w-4 h-4" />
+          <span className="hidden sm:inline">Daily Check-In</span>
+        </button>
       </div>
 
       {/* Floating Check-In Button */}
       <FloatingCheckIn />
 
-      {/* Bottom Navigation */}
-      <BottomNavigation />
+      {/* Bottom Navigation with Journal */}
+      <HoloflowerBottomNav />
 
       {/* Wild Petal Draw Modal */}
       <WildPetalDraw
         isOpen={showWildPetal}
         onClose={() => setShowWildPetal(false)}
+      />
+
+      {/* Interactive Check-In Panel */}
+      <InteractiveHoloflowerCheckIn
+        isOpen={showCheckIn}
+        onClose={() => setShowCheckIn(false)}
+        onSubmit={async (values) => {
+          console.log('Check-in values:', values);
+          // Visual feedback
+          setEnergyState('radiant');
+          setTimeout(() => setEnergyState('emerging'), 3000);
+        }}
+      />
+
+      {/* Journal Flow */}
+      <HoloflowerJournalFlow
+        isOpen={showJournal}
+        onClose={() => {
+          setShowJournal(false);
+          setCheckInData(null);
+        }}
+        checkInData={checkInData}
       />
 
       {/* Welcome overlay (shows briefly on load) */}
