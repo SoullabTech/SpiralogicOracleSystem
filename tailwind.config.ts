@@ -26,34 +26,57 @@ const config: Config = {
         "sacred-radial": "radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%)",
       },
       colors: {
+        // Spiralogic Oracle Primary Elemental Colors
+        spiralogic: {
+          fire: '#FF6B6B',
+          water: '#4ECDC4',
+          earth: '#95E77E',
+          air: '#A8DADC',
+          aether: '#9B5DE5',
+          dark: '#0A0E27',
+          'dark-secondary': '#1a1f3a',
+          light: '#F7F9FB',
+          gold: '#FFD700',
+        },
+
         // Earth Tone Sacred Palette - Based on Facet Colors
         sacred: {
           brown: "#B69A78",     // Base earth brown
-          tan: "#D4B896",       // Light tan 
+          tan: "#D4B896",       // Light tan
           sienna: "#C85450",    // Sacred sienna
           sage: "#7A9A65",      // Sacred sage green
         },
         // Elemental Earth Tones - From Facets
         fire: {
+          DEFAULT: '#FF6B6B',   // Spiralogic fire
           base: "#C85450",      // Fire facet red
           glow: "#E06B67",      // Fire glow
           shadow: "#A84440",    // Fire shadow
         },
         water: {
+          DEFAULT: '#4ECDC4',   // Spiralogic water
           base: "#6B9BD1",      // Water facet blue
           glow: "#83B3E9",      // Water glow
           shadow: "#5383B9",    // Water shadow
         },
         earth: {
+          DEFAULT: '#95E77E',   // Spiralogic earth
           base: "#7A9A65",      // Earth facet green
           glow: "#92B27D",      // Earth glow
           shadow: "#628253",    // Earth shadow
         },
         air: {
+          DEFAULT: '#A8DADC',   // Spiralogic air
           base: "#D4B896",      // Air facet tan
           glow: "#F0D4B2",      // Air glow
           shadow: "#B89A7A",    // Air shadow
         },
+        aether: {
+          DEFAULT: '#9B5DE5',   // Spiralogic aether
+        },
+        dark: '#0A0E27',
+        light: '#F7F9FB',
+        gold: '#FFD700',
         // Sacred Gold Accents - Premium Highlights
         gold: {
           divine: "#FFD700",    // Primary accent - Divine Gold
