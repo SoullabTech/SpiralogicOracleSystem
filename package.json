@@ -109,7 +109,7 @@
     "clsx": "^2.1.1",
     "critters": "^0.0.23",
     "formidable": "^3.5.1",
-    "framer-motion": "^10.16.16",
+    "framer-motion": "^12.23.21",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.303.0",
     "luxon": "^3.7.2",
