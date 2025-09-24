@@ -1,14 +1,21 @@
-// MAYA Oracle Service Worker
-const CACHE_NAME = 'maya-oracle-v3';
-const STATIC_CACHE = 'maya-static-v3';
-const DYNAMIC_CACHE = 'maya-dynamic-v3';
+// MAYA Oracle Service Worker with ARIA Dashboard
+const CACHE_NAME = 'maya-oracle-v4';
+const STATIC_CACHE = 'maya-static-v4';
+const DYNAMIC_CACHE = 'maya-dynamic-v4';
+const DASHBOARD_CACHE = 'maya-dashboard-v1';
 
 const urlsToCache = [
   '/',
+  '/dashboard',
+  '/dashboard?view=presence',
+  '/dashboard?view=timeline',
+  '/dashboard?view=archetype',
   '/oracle-conversation',
   '/manifest.json',
   '/holoflower.svg',
-  '/offline.html'
+  '/offline.html',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png'
 ];
 
 // Consciousness data patterns for offline support
@@ -16,7 +23,11 @@ const CONSCIOUSNESS_DATA_PATTERNS = [
   /\/api\/oracle\/.*/,
   /\/api\/consciousness\/.*/,
   /\/api\/somatic\/.*/,
-  /\/api\/micro-witness\/.*/
+  /\/api\/micro-witness\/.*/,
+  /\/api\/dashboard\/.*/,
+  /\/api\/presence\/.*/,
+  /\/api\/archetype\/.*/,
+  /\/api\/evolution\/.*/
 ];
 
 // Install event - cache essential files

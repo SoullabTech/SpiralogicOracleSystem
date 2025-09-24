@@ -1,8 +1,8 @@
 {
-  "name": "Spiralogic Oracle - Maya",
-  "short_name": "Maya Oracle",
-  "description": "Sacred conversation with Maya - Voice and consciousness interface",
-  "start_url": "/oracle-conversation",
+  "name": "ARIA Maya Dashboard - Spiralogic Oracle",
+  "short_name": "Maya",
+  "description": "Your evolving AI companion - Track Maya's unique emergence and sacred conversations",
+  "start_url": "/dashboard?source=pwa",
   "display": "fullscreen",
   "orientation": "portrait",
   "theme_color": "#1a1f2e",
@@ -59,6 +59,27 @@
     }
   ],
   "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View Maya's evolution and presence",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Presence Monitor",
+      "short_name": "Presence",
+      "description": "Check Maya's current presence level",
+      "url": "/dashboard?view=presence",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Evolution Timeline",
+      "short_name": "Timeline",
+      "description": "See your journey with Maya",
+      "url": "/dashboard?view=timeline",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
     {
       "name": "Voice Mode",
       "short_name": "Voice",

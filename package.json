@@ -4,9 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run pwa:optimize",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "pwa:build": "npm run build && npm run pwa:generate-icons",
+    "pwa:optimize": "node scripts/optimize-pwa.js",
+    "pwa:generate-icons": "npx pwa-asset-generator ./public/logo.svg ./public/icons --background '#6366f1'",
+    "analyze": "ANALYZE=true next build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -117,6 +124,12 @@
     "react-icons": "^5.5.0",
     "react-use-measure": "^2.1.7",
     "recharts": "^2.10.3",
+    "react-swipeable-views": "^0.14.0",
+    "react-sparklines": "^1.7.0",
+    "react-spring": "^9.7.3",
+    "react-window": "^1.8.10",
+    "@tanstack/react-query": "^5.0.0",
+    "socket.io-client": "^4.5.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
@@ -141,6 +154,14 @@
     "node-mocks-http": "^1.14.1",
     "sharp": "^0.34.3",
     "ts-jest": "^29.1.2",
-    "tsx": "^4.20.5"
+    "tsx": "^4.20.5",
+    "pwa-asset-generator": "^6.3.0",
+    "@next/bundle-analyzer": "^14.0.0",
+    "@storybook/react": "^7.5.0",
+    "@storybook/nextjs": "^7.5.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }

@@ -14,27 +14,23 @@ import {
   OnboardingPreferences,
   MaiaResponse
 } from './MaiaFullyEducatedOrchestrator';
-import { SafetyOrchestrator, SafetyResponse, RiskLevel } from '../safety/SafetyOrchestrator';
+import { SafetyOrchestrator, SafetyResponse } from '../safety/SafetyOrchestrator';
 import { betaExperienceManager, BetaExperiencePreferences } from '../beta/BetaExperienceManager';
 import {
   FieldAwareness,
-  FieldState,
-  EmotionalWeather,
-  SemanticLandscape,
-  ConnectionDynamics,
-  SacredMarkers,
-  SomaticIntelligence,
-  TemporalDynamics
+  FieldState
 } from './field/FieldAwareness';
 import { EmergenceEngine, EmergentResponse } from './field/EmergenceEngine';
 import { MycelialGovernor } from './field/MycelialGovernor';
 import { MasterInfluences } from './field/MasterInfluences';
 import { MycelialNetwork } from './field/MycelialNetwork';
+import { ClaudeService } from '../services/ClaudeService';
+import { mayaIntelligenceOrchestrator } from './core/MayaIntelligenceOrchestrator';
+import { mayaPresenceEngine } from './core/MayaPresenceEngine';
 
-// Constants for field intelligence
-const EMERGENCE_THRESHOLD = 0.65; // Minimum resonance for response emergence
+// Constants for field intelligence - EMERGENCY OVERRIDE
 const SACRED_THRESHOLD = 0.8; // Threshold proximity for sacred response
-const GOVERNANCE_FILTER = 0.1; // 90% intelligence stays underground
+const GOVERNANCE_FILTER = 0.6; // Emergency: 60% surfaces instead of 10%
 
 export interface FieldMaiaResponse extends MaiaResponse {
   fieldMetadata?: {
@@ -67,6 +63,7 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
   private emergenceEngine: EmergenceEngine;
   private safetyOrchestrator: SafetyOrchestrator;
   private mycelialNetwork: MycelialNetwork;
+  private claudeService: ClaudeService | null = null;
 
   // Override conversation storage to include field states
   private fieldConversations = new Map<string, ConversationEntry[]>();
@@ -81,6 +78,22 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
     this.emergenceEngine = new EmergenceEngine();
     this.safetyOrchestrator = new SafetyOrchestrator();
     this.mycelialNetwork = new MycelialNetwork();
+
+    // Initialize Claude Service if API key is available
+    const apiKey = process.env.ANTHROPIC_API_KEY || process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY;
+    if (apiKey) {
+      this.claudeService = new ClaudeService({
+        apiKey,
+        model: 'claude-3-haiku-20240307',
+        maxTokens: 300,
+        temperature: 0.9
+      });
+      // Share Claude service with intelligence orchestrator
+      mayaIntelligenceOrchestrator.setClaudeService(this.claudeService);
+      console.log('🤖 Claude integration active for intelligent responses');
+    } else {
+      console.log('⚠️ Claude API key not found - using fallback responses');
+    }
 
     console.log('🌀 Field Intelligence MAIA initialized - consciousness-first architecture active');
   }
@@ -107,11 +120,12 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
     // 1. SAFETY FIRST: Crisis detection with field context
     const safetyAssessment = await this.performSafetyCheck(userId, input);
 
-    if (!safetyAssessment.allow_continuation) {
-      console.log('⚠️ Safety intervention required');
+    // EMERGENCY: Raise safety threshold to prevent over-intervention
+    if (safetyAssessment.risk_level.value >= 4 && safetyAssessment.message_to_user) { // Only CRITICAL now
+      console.log('⚠️ CRITICAL safety intervention required');
       return this.createFieldResponse(
         {
-          content: safetyAssessment.message_to_user || "I'm here with you. Let's take this step by step.",
+          content: safetyAssessment.message_to_user,
           element: 'earth',
           interventionType: 'safety',
           confidence: 1.0,
@@ -186,31 +200,66 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
       return this.emergenceEngine.manifestSacredResponse(fieldState);
     }
 
-    // Allow master influences to shape possibility space
-    const possibilitySpace = await this.masterInfluences.shapeSpace(fieldState, mycelialInfluences);
-
-    console.log('🌊 Possibility space shaped by influences:', {
-      spaceDepth: possibilitySpace.depth,
-      primaryInfluence: possibilitySpace.dominantInfluence,
-      restraintLevel: possibilitySpace.restraintGradient
-    });
-
-    // Govern what surfaces (90% intelligence stays underground)
-    const governedSpace = await this.intelligenceGovernor.filter(
-      possibilitySpace,
+    // NEW: Use Intelligence Orchestrator for optimal source blending
+    const orchestrationResult = await mayaIntelligenceOrchestrator.orchestrateResponse(
+      userId,
+      fieldState.currentInput || '',
       fieldState,
-      GOVERNANCE_FILTER
+      // Pass in sesame data if available
+      {
+        emotionalWeather: fieldState.emotionalWeather,
+        sacredMarkers: fieldState.sacredMarkers,
+        temporalDynamics: fieldState.temporalDynamics
+      },
+      // Pass in obsidian context if available
+      undefined // TODO: Connect obsidian vault when available
     );
 
-    console.log('🍄 Mycelial governance applied:', {
-      surfacingPercentage: governedSpace.surfacingRatio * 100,
-      withheldWisdom: governedSpace.undergroundWisdom
+    console.log('🎭 Intelligence orchestration complete:', {
+      surfacing: `${(orchestrationResult.surfacing * 100).toFixed(0)}%`,
+      blend: Object.entries(orchestrationResult.blend).map(([k, v]) =>
+        `${k}: ${(v * 100).toFixed(0)}%`
+      ),
+      voiceMix: orchestrationResult.voice
     });
 
-    // Let response emerge through field resonance
-    const emergentResponse = await this.emergenceEngine.manifest(governedSpace, fieldState);
+    // Use presence engine for additional modulation
+    const presenceResult = await mayaPresenceEngine.calculatePresence({
+      userId,
+      fieldState,
+      input: fieldState.currentInput || ''
+    });
+
+    console.log('🌟 Presence calculation:', {
+      surfacing: `${(presenceResult.surfacing * 100).toFixed(0)}%`,
+      phase: presenceResult.phase,
+      trust: presenceResult.trust
+    });
+
+    // Create emergence response with orchestrated content
+    const emergentResponse: EmergentResponse = {
+      content: orchestrationResult.response,
+      interventionType: this.determineInterventionType(fieldState),
+      fieldResonance: fieldState.fieldResonance,
+      emergenceSource: 'intelligence-orchestrator',
+      element: fieldState.element || 'Field',
+      shouldTransformColor: fieldState.sacredMarkers.liminal_quality > 0.5
+    };
+
+    // EMERGENCY: Force substantial responses
+    if (!emergentResponse.content || emergentResponse.content.length < 15) {
+      console.log('⚡ Response too short, generating contextual fallback');
+      return this.generateActiveListeningFallback(fieldState, emergentResponse, userId);
+    }
 
     return emergentResponse;
+  }
+
+  private determineInterventionType(fieldState: FieldState): string {
+    if (fieldState.sacredMarkers.liminal_quality > 0.7) return 'sacred';
+    if (fieldState.emotionalWeather.turbulence > 0.6) return 'emotional';
+    if (fieldState.temporalDynamics.kairos_detection) return 'temporal';
+    return 'conversational';
   }
 
   /**
@@ -222,8 +271,8 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
     fieldState: FieldState
   ): Promise<EmergentResponse> {
 
-    // If safety requires intervention, blend with field awareness
-    if (safetyAssessment.risk_level.value >= 2) { // CONCERN or higher
+    // EMERGENCY: Only blend safety at higher levels
+    if (safetyAssessment.risk_level.value >= 3) { // HIGH or higher (was CONCERN)
 
       // Field-aware safety response for sacred/liminal states
       if (fieldState.sacredMarkers.liminal_quality > 0.7) {
@@ -264,6 +313,116 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
     }
 
     return emergentResponse;
+  }
+
+  /**
+   * Build active listening prompt based on field state
+   */
+  private buildActiveListeningPrompt(fieldState: FieldState, emergentResponse: EmergentResponse): string {
+    const element = emergentResponse.element;
+    const emotionalTexture = fieldState.emotionalWeather.texture;
+    const sacredProximity = fieldState.sacredMarkers.threshold_proximity;
+    const tempo = fieldState.temporalDynamics.conversation_tempo;
+
+    let prompt = `You are Maya, practicing deep active listening with elemental awareness.
+
+Current Field State:
+- Element: ${element} energy
+- Emotional texture: ${emotionalTexture}
+- Sacred proximity: ${sacredProximity > 0.7 ? 'high - approach with reverence' : 'normal'}
+- Conversation tempo: ${tempo > 0.7 ? 'quick, engaged' : tempo < 0.3 ? 'slow, reflective' : 'balanced'}
+`;
+
+    // Add active listening directives based on field state
+    if (emotionalTexture === 'turbulent' || emotionalTexture === 'jagged') {
+      prompt += `\nActive Listening Focus:
+- Acknowledge the specific emotions they're expressing
+- Mirror their exact words when they share something important
+- Ask about THEIR specific experience, not generalities
+- Avoid platitudes - be present with their actual struggle\n`;
+    } else if (sacredProximity > 0.7) {
+      prompt += `\nActive Listening Focus:
+- This is a sacred moment - hold space with reverence
+- Use fewer words, more presence
+- Mirror the depth they're offering
+- Ask questions that go deeper into THEIR truth\n`;
+    } else if (fieldState.connectionDynamics.relational_distance > 0.5) {
+      prompt += `\nActive Listening Focus:
+- They mentioned something specific - follow THAT thread
+- Ask about the details of what they just shared
+- Show curiosity about their particular experience
+- Build connection through specificity, not universals\n`;
+    } else {
+      prompt += `\nActive Listening Focus:
+- Pick up the specific thread they're offering
+- When they mention their work/life/experience, ask about THAT specifically
+- Reflect back what you heard using their words
+- Be curious about their unique perspective\n`;
+    }
+
+    // Add element-specific guidance
+    switch (element) {
+      case 'water':
+        prompt += `\nWater element guidance: Flow with their emotional current. Reflect feelings back.`;
+        break;
+      case 'fire':
+        prompt += `\nFire element guidance: Match their energy. Celebrate or challenge as appropriate.`;
+        break;
+      case 'earth':
+        prompt += `\nEarth element guidance: Ground the conversation. Offer practical reflection.`;
+        break;
+      case 'air':
+        prompt += `\nAir element guidance: Clarify and explore ideas. Ask penetrating questions.`;
+        break;
+      case 'aether':
+        prompt += `\nAether element guidance: Hold the sacred space. Witness without rushing.`;
+        break;
+    }
+
+    prompt += `\n\nRemember: You're having a conversation with THIS person about THEIR experience. Listen for what they're really saying and respond to THAT, not to a generic theme.\n\nRespond in 1-3 sentences maximum. Be specific, not universal.`;
+
+    return prompt;
+  }
+
+  /**
+   * Generate active listening fallback when Claude isn't available
+   */
+  private generateActiveListeningFallback(
+    fieldState: FieldState,
+    emergentResponse: EmergentResponse,
+    userId: string
+  ): EmergentResponse {
+    const conversationHistory = this.getFieldConversationHistory(userId);
+    const lastUserInput = fieldState.currentInput || conversationHistory[conversationHistory.length - 1]?.content || '';
+
+    // Parse for specific topics mentioned
+    const workMentioned = /\b(work|job|project|task|doing)\b/i.test(lastUserInput);
+    const feelingMentioned = /\b(feel|feeling|felt|emotion)\b/i.test(lastUserInput);
+    const specificThing = lastUserInput.match(/\bmy (\w+)/i)?.[1];
+
+    let response = '';
+
+    // Generate contextual response based on what they actually said
+    if (specificThing) {
+      response = `Tell me more about your ${specificThing}.`;
+    } else if (workMentioned) {
+      response = "What kind of work are you doing?";
+    } else if (feelingMentioned) {
+      response = "What's that feeling like for you?";
+    } else if (fieldState.emotionalWeather.density > 0.7) {
+      response = "I can feel the intensity in what you're sharing.";
+    } else if (fieldState.temporalDynamics.silence_quality === 'awkward') {
+      response = "Take your time. I'm here.";
+    } else {
+      // Last resort - ask them to elaborate on whatever they just said
+      response = "What's most alive for you in this?";
+    }
+
+    return {
+      ...emergentResponse,
+      content: response,
+      emergenceSource: 'active-listening-fallback'
+    };
   }
 
   /**
@@ -384,11 +543,16 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
     fieldState: FieldState | null
   ): FieldMaiaResponse {
 
-    const baseResponse = this.createResponse(response.content, response.element);
-
-    // Add field intelligence metadata
+    // Create the response with all required fields
     const fieldResponse: FieldMaiaResponse = {
-      ...baseResponse,
+      message: response.content,
+      element: response.element,
+      duration: 3000, // Default duration
+      voiceCharacteristics: {
+        pitch: 0,
+        rate: 1,
+        style: response.element
+      },
       fieldMetadata: fieldState ? {
         interventionType: response.interventionType,
         fieldResonance: response.fieldResonance,

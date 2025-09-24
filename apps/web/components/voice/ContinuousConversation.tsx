@@ -60,6 +60,33 @@ export const ContinuousConversation = forwardRef<ContinuousConversationRef, Cont
     isRecording
   }));
 
+  // Auto-restart listening when Maya stops speaking
+  useEffect(() => {
+    if (!isSpeaking && isListening && !isRecording && !isProcessing) {
+      // Maya stopped speaking, restart listening
+      console.log('🎤 Maya stopped speaking, restarting microphone...');
+      setTimeout(() => {
+        if (recognitionRef.current && isListening && !isRecording) {
+          try {
+            recognitionRef.current.start();
+          } catch (err) {
+            console.error('Error restarting recognition after speech:', err);
+            // Try again after a longer delay
+            setTimeout(() => {
+              if (recognitionRef.current && isListening && !isRecording) {
+                try {
+                  recognitionRef.current.start();
+                } catch (err2) {
+                  console.error('Error restarting recognition (retry):', err2);
+                }
+              }
+            }, 500);
+          }
+        }
+      }, 300); // Small delay to ensure audio context is ready
+    }
+  }, [isSpeaking, isListening, isRecording, isProcessing]);
+
   // Initialize Web Speech API
   const initializeSpeechRecognition = useCallback(() => {
     if (typeof window === 'undefined') return null;

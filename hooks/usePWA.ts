@@ -15,8 +15,27 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+interface ABTestVariant {
+  name: 'immediate' | 'delayed' | 'contextual';
+  triggerAfter?: number; // Number of interactions or sessions
+  contextTrigger?: string; // Specific event that triggers prompt
+}
+
+interface AnalyticsData {
+  variant: ABTestVariant['name'];
+  impressions: number;
+  dismissals: number;
+  installs: number;
+  sessionCount: number;
+  interactionCount: number;
+  firstSeen: number;
+  lastSeen: number;
+}
+
 export const usePWA = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [abVariant, setABVariant] = useState<ABTestVariant | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [pwaState, setPWAState] = useState<PWAState>({
     isInstallable: false,
     isInstalled: false,
@@ -26,6 +45,42 @@ export const usePWA = () => {
     canPrompt: false,
     platform: 'unknown'
   });
+
+  // Initialize A/B test variant and analytics
+  useEffect(() => {
+    const storedAnalytics = localStorage.getItem('pwa_analytics');
+    if (storedAnalytics) {
+      const data = JSON.parse(storedAnalytics) as AnalyticsData;
+      setAnalytics(data);
+
+      // Update session count if needed
+      const lastSeen = data.lastSeen;
+      const now = Date.now();
+      if (now - lastSeen > 30 * 60 * 1000) { // New session after 30 minutes
+        data.sessionCount++;
+        data.lastSeen = now;
+        localStorage.setItem('pwa_analytics', JSON.stringify(data));
+        trackEvent('new_session', { variant: data.variant, sessionCount: data.sessionCount });
+      }
+    } else {
+      // Assign A/B test variant
+      const variant = assignABVariant();
+      const newAnalytics: AnalyticsData = {
+        variant: variant.name,
+        impressions: 0,
+        dismissals: 0,
+        installs: 0,
+        sessionCount: 1,
+        interactionCount: 0,
+        firstSeen: Date.now(),
+        lastSeen: Date.now()
+      };
+      setABVariant(variant);
+      setAnalytics(newAnalytics);
+      localStorage.setItem('pwa_analytics', JSON.stringify(newAnalytics));
+      trackEvent('ab_variant_assigned', { variant: variant.name });
+    }
+  }, []);
 
   // Detect platform and PWA state
   useEffect(() => {
@@ -184,13 +239,108 @@ export const usePWA = () => {
     return null;
   }, []);
 
+  // Track user interaction for A/B testing
+  const trackInteraction = useCallback((interactionType: string) => {
+    if (!analytics) return;
+
+    const updated = { ...analytics, interactionCount: analytics.interactionCount + 1 };
+    setAnalytics(updated);
+    localStorage.setItem('pwa_analytics', JSON.stringify(updated));
+
+    trackEvent('user_interaction', {
+      type: interactionType,
+      variant: analytics.variant,
+      count: updated.interactionCount
+    });
+
+    // Check if we should show prompt based on variant rules
+    if (abVariant && shouldShowInstallPrompt()) {
+      setPWAState(prev => ({ ...prev, canPrompt: true }));
+    }
+  }, [analytics, abVariant]);
+
+  // Determine if install prompt should show based on A/B variant
+  const shouldShowInstallPrompt = useCallback(() => {
+    if (!analytics || !abVariant) return false;
+
+    const dismissed = localStorage.getItem('pwa-install-dismissed');
+    if (dismissed) {
+      const dismissedTime = parseInt(dismissed);
+      const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
+      if (daysSinceDismissed < 7) return false;
+    }
+
+    switch (abVariant.name) {
+      case 'immediate':
+        return analytics.sessionCount === 1;
+
+      case 'delayed':
+        return analytics.interactionCount >= (abVariant.triggerAfter || 3) ||
+               analytics.sessionCount >= 3;
+
+      case 'contextual':
+        // Check for meaningful moment
+        const milestone = localStorage.getItem('milestone_reached');
+        const trustLevel = localStorage.getItem('trust_level');
+        const novelArchetype = localStorage.getItem('novel_archetype');
+
+        return !!(milestone ||
+                 (trustLevel && parseInt(trustLevel) >= 70) ||
+                 novelArchetype);
+
+      default:
+        return false;
+    }
+  }, [analytics, abVariant]);
+
+  // Assign A/B test variant
+  const assignABVariant = (): ABTestVariant => {
+    const random = Math.random();
+    if (random < 0.33) {
+      return { name: 'immediate' };
+    } else if (random < 0.66) {
+      return { name: 'delayed', triggerAfter: 3 };
+    } else {
+      return { name: 'contextual', contextTrigger: 'milestone_reached' };
+    }
+  };
+
+  // Track analytics event
+  const trackEvent = (eventName: string, parameters: Record<string, any>) => {
+    // Google Analytics 4
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', eventName, {
+        event_category: 'PWA',
+        ...parameters
+      });
+    }
+
+    // Custom analytics endpoint
+    fetch('/api/analytics/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: eventName,
+        properties: parameters,
+        timestamp: Date.now()
+      })
+    }).catch(console.error);
+
+    console.log('[PWA Analytics]', eventName, parameters);
+  };
+
   return {
     ...pwaState,
     installPWA,
     dismissInstallPrompt,
-    shouldShowPrompt,
+    shouldShowPrompt: shouldShowInstallPrompt,
     getIOSInstallInstructions,
     registerServiceWorker,
-    isReady: true
+    trackInteraction,
+    analytics,
+    abVariant,
+    isReady: true,
+    installPrompt: deferredPrompt,
+    handleInstall: installPWA
   };
 };

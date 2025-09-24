@@ -442,7 +442,7 @@ class GroundingPresence implements FieldIntervention {
 
 export class EmergenceEngine {
   private interventions: FieldIntervention[];
-  private emergenceThreshold = 0.65;
+  private emergenceThreshold = 0.45; // Lowered from 0.65 to allow more diverse responses
 
   constructor() {
     this.interventions = [

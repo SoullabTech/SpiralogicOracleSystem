@@ -6,6 +6,7 @@
 
 import { FieldState } from './FieldAwareness';
 import { PossibilitySpace } from './MasterInfluences';
+import { emergencyGovernor } from './EmergencyGovernor';
 
 export interface GovernedSpace {
   surfacingRatio: number; // What percentage surfaces (typically 0.1 = 10%)
@@ -36,14 +37,21 @@ export class MycelialGovernor {
 
     console.log('🍄 Mycelial governance filtering possibility space');
 
-    // Calculate what percentage should surface based on field conditions
-    const surfacingRatio = this.calculateSurfacingRatio(
-      fieldState,
-      possibilitySpace,
-      governanceFilter
-    );
+    // EMERGENCY PATCH: Use new governor with floor protection
+    const emergencyResult = emergencyGovernor.calculateSurfacing(fieldState, possibilitySpace);
+    const surfacingRatio = emergencyResult.surfacingRatio;
 
-    console.log(`  Surfacing ratio: ${(surfacingRatio * 100).toFixed(1)}% will emerge`);
+    console.log('🚨 Emergency Governor Active:', {
+      surfacing: `${(surfacingRatio * 100).toFixed(0)}%`,
+      explanation: emergencyResult.explanation
+    });
+
+    // OLD SYSTEM (disabled - kept for reference):
+    // const surfacingRatio = this.calculateSurfacingRatio(
+    //   fieldState,
+    //   possibilitySpace,
+    //   governanceFilter
+    // );
 
     // Determine what stays underground
     const undergroundWisdom = this.determineUndergroundWisdom(
@@ -93,13 +101,13 @@ export class MycelialGovernor {
     possibilitySpace: PossibilitySpace,
     baseFilter: number
   ): number {
-    let ratio = baseFilter; // Start with base (typically 10%)
+    let ratio = Math.max(0.25, baseFilter); // Start with minimum 25% instead of 10%
 
     // Conditions that increase surfacing
 
     // Strong connection allows more to surface
     if (fieldState.connectionDynamics.resonance_frequency > 0.8) {
-      ratio *= 2; // Up to 20%
+      ratio *= 2; // Up to 50% now with higher base
     }
 
     // Kairos moments allow more emergence
@@ -121,19 +129,19 @@ export class MycelialGovernor {
 
     // Conditions that decrease surfacing
 
-    // Sacred thresholds require restraint
+    // Sacred thresholds still allow meaningful response
     if (fieldState.sacredMarkers.threshold_proximity > 0.8) {
-      ratio *= 0.3; // Only 3% surfaces
+      ratio *= 0.6; // 15% surfaces instead of 3%
     }
 
-    // High restraint gradient
+    // High restraint gradient - less severe
     if (possibilitySpace.restraintGradient > 0.8) {
-      ratio *= 0.4;
+      ratio *= 0.7; // Reduced penalty
     }
 
-    // Turbulent emotions need less input
+    // Turbulent emotions still need connection
     if (fieldState.emotionalWeather.texture === 'turbulent') {
-      ratio *= 0.5;
+      ratio *= 0.75; // Less restriction
     }
 
     // Confusion needs simplicity
@@ -141,12 +149,12 @@ export class MycelialGovernor {
       ratio *= 0.5;
     }
 
-    // Early relationship = less surfacing
+    // Early relationship = build trust with engagement
     if (fieldState.connectionDynamics.relational_distance > 0.7) {
-      ratio *= 0.4;
+      ratio *= 0.8; // Much less restriction to build connection
     }
 
-    return Math.max(0.01, Math.min(0.5, ratio)); // Between 1% and 50%
+    return Math.max(0.15, Math.min(0.75, ratio)); // Between 15% and 75%
   }
 
   /**

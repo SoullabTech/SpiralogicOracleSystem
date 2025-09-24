@@ -27,6 +27,12 @@
     },
     "app/api/oracle/maya/route.ts": {
       "maxDuration": 30
+    },
+    "app/dashboard/page.tsx": {
+      "maxDuration": 10
+    },
+    "app/api/dashboard/[...route].ts": {
+      "maxDuration": 30
     }
   },
   "env": {
@@ -34,7 +40,9 @@
     "NEXT_PUBLIC_API_MODE": "production",
     "NEXT_PUBLIC_MOCK_SUPABASE": "false",
     "NEXT_PUBLIC_MEMORY_REFERENCES_ENABLED": "true",
-    "NEXT_PUBLIC_DISABLE_AUDIO_BANNER": "true"
+    "NEXT_PUBLIC_DISABLE_AUDIO_BANNER": "true",
+    "NEXT_PUBLIC_WS_URL": "wss://aria.ai/dashboard",
+    "NEXT_PUBLIC_PWA_ENABLED": "true"
   },
   "regions": ["iad1"],
   "github": {
@@ -45,6 +53,56 @@
     {
       "source": "/beta",
       "destination": "/beta-signup"
+    },
+    {
+      "source": "/dashboard/:path*",
+      "destination": "/dashboard"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        }
+      ]
+    },
+    {
+      "source": "/icons/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/dashboard",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
     }
   ]
 }
