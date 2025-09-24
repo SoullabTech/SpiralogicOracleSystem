@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Mic, Heart, BookOpen, Eye, Flower2 } from 'lucide-react';
+import { MessageSquare, Mic, Heart, BookOpen, Eye } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
-import { OrganicHoloflowerCheckIn } from './OrganicHoloflowerCheckIn';
 
 interface NavItem {
   id: string;
@@ -18,7 +17,6 @@ interface NavItem {
 export function HoloflowerBottomNav() {
   const router = useRouter();
   const pathname = usePathname();
-  const [showHoloflower, setShowHoloflower] = useState(false);
 
   const navItems: NavItem[] = [
     {
@@ -67,49 +65,13 @@ export function HoloflowerBottomNav() {
   };
 
   return (
-    <>
-      <motion.div
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 z-40 bg-black/90 backdrop-blur-xl border-t border-white/10"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
-      >
-        {/* Floating Holoflower Button */}
-        <motion.button
-          initial={{ scale: 0, y: 20 }}
-          animate={{ scale: 1, y: 0 }}
-          transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
-          whileHover={{ scale: 1.1, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setShowHoloflower(true)}
-          className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center group"
-          style={{
-            boxShadow: '0 8px 32px rgba(147,51,234,0.5), 0 0 80px rgba(147,51,234,0.3)',
-            zIndex: 100
-          }}
-        >
-          <Flower2 className="w-8 h-8 text-white drop-shadow-lg" />
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)'
-            }}
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.5, 0, 0.5]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut'
-            }}
-          />
-          <div className="absolute -top-10 bg-black/90 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap pointer-events-none border border-white/20">
-            🌸 Daily Check-In
-          </div>
-        </motion.button>
-
-        <div className="flex items-center justify-around px-2 py-3">
+    <motion.div
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      className="fixed bottom-0 left-0 right-0 z-40 bg-black/90 backdrop-blur-xl border-t border-white/10"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
+      <div className="flex items-center justify-around px-2 py-3">
         {navItems.map((item) => {
           const isActive = item.path && pathname === item.path;
 
@@ -173,19 +135,7 @@ export function HoloflowerBottomNav() {
             </motion.button>
           );
         })}
-        </div>
-      </motion.div>
-
-      {/* Organic Holoflower Check-in Modal */}
-      <OrganicHoloflowerCheckIn
-        isOpen={showHoloflower}
-        onClose={() => setShowHoloflower(false)}
-        onSubmit={(values, crystalFocus, insights) => {
-          console.log('Holoflower check-in completed:', { values, crystalFocus, insights });
-          // Trigger journal flow or other actions
-          window.dispatchEvent(new CustomEvent('holoflowerCheckInComplete', { detail: insights }));
-        }}
-      />
-    </>
+      </div>
+    </motion.div>
   );
 }
