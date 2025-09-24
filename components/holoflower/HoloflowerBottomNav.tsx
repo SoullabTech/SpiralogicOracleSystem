@@ -76,17 +76,19 @@ export function HoloflowerBottomNav() {
       >
         {/* Floating Holoflower Button */}
         <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
+          initial={{ scale: 0, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
+          whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowHoloflower(true)}
-          className="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full shadow-xl flex items-center justify-center group z-50"
+          className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center group"
           style={{
-            boxShadow: '0 4px 20px rgba(147,51,234,0.4), 0 0 40px rgba(147,51,234,0.2)'
+            boxShadow: '0 8px 32px rgba(147,51,234,0.5), 0 0 80px rgba(147,51,234,0.3)',
+            zIndex: 100
           }}
         >
-          <Flower2 className="w-7 h-7 text-white" />
+          <Flower2 className="w-8 h-8 text-white drop-shadow-lg" />
           <motion.div
             className="absolute inset-0 rounded-full"
             style={{
@@ -102,8 +104,8 @@ export function HoloflowerBottomNav() {
               ease: 'easeInOut'
             }}
           />
-          <div className="absolute -top-8 bg-black/90 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-            Daily Check-In
+          <div className="absolute -top-10 bg-black/90 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap pointer-events-none border border-white/20">
+            🌸 Daily Check-In
           </div>
         </motion.button>
 
