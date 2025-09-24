@@ -14,7 +14,7 @@ import {
   OnboardingPreferences,
   MaiaResponse
 } from './MaiaFullyEducatedOrchestrator';
-import { SafetyOrchestrator, SafetyResponse, RiskLevel } from '../safety/SafetyOrchestrator';
+import { SafetyOrchestrator, SafetyResponse, RiskLevels } from '../safety/SafetyOrchestrator';
 import { betaExperienceManager, BetaExperiencePreferences } from '../beta/BetaExperienceManager';
 import {
   FieldAwareness,
@@ -223,7 +223,7 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
   ): Promise<EmergentResponse> {
 
     // If safety requires intervention, blend with field awareness
-    if (safetyAssessment.risk_level.value >= RiskLevel.CONCERN.value) {
+    if (safetyAssessment.risk_level.value >= RiskLevels.CONCERN.value) {
 
       // Field-aware safety response for sacred/liminal states
       if (fieldState.sacredMarkers.liminal_quality > 0.7) {

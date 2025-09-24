@@ -3,6 +3,38 @@
  * Coordinates safety checks across the platform
  */
 
+export enum RiskLevel {
+  SAFE = 'SAFE',
+  LOW = 'LOW',
+  CONCERN = 'CONCERN',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL'
+}
+
+export interface RiskLevelValue {
+  value: number;
+  name: string;
+}
+
+export const RiskLevels: Record<string, RiskLevelValue> = {
+  SAFE: { value: 0, name: 'SAFE' },
+  LOW: { value: 1, name: 'LOW' },
+  CONCERN: { value: 2, name: 'CONCERN' },
+  HIGH: { value: 3, name: 'HIGH' },
+  CRITICAL: { value: 4, name: 'CRITICAL' }
+};
+
+export interface SafetyResponse {
+  safe: boolean;
+  risk_level: RiskLevelValue;
+  confidence: number;
+  flags?: string[];
+  suggestions?: string[];
+  message_to_user?: string;
+  assessment_prompt?: string;
+  metadata?: Record<string, any>;
+}
+
 export interface SafetyContext {
   userId?: string;
   sessionId?: string;
@@ -25,13 +57,44 @@ export class SafetyOrchestrator {
     low: 0.3
   };
 
-  async assessSafety(context: SafetyContext): Promise<SafetyResult> {
-    // Basic safety assessment logic
-    const result: SafetyResult = {
+  async performSafetyCheck(content: string, userId?: string): Promise<SafetyResponse> {
+    // Perform comprehensive safety assessment
+    const result: SafetyResponse = {
       safe: true,
+      risk_level: RiskLevels.SAFE,
       confidence: 0.95,
       flags: [],
       suggestions: []
+    };
+
+    // Check for crisis indicators
+    if (content) {
+      const crisisKeywords = ['emergency', 'crisis', 'urgent', 'harm', 'suicide', 'kill'];
+      const contentLower = content.toLowerCase();
+
+      for (const keyword of crisisKeywords) {
+        if (contentLower.includes(keyword)) {
+          result.risk_level = RiskLevels.CONCERN;
+          result.confidence = 0.7;
+          result.flags?.push('potential-crisis');
+          result.message_to_user = "I notice you may be going through something difficult. I'm here to listen and support you. If you're in immediate danger, please reach out to a crisis helpline or emergency services.";
+          result.assessment_prompt = "Would you like to talk about what you're experiencing?";
+        }
+      }
+    }
+
+    return result;
+  }
+
+  async assessSafety(context: SafetyContext): Promise<SafetyResult> {
+    // Legacy method for backward compatibility
+    const safetyResponse = await this.performSafetyCheck(context.content || '', context.userId);
+
+    const result: SafetyResult = {
+      safe: safetyResponse.safe,
+      confidence: safetyResponse.confidence,
+      flags: safetyResponse.flags,
+      suggestions: safetyResponse.suggestions
     };
 
     // Check for crisis indicators

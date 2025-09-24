@@ -1,7 +1,7 @@
 // Oracle Conversation - Voice-synchronized sacred dialogue
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Paperclip, X } from 'lucide-react';
+import { Paperclip, X, Flower2 } from 'lucide-react';
 import { SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/SimplifiedOrganicVoice';
 import { SacredHoloflower } from './sacred/SacredHoloflower';
 import { EnhancedVoiceMicButton } from './ui/EnhancedVoiceMicButton';
@@ -10,6 +10,7 @@ import AdaptiveVoiceMicButton from './ui/AdaptiveVoiceMicButton';
 import { EmergencyChatInterface } from './ui/EmergencyChatInterface';
 import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
 import { OrganicVoiceMaia } from './ui/OrganicVoiceMaia';
+import { OrganicHoloflowerCheckIn } from './holoflower/OrganicHoloflowerCheckIn';
 // import { VoiceActivatedMaia as SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/VoiceActivatedMaiaFixed'; // File doesn't exist
 import { AgentCustomizer } from './oracle/AgentCustomizer';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
@@ -152,6 +153,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [showCaptions, setShowCaptions] = useState(true); // Show text by default in voice mode
   const [showVoiceText, setShowVoiceText] = useState(true); // Toggle for showing text in voice mode
   const [showCustomizer, setShowCustomizer] = useState(false); // Settings panel
+  const [showHoloflowerCheckIn, setShowHoloflowerCheckIn] = useState(false); // Holoflower check-in modal
 
   // Initialize voice when in voice mode
   useEffect(() => {
@@ -665,6 +667,52 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   return (
     <div className="oracle-conversation min-h-screen bg-[#1a1f2e] overflow-hidden">
+      {/* Floating Holoflower Check-In Button */}
+      <motion.button
+        initial={{ scale: 0, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+        whileHover={{ scale: 1.1, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowHoloflowerCheckIn(true)}
+        className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center group z-50"
+        style={{
+          boxShadow: '0 8px 32px rgba(147,51,234,0.5), 0 0 80px rgba(147,51,234,0.3)'
+        }}
+      >
+        <Flower2 className="w-8 h-8 text-white drop-shadow-lg" />
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)'
+          }}
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.5, 0, 0.5]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
+        />
+        <div className="absolute -top-10 bg-black/90 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap pointer-events-none border border-white/20">
+          🌸 Daily Check-In
+        </div>
+      </motion.button>
+
+      {/* Organic Holoflower Check-In Modal */}
+      <OrganicHoloflowerCheckIn
+        isOpen={showHoloflowerCheckIn}
+        onClose={() => setShowHoloflowerCheckIn(false)}
+        onSubmit={(values, crystalFocus, insights) => {
+          console.log('Holoflower check-in completed:', { values, crystalFocus, insights });
+          // Can integrate with MAIA for personalized response
+          const checkInMessage = `I just completed my holoflower check-in with ${crystalFocus} focus. My coherence is at ${Math.round((insights?.coherence || 0) * 100)}%.`;
+          handleUserMessage(checkInMessage);
+        }}
+      />
+
       {/* Agent Customizer - Only show when settings clicked */}
       {showCustomizer && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
