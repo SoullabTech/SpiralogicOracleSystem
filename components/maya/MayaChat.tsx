@@ -110,6 +110,7 @@ export default function MayaChat() {
           onSend={sendMessage}
           disabled={isStreaming}
           placeholder="Share your thoughts..."
+          className="w-full"
         />
       </div>
       </div>

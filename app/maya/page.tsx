@@ -4,18 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
-// Dynamically import to avoid SSR issues
-const MayaChat = dynamic(
-  () => import('@/components/maya/MayaChat'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="text-amber-400">Loading Maia...</div>
-      </div>
-    )
-  }
-);
+// Import the correct Oracle Conversation interface
+import { OracleConversation } from '@/components/OracleConversation';
 
 export default function MayaPage() {
   const router = useRouter();
@@ -57,5 +47,6 @@ export default function MayaPage() {
     );
   }
 
-  return <MayaChat />;
+  const explorerId = sessionStorage.getItem('explorerId') || localStorage.getItem('explorerId') || 'anonymous';
+  return <OracleConversation sessionId={Date.now().toString()} userId={explorerId} />;
 }

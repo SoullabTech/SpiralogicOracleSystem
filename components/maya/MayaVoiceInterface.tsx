@@ -53,7 +53,7 @@ export default function MayaVoiceInterface() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-amber-900/20 to-gray-900">
       {/* Background Pattern */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.02]">
         <svg viewBox="0 0 1000 1000" className="w-full h-full">
@@ -219,7 +219,7 @@ export default function MayaVoiceInterface() {
                     isListening
                       ? 'bg-amber-500 shadow-lg shadow-amber-500/50'
                       : isSpeaking
-                      ? 'bg-purple-500 shadow-lg shadow-purple-500/50'
+                      ? 'bg-amber-500 shadow-lg shadow-amber-500/50'
                       : 'bg-gray-700 hover:bg-gray-600'
                   } ${isSpeaking ? 'cursor-not-allowed opacity-70' : ''}`}
                 >

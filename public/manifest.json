@@ -2,7 +2,7 @@
   "name": "ARIA Maya Dashboard - Spiralogic Oracle",
   "short_name": "Maya",
   "description": "Your evolving AI companion - Track Maya's unique emergence and sacred conversations",
-  "start_url": "/dashboard?source=pwa",
+  "start_url": "/?source=pwa",
   "display": "fullscreen",
   "orientation": "portrait",
   "theme_color": "#1a1f2e",
@@ -60,59 +60,17 @@
   ],
   "shortcuts": [
     {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "View Maya's evolution and presence",
-      "url": "/dashboard",
+      "name": "Maya Chat",
+      "short_name": "Maya",
+      "description": "Talk with Maya AI",
+      "url": "/maya",
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Presence Monitor",
-      "short_name": "Presence",
-      "description": "Check Maya's current presence level",
-      "url": "/dashboard?view=presence",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Evolution Timeline",
-      "short_name": "Timeline",
-      "description": "See your journey with Maya",
-      "url": "/dashboard?view=timeline",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Voice Mode",
-      "short_name": "Voice",
-      "description": "Talk with Maya using voice",
-      "url": "/oracle-conversation?mode=voice",
-      "icons": [{ "src": "/holoflower.svg", "sizes": "192x192" }]
-    },
-    {
-      "name": "Chat Mode",
-      "short_name": "Chat",
-      "description": "Text conversation with Maya",
-      "url": "/oracle-conversation?mode=chat",
-      "icons": [{ "src": "/holoflower.svg", "sizes": "192x192" }]
-    },
-    {
-      "name": "Beta Monitor",
-      "short_name": "Monitor",
-      "description": "Monitor beta users and protection systems",
-      "url": "/beta/monitor",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "User Activity",
-      "short_name": "Users",
-      "description": "Beta user activity dashboard",
-      "url": "/beta/monitor?tab=users",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Protection Monitor",
-      "short_name": "Protection",
-      "description": "Hallucination protection monitoring",
-      "url": "/beta/monitor?tab=protection",
+      "name": "Journal",
+      "short_name": "Journal",
+      "description": "Your soul journal",
+      "url": "/journal",
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ],
