@@ -1,4 +1,4 @@
-# Spiralogic "Midnight Amber" Design System
+# Spiralogic "AIN Amber" Design System
 
 ## Core Principles
 - Deep naval sophistication meets golden warmth
@@ -68,4 +68,4 @@
 - Dynamic imports for performance
 - Server/client component separation
 
-This design system represents Spiralogic's unique brand identity - neither mystical purple nor stark Tesla minimalism, but a sophisticated balance of depth and warmth.
+The AIN Amber design system represents Spiralogic's unique brand identity - neither mystical purple nor stark Tesla minimalism, but a sophisticated balance of depth and warmth.
