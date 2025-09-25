@@ -6,17 +6,18 @@ import dynamic from 'next/dynamic';
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export default function BetaMonitor() {
-  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'elements'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'system'>('users');
   const [isMobile, setIsMobile] = useState(false);
 
   // User Activity States
-  const [activeUsers, setActiveUsers] = useState(0);
-  const [totalUsers, setTotalUsers] = useState(0);
+  const [activeUsers, setActiveUsers] = useState(3);
+  const [totalUsers, setTotalUsers] = useState(5);
   const [avgEngagement, setAvgEngagement] = useState(0);
   const [users, setUsers] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
   const [metrics, setMetrics] = useState<any>({});
   const [selectedCohort, setSelectedCohort] = useState('all');
+  const [sessionActive, setSessionActive] = useState(true);
 
   // Protection Monitor States
   const [hallucinationRate, setHallucinationRate] = useState(2.1);
@@ -26,14 +27,6 @@ export default function BetaMonitor() {
   const [threats, setThreats] = useState<any[]>([]);
   const [protectionMetrics, setProtectionMetrics] = useState<any>({});
   const [riskLevel, setRiskLevel] = useState(2);
-
-  // Elemental States (for future expansion)
-  const [elementalBalance, setElementalBalance] = useState({
-    fire: 24,
-    water: 31,
-    earth: 28,
-    air: 17
-  });
 
   useEffect(() => {
     // Check if mobile
@@ -45,11 +38,11 @@ export default function BetaMonitor() {
 
     // Initialize User Data
     const mockUsers = [
-      { id: 'user001', name: 'Alice Chen', cohort: 'A', status: 'online', sessions: 24, engagement: 0.85, trustScore: 0.78, element: 'fire' },
-      { id: 'user002', name: 'Bob Smith', cohort: 'B', status: 'online', sessions: 12, engagement: 0.72, trustScore: 0.65, element: 'water' },
-      { id: 'user003', name: 'Carol Jones', cohort: 'A', status: 'idle', sessions: 18, engagement: 0.91, trustScore: 0.82, element: 'earth' },
-      { id: 'user004', name: 'David Kim', cohort: 'C', status: 'online', sessions: 8, engagement: 0.68, trustScore: 0.70, element: 'air' },
-      { id: 'user005', name: 'Eve Wilson', cohort: 'B', status: 'offline', sessions: 31, engagement: 0.94, trustScore: 0.88, element: 'fire' }
+      { id: 'user001', name: 'Alice C', status: 'online', sessions: 24, engagement: 0.85, trustScore: 0.78 },
+      { id: 'user002', name: 'Bob S', status: 'online', sessions: 12, engagement: 0.72, trustScore: 0.65 },
+      { id: 'user003', name: 'Carol J', status: 'idle', sessions: 18, engagement: 0.91, trustScore: 0.82 },
+      { id: 'user004', name: 'David K', status: 'offline', sessions: 8, engagement: 0.68, trustScore: 0.70 },
+      { id: 'user005', name: 'Eve W', status: 'offline', sessions: 31, engagement: 0.94, trustScore: 0.88 }
     ];
 
     setUsers(mockUsers);
@@ -58,11 +51,11 @@ export default function BetaMonitor() {
     setAvgEngagement(Math.round(mockUsers.reduce((acc, u) => acc + u.engagement, 0) / mockUsers.length * 100));
 
     const mockActivities = [
-      { time: '2 min ago', user: 'Alice Chen', action: 'Fire ritual completed', engagement: 'fire', icon: '🔥' },
-      { time: '5 min ago', user: 'Bob Smith', action: 'Water reflection shared', engagement: 'water', icon: '💧' },
-      { time: '8 min ago', user: 'Carol Jones', action: 'Earth grounding practice', engagement: 'earth', icon: '🌍' },
-      { time: '12 min ago', user: 'David Kim', action: 'Air meditation begun', engagement: 'air', icon: '🌬️' },
-      { time: '15 min ago', user: 'Eve Wilson', action: 'Aether connection established', engagement: 'aether', icon: '✨' }
+      { time: '2m', user: 'Alice', action: 'Session started', type: 'session' },
+      { time: '5m', user: 'Bob', action: 'Voice enabled', type: 'voice' },
+      { time: '8m', user: 'Carol', action: 'Conversation ended', type: 'end' },
+      { time: '12m', user: 'David', action: 'Feedback provided', type: 'feedback' },
+      { time: '15m', user: 'Eve', action: 'Session paused', type: 'pause' }
     ];
 
     setActivities(mockActivities);
@@ -70,17 +63,17 @@ export default function BetaMonitor() {
     setMetrics({
       avgSession: '23',
       avgMessages: '18',
-      sacredUsage: '32',
-      enrichmentRate: '12',
+      voiceUsage: '32',
+      completionRate: '87',
       trustAvg: '0.77'
     });
 
     // Initialize Protection Data
     const mockThreats = [
-      { time: '1 min ago', type: 'Ambiguous Risk', claim: 'Climate change timeline', action: 'User choice fallback', severity: 'low' },
-      { time: '3 min ago', type: 'Low Confidence', claim: 'Historical date verification', action: 'Enrichment requested', severity: 'medium' },
-      { time: '5 min ago', type: 'Contradiction', claim: 'Scientific fact check', action: 'Dual verification', severity: 'high' },
-      { time: '12 min ago', type: 'Cold Start', claim: 'Personal memory', action: 'Active enrichment', severity: 'low' }
+      { time: '1m', type: 'Low Confidence', action: 'Verified', severity: 'low' },
+      { time: '3m', type: 'Ambiguous', action: 'Enriched', severity: 'medium' },
+      { time: '5m', type: 'Contradiction', action: 'Resolved', severity: 'high' },
+      { time: '12m', type: 'Cold Start', action: 'Cached', severity: 'low' }
     ];
 
     setThreats(mockThreats);
@@ -88,8 +81,8 @@ export default function BetaMonitor() {
     setProtectionMetrics({
       verifiedClaims: 1247,
       blockedHallucinations: 26,
-      enrichmentsSuggested: 89,
-      sacredProtections: 412,
+      enrichments: 89,
+      cacheHits: 412,
       avgResponseTime: '120ms'
     });
 
@@ -100,424 +93,376 @@ export default function BetaMonitor() {
     ? users
     : users.filter(u => u.cohort === selectedCohort);
 
-  const getElementColor = (element: string) => {
-    const colors = {
-      fire: 'from-orange-500 to-red-500',
-      water: 'from-cyan-500 to-blue-500',
-      earth: 'from-green-600 to-emerald-500',
-      air: 'from-gray-400 to-slate-300',
-      aether: 'from-purple-500 to-indigo-500'
-    };
-    return colors[element as keyof typeof colors] || colors.fire;
-  };
-
-  const getElementBg = (element: string) => {
-    const colors = {
-      fire: 'bg-orange-500/10 border-orange-500/30',
-      water: 'bg-cyan-500/10 border-cyan-500/30',
-      earth: 'bg-green-500/10 border-green-500/30',
-      air: 'bg-gray-300/10 border-gray-400/30',
-      aether: 'bg-purple-500/10 border-purple-500/30'
-    };
-    return colors[element as keyof typeof colors] || colors.fire;
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-spiralogic-dark via-spiralogic-dark-secondary to-spiralogic-dark">
-      {/* PWA-optimized padding and safe areas */}
+    <div className="min-h-screen bg-[#1a1f3a]">
+      {/* PWA Safe Area */}
       <div className="safe-top" />
 
-      {/* Subtle elemental particles background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30">
-        <div className="absolute top-20 left-20 w-40 h-40 bg-fire-base rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-water-base rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse animation-delay-2000" />
-        <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-earth-base rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse animation-delay-4000" />
+      {/* Subtle Sacred Geometry Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.02]">
+        <svg viewBox="0 0 1000 1000" className="w-full h-full">
+          <circle cx="500" cy="500" r="400" fill="none" stroke="#F6AD55" strokeWidth="0.5" strokeDasharray="4 4" />
+          <circle cx="500" cy="500" r="300" fill="none" stroke="#F6AD55" strokeWidth="0.5" strokeDasharray="2 6" />
+          <circle cx="500" cy="500" r="200" fill="none" stroke="#F6AD55" strokeWidth="0.5" />
+        </svg>
       </div>
 
-      <div className="relative z-10 px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6 max-w-7xl mx-auto">
-        {/* Header with Elemental Design */}
-        <div className="bg-gradient-to-r from-sacred-brown/10 to-sacred-sage/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 border border-gold-amber/20 shadow-2xl">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-              <div className="relative">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gold-divine to-gold-amber rounded-full flex items-center justify-center text-spiralogic-dark text-xl sm:text-2xl font-bold">
-                  ◈
-                </div>
-                <div className="absolute inset-0 bg-gold-divine rounded-full animate-pulse opacity-20" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gold-divine">ARIA Oracle Monitor</h1>
-                <p className="text-gold-ethereal text-xs sm:text-sm">Elemental Balance & Protection</p>
-              </div>
-              <span className="bg-gradient-to-r from-fire-base to-earth-base text-white px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
-                BETA v1.0.0
+      <div className="relative z-10 px-4 sm:px-6 py-4 sm:py-6 max-w-7xl mx-auto">
+        {/* Minimal Header */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <h1 className="text-xl sm:text-2xl font-light text-gray-200">ARIA Monitor</h1>
+              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                sessionActive
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                  : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+              }`}>
+                Session {sessionActive ? 'Active' : 'Paused'}
               </span>
             </div>
+            <button className="p-2 rounded-full bg-gray-800/50 border border-gray-700/50 text-gray-400 hover:text-gray-200 transition-colors">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 100-12 6 6 0 000 12z"/>
+              </svg>
+            </button>
+          </div>
 
-            {/* Elemental Stats Grid */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-4 md:gap-6 w-full sm:w-auto">
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl md:text-4xl font-bold text-gold-divine drop-shadow-lg">{activeUsers}</div>
-                <div className="text-[10px] sm:text-xs text-gold-ethereal uppercase tracking-wider">Active</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl md:text-4xl font-bold bg-gradient-to-r from-earth-base to-water-base bg-clip-text text-transparent">
-                  {100 - hallucinationRate.toFixed(0)}%
-                </div>
-                <div className="text-[10px] sm:text-xs text-gold-ethereal uppercase tracking-wider">Truth</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl md:text-4xl font-bold text-fire-base drop-shadow-lg">{riskLevel}/10</div>
-                <div className="text-[10px] sm:text-xs text-gold-ethereal uppercase tracking-wider">Risk</div>
-              </div>
+          {/* Key Metrics Bar */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
+              <div className="text-2xl sm:text-3xl font-light text-gray-100">{activeUsers}/{totalUsers}</div>
+              <div className="text-xs text-gray-500 mt-1">Active Users</div>
+            </div>
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
+              <div className="text-2xl sm:text-3xl font-light text-gray-100">{100 - hallucinationRate.toFixed(0)}%</div>
+              <div className="text-xs text-gray-500 mt-1">Accuracy</div>
+            </div>
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
+              <div className="text-2xl sm:text-3xl font-light text-gray-100">{riskLevel}/10</div>
+              <div className="text-xs text-gray-500 mt-1">Risk Level</div>
             </div>
           </div>
-        </div>
 
-        {/* Tab Switcher with Elemental Design */}
-        <div className="bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-1 mb-4 sm:mb-6 border border-gold-amber/20">
-          <div className="flex gap-1">
+          {/* Tab Navigation */}
+          <div className="flex gap-2 p-1 bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl">
             <button
               onClick={() => setActiveTab('users')}
-              className={`flex-1 py-2 px-3 sm:py-3 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all ${
+              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
                 activeTab === 'users'
-                  ? 'bg-gradient-to-r from-earth-base to-sacred-sage text-white shadow-lg'
-                  : 'text-gold-ethereal hover:text-white hover:bg-sacred-brown/20'
+                  ? 'bg-[#F6AD55] text-gray-900'
+                  : 'text-gray-400 hover:text-gray-200'
               }`}
             >
-              👥 Beta Users
+              Users
             </button>
             <button
               onClick={() => setActiveTab('protection')}
-              className={`flex-1 py-2 px-3 sm:py-3 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all ${
+              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
                 activeTab === 'protection'
-                  ? 'bg-gradient-to-r from-fire-base to-sacred-sienna text-white shadow-lg'
-                  : 'text-gold-ethereal hover:text-white hover:bg-sacred-brown/20'
+                  ? 'bg-[#F6AD55] text-gray-900'
+                  : 'text-gray-400 hover:text-gray-200'
               }`}
             >
-              🛡️ Protection
+              Protection
             </button>
             <button
-              onClick={() => setActiveTab('elements')}
-              className={`flex-1 py-2 px-3 sm:py-3 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all ${
-                activeTab === 'elements'
-                  ? 'bg-gradient-to-r from-water-base to-air-base text-white shadow-lg'
-                  : 'text-gold-ethereal hover:text-white hover:bg-sacred-brown/20'
+              onClick={() => setActiveTab('system')}
+              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                activeTab === 'system'
+                  ? 'bg-[#F6AD55] text-gray-900'
+                  : 'text-gray-400 hover:text-gray-200'
               }`}
             >
-              🌀 Elements
+              System
             </button>
           </div>
         </div>
 
         {/* User Activity Tab */}
         {activeTab === 'users' && (
-          <>
-            {/* Filters */}
-            <div className="bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 border border-gold-amber/20">
-              <select
-                value={selectedCohort}
-                onChange={(e) => setSelectedCohort(e.target.value)}
-                className="w-full sm:w-auto px-3 py-1.5 bg-spiralogic-dark/50 border border-gold-amber/30 rounded-lg text-gold-ethereal text-xs sm:text-sm backdrop-blur focus:outline-none focus:ring-2 focus:ring-gold-divine"
-              >
-                <option value="all">All Cohorts</option>
-                <option value="A">Cohort A (Fire)</option>
-                <option value="B">Cohort B (Water)</option>
-                <option value="C">Cohort C (Earth)</option>
-              </select>
-            </div>
-
-            {/* Main Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
-              {/* Active Users */}
-              <div className="lg:col-span-1 bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-                <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4 flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">🔥</span> Active Souls
-                </h3>
-                <div className="space-y-2 sm:space-y-3 max-h-48 sm:max-h-64 lg:max-h-80 overflow-y-auto">
-                  {filteredUsers.map(user => (
-                    <div key={user.id} className="flex justify-between items-center p-2 sm:p-3 bg-spiralogic-dark/30 rounded-lg sm:rounded-xl border border-gold-amber/10 hover:bg-spiralogic-dark/50 transition-colors">
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br ${getElementColor(user.element)} flex items-center justify-center text-white font-bold text-xs sm:text-sm`}>
-                          {user.name.split(' ').map((n: string) => n[0]).join('')}
-                        </div>
-                        <div>
-                          <div className="font-medium text-gold-ethereal text-sm sm:text-base flex items-center gap-1 sm:gap-2">
-                            <span className="truncate max-w-[100px] sm:max-w-none">{user.name}</span>
-                          </div>
-                          <div className="text-[10px] sm:text-xs text-gold-amber/70 flex items-center gap-1 sm:gap-2">
-                            <span className={`inline-block w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
-                              user.status === 'online' ? 'bg-earth-base animate-pulse' :
-                              user.status === 'idle' ? 'bg-gold-amber' :
-                              'bg-gray-400'
-                            }`} />
-                            {user.status}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs sm:text-sm font-semibold text-earth-base">
-                          {(user.engagement * 100).toFixed(0)}%
-                        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Active Users List */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Active Sessions</h3>
+              <div className="space-y-3">
+                {filteredUsers.map(user => (
+                  <div key={user.id} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-2 h-2 rounded-full ${
+                        user.status === 'online' ? 'bg-green-400' :
+                        user.status === 'idle' ? 'bg-yellow-400' :
+                        'bg-gray-600'
+                      }`} />
+                      <div>
+                        <div className="text-sm text-gray-200">{user.name}</div>
+                        <div className="text-xs text-gray-500">{user.sessions} sessions</div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Elemental Metrics */}
-              <div className="lg:col-span-1 bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-                <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4 flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">💧</span> Sacred Metrics
-                </h3>
-                <div className="space-y-3 sm:space-y-4">
-                  {Object.entries({
-                    'Session Duration': `${metrics.avgSession} min`,
-                    'Messages/Session': metrics.avgMessages,
-                    'Sacred Usage': `${metrics.sacredUsage}%`,
-                    'Enrichment Rate': `${metrics.enrichmentRate}%`,
-                    'Trust Field': metrics.trustAvg
-                  }).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center p-2 sm:p-3 bg-gradient-to-r from-earth-base/10 to-water-base/10 rounded-lg border border-sacred-sage/20">
-                      <span className="text-gold-ethereal text-xs sm:text-sm">{key}:</span>
-                      <span className="font-semibold text-gold-divine text-xs sm:text-sm">{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Activity Feed */}
-              <div className="lg:col-span-1 bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-                <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4 flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">🌍</span> Activity
-                </h3>
-                <div className="space-y-2 max-h-48 sm:max-h-64 lg:max-h-80 overflow-y-auto">
-                  {activities.map((activity, idx) => (
-                    <div key={idx} className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border-l-4 ${getElementBg(activity.engagement)} backdrop-blur`}>
-                      <div className="flex items-start gap-2">
-                        <span className="text-sm sm:text-lg">{activity.icon}</span>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-[10px] sm:text-xs text-gold-amber/70">{activity.time}</div>
-                          <div className="text-xs sm:text-sm text-gold-ethereal truncate">
-                            <span className="font-semibold text-gold-divine">{activity.user}</span>
-                            <span> {activity.action}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Protection Tab */}
-        {activeTab === 'protection' && (
-          <>
-            {/* Protection Status */}
-            <div className="bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border border-gold-amber/20">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                <div className="text-center">
-                  <div className="text-lg sm:text-2xl font-bold text-earth-base">{hallucinationRate.toFixed(1)}%</div>
-                  <div className="text-[10px] sm:text-xs text-gold-ethereal uppercase">Hallucination</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg sm:text-2xl font-bold text-water-base">{verificationRate}%</div>
-                  <div className="text-[10px] sm:text-xs text-gold-ethereal uppercase">Verified</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg sm:text-2xl font-bold text-air-base">{cacheHitRate}%</div>
-                  <div className="text-[10px] sm:text-xs text-gold-ethereal uppercase">Cache Hit</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg sm:text-2xl font-bold text-fire-base">{fieldCoverage}%</div>
-                  <div className="text-[10px] sm:text-xs text-gold-ethereal uppercase">Coverage</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Protection Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
-              {/* Threat Detection */}
-              <div className="lg:col-span-1 bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-                <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4 flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">⚡</span> Threats
-                </h3>
-                <div className="space-y-2 max-h-48 sm:max-h-64 lg:max-h-80 overflow-y-auto">
-                  {threats.map((threat, idx) => (
-                    <div key={idx} className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border-l-4 ${
-                      threat.severity === 'high' ? 'border-fire-base bg-fire-base/10' :
-                      threat.severity === 'medium' ? 'border-gold-amber bg-gold-amber/10' :
-                      'border-earth-base bg-earth-base/10'
-                    }`}>
-                      <div className="text-[10px] sm:text-xs text-gold-amber/70">{threat.time}</div>
-                      <div className="text-xs sm:text-sm font-semibold text-gold-divine">{threat.type}</div>
-                      <div className="text-[10px] sm:text-xs text-gold-ethereal truncate">{threat.claim}</div>
-                      <div className="text-[10px] sm:text-xs text-sacred-sage">→ {threat.action}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Protection Stats */}
-              <div className="lg:col-span-1 bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-                <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4 flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">🛡️</span> Stats
-                </h3>
-                <div className="space-y-3 sm:space-y-4">
-                  {Object.entries(protectionMetrics).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center p-2 sm:p-3 bg-gradient-to-r from-water-base/10 to-earth-base/10 rounded-lg border border-sacred-sage/20">
-                      <span className="text-gold-ethereal text-xs sm:text-sm">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                      <span className="font-semibold text-gold-divine text-xs sm:text-sm">{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Thresholds */}
-              <div className="lg:col-span-1 bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-                <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4 flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">🌬️</span> Thresholds
-                </h3>
-                <div className="space-y-3">
-                  {[
-                    { mode: 'Sacred Space', threshold: '95%', element: 'aether' },
-                    { mode: 'Personal', threshold: '85%', element: 'fire' },
-                    { mode: 'Advisory', threshold: '75%', element: 'water' },
-                    { mode: 'Creative', threshold: '40%', element: 'earth' }
-                  ].map((mode) => (
-                    <div key={mode.mode} className="p-2 sm:p-3 bg-spiralogic-dark/30 rounded-lg border border-gold-amber/10">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs sm:text-sm text-gold-ethereal">{mode.mode}</span>
-                        <span className="text-xs sm:text-sm font-semibold text-gold-divine">{mode.threshold}</span>
-                      </div>
-                      <div className="w-full bg-spiralogic-dark/50 rounded-full h-1.5 sm:h-2">
-                        <div className={`bg-gradient-to-r ${getElementColor(mode.element)} h-1.5 sm:h-2 rounded-full`}
-                             style={{ width: mode.threshold }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Elements Tab */}
-        {activeTab === 'elements' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {/* Elemental Balance */}
-            <div className="bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-              <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4">Elemental Balance</h3>
-              <div className="space-y-4">
-                {Object.entries(elementalBalance).map(([element, value]) => (
-                  <div key={element}>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm text-gold-ethereal capitalize">{element}</span>
-                      <span className="text-sm font-semibold text-gold-divine">{value}%</span>
-                    </div>
-                    <div className="w-full bg-spiralogic-dark/50 rounded-full h-2">
-                      <div className={`bg-gradient-to-r ${getElementColor(element)} h-2 rounded-full transition-all duration-500`}
-                           style={{ width: `${value}%` }} />
+                    <div className="text-right">
+                      <div className="text-sm text-gray-300">{(user.engagement * 100).toFixed(0)}%</div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Coming Soon */}
-            <div className="bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-              <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4">More Monitors Coming</h3>
+            {/* Metrics */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Session Metrics</h3>
+              <div className="space-y-4">
+                {Object.entries({
+                  'Avg Duration': `${metrics.avgSession} min`,
+                  'Messages': metrics.avgMessages,
+                  'Voice Usage': `${metrics.voiceUsage}%`,
+                  'Completion': `${metrics.completionRate}%`,
+                  'Trust Score': metrics.trustAvg
+                }).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">{key}</span>
+                    <span className="text-sm text-gray-200">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Activity Feed */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Recent Activity</h3>
               <div className="space-y-3">
-                <div className="p-3 bg-spiralogic-dark/30 rounded-lg border border-gold-amber/10">
-                  <div className="text-sm font-medium text-gold-divine">Performance Metrics</div>
-                  <div className="text-xs text-gold-ethereal">Response times, throughput, system health</div>
+                {activities.map((activity, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#F6AD55] mt-1.5" />
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-500">{activity.time} ago</div>
+                      <div className="text-sm text-gray-200">
+                        <span className="text-gray-400">{activity.user}</span>
+                        <span className="text-gray-300 ml-1">{activity.action}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Protection Tab */}
+        {activeTab === 'protection' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Protection Status */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Protection Status</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-2xl font-light text-gray-100">{hallucinationRate.toFixed(1)}%</div>
+                  <div className="text-xs text-gray-500">Hallucination Rate</div>
                 </div>
-                <div className="p-3 bg-spiralogic-dark/30 rounded-lg border border-gold-amber/10">
-                  <div className="text-sm font-medium text-gold-divine">Revenue Analytics</div>
-                  <div className="text-xs text-gold-ethereal">Subscription tracking, conversion rates</div>
+                <div>
+                  <div className="text-2xl font-light text-gray-100">{verificationRate}%</div>
+                  <div className="text-xs text-gray-500">Verified</div>
                 </div>
-                <div className="p-3 bg-spiralogic-dark/30 rounded-lg border border-gold-amber/10">
-                  <div className="text-sm font-medium text-gold-divine">Oracle Sessions</div>
-                  <div className="text-xs text-gold-ethereal">Deep conversation analytics</div>
+                <div>
+                  <div className="text-2xl font-light text-gray-100">{cacheHitRate}%</div>
+                  <div className="text-xs text-gray-500">Cache Hit</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-light text-gray-100">{fieldCoverage}%</div>
+                  <div className="text-xs text-gray-500">Coverage</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Threat Log */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Threat Detection</h3>
+              <div className="space-y-3">
+                {threats.map((threat, idx) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-2 h-2 rounded-full ${
+                        threat.severity === 'high' ? 'bg-red-400' :
+                        threat.severity === 'medium' ? 'bg-yellow-400' :
+                        'bg-green-400'
+                      }`} />
+                      <div>
+                        <div className="text-sm text-gray-200">{threat.type}</div>
+                        <div className="text-xs text-gray-500">{threat.time} ago</div>
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-400">{threat.action}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Protection Stats */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5 lg:col-span-2">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Protection Metrics</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                {Object.entries(protectionMetrics).map(([key, value]) => (
+                  <div key={key}>
+                    <div className="text-lg font-light text-gray-100">{value}</div>
+                    <div className="text-xs text-gray-500">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* System Tab */}
+        {activeTab === 'system' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* System Health */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">System Health</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-xs text-gray-500">CPU Usage</span>
+                    <span className="text-xs text-gray-400">23%</span>
+                  </div>
+                  <div className="w-full bg-gray-700/50 rounded-full h-1.5">
+                    <div className="bg-[#F6AD55] h-1.5 rounded-full" style={{ width: '23%' }} />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-xs text-gray-500">Memory</span>
+                    <span className="text-xs text-gray-400">47%</span>
+                  </div>
+                  <div className="w-full bg-gray-700/50 rounded-full h-1.5">
+                    <div className="bg-[#F6AD55] h-1.5 rounded-full" style={{ width: '47%' }} />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-xs text-gray-500">Network</span>
+                    <span className="text-xs text-gray-400">12%</span>
+                  </div>
+                  <div className="w-full bg-gray-700/50 rounded-full h-1.5">
+                    <div className="bg-[#F6AD55] h-1.5 rounded-full" style={{ width: '12%' }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Response Times */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Response Times</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Average</span>
+                  <span className="text-sm text-gray-200">120ms</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">P50</span>
+                  <span className="text-sm text-gray-200">95ms</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">P95</span>
+                  <span className="text-sm text-gray-200">245ms</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">P99</span>
+                  <span className="text-sm text-gray-200">380ms</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Uptime */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5 lg:col-span-2">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">System Uptime</h3>
+              <div className="grid grid-cols-4 gap-4">
+                <div>
+                  <div className="text-2xl font-light text-gray-100">99.9%</div>
+                  <div className="text-xs text-gray-500">This Month</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-light text-gray-100">14d</div>
+                  <div className="text-xs text-gray-500">Current Uptime</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-light text-gray-100">0</div>
+                  <div className="text-xs text-gray-500">Incidents</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-light text-gray-100">1.2ms</div>
+                  <div className="text-xs text-gray-500">Avg Latency</div>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
-          <div className="bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-            <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4">
-              {activeTab === 'users' ? 'Oracle Sessions' : 'Protection Timeline'}
+        {/* Minimal Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+          <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+            <h3 className="text-sm font-medium text-gray-400 mb-4">
+              {activeTab === 'users' ? 'Activity Timeline' : activeTab === 'protection' ? 'Risk Timeline' : 'Performance'}
             </h3>
-            <div className="w-full overflow-x-auto">
+            <div className="w-full h-48 flex items-center justify-center text-gray-600">
               <Plot
                 data={[{
-                  x: Array.from({length: 24}, (_, i) => `${i}:00`),
-                  y: activeTab === 'users'
-                    ? Array.from({length: 24}, () => Math.floor(Math.random() * 30 + 5))
-                    : Array.from({length: 24}, () => Math.random() * 5 + 1),
+                  x: Array.from({length: 12}, (_, i) => i),
+                  y: Array.from({length: 12}, () => Math.random() * 50 + 20),
                   type: 'scatter',
-                  mode: 'lines+markers',
-                  line: { color: '#7A9A65', width: 2 },
-                  marker: { color: '#B69A78', size: isMobile ? 4 : 6 }
+                  mode: 'lines',
+                  line: { color: '#F6AD55', width: 1.5, shape: 'spline' },
+                  fill: 'tozeroy',
+                  fillcolor: 'rgba(246, 173, 85, 0.1)'
                 }]}
                 layout={{
-                  height: isMobile ? 200 : 300,
-                  paper_bgcolor: 'rgba(0,0,0,0)',
-                  plot_bgcolor: 'rgba(0,0,0,0)',
+                  height: 180,
+                  paper_bgcolor: 'transparent',
+                  plot_bgcolor: 'transparent',
+                  margin: { t: 0, r: 0, l: 0, b: 0 },
                   xaxis: {
-                    title: { text: 'Hour', font: { color: '#FEB95A', size: isMobile ? 10 : 12 }},
-                    gridcolor: 'rgba(255,215,0,0.1)',
-                    tickfont: { color: '#FEB95A', size: isMobile ? 8 : 10 }
+                    visible: false,
+                    showgrid: false,
+                    zeroline: false
                   },
                   yaxis: {
-                    title: {
-                      text: activeTab === 'users' ? 'Active Souls' : 'Risk Level',
-                      font: { color: '#FEB95A', size: isMobile ? 10 : 12 }
-                    },
-                    gridcolor: 'rgba(255,215,0,0.1)',
-                    tickfont: { color: '#FEB95A', size: isMobile ? 8 : 10 }
+                    visible: false,
+                    showgrid: false,
+                    zeroline: false
                   },
-                  margin: { t: 20, r: 20, l: isMobile ? 40 : 50, b: isMobile ? 40 : 50 }
+                  showlegend: false
                 }}
-                config={{ responsive: true, displayModeBar: false }}
+                config={{ displayModeBar: false, responsive: true }}
               />
             </div>
           </div>
 
-          <div className="bg-sacred-brown/10 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gold-amber/20">
-            <h3 className="text-base sm:text-lg font-semibold text-gold-divine mb-3 sm:mb-4">
-              {activeTab === 'users' ? 'Elemental Distribution' : 'Protection Analysis'}
+          <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+            <h3 className="text-sm font-medium text-gray-400 mb-4">
+              {activeTab === 'users' ? 'Session Distribution' : activeTab === 'protection' ? 'Protection Analysis' : 'Resource Usage'}
             </h3>
-            <div className="w-full overflow-x-auto">
+            <div className="w-full h-48 flex items-center justify-center text-gray-600">
               <Plot
                 data={[{
-                  labels: activeTab === 'users'
-                    ? ['Fire', 'Water', 'Earth', 'Air']
-                    : ['Verified', 'Enriched', 'Cached', 'Blocked'],
-                  values: activeTab === 'users' ? [24, 31, 28, 17] : [65, 20, 10, 5],
+                  values: [30, 25, 20, 25],
+                  labels: activeTab === 'users' ? ['Voice', 'Chat', 'Mixed', 'Other'] :
+                          activeTab === 'protection' ? ['Verified', 'Cached', 'Enriched', 'Blocked'] :
+                          ['CPU', 'Memory', 'Network', 'Storage'],
                   type: 'pie',
-                  hole: 0.4,
+                  hole: 0.6,
                   marker: {
-                    colors: ['#C85450', '#6B9BD1', '#7A9A65', '#D4B896']
+                    colors: ['#F6AD55', '#94a3b8', '#64748b', '#475569']
                   },
-                  textfont: { color: '#FEB95A', size: isMobile ? 10 : 12 }
+                  textinfo: 'none',
+                  hoverinfo: 'label+percent'
                 }]}
                 layout={{
-                  height: isMobile ? 200 : 300,
-                  paper_bgcolor: 'rgba(0,0,0,0)',
-                  plot_bgcolor: 'rgba(0,0,0,0)',
-                  margin: { t: 20, r: 20, l: 20, b: 20 },
-                  showlegend: !isMobile,
-                  legend: {
-                    font: { color: '#FEB95A', size: isMobile ? 8 : 10 }
-                  }
+                  height: 180,
+                  paper_bgcolor: 'transparent',
+                  plot_bgcolor: 'transparent',
+                  margin: { t: 0, r: 0, l: 0, b: 0 },
+                  showlegend: false
                 }}
-                config={{ responsive: true, displayModeBar: false }}
+                config={{ displayModeBar: false, responsive: true }}
               />
             </div>
           </div>
@@ -525,13 +470,13 @@ export default function BetaMonitor() {
       </div>
 
       {/* PWA Install Prompt */}
-      <div id="pwa-install-prompt" className="hidden fixed bottom-4 left-4 right-4 bg-spiralogic-dark/95 backdrop-blur-lg rounded-2xl p-4 border border-gold-amber/30 shadow-2xl z-50">
-        <p className="text-gold-ethereal text-sm mb-2">Install ARIA Monitor for quick access</p>
+      <div id="pwa-install-prompt" className="hidden fixed bottom-4 left-4 right-4 bg-gray-900/95 backdrop-blur-lg rounded-xl p-4 border border-gray-700/50 shadow-2xl z-50">
+        <p className="text-gray-300 text-sm mb-3">Install ARIA Monitor</p>
         <div className="flex gap-2">
-          <button className="flex-1 bg-gradient-to-r from-earth-base to-sacred-sage text-white py-2 px-4 rounded-lg text-sm font-semibold">
+          <button className="flex-1 bg-[#F6AD55] text-gray-900 py-2 px-4 rounded-lg text-sm font-medium">
             Install
           </button>
-          <button className="px-4 py-2 text-gold-amber text-sm">Later</button>
+          <button className="px-4 py-2 text-gray-500 text-sm">Later</button>
         </div>
       </div>
 
@@ -541,38 +486,20 @@ export default function BetaMonitor() {
           padding-top: env(safe-area-inset-top);
         }
 
-        /* Custom Scrollbar */
+        /* Custom Minimal Scrollbar */
         ::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
+          width: 4px;
+          height: 4px;
         }
         ::-webkit-scrollbar-track {
-          background: rgba(182, 154, 120, 0.1);
+          background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-          background: rgba(255, 215, 0, 0.3);
-          border-radius: 10px;
+          background: rgba(148, 163, 184, 0.2);
+          border-radius: 2px;
         }
         ::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 215, 0, 0.5);
-        }
-
-        /* Animations */
-        @keyframes animation-delay-2000 {
-          0%, 100% { opacity: 0.2; transform: scale(1); }
-          50% { opacity: 0.3; transform: scale(1.1); }
-        }
-        @keyframes animation-delay-4000 {
-          0%, 100% { opacity: 0.15; transform: scale(1); }
-          50% { opacity: 0.25; transform: scale(1.15); }
-        }
-        .animation-delay-2000 {
-          animation: animation-delay-2000 4s ease-in-out infinite;
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation: animation-delay-4000 6s ease-in-out infinite;
-          animation-delay: 4s;
+          background: rgba(148, 163, 184, 0.3);
         }
 
         /* Mobile Touch Optimizations */
@@ -585,7 +512,7 @@ export default function BetaMonitor() {
         /* PWA Standalone Mode */
         @media all and (display-mode: standalone) {
           .safe-top {
-            background: linear-gradient(to bottom, rgba(10, 14, 39, 0.9), transparent);
+            background: linear-gradient(to bottom, rgba(26, 31, 58, 0.95), transparent);
           }
         }
       `}</style>
