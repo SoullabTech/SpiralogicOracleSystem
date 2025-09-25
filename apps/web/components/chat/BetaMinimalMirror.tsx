@@ -146,7 +146,7 @@ export default function BetaMinimalMirror() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center"
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-indigo-500 flex items-center justify-center"
             >
               <Sparkles className="w-4 h-4 text-white" />
             </motion.div>

@@ -36,8 +36,8 @@ export function MaiaInsightCard({
       animate={{ opacity: 1, x: 0 }}
       className={`p-4 rounded-2xl ${
         type === "user" 
-          ? "bg-purple-100 dark:bg-purple-900/30 ml-8" 
-          : "bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 mr-8"
+          ? "bg-amber-100 dark:bg-amber-900/30 ml-8" 
+          : "bg-gradient-to-br from-amber-50 to-pink-50 dark:from-black/50 dark:to-pink-950/50 mr-8"
       } backdrop-blur`}
     >
       {/* Elements indicator */}

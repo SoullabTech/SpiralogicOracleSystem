@@ -18,10 +18,10 @@ export default function SoullabPage() {
 
   if (!userId) {
     return (
-      <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen  from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-purple-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-purple-200">Initializing your personal Oracle...</p>
+          <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-amber-200">Initializing your personal Oracle...</p>
         </div>
       </div>
     );

@@ -310,7 +310,7 @@ export default function BetaMonitor() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-xs text-gray-500">Expansive Mode Success</span>
-                    <span className="text-sm text-purple-400">87%</span>
+                    <span className="text-sm text-amber-400">87%</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-xs text-gray-500">Context Recognition</span>
@@ -368,9 +368,9 @@ export default function BetaMonitor() {
                   <span className="text-xs text-gray-500">Uniqueness</span>
                   <div className="flex items-center gap-2">
                     <div className="w-16 bg-gray-700 rounded-full h-1.5">
-                      <div className="h-full rounded-full bg-purple-400" style={{ width: '89%' }} />
+                      <div className="h-full rounded-full bg-amber-400" style={{ width: '89%' }} />
                     </div>
-                    <span className="text-xs text-purple-400">89%</span>
+                    <span className="text-xs text-amber-400">89%</span>
                   </div>
                 </div>
               </div>
@@ -455,9 +455,9 @@ export default function BetaMonitor() {
                   <span className="text-xs text-gray-500">Emotional Density</span>
                   <div className="flex items-center gap-2">
                     <div className="w-20 bg-gray-700 rounded-full h-1.5">
-                      <div className="h-full rounded-full bg-purple-400" style={{ width: '67%' }} />
+                      <div className="h-full rounded-full bg-amber-400" style={{ width: '67%' }} />
                     </div>
-                    <span className="text-xs text-purple-400">0.67</span>
+                    <span className="text-xs text-amber-400">0.67</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -512,7 +512,7 @@ export default function BetaMonitor() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-xs text-gray-500">Key Moments</span>
-                  <span className="text-sm text-purple-400">18</span>
+                  <span className="text-sm text-amber-400">18</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-xs text-gray-500">Emotional Tags</span>
@@ -539,7 +539,7 @@ export default function BetaMonitor() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-xs text-gray-500">Shadow Work</span>
-                  <span className="text-xs text-purple-400">Engaging</span>
+                  <span className="text-xs text-amber-400">Engaging</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-xs text-gray-500">Growth Edge</span>
@@ -593,9 +593,9 @@ export default function BetaMonitor() {
                   <span className="text-xs text-gray-500">Transformative Impact</span>
                   <div className="flex items-center gap-2">
                     <div className="w-16 bg-gray-700 rounded-full h-1.5">
-                      <div className="h-full rounded-full bg-purple-400" style={{ width: '85%' }} />
+                      <div className="h-full rounded-full bg-amber-400" style={{ width: '85%' }} />
                     </div>
-                    <span className="text-xs text-purple-400">8.5/10</span>
+                    <span className="text-xs text-amber-400">8.5/10</span>
                   </div>
                 </div>
                 <div className="flex justify-between">
@@ -609,7 +609,7 @@ export default function BetaMonitor() {
                 </div>
                 <div className="mt-4 pt-3 border-t border-gray-700/50">
                   <p className="text-xs text-gray-500">Flow States: <span className="text-green-400">12 recorded</span></p>
-                  <p className="text-xs text-gray-500 mt-1">Shadow Integration: <span className="text-purple-400">Active</span></p>
+                  <p className="text-xs text-gray-500 mt-1">Shadow Integration: <span className="text-amber-400">Active</span></p>
                 </div>
               </div>
             </div>

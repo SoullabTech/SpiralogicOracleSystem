@@ -56,7 +56,7 @@ export function MemoryCard({ memory, onPlay, isPlaying }: MemoryCardProps) {
       case 'upload':
         return <FileText className="w-5 h-5 text-green-500" />;
       case 'voice':
-        return <Mic className="w-5 h-5 text-purple-500" />;
+        return <Mic className="w-5 h-5 text-amber-500" />;
       default:
         return null;
     }
@@ -180,7 +180,7 @@ export function MemoryCard({ memory, onPlay, isPlaying }: MemoryCardProps) {
   };
 
   return (
-    <div className="bg-background/40 backdrop-blur-sm border border-purple-500/20 rounded-lg p-4 hover:border-purple-500/40 hover:bg-background/60 transition-all">
+    <div className="bg-background/40 backdrop-blur-sm border border-amber-500/20 rounded-lg p-4 hover:border-amber-500/40 hover:bg-background/60 transition-all">
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 mt-0.5">
           {getIcon()}
@@ -188,7 +188,7 @@ export function MemoryCard({ memory, onPlay, isPlaying }: MemoryCardProps) {
         
         <div className="flex-grow min-w-0">
           <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-xs text-purple-400">{getTypeLabel()}</span>
+            <span className="text-xs text-amber-400">{getTypeLabel()}</span>
             <span className="text-xs text-gray-500">{formatDate(memory.createdAt)}</span>
           </div>
           
@@ -201,7 +201,7 @@ export function MemoryCard({ memory, onPlay, isPlaying }: MemoryCardProps) {
           {memory.type === 'voice' && memory.metadata?.audioUrl ? (
             <div className="space-y-3">
               {/* Waveform visualization */}
-              <div className="relative bg-background/50 border border-purple-500/20 rounded-lg p-3">
+              <div className="relative bg-background/50 border border-amber-500/20 rounded-lg p-3">
                 <canvas
                   ref={canvasRef}
                   className="w-full h-[30px]"
@@ -210,7 +210,7 @@ export function MemoryCard({ memory, onPlay, isPlaying }: MemoryCardProps) {
                 
                 {/* Progress overlay */}
                 <div
-                  className="absolute top-0 left-0 h-full bg-purple-500/20 rounded-lg transition-all"
+                  className="absolute top-0 left-0 h-full bg-amber-500/20 rounded-lg transition-all"
                   style={{ width: `${audioProgress}%` }}
                 />
                 
@@ -314,7 +314,7 @@ export function MemoryCard({ memory, onPlay, isPlaying }: MemoryCardProps) {
               {memory.insights.map((insight, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-purple-100 text-purple-700 border border-purple-200 hover:bg-purple-200 transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-700 border border-amber-200 hover:bg-amber-200 transition-colors"
                   title={`${insight.archetype} (${Math.round(insight.confidence * 100)}% confidence)`}
                 >
                   <span className="text-sm">{insight.symbol}</span>

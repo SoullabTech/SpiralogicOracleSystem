@@ -157,7 +157,7 @@ export default function ExplorerDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Sparkles className="w-12 h-12 text-purple-600 animate-pulse mx-auto mb-4" />
+          <Sparkles className="w-12 h-12 text-amber-600 animate-pulse mx-auto mb-4" />
           <p className="text-gray-600">Loading your journey...</p>
         </div>
       </div>
@@ -165,26 +165,26 @@ export default function ExplorerDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-6xl mx-auto p-6 space-y-6">
         {/* Welcome Panel */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl"
+          className="bg-gradient-to-r from-amber-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl"
         >
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">
                 Welcome back, {explorerName} 🌈
               </h1>
-              <p className="text-purple-100">
+              <p className="text-amber-100">
                 Week {currentWeek} • Integration Cohort • {getArcPhase(arcLevel)}
               </p>
             </div>
             <div className="text-right">
               <div className="text-4xl font-bold">{arcLevel.toFixed(1)}</div>
-              <div className="text-sm text-purple-200">Arc Level</div>
+              <div className="text-sm text-amber-200">Arc Level</div>
             </div>
           </div>
         </motion.div>
@@ -197,7 +197,7 @@ export default function ExplorerDashboard() {
           className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg"
         >
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-            <TrendingUp className="w-5 h-5 mr-2 text-purple-600" />
+            <TrendingUp className="w-5 h-5 mr-2 text-amber-600" />
             Universal Arc™ Progress
           </h2>
 
@@ -207,7 +207,7 @@ export default function ExplorerDashboard() {
                 initial={{ width: 0 }}
                 animate={{ width: `${(arcLevel / 5) * 100}%` }}
                 transition={{ duration: 1, ease: 'easeOut' }}
-                className="h-full bg-gradient-to-r from-purple-500 to-indigo-500"
+                className="h-full bg-gradient-to-r from-amber-500 to-indigo-500"
               />
             </div>
 
@@ -234,7 +234,7 @@ export default function ExplorerDashboard() {
               transition={{ duration: 1, ease: 'easeOut' }}
               className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
             >
-              <div className="w-6 h-6 bg-white border-4 border-purple-600 rounded-full shadow-lg" />
+              <div className="w-6 h-6 bg-white border-4 border-amber-600 rounded-full shadow-lg" />
             </motion.div>
           </div>
 
@@ -255,7 +255,7 @@ export default function ExplorerDashboard() {
           className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg"
         >
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-            <Calendar className="w-5 h-5 mr-2 text-purple-600" />
+            <Calendar className="w-5 h-5 mr-2 text-amber-600" />
             Session History
           </h2>
 
@@ -268,7 +268,7 @@ export default function ExplorerDashboard() {
                 className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="text-lg font-bold text-purple-600">
+                  <div className="text-lg font-bold text-amber-600">
                     #{session.sessionNumber}
                   </div>
                   <div>
@@ -286,10 +286,10 @@ export default function ExplorerDashboard() {
                     {session.patterns.map((pattern, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center space-x-1 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 rounded text-xs"
+                        className="flex items-center space-x-1 px-2 py-1 bg-amber-100 dark:bg-amber-900/30 rounded text-xs"
                       >
                         {getPatternIcon(pattern)}
-                        <span className="text-purple-700 dark:text-purple-300">{pattern}</span>
+                        <span className="text-amber-700 dark:text-amber-300">{pattern}</span>
                       </div>
                     ))}
                   </div>
@@ -302,7 +302,7 @@ export default function ExplorerDashboard() {
           </div>
 
           {sessions.length > 5 && (
-            <button className="mt-4 text-sm text-purple-600 hover:underline">
+            <button className="mt-4 text-sm text-amber-600 hover:underline">
               View all {sessions.length} sessions →
             </button>
           )}
@@ -316,7 +316,7 @@ export default function ExplorerDashboard() {
           className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg"
         >
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-            <MessageSquare className="w-5 h-5 mr-2 text-purple-600" />
+            <MessageSquare className="w-5 h-5 mr-2 text-amber-600" />
             Reflections Journal
           </h2>
 
@@ -335,7 +335,7 @@ export default function ExplorerDashboard() {
                     className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="text-lg font-bold text-purple-600">
+                      <div className="text-lg font-bold text-amber-600">
                         Week {week}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -375,7 +375,7 @@ export default function ExplorerDashboard() {
                             ))}
                             <Link
                               href={`/explorer/reflection?week=${week}`}
-                              className="inline-flex items-center text-sm text-purple-600 hover:underline"
+                              className="inline-flex items-center text-sm text-amber-600 hover:underline"
                             >
                               <Edit className="w-4 h-4 mr-1" />
                               Edit reflection
@@ -388,7 +388,7 @@ export default function ExplorerDashboard() {
                             </p>
                             <Link
                               href={`/explorer/reflection?week=${week}`}
-                              className="inline-flex items-center mt-2 text-sm text-purple-600 hover:underline"
+                              className="inline-flex items-center mt-2 text-sm text-amber-600 hover:underline"
                             >
                               <Edit className="w-4 h-4 mr-1" />
                               Add reflection
@@ -412,13 +412,13 @@ export default function ExplorerDashboard() {
           className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg"
         >
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-            <Award className="w-5 h-5 mr-2 text-purple-600" />
+            <Award className="w-5 h-5 mr-2 text-amber-600" />
             Your Journey Metrics
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">
+            <div className="text-center p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+              <div className="text-2xl font-bold text-amber-600">
                 {metrics.totalSessions}
               </div>
               <div className="text-xs text-gray-600 dark:text-gray-400">
@@ -464,7 +464,7 @@ export default function ExplorerDashboard() {
         >
           <Link
             href="/explorer/reflection"
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
           >
             Update Reflection
           </Link>

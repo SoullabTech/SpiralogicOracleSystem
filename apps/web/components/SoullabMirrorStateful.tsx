@@ -145,7 +145,7 @@ export default function SoullabMirrorStateful() {
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
-                  className="w-1 h-1 bg-purple-500 rounded-full"
+                  className="w-1 h-1 bg-amber-500 rounded-full"
                   animate={{
                     y: [0, -4, 0],
                     opacity: [0.5, 1, 0.5]
@@ -168,7 +168,7 @@ export default function SoullabMirrorStateful() {
               {[80, 100].map((radius, i) => (
                 <motion.div
                   key={i}
-                  className="absolute top-1/2 left-1/2 rounded-full border border-purple-400/30"
+                  className="absolute top-1/2 left-1/2 rounded-full border border-amber-400/30"
                   style={{
                     width: radius,
                     height: radius,
@@ -209,7 +209,7 @@ export default function SoullabMirrorStateful() {
                     max-w-[280px] px-4 py-3 rounded-2xl
                     ${message.type === 'user' 
                       ? 'bg-white text-gray-900 shadow-sm' 
-                      : 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg'
+                      : 'bg-gradient-to-r from-indigo-500 to-amber-500 text-white shadow-lg'
                     }
                   `}
                   style={message.type === 'maia' ? {
@@ -232,7 +232,7 @@ export default function SoullabMirrorStateful() {
                 className="flex justify-start"
               >
                 <div 
-                  className="bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-3 rounded-2xl shadow-lg"
+                  className="bg-gradient-to-r from-indigo-500 to-amber-500 px-4 py-3 rounded-2xl shadow-lg"
                   style={{
                     boxShadow: '0 2px 12px rgba(99, 102, 241, 0.15), 0 0 20px rgba(139, 92, 246, 0.2)'
                   }}
@@ -282,7 +282,7 @@ export default function SoullabMirrorStateful() {
                     px-3 py-1.5 rounded-2xl text-sm font-medium border transition-colors
                     ${chip.color === 'amber' ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100' :
                       chip.color === 'indigo' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100' :
-                      'bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100'}
+                      'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100'}
                   `}
                 >
                   {chip.icon} {chip.label}

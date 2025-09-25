@@ -92,7 +92,7 @@ export const OracleChatComponent: React.FC = () => {
 
         <textarea
           id="oracle-input"
-          className="w-full p-4 border border-gray-300 rounded-xl shadow-sm resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+          className="w-full p-4 border border-gray-300 rounded-xl shadow-sm resize-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
           placeholder="Share your question, challenge, or what's on your heart..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -114,7 +114,7 @@ export const OracleChatComponent: React.FC = () => {
               ${
                 loading || !input.trim()
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transform hover:scale-105"
+                  : "bg-gradient-to-r from-amber-600 to-indigo-600 text-white hover:from-amber-700 hover:to-indigo-700 transform hover:scale-105"
               }
             `}
           >
@@ -151,7 +151,7 @@ export const OracleChatComponent: React.FC = () => {
           <div className="flex items-center space-x-2 text-sm text-gray-600">
             <span>✨ Oracle Response</span>
             {response.metadata.voice_synthesis && (
-              <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs">
+              <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs">
                 🎧 Voice Available
               </span>
             )}
@@ -170,7 +170,7 @@ export const OracleChatComponent: React.FC = () => {
 
           {/* Additional Metadata */}
           {response.metadata.archetypal_presence && (
-            <div className="text-center text-sm text-purple-600 italic">
+            <div className="text-center text-sm text-amber-600 italic">
               Archetypal Presence: {response.metadata.archetypal_presence}
             </div>
           )}

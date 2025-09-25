@@ -66,12 +66,12 @@ export const MotionStatesDemo: React.FC<MotionStatesDemoProps> = ({
   };
 
   return (
-    <div className="motion-states-demo p-8 bg-gradient-to-br from-purple-900 via-indigo-900 to-black min-h-screen">
+    <div className="motion-states-demo p-8 bg-gradient-to-br from-amber-900 via-indigo-900 to-black min-h-screen">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-2 text-center">
           Sacred Motion States Demo
         </h1>
-        <p className="text-purple-200 text-center mb-8">
+        <p className="text-amber-200 text-center mb-8">
           Experience the living breath of the Holoflower
         </p>
 
@@ -81,20 +81,20 @@ export const MotionStatesDemo: React.FC<MotionStatesDemoProps> = ({
             <h3 className="text-lg font-semibold text-white">
               Current State: <span className="text-yellow-300 capitalize">{currentDemo.state}</span>
             </h3>
-            <div className="text-sm text-purple-200">
+            <div className="text-sm text-amber-200">
               Step {currentStep + 1} of {DEMO_SEQUENCE.length}
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
             <div className="text-center">
-              <div className="text-purple-200">Coherence</div>
+              <div className="text-amber-200">Coherence</div>
               <div className="text-xl font-bold text-white">
                 {Math.round(currentDemo.coherence * 100)}%
               </div>
             </div>
             <div className="text-center">
-              <div className="text-purple-200">Trend</div>
+              <div className="text-amber-200">Trend</div>
               <div className="text-xl font-bold text-white capitalize">
                 {currentDemo.shift}
                 {currentDemo.shift === 'rising' && ' ↑'}
@@ -103,13 +103,13 @@ export const MotionStatesDemo: React.FC<MotionStatesDemoProps> = ({
               </div>
             </div>
             <div className="text-center">
-              <div className="text-purple-200">Active Facet</div>
+              <div className="text-amber-200">Active Facet</div>
               <div className="text-xl font-bold text-white">
                 {activeFacetId?.split('-')[0] || 'None'}
               </div>
             </div>
             <div className="text-center">
-              <div className="text-purple-200">Check-ins</div>
+              <div className="text-amber-200">Check-ins</div>
               <div className="text-xl font-bold text-white">
                 {Object.keys(userCheckIns).length}
               </div>
@@ -216,7 +216,7 @@ export const MotionStatesDemo: React.FC<MotionStatesDemoProps> = ({
                 className={`p-3 rounded-lg border transition-colors ${
                   currentDemo.state === state.name.toLowerCase()
                     ? 'bg-yellow-500/20 border-yellow-400 text-yellow-100'
-                    : 'bg-white/5 border-purple-500/30 text-purple-200'
+                    : 'bg-white/5 border-amber-500/30 text-amber-200'
                 }`}
               >
                 <div className="font-semibold text-white mb-1">{state.name}</div>
@@ -228,10 +228,10 @@ export const MotionStatesDemo: React.FC<MotionStatesDemoProps> = ({
 
         {/* Audio Controls */}
         <div className="mt-6 text-center">
-          <p className="text-purple-200 text-sm">
+          <p className="text-amber-200 text-sm">
             🔊 Audio feedback includes elemental tones, coherence shifts, and state transitions
           </p>
-          <p className="text-purple-300 text-xs mt-2">
+          <p className="text-amber-300 text-xs mt-2">
             Click petals to activate elemental tones • Sacred frequencies: Fire (528Hz), Water (417Hz), Earth (396Hz), Air (741Hz), Aether (963Hz)
           </p>
         </div>

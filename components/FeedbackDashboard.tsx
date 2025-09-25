@@ -178,7 +178,7 @@ export default function FeedbackDashboard() {
           <h3 className="text-sm font-medium text-gray-700 mb-4">Live Feedback Stream</h3>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {feedback.slice(-10).reverse().map(f => (
-              <div key={f.id} className="border-l-2 border-gray-200 pl-4 py-2 hover:border-purple-400 transition-colors">
+              <div key={f.id} className="border-l-2 border-gray-200 pl-4 py-2 hover:border-amber-400 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <span className="text-xs font-medium text-gray-500 uppercase">{f.agent}</span>
@@ -204,7 +204,7 @@ export default function FeedbackDashboard() {
                     <span className="text-xs text-gray-500">Trust:</span>
                     <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden max-w-xs">
                       <div
-                        className="h-full bg-purple-500 transition-all duration-500"
+                        className="h-full bg-amber-500 transition-all duration-500"
                         style={{ width: `${f.trustLevel * 100}%` }}
                       />
                     </div>

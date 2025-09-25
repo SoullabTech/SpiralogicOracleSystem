@@ -78,9 +78,9 @@ export default function OracleBridgePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900 to-slate-900 text-white p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-yellow-400 to-purple-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-yellow-400 to-amber-400 bg-clip-text text-transparent">
           Oracle Bridge
         </h1>
         <p className="text-center text-gray-400 mb-8">Where intuition meets insight</p>
@@ -88,7 +88,7 @@ export default function OracleBridgePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Intuitive Check-in */}
           <div className="bg-black/30 backdrop-blur rounded-xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-purple-300">
+            <h2 className="text-2xl font-semibold mb-4 text-amber-300">
               🌸 Right Brain • Divination
             </h2>
             <p className="text-sm text-gray-400 mb-6">
@@ -108,14 +108,14 @@ export default function OracleBridgePage() {
             {/* Show user check-in results */}
             {insights?.userCheckin && insights.userCheckin.length > 0 && (
               <div className="mt-6 space-y-3">
-                <h3 className="text-lg font-medium text-purple-200">Your Energy Signatures:</h3>
+                <h3 className="text-lg font-medium text-amber-200">Your Energy Signatures:</h3>
                 {insights.userCheckin.map((item, idx) => (
-                  <div key={idx} className="bg-purple-900/30 rounded-lg p-3">
-                    <div className="font-medium text-purple-100">{item.essence}</div>
+                  <div key={idx} className="bg-amber-900/30 rounded-lg p-3">
+                    <div className="font-medium text-amber-100">{item.essence}</div>
                     <div className="text-xs text-gray-400 mt-1">
                       {item.keywords.join(" • ")}
                     </div>
-                    <div className="text-sm text-purple-200 mt-2 italic">
+                    <div className="text-sm text-amber-200 mt-2 italic">
                       "{item.feeling}"
                     </div>
                     <div className="text-sm text-yellow-400 mt-2">
@@ -140,13 +140,13 @@ export default function OracleBridgePage() {
               value={journalText}
               onChange={(e) => setJournalText(e.target.value)}
               placeholder="What's on your mind? What are you navigating?"
-              className="w-full h-40 bg-black/50 border border-purple-500/30 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:border-purple-400"
+              className="w-full h-40 bg-black/50 border border-amber-500/30 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:border-amber-400"
             />
 
             <button
               onClick={handleSubmit}
               disabled={loading || (!journalText && Object.keys(petalValues).length === 0)}
-              className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg py-3 px-6 font-medium transition-all"
+              className="w-full mt-4 bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg py-3 px-6 font-medium transition-all"
             >
               {loading ? "Processing..." : "Receive Insight"}
             </button>
@@ -170,14 +170,14 @@ export default function OracleBridgePage() {
                     
                     <div>
                       <div className="text-sm text-gray-400">Archetype:</div>
-                      <div className="text-purple-300 font-medium">
+                      <div className="text-amber-300 font-medium">
                         {insights.oracleReading.archetype}
                       </div>
                     </div>
 
                     {/* Special Aether indicator */}
                     {insights.oracleReading.spiralStage?.element === "aether" && (
-                      <div className="mt-4 p-3 bg-gradient-to-r from-purple-900/40 to-blue-900/40 rounded-lg border border-white/20">
+                      <div className="mt-4 p-3 bg-gradient-to-r from-amber-900/40 to-blue-900/40 rounded-lg border border-white/20">
                         <div className="text-sm text-gray-300 mb-1">✨ Transcendent State Detected</div>
                         <div className="text-white font-medium">
                           Aether Stage {insights.oracleReading.spiralStage.stage}:
@@ -201,7 +201,7 @@ export default function OracleBridgePage() {
                                   element === "water" ? "bg-blue-500" :
                                   element === "earth" ? "bg-green-600" :
                                   element === "air" ? "bg-gray-400" :
-                                  "bg-purple-500"
+                                  "bg-amber-500"
                                 }`}
                                 style={{ height: `${value * 100}%` }}
                               />
@@ -221,7 +221,7 @@ export default function OracleBridgePage() {
         {/* Center Bridge - Synthesis */}
         {insights?.mergedInsight && (
           <div className="mt-8 max-w-2xl mx-auto">
-            <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur rounded-xl p-6 border border-yellow-500/30">
+            <div className="bg-gradient-to-r from-amber-900/50 to-blue-900/50 backdrop-blur rounded-xl p-6 border border-yellow-500/30">
               <h3 className="text-xl font-semibold text-center mb-4 text-yellow-400">
                 🌉 The Bridge
               </h3>
@@ -252,8 +252,8 @@ export default function OracleBridgePage() {
         {/* Journey Tracking Section */}
         {sessionHistory.length > 0 && (
           <div className="mt-12 space-y-8">
-            <div className="border-t border-purple-500/20 pt-8">
-              <h2 className="text-2xl font-semibold text-center mb-8 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <div className="border-t border-amber-500/20 pt-8">
+              <h2 className="text-2xl font-semibold text-center mb-8 bg-gradient-to-r from-amber-400 to-blue-400 bg-clip-text text-transparent">
                 Your Journey Arc
               </h2>
               

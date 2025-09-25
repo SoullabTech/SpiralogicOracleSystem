@@ -166,7 +166,7 @@ export function BetaControlPanel({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-sm">
-            <Settings className="w-4 h-4 text-purple-500" />
+            <Settings className="w-4 h-4 text-amber-500" />
             Experience Presets
           </CardTitle>
         </CardHeader>

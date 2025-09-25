@@ -167,7 +167,7 @@ export default function ObsidianVaultPanel({ isOpen, onClose }: ObsidianVaultPan
             <div className="border-b border-gray-800 p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-blue-500 rounded-full flex items-center justify-center">
                     <BookOpen className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -195,7 +195,7 @@ export default function ObsidianVaultPanel({ isOpen, onClose }: ObsidianVaultPan
                     <motion.div
                       animate={{ rotate: loading ? 360 : 0 }}
                       transition={{ duration: 2, repeat: loading ? Infinity : 0, ease: "linear" }}
-                      className="w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                      className="w-20 h-20 bg-gradient-to-br from-amber-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6"
                     >
                       <BookOpen className="w-10 h-10 text-white" />
                     </motion.div>
@@ -211,7 +211,7 @@ export default function ObsidianVaultPanel({ isOpen, onClose }: ObsidianVaultPan
                     <button
                       onClick={handleConnect}
                       disabled={loading}
-                      className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all disabled:opacity-50"
+                      className="px-8 py-3 bg-gradient-to-r from-amber-600 to-blue-600 text-white font-medium rounded-lg hover:from-amber-700 hover:to-blue-700 transition-all disabled:opacity-50"
                     >
                       {loading ? (
                         <div className="flex items-center space-x-2">
@@ -235,8 +235,8 @@ export default function ObsidianVaultPanel({ isOpen, onClose }: ObsidianVaultPan
                           <div className="text-lg font-semibold text-white">{vaultStats.totalNotes}</div>
                           <div className="text-xs text-gray-400">Notes</div>
                         </div>
-                        <div className="bg-purple-500/20 rounded-lg p-3">
-                          <div className="text-lg font-semibold text-purple-400">{vaultStats.frameworks}</div>
+                        <div className="bg-amber-500/20 rounded-lg p-3">
+                          <div className="text-lg font-semibold text-amber-400">{vaultStats.frameworks}</div>
                           <div className="text-xs text-gray-400">Frameworks</div>
                         </div>
                         <div className="bg-blue-500/20 rounded-lg p-3">
@@ -273,14 +273,14 @@ export default function ObsidianVaultPanel({ isOpen, onClose }: ObsidianVaultPan
                           onChange={(e) => setSearchQuery(e.target.value)}
                           onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                           placeholder="Search your knowledge vault..."
-                          className="w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
+                          className="w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-amber-500"
                         />
                       </div>
 
                       <select
                         value={selectedFilter}
                         onChange={(e) => setSelectedFilter(e.target.value)}
-                        className="px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500"
+                        className="px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-amber-500"
                       >
                         {getFilterOptions().map((option) => (
                           <option key={option.value} value={option.value}>
@@ -292,7 +292,7 @@ export default function ObsidianVaultPanel({ isOpen, onClose }: ObsidianVaultPan
                       <button
                         onClick={handleSearch}
                         disabled={!searchQuery.trim() || loading}
-                        className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+                        className="px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors disabled:opacity-50"
                       >
                         {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                       </button>
@@ -329,7 +329,7 @@ export default function ObsidianVaultPanel({ isOpen, onClose }: ObsidianVaultPan
                                 <h4 className="font-medium text-white truncate">{note.title}</h4>
                               </div>
                               {note.relevance && (
-                                <span className="text-xs text-purple-400 bg-purple-500/20 px-2 py-1 rounded">
+                                <span className="text-xs text-amber-400 bg-amber-500/20 px-2 py-1 rounded">
                                   {Math.round(note.relevance * 100)}% match
                                 </span>
                               )}

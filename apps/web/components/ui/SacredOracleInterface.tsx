@@ -56,7 +56,7 @@ const consciousnessStateConfig = {
     color: '#B794F6', // Unity Field
     geometry: 'vector-equilibrium' as const,
     description: 'Dancing with the infinite',
-    bgGradient: 'from-purple-900/20 to-transparent'
+    bgGradient: 'from-amber-900/20 to-transparent'
   },
   dormant: {
     color: '#4A5568', // Sacred Ethereal

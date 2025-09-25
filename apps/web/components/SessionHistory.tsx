@@ -67,7 +67,7 @@ export default function SessionHistory({
               onClick={() => setFilter(elem as any)}
               className={`px-3 py-1 rounded-full text-xs transition-all ${
                 filter === elem 
-                  ? "bg-purple-600 text-white" 
+                  ? "bg-amber-600 text-white" 
                   : "bg-gray-800 text-gray-400 hover:bg-gray-700"
               }`}
             >
@@ -98,7 +98,7 @@ export default function SessionHistory({
           <div key={session.id} className="relative">
             {/* Connection line (for horizontal view) */}
             {view === "horizontal" && idx < filteredSessions.length - 1 && (
-              <div className="absolute top-10 left-20 w-8 h-0.5 bg-gradient-to-r from-purple-600 to-transparent" />
+              <div className="absolute top-10 left-20 w-8 h-0.5 bg-gradient-to-r from-amber-600 to-transparent" />
             )}
             
             {/* Mini Holoflower */}
@@ -121,7 +121,7 @@ export default function SessionHistory({
 
       {/* Elemental Arc Summary */}
       <div className="mt-6 p-4 bg-black/30 rounded-lg">
-        <h3 className="text-sm font-medium text-purple-300 mb-3">Elemental Journey Arc</h3>
+        <h3 className="text-sm font-medium text-amber-300 mb-3">Elemental Journey Arc</h3>
         <div className="flex items-center gap-4">
           {["fire", "water", "earth", "air", "aether"].map(elem => {
             const count = elementCounts[elem] || 0;
@@ -137,7 +137,7 @@ export default function SessionHistory({
                       elem === "water" ? "bg-blue-500" :
                       elem === "earth" ? "bg-green-600" :
                       elem === "air" ? "bg-gray-400" :
-                      "bg-gradient-to-t from-purple-400 to-transparent"
+                      "bg-gradient-to-t from-amber-400 to-transparent"
                     }`}
                     style={{ height: `${percentage}%` }}
                   />
@@ -159,7 +159,7 @@ export default function SessionHistory({
                onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h2 className="text-xl font-semibold text-purple-300">Session Detail</h2>
+                <h2 className="text-xl font-semibold text-amber-300">Session Detail</h2>
                 <p className="text-sm text-gray-400">
                   {new Date(selectedSession.timestamp).toLocaleString()}
                 </p>
@@ -187,7 +187,7 @@ export default function SessionHistory({
                   {selectedSession.oracleReading.archetype && (
                     <div>
                       <span className="text-gray-400">Archetype: </span>
-                      <span className="text-purple-300">{selectedSession.oracleReading.archetype}</span>
+                      <span className="text-amber-300">{selectedSession.oracleReading.archetype}</span>
                     </div>
                   )}
                   {selectedSession.oracleReading.reflection && (
@@ -201,7 +201,7 @@ export default function SessionHistory({
 
             {/* Merged Insight */}
             {selectedSession.mergedInsight && (
-              <div className="p-4 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg">
+              <div className="p-4 bg-gradient-to-r from-amber-900/30 to-blue-900/30 rounded-lg">
                 <h3 className="text-sm font-medium text-yellow-400 mb-2">Synthesis</h3>
                 <div className="space-y-3 text-sm">
                   {selectedSession.mergedInsight.synthesis && (

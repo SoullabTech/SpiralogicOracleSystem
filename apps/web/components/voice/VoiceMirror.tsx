@@ -258,7 +258,7 @@ export default function VoiceMirror({
               {mode === 'voice' ? '🎤 Voice Mode' : '✍️ Text Mode'}
             </span>
             {prosodyData?.currentPhase && (
-              <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-full text-xs text-purple-700 dark:text-purple-300">
+              <span className="px-2 py-1 bg-amber-100 dark:bg-amber-900/30 rounded-full text-xs text-amber-700 dark:text-amber-300">
                 {prosodyData.currentPhase}
               </span>
             )}
@@ -280,7 +280,7 @@ export default function VoiceMirror({
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {message.role === 'user' ? (
-                  <div className="max-w-md px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl rounded-tr-sm shadow-lg">
+                  <div className="max-w-md px-4 py-3 bg-gradient-to-r from-amber-500 to-indigo-600 text-white rounded-2xl rounded-tr-sm shadow-lg">
                     {message.content}
                   </div>
                 ) : (
@@ -306,9 +306,9 @@ export default function VoiceMirror({
                 <div className="px-4 py-3 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" />
-                      <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                      <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" />
+                      <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                      <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                     </div>
                     <span className="text-sm text-neutral-500 italic">
                       Maia is reflecting...
@@ -355,7 +355,7 @@ export default function VoiceMirror({
                 const unlocked = await unlockAudio();
                 setAudioUnlocked(unlocked);
               }}
-              className="px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all"
+              className="px-4 py-2 bg-gradient-to-r from-amber-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all"
             >
               Tap to enable sacred voice ✨
             </button>

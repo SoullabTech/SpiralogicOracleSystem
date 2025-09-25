@@ -24,7 +24,7 @@ export default function DashboardLayout({
         className="flex items-center justify-between p-4 md:p-6 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm"
       >
         <div>
-          <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+          <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-600 to-indigo-600 dark:from-amber-400 dark:to-indigo-400 bg-clip-text text-transparent">
             {title}
           </h1>
           {subtitle && (

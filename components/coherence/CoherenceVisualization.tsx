@@ -128,9 +128,9 @@ export const CoherenceVisualization: React.FC<CoherenceVisualizationProps> = ({
           </div>
         </div>
         
-        <div className="bg-purple-50 rounded-lg p-3">
-          <div className="text-xs text-purple-600">Trend</div>
-          <div className="text-xl font-semibold text-purple-700 capitalize">
+        <div className="bg-amber-50 rounded-lg p-3">
+          <div className="text-xs text-amber-600">Trend</div>
+          <div className="text-xl font-semibold text-amber-700 capitalize">
             {stats.trend}
             {stats.trend === 'rising' && ' ↑'}
             {stats.trend === 'falling' && ' ↓'}
@@ -258,7 +258,7 @@ export const CoherenceVisualization: React.FC<CoherenceVisualizationProps> = ({
       {showComponents && (
         <div className="flex justify-center gap-6 mb-6 text-xs">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-purple-500 rounded-full" />
+            <div className="w-3 h-3 bg-amber-500 rounded-full" />
             <span>Overall Coherence</span>
           </div>
           <div className="flex items-center gap-2">
@@ -303,11 +303,11 @@ export const CoherenceVisualization: React.FC<CoherenceVisualizationProps> = ({
       )}
 
       {/* Insights */}
-      <div className="mt-6 p-4 bg-purple-50 rounded-lg">
-        <p className="text-sm text-purple-900 font-medium mb-2">
+      <div className="mt-6 p-4 bg-amber-50 rounded-lg">
+        <p className="text-sm text-amber-900 font-medium mb-2">
           Coherence Insight
         </p>
-        <p className="text-sm text-purple-700">
+        <p className="text-sm text-amber-700">
           {stats.trend === 'rising' && 
             'Your coherence is improving. Journal themes are aligning well with your intuitive check-ins and oracle guidance.'}
           {stats.trend === 'falling' && 

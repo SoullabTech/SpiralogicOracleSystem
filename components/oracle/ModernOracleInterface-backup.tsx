@@ -538,7 +538,7 @@ export function ModernOracleInterface({
                 </button>
                 <button
                   onClick={initializeSystem}
-                  className="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-xs"
+                  className="px-3 py-1 bg-amber-600 hover:bg-amber-700 rounded text-xs"
                 >
                   Refresh System Status
                 </button>

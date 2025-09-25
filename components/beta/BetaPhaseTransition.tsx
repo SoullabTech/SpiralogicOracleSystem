@@ -34,9 +34,9 @@ const phaseIcons = {
 const phaseColors = {
   entry: 'from-amber-400 to-orange-500',
   journal: 'from-blue-400 to-indigo-500',
-  chat: 'from-purple-400 to-pink-500',
+  chat: 'from-amber-400 to-pink-500',
   integration: 'from-green-400 to-emerald-500',
-  evening: 'from-indigo-400 to-purple-600'
+  evening: 'from-indigo-400 to-amber-600'
 };
 
 const phaseNames = {

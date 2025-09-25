@@ -20,7 +20,7 @@ const ANCHORING_MESSAGES = [
     trigger: 25,
     message: "Your patterns are observations, not diagnoses. You know yourself best.",
     icon: Heart,
-    color: 'text-purple-500'
+    color: 'text-amber-500'
   },
   {
     trigger: 40,
@@ -66,7 +66,7 @@ export default function RealityAnchor({ messageCount, sessionNumber }: RealityAn
         trigger: 0,
         message: "Welcome to your first session. I'm Maya, an AI here to explore with you.",
         icon: Sparkles,
-        color: 'text-purple-500'
+        color: 'text-amber-500'
       });
     }
   }, [sessionNumber, messageCount]);

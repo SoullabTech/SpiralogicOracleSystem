@@ -46,7 +46,7 @@ const getCoherenceGradient = (level: number) => {
   if (level < 0.5) return "from-orange-500 to-yellow-500";
   if (level < 0.7) return "from-yellow-500 to-green-500";
   if (level < 0.9) return "from-green-500 to-blue-500";
-  return "from-blue-500 to-purple-500";
+  return "from-blue-500 to-amber-500";
 };
 
 export default function HoloflowerNode() {

@@ -87,7 +87,7 @@ export default function EnhancedPetalScaffold({
 
   return (
     <div 
-      className="relative flex items-center justify-center bg-gradient-to-br from-indigo-900/20 via-purple-900/20 to-pink-900/20 rounded-3xl"
+      className="relative flex items-center justify-center bg-gradient-to-br from-indigo-900/20 via-amber-900/20 to-pink-900/20 rounded-3xl"
       style={{ width: size, height: size }}
     >
       {/* Sacred geometry background pattern */}
@@ -307,7 +307,7 @@ export default function EnhancedPetalScaffold({
       {/* Central Aether Core */}
       <motion.div
         className="absolute w-20 h-20 rounded-full cursor-pointer z-10
-                 bg-gradient-to-br from-purple-400 via-pink-400 to-indigo-400
+                 bg-gradient-to-br from-amber-400 via-pink-400 to-indigo-400
                  border-2 border-white/40 shadow-2xl
                  flex items-center justify-center"
         style={{

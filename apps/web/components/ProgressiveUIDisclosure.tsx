@@ -296,7 +296,7 @@ export function InteractionQualityIndicator({
 }: InteractionQualityIndicatorProps) {
   const getQuality = () => {
     if (gap < 0.1) return { type: 'collapse', color: 'text-red-500', icon: '⚫' };
-    if (resonance > 0.8 && gap > 0.3) return { type: 'creative_tension', color: 'text-purple-500', icon: '⚡' };
+    if (resonance > 0.8 && gap > 0.3) return { type: 'creative_tension', color: 'text-amber-500', icon: '⚡' };
     if (resonance > 0.6) return { type: 'harmonic', color: 'text-blue-500', icon: '🌊' };
     if (resonance < 0.3) return { type: 'dissonant', color: 'text-amber-500', icon: '🎭' };
     return { type: 'developing', color: 'text-slate-500', icon: '○' };

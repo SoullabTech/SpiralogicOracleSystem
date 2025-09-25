@@ -29,7 +29,7 @@ export default function RitualTransition({ trigger, onComplete }: RitualTransiti
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0  from-indigo-900 via-purple-900 to-black flex items-center justify-center z-50"
+          className="fixed inset-0  from-indigo-900 via-amber-900 to-black flex items-center justify-center z-50"
           style={{
             backgroundImage: `radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 1px, transparent 1px),
                              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 1px, transparent 1px),

@@ -257,8 +257,8 @@ export function ResonanceQualityIndicator({
         return {
           icon: '⚔️',
           label: 'Creative tension',
-          color: 'text-purple-600',
-          bgColor: 'bg-purple-50'
+          color: 'text-amber-600',
+          bgColor: 'bg-amber-50'
         };
       case 'collapse':
         return {

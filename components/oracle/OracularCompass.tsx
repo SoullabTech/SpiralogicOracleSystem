@@ -76,7 +76,7 @@ const DIRECTIONS: Record<string, Direction> = {
     element: "Transcendence",
     purpose: "Opens vertical axis, dissolves boundaries",
     cards: [1, 5],
-    color: "from-violet-500/20 to-purple-600/20",
+    color: "from-violet-500/20 to-amber-600/20",
     position: { x: 0, y: -150 }
   },
   right: {

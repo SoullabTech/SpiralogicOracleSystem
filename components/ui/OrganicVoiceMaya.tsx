@@ -803,7 +803,7 @@ export const OrganicVoiceMaya: React.FC<OrganicVoiceMayaProps> = ({
                 {[0, 0.3, 0.6].map((delay, i) => (
                   <motion.div
                     key={i}
-                    className="absolute inset-0 rounded-full border border-purple-400/30"
+                    className="absolute inset-0 rounded-full border border-amber-400/30"
                     initial={{ scale: 1, opacity: 0.5 }}
                     animate={{
                       scale: [1, 1.5, 2],
@@ -868,9 +868,9 @@ export const OrganicVoiceMaya: React.FC<OrganicVoiceMayaProps> = ({
           <div className="absolute inset-0 flex items-center justify-center">
             <svg
               className={`w-12 h-12 transition-all duration-500 ${
-                conversationMode === 'paused' ? 'text-purple-200 opacity-40' :
+                conversationMode === 'paused' ? 'text-amber-200 opacity-40' :
                 presenceMode === 'dormant' ? 'text-gray-500 opacity-30' :
-                isListening ? 'text-purple-300' : 'text-gray-400'
+                isListening ? 'text-amber-300' : 'text-gray-400'
               }`}
               fill="none"
               stroke="currentColor"
@@ -906,9 +906,9 @@ export const OrganicVoiceMaya: React.FC<OrganicVoiceMayaProps> = ({
         initial={{ opacity: 0 }}
       >
         <p className={`text-sm font-light ${
-          conversationMode === 'paused' ? 'text-purple-300 opacity-50' :
+          conversationMode === 'paused' ? 'text-amber-300 opacity-50' :
           presenceMode === 'dormant' ? 'text-gray-600' :
-          isListening ? 'text-purple-400' : 'text-gray-500'
+          isListening ? 'text-amber-400' : 'text-gray-500'
         }`}>
           {conversationMode === 'paused' && '🌙 Taking space'}
           {conversationMode !== 'paused' && status === 'idle' && 'Touch to begin'}
@@ -935,7 +935,7 @@ export const OrganicVoiceMaya: React.FC<OrganicVoiceMayaProps> = ({
             exit={{ opacity: 0, y: -20 }}
           >
             <div className="px-6 py-3 rounded-2xl backdrop-blur-md bg-white/10 border border-white/20">
-              <p className="text-sm text-purple-300">{transcript}</p>
+              <p className="text-sm text-amber-300">{transcript}</p>
             </div>
           </motion.div>
         )}
@@ -950,8 +950,8 @@ export const OrganicVoiceMaya: React.FC<OrganicVoiceMayaProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
           >
-            <div className="px-6 py-3 rounded-2xl backdrop-blur-md bg-purple-500/10 border border-purple-400/20">
-              <p className="text-sm text-purple-200 opacity-70">
+            <div className="px-6 py-3 rounded-2xl backdrop-blur-md bg-amber-500/10 border border-amber-400/20">
+              <p className="text-sm text-amber-200 opacity-70">
                 {GENTLE_PROMPTS[promptIndexRef.current % GENTLE_PROMPTS.length]}
               </p>
             </div>
@@ -968,8 +968,8 @@ export const OrganicVoiceMaya: React.FC<OrganicVoiceMayaProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
           >
-            <div className="px-4 py-2 rounded-xl backdrop-blur-sm bg-purple-900/20 border border-purple-500/20">
-              <p className="text-xs text-purple-300 opacity-60">
+            <div className="px-4 py-2 rounded-xl backdrop-blur-sm bg-amber-900/20 border border-amber-500/20">
+              <p className="text-xs text-amber-300 opacity-60">
                 {pauseAcknowledgment === '🙏' ? pauseAcknowledgment : pauseAcknowledgment}
               </p>
             </div>

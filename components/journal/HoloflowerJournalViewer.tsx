@@ -78,7 +78,7 @@ export function HoloflowerJournalViewer({ entries }: HoloflowerJournalViewerProp
             onClick={() => setViewMode(mode as any)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               viewMode === mode
-                ? 'bg-purple-600 text-white'
+                ? 'bg-amber-600 text-white'
                 : 'bg-white/5 text-white/70 hover:bg-white/10'
             }`}
           >
@@ -115,7 +115,7 @@ export function HoloflowerJournalViewer({ entries }: HoloflowerJournalViewerProp
                 </div>
                 <button
                   onClick={() => setSelectedEntry(entry)}
-                  className="text-purple-400 hover:text-purple-300 text-sm"
+                  className="text-amber-400 hover:text-amber-300 text-sm"
                 >
                   View Details
                 </button>
@@ -160,7 +160,7 @@ export function HoloflowerJournalViewer({ entries }: HoloflowerJournalViewerProp
                 <p className="text-white/60 text-xs">
                   {new Date(entry.timestamp).toLocaleDateString()}
                 </p>
-                <p className="text-purple-400 text-xs">
+                <p className="text-amber-400 text-xs">
                   {Math.round(entry.checkInData.coherence * 100)}%
                 </p>
               </div>
@@ -241,7 +241,7 @@ export function HoloflowerJournalViewer({ entries }: HoloflowerJournalViewerProp
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="bg-gradient-to-br from-purple-950 via-indigo-950 to-black rounded-3xl max-w-4xl w-full max-h-[80vh] overflow-y-auto"
+              className="bg-gradient-to-br from-black via-indigo-950 to-black rounded-3xl max-w-4xl w-full max-h-[80vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6 border-b border-white/10">
@@ -255,7 +255,7 @@ export function HoloflowerJournalViewer({ entries }: HoloflowerJournalViewerProp
                         day: 'numeric'
                       })}
                     </h2>
-                    <p className="text-purple-300">
+                    <p className="text-amber-300">
                       Coherence: {Math.round(selectedEntry.checkInData.coherence * 100)}%
                     </p>
                   </div>

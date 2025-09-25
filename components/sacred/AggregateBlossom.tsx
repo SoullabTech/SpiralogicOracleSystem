@@ -270,7 +270,7 @@ export const AggregateBlossom: React.FC<AggregateBlossomProps> = ({
             {timeWindow}-day aggregate from {aggregateData.sessionCount} sessions
           </p>
           {aggregateData.aetherPresence > 0 && (
-            <p className="text-xs text-purple-600 mt-1">
+            <p className="text-xs text-amber-600 mt-1">
               {Math.round(aggregateData.aetherPresence * 100)}% Aetheric presence
             </p>
           )}

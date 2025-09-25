@@ -588,7 +588,7 @@ export const HoloflowerTimeline: React.FC<TimelineProps> = ({
       {/* Journey Insights */}
       {sessions.length > 5 && (
         <motion.div
-          className="mt-6 p-4 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-lg"
+          className="mt-6 p-4 bg-gradient-to-r from-amber-900/20 to-blue-900/20 rounded-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}

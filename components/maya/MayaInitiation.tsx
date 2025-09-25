@@ -79,7 +79,7 @@ export function MayaInitiation() {
             className="space-y-6"
           >
             <div className="flex justify-center mb-8">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-600 to-indigo-600 flex items-center justify-center">
                 <Brain className="w-12 h-12 text-white" />
               </div>
             </div>
@@ -100,7 +100,7 @@ export function MayaInitiation() {
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 placeholder="What should I call you?"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50"
                 autoFocus
               />
             </div>
@@ -128,7 +128,7 @@ export function MayaInitiation() {
 
             <div className="grid gap-3">
               <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                <MessageCircle className="w-5 h-5 text-purple-400" />
+                <MessageCircle className="w-5 h-5 text-amber-400" />
                 <div>
                   <p className="text-white text-sm font-medium">Conversations</p>
                   <p className="text-white/60 text-xs">Text or voice, I maintain context</p>
@@ -192,7 +192,7 @@ export function MayaInitiation() {
                     ...prev,
                     clarity: parseInt(e.target.value)
                   }))}
-                  className="w-full accent-purple-600"
+                  className="w-full accent-amber-600"
                 />
               </div>
 
@@ -210,7 +210,7 @@ export function MayaInitiation() {
                     ...prev,
                     support: parseInt(e.target.value)
                   }))}
-                  className="w-full accent-purple-600"
+                  className="w-full accent-amber-600"
                 />
               </div>
 
@@ -228,13 +228,13 @@ export function MayaInitiation() {
                     ...prev,
                     pace: parseInt(e.target.value)
                   }))}
-                  className="w-full accent-purple-600"
+                  className="w-full accent-amber-600"
                 />
               </div>
             </div>
 
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <p className="text-purple-300 text-sm mb-2">Your preference:</p>
+              <p className="text-amber-300 text-sm mb-2">Your preference:</p>
               <p className="text-white/80 text-sm">
                 I'll be 
                 {communicationStyle.clarity > 60 ? ' direct and clear' : 
@@ -270,7 +270,7 @@ export function MayaInitiation() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center"
+                className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-600 to-indigo-600 flex items-center justify-center"
               >
                 <Brain className="w-12 h-12 text-white" />
               </motion.div>
@@ -285,7 +285,7 @@ export function MayaInitiation() {
               Our conversation can start with whatever's on your mind.
             </p>
 
-            <div className="bg-gradient-to-br from-purple-600/10 to-indigo-600/10 rounded-xl p-6 border border-purple-500/20">
+            <div className="bg-gradient-to-br from-amber-600/10 to-indigo-600/10 rounded-xl p-6 border border-amber-500/20">
               <p className="text-white/80 text-sm">
                 You can share thoughts, upload documents, send links, or speak directly. 
                 I'll maintain our context across all interactions.
@@ -296,7 +296,7 @@ export function MayaInitiation() {
               <motion.div
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-purple-400 text-sm"
+                className="text-amber-400 text-sm"
               >
                 Initializing your Maya instance...
               </motion.div>
@@ -334,7 +334,7 @@ export function MayaInitiation() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-indigo-950 to-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-indigo-950 to-black flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -347,9 +347,9 @@ export function MayaInitiation() {
               key={key}
               className={`h-1 rounded-full transition-all ${
                 key === phase
-                  ? 'w-8 bg-purple-500'
+                  ? 'w-8 bg-amber-500'
                   : Object.keys(phases).indexOf(key) < Object.keys(phases).indexOf(phase)
-                  ? 'w-4 bg-purple-400'
+                  ? 'w-4 bg-amber-400'
                   : 'w-4 bg-white/20'
               }`}
             />
@@ -384,7 +384,7 @@ export function MayaInitiation() {
               disabled={!canProceed()}
               className={`ml-auto px-6 py-2 rounded-lg transition-all flex items-center gap-2 ${
                 canProceed()
-                  ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                  ? 'bg-amber-600 hover:bg-amber-700 text-white'
                   : 'bg-white/10 text-white/30 cursor-not-allowed'
               }`}
             >

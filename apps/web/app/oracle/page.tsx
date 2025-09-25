@@ -513,7 +513,7 @@ function OraclePageInner() {
               className="p-2 hover:bg-[#1A1F2E] rounded-lg transition-colors"
               title="Obsidian Vault"
             >
-              <Database className="w-5 h-5 text-gray-400 hover:text-purple-400" />
+              <Database className="w-5 h-5 text-gray-400 hover:text-amber-400" />
             </button>
             <button
               onClick={() => router.push('/journal')}

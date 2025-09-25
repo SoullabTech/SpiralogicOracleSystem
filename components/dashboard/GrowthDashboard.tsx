@@ -112,7 +112,7 @@ export default function GrowthDashboard({ userId, timeRange = "30" }: GrowthDash
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 bg-gradient-to-br from-indigo-50 to-amber-50 min-h-screen">
 
       {/* Header Stats */}
       <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -121,7 +121,7 @@ export default function GrowthDashboard({ userId, timeRange = "30" }: GrowthDash
           value={data.coherenceScore}
           icon={<Brain className="w-6 h-6" />}
           suffix="%"
-          color="bg-gradient-to-r from-purple-500 to-pink-500"
+          color="bg-gradient-to-r from-amber-500 to-pink-500"
         />
         <StatsCard
           title="Breakthrough Moments"
@@ -164,7 +164,7 @@ export default function GrowthDashboard({ userId, timeRange = "30" }: GrowthDash
       <Card className="lg:col-span-4 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Brain className="w-5 h-5 text-purple-500" />
+            <Brain className="w-5 h-5 text-amber-500" />
             Coherence Level
           </CardTitle>
         </CardHeader>
@@ -334,11 +334,11 @@ function CircularProgress({ value }: { value: number }) {
           strokeWidth="8"
           fill="transparent"
           strokeDasharray={strokeDasharray}
-          className="text-purple-500"
+          className="text-amber-500"
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-2xl font-bold text-purple-600">{value}%</span>
+        <span className="text-2xl font-bold text-amber-600">{value}%</span>
       </div>
     </div>
   );
@@ -401,26 +401,26 @@ function BreakthroughTimeline({ breakthroughs }: { breakthroughs: DashboardData[
 
   return (
     <div className="relative">
-      <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500 to-pink-500"></div>
+      <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-500 to-pink-500"></div>
 
       {breakthroughs.map((breakthrough, idx) => (
         <div key={idx} className="flex items-start mb-8 relative">
-          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold z-10">
+          <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold z-10">
             ✨
           </div>
           <div className="ml-6 flex-1">
             <div className="text-sm text-gray-500">{breakthrough.date}</div>
-            <div className="mt-1 p-3 bg-purple-50 rounded-lg">
-              <p className="font-medium text-purple-800">{breakthrough.description}</p>
+            <div className="mt-1 p-3 bg-amber-50 rounded-lg">
+              <p className="font-medium text-amber-800">{breakthrough.description}</p>
               {breakthrough.context && (
-                <p className="text-sm text-purple-600 mt-2">{breakthrough.context}</p>
+                <p className="text-sm text-amber-600 mt-2">{breakthrough.context}</p>
               )}
               <div className="mt-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-purple-600">Intensity:</span>
-                  <div className="w-20 h-2 bg-purple-200 rounded-full">
+                  <span className="text-xs text-amber-600">Intensity:</span>
+                  <div className="w-20 h-2 bg-amber-200 rounded-full">
                     <div
-                      className="h-2 bg-purple-500 rounded-full"
+                      className="h-2 bg-amber-500 rounded-full"
                       style={{ width: `${breakthrough.intensity * 100}%` }}
                     ></div>
                   </div>

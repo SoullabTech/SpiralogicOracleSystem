@@ -52,7 +52,7 @@ export default function EnhancedPersonalizationField() {
     { id: 'water', name: 'Water', icon: Droplet, color: 'from-blue-500 to-cyan-500' },
     { id: 'earth', name: 'Earth', icon: Mountain, color: 'from-green-500 to-emerald-500' },
     { id: 'air', name: 'Air', icon: Wind, color: 'from-gray-400 to-blue-400' },
-    { id: 'aether', name: 'Aether', icon: Star, color: 'from-purple-500 to-pink-500' }
+    { id: 'aether', name: 'Aether', icon: Star, color: 'from-amber-500 to-pink-500' }
   ];
 
   useEffect(() => {

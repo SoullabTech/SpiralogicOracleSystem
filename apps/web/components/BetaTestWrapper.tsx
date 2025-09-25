@@ -98,7 +98,7 @@ export default function BetaTestWrapper({
             className="absolute bottom-0 left-0 right-0 z-50"
           >
             <div className="bg-gradient-to-b from-white/95 to-white dark:from-neutral-900/95 dark:to-neutral-900 
-                          backdrop-blur-xl border-t border-purple-200/30 dark:border-purple-800/30 
+                          backdrop-blur-xl border-t border-amber-200/30 dark:border-amber-800/30 
                           rounded-t-3xl shadow-2xl">
               
               {/* Drag handle */}
@@ -145,7 +145,7 @@ export default function BetaTestWrapper({
                       onChange={(e) => setQuickReflection(e.target.value)}
                       className="w-full p-3 rounded-xl border border-neutral-200 dark:border-neutral-700
                                bg-white/70 dark:bg-neutral-800/70 text-sm resize-none
-                               focus:outline-none focus:ring-2 focus:ring-purple-400/50
+                               focus:outline-none focus:ring-2 focus:ring-amber-400/50
                                placeholder-neutral-400 dark:placeholder-neutral-500"
                       rows={2}
                       placeholder="A word, phrase, or brief feeling..."
@@ -154,7 +154,7 @@ export default function BetaTestWrapper({
                     <div className="flex justify-between items-center mt-4">
                       <button
                         onClick={() => setFeedbackPhase('expanded')}
-                        className="text-sm text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+                        className="text-sm text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1"
                       >
                         Share more detail
                         <ChevronDown className="w-3 h-3" />
@@ -163,7 +163,7 @@ export default function BetaTestWrapper({
                       <button
                         onClick={submitFeedback}
                         disabled={!quickReflection.trim()}
-                        className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 
+                        className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-indigo-600 
                                  text-white text-sm font-medium hover:scale-105 transition
                                  disabled:opacity-50 disabled:hover:scale-100"
                       >
@@ -191,7 +191,7 @@ export default function BetaTestWrapper({
                             onClick={() => setExpandedFeedback(prev => ({ ...prev, clarity: val }))}
                             className={`flex-1 py-2 rounded-lg text-sm transition
                               ${expandedFeedback.clarity === val
-                                ? 'bg-purple-500 text-white'
+                                ? 'bg-amber-500 text-white'
                                 : 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                               }`}
                           >
@@ -217,7 +217,7 @@ export default function BetaTestWrapper({
                             onClick={() => setExpandedFeedback(prev => ({ ...prev, wouldReturn: option }))}
                             className={`flex-1 py-2 rounded-lg text-sm transition
                               ${expandedFeedback.wouldReturn === option
-                                ? 'bg-purple-500 text-white'
+                                ? 'bg-amber-500 text-white'
                                 : 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                               }`}
                           >
@@ -237,7 +237,7 @@ export default function BetaTestWrapper({
                         onChange={(e) => setExpandedFeedback(prev => ({ ...prev, suggestion: e.target.value }))}
                         className="w-full p-3 rounded-xl border border-neutral-200 dark:border-neutral-700
                                  bg-white/70 dark:bg-neutral-800/70 text-sm resize-none
-                                 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
+                                 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
                         rows={2}
                         placeholder="What would make this experience better?"
                       />
@@ -253,7 +253,7 @@ export default function BetaTestWrapper({
                       </button>
                       <button
                         onClick={submitFeedback}
-                        className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 
+                        className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-indigo-600 
                                  text-white text-sm font-medium hover:scale-105 transition"
                       >
                         Submit Feedback
@@ -286,9 +286,9 @@ export default function BetaTestWrapper({
         transition={{ delay: 2 }}
         className="absolute top-4 right-4 z-40"
       >
-        <div className="px-3 py-1 rounded-full bg-purple-100/80 dark:bg-purple-900/30 
-                      backdrop-blur-sm border border-purple-200/50 dark:border-purple-800/50">
-          <span className="text-xs font-medium text-purple-600 dark:text-purple-400">
+        <div className="px-3 py-1 rounded-full bg-amber-100/80 dark:bg-amber-900/30 
+                      backdrop-blur-sm border border-amber-200/50 dark:border-amber-800/50">
+          <span className="text-xs font-medium text-amber-600 dark:text-amber-400">
             Beta
           </span>
         </div>

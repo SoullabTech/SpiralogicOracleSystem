@@ -118,8 +118,8 @@ export const HoloflowerCheckIn: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowGuidance(!showGuidance)}
-                className="px-4 py-2 text-sm bg-purple-100 hover:bg-purple-200 
-                         text-purple-700 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm bg-amber-100 hover:bg-amber-200 
+                         text-amber-700 rounded-lg transition-colors"
               >
                 {showGuidance ? 'Hide' : 'Show'} Guidance
               </button>
@@ -163,9 +163,9 @@ export const HoloflowerCheckIn: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-4 p-4 bg-purple-50 rounded-lg">
-                <p className="text-sm font-medium text-purple-900 mb-1">Practice:</p>
-                <p className="text-purple-700 italic">
+              <div className="mt-4 p-4 bg-amber-50 rounded-lg">
+                <p className="text-sm font-medium text-amber-900 mb-1">Practice:</p>
+                <p className="text-amber-700 italic">
                   {getFacetById(selectedFacet).practice}
                 </p>
               </div>
@@ -174,9 +174,9 @@ export const HoloflowerCheckIn: React.FC = () => {
 
           {/* Oracle Guidance */}
           {showGuidance && (
-            <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl 
-                          shadow-sm border border-purple-100 p-6">
-              <h3 className="text-lg font-medium text-purple-900 mb-4">
+            <div className="bg-gradient-to-br from-amber-50 to-white rounded-xl 
+                          shadow-sm border border-amber-100 p-6">
+              <h3 className="text-lg font-medium text-amber-900 mb-4">
                 Oracle Guidance
               </h3>
 
@@ -196,10 +196,10 @@ export const HoloflowerCheckIn: React.FC = () => {
                 )}
 
                 <div className="border-t pt-4">
-                  <p className="text-purple-900 font-medium mb-2">
+                  <p className="text-amber-900 font-medium mb-2">
                     {guidance.primary}
                   </p>
-                  <p className="text-purple-700 italic">
+                  <p className="text-amber-700 italic">
                     Practice: {guidance.practice}
                   </p>
                 </div>

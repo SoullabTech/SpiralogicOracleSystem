@@ -101,7 +101,7 @@ export default function BetaMirror({ className = '' }: BetaMirrorProps) {
         className="flex items-center justify-between px-6 py-4 border-b dark:border-neutral-700"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-indigo-600 flex items-center justify-center">
             <span className="text-white font-medium">M</span>
           </div>
           <div>
@@ -150,9 +150,9 @@ export default function BetaMirror({ className = '' }: BetaMirrorProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 border-t dark:border-purple-800"
+        className="px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border-t dark:border-amber-800"
       >
-        <p className="text-xs text-center text-purple-600 dark:text-purple-400">
+        <p className="text-xs text-center text-amber-600 dark:text-amber-400">
           Beta Version — Your feedback shapes Maia&apos;s evolution
         </p>
       </motion.div>

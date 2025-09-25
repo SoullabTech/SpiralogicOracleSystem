@@ -235,7 +235,7 @@ export function RitualArcProgression({
             <motion.div
               initial={{ y: 30 }}
               animate={{ y: 0 }}
-              className="text-center space-y-6 p-8 rounded-3xl bg-gradient-to-br from-purple-900/80 to-pink-900/80 
+              className="text-center space-y-6 p-8 rounded-3xl bg-gradient-to-br from-amber-900/80 to-pink-900/80 
                          backdrop-blur-lg border border-white/20 shadow-2xl max-w-lg mx-4"
             >
               {/* Milestone Icon */}
@@ -243,7 +243,7 @@ export function RitualArcProgression({
                 className={`w-24 h-24 mx-auto rounded-full border-2 border-white/40 relative overflow-hidden
                            ${newMilestone.centerState === 'seed' ? 'bg-gradient-to-br from-green-500/40 to-emerald-600/40' :
                              newMilestone.centerState === 'bud' ? 'bg-gradient-to-br from-yellow-500/40 to-orange-500/40' :
-                             newMilestone.centerState === 'bloom' ? 'bg-gradient-to-br from-pink-500/40 to-purple-500/40' :
+                             newMilestone.centerState === 'bloom' ? 'bg-gradient-to-br from-pink-500/40 to-amber-500/40' :
                              'bg-gradient-to-br from-yellow-300/40 to-white/40'}`}
                 animate={{
                   scale: [1, 1.2, 1.1],
@@ -371,7 +371,7 @@ export function RitualArcProgression({
             </div>
             <div className="w-full h-0.5 bg-white/10 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-purple-500/60 to-pink-500/60 rounded-full"
+                className="h-full bg-gradient-to-r from-amber-500/60 to-pink-500/60 rounded-full"
                 initial={{ width: '0%' }}
                 animate={{ 
                   width: `${Math.min(100, (userProgress.totalSessions / nextMilestone.unlockConditions.minSessions) * 100)}%` 

@@ -115,7 +115,7 @@ const OracleCard = React.forwardRef<HTMLDivElement, OracleCardProps>(
       low: 'shadow-sm',
       medium: 'shadow-md',
       high: 'shadow-lg',
-      mystical: 'shadow-lg shadow-purple-500/20' // Oracle-themed shadow
+      mystical: 'shadow-lg shadow-amber-500/20' // Oracle-themed shadow
     };
     
     // ✅ PRESERVED - Our signature glassmorphic blur
@@ -131,19 +131,19 @@ const OracleCard = React.forwardRef<HTMLDivElement, OracleCardProps>(
     const gradientClasses = {
       none: 'bg-background/80',  // Our current default
       subtle: 'bg-gradient-to-br from-background/80 to-background/60',
-      primary: 'bg-gradient-to-br from-purple-900/20 via-background/80 to-slate-900/90',
-      mystical: 'bg-gradient-to-br from-purple-900/30 via-indigo-900/20 to-orange-900/10'
+      primary: 'bg-gradient-to-br from-amber-900/20 via-background/80 to-slate-900/90',
+      mystical: 'bg-gradient-to-br from-amber-900/30 via-indigo-900/20 to-orange-900/10'
     };
     
     // Build the className with all enhancements
     const baseClasses = `
       rounded-xl 
-      border border-purple-500/20 
+      border border-amber-500/20 
       ${gradientClasses[gradient]}
       ${blurClasses[blur]}
       ${elevationClasses[elevation]}
       ${spacingClasses[spacing]}
-      ${mystical ? 'ring-1 ring-purple-400/30' : ''}
+      ${mystical ? 'ring-1 ring-amber-400/30' : ''}
       ${className}
     `.trim().replace(/\s+/g, ' ');
 
@@ -237,7 +237,7 @@ const OracleCardTitle = React.forwardRef<
   React.HTMLAttributes<HTMLHeadingElement> & { mystical?: boolean }
 >(({ className = "", mystical = false, ...props }, ref) => {
   const titleClasses = mystical 
-    ? `text-xl font-semibold leading-none tracking-tight bg-gradient-to-r from-purple-400 to-orange-400 bg-clip-text text-transparent ${className}`
+    ? `text-xl font-semibold leading-none tracking-tight bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent ${className}`
     : `text-xl font-semibold leading-none tracking-tight text-white ${className}`;
   
   return (

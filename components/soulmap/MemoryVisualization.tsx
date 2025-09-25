@@ -208,7 +208,7 @@ export function MemoryVisualization({ userId }: { userId: string }) {
   };
   
   return (
-    <div className="w-full h-screen bg-gradient-to-br from-purple-950 via-indigo-950 to-black">
+    <div className="w-full h-screen bg-gradient-to-br from-black via-indigo-950 to-black">
       {/* 3D Visualization */}
       <Canvas camera={{ position: [10, 10, 10], fov: 60 }}>
         <ambientLight intensity={0.5} />
@@ -308,7 +308,7 @@ export function MemoryVisualization({ userId }: { userId: string }) {
               <p className="text-white/60 text-xs uppercase mb-1">Importance</p>
               <div className="w-full bg-white/10 rounded-full h-2">
                 <div
-                  className="bg-gradient-to-r from-purple-500 to-indigo-500 h-2 rounded-full"
+                  className="bg-gradient-to-r from-amber-500 to-indigo-500 h-2 rounded-full"
                   style={{ width: `${selectedNode.importance * 100}%` }}
                 />
               </div>

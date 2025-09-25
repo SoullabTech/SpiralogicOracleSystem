@@ -28,9 +28,9 @@ const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
 
     const variants = {
       default: {
-        bg: "bg-background/95 backdrop-blur-xl border-purple-500/20",
+        bg: "bg-background/95 backdrop-blur-xl border-amber-500/20",
         icon: Info,
-        iconColor: "text-purple-400"
+        iconColor: "text-amber-400"
       },
       success: {
         bg: "bg-green-500/10 backdrop-blur-xl border-green-500/20",

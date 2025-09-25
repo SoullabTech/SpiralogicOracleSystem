@@ -7,7 +7,7 @@ export default function TestStreamingPage() {
   const [conversationState, setConversationState] = useState<any>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-blue-900 to-indigo-900">
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-white text-center mb-2">
           Streaming Conversation Test

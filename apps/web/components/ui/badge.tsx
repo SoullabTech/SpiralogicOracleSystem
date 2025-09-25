@@ -35,7 +35,7 @@ const ArchetypeBadge = React.forwardRef<HTMLDivElement, ArchetypeBadgeProps>(
   ({ archetype, ...props }, ref) => {
     const archetypeColors = {
       sage: 'bg-blue-500/20 text-blue-400',
-      seeker: 'bg-purple-500/20 text-purple-400',
+      seeker: 'bg-amber-500/20 text-amber-400',
       healer: 'bg-green-500/20 text-green-400', 
       creator: 'bg-orange-500/20 text-orange-400',
       rebel: 'bg-red-500/20 text-red-400',

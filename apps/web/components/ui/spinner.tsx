@@ -20,7 +20,7 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
     }
 
     const colors = {
-      purple: "text-purple-400",
+      purple: "text-amber-400",
       orange: "text-orange-400",
       green: "text-green-400",
       blue: "text-blue-400"

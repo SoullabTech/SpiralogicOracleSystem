@@ -16,7 +16,7 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
     const percentage = Math.min(Math.max(value, 0), max) / max * 100
 
     const colorClasses = {
-      purple: "bg-gradient-to-r from-purple-500 to-purple-600",
+      purple: "bg-gradient-to-r from-amber-500 to-amber-600",
       orange: "bg-gradient-to-r from-orange-500 to-orange-600", 
       green: "bg-gradient-to-r from-green-500 to-green-600",
       blue: "bg-gradient-to-r from-blue-500 to-blue-600",

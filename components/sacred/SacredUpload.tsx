@@ -184,7 +184,7 @@ export function SacredUpload({ onOfferingComplete, className = '' }: SacredUploa
       case 'Fire': return 'text-red-500';
       case 'Water': return 'text-blue-500';
       case 'Earth': return 'text-green-500';
-      case 'Air': return 'text-purple-500';
+      case 'Air': return 'text-amber-500';
       default: return 'text-sacred';
     }
   };
@@ -213,7 +213,7 @@ export function SacredUpload({ onOfferingComplete, className = '' }: SacredUploa
                   duration: 2,
                   repeat: Infinity 
                 }}
-                className="bg-gradient-to-br from-sacred/20 to-purple-900/20 rounded-3xl p-12 border border-sacred/30"
+                className="bg-gradient-to-br from-sacred/20 to-amber-900/20 rounded-3xl p-12 border border-sacred/30"
               >
                 <Sparkles className="w-20 h-20 text-sacred mx-auto mb-6" />
                 <p className="text-2xl text-white font-light">Offer Your Sacred Asset</p>
@@ -320,7 +320,7 @@ export function SacredUpload({ onOfferingComplete, className = '' }: SacredUploa
                       {uploadFile.resonance.element}
                     </span>
                     {uploadFile.resonance.hasAether && (
-                      <span className="text-xs text-purple-400">Aether</span>
+                      <span className="text-xs text-amber-400">Aether</span>
                     )}
                   </div>
                 )}
@@ -339,7 +339,7 @@ export function SacredUpload({ onOfferingComplete, className = '' }: SacredUploa
                 className="mt-3 h-1 bg-sacred/10 rounded-full overflow-hidden"
               >
                 <motion.div
-                  className="h-full bg-gradient-to-r from-sacred to-purple-500"
+                  className="h-full bg-gradient-to-r from-sacred to-amber-500"
                   initial={{ width: 0 }}
                   animate={{ width: `${uploadFile.resonance.coherence * 100}%` }}
                   transition={{ duration: 1, delay: 0.5 }}

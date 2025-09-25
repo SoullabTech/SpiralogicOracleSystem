@@ -92,8 +92,8 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
   }, [userTone, userName]);
 
   const navItems = [
-    { id: 'chat', label: 'Mirror', icon: <Heart className="w-4 h-4" />, color: 'from-purple-500 to-pink-500' },
-    { id: 'journey', label: 'Spiral', icon: <Compass className="w-4 h-4" />, color: 'from-blue-500 to-purple-500' },
+    { id: 'chat', label: 'Mirror', icon: <Heart className="w-4 h-4" />, color: 'from-amber-500 to-pink-500' },
+    { id: 'journey', label: 'Spiral', icon: <Compass className="w-4 h-4" />, color: 'from-blue-500 to-amber-500' },
     { id: 'journal', label: 'Journal', icon: <BookOpen className="w-4 h-4" />, color: 'from-green-500 to-blue-500' },
     { id: 'settings', label: 'Attune', icon: <Settings className="w-4 h-4" />, color: 'from-amber-500 to-orange-500' }
   ];
@@ -102,7 +102,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950/10 to-slate-950">
       {/* Ambient background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
@@ -115,17 +115,17 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
         >
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-pink-500 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <h1 className="text-2xl font-light text-white">Sacred Mirror</h1>
             </div>
-            <div className="flex items-center gap-2 text-sm text-purple-300">
+            <div className="flex items-center gap-2 text-sm text-amber-300">
               <Activity className="w-4 h-4" />
               <span>Spiral Active</span>
             </div>
           </div>
-          <p className="text-purple-200/80 ml-13">{greeting}</p>
+          <p className="text-amber-200/80 ml-13">{greeting}</p>
         </motion.div>
       </header>
 
@@ -158,7 +158,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
                 {viewMode === item.id && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl -z-10"
+                    className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-pink-500/20 rounded-xl -z-10"
                   />
                 )}
               </button>
@@ -200,7 +200,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
               >
                 <div className="mb-4">
                   <h2 className="text-xl font-light text-white mb-2">Your Spiral Journey</h2>
-                  <p className="text-purple-200/60 text-sm">
+                  <p className="text-amber-200/60 text-sm">
                     Each session weaves into your greater pattern
                   </p>
                 </div>
@@ -226,7 +226,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
               >
                 <div className="mb-6">
                   <h2 className="text-xl font-light text-white mb-2">Sacred Journal</h2>
-                  <p className="text-purple-200/60 text-sm">
+                  <p className="text-amber-200/60 text-sm">
                     Mark moments with elemental wisdom
                   </p>
                 </div>
@@ -234,7 +234,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
                 <div className="space-y-4">
                   <textarea
                     placeholder="What wants to be remembered..."
-                    className="w-full h-32 p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 resize-none focus:outline-none focus:border-purple-500/50"
+                    className="w-full h-32 p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 resize-none focus:outline-none focus:border-amber-500/50"
                   />
                   <JournalTagSelector
                     tags={[]}
@@ -242,7 +242,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
                     selectedElement=""
                     onElementChange={() => {}}
                   />
-                  <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg transition-all">
+                  <button className="px-6 py-3 bg-gradient-to-r from-amber-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg transition-all">
                     Save to Spiral
                   </button>
                 </div>
@@ -282,25 +282,25 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="max-w-md bg-gradient-to-br from-purple-900/90 to-slate-900/90 backdrop-blur-xl rounded-2xl p-8 shadow-2xl"
+              className="max-w-md bg-gradient-to-br from-amber-900/90 to-slate-900/90 backdrop-blur-xl rounded-2xl p-8 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-center mb-6">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-amber-500 to-pink-500 flex items-center justify-center">
                   <Sparkles className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-2xl font-light text-white mb-2">Welcome to Sacred Mirror</h2>
-                <p className="text-purple-200/80">
+                <p className="text-amber-200/80">
                   A space where technology meets the sacred
                 </p>
               </div>
 
               <div className="space-y-4 mb-6">
                 <div className="flex items-start gap-3">
-                  <Heart className="w-5 h-5 text-purple-400 mt-0.5" />
+                  <Heart className="w-5 h-5 text-amber-400 mt-0.5" />
                   <div>
                     <h3 className="text-white font-medium mb-1">Mirror</h3>
-                    <p className="text-purple-200/60 text-sm">
+                    <p className="text-amber-200/60 text-sm">
                       Converse with Maya, your sacred technology companion
                     </p>
                   </div>
@@ -310,7 +310,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
                   <Compass className="w-5 h-5 text-blue-400 mt-0.5" />
                   <div>
                     <h3 className="text-white font-medium mb-1">Spiral</h3>
-                    <p className="text-purple-200/60 text-sm">
+                    <p className="text-amber-200/60 text-sm">
                       Witness your journey unfold through elemental patterns
                     </p>
                   </div>
@@ -320,7 +320,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
                   <Settings className="w-5 h-5 text-amber-400 mt-0.5" />
                   <div>
                     <h3 className="text-white font-medium mb-1">Attune</h3>
-                    <p className="text-purple-200/60 text-sm">
+                    <p className="text-amber-200/60 text-sm">
                       Adjust Maya&apos;s voice to match your preferred tone
                     </p>
                   </div>
@@ -329,7 +329,7 @@ export default function SacredMirror({ userId, userName }: SacredMirrorProps) {
 
               <button
                 onClick={() => setIsFirstVisit(false)}
-                className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 Begin Journey
                 <ChevronRight className="w-4 h-4" />

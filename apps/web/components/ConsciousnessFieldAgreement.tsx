@@ -54,18 +54,18 @@ export default function ConsciousnessFieldAgreement({
   };
 
   return (
-    <Card className="max-w-3xl mx-auto p-8  from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950">
+    <Card className="max-w-3xl mx-auto p-8  from-amber-50 to-blue-50 dark:from-black dark:to-blue-950">
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <Brain className="w-16 h-16 text-purple-600" />
+              <Brain className="w-16 h-16 text-amber-600" />
               <Sparkles className="w-8 h-8 text-yellow-500 absolute -top-2 -right-2" />
             </div>
           </div>
           
-          <h2 className="text-3xl font-bold  from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold  from-amber-600 to-blue-600 bg-clip-text text-transparent">
             Join the Consciousness Field
           </h2>
           
@@ -125,8 +125,8 @@ export default function ConsciousnessFieldAgreement({
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                   <div className="text-center space-y-2">
-                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto">
-                      <Shield className="w-6 h-6 text-purple-600" />
+                    <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center mx-auto">
+                      <Shield className="w-6 h-6 text-amber-600" />
                     </div>
                     <h4 className="font-medium">Privacy First</h4>
                     <p className="text-sm text-gray-500">Your identity is always protected</p>
@@ -354,7 +354,7 @@ export default function ConsciousnessFieldAgreement({
             <Button
               onClick={handleAccept}
               disabled={!consent.anonymizedSharing}
-              className=" from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              className=" from-amber-600 to-blue-600 hover:from-amber-700 hover:to-blue-700"
             >
               <Check className="w-4 h-4 mr-2" />
               Join the Field
@@ -390,18 +390,18 @@ function ConsentOption({
         checked={checked}
         onChange={onChange}
         disabled={required}
-        className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+        className="mt-1 w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
       />
       <div className="flex-1">
         <div className="flex items-center space-x-2">
-          <span className="font-medium group-hover:text-purple-600 transition-colors">
+          <span className="font-medium group-hover:text-amber-600 transition-colors">
             {label}
           </span>
           {required && (
             <Badge variant="outline" className="text-xs">Required</Badge>
           )}
           {premium && (
-            <Badge className="text-xs  from-purple-600 to-blue-600">
+            <Badge className="text-xs  from-amber-600 to-blue-600">
               Enhanced
             </Badge>
           )}
@@ -430,14 +430,14 @@ function DetailedConsentOption({
   premium?: boolean;
 }) {
   return (
-    <div className="border rounded-lg p-4 hover:border-purple-300 transition-colors">
+    <div className="border rounded-lg p-4 hover:border-amber-300 transition-colors">
       <label className="flex items-start space-x-3 cursor-pointer">
         <input
           type="checkbox"
           checked={checked}
           onChange={onChange}
           disabled={required}
-          className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+          className="mt-1 w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
         />
         <div className="flex-1 space-y-2">
           <div className="flex items-center space-x-2">
@@ -446,7 +446,7 @@ function DetailedConsentOption({
               <Badge variant="outline" className="text-xs">Required</Badge>
             )}
             {premium && (
-              <Badge className="text-xs  from-purple-600 to-blue-600">
+              <Badge className="text-xs  from-amber-600 to-blue-600">
                 Enhanced
               </Badge>
             )}
@@ -483,7 +483,7 @@ function DetailedSection({
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       >
         <div className="flex items-center space-x-3">
-          <div className="text-purple-600">{icon}</div>
+          <div className="text-amber-600">{icon}</div>
           <h3 className="font-semibold text-left">{title}</h3>
         </div>
         <motion.div

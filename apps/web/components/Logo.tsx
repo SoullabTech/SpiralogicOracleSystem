@@ -71,7 +71,7 @@ export default function Logo({ size = "md", showText = true, className = "", sta
       <motion.div 
         animate={getLogoAnimation()}
         transition={getTransition()}
-        className={`bg-gradient-to-br from-gold-divine to-purple-500 rounded-full flex items-center justify-center ${sizeMap[size]} shadow-lg`}
+        className={`bg-gradient-to-br from-gold-divine to-amber-500 rounded-full flex items-center justify-center ${sizeMap[size]} shadow-lg`}
       >
         <span className="text-white font-bold drop-shadow-md">SL</span>
       </motion.div>

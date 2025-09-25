@@ -410,7 +410,7 @@ export const InteractiveMembrane: React.FC<{
         {fieldInfluences.map(influence => (
           <motion.div
             key={`${influence.source}_${influence.element}`}
-            className="absolute text-xs text-purple-300/50 pointer-events-none"
+            className="absolute text-xs text-amber-300/50 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: influence.intensity }}
             exit={{ opacity: 0 }}

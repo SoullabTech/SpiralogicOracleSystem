@@ -84,7 +84,7 @@ export function PetalVoicePreview({
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm
                          transition-all ${
                            voiceEnabled
-                             ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                             ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                              : 'bg-gray-700/50 text-gray-400 border border-gray-600/30'
                          }`}
             >
@@ -93,7 +93,7 @@ export function PetalVoicePreview({
             </button>
             
             {isLoading && (
-              <div className="flex items-center gap-2 text-purple-300 text-sm">
+              <div className="flex items-center gap-2 text-amber-300 text-sm">
                 <Loader2 size={16} className="animate-spin" />
                 <span>Synthesizing voice...</span>
               </div>
@@ -102,7 +102,7 @@ export function PetalVoicePreview({
 
           {/* Context Indicator */}
           <div className="text-xs text-gray-400">
-            Context: <span className="text-purple-300">{context}</span>
+            Context: <span className="text-amber-300">{context}</span>
           </div>
         </div>
       )}

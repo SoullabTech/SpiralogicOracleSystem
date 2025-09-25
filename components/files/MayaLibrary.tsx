@@ -28,7 +28,7 @@ interface MayaLibraryProps {
 }
 
 const CATEGORY_COLORS = {
-  journal: 'text-purple-400 bg-purple-400/10 border-purple-400/30',
+  journal: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
   reference: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
   wisdom: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30',
   personal: 'text-green-400 bg-green-400/10 border-green-400/30'
@@ -121,7 +121,7 @@ export function MayaLibrary({ userId, className = '', onFileSelect }: MayaLibrar
       'text/plain': { icon: FileText, color: 'text-blue-400' },
       'text/markdown': { icon: FileText, color: 'text-green-400' },
       'application/json': { icon: FileText, color: 'text-yellow-400' },
-      'text/csv': { icon: FileText, color: 'text-purple-400' }
+      'text/csv': { icon: FileText, color: 'text-amber-400' }
     };
     
     return iconMap[mimeType] || { icon: FileText, color: 'text-gray-400' };

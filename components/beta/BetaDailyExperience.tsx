@@ -143,7 +143,7 @@ const ELEMENT_ICONS = {
   water: <Droplets className="w-6 h-6 text-blue-500" />,
   earth: <Mountain className="w-6 h-6 text-green-500" />,
   air: <Wind className="w-6 h-6 text-gray-500" />,
-  aether: <Sparkles className="w-6 h-6 text-purple-500" />,
+  aether: <Sparkles className="w-6 h-6 text-amber-500" />,
   integration: <Sparkles className="w-6 h-6 text-indigo-500" />,
   shadow: <div className="w-6 h-6 bg-gray-800 rounded-full" />
 };
@@ -203,7 +203,7 @@ export default function BetaDailyExperience({
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header */}
-      <Card className="bg-gradient-to-r from-purple-50 to-pink-50">
+      <Card className="bg-gradient-to-r from-amber-50 to-pink-50">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -359,7 +359,7 @@ function EntryPhase({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="text-center p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+        <div className="text-center p-6 bg-gradient-to-r from-blue-50 to-amber-50 rounded-lg">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
             {experience.entryPrompt}
           </h3>
@@ -372,7 +372,7 @@ function EntryPhase({
           value={response}
           onChange={(e) => setResponse(e.target.value)}
           placeholder="Write whatever comes to mind..."
-          className="w-full h-32 p-4 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full h-32 p-4 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
         />
 
         <div className="flex justify-between">
@@ -385,7 +385,7 @@ function EntryPhase({
           <Button
             onClick={() => onComplete('entry', response)}
             disabled={!response.trim()}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            className="bg-gradient-to-r from-amber-500 to-pink-500 text-white"
           >
             Continue to Journaling
           </Button>
@@ -446,7 +446,7 @@ function JournalPhase({
 
         <Button
           onClick={() => onComplete('journal')}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+          className="w-full bg-gradient-to-r from-amber-500 to-pink-500 text-white"
         >
           Continue to Chat
         </Button>
@@ -475,7 +475,7 @@ function ChatPhase({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="text-center p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg">
+        <div className="text-center p-4 bg-gradient-to-r from-indigo-50 to-amber-50 rounded-lg">
           <p className="text-gray-700">
             The {experience.archetypeEnergy} in you wants to explore...
           </p>
@@ -490,7 +490,7 @@ function ChatPhase({
               whileTap={{ scale: 0.98 }}
               className={`w-full p-4 text-left rounded-lg border-2 transition-colors ${
                 selectedPrompt === prompt
-                  ? 'border-purple-500 bg-purple-50'
+                  ? 'border-amber-500 bg-amber-50'
                   : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => setSelectedPrompt(prompt)}
@@ -510,7 +510,7 @@ function ChatPhase({
           <Button
             onClick={() => onComplete('chat')}
             disabled={!selectedPrompt}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            className="bg-gradient-to-r from-amber-500 to-pink-500 text-white"
           >
             Start Conversation
           </Button>
@@ -576,7 +576,7 @@ function IntegrationPhase({
 
         <Button
           onClick={() => onComplete('integration')}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+          className="w-full bg-gradient-to-r from-amber-500 to-pink-500 text-white"
         >
           Complete Today's Journey
         </Button>
@@ -639,7 +639,7 @@ function FeedbackPhase({
 
         <Button
           onClick={() => onComplete('feedback', rating)}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+          className="w-full bg-gradient-to-r from-amber-500 to-pink-500 text-white"
         >
           Complete Day {experience.day}
         </Button>

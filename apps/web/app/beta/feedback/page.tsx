@@ -113,7 +113,7 @@ export default function BetaFeedbackPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
+      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-violet-900 to-amber-900 text-yellow-400 flex items-center justify-center p-8">
         <div className="text-center max-w-lg">
           <div className="mb-6">
             <div className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mx-auto shadow-lg animate-pulse">
@@ -146,7 +146,7 @@ export default function BetaFeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-violet-900 to-amber-900 text-yellow-400">
       <div className="container mx-auto px-8 py-16">
         <div className="max-w-3xl mx-auto">
           {/* Header */}

@@ -62,7 +62,7 @@
           {message.provider && (
             <span className={`text-xs px-2 py-0.5 rounded-full ${
               message.provider === 'whisper' ? 'bg-blue-500/20 text-blue-300' :
-              message.provider === 'sesame' ? 'bg-purple-500/20 text-purple-300' :
+              message.provider === 'sesame' ? 'bg-amber-500/20 text-amber-300' :
               message.provider === 'elevenlabs' ? 'bg-green-500/20 text-green-300' :
               'bg-gray-500/20 text-gray-300'
             }`}>

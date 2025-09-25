@@ -334,12 +334,12 @@ function OraclePageContent() {
   );
   
   return (
-    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 flex flex-col">
+    <div className="min-h-screen  from-slate-900 via-amber-900/20 to-slate-900 flex flex-col">
       {/* Header */}
-      <div className="bg-background/80 backdrop-blur-xl border-b border-purple-500/20 p-4">
+      <div className="bg-background/80 backdrop-blur-xl border-b border-amber-500/20 p-4">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10  from-purple-500 to-orange-500 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10  from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
               <Crown className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -359,7 +359,7 @@ function OraclePageContent() {
                   onClick={() => setElement(el as any)}
                   className={`px-2 py-1 text-xs rounded transition-colors ${
                     element === el 
-                      ? 'bg-purple-600 text-white' 
+                      ? 'bg-amber-600 text-white' 
                       : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   }`}
                   title={`${el} element ${el === 'air' ? '(Claude)' : ''}`}
@@ -403,13 +403,13 @@ function OraclePageContent() {
                   >
                     <div className={`max-w-[80%] ${
                       message.type === 'user' 
-                        ? ' from-purple-600 to-orange-500 text-white' 
-                        : 'bg-background/80 backdrop-blur-xl border border-purple-500/20'
+                        ? ' from-amber-600 to-orange-500 text-white' 
+                        : 'bg-background/80 backdrop-blur-xl border border-amber-500/20'
                     } rounded-2xl p-4`}>
                       {message.type === 'maya' && (
                         <div className="flex items-center space-x-2 mb-2">
-                          <Crown className="w-4 h-4 text-purple-400" />
-                          <span className="text-xs font-medium text-purple-400">
+                          <Crown className="w-4 h-4 text-amber-400" />
+                          <span className="text-xs font-medium text-amber-400">
                             {oracleInfo?.name || 'Maya'}
                           </span>
                         </div>
@@ -418,12 +418,12 @@ function OraclePageContent() {
                       <p className="text-sm leading-relaxed">{message.content}</p>
                       
                       {message.audio && (
-                        <div className="flex items-center space-x-2 mt-3 pt-2 border-t border-purple-500/20">
+                        <div className="flex items-center space-x-2 mt-3 pt-2 border-t border-amber-500/20">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => playAudio(message.id, message.audio!)}
-                            className="text-purple-400 hover:text-purple-300 p-1"
+                            className="text-amber-400 hover:text-amber-300 p-1"
                           >
                             {isPlayingAudio === message.id ? (
                               <Pause className="w-4 h-4" />
@@ -447,10 +447,10 @@ function OraclePageContent() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-background/80 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-4 max-w-[80%]">
+                  <div className="bg-background/80 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-4 max-w-[80%]">
                     <div className="flex items-center space-x-2 mb-2">
-                      <Crown className="w-4 h-4 text-purple-400" />
-                      <span className="text-xs font-medium text-purple-400">
+                      <Crown className="w-4 h-4 text-amber-400" />
+                      <span className="text-xs font-medium text-amber-400">
                         {oracleInfo?.name || 'Maya'}
                       </span>
                     </div>
@@ -466,7 +466,7 @@ function OraclePageContent() {
           </div>
 
           {/* Status Bar */}
-          <div className="bg-background/70 backdrop-blur-xl border-t border-purple-500/20 px-4 py-2">
+          <div className="bg-background/70 backdrop-blur-xl border-t border-amber-500/20 px-4 py-2">
             <div className="max-w-3xl mx-auto flex items-center justify-between text-xs text-muted-foreground">
               <div className="flex items-center gap-4">
                 <span>Stage: <Badge variant="outline" className="ml-1">{stage}</Badge></span>
@@ -488,7 +488,7 @@ function OraclePageContent() {
           </div>
           
           {/* Input Area */}
-          <div className="bg-background/80 backdrop-blur-xl border-t border-purple-500/20 p-4">
+          <div className="bg-background/80 backdrop-blur-xl border-t border-amber-500/20 p-4">
             <div className="max-w-3xl mx-auto">
               <div className="flex items-center space-x-3">
                 <VoiceRecorder
@@ -510,7 +510,7 @@ function OraclePageContent() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowJournalModal(true)}
-                  className="p-2 text-muted-foreground hover:text-purple-400"
+                  className="p-2 text-muted-foreground hover:text-amber-400"
                   title="Write in journal"
                 >
                   <FileText className="w-5 h-5" />
@@ -521,7 +521,7 @@ function OraclePageContent() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowUploadModal(true)}
-                  className="p-2 text-muted-foreground hover:text-purple-400"
+                  className="p-2 text-muted-foreground hover:text-amber-400"
                   title="Upload document"
                 >
                   <Upload className="w-5 h-5" />
@@ -533,7 +533,7 @@ function OraclePageContent() {
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && !isStreaming && sendMessage()}
                     placeholder="Type a message or use the tools..."
-                    className="bg-background/50 border-purple-500/20 focus:border-purple-400"
+                    className="bg-background/50 border-amber-500/20 focus:border-amber-400"
                     disabled={isStreaming}
                   />
                 </div>
@@ -541,7 +541,7 @@ function OraclePageContent() {
                 <Button
                   onClick={sendMessage}
                   disabled={!inputText.trim() || isStreaming}
-                  className="p-2  from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white rounded-full"
+                  className="p-2  from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600 text-white rounded-full"
                 >
                   <Send className="w-5 h-5" />
                 </Button>
@@ -552,8 +552,8 @@ function OraclePageContent() {
         
         {/* Memory Panel - Desktop */}
         {!isMobile && showMemoryPanel && (
-          <div className="absolute right-0 top-0 bottom-0 w-80 bg-background/95 backdrop-blur-xl border-l border-purple-500/20 flex flex-col">
-            <div className="p-4 border-b border-purple-500/20">
+          <div className="absolute right-0 top-0 bottom-0 w-80 bg-background/95 backdrop-blur-xl border-l border-amber-500/20 flex flex-col">
+            <div className="p-4 border-b border-amber-500/20">
               <h2 className="font-semibold text-lg mb-3">Memory Timeline</h2>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -561,7 +561,7 @@ function OraclePageContent() {
                   placeholder="Search memories..."
                   value={memorySearch}
                   onChange={(e) => setMemorySearch(e.target.value)}
-                  className="pl-10 bg-background/50 border-purple-500/20"
+                  className="pl-10 bg-background/50 border-amber-500/20"
                 />
               </div>
             </div>
@@ -577,13 +577,13 @@ function OraclePageContent() {
                   {filteredMemories.map((memory) => (
                     <Card 
                       key={memory.id} 
-                      className="p-3 bg-background/50 border-purple-500/20 hover:border-purple-400/40 transition-colors cursor-pointer"
+                      className="p-3 bg-background/50 border-amber-500/20 hover:border-amber-400/40 transition-colors cursor-pointer"
                     >
                       <div className="flex items-start gap-3">
                         <div className={`p-2 rounded-full ${
                           memory.type === 'journal' ? 'bg-blue-500/20 text-blue-400' :
                           memory.type === 'upload' ? 'bg-green-500/20 text-green-400' :
-                          'bg-purple-500/20 text-purple-400'
+                          'bg-amber-500/20 text-amber-400'
                         }`}>
                           {memory.type === 'journal' ? <FileText className="w-4 h-4" /> :
                            memory.type === 'upload' ? <Upload className="w-4 h-4" /> :
@@ -613,7 +613,7 @@ function OraclePageContent() {
 
       {/* Bottom Navigation - Mobile Only */}
       {isMobile && (
-        <div className="bg-background/95 backdrop-blur-xl border-t border-purple-500/20 p-2">
+        <div className="bg-background/95 backdrop-blur-xl border-t border-amber-500/20 p-2">
           <div className="flex justify-around">
             {[
               { id: 'chat', icon: Crown, label: 'Chat' },
@@ -634,8 +634,8 @@ function OraclePageContent() {
                 className={`flex flex-col items-center space-y-1 p-3 rounded-lg transition-all ${
                   (item.id === 'chat' && activeTab === 'agent') || 
                   (item.id === 'memories' && showMemoryPanel)
-                    ? 'bg-purple-500/20 text-purple-400'
-                    : 'text-muted-foreground hover:text-purple-400'
+                    ? 'bg-amber-500/20 text-amber-400'
+                    : 'text-muted-foreground hover:text-amber-400'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
@@ -655,7 +655,7 @@ function OraclePageContent() {
           className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl"
         >
           <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-4 border-b border-purple-500/20">
+            <div className="flex items-center justify-between p-4 border-b border-amber-500/20">
               <h2 className="font-semibold text-lg">Memory Timeline</h2>
               <Button
                 variant="ghost"
@@ -673,7 +673,7 @@ function OraclePageContent() {
                   placeholder="Search memories..."
                   value={memorySearch}
                   onChange={(e) => setMemorySearch(e.target.value)}
-                  className="pl-10 bg-background/50 border-purple-500/20"
+                  className="pl-10 bg-background/50 border-amber-500/20"
                 />
               </div>
             </div>
@@ -689,13 +689,13 @@ function OraclePageContent() {
                   {filteredMemories.map((memory) => (
                     <Card 
                       key={memory.id} 
-                      className="p-3 bg-background/50 border-purple-500/20"
+                      className="p-3 bg-background/50 border-amber-500/20"
                     >
                       <div className="flex items-start gap-3">
                         <div className={`p-2 rounded-full ${
                           memory.type === 'journal' ? 'bg-blue-500/20 text-blue-400' :
                           memory.type === 'upload' ? 'bg-green-500/20 text-green-400' :
-                          'bg-purple-500/20 text-purple-400'
+                          'bg-amber-500/20 text-amber-400'
                         }`}>
                           {memory.type === 'journal' ? <FileText className="w-4 h-4" /> :
                            memory.type === 'upload' ? <Upload className="w-4 h-4" /> :
@@ -737,7 +737,7 @@ function OraclePageContent() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-background/95 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 max-w-md w-full"
+              className="bg-background/95 backdrop-blur-xl border border-amber-500/20 rounded-xl p-6 max-w-md w-full"
               onClick={(e) => e.stopPropagation()}
             >
               <h3 className="text-lg font-semibold mb-4">Write in Journal</h3>
@@ -745,7 +745,7 @@ function OraclePageContent() {
                 value={journalContent}
                 onChange={(e) => setJournalContent(e.target.value)}
                 placeholder="Share your thoughts, feelings, or experiences..."
-                className="w-full h-32 p-3 bg-background/50 border border-purple-500/20 rounded-lg resize-none focus:border-purple-400 focus:outline-none"
+                className="w-full h-32 p-3 bg-background/50 border border-amber-500/20 rounded-lg resize-none focus:border-amber-400 focus:outline-none"
               />
               <div className="flex justify-end gap-2 mt-4">
                 <Button
@@ -757,7 +757,7 @@ function OraclePageContent() {
                 <Button
                   onClick={handleJournalSubmit}
                   disabled={!journalContent.trim()}
-                  className=" from-purple-600 to-orange-500"
+                  className=" from-amber-600 to-orange-500"
                 >
                   Save Entry
                 </Button>
@@ -781,12 +781,12 @@ function OraclePageContent() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-background/95 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6 max-w-md w-full"
+              className="bg-background/95 backdrop-blur-xl border border-amber-500/20 rounded-xl p-6 max-w-md w-full"
               onClick={(e) => e.stopPropagation()}
             >
               <h3 className="text-lg font-semibold mb-4">Upload Document</h3>
-              <div className="border-2 border-dashed border-purple-500/30 rounded-lg p-8 text-center">
-                <Upload className="w-12 h-12 mx-auto mb-3 text-purple-400" />
+              <div className="border-2 border-dashed border-amber-500/30 rounded-lg p-8 text-center">
+                <Upload className="w-12 h-12 mx-auto mb-3 text-amber-400" />
                 <input
                   type="file"
                   onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
@@ -796,7 +796,7 @@ function OraclePageContent() {
                 />
                 <label
                   htmlFor="file-upload"
-                  className="cursor-pointer text-sm text-muted-foreground hover:text-purple-400"
+                  className="cursor-pointer text-sm text-muted-foreground hover:text-amber-400"
                 >
                   {uploadFile ? uploadFile.name : 'Click to select file'}
                 </label>
@@ -811,7 +811,7 @@ function OraclePageContent() {
                 <Button
                   onClick={handleUploadSubmit}
                   disabled={!uploadFile}
-                  className=" from-purple-600 to-orange-500"
+                  className=" from-amber-600 to-orange-500"
                 >
                   Upload
                 </Button>

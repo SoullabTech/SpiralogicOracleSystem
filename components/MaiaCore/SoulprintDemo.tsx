@@ -11,7 +11,7 @@ export default function SoulprintDemo() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-amber-900 to-pink-900 p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 space-y-4">

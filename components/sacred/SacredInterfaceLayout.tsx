@@ -163,7 +163,7 @@ const SacredInterfaceLayout: React.FC = () => {
   // Central Presence Panel
   const CentralPresencePanel = () => (
     <motion.div
-      className="relative w-full h-full bg-gradient-radial from-purple-950/20 via-slate-950 to-black rounded-lg overflow-hidden"
+      className="relative w-full h-full bg-gradient-radial from-black/20 via-slate-950 to-black rounded-lg overflow-hidden"
       animate={{
         scale: activeFields.some(f => f.position !== 'center') ? 0.95 : 1
       }}
@@ -217,7 +217,7 @@ const SacredInterfaceLayout: React.FC = () => {
       <div className="relative z-10 flex flex-col h-full p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-light text-purple-300">
+          <h2 className="text-xl font-light text-amber-300">
             Pure Presence
           </h2>
           <div className="flex gap-2">
@@ -225,7 +225,7 @@ const SacredInterfaceLayout: React.FC = () => {
               onClick={() => setIsJournaling(!isJournaling)}
               className={`px-3 py-1 rounded text-sm ${
                 isJournaling
-                  ? 'bg-purple-600/30 text-purple-300'
+                  ? 'bg-amber-600/30 text-amber-300'
                   : 'bg-slate-800/50 text-gray-400'
               }`}
             >
@@ -266,7 +266,7 @@ const SacredInterfaceLayout: React.FC = () => {
             >
               <div className={`rounded-lg p-3 ${
                 message.role === 'user'
-                  ? 'bg-purple-900/30 text-purple-100'
+                  ? 'bg-amber-900/30 text-amber-100'
                   : 'bg-slate-800/50 text-gray-300'
               }`}>
                 <div className="text-sm">{message.content}</div>
@@ -288,11 +288,11 @@ const SacredInterfaceLayout: React.FC = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
             placeholder={isJournaling ? "Journal your thoughts..." : "Share in presence..."}
-            className="w-full px-4 py-3 bg-slate-900/50 border border-purple-900/30 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-purple-600/50"
+            className="w-full px-4 py-3 bg-slate-900/50 border border-amber-900/30 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-600/50"
           />
           <button
             onClick={sendMessage}
-            className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-purple-600/30 rounded text-purple-300 hover:bg-purple-600/40"
+            className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-amber-600/30 rounded text-amber-300 hover:bg-amber-600/40"
           >
             →
           </button>
@@ -324,7 +324,7 @@ const SacredInterfaceLayout: React.FC = () => {
           position === 'left' ? 'border-l-2' :
           'border-r-2'
         } ${
-          isActive ? 'border-purple-500' : 'border-gray-700'
+          isActive ? 'border-amber-500' : 'border-gray-700'
         } rounded-lg p-4 cursor-pointer transition-all`}
         onClick={() => slideToField(position)}
         onMouseEnter={() => setHoveredPanel(position)}
@@ -337,11 +337,11 @@ const SacredInterfaceLayout: React.FC = () => {
         <div className="h-full flex flex-col">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h3 className="text-sm font-medium text-purple-300">{title}</h3>
+              <h3 className="text-sm font-medium text-amber-300">{title}</h3>
               <p className="text-xs text-gray-500">{description}</p>
             </div>
             <div className={`w-2 h-2 rounded-full ${
-              isActive ? 'bg-purple-400' : 'bg-gray-600'
+              isActive ? 'bg-amber-400' : 'bg-gray-600'
             }`} />
           </div>
 
@@ -351,7 +351,7 @@ const SacredInterfaceLayout: React.FC = () => {
                 <div className="text-gray-600">{metric.label}</div>
                 <div className="h-1 bg-gray-700 rounded-full mt-1">
                   <motion.div
-                    className="h-full bg-purple-500 rounded-full"
+                    className="h-full bg-amber-500 rounded-full"
                     animate={{ width: `${metric.value * 100}%` }}
                   />
                 </div>
@@ -370,7 +370,7 @@ const SacredInterfaceLayout: React.FC = () => {
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
       {/* Background field effects */}
-      <div className="absolute inset-0 bg-gradient-radial from-purple-950/10 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-radial from-black/10 via-transparent to-transparent" />
 
       {/* Central Presence */}
       <div className="absolute inset-32 z-10">
@@ -440,7 +440,7 @@ const PresenceMetric: React.FC<{ label: string; value: number }> = ({ label, val
     <span className="text-gray-500">{label}</span>
     <div className="w-16 h-1 bg-gray-800 rounded-full">
       <motion.div
-        className="h-full bg-purple-500/50 rounded-full"
+        className="h-full bg-amber-500/50 rounded-full"
         animate={{ width: `${value * 100}%` }}
       />
     </div>

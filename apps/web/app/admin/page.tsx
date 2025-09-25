@@ -175,8 +175,8 @@ export default function AdminDashboard() {
         {/* Response Time */}
         <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
           <div className="flex items-center justify-between mb-4">
-            <Zap className="w-8 h-8 text-purple-400" />
-            <span className="text-2xl font-bold text-purple-400">
+            <Zap className="w-8 h-8 text-amber-400" />
+            <span className="text-2xl font-bold text-amber-400">
               {interactionMetrics.avgResponseTime}ms
             </span>
           </div>
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
                           session.element === 'water' ? 'bg-blue-900 text-blue-300' :
                           session.element === 'earth' ? 'bg-green-900 text-green-300' :
                           session.element === 'air' ? 'bg-yellow-900 text-yellow-300' :
-                          'bg-purple-900 text-purple-300'
+                          'bg-amber-900 text-amber-300'
                         }`}>
                           {session.element}
                         </span>
@@ -309,7 +309,7 @@ export default function AdminDashboard() {
             
             <div className="flex justify-between items-center p-3 bg-gray-700 rounded">
               <span className="text-sm text-gray-300">Total Sessions</span>
-              <span className="font-medium text-purple-400">
+              <span className="font-medium text-amber-400">
                 {sessionMetrics.totalSessions}
               </span>
             </div>

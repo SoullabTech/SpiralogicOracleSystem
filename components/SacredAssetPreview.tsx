@@ -141,7 +141,7 @@ export default function SacredAssetPreview({
             )}
             
             {metadata?.aetherResonance && metadata.aetherResonance > 0.5 && (
-              <span className="text-purple-400">
+              <span className="text-amber-400">
                 ✨ {Math.round(metadata.aetherResonance * 100)}% Aether
               </span>
             )}
@@ -185,7 +185,7 @@ export default function SacredAssetPreview({
         {/* Aether resonance indicator */}
         {metadata?.aetherResonance && metadata.aetherResonance > 0.7 && (
           <motion.div
-            className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full"
+            className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.8, 1, 0.8]

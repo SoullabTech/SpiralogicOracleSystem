@@ -224,7 +224,7 @@ export const HoloflowerViz: React.FC<HoloflowerVizProps> = ({
           y={size / 2}
           textAnchor="middle"
           dominantBaseline="middle"
-          className="fill-purple-700 text-xs font-semibold"
+          className="fill-amber-700 text-xs font-semibold"
         >
           {current.element.toUpperCase()} {current.stage}
         </text>

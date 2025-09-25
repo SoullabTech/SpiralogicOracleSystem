@@ -34,7 +34,7 @@ export function ChatMessage({ message, isLatest = false, onPlayAudio }: ChatMess
       fire: 'text-red-400',
       water: 'text-blue-400', 
       earth: 'text-green-400',
-      air: 'text-purple-400',
+      air: 'text-amber-400',
       aether: 'text-gold-divine'
     };
     return element ? colors[element as keyof typeof colors] || 'text-gold-divine' : 'text-gold-divine';

@@ -77,7 +77,7 @@ export function AudioUnlockBanner() {
     <div 
       className={`
         fixed top-4 left-1/2 -translate-x-1/2 z-[8000]
-        bg-gradient-to-r from-blue-600 to-purple-600
+        bg-gradient-to-r from-blue-600 to-amber-600
         text-white px-6 py-3 rounded-full shadow-2xl
         flex items-center gap-3 cursor-pointer
         hover:scale-105 transition-all duration-300

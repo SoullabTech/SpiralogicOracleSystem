@@ -51,7 +51,7 @@ export default function GreetingIntro({ onNext }: GreetingIntroProps) {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="mb-12"
         >
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 maya-pulse mx-auto flex items-center justify-center shadow-lg">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-pink-500 maya-pulse mx-auto flex items-center justify-center shadow-lg">
             <Sparkles className="w-8 h-8 text-white" />
           </div>
         </motion.div>
@@ -100,21 +100,21 @@ export default function GreetingIntro({ onNext }: GreetingIntroProps) {
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.6 }}
           >
-            <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <p 
               className="text-sm text-neutral-500"
               style={{ fontFamily: 'Lato, sans-serif' }}
             >
               Breathing with the rhythm of your awareness
             </p>
-            <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
           </motion.div>
         </div>
 
         {/* Continue Button */}
         <motion.button
           onClick={onNext}
-          className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+          className="px-8 py-4 bg-gradient-to-r from-amber-600 to-pink-600 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
           style={{ fontFamily: 'Lato, sans-serif' }}
           whileHover={{ 
             scale: 1.02,
@@ -130,7 +130,7 @@ export default function GreetingIntro({ onNext }: GreetingIntroProps) {
         
         {/* Subtle background elements */}
         <motion.div
-          className="fixed top-10 right-10 w-32 h-32 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 opacity-30 -z-10"
+          className="fixed top-10 right-10 w-32 h-32 rounded-full bg-gradient-to-br from-amber-100 to-pink-100 opacity-30 -z-10"
           initial={{ scale: 0, rotate: 0 }}
           animate={{ scale: 1, rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}

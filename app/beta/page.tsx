@@ -12,7 +12,7 @@ export default function BetaLandingPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-950 to-black">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black to-black">
       <div className="text-white">Redirecting to Maia Beta...</div>
     </div>
   );

@@ -36,19 +36,19 @@ export const ShapingDebugPanel: React.FC<ShapingDebugPanelProps> = ({
 
   return (
     <motion.div
-      className="fixed bottom-4 right-4 w-96 bg-black/95 backdrop-blur-md rounded-lg shadow-2xl border border-purple-500/30 text-white font-mono text-xs z-50"
+      className="fixed bottom-4 right-4 w-96 bg-black/95 backdrop-blur-md rounded-lg shadow-2xl border border-amber-500/30 text-white font-mono text-xs z-50"
       initial={{ opacity: 0, x: 100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
     >
       {/* Header */}
       <div 
-        className="flex items-center justify-between p-3 cursor-pointer hover:bg-purple-500/10 transition-colors"
+        className="flex items-center justify-between p-3 cursor-pointer hover:bg-amber-500/10 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-2">
-          <Zap className="w-4 h-4 text-purple-400" />
-          <span className="font-semibold text-purple-300">Sesame CI Shaping</span>
+          <Zap className="w-4 h-4 text-amber-400" />
+          <span className="font-semibold text-amber-300">Sesame CI Shaping</span>
         </div>
         
         <div className="flex items-center gap-2">
@@ -85,12 +85,12 @@ export const ShapingDebugPanel: React.FC<ShapingDebugPanelProps> = ({
             <div className="p-3 pt-0 space-y-3">
               
               {/* Status Bar */}
-              <div className="flex items-center justify-between p-2 bg-purple-900/20 rounded border border-purple-500/20">
+              <div className="flex items-center justify-between p-2 bg-amber-900/20 rounded border border-amber-500/20">
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${
                     shapingApplied ? 'bg-green-400 animate-pulse' : 'bg-red-400'
                   }`} />
-                  <span className="text-purple-300 font-semibold">
+                  <span className="text-amber-300 font-semibold">
                     {element.toUpperCase()} Element
                   </span>
                 </div>
@@ -116,17 +116,17 @@ export const ShapingDebugPanel: React.FC<ShapingDebugPanelProps> = ({
                 </div>
 
                 <div className="text-center">
-                  <div className="inline-flex items-center gap-2 text-purple-400 font-bold">
+                  <div className="inline-flex items-center gap-2 text-amber-400 font-bold">
                     ⬇ SESAME CI SHAPING ⬇
                   </div>
                 </div>
 
                 <div>
                   <div className="text-gray-400 mb-1 flex items-center gap-1">
-                    <Zap className="w-3 h-3 text-purple-400" />
+                    <Zap className="w-3 h-3 text-amber-400" />
                     Shaped Text:
                   </div>
-                  <div className="p-2 bg-purple-900/20 rounded border border-purple-500/30 text-white leading-relaxed">
+                  <div className="p-2 bg-amber-900/20 rounded border border-amber-500/30 text-white leading-relaxed">
                     "{highlightShapingTags(shapedText)}"
                   </div>
                 </div>
@@ -140,7 +140,7 @@ export const ShapingDebugPanel: React.FC<ShapingDebugPanelProps> = ({
                     {shapingTags.map((tag, index) => (
                       <span
                         key={index}
-                        className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs border border-purple-500/30"
+                        className="px-2 py-1 bg-amber-500/20 text-amber-300 rounded text-xs border border-amber-500/30"
                       >
                         {tag}
                       </span>
@@ -167,7 +167,7 @@ export const ShapingDebugPanel: React.FC<ShapingDebugPanelProps> = ({
               {/* Performance Metrics */}
               <div className="flex justify-between items-center text-xs text-gray-400 pt-2 border-t border-gray-700">
                 <span>Sacred Tech Processing</span>
-                <span className="text-purple-400">
+                <span className="text-amber-400">
                   {shapingApplied ? '✨ Embodied' : '⚠️ Raw'}
                 </span>
               </div>

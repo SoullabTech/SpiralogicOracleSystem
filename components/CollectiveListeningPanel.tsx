@@ -86,7 +86,7 @@ export function CollectiveListeningPanel({
           </div>
 
           {activeUsers > 0 && (
-            <div className="text-sm text-purple-400">
+            <div className="text-sm text-amber-400">
               {activeUsers} {activeUsers === 1 ? 'presence' : 'presences'} active
             </div>
           )}
@@ -116,7 +116,7 @@ export function CollectiveListeningPanel({
               onClick={() => changeMode(m)}
               className={`px-4 py-2 rounded-lg capitalize transition-colors ${
                 mode === m
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-amber-600 text-white'
                   : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
@@ -173,17 +173,17 @@ export function CollectiveListeningPanel({
               </p>
             ) : (
               collectiveInsights.map((insight, idx) => (
-                <div key={idx} className="bg-purple-900/20 rounded p-3 border border-purple-700/30">
-                  <p className="text-purple-200 text-sm mb-2">{insight.message}</p>
+                <div key={idx} className="bg-amber-900/20 rounded p-3 border border-amber-700/30">
+                  <p className="text-amber-200 text-sm mb-2">{insight.message}</p>
                   <div className="flex items-center justify-between">
                     <div className="flex gap-2">
                       {insight.elements.map(element => (
-                        <span key={element} className="text-xs text-purple-400">
+                        <span key={element} className="text-xs text-amber-400">
                           {element}
                         </span>
                       ))}
                     </div>
-                    <div className="text-xs text-purple-500">
+                    <div className="text-xs text-amber-500">
                       {(insight.strength * 100).toFixed(0)}% resonance
                     </div>
                   </div>
@@ -201,15 +201,15 @@ export function CollectiveListeningPanel({
 
       {/* Last Insight Banner */}
       {lastInsight && (
-        <div className="last-insight bg-gradient-to-r from-purple-900/50 to-blue-900/50 rounded-lg p-4 border border-purple-700/30">
+        <div className="last-insight bg-gradient-to-r from-amber-900/50 to-blue-900/50 rounded-lg p-4 border border-amber-700/30">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-purple-100 font-medium">{lastInsight.message}</p>
+              <p className="text-amber-100 font-medium">{lastInsight.message}</p>
               {lastInsight.personalMirror && (
-                <p className="text-purple-300 text-sm mt-1">{lastInsight.personalMirror}</p>
+                <p className="text-amber-300 text-sm mt-1">{lastInsight.personalMirror}</p>
               )}
             </div>
-            <div className="text-xs text-purple-400">
+            <div className="text-xs text-amber-400">
               {lastInsight.type}
             </div>
           </div>

@@ -222,7 +222,7 @@ export const VoiceConfigurationPanel: React.FC<VoiceConfigurationPanelProps> = (
                 <button
                   onClick={handleSaveCustomWakeWord}
                   disabled={customWakeWordInput.trim() === customWakeWord || saveStatus === 'saving'}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded-lg text-sm transition-colors"
+                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white rounded-lg text-sm transition-colors"
                 >
                   Save
                 </button>
@@ -234,16 +234,16 @@ export const VoiceConfigurationPanel: React.FC<VoiceConfigurationPanelProps> = (
           )}
 
           {/* Nudge Settings */}
-          <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-            <h4 className="text-sm font-semibold text-purple-800 dark:text-purple-200 mb-3">
+          <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/30 rounded-lg">
+            <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-3">
               Conversation Settings
             </h4>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-sm text-purple-700 dark:text-purple-300">
+                <span className="text-sm text-amber-700 dark:text-amber-300">
                   Gentle nudges during silence
                 </span>
-                <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+                <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
                   Maya will softly remind you she's here after 45 seconds of silence (max once per 5 minutes)
                 </p>
               </div>
@@ -254,7 +254,7 @@ export const VoiceConfigurationPanel: React.FC<VoiceConfigurationPanelProps> = (
                   onChange={(e) => handleNudgeToggle(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 dark:peer-focus:ring-amber-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-amber-600"></div>
               </label>
             </div>
           </div>

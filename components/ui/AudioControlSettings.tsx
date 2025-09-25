@@ -57,7 +57,7 @@ export const AudioControlSettings: React.FC<AudioControlSettingsProps> = ({
         className={`
           p-3 rounded-full backdrop-blur-lg transition-all duration-300
           ${audioEnabled
-            ? 'bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30'
+            ? 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30'
             : 'bg-gray-800/50 hover:bg-gray-700/50 border border-gray-600/30'
           }
         `}
@@ -66,7 +66,7 @@ export const AudioControlSettings: React.FC<AudioControlSettingsProps> = ({
         aria-label={audioEnabled ? 'Mute Maya voice' : 'Enable Maya voice'}
       >
         {audioEnabled ? (
-          <Volume2 className="w-5 h-5 text-purple-300" />
+          <Volume2 className="w-5 h-5 text-amber-300" />
         ) : (
           <VolumeX className="w-5 h-5 text-gray-400" />
         )}
@@ -102,7 +102,7 @@ export const InlineAudioToggle: React.FC<{
       className={`
         inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-all
         ${enabled
-          ? 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30'
+          ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
           : 'bg-gray-700/30 text-gray-400 hover:bg-gray-700/50'
         }
       `}
@@ -168,7 +168,7 @@ export const AudioSettingsPanel: React.FC<{
               onClick={() => onSettingsChange({ ...settings, voiceEnabled: !settings.voiceEnabled })}
               className={`
                 relative w-12 h-6 rounded-full transition-colors
-                ${settings.voiceEnabled ? 'bg-purple-500' : 'bg-gray-600'}
+                ${settings.voiceEnabled ? 'bg-amber-500' : 'bg-gray-600'}
               `}
             >
               <div className={`
@@ -190,7 +190,7 @@ export const AudioSettingsPanel: React.FC<{
               max="100"
               value={settings.volume * 100}
               onChange={(e) => onSettingsChange({ ...settings, volume: parseInt(e.target.value) / 100 })}
-              className="w-full accent-purple-500"
+              className="w-full accent-amber-500"
               disabled={!settings.voiceEnabled}
             />
           </div>
@@ -201,7 +201,7 @@ export const AudioSettingsPanel: React.FC<{
             <select
               value={settings.voice}
               onChange={(e) => onSettingsChange({ ...settings, voice: e.target.value as any })}
-              className="w-full px-3 py-2 bg-gray-800 text-gray-300 rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none"
+              className="w-full px-3 py-2 bg-gray-800 text-gray-300 rounded-lg border border-gray-700 focus:border-amber-500 focus:outline-none"
               disabled={!settings.voiceEnabled}
             >
               <option value="alloy">Alloy (Neutral)</option>
@@ -225,7 +225,7 @@ export const AudioSettingsPanel: React.FC<{
               max="150"
               value={settings.speed * 100}
               onChange={(e) => onSettingsChange({ ...settings, speed: parseInt(e.target.value) / 100 })}
-              className="w-full accent-purple-500"
+              className="w-full accent-amber-500"
               disabled={!settings.voiceEnabled}
             />
           </div>

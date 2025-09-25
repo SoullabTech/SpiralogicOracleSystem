@@ -28,7 +28,7 @@ export const MandalaNavigation: React.FC<MandalaNavigationProps> = ({
     { element: 'Water', position: { x: 95, y: -31 }, symbol: '💧', color: 'from-blue-400 to-blue-600' },
     { element: 'Earth', position: { x: 59, y: 81 }, symbol: '🌍', color: 'from-green-600 to-amber-700' },
     { element: 'Air', position: { x: -59, y: 81 }, symbol: '🌬️', color: 'from-cyan-300 to-sky-500' },
-    { element: 'Aether', position: { x: -95, y: -31 }, symbol: '✨', color: 'from-purple-500 to-indigo-600' }
+    { element: 'Aether', position: { x: -95, y: -31 }, symbol: '✨', color: 'from-amber-500 to-indigo-600' }
   ];
   
   // Pulse based on spiral phase

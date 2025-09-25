@@ -237,7 +237,7 @@ export const StreamingVoiceInterface: React.FC<StreamingVoiceInterfaceProps> = (
   }, []);
 
   return (
-    <div className="streaming-voice-interface p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-lg">
+    <div className="streaming-voice-interface p-6 bg-gradient-to-br from-indigo-50 to-amber-50 rounded-xl shadow-lg">
       {/* Audio Level Visualizer */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
@@ -248,7 +248,7 @@ export const StreamingVoiceInterface: React.FC<StreamingVoiceInterfaceProps> = (
         </div>
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-100"
+            className="h-full bg-gradient-to-r from-blue-400 to-amber-500 transition-all duration-100"
             style={{ 
               width: `${audioLevel * 100}%`,
               opacity: isListening ? 1 : 0.3
@@ -333,7 +333,7 @@ export const StreamingVoiceInterface: React.FC<StreamingVoiceInterfaceProps> = (
 
       {/* Response Display */}
       {responseText && (
-        <div className="mt-4 p-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg">
+        <div className="mt-4 p-4 bg-gradient-to-br from-amber-100 to-pink-100 rounded-lg">
           <div className="text-xs text-gray-600 mb-1">Maya says:</div>
           <div className="text-gray-800 leading-relaxed">{responseText}</div>
         </div>

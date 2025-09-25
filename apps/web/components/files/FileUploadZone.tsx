@@ -26,7 +26,7 @@ const SUPPORTED_TYPES = {
   'text/markdown': { ext: '.md', icon: FileText, color: 'text-green-400' },
   'application/pdf': { ext: '.pdf', icon: FileText, color: 'text-red-400' },
   'application/json': { ext: '.json', icon: FileText, color: 'text-yellow-400' },
-  'text/csv': { ext: '.csv', icon: FileText, color: 'text-purple-400' },
+  'text/csv': { ext: '.csv', icon: FileText, color: 'text-amber-400' },
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': { 
     ext: '.docx', 
     icon: FileText, 

@@ -65,9 +65,9 @@ export default function OracleBetaDashboard() {
       name: "Air Agent",
       emoji: "💨",
       description: "Mental clarity and communication",
-      color: "from-purple-500 to-violet-500",
-      bgColor: "bg-purple-500/10",
-      borderColor: "border-purple-500/30",
+      color: "from-amber-500 to-violet-500",
+      bgColor: "bg-amber-500/10",
+      borderColor: "border-amber-500/30",
       endpoint: "/api/air-agent/oracle-response",
     },
   };
@@ -251,7 +251,7 @@ export default function OracleBetaDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-violet-900 to-amber-900 text-yellow-400">
       {/* Header */}
       <div className="border-b border-white/10 bg-black/20">
         <div className="container mx-auto px-6 py-4">

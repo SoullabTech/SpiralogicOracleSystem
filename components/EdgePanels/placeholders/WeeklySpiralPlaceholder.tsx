@@ -2,9 +2,9 @@ import React from "react";
 
 export const WeeklySpiralPlaceholder: React.FC = () => {
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-750 rounded-xl">
+    <div className="p-6 bg-gradient-to-br from-amber-50 to-indigo-50 dark:from-gray-800 dark:to-gray-750 rounded-xl">
       <div className="text-center space-y-4">
-        <div className="w-32 h-32 mx-auto bg-gradient-to-br from-purple-200 to-indigo-200 dark:from-purple-800 dark:to-indigo-800 rounded-full animate-pulse" />
+        <div className="w-32 h-32 mx-auto bg-gradient-to-br from-amber-200 to-indigo-200 dark:from-amber-800 dark:to-indigo-800 rounded-full animate-pulse" />
 
         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
           Weekly Insights Coming Soon
@@ -23,7 +23,7 @@ export const WeeklySpiralPlaceholder: React.FC = () => {
           ))}
         </div>
 
-        <div className="mt-6 text-xs text-purple-600 dark:text-purple-400">
+        <div className="mt-6 text-xs text-amber-600 dark:text-amber-400">
           Phase 2 Beta Feature
         </div>
       </div>

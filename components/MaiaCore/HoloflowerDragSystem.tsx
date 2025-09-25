@@ -117,7 +117,7 @@ export function HoloflowerDragSystem({
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       {/* Center Holoflower Core */}
       <motion.div
-        className="absolute rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30 
+        className="absolute rounded-full bg-gradient-to-br from-amber-500/30 to-pink-500/30 
                    backdrop-blur-md border border-white/40"
         style={{
           width: petalSize * 2,

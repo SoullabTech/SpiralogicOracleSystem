@@ -77,7 +77,7 @@ export default function AudioUnlockWidget() {
     <div className="p-6 bg-gradient-to-br from-neutral-900 to-neutral-800 text-white rounded-2xl shadow-lg border border-neutral-700">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold flex items-center gap-2">
-          <Volume2 className="w-5 h-5 text-purple-400" />
+          <Volume2 className="w-5 h-5 text-amber-400" />
           Maia Voice Unlock
         </h3>
         <span className="text-xs text-neutral-400">Last 24h</span>
@@ -110,7 +110,7 @@ export default function AudioUnlockWidget() {
         </div>
         <div className="w-full bg-neutral-700 rounded-full h-3 overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full transition-all duration-500"
+            className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-500"
             style={{ width: `${stats.percent}%` }}
           />
         </div>

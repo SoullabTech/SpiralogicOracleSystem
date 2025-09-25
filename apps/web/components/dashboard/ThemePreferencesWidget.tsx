@@ -225,7 +225,7 @@ export default function ThemePreferencesWidget() {
               onClick={() => setTimeRange(range)}
               className={`px-3 py-1 rounded text-sm transition ${
                 timeRange === range
-                  ? 'bg-white dark:bg-neutral-700 text-purple-600 dark:text-purple-400 shadow'
+                  ? 'bg-white dark:bg-neutral-700 text-amber-600 dark:text-amber-400 shadow'
                   : 'text-neutral-600 dark:text-neutral-400'
               }`}
             >
@@ -276,10 +276,10 @@ export default function ThemePreferencesWidget() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-amber-50 to-pink-50 dark:from-amber-900/20 dark:to-pink-900/20 rounded-xl p-4">
           <div className="flex items-center justify-between mb-2">
-            <TrendingUp className="w-5 h-5 text-purple-600" />
-            <span className="text-xs text-purple-600">Changes</span>
+            <TrendingUp className="w-5 h-5 text-amber-600" />
+            <span className="text-xs text-amber-600">Changes</span>
           </div>
           <div className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">
             {metrics.totalChanges}
@@ -402,7 +402,7 @@ export default function ThemePreferencesWidget() {
         </h4>
         <div className="grid grid-cols-2 gap-4 text-xs text-neutral-600 dark:text-neutral-400">
           <div className="flex items-start gap-2">
-            <Clock className="w-4 h-4 mt-0.5 text-purple-600" />
+            <Clock className="w-4 h-4 mt-0.5 text-amber-600" />
             <div>
               <p className="font-medium text-neutral-700 dark:text-neutral-300">
                 Peak switching time

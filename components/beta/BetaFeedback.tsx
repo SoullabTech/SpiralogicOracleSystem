@@ -109,7 +109,7 @@ export function BetaFeedback() {
               }}
               className={`p-4 rounded-xl border transition-all ${
                 feedback.category === cat.id
-                  ? 'bg-purple-600/20 border-purple-500'
+                  ? 'bg-amber-600/20 border-amber-500'
                   : 'bg-white/5 border-white/10 hover:bg-white/10'
               }`}
             >
@@ -155,7 +155,7 @@ export function BetaFeedback() {
           {feedback.rating && (
             <button
               onClick={() => setCurrentStep(2)}
-              className="w-full mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+              className="w-full mt-4 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
             >
               Continue
             </button>
@@ -181,7 +181,7 @@ export function BetaFeedback() {
                   }))}
                   className={`p-2 rounded-lg text-sm ${
                     feedback.emotionalShift?.before === state.id
-                      ? 'bg-purple-600/30 border border-purple-500'
+                      ? 'bg-amber-600/30 border border-amber-500'
                       : 'bg-white/5 hover:bg-white/10'
                   }`}
                 >
@@ -204,7 +204,7 @@ export function BetaFeedback() {
                   }))}
                   className={`p-2 rounded-lg text-sm ${
                     feedback.emotionalShift?.after === state.id
-                      ? 'bg-purple-600/30 border border-purple-500'
+                      ? 'bg-amber-600/30 border border-amber-500'
                       : 'bg-white/5 hover:bg-white/10'
                   }`}
                 >
@@ -218,7 +218,7 @@ export function BetaFeedback() {
           {feedback.emotionalShift?.before && feedback.emotionalShift?.after && (
             <button
               onClick={() => setCurrentStep(3)}
-              className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+              className="w-full px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
             >
               Continue
             </button>
@@ -236,19 +236,19 @@ export function BetaFeedback() {
             value={feedback.resonance || ''}
             onChange={(e) => setFeedback(prev => ({ ...prev, resonance: e.target.value }))}
             placeholder="What aspect touched your soul?"
-            className="w-full h-24 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 resize-none"
+            className="w-full h-24 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 resize-none"
           />
           
           <textarea
             value={feedback.insight || ''}
             onChange={(e) => setFeedback(prev => ({ ...prev, insight: e.target.value }))}
             placeholder="What insight emerged for you?"
-            className="w-full h-24 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 resize-none"
+            className="w-full h-24 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 resize-none"
           />
           
           <button
             onClick={() => setCurrentStep(4)}
-            className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+            className="w-full px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
           >
             Continue
           </button>
@@ -265,7 +265,7 @@ export function BetaFeedback() {
             value={feedback.suggestions || ''}
             onChange={(e) => setFeedback(prev => ({ ...prev, suggestions: e.target.value }))}
             placeholder="What would make this experience even more sacred?"
-            className="w-full h-24 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 resize-none"
+            className="w-full h-24 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 resize-none"
           />
           
           <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
@@ -297,7 +297,7 @@ export function BetaFeedback() {
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg transition-all flex items-center justify-center gap-2"
+            className="w-full px-4 py-3 bg-gradient-to-r from-amber-600 to-indigo-600 hover:from-amber-700 hover:to-indigo-700 text-white rounded-lg transition-all flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>
@@ -331,7 +331,7 @@ export function BetaFeedback() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-24 right-6 z-30 w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30"
+        className="fixed bottom-24 right-6 z-30 w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30"
       >
         <MessageCircle className="w-6 h-6 text-white" />
         
@@ -355,7 +355,7 @@ export function BetaFeedback() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-3xl p-6 max-w-md w-full border border-purple-500/20"
+              className="bg-gradient-to-br from-black to-indigo-950 rounded-3xl p-6 max-w-md w-full border border-amber-500/20"
               onClick={(e) => e.stopPropagation()}
             >
               {showThankYou ? (
@@ -398,9 +398,9 @@ export function BetaFeedback() {
                         key={idx}
                         className={`w-2 h-2 rounded-full transition-all ${
                           idx === currentStep
-                            ? 'w-8 bg-purple-500'
+                            ? 'w-8 bg-amber-500'
                             : idx < currentStep
-                            ? 'bg-purple-400'
+                            ? 'bg-amber-400'
                             : 'bg-white/20'
                         }`}
                       />

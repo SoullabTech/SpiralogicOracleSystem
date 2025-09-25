@@ -23,10 +23,10 @@ export default function RecallDebugOverlay({
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 w-96 max-w-[calc(100vw-2rem)] bg-black/90 backdrop-blur-sm text-white rounded-xl shadow-2xl p-4 z-50 border border-purple-500/50">
+    <div className="fixed bottom-4 right-4 w-96 max-w-[calc(100vw-2rem)] bg-black/90 backdrop-blur-sm text-white rounded-xl shadow-2xl p-4 z-50 border border-amber-500/50">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-bold flex items-center gap-2">
-          <Brain className="w-5 h-5 text-purple-400 animate-pulse" /> 
+          <Brain className="w-5 h-5 text-amber-400 animate-pulse" /> 
           Semantic Recall Debug
         </h3>
         <button 
@@ -49,7 +49,7 @@ export default function RecallDebugOverlay({
             key={m.id}
             className={`p-3 rounded-lg border transition-all ${
               m.injected 
-                ? "bg-purple-900/30 border-purple-500/30" 
+                ? "bg-amber-900/30 border-amber-500/30" 
                 : "bg-gray-800/30 border-gray-600/30"
             }`}
           >
@@ -57,7 +57,7 @@ export default function RecallDebugOverlay({
               <div className="flex-1">
                 <span className="font-semibold text-sm">
                   {m.element && (
-                    <span className="text-purple-300">{m.element}</span>
+                    <span className="text-amber-300">{m.element}</span>
                   )}
                   {m.element && m.phase && " · "}
                   {m.phase && (

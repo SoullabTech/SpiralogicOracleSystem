@@ -31,11 +31,11 @@ export default function DaimonCard({ encounter, onDismiss, onReflect }: DaimonCa
     const colors = {
       emerging: 'from-green-500/20 to-emerald-600/20',
       crystallizing: 'from-blue-500/20 to-cyan-600/20',
-      transforming: 'from-purple-500/20 to-violet-600/20',
+      transforming: 'from-amber-500/20 to-violet-600/20',
       integrating: 'from-yellow-500/20 to-amber-600/20',
       awakening: 'from-pink-500/20 to-rose-600/20',
       challenging: 'from-red-500/20 to-orange-600/20',
-      beckoning: 'from-indigo-500/20 to-purple-600/20',
+      beckoning: 'from-indigo-500/20 to-amber-600/20',
       warning: 'from-orange-500/20 to-red-600/20',
       celebrating: 'from-yellow-500/20 to-green-600/20',
       mourning: 'from-gray-500/20 to-slate-600/20'

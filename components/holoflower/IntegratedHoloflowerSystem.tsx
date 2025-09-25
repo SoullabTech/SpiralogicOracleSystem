@@ -211,7 +211,7 @@ const CenterView: React.FC<{
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
         <div className="text-center">
           <div className="text-sm text-gray-400">Coherence</div>
-          <div className="text-2xl font-bold text-purple-400">
+          <div className="text-2xl font-bold text-amber-400">
             {userCheckIn ? Math.round(calculateCoherence() * 100) : '--'}%
           </div>
         </div>
@@ -237,7 +237,7 @@ const CheckInView: React.FC<{
 
       {/* Submit button */}
       <motion.button
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 bg-purple-600 text-white rounded-full"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 bg-amber-600 text-white rounded-full"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onSubmit}
@@ -253,7 +253,7 @@ const HigherSelfView: React.FC = () => {
   return (
     <div className="w-full h-full flex items-center justify-center">
       <div className="text-center">
-        <h2 className="text-2xl font-light text-purple-300">Higher Self Systems</h2>
+        <h2 className="text-2xl font-light text-amber-300">Higher Self Systems</h2>
         <p className="text-gray-400 mt-2">Conscious Awareness • Witnessing • Sacred Presence</p>
       </div>
     </div>
@@ -304,7 +304,7 @@ const NavigationControls: React.FC<{
     return (
       <>
         <button
-          className="absolute top-8 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-purple-600/20 flex items-center justify-center"
+          className="absolute top-8 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-amber-600/20 flex items-center justify-center"
           onClick={() => onNavigate('top')}
         >
           ↑
@@ -333,7 +333,7 @@ const NavigationControls: React.FC<{
 
   return (
     <button
-      className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-purple-600/20 rounded-full text-white"
+      className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-amber-600/20 rounded-full text-white"
       onClick={() => onNavigate('center')}
     >
       ◉ Return to Center

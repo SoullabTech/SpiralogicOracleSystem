@@ -33,7 +33,7 @@ export default function PromptCardStack({
   // Card visual themes based on direction/element
   const cardThemes = {
     up: {
-      gradient: 'from-violet-600 to-purple-800',
+      gradient: 'from-violet-600 to-amber-800',
       symbol: '☉',
       title: 'Transcendence'
     },

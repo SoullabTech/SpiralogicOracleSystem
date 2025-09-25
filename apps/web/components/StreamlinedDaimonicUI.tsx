@@ -217,7 +217,7 @@ const DaimonicHeader: React.FC<{
             <span className="text-sm text-gray-600">Depth:</span>
             <div className="w-16 h-2 bg-gray-200 rounded-full">
               <div 
-                className="h-2 bg-purple-500 rounded-full transition-all duration-500" 
+                className="h-2 bg-amber-500 rounded-full transition-all duration-500" 
                 style={{ width: `${thresholds.complexity_readiness * 100}%` }}
               />
             </div>
@@ -303,8 +303,8 @@ const ConversationDisplay: React.FC<{
  */
 const UserMessage: React.FC<{ content: string }> = ({ content }) => (
   <div className="flex justify-end">
-    <div className="max-w-sm p-3 bg-purple-100 rounded-lg">
-      <p className="text-sm text-purple-800">{content}</p>
+    <div className="max-w-sm p-3 bg-amber-100 rounded-lg">
+      <p className="text-sm text-amber-800">{content}</p>
     </div>
   </div>
 );
@@ -345,7 +345,7 @@ const OracleResponse: React.FC<{ response: UnifiedResponse }> = ({ response }) =
         >
           <button
             onClick={() => setShowDialogical(!showDialogical)}
-            className="text-sm text-purple-600 hover:text-purple-800 mb-3"
+            className="text-sm text-amber-600 hover:text-amber-800 mb-3"
           >
             {showDialogical ? 'Hide' : 'Explore'} deeper layers
           </button>
@@ -378,7 +378,7 @@ const VisualHintIndicator: React.FC<{ hint: string }> = ({ hint }) => {
       case 'grounding_mode':
         return <Circle className="text-green-500 animate-pulse" size={12} />;
       case 'trickster_alert':
-        return <Zap className="text-purple-500 animate-bounce" size={12} />;
+        return <Zap className="text-amber-500 animate-bounce" size={12} />;
       case 'gentle_passage':
         return <Waves className="text-blue-500 animate-pulse" size={12} />;
       case 'creative_resonance':
@@ -430,7 +430,7 @@ const MultiAgentVoices: React.FC<{ voices: AgentVoice[] }> = ({ voices }) => {
             className={`
               flex-1 px-3 py-2 rounded text-sm font-medium transition-all
               ${activeVoice === index 
-                ? 'bg-white text-purple-700 shadow-sm' 
+                ? 'bg-white text-amber-700 shadow-sm' 
                 : 'text-gray-600 hover:text-gray-800'
               }
             `}
@@ -469,7 +469,7 @@ const DialogicalDisplay: React.FC<{ layer: DialogicalLayer }> = ({ layer }) => {
   const [activeTab, setActiveTab] = useState<'questions' | 'reflections' | 'resistances'>('questions');
 
   return (
-    <div className="space-y-4 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-300">
+    <div className="space-y-4 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-300">
       {/* Tab navigation */}
       <div className="flex space-x-4">
         {(['questions', 'reflections', 'resistances'] as const).map(tab => (
@@ -479,7 +479,7 @@ const DialogicalDisplay: React.FC<{ layer: DialogicalLayer }> = ({ layer }) => {
             className={`
               text-sm font-medium transition-colors
               ${activeTab === tab 
-                ? 'text-purple-700 border-b-2 border-purple-700' 
+                ? 'text-amber-700 border-b-2 border-amber-700' 
                 : 'text-gray-600 hover:text-gray-800'
               }
             `}
@@ -500,8 +500,8 @@ const DialogicalDisplay: React.FC<{ layer: DialogicalLayer }> = ({ layer }) => {
           {activeTab === 'questions' && (
             <ul className="space-y-2">
               {layer.questions.map((question, i) => (
-                <li key={i} className="text-sm text-purple-800">
-                  <span className="text-purple-600 mr-2">•</span>
+                <li key={i} className="text-sm text-amber-800">
+                  <span className="text-amber-600 mr-2">•</span>
                   {question}
                 </li>
               ))}
@@ -511,8 +511,8 @@ const DialogicalDisplay: React.FC<{ layer: DialogicalLayer }> = ({ layer }) => {
           {activeTab === 'reflections' && (
             <ul className="space-y-2">
               {layer.reflections.map((reflection, i) => (
-                <li key={i} className="text-sm text-purple-800 italic">
-                  <span className="text-purple-600 mr-2">~</span>
+                <li key={i} className="text-sm text-amber-800 italic">
+                  <span className="text-amber-600 mr-2">~</span>
                   {reflection}
                 </li>
               ))}
@@ -534,10 +534,10 @@ const DialogicalDisplay: React.FC<{ layer: DialogicalLayer }> = ({ layer }) => {
 
       {/* Incomplete knowings */}
       {layer.incomplete_knowings.length > 0 && (
-        <div className="mt-4 p-3 bg-purple-100 rounded">
-          <h4 className="text-sm font-medium text-purple-800 mb-2">Partial Knowings</h4>
+        <div className="mt-4 p-3 bg-amber-100 rounded">
+          <h4 className="text-sm font-medium text-amber-800 mb-2">Partial Knowings</h4>
           {layer.incomplete_knowings.map((knowing, i) => (
-            <p key={i} className="text-sm text-purple-700 italic">
+            <p key={i} className="text-sm text-amber-700 italic">
               {knowing}
             </p>
           ))}
@@ -559,7 +559,7 @@ const ArchitecturalDisplay: React.FC<{ layer: ArchitecturalLayer }> = ({ layer }
         <span className="font-medium">Gap Intensity:</span>
         <div className="mt-1 w-full bg-gray-200 rounded-full h-2">
           <div 
-            className="bg-purple-500 h-2 rounded-full" 
+            className="bg-amber-500 h-2 rounded-full" 
             style={{ width: `${layer.synaptic_gap_intensity * 100}%` }}
           />
         </div>
@@ -612,9 +612,9 @@ const ProcessingIndicator: React.FC = () => (
     className="flex justify-center items-center p-8"
   >
     <div className="flex space-x-2">
-      <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-      <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-75" />
-      <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-150" />
+      <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+      <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-75" />
+      <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-150" />
     </div>
     <span className="ml-4 text-sm text-gray-600">Oracle contemplating...</span>
   </motion.div>
@@ -638,14 +638,14 @@ const InputArea: React.FC<{
       onChange={(e) => onChange(e.target.value)}
       onKeyPress={onKeyPress}
       placeholder="What would you like to explore?"
-      className="flex-1 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+      className="flex-1 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
       rows={2}
       disabled={disabled}
     />
     <button
       onClick={onSend}
       disabled={disabled || !value.trim()}
-      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <Send size={18} />
     </button>

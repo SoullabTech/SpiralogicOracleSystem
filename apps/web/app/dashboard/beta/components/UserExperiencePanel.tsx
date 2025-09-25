@@ -78,7 +78,7 @@ export default function UserExperiencePanel({ uxMetrics }: UserExperiencePanelPr
           </div>
           
           <div className="p-3 bg-gray-800/30 rounded-lg text-center">
-            <div className="text-lg font-semibold text-purple-400">
+            <div className="text-lg font-semibold text-amber-400">
               {uxMetrics.feelsAlive.toFixed(1)}%
             </div>
             <div className="text-xs text-gray-400">"Maya Feels Alive"</div>

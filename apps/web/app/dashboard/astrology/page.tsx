@@ -61,7 +61,7 @@ export default function AstrologyDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -90,12 +90,12 @@ export default function AstrologyDashboard() {
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-amber-600 text-white px-4 py-2 rounded-md hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading || !birthDate}
               >
                 {loading

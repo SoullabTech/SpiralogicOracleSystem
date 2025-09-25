@@ -39,7 +39,7 @@ export default function AnalyticsPage() {
         averageSessionLength: 12.3,
         mostActiveDay: 'Thursday',
         topTopics: [
-          { topic: 'Life Direction', count: 15, color: 'bg-purple-500' },
+          { topic: 'Life Direction', count: 15, color: 'bg-amber-500' },
           { topic: 'Relationships', count: 12, color: 'bg-orange-500' },
           { topic: 'Career Growth', count: 8, color: 'bg-green-500' },
           { topic: 'Creativity', count: 6, color: 'bg-blue-500' },
@@ -53,12 +53,12 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4"
+            className="w-16 h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4"
           >
             <BarChart3 className="w-8 h-8 text-white" />
           </motion.div>
@@ -72,7 +72,7 @@ export default function AnalyticsPage() {
   const maxConversations = Math.max(...(analytics?.weeklyConversations || [1]));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <motion.div 
@@ -98,15 +98,15 @@ export default function AnalyticsPage() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
         >
-          <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+          <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
             <CardContent className="p-6 text-center">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3, type: "spring" }}
-                className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3"
+                className="w-12 h-12 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-3"
               >
-                <MessageSquare className="w-6 h-6 text-purple-400" />
+                <MessageSquare className="w-6 h-6 text-amber-400" />
               </motion.div>
               <p className="text-2xl font-bold text-white mb-1">42</p>
               <p className="text-sm text-muted-foreground">Total Conversations</p>
@@ -166,10 +166,10 @@ export default function AnalyticsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+            <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <BarChart3 className="w-5 h-5 text-purple-400" />
+                  <BarChart3 className="w-5 h-5 text-amber-400" />
                   <span>Weekly Activity</span>
                 </CardTitle>
               </CardHeader>
@@ -189,7 +189,7 @@ export default function AnalyticsPage() {
                             initial={{ width: 0 }}
                             animate={{ width: `${width}%` }}
                             transition={{ delay: 0.3 + index * 0.1, duration: 0.8 }}
-                            className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-amber-500 to-blue-500 rounded-full"
                           />
                         </div>
                         <div className="w-8 text-sm text-white font-semibold">
@@ -249,16 +249,16 @@ export default function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+          <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Zap className="w-5 h-5 text-purple-400" />
+                <Zap className="w-5 h-5 text-amber-400" />
                 <span>AI Insights</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                <div className="p-4 bg-amber-500/10 rounded-lg border border-amber-500/20">
                   <h4 className="font-medium text-white mb-2">Most Active Time</h4>
                   <p className="text-sm text-muted-foreground">
                     You engage most deeply on {analytics?.mostActiveDay}s, suggesting this is when you&apos;re most 

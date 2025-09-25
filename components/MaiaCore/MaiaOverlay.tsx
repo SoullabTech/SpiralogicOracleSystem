@@ -62,11 +62,11 @@ export default function MaiaOverlay({
       onClick={onClose}
     >
       {/* Backdrop with blur */}
-      <div className="absolute inset-0 bg-gradient-to-t from-purple-900/40 via-black/30 to-transparent backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-gradient-to-t from-amber-900/40 via-black/30 to-transparent backdrop-blur-sm" />
       
       {/* Main panel */}
       <motion.div
-        className="relative w-full max-w-lg bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 rounded-t-3xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-lg bg-gradient-to-br from-amber-50 to-pink-50 dark:from-black dark:to-pink-950 rounded-t-3xl shadow-2xl overflow-hidden"
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
         exit={{ y: "100%" }}
@@ -75,7 +75,7 @@ export default function MaiaOverlay({
       >
         {/* Coherence indicator bar */}
         <motion.div
-          className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"
+          className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-pink-500"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: coherenceLevel }}
           transition={{ duration: 1 }}
@@ -86,7 +86,7 @@ export default function MaiaOverlay({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <motion.div
-                className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400"
+                className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-pink-400"
                 animate={{
                   scale: [1, 1.1, 1],
                   opacity: [0.8, 1, 0.8]
@@ -94,7 +94,7 @@ export default function MaiaOverlay({
                 transition={{ duration: 3, repeat: Infinity }}
               />
               <div>
-                <h2 className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <h2 className="text-lg font-semibold bg-gradient-to-r from-amber-600 to-pink-600 bg-clip-text text-transparent">
                   Maia
                 </h2>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -130,7 +130,7 @@ export default function MaiaOverlay({
                 
                 <div className="grid grid-cols-2 gap-3">
                   <motion.button
-                    className="p-4 rounded-xl bg-white/50 dark:bg-black/30 backdrop-blur border border-purple-200 dark:border-purple-800"
+                    className="p-4 rounded-xl bg-white/50 dark:bg-black/30 backdrop-blur border border-amber-200 dark:border-amber-800"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setMode("voice")}
@@ -188,7 +188,7 @@ export default function MaiaOverlay({
                 className="space-y-4"
               >
                 <textarea
-                  className="w-full p-4 rounded-xl bg-white/50 dark:bg-black/30 backdrop-blur border border-purple-200 dark:border-purple-800 resize-none"
+                  className="w-full p-4 rounded-xl bg-white/50 dark:bg-black/30 backdrop-blur border border-amber-200 dark:border-amber-800 resize-none"
                   rows={4}
                   placeholder="Share what's alive in you..."
                   onKeyDown={(e) => {
@@ -221,7 +221,7 @@ export default function MaiaOverlay({
             <motion.div
               key={m}
               className={`w-2 h-2 rounded-full ${
-                mode === m ? "bg-purple-500" : "bg-gray-300 dark:bg-gray-600"
+                mode === m ? "bg-amber-500" : "bg-gray-300 dark:bg-gray-600"
               }`}
               animate={{ scale: mode === m ? 1.2 : 1 }}
             />

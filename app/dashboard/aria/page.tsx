@@ -11,7 +11,7 @@ const ARIADashboard = dynamic(
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-black">
         <div className="flex flex-col items-center space-y-4">
           <div className="text-4xl animate-pulse">🦋</div>
-          <div className="text-purple-400">Loading Maya Dashboard...</div>
+          <div className="text-amber-400">Loading Maya Dashboard...</div>
         </div>
       </div>
     )

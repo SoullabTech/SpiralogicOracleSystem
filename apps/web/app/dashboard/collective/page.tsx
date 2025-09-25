@@ -161,11 +161,11 @@ const CollectiveDashboard = () => {
             <span className="text-white/70">Low</span>
           </div>
           <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-purple-400/50 rounded"></div>
+            <div className="w-3 h-3 bg-amber-400/50 rounded"></div>
             <span className="text-white/70">Medium</span>
           </div>
           <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-purple-400 rounded"></div>
+            <div className="w-3 h-3 bg-amber-400 rounded"></div>
             <span className="text-white/70">High</span>
           </div>
         </div>
@@ -175,7 +175,7 @@ const CollectiveDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  from-purple-900 via-blue-900 to-indigo-900 p-6 flex items-center justify-center">
+      <div className="min-h-screen  from-amber-900 via-blue-900 to-indigo-900 p-6 flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin w-12 h-12 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-lg">Reading the collective field...</p>
@@ -187,11 +187,11 @@ const CollectiveDashboard = () => {
 
   if (!stats) {
     return (
-      <div className="min-h-screen  from-purple-900 via-blue-900 to-indigo-900 p-6 flex items-center justify-center">
+      <div className="min-h-screen  from-amber-900 via-blue-900 to-indigo-900 p-6 flex items-center justify-center">
         <div className="text-center text-white">
           <h2 className="text-2xl font-bold mb-4">Unable to Read the Field</h2>
           <p className="text-white/70 mb-6">The collective currents are temporarily obscured</p>
-          <Button onClick={loadCollectiveData} className="bg-purple-600 hover:bg-purple-700">
+          <Button onClick={loadCollectiveData} className="bg-amber-600 hover:bg-amber-700">
             Try Again
           </Button>
         </div>
@@ -200,11 +200,11 @@ const CollectiveDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen  from-purple-900 via-blue-900 to-indigo-900 p-6">
+    <div className="min-h-screen  from-amber-900 via-blue-900 to-indigo-900 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center text-white space-y-4">
-          <h1 className="text-4xl font-bold  from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold  from-blue-400 to-amber-400 bg-clip-text text-transparent">
             🌍 Collective Evolution
           </h1>
           <p className="text-xl text-blue-200">
@@ -286,7 +286,7 @@ const CollectiveDashboard = () => {
               <Card className="bg-white/10 backdrop-blur-sm border-white/20">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3">
-                    <Compass className="w-8 h-8 text-purple-400" />
+                    <Compass className="w-8 h-8 text-amber-400" />
                     <div>
                       <p className="text-white/70 text-sm">Dominant Field</p>
                       <p className="text-white text-lg font-bold">
@@ -316,7 +316,7 @@ const CollectiveDashboard = () => {
 
             {/* User Contribution Banner */}
             {userContribution && (
-              <Card className=" from-indigo-900/40 to-purple-900/40 backdrop-blur-sm border-indigo-400/30">
+              <Card className=" from-indigo-900/40 to-amber-900/40 backdrop-blur-sm border-indigo-400/30">
                 <CardHeader>
                   <CardTitle className="text-white text-center text-xl">
                     🌊 Your Contribution to the Field
@@ -448,7 +448,7 @@ const CollectiveDashboard = () => {
                     {stats.recentPatterns.map((pattern, index) => (
                       <div key={index} className="bg-white/5 rounded-lg p-4 space-y-2">
                         <div className="flex items-start space-x-2">
-                          <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
                           <p className="text-white/90 text-sm leading-relaxed">{pattern}</p>
                         </div>
                       </div>
@@ -521,7 +521,7 @@ const CollectiveDashboard = () => {
                     <h4 className="text-white/80 font-medium mb-2">Peak Hours</h4>
                     <div className="flex flex-wrap gap-2">
                       {stats.temporalInsights.peakHours.map((hour) => (
-                        <Badge key={hour} className="bg-purple-500/20 text-purple-300">
+                        <Badge key={hour} className="bg-amber-500/20 text-amber-300">
                           {hour}
                         </Badge>
                       ))}
@@ -588,13 +588,13 @@ const CollectiveDashboard = () => {
           <div className="space-y-6">
             {/* Oracle Reading Card */}
             {stats.oracleNarrative && (
-              <Card className=" from-purple-900/40 via-indigo-900/40 to-blue-900/40 backdrop-blur-sm border-purple-400/30">
+              <Card className=" from-amber-900/40 via-indigo-900/40 to-blue-900/40 backdrop-blur-sm border-amber-400/30">
                 <CardHeader className="text-center">
                   <CardTitle className="text-white flex items-center justify-center space-x-2 text-2xl">
                     <Eye className="w-6 h-6" />
                     <span>Oracle Reading</span>
                   </CardTitle>
-                  <Badge className="mx-auto bg-purple-500/20 text-purple-200 capitalize">
+                  <Badge className="mx-auto bg-amber-500/20 text-amber-200 capitalize">
                     {stats.oracleNarrative.tone} Voice
                   </Badge>
                 </CardHeader>

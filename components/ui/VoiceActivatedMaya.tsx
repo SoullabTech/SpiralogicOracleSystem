@@ -309,7 +309,7 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
         onClick={toggleVoiceActivation}
         className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all ${
           isListening
-            ? 'bg-gradient-to-br from-purple-500 to-indigo-600'
+            ? 'bg-gradient-to-br from-amber-500 to-indigo-600'
             : 'bg-gradient-to-br from-gray-600 to-gray-700'
         }`}
         whileHover={{ scale: 1.05 }}
@@ -320,7 +320,7 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
           {isListening && (
             <>
               <motion.div
-                className="absolute inset-0 rounded-full bg-purple-500 opacity-25"
+                className="absolute inset-0 rounded-full bg-amber-500 opacity-25"
                 initial={{ scale: 1 }}
                 animate={{ scale: 1.5, opacity: 0 }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -333,7 +333,7 @@ export const VoiceActivatedMaya: React.FC<VoiceActivatedMayaProps> = ({
               />
               {/* Ambient presence - subtle breathing effect */}
               <motion.div
-                className="absolute inset-2 rounded-full bg-gradient-to-br from-purple-400/10 to-indigo-400/10"
+                className="absolute inset-2 rounded-full bg-gradient-to-br from-amber-400/10 to-indigo-400/10"
                 animate={{
                   scale: [1, 1.05, 1],
                   opacity: [0.3, 0.5, 0.3]

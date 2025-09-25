@@ -26,7 +26,7 @@ export default function BetaPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
+      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-violet-900 to-amber-900 text-yellow-400 flex items-center justify-center p-8">
         <div className="text-center max-w-lg">
           <div className="mb-6">
             <div className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mx-auto shadow-lg">
@@ -50,7 +50,7 @@ export default function BetaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-violet-900 to-amber-900 text-yellow-400">
       {/* Header */}
       <div className="text-center pt-12 pb-8">
         <h1 className="text-6xl font-bold mb-4">

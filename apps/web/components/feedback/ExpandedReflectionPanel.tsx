@@ -122,10 +122,10 @@ export default function ExpandedReflectionPanel({
           }}
           className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 md:bottom-8"
         >
-          <div className="relative bg-gradient-to-br from-purple-50/95 via-indigo-50/95 to-purple-50/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-purple-100/20 p-6">
+          <div className="relative bg-gradient-to-br from-amber-50/95 via-indigo-50/95 to-amber-50/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-amber-100/20 p-6">
             {/* Subtle aura background with blur */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-400/8 via-indigo-400/8 to-purple-400/8 rounded-2xl blur-xl" />
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-indigo-600/5 rounded-2xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-400/8 via-indigo-400/8 to-amber-400/8 rounded-2xl blur-xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-indigo-600/5 rounded-2xl" />
             
             <div className="relative">
               {!hasSubmitted ? (
@@ -145,7 +145,7 @@ export default function ExpandedReflectionPanel({
                       value={feeling}
                       onChange={(e) => setFeeling(e.target.value)}
                       placeholder="e.g. calm, curious, confused..."
-                      className="w-full px-3 py-2 bg-white/70 border border-purple-100 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
+                      className="w-full px-3 py-2 bg-white/70 border border-amber-100 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all"
                       maxLength={50}
                     />
                   </div>
@@ -159,7 +159,7 @@ export default function ExpandedReflectionPanel({
                       value={surprise}
                       onChange={(e) => setSurprise(e.target.value)}
                       placeholder="Optional..."
-                      className="w-full px-3 py-2 bg-white/70 border border-purple-100 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none"
+                      className="w-full px-3 py-2 bg-white/70 border border-amber-100 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all resize-none"
                       rows={1}
                       onFocus={(e) => e.target.rows = 2}
                       onBlur={(e) => e.target.rows = 1}
@@ -175,7 +175,7 @@ export default function ExpandedReflectionPanel({
                       value={frustration}
                       onChange={(e) => setFrustration(e.target.value)}
                       placeholder="Optional..."
-                      className="w-full px-3 py-2 bg-white/70 border border-purple-100 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none"
+                      className="w-full px-3 py-2 bg-white/70 border border-amber-100 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all resize-none"
                       rows={1}
                       onFocus={(e) => e.target.rows = 2}
                       onBlur={(e) => e.target.rows = 1}
@@ -192,7 +192,7 @@ export default function ExpandedReflectionPanel({
                       w-full py-2.5 px-4 rounded-lg font-sans text-sm font-medium
                       transition-all duration-300
                       ${feeling.trim() && !isSubmitting
-                        ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg hover:shadow-xl'
+                        ? 'bg-gradient-to-r from-amber-500 to-indigo-500 text-white shadow-lg hover:shadow-xl'
                         : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }
                     `}

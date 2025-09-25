@@ -83,7 +83,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
             onClick={() => setViewMode('linear')}
             className={`px-3 py-1 text-xs rounded-lg transition-colors
               ${viewMode === 'linear' 
-                ? 'bg-purple-100 text-purple-700' 
+                ? 'bg-amber-100 text-amber-700' 
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
           >
             Linear
@@ -92,7 +92,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
             onClick={() => setViewMode('spiral')}
             className={`px-3 py-1 text-xs rounded-lg transition-colors
               ${viewMode === 'spiral' 
-                ? 'bg-purple-100 text-purple-700' 
+                ? 'bg-amber-100 text-amber-700' 
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
           >
             Spiral
@@ -105,7 +105,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
         <div className="relative">
           {/* Connection line */}
           <div className="absolute top-8 left-8 right-8 h-0.5 bg-gradient-to-r 
-                        from-purple-200 via-blue-200 to-green-200" />
+                        from-amber-200 via-blue-200 to-green-200" />
           
           {/* Sessions */}
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
@@ -116,7 +116,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
               >
                 {/* Connection dot */}
                 <div className="absolute top-8 left-1/2 transform -translate-x-1/2 
-                              w-2 h-2 bg-white border-2 border-purple-400 rounded-full z-10" />
+                              w-2 h-2 bg-white border-2 border-amber-400 rounded-full z-10" />
                 
                 {/* Mini Holoflower */}
                 <div className="pt-12">
@@ -134,7 +134,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
 
                 {/* Session number */}
                 <div className="absolute -top-2 left-1/2 transform -translate-x-1/2
-                              text-xs font-medium text-purple-600">
+                              text-xs font-medium text-amber-600">
                   #{sessions.length - index}
                 </div>
               </div>
@@ -183,7 +183,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
           {/* Center text */}
           <div className="absolute text-center">
             <p className="text-xs text-gray-500">Spiral Journey</p>
-            <p className="text-sm font-medium text-purple-700">
+            <p className="text-sm font-medium text-amber-700">
               {sessions.length} sessions
             </p>
           </div>
@@ -224,7 +224,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
             {journeyArc.hasTranscended && (
               <div className="col-span-2">
                 <span className="text-gray-500">Transcendent:</span>
-                <span className="ml-2 text-purple-700">
+                <span className="ml-2 text-amber-700">
                   {Math.round(journeyArc.aetherRatio * 100)}% Aetheric
                 </span>
               </div>
@@ -232,8 +232,8 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
           </div>
 
           {/* Narrative */}
-          <div className="mt-4 p-3 bg-purple-50 rounded-lg">
-            <p className="text-sm text-purple-800 italic">
+          <div className="mt-4 p-3 bg-amber-50 rounded-lg">
+            <p className="text-sm text-amber-800 italic">
               {journeyArc.narrative}
             </p>
           </div>
@@ -261,7 +261,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
                 <>
                   <span className="text-gray-400">→</span>
                   <span className="px-2 py-1 rounded text-xs bg-gradient-to-r 
-                                 from-purple-400 to-pink-400 text-white">
+                                 from-amber-400 to-pink-400 text-white">
                     ✦
                   </span>
                 </>
@@ -291,7 +291,7 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
                       <span className="font-medium">Essence:</span> {facet.essence}
                     </p>
                     {session?.practice && (
-                      <p className="text-xs text-purple-700 italic mt-2">
+                      <p className="text-xs text-amber-700 italic mt-2">
                         {session.practice}
                       </p>
                     )}

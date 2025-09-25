@@ -26,7 +26,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
         relative px-4 py-2 rounded-full text-sm font-medium
         transition-all duration-300 backdrop-blur-sm
         ${state === 'on' 
-          ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' 
+          ? 'bg-amber-500/20 text-amber-300 border border-amber-400/30' 
           : state === 'silent'
           ? 'bg-amber-500/20 text-amber-300 border border-amber-400/30'
           : 'bg-gray-800/20 text-gray-400 border border-gray-600/30'}

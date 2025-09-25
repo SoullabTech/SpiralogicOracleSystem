@@ -68,7 +68,7 @@ const arcDefinitions = {
     color: '#9b59b6',
     label: 'Return',
     description: 'Gifting medicine, completing cycle',
-    gradient: 'from-purple-400 to-purple-600'
+    gradient: 'from-amber-400 to-amber-600'
   }
 };
 
@@ -153,7 +153,7 @@ export default function EnhancedSpiralVisualizer({
           onClick={() => setViewMode('spiral')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             viewMode === 'spiral' 
-              ? 'bg-purple-600 text-white' 
+              ? 'bg-amber-600 text-white' 
               : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
           }`}
         >
@@ -164,7 +164,7 @@ export default function EnhancedSpiralVisualizer({
           onClick={() => setViewMode('timeline')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             viewMode === 'timeline' 
-              ? 'bg-purple-600 text-white' 
+              ? 'bg-amber-600 text-white' 
               : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
           }`}
         >
@@ -487,7 +487,7 @@ export default function EnhancedSpiralVisualizer({
               key={arcName}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${
                 currentArc === arcName 
-                  ? 'bg-slate-800 ring-2 ring-purple-500 scale-105' 
+                  ? 'bg-slate-800 ring-2 ring-amber-500 scale-105' 
                   : 'bg-slate-800/50'
               }`}
             >
@@ -526,7 +526,7 @@ export default function EnhancedSpiralVisualizer({
                     <motion.span 
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="text-xs px-2 py-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"
+                      className="text-xs px-2 py-1 bg-gradient-to-r from-amber-600 to-pink-600 rounded-full"
                     >
                       ✨ Transition Point
                     </motion.span>
@@ -565,9 +565,9 @@ export default function EnhancedSpiralVisualizer({
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="mb-4 p-3 bg-purple-900/20 border border-purple-700/30 rounded-lg"
+                className="mb-4 p-3 bg-amber-900/20 border border-amber-700/30 rounded-lg"
               >
-                <p className="text-sm text-purple-200">
+                <p className="text-sm text-amber-200">
                   <Sparkles className="inline w-4 h-4 mr-1" />
                   You crossed from{' '}
                   <span className="font-semibold">
@@ -693,7 +693,7 @@ function TimelineView({
                 <Hash className="w-4 h-4 text-yellow-400" />
               )}
               {node.isArcTransition && (
-                <ChevronRight className="w-4 h-4 text-purple-400" />
+                <ChevronRight className="w-4 h-4 text-amber-400" />
               )}
             </div>
           </div>

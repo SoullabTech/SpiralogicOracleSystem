@@ -16,7 +16,7 @@ export default function SacredTestimonial() {
         <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-purple-400 to-indigo-400 animate-pulse" />
       </div>
 
-      <div className="relative bg-gradient-to-br from-indigo-900/40 via-purple-900/40 to-amber-900/40 backdrop-blur-sm rounded-3xl p-10 border border-amber-400/20 shadow-2xl">
+      <div className="relative bg-gradient-to-br from-indigo-900/40 via-amber-900/40 to-amber-900/40 backdrop-blur-sm rounded-3xl p-10 border border-amber-400/20 shadow-2xl">
         {/* Header with sacred symbol */}
         <div className="text-center mb-8">
           <motion.div

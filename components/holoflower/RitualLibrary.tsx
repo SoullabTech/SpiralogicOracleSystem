@@ -178,7 +178,7 @@ function RitualPlayer({ ritual, onClose }: RitualPlayerProps) {
                 completedSteps.includes(idx)
                   ? 'bg-green-500'
                   : idx === currentStep
-                  ? 'bg-purple-500'
+                  ? 'bg-amber-500'
                   : 'bg-white/10'
               }`}
             />
@@ -195,8 +195,8 @@ function RitualPlayer({ ritual, onClose }: RitualPlayerProps) {
           <h3 className="text-white text-lg mb-4">{currentStepData.instruction}</h3>
           
           {currentStepData.visualization && (
-            <div className="mb-4 p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
-              <p className="text-purple-300 text-sm italic">
+            <div className="mb-4 p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
+              <p className="text-amber-300 text-sm italic">
                 Visualization: {currentStepData.visualization}
               </p>
             </div>
@@ -226,7 +226,7 @@ function RitualPlayer({ ritual, onClose }: RitualPlayerProps) {
               </div>
               <div className="w-full bg-white/10 rounded-full h-2">
                 <motion.div
-                  className="bg-purple-500 h-2 rounded-full"
+                  className="bg-amber-500 h-2 rounded-full"
                   initial={{ width: '100%' }}
                   animate={{ width: '0%' }}
                   transition={{ duration: currentStepData.duration, ease: 'linear' }}
@@ -260,7 +260,7 @@ function RitualPlayer({ ritual, onClose }: RitualPlayerProps) {
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center gap-2"
+            className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors flex items-center gap-2"
           >
             {isPlaying ? (
               <>
@@ -321,7 +321,7 @@ export function RitualLibrary({ isOpen, onClose, selectedElement, selectedPetalN
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-3xl p-6 max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col border border-purple-500/20"
+            className="bg-gradient-to-br from-black to-indigo-950 rounded-3xl p-6 max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col border border-amber-500/20"
             onClick={(e) => e.stopPropagation()}
           >
             {selectedRitual ? (
@@ -334,7 +334,7 @@ export function RitualLibrary({ isOpen, onClose, selectedElement, selectedPetalN
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <BookOpen className="w-6 h-6 text-purple-400" />
+                    <BookOpen className="w-6 h-6 text-amber-400" />
                     <h2 className="text-2xl font-light text-white">Ritual Library</h2>
                   </div>
                   <button
@@ -356,7 +356,7 @@ export function RitualLibrary({ isOpen, onClose, selectedElement, selectedPetalN
                           onClick={() => setFilterElement(elem)}
                           className={`px-3 py-1 rounded-lg text-sm transition-all ${
                             filterElement === elem
-                              ? 'bg-purple-600 text-white'
+                              ? 'bg-amber-600 text-white'
                               : 'bg-white/10 text-white/60 hover:bg-white/20'
                           }`}
                         >
@@ -375,7 +375,7 @@ export function RitualLibrary({ isOpen, onClose, selectedElement, selectedPetalN
                           onClick={() => setFilterDifficulty(diff)}
                           className={`px-3 py-1 rounded-lg text-sm transition-all ${
                             filterDifficulty === diff
-                              ? 'bg-purple-600 text-white'
+                              ? 'bg-amber-600 text-white'
                               : 'bg-white/10 text-white/60 hover:bg-white/20'
                           }`}
                         >

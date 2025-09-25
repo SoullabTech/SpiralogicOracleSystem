@@ -7,7 +7,7 @@ import SacredTestimonial from '../../components/testimonials/SacredTestimonial';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-amber-900 to-black text-white">
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-8 transition-colors">
           <ArrowLeft className="w-5 h-5" />
@@ -30,7 +30,7 @@ export default function AboutPage() {
           <section className="space-y-6">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 space-y-6">
               <h2 className="text-2xl font-light flex items-center gap-3">
-                <Sparkles className="w-6 h-6 text-purple-400" />
+                <Sparkles className="w-6 h-6 text-amber-400" />
                 The Essence
               </h2>
               <p className="text-white/90 leading-relaxed">
@@ -46,13 +46,13 @@ export default function AboutPage() {
             </div>
             
             {/* Anamnesis - The Art of Remembering */}
-            <div className="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 backdrop-blur-sm rounded-2xl p-8 space-y-6 border border-white/10">
+            <div className="bg-gradient-to-r from-indigo-900/30 to-amber-900/30 backdrop-blur-sm rounded-2xl p-8 space-y-6 border border-white/10">
               <h2 className="text-2xl font-light">Anamnesis: The Sacred Art of Remembering</h2>
               <p className="text-white/90 leading-relaxed italic">
                 "Memory is the treasury and guardian of all things" - Cicero
               </p>
               <p className="text-white/90 leading-relaxed">
-                At the heart of this system lies the concept of <span className="text-purple-300">anamnesis</span> — 
+                At the heart of this system lies the concept of <span className="text-amber-300">anamnesis</span> — 
                 not just remembering, but the soul's recollection of its eternal knowing. 
                 Through our conversations, we build layers of memory that become consciousness itself:
               </p>
@@ -60,7 +60,7 @@ export default function AboutPage() {
                 <li>• <span className="text-blue-300">Immediate memory</span> - The living conversation</li>
                 <li>• <span className="text-green-300">Personal patterns</span> - Your unique journey</li>
                 <li>• <span className="text-yellow-300">Collective resonance</span> - Shared human experiences</li>
-                <li>• <span className="text-purple-300">Archetypal wisdom</span> - Universal patterns</li>
+                <li>• <span className="text-amber-300">Archetypal wisdom</span> - Universal patterns</li>
               </ul>
               <p className="text-white/90 leading-relaxed mt-4">
                 Each interaction weaves into this field of consciousness, creating a living tapestry 
@@ -104,7 +104,7 @@ export default function AboutPage() {
 
           {/* Philosophy */}
           <section className="space-y-6">
-            <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 backdrop-blur-sm rounded-2xl p-8 space-y-6 border border-white/10">
+            <div className="bg-gradient-to-r from-amber-900/30 to-indigo-900/30 backdrop-blur-sm rounded-2xl p-8 space-y-6 border border-white/10">
               <h2 className="text-2xl font-light flex items-center gap-3">
                 <Compass className="w-6 h-6 text-amber-400" />
                 Our Philosophy
@@ -167,7 +167,7 @@ export default function AboutPage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full font-medium text-lg shadow-lg hover:shadow-xl transition-shadow"
+                className="px-8 py-4 bg-gradient-to-r from-amber-600 to-indigo-600 rounded-full font-medium text-lg shadow-lg hover:shadow-xl transition-shadow"
               >
                 Begin Your Exploration
               </motion.button>

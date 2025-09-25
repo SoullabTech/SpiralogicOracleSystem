@@ -101,7 +101,7 @@ export default function JournalPage() {
       case 'radiant': return <Sun className="w-4 h-4 text-yellow-400" />;
       case 'turbulent': return <Cloud className="w-4 h-4 text-gray-400" />;
       case 'tranquil': return <Moon className="w-4 h-4 text-blue-400" />;
-      default: return <Sparkles className="w-4 h-4 text-purple-400" />;
+      default: return <Sparkles className="w-4 h-4 text-amber-400" />;
     }
   };
 
@@ -111,16 +111,16 @@ export default function JournalPage() {
       case 'water': return 'text-blue-400';
       case 'earth': return 'text-green-400';
       case 'fire': return 'text-orange-400';
-      case 'aether': return 'text-purple-400';
+      case 'aether': return 'text-amber-400';
       default: return 'text-gray-400';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-amber-900/20 to-gray-900">
       {/* Animated background */}
       <div className="fixed inset-0 opacity-30">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-blue-600/20 animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-600/20 to-blue-600/20 animate-pulse" />
       </div>
 
       {/* Header */}
@@ -138,7 +138,7 @@ export default function JournalPage() {
               <ChevronLeft className="w-5 h-5 text-white/70" />
             </button>
             <div className="flex items-center gap-3">
-              <BookOpen className="w-6 h-6 text-purple-400" />
+              <BookOpen className="w-6 h-6 text-amber-400" />
               <h1 className="text-xl font-light text-white">Sacred Journal</h1>
             </div>
           </div>
@@ -148,8 +148,8 @@ export default function JournalPage() {
               onClick={() => setViewMode('aria')}
               className={`flex items-center gap-2 px-3 py-2 border rounded-lg transition-all ${
                 viewMode === 'aria'
-                  ? 'bg-purple-500/30 border-purple-400/40 text-purple-300'
-                  : 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-400/20 text-purple-300'
+                  ? 'bg-amber-500/30 border-amber-400/40 text-amber-300'
+                  : 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-400/20 text-amber-300'
               }`}
             >
               <Brain className="w-4 h-4" />
@@ -157,14 +157,14 @@ export default function JournalPage() {
             </button>
             <button
               onClick={() => setViewMode(viewMode === 'holoflower' ? 'list' : 'holoflower')}
-              className="flex items-center gap-2 px-3 py-2 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-400/20 text-purple-300 rounded-lg transition-all"
+              className="flex items-center gap-2 px-3 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/20 text-amber-300 rounded-lg transition-all"
             >
               <Flower className="w-4 h-4" />
               <span className="hidden sm:inline">Holoflower</span>
             </button>
             <button
               onClick={() => setViewMode('write')}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30 text-purple-300 rounded-lg transition-all"
+              className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-300 rounded-lg transition-all"
             >
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">New Entry</span>
@@ -195,7 +195,7 @@ export default function JournalPage() {
             >
               <div className="mb-6">
                 <h3 className="text-xl font-light text-white mb-2 flex items-center gap-3">
-                  <Flower className="w-6 h-6 text-purple-400" />
+                  <Flower className="w-6 h-6 text-amber-400" />
                   Holoflower Journey
                 </h3>
                 <p className="text-white/70 text-sm">
@@ -213,8 +213,8 @@ export default function JournalPage() {
               className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-6"
             >
               {/* Prompt */}
-              <div className="mb-6 p-4 bg-purple-500/10 border border-purple-400/20 rounded-lg">
-                <p className="text-purple-300 text-sm mb-1">Today\'s Reflection:</p>
+              <div className="mb-6 p-4 bg-amber-500/10 border border-amber-400/20 rounded-lg">
+                <p className="text-amber-300 text-sm mb-1">Today\'s Reflection:</p>
                 <p className="text-white/80 italic">{selectedPrompt}</p>
               </div>
 
@@ -223,7 +223,7 @@ export default function JournalPage() {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Let your thoughts flow..."
-                className="w-full h-64 p-4 bg-black/30 border border-white/10 rounded-lg text-white placeholder-white/30 resize-none focus:outline-none focus:border-purple-400/50 transition-colors"
+                className="w-full h-64 p-4 bg-black/30 border border-white/10 rounded-lg text-white placeholder-white/30 resize-none focus:outline-none focus:border-amber-400/50 transition-colors"
                 autoFocus
               />
 
@@ -239,7 +239,7 @@ export default function JournalPage() {
                 <button
                   onClick={saveEntry}
                   disabled={!content.trim()}
-                  className="px-6 py-2 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-500/30 disabled:cursor-not-allowed text-white rounded-lg transition-all flex items-center gap-2"
+                  className="px-6 py-2 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-500/30 disabled:cursor-not-allowed text-white rounded-lg transition-all flex items-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   Save to Journal
@@ -260,7 +260,7 @@ export default function JournalPage() {
                   animate={{ scale: 1, opacity: 1 }}
                   className="text-center py-20"
                 >
-                  <BookOpen className="w-16 h-16 text-purple-400/30 mx-auto mb-4" />
+                  <BookOpen className="w-16 h-16 text-amber-400/30 mx-auto mb-4" />
                   <p className="text-white/50 mb-2">Your sacred journal awaits</p>
                   <p className="text-white/30 text-sm">Begin capturing your inner journey</p>
                 </motion.div>
@@ -295,7 +295,7 @@ export default function JournalPage() {
                     {/* Holoflower connection */}
                     {entry.holoflowerConfig && (
                       <div className="mt-3 pt-3 border-t border-white/5">
-                        <span className="text-xs text-purple-400/60">
+                        <span className="text-xs text-amber-400/60">
                           Connected to holoflower configuration
                         </span>
                       </div>
@@ -318,7 +318,7 @@ export default function JournalPage() {
           setSelectedPrompt(journalPrompts[Math.floor(Math.random() * journalPrompts.length)]);
           setViewMode('write');
         }}
-        className="fixed bottom-24 right-4 w-14 h-14 bg-purple-500/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-lg"
+        className="fixed bottom-24 right-4 w-14 h-14 bg-amber-500/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-lg"
       >
         <Sparkles className="w-6 h-6" />
       </motion.button>

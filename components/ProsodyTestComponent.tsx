@@ -152,11 +152,11 @@ export default function ProsodyTestComponent({ userId }: { userId: string }) {
               <div key={index} className={`p-3 rounded-lg ${
                 message.role === 'user' 
                   ? 'bg-blue-50 border border-blue-200 ml-8' 
-                  : 'bg-purple-50 border border-purple-200 mr-8'
+                  : 'bg-amber-50 border border-amber-200 mr-8'
               }`}>
                 <div className="flex justify-between items-start mb-1">
                   <span className={`font-medium text-sm ${
-                    message.role === 'user' ? 'text-blue-700' : 'text-purple-700'
+                    message.role === 'user' ? 'text-blue-700' : 'text-amber-700'
                   }`}>
                     {message.role === 'user' ? '👤 You' : '🌸 Maya'}
                   </span>

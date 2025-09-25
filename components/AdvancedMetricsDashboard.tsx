@@ -45,7 +45,7 @@ export default function AdvancedMetricsDashboard() {
     return (
       <div className="p-6 flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
           <p className="text-gray-500">Loading advanced metrics...</p>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function AdvancedMetricsDashboard() {
     <div className="p-6 space-y-8 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-purple-600">🔮 Advanced Ritual Metrics</h1>
+          <h1 className="text-3xl font-bold text-amber-600">🔮 Advanced Ritual Metrics</h1>
           <p className="text-gray-500">Deep insights into user trust and resonance patterns</p>
         </div>
 
@@ -111,7 +111,7 @@ export default function AdvancedMetricsDashboard() {
               onClick={() => setTimeframe(period as any)}
               className={`px-4 py-2 rounded-lg transition ${
                 timeframe === period
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-amber-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
@@ -146,11 +146,11 @@ export default function AdvancedMetricsDashboard() {
           <div className="mt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span>Emotional Intensity</span>
-              <span className="font-bold text-purple-600">{metrics.avgEmotionalIntensity}/10</span>
+              <span className="font-bold text-amber-600">{metrics.avgEmotionalIntensity}/10</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Sacred Language Usage</span>
-              <span className="font-bold text-purple-600">{metrics.sacredLanguageUsage}%</span>
+              <span className="font-bold text-amber-600">{metrics.sacredLanguageUsage}%</span>
             </div>
           </div>
         </div>
@@ -237,34 +237,34 @@ export default function AdvancedMetricsDashboard() {
       </div>
 
       {/* Trust Progression Indicator */}
-      <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-6">
+      <div className="bg-gradient-to-r from-amber-100 to-pink-100 rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">🌟 Community Trust Indicators</h2>
         <div className="grid grid-cols-4 gap-4">
           <div className="bg-white/80 backdrop-blur rounded-lg p-4 text-center">
             <div className="text-3xl mb-2">💎</div>
             <div className="text-sm text-gray-600">Avg Trust Level</div>
-            <div className="text-2xl font-bold text-purple-600">
+            <div className="text-2xl font-bold text-amber-600">
               {((metrics.avgEmotionalIntensity || 0) * 0.8).toFixed(1)}/10
             </div>
           </div>
           <div className="bg-white/80 backdrop-blur rounded-lg p-4 text-center">
             <div className="text-3xl mb-2">🔮</div>
             <div className="text-sm text-gray-600">Sacred Language</div>
-            <div className="text-2xl font-bold text-purple-600">
+            <div className="text-2xl font-bold text-amber-600">
               {metrics.sacredLanguageUsage}%
             </div>
           </div>
           <div className="bg-white/80 backdrop-blur rounded-lg p-4 text-center">
             <div className="text-3xl mb-2">🌈</div>
             <div className="text-sm text-gray-600">Vulnerable Shares</div>
-            <div className="text-2xl font-bold text-purple-600">
+            <div className="text-2xl font-bold text-amber-600">
               {metrics.depthDistribution?.vulnerable || 0}
             </div>
           </div>
           <div className="bg-white/80 backdrop-blur rounded-lg p-4 text-center">
             <div className="text-3xl mb-2">♾️</div>
             <div className="text-sm text-gray-600">Return Rate</div>
-            <div className="text-2xl font-bold text-purple-600">
+            <div className="text-2xl font-bold text-amber-600">
               {Math.round((metrics.completedUsers / metrics.totalUsers) * 100)}%
             </div>
           </div>

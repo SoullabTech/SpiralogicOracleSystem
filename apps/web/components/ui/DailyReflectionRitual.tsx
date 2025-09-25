@@ -49,8 +49,8 @@ const elementalPrompts: ElementalPrompt[] = [
     element: 'aether',
     icon: <Sparkles className="w-5 h-5" />,
     prompt: "What felt magical or connected?",
-    color: 'text-purple-600',
-    bgGradient: 'from-purple-50 to-pink-50'
+    color: 'text-amber-600',
+    bgGradient: 'from-amber-50 to-pink-50'
   }
 ];
 
@@ -118,12 +118,12 @@ export function DailyReflectionRitual({
         {showElemental && (
           <Button
             variant="outline"
-            className="w-full justify-start border-purple-200 hover:bg-purple-50"
+            className="w-full justify-start border-amber-200 hover:bg-amber-50"
             onClick={() => setRitualMode('elemental')}
           >
-            <div className="w-2 h-2 rounded-full bg-purple-400 mr-3 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-amber-400 mr-3 animate-pulse" />
             Elemental Scan (2 minutes)
-            <span className="ml-auto text-xs text-purple-600">NEW</span>
+            <span className="ml-auto text-xs text-amber-600">NEW</span>
           </Button>
         )}
         
@@ -155,7 +155,7 @@ export function DailyReflectionRitual({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Share what comes up for you..."
-          className="w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           rows={3}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && e.shiftKey === false) {
@@ -171,7 +171,7 @@ export function DailyReflectionRitual({
               <div
                 key={index}
                 className={`w-2 h-2 rounded-full ${
-                  index <= currentPromptIndex ? 'bg-purple-500' : 'bg-gray-300'
+                  index <= currentPromptIndex ? 'bg-amber-500' : 'bg-gray-300'
                 }`}
               />
             ))}
@@ -180,7 +180,7 @@ export function DailyReflectionRitual({
           <Button
             onClick={handleResponse}
             disabled={!inputValue.trim()}
-            className="bg-purple-600 hover:bg-purple-700"
+            className="bg-amber-600 hover:bg-amber-700"
           >
             {currentPromptIndex < elementalPrompts.length - 1 ? 'Next' : 'Complete'}
           </Button>

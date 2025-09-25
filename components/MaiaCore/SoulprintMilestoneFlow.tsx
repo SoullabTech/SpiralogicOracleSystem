@@ -210,7 +210,7 @@ export default function SoulprintMilestoneFlow({
                     animate={{ opacity: 1 }}
                   >
                     <motion.div
-                      className="w-12 h-12 border-2 border-purple-400 border-t-transparent rounded-full mx-auto"
+                      className="w-12 h-12 border-2 border-amber-400 border-t-transparent rounded-full mx-auto"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />

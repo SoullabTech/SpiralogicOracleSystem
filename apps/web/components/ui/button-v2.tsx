@@ -105,7 +105,7 @@ const ButtonV2 = React.forwardRef<HTMLButtonElement, ButtonPropsV2>(
 
     // 🆕 ENHANCED - Oracle-themed gradient overlays
     const gradientOverlays = {
-      default: "bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600",
+      default: "bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600",
       destructive: "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800",
       outline: "", // No gradient for outline
       secondary: "bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800",

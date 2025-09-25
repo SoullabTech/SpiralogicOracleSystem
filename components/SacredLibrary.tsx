@@ -158,7 +158,7 @@ export default function SacredLibrary({
             <Sparkles className="w-4 h-4" />
             Avg Aether
           </div>
-          <div className="text-2xl font-bold text-purple-400">
+          <div className="text-2xl font-bold text-amber-400">
             {Math.round(stats.avgAether * 100)}%
           </div>
         </div>
@@ -260,7 +260,7 @@ export default function SacredLibrary({
             onClick={() => setShowHighAether(!showHighAether)}
             className={`px-4 py-2 rounded-lg border transition-all ${
               showHighAether
-                ? 'bg-purple-600/20 border-purple-400 text-purple-300'
+                ? 'bg-amber-600/20 border-amber-400 text-amber-300'
                 : 'bg-black/40 border-white/10 text-white/60 hover:text-white'
             }`}
           >
@@ -271,7 +271,7 @@ export default function SacredLibrary({
           {/* Upload Button */}
           <button
             onClick={onUpload}
-            className="ml-auto px-4 py-2 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 rounded-lg text-white border border-white/10 transition-all flex items-center gap-2"
+            className="ml-auto px-4 py-2 bg-gradient-to-r from-amber-600/20 to-blue-600/20 hover:from-amber-600/30 hover:to-blue-600/30 rounded-lg text-white border border-white/10 transition-all flex items-center gap-2"
           >
             <Upload className="w-4 h-4" />
             Upload Sacred Asset
@@ -304,7 +304,7 @@ export default function SacredLibrary({
             </p>
             <button
               onClick={onUpload}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 rounded-lg text-white font-medium transition-all"
+              className="px-6 py-3 bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-500 hover:to-blue-500 rounded-lg text-white font-medium transition-all"
             >
               Upload Your First Sacred Asset
             </button>
@@ -363,7 +363,7 @@ export default function SacredLibrary({
                           </span>
                         )}
                         {asset.metadata?.aetherResonance && asset.metadata.aetherResonance > 0.5 && (
-                          <span className="text-purple-400">
+                          <span className="text-amber-400">
                             ✨ {Math.round(asset.metadata.aetherResonance * 100)}%
                           </span>
                         )}

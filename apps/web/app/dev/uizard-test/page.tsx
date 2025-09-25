@@ -59,7 +59,7 @@ export default function UizardTestPage() {
   ] as const;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <motion.div 
@@ -70,7 +70,7 @@ export default function UizardTestPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2 flex items-center space-x-2">
-                <TestTube className="w-8 h-8 text-purple-400" />
+                <TestTube className="w-8 h-8 text-amber-400" />
                 <span>Uizard Enhancement Testing</span>
               </h1>
               <p className="text-muted-foreground">
@@ -90,10 +90,10 @@ export default function UizardTestPage() {
           transition={{ delay: 0.1 }}
           className="mb-8"
         >
-          <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+          <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Settings className="w-5 h-5 text-purple-400" />
+                <Settings className="w-5 h-5 text-amber-400" />
                 <span>Feature Flag Status</span>
               </CardTitle>
             </CardHeader>
@@ -153,10 +153,10 @@ export default function UizardTestPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+            <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Palette className="w-5 h-5 text-purple-400" />
+                  <Palette className="w-5 h-5 text-amber-400" />
                   <span>Button Variants</span>
                 </CardTitle>
               </CardHeader>
@@ -253,7 +253,7 @@ export default function UizardTestPage() {
                   <h4 className="text-sm font-semibold text-white mb-3">Sacred Actions</h4>
                   <div className="space-y-2">
                     <Button 
-                      className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600"
+                      className="w-full bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600"
                       elevation={flags.uizard_buttons ? "high" : undefined}
                       animation={flags.uizard_buttons ? "glow" : undefined}
                     >
@@ -263,7 +263,7 @@ export default function UizardTestPage() {
                     
                     <Button 
                       variant="outline" 
-                      className="w-full border-purple-500/20 hover:bg-purple-500/10"
+                      className="w-full border-amber-500/20 hover:bg-amber-500/10"
                       elevation={flags.uizard_buttons ? "medium" : undefined}
                     >
                       <Sparkles className="w-4 h-4 mr-2" />
@@ -413,8 +413,8 @@ export default function UizardTestPage() {
                         Floating animation with mystical shadow and gradient title.
                       </p>
                       <div className="flex items-center space-x-2">
-                        <Crown className="w-4 h-4 text-purple-400" />
-                        <span className="text-xs text-purple-300">Sacred Content</span>
+                        <Crown className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs text-amber-300">Sacred Content</span>
                       </div>
                     </OracleCardContent>
                   </MysticalCard>
@@ -468,7 +468,7 @@ export default function UizardTestPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <p className="text-xs text-muted-foreground">Original Card System</p>
-                    <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20 p-6">
+                    <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20 p-6">
                       <CardHeader>
                         <CardTitle>Standard Card</CardTitle>
                       </CardHeader>

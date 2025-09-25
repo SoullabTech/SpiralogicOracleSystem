@@ -110,9 +110,9 @@ export default function PetalAudioPlayer({
       case 'fire': return 'from-orange-500 to-red-500';
       case 'water': return 'from-blue-500 to-cyan-500';
       case 'earth': return 'from-green-600 to-amber-600';
-      case 'air': return 'from-sky-400 to-purple-400';
-      case 'aether': return 'from-purple-500 to-pink-500';
-      default: return 'from-indigo-500 to-purple-500';
+      case 'air': return 'from-sky-400 to-amber-400';
+      case 'aether': return 'from-amber-500 to-pink-500';
+      default: return 'from-indigo-500 to-amber-500';
     }
   };
 

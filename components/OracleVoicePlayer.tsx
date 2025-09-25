@@ -73,11 +73,11 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
   };
 
   return (
-    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-6 rounded-xl shadow-lg border border-purple-200">
+    <div className="bg-gradient-to-r from-amber-50 to-indigo-50 p-6 rounded-xl shadow-lg border border-amber-200">
       {/* Oracle Response Text */}
       <div className="mb-4">
         <div className="flex items-center mb-2">
-          <span className="text-sm font-medium text-purple-600">
+          <span className="text-sm font-medium text-amber-600">
             {getVoiceProfileDisplay(voiceProfile)}
           </span>
         </div>
@@ -95,7 +95,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
               flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all
               ${
                 audioUrl
-                  ? "bg-purple-600 hover:bg-purple-700 text-white"
+                  ? "bg-amber-600 hover:bg-amber-700 text-white"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }
               ${isLoading ? "animate-pulse" : ""}
@@ -129,7 +129,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
           {/* Voice Status */}
           <div className="text-sm">
             {audioUrl ? (
-              <span className="text-purple-600 font-medium">
+              <span className="text-amber-600 font-medium">
                 🎧 {isPlaying ? "Playing Oracle Voice" : "Click to hear Oracle"}
               </span>
             ) : (
@@ -141,17 +141,17 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
         {/* Audio Status Indicator */}
         {isPlaying && (
           <div className="flex items-center space-x-1">
-            <div className="w-1 h-3 bg-purple-400 rounded animate-pulse" />
+            <div className="w-1 h-3 bg-amber-400 rounded animate-pulse" />
             <div
-              className="w-1 h-4 bg-purple-500 rounded animate-pulse"
+              className="w-1 h-4 bg-amber-500 rounded animate-pulse"
               style={{ animationDelay: "0.1s" }}
             />
             <div
-              className="w-1 h-2 bg-purple-400 rounded animate-pulse"
+              className="w-1 h-2 bg-amber-400 rounded animate-pulse"
               style={{ animationDelay: "0.2s" }}
             />
             <div
-              className="w-1 h-4 bg-purple-500 rounded animate-pulse"
+              className="w-1 h-4 bg-amber-500 rounded animate-pulse"
               style={{ animationDelay: "0.3s" }}
             />
           </div>

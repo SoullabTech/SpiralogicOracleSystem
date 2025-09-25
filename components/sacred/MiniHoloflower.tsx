@@ -207,7 +207,7 @@ export const MiniHoloflower: React.FC<MiniHoloflowerProps> = ({
       {/* Aether badge */}
       {aetherState && size >= 64 && (
         <div className="absolute -top-1 -right-1">
-          <div className="w-4 h-4 bg-white rounded-full border border-purple-300 
+          <div className="w-4 h-4 bg-white rounded-full border border-amber-300 
                         flex items-center justify-center">
             <span className="text-xs">✦</span>
           </div>

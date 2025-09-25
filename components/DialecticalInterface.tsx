@@ -58,7 +58,7 @@ export const DialecticalInterface: React.FC<DialecticalInterfaceProps> = ({
       {/* Header with confidence indicator */}
       <div className="flex items-center justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse" />
+          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-amber-400 animate-pulse" />
           <span className="text-sm font-medium text-gray-700">Maya's Dialectical Response</span>
           <ConfidenceIndicator confidence={response.confidence} />
         </div>
@@ -164,12 +164,12 @@ export const DialecticalInterface: React.FC<DialecticalInterfaceProps> = ({
               className="space-y-4"
             >
               {/* Maya's Response */}
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-lg">
+              <div className="bg-gradient-to-br from-amber-50 to-pink-50 p-4 rounded-lg">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-pink-400 flex items-center justify-center">
                     <span className="text-white text-xs font-bold">M</span>
                   </div>
-                  <span className="text-sm font-medium text-purple-700">Maya</span>
+                  <span className="text-sm font-medium text-amber-700">Maya</span>
                 </div>
                 <p className="text-gray-800 leading-relaxed">
                   {response.cultural_layer.maya_witness}
@@ -254,10 +254,10 @@ export const DialecticalInterface: React.FC<DialecticalInterfaceProps> = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-white/10 p-4 bg-gradient-to-r from-blue-50 to-purple-50"
+            className="border-t border-white/10 p-4 bg-gradient-to-r from-blue-50 to-amber-50"
           >
             <div className="flex items-start gap-3">
-              <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex-shrink-0 mt-0.5" />
+              <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-amber-400 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="text-sm font-medium text-gray-800 mb-1">Dialectical Bridge</h4>
                 <p className="text-sm text-gray-700 leading-relaxed">

@@ -21,7 +21,7 @@ const elementGradients: Record<string, string> = {
   water: "from-blue-500 to-cyan-500",
   earth: "from-green-500 to-emerald-500",
   air: "from-yellow-400 to-amber-400",
-  aether: "from-purple-500 to-indigo-500",
+  aether: "from-amber-500 to-indigo-500",
 };
 
 export const WeeklySpiral: React.FC<WeeklySpiralProps> = ({
@@ -62,11 +62,11 @@ export const WeeklySpiral: React.FC<WeeklySpiralProps> = ({
 
   return (
     <div className={`weekly-spiral-container ${className}`}>
-      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-6 shadow-xl">
+      <div className="bg-gradient-to-br from-amber-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-6 shadow-xl">
 
         {/* Header */}
         <div className="text-center mb-6">
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-indigo-600 bg-clip-text text-transparent">
             {insight.theme || "Weekly Journey"}
           </h3>
           <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -161,8 +161,8 @@ export const WeeklySpiral: React.FC<WeeklySpiralProps> = ({
 
         {/* Collective Resonance (Phase 2) */}
         {insight.collectiveResonance && (
-          <div className="mt-6 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-center">
-            <p className="text-sm text-purple-700 dark:text-purple-400">
+          <div className="mt-6 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-center">
+            <p className="text-sm text-amber-700 dark:text-amber-400">
               🌍 {insight.collectiveResonance.pattern} ({insight.collectiveResonance.prevalence}% of community)
             </p>
           </div>

@@ -56,7 +56,7 @@ export const HoloflowerWatermark: React.FC<HoloflowerWatermarkProps> = ({
           width="400"
           height="400"
           viewBox="0 0 400 400"
-          className={`${mode === 'dark' ? 'text-purple-500/20' : 'text-purple-400/20'}`}
+          className={`${mode === 'dark' ? 'text-amber-500/20' : 'text-amber-400/20'}`}
           style={{ opacity: baseOpacity }}
         >
           {/* Sacred geometry pattern */}

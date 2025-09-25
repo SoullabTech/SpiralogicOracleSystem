@@ -160,7 +160,7 @@ export default function OptOutFlow({ explorerId, explorerName, onClose, onComple
 
                 <button
                   onClick={onClose}
-                  className="w-full px-4 py-3 text-purple-600 hover:text-purple-700 transition-colors"
+                  className="w-full px-4 py-3 text-amber-600 hover:text-amber-700 transition-colors"
                 >
                   Never Mind, I'll Stay
                 </button>
@@ -236,7 +236,7 @@ export default function OptOutFlow({ explorerId, explorerName, onClose, onComple
                   value={feedbackReason}
                   onChange={(e) => setFeedbackReason(e.target.value)}
                   placeholder="No pressure to answer..."
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 placeholder-gray-400 focus:border-purple-500 focus:outline-none resize-none"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 placeholder-gray-400 focus:border-amber-500 focus:outline-none resize-none"
                   rows={3}
                 />
               </div>
@@ -269,7 +269,7 @@ export default function OptOutFlow({ explorerId, explorerName, onClose, onComple
 
           {step === 'complete' && (
             <div className="space-y-4 text-center py-8">
-              <Heart className="w-12 h-12 text-purple-600 mx-auto" />
+              <Heart className="w-12 h-12 text-amber-600 mx-auto" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Thank you for exploring with Maya
@@ -288,7 +288,7 @@ export default function OptOutFlow({ explorerId, explorerName, onClose, onComple
 
               <button
                 onClick={onComplete}
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
               >
                 Close
               </button>

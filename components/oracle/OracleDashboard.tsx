@@ -31,10 +31,10 @@ export const OracleDashboard: React.FC = () => {
   };
 
   return (
-    <div className="oracle-dashboard min-h-screen bg-gradient-to-b from-purple-50 to-white">
+    <div className="oracle-dashboard min-h-screen bg-gradient-to-b from-amber-50 to-white">
       {/* Header */}
       <div className="text-center py-8">
-        <h1 className="text-4xl font-bold text-purple-900 mb-2">
+        <h1 className="text-4xl font-bold text-amber-900 mb-2">
           Spiralogic Oracle
         </h1>
         <p className="text-gray-600">Journey through the elemental cascade</p>
@@ -47,15 +47,15 @@ export const OracleDashboard: React.FC = () => {
             value={inputQuery}
             onChange={(e) => setInputQuery(e.target.value)}
             placeholder="Share your question, reflection, or what's on your heart..."
-            className="w-full p-4 rounded-lg border border-purple-200 focus:border-purple-400 
+            className="w-full p-4 rounded-lg border border-amber-200 focus:border-amber-400 
                      focus:outline-none resize-none h-32"
             disabled={loading}
           />
           <button
             type="submit"
             disabled={loading || !inputQuery.trim()}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 
-                     text-white rounded-lg font-semibold hover:from-purple-700 
+            className="w-full py-3 bg-gradient-to-r from-amber-600 to-indigo-600 
+                     text-white rounded-lg font-semibold hover:from-amber-700 
                      hover:to-indigo-700 disabled:opacity-50 transition-all"
           >
             {loading ? 'Processing cascade...' : 'Begin Oracle Journey'}
@@ -78,7 +78,7 @@ export const OracleDashboard: React.FC = () => {
               onClick={() => setViewMode('holoflower')}
               className={`px-4 py-2 rounded-lg transition-all ${
                 viewMode === 'holoflower' 
-                  ? 'bg-purple-600 text-white' 
+                  ? 'bg-amber-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
@@ -88,7 +88,7 @@ export const OracleDashboard: React.FC = () => {
               onClick={() => setViewMode('wheel')}
               className={`px-4 py-2 rounded-lg transition-all ${
                 viewMode === 'wheel' 
-                  ? 'bg-purple-600 text-white' 
+                  ? 'bg-amber-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
@@ -98,7 +98,7 @@ export const OracleDashboard: React.FC = () => {
               onClick={() => setViewMode('spiral')}
               className={`px-4 py-2 rounded-lg transition-all ${
                 viewMode === 'spiral' 
-                  ? 'bg-purple-600 text-white' 
+                  ? 'bg-amber-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
@@ -139,10 +139,10 @@ export const OracleDashboard: React.FC = () => {
           {/* Oracle Response */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {/* Reflection */}
-            <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 shadow-md">
+            <div className="bg-gradient-to-br from-amber-50 to-white rounded-xl p-6 shadow-md">
               <div className="flex items-center mb-3">
                 <span className="text-2xl mr-2">🔮</span>
-                <h3 className="font-semibold text-purple-900">Reflection</h3>
+                <h3 className="font-semibold text-amber-900">Reflection</h3>
               </div>
               <p className="text-gray-700 italic">{session.reflection}</p>
             </div>
@@ -180,7 +180,7 @@ export const OracleDashboard: React.FC = () => {
                     {element === 'aether' && '✨'}
                   </div>
                   <div className="font-semibold capitalize">{element}</div>
-                  <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-2xl font-bold text-amber-600">
                     {(value * 100).toFixed(0)}%
                   </div>
                 </div>
@@ -193,25 +193,25 @@ export const OracleDashboard: React.FC = () => {
       {/* Journey Overview */}
       {journey && sessions.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 pb-12">
-          <div className="bg-gradient-to-r from-purple-100 to-indigo-100 rounded-xl p-6">
-            <h3 className="text-xl font-semibold text-purple-900 mb-4">Your Oracle Journey</h3>
+          <div className="bg-gradient-to-r from-amber-100 to-indigo-100 rounded-xl p-6">
+            <h3 className="text-xl font-semibold text-amber-900 mb-4">Your Oracle Journey</h3>
             
             <div className="grid md:grid-cols-3 gap-6">
               <div>
                 <span className="text-sm text-gray-600">Total Sessions</span>
-                <p className="text-2xl font-bold text-purple-700">{journey.totalSessions}</p>
+                <p className="text-2xl font-bold text-amber-700">{journey.totalSessions}</p>
               </div>
               
               <div>
                 <span className="text-sm text-gray-600">Dominant Element</span>
-                <p className="text-2xl font-bold text-purple-700 capitalize">
+                <p className="text-2xl font-bold text-amber-700 capitalize">
                   {journey.dominantElement}
                 </p>
               </div>
               
               <div>
                 <span className="text-sm text-gray-600">Current Stage</span>
-                <p className="text-2xl font-bold text-purple-700 capitalize">
+                <p className="text-2xl font-bold text-amber-700 capitalize">
                   {journey.currentStage.element} - {journey.currentStage.stage}
                 </p>
               </div>

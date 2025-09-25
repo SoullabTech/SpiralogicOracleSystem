@@ -36,7 +36,7 @@ export default function JournalTagSelector({
   // Default suggested tags based on common patterns
   const defaultSuggestedTags: JournalTag[] = [
     { id: 'work', label: 'work', color: 'bg-blue-100 text-blue-700' },
-    { id: 'dream', label: 'dream', color: 'bg-purple-100 text-purple-700' },
+    { id: 'dream', label: 'dream', color: 'bg-amber-100 text-amber-700' },
     { id: 'feeling', label: 'feeling', color: 'bg-pink-100 text-pink-700' },
     { id: 'insight', label: 'insight', color: 'bg-yellow-100 text-yellow-700' },
     { id: 'relationship', label: 'relationship', color: 'bg-green-100 text-green-700' },
@@ -98,7 +98,7 @@ export default function JournalTagSelector({
   const getTagColor = (tagText: string): string => {
     const colorMap: Record<string, string> = {
       work: 'bg-blue-100 text-blue-700 border-blue-200',
-      dream: 'bg-purple-100 text-purple-700 border-purple-200',
+      dream: 'bg-amber-100 text-amber-700 border-amber-200',
       feeling: 'bg-pink-100 text-pink-700 border-pink-200',
       emotion: 'bg-pink-100 text-pink-700 border-pink-200',
       insight: 'bg-yellow-100 text-yellow-700 border-yellow-200',

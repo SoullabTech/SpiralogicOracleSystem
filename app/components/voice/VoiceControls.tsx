@@ -79,7 +79,7 @@ export function VoiceControls({
         <button
           onClick={handlePlayPause}
           disabled={!isReady}
-          className="p-2 rounded-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white transition-colors"
+          className="p-2 rounded-full bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white transition-colors"
           title={voiceState.isPlaying ? 'Pause Maya' : 'Hear Maya'}
         >
           {voiceState.isPlaying && !voiceState.isPaused ? (
@@ -150,7 +150,7 @@ export function VoiceControls({
         <button
           onClick={handlePlayPause}
           disabled={!isReady}
-          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded-md transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white rounded-md transition-colors flex items-center gap-2"
         >
           {voiceState.isPlaying && !voiceState.isPaused ? (
             <>
@@ -201,8 +201,8 @@ export function VoiceControls({
 
       {/* Currently speaking text */}
       {voiceState.currentText && (
-        <div className="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-md">
-          <p className="text-sm text-purple-800">
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
+          <p className="text-sm text-amber-800">
             <strong>Speaking:</strong> {voiceState.currentText.substring(0, 100)}
             {voiceState.currentText.length > 100 ? '...' : ''}
           </p>
@@ -214,7 +214,7 @@ export function VoiceControls({
         <>
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className="mb-3 text-sm text-purple-600 hover:text-purple-800"
+            className="mb-3 text-sm text-amber-600 hover:text-amber-800"
           >
             {showSettings ? 'Hide' : 'Show'} Advanced Settings
           </button>
@@ -302,7 +302,7 @@ export function HearMayaButton({ className = '' }: { className?: string }) {
       <button
         onClick={handleClick}
         disabled={!isReady}
-        className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded-md transition-colors flex items-center gap-2"
+        className="px-6 py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white rounded-md transition-colors flex items-center gap-2"
       >
         {isPlaying ? (
           <>

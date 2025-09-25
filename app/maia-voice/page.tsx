@@ -130,7 +130,7 @@ export default function MayaVoicePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-4xl mx-auto p-6">
         {/* Header */}
         <div className="text-center mb-8">
@@ -171,7 +171,7 @@ export default function MayaVoicePage() {
                     <div
                       className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
                         message.role === 'user'
-                          ? 'bg-purple-500 text-white'
+                          ? 'bg-amber-500 text-white'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                       }`}
                     >

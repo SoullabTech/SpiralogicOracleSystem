@@ -31,7 +31,7 @@ const IntegratedSafetyPanel: React.FC<PanelView> = ({ mode, userId }) => {
               onClick={() => setTimeRange(range as any)}
               className={`px-3 py-1 rounded text-sm ${
                 timeRange === range
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-amber-600 text-white'
                   : 'bg-gray-200 text-gray-700'
               }`}
             >
@@ -46,7 +46,7 @@ const IntegratedSafetyPanel: React.FC<PanelView> = ({ mode, userId }) => {
           onClick={() => setActiveTab('coherence')}
           className={`px-4 py-2 rounded ${
             activeTab === 'coherence'
-              ? 'bg-purple-100 text-purple-700 font-medium'
+              ? 'bg-amber-100 text-amber-700 font-medium'
               : 'bg-white text-gray-600'
           }`}
         >
@@ -56,7 +56,7 @@ const IntegratedSafetyPanel: React.FC<PanelView> = ({ mode, userId }) => {
           onClick={() => setActiveTab('drift')}
           className={`px-4 py-2 rounded ${
             activeTab === 'drift'
-              ? 'bg-purple-100 text-purple-700 font-medium'
+              ? 'bg-amber-100 text-amber-700 font-medium'
               : 'bg-white text-gray-600'
           }`}
         >
@@ -66,7 +66,7 @@ const IntegratedSafetyPanel: React.FC<PanelView> = ({ mode, userId }) => {
           onClick={() => setActiveTab('immune')}
           className={`px-4 py-2 rounded ${
             activeTab === 'immune'
-              ? 'bg-purple-100 text-purple-700 font-medium'
+              ? 'bg-amber-100 text-amber-700 font-medium'
               : 'bg-white text-gray-600'
           }`}
         >
@@ -93,7 +93,7 @@ const IntegratedSafetyPanel: React.FC<PanelView> = ({ mode, userId }) => {
         <h2 className="text-xl font-semibold">Your Wellness Journey</h2>
         <button
           onClick={() => setActiveTab('wellness')}
-          className="text-sm text-purple-600 hover:text-purple-700"
+          className="text-sm text-amber-600 hover:text-amber-700"
         >
           View Details →
         </button>
@@ -210,7 +210,7 @@ const ImmuneMemoryPanel: React.FC<{ timeRange: string }> = ({ timeRange }) => {
         {/* Pattern Library */}
         <div className="bg-gray-800 p-4 rounded">
           <h4 className="text-sm text-gray-400 mb-3">Pattern Library</h4>
-          <div className="text-2xl font-bold text-purple-400">847</div>
+          <div className="text-2xl font-bold text-amber-400">847</div>
           <div className="text-xs text-gray-500">Learned Patterns</div>
           <div className="mt-2 text-xs">
             <div className="text-green-400">+23 this week</div>
@@ -322,7 +322,7 @@ const SemanticShift: React.FC<{
         style={{ width: `${baseline * 100}%` }}
       />
       <div
-        className="absolute h-2 bg-purple-500 rounded-full"
+        className="absolute h-2 bg-amber-500 rounded-full"
         style={{ width: `${current * 100}%` }}
       />
     </div>
@@ -336,7 +336,7 @@ const CycleIndicator: React.FC<{
   <div className="flex flex-col items-center">
     <div
       className={`w-8 h-8 rounded-full flex items-center justify-center ${
-        detected ? 'bg-purple-600' : 'bg-gray-700'
+        detected ? 'bg-amber-600' : 'bg-gray-700'
       }`}
     >
       {cycle}

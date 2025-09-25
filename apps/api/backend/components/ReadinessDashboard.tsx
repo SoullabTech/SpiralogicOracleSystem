@@ -82,15 +82,15 @@ const ReadinessDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen  from-slate-900 via-purple-900 to-slate-900 text-white p-8">
+    <div className="min-h-screen  from-slate-900 via-amber-900 to-slate-900 text-white p-8">
       <div className="max-w-6xl mx-auto">
         
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20  from-purple-400 to-pink-400 rounded-full mb-6">
+          <div className="inline-flex items-center justify-center w-20 h-20  from-amber-400 to-pink-400 rounded-full mb-6">
             <Eye className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-4xl font-bold  from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-bold  from-amber-400 to-pink-400 bg-clip-text text-transparent mb-4">
             AIN Oracle System
           </h1>
           <p className="text-xl text-slate-300 mb-8">
@@ -101,7 +101,7 @@ const ReadinessDashboard: React.FC = () => {
             <button
               onClick={runReadinessCheck}
               disabled={loading}
-              className="inline-flex items-center px-8 py-4  from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-8 py-4  from-amber-600 to-pink-600 hover:from-amber-700 hover:to-pink-700 rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play className="w-6 h-6 mr-3" />
               Begin Readiness Check
@@ -112,7 +112,7 @@ const ReadinessDashboard: React.FC = () => {
         {/* Loading State */}
         {loading && (
           <div className="text-center py-20">
-            <div className="animate-spin w-16 h-16 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-6"></div>
+            <div className="animate-spin w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full mx-auto mb-6"></div>
             <p className="text-xl text-slate-300">Oracle awakening... Testing all systems...</p>
           </div>
         )}
@@ -281,7 +281,7 @@ const ReadinessDashboard: React.FC = () => {
             <div className="text-center space-y-4">
               <button
                 onClick={runReadinessCheck}
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors mr-4"
+                className="px-6 py-3 bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors mr-4"
               >
                 Run Again
               </button>

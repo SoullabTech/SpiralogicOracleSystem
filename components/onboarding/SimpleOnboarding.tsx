@@ -66,21 +66,21 @@ export function SimpleOnboarding() {
       component: (
         <div className="space-y-8 text-center">
           <div className="relative w-32 h-32 mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-orange-500 rounded-full animate-pulse opacity-30" />
-            <div className="absolute inset-2 bg-gradient-to-br from-purple-500 to-orange-400 rounded-full animate-spin-slow" />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-600 to-orange-500 rounded-full animate-pulse opacity-30" />
+            <div className="absolute inset-2 bg-gradient-to-br from-amber-500 to-orange-400 rounded-full animate-spin-slow" />
             <div className="absolute inset-6 bg-background rounded-full flex items-center justify-center">
-              <Crown className="w-12 h-12 text-purple-600" />
+              <Crown className="w-12 h-12 text-amber-600" />
             </div>
           </div>
           <div className="space-y-4">
-            <h3 className="text-3xl font-light bg-gradient-to-r from-purple-400 to-orange-400 bg-clip-text text-transparent">Maya</h3>
+            <h3 className="text-3xl font-light bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">Maya</h3>
             <p className="text-muted-foreground text-xs max-w-xs mx-auto">
               Personal oracle that learns you, guides all interactions, adapts continuously
             </p>
             
             {/* Voice Preview */}
             <motion.div 
-              className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4 cursor-pointer hover:bg-purple-500/15 transition-all"
+              className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 cursor-pointer hover:bg-amber-500/15 transition-all"
               onClick={handleHearMaya}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -90,10 +90,10 @@ export function SimpleOnboarding() {
                   <motion.div 
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ repeat: Infinity, duration: 1 }}
-                    className="w-6 h-6 rounded-full bg-purple-500"
+                    className="w-6 h-6 rounded-full bg-amber-500"
                   />
                 ) : (
-                  <Play className="w-6 h-6 text-purple-400" />
+                  <Play className="w-6 h-6 text-amber-400" />
                 )}
                 <span className="text-sm font-medium">
                   {isPlaying ? 'Speaking...' : 'Hear Maya'}
@@ -118,7 +118,7 @@ export function SimpleOnboarding() {
                 placeholder="Username"
                 value={userData.username}
                 onChange={(e) => setUserData({ ...userData, username: e.target.value })}
-                className="pl-10 text-center bg-background/50 border-purple-500/20 focus:border-purple-400"
+                className="pl-10 text-center bg-background/50 border-amber-500/20 focus:border-amber-400"
               />
             </div>
             
@@ -129,7 +129,7 @@ export function SimpleOnboarding() {
                 placeholder="Password"
                 value={userData.password}
                 onChange={(e) => setUserData({ ...userData, password: e.target.value })}
-                className="pl-10 pr-10 text-center bg-background/50 border-purple-500/20 focus:border-purple-400"
+                className="pl-10 pr-10 text-center bg-background/50 border-amber-500/20 focus:border-amber-400"
               />
               <button
                 type="button"
@@ -147,7 +147,7 @@ export function SimpleOnboarding() {
                 placeholder="Confirm password"
                 value={userData.confirmPassword}
                 onChange={(e) => setUserData({ ...userData, confirmPassword: e.target.value })}
-                className="pl-10 text-center bg-background/50 border-purple-500/20 focus:border-purple-400"
+                className="pl-10 text-center bg-background/50 border-amber-500/20 focus:border-amber-400"
               />
             </div>
           </div>
@@ -156,7 +156,7 @@ export function SimpleOnboarding() {
             <p className="text-sm text-red-500 text-center">Passwords don&apos;t match</p>
           )}
           
-          <div className="text-center text-xs text-muted-foreground bg-purple-500/5 p-3 rounded-lg">
+          <div className="text-center text-xs text-muted-foreground bg-amber-500/5 p-3 rounded-lg">
             Maya learns your patterns, preferences, and communication style to provide hyper-personalized guidance
           </div>
         </div>
@@ -181,14 +181,14 @@ export function SimpleOnboarding() {
               placeholder="Oracle name"
               value={userData.oracleName}
               onChange={(e) => setUserData({ ...userData, oracleName: e.target.value })}
-              className="text-center text-lg bg-background/50 border-purple-500/20 focus:border-purple-400"
+              className="text-center text-lg bg-background/50 border-amber-500/20 focus:border-amber-400"
             />
             <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
-              <div className="bg-purple-500/5 p-2 rounded flex items-center space-x-1">
+              <div className="bg-amber-500/5 p-2 rounded flex items-center space-x-1">
                 <Sparkles className="w-3 h-3" />
                 <span>Adapts to you</span>
               </div>
-              <div className="bg-purple-500/5 p-2 rounded flex items-center space-x-1">
+              <div className="bg-amber-500/5 p-2 rounded flex items-center space-x-1">
                 <Mic className="w-3 h-3" />
                 <span>Voice + text</span>
               </div>
@@ -232,27 +232,27 @@ export function SimpleOnboarding() {
             </div>
             
             {/* Bottom Navigation Preview */}
-            <div className="bg-background/50 border border-purple-500/20 rounded-xl p-3">
+            <div className="bg-background/50 border border-amber-500/20 rounded-xl p-3">
               <div className="text-xs text-muted-foreground mb-2">Your services:</div>
               <div className="flex justify-around">
                 <div className="flex flex-col items-center space-y-1">
-                  <Users className="w-4 h-4 text-purple-400" />
+                  <Users className="w-4 h-4 text-amber-400" />
                   <span className="text-xs">Agent</span>
                 </div>
                 <div className="flex flex-col items-center space-y-1">
-                  <Calendar className="w-4 h-4 text-purple-400" />
+                  <Calendar className="w-4 h-4 text-amber-400" />
                   <span className="text-xs">Journal</span>
                 </div>
                 <div className="flex flex-col items-center space-y-1">
-                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <Sparkles className="w-4 h-4 text-amber-400" />
                   <span className="text-xs">Astrology</span>
                 </div>
                 <div className="flex flex-col items-center space-y-1">
-                  <BarChart3 className="w-4 h-4 text-purple-400" />
+                  <BarChart3 className="w-4 h-4 text-amber-400" />
                   <span className="text-xs">Insights</span>
                 </div>
                 <div className="flex flex-col items-center space-y-1">
-                  <Settings className="w-4 h-4 text-purple-400" />
+                  <Settings className="w-4 h-4 text-amber-400" />
                   <span className="text-xs">Settings</span>
                 </div>
               </div>
@@ -365,8 +365,8 @@ export function SimpleOnboarding() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
-      <Card className="w-full max-w-md p-8 bg-background/80 backdrop-blur-xl border-purple-500/20">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900">
+      <Card className="w-full max-w-md p-8 bg-background/80 backdrop-blur-xl border-amber-500/20">
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <div className="flex space-x-1">
@@ -374,18 +374,18 @@ export function SimpleOnboarding() {
                 <div 
                   key={i}
                   className={`w-2 h-2 rounded-full transition-all ${
-                    i <= currentStep ? 'bg-purple-500' : 'bg-purple-500/20'
+                    i <= currentStep ? 'bg-amber-500' : 'bg-amber-500/20'
                   }`}
                 />
               ))}
             </div>
-            <span className="text-xs font-mono text-muted-foreground bg-purple-500/10 px-2 py-1 rounded">
+            <span className="text-xs font-mono text-muted-foreground bg-amber-500/10 px-2 py-1 rounded">
               BETA
             </span>
           </div>
-          <div className="w-full bg-purple-500/10 rounded-full h-1">
+          <div className="w-full bg-amber-500/10 rounded-full h-1">
             <motion.div
-              className="bg-gradient-to-r from-purple-500 to-orange-500 h-1 rounded-full"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 h-1 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
               transition={{ duration: 0.5 }}
@@ -401,7 +401,7 @@ export function SimpleOnboarding() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4, type: "spring" }}
           >
-            <h1 className="text-2xl font-bold text-center mb-2 bg-gradient-to-r from-purple-400 to-orange-400 bg-clip-text text-transparent">{steps[currentStep].title}</h1>
+            <h1 className="text-2xl font-bold text-center mb-2 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">{steps[currentStep].title}</h1>
             {steps[currentStep].subtitle && (
               <p className="text-center text-muted-foreground mb-8 text-sm">{steps[currentStep].subtitle}</p>
             )}
@@ -422,7 +422,7 @@ export function SimpleOnboarding() {
             <Button
               onClick={handleNext}
               disabled={!canProceed() || isLoading}
-              className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white font-semibold py-3 rounded-xl"
+              className="w-full bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600 text-white font-semibold py-3 rounded-xl"
               size="lg"
             >
               {isLoading ? (

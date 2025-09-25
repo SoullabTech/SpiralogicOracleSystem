@@ -311,7 +311,7 @@ export default function BetaRitualFlow() {
   }, [ritualState.stage]);
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
+    <div className="fixed inset-0 bg-gradient-to-b from-slate-900 via-amber-900 to-slate-900 overflow-hidden">
       <audio ref={audioRef} />
 
       {/* Sacred Spiral Background */}
@@ -326,7 +326,7 @@ export default function BetaRitualFlow() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="w-96 h-96 rounded-full bg-gradient-radial from-purple-500/20 via-transparent to-transparent"
+          className="w-96 h-96 rounded-full bg-gradient-radial from-amber-500/20 via-transparent to-transparent"
         />
       </div>
 
@@ -441,7 +441,7 @@ export default function BetaRitualFlow() {
               <div className="flex gap-8 justify-center">
                 <button
                   onClick={() => selectVoiceCompanion('maya')}
-                  className="px-8 py-4 bg-purple-600/50 backdrop-blur rounded-lg hover:bg-purple-600/70 transition"
+                  className="px-8 py-4 bg-amber-600/50 backdrop-blur rounded-lg hover:bg-amber-600/70 transition"
                 >
                   <span className="text-lg">Maya</span>
                   <p className="text-sm opacity-70">Warm & intuitive</p>
@@ -573,7 +573,7 @@ function ElementIcon({ element }: { element: string }) {
     water: 'from-blue-500 to-cyan-500',
     earth: 'from-amber-600 to-stone-600',
     air: 'from-gray-400 to-white',
-    aether: 'from-purple-500 to-pink-500'
+    aether: 'from-amber-500 to-pink-500'
   };
 
   return (
@@ -595,7 +595,7 @@ function SpiralIcon({ glowing = false }: { glowing?: boolean }) {
         stroke="currentColor"
         strokeWidth="2"
         fill="none"
-        className={glowing ? 'text-purple-400' : 'text-white/50'}
+        className={glowing ? 'text-amber-400' : 'text-white/50'}
       />
     </svg>
   );

@@ -61,15 +61,15 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
       <div
         className={`
           relative rounded-lg border-2 p-4 transition-all cursor-pointer
-          ${isSelected ? 'border-purple-500 bg-purple-50 dark:bg-purple-950' : 'border-gray-200 dark:border-gray-700'}
-          ${!isAvailable ? 'opacity-50 cursor-not-allowed' : 'hover:border-purple-300'}
+          ${isSelected ? 'border-amber-500 bg-amber-50 dark:bg-purple-950' : 'border-gray-200 dark:border-gray-700'}
+          ${!isAvailable ? 'opacity-50 cursor-not-allowed' : 'hover:border-amber-300'}
         `}
         onClick={() => isAvailable && onVoiceSelect(profile.id)}
       >
         {/* Selected Indicator */}
         {isSelected && (
           <div className="absolute -top-2 -right-2">
-            <div className="bg-purple-500 rounded-full p-1">
+            <div className="bg-amber-500 rounded-full p-1">
               <Check className="w-4 h-4 text-white" />
             </div>
           </div>
@@ -106,7 +106,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
                   ${mask === 'water' ? 'bg-blue-100 text-blue-700' : ''}
                   ${mask === 'earth' ? 'bg-green-100 text-green-700' : ''}
                   ${mask === 'air' ? 'bg-gray-100 text-gray-700' : ''}
-                  ${mask === 'aether' ? 'bg-purple-100 text-purple-700' : ''}
+                  ${mask === 'aether' ? 'bg-amber-100 text-amber-700' : ''}
                 `}
               >
                 {mask}
@@ -130,7 +130,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
                 handlePreview(profile.id);
               }}
               disabled={previewingVoice === profile.id}
-              className="mt-3 flex items-center gap-2 text-sm text-purple-600 hover:text-purple-700"
+              className="mt-3 flex items-center gap-2 text-sm text-amber-600 hover:text-amber-700"
             >
               <Play className="w-4 h-4" />
               {previewingVoice === profile.id ? 'Playing...' : 'Preview'}
@@ -150,7 +150,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
           className={`
             px-4 py-2 -mb-px border-b-2 transition-colors
             ${selectedCategory === 'canonical'
-              ? 'border-purple-500 text-purple-600'
+              ? 'border-amber-500 text-amber-600'
               : 'border-transparent text-gray-600 hover:text-gray-800'}
           `}
         >
@@ -161,7 +161,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
           className={`
             px-4 py-2 -mb-px border-b-2 transition-colors
             ${selectedCategory === 'alternative'
-              ? 'border-purple-500 text-purple-600'
+              ? 'border-amber-500 text-amber-600'
               : 'border-transparent text-gray-600 hover:text-gray-800'}
           `}
         >
@@ -172,7 +172,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
           className={`
             px-4 py-2 -mb-px border-b-2 transition-colors
             ${selectedCategory === 'experimental'
-              ? 'border-purple-500 text-purple-600'
+              ? 'border-amber-500 text-amber-600'
               : 'border-transparent text-gray-600 hover:text-gray-800'}
           `}
         >
@@ -195,7 +195,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
             onClick={() => handleVoiceModeToggle('push-to-talk')}
             className={`flex-1 py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all ${
               voiceMode === 'push-to-talk'
-                ? 'bg-purple-600 text-white shadow-lg'
+                ? 'bg-amber-600 text-white shadow-lg'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
@@ -206,7 +206,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
             onClick={() => handleVoiceModeToggle('wake-word')}
             className={`flex-1 py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all ${
               voiceMode === 'wake-word'
-                ? 'bg-purple-600 text-white shadow-lg'
+                ? 'bg-amber-600 text-white shadow-lg'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
@@ -254,7 +254,7 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
             onClick={() => handleInteractionModeChange('guided')}
             className={`py-3 px-3 rounded-lg text-center transition-all ${
               interactionMode === 'guided'
-                ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 border-2 border-purple-500'
+                ? 'bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 border-2 border-amber-500'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-transparent hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
@@ -276,13 +276,13 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
           <span className="text-sm text-gray-600 dark:text-gray-400">
             Your Trust Level
           </span>
-          <span className="text-lg font-semibold text-purple-600">
+          <span className="text-lg font-semibold text-amber-600">
             Level {userLevel}
           </span>
         </div>
         <div className="mt-2 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
-            className="bg-purple-500 h-2 rounded-full transition-all"
+            className="bg-amber-500 h-2 rounded-full transition-all"
             style={{ width: `${Math.min(userLevel * 20, 100)}%` }}
           />
         </div>
@@ -292,9 +292,9 @@ export const VoiceSelectionUI: React.FC<VoiceSelectionUIProps> = ({
       </div>
 
       {/* Current Selection Summary */}
-      <div className="mt-4 p-3 bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800 rounded-lg">
-        <h4 className="text-sm font-semibold text-purple-800 dark:text-purple-200 mb-2">Current Selection</h4>
-        <div className="text-xs text-purple-700 dark:text-purple-300 space-y-1">
+      <div className="mt-4 p-3 bg-amber-50 dark:bg-purple-950 border border-amber-200 dark:border-amber-800 rounded-lg">
+        <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">Current Selection</h4>
+        <div className="text-xs text-amber-700 dark:text-amber-300 space-y-1">
           <div>Voice: {voiceConfig.getProfile(currentVoiceId)?.displayName || 'Unknown'}</div>
           <div>Activation: {voiceMode === 'push-to-talk' ? 'Push-to-Talk' : 'Wake Word'}</div>
           <div>Style: {interactionMode.charAt(0).toUpperCase() + interactionMode.slice(1)}</div>

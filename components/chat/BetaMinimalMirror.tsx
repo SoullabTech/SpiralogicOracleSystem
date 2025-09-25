@@ -310,7 +310,7 @@ export default function BetaMinimalMirror() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center"
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-indigo-500 flex items-center justify-center"
             >
               <Sparkles className="w-4 h-4 text-white" />
             </motion.div>
@@ -417,9 +417,9 @@ export default function BetaMinimalMirror() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="absolute top-20 right-4 p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800"
+        className="absolute top-20 right-4 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800"
       >
-        <div className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400">
+        <div className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400">
           <Sparkles className="w-3 h-3" />
           <span>Session {sessionCount} • Message {messageCount}</span>
         </div>

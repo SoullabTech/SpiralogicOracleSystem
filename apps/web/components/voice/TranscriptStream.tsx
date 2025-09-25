@@ -42,7 +42,7 @@ export default function TranscriptStream({
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3 }}
-      className={`rounded-lg bg-purple-50 dark:bg-purple-900/20 p-3 ${className}`}
+      className={`rounded-lg bg-amber-50 dark:bg-amber-900/20 p-3 ${className}`}
     >
       <div className="space-y-1">
         {/* Display finalized transcript with fade-in */}
@@ -57,7 +57,7 @@ export default function TranscriptStream({
                 duration: 0.3,
                 delay: index * 0.1
               }}
-              className="text-sm text-purple-700 dark:text-purple-300"
+              className="text-sm text-amber-700 dark:text-amber-300"
             >
               {line}
             </motion.div>
@@ -69,7 +69,7 @@ export default function TranscriptStream({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.7 }}
-            className="text-sm text-purple-600 dark:text-purple-400 italic"
+            className="text-sm text-amber-600 dark:text-amber-400 italic"
           >
             {interimTranscript}
             <motion.span
@@ -89,7 +89,7 @@ export default function TranscriptStream({
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
-                  className="w-1.5 h-1.5 bg-purple-500 rounded-full"
+                  className="w-1.5 h-1.5 bg-amber-500 rounded-full"
                   animate={{
                     scale: [1, 1.5, 1],
                     opacity: [0.5, 1, 0.5]
@@ -102,7 +102,7 @@ export default function TranscriptStream({
                 />
               ))}
             </div>
-            <span className="text-xs text-purple-600 dark:text-purple-400">
+            <span className="text-xs text-amber-600 dark:text-amber-400">
               Listening...
             </span>
           </div>

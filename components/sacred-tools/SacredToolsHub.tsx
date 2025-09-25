@@ -106,7 +106,7 @@ export default function SacredToolsHub({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-3">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-amber-600 bg-clip-text text-transparent mb-3">
           Sacred Tools
         </h1>
         <p className="text-white/60 text-lg">
@@ -320,12 +320,12 @@ function SacredToolsOverview({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="group relative p-6 bg-gradient-to-br from-purple-900/20 to-pink-900/20 rounded-2xl border border-purple-500/30 cursor-not-allowed"
+        className="group relative p-6 bg-gradient-to-br from-amber-900/20 to-pink-900/20 rounded-2xl border border-amber-500/30 cursor-not-allowed"
       >
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-4">
-            <MoreHorizontal className="w-8 h-8 text-purple-400" />
-            <span className="text-xs text-purple-400 font-medium">COMING SOON</span>
+            <MoreHorizontal className="w-8 h-8 text-amber-400" />
+            <span className="text-xs text-amber-400 font-medium">COMING SOON</span>
           </div>
           
           <h3 className="text-xl font-semibold text-white mb-2">

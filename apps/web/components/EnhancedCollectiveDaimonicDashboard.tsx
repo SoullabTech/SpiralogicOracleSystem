@@ -268,7 +268,7 @@ function CollectiveFieldBanner({
       case 'clear': 
         return ' from-blue-100 via-white to-blue-100';
       case 'stormy': 
-        return ' from-purple-200 via-indigo-200 to-purple-200';
+        return ' from-amber-200 via-indigo-200 to-amber-200';
       default: 
         return ' from-gray-100 to-gray-200';
     }
@@ -279,7 +279,7 @@ function CollectiveFieldBanner({
       case 'calm': return 'text-green-800';
       case 'charged': return 'text-orange-800';
       case 'clear': return 'text-blue-800';
-      case 'stormy': return 'text-purple-800';
+      case 'stormy': return 'text-amber-800';
       default: return 'text-gray-800';
     }
   };
@@ -482,7 +482,7 @@ function ResonanceNetwork({
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="h-2 rounded-full  from-blue-400 to-purple-500"
+                className="h-2 rounded-full  from-blue-400 to-amber-500"
                 style={{ width: `${cluster.resonanceStrength * 100}%` }}
               />
             </div>

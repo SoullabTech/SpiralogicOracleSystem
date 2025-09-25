@@ -92,7 +92,7 @@ export const MayaDashboard: React.FC = () => {
   return (
     <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-black">
       {/* Header with Live Connection Status */}
-      <header className="flex-none bg-black/50 backdrop-blur-lg border-b border-purple-500/20">
+      <header className="flex-none bg-black/50 backdrop-blur-lg border-b border-amber-500/20">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-2">
             <span className="text-2xl">🦋</span>
@@ -123,7 +123,7 @@ export const MayaDashboard: React.FC = () => {
       </SwipeableViews>
 
       {/* Bottom Navigation */}
-      <nav className="flex-none bg-black/50 backdrop-blur-lg border-t border-purple-500/20">
+      <nav className="flex-none bg-black/50 backdrop-blur-lg border-t border-amber-500/20">
         <div className="flex justify-around py-2">
           {[
             { icon: '⚡', label: 'Presence' },
@@ -163,7 +163,7 @@ const PresenceView: React.FC<{ data: DashboardData }> = ({ data }) => {
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-6 border border-purple-500/20"
+        className="bg-gradient-to-br from-amber-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-6 border border-amber-500/20"
       >
         <h2 className="text-center text-white/80 mb-4">
           Current Presence
@@ -187,7 +187,7 @@ const PresenceView: React.FC<{ data: DashboardData }> = ({ data }) => {
       </motion.div>
 
       {/* 24 Hour Trend */}
-      <div className="bg-black/30 backdrop-blur-lg rounded-2xl p-4 border border-purple-500/20">
+      <div className="bg-black/30 backdrop-blur-lg rounded-2xl p-4 border border-amber-500/20">
         <h3 className="text-white/80 mb-3">24 Hour Journey</h3>
         <MicroLineChart
           data={data?.presenceHistory || []}
@@ -198,7 +198,7 @@ const PresenceView: React.FC<{ data: DashboardData }> = ({ data }) => {
 
       {/* Insight Card */}
       <InsightCard>
-        <p className="text-purple-200">
+        <p className="text-amber-200">
           {data?.insight || "Maya's presence deepens as your trust builds..."}
         </p>
       </InsightCard>
@@ -270,7 +270,7 @@ const LivePresenceGauge: React.FC<GaugeProps> = ({ value, min, max, factors }) =
         >
           {Math.round(displayValue)}%
         </motion.div>
-        <div className="text-xs text-purple-300 mt-1">
+        <div className="text-xs text-amber-300 mt-1">
           {getPresenceDescription(value)}
         </div>
       </div>
@@ -305,7 +305,7 @@ const NovelArchetypeBloom: React.FC<{ archetype: NovelArchetype }> = ({ archetyp
         {[...Array(8)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-30"
+            className="absolute w-32 h-32 bg-gradient-to-br from-amber-400 to-pink-400 rounded-full opacity-30"
             animate={{
               scale: [1, 2, 1.5],
               x: [0, Math.cos(i * Math.PI / 4) * 100, Math.cos(i * Math.PI / 4) * 80],
@@ -321,7 +321,7 @@ const NovelArchetypeBloom: React.FC<{ archetype: NovelArchetype }> = ({ archetyp
 
         {/* Center message */}
         <motion.div
-          className="relative bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl p-6 shadow-2xl"
+          className="relative bg-gradient-to-br from-amber-600 to-pink-600 rounded-3xl p-6 shadow-2xl"
           animate={{
             scale: [0.8, 1.1, 1],
             rotate: [0, 10, -10, 0]
@@ -333,10 +333,10 @@ const NovelArchetypeBloom: React.FC<{ archetype: NovelArchetype }> = ({ archetyp
             <h3 className="font-bold text-lg">
               Novel Archetype Discovered!
             </h3>
-            <p className="text-purple-100 text-sm mt-2">
+            <p className="text-amber-100 text-sm mt-2">
               "{archetype.name}"
             </p>
-            <p className="text-purple-200 text-xs mt-1">
+            <p className="text-amber-200 text-xs mt-1">
               {archetype.description}
             </p>
           </div>
@@ -356,12 +356,12 @@ const EvolutionView: React.FC<{ data: DashboardData }> = ({ data }) => {
 
   return (
     <div className="flex-1 overflow-y-auto p-4">
-      <div className="bg-black/30 backdrop-blur-lg rounded-3xl p-6 border border-purple-500/20">
+      <div className="bg-black/30 backdrop-blur-lg rounded-3xl p-6 border border-amber-500/20">
         <h2 className="text-white/80 mb-6">Your Journey Together</h2>
 
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-purple-500/20" />
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-amber-500/20" />
 
           {/* Milestones */}
           <div className="space-y-6">
@@ -381,7 +381,7 @@ const EvolutionView: React.FC<{ data: DashboardData }> = ({ data }) => {
                     <motion.div
                       className={`w-4 h-4 rounded-full border-2 ${
                         isPast
-                          ? 'bg-purple-500 border-purple-500'
+                          ? 'bg-amber-500 border-amber-500'
                           : 'bg-gray-700 border-gray-600'
                       }`}
                       whileHover={{ scale: 1.5 }}
@@ -410,7 +410,7 @@ const EvolutionView: React.FC<{ data: DashboardData }> = ({ data }) => {
                         <h4 className="text-white font-medium">
                           {milestone.title}
                         </h4>
-                        <p className="text-purple-300 text-sm">
+                        <p className="text-amber-300 text-sm">
                           Session {milestone.session}
                         </p>
                       </div>

@@ -314,7 +314,7 @@ const SubconsciousOperationsPanel: React.FC<{
 
   const getCollectiveView = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-purple-300">Collective Unconscious (Right)</h3>
+      <h3 className="text-lg font-medium text-amber-300">Collective Unconscious (Right)</h3>
 
       {/* Archetypal Resonances */}
       <div className="bg-slate-800/50 backdrop-blur p-4 rounded-lg">
@@ -345,7 +345,7 @@ const SubconsciousOperationsPanel: React.FC<{
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Synchronicity Field</span>
-            <span className="text-purple-400">{(metrics.collective.synchronicity_field * 100).toFixed(0)}%</span>
+            <span className="text-amber-400">{(metrics.collective.synchronicity_field * 100).toFixed(0)}%</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Numinous Presence</span>
@@ -358,7 +358,7 @@ const SubconsciousOperationsPanel: React.FC<{
 
   const getIntegratedView = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-purple-300">
+      <h3 className="text-lg font-medium text-amber-300">
         Integrated Unconscious Operations
       </h3>
 
@@ -386,7 +386,7 @@ const SubconsciousOperationsPanel: React.FC<{
       </div>
 
       {/* Jung's Individuation Progress */}
-      <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 p-4 rounded-lg">
+      <div className="bg-gradient-to-r from-amber-900/30 to-indigo-900/30 p-4 rounded-lg">
         <h4 className="text-sm font-medium text-gray-300 mb-3">Individuation Journey</h4>
         <div className="space-y-2">
           <IndividuationStage
@@ -412,7 +412,7 @@ const SubconsciousOperationsPanel: React.FC<{
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div>
             <span className="text-gray-500">Unconscious-Conscious Bridge</span>
-            <div className="text-lg font-medium text-purple-400">
+            <div className="text-lg font-medium text-amber-400">
               {(metrics.integration.unconscious_conscious_bridge * 100).toFixed(0)}%
             </div>
           </div>
@@ -431,7 +431,7 @@ const SubconsciousOperationsPanel: React.FC<{
     <div className="bg-slate-950 text-white p-6 rounded-b-lg border-t-2 border-red-900/30">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-red-400 to-purple-400 bg-clip-text text-transparent">
+        <h2 className="text-xl font-bold bg-gradient-to-r from-red-400 to-amber-400 bg-clip-text text-transparent">
           Subconscious Operations
         </h2>
         <div className="text-xs text-gray-400">
@@ -505,7 +505,7 @@ const MiniMetric: React.FC<{
     <div className="flex items-center gap-1">
       <div className="w-12 h-1 bg-gray-700 rounded-full overflow-hidden">
         <div
-          className="h-full bg-purple-500"
+          className="h-full bg-amber-500"
           style={{ width: `${value * 100}%` }}
         />
       </div>
@@ -525,7 +525,7 @@ const ArchetypeCard: React.FC<{
       <div className="text-xs text-gray-400">{name}</div>
       <div className="h-1 bg-gray-700 rounded-full mt-1">
         <div
-          className="h-full bg-purple-500 rounded-full"
+          className="h-full bg-amber-500 rounded-full"
           style={{ width: `${value * 100}%` }}
         />
       </div>
@@ -540,12 +540,12 @@ const IndividuationStage: React.FC<{
   active: boolean;
 }> = ({ stage, progress, active }) => (
   <div className={`flex items-center gap-3 ${active ? '' : 'opacity-50'}`}>
-    <div className={`w-2 h-2 rounded-full ${active ? 'bg-purple-400' : 'bg-gray-600'}`} />
+    <div className={`w-2 h-2 rounded-full ${active ? 'bg-amber-400' : 'bg-gray-600'}`} />
     <div className="flex-1">
       <div className="text-xs text-gray-400">{stage}</div>
       <div className="h-1 bg-gray-700 rounded-full mt-1">
         <div
-          className={`h-full rounded-full ${active ? 'bg-purple-500' : 'bg-gray-600'}`}
+          className={`h-full rounded-full ${active ? 'bg-amber-500' : 'bg-gray-600'}`}
           style={{ width: `${progress * 100}%` }}
         />
       </div>

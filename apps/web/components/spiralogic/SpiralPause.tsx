@@ -96,7 +96,7 @@ export const SpiralPause: React.FC<SpiralPauseProps> = ({
           
           {/* Center breathing circle */}
           <motion.div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-blue-500"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-blue-500"
             animate={{
               scale: breathPhase === 'inhale' ? [1, 1.5] : breathPhase === 'hold' ? 1.5 : [1.5, 1],
               opacity: breathPhase === 'hold' ? [0.8, 1, 0.8] : 1
@@ -134,7 +134,7 @@ export const SpiralPause: React.FC<SpiralPauseProps> = ({
       {/* Progress bar */}
       <div className="w-64 bg-gray-200 dark:bg-gray-700 h-1 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-gradient-to-r from-purple-500 via-blue-500 to-green-500"
+          className="h-full bg-gradient-to-r from-amber-500 via-blue-500 to-green-500"
           initial={{ width: '0%' }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.1 }}

@@ -53,7 +53,7 @@ export default function MetricsPage() {
               <p className="text-sm text-neutral-500 dark:text-neutral-400">Voice Queries</p>
               <p className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">1,247</p>
             </div>
-            <BarChart3 className="w-8 h-8 text-purple-500" />
+            <BarChart3 className="w-8 h-8 text-amber-500" />
           </div>
           <div className="flex items-center mt-4 text-sm">
             <TrendingUp className="w-4 h-4 text-green-500 mr-1" />

@@ -61,7 +61,7 @@ export default function BetaTesterFeedback({ feedbackData }: BetaTesterFeedbackP
 
           <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
             <div className="flex items-center space-x-2">
-              <TrendingUp className="w-4 h-4 text-purple-400" />
+              <TrendingUp className="w-4 h-4 text-amber-400" />
               <span className="text-sm text-gray-300">Retention Rate</span>
             </div>
             <span className={`text-sm font-semibold ${retentionColor}`}>
@@ -185,7 +185,7 @@ export default function BetaTesterFeedback({ feedbackData }: BetaTesterFeedbackP
             )}
             
             {feedbackData.retentionRate >= 70 && (
-              <div className="flex items-center space-x-2 text-purple-400">
+              <div className="flex items-center space-x-2 text-amber-400">
                 <TrendingUp className="w-3 h-3" />
                 <span>High retention suggests compelling user experience</span>
               </div>

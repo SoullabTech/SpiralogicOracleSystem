@@ -129,7 +129,7 @@ const FiveFoldInterface: React.FC = () => {
       {/* Return to center button - always visible when not at center */}
       {viewState.current !== 'center' && (
         <motion.button
-          className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-purple-600/20 backdrop-blur-md rounded-full text-white text-sm"
+          className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-amber-600/20 backdrop-blur-md rounded-full text-white text-sm"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={() => navigateTo('center')}
@@ -149,7 +149,7 @@ const FiveFoldInterface: React.FC = () => {
             whileHover={{ opacity: 1, scale: 1.1 }}
             onClick={() => navigateTo('top')}
           >
-            <div className="w-12 h-12 rounded-full bg-purple-600/20 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-amber-600/20 backdrop-blur-sm flex items-center justify-center">
               <span className="text-white text-xl">↑</span>
             </div>
             <span className="text-xs text-gray-400 mt-1 block">Higher Self</span>
@@ -208,7 +208,7 @@ const FiveFoldInterface: React.FC = () => {
         <div className="grid grid-cols-3 gap-1">
           {/* Top */}
           <div className="col-start-2">
-            <div className={`w-6 h-6 rounded ${viewState.current === 'top' ? 'bg-purple-500' : 'bg-gray-700'}`} />
+            <div className={`w-6 h-6 rounded ${viewState.current === 'top' ? 'bg-amber-500' : 'bg-gray-700'}`} />
           </div>
           {/* Middle row */}
           <div className={`w-6 h-6 rounded ${viewState.current === 'left' ? 'bg-blue-500' : 'bg-gray-700'}`} />
@@ -325,7 +325,7 @@ const FiveFoldInterface: React.FC = () => {
             exit={{ opacity: 0, y: 20 }}
           >
             <div className="bg-slate-900/90 backdrop-blur-md rounded-2xl px-6 py-3">
-              <div className="text-sm text-purple-400">
+              <div className="text-sm text-amber-400">
                 {selectedPetal.element} • {selectedPetal.name}
               </div>
               <div className="text-xs text-gray-400 mt-1">

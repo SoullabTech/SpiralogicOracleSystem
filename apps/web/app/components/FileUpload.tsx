@@ -197,7 +197,7 @@ export default function FileUpload({
       case 'uploading':
         return <Loader2 className="w-4 h-4 animate-spin text-blue-500" />;
       case 'processing':
-        return <Loader2 className="w-4 h-4 animate-spin text-purple-500" />;
+        return <Loader2 className="w-4 h-4 animate-spin text-amber-500" />;
       case 'complete':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
       case 'error':
@@ -212,7 +212,7 @@ export default function FileUpload({
       case 'uploading':
         return 'bg-blue-500';
       case 'processing':
-        return 'bg-purple-500';
+        return 'bg-amber-500';
       case 'complete':
         return 'bg-green-500';
       case 'error':
@@ -229,8 +229,8 @@ export default function FileUpload({
         className={`
           relative border-2 border-dashed rounded-lg p-8 transition-all
           ${isDragging 
-            ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/10' 
-            : 'border-gray-300 dark:border-gray-600 hover:border-purple-400'
+            ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/10' 
+            : 'border-gray-300 dark:border-gray-600 hover:border-amber-400'
           }
         `}
         onDragEnter={handleDragEnter}
@@ -262,8 +262,8 @@ export default function FileUpload({
         </div>
 
         {isDragging && (
-          <div className="absolute inset-0 flex items-center justify-center bg-purple-500/10 rounded-lg">
-            <p className="text-lg font-medium text-purple-600 dark:text-purple-400">
+          <div className="absolute inset-0 flex items-center justify-center bg-amber-500/10 rounded-lg">
+            <p className="text-lg font-medium text-amber-600 dark:text-amber-400">
               Drop files to upload
             </p>
           </div>
@@ -324,14 +324,14 @@ export default function FileUpload({
 
       {/* Maya&apos;s Response Area */}
       {files.some(f => f.status === 'processing') && (
-        <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+        <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
           <div className="flex items-center space-x-2">
-            <Loader2 className="w-5 h-5 animate-spin text-purple-600" />
-            <p className="text-sm text-purple-700 dark:text-purple-300">
+            <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+            <p className="text-sm text-amber-700 dark:text-amber-300">
               Maya is reading and understanding your files...
             </p>
           </div>
-          <p className="text-xs text-purple-600 dark:text-purple-400 mt-2">
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
             She&apos;ll weave these insights into your future conversations
           </p>
         </div>

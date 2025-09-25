@@ -80,11 +80,11 @@ export default function IChingAstroCard({
   };
 
   return (
-    <Card className="w-full bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 border-purple-200">
+    <Card className="w-full bg-gradient-to-br from-amber-50 via-blue-50 to-indigo-50 border-amber-200">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <Sparkles className="h-6 w-6 text-purple-600" />
+            <Sparkles className="h-6 w-6 text-amber-600" />
             <div>
               <CardTitle className="text-xl text-gray-900">
                 I Ching Astrology Profile
@@ -98,7 +98,7 @@ export default function IChingAstroCard({
             variant="ghost"
             size="sm"
             onClick={() => setExpanded(!expanded)}
-            className="text-purple-600 hover:text-purple-700"
+            className="text-amber-600 hover:text-amber-700"
           >
             {expanded ? (
               <ChevronUp className="h-4 w-4" />
@@ -114,11 +114,11 @@ export default function IChingAstroCard({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <Compass className="h-4 w-4 text-purple-600" />
+              <Compass className="h-4 w-4 text-amber-600" />
               <h3 className="font-semibold text-gray-900">Birth Trigram</h3>
             </div>
 
-            <div className="bg-white rounded-lg p-4 border border-purple-100">
+            <div className="bg-white rounded-lg p-4 border border-amber-100">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
                   <span
@@ -230,9 +230,9 @@ export default function IChingAstroCard({
         )}
 
         {/* Yearly Guidance */}
-        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-100">
+        <div className="bg-gradient-to-r from-amber-50 to-indigo-50 rounded-lg p-4 border border-amber-100">
           <h4 className="font-medium text-gray-900 mb-2 flex items-center">
-            <Sparkles className="h-4 w-4 mr-2 text-purple-600" />
+            <Sparkles className="h-4 w-4 mr-2 text-amber-600" />
             Yearly Guidance
           </h4>
           <p className="text-gray-700 leading-relaxed">

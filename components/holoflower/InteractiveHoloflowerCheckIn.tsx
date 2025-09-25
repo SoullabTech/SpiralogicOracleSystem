@@ -324,7 +324,7 @@ export function InteractiveHoloflowerCheckIn({
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-          className="fixed inset-y-0 right-0 w-full md:w-3/4 lg:w-2/3 bg-gradient-to-br from-purple-950 via-indigo-950 to-black z-50 overflow-y-auto"
+          className="fixed inset-y-0 right-0 w-full md:w-3/4 lg:w-2/3 bg-gradient-to-br from-black via-indigo-950 to-black z-50 overflow-y-auto"
         >
           {/* Header */}
           <div className="sticky top-0 z-10 bg-black/50 backdrop-blur-xl border-b border-white/10 px-6 py-4">
@@ -341,7 +341,7 @@ export function InteractiveHoloflowerCheckIn({
 
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg flex items-center gap-2 transition-colors"
               >
                 <Sparkles className="w-4 h-4" />
                 Submit & Journal
@@ -353,11 +353,11 @@ export function InteractiveHoloflowerCheckIn({
               <div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-white/60">Overall Coherence</span>
-                  <span className="text-purple-400">{Math.round(calculateCoherence() * 100)}%</span>
+                  <span className="text-amber-400">{Math.round(calculateCoherence() * 100)}%</span>
                 </div>
                 <div className="mt-1 h-2 bg-white/10 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                    className="h-full bg-gradient-to-r from-amber-500 to-pink-500"
                     animate={{ width: `${calculateCoherence() * 100}%` }}
                     transition={{ duration: 0.3 }}
                   />
@@ -376,7 +376,7 @@ export function InteractiveHoloflowerCheckIn({
                 </div>
                 <div className="flex items-center gap-1">
                   <span className="text-white/40">Spiral:</span>
-                  <span className="text-purple-400">{facets.filter(f => f.phase === 'spiral').length}</span>
+                  <span className="text-amber-400">{facets.filter(f => f.phase === 'spiral').length}</span>
                 </div>
               </div>
             </div>
@@ -403,7 +403,7 @@ export function InteractiveHoloflowerCheckIn({
               {/* Center Circle */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div
-                  className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-600/30 to-pink-600/30 backdrop-blur-sm border border-white/20"
+                  className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-600/30 to-pink-600/30 backdrop-blur-sm border border-white/20"
                   animate={{
                     scale: [1, 1.1, 1],
                     opacity: [0.3, 0.5, 0.3]
@@ -538,7 +538,7 @@ export function InteractiveHoloflowerCheckIn({
                           {selectedFacet.phase} phase
                         </span>
                         {selectedFacet.crystal && (
-                          <span className="px-2 py-1 bg-purple-600/20 rounded text-purple-300">
+                          <span className="px-2 py-1 bg-amber-600/20 rounded text-amber-300">
                             💎 {selectedFacet.crystal}
                           </span>
                         )}
@@ -555,19 +555,19 @@ export function InteractiveHoloflowerCheckIn({
                   <div className="space-y-4">
                     {/* Focus State */}
                     <div>
-                      <p className="text-purple-400 text-sm mb-2">Focus:</p>
+                      <p className="text-amber-400 text-sm mb-2">Focus:</p>
                       <p className="text-white/90 italic">{selectedFacet.focus}</p>
                     </div>
 
                     {/* Reflection Question */}
                     <div>
-                      <p className="text-purple-400 text-sm mb-2">Reflection:</p>
+                      <p className="text-amber-400 text-sm mb-2">Reflection:</p>
                       <p className="text-white/80">{selectedFacet.question}</p>
                     </div>
 
                     {/* Value Adjustment */}
                     <div>
-                      <p className="text-purple-400 text-sm mb-2">Adjust Value:</p>
+                      <p className="text-amber-400 text-sm mb-2">Adjust Value:</p>
                       <div className="flex items-center gap-4">
                         <button
                           onClick={() => handleValueChange(selectedFacet.id, -0.5)}
@@ -604,9 +604,9 @@ export function InteractiveHoloflowerCheckIn({
             </AnimatePresence>
 
             {/* Daily Ritual Guide */}
-            <div className="mt-8 p-4 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-lg border border-purple-600/30">
+            <div className="mt-8 p-4 bg-gradient-to-br from-amber-600/10 to-pink-600/10 rounded-lg border border-amber-600/30">
               <div className="flex items-start gap-3">
-                <Info className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                 <div className="space-y-3">
                   <div className="text-sm text-white/80">
                     <p className="font-medium mb-1">🌙 Your Daily Ritual:</p>
@@ -618,7 +618,7 @@ export function InteractiveHoloflowerCheckIn({
                       <p>5. Chat with MAIA for deeper guidance</p>
                     </div>
                   </div>
-                  <div className="text-xs text-purple-300 italic">
+                  <div className="text-xs text-amber-300 italic">
                     "Your configuration creates a unique energetic signature that MAIA uses to support your journey."
                   </div>
                 </div>

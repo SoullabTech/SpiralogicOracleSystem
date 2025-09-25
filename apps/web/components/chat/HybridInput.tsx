@@ -338,7 +338,7 @@ export default function HybridInput({
               {[1, 2, 3].map((i) => (
                 <motion.span
                   key={i}
-                  className="absolute inset-0 rounded-full border-2 border-purple-400"
+                  className="absolute inset-0 rounded-full border-2 border-amber-400"
                   initial={{ scale: 1, opacity: 0 }}
                   animate={{
                     scale: 1 + volume * (i * 0.5),

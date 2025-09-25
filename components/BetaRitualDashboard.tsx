@@ -53,10 +53,10 @@ export default function BetaRitualDashboard() {
 
   if (loading || !metrics || !advancedMetrics) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900">
+      <div className="p-6 flex items-center justify-center min-h-screen bg-gradient-to-br from-amber-900 via-purple-800 to-indigo-900">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-300 mx-auto mb-4"></div>
-          <p className="text-purple-200">Loading ritual metrics...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-300 mx-auto mb-4"></div>
+          <p className="text-amber-200">Loading ritual metrics...</p>
         </div>
       </div>
     );
@@ -91,12 +91,12 @@ export default function BetaRitualDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-purple-800 to-indigo-900 p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-4xl font-bold text-white mb-2">✨ Beta Ritual Analytics</h1>
-          <p className="text-purple-200">How seekers enter sacred space</p>
+          <p className="text-amber-200">How seekers enter sacred space</p>
         </div>
 
         <div className="flex gap-4">
@@ -106,8 +106,8 @@ export default function BetaRitualDashboard() {
               onClick={() => setActiveTab('basic')}
               className={`px-4 py-2 rounded-lg transition ${
                 activeTab === 'basic'
-                  ? 'bg-purple-600 text-white'
-                  : 'text-purple-200 hover:text-white'
+                  ? 'bg-amber-600 text-white'
+                  : 'text-amber-200 hover:text-white'
               }`}
             >
               Core Metrics
@@ -116,8 +116,8 @@ export default function BetaRitualDashboard() {
               onClick={() => setActiveTab('advanced')}
               className={`px-4 py-2 rounded-lg transition ${
                 activeTab === 'advanced'
-                  ? 'bg-purple-600 text-white'
-                  : 'text-purple-200 hover:text-white'
+                  ? 'bg-amber-600 text-white'
+                  : 'text-amber-200 hover:text-white'
               }`}
             >
               Deep Insights
@@ -132,8 +132,8 @@ export default function BetaRitualDashboard() {
                 onClick={() => setTimeframe(period as any)}
                 className={`px-4 py-2 rounded-lg transition ${
                   timeframe === period
-                    ? 'bg-purple-600 text-white'
-                    : 'text-purple-200 hover:text-white'
+                    ? 'bg-amber-600 text-white'
+                    : 'text-amber-200 hover:text-white'
                 }`}
               >
                 {period.charAt(0).toUpperCase() + period.slice(1)}
@@ -161,7 +161,7 @@ export default function BetaRitualDashboard() {
                 value={`${nudgeMetrics.nudgeOnCount}`}
                 icon="🔔"
                 subtitle="Users who keep gentle nudges on"
-                color="text-purple-400"
+                color="text-amber-400"
               />
               <MetricCard
                 title="Nudges Disabled"
@@ -375,7 +375,7 @@ export default function BetaRitualDashboard() {
       )}
 
       {/* Live Status */}
-      <div className="text-center text-purple-200 mt-8">
+      <div className="text-center text-amber-200 mt-8">
         <div className="flex items-center justify-center gap-2">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           <span>Live • Auto-refreshing every 30s • Last updated: {new Date().toLocaleTimeString()}</span>
@@ -386,7 +386,7 @@ export default function BetaRitualDashboard() {
 }
 
 // Metric Card Component
-function MetricCard({ title, value, icon, color = "text-purple-300", trend, subtitle }: any) {
+function MetricCard({ title, value, icon, color = "text-amber-300", trend, subtitle }: any) {
   return (
     <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
       <div className="flex items-start justify-between mb-2">
@@ -410,7 +410,7 @@ function ChartCard({ title, subtitle, children }: any) {
     <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-white">{title}</h3>
-        <p className="text-sm text-purple-200">{subtitle}</p>
+        <p className="text-sm text-amber-200">{subtitle}</p>
       </div>
       {children}
     </div>

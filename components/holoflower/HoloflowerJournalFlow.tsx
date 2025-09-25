@@ -115,13 +115,13 @@ export function HoloflowerJournalFlow({ isOpen, onClose, checkInData }: Holoflow
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
-            className="bg-gradient-to-br from-purple-950 via-indigo-950 to-black rounded-3xl max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col"
+            className="bg-gradient-to-br from-black via-indigo-950 to-black rounded-3xl max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col"
           >
             {/* Header */}
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <BookOpen className="w-6 h-6 text-purple-400" />
+                  <BookOpen className="w-6 h-6 text-amber-400" />
                   <h2 className="text-xl font-light text-white">Sacred Journal</h2>
                 </div>
                 <button
@@ -146,7 +146,7 @@ export function HoloflowerJournalFlow({ isOpen, onClose, checkInData }: Holoflow
                     {checkInData && (
                       <div className="mb-6 p-4 bg-white/5 rounded-xl border border-white/10">
                         <div className="flex items-center gap-3 mb-3">
-                          <Camera className="w-5 h-5 text-purple-400" />
+                          <Camera className="w-5 h-5 text-amber-400" />
                           <h3 className="text-white font-medium">Your Holoflower Configuration</h3>
                         </div>
                         <div className="flex justify-center">
@@ -164,13 +164,13 @@ export function HoloflowerJournalFlow({ isOpen, onClose, checkInData }: Holoflow
                     {/* Journal Entry Area */}
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <p className="text-purple-300 text-sm">
+                        <p className="text-amber-300 text-sm">
                           Your holoflower insights have been captured. Add your reflections:
                         </p>
                         {!savedEntry && (
                           <button
                             onClick={handleSaveJournal}
-                            className="flex items-center gap-2 px-4 py-2 bg-purple-600/30 hover:bg-purple-600/50 text-white rounded-lg transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-amber-600/30 hover:bg-amber-600/50 text-white rounded-lg transition-colors"
                           >
                             <Save className="w-4 h-4" />
                             Save Entry
@@ -181,7 +181,7 @@ export function HoloflowerJournalFlow({ isOpen, onClose, checkInData }: Holoflow
                       <textarea
                         value={journalEntry}
                         onChange={(e) => setJournalEntry(e.target.value)}
-                        className="w-full h-[400px] bg-white/5 border border-white/10 rounded-xl p-4 text-white/90 placeholder-white/40 resize-none focus:outline-none focus:border-purple-500/50"
+                        className="w-full h-[400px] bg-white/5 border border-white/10 rounded-xl p-4 text-white/90 placeholder-white/40 resize-none focus:outline-none focus:border-amber-500/50"
                         placeholder="Reflect on your holoflower reading..."
                       />
 
@@ -230,7 +230,7 @@ export function HoloflowerJournalFlow({ isOpen, onClose, checkInData }: Holoflow
                     </button>
                     <button
                       onClick={handleChatWithMAIA}
-                      className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+                      className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg flex items-center gap-2 transition-colors"
                     >
                       <MessageCircle className="w-5 h-5" />
                       Chat with MAIA
@@ -243,9 +243,9 @@ export function HoloflowerJournalFlow({ isOpen, onClose, checkInData }: Holoflow
 
             {/* Footer Guide */}
             {showingInsights && (
-              <div className="p-4 border-t border-white/10 bg-purple-600/10">
+              <div className="p-4 border-t border-white/10 bg-amber-600/10">
                 <div className="flex items-center gap-3 text-sm">
-                  <Edit3 className="w-4 h-4 text-purple-400" />
+                  <Edit3 className="w-4 h-4 text-amber-400" />
                   <p className="text-white/70">
                     This is your sacred space. Let your thoughts flow naturally.
                     Your journal entries help MAIA understand your journey better.

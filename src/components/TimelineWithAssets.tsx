@@ -116,13 +116,13 @@ const MiniHoloflower: React.FC<MiniHoloflowerProps> = ({ session, onClick, isExp
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="absolute top-24 left-1/2 -translate-x-1/2 z-50 w-80 bg-black/90 backdrop-blur-xl rounded-2xl p-4 border border-purple-500/30 shadow-2xl"
+            className="absolute top-24 left-1/2 -translate-x-1/2 z-50 w-80 bg-black/90 backdrop-blur-xl rounded-2xl p-4 border border-amber-500/30 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-purple-400" />
+                <Clock className="w-4 h-4 text-amber-400" />
                 <span className="text-sm text-white">
                   {session.timestamp.toLocaleString()}
                 </span>
@@ -137,8 +137,8 @@ const MiniHoloflower: React.FC<MiniHoloflowerProps> = ({ session, onClick, isExp
 
             {/* Intention */}
             {session.intention && (
-              <div className="mb-3 p-2 bg-purple-900/30 rounded-lg">
-                <p className="text-xs text-purple-300 mb-1">Intention:</p>
+              <div className="mb-3 p-2 bg-amber-900/30 rounded-lg">
+                <p className="text-xs text-amber-300 mb-1">Intention:</p>
                 <p className="text-sm text-white">{session.intention}</p>
               </div>
             )}
@@ -165,7 +165,7 @@ const MiniHoloflower: React.FC<MiniHoloflowerProps> = ({ session, onClick, isExp
                           className="w-full h-20 object-cover rounded-lg"
                         />
                       ) : asset.type === 'audio' ? (
-                        <div className="w-full h-20 bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-lg flex items-center justify-center">
+                        <div className="w-full h-20 bg-gradient-to-br from-amber-900/50 to-pink-900/50 rounded-lg flex items-center justify-center">
                           <img
                             src={asset.preview}
                             alt={asset.id}
@@ -203,7 +203,7 @@ const MiniHoloflower: React.FC<MiniHoloflowerProps> = ({ session, onClick, isExp
               {session.resonance.map((element) => (
                 <span
                   key={element}
-                  className="px-2 py-1 text-xs bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded text-purple-300"
+                  className="px-2 py-1 text-xs bg-gradient-to-r from-amber-500/20 to-pink-500/20 rounded text-amber-300"
                 >
                   {element}
                 </span>
@@ -241,14 +241,14 @@ export default function TimelineWithAssets({ sessions, onSessionClick }: Timelin
   const filteredSessions = filterSessionsByRange(sessions);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900/20 via-black to-purple-900/20 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900/20 via-black to-amber-900/20 p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-8"
       >
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent mb-2">
           Sacred Timeline
         </h1>
         <p className="text-gray-400 text-sm">
@@ -264,7 +264,7 @@ export default function TimelineWithAssets({ sessions, onSessionClick }: Timelin
             onClick={() => setTimeRange(range)}
             className={`px-4 py-2 rounded-lg capitalize transition-all ${
               timeRange === range
-                ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
+                ? 'bg-amber-500/30 text-amber-300 border border-amber-500/50'
                 : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
             }`}
           >
@@ -276,7 +276,7 @@ export default function TimelineWithAssets({ sessions, onSessionClick }: Timelin
       {/* Timeline */}
       <div className="relative max-w-4xl mx-auto">
         {/* Timeline Line */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500/50 via-pink-500/50 to-purple-500/50" />
+        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-500/50 via-pink-500/50 to-amber-500/50" />
 
         {/* Sessions */}
         <div className="space-y-12">

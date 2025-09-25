@@ -57,7 +57,7 @@ const elementColors = {
   water: "text-blue-500 bg-blue-50 border-blue-200",
   earth: "text-amber-600 bg-amber-50 border-amber-200",
   air: "text-sky-500 bg-sky-50 border-sky-200",
-  aether: "text-purple-500 bg-purple-50 border-purple-200",
+  aether: "text-amber-500 bg-amber-50 border-amber-200",
   resistance: "text-gray-500 bg-gray-50 border-gray-200"
 };
 
@@ -179,7 +179,7 @@ export default function ProsodyDebugOverlay(props: DebugProps) {
               {(props.phase || props.debugData?.phase) && (
                 <div>
                   <div className="text-xs font-medium text-gray-500 mb-1">PHASE</div>
-                  <div className="text-sm p-2 bg-purple-50 border-l-2 border-purple-300 rounded">
+                  <div className="text-sm p-2 bg-amber-50 border-l-2 border-amber-300 rounded">
                     {props.phase || props.debugData?.phase}
                   </div>
                 </div>

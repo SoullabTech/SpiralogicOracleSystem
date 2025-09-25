@@ -32,7 +32,7 @@ export const SimplifiedOracleInterface: React.FC<SimplifiedOracleInterfaceProps>
   onGrounding
 }) => {
   const [showPulse, setShowPulse] = useState(false);
-  const [borderColor, setBorderColor] = useState('border-purple-500/20');
+  const [borderColor, setBorderColor] = useState('border-amber-500/20');
   const messageRef = useRef<HTMLDivElement>(null);
 
   // Breakthrough pulse effect (intent 17)
@@ -49,7 +49,7 @@ export const SimplifiedOracleInterface: React.FC<SimplifiedOracleInterfaceProps>
       // Gentle transition to new emotional state color
       const emotionColors = {
         high: 'border-orange-400/30',      // High energy/arousal
-        balanced: 'border-purple-500/30',  // Balanced state
+        balanced: 'border-amber-500/30',  // Balanced state
         calm: 'border-blue-400/30',        // Calm/reflective
         processing: 'border-amber-400/30'  // Processing/working through
       };
@@ -96,8 +96,8 @@ export const SimplifiedOracleInterface: React.FC<SimplifiedOracleInterfaceProps>
       >
         {/* Simple header */}
         <div className="flex items-center space-x-2 mb-2">
-          <Crown className="w-4 h-4 text-purple-400" />
-          <span className="text-xs font-medium text-purple-400">Maya</span>
+          <Crown className="w-4 h-4 text-amber-400" />
+          <span className="text-xs font-medium text-amber-400">Maya</span>
         </div>
 
         {/* Message content */}

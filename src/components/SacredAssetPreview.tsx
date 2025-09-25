@@ -34,7 +34,7 @@ const elementalColors = {
   fire: 'from-red-500 to-orange-500',
   water: 'from-blue-500 to-cyan-500',
   earth: 'from-green-500 to-emerald-500',
-  air: 'from-purple-500 to-pink-500',
+  air: 'from-amber-500 to-pink-500',
   aether: 'from-yellow-500 to-amber-500'
 };
 
@@ -52,15 +52,15 @@ export default function SacredAssetPreview({
   const [showGif, setShowGif] = useState(false);
 
   const getElementalGradient = () => {
-    if (!metadata?.resonance) return 'from-purple-500/20 to-pink-500/20';
+    if (!metadata?.resonance) return 'from-amber-500/20 to-pink-500/20';
     const primary = metadata.resonance[0]?.toLowerCase();
-    return elementalColors[primary as keyof typeof elementalColors] || 'from-purple-500/20 to-pink-500/20';
+    return elementalColors[primary as keyof typeof elementalColors] || 'from-amber-500/20 to-pink-500/20';
   };
 
   const getIcon = () => {
     switch (type) {
       case 'audio': return <FileAudio className="w-8 h-8 text-yellow-400" />;
-      case 'video': return <FileVideo className="w-8 h-8 text-purple-400" />;
+      case 'video': return <FileVideo className="w-8 h-8 text-amber-400" />;
       case 'image': return <FileImage className="w-8 h-8 text-blue-400" />;
       case 'doc': return <FileText className="w-8 h-8 text-green-400" />;
     }
@@ -115,7 +115,7 @@ export default function SacredAssetPreview({
               </div>
             </button>
             {metadata?.resolution && (
-              <div className="absolute bottom-1 right-1 bg-black/60 px-2 py-1 rounded text-xs text-purple-400">
+              <div className="absolute bottom-1 right-1 bg-black/60 px-2 py-1 rounded text-xs text-amber-400">
                 {metadata.resolution}
               </div>
             )}
@@ -155,7 +155,7 @@ export default function SacredAssetPreview({
       {/* Sacred glow effect */}
       {isHovered && (
         <motion.div
-          className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-500/10 to-purple-500/10"
+          className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-500/10 to-amber-500/10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -198,7 +198,7 @@ export default function SacredAssetPreview({
             </span>
           )}
           {metadata.resonance && (
-            <span className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-2 py-1 rounded text-purple-300">
+            <span className="bg-gradient-to-r from-amber-500/20 to-pink-500/20 px-2 py-1 rounded text-amber-300">
               {metadata.resonance.join(' + ')}
             </span>
           )}

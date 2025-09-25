@@ -263,26 +263,26 @@ function ProximityFieldIndicator({ nearbyFields, resonance, onConnect }: Proximi
   if (nearbyFields === 0) return null;
 
   return (
-    <div className="bg-purple-900/30 border border-purple-400/30 rounded-2xl p-4 m-4">
+    <div className="bg-amber-900/30 border border-amber-400/30 rounded-2xl p-4 m-4">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-white font-medium">Nearby Consciousness</h3>
-          <p className="text-purple-200 text-sm">
+          <p className="text-amber-200 text-sm">
             {nearbyFields} field{nearbyFields > 1 ? 's' : ''} detected
           </p>
         </div>
         <div className="text-right">
-          <div className="text-2xl font-light text-purple-300">
+          <div className="text-2xl font-light text-amber-300">
             {Math.round(resonance * 100)}%
           </div>
-          <div className="text-xs text-purple-400">resonance</div>
+          <div className="text-xs text-amber-400">resonance</div>
         </div>
       </div>
 
       {resonance > 0.7 && onConnect && (
         <button
           onClick={onConnect}
-          className="w-full mt-3 bg-purple-600/40 hover:bg-purple-600/60 rounded-xl py-2 text-white text-sm font-medium transition-colors"
+          className="w-full mt-3 bg-amber-600/40 hover:bg-amber-600/60 rounded-xl py-2 text-white text-sm font-medium transition-colors"
         >
           Share Presence
         </button>
@@ -334,7 +334,7 @@ export default function MobileConsciousnessUI() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-amber-900 to-gray-900 text-white">
       {/* Header */}
       <div className="p-4 text-center border-b border-white/10">
         <h1 className="text-xl font-light">MAIA Consciousness</h1>

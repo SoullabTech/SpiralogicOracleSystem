@@ -136,7 +136,7 @@ const CheckInScreen: React.FC<CheckInScreenProps> = ({ onComplete, onSwipeUp }) 
       <div className="px-4 pb-6 space-y-2">
         <motion.button
           onClick={handleSave}
-          className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium"
+          className="w-full py-3 bg-gradient-to-r from-amber-600 to-blue-600 text-white rounded-lg font-medium"
           whileTap={{ scale: 0.98 }}
         >
           Save Check-In
@@ -187,7 +187,7 @@ const JournalScreen: React.FC<JournalScreenProps> = ({ onSubmit, onSwipeUp, onSw
 
   return (
     <motion.div 
-      className="h-full flex flex-col bg-gradient-to-b from-purple-950 to-black"
+      className="h-full flex flex-col bg-gradient-to-b from-black to-black"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -220,7 +220,7 @@ const JournalScreen: React.FC<JournalScreenProps> = ({ onSubmit, onSwipeUp, onSw
           value={journalText}
           onChange={(e) => setJournalText(e.target.value)}
           placeholder="Write freely..."
-          className="w-full h-full bg-white/5 text-white rounded-lg p-4 resize-none focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+          className="w-full h-full bg-white/5 text-white rounded-lg p-4 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/50"
           style={{ minHeight: '200px' }}
         />
       </div>
@@ -235,7 +235,7 @@ const JournalScreen: React.FC<JournalScreenProps> = ({ onSubmit, onSwipeUp, onSw
         <motion.button
           onClick={handleSubmit}
           disabled={!journalText.trim() || isProcessing}
-          className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium disabled:opacity-50"
+          className="w-full py-3 bg-gradient-to-r from-blue-600 to-amber-600 text-white rounded-lg font-medium disabled:opacity-50"
           whileTap={{ scale: 0.98 }}
         >
           {isProcessing ? (
@@ -423,7 +423,7 @@ const OverviewScreen: React.FC<OverviewScreenProps> = ({ sessions, onSwipeDown }
           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-center">
             <div className="text-white/80 text-sm">{stats.totalSessions} sessions</div>
             {stats.aetherCount > 0 && (
-              <div className="text-purple-300 text-xs mt-1">
+              <div className="text-amber-300 text-xs mt-1">
                 ✨ {stats.aetherCount} transcendent moments
               </div>
             )}
@@ -458,7 +458,7 @@ const OverviewScreen: React.FC<OverviewScreenProps> = ({ sessions, onSwipeDown }
             className="bg-white/5 rounded-lg p-3 text-center"
             whileHover={{ scale: 1.02 }}
           >
-            <Sparkles className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+            <Sparkles className="w-5 h-5 text-amber-400 mx-auto mb-1" />
             <div className="text-white/80 text-xs">Insights</div>
             <div className="text-white text-sm font-medium">
               {stats.totalSessions * 3}
@@ -469,7 +469,7 @@ const OverviewScreen: React.FC<OverviewScreenProps> = ({ sessions, onSwipeDown }
 
       {/* Insight Message */}
       <div className="px-4 pb-4">
-        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg p-4">
+        <div className="bg-gradient-to-r from-amber-900/30 to-blue-900/30 rounded-lg p-4">
           <p className="text-white/90 text-sm">
             {stats.avgCoherence > 0.7 
               ? "Your field is highly coherent. Trust the flow emerging."

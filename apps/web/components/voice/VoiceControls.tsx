@@ -308,7 +308,7 @@ export function CompactVoiceControls({ onAutoSpeakChange }: { onAutoSpeakChange?
         size="sm"
         variant={autoSpeak ? "default" : "ghost"}
         onClick={() => handleAutoSpeakChange(!autoSpeak)}
-        className={autoSpeak ? "bg-purple-600 hover:bg-purple-700" : ""}
+        className={autoSpeak ? "bg-amber-600 hover:bg-amber-700" : ""}
       >
         {autoSpeak ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
       </Button>

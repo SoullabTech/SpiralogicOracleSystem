@@ -310,7 +310,7 @@ function CommonThemesDisplay({
           {themes.sharedGrowthAreas.map((area, index) => (
             <span 
               key={index} 
-              className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded"
+              className="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded"
             >
               {area}
             </span>

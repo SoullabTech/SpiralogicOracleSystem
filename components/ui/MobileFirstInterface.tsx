@@ -115,7 +115,7 @@ export const MobileFirstInterface: React.FC<MobileFirstInterfaceProps> = ({
 
               {/* Center logo */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500/10 to-blue-500/10 flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-500/10 to-blue-500/10 flex items-center justify-center">
                   <span className="text-6xl">✨</span>
                 </div>
               </div>
@@ -162,7 +162,7 @@ export const MobileFirstInterface: React.FC<MobileFirstInterfaceProps> = ({
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message..."
                 className="w-full px-4 py-3 bg-gray-800/50 text-white rounded-2xl
-                         border border-gray-700 focus:border-purple-500 focus:outline-none
+                         border border-gray-700 focus:border-amber-500 focus:outline-none
                          resize-none min-h-[48px] max-h-32"
                 rows={1}
                 style={{
@@ -190,7 +190,7 @@ export const MobileFirstInterface: React.FC<MobileFirstInterfaceProps> = ({
               disabled={!message.trim() || isProcessing}
               className={`p-3 rounded-full transition-all
                 ${message.trim() && !isProcessing
-                  ? 'bg-purple-500 hover:bg-purple-600 text-white'
+                  ? 'bg-amber-500 hover:bg-amber-600 text-white'
                   : 'bg-gray-800 text-gray-500 cursor-not-allowed'
                 }`}
               aria-label="Send message"

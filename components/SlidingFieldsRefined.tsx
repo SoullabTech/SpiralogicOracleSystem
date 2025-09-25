@@ -195,7 +195,7 @@ export default function SlidingFieldsRefined() {
         <button
           onClick={() => navigateToView(state.currentView === 'bottom' ? 'center' : 'bottom')}
           className={`w-2 h-4 rounded-full transition-all ${
-            state.currentView === 'bottom' ? 'bg-purple-400' : 'bg-white/40 hover:bg-white/60'
+            state.currentView === 'bottom' ? 'bg-amber-400' : 'bg-white/40 hover:bg-white/60'
           }`}
           title="Timeline"
         />
@@ -355,7 +355,7 @@ export default function SlidingFieldsRefined() {
                 { element: 'Water', color: 'from-blue-500 to-cyan-500', emoji: '💧' },
                 { element: 'Earth', color: 'from-green-500 to-emerald-500', emoji: '🌍' },
                 { element: 'Air', color: 'from-gray-400 to-blue-400', emoji: '💨' },
-                { element: 'Aether', color: 'from-purple-500 to-pink-500', emoji: '✨' }
+                { element: 'Aether', color: 'from-amber-500 to-pink-500', emoji: '✨' }
               ].map((el) => (
                 <motion.button
                   key={el.element}
@@ -442,7 +442,7 @@ export default function SlidingFieldsRefined() {
 
           <div className="bg-white/5 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Moon className="w-6 h-6 text-purple-400" />
+              <Moon className="w-6 h-6 text-amber-400" />
               <div>
                 <h3 className="text-white text-lg">Oracle Card</h3>
                 <p className="text-white/60 text-sm">Trust • Inner Knowing</p>
@@ -456,7 +456,7 @@ export default function SlidingFieldsRefined() {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white text-sm transition-colors"
+              className="mt-4 px-4 py-2 bg-amber-600 hover:bg-amber-700 rounded-lg text-white text-sm transition-colors"
             >
               Draw New Card
             </motion.button>
@@ -468,13 +468,13 @@ export default function SlidingFieldsRefined() {
 
   // Bottom view - Timeline (unchanged)
   const renderBottomView = () => (
-    <div className="w-full h-full bg-gradient-to-br from-purple-900 to-indigo-900 relative">
+    <div className="w-full h-full bg-gradient-to-br from-amber-900 to-indigo-900 relative">
       <div className="p-6 h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-purple-300" />
+              <BookOpen className="w-6 h-6 text-amber-300" />
             </div>
             <div>
               <h1 className="text-white text-2xl font-light">Timeline</h1>
@@ -506,7 +506,7 @@ export default function SlidingFieldsRefined() {
               className="bg-white/5 rounded-xl p-4"
             >
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0" />
+                <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 flex-shrink-0" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-white/60 text-xs">{entry.date}</span>

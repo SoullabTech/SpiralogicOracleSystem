@@ -305,7 +305,7 @@ const WellnessTrajectoryDashboard: React.FC<{ userId: string }> = ({ userId }) =
       <h3 className="text-lg font-medium mb-4">Recent Milestones</h3>
       <div className="space-y-3">
         {milestones.map((milestone, index) => (
-          <div key={index} className="flex items-start space-x-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+          <div key={index} className="flex items-start space-x-3 p-3 bg-gradient-to-r from-blue-50 to-amber-50 rounded-lg">
             <div className="text-2xl">
               {milestone.celebration ? '🎉' : '📈'}
             </div>

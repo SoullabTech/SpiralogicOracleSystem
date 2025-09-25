@@ -139,7 +139,7 @@ const LeftAnalyticsPanel: React.FC = () => {
             onClick={() => setSelectedMetric(metric)}
             className={`p-2 text-xs rounded capitalize ${
               selectedMetric === metric
-                ? 'bg-purple-700 text-white'
+                ? 'bg-amber-700 text-white'
                 : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
@@ -278,7 +278,7 @@ const LeftAnalyticsPanel: React.FC = () => {
               <div>
                 <div className="flex justify-between text-xs mb-1">
                   <span>Pattern Library</span>
-                  <span className="text-purple-400">{analyticsData.immuneMetrics.patterns_recognized}</span>
+                  <span className="text-amber-400">{analyticsData.immuneMetrics.patterns_recognized}</span>
                 </div>
                 <div className="text-xs text-gray-500">
                   Learning velocity: {analyticsData.immuneMetrics.learning_velocity.toFixed(1)} patterns/hour
@@ -308,7 +308,7 @@ const LeftAnalyticsPanel: React.FC = () => {
             <h3 className="text-sm font-medium mb-3">Pattern Type Distribution</h3>
             <div className="space-y-2">
               {[
-                { type: 'Isolation', count: 342, color: 'bg-purple-600' },
+                { type: 'Isolation', count: 342, color: 'bg-amber-600' },
                 { type: 'Manipulation', count: 287, color: 'bg-red-600' },
                 { type: 'Reality Distortion', count: 198, color: 'bg-orange-600' },
                 { type: 'Externalization', count: 267, color: 'bg-yellow-600' },
@@ -344,7 +344,7 @@ const LeftAnalyticsPanel: React.FC = () => {
               <div>
                 <div className="flex justify-between text-xs mb-1">
                   <span>Transformation Velocity</span>
-                  <span className="text-purple-400">
+                  <span className="text-amber-400">
                     {analyticsData.longitudinalMetrics.transformation_velocity.toFixed(2)}x
                   </span>
                 </div>
@@ -366,7 +366,7 @@ const LeftAnalyticsPanel: React.FC = () => {
               {analyticsData.longitudinalMetrics.coherence_trend.map((value, i) => (
                 <div
                   key={i}
-                  className="flex-1 bg-gradient-to-t from-purple-600 to-purple-400 rounded-t"
+                  className="flex-1 bg-gradient-to-t from-amber-600 to-amber-400 rounded-t"
                   style={{ height: `${value * 100}%` }}
                 />
               ))}
@@ -392,7 +392,7 @@ const LeftAnalyticsPanel: React.FC = () => {
           </div>
           <div className="text-center">
             <div className="text-gray-500">Sessions</div>
-            <div className="text-purple-400">2,847</div>
+            <div className="text-amber-400">2,847</div>
           </div>
         </div>
       </div>

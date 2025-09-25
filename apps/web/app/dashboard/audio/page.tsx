@@ -11,7 +11,7 @@ export default function AudioAnalyticsDashboard() {
     <div className="min-h-screen bg-white dark:bg-black text-neutral-900 dark:text-white p-8 transition-colors duration-200">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">
-        <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
           Maia Voice Analytics
         </h1>
         <p className="text-neutral-600 dark:text-neutral-400">
@@ -39,10 +39,10 @@ export default function AudioAnalyticsDashboard() {
         {/* Quick Stats Row */}
         <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Voice Sessions */}
-          <div className="p-4 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl border border-purple-200 dark:border-purple-700/30">
+          <div className="p-4 bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl border border-amber-200 dark:border-amber-700/30">
             <div className="flex items-center justify-between mb-2">
-              <Volume2 className="w-5 h-5 text-purple-400" />
-              <span className="text-xs text-purple-300">+12%</span>
+              <Volume2 className="w-5 h-5 text-amber-400" />
+              <span className="text-xs text-amber-300">+12%</span>
             </div>
             <div className="text-2xl font-bold text-neutral-900 dark:text-white">2,847</div>
             <div className="text-xs text-neutral-600 dark:text-neutral-400">Voice Sessions Today</div>
@@ -82,7 +82,7 @@ export default function AudioAnalyticsDashboard() {
         {/* Browser Correlation Insights */}
         <div className="lg:col-span-3 p-6 bg-gradient-to-br from-gray-100 to-gray-50 dark:from-neutral-900 dark:to-neutral-800 rounded-2xl border border-gray-200 dark:border-neutral-700">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-purple-400" />
+            <Activity className="w-5 h-5 text-amber-400" />
             Key Insights
           </h3>
           
@@ -101,7 +101,7 @@ export default function AudioAnalyticsDashboard() {
             
             <div className="p-4 bg-white/50 dark:bg-neutral-800/50 rounded-lg border border-gray-100 dark:border-transparent">
               <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">Avg Session Length</div>
-              <div className="text-xl font-bold text-purple-400">12 min</div>
+              <div className="text-xl font-bold text-amber-400">12 min</div>
               <div className="text-xs text-neutral-500 dark:text-neutral-500">For users who unlock audio</div>
             </div>
           </div>

@@ -14,7 +14,7 @@ export const PatternVisualizerPlaceholder: React.FC = () => {
             { element: "💧 Water", value: 40, color: "bg-blue-400" },
             { element: "🌍 Earth", value: 20, color: "bg-green-400" },
             { element: "🌬️ Air", value: 10, color: "bg-yellow-400" },
-            { element: "✨ Aether", value: 5, color: "bg-purple-400" }
+            { element: "✨ Aether", value: 5, color: "bg-amber-400" }
           ].map(({ element, value, color }) => (
             <div key={element} className="flex items-center gap-3">
               <span className="w-16 text-sm">{element}</span>

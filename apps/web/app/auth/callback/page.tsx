@@ -63,7 +63,7 @@ function AuthCallbackContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-violet-900 to-amber-900 text-yellow-400 flex items-center justify-center p-8">
       <div className="max-w-md w-full bg-white/10 rounded-xl border border-white/20 p-8 backdrop-blur-sm text-center">
         <div className="mb-8">
           <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
@@ -119,7 +119,7 @@ function AuthCallbackContent() {
 export default function AuthCallbackPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-purple-900 text-yellow-400 flex items-center justify-center p-8">
+      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-violet-900 to-amber-900 text-yellow-400 flex items-center justify-center p-8">
         <div className="max-w-md w-full bg-white/10 rounded-xl border border-white/20 p-8 backdrop-blur-sm text-center">
           <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl animate-spin">🔮</span>

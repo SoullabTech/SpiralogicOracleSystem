@@ -164,7 +164,7 @@ export default function OnboardingStep({
                 { value: "water", label: "Water", desc: "Emotion, intuition, flow", color: "text-blue-500" },
                 { value: "earth", label: "Earth", desc: "Grounding, stability, growth", color: "text-green-500" },
                 { value: "air", label: "Air", desc: "Clarity, communication, ideas", color: "text-indigo-500" },
-                { value: "aether", label: "Spirit", desc: "Unity, transcendence, wisdom", color: "text-purple-500" }
+                { value: "aether", label: "Spirit", desc: "Unity, transcendence, wisdom", color: "text-amber-500" }
               ].map(element => (
                 <button
                   key={element.value}

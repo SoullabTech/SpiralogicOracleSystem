@@ -28,10 +28,10 @@ export function BetaOnboarding() {
       component: (
         <div className="space-y-6">
           <div className="relative w-48 h-48 mx-auto mb-8">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-orange-500 rounded-full animate-pulse opacity-20" />
-            <div className="absolute inset-4 bg-gradient-to-br from-purple-500 to-orange-400 rounded-full animate-spin-slow" />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-600 to-orange-500 rounded-full animate-pulse opacity-20" />
+            <div className="absolute inset-4 bg-gradient-to-br from-amber-500 to-orange-400 rounded-full animate-spin-slow" />
             <div className="absolute inset-8 bg-background rounded-full flex items-center justify-center">
-              <Sparkles className="w-16 h-16 text-purple-600" />
+              <Sparkles className="w-16 h-16 text-amber-600" />
             </div>
           </div>
           <div className="text-center space-y-2">
@@ -95,7 +95,7 @@ export function BetaOnboarding() {
             })}
           </div>
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-purple-500/10 to-orange-500/10">
+            <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-amber-500/10 to-orange-500/10">
               <div className="text-4xl">☯</div>
             </div>
           </div>
@@ -186,7 +186,7 @@ export function BetaOnboarding() {
           </div>
           <div className="w-full bg-muted rounded-full h-2">
             <div
-              className="bg-gradient-to-r from-purple-500 to-orange-500 h-2 rounded-full transition-all"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
@@ -217,7 +217,7 @@ export function BetaOnboarding() {
           <Button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600"
+            className="bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600"
           >
             {currentStep === steps.length - 1 ? 'Begin Journey' : 'Continue'}
           </Button>

@@ -310,7 +310,7 @@ export const DaimonicOracleInterface: React.FC<DaimonicOracleInterfaceProps> = (
             <span className="text-sm text-gray-600">Complexity:</span>
             <div className="w-16 h-2 bg-gray-200 rounded-full">
               <div 
-                className="h-2 bg-purple-500 rounded-full transition-all duration-500" 
+                className="h-2 bg-amber-500 rounded-full transition-all duration-500" 
                 style={{ width: `${complexityReadiness * 100}%` }}
               />
             </div>
@@ -324,14 +324,14 @@ export const DaimonicOracleInterface: React.FC<DaimonicOracleInterfaceProps> = (
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setMultiAgentMode(false)}
-            className={`p-2 rounded ${!multiAgentMode ? 'bg-purple-100 text-purple-700' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`p-2 rounded ${!multiAgentMode ? 'bg-amber-100 text-amber-700' : 'text-gray-500 hover:text-gray-700'}`}
             title="Single Agent Mode"
           >
             <User size={20} />
           </button>
           <button
             onClick={() => setMultiAgentMode(true)}
-            className={`p-2 rounded ${multiAgentMode ? 'bg-purple-100 text-purple-700' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`p-2 rounded ${multiAgentMode ? 'bg-amber-100 text-amber-700' : 'text-gray-500 hover:text-gray-700'}`}
             title="Multi-Agent Mode"
           >
             <Users size={20} />
@@ -369,7 +369,7 @@ export const DaimonicOracleInterface: React.FC<DaimonicOracleInterfaceProps> = (
                       setSelectedAgents(prev => prev.filter(id => id !== agent.id));
                     }
                   }}
-                  className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
                 />
                 <span className="text-sm">
                   <span className="font-medium">{agent.name}</span>
@@ -393,8 +393,8 @@ export const DaimonicOracleInterface: React.FC<DaimonicOracleInterfaceProps> = (
             >
               {entry.type === 'user' ? (
                 <div className="flex justify-end">
-                  <div className="max-w-sm p-3 bg-purple-100 rounded-lg">
-                    <p className="text-sm text-purple-800">{entry.content}</p>
+                  <div className="max-w-sm p-3 bg-amber-100 rounded-lg">
+                    <p className="text-sm text-amber-800">{entry.content}</p>
                   </div>
                 </div>
               ) : entry.type === 'multi_agent' ? (
@@ -422,7 +422,7 @@ export const DaimonicOracleInterface: React.FC<DaimonicOracleInterfaceProps> = (
             animate={{ opacity: 1 }}
             className="flex justify-center items-center p-8"
           >
-            <RefreshCw className="animate-spin text-purple-500" size={24} />
+            <RefreshCw className="animate-spin text-amber-500" size={24} />
             <span className="ml-2 text-gray-600">Consulting oracle...</span>
           </motion.div>
         )}
@@ -438,14 +438,14 @@ export const DaimonicOracleInterface: React.FC<DaimonicOracleInterfaceProps> = (
             "Ask your question to multiple agents..." : 
             "What would you like to explore?"
           }
-          className="flex-1 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="flex-1 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           rows={2}
           disabled={isLoading}
         />
         <button
           onClick={handleConsultation}
           disabled={isLoading || !input.trim()}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+          className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
         >
           <Send size={18} />
         </button>
@@ -540,7 +540,7 @@ const MultiAgentResponseDisplay: React.FC<{
     <div className="space-y-4">
       {/* Collective dynamics indicator */}
       {response.collective && complexityReadiness > 0.5 && (
-        <div className="p-3  from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+        <div className="p-3  from-amber-50 to-blue-50 rounded-lg border border-amber-200">
           <div className="text-sm text-gray-700">
             <span className="font-medium">Collective Dynamics:</span>
             <div className="mt-1 flex space-x-4 text-xs">
@@ -561,7 +561,7 @@ const MultiAgentResponseDisplay: React.FC<{
             className={`
               flex-1 px-3 py-2 rounded text-sm font-medium transition-all
               ${activeAgent === index 
-                ? 'bg-white text-purple-700 shadow-sm' 
+                ? 'bg-white text-amber-700 shadow-sm' 
                 : 'text-gray-600 hover:text-gray-800'
               }
             `}
@@ -606,7 +606,7 @@ const MultiAgentResponseDisplay: React.FC<{
             <div className="mt-4 pt-4 border-t border-gray-200">
               <div className="space-y-2">
                 {response.agents[activeAgent].dialogical.questions?.map((question: string, idx: number) => (
-                  <p key={idx} className="text-sm text-purple-700">• {question}</p>
+                  <p key={idx} className="text-sm text-amber-700">• {question}</p>
                 ))}
               </div>
               

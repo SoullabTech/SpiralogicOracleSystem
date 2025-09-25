@@ -111,13 +111,13 @@ export function PetalJournal({ isOpen, onClose, petal, petalInteractionId }: Pet
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-3xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col border border-purple-500/20"
+            className="bg-gradient-to-br from-black to-indigo-950 rounded-3xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col border border-amber-500/20"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <BookOpen className="w-5 h-5 text-purple-400" />
+                <BookOpen className="w-5 h-5 text-amber-400" />
                 <h2 className="text-xl font-light text-white">Journal</h2>
               </div>
               <button
@@ -148,12 +148,12 @@ export function PetalJournal({ isOpen, onClose, petal, petalInteractionId }: Pet
             {currentPrompt && (
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-purple-300 text-sm">Reflection Prompt</p>
+                  <p className="text-amber-300 text-sm">Reflection Prompt</p>
                   <button
                     onClick={() => setIsVoiceActive(!isVoiceActive)}
                     className={`p-1.5 rounded-lg transition-colors ${
                       isVoiceActive 
-                        ? 'bg-purple-600 text-white' 
+                        ? 'bg-amber-600 text-white' 
                         : 'bg-white/10 text-white/60 hover:bg-white/20'
                     }`}
                   >
@@ -181,7 +181,7 @@ export function PetalJournal({ isOpen, onClose, petal, petalInteractionId }: Pet
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Give your reflection a title..."
-              className="w-full mb-4 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50"
+              className="w-full mb-4 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50"
             />
 
             {/* Journal textarea */}
@@ -190,7 +190,7 @@ export function PetalJournal({ isOpen, onClose, petal, petalInteractionId }: Pet
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Let your thoughts flow..."
-                className="w-full h-full min-h-[200px] px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 resize-none"
+                className="w-full h-full min-h-[200px] px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 resize-none"
               />
             </div>
 
@@ -204,7 +204,7 @@ export function PetalJournal({ isOpen, onClose, petal, petalInteractionId }: Pet
               <button
                 onClick={handleSave}
                 disabled={!content.trim() || isSaving}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-600/50 text-white rounded-lg transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-600/50 text-white rounded-lg transition-colors"
               >
                 {isSaving ? (
                   <>

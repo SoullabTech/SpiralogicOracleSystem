@@ -134,7 +134,7 @@ export const ArchetypalRoutingTest: React.FC = () => {
 
   const getAgentColor = (agent: string) => {
     const colors = {
-      maya: 'text-purple-400',
+      maya: 'text-amber-400',
       fire: 'text-red-400',
       water: 'text-blue-400',
       earth: 'text-green-400',
@@ -195,7 +195,7 @@ export const ArchetypalRoutingTest: React.FC = () => {
               <div className="text-sm text-white/60">Avg Confidence</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">
+              <div className="text-2xl font-bold text-amber-400">
                 {averageResponseTime.toFixed(0)}ms
               </div>
               <div className="text-sm text-white/60">Avg Response Time</div>

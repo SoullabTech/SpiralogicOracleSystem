@@ -24,7 +24,7 @@ const elementalColors = {
   fire: 'from-red-500 to-orange-500',
   water: 'from-blue-500 to-cyan-500', 
   earth: 'from-green-500 to-emerald-500',
-  air: 'from-purple-500 to-pink-500',
+  air: 'from-amber-500 to-pink-500',
   aether: 'from-yellow-500 to-amber-500'
 };
 
@@ -43,7 +43,7 @@ export default function SacredUpload({
   const getFileIcon = (file: File) => {
     const type = file.type;
     if (type.startsWith('audio/')) return <FileAudio className="w-8 h-8 text-yellow-400" />;
-    if (type.startsWith('video/')) return <FileVideo className="w-8 h-8 text-purple-400" />;
+    if (type.startsWith('video/')) return <FileVideo className="w-8 h-8 text-amber-400" />;
     if (type.startsWith('image/')) return <FileImage className="w-8 h-8 text-blue-400" />;
     return <FileText className="w-8 h-8 text-green-400" />;
   };
@@ -226,7 +226,7 @@ export default function SacredUpload({
             animate={{ rotate: isDragging ? 180 : 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Upload className="w-12 h-12 text-purple-400 mx-auto" />
+            <Upload className="w-12 h-12 text-amber-400 mx-auto" />
           </motion.div>
           
           <div>
@@ -249,7 +249,7 @@ export default function SacredUpload({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/10 to-yellow-500/10"
+              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500/10 to-yellow-500/10"
             />
           )}
         </AnimatePresence>
@@ -285,7 +285,7 @@ export default function SacredUpload({
               {uploadFile.status === 'uploading' && (
                 <div className="w-full bg-white/10 rounded-full h-2">
                   <motion.div
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-amber-500 to-pink-500 h-2 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${uploadFile.progress}%` }}
                     transition={{ duration: 0.3 }}
@@ -313,7 +313,7 @@ export default function SacredUpload({
                   </>
                 )}
                 {uploadFile.status === 'uploading' && (
-                  <span className="text-purple-400 text-xs">Uploading...</span>
+                  <span className="text-amber-400 text-xs">Uploading...</span>
                 )}
 
                 {/* Resonance Display */}
@@ -322,7 +322,7 @@ export default function SacredUpload({
                     {uploadFile.result.resonance.elements.map((element: string) => (
                       <span
                         key={element}
-                        className="px-2 py-1 text-xs bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded text-purple-300"
+                        className="px-2 py-1 text-xs bg-gradient-to-r from-amber-500/20 to-pink-500/20 rounded text-amber-300"
                       >
                         {element}
                       </span>

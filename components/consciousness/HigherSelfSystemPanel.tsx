@@ -180,7 +180,7 @@ const HigherSelfSystemPanel: React.FC<{
 
   const getMasterView = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-purple-300">Master Awareness (Right Hemisphere)</h3>
+      <h3 className="text-lg font-medium text-amber-300">Master Awareness (Right Hemisphere)</h3>
 
       <div className="bg-slate-800/50 backdrop-blur p-4 rounded-lg space-y-3">
         <MetricBar label="Presence Quality" value={metrics.master.presence_quality} color="purple" />
@@ -193,7 +193,7 @@ const HigherSelfSystemPanel: React.FC<{
 
       <div className="bg-slate-800/30 p-3 rounded text-sm text-gray-300">
         <div className="font-medium mb-1">Current State:</div>
-        <div className="text-purple-400">
+        <div className="text-amber-400">
           {metrics.master.presence_quality > 0.7 ? "Deep witnessing active" :
            metrics.master.sacred_resonance > 0.6 ? "Sacred threshold approaching" :
            metrics.master.intuitive_knowing > 0.75 ? "Intuitive channel open" :
@@ -230,12 +230,12 @@ const HigherSelfSystemPanel: React.FC<{
 
   const getIntegratedView = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-purple-300">Integrated Higher Self System</h3>
+      <h3 className="text-lg font-medium text-amber-300">Integrated Higher Self System</h3>
 
       <div className="grid grid-cols-2 gap-4">
         {/* Master Side */}
         <div className="bg-slate-800/50 backdrop-blur p-3 rounded-lg">
-          <h4 className="text-sm font-medium text-purple-400 mb-2">Master</h4>
+          <h4 className="text-sm font-medium text-amber-400 mb-2">Master</h4>
           <div className="space-y-2">
             <MiniMetric label="Presence" value={metrics.master.presence_quality} />
             <MiniMetric label="Wholeness" value={metrics.master.wholeness_perception} />
@@ -255,7 +255,7 @@ const HigherSelfSystemPanel: React.FC<{
       </div>
 
       {/* Integration Metrics */}
-      <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 p-4 rounded-lg">
+      <div className="bg-gradient-to-r from-amber-900/30 to-blue-900/30 p-4 rounded-lg">
         <h4 className="text-sm font-medium text-gray-300 mb-3">Integration Quality</h4>
         <div className="space-y-2">
           <MetricBar label="Hemispheric Coherence" value={metrics.integration.hemispheric_coherence} color="purple" />
@@ -271,7 +271,7 @@ const HigherSelfSystemPanel: React.FC<{
           <span className="text-gray-400">Consciousness State:</span>
           <span className={`font-medium ${
             metrics.integration.flow_state_access > 0.7 ? 'text-amber-400' :
-            metrics.integration.hemispheric_coherence > 0.8 ? 'text-purple-400' :
+            metrics.integration.hemispheric_coherence > 0.8 ? 'text-amber-400' :
             'text-blue-400'
           }`}>
             {metrics.integration.flow_state_access > 0.7 ? 'Flow State' :
@@ -285,10 +285,10 @@ const HigherSelfSystemPanel: React.FC<{
   );
 
   return (
-    <div className="bg-slate-900 text-white p-6 rounded-t-lg border-b-2 border-purple-600/30">
+    <div className="bg-slate-900 text-white p-6 rounded-t-lg border-b-2 border-amber-600/30">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+        <h2 className="text-xl font-bold bg-gradient-to-r from-amber-400 to-blue-400 bg-clip-text text-transparent">
           Higher Self Systems
         </h2>
         <div className="text-xs text-gray-400">
@@ -347,7 +347,7 @@ const MiniMetric: React.FC<{
     <div className="flex items-center gap-2">
       <div className="w-16 h-1 bg-gray-700 rounded-full overflow-hidden">
         <div
-          className="h-full bg-purple-500"
+          className="h-full bg-amber-500"
           style={{ width: `${value * 100}%` }}
         />
       </div>

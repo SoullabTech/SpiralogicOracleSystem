@@ -33,14 +33,14 @@ export default function ConstellationMap() {
 
   if (loading) {
     return (
-      <div className="relative w-full h-[500px]  from-indigo-900 via-purple-900 to-black rounded-xl flex items-center justify-center">
+      <div className="relative w-full h-[500px]  from-indigo-900 via-amber-900 to-black rounded-xl flex items-center justify-center">
         <div className="text-white text-lg">✨ Mapping the constellation...</div>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full h-[500px]  from-indigo-900 via-purple-900 to-black rounded-xl overflow-hidden">
+    <div className="relative w-full h-[500px]  from-indigo-900 via-amber-900 to-black rounded-xl overflow-hidden">
       <svg width="100%" height="100%" viewBox="-300 -250 600 500">
         {/* Background stars */}
         {Array.from({ length: 50 }).map((_, i) => (

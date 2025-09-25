@@ -37,11 +37,11 @@ const elementColors = {
   water: 'text-blue-400 bg-blue-900/20',
   earth: 'text-green-400 bg-green-900/20',
   air: 'text-yellow-400 bg-yellow-900/20',
-  aether: 'text-purple-400 bg-purple-900/20'
+  aether: 'text-amber-400 bg-amber-900/20'
 };
 
 const phaseColors = {
-  integration: 'text-purple-400',
+  integration: 'text-amber-400',
   exploration: 'text-blue-400',
   grounding: 'text-green-400',
   transformation: 'text-amber-400',
@@ -202,7 +202,7 @@ export default function SessionMemoryDrawer({
             <div className="flex items-center gap-2 mb-1">
               {/* Type icon */}
               {entry.type === 'journal' && <BookOpen className="w-4 h-4 text-amber-400" />}
-              {entry.type === 'insight' && <Brain className="w-4 h-4 text-purple-400" />}
+              {entry.type === 'insight' && <Brain className="w-4 h-4 text-amber-400" />}
               {entry.type === 'phase_shift' && <TrendingUp className="w-4 h-4 text-indigo-400" />}
               
               {/* Element icon */}
@@ -410,7 +410,7 @@ export default function SessionMemoryDrawer({
                     {spiralLoading ? (
                       <div className="flex items-center justify-center py-12">
                         <div className="flex flex-col items-center gap-3">
-                          <Sparkles className="w-8 h-8 text-purple-400 animate-pulse" />
+                          <Sparkles className="w-8 h-8 text-amber-400 animate-pulse" />
                           <p className="text-sm text-gray-400">Loading spiral journey...</p>
                         </div>
                       </div>
@@ -463,7 +463,7 @@ export default function SessionMemoryDrawer({
                                 </h5>
                                 <ul className="space-y-1">
                                   {selectedNode.insights.map((insight: string, idx: number) => (
-                                    <li key={idx} className="text-xs text-purple-300 pl-3">
+                                    <li key={idx} className="text-xs text-amber-300 pl-3">
                                       ✦ {insight}
                                     </li>
                                   ))}

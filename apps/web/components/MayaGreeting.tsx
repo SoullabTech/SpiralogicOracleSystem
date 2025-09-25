@@ -52,8 +52,8 @@ export function MaiaGreeting({
           ${className}
           ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}
           transition-all duration-500 ease-out
-          bg-gradient-to-r from-purple-900/20 to-indigo-900/20
-          border border-purple-700/30
+          bg-gradient-to-r from-amber-900/20 to-indigo-900/20
+          border border-amber-700/30
           rounded-lg p-3 mb-3
           backdrop-blur-sm
         `}
@@ -67,7 +67,7 @@ export function MaiaGreeting({
             {memorySnippet && !isExpanded && (
               <button
                 onClick={handleExpand}
-                className="flex items-center gap-1 mt-1 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                className="flex items-center gap-1 mt-1 text-xs text-amber-400 hover:text-amber-300 transition-colors"
               >
                 {getMemoryIcon()} Maia remembers
                 <ChevronDownIcon className="w-3 h-3" />
@@ -77,7 +77,7 @@ export function MaiaGreeting({
         </div>
 
         {memorySnippet && isExpanded && (
-          <div className="mt-3 p-2 bg-black/30 rounded border border-purple-700/20">
+          <div className="mt-3 p-2 bg-black/30 rounded border border-amber-700/20">
             <div className="flex items-start gap-2">
               <span className="text-lg">{getMemoryIcon()}</span>
               <p className="text-xs text-gray-300 italic">
@@ -86,7 +86,7 @@ export function MaiaGreeting({
             </div>
             <button
               onClick={handleExpand}
-              className="flex items-center gap-1 mt-2 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+              className="flex items-center gap-1 mt-2 text-xs text-amber-400 hover:text-amber-300 transition-colors"
             >
               <ChevronUpIcon className="w-3 h-3" />
               Hide memory
@@ -104,8 +104,8 @@ export function MaiaGreeting({
         ${className}
         ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}
         transition-all duration-700 ease-out
-        bg-gradient-to-r from-purple-900/10 to-indigo-900/10
-        border-b border-purple-700/30
+        bg-gradient-to-r from-amber-900/10 to-indigo-900/10
+        border-b border-amber-700/30
         backdrop-blur-sm
       `}
     >
@@ -118,7 +118,7 @@ export function MaiaGreeting({
           <div className="mt-3">
             <button
               onClick={handleExpand}
-              className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+              className="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition-colors"
             >
               {getMemoryIcon()}
               <span className="font-medium">Maia remembers</span>
@@ -130,7 +130,7 @@ export function MaiaGreeting({
             </button>
             
             {isExpanded && (
-              <div className="mt-3 p-4 bg-black/20 rounded-lg border border-purple-700/20">
+              <div className="mt-3 p-4 bg-black/20 rounded-lg border border-amber-700/20">
                 <div className="flex gap-3">
                   <span className="text-2xl">{getMemoryIcon()}</span>
                   <div className="flex-1">
@@ -138,7 +138,7 @@ export function MaiaGreeting({
                       "{memorySnippet}"
                     </p>
                     {memoryType && (
-                      <p className="mt-2 text-xs text-purple-400">
+                      <p className="mt-2 text-xs text-amber-400">
                         From your recent {memoryType === 'journal' ? 'journal entry' : 
                                           memoryType === 'phase' ? 'phase patterns' :
                                           'elemental resonance'}
@@ -210,7 +210,7 @@ export function MaiaGreetingContainer({
   if (loading) {
     return (
       <div className="animate-pulse">
-        <div className="h-20 bg-purple-900/10 rounded-lg"></div>
+        <div className="h-20 bg-amber-900/10 rounded-lg"></div>
       </div>
     );
   }

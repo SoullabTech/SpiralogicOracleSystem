@@ -72,7 +72,7 @@ export function HoloflowerCore({ onPetalSelect, energyState = 'emerging' }: Holo
   };
 
   return (
-    <div className="relative w-full h-screen flex items-center justify-center bg-gradient-to-br from-purple-950 via-indigo-950 to-black overflow-hidden">
+    <div className="relative w-full h-screen flex items-center justify-center bg-gradient-to-br from-black via-indigo-950 to-black overflow-hidden">
       {/* Ambient background particles */}
       <div className="absolute inset-0">
         {[...Array(50)].map((_, i) => (
@@ -110,8 +110,8 @@ export function HoloflowerCore({ onPetalSelect, energyState = 'emerging' }: Holo
             rotate: { duration: 60, repeat: Infinity, ease: "linear" },
           }}
         >
-          <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 opacity-50 blur-xl" />
-          <div className="absolute inset-4 rounded-full bg-gradient-to-br from-white to-purple-200 opacity-30" />
+          <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-600 to-indigo-600 opacity-50 blur-xl" />
+          <div className="absolute inset-4 rounded-full bg-gradient-to-br from-white to-amber-200 opacity-30" />
         </motion.div>
 
         {/* Petals */}
@@ -216,7 +216,7 @@ export function HoloflowerCore({ onPetalSelect, energyState = 'emerging' }: Holo
 
               {/* Action buttons */}
               <div className="flex gap-3 mt-4">
-                <button className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                <button className="flex-1 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors">
                   Journal This
                 </button>
                 <button 
@@ -240,7 +240,7 @@ export function HoloflowerCore({ onPetalSelect, energyState = 'emerging' }: Holo
               key={state}
               className={`px-3 py-1 rounded-lg text-sm transition-all ${
                 energyState === state 
-                  ? 'bg-purple-600 text-white' 
+                  ? 'bg-amber-600 text-white' 
                   : 'bg-white/10 text-white/60 hover:bg-white/20'
               }`}
             >

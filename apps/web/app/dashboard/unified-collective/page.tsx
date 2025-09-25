@@ -89,7 +89,7 @@ export default function UnifiedCollectiveDashboard() {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold  from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold  from-amber-400 to-pink-400 bg-clip-text text-transparent">
             Collective Consciousness Dashboard
           </h1>
           

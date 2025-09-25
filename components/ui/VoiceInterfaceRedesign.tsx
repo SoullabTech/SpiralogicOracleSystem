@@ -224,7 +224,7 @@ export const VoiceInterfaceRedesign: React.FC<VoiceInterfaceRedesignProps> = ({
         {/* Logo Area */}
         <div className="mb-8">
           {/* Maya Logo Here */}
-          <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center">
+          <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-500/20 to-blue-500/20 flex items-center justify-center">
             <span className="text-4xl">✨</span>
           </div>
         </div>
@@ -331,7 +331,7 @@ export const VoiceInterfaceRedesign: React.FC<VoiceInterfaceRedesignProps> = ({
             className={`
               p-3 rounded-full backdrop-blur-lg transition-all
               ${audioEnabled
-                ? 'bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30'
+                ? 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30'
                 : 'bg-gray-800/50 hover:bg-gray-700/50 border border-gray-600/30'
               }
             `}
@@ -340,7 +340,7 @@ export const VoiceInterfaceRedesign: React.FC<VoiceInterfaceRedesignProps> = ({
             title={audioEnabled ? 'Mute voice responses' : 'Enable voice responses'}
           >
             {audioEnabled ? (
-              <Volume2 className="w-5 h-5 text-purple-300" />
+              <Volume2 className="w-5 h-5 text-amber-300" />
             ) : (
               <VolumeX className="w-5 h-5 text-gray-400" />
             )}

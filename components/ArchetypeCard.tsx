@@ -56,10 +56,10 @@ const ARCHETYPE_CONFIG = {
   shadow: {
     name: 'Shadow',
     icon: Eye,
-    color: 'from-purple-500 to-gray-600',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-200',
-    textColor: 'text-purple-700',
+    color: 'from-amber-500 to-gray-600',
+    bgColor: 'bg-amber-50',
+    borderColor: 'border-amber-200',
+    textColor: 'text-amber-700',
     description: 'Integration • Hidden Gold • Wholeness'
   },
   lover: {
@@ -218,10 +218,10 @@ export const ArchetypeCard: React.FC<LegacyArchetypeCardProps> = ({
         accent: 'bg-red-500'
       },
       purple: { 
-        bg: 'bg-purple-50', 
-        text: 'text-purple-700', 
-        border: 'border-purple-200', 
-        accent: 'bg-purple-500'
+        bg: 'bg-amber-50', 
+        text: 'text-amber-700', 
+        border: 'border-amber-200', 
+        accent: 'bg-amber-500'
       },
       gray: { 
         bg: 'bg-gray-50', 
@@ -436,7 +436,7 @@ export const ArchetypeInsights: React.FC<ArchetypeInsightsProps> = ({
     <div className={`space-y-4 ${className}`}>
       {title && (
         <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-600" />
+          <Sparkles className="w-5 h-5 text-amber-600" />
           {title}
         </h2>
       )}

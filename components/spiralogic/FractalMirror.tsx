@@ -22,7 +22,7 @@ export const FractalMirror: React.FC<FractalMirrorProps> = ({ pattern, className
   const scaleColors: Record<FractalScale, string> = {
     personal: 'from-blue-400 to-blue-600',
     interpersonal: 'from-green-400 to-green-600',
-    collective: 'from-purple-400 to-purple-600',
+    collective: 'from-amber-400 to-amber-600',
     cosmic: 'from-indigo-400 to-pink-600'
   };
   
@@ -38,7 +38,7 @@ export const FractalMirror: React.FC<FractalMirrorProps> = ({ pattern, className
           </span>
           <div className="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+              className="h-full bg-gradient-to-r from-amber-500 to-pink-500"
               initial={{ width: 0 }}
               animate={{ width: `${pattern.coherence * 100}%` }}
               transition={{ duration: 1, ease: "easeOut" }}
@@ -194,7 +194,7 @@ export const FractalMirror: React.FC<FractalMirrorProps> = ({ pattern, className
               key={i}
               className={`w-2 h-2 rounded-full ${
                 i < pattern.depth
-                  ? 'bg-gradient-to-br from-purple-500 to-pink-500'
+                  ? 'bg-gradient-to-br from-amber-500 to-pink-500'
                   : 'bg-gray-300 dark:bg-gray-600'
               }`}
             />

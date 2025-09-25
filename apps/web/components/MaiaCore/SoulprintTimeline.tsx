@@ -21,7 +21,7 @@ interface TimelineEntry {
 
 const milestoneColors = {
   'first-bloom': 'from-pink-500 to-rose-400',
-  'pattern-keeper': 'from-purple-500 to-violet-400', 
+  'pattern-keeper': 'from-amber-500 to-violet-400', 
   'depth-seeker': 'from-blue-500 to-indigo-400',
   'sacred-gardener': 'from-green-500 to-emerald-400',
   'wisdom-keeper': 'from-amber-500 to-yellow-400'
@@ -282,7 +282,7 @@ export default function SacredTimeline({ userId, className }: SacredTimelineProp
                                       element === 'water' ? 'bg-blue-400' :
                                       element === 'earth' ? 'bg-green-400' :
                                       element === 'air' ? 'bg-sky-400' :
-                                      'bg-purple-400'
+                                      'bg-amber-400'
                                     )}
                                     style={{ width: `${value * 100}%` }}
                                   />

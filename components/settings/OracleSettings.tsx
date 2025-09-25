@@ -76,7 +76,7 @@ const elementalPreferences = [
   {
     id: "aether",
     label: "Aether",
-    color: "text-purple-400",
+    color: "text-amber-400",
     description: "Spirit, transcendence, wisdom",
   },
 ];

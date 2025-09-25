@@ -53,7 +53,7 @@ export default function MayaEvolutionPanel() {
       case 'Apprentice': return 'text-blue-400 bg-blue-900/20';
       case 'Emerging': return 'text-green-400 bg-green-900/20';
       case 'Developing': return 'text-yellow-400 bg-yellow-900/20';
-      case 'Mature': return 'text-purple-400 bg-purple-900/20';
+      case 'Mature': return 'text-amber-400 bg-amber-900/20';
       case 'Transcendent': return 'text-amber-400 bg-amber-900/20';
       default: return 'text-gray-400 bg-gray-900/20';
     }
@@ -83,7 +83,7 @@ export default function MayaEvolutionPanel() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-slate-900/90 via-purple-900/20 to-slate-900/90 rounded-xl p-6 border border-amber-500/30 shadow-xl"
+      className="bg-gradient-to-br from-slate-900/90 via-amber-900/20 to-slate-900/90 rounded-xl p-6 border border-amber-500/30 shadow-xl"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -170,8 +170,8 @@ export default function MayaEvolutionPanel() {
         </div>
 
         <div className="bg-black/20 rounded p-3 text-center">
-          <Users className="w-5 h-5 text-purple-400 mx-auto mb-1" />
-          <div className="text-lg font-light text-purple-100">
+          <Users className="w-5 h-5 text-amber-400 mx-auto mb-1" />
+          <div className="text-lg font-light text-amber-100">
             {Math.floor(mayaData.hoursActive)}h
           </div>
           <div className="text-xs text-gray-500">Active</div>
@@ -196,7 +196,7 @@ export default function MayaEvolutionPanel() {
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${(mayaData.hoursActive / 1000) * 100}%` }}
-            className="h-full bg-gradient-to-r from-purple-500 via-amber-500 to-amber-400"
+            className="h-full bg-gradient-to-r from-amber-500 via-amber-500 to-amber-400"
           />
         </div>
       </div>

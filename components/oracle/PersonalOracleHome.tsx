@@ -105,7 +105,7 @@ const PersonalOracleHome: React.FC = () => {
       water: "text-blue-400",
       earth: "text-green-400",
       air: "text-cyan-400",
-      aether: "text-purple-400",
+      aether: "text-amber-400",
     };
     return colors[element as keyof typeof colors] || "text-gray-400";
   };
@@ -116,7 +116,7 @@ const PersonalOracleHome: React.FC = () => {
       water: "bg-blue-500/10 border-blue-500/20",
       earth: "bg-green-500/10 border-green-500/20",
       air: "bg-cyan-500/10 border-cyan-500/20",
-      aether: "bg-purple-500/10 border-purple-500/20",
+      aether: "bg-amber-500/10 border-amber-500/20",
     };
     return (
       backgrounds[element as keyof typeof backgrounds] ||

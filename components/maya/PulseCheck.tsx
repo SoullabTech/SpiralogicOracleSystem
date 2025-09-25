@@ -18,7 +18,7 @@ export default function PulseCheck({ type, onResponse, onDismiss }: PulseCheckPr
       question: "How did that land?",
       options: ['Too much', 'Just right', 'Need more'],
       icon: Heart,
-      color: 'text-purple-400'
+      color: 'text-amber-400'
     },
     resonance: {
       question: "Does this resonate?",

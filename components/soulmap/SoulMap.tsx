@@ -266,7 +266,7 @@ export function SoulMap() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-indigo-950 to-black p-6">
+    <div className="min-h-screen bg-gradient-to-br from-black via-indigo-950 to-black p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -307,7 +307,7 @@ export function SoulMap() {
                     repeat: Infinity,
                     ease: "linear"
                   }}
-                  className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 opacity-30"
+                  className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-600 to-indigo-600 opacity-30"
                 />
                 <div className="absolute inset-2 rounded-full bg-white/20" />
               </div>
@@ -416,7 +416,7 @@ export function SoulMap() {
               <h2 className="text-xl font-light text-white mb-4">Soul Insights</h2>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full mt-1.5" />
+                  <div className="w-2 h-2 bg-amber-400 rounded-full mt-1.5" />
                   <p className="text-white/80 text-sm">
                     Your soul resonates most strongly with {userArchetype?.dominantElement} energy,
                     suggesting a natural affinity for {userArchetype?.dominantElement === 'air' ? 'innovation and communication' :

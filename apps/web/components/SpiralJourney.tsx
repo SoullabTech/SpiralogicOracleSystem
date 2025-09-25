@@ -52,7 +52,7 @@ const elementMap = {
     color: '#a855f7', 
     icon: Sparkles,
     label: 'Aether',
-    bgClass: 'bg-purple-500'
+    bgClass: 'bg-amber-500'
   },
 };
 
@@ -112,9 +112,9 @@ export default function SpiralJourney({
       const ElementIcon = elementMap[node.element]?.icon || Sparkles;
       
       return (
-        <div className="bg-black/90 backdrop-blur-sm text-white p-3 rounded-lg border border-purple-500/30">
+        <div className="bg-black/90 backdrop-blur-sm text-white p-3 rounded-lg border border-amber-500/30">
           <div className="flex items-center gap-2 mb-2">
-            <ElementIcon size={16} className="text-purple-400" />
+            <ElementIcon size={16} className="text-amber-400" />
             <span className="font-semibold">
               {node.phase.charAt(0).toUpperCase() + node.phase.slice(1)}
             </span>
@@ -129,7 +129,7 @@ export default function SpiralJourney({
             </p>
           )}
           {node.emotionalTone && (
-            <p className="text-xs text-purple-300 mt-1">
+            <p className="text-xs text-amber-300 mt-1">
               Tone: {node.emotionalTone}
             </p>
           )}
@@ -187,7 +187,7 @@ export default function SpiralJourney({
         {/* Center visualization */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
-            <Sparkles className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+            <Sparkles className="w-8 h-8 text-amber-400 mx-auto mb-2" />
             <p className="text-xs text-gray-400">
               {nodes.length} Sessions
             </p>
@@ -233,7 +233,7 @@ export default function SpiralJourney({
                 }`}
               >
                 <div className={`w-2 h-2 rounded-full ${
-                  hasPhase ? 'bg-purple-500' : 'bg-gray-600'
+                  hasPhase ? 'bg-amber-500' : 'bg-gray-600'
                 }`} />
                 <span className="text-xs mt-1 text-gray-400">
                   {phase.slice(0, 3).toUpperCase()}
@@ -251,7 +251,7 @@ export default function SpiralJourney({
             "{hoveredNode.snippet}"
           </p>
           {hoveredNode.practices.length > 0 && (
-            <p className="text-xs text-purple-400 mt-2">
+            <p className="text-xs text-amber-400 mt-2">
               Practices: {hoveredNode.practices.length}
             </p>
           )}

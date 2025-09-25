@@ -262,10 +262,10 @@ export default function InternalPrismInterface() {
               <div className="space-y-3">
                 <h3 className="font-medium text-lg">Creative Tensions</h3>
                 {dialogue.tensions.map((tension, index) => (
-                  <div key={index} className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-200">
-                    <p className="font-medium text-purple-800 mb-2">{tension.nature}</p>
-                    <p className="text-sm text-purple-700 mb-2">{tension.creativeEdge}</p>
-                    <p className="text-sm text-purple-600">{tension.integration}</p>
+                  <div key={index} className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-200">
+                    <p className="font-medium text-amber-800 mb-2">{tension.nature}</p>
+                    <p className="text-sm text-amber-700 mb-2">{tension.creativeEdge}</p>
+                    <p className="text-sm text-amber-600">{tension.integration}</p>
                   </div>
                 ))}
               </div>

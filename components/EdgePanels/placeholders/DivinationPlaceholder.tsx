@@ -3,7 +3,7 @@ import React from "react";
 export const DivinationPlaceholder: React.FC = () => {
   return (
     <div className="space-y-4">
-      <div className="p-6 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-800 dark:to-gray-750 rounded-xl">
+      <div className="p-6 bg-gradient-to-br from-violet-50 to-amber-50 dark:from-gray-800 dark:to-gray-750 rounded-xl">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
           Divination Tools
         </h3>

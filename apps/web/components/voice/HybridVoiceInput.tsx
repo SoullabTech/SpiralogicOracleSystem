@@ -27,13 +27,13 @@ const auraColors: Record<string, string> = {
   fire: 'from-orange-500 to-pink-600',
   water: 'from-blue-500 to-cyan-600',
   earth: 'from-green-600 to-emerald-500',
-  air: 'from-indigo-500 to-purple-600',
+  air: 'from-indigo-500 to-amber-600',
   aether: 'from-yellow-400 to-amber-600',
-  mirror: 'from-indigo-500 to-purple-600',
-  shadow: 'from-purple-600 to-pink-600',
+  mirror: 'from-indigo-500 to-amber-600',
+  shadow: 'from-amber-600 to-pink-600',
   anima: 'from-pink-500 to-orange-500',
   self: 'from-amber-500 to-yellow-500',
-  default: 'from-purple-500 to-indigo-600'
+  default: 'from-amber-500 to-indigo-600'
 };
 
 export default function HybridVoiceInput({
@@ -277,8 +277,8 @@ export default function HybridVoiceInput({
             exit={{ opacity: 0, y: 10 }}
             className="absolute -top-8 left-0 right-0 flex justify-center"
           >
-            <div className="px-3 py-1 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-full border border-purple-500/20">
-              <span className="text-xs text-purple-600 font-medium">
+            <div className="px-3 py-1 bg-gradient-to-r from-amber-500/10 to-indigo-500/10 rounded-full border border-amber-500/20">
+              <span className="text-xs text-amber-600 font-medium">
                 {prosodyData.emotion || 'Sensing your energy...'}
               </span>
             </div>
@@ -292,7 +292,7 @@ export default function HybridVoiceInput({
           relative flex items-end gap-2 p-3 
           bg-white dark:bg-neutral-900 
           border rounded-2xl transition-all duration-300
-          ${isFocused ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-neutral-200 dark:border-neutral-700'}
+          ${isFocused ? 'border-amber-500 ring-2 ring-amber-500/20' : 'border-neutral-200 dark:border-neutral-700'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
         `}
         animate={{
@@ -345,8 +345,8 @@ export default function HybridVoiceInput({
               exit={{ opacity: 0, scale: 0.8 }}
               className="absolute inset-0 pointer-events-none"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 rounded-2xl" />
-              <div className="absolute inset-0 border-2 border-purple-500/20 rounded-2xl animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-indigo-500/5 rounded-2xl" />
+              <div className="absolute inset-0 border-2 border-amber-500/20 rounded-2xl animate-pulse" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -391,7 +391,7 @@ export default function HybridVoiceInput({
                       key={ring}
                       className={`
                         absolute inset-0 rounded-full 
-                        border-2 ${audioLevel > 0.1 ? 'border-pink-400' : 'border-purple-400'}
+                        border-2 ${audioLevel > 0.1 ? 'border-pink-400' : 'border-amber-400'}
                       `}
                       initial={{ scale: 1, opacity: 0 }}
                       animate={{
@@ -421,7 +421,7 @@ export default function HybridVoiceInput({
                 relative z-10 p-2.5 rounded-full transition-all duration-300
                 ${isVoiceActive 
                   ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white' 
-                  : 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:shadow-lg'
+                  : 'bg-gradient-to-r from-amber-500 to-indigo-600 text-white hover:shadow-lg'
                 }
                 ${disabled ? 'cursor-not-allowed opacity-50' : ''}
               `}
@@ -503,9 +503,9 @@ export default function HybridVoiceInput({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-2 p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg"
+            className="mt-2 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg"
           >
-            <p className="text-sm text-purple-700 dark:text-purple-300">
+            <p className="text-sm text-amber-700 dark:text-amber-300">
               {transcript}
             </p>
           </motion.div>

@@ -106,7 +106,7 @@ export function StreamingOracleVoicePlayer({
 
     if (isStreaming) {
       return (
-        <div className="flex items-center gap-2 text-purple-500">
+        <div className="flex items-center gap-2 text-amber-500">
           <Loader2 className="w-5 h-5 animate-spin" />
           <span className="text-sm">Maya is thinking...</span>
         </div>
@@ -161,9 +161,9 @@ export function StreamingOracleVoicePlayer({
             </p>
             {showTypingIndicator && (
               <div className="flex gap-1">
-                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
             )}
           </div>

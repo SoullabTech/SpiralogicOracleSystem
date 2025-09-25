@@ -175,7 +175,7 @@ const MayaStateView: React.FC = () => {
           animate={{
             boxShadow: `0 0 ${presence * 50}px rgba(139, 92, 246, ${presence})`
           }}
-          className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500"
+          className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-500 to-pink-500"
         >
           <MoodIndicator mood={currentMood} />
         </motion.div>
@@ -442,7 +442,7 @@ const MobileNotification: React.FC = ({ notification }) => {
       exit={{ y: -100 }}
       className="fixed top-0 inset-x-0 z-50"
     >
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 shadow-lg">
+      <div className="bg-gradient-to-r from-amber-600 to-pink-600 p-4 shadow-lg">
         <div className="flex items-center">
           <Icon>{notification.icon}</Icon>
           <div className="ml-3 flex-1">

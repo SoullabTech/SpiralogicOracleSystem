@@ -213,7 +213,7 @@ export default function ReflectionMetricsWidget() {
               onClick={() => setTimeRange(range)}
               className={`px-3 py-1 rounded text-sm transition ${
                 timeRange === range
-                  ? 'bg-white dark:bg-neutral-700 text-purple-600 dark:text-purple-400 shadow'
+                  ? 'bg-white dark:bg-neutral-700 text-amber-600 dark:text-amber-400 shadow'
                   : 'text-neutral-600 dark:text-neutral-400'
               }`}
             >
@@ -225,10 +225,10 @@ export default function ReflectionMetricsWidget() {
 
       {/* Key metrics */}
       <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-amber-50 to-indigo-50 dark:from-amber-900/20 dark:to-indigo-900/20 rounded-xl p-4">
           <div className="flex items-center justify-between mb-2">
-            <MessageSquare className="w-5 h-5 text-purple-600" />
-            <span className="text-xs text-purple-600">Total</span>
+            <MessageSquare className="w-5 h-5 text-amber-600" />
+            <span className="text-xs text-amber-600">Total</span>
           </div>
           <div className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">
             {metrics.totalSubmissions}

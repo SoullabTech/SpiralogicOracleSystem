@@ -87,7 +87,7 @@ export function OfferingTimeline({
     return (
       <div className={`flex items-center justify-center p-8 ${className}`}>
         <motion.div
-          className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500/40 to-pink-500/40"
+          className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500/40 to-pink-500/40"
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         />
@@ -108,7 +108,7 @@ export function OfferingTimeline({
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div className="space-y-2">
-              <div className="text-2xl font-bold text-purple-400">{streak}</div>
+              <div className="text-2xl font-bold text-amber-400">{streak}</div>
               <div className="text-white/60 text-sm">Current Streak</div>
             </div>
             
@@ -167,7 +167,7 @@ export function OfferingTimeline({
                     <span className={`text-xs px-2 py-1 rounded-full capitalize
                       ${item.status === 'rest' ? 'bg-green-500/20 text-green-400' :
                         item.status === 'transcendent' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-purple-500/20 text-purple-400'}`}>
+                        'bg-amber-500/20 text-amber-400'}`}>
                       {item.status}
                     </span>
                   </div>
@@ -182,7 +182,7 @@ export function OfferingTimeline({
                       {item.petal_scores.map((score, petalIndex) => (
                         <div
                           key={petalIndex}
-                          className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
+                          className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-pink-500"
                           style={{ opacity: score > 0 ? 0.8 : 0.2 }}
                         />
                       ))}

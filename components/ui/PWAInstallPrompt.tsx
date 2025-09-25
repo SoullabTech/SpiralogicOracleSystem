@@ -75,7 +75,7 @@ export const PWAInstallPrompt: React.FC = () => {
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className="fixed top-4 right-4 left-4 md:left-auto md:w-96 z-40"
         >
-          <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl shadow-2xl p-4 text-white">
+          <div className="bg-gradient-to-br from-amber-600 to-indigo-600 rounded-2xl shadow-2xl p-4 text-white">
             {/* Close button */}
             <button
               onClick={handleDismiss}
@@ -119,7 +119,7 @@ export const PWAInstallPrompt: React.FC = () => {
                   onClick={handleInstall}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full bg-white text-purple-600 font-medium py-3 px-4 rounded-xl flex items-center justify-center space-x-2 shadow-lg"
+                  className="w-full bg-white text-amber-600 font-medium py-3 px-4 rounded-xl flex items-center justify-center space-x-2 shadow-lg"
                 >
                   {isIOS ? (
                     <>
@@ -164,7 +164,7 @@ export const PWAInstallPrompt: React.FC = () => {
             className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
+            <div className="bg-gradient-to-r from-amber-600 to-indigo-600 p-6 text-white">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-xl font-bold">Install Maya on iPhone</h3>
                 <button
@@ -189,7 +189,7 @@ export const PWAInstallPrompt: React.FC = () => {
                   transition={{ delay: index * 0.1 }}
                   className="flex items-start space-x-3"
                 >
-                  <div className="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center font-semibold text-sm">
+                  <div className="flex-shrink-0 w-8 h-8 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center font-semibold text-sm">
                     {index + 1}
                   </div>
                   <p className="text-gray-700 dark:text-gray-300 pt-1">
@@ -199,8 +199,8 @@ export const PWAInstallPrompt: React.FC = () => {
               ))}
 
               {/* Visual hint */}
-              <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
-                <div className="flex items-center space-x-2 text-purple-600 dark:text-purple-400">
+              <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+                <div className="flex items-center space-x-2 text-amber-600 dark:text-amber-400">
                   <Share className="w-5 h-5" />
                   <span className="text-sm font-medium">
                     Look for this icon in Safari
@@ -211,7 +211,7 @@ export const PWAInstallPrompt: React.FC = () => {
               {/* Done button */}
               <button
                 onClick={handleDismiss}
-                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-3 rounded-xl mt-4"
+                className="w-full bg-gradient-to-r from-amber-600 to-indigo-600 text-white font-medium py-3 rounded-xl mt-4"
               >
                 Got it!
               </button>

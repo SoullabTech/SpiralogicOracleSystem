@@ -50,8 +50,8 @@ export default function ToneSlider({
     if (tone <= 0.2) return "from-slate-500 to-slate-600";
     if (tone <= 0.4) return "from-green-500 to-green-600";
     if (tone <= 0.6) return "from-blue-500 to-blue-600";
-    if (tone <= 0.8) return "from-purple-500 to-purple-600";
-    return "from-pink-500 to-purple-600";
+    if (tone <= 0.8) return "from-amber-500 to-amber-600";
+    return "from-pink-500 to-amber-600";
   };
 
   const getToneIcon = (tone: number) => {
@@ -165,7 +165,7 @@ export default function ToneSlider({
           disabled={disabled}
           className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
             localValue > 0.7
-              ? 'bg-purple-700 text-white'
+              ? 'bg-amber-700 text-white'
               : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800'
           }`}
         >

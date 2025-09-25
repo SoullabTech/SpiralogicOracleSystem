@@ -291,7 +291,7 @@ const PresenceView = ({ data, element }) => {
     water: 'from-water to-blue-500',
     earth: 'from-earth to-green-500',
     air: 'from-air to-gray-300',
-    aether: 'from-aether to-purple-500'
+    aether: 'from-aether to-amber-500'
   };
 
   return (

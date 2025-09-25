@@ -52,7 +52,7 @@ export default function SacredMomentNotification({
       case 'breakthrough':
         return {
           icon: <Sparkles className="w-6 h-6" />,
-          color: 'from-purple-400 to-pink-400',
+          color: 'from-amber-400 to-pink-400',
           title: 'Breakthrough',
           description: 'A profound shift has occurred'
         };

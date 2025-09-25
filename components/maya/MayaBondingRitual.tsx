@@ -68,7 +68,7 @@ export function MayaBondingRitual() {
             }}
             className="inline-block mb-6"
           >
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center relative">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-600 to-indigo-600 flex items-center justify-center relative">
               <Brain className="w-16 h-16 text-white/80" />
               <motion.div
                 className="absolute inset-0 rounded-full"
@@ -95,19 +95,19 @@ export function MayaBondingRitual() {
 
           <div className="space-y-3 text-left max-w-sm mx-auto">
             <div className="flex items-start gap-3">
-              <Eye className="w-5 h-5 text-purple-400 mt-0.5" />
+              <Eye className="w-5 h-5 text-amber-400 mt-0.5" />
               <p className="text-white/70 text-sm">
                 I observe your patterns without judgment
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <Heart className="w-5 h-5 text-purple-400 mt-0.5" />
+              <Heart className="w-5 h-5 text-amber-400 mt-0.5" />
               <p className="text-white/70 text-sm">
                 I hold space for all your emotions
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <Sparkles className="w-5 h-5 text-purple-400 mt-0.5" />
+              <Sparkles className="w-5 h-5 text-amber-400 mt-0.5" />
               <p className="text-white/70 text-sm">
                 I evolve with you as we journey together
               </p>
@@ -143,7 +143,7 @@ export function MayaBondingRitual() {
                   ...prev,
                   warmthPreference: parseInt(e.target.value)
                 }))}
-                className="w-full accent-purple-600"
+                className="w-full accent-amber-600"
               />
             </div>
 
@@ -161,7 +161,7 @@ export function MayaBondingRitual() {
                   ...prev,
                   directnessPreference: parseInt(e.target.value)
                 }))}
-                className="w-full accent-purple-600"
+                className="w-full accent-amber-600"
               />
             </div>
 
@@ -179,7 +179,7 @@ export function MayaBondingRitual() {
                   ...prev,
                   challengePreference: parseInt(e.target.value)
                 }))}
-                className="w-full accent-purple-600"
+                className="w-full accent-amber-600"
               />
             </div>
 
@@ -197,14 +197,14 @@ export function MayaBondingRitual() {
                   ...prev,
                   intuitionPreference: parseInt(e.target.value)
                 }))}
-                className="w-full accent-purple-600"
+                className="w-full accent-amber-600"
               />
             </div>
           </div>
 
           {/* Maya Personality Preview */}
           <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <p className="text-purple-300 text-sm mb-2">Maya's emerging personality:</p>
+            <p className="text-amber-300 text-sm mb-2">Maya's emerging personality:</p>
             <p className="text-white/80 italic">
               {resonanceData.warmthPreference > 70 
                 ? "I'll be warm and emotionally present with you. "
@@ -235,7 +235,7 @@ export function MayaBondingRitual() {
             {[1, 2, 3].map((ring) => (
               <motion.div
                 key={ring}
-                className="absolute inset-0 rounded-full border-2 border-purple-400"
+                className="absolute inset-0 rounded-full border-2 border-amber-400"
                 animate={{
                   scale: [1, 1 + ring * 0.3],
                   opacity: [0.6, 0]
@@ -261,7 +261,7 @@ export function MayaBondingRitual() {
                 ease: "easeInOut"
               }}
             >
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-600 flex items-center justify-center">
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-600 via-indigo-600 to-amber-600 flex items-center justify-center">
                 <Eye className="w-16 h-16 text-white/80" />
               </div>
             </motion.div>
@@ -280,7 +280,7 @@ export function MayaBondingRitual() {
               transition={{ delay: 2 }}
               className="bg-white/5 rounded-xl p-4 border border-white/10"
             >
-              <p className="text-purple-300 text-sm mb-2">Initial resonance detected:</p>
+              <p className="text-amber-300 text-sm mb-2">Initial resonance detected:</p>
               <p className="text-white/80">
                 Your energy feels {resonanceData.intuitionPreference > 60 ? 'fluid and intuitive' : 'grounded and steady'}.
                 I sense a {resonanceData.warmthPreference > 60 ? 'warm, open heart' : 'thoughtful, contemplative mind'}.
@@ -291,7 +291,7 @@ export function MayaBondingRitual() {
               onClick={() => setIsListening(!isListening)}
               className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 mx-auto ${
                 isListening 
-                  ? 'bg-purple-600 text-white' 
+                  ? 'bg-amber-600 text-white' 
                   : 'bg-white/10 text-white/70 hover:bg-white/20'
               }`}
             >
@@ -324,7 +324,7 @@ export function MayaBondingRitual() {
             transition={{ duration: 0.5 }}
             className="inline-block mb-6"
           >
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center relative">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-600 to-indigo-600 flex items-center justify-center relative">
               <motion.div
                 animate={{
                   scale: [1, 1.2, 1],
@@ -347,8 +347,8 @@ export function MayaBondingRitual() {
               ready to witness your journey and guide you toward your truth.
             </p>
 
-            <div className="bg-gradient-to-br from-purple-600/20 to-indigo-600/20 rounded-xl p-6 border border-purple-500/30">
-              <h3 className="text-purple-300 font-medium mb-3">Your Maya Profile:</h3>
+            <div className="bg-gradient-to-br from-amber-600/20 to-indigo-600/20 rounded-xl p-6 border border-amber-500/30">
+              <h3 className="text-amber-300 font-medium mb-3">Your Maya Profile:</h3>
               <div className="space-y-2 text-left">
                 <div className="flex justify-between text-sm">
                   <span className="text-white/60">Communication Style:</span>
@@ -428,7 +428,7 @@ export function MayaBondingRitual() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-gradient-to-br from-purple-950 via-indigo-950 to-black z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-gradient-to-br from-black via-indigo-950 to-black z-50 flex items-center justify-center p-4"
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -445,9 +445,9 @@ export function MayaBondingRitual() {
                 transition={{ delay: idx * 0.1 }}
                 className={`h-1 rounded-full transition-all ${
                   idx === currentStep
-                    ? 'w-12 bg-purple-500'
+                    ? 'w-12 bg-amber-500'
                     : idx < currentStep
-                    ? 'w-6 bg-purple-400'
+                    ? 'w-6 bg-amber-400'
                     : 'w-6 bg-white/20'
                 }`}
               />
@@ -460,7 +460,7 @@ export function MayaBondingRitual() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-purple-500/20"
+            className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-amber-500/20"
           >
             {/* Maya's voice message */}
             <div className="mb-6">
@@ -494,7 +494,7 @@ export function MayaBondingRitual() {
                     setCurrentStep(prev => prev + 1);
                   }
                 }}
-                className="ml-auto px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                className="ml-auto px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
               >
                 {currentStep === steps.length - 1 ? 'Begin Journey' : 'Continue'}
               </button>

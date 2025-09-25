@@ -151,7 +151,7 @@ export function SacredNatalChart({
         
         <motion.button
           onClick={generateSacredReading}
-          className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg"
+          className="p-2 bg-gradient-to-r from-amber-500 to-pink-500 rounded-lg"
           whileTap={{ scale: 0.95 }}
         >
           <Sparkles className="w-5 h-5 text-white" />
@@ -184,7 +184,7 @@ export function SacredNatalChart({
 
       {/* Main Chart Container */}
       <motion.div
-        className="relative aspect-square bg-gradient-to-br from-purple-900/20 to-black rounded-3xl overflow-hidden"
+        className="relative aspect-square bg-gradient-to-br from-amber-900/20 to-black rounded-3xl overflow-hidden"
         animate={controls}
         style={{
           transform: `scale(${zoomLevel})`
@@ -467,14 +467,14 @@ export function SacredNatalChart({
               exit={{ opacity: 0 }}
             >
               <div className="max-w-md text-center text-white">
-                <Sparkles className="w-12 h-12 mx-auto mb-4 text-purple-400" />
+                <Sparkles className="w-12 h-12 mx-auto mb-4 text-amber-400" />
                 <h3 className="text-2xl font-light mb-4">Sacred Reflection</h3>
                 <p className="text-lg leading-relaxed opacity-90">
                   "Your fire burns brightly in the 9th house — a restless spirit seeking truth across horizons. 
                   Water flows through your emotional depths, while earth grounds your ambitions in practical wisdom."
                 </p>
                 <button
-                  className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                  className="mt-6 px-6 py-3 bg-gradient-to-r from-amber-500 to-pink-500 rounded-full"
                   onClick={() => setShowReading(false)}
                 >
                   Close Reading

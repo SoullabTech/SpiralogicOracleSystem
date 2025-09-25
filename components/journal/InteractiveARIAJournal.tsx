@@ -267,7 +267,7 @@ export const InteractiveARIAJournal: React.FC = () => {
     water: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
     earth: 'text-green-400 bg-green-400/10 border-green-400/30',
     air: 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30',
-    aether: 'text-purple-400 bg-purple-400/10 border-purple-400/30'
+    aether: 'text-amber-400 bg-amber-400/10 border-amber-400/30'
   };
 
   return (
@@ -276,18 +276,18 @@ export const InteractiveARIAJournal: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-black/40 backdrop-blur-md border border-purple-400/20 rounded-xl p-4"
+        className="bg-black/40 backdrop-blur-md border border-amber-400/20 rounded-xl p-4"
       >
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <Brain className="w-5 h-5 text-purple-400" />
-            <span className="text-sm text-purple-300">ARIA Presence</span>
+            <Brain className="w-5 h-5 text-amber-400" />
+            <span className="text-sm text-amber-300">ARIA Presence</span>
           </div>
-          <span className="text-sm text-purple-400">{ariaPresence}%</span>
+          <span className="text-sm text-amber-400">{ariaPresence}%</span>
         </div>
         <div className="w-full bg-black/30 rounded-full h-2 overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-purple-500 to-purple-400"
+            className="h-full bg-gradient-to-r from-amber-500 to-amber-400"
             initial={{ width: 0 }}
             animate={{ width: `${ariaPresence}%` }}
             transition={{ duration: 1 }}
@@ -352,7 +352,7 @@ export const InteractiveARIAJournal: React.FC = () => {
               onClick={() => setVoiceEnabled(!voiceEnabled)}
               className={`p-2 rounded-lg transition-all ${
                 voiceEnabled
-                  ? 'bg-purple-500/20 text-purple-400 border border-purple-400/30'
+                  ? 'bg-amber-500/20 text-amber-400 border border-amber-400/30'
                   : 'bg-white/5 text-white/50 hover:text-white/70 border border-white/10'
               }`}
               title={voiceEnabled ? 'Disable voice responses' : 'Enable voice responses'}
@@ -366,7 +366,7 @@ export const InteractiveARIAJournal: React.FC = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Begin your sacred reflection..."
-          className="w-full h-48 p-3 bg-black/20 border border-white/5 rounded-lg text-white placeholder-white/30 resize-none focus:outline-none focus:border-purple-400/30"
+          className="w-full h-48 p-3 bg-black/20 border border-white/5 rounded-lg text-white placeholder-white/30 resize-none focus:outline-none focus:border-amber-400/30"
         />
 
         {isListening && (
@@ -403,7 +403,7 @@ export const InteractiveARIAJournal: React.FC = () => {
                         element === 'water' ? 'bg-blue-400' :
                         element === 'earth' ? 'bg-green-400' :
                         element === 'air' ? 'bg-cyan-400' :
-                        'bg-purple-400'
+                        'bg-amber-400'
                       }`}
                       initial={{ width: 0 }}
                       animate={{ width: `${value}%` }}
@@ -423,7 +423,7 @@ export const InteractiveARIAJournal: React.FC = () => {
         disabled={!content.trim() || isProcessing}
         className={`w-full py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
           content.trim() && !isProcessing
-            ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700'
+            ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700'
             : 'bg-white/5 text-white/30 cursor-not-allowed'
         }`}
         whileHover={{ scale: content.trim() && !isProcessing ? 1.02 : 1 }}
@@ -452,19 +452,19 @@ export const InteractiveARIAJournal: React.FC = () => {
             className="space-y-4"
           >
             {/* Sacred Mirror Reflection */}
-            <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 backdrop-blur-md border border-purple-400/20 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-amber-900/20 to-blue-900/20 backdrop-blur-md border border-amber-400/20 rounded-xl p-5">
               <div className="flex items-start gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
-                  <Brain className="w-5 h-5 text-purple-400" />
+                <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                  <Brain className="w-5 h-5 text-amber-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-purple-300 mb-1">Maya's Sacred Mirror</p>
+                  <p className="text-sm text-amber-300 mb-1">Maya's Sacred Mirror</p>
                   <p className="text-white/80 leading-relaxed">{mayaResponse.reflection}</p>
                 </div>
               </div>
 
               {/* Elemental Guidance */}
-              <div className="border-t border-purple-400/10 pt-4">
+              <div className="border-t border-amber-400/10 pt-4">
                 <div className="flex items-center gap-2 mb-2">
                   {elementIcons[mayaResponse.element as keyof typeof elementIcons]}
                   <span className="text-sm text-white/70 capitalize">
@@ -476,10 +476,10 @@ export const InteractiveARIAJournal: React.FC = () => {
 
               {/* Sacred Insight */}
               {mayaResponse.sacredInsight && (
-                <div className="mt-4 p-3 bg-purple-500/10 rounded-lg border border-purple-400/20">
+                <div className="mt-4 p-3 bg-amber-500/10 rounded-lg border border-amber-400/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <Compass className="w-4 h-4 text-purple-400" />
-                    <span className="text-xs text-purple-300">Sacred Insight</span>
+                    <Compass className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs text-amber-300">Sacred Insight</span>
                   </div>
                   <p className="text-white/70 text-sm">{mayaResponse.sacredInsight}</p>
                 </div>
@@ -487,17 +487,17 @@ export const InteractiveARIAJournal: React.FC = () => {
 
               {/* Emotional Resonance */}
               <div className="mt-4 flex items-center gap-3">
-                <Activity className="w-4 h-4 text-purple-400" />
+                <Activity className="w-4 h-4 text-amber-400" />
                 <span className="text-xs text-white/50">Emotional Resonance:</span>
                 <div className="flex-1 bg-black/30 rounded-full h-1.5 overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-purple-400 to-blue-400"
+                    className="h-full bg-gradient-to-r from-amber-400 to-blue-400"
                     initial={{ width: 0 }}
                     animate={{ width: `${mayaResponse.resonance}%` }}
                     transition={{ duration: 1 }}
                   />
                 </div>
-                <span className="text-xs text-purple-400">{Math.round(mayaResponse.resonance)}%</span>
+                <span className="text-xs text-amber-400">{Math.round(mayaResponse.resonance)}%</span>
               </div>
 
               {/* Voice Controls */}

@@ -62,12 +62,12 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 bg-gradient-to-br from-purple-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"
+            className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"
           >
             <Crown className="w-8 h-8 text-white" />
           </motion.div>
@@ -78,7 +78,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <motion.div 
@@ -93,7 +93,7 @@ export default function DashboardPage() {
             </div>
             <div className="flex items-center space-x-3">
               <Link href="/oracle/settings">
-                <Button variant="outline" size="sm" className="border-purple-500/20 hover:bg-purple-500/10">
+                <Button variant="outline" size="sm" className="border-amber-500/20 hover:bg-amber-500/10">
                   <Settings className="w-4 h-4 mr-2" />
                   Settings
                 </Button>
@@ -115,7 +115,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
         >
-          <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+          <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -129,7 +129,7 @@ export default function DashboardPage() {
                     {stats.conversations}
                   </motion.p>
                 </div>
-                <MessageCircle className="w-8 h-8 text-purple-400" />
+                <MessageCircle className="w-8 h-8 text-amber-400" />
               </div>
             </CardContent>
           </Card>
@@ -200,10 +200,10 @@ export default function DashboardPage() {
           className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
           {/* Recent Activity */}
-          <Card className="lg:col-span-2 bg-background/80 backdrop-blur-xl border-purple-500/20">
+          <Card className="lg:col-span-2 bg-background/80 backdrop-blur-xl border-amber-500/20">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5 text-purple-400" />
+                <Clock className="w-5 h-5 text-amber-400" />
                 <span>Recent Activity</span>
               </CardTitle>
             </CardHeader>
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                     className="flex items-center space-x-3 p-3 rounded-lg bg-background/50 hover:bg-background/70 transition-colors"
                   >
                     <div className={`w-2 h-2 rounded-full ${
-                      item.type === 'chat' ? 'bg-purple-400' :
+                      item.type === 'chat' ? 'bg-amber-400' :
                       item.type === 'astrology' ? 'bg-orange-400' :
                       item.type === 'journal' ? 'bg-green-400' :
                       'bg-blue-400'
@@ -234,10 +234,10 @@ export default function DashboardPage() {
           </Card>
 
           {/* Quick Actions */}
-          <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+          <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Target className="w-5 h-5 text-purple-400" />
+                <Target className="w-5 h-5 text-amber-400" />
                 <span>Quick Actions</span>
               </CardTitle>
             </CardHeader>
@@ -247,7 +247,7 @@ export default function DashboardPage() {
                 whileTap={{ scale: 0.98 }}
               >
                 <Link href="/oracle">
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600">
+                  <Button className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600">
                     <Crown className="w-4 h-4 mr-2" />
                     Chat with Oracle
                   </Button>

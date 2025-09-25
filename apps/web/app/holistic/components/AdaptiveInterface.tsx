@@ -75,7 +75,7 @@ export const AdaptiveInterface: React.FC<AdaptiveInterfaceProps> = ({
         label: "Seeking Clarity",
       },
       [UserState.DISCONNECTED]: {
-        color: "text-purple-600",
+        color: "text-amber-600",
         icon: "🌊",
         label: "Disconnected",
       },

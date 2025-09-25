@@ -202,7 +202,7 @@ export function LibraryTable({ className = '', onFileSelect, onRefresh }: Librar
       'text/plain': 'text-blue-400',
       'text/markdown': 'text-green-400',
       'application/json': 'text-yellow-400',
-      'text/csv': 'text-purple-400'
+      'text/csv': 'text-amber-400'
     };
     return iconMap[mimeType] || 'text-gray-400';
   };

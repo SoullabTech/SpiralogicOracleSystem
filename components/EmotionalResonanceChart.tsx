@@ -55,7 +55,7 @@ export default function EmotionalResonanceChart({ userId, className = "" }: Emot
     switch (dimension) {
       case 'valence': return 'from-pink-500 to-rose-600';
       case 'arousal': return 'from-orange-500 to-amber-600'; 
-      case 'dominance': return 'from-purple-500 to-indigo-600';
+      case 'dominance': return 'from-amber-500 to-indigo-600';
       default: return 'from-gray-500 to-gray-600';
     }
   };
@@ -107,21 +107,21 @@ export default function EmotionalResonanceChart({ userId, className = "" }: Emot
 
   if (loading) {
     return (
-      <div className={` from-slate-800/50 to-purple-900/20 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 ${className}`}>
+      <div className={` from-slate-800/50 to-amber-900/20 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-6 ${className}`}>
         <div className="flex items-center justify-center h-48">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-          <span className="ml-2 text-purple-300">Loading emotional resonance...</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+          <span className="ml-2 text-amber-300">Loading emotional resonance...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={` from-slate-800/50 to-purple-900/20 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 ${className}`}>
+    <div className={` from-slate-800/50 to-amber-900/20 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-6 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2  from-pink-500 to-purple-600 rounded-lg">
+          <div className="p-2  from-pink-500 to-amber-600 rounded-lg">
             <Activity className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -138,7 +138,7 @@ export default function EmotionalResonanceChart({ userId, className = "" }: Emot
               onClick={() => setTimeframe(period)}
               className={`px-3 py-1.5 text-sm rounded-md transition-all ${
                 timeframe === period
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-amber-600 text-white'
                   : 'text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
               }`}
             >
@@ -152,8 +152,8 @@ export default function EmotionalResonanceChart({ userId, className = "" }: Emot
       {currentState && (
         <div className="mb-6 p-4 bg-gray-800/30 rounded-xl">
           <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-4 h-4 text-purple-400" />
-            <span className="text-sm font-medium text-purple-300">Current Resonance</span>
+            <TrendingUp className="w-4 h-4 text-amber-400" />
+            <span className="text-sm font-medium text-amber-300">Current Resonance</span>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -186,8 +186,8 @@ export default function EmotionalResonanceChart({ userId, className = "" }: Emot
             })}
           </div>
           
-          <div className="mt-4 p-3  from-purple-500/10 to-pink-500/10 rounded-lg">
-            <p className="text-sm text-purple-200">{currentState.insight}</p>
+          <div className="mt-4 p-3  from-amber-500/10 to-pink-500/10 rounded-lg">
+            <p className="text-sm text-amber-200">{currentState.insight}</p>
           </div>
         </div>
       )}
@@ -232,7 +232,7 @@ export default function EmotionalResonanceChart({ userId, className = "" }: Emot
                       initial={{ height: 0 }}
                       animate={{ height: `${dominanceHeight}%` }}
                       transition={{ duration: 0.6, delay: index * 0.05 }}
-                      className="flex-1  from-purple-600 to-purple-400 rounded-t-sm min-h-[2px]"
+                      className="flex-1  from-amber-600 to-amber-400 rounded-t-sm min-h-[2px]"
                       title={`${new Date(trend.date).toLocaleDateString()}: Inner Strength ${trend.avg_dominance.toFixed(2)}`}
                     />
                   </div>
@@ -257,7 +257,7 @@ export default function EmotionalResonanceChart({ userId, className = "" }: Emot
             <span className="text-gray-400">Energy Level</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3  from-purple-600 to-purple-400 rounded"></div>
+            <div className="w-3 h-3  from-amber-600 to-amber-400 rounded"></div>
             <span className="text-gray-400">Inner Strength</span>
           </div>
         </div>

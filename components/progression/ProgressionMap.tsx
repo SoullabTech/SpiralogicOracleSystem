@@ -253,7 +253,7 @@ export const ProgressionMap: React.FC<ProgressionMapProps> = ({
               
               <span className={`text-xs mt-1 font-medium ${
                 archetype.name === currentArchetype.name 
-                  ? 'text-purple-600' 
+                  ? 'text-amber-600' 
                   : 'text-gray-500'
               }`}>
                 {archetype.name}
@@ -265,7 +265,7 @@ export const ProgressionMap: React.FC<ProgressionMapProps> = ({
         {/* Progress bar */}
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-1000"
+            className="h-full bg-gradient-to-r from-blue-400 to-amber-500 transition-all duration-1000"
             style={{
               width: `${(userProgress.totalSessions / (nextArchetype?.threshold.sessions || userProgress.totalSessions)) * 100}%`
             }}
@@ -317,7 +317,7 @@ export const ProgressionMap: React.FC<ProgressionMapProps> = ({
   );
 
   return (
-    <div className="progression-map bg-gradient-to-br from-purple-50 to-white rounded-xl shadow-sm p-6">
+    <div className="progression-map bg-gradient-to-br from-amber-50 to-white rounded-xl shadow-sm p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -333,7 +333,7 @@ export const ProgressionMap: React.FC<ProgressionMapProps> = ({
             onClick={() => setActiveView('spiral')}
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               activeView === 'spiral'
-                ? 'bg-purple-100 text-purple-700'
+                ? 'bg-amber-100 text-amber-700'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -343,7 +343,7 @@ export const ProgressionMap: React.FC<ProgressionMapProps> = ({
             onClick={() => setActiveView('linear')}
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               activeView === 'linear'
-                ? 'bg-purple-100 text-purple-700'
+                ? 'bg-amber-100 text-amber-700'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -360,7 +360,7 @@ export const ProgressionMap: React.FC<ProgressionMapProps> = ({
       {/* Stats summary */}
       <div className="mt-6 grid grid-cols-4 gap-4 text-center">
         <div>
-          <div className="text-2xl font-bold text-purple-600">
+          <div className="text-2xl font-bold text-amber-600">
             {userProgress.totalSessions}
           </div>
           <div className="text-xs text-gray-500">Sessions</div>

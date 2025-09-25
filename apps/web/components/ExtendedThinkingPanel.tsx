@@ -167,7 +167,7 @@ export default function ExtendedThinkingPanel({
                       </span>
                     )}
                     {step.metadata.jungianMapping && (
-                      <span className="px-2 py-1 bg-purple-900/30 text-purple-400 text-xs rounded">
+                      <span className="px-2 py-1 bg-amber-900/30 text-amber-400 text-xs rounded">
                         {step.metadata.jungianMapping}
                       </span>
                     )}

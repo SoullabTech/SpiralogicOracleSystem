@@ -153,7 +153,7 @@ export default function EnhancedMirrorView({
                 animate={{ rotate: mode === 'voice' ? 360 : 0 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="w-6 h-6 text-purple-500" />
+                <Sparkles className="w-6 h-6 text-amber-500" />
               </motion.div>
               <h1 className="text-xl font-light text-neutral-700 dark:text-neutral-300">
                 Sacred Mirror
@@ -167,7 +167,7 @@ export default function EnhancedMirrorView({
                 className={`
                   px-4 py-2 rounded-full flex items-center gap-2 transition-all
                   ${mode === 'text' 
-                    ? 'bg-white dark:bg-neutral-700 shadow-md text-purple-600 dark:text-purple-400' 
+                    ? 'bg-white dark:bg-neutral-700 shadow-md text-amber-600 dark:text-amber-400' 
                     : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
                   }
                 `}
@@ -181,7 +181,7 @@ export default function EnhancedMirrorView({
                 className={`
                   px-4 py-2 rounded-full flex items-center gap-2 transition-all
                   ${mode === 'hybrid' 
-                    ? 'bg-white dark:bg-neutral-700 shadow-md text-purple-600 dark:text-purple-400' 
+                    ? 'bg-white dark:bg-neutral-700 shadow-md text-amber-600 dark:text-amber-400' 
                     : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
                   }
                 `}
@@ -198,7 +198,7 @@ export default function EnhancedMirrorView({
                 className={`
                   px-4 py-2 rounded-full flex items-center gap-2 transition-all
                   ${mode === 'voice' 
-                    ? 'bg-white dark:bg-neutral-700 shadow-md text-purple-600 dark:text-purple-400' 
+                    ? 'bg-white dark:bg-neutral-700 shadow-md text-amber-600 dark:text-amber-400' 
                     : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
                   }
                 `}
@@ -227,7 +227,7 @@ export default function EnhancedMirrorView({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-purple-500/20 to-indigo-500/20 backdrop-blur-md"
+              className="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-amber-500/20 to-indigo-500/20 backdrop-blur-md"
             >
               <motion.div
                 animate={{

@@ -22,7 +22,7 @@ const elementIcons: Record<string, JSX.Element> = {
   water: <Droplets className="h-4 w-4 text-blue-500" />,
   earth: <Leaf className="h-4 w-4 text-green-600" />,
   air: <Wind className="h-4 w-4 text-gray-400" />,
-  aether: <Sparkles className="h-4 w-4 text-purple-500" />,
+  aether: <Sparkles className="h-4 w-4 text-amber-500" />,
 };
 
 export default function WeeklySpiralSummary() {

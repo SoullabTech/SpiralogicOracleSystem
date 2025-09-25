@@ -53,9 +53,9 @@ export default function HelpPage() {
 
         {/* Troubleshooting */}
         <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700
-                      hover:border-purple-300 dark:hover:border-purple-600 transition-colors cursor-pointer">
+                      hover:border-amber-300 dark:hover:border-amber-600 transition-colors cursor-pointer">
           <div className="flex items-center gap-3 mb-4">
-            <HelpCircle className="w-6 h-6 text-purple-500" />
+            <HelpCircle className="w-6 h-6 text-amber-500" />
             <h3 className="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
               Troubleshooting
             </h3>
@@ -63,7 +63,7 @@ export default function HelpPage() {
           <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
             Common issues and solutions for voice, audio, and connection problems.
           </p>
-          <button className="text-sm text-purple-600 dark:text-purple-400 hover:underline">
+          <button className="text-sm text-amber-600 dark:text-amber-400 hover:underline">
             Get Help →
           </button>
         </div>

@@ -130,12 +130,12 @@ export default function MaiaBubble({
         className="flex items-start gap-3 mb-4"
       >
         <div className="flex-1">
-          <div className="inline-block px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30">
+          <div className="inline-block px-4 py-3 rounded-2xl bg-gradient-to-r from-amber-100 to-indigo-100 dark:from-amber-900/30 dark:to-indigo-900/30">
             <div className="flex items-center gap-1">
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
-                  className="w-2 h-2 bg-purple-600 dark:bg-purple-400 rounded-full"
+                  className="w-2 h-2 bg-amber-600 dark:bg-amber-400 rounded-full"
                   animate={{
                     y: [0, -8, 0],
                   }}
@@ -164,7 +164,7 @@ export default function MaiaBubble({
       <div className="flex-1">
         {/* Main bubble with voice-reactive scale */}
         <motion.div
-          className="relative inline-block max-w-[85%] px-5 py-3 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg"
+          className="relative inline-block max-w-[85%] px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-indigo-600 text-white shadow-lg"
           animate={{
             scale: isPlaying ? 1 + (audioLevel * 0.05) : 1,
           }}
@@ -173,7 +173,7 @@ export default function MaiaBubble({
           {/* Voice-synced subtle glow */}
           {isPlaying && (
             <motion.div
-              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 blur-xl opacity-40"
+              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-indigo-600 blur-xl opacity-40"
               animate={{
                 opacity: 0.2 + (audioLevel * 0.3),
                 scale: 1 + (audioLevel * 0.1),
@@ -196,15 +196,15 @@ export default function MaiaBubble({
               whileTap={{ scale: 0.95 }}
             >
               {isPlaying ? (
-                <Pause className="w-4 h-4 text-purple-600" />
+                <Pause className="w-4 h-4 text-amber-600" />
               ) : (
-                <Volume2 className="w-4 h-4 text-purple-600" />
+                <Volume2 className="w-4 h-4 text-amber-600" />
               )}
               
               {/* Simple playback ring */}
               {isPlaying && (
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-purple-400"
+                  className="absolute inset-0 rounded-full border-2 border-amber-400"
                   animate={{
                     scale: [1, 1.5, 1],
                     opacity: [0.6, 0, 0.6],

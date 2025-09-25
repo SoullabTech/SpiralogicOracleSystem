@@ -71,7 +71,7 @@ export function EdgePanel({
         )}
       >
         {/* Panel Header */}
-        <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850">
+        <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-amber-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             {title}
           </h2>
@@ -92,10 +92,10 @@ export function EdgePanel({
         </div>
 
         {/* Panel Footer */}
-        <footer className="p-3 border-t border-gray-200 dark:border-gray-700 text-center bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850">
+        <footer className="p-3 border-t border-gray-200 dark:border-gray-700 text-center bg-gradient-to-r from-amber-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850">
           <button
             onClick={() => handleToggle(false)}
-            className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium transition-colors"
+            className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium transition-colors"
           >
             Return to Oracle
           </button>
@@ -106,8 +106,8 @@ export function EdgePanel({
           onClick={() => handleToggle(!open)}
           className={clsx(
             "absolute flex items-center justify-center",
-            "bg-gradient-to-br from-purple-500 to-indigo-600",
-            "hover:from-purple-600 hover:to-indigo-700",
+            "bg-gradient-to-br from-amber-500 to-indigo-600",
+            "hover:from-amber-600 hover:to-indigo-700",
             "text-white shadow-lg transition-all duration-300",
             "backdrop-blur-sm bg-opacity-90",
             handleClasses[edge]

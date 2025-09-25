@@ -127,7 +127,7 @@ export default function UserVoiceSettings({
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <RefreshCw className="w-6 h-6 animate-spin text-purple-400" />
+        <RefreshCw className="w-6 h-6 animate-spin text-amber-400" />
       </div>
     );
   }
@@ -137,7 +137,7 @@ export default function UserVoiceSettings({
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <Settings className="w-5 h-5 text-purple-400" />
+          <Settings className="w-5 h-5 text-amber-400" />
           <h2 className="text-xl font-semibold text-white">Voice & Personality Settings</h2>
         </div>
         {onClose && (
@@ -187,7 +187,7 @@ export default function UserVoiceSettings({
               onChange={(e) => setSettings({ ...settings, adaptiveLearning: e.target.checked })}
               className="sr-only peer"
             />
-            <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+            <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
           </label>
         </div>
 
@@ -205,7 +205,7 @@ export default function UserVoiceSettings({
                 onClick={() => setSettings({ ...settings, preferredGreetingTime: option.value as any })}
                 className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                   settings.preferredGreetingTime === option.value
-                    ? 'bg-purple-600 text-white'
+                    ? 'bg-amber-600 text-white'
                     : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                 }`}
               >
@@ -226,7 +226,7 @@ export default function UserVoiceSettings({
                 type="checkbox"
                 checked={settings.elementalBalance}
                 onChange={(e) => setSettings({ ...settings, elementalBalance: e.target.checked })}
-                className="w-4 h-4 text-purple-600 bg-slate-700 border-slate-600 rounded focus:ring-purple-500"
+                className="w-4 h-4 text-amber-600 bg-slate-700 border-slate-600 rounded focus:ring-amber-500"
               />
             </label>
             
@@ -236,7 +236,7 @@ export default function UserVoiceSettings({
                 type="checkbox"
                 checked={settings.symbolRecognition}
                 onChange={(e) => setSettings({ ...settings, symbolRecognition: e.target.checked })}
-                className="w-4 h-4 text-purple-600 bg-slate-700 border-slate-600 rounded focus:ring-purple-500"
+                className="w-4 h-4 text-amber-600 bg-slate-700 border-slate-600 rounded focus:ring-amber-500"
               />
             </label>
           </div>
@@ -244,8 +244,8 @@ export default function UserVoiceSettings({
 
         {/* Preview Text */}
         {previewGreeting && (
-          <div className="p-4 bg-purple-900/20 border border-purple-700/30 rounded-lg">
-            <p className="text-sm text-purple-200 italic">
+          <div className="p-4 bg-amber-900/20 border border-amber-700/30 rounded-lg">
+            <p className="text-sm text-amber-200 italic">
               {previewGreeting}
             </p>
           </div>
@@ -274,7 +274,7 @@ export default function UserVoiceSettings({
           <button
             onClick={saveSettings}
             disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
           >
             {saving ? (
               <RefreshCw className="w-4 h-4 animate-spin" />

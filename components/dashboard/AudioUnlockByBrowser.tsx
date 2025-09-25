@@ -66,7 +66,7 @@ export default function AudioUnlockByBrowser() {
 
   const getPlatformIcon = (platforms: string[]) => {
     if (platforms.includes('mobile')) return <Smartphone className="w-4 h-4 text-blue-400" />;
-    if (platforms.includes('tablet')) return <Tablet className="w-4 h-4 text-purple-400" />;
+    if (platforms.includes('tablet')) return <Tablet className="w-4 h-4 text-amber-400" />;
     return <Monitor className="w-4 h-4 text-green-400" />;
   };
 
@@ -111,7 +111,7 @@ export default function AudioUnlockByBrowser() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold flex items-center gap-2">
-          <Globe className="w-5 h-5 text-purple-400" />
+          <Globe className="w-5 h-5 text-amber-400" />
           Browser Compatibility Matrix
         </h3>
         
@@ -119,7 +119,7 @@ export default function AudioUnlockByBrowser() {
         <select
           value={days}
           onChange={(e) => setDays(Number(e.target.value))}
-          className="bg-neutral-700 text-white text-sm rounded px-2 py-1 border border-neutral-600 focus:outline-none focus:border-purple-400"
+          className="bg-neutral-700 text-white text-sm rounded px-2 py-1 border border-neutral-600 focus:outline-none focus:border-amber-400"
         >
           <option value={7}>7 days</option>
           <option value={14}>14 days</option>
@@ -200,8 +200,8 @@ export default function AudioUnlockByBrowser() {
 
       {/* Insights */}
       {stats.length > 0 && (
-        <div className="mt-6 p-4 bg-purple-900/20 rounded-lg border border-purple-700/30">
-          <h4 className="text-sm font-semibold text-purple-300 mb-2">💡 Key Insights</h4>
+        <div className="mt-6 p-4 bg-amber-900/20 rounded-lg border border-amber-700/30">
+          <h4 className="text-sm font-semibold text-amber-300 mb-2">💡 Key Insights</h4>
           <ul className="space-y-1 text-xs text-neutral-300">
             {stats.some(s => s.browser.toLowerCase().includes('safari') && s.successRate < 80) && (
               <li>• Safari users may need an extra tap to enable audio (iOS limitation)</li>

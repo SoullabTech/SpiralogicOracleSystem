@@ -360,13 +360,13 @@ const RightVisualizationPanel: React.FC = () => {
       <div className="absolute top-4 right-4 space-y-2">
         <button
           onClick={() => setIsPulsing(!isPulsing)}
-          className="bg-purple-600/20 backdrop-blur-sm text-white px-3 py-1 rounded text-xs"
+          className="bg-amber-600/20 backdrop-blur-sm text-white px-3 py-1 rounded text-xs"
         >
           {isPulsing ? 'Pause' : 'Resume'}
         </button>
         <button
           onClick={() => setShowStats(!showStats)}
-          className="bg-purple-600/20 backdrop-blur-sm text-white px-3 py-1 rounded text-xs"
+          className="bg-amber-600/20 backdrop-blur-sm text-white px-3 py-1 rounded text-xs"
         >
           {showStats ? 'Hide' : 'Show'} Info
         </button>
@@ -378,7 +378,7 @@ const RightVisualizationPanel: React.FC = () => {
           <div className="font-medium mb-1">Field Resonances</div>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-purple-500" />
+              <div className="w-2 h-2 rounded-full bg-amber-500" />
               <span className="text-gray-300">Sacred</span>
             </div>
             <div className="flex items-center gap-2">
@@ -402,7 +402,7 @@ const RightVisualizationPanel: React.FC = () => {
         <div className="absolute top-16 right-4 bg-black/70 backdrop-blur-sm text-white p-3 rounded text-xs space-y-2">
           <div>
             <div className="text-gray-400">Overall Coherence</div>
-            <div className="text-lg font-bold text-purple-400">
+            <div className="text-lg font-bold text-amber-400">
               {(fieldResonances.reduce((sum, r) => sum + r.amplitude, 0) / fieldResonances.length * 100).toFixed(0)}%
             </div>
           </div>
@@ -420,7 +420,7 @@ const RightVisualizationPanel: React.FC = () => {
           </div>
           <div className="space-y-1">
             <div className="text-gray-400">Transformation Rate</div>
-            <div className="text-lg font-bold text-purple-400">
+            <div className="text-lg font-bold text-amber-400">
               {(driftParticles.filter(p => p.type === 'transformation').length / Math.max(1, driftParticles.length) * 100).toFixed(0)}%
             </div>
           </div>
@@ -431,7 +431,7 @@ const RightVisualizationPanel: React.FC = () => {
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
         <div className="flex justify-between text-xs text-gray-300">
           <div>Field Integrity: <span className="text-green-400">Stable</span></div>
-          <div>Pattern Recognition: <span className="text-purple-400">Active</span></div>
+          <div>Pattern Recognition: <span className="text-amber-400">Active</span></div>
           <div>Immune Response: <span className="text-blue-400">Learning</span></div>
         </div>
       </div>

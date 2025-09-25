@@ -66,15 +66,15 @@ export const OracleBetaUI: React.FC = () => {
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="What's on your heart today?"
                   className="w-full p-4 border border-gray-200 rounded-lg 
-                           focus:border-purple-400 focus:outline-none 
+                           focus:border-amber-400 focus:outline-none 
                            resize-none h-32 text-gray-700"
                   disabled={loading}
                 />
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="mt-4 w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 
-                           text-white rounded-lg font-medium hover:from-purple-600 
+                  className="mt-4 w-full py-3 bg-gradient-to-r from-amber-500 to-indigo-500 
+                           text-white rounded-lg font-medium hover:from-amber-600 
                            hover:to-indigo-600 disabled:opacity-50 transition-all"
                 >
                   {loading ? (
@@ -101,7 +101,7 @@ export const OracleBetaUI: React.FC = () => {
                              ${isExpanded ? 'max-h-[600px]' : 'max-h-0'}`}>
                 <div className="p-6 space-y-6">
                   {/* Reflection */}
-                  <div className="border-l-4 border-purple-400 pl-4">
+                  <div className="border-l-4 border-amber-400 pl-4">
                     <h3 className="text-sm font-semibold text-gray-600 mb-2">
                       REFLECTION
                     </h3>
@@ -145,7 +145,7 @@ export const OracleBetaUI: React.FC = () => {
                                 element === 'water' ? 'bg-blue-400' :
                                 element === 'earth' ? 'bg-green-400' :
                                 element === 'air' ? 'bg-yellow-400' :
-                                'bg-purple-400'
+                                'bg-amber-400'
                               }`}
                               style={{ width: `${value * 100}%` }}
                             />

@@ -148,7 +148,7 @@ export default function VoiceRecorder({
       water: 'text-blue-400', 
       earth: 'text-green-400',
       air: 'text-yellow-400',
-      aether: 'text-purple-400'
+      aether: 'text-amber-400'
     };
     return colors[element] || 'text-white';
   };
@@ -898,7 +898,7 @@ export default function VoiceRecorder({
 
             <div className="flex justify-between">
               <span className="text-gray-300">Last Speech:</span>
-              <span className="text-purple-400">{Math.round(debugInfo.timeSinceLastSpeech / 1000)}s ago</span>
+              <span className="text-amber-400">{Math.round(debugInfo.timeSinceLastSpeech / 1000)}s ago</span>
             </div>
 
             <div className="flex justify-between">
@@ -956,14 +956,14 @@ export default function VoiceRecorder({
 
       {/* 🌀 Enhanced Jungian Prosody Debug Panel (Development Only) */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="absolute top-full right-0 mt-2 p-3 bg-gradient-to-br from-purple-900/90 to-indigo-900/90 text-white rounded-lg text-xs font-mono shadow-lg border border-purple-600 min-w-80 z-40">
+        <div className="absolute top-full right-0 mt-2 p-3 bg-gradient-to-br from-amber-900/90 to-indigo-900/90 text-white rounded-lg text-xs font-mono shadow-lg border border-amber-600 min-w-80 z-40">
           {/* Title Bar */}
-          <div className="mb-2 pb-2 border-b border-purple-600">
-            <div className="text-purple-300 font-bold text-sm flex items-center gap-2">
+          <div className="mb-2 pb-2 border-b border-amber-600">
+            <div className="text-amber-300 font-bold text-sm flex items-center gap-2">
               🌀 JUNGIAN PROSODY LAB
               {prosodyData && <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" title="Live Data" />}
             </div>
-            <div className="text-purple-400 text-xs mt-1">Mirror → Balance → Shape</div>
+            <div className="text-amber-400 text-xs mt-1">Mirror → Balance → Shape</div>
           </div>
 
           {/* Real-Time Data or Demo Mode */}
@@ -972,7 +972,7 @@ export default function VoiceRecorder({
               /* 🔴 LIVE DATA MODE */
               <>
                 {/* User Element Detection */}
-                <div className="bg-purple-800/40 rounded p-2">
+                <div className="bg-amber-800/40 rounded p-2">
                   <div className="text-yellow-300 font-semibold mb-1 flex items-center gap-1">
                     {getElementIcon(prosodyData.userElement)} User Element Detection:
                   </div>
@@ -1067,7 +1067,7 @@ export default function VoiceRecorder({
             ) : (
               /* 📊 DEMO MODE (when no live data available) */
               <>
-                <div className="bg-purple-800/40 rounded p-2 opacity-60">
+                <div className="bg-amber-800/40 rounded p-2 opacity-60">
                   <div className="text-yellow-300 font-semibold mb-1 flex items-center gap-1">
                     🔥 User Element Detection:
                   </div>
@@ -1102,21 +1102,21 @@ export default function VoiceRecorder({
           </div>
 
           {/* System Status */}
-          <div className="mt-3 pt-2 border-t border-purple-600">
+          <div className="mt-3 pt-2 border-t border-amber-600">
             <div className="flex justify-between text-xs">
-              <span className="text-purple-300">Jungian Engine:</span>
+              <span className="text-amber-300">Jungian Engine:</span>
               <span className={prosodyData ? "text-green-400" : "text-yellow-400"}>
                 {prosodyData ? "🟢 Live Data" : "🟡 Standby"}
               </span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-purple-300">Data Source:</span>
+              <span className="text-amber-300">Data Source:</span>
               <span className="text-blue-400">
                 {prosodyData ? "ConversationalPipeline" : "Demo Mode"}
               </span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-purple-300">Last Update:</span>
+              <span className="text-amber-300">Last Update:</span>
               <span className="text-green-400 font-mono">
                 {prosodyData?.timestamp ? new Date(prosodyData.timestamp).toLocaleTimeString() : 'None'}
               </span>
@@ -1125,7 +1125,7 @@ export default function VoiceRecorder({
 
           {/* Live Updates Indicator */}
           {prosodyData && (
-            <div className="mt-2 pt-2 border-t border-purple-600 text-xs text-center">
+            <div className="mt-2 pt-2 border-t border-amber-600 text-xs text-center">
               <div className="text-green-300 animate-pulse flex items-center justify-center gap-1">
                 📡 Real-time Jungian prosody analysis active
                 <div className="flex gap-1">
@@ -1139,7 +1139,7 @@ export default function VoiceRecorder({
 
           {/* Instructions for Demo Mode */}
           {!prosodyData && (
-            <div className="mt-2 pt-2 border-t border-purple-600 text-xs text-purple-300 text-center">
+            <div className="mt-2 pt-2 border-t border-amber-600 text-xs text-amber-300 text-center">
               💡 Record a voice message to see live Jungian prosody analysis
             </div>
           )}
@@ -1163,9 +1163,9 @@ export default function VoiceRecorder({
       {/* Maya Welcome Status Indicator */}
       {isPlayingWelcome && (
         <div className="mb-3 flex items-center justify-center gap-2 animate-fade-in">
-          <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-          <span className="text-sm text-purple-600 font-medium">Maya is greeting you...</span>
-          <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+          <span className="text-sm text-amber-600 font-medium">Maya is greeting you...</span>
+          <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
         </div>
       )}
       

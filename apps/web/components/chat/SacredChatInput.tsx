@@ -312,7 +312,7 @@ export default function SacredChatInput({
                         delay: 1.3
                       }}
                     >
-                      <Sparkles className="w-2 h-2 text-purple-300" />
+                      <Sparkles className="w-2 h-2 text-amber-300" />
                     </motion.div>
                   </div>
 
@@ -396,7 +396,7 @@ export default function SacredChatInput({
                     />
                     {/* Cloud pulse 3 */}
                     <motion.div
-                      className="absolute bottom-4 left-6 w-5 h-3 bg-purple-400/20 rounded-full blur-sm"
+                      className="absolute bottom-4 left-6 w-5 h-3 bg-amber-400/20 rounded-full blur-sm"
                       animate={{
                         scale: [1, 1.4, 1],
                         opacity: [0.2, 0.6, 0.2],
@@ -535,7 +535,7 @@ export default function SacredChatInput({
                             delay: 1
                           }}
                         >
-                          <Sparkles className="w-2 h-2 text-purple-300" />
+                          <Sparkles className="w-2 h-2 text-amber-300" />
                         </motion.div>
                       </motion.div>
                     </>

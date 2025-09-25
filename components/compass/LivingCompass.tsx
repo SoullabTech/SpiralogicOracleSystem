@@ -42,7 +42,7 @@ export default function LivingCompass() {
       name: 'Stories & Memory',
       description: 'Journals, past conversations, relived moments',
       element: 'aether',
-      color: 'from-purple-900 to-indigo-900',
+      color: 'from-amber-900 to-indigo-900',
       icon: <Book className="w-6 h-6" />,
       active: true
     },
@@ -69,7 +69,7 @@ export default function LivingCompass() {
       name: 'Divination',
       description: 'Tarot, I Ching, oracle cards',
       element: 'water',
-      color: 'from-blue-900 to-purple-900',
+      color: 'from-blue-900 to-amber-900',
       icon: <Moon className="w-6 h-6" />,
       active: true
     }

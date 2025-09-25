@@ -152,7 +152,7 @@ export default function LibraryPage() {
     const colors = {
       journal: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
       reference: 'bg-green-500/20 text-green-300 border-green-500/30',
-      wisdom: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+      wisdom: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
       personal: 'bg-pink-500/20 text-pink-300 border-pink-500/30',
     };
     return colors[category as keyof typeof colors] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
@@ -167,7 +167,7 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-blue-900 to-indigo-900">
       <div className="max-w-6xl mx-auto px-4 py-8">
         
         {/* Header */}
@@ -188,7 +188,7 @@ export default function LibraryPage() {
                 <Sparkles className="w-8 h-8 text-yellow-400" />
                 <h1 className="text-3xl font-light text-white">Maya&apos;s Sacred Library</h1>
               </div>
-              <p className="text-purple-200 mt-1">
+              <p className="text-amber-200 mt-1">
                 Your uploaded wisdom, woven into Maya&apos;s consciousness
               </p>
             </div>
@@ -212,7 +212,7 @@ export default function LibraryPage() {
           >
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20">
               <div className="text-2xl font-bold text-white">{stats.total}</div>
-              <div className="text-sm text-purple-200">Files</div>
+              <div className="text-sm text-amber-200">Files</div>
             </div>
             <div className="bg-green-500/20 backdrop-blur-sm rounded-lg p-4 text-center border border-green-500/30">
               <div className="text-2xl font-bold text-green-300">{stats.completed}</div>
@@ -230,9 +230,9 @@ export default function LibraryPage() {
               <div className="text-2xl font-bold text-blue-300">{stats.totalChunks}</div>
               <div className="text-sm text-blue-200">Memory Chunks</div>
             </div>
-            <div className="bg-purple-500/20 backdrop-blur-sm rounded-lg p-4 text-center border border-purple-500/30">
-              <div className="text-2xl font-bold text-purple-300">{(stats.totalTokens / 1000).toFixed(1)}k</div>
-              <div className="text-sm text-purple-200">Tokens</div>
+            <div className="bg-amber-500/20 backdrop-blur-sm rounded-lg p-4 text-center border border-amber-500/30">
+              <div className="text-2xl font-bold text-amber-300">{(stats.totalTokens / 1000).toFixed(1)}k</div>
+              <div className="text-sm text-amber-200">Tokens</div>
             </div>
           </motion.div>
         )}
@@ -286,7 +286,7 @@ export default function LibraryPage() {
             >
               <FileText className="w-16 h-16 mx-auto mb-4 text-gray-500" />
               <h3 className="text-xl text-white mb-2">No sacred knowledge yet</h3>
-              <p className="text-purple-200 mb-6">
+              <p className="text-amber-200 mb-6">
                 Upload your first document to begin building Maya&apos;s wisdom
               </p>
               <button
@@ -327,7 +327,7 @@ export default function LibraryPage() {
                         {getStatusIcon(file.status, file.progress)}
                       </div>
 
-                      <div className="text-sm text-purple-200 mb-2">
+                      <div className="text-sm text-amber-200 mb-2">
                         {file.status === 'completed' ? (
                           <span>{file.totalChunks} memory chunks • {file.totalTokens} tokens</span>
                         ) : (
@@ -413,13 +413,13 @@ export default function LibraryPage() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-gradient-to-br from-purple-900 to-blue-900 p-8 rounded-2xl max-w-2xl w-full border border-white/20"
+                className="bg-gradient-to-br from-amber-900 to-blue-900 p-8 rounded-2xl max-w-2xl w-full border border-white/20"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="text-center mb-6">
                   <Sparkles className="w-12 h-12 mx-auto mb-4 text-yellow-400" />
                   <h2 className="text-2xl font-light text-white mb-2">Share Your Wisdom</h2>
-                  <p className="text-purple-200">Upload documents for Maya to weave into her consciousness</p>
+                  <p className="text-amber-200">Upload documents for Maya to weave into her consciousness</p>
                 </div>
                 
                 <FileUploadZone
@@ -437,7 +437,7 @@ export default function LibraryPage() {
 
                 <button
                   onClick={() => setShowUpload(false)}
-                  className="mt-6 w-full py-2 text-purple-200 hover:text-white transition-colors"
+                  className="mt-6 w-full py-2 text-amber-200 hover:text-white transition-colors"
                 >
                   Close
                 </button>
@@ -460,12 +460,12 @@ export default function LibraryPage() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-gradient-to-br from-purple-900 to-blue-900 p-8 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-white/20"
+                className="bg-gradient-to-br from-amber-900 to-blue-900 p-8 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-white/20"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-light text-white mb-2">{selectedFile.originalName}</h2>
-                  <div className="flex items-center justify-center space-x-4 text-sm text-purple-200">
+                  <div className="flex items-center justify-center space-x-4 text-sm text-amber-200">
                     <span>Status: {selectedFile.status}</span>
                     {selectedFile.totalChunks > 0 && (
                       <>
@@ -489,7 +489,7 @@ export default function LibraryPage() {
 
                 <button
                   onClick={() => setSelectedFile(null)}
-                  className="w-full py-2 text-purple-200 hover:text-white transition-colors"
+                  className="w-full py-2 text-amber-200 hover:text-white transition-colors"
                 >
                   Close
                 </button>

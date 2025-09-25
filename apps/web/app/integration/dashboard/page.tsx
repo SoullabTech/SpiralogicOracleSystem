@@ -185,7 +185,7 @@ const IntegrationStatusIndicator: React.FC<{ stage: IntegrationStage }> = ({
       case "daily_integration":
         return { color: "bg-green-100 text-green-800", label: "Integrating" };
       case "embodied_wisdom":
-        return { color: "bg-purple-100 text-purple-800", label: "Embodying" };
+        return { color: "bg-amber-100 text-amber-800", label: "Embodying" };
       case "spiral_revisit":
         return { color: "bg-indigo-100 text-indigo-800", label: "Deepening" };
       default:

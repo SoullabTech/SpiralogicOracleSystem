@@ -158,7 +158,7 @@ export default function OperationalDashboard() {
                 <div className="text-xs text-gray-400">Active Users</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-semibold text-purple-400">
+                <div className="text-lg font-semibold text-amber-400">
                   {metrics?.memory_health.continuity_percent.toFixed(1) || 0}%
                 </div>
                 <div className="text-xs text-gray-400">Memory</div>

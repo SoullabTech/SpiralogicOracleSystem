@@ -110,7 +110,7 @@ export const LongitudinalCoherence: React.FC<LongitudinalCoherenceProps> = ({
                 onClick={() => setTimeRange(days)}
                 className={`px-4 py-2 text-sm rounded-lg transition-colors
                   ${timeRange === days 
-                    ? 'bg-purple-100 text-purple-700' 
+                    ? 'bg-amber-100 text-amber-700' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
               >
                 {days}d
@@ -120,11 +120,11 @@ export const LongitudinalCoherence: React.FC<LongitudinalCoherenceProps> = ({
         </div>
 
         {/* Progress indicator */}
-        <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+        <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-blue-50 rounded-lg">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-600">Overall Progress</p>
-              <p className="text-2xl font-bold text-purple-700">
+              <p className="text-2xl font-bold text-amber-700">
                 {metrics.progress > 0 ? '+' : ''}{metrics.progress.toFixed(1)}%
               </p>
             </div>
@@ -139,7 +139,7 @@ export const LongitudinalCoherence: React.FC<LongitudinalCoherenceProps> = ({
           {/* Progress bar */}
           <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-purple-400 to-blue-400 transition-all duration-1000"
+              className="h-full bg-gradient-to-r from-amber-400 to-blue-400 transition-all duration-1000"
               style={{ width: `${metrics.currentCoherence * 100}%` }}
             />
           </div>
@@ -155,7 +155,7 @@ export const LongitudinalCoherence: React.FC<LongitudinalCoherenceProps> = ({
               onClick={() => setViewMode(mode)}
               className={`flex-1 py-3 text-sm font-medium rounded-lg transition-colors
                 ${viewMode === mode 
-                  ? 'bg-purple-100 text-purple-700' 
+                  ? 'bg-amber-100 text-amber-700' 
                   : 'text-gray-600 hover:bg-gray-50'}`}
             >
               {mode.charAt(0).toUpperCase() + mode.slice(1)}
@@ -214,7 +214,7 @@ export const LongitudinalCoherence: React.FC<LongitudinalCoherenceProps> = ({
                       phase.dominant === 'water' ? 'bg-blue-400' :
                       phase.dominant === 'earth' ? 'bg-green-400' :
                       phase.dominant === 'air' ? 'bg-yellow-500' :
-                      'bg-purple-400'}`}>
+                      'bg-amber-400'}`}>
                     {phase.dominant}
                   </div>
                   <div className="text-sm text-gray-600">
@@ -247,7 +247,7 @@ export const LongitudinalCoherence: React.FC<LongitudinalCoherenceProps> = ({
               </div>
               <p className="text-xs text-gray-600">{pattern.description}</p>
               {pattern.recommendation && (
-                <p className="text-xs text-purple-600 mt-2 italic">
+                <p className="text-xs text-amber-600 mt-2 italic">
                   Try: {pattern.recommendation}
                 </p>
               )}
@@ -354,17 +354,17 @@ const InsightsView: React.FC<{ metrics: any; sessions: CoherenceSession[] }> = (
       </div>
 
       {/* Recommendations */}
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6">
-        <h4 className="text-lg font-medium text-purple-900 mb-3">
+      <div className="bg-gradient-to-r from-amber-50 to-blue-50 rounded-xl p-6">
+        <h4 className="text-lg font-medium text-amber-900 mb-3">
           Personalized Recommendations
         </h4>
         <div className="space-y-3">
           {generateRecommendations(metrics, sessions).map((rec, i) => (
             <div key={i} className="flex gap-3">
-              <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs font-bold text-purple-700">{i + 1}</span>
+              <div className="w-6 h-6 rounded-full bg-amber-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-bold text-amber-700">{i + 1}</span>
               </div>
-              <p className="text-sm text-purple-800">{rec}</p>
+              <p className="text-sm text-amber-800">{rec}</p>
             </div>
           ))}
         </div>

@@ -54,7 +54,7 @@ export default function MemorySystemPanel({ memoryMetrics }: MemorySystemPanelPr
             <div className="text-xs text-gray-400">Integration Success</div>
           </div>
           <div className="text-center p-3 bg-gray-800/30 rounded-lg">
-            <div className="text-lg font-semibold text-purple-400">
+            <div className="text-lg font-semibold text-amber-400">
               {memoryMetrics.crossSessionContinuity.toFixed(1)}%
             </div>
             <div className="text-xs text-gray-400">Session Continuity</div>

@@ -43,9 +43,9 @@ export const ElementalStateUI: React.FC<ElementalStateUIProps> = ({
       glow: 'shadow-cyan-400/50'
     },
     Aether: { 
-      primary: 'from-purple-500 to-indigo-600',
-      secondary: 'from-pink-500 to-purple-600',
-      glow: 'shadow-purple-500/50'
+      primary: 'from-amber-500 to-indigo-600',
+      secondary: 'from-pink-500 to-amber-600',
+      glow: 'shadow-amber-500/50'
     }
   };
   
@@ -111,7 +111,7 @@ export const ElementalStateUI: React.FC<ElementalStateUIProps> = ({
           </div>
           <div className="h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+              className="h-full bg-gradient-to-r from-amber-500 to-pink-500"
               initial={{ width: 0 }}
               animate={{ width: `${elementalState.evolution * 100}%` }}
               transition={{ duration: 0.5, ease: "easeOut" }}

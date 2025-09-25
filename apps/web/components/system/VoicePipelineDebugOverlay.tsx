@@ -244,7 +244,7 @@ export function VoicePipelineDebugOverlay() {
       case 'water': return 'text-blue-400';
       case 'earth': return 'text-yellow-600';
       case 'air': return 'text-cyan-400';
-      case 'aether': return 'text-purple-400';
+      case 'aether': return 'text-amber-400';
       default: return 'text-gray-400';
     }
   };
@@ -328,7 +328,7 @@ export function VoicePipelineDebugOverlay() {
             {/* Prosody Intelligence */}
             {pipelineState.prosodyInfo && (
               <div className="border-t border-gray-800 pt-2">
-                <div className="text-purple-400 uppercase text-xs mb-2 flex items-center gap-1">
+                <div className="text-amber-400 uppercase text-xs mb-2 flex items-center gap-1">
                   <Target className="w-3 h-3" />
                   Prosody Intelligence
                   <span className="text-gray-500 ml-auto">
@@ -389,7 +389,7 @@ export function VoicePipelineDebugOverlay() {
                 <div className="text-xs border-t border-gray-700 pt-1">
                   <div className="text-gray-500 uppercase text-xs mb-1">Jungian Arc</div>
                   <div className="flex items-center gap-2">
-                    <span className="text-purple-400">Mirror:</span>
+                    <span className="text-amber-400">Mirror:</span>
                     <span className={getElementColor(pipelineState.prosodyInfo.jungianFlow.mirror.element)}>
                       {pipelineState.prosodyInfo.jungianFlow.mirror.duration.toFixed(1)}s
                     </span>
@@ -438,7 +438,7 @@ export function VoicePipelineDebugOverlay() {
                     ...prev, 
                     prosodyInfo: generateMockProsodyInfo() 
                   }))}
-                  className="w-full py-1 text-center text-purple-400 hover:text-purple-300 transition-colors text-xs"
+                  className="w-full py-1 text-center text-amber-400 hover:text-amber-300 transition-colors text-xs"
                 >
                   🎭 Generate Mock Prosody
                 </button>

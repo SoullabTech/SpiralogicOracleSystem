@@ -147,7 +147,7 @@ export default function VoicePipelinePanel({ voiceMetrics }: VoicePipelinePanelP
             <div className="text-xs text-gray-400">Daily Interactions</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-semibold text-purple-400">
+            <div className="text-lg font-semibold text-amber-400">
               {voiceMetrics.processingLatency.toFixed(0)}ms
             </div>
             <div className="text-xs text-gray-400">Avg Latency</div>

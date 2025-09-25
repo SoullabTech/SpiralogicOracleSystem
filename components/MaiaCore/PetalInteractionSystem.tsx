@@ -78,7 +78,7 @@ const PETAL_MEANINGS: PetalMeaning[] = [
   {
     element: 'aether',
     color: '#E0AAFF',
-    gradient: 'from-purple-500 to-pink-500',
+    gradient: 'from-amber-500 to-pink-500',
     meaning: 'Spirit & Unity',
     question: 'What transcends all form?',
     shadowAspect: 'Spiritual bypassing, dissociation',
@@ -285,7 +285,7 @@ export function PetalInteractionSystem({
             >
               {/* Gentle Pulsing Orb */}
               <motion.div
-                className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-purple-500/40 to-pink-500/40
+                className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-amber-500/40 to-pink-500/40
                            border border-white/20 backdrop-blur-md"
                 animate={{
                   scale: [1, 1.1, 1],
@@ -312,9 +312,9 @@ export function PetalInteractionSystem({
               <div className="flex space-x-4 pt-4">
                 <motion.button
                   onClick={handleOfferNow}
-                  className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20
-                           border border-purple-500/40 text-white text-sm font-medium
-                           hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300"
+                  className="flex-1 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500/20 to-pink-500/20
+                           border border-amber-500/40 text-white text-sm font-medium
+                           hover:from-amber-500/30 hover:to-pink-500/30 transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -390,7 +390,7 @@ export function PetalInteractionSystem({
             >
               {/* Blooming Flower Icon */}
               <motion.div
-                className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-pink-500/50 to-purple-500/50
+                className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-pink-500/50 to-amber-500/50
                            border border-pink-500/30"
                 animate={{
                   scale: [1, 1.2, 1],
@@ -444,7 +444,7 @@ export function PetalInteractionSystem({
       >
         {/* Center Core */}
         <motion.div
-          className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30
+          className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-500/30 to-pink-500/30
                      backdrop-blur-md border border-white/20 cursor-pointer"
           onClick={handleCenterClick}
           animate={{

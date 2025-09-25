@@ -71,9 +71,9 @@ export const DaimonicResponseUI: React.FC<DaimonicResponseUIProps> = ({
     switch (gap.quality) {
       case 'creative':
         return {
-          bgGradient: 'from-purple-50 to-indigo-50',
-          borderColor: 'border-purple-200',
-          glowColor: 'shadow-purple-100',
+          bgGradient: 'from-amber-50 to-indigo-50',
+          borderColor: 'border-amber-200',
+          glowColor: 'shadow-amber-100',
           animation: 'pulse'
         };
       case 'emerging':
@@ -113,9 +113,9 @@ export const DaimonicResponseUI: React.FC<DaimonicResponseUIProps> = ({
   if (isProcessing) {
     return (
       <div className="flex items-center justify-center p-8 space-x-3">
-        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-75"></div>
-        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-150"></div>
+        <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+        <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-75"></div>
+        <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-150"></div>
         <span className="text-sm text-gray-600 ml-4">Processing...</span>
       </div>
     );
@@ -178,7 +178,7 @@ export const DaimonicResponseUI: React.FC<DaimonicResponseUIProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-4 p-4 bg-gray-50 rounded border-l-4 border-purple-300"
+            className="mt-4 p-4 bg-gray-50 rounded border-l-4 border-amber-300"
           >
             <ArchitecturalInsights 
               architectural={response.architectural}
@@ -247,7 +247,7 @@ const PhenomenologicalResponse: React.FC<{
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={onDeepen}
-        className="inline-flex items-center space-x-2 text-sm text-purple-600 hover:text-purple-800 cursor-pointer"
+        className="inline-flex items-center space-x-2 text-sm text-amber-600 hover:text-amber-800 cursor-pointer"
       >
         <span>Explore deeper</span>
         <ChevronDown size={14} />
@@ -276,7 +276,7 @@ const DialogicalLayer: React.FC<{
             className={`
               pb-2 px-1 text-sm font-medium border-b-2 transition-colors
               ${activeTab === tab 
-                ? 'border-purple-500 text-purple-700' 
+                ? 'border-amber-500 text-amber-700' 
                 : 'border-transparent text-gray-500 hover:text-gray-700'
               }
             `}
@@ -300,7 +300,7 @@ const DialogicalLayer: React.FC<{
             <ul className="space-y-2">
               {content.questions.map((question, index) => (
                 <li key={index} className="text-gray-700 text-sm">
-                  <span className="text-purple-600 mr-2">•</span>
+                  <span className="text-amber-600 mr-2">•</span>
                   {question}
                 </li>
               ))}
@@ -339,11 +339,11 @@ const DialogicalLayer: React.FC<{
 
       {/* Incomplete Knowings */}
       {content.incomplete_knowings.length > 0 && (
-        <div className="mt-6 p-3 bg-purple-50 rounded border-l-4 border-purple-300">
-          <h4 className="text-sm font-medium text-purple-800 mb-2">Partial Knowings</h4>
+        <div className="mt-6 p-3 bg-amber-50 rounded border-l-4 border-amber-300">
+          <h4 className="text-sm font-medium text-amber-800 mb-2">Partial Knowings</h4>
           <div className="space-y-1">
             {content.incomplete_knowings.map((knowing, index) => (
-              <p key={index} className="text-sm text-purple-700 italic">
+              <p key={index} className="text-sm text-amber-700 italic">
                 {knowing}
               </p>
             ))}
@@ -363,7 +363,7 @@ const SynapticGapIndicator: React.FC<{
   const getGapVisualization = () => {
     switch (gap.quality) {
       case 'creative':
-        return <Zap className="text-purple-500 animate-pulse" size={16} />;
+        return <Zap className="text-amber-500 animate-pulse" size={16} />;
       case 'emerging':
         return <Circle className="text-green-500 animate-spin" size={16} />;
       case 'dissolving':
@@ -401,7 +401,7 @@ const ArchitecturalInsights: React.FC<{
           <span className="font-medium">Daimonic Signature:</span>
           <div className="mt-1 w-full bg-gray-200 rounded-full h-2">
             <div 
-              className="bg-purple-500 h-2 rounded-full" 
+              className="bg-amber-500 h-2 rounded-full" 
               style={{ width: `${architectural.daimonic_signature * 100}%` }}
             />
           </div>

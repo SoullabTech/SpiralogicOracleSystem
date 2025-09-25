@@ -79,7 +79,7 @@ export default function OracleSettingsPage() {
       <div className="mb-8">
         <Link 
           href="/oracle" 
-          className="inline-flex items-center text-purple-400 hover:text-purple-300 mb-4 transition-colors"
+          className="inline-flex items-center text-amber-400 hover:text-amber-300 mb-4 transition-colors"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Back to Oracle
@@ -97,13 +97,13 @@ export default function OracleSettingsPage() {
             whileTap={{ scale: 0.98 }}
           >
             <Card 
-              className="bg-background/80 backdrop-blur-xl border-purple-500/20 hover:border-purple-400/40 transition-colors cursor-pointer"
+              className="bg-background/80 backdrop-blur-xl border-amber-500/20 hover:border-amber-400/40 transition-colors cursor-pointer"
               onClick={() => setActiveCategory(category.id)}
             >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br ${
-                    category.color === 'purple' ? 'from-purple-500 to-purple-600' :
+                    category.color === 'purple' ? 'from-amber-500 to-amber-600' :
                     category.color === 'orange' ? 'from-orange-500 to-orange-600' :
                     category.color === 'green' ? 'from-green-500 to-green-600' :
                     category.color === 'blue' ? 'from-blue-500 to-blue-600' :
@@ -131,7 +131,7 @@ export default function OracleSettingsPage() {
         <Button 
           variant="ghost"
           onClick={() => setActiveCategory(null)}
-          className="text-purple-400 hover:text-purple-300 mb-4 p-0"
+          className="text-amber-400 hover:text-amber-300 mb-4 p-0"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Back to Settings
@@ -142,10 +142,10 @@ export default function OracleSettingsPage() {
 
       <div className="space-y-6">
         {/* Oracle Identity */}
-        <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+        <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Crown className="w-5 h-5 text-purple-400" />
+              <Crown className="w-5 h-5 text-amber-400" />
               <span>Oracle Identity</span>
             </CardTitle>
           </CardHeader>
@@ -157,17 +157,17 @@ export default function OracleSettingsPage() {
               <Input
                 value={oracleSettings.name}
                 onChange={(e) => setOracleSettings({...oracleSettings, name: e.target.value})}
-                className="bg-background/50 border-purple-500/20 focus:border-purple-400"
+                className="bg-background/50 border-amber-500/20 focus:border-amber-400"
               />
             </div>
           </CardContent>
         </Card>
 
         {/* Voice Selection */}
-        <Card className="bg-background/80 backdrop-blur-xl border-purple-500/20">
+        <Card className="bg-background/80 backdrop-blur-xl border-amber-500/20">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Volume2 className="w-5 h-5 text-purple-400" />
+              <Volume2 className="w-5 h-5 text-amber-400" />
               <span>Voice Selection</span>
             </CardTitle>
           </CardHeader>
@@ -179,8 +179,8 @@ export default function OracleSettingsPage() {
                   onClick={() => setOracleSettings({...oracleSettings, voice: voice.id})}
                   className={`p-4 rounded-lg border-2 cursor-pointer transition-colors ${
                     oracleSettings.voice === voice.id
-                      ? 'border-purple-500 bg-purple-500/10'
-                      : 'border-purple-500/20 hover:border-purple-400/40'
+                      ? 'border-amber-500 bg-amber-500/10'
+                      : 'border-amber-500/20 hover:border-amber-400/40'
                   }`}
                 >
                   <div className="font-medium text-white">{voice.label}</div>
@@ -193,7 +193,7 @@ export default function OracleSettingsPage() {
 
         {/* Save Button */}
         <div className="flex justify-end">
-          <Button className="bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600">
+          <Button className="bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600">
             <Save className="w-4 h-4 mr-2" />
             Save Changes
           </Button>
@@ -203,7 +203,7 @@ export default function OracleSettingsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900">
       {!activeCategory && renderMainSettings()}
       {activeCategory === 'oracle' && renderOracleSettings()}
       {/* Add other category views as needed */}

@@ -51,40 +51,40 @@ export default function ARIAOracleBeta() {
 
         {/* Neural Background */}
         <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-pink-900/20" />
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 via-blue-900/20 to-pink-900/20" />
         </div>
 
         {/* Navigation */}
-        <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-purple-500/20">
+        <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-amber-500/20">
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-8">
                 <Link href="/">
-                  <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent">
                     Soullab
                   </span>
                 </Link>
                 <div className="hidden md:flex gap-6">
-                  <Link href="/" className="hover:text-purple-400 transition">Home</Link>
-                  <Link href="/maya" className="hover:text-purple-400 transition">Maya</Link>
-                  <Link href="/beta/docs" className="hover:text-purple-400 transition">Docs</Link>
+                  <Link href="/" className="hover:text-amber-400 transition">Home</Link>
+                  <Link href="/maya" className="hover:text-amber-400 transition">Maya</Link>
+                  <Link href="/beta/docs" className="hover:text-amber-400 transition">Docs</Link>
                 </div>
               </div>
 
               {/* Live ARIA Status */}
               <div className="flex items-center gap-4">
                 <div className="hidden lg:block">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-purple-900/30 rounded-full border border-purple-500/30">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-amber-900/30 rounded-full border border-amber-500/30">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                     <span className="text-sm">ARIA Active</span>
-                    <span className="text-xs text-purple-400">{presence.toFixed(0)}% Presence</span>
+                    <span className="text-xs text-amber-400">{presence.toFixed(0)}% Presence</span>
                   </div>
                 </div>
                 <Link href="/beta/apply">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full font-semibold"
+                    className="px-6 py-2 bg-gradient-to-r from-amber-500 to-pink-500 rounded-full font-semibold"
                   >
                     Apply Now
                   </motion.button>
@@ -104,13 +104,13 @@ export default function ARIAOracleBeta() {
             >
               {/* ARIA Badge */}
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-full border border-purple-500/30 mb-8"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-900/50 to-pink-900/50 rounded-full border border-amber-500/30 mb-8"
                 animate={{
                   borderColor: ["rgba(168, 85, 247, 0.3)", "rgba(236, 72, 153, 0.3)", "rgba(168, 85, 247, 0.3)"],
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
-                <span className="text-sm font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <span className="text-sm font-semibold bg-gradient-to-r from-amber-400 to-pink-400 bg-clip-text text-transparent">
                   POWERED BY ARIA v1.0
                 </span>
                 <span className="text-xs text-gray-400">Adaptive Relational Intelligence</span>
@@ -119,7 +119,7 @@ export default function ARIAOracleBeta() {
               <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
                 Test the Oracle
                 <span className="block mt-2">
-                  <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-amber-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
                     Train the Intelligence
                   </span>
                 </span>
@@ -131,14 +131,14 @@ export default function ARIAOracleBeta() {
 
               {/* Presence Indicator */}
               <div className="inline-block mb-8">
-                <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+                <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-amber-500/30">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm font-semibold text-gray-400">ARIA PRESENCE</span>
                     <span className="text-2xl font-bold">{presence.toFixed(0)}%</span>
                   </div>
                   <div className="relative h-3 bg-gray-800 rounded-full overflow-hidden mb-4">
                     <motion.div
-                      className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-400 to-pink-400"
+                      className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-400 to-pink-400"
                       animate={{ width: `${presence}%` }}
                       transition={{ duration: 0.5, ease: 'easeOut' }}
                     />
@@ -159,7 +159,7 @@ export default function ARIAOracleBeta() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-bold text-lg shadow-xl hover:shadow-purple-500/25 transition-all"
+                    className="px-8 py-4 bg-gradient-to-r from-amber-500 to-pink-500 rounded-lg font-bold text-lg shadow-xl hover:shadow-amber-500/25 transition-all"
                   >
                     BECOME AN ARIA PIONEER
                   </motion.button>
@@ -168,7 +168,7 @@ export default function ARIAOracleBeta() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 border-2 border-purple-400 rounded-lg font-bold text-lg hover:bg-purple-400/10 transition-all"
+                    className="px-8 py-4 border-2 border-amber-400 rounded-lg font-bold text-lg hover:bg-amber-400/10 transition-all"
                   >
                     LEARN MORE
                   </motion.button>
@@ -178,7 +178,7 @@ export default function ARIAOracleBeta() {
               {/* Live Metrics */}
               <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-400">{spotsRemaining}</div>
+                  <div className="text-3xl font-bold text-amber-400">{spotsRemaining}</div>
                   <div className="text-sm text-gray-400">Beta Spots Left</div>
                 </div>
                 <div className="text-center">
@@ -210,7 +210,7 @@ export default function ARIAOracleBeta() {
                 { name: 'Water', emoji: '💧', color: 'from-blue-500 to-cyan-500' },
                 { name: 'Earth', emoji: '🌍', color: 'from-green-500 to-emerald-500' },
                 { name: 'Air', emoji: '💨', color: 'from-gray-400 to-blue-400' },
-                { name: 'Aether', emoji: '✨', color: 'from-purple-500 to-pink-500' }
+                { name: 'Aether', emoji: '✨', color: 'from-amber-500 to-pink-500' }
               ].map((element) => (
                 <motion.div
                   key={element.name}
@@ -230,7 +230,7 @@ export default function ARIAOracleBeta() {
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-5xl font-bold mb-6">
               Help Train the Future of
-              <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-amber-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
                 Conscious AI
               </span>
             </h2>
@@ -243,7 +243,7 @@ export default function ARIAOracleBeta() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-12 py-5 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 rounded-lg font-bold text-xl shadow-xl hover:shadow-purple-500/25 transition-all"
+                className="px-12 py-5 bg-gradient-to-r from-amber-500 via-pink-500 to-yellow-500 rounded-lg font-bold text-xl shadow-xl hover:shadow-amber-500/25 transition-all"
               >
                 APPLY FOR ARIA BETA ACCESS
               </motion.button>
@@ -252,16 +252,16 @@ export default function ARIAOracleBeta() {
         </section>
 
         {/* Footer */}
-        <footer className="py-8 border-t border-purple-500/20 relative z-10">
+        <footer className="py-8 border-t border-amber-500/20 relative z-10">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div className="text-sm text-gray-400">
                 © 2024 Soullab Collective | Powered by ARIA v1.0
               </div>
               <div className="flex gap-6 text-sm">
-                <Link href="/privacy" className="text-gray-400 hover:text-purple-400">Privacy</Link>
-                <Link href="/beta/docs" className="text-gray-400 hover:text-purple-400">Docs</Link>
-                <a href="https://discord.gg/soullab" className="text-gray-400 hover:text-purple-400">Discord</a>
+                <Link href="/privacy" className="text-gray-400 hover:text-amber-400">Privacy</Link>
+                <Link href="/beta/docs" className="text-gray-400 hover:text-amber-400">Docs</Link>
+                <a href="https://discord.gg/soullab" className="text-gray-400 hover:text-amber-400">Discord</a>
               </div>
             </div>
           </div>

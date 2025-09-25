@@ -91,7 +91,7 @@ export function SacredMirrorInterface({ userId, userLevel = 'first_bloom' }: Sac
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-800">
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-800">
       {/* Contextual Appearance - only when user is naturally reflective */}
       <AnimatePresence>
         {showMirrorMoment && currentInsight && (
@@ -232,8 +232,8 @@ function DeepRootsInterface({ patterns, insight }: { patterns: any; insight: str
             <div>💫 Channel Monday vision as inspiration</div>
           </div>
           <motion.button
-            className="mt-4 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/40
-                       text-purple-300 text-xs hover:bg-purple-500/30 transition-colors"
+            className="mt-4 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40
+                       text-amber-300 text-xs hover:bg-amber-500/30 transition-colors"
             whileHover={{ scale: 1.05 }}
           >
             Apply this pattern
@@ -257,11 +257,11 @@ function WisdomKeeperInterface({ patterns }: { patterns: any }) {
         <h2 className="text-white/90 text-lg font-light mb-2">
           Sacred Observatory
         </h2>
-        <p className="text-purple-300 text-sm">Wisdom Keeper Level</p>
+        <p className="text-amber-300 text-sm">Wisdom Keeper Level</p>
       </div>
 
       {/* Master Integration Interface */}
-      <div className="p-6 rounded-2xl bg-gradient-to-br from-black/30 to-purple-900/20 border border-white/10">
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-black/30 to-amber-900/20 border border-white/10">
         <h3 className="text-white/90 text-base font-medium mb-4">
           Today's Emergence
         </h3>
@@ -290,9 +290,9 @@ function WisdomKeeperInterface({ patterns }: { patterns: any }) {
           
           <motion.button
             onClick={() => setShowMentorMode(true)}
-            className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20
-                       border border-purple-500/40 text-purple-300 text-xs
-                       hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300"
+            className="px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-pink-500/20
+                       border border-amber-500/40 text-amber-300 text-xs
+                       hover:from-amber-500/30 hover:to-pink-500/30 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
           >
             Mentor Mode

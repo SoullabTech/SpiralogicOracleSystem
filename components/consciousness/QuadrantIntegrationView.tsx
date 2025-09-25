@@ -151,7 +151,7 @@ const QuadrantIntegrationView: React.FC<{ userId?: string }> = ({ userId }) => {
     <div className="relative h-96">
       {/* Central integration point */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-600 to-indigo-600 flex items-center justify-center">
           <span className="text-white font-bold">SELF</span>
         </div>
       </div>
@@ -213,9 +213,9 @@ const QuadrantIntegrationView: React.FC<{ userId?: string }> = ({ userId }) => {
           <div className="text-center">
             <div className="text-sm text-gray-500 mb-1">Liminal Threshold</div>
             <div className="flex gap-4 items-center">
-              <div className="h-px w-32 bg-gradient-to-r from-transparent to-purple-600" />
-              <div className="text-purple-400 font-medium">EGO ↔ SELF</div>
-              <div className="h-px w-32 bg-gradient-to-l from-transparent to-purple-600" />
+              <div className="h-px w-32 bg-gradient-to-r from-transparent to-amber-600" />
+              <div className="text-amber-400 font-medium">EGO ↔ SELF</div>
+              <div className="h-px w-32 bg-gradient-to-l from-transparent to-amber-600" />
             </div>
             <div className="text-xs text-gray-600 mt-1">Conscious ↕ Unconscious</div>
           </div>
@@ -245,7 +245,7 @@ const QuadrantIntegrationView: React.FC<{ userId?: string }> = ({ userId }) => {
           onClick={() => setViewMode('grid')}
           className={`px-4 py-2 rounded text-sm ${
             viewMode === 'grid'
-              ? 'bg-purple-600 text-white'
+              ? 'bg-amber-600 text-white'
               : 'bg-gray-800 text-gray-400'
           }`}
         >
@@ -255,7 +255,7 @@ const QuadrantIntegrationView: React.FC<{ userId?: string }> = ({ userId }) => {
           onClick={() => setViewMode('flow')}
           className={`px-4 py-2 rounded text-sm ${
             viewMode === 'flow'
-              ? 'bg-purple-600 text-white'
+              ? 'bg-amber-600 text-white'
               : 'bg-gray-800 text-gray-400'
           }`}
         >
@@ -265,7 +265,7 @@ const QuadrantIntegrationView: React.FC<{ userId?: string }> = ({ userId }) => {
           onClick={() => setViewMode('depth')}
           className={`px-4 py-2 rounded text-sm ${
             viewMode === 'depth'
-              ? 'bg-purple-600 text-white'
+              ? 'bg-amber-600 text-white'
               : 'bg-gray-800 text-gray-400'
           }`}
         >
@@ -300,12 +300,12 @@ const IntegrationMetric: React.FC<{
 }> = ({ label, value }) => (
   <div className="text-center">
     <div className="text-xs text-gray-500 mb-1">{label}</div>
-    <div className="text-2xl font-bold text-purple-400">
+    <div className="text-2xl font-bold text-amber-400">
       {(value * 100).toFixed(0)}%
     </div>
     <div className="h-1 bg-gray-700 rounded-full mt-2">
       <div
-        className="h-full bg-purple-500 rounded-full"
+        className="h-full bg-amber-500 rounded-full"
         style={{ width: `${value * 100}%` }}
       />
     </div>

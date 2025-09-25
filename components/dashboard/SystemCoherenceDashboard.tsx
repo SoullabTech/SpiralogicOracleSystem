@@ -282,7 +282,7 @@ const SystemCoherenceDashboard: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <div className="w-20 bg-gray-700 rounded-full h-2">
                     <div
-                      className="bg-purple-500 h-2 rounded-full transition-all duration-500"
+                      className="bg-amber-500 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${value * 100}%` }}
                     />
                   </div>
@@ -355,7 +355,7 @@ const SystemCoherenceDashboard: React.FC = () => {
             <div>
               <div className="flex justify-between text-sm">
                 <span>Shadow Integration</span>
-                <span className="text-purple-400">
+                <span className="text-amber-400">
                   {(transformationMetrics.shadow_integration * 100).toFixed(0)}%
                 </span>
               </div>
@@ -386,7 +386,7 @@ const SystemCoherenceDashboard: React.FC = () => {
           {systemPulse.map((pulse, i) => (
             <div
               key={i}
-              className="flex-1 bg-purple-600 opacity-60"
+              className="flex-1 bg-amber-600 opacity-60"
               style={{
                 height: `${pulse.accuracy * 100}%`,
                 backgroundColor: `hsl(${270 - pulse.restraint_level * 10}, 70%, 50%)`

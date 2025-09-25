@@ -372,7 +372,7 @@ export function SoullabChatInterface({
     const stages = {
       structured_guide: { name: 'Gentle Guide', icon: '🌱', color: 'text-green-400' },
       dialogical_companion: { name: 'Deep Companion', icon: '💫', color: 'text-blue-400' },
-      cocreative_partner: { name: 'Creative Partner', icon: '✨', color: 'text-purple-400' },
+      cocreative_partner: { name: 'Creative Partner', icon: '✨', color: 'text-amber-400' },
       transparent_prism: { name: 'Transparent Wisdom', icon: '💎', color: 'text-cyan-400' }
     };
     return stages[oracleState.currentStage as keyof typeof stages] || stages.structured_guide;
@@ -381,7 +381,7 @@ export function SoullabChatInterface({
   const stageInfo = getStageInfo();
 
   return (
-    <div className="min-h-screen  from-slate-900 via-purple-900/20 to-slate-900 text-white">
+    <div className="min-h-screen  from-slate-900 via-amber-900/20 to-slate-900 text-white">
       {/* Session Memory Banner */}
       {showMemoryBanner && memoryIndicators.length > 0 && (
         <SessionMemoryBanner 
@@ -391,7 +391,7 @@ export function SoullabChatInterface({
       )}
       
       {/* Header with Oracle State */}
-      <div className="border-b border-purple-500/20 bg-black/40 backdrop-blur-xl">
+      <div className="border-b border-amber-500/20 bg-black/40 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
@@ -403,12 +403,12 @@ export function SoullabChatInterface({
               />
               
               <div className="flex flex-col">
-                <h1 className="text-2xl font-bold from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold from-amber-400 to-cyan-400 bg-clip-text text-transparent">
                   Soullab Oracle
                 </h1>
-                <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30">
+                <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
                   <span className={`${stageInfo.color} text-sm`}>{stageInfo.icon}</span>
-                  <span className="text-sm text-purple-200">{stageInfo.name}</span>
+                  <span className="text-sm text-amber-200">{stageInfo.name}</span>
                 </div>
               </div>
             </div>
@@ -464,9 +464,9 @@ export function SoullabChatInterface({
                   I remember our conversations, learn from your journal entries, and grow with you.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-                  <div className="p-4 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                    <Brain className="w-8 h-8 text-purple-400 mb-2 mx-auto" />
-                    <p className="text-sm text-purple-200">Cognitive Intelligence</p>
+                  <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                    <Brain className="w-8 h-8 text-amber-400 mb-2 mx-auto" />
+                    <p className="text-sm text-amber-200">Cognitive Intelligence</p>
                   </div>
                   <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
                     <Heart className="w-8 h-8 text-pink-400 mb-2 mx-auto" />
@@ -489,7 +489,7 @@ export function SoullabChatInterface({
                   <div
                     className={`px-4 py-3 rounded-2xl ${
                       message.role === 'user'
-                        ? `${message.metadata?.isJournal ? 'bg-yellow-600' : 'bg-purple-600'} text-white`
+                        ? `${message.metadata?.isJournal ? 'bg-yellow-600' : 'bg-amber-600'} text-white`
                         : 'bg-slate-800/80 backdrop-blur text-slate-100 border border-slate-700/50'
                     }`}
                   >
@@ -576,7 +576,7 @@ export function SoullabChatInterface({
 
         {/* Journal Sidebar */}
         {showJournal && (
-          <div className="w-96 border-l border-purple-500/20 bg-black/20 backdrop-blur-xl p-6">
+          <div className="w-96 border-l border-amber-500/20 bg-black/20 backdrop-blur-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Journal Entry</h3>
               <button
@@ -593,7 +593,7 @@ export function SoullabChatInterface({
                 value={journalTitle}
                 onChange={(e) => setJournalTitle(e.target.value)}
                 placeholder="Entry title (optional)"
-                className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
               />
               
               <textarea
@@ -601,13 +601,13 @@ export function SoullabChatInterface({
                 onChange={(e) => setJournalInput(e.target.value)}
                 placeholder="What&apos;s happening in your inner world?"
                 rows={12}
-                className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 resize-none"
+                className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none"
               />
               
               <button
                 onClick={handleJournalEntry}
                 disabled={!journalInput.trim()}
-                className="w-full py-2  from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all"
+                className="w-full py-2  from-amber-500 to-cyan-500 hover:from-amber-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all"
               >
                 Share with Oracle
               </button>

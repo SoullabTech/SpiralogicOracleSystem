@@ -48,7 +48,7 @@ export default function BetaApplication() {
 
       <div className="min-h-screen bg-black text-white py-20">
         <div className="max-w-2xl mx-auto px-6">
-          <Link href="/beta" className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-8">
+          <Link href="/beta" className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 mb-8">
             <span>←</span>
             <span>Back to Beta Home</span>
           </Link>
@@ -61,7 +61,7 @@ export default function BetaApplication() {
               <input
                 type="text"
                 required
-                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-purple-500 focus:outline-none"
+                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-amber-500 focus:outline-none"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
               />
@@ -72,7 +72,7 @@ export default function BetaApplication() {
               <input
                 type="email"
                 required
-                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-purple-500 focus:outline-none"
+                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-amber-500 focus:outline-none"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
               />
@@ -86,7 +86,7 @@ export default function BetaApplication() {
                 required
                 maxLength={300}
                 rows={4}
-                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-purple-500 focus:outline-none"
+                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-amber-500 focus:outline-none"
                 value={formData.why}
                 onChange={(e) => setFormData({...formData, why: e.target.value})}
               />
@@ -99,7 +99,7 @@ export default function BetaApplication() {
               <label className="block mb-2">Daily Testing Commitment</label>
               <select
                 required
-                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-purple-500 focus:outline-none"
+                className="w-full p-3 bg-gray-900 rounded-lg border border-gray-800 focus:border-amber-500 focus:outline-none"
                 value={formData.commitment}
                 onChange={(e) => setFormData({...formData, commitment: e.target.value})}
               >
@@ -127,7 +127,7 @@ export default function BetaApplication() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+              className="w-full py-4 bg-gradient-to-r from-amber-500 to-pink-500 text-white font-bold rounded-lg hover:opacity-90 transition disabled:opacity-50"
             >
               {loading ? 'SUBMITTING...' : 'SUBMIT APPLICATION'}
             </button>

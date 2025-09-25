@@ -98,7 +98,7 @@ export default function SpiralogicExperience() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-amber-900">
       <AnimatePresence mode="wait">
         {/* Greeting Stage */}
         {stage === 'greeting' && (
@@ -137,7 +137,7 @@ export default function SpiralogicExperience() {
               >
                 <button
                   onClick={handleGreetingComplete}
-                  className="px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                  className="px-8 py-4 bg-gradient-to-r from-amber-500 to-indigo-600 text-white rounded-full text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                 >
                   Begin the Journey
                 </button>
@@ -232,7 +232,7 @@ export default function SpiralogicExperience() {
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   placeholder="Share what is present for you..."
-                  className="w-full h-32 p-4 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur border border-gray-200 dark:border-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full h-32 p-4 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur border border-gray-200 dark:border-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500"
                   disabled={isProcessing}
                 />
                 
@@ -240,7 +240,7 @@ export default function SpiralogicExperience() {
                   <button
                     onClick={handleReflectionSubmit}
                     disabled={isProcessing || !userInput.trim()}
-                    className="px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-3 bg-gradient-to-r from-amber-500 to-indigo-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isProcessing ? 'Processing...' : 'Offer to the Spiral'}
                   </button>
@@ -280,9 +280,9 @@ export default function SpiralogicExperience() {
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-2xl p-6"
+                    className="bg-gradient-to-br from-amber-50 to-indigo-50 dark:from-amber-900/20 dark:to-indigo-900/20 rounded-2xl p-6"
                   >
-                    <h4 className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-3">
+                    <h4 className="text-sm font-medium text-amber-700 dark:text-amber-300 mb-3">
                       Ritual Invitation
                     </h4>
                     <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -296,7 +296,7 @@ export default function SpiralogicExperience() {
                     />
                     <button
                       onClick={handleRitualComplete}
-                      className="mt-3 px-4 py-2 bg-purple-500 text-white rounded-lg text-sm hover:bg-purple-600 transition-colors"
+                      className="mt-3 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors"
                     >
                       Complete Ritual
                     </button>

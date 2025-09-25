@@ -362,7 +362,7 @@ export function SpiralogicHoloflowerCheckIn({
 
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-2 transition-all"
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg flex items-center gap-2 transition-all"
               >
                 <Sparkles className="w-4 h-4" />
                 Submit Check-In
@@ -422,7 +422,7 @@ export function SpiralogicHoloflowerCheckIn({
                     ease: 'easeInOut'
                   }}
                 >
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600/30 to-pink-600/30 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-600/30 to-pink-600/30 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     {ELEMENT_ICONS.aether}
                   </div>
                 </motion.div>
@@ -546,7 +546,7 @@ export function SpiralogicHoloflowerCheckIn({
                       </div>
                       <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <motion.div
-                          className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                          className="h-full bg-gradient-to-r from-amber-500 to-pink-500"
                           animate={{ width: `${value * 10}%` }}
                           transition={{ duration: 0.3 }}
                         />
@@ -578,7 +578,7 @@ export function SpiralogicHoloflowerCheckIn({
                           {PHASE_SYMBOLS[selectedFacet.phase]}
                         </span>
                       </div>
-                      <p className="text-purple-400 text-sm mb-1">
+                      <p className="text-amber-400 text-sm mb-1">
                         {selectedFacet.focusState}
                       </p>
                       <p className="text-white/60 text-sm">
@@ -595,8 +595,8 @@ export function SpiralogicHoloflowerCheckIn({
 
                   <div className="space-y-4">
                     {/* Key Question */}
-                    <div className="p-4 bg-purple-600/10 rounded-lg border border-purple-600/30">
-                      <p className="text-purple-400 text-xs mb-2">Reflection Question:</p>
+                    <div className="p-4 bg-amber-600/10 rounded-lg border border-amber-600/30">
+                      <p className="text-amber-400 text-xs mb-2">Reflection Question:</p>
                       <p className="text-white/90">{selectedFacet.keyQuestion}</p>
                     </div>
 
@@ -666,7 +666,7 @@ export function SpiralogicHoloflowerCheckIn({
                           [selectedFacet.id]: e.target.value
                         }))}
                         placeholder="What comes up for you in this facet?"
-                        className="w-full h-20 p-3 bg-black/30 border border-white/10 rounded-lg text-white placeholder-white/30 resize-none focus:outline-none focus:border-purple-400/50"
+                        className="w-full h-20 p-3 bg-black/30 border border-white/10 rounded-lg text-white placeholder-white/30 resize-none focus:outline-none focus:border-amber-400/50"
                       />
                     </div>
                   </div>
@@ -674,7 +674,7 @@ export function SpiralogicHoloflowerCheckIn({
               ) : (
                 // Instructions when no facet selected
                 <div className="bg-white/5 rounded-xl border border-white/10 p-8 text-center">
-                  <Sparkles className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+                  <Sparkles className="w-12 h-12 text-amber-400 mx-auto mb-4" />
                   <h3 className="text-lg font-light text-white mb-2">
                     Explore Your 12 Facets
                   </h3>
@@ -711,7 +711,7 @@ export function SpiralogicHoloflowerCheckIn({
                       </div>
                       <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <motion.div
-                          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                          className="h-full bg-gradient-to-r from-indigo-500 to-amber-500"
                           animate={{ width: `${value * 10}%` }}
                           transition={{ duration: 0.3 }}
                         />
@@ -721,8 +721,8 @@ export function SpiralogicHoloflowerCheckIn({
                   ))}
                 </div>
 
-                <div className="mt-4 p-3 bg-purple-600/10 rounded-lg border border-purple-600/30">
-                  <p className="text-purple-400 text-xs mb-1">Current Focus:</p>
+                <div className="mt-4 p-3 bg-amber-600/10 rounded-lg border border-amber-600/30">
+                  <p className="text-amber-400 text-xs mb-1">Current Focus:</p>
                   <p className="text-white/80 text-sm">
                     {getCurrentPhase() === 'vector' && 'Initiating new directions and exploring possibilities'}
                     {getCurrentPhase() === 'circle' && 'Integrating experiences and developing processes'}
@@ -733,8 +733,8 @@ export function SpiralogicHoloflowerCheckIn({
 
               {/* Crystal Focus Context (if applicable) */}
               {crystalFocus !== 'general' && (
-                <div className="bg-purple-600/10 rounded-xl border border-purple-600/30 p-6">
-                  <h3 className="text-purple-400 text-sm mb-3">Crystal Focus: {crystalFocus}</h3>
+                <div className="bg-amber-600/10 rounded-xl border border-amber-600/30 p-6">
+                  <h3 className="text-amber-400 text-sm mb-3">Crystal Focus: {crystalFocus}</h3>
                   <p className="text-white/70 text-sm leading-relaxed">
                     {crystalFocus === 'career' && 'Your Earth and Air facets are especially important for manifesting professional goals.'}
                     {crystalFocus === 'spiritual' && 'Fire and Water facets guide your spiritual journey and inner transformation.'}

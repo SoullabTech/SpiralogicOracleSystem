@@ -202,7 +202,7 @@ export function ProgressiveRevelationSystem({ userId, children }: ProgressiveRev
               {/* Gentle breathing orb */}
               <motion.div
                 className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br 
-                           from-purple-500/30 to-pink-500/30 border border-white/20"
+                           from-amber-500/30 to-pink-500/30 border border-white/20"
                 animate={{
                   scale: [1, 1.1, 1],
                   opacity: [0.6, 1, 0.6]
@@ -227,9 +227,9 @@ export function ProgressiveRevelationSystem({ userId, children }: ProgressiveRev
               <div className="flex flex-col space-y-3">
                 <motion.button
                   onClick={dismissRevelation}
-                  className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20
-                           border border-purple-500/40 text-white text-sm font-medium
-                           hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300"
+                  className="px-6 py-3 rounded-full bg-gradient-to-r from-amber-500/20 to-pink-500/20
+                           border border-amber-500/40 text-white text-sm font-medium
+                           hover:from-amber-500/30 hover:to-pink-500/30 transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -254,7 +254,7 @@ export function ProgressiveRevelationSystem({ userId, children }: ProgressiveRev
                     key={i}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       i <= revelationLevel 
-                        ? 'bg-purple-400' 
+                        ? 'bg-amber-400' 
                         : 'bg-white/20'
                     }`}
                   />

@@ -87,10 +87,10 @@ const DepthController: React.FC<{
         />
       </div>
       <div className="flex justify-between mt-2 text-xs text-gray-500">
-        <span className={depth === 0 ? 'text-purple-600 font-medium' : ''}>Surface</span>
-        <span className={depth === 1 ? 'text-purple-600 font-medium' : ''}>Exploring</span>
-        <span className={depth === 2 ? 'text-purple-600 font-medium' : ''}>Deep</span>
-        <span className={depth === 3 ? 'text-purple-600 font-medium' : ''}>Mystery</span>
+        <span className={depth === 0 ? 'text-amber-600 font-medium' : ''}>Surface</span>
+        <span className={depth === 1 ? 'text-amber-600 font-medium' : ''}>Exploring</span>
+        <span className={depth === 2 ? 'text-amber-600 font-medium' : ''}>Deep</span>
+        <span className={depth === 3 ? 'text-amber-600 font-medium' : ''}>Mystery</span>
       </div>
     </div>
   );
@@ -122,8 +122,8 @@ const SilenceControls: React.FC<{
       
       <motion.button
         whileTap={{ scale: 0.95 }}
-        className="px-4 py-2 bg-purple-100 dark:bg-purple-900 rounded-full 
-                   hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+        className="px-4 py-2 bg-amber-100 dark:bg-amber-900 rounded-full 
+                   hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors"
       >
         <span className="text-sm">✨ Sit with this</span>
       </motion.button>
@@ -162,7 +162,7 @@ const DensitySelector: React.FC<{
           className={`
             px-3 py-2 rounded-md transition-all
             ${selected === density.value 
-              ? 'bg-purple-500 text-white' 
+              ? 'bg-amber-500 text-white' 
               : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
             }
           `}

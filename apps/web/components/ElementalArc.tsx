@@ -87,7 +87,7 @@ export default function ElementalArc({ sessions, height = 200 }: ElementalArcPro
   return (
     <div className="w-full overflow-x-auto">
       <div className="min-w-[600px] p-4 bg-black/30 rounded-lg">
-        <h3 className="text-sm font-medium text-purple-300 mb-3">Elemental Arc Journey</h3>
+        <h3 className="text-sm font-medium text-amber-300 mb-3">Elemental Arc Journey</h3>
         
         <svg width={width} height={height} className="overflow-visible">
           <g transform={`translate(${padding.left}, ${padding.top})`}>
@@ -219,8 +219,8 @@ export default function ElementalArc({ sessions, height = 200 }: ElementalArcPro
         </div>
 
         {/* Pattern Detection */}
-        <div className="mt-4 p-3 bg-purple-900/20 rounded-lg">
-          <h4 className="text-xs font-medium text-purple-300 mb-2">Detected Patterns:</h4>
+        <div className="mt-4 p-3 bg-amber-900/20 rounded-lg">
+          <h4 className="text-xs font-medium text-amber-300 mb-2">Detected Patterns:</h4>
           <div className="text-xs text-gray-400 space-y-1">
             {(() => {
               const dominantCounts = arcData.reduce((acc, d) => {

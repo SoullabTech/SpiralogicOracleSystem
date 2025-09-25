@@ -206,8 +206,8 @@ export const ProsodyDebugPanel: React.FC<ProsodyDebugPanelProps> = ({
 
               {/* Therapeutic Guidance */}
               {therapeuticGuidance && (
-                <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded p-2 border border-purple-700/30">
-                  <div className="text-xs text-purple-400 mb-1">Therapeutic Arc</div>
+                <div className="bg-gradient-to-r from-amber-900/20 to-blue-900/20 rounded p-2 border border-amber-700/30">
+                  <div className="text-xs text-amber-400 mb-1">Therapeutic Arc</div>
                   <div className="text-xs text-gray-300 italic">
                     {therapeuticGuidance}
                   </div>

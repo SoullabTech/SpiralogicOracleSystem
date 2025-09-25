@@ -220,7 +220,7 @@ export default function ConversationFlow({
             onAnimationComplete={() => {
               setTimeout(() => setAudioUnlocked(false), 3000);
             }}
-            className="mx-4 mb-2 p-3 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-lg text-sm"
+            className="mx-4 mb-2 p-3 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-lg text-sm"
           >
             🔊 Maia&apos;s voice unlocked — you&apos;ll now hear her replies
           </motion.div>

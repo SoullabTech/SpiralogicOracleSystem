@@ -362,7 +362,7 @@ const EvolutionDashboard = () => {
       case 'breakthrough': return <Zap className="w-4 h-4 text-yellow-500" />;
       case 'pattern': return <BarChart3 className="w-4 h-4 text-blue-500" />;
       case 'integration': return <Target className="w-4 h-4 text-green-500" />;
-      case 'shadow': return <Eye className="w-4 h-4 text-purple-500" />;
+      case 'shadow': return <Eye className="w-4 h-4 text-amber-500" />;
       case 'daimonic': return <Moon className="w-4 h-4 text-indigo-500" />;
       default: return <Star className="w-4 h-4" />;
     }
@@ -418,7 +418,7 @@ const EvolutionDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  from-purple-900 via-blue-900 to-indigo-900 p-6 flex items-center justify-center">
+      <div className="min-h-screen  from-amber-900 via-blue-900 to-indigo-900 p-6 flex items-center justify-center">
         <div className="text-center text-white">
           <div className="animate-spin w-12 h-12 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-lg">Mapping your evolutionary journey...</p>
@@ -428,14 +428,14 @@ const EvolutionDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen  from-purple-900 via-blue-900 to-indigo-900 p-6">
+    <div className="min-h-screen  from-amber-900 via-blue-900 to-indigo-900 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center text-white space-y-4">
-          <h1 className="text-4xl font-bold  from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold  from-amber-400 to-pink-400 bg-clip-text text-transparent">
             🌀 Evolution Dashboard
           </h1>
-          <p className="text-xl text-purple-200">
+          <p className="text-xl text-amber-200">
             Witness your archetypal transformation and consciousness evolution
           </p>
           
@@ -509,7 +509,7 @@ const EvolutionDashboard = () => {
               <Card className="bg-white/10 backdrop-blur-sm border-white/20">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3">
-                    <Compass className="w-8 h-8 text-purple-400" />
+                    <Compass className="w-8 h-8 text-amber-400" />
                     <div>
                       <p className="text-white/70 text-sm">Dominant Archetype</p>
                       <p className="text-white text-lg font-bold">
@@ -812,11 +812,11 @@ const EvolutionDashboard = () => {
                   <span className="text-white/70 text-sm">Low</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-purple-400/50 rounded"></div>
+                  <div className="w-4 h-4 bg-amber-400/50 rounded"></div>
                   <span className="text-white/70 text-sm">Medium</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-purple-400 rounded"></div>
+                  <div className="w-4 h-4 bg-amber-400 rounded"></div>
                   <span className="text-white/70 text-sm">High Intensity</span>
                 </div>
               </div>
@@ -828,7 +828,7 @@ const EvolutionDashboard = () => {
         {activeView === 'field-context' && combinedData && (
           <div className="space-y-6">
             {/* Cross-Narrative Banner */}
-            <Card className=" from-cyan-900/40 via-blue-900/40 to-purple-900/40 backdrop-blur-sm border-cyan-400/30">
+            <Card className=" from-cyan-900/40 via-blue-900/40 to-amber-900/40 backdrop-blur-sm border-cyan-400/30">
               <CardHeader>
                 <CardTitle className="text-white text-center text-2xl">
                   🌊 Your Place in the Archetypal Field
@@ -937,7 +937,7 @@ const EvolutionDashboard = () => {
                           {[6, 7, 22, 23].filter(hour => 
                             emotionalData.some(d => d.hour === hour && d.intensity > 0.6)
                           ).map(hour => (
-                            <Badge key={hour} className="bg-purple-500/20 text-purple-300">
+                            <Badge key={hour} className="bg-amber-500/20 text-amber-300">
                               {hour}:00
                             </Badge>
                           ))}
@@ -963,7 +963,7 @@ const EvolutionDashboard = () => {
               <Button
                 onClick={() => setActiveView('overview')}
                 variant="outline"
-                className="border-purple-500/20 hover:bg-purple-500/10"
+                className="border-amber-500/20 hover:bg-amber-500/10"
               >
                 <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
                 Back to Personal View
@@ -984,7 +984,7 @@ const EvolutionDashboard = () => {
           <div className="text-center">
             <Button 
               onClick={downloadJourneyReport}
-              className=" from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 text-lg"
+              className=" from-amber-500 to-pink-500 hover:from-amber-600 hover:to-pink-600 text-white px-8 py-4 text-lg"
               size="lg"
             >
               <Download className="w-5 h-5 mr-2" />

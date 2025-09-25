@@ -188,7 +188,7 @@ export default function HoloflowerExperience() {
                 onClick={() => handleEnergyChange(state)}
                 className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all ${
                   energyState === state
-                    ? 'bg-purple-600 text-white'
+                    ? 'bg-amber-600 text-white'
                     : 'bg-white/10 text-white/60 hover:bg-white/20'
                 }`}
               >
@@ -201,7 +201,7 @@ export default function HoloflowerExperience() {
         {/* Check-In Button */}
         <button
           onClick={() => setShowCheckIn(true)}
-          className="bg-purple-600/80 backdrop-blur-lg hover:bg-purple-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
+          className="bg-amber-600/80 backdrop-blur-lg hover:bg-amber-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
         >
           <Activity className="w-4 h-4" />
           <span className="hidden sm:inline">Daily Check-In</span>

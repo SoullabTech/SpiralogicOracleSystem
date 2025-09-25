@@ -58,7 +58,7 @@ export function AskMayaPanel({ className }: AskMayaPanelProps) {
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-2xl">
-              <Brain className="w-6 h-6 text-purple-600" />
+              <Brain className="w-6 h-6 text-amber-600" />
               Maya's Insights
             </CardTitle>
             <Button onClick={handleReset} variant="outline" size="sm">
@@ -69,10 +69,10 @@ export function AskMayaPanel({ className }: AskMayaPanelProps) {
 
         <CardContent className="space-y-6">
           {/* Validation Message */}
-          <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+          <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
             <div className="flex items-start gap-3">
-              <Heart className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
-              <p className="text-purple-800 font-medium">{insights.validationMessage}</p>
+              <Heart className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+              <p className="text-amber-800 font-medium">{insights.validationMessage}</p>
             </div>
           </div>
 
@@ -154,7 +154,7 @@ export function AskMayaPanel({ className }: AskMayaPanelProps) {
                       <ul className="space-y-1">
                         {insights.everydayApplications.workplaceApplications.map((application, index) => (
                           <li key={index} className="flex items-start gap-2">
-                            <ArrowRight className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                            <ArrowRight className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
                             <span className="text-gray-700">{application}</span>
                           </li>
                         ))}
@@ -273,7 +273,7 @@ export function AskMayaPanel({ className }: AskMayaPanelProps) {
     <Card className={`w-full max-w-2xl mx-auto ${className}`}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
-          <Brain className="w-6 h-6 text-purple-600" />
+          <Brain className="w-6 h-6 text-amber-600" />
           Ask Maya
         </CardTitle>
         <p className="text-gray-600">

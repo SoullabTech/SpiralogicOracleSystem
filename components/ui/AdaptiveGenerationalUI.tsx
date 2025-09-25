@@ -60,7 +60,7 @@ export const AdaptiveGenerationalUI: React.FC<AdaptiveGenerationalUIProps> = ({
   // GEN ALPHA (Under 14) - Colorful, gamified, visual
   if (userGeneration === 'genAlpha') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-amber-400 via-pink-400 to-blue-400 p-4">
         <div className="max-w-md mx-auto">
           {/* Fun animated character */}
           <motion.div
@@ -122,7 +122,7 @@ export const AdaptiveGenerationalUI: React.FC<AdaptiveGenerationalUIProps> = ({
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="w-full bg-purple-500 text-white p-6 rounded-full flex items-center justify-center gap-3"
+            className="w-full bg-amber-500 text-white p-6 rounded-full flex items-center justify-center gap-3"
           >
             <Mic className="w-8 h-8" />
             <span className="text-xl font-bold">Press to Talk!</span>
@@ -149,7 +149,7 @@ export const AdaptiveGenerationalUI: React.FC<AdaptiveGenerationalUIProps> = ({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="type here..."
-              className="w-full bg-gray-900 border border-gray-800 rounded-full px-4 py-3 pr-12 focus:outline-none focus:border-purple-500 lowercase"
+              className="w-full bg-gray-900 border border-gray-800 rounded-full px-4 py-3 pr-12 focus:outline-none focus:border-amber-500 lowercase"
               style={{ fontSize }}
             />
             <button className="absolute right-2 top-2 p-2">
@@ -177,7 +177,7 @@ export const AdaptiveGenerationalUI: React.FC<AdaptiveGenerationalUIProps> = ({
   // MILLENNIAL (28-43) - Friendly, organized, emoji-friendly
   if (userGeneration === 'millennial') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-amber-50 p-4">
         <div className="max-w-md mx-auto">
           {/* Friendly header with emoji */}
           <div className="bg-white rounded-2xl shadow-sm p-6 mb-4">
@@ -212,7 +212,7 @@ export const AdaptiveGenerationalUI: React.FC<AdaptiveGenerationalUIProps> = ({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Share what's on your mind..."
-              className="w-full resize-none p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full resize-none p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500"
               rows={3}
               style={{ fontSize }}
             />
@@ -220,7 +220,7 @@ export const AdaptiveGenerationalUI: React.FC<AdaptiveGenerationalUIProps> = ({
               <button className="text-gray-500">
                 <Plus className="w-5 h-5" />
               </button>
-              <button className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600">
+              <button className="bg-amber-500 text-white px-6 py-2 rounded-full hover:bg-amber-600">
                 Send
               </button>
             </div>

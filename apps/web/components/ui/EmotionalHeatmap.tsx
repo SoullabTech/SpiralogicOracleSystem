@@ -236,11 +236,11 @@ export function EmotionalHeatmap({
           {dimension === 'dominance' && (
             <>
               <div className="flex items-center gap-1">
-                <div className="w-4 h-4 bg-purple-300 rounded" />
+                <div className="w-4 h-4 bg-amber-300 rounded" />
                 <span>Low</span>
               </div>
               <div className="flex items-center gap-1">
-                <div className="w-4 h-4 bg-purple-600 rounded" />
+                <div className="w-4 h-4 bg-amber-600 rounded" />
                 <span>High</span>
               </div>
             </>

@@ -47,7 +47,7 @@ export default function MaiaBubble({
       case 'earth': return 'from-green-500 to-emerald-500';
       case 'air': return 'from-yellow-400 to-amber-400';
       case 'aether': 
-      default: return 'from-purple-500 to-indigo-500';
+      default: return 'from-amber-500 to-indigo-500';
     }
   };
 
@@ -58,7 +58,7 @@ export default function MaiaBubble({
       case 'earth': return 'shadow-green-500/20';
       case 'air': return 'shadow-yellow-400/20';
       case 'aether':
-      default: return 'shadow-purple-500/20';
+      default: return 'shadow-amber-500/20';
     }
   };
 
@@ -106,7 +106,7 @@ export default function MaiaBubble({
             <motion.div
               animate={{ opacity: [1, 0.5, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="flex items-center gap-1 text-xs text-purple-500"
+              className="flex items-center gap-1 text-xs text-amber-500"
             >
               <Loader2 className="w-3 h-3 animate-spin" />
               <span>thinking...</span>

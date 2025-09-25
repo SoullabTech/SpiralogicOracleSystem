@@ -158,7 +158,7 @@ export default function VoiceMaskListeningTest({
             onClick={() => onChange(rating)}
             className={`p-2 rounded-lg transition-all ${
               value >= rating
-                ? 'bg-purple-500 text-white'
+                ? 'bg-amber-500 text-white'
                 : 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700'
             }`}
           >
@@ -186,7 +186,7 @@ export default function VoiceMaskListeningTest({
       {/* Progress Bar */}
       <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
         <motion.div
-          className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full"
+          className="bg-gradient-to-r from-amber-500 to-amber-600 h-2 rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.3 }}
@@ -216,7 +216,7 @@ export default function VoiceMaskListeningTest({
           </p>
           <button
             onClick={handlePhraseChange}
-            className="mt-2 text-xs text-purple-600 hover:text-purple-700 mx-auto block"
+            className="mt-2 text-xs text-amber-600 hover:text-amber-700 mx-auto block"
           >
             Try different phrase →
           </button>
@@ -230,7 +230,7 @@ export default function VoiceMaskListeningTest({
             className={`px-6 py-3 rounded-lg flex items-center gap-2 font-medium transition-colors
               ${isPlaying
                 ? 'bg-neutral-200 dark:bg-neutral-700 cursor-wait'
-                : 'bg-purple-600 hover:bg-purple-700 text-white'}`}
+                : 'bg-amber-600 hover:bg-amber-700 text-white'}`}
             whileHover={!isPlaying ? { scale: 1.05 } : {}}
             whileTap={!isPlaying ? { scale: 0.95 } : {}}
           >
@@ -317,7 +317,7 @@ export default function VoiceMaskListeningTest({
             disabled={!hasListened || Object.values(ratings).some(r => r === 0)}
             className={`px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors
               ${hasListened && !Object.values(ratings).some(r => r === 0)
-                ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                ? 'bg-amber-600 hover:bg-amber-700 text-white'
                 : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-400 cursor-not-allowed'}`}
           >
             {currentMaskIndex < testOrder.length - 1 ? (
@@ -405,7 +405,7 @@ function TestResults({
                 <span className="font-medium">
                   {ratings.element} {ratings.name}
                 </span>
-                <span className="text-sm font-bold text-purple-600">
+                <span className="text-sm font-bold text-amber-600">
                   {ratings.overall.toFixed(1)} / 5.0
                 </span>
               </div>

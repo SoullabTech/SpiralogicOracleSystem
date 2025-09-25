@@ -245,7 +245,7 @@ export default function BetaAnalyticsPage() {
           <div className="bg-white p-6 rounded-lg border border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <TrendingUp className="w-8 h-8 text-purple-500" />
+                <TrendingUp className="w-8 h-8 text-amber-500" />
                 <div>
                   <p className="text-sm text-gray-500">Success Rate</p>
                   <p className="text-2xl font-bold text-gray-900">{analytics.successRate}%</p>

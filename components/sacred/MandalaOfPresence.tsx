@@ -388,7 +388,7 @@ const MandalaOfPresence: React.FC = () => {
             className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30"
           >
             <div className="bg-slate-900/90 backdrop-blur-md rounded-2xl px-6 py-3 text-center">
-              <div className="text-sm text-purple-400 font-medium">
+              <div className="text-sm text-amber-400 font-medium">
                 {selectedPetal.element} • {selectedPetal.name}
               </div>
               <div className="text-xs text-gray-400 mt-1">
@@ -418,7 +418,7 @@ const MetricBar: React.FC<{
         : 'h-16 w-full bg-gray-800 relative'
     } rounded-full overflow-hidden`}>
       <motion.div
-        className="bg-gradient-to-r from-purple-600 to-purple-400"
+        className="bg-gradient-to-r from-amber-600 to-amber-400"
         animate={vertical
           ? { width: `${value * 100}%` }
           : { height: `${value * 100}%`, y: `${(1 - value) * 100}%` }

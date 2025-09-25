@@ -34,13 +34,13 @@ const ENHANCED_PETALS: PetalMeaning[] = [
   {
     element: 'air',
     color: '#A8DADC',
-    gradient: 'from-sky-400 via-indigo-400 to-purple-400', 
+    gradient: 'from-sky-400 via-indigo-400 to-amber-400', 
     position: { x: 57, y: 57, rotation: 135 }
   },
   {
     element: 'aether',
     color: '#E0AAFF',
-    gradient: 'from-purple-500 via-pink-500 to-rose-500',
+    gradient: 'from-amber-500 via-pink-500 to-rose-500',
     position: { x: 0, y: 80, rotation: 180 }
   },
   {
@@ -58,7 +58,7 @@ const ENHANCED_PETALS: PetalMeaning[] = [
   {
     element: 'void',
     color: '#0F0E17',
-    gradient: 'from-indigo-900 via-purple-900 to-black',
+    gradient: 'from-indigo-900 via-amber-900 to-black',
     position: { x: -57, y: -57, rotation: 315 }
   }
 ];
@@ -183,9 +183,9 @@ export function EnhancedPetalSystem() {
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
             onClick={handleModeToggle}
             className="absolute top-4 right-4 z-50 px-5 py-3 rounded-full
-                       bg-gradient-to-r from-purple-500/20 to-pink-500/20 
+                       bg-gradient-to-r from-amber-500/20 to-pink-500/20 
                        backdrop-blur-lg border border-white/30
-                       hover:from-purple-500/30 hover:to-pink-500/30
+                       hover:from-amber-500/30 hover:to-pink-500/30
                        transition-all duration-300 group"
           >
             <div className="flex items-center space-x-2">
@@ -247,7 +247,7 @@ export function EnhancedPetalSystem() {
         {/* Core Mandala */}
         <motion.div
           className="absolute inset-0 rounded-full 
-                     bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-blue-500/20
+                     bg-gradient-to-br from-amber-500/20 via-pink-500/20 to-blue-500/20
                      backdrop-blur-md border border-white/30"
           animate={{
             scale: breakthroughMoment ? [1, 1.2, 1] : [1, 1.05, 1],

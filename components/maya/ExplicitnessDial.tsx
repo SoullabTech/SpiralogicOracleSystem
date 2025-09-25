@@ -144,7 +144,7 @@ export const ExplicitnessDial: React.FC<ExplicitnessDialProps> = ({
             transform="rotate(-90 96 96)"
             className={cn(
               'transition-all duration-500',
-              isTransitioning ? 'text-purple-400' : 'text-purple-600'
+              isTransitioning ? 'text-amber-400' : 'text-amber-600'
             )}
           />
         </svg>

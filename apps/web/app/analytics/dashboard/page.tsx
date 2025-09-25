@@ -304,11 +304,11 @@ const UserMetricsView: React.FC<{
           </div>
           <div className="text-sm text-green-800">Consistency Score</div>
         </div>
-        <div className="text-center p-4 bg-purple-50 rounded-lg">
-          <div className="text-2xl font-semibold text-purple-600">
+        <div className="text-center p-4 bg-amber-50 rounded-lg">
+          <div className="text-2xl font-semibold text-amber-600">
             {metrics.integrationProgress.spiralDepth}
           </div>
-          <div className="text-sm text-purple-800">Spiral Depth</div>
+          <div className="text-sm text-amber-800">Spiral Depth</div>
         </div>
         <div className="text-center p-4 bg-orange-50 rounded-lg">
           <div className="text-2xl font-semibold text-orange-600">
@@ -480,11 +480,11 @@ const PlatformAnalyticsView: React.FC<{ analytics: PlatformAnalytics }> = ({
           </div>
           <div className="text-sm text-green-800">Active Users</div>
         </div>
-        <div className="text-center p-4 bg-purple-50 rounded-lg">
-          <div className="text-2xl font-semibold text-purple-600">
+        <div className="text-center p-4 bg-amber-50 rounded-lg">
+          <div className="text-2xl font-semibold text-amber-600">
             {Math.round(analytics.retentionRates.month1 * 100)}%
           </div>
-          <div className="text-sm text-purple-800">30-Day Retention</div>
+          <div className="text-sm text-amber-800">30-Day Retention</div>
         </div>
       </div>
     </div>

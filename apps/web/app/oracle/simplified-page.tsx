@@ -165,11 +165,11 @@ function SimplifiedOracleContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/10 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/10 to-slate-900 flex flex-col">
       {/* Minimal header */}
       <div className="p-6 text-center">
         <div className="inline-flex items-center space-x-2">
-          <Crown className="w-5 h-5 text-purple-400" />
+          <Crown className="w-5 h-5 text-amber-400" />
           <h1 className="text-xl font-light text-white">Maya</h1>
         </div>
       </div>
@@ -207,10 +207,10 @@ function SimplifiedOracleContent() {
               animate={{ opacity: 1, y: 0 }}
               className="flex justify-start"
             >
-              <div className="bg-background/60 backdrop-blur-xl border border-purple-500/20 rounded-2xl px-4 py-3 max-w-[80%]">
+              <div className="bg-background/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl px-4 py-3 max-w-[80%]">
                 <div className="flex items-center space-x-3">
                   <Spinner variant="oracle" size="sm" color="purple" />
-                  <span className="text-xs text-purple-300">Maya is reflecting...</span>
+                  <span className="text-xs text-amber-300">Maya is reflecting...</span>
                 </div>
               </div>
             </motion.div>
@@ -231,7 +231,7 @@ function SimplifiedOracleContent() {
               className={`p-3 rounded-full ${
                 isRecording 
                   ? 'bg-red-500/20 text-red-400' 
-                  : 'text-purple-400 hover:bg-purple-500/10'
+                  : 'text-amber-400 hover:bg-amber-500/10'
               }`}
             >
               {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
@@ -249,7 +249,7 @@ function SimplifiedOracleContent() {
             <Button
               onClick={sendMessage}
               disabled={!inputText.trim() || isStreaming}
-              className="p-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full disabled:opacity-30"
+              className="p-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full disabled:opacity-30"
             >
               <Send className="w-5 h-5" />
             </Button>

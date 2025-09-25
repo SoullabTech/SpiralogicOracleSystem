@@ -12,7 +12,7 @@ const OracleConversation = dynamic(
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white text-center">
           <div className="animate-pulse">
-            <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 opacity-50"></div>
+            <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-r from-amber-600 to-blue-600 opacity-50"></div>
             <p className="text-xl">Initializing Sacred Oracle...</p>
           </div>
         </div>

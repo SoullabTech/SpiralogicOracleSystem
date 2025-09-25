@@ -300,7 +300,7 @@ export function OracleUnified({ sessionId = `session-${Date.now()}`, onMessageAd
                 {[...Array(8)].map((_, i) => (
                   <motion.div
                     key={`maia-sparkle-${i}`}
-                    className="absolute w-1 h-1 bg-purple-400 rounded-full"
+                    className="absolute w-1 h-1 bg-amber-400 rounded-full"
                     initial={{
                       x: 0,
                       y: 0,

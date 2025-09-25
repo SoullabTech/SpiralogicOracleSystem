@@ -65,7 +65,7 @@ export default function ToneStyleSelector({
       name: 'Poetic', 
       desc: 'Flowing, metaphorical expression',
       icon: Sparkles, 
-      color: 'from-purple-600 to-pink-600' 
+      color: 'from-amber-600 to-pink-600' 
     },
     { 
       id: 'auto' as const, 

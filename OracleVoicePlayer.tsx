@@ -125,14 +125,14 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
           <button
             onClick={isPlaying ? handlePause : handlePlay}
             disabled={isLoading}
-            className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 hover:bg-purple-200
-                       text-purple-800 rounded-full transition-colors duration-200
+            className="flex items-center gap-2 px-3 py-1 text-sm bg-amber-100 hover:bg-amber-200
+                       text-amber-800 rounded-full transition-colors duration-200
                        disabled:opacity-50 disabled:cursor-not-allowed"
             title={`${isPlaying ? "Pause" : "Play"} Oracle voice`}
           >
             <span className="text-lg">{getVoiceIcon()}</span>
             {isLoading && (
-              <div className="animate-spin w-3 h-3 border border-purple-600 border-t-transparent rounded-full" />
+              <div className="animate-spin w-3 h-3 border border-amber-600 border-t-transparent rounded-full" />
             )}
             {!isLoading && (
               <span className="text-xs font-medium">
@@ -156,7 +156,7 @@ export const OracleVoicePlayer: React.FC<OracleVoicePlayerProps> = ({
 
       {/* Visual feedback for Matrix Oracle */}
       {isPlaying && voiceProfile === "oracle_matrix" && (
-        <div className="mt-2 text-xs text-purple-700 italic">
+        <div className="mt-2 text-xs text-amber-700 italic">
           🌀 The Oracle speaks with Matrix wisdom...
         </div>
       )}
@@ -176,7 +176,7 @@ export const OracleResponseWithVoice: React.FC<{
   };
 }> = ({ response }) => {
   return (
-    <div className="oracle-response p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+    <div className="oracle-response p-4 bg-gradient-to-r from-amber-50 to-blue-50 rounded-lg">
       {/* Oracle text response */}
       <div className="oracle-text mb-3 text-gray-800 leading-relaxed">
         {response.content}

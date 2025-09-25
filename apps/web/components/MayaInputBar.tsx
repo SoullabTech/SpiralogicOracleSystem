@@ -75,12 +75,12 @@ export default function MaiaInputBar({
 
   // Element options for the dropdown
   const elements = [
-    { value: "auto", label: "Auto-Detect", icon: "🔮", color: "text-purple-400" },
+    { value: "auto", label: "Auto-Detect", icon: "🔮", color: "text-amber-400" },
     { value: "fire", label: "Fire", icon: "🔥", color: "text-red-400" },
     { value: "water", label: "Water", icon: "💧", color: "text-blue-400" },
     { value: "earth", label: "Earth", icon: "🌍", color: "text-green-400" },
     { value: "air", label: "Air", icon: "💨", color: "text-yellow-400" },
-    { value: "aether", label: "Aether", icon: "✨", color: "text-purple-400" }
+    { value: "aether", label: "Aether", icon: "✨", color: "text-amber-400" }
   ];
 
   // Language options
@@ -322,7 +322,7 @@ export default function MaiaInputBar({
           {/* Maia&apos;s Welcome Ritual Trigger */}
           <button
             onClick={triggerWelcomeRitual}
-            className="text-purple-400 hover:text-purple-300 cursor-pointer transition-colors"
+            className="text-amber-400 hover:text-amber-300 cursor-pointer transition-colors"
             title="Start Maia's Welcome Ritual"
             disabled={isStreaming}
           >
@@ -379,7 +379,7 @@ export default function MaiaInputBar({
               onClick={() => setShowRecallDebug(!showRecallDebug)}
               className={`transition-colors ${
                 showRecallDebug
-                  ? 'text-purple-400 hover:text-purple-300'
+                  ? 'text-amber-400 hover:text-amber-300'
                   : 'text-gray-400 hover:text-white'
               }`}
               title="Toggle Semantic Recall Debug"

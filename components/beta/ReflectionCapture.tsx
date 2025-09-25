@@ -202,25 +202,25 @@ export default function ReflectionCapture() {
         className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
+        <div className="bg-gradient-to-r from-amber-600 to-indigo-600 p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold flex items-center">
                 <Sparkles className="w-6 h-6 mr-2" />
                 Week {currentWeek} Reflection
               </h2>
-              <p className="text-purple-100 mt-1">{currentPrompts.title}</p>
+              <p className="text-amber-100 mt-1">{currentPrompts.title}</p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-purple-200">Explorer</p>
+              <p className="text-sm text-amber-200">Explorer</p>
               <p className="font-semibold">{explorerName}</p>
             </div>
           </div>
         </div>
 
         {/* Goal */}
-        <div className="px-6 py-4 bg-purple-50 dark:bg-purple-900/20 border-b border-purple-200 dark:border-purple-800">
-          <p className="text-sm text-purple-700 dark:text-purple-300">
+        <div className="px-6 py-4 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800">
+          <p className="text-sm text-amber-700 dark:text-amber-300">
             <strong>This week's focus:</strong> {currentPrompts.goal}
           </p>
         </div>
@@ -244,7 +244,7 @@ export default function ReflectionCapture() {
                     <span className="text-gray-700 dark:text-gray-300 font-medium">
                       {prompt.question}
                     </span>
-                    <span className="block text-xs text-purple-600 dark:text-purple-400 mt-1">
+                    <span className="block text-xs text-amber-600 dark:text-amber-400 mt-1">
                       Principle: {prompt.principle}
                     </span>
                   </label>
@@ -262,7 +262,7 @@ export default function ReflectionCapture() {
                   value={responses[responseKey] || ''}
                   onChange={(e) => handleResponseChange(prompt.tag, e.target.value)}
                   placeholder="Take your time... there's no right answer"
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 placeholder-gray-400 focus:border-purple-500 focus:outline-none resize-none"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 placeholder-gray-400 focus:border-amber-500 focus:outline-none resize-none"
                   rows={3}
                 />
               </motion.div>
@@ -311,7 +311,7 @@ export default function ReflectionCapture() {
               disabled={!canSave || isSaving}
               className={`flex items-center space-x-2 px-5 py-2.5 rounded-lg font-medium transition-colors ${
                 canSave && !isSaving
-                  ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                  ? 'bg-amber-600 hover:bg-amber-700 text-white'
                   : 'bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed'
               }`}
             >
@@ -338,7 +338,7 @@ export default function ReflectionCapture() {
               onClick={() => setCurrentWeek(week)}
               className={`w-2 h-2 rounded-full transition-colors ${
                 week === currentWeek
-                  ? 'bg-purple-600'
+                  ? 'bg-amber-600'
                   : savedWeeks.includes(week)
                   ? 'bg-green-500'
                   : 'bg-gray-300 dark:bg-gray-600'
@@ -361,7 +361,7 @@ export default function ReflectionCapture() {
         </p>
         <a
           href="#"
-          className="text-purple-600 dark:text-purple-400 hover:underline text-sm"
+          className="text-amber-600 dark:text-amber-400 hover:underline text-sm"
         >
           Post in #reflections on Discord
         </a>

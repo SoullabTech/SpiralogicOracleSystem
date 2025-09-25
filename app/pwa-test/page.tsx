@@ -44,7 +44,7 @@ export default function PWATestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 to-indigo-900 p-4">
       <div className="max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -80,7 +80,7 @@ export default function PWATestPage() {
             <div className="bg-white/5 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold">Platform</span>
-                <span className="text-sm px-2 py-1 bg-purple-500/30 rounded">
+                <span className="text-sm px-2 py-1 bg-amber-500/30 rounded">
                   {platform.toUpperCase()}
                 </span>
               </div>
@@ -130,7 +130,7 @@ export default function PWATestPage() {
               onClick={handleInstall}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-3 mb-4"
+              className="w-full bg-gradient-to-r from-amber-600 to-indigo-600 text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-3 mb-4"
             >
               {isIOS ? <Share className="w-5 h-5" /> : <Download className="w-5 h-5" />}
               {isIOS ? 'Show Install Instructions' : 'Install Maya App'}

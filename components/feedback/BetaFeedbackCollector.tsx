@@ -114,7 +114,7 @@ export default function BetaFeedbackCollector({
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm font-medium"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-amber-500 to-pink-500 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm font-medium"
       >
         ✨ Share Feedback
       </button>
@@ -149,7 +149,7 @@ export default function BetaFeedbackCollector({
                     <div
                       key={index}
                       className={`h-2 w-8 rounded-full transition-colors ${
-                        index <= currentStep ? 'bg-purple-500' : 'bg-gray-200'
+                        index <= currentStep ? 'bg-amber-500' : 'bg-gray-200'
                       }`}
                     />
                   ))}
@@ -171,7 +171,7 @@ export default function BetaFeedbackCollector({
                     })}
                     placeholder={currentStepData.placeholder}
                     rows={4}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
                   />
                 )}
 
@@ -190,7 +190,7 @@ export default function BetaFeedbackCollector({
                     />
                     <div className="flex justify-between text-sm text-gray-500">
                       <span>{currentStepData.min}</span>
-                      <span className="font-medium text-purple-600">
+                      <span className="font-medium text-amber-600">
                         {feedback[currentStepData.key] as number || 5}
                       </span>
                       <span>{currentStepData.max}</span>
@@ -223,7 +223,7 @@ export default function BetaFeedbackCollector({
                     }
                   }}
                   disabled={isSubmitting}
-                  className="px-8 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 disabled:opacity-50"
+                  className="px-8 py-2 bg-gradient-to-r from-amber-500 to-pink-500 text-white rounded-lg hover:from-amber-600 hover:to-pink-600 transition-all duration-300 disabled:opacity-50"
                 >
                   {isSubmitting ? 'Sending...' : isLastStep ? 'Share Feedback' : 'Next'}
                 </button>

@@ -185,14 +185,14 @@ export default function ThemeToggleWithAnalytics() {
         onClick={() => handleThemeChange('system')}
         className={`p-2 rounded-full border transition-all duration-200
                    ${theme === 'system' 
-                     ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20 shadow-purple-200 dark:shadow-purple-900' 
+                     ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20 shadow-amber-200 dark:shadow-amber-900' 
                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-900'
                    } shadow-sm hover:shadow-md`}
         aria-label="System default"
         title="Follow system theme"
       >
         <Monitor className={`w-5 h-5 transition-colors ${
-          theme === 'system' ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500 dark:text-gray-400'
+          theme === 'system' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-500 dark:text-gray-400'
         }`} />
       </motion.button>
     </div>

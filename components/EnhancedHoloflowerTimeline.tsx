@@ -96,7 +96,7 @@ export default function EnhancedHoloflowerTimeline({
             {Math.round(timeline.averageCoherence * 100)}% coherence
           </span>
           <span className="flex items-center gap-1">
-            <Sparkles className="w-4 h-4 text-purple-400" />
+            <Sparkles className="w-4 h-4 text-amber-400" />
             {timeline.growthTrajectory}
           </span>
         </motion.div>
@@ -105,7 +105,7 @@ export default function EnhancedHoloflowerTimeline({
       {/* Session Timeline */}
       <div className="relative">
         {/* Sacred geometry connection line */}
-        <div className="absolute left-12 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500/20 via-blue-500/10 to-transparent" />
+        <div className="absolute left-12 top-0 bottom-0 w-px bg-gradient-to-b from-amber-500/20 via-blue-500/10 to-transparent" />
 
         {/* Sessions */}
         <div className="space-y-6">
@@ -232,7 +232,7 @@ export default function EnhancedHoloflowerTimeline({
                             )}
                             
                             {session.aetherStage && session.aetherStage > 0 && (
-                              <span className="flex items-center gap-1 text-purple-400">
+                              <span className="flex items-center gap-1 text-amber-400">
                                 <Sparkles className="w-3 h-3" />
                                 Aether stage {session.aetherStage}
                               </span>
@@ -276,7 +276,7 @@ export default function EnhancedHoloflowerTimeline({
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="ml-20 mt-4 overflow-hidden"
                     >
-                      <div className="bg-gradient-to-br from-purple-900/10 to-blue-900/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                      <div className="bg-gradient-to-br from-amber-900/10 to-blue-900/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                         
                         {/* Sacred Assets Grid */}
                         {hasAssets ? (
@@ -310,7 +310,7 @@ export default function EnhancedHoloflowerTimeline({
                             </p>
                             <button 
                               onClick={() => onAssetUpload?.(session.id)}
-                              className="px-6 py-2 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 rounded-lg text-white/70 hover:text-white text-sm font-medium transition-all"
+                              className="px-6 py-2 bg-gradient-to-r from-amber-600/20 to-blue-600/20 hover:from-amber-600/30 hover:to-blue-600/30 rounded-lg text-white/70 hover:text-white text-sm font-medium transition-all"
                             >
                               Upload Sacred Assets
                             </button>
@@ -321,7 +321,7 @@ export default function EnhancedHoloflowerTimeline({
                         <div className="mt-6 pt-6 border-t border-white/10 flex gap-3">
                           <button
                             onClick={() => onSessionSelect?.(session)}
-                            className="flex-1 py-2 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 rounded-lg text-white/80 hover:text-white text-sm font-medium transition-all"
+                            className="flex-1 py-2 bg-gradient-to-r from-amber-600/20 to-blue-600/20 hover:from-amber-600/30 hover:to-blue-600/30 rounded-lg text-white/80 hover:text-white text-sm font-medium transition-all"
                           >
                             Load Session State
                           </button>
@@ -344,7 +344,7 @@ export default function EnhancedHoloflowerTimeline({
 
       {/* Element Distribution Summary */}
       <motion.div 
-        className="mt-12 p-6 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-2xl border border-white/10"
+        className="mt-12 p-6 bg-gradient-to-br from-amber-900/20 to-blue-900/20 rounded-2xl border border-white/10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
@@ -358,7 +358,7 @@ export default function EnhancedHoloflowerTimeline({
               <div className="text-white font-bold text-lg">{count}</div>
               <div className="h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
                 <motion.div 
-                  className="h-full bg-gradient-to-r from-purple-400 to-blue-400"
+                  className="h-full bg-gradient-to-r from-amber-400 to-blue-400"
                   initial={{ width: 0 }}
                   animate={{ width: `${(count / timeline.totalSessions) * 100}%` }}
                   transition={{ delay: 0.7, duration: 0.5 }}

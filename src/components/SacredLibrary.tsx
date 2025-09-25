@@ -114,7 +114,7 @@ export default function SacredLibrary({
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 p-6"
+      className="min-h-screen bg-gradient-to-br from-amber-900/20 via-black to-pink-900/20 p-6"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -125,7 +125,7 @@ export default function SacredLibrary({
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-8"
       >
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-purple-400 bg-clip-text text-transparent mb-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-amber-400 bg-clip-text text-transparent mb-2">
           Sacred Library
         </h1>
         <p className="text-gray-400 text-sm">
@@ -143,7 +143,7 @@ export default function SacredLibrary({
             placeholder="Search by name, type, or resonance..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50"
+            className="w-full pl-10 pr-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-amber-500/50"
           />
         </div>
 
@@ -155,7 +155,7 @@ export default function SacredLibrary({
               onClick={() => setSelectedCategory(filter.id)}
               className={`px-3 py-2 rounded-lg transition-all ${
                 selectedCategory === filter.id
-                  ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
+                  ? 'bg-amber-500/30 text-amber-300 border border-amber-500/50'
                   : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
               }`}
             >
@@ -171,7 +171,7 @@ export default function SacredLibrary({
             onClick={() => setViewMode('grid')}
             className={`p-2 rounded-lg transition-all ${
               viewMode === 'grid'
-                ? 'bg-purple-500/30 text-purple-300'
+                ? 'bg-amber-500/30 text-amber-300'
                 : 'bg-white/5 text-gray-400 hover:bg-white/10'
             }`}
           >
@@ -181,7 +181,7 @@ export default function SacredLibrary({
             onClick={() => setViewMode('list')}
             className={`p-2 rounded-lg transition-all ${
               viewMode === 'list'
-                ? 'bg-purple-500/30 text-purple-300'
+                ? 'bg-amber-500/30 text-amber-300'
                 : 'bg-white/5 text-gray-400 hover:bg-white/10'
             }`}
           >
@@ -190,7 +190,7 @@ export default function SacredLibrary({
         </div>
 
         {/* Upload Button */}
-        <label className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg cursor-pointer hover:from-purple-600 hover:to-pink-600 transition-all flex items-center gap-2">
+        <label className="px-4 py-2 bg-gradient-to-r from-amber-500 to-pink-500 text-white rounded-lg cursor-pointer hover:from-amber-600 hover:to-pink-600 transition-all flex items-center gap-2">
           <Upload className="w-4 h-4" />
           Upload
           <input
@@ -249,7 +249,7 @@ export default function SacredLibrary({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.03 }}
                 onClick={() => onAssetSelect?.(asset)}
-                className="flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-purple-500/30 cursor-pointer transition-all"
+                className="flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-amber-500/30 cursor-pointer transition-all"
               >
                 {/* Preview Thumbnail */}
                 <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/5">
@@ -281,7 +281,7 @@ export default function SacredLibrary({
                     {asset.metadata.resonance.map(r => (
                       <span
                         key={r}
-                        className="px-2 py-1 text-xs bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded text-purple-300"
+                        className="px-2 py-1 text-xs bg-gradient-to-r from-amber-500/20 to-pink-500/20 rounded text-amber-300"
                       >
                         {r}
                       </span>
@@ -322,10 +322,10 @@ export default function SacredLibrary({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-purple-900/50 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-amber-900/50 backdrop-blur-sm flex items-center justify-center z-50"
           >
-            <div className="bg-black/80 rounded-3xl p-12 border-2 border-dashed border-purple-500">
-              <Upload className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+            <div className="bg-black/80 rounded-3xl p-12 border-2 border-dashed border-amber-500">
+              <Upload className="w-16 h-16 text-amber-400 mx-auto mb-4" />
               <p className="text-white text-xl">Drop your sacred assets here</p>
             </div>
           </motion.div>

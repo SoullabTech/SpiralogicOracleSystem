@@ -41,7 +41,7 @@ export default function SacredCoherenceDisplay({
       case 'water': return <Droplets className="w-5 h-5 text-blue-400" />;
       case 'earth': return <Mountain className="w-5 h-5 text-green-400" />;
       case 'air': return <Wind className="w-5 h-5 text-yellow-400" />;
-      default: return <Sparkles className="w-5 h-5 text-purple-400" />;
+      default: return <Sparkles className="w-5 h-5 text-amber-400" />;
     }
   };
 
@@ -75,7 +75,7 @@ export default function SacredCoherenceDisplay({
           onClick={() => setSelectedVoice('both')}
           className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
             selectedVoice === 'both' 
-              ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' 
+              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -196,7 +196,7 @@ export default function SacredCoherenceDisplay({
         </div>
         <div className="mt-2 h-1 bg-slate-800 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-1000"
+            className="h-full bg-gradient-to-r from-amber-500 to-blue-500 transition-all duration-1000"
             style={{ width: `${trustLevel * 100}%` }}
           />
         </div>

@@ -236,11 +236,11 @@ export default function VoiceMenu({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-neutral-900
                    border border-neutral-200 dark:border-neutral-700 rounded-lg
-                   hover:border-purple-500 transition-all duration-300"
+                   hover:border-amber-500 transition-all duration-300"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <Volume2 className="w-5 h-5 text-purple-600" />
+        <Volume2 className="w-5 h-5 text-amber-600" />
         <span className="text-sm font-medium">
           {selectedVoice?.name || 'Select Voice'}
         </span>
@@ -265,7 +265,7 @@ export default function VoiceMenu({
                 onClick={() => setSelectedCategory('maya')}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors
                   ${selectedCategory === 'maya'
-                    ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600'
+                    ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600'
                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800'
                   }`}
               >
@@ -275,7 +275,7 @@ export default function VoiceMenu({
                 onClick={() => setSelectedCategory('miles')}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors
                   ${selectedCategory === 'miles'
-                    ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600'
+                    ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600'
                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800'
                   }`}
               >
@@ -285,7 +285,7 @@ export default function VoiceMenu({
                 onClick={() => setSelectedCategory('custom')}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors
                   ${selectedCategory === 'custom'
-                    ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600'
+                    ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600'
                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800'
                   }`}
               >
@@ -350,8 +350,8 @@ export default function VoiceMenu({
                           </p>
                           <button
                             onClick={() => setShowCloneDialog(true)}
-                            className="px-4 py-2 bg-purple-600 text-white rounded-lg
-                                     hover:bg-purple-700 transition-colors text-sm font-medium"
+                            className="px-4 py-2 bg-amber-600 text-white rounded-lg
+                                     hover:bg-amber-700 transition-colors text-sm font-medium"
                           >
                             Clone Your Voice
                           </button>
@@ -374,8 +374,8 @@ export default function VoiceMenu({
                           ))}
                           <button
                             onClick={() => setShowCloneDialog(true)}
-                            className="w-full mt-2 px-4 py-2 text-sm text-purple-600
-                                     hover:bg-purple-50 dark:hover:bg-purple-900/20
+                            className="w-full mt-2 px-4 py-2 text-sm text-amber-600
+                                     hover:bg-amber-50 dark:hover:bg-amber-900/20
                                      transition-colors rounded-lg"
                           >
                             + Add Another Voice
@@ -458,7 +458,7 @@ function VoiceMaskOption({
       className={`p-3 rounded-lg mb-2 border transition-all duration-200
         ${!isUnlocked ? 'opacity-50 cursor-not-allowed bg-neutral-50 dark:bg-neutral-900' : 'cursor-pointer'}
         ${isSelected && isUnlocked
-          ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700'
+          ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700'
           : 'hover:bg-neutral-50 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
         }`}
       onClick={onSelect}
@@ -500,7 +500,7 @@ function VoiceMaskOption({
               </span>
             )}
             {mask.status === 'seasonal' && isUnlocked && (
-              <span className="text-xs text-purple-600 dark:text-purple-400">
+              <span className="text-xs text-amber-600 dark:text-amber-400">
                 ✨ Seasonal
               </span>
             )}
@@ -513,9 +513,9 @@ function VoiceMaskOption({
                 value={aliasInput}
                 onChange={(e) => setAliasInput(e.target.value)}
                 placeholder="Enter custom name"
-                className="px-2 py-1 text-xs border border-purple-300 dark:border-purple-700
+                className="px-2 py-1 text-xs border border-amber-300 dark:border-amber-700
                          rounded bg-white dark:bg-neutral-800 focus:outline-none
-                         focus:border-purple-500"
+                         focus:border-amber-500"
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -533,7 +533,7 @@ function VoiceMaskOption({
                   onAliasChange(aliasInput);
                   onEditAlias();
                 }}
-                className="text-xs text-purple-600 hover:text-purple-700"
+                className="text-xs text-amber-600 hover:text-amber-700"
               >
                 Save
               </button>
@@ -544,7 +544,7 @@ function VoiceMaskOption({
                 e.stopPropagation();
                 onEditAlias();
               }}
-              className="text-xs text-purple-600 hover:text-purple-700 mt-2"
+              className="text-xs text-amber-600 hover:text-amber-700 mt-2"
             >
               {userAlias ? 'Edit Alias' : 'Set Custom Name'}
             </button>
@@ -553,7 +553,7 @@ function VoiceMaskOption({
 
         <div className="flex items-center gap-2 ml-3">
           {isSelected && isUnlocked && (
-            <Check className="w-4 h-4 text-purple-600" />
+            <Check className="w-4 h-4 text-amber-600" />
           )}
           {isUnlocked && (
             <button
@@ -565,7 +565,7 @@ function VoiceMaskOption({
               className="p-1.5 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700
                        transition-colors disabled:opacity-50"
             >
-              <Play className={`w-4 h-4 ${isPreviewing ? 'text-purple-600 animate-pulse' : 'text-neutral-600'}`} />
+              <Play className={`w-4 h-4 ${isPreviewing ? 'text-amber-600 animate-pulse' : 'text-neutral-600'}`} />
             </button>
           )}
         </div>
@@ -605,14 +605,14 @@ function VoiceOption({
     <motion.div
       className={`flex items-center justify-between p-3 rounded-lg mb-1
         ${isSelected
-          ? 'bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700'
+          ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700'
           : 'hover:bg-neutral-50 dark:hover:bg-neutral-800 border border-transparent'
         } transition-all duration-200 cursor-pointer`}
       onClick={onSelect}
       whileHover={{ x: 4 }}
     >
       <div className="flex items-center gap-3">
-        {isCustom && <User className="w-4 h-4 text-purple-600" />}
+        {isCustom && <User className="w-4 h-4 text-amber-600" />}
         <div>
           <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
             {voice.name}
@@ -627,7 +627,7 @@ function VoiceOption({
 
       <div className="flex items-center gap-2">
         {isSelected && (
-          <Check className="w-4 h-4 text-purple-600" />
+          <Check className="w-4 h-4 text-amber-600" />
         )}
         <button
           onClick={(e) => {
@@ -638,7 +638,7 @@ function VoiceOption({
           className="p-1.5 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700
                    transition-colors disabled:opacity-50"
         >
-          <Play className={`w-4 h-4 ${isPreviewing ? 'text-purple-600 animate-pulse' : 'text-neutral-600'}`} />
+          <Play className={`w-4 h-4 ${isPreviewing ? 'text-amber-600 animate-pulse' : 'text-neutral-600'}`} />
         </button>
       </div>
     </motion.div>
@@ -693,7 +693,7 @@ function VoiceCloneDialog({
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g., My Voice"
               className="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-700
-                       rounded-lg focus:outline-none focus:border-purple-500
+                       rounded-lg focus:outline-none focus:border-amber-500
                        bg-white dark:bg-neutral-800"
             />
           </div>
@@ -705,7 +705,7 @@ function VoiceCloneDialog({
               accept="audio/*"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
               className="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-700
-                       rounded-lg focus:outline-none focus:border-purple-500
+                       rounded-lg focus:outline-none focus:border-amber-500
                        bg-white dark:bg-neutral-800"
             />
             <p className="text-xs text-neutral-500 mt-1">
@@ -726,8 +726,8 @@ function VoiceCloneDialog({
           <button
             onClick={handleSubmit}
             disabled={!file || !name || isUploading}
-            className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg
-                     hover:bg-purple-700 transition-colors disabled:opacity-50
+            className="flex-1 px-4 py-2 bg-amber-600 text-white rounded-lg
+                     hover:bg-amber-700 transition-colors disabled:opacity-50
                      disabled:cursor-not-allowed"
           >
             {isUploading ? 'Cloning...' : 'Clone Voice'}

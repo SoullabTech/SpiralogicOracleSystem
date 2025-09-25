@@ -1162,7 +1162,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 <motion.div
                   className={`w-full h-full rounded-full ${
                     isMounted && voiceMicRef.current?.isContemplationMode
-                      ? 'bg-purple-500'
+                      ? 'bg-amber-500'
                       : !showChatInterface && voiceEnabled && !isMuted
                       ? 'bg-green-500'
                       : 'bg-red-500/60'

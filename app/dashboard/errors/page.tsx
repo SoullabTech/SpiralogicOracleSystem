@@ -61,14 +61,14 @@ export default function ErrorDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-amber-900 to-violet-900 flex items-center justify-center">
         <div className="text-white text-xl">Loading error logs...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-amber-900 to-violet-900 p-6">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -76,7 +76,7 @@ export default function ErrorDashboard() {
           className="mb-8"
         >
           <h1 className="text-4xl font-bold text-white mb-4">🔍 Error Dashboard</h1>
-          <p className="text-purple-200">
+          <p className="text-amber-200">
             Real-time error tracking for Spiralogic Oracle System
           </p>
         </motion.div>
@@ -87,8 +87,8 @@ export default function ErrorDashboard() {
             onClick={() => setFilter('all')}
             className={`px-4 py-2 rounded-lg transition-all ${
               filter === 'all'
-                ? 'bg-purple-600 text-white'
-                : 'bg-purple-900/50 text-purple-200 hover:bg-purple-800/50'
+                ? 'bg-amber-600 text-white'
+                : 'bg-amber-900/50 text-amber-200 hover:bg-amber-800/50'
             }`}
           >
             All ({errors.length})
@@ -158,7 +158,7 @@ export default function ErrorDashboard() {
 
                   <div className="flex items-center gap-4 text-sm text-gray-400">
                     {err.context && (
-                      <span className="text-purple-300">
+                      <span className="text-amber-300">
                         📍 {err.context}
                       </span>
                     )}
@@ -258,11 +258,11 @@ export default function ErrorDashboard() {
             transition={{ delay: 0.5 }}
             className="mt-8 grid grid-cols-4 gap-4"
           >
-            <div className="bg-purple-900/30 rounded-lg p-4 text-center">
-              <div className="text-3xl font-bold text-purple-300">
+            <div className="bg-amber-900/30 rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-amber-300">
                 {errors.length}
               </div>
-              <div className="text-sm text-purple-200">Total Errors</div>
+              <div className="text-sm text-amber-200">Total Errors</div>
             </div>
             <div className="bg-red-900/30 rounded-lg p-4 text-center">
               <div className="text-3xl font-bold text-red-300">

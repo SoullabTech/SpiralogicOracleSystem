@@ -29,23 +29,23 @@ export default function ApplicationSuccess() {
             Thank you for applying to become an Oracle Pioneer. We'll review your application within 24 hours.
           </p>
 
-          <div className="bg-purple-900/20 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30 mb-8">
+          <div className="bg-amber-900/20 backdrop-blur-sm rounded-xl p-6 border border-amber-500/30 mb-8">
             <h2 className="text-2xl font-semibold mb-4">What Happens Next?</h2>
             <div className="space-y-3 text-left">
               <div className="flex items-start gap-3">
-                <span className="text-purple-400">1.</span>
+                <span className="text-amber-400">1.</span>
                 <span>We review your application within 24 hours</span>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-purple-400">2.</span>
+                <span className="text-amber-400">2.</span>
                 <span>You'll receive an email with your decision</span>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-purple-400">3.</span>
+                <span className="text-amber-400">3.</span>
                 <span>If accepted, you'll get immediate beta access</span>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-purple-400">4.</span>
+                <span className="text-amber-400">4.</span>
                 <span>Begin testing and training ARIA</span>
               </div>
             </div>
@@ -56,7 +56,7 @@ export default function ApplicationSuccess() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold"
+                className="px-6 py-3 bg-gradient-to-r from-amber-500 to-pink-500 rounded-lg font-semibold"
               >
                 Back to Beta Home
               </motion.button>
@@ -65,7 +65,7 @@ export default function ApplicationSuccess() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-3 border-2 border-purple-400 rounded-lg font-semibold hover:bg-purple-400/10"
+                className="px-6 py-3 border-2 border-amber-400 rounded-lg font-semibold hover:bg-amber-400/10"
               >
                 Explore Soullab
               </motion.button>

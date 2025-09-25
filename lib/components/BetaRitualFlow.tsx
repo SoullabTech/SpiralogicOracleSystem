@@ -102,39 +102,39 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center">
-          <Sparkles className="w-8 h-8 text-purple-300 animate-spin mx-auto mb-4" />
-          <p className="text-purple-200">Preparing your sacred space...</p>
+          <Sparkles className="w-8 h-8 text-amber-300 animate-spin mx-auto mb-4" />
+          <p className="text-amber-200">Preparing your sacred space...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
 
         {/* Welcome Step */}
         {currentStep === 'welcome' && (
           <div className="text-center space-y-8">
             <div className="space-y-4">
-              <Sparkles className="w-16 h-16 text-purple-300 mx-auto animate-pulse" />
+              <Sparkles className="w-16 h-16 text-amber-300 mx-auto animate-pulse" />
               <h1 className="text-4xl font-bold text-white">Welcome to the Oracle</h1>
-              <p className="text-purple-200 text-lg">
+              <p className="text-amber-200 text-lg">
                 You're about to begin a journey of self-discovery through the five elements.
                 First, let's create your sacred configuration.
               </p>
             </div>
 
-            <div className="bg-purple-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30">
-              <p className="text-purple-100 mb-4">
+            <div className="bg-amber-800/30 backdrop-blur-sm rounded-xl p-6 border border-amber-500/30">
+              <p className="text-amber-100 mb-4">
                 This is a beta experience. Your choices will shape how the Oracle connects with you.
               </p>
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={() => setCurrentStep('voice_choice')}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors"
+                  className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg transition-colors"
                 >
                   Begin Configuration
                 </button>
@@ -154,7 +154,7 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
           <div className="text-center space-y-8">
             <div className="space-y-4">
               <h2 className="text-3xl font-bold text-white">Choose Your Companion Voice</h2>
-              <p className="text-purple-200">
+              <p className="text-amber-200">
                 Select the voice that will guide your journey through the elements.
               </p>
             </div>
@@ -162,17 +162,17 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
             <div className="grid md:grid-cols-2 gap-6">
               <button
                 onClick={() => handleVoiceChoice('maya-alloy')}
-                className="bg-purple-800/50 hover:bg-purple-700/50 backdrop-blur-sm rounded-xl p-8 border border-purple-500/50 transition-all group"
+                className="bg-amber-800/50 hover:bg-amber-700/50 backdrop-blur-sm rounded-xl p-8 border border-amber-500/50 transition-all group"
               >
                 <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
                     <Heart className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-white">Maya</h3>
-                  <p className="text-purple-200 text-sm">
+                  <p className="text-amber-200 text-sm">
                     Warm, intuitive presence. Maya speaks with gentle wisdom and emotional attunement.
                   </p>
-                  <div className="text-xs text-purple-300">OpenAI Alloy Voice</div>
+                  <div className="text-xs text-amber-300">OpenAI Alloy Voice</div>
                 </div>
               </button>
 
@@ -200,7 +200,7 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
           <div className="text-center space-y-8">
             <div className="space-y-4">
               <h2 className="text-3xl font-bold text-white">How Do You Want to Connect?</h2>
-              <p className="text-purple-200">
+              <p className="text-amber-200">
                 Choose how you'd like to activate your conversations with the Oracle.
               </p>
             </div>
@@ -240,7 +240,7 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
           <div className="text-center space-y-8">
             <div className="space-y-4">
               <h2 className="text-3xl font-bold text-white">Choose Your Journey Style</h2>
-              <p className="text-purple-200">
+              <p className="text-amber-200">
                 How would you like the Oracle to guide your exploration?
               </p>
             </div>
@@ -270,12 +270,12 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
 
               <button
                 onClick={() => handleInteractionChoice('guided')}
-                className="bg-purple-800/50 hover:bg-purple-700/50 backdrop-blur-sm rounded-xl p-6 border border-purple-500/50 transition-all"
+                className="bg-amber-800/50 hover:bg-amber-700/50 backdrop-blur-sm rounded-xl p-6 border border-amber-500/50 transition-all"
               >
                 <div className="text-center space-y-3">
                   <div className="text-2xl">🌟</div>
                   <h3 className="text-lg font-semibold text-white">Guided</h3>
-                  <p className="text-purple-200 text-xs">Structured prompts and rituals</p>
+                  <p className="text-amber-200 text-xs">Structured prompts and rituals</p>
                 </div>
               </button>
             </div>
@@ -286,30 +286,30 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
         {currentStep === 'completion' && (
           <div className="text-center space-y-8">
             <div className="space-y-4">
-              <Sparkles className="w-16 h-16 text-purple-300 mx-auto animate-pulse" />
+              <Sparkles className="w-16 h-16 text-amber-300 mx-auto animate-pulse" />
               <h2 className="text-3xl font-bold text-white">Your Sacred Configuration</h2>
-              <p className="text-purple-200">
+              <p className="text-amber-200">
                 The Oracle is now attuned to your preferences. Your journey begins.
               </p>
             </div>
 
-            <div className="bg-purple-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30 space-y-4">
-              <div className="text-purple-100">
+            <div className="bg-amber-800/30 backdrop-blur-sm rounded-xl p-6 border border-amber-500/30 space-y-4">
+              <div className="text-amber-100">
                 <div className="grid grid-cols-3 gap-4 text-sm">
                   <div>
-                    <div className="text-purple-300 mb-1">Voice</div>
+                    <div className="text-amber-300 mb-1">Voice</div>
                     <div className="font-semibold">
                       {voiceId === 'maya-alloy' ? 'Maya' : 'Anthony'}
                     </div>
                   </div>
                   <div>
-                    <div className="text-purple-300 mb-1">Activation</div>
+                    <div className="text-amber-300 mb-1">Activation</div>
                     <div className="font-semibold">
                       {voiceMode === 'push-to-talk' ? 'Push-to-Talk' : 'Wake Word'}
                     </div>
                   </div>
                   <div>
-                    <div className="text-purple-300 mb-1">Style</div>
+                    <div className="text-amber-300 mb-1">Style</div>
                     <div className="font-semibold capitalize">
                       {interactionMode}
                     </div>
@@ -317,14 +317,14 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
                 </div>
               </div>
 
-              <p className="text-purple-200 text-sm">
+              <p className="text-amber-200 text-sm">
                 You can always change these preferences later in your Oracle settings.
               </p>
             </div>
 
             <button
               onClick={completeRitual}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105"
+              className="bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105"
             >
               Enter the Oracle
             </button>
@@ -338,8 +338,8 @@ export const BetaRitualFlow: React.FC<BetaRitualFlowProps> = ({
               key={step}
               className={`w-3 h-3 rounded-full transition-colors ${
                 ['welcome', 'voice_choice', 'interaction_mode', 'first_breath', 'completion'].indexOf(currentStep) >= index
-                  ? 'bg-purple-400'
-                  : 'bg-purple-800'
+                  ? 'bg-amber-400'
+                  : 'bg-amber-800'
               }`}
             />
           ))}

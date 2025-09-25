@@ -403,7 +403,7 @@ export function OrganicHoloflowerCheckIn({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="fixed inset-0 bg-gradient-to-br from-purple-950/95 via-indigo-950/95 to-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-gradient-to-br from-black/95 via-indigo-950/95 to-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4"
     >
       <div className="max-w-2xl w-full">
         <motion.div
@@ -559,7 +559,7 @@ export function OrganicHoloflowerCheckIn({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-gradient-to-br from-purple-950 via-indigo-950 to-black z-50 overflow-hidden"
+          className="fixed inset-0 bg-gradient-to-br from-black via-indigo-950 to-black z-50 overflow-hidden"
         >
           {/* Header */}
           <div className="absolute top-0 left-0 right-0 z-20 bg-black/30 backdrop-blur-xl border-b border-white/10 px-4 py-3">
@@ -713,8 +713,8 @@ export function OrganicHoloflowerCheckIn({
 
                   <p className="text-white/80 text-sm mb-3">{selectedPetal.description}</p>
 
-                  <div className="p-3 bg-purple-600/10 rounded-lg border border-purple-600/30">
-                    <p className="text-purple-400 text-xs mb-1">Reflection:</p>
+                  <div className="p-3 bg-amber-600/10 rounded-lg border border-amber-600/30">
+                    <p className="text-amber-400 text-xs mb-1">Reflection:</p>
                     <p className="text-white/90 text-sm">{selectedPetal.question}</p>
                   </div>
 
@@ -755,7 +755,7 @@ export function OrganicHoloflowerCheckIn({
             <p className="text-white/60 text-xs mb-1">Coherence</p>
             <div className="w-32 h-2 bg-white/10 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                className="h-full bg-gradient-to-r from-amber-500 to-pink-500"
                 animate={{ width: `${calculateCoherence() * 100}%` }}
               />
             </div>

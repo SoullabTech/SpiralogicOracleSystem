@@ -269,7 +269,7 @@ function CollectiveDaimonicBanner({
       case 'ordinary': return 'bg-green-100 border-green-300 text-green-800';
       case 'charged': return 'bg-amber-100 border-amber-300 text-amber-800';
       case 'clear': return 'bg-blue-100 border-blue-300 text-blue-800';
-      case 'stormy': return 'bg-purple-100 border-purple-300 text-purple-800';
+      case 'stormy': return 'bg-amber-100 border-amber-300 text-amber-800';
       default: return 'bg-gray-100 border-gray-300 text-gray-800';
     }
   };
@@ -423,7 +423,7 @@ function ResonanceNetwork({
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
               <div 
-                className="bg-purple-500 h-2 rounded-full"
+                className="bg-amber-500 h-2 rounded-full"
                 style={{ width: `${cluster.resonanceStrength * 100}%` }}
               />
             </div>

@@ -56,7 +56,7 @@ export default function SettingsPage() {
         {/* Audio Preferences */}
         <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-4">
-            <Volume2 className="w-5 h-5 text-purple-500" />
+            <Volume2 className="w-5 h-5 text-amber-500" />
             <h3 className="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
               Audio Settings
             </h3>

@@ -517,7 +517,7 @@ export function ModernOracleInterface({
           <button
             onClick={() => setDebugMode(!debugMode)}
             className={`p-2 rounded-lg transition-colors ${
-              debugMode ? 'text-purple-400 bg-purple-500/10' : 'text-white/60 hover:text-white hover:bg-white/10'
+              debugMode ? 'text-amber-400 bg-amber-500/10' : 'text-white/60 hover:text-white hover:bg-white/10'
             }`}
             title="Toggle debug mode"
           >
@@ -539,7 +539,7 @@ export function ModernOracleInterface({
             >
               <div className={`max-w-md ${
                 message.role === 'user' 
-                  ? 'bg-purple-500/20 text-purple-100' 
+                  ? 'bg-amber-500/20 text-amber-100' 
                   : 'bg-white/5 text-white/90'
               } rounded-2xl px-4 py-3`}>
                 <p className="whitespace-pre-wrap">{message.text}</p>
@@ -579,15 +579,15 @@ export function ModernOracleInterface({
             animate={{ opacity: 1 }}
             className="flex justify-center"
           >
-            <div className="bg-purple-500/10 border border-purple-500/30 rounded-2xl px-4 py-3">
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl px-4 py-3">
               {voiceState.isListening && (
-                <div className="flex items-center gap-2 text-purple-400">
+                <div className="flex items-center gap-2 text-amber-400">
                   <Mic size={16} className="animate-pulse" />
                   <span className="text-sm">Listening...</span>
                 </div>
               )}
               {voiceState.isProcessing && (
-                <div className="text-sm text-purple-400">Processing audio...</div>
+                <div className="text-sm text-amber-400">Processing audio...</div>
               )}
               {voiceState.interimTranscript && (
                 <div className="text-sm text-white/60 italic">{voiceState.interimTranscript}</div>
@@ -623,7 +623,7 @@ export function ModernOracleInterface({
             className={`p-3 rounded-full transition-all ${
               voiceState.isListening 
                 ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
-                : 'bg-purple-500 hover:bg-purple-600 text-white'
+                : 'bg-amber-500 hover:bg-amber-600 text-white'
             } ${voiceState.isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {voiceState.isListening ? <MicOff size={20} /> : <Mic size={20} />}
@@ -636,13 +636,13 @@ export function ModernOracleInterface({
             onKeyPress={handleKeyPress}
             placeholder="Type a message or use voice..."
             disabled={isLoading || voiceState.isListening}
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-purple-500/50 disabled:opacity-50"
+            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-amber-500/50 disabled:opacity-50"
           />
           
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isLoading}
-            className="p-3 bg-purple-500 hover:bg-purple-600 disabled:bg-white/10 disabled:cursor-not-allowed rounded-full transition-colors"
+            className="p-3 bg-amber-500 hover:bg-amber-600 disabled:bg-white/10 disabled:cursor-not-allowed rounded-full transition-colors"
           >
             <Send size={20} />
           </button>

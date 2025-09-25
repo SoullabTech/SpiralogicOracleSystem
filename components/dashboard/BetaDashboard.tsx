@@ -18,7 +18,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, icon, col
     green: 'bg-green-50 border-green-200 text-green-800',
     yellow: 'bg-yellow-50 border-yellow-200 text-yellow-800',
     red: 'bg-red-50 border-red-200 text-red-800',
-    purple: 'bg-purple-50 border-purple-200 text-purple-800'
+    purple: 'bg-amber-50 border-amber-200 text-amber-800'
   };
 
   return (
