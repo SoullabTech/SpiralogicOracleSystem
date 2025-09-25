@@ -722,27 +722,6 @@ export default function BetaMonitor() {
           </div>
         )}
       </div>
-
-      {/* Safe Area Styles */}
-      <style jsx>{`
-        .safe-top {
-          padding-top: env(safe-area-inset-top);
-        }
-
-        /* Mobile Touch Optimizations */
-        @media (max-width: 640px) {
-          button, select {
-            min-height: 44px;
-          }
-        }
-
-        /* PWA Standalone Mode */
-        @media all and (display-mode: standalone) {
-          .safe-top {
-            background: linear-gradient(to bottom, rgba(26, 31, 58, 0.95), transparent);
-          }
-        }
-      `}</style>
     </div>
   );
 }

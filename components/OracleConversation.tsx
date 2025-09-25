@@ -1494,15 +1494,47 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </svg>
           </button>
 
-          {/* Journal/Book Icon */}
+          {/* Journal/Book Icon - Open Book Style */}
           <button
             onClick={() => window.location.href = '/journal'}
-            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300"
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300 group"
             title="Sacred Journal"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              {/* Left page */}
+              <path
+                d="M 4,8 Q 4,6 6,6 L 14,6 L 14,24 Q 14,25 13,25 L 6,25 Q 4,25 4,23 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="group-hover:animate-pulse"
+              />
+              {/* Right page */}
+              <path
+                d="M 28,8 Q 28,6 26,6 L 18,6 L 18,24 Q 18,25 19,25 L 26,25 Q 28,25 28,23 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="group-hover:animate-pulse"
+              />
+              {/* Book spine */}
+              <path
+                d="M 14,6 L 14,25 L 18,25 L 18,6 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              {/* Text lines */}
+              <path d="M 7,10 L 11,10" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
+              <path d="M 7,13 L 11,13" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
+              <path d="M 20,10 L 24,10" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
+              <path d="M 20,13 L 24,13" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
             </svg>
           </button>
 
