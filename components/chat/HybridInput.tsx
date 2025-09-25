@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Mic, MicOff, Keyboard, Loader2 } from 'lucide-react';
 import { unlockAudioContext as unlockAudio } from '@/lib/audio/audioUnlock';
 import { useToastContext } from '@/components/system/ToastProvider';
+import { ConversationalMagicEngine } from '@/lib/voice/ConversationalMagic';
 
 interface HybridInputProps {
   onSend: (text: string) => void;
@@ -36,6 +37,9 @@ export default function HybridInput({
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const magicEngineRef = useRef<ConversationalMagicEngine | null>(null);
+  const pauseDurationsRef = useRef<number[]>([]);
+  const utteranceLengthsRef = useRef<number[]>([]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -82,9 +86,15 @@ export default function HybridInput({
     (recognition as any).serviceURI = undefined;
 
     // Add silence timer to prevent premature cutoff
+    // Initialize conversational magic engine
+    if (!magicEngineRef.current) {
+      magicEngineRef.current = new ConversationalMagicEngine();
+    }
+
     let silenceTimer: NodeJS.Timeout;
     let lastSpeechTime = Date.now();
     let hasSentMessage = false; // Flag to prevent double-sending
+    let utteranceStartTime = Date.now();
 
     recognition.onstart = () => {
       setError(null);
@@ -115,22 +125,43 @@ export default function HybridInput({
         setTranscript(prev => prev + ' ' + final);
         setInterimTranscript('');
 
-        // DON'T auto-send on sentence endings - wait for silence
-        // This prevents cutting off mid-thought
-        silenceTimer = setTimeout(() => {
-          const fullTranscript = (transcript + ' ' + final).trim();
-          if (fullTranscript && Date.now() - lastSpeechTime > 1500 && !hasSentMessage) {
-            // Only send if there's been 1.5+ seconds of silence AND we haven't already sent
-            hasSentMessage = true; // Set flag to prevent double-sending
-            onSend(fullTranscript);
-            setTranscript('');
-            setInterimTranscript('');
-            // Keep listening for continuous conversation
-            // Only stop if user manually toggles off
-            hasSentMessage = false; // Reset for next message
-            lastSpeechTime = Date.now();
-          }
-        }, 1800); // Wait 1.8 seconds of silence before sending (reduced from 2.5)
+        // Check if this is back-channeling
+        const isBackChannel = magicEngineRef.current?.detectBackChanneling(final);
+
+        if (isBackChannel) {
+          // Don't send back-channels as full messages
+          console.log('Back-channel detected:', final);
+        } else {
+          // Get dynamic silence threshold based on context
+          const silenceThreshold = magicEngineRef.current?.getDynamicSilenceThreshold() || 1800;
+
+          silenceTimer = setTimeout(() => {
+            const fullTranscript = (transcript + ' ' + final).trim();
+            if (fullTranscript && Date.now() - lastSpeechTime > (silenceThreshold * 0.8) && !hasSentMessage) {
+              // Track utterance length for learning
+              const utteranceLength = fullTranscript.split(' ').length;
+              utteranceLengthsRef.current.push(utteranceLength);
+
+              // Track pause duration
+              const pauseDuration = Date.now() - lastSpeechTime;
+              pauseDurationsRef.current.push(pauseDuration);
+
+              // Learn user rhythm
+              magicEngineRef.current?.learnUserRhythm(
+                pauseDurationsRef.current,
+                utteranceLengthsRef.current
+              );
+
+              hasSentMessage = true;
+              onSend(fullTranscript);
+              setTranscript('');
+              setInterimTranscript('');
+              hasSentMessage = false;
+              lastSpeechTime = Date.now();
+              utteranceStartTime = Date.now();
+            }
+          }, silenceThreshold);
+        }
       }
       
       // Notify parent of transcript updates
