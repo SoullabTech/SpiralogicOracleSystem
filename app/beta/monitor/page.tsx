@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export default function BetaMonitor() {
-  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'system'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'system' | 'conversation'>('users');
   const [isMobile, setIsMobile] = useState(false);
 
   // User Activity States
@@ -27,6 +27,13 @@ export default function BetaMonitor() {
   const [threats, setThreats] = useState<any[]>([]);
   const [protectionMetrics, setProtectionMetrics] = useState<any>({});
   const [riskLevel, setRiskLevel] = useState(2);
+
+  // Conversation Magic States
+  const [conversationMetrics, setConversationMetrics] = useState<any>({});
+  const [emotionalTones, setEmotionalTones] = useState<any[]>([]);
+  const [engagementScores, setEngagementScores] = useState<any[]>([]);
+  const [interruptionData, setInterruptionData] = useState<any[]>([]);
+  const [backChannelEvents, setBackChannelEvents] = useState<any[]>([]);
 
   useEffect(() => {
     // Check if mobile
@@ -85,6 +92,46 @@ export default function BetaMonitor() {
       cacheHits: 412,
       avgResponseTime: '120ms'
     });
+
+    // Initialize Conversation Magic Data
+    setConversationMetrics({
+      avgSilenceThreshold: '1.8s',
+      avgUtteranceLength: '12 words',
+      avgEngagement: 72,
+      totalInterruptions: 8,
+      backChannelRate: '23%',
+      emotionalAdaptations: 14,
+      turnTakingAccuracy: '89%',
+      rhythmAdaptation: 'Learning'
+    });
+
+    setEmotionalTones([
+      { time: '2m', user: 'Alice', tone: 'excited', response: 'matched' },
+      { time: '5m', user: 'Bob', tone: 'contemplative', response: 'slowed' },
+      { time: '8m', user: 'Carol', tone: 'stressed', response: 'calmed' },
+      { time: '12m', user: 'David', tone: 'joyful', response: 'elevated' }
+    ]);
+
+    setEngagementScores([
+      { user: 'Alice', score: 85, trend: 'up' },
+      { user: 'Bob', score: 72, trend: 'stable' },
+      { user: 'Carol', score: 91, trend: 'up' },
+      { user: 'David', score: 68, trend: 'down' },
+      { user: 'Eve', score: 94, trend: 'up' }
+    ]);
+
+    setInterruptionData([
+      { time: '3m', user: 'Alice', type: 'natural', handled: 'graceful' },
+      { time: '7m', user: 'Bob', type: 'urgent', handled: 'immediate' },
+      { time: '15m', user: 'Carol', type: 'clarification', handled: 'paused' }
+    ]);
+
+    setBackChannelEvents([
+      { time: '1m', user: 'Alice', phrase: 'mm-hmm', context: 'listening' },
+      { time: '4m', user: 'Bob', phrase: 'go on', context: 'encouraging' },
+      { time: '6m', user: 'Carol', phrase: 'yeah', context: 'agreeing' },
+      { time: '9m', user: 'David', phrase: 'interesting', context: 'engaged' }
+    ]);
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -176,6 +223,16 @@ export default function BetaMonitor() {
               }`}
             >
               System
+            </button>
+            <button
+              onClick={() => setActiveTab('conversation')}
+              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                activeTab === 'conversation'
+                  ? 'bg-[#F6AD55] text-gray-900'
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              Conversation
             </button>
           </div>
         </div>
@@ -500,6 +557,175 @@ export default function BetaMonitor() {
         }
         ::-webkit-scrollbar-thumb:hover {
           background: rgba(148, 163, 184, 0.3);
+        }
+
+        {/* Conversation Magic Tab */}
+        {activeTab === 'conversation' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Conversation Flow Metrics */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Conversation Flow</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Avg Silence Threshold</span>
+                  <span className="text-sm text-[#F6AD55] font-medium">{conversationMetrics.avgSilenceThreshold}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Avg Utterance Length</span>
+                  <span className="text-sm text-gray-200">{conversationMetrics.avgUtteranceLength}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Turn-Taking Accuracy</span>
+                  <span className="text-sm text-green-400">{conversationMetrics.turnTakingAccuracy}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Rhythm Adaptation</span>
+                  <span className="text-sm text-blue-400">{conversationMetrics.rhythmAdaptation}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Back-Channel Rate</span>
+                  <span className="text-sm text-gray-200">{conversationMetrics.backChannelRate}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Engagement Scores */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">User Engagement</h3>
+              <div className="space-y-3">
+                {engagementScores.map((user: any, idx: number) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="text-sm text-gray-200">{user.user}</div>
+                      {user.trend === 'up' && (
+                        <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M5.5 13.5L10 9l4.5 4.5L16 12v5h-5l-1.5-1.5L10 15l-4.5-4.5z"/>
+                        </svg>
+                      )}
+                      {user.trend === 'down' && (
+                        <svg className="w-3 h-3 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M14.5 6.5L10 11 5.5 6.5 4 8v-5h5l-1.5 1.5L10 5l4.5 4.5z"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-20 bg-gray-700 rounded-full h-1.5">
+                        <div
+                          className="h-full rounded-full"
+                          style={{
+                            width: `${user.score}%`,
+                            backgroundColor: user.score > 80 ? '#F6AD55' : user.score > 60 ? '#E89923' : '#D97706'
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-400">{user.score}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-700/50">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Average Engagement</span>
+                  <span className="text-lg font-light text-[#F6AD55]">{conversationMetrics.avgEngagement}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Emotional Tone Tracking */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Emotional Adaptation</h3>
+              <div className="space-y-3">
+                {emotionalTones.map((event: any, idx: number) => (
+                  <div key={idx} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-500">{event.time}</span>
+                      <span className="text-gray-200">{event.user}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                        {event.tone}
+                      </span>
+                      <span className="text-gray-500">→</span>
+                      <span className="px-2 py-1 rounded bg-green-500/20 text-green-400 border border-green-500/30">
+                        {event.response}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-700/50">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Total Adaptations</span>
+                  <span className="text-sm text-gray-200">{conversationMetrics.emotionalAdaptations}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Interruption & Back-Channel Events */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Natural Interactions</h3>
+
+              {/* Interruptions */}
+              <div className="mb-4">
+                <h4 className="text-xs text-gray-500 mb-2">Interruption Handling</h4>
+                <div className="space-y-2">
+                  {interruptionData.map((event: any, idx: number) => (
+                    <div key={idx} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500">{event.time}</span>
+                        <span className="text-gray-200">{event.user}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-400">{event.type}</span>
+                        <span className="px-2 py-0.5 rounded bg-green-500/20 text-green-400">
+                          {event.handled}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Back-Channels */}
+              <div className="pt-4 border-t border-gray-700/50">
+                <h4 className="text-xs text-gray-500 mb-2">Back-Channel Recognition</h4>
+                <div className="space-y-2">
+                  {backChannelEvents.map((event: any, idx: number) => (
+                    <div key={idx} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500">{event.time}</span>
+                        <span className="text-gray-200">{event.user}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                          "{event.phrase}"
+                        </span>
+                        <span className="text-gray-400">({event.context})</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-gray-700/50 grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-xs text-gray-500">Total Interruptions</div>
+                  <div className="text-lg font-light text-gray-200">{conversationMetrics.totalInterruptions}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">Back-Channel Rate</div>
+                  <div className="text-lg font-light text-[#F6AD55]">{conversationMetrics.backChannelRate}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Safe Area Styles */}
+      <style jsx>{`
+        .safe-top {
+          padding-top: env(safe-area-inset-top);
         }
 
         /* Mobile Touch Optimizations */
