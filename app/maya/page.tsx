@@ -22,15 +22,30 @@ export default function MayaPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    // Check if user has beta access
-    const explorerId = sessionStorage.getItem('betaUserId') || sessionStorage.getItem('explorerId');
-    const explorerName = sessionStorage.getItem('explorerName');
+    // Check if user has beta access - also check localStorage for persistence
+    const explorerId = sessionStorage.getItem('betaUserId') ||
+                      sessionStorage.getItem('explorerId') ||
+                      localStorage.getItem('betaUserId') ||
+                      localStorage.getItem('explorerId');
+    const explorerName = sessionStorage.getItem('explorerName') ||
+                        localStorage.getItem('explorerName');
 
     if (!explorerId || !explorerName) {
-      // Not authorized - redirect to signup
-      router.push('/beta-signup');
+      // Check if returning user - try beta signin first
+      const hasUsedBefore = localStorage.getItem('betaOnboardingComplete') === 'true';
+      if (hasUsedBefore) {
+        router.push('/beta-signin');
+      } else {
+        router.push('/beta-signup');
+      }
     } else {
       setIsAuthorized(true);
+      // Ensure session storage is populated from localStorage if needed
+      if (!sessionStorage.getItem('explorerId') && localStorage.getItem('explorerId')) {
+        sessionStorage.setItem('explorerId', localStorage.getItem('explorerId') || '');
+        sessionStorage.setItem('explorerName', localStorage.getItem('explorerName') || '');
+        sessionStorage.setItem('betaUserId', localStorage.getItem('betaUserId') || '');
+      }
     }
   }, [router]);
 

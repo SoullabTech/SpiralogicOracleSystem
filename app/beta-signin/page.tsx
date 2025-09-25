@@ -25,13 +25,20 @@ export default function BetaSignin() {
       if (response.ok) {
         const data = await response.json();
 
-        // Store credentials in session
+        // Store credentials in both session and local storage
         sessionStorage.setItem('betaUserId', data.userId);
         sessionStorage.setItem('explorerId', data.explorerId);
         sessionStorage.setItem('explorerName', data.explorerName);
         sessionStorage.setItem('mayaInstance', data.mayaInstance);
         sessionStorage.setItem('sessionId', data.sessionId);
         sessionStorage.setItem('signupDate', data.signupDate);
+
+        // Also store in localStorage for persistence
+        localStorage.setItem('betaUserId', data.userId);
+        localStorage.setItem('explorerId', data.explorerId);
+        localStorage.setItem('explorerName', data.explorerName);
+        localStorage.setItem('betaOnboardingComplete', 'true');
+        localStorage.setItem('signupDate', data.signupDate);
 
         // Redirect to Maya
         router.push('/maya');

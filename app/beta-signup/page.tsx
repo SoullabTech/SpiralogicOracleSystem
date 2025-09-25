@@ -44,13 +44,20 @@ export default function BetaSignup() {
       if (response.ok) {
         const { userId, explorerId, mayaInstance, sessionId, signupDate } = await response.json();
 
-        // Store credentials in session
+        // Store credentials in both session and local storage for persistence
         sessionStorage.setItem('betaUserId', userId);
         sessionStorage.setItem('explorerId', explorerId);
         sessionStorage.setItem('mayaInstance', mayaInstance);
         sessionStorage.setItem('explorerName', explorerName);
         sessionStorage.setItem('sessionId', sessionId);
         sessionStorage.setItem('signupDate', signupDate);
+
+        // Also store in localStorage for persistence across sessions
+        localStorage.setItem('betaUserId', userId);
+        localStorage.setItem('explorerId', explorerId);
+        localStorage.setItem('explorerName', explorerName);
+        localStorage.setItem('betaOnboardingComplete', 'true');
+        localStorage.setItem('signupDate', signupDate);
 
         // Redirect to Maya conversation
         router.push('/maya');

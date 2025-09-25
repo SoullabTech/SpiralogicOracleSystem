@@ -14,7 +14,9 @@
       "Read(//var/folders/4f/cd3c1bys0m1f_87221z0vjgh0000gn/T/TemporaryItems/NSIRD_screencaptureui_TU2slK/**)",
       "Read(//Volumes/T7 Shield/Projects/**)",
       "Bash(grep:*)",
-      "Read(//Users/andreanezat/Desktop/**)"
+      "Read(//Users/andreanezat/Desktop/**)",
+      "Read(//var/folders/4f/cd3c1bys0m1f_87221z0vjgh0000gn/T/TemporaryItems/NSIRD_screencaptureui_6NexPV/**)",
+      "Read(//var/folders/4f/cd3c1bys0m1f_87221z0vjgh0000gn/T/TemporaryItems/NSIRD_screencaptureui_CIwvxS/**)"
     ],
     "deny": [],
     "ask": []
