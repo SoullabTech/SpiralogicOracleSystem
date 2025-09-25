@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open:*)",
+      "Bash(python3:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(find:*)",
+      "Read(//Volumes/T7 Shield/Projects/SpiralogicOracleSystem/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

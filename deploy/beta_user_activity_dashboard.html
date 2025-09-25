@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARIA Beta User Activity Monitor</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            color: #1e3c72;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .live-stats {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .metric-card h3 {
+            font-size: 1rem;
+            color: #2a5298;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-card .icon {
+            font-size: 1.2rem;
+        }
+
+        .user-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.2s;
+        }
+
+        .user-item:hover {
+            background: #f5f5f5;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-status {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .user-metrics {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .activity-feed {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-left: 3px solid transparent;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .activity-item.high-engagement {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .activity-item.medium-engagement {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .activity-item.low-engagement {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #999;
+            min-width: 60px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-user {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .activity-action {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-online {
+            background: #10b981;
+            animation: pulse-green 2s infinite;
+        }
+
+        .status-idle {
+            background: #f59e0b;
+        }
+
+        .status-offline {
+            background: #9ca3af;
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .engagement-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .score-high {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .score-medium {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .score-low {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .filter-bar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        select, input {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+
+        .beta-phase-indicator {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .alert-banner {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-banner.active {
+            display: block;
+        }
+
+        .cohort-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .cohort-a {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .cohort-b {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        .cohort-c {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span>🎯</span>
+                ARIA Beta User Activity Monitor
+                <span class="beta-phase-indicator">BETA v1.0.0</span>
+            </h1>
+            <div class="live-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="active-users">0</div>
+                    <div class="stat-label">Active Now</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-users">0</div>
+                    <div class="stat-label">Total Beta Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="avg-engagement">0%</div>
+                    <div class="stat-label">Avg Engagement</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-banner" id="alert-banner">
+            <strong>⚠️ Alert:</strong> <span id="alert-message"></span>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-group">
+                <span class="filter-label">Cohort:</span>
+                <select id="cohort-filter">
+                    <option value="all">All Cohorts</option>
+                    <option value="A">Cohort A (Early)</option>
+                    <option value="B">Cohort B (Sacred)</option>
+                    <option value="C">Cohort C (Creative)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Time Range:</span>
+                <select id="time-filter">
+                    <option value="live">Live</option>
+                    <option value="1h">Last Hour</option>
+                    <option value="24h">Last 24 Hours</option>
+                    <option value="7d">Last 7 Days</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Risk Level:</span>
+                <select id="risk-filter">
+                    <option value="all">All Levels</option>
+                    <option value="sacred">Sacred</option>
+                    <option value="personal">Personal</option>
+                    <option value="creative">Creative</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="metric-card">
+                <h3><span class="icon">👥</span> Active Beta Users</h3>
+                <div class="user-list" id="active-user-list">
+                    <!-- Users will be inserted here -->
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3><span class="icon">📊</span> Engagement Metrics</h3>
+                <div id="engagement-metrics">
+                    <div class="metric-item">
+                        <strong>Session Length:</strong> <span id="avg-session">0 min</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong>Messages/Session:</strong> <span id="avg-messages">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong>Sacred Mode Usage:</strong> <span id="sacred-usage">0%</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong>Enrichment Rate:</strong> <span id="enrichment-rate">0%</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong>Trust Score Avg:</strong> <span id="trust-avg">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3><span class="icon">🔥</span> Hot Topics</h3>
+                <div id="hot-topics">
+                    <!-- Topics will be inserted here -->
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3><span class="icon">⚡</span> Mode Distribution</h3>
+                <canvas id="mode-distribution"></canvas>
+            </div>
+        </div>
+
+        <div class="activity-feed">
+            <h3 style="margin-bottom: 15px;">📡 Live Activity Feed</h3>
+            <div id="activity-list">
+                <!-- Activity items will be inserted here -->
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>User Activity Timeline</h3>
+                <div id="activity-timeline"></div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Engagement by Cohort</h3>
+                <div id="cohort-engagement"></div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Hallucination Reports</h3>
+                <div id="hallucination-reports"></div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Feature Usage Heatmap</h3>
+                <div id="feature-heatmap"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Socket.IO for real-time updates
+        const socket = io('http://localhost:3002');
+
+        // Mock data for demonstration
+        const mockUsers = [
+            { id: 'user001', name: 'Alice Chen', cohort: 'A', status: 'online', sessions: 24, engagement: 0.85, trustScore: 0.78 },
+            { id: 'user002', name: 'Bob Smith', cohort: 'B', status: 'online', sessions: 12, engagement: 0.72, trustScore: 0.65 },
+            { id: 'user003', name: 'Carol Jones', cohort: 'A', status: 'idle', sessions: 18, engagement: 0.91, trustScore: 0.82 },
+            { id: 'user004', name: 'David Kim', cohort: 'C', status: 'online', sessions: 8, engagement: 0.68, trustScore: 0.70 },
+            { id: 'user005', name: 'Eve Wilson', cohort: 'B', status: 'offline', sessions: 31, engagement: 0.94, trustScore: 0.88 }
+        ];
+
+        const mockActivities = [
+            { time: '2 min ago', user: 'Alice Chen', action: 'Entered sacred mode', engagement: 'high' },
+            { time: '5 min ago', user: 'Bob Smith', action: 'Provided enrichment source', engagement: 'high' },
+            { time: '8 min ago', user: 'Carol Jones', action: 'Switched to creative mode', engagement: 'medium' },
+            { time: '12 min ago', user: 'David Kim', action: 'Reported potential hallucination', engagement: 'high' },
+            { time: '15 min ago', user: 'Eve Wilson', action: 'Started new session', engagement: 'medium' }
+        ];
+
+        // Update active users display
+        function updateActiveUsers() {
+            const userList = document.getElementById('active-user-list');
+            userList.innerHTML = '';
+
+            mockUsers.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div style="display: flex; align-items: center;">
+                        <div class="user-avatar">${user.name.split(' ').map(n => n[0]).join('')}</div>
+                        <div class="user-info">
+                            <div class="user-name">
+                                ${user.name}
+                                <span class="cohort-badge cohort-${user.cohort.toLowerCase()}">Cohort ${user.cohort}</span>
+                            </div>
+                            <div class="user-status">
+                                <span class="status-indicator status-${user.status}"></span>
+                                ${user.status} • ${user.sessions} sessions
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-metrics">
+                        <div class="metric">
+                            <div class="metric-value">${(user.engagement * 100).toFixed(0)}%</div>
+                            <div class="metric-label">Engage</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${user.trustScore.toFixed(2)}</div>
+                            <div class="metric-label">Trust</div>
+                        </div>
+                    </div>
+                `;
+                userList.appendChild(userItem);
+            });
+        }
+
+        // Update activity feed
+        function updateActivityFeed() {
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = '';
+
+            mockActivities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = `activity-item ${activity.engagement}-engagement`;
+                activityItem.innerHTML = `
+                    <div class="activity-time">${activity.time}</div>
+                    <div class="activity-content">
+                        <span class="activity-user">${activity.user}</span>
+                        <span class="activity-action">${activity.action}</span>
+                        <span class="engagement-score score-${activity.engagement}">${activity.engagement}</span>
+                    </div>
+                `;
+                activityList.appendChild(activityItem);
+            });
+        }
+
+        // Update hot topics
+        function updateHotTopics() {
+            const topics = [
+                { topic: 'Spiritual guidance', count: 45, trend: '↑' },
+                { topic: 'Creative writing', count: 38, trend: '↑' },
+                { topic: 'Personal advice', count: 32, trend: '→' },
+                { topic: 'Technical questions', count: 28, trend: '↓' },
+                { topic: 'Meditation', count: 24, trend: '↑' }
+            ];
+
+            const topicsContainer = document.getElementById('hot-topics');
+            topicsContainer.innerHTML = topics.map(t => `
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <span>${t.topic}</span>
+                    <span><strong>${t.count}</strong> ${t.trend}</span>
+                </div>
+            `).join('');
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Activity Timeline
+            const timeline = {
+                x: Array.from({length: 24}, (_, i) => `${i}:00`),
+                y: Array.from({length: 24}, () => Math.floor(Math.random() * 50 + 10)),
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Active Users',
+                line: { color: '#667eea' }
+            };
+
+            Plotly.newPlot('activity-timeline', [timeline], {
+                title: '',
+                xaxis: { title: 'Hour' },
+                yaxis: { title: 'Active Users' },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            }, {responsive: true});
+
+            // Cohort Engagement
+            const cohortData = [{
+                x: ['Cohort A', 'Cohort B', 'Cohort C'],
+                y: [85, 72, 68],
+                type: 'bar',
+                marker: {
+                    color: ['#3b82f6', '#ec4899', '#8b5cf6']
+                }
+            }];
+
+            Plotly.newPlot('cohort-engagement', cohortData, {
+                title: '',
+                xaxis: { title: 'Cohort' },
+                yaxis: { title: 'Engagement %' },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            }, {responsive: true});
+
+            // Hallucination Reports
+            const hallucinationData = [{
+                labels: ['Detected & Recovered', 'User Reported', 'False Positive', 'Undetected'],
+                values: [65, 20, 10, 5],
+                type: 'pie',
+                hole: 0.4,
+                marker: {
+                    colors: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444']
+                }
+            }];
+
+            Plotly.newPlot('hallucination-reports', hallucinationData, {
+                title: '',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            }, {responsive: true});
+
+            // Feature Heatmap
+            const heatmapData = [{
+                z: [
+                    [10, 20, 30, 25, 15],
+                    [20, 35, 45, 40, 30],
+                    [30, 45, 55, 50, 40],
+                    [25, 40, 50, 45, 35],
+                    [15, 30, 40, 35, 25]
+                ],
+                x: ['Sacred Mode', 'Creative', 'Personal', 'Enrichment', 'Corrections'],
+                y: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                type: 'heatmap',
+                colorscale: 'Viridis'
+            }];
+
+            Plotly.newPlot('feature-heatmap', heatmapData, {
+                title: '',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            }, {responsive: true});
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('active-users').textContent = mockUsers.filter(u => u.status === 'online').length;
+            document.getElementById('total-users').textContent = mockUsers.length;
+            document.getElementById('avg-engagement').textContent =
+                Math.round(mockUsers.reduce((acc, u) => acc + u.engagement, 0) / mockUsers.length * 100) + '%';
+
+            document.getElementById('avg-session').textContent = '23 min';
+            document.getElementById('avg-messages').textContent = '18';
+            document.getElementById('sacred-usage').textContent = '32%';
+            document.getElementById('enrichment-rate').textContent = '12%';
+            document.getElementById('trust-avg').textContent = '0.77';
+        }
+
+        // Socket.IO event handlers
+        socket.on('user_activity', (data) => {
+            console.log('User activity:', data);
+            // Update UI with real data
+        });
+
+        socket.on('engagement_update', (data) => {
+            console.log('Engagement update:', data);
+            // Update metrics
+        });
+
+        // Filter handlers
+        document.getElementById('cohort-filter').addEventListener('change', (e) => {
+            console.log('Filter by cohort:', e.target.value);
+            // Apply filter
+        });
+
+        document.getElementById('time-filter').addEventListener('change', (e) => {
+            console.log('Filter by time:', e.target.value);
+            // Apply filter
+        });
+
+        document.getElementById('risk-filter').addEventListener('change', (e) => {
+            console.log('Filter by risk:', e.target.value);
+            // Apply filter
+        });
+
+        // Initialize on load
+        window.onload = function() {
+            updateActiveUsers();
+            updateActivityFeed();
+            updateHotTopics();
+            updateStats();
+            initCharts();
+
+            // Simulate real-time updates
+            setInterval(() => {
+                // Add new activity
+                const newActivity = {
+                    time: 'Just now',
+                    user: mockUsers[Math.floor(Math.random() * mockUsers.length)].name,
+                    action: ['Started session', 'Entered sacred mode', 'Provided feedback', 'Changed mode'][Math.floor(Math.random() * 4)],
+                    engagement: ['high', 'medium', 'low'][Math.floor(Math.random() * 3)]
+                };
+                mockActivities.unshift(newActivity);
+                mockActivities.pop();
+                updateActivityFeed();
+
+                // Randomly update user status
+                if (Math.random() > 0.7) {
+                    const randomUser = mockUsers[Math.floor(Math.random() * mockUsers.length)];
+                    randomUser.status = ['online', 'idle', 'offline'][Math.floor(Math.random() * 3)];
+                    updateActiveUsers();
+                    updateStats();
+                }
+            }, 5000);
+        };
+    </script>
+</body>
+</html>

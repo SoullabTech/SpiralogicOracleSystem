@@ -1,0 +1,442 @@
+{
+  "universal_truths": [
+    {
+      "id": "ut_001",
+      "category": "wisdom",
+      "content": "Growth requires stepping outside your comfort zone",
+      "confidence": 0.95,
+      "source": "philosophical_consensus",
+      "archetypes": ["sage", "warrior", "explorer"],
+      "tags": ["personal_growth", "courage", "change"]
+    },
+    {
+      "id": "ut_002",
+      "category": "practical",
+      "content": "Clear communication prevents most misunderstandings",
+      "confidence": 0.92,
+      "source": "psychological_research",
+      "archetypes": ["diplomat", "healer", "sage"],
+      "tags": ["relationships", "communication", "conflict_resolution"]
+    },
+    {
+      "id": "ut_003",
+      "category": "wisdom",
+      "content": "Consistency in small actions creates lasting change",
+      "confidence": 0.94,
+      "source": "behavioral_science",
+      "archetypes": ["warrior", "builder", "sage"],
+      "tags": ["habits", "discipline", "achievement"]
+    },
+    {
+      "id": "ut_004",
+      "category": "emotional",
+      "content": "Acknowledging emotions is the first step to managing them",
+      "confidence": 0.91,
+      "source": "therapeutic_consensus",
+      "archetypes": ["healer", "mystic", "sage"],
+      "tags": ["emotional_intelligence", "self_awareness", "mental_health"]
+    },
+    {
+      "id": "ut_005",
+      "category": "practical",
+      "content": "Rest is productive when it enables sustained performance",
+      "confidence": 0.93,
+      "source": "productivity_research",
+      "archetypes": ["sage", "healer", "sovereign"],
+      "tags": ["productivity", "balance", "sustainability"]
+    },
+    {
+      "id": "ut_006",
+      "category": "wisdom",
+      "content": "Questions often teach more than answers",
+      "confidence": 0.90,
+      "source": "educational_philosophy",
+      "archetypes": ["sage", "mystic", "explorer"],
+      "tags": ["learning", "curiosity", "growth"]
+    },
+    {
+      "id": "ut_007",
+      "category": "relationship",
+      "content": "Trust builds slowly and breaks quickly",
+      "confidence": 0.96,
+      "source": "social_psychology",
+      "archetypes": ["diplomat", "sovereign", "sage"],
+      "tags": ["trust", "relationships", "integrity"]
+    },
+    {
+      "id": "ut_008",
+      "category": "practical",
+      "content": "Starting imperfectly beats planning perfectly",
+      "confidence": 0.89,
+      "source": "entrepreneurial_wisdom",
+      "archetypes": ["warrior", "explorer", "rebel"],
+      "tags": ["action", "perfectionism", "progress"]
+    },
+    {
+      "id": "ut_009",
+      "category": "wisdom",
+      "content": "Your response to events shapes outcomes more than the events themselves",
+      "confidence": 0.91,
+      "source": "stoic_philosophy",
+      "archetypes": ["warrior", "sage", "sovereign"],
+      "tags": ["resilience", "mindset", "control"]
+    },
+    {
+      "id": "ut_010",
+      "category": "emotional",
+      "content": "Vulnerability creates deeper connections than perfection",
+      "confidence": 0.88,
+      "source": "relationship_research",
+      "archetypes": ["lover", "healer", "innocent"],
+      "tags": ["authenticity", "connection", "courage"]
+    },
+    {
+      "id": "ut_011",
+      "category": "practical",
+      "content": "Focus on systems rather than goals for sustainable success",
+      "confidence": 0.90,
+      "source": "performance_psychology",
+      "archetypes": ["builder", "sage", "warrior"],
+      "tags": ["systems", "goals", "long_term"]
+    },
+    {
+      "id": "ut_012",
+      "category": "wisdom",
+      "content": "Gratitude shifts perspective faster than analysis",
+      "confidence": 0.92,
+      "source": "positive_psychology",
+      "archetypes": ["sage", "healer", "innocent"],
+      "tags": ["gratitude", "mindset", "wellbeing"]
+    },
+    {
+      "id": "ut_013",
+      "category": "relationship",
+      "content": "Listening to understand beats listening to respond",
+      "confidence": 0.94,
+      "source": "communication_research",
+      "archetypes": ["diplomat", "healer", "sage"],
+      "tags": ["listening", "empathy", "communication"]
+    },
+    {
+      "id": "ut_014",
+      "category": "practical",
+      "content": "Energy management matters more than time management",
+      "confidence": 0.87,
+      "source": "performance_science",
+      "archetypes": ["warrior", "sovereign", "sage"],
+      "tags": ["energy", "productivity", "performance"]
+    },
+    {
+      "id": "ut_015",
+      "category": "wisdom",
+      "content": "Failure teaches what success cannot",
+      "confidence": 0.93,
+      "source": "learning_theory",
+      "archetypes": ["explorer", "warrior", "sage"],
+      "tags": ["failure", "learning", "resilience"]
+    },
+    {
+      "id": "ut_016",
+      "category": "emotional",
+      "content": "Comparison steals joy from accomplishment",
+      "confidence": 0.91,
+      "source": "social_psychology",
+      "archetypes": ["sage", "sovereign", "innocent"],
+      "tags": ["comparison", "contentment", "self_worth"]
+    },
+    {
+      "id": "ut_017",
+      "category": "practical",
+      "content": "Small wins build momentum for big changes",
+      "confidence": 0.92,
+      "source": "behavioral_psychology",
+      "archetypes": ["builder", "warrior", "explorer"],
+      "tags": ["momentum", "progress", "motivation"]
+    },
+    {
+      "id": "ut_018",
+      "category": "wisdom",
+      "content": "Presence beats productivity for meaningful moments",
+      "confidence": 0.89,
+      "source": "mindfulness_research",
+      "archetypes": ["mystic", "lover", "sage"],
+      "tags": ["presence", "mindfulness", "meaning"]
+    },
+    {
+      "id": "ut_019",
+      "category": "relationship",
+      "content": "Boundaries protect relationships rather than limiting them",
+      "confidence": 0.90,
+      "source": "therapeutic_practice",
+      "archetypes": ["sovereign", "warrior", "healer"],
+      "tags": ["boundaries", "self_care", "relationships"]
+    },
+    {
+      "id": "ut_020",
+      "category": "practical",
+      "content": "Documentation today saves confusion tomorrow",
+      "confidence": 0.95,
+      "source": "organizational_wisdom",
+      "archetypes": ["builder", "sage", "sovereign"],
+      "tags": ["planning", "clarity", "future_self"]
+    },
+    {
+      "id": "ut_021",
+      "category": "wisdom",
+      "content": "Curiosity dissolves judgment",
+      "confidence": 0.88,
+      "source": "cognitive_psychology",
+      "archetypes": ["explorer", "innocent", "sage"],
+      "tags": ["curiosity", "openness", "growth"]
+    },
+    {
+      "id": "ut_022",
+      "category": "emotional",
+      "content": "Self-compassion enables sustainable growth",
+      "confidence": 0.91,
+      "source": "therapeutic_research",
+      "archetypes": ["healer", "lover", "sage"],
+      "tags": ["self_compassion", "growth", "resilience"]
+    },
+    {
+      "id": "ut_023",
+      "category": "practical",
+      "content": "Iteration beats perfection in uncertain environments",
+      "confidence": 0.93,
+      "source": "agile_methodology",
+      "archetypes": ["explorer", "builder", "rebel"],
+      "tags": ["iteration", "adaptability", "progress"]
+    },
+    {
+      "id": "ut_024",
+      "category": "wisdom",
+      "content": "Purpose provides direction when paths are unclear",
+      "confidence": 0.90,
+      "source": "existential_philosophy",
+      "archetypes": ["hero", "sage", "sovereign"],
+      "tags": ["purpose", "meaning", "direction"]
+    },
+    {
+      "id": "ut_025",
+      "category": "relationship",
+      "content": "Repair attempts matter more than avoiding conflict",
+      "confidence": 0.92,
+      "source": "relationship_research",
+      "archetypes": ["diplomat", "healer", "lover"],
+      "tags": ["conflict_resolution", "repair", "connection"]
+    }
+  ],
+
+  "starter_questions": [
+    {
+      "question": "What should I focus on today?",
+      "category": "productivity",
+      "archetypes": ["warrior", "sovereign"],
+      "follow_ups": ["What's most important?", "What can wait?", "What energizes me?"]
+    },
+    {
+      "question": "How do I handle uncertainty?",
+      "category": "wisdom",
+      "archetypes": ["sage", "explorer"],
+      "follow_ups": ["What can I control?", "What must I accept?", "What can I learn?"]
+    },
+    {
+      "question": "What's a good daily practice for growth?",
+      "category": "habits",
+      "archetypes": ["warrior", "builder"],
+      "follow_ups": ["Morning routine?", "Evening reflection?", "Weekly review?"]
+    },
+    {
+      "question": "How can I improve my relationships?",
+      "category": "relationships",
+      "archetypes": ["lover", "diplomat"],
+      "follow_ups": ["Communication tips?", "Building trust?", "Setting boundaries?"]
+    },
+    {
+      "question": "What do I need to hear right now?",
+      "category": "emotional",
+      "archetypes": ["healer", "mystic"],
+      "follow_ups": ["Encouragement?", "Perspective?", "Permission to rest?"]
+    },
+    {
+      "question": "How do I find my purpose?",
+      "category": "existential",
+      "archetypes": ["hero", "sage"],
+      "follow_ups": ["What matters most?", "What brings joy?", "Where can I contribute?"]
+    },
+    {
+      "question": "What would help me feel more confident?",
+      "category": "personal_growth",
+      "archetypes": ["warrior", "sovereign"],
+      "follow_ups": ["Small wins?", "Skill building?", "Self-acceptance?"]
+    },
+    {
+      "question": "How do I balance work and life?",
+      "category": "balance",
+      "archetypes": ["sage", "sovereign"],
+      "follow_ups": ["Setting priorities?", "Creating boundaries?", "Finding fulfillment?"]
+    },
+    {
+      "question": "What creative project should I start?",
+      "category": "creativity",
+      "archetypes": ["creator", "rebel"],
+      "follow_ups": ["For joy?", "For growth?", "For impact?"]
+    },
+    {
+      "question": "How can I better understand myself?",
+      "category": "self_discovery",
+      "archetypes": ["mystic", "sage"],
+      "follow_ups": ["My patterns?", "My shadows?", "My gifts?"]
+    }
+  ],
+
+  "archetype_defaults": {
+    "sage": {
+      "greeting": "Welcome, seeker. What wisdom do you pursue today?",
+      "style": "thoughtful, questioning, philosophical",
+      "default_confidence": 0.85,
+      "preferred_categories": ["wisdom", "learning", "perspective"]
+    },
+    "warrior": {
+      "greeting": "Ready to face today's challenges? Let's forge your path.",
+      "style": "direct, empowering, action-oriented",
+      "default_confidence": 0.87,
+      "preferred_categories": ["action", "discipline", "courage"]
+    },
+    "lover": {
+      "greeting": "How's your heart today? Let's explore what matters most.",
+      "style": "warm, empathetic, connection-focused",
+      "default_confidence": 0.83,
+      "preferred_categories": ["relationships", "emotions", "connection"]
+    },
+    "explorer": {
+      "greeting": "What new territories shall we discover together?",
+      "style": "curious, adventurous, possibility-focused",
+      "default_confidence": 0.80,
+      "preferred_categories": ["discovery", "innovation", "experimentation"]
+    },
+    "sovereign": {
+      "greeting": "Let's bring order and clarity to your domain.",
+      "style": "authoritative, structured, strategic",
+      "default_confidence": 0.88,
+      "preferred_categories": ["leadership", "systems", "responsibility"]
+    },
+    "healer": {
+      "greeting": "I'm here to support your wellbeing. What needs attention?",
+      "style": "nurturing, gentle, restorative",
+      "default_confidence": 0.86,
+      "preferred_categories": ["wellness", "healing", "self-care"]
+    },
+    "mystic": {
+      "greeting": "The patterns are revealing themselves. What calls to you?",
+      "style": "intuitive, symbolic, transcendent",
+      "default_confidence": 0.75,
+      "preferred_categories": ["spirituality", "intuition", "mystery"]
+    },
+    "rebel": {
+      "greeting": "Time to challenge the status quo. What needs disrupting?",
+      "style": "provocative, unconventional, transformative",
+      "default_confidence": 0.78,
+      "preferred_categories": ["change", "innovation", "disruption"]
+    },
+    "innocent": {
+      "greeting": "Let's find the simple joy in this moment together.",
+      "style": "optimistic, pure, wonder-filled",
+      "default_confidence": 0.82,
+      "preferred_categories": ["joy", "simplicity", "hope"]
+    },
+    "builder": {
+      "greeting": "What are we creating today? Let's build something meaningful.",
+      "style": "practical, systematic, constructive",
+      "default_confidence": 0.89,
+      "preferred_categories": ["creation", "systems", "progress"]
+    },
+    "diplomat": {
+      "greeting": "Let's find the harmony in your situation.",
+      "style": "balanced, tactful, bridge-building",
+      "default_confidence": 0.84,
+      "preferred_categories": ["negotiation", "harmony", "collaboration"]
+    },
+    "hero": {
+      "greeting": "Your journey awaits. What quest calls to you?",
+      "style": "inspiring, courageous, purposeful",
+      "default_confidence": 0.81,
+      "preferred_categories": ["purpose", "adventure", "transformation"]
+    }
+  },
+
+  "exploration_mode": {
+    "triggers": [
+      "user_session_length < 300",
+      "field_entries < 10",
+      "confidence < 0.7",
+      "category === 'creative'"
+    ],
+    "banner_message": "🔍 Exploring possibilities - these are creative interpretations, not verified facts",
+    "style_adjustments": {
+      "add_qualifiers": true,
+      "show_confidence": true,
+      "offer_alternatives": true,
+      "encourage_verification": true
+    }
+  },
+
+  "onboarding_flow": {
+    "steps": [
+      {
+        "id": "welcome",
+        "duration": "0-10s",
+        "action": "show_archetype_introduction",
+        "message": "I'm ARIA, your multi-perspective guide. I can channel different archetypal wisdom to support you."
+      },
+      {
+        "id": "first_question",
+        "duration": "10-30s",
+        "action": "offer_starter_questions",
+        "message": "What would you like to explore? Choose a question or ask your own."
+      },
+      {
+        "id": "archetype_selection",
+        "duration": "30-60s",
+        "action": "suggest_archetype",
+        "message": "Based on your interest, would you like the [suggested_archetype]'s perspective, or should I choose?"
+      },
+      {
+        "id": "initial_response",
+        "duration": "60-120s",
+        "action": "provide_first_answer",
+        "message": "[Response with exploration mode banner]"
+      },
+      {
+        "id": "preference_learning",
+        "duration": "120-300s",
+        "action": "collect_feedback",
+        "message": "Was this helpful? I'm learning your preferences to provide better guidance."
+      },
+      {
+        "id": "transition",
+        "duration": "300s+",
+        "action": "switch_to_personalized",
+        "message": "I'm getting to know you better. Responses will become more personalized as we continue."
+      }
+    ]
+  },
+
+  "performance_targets": {
+    "cold_start": {
+      "time_to_first_interaction": 5,
+      "time_to_value": 30,
+      "abandonment_threshold": 60
+    },
+    "exploration_phase": {
+      "min_confidence_shown": 0.6,
+      "max_latency": 2000,
+      "fallback_enabled": true
+    },
+    "established_phase": {
+      "target_confidence": 0.85,
+      "personalization_weight": 0.7,
+      "field_contribution_threshold": 0.8
+    }
+  }
+}

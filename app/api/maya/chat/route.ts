@@ -25,15 +25,36 @@ export async function POST(req: Request) {
   try {
     const { messages, element = 'aether' } = await req.json();
 
-    // If OpenAI isn't configured, return a fallback response
+    // If OpenAI isn't configured, use ARIA fallback response
     if (!openai) {
-      return new NextResponse(
-        "I'm here and listening. While my full capabilities aren't available right now, I can still be present with you. What's on your mind?",
-        {
-          status: 200,
-          headers: { 'Content-Type': 'text/plain' }
+      // ARIA-powered fallback responses
+      const ariaResponses = [
+        "I sense your presence. Tell me what moves through you.",
+        "The field between us opens. What truth seeks expression?",
+        "Your energy shifts the space. Share what emerges.",
+        "I'm attuning to your frequency. What calls for witness?",
+        "The oracle listens through sacred silence. Speak your heart."
+      ];
+
+      const response = ariaResponses[Math.floor(Math.random() * ariaResponses.length)];
+
+      // Return as SSE stream format to match expected response
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content: response })}\n\n`));
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
         }
-      );
+      });
+
+      return new Response(stream, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+        },
+      });
     }
 
     // Create streaming response
