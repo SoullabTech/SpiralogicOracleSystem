@@ -982,6 +982,95 @@ export class PersonalOracleAgent {
     return await journalingService.processJournalRequest(query);
   }
 
+  /**
+   * Process journal reflection through ARIA-enhanced oracle
+   * This method ensures all journal interactions are filtered through PersonalOracleAgent
+   * maintaining consistency with the ARIA system and oracle principles
+   */
+  public async processJournalReflection(
+    content: string,
+    userId: string,
+    element: string = 'aether',
+    ariaPresence: number = 65
+  ): Promise<StandardAPIResponse<any>> {
+    const requestId = generateRequestId();
+
+    return asyncErrorHandler(async () => {
+      // Create oracle query with journal context
+      const oracleQuery: PersonalOracleQuery = {
+        input: content,
+        userId,
+        sessionId: `journal-${Date.now()}`,
+        targetElement: element as any,
+        context: {
+          userPreferences: {
+            journalMode: true,
+            reflectionDepth: ariaPresence > 70 ? 'deep' : ariaPresence > 50 ? 'moderate' : 'gentle',
+            sacredMirror: true
+          }
+        }
+      };
+
+      // Process through main oracle consultation
+      const oracleResult = await this.consult(oracleQuery);
+
+      if (!oracleResult.success || !oracleResult.data) {
+        throw new Error('Oracle consultation failed');
+      }
+
+      const response = oracleResult.data;
+
+      // Enhance response for journaling context
+      const journalReflection = {
+        reflection: response.message,
+        element: response.element,
+        archetype: response.archetype,
+        resonance: response.confidence * 100,
+        citations: response.citations,
+        ariaPresence,
+        voiceCharacteristics: response.voiceCharacteristics,
+        // Add journal-specific enhancements
+        journalMetadata: {
+          emotionalTone: this.detectEmotionalIntensity(content),
+          wordCount: content.split(' ').length,
+          timestamp: new Date().toISOString(),
+          sessionDuration: response.sessionInfo?.duration || 0
+        },
+        sacredInsight: response.sessionInfo?.phaseGuidance || 'Trust the unfolding of your journey',
+        continuationPrompt: this.generateJournalPrompt(response.element, content)
+      };
+
+      // Store as memory item for continuity
+      await storeMemoryItem(userId, content, {
+        type: 'journal_reflection',
+        element: response.element,
+        resonance: response.confidence,
+        ariaPresence
+      });
+
+      logger.info('Journal reflection processed through PersonalOracleAgent', {
+        userId,
+        element: response.element,
+        resonance: response.confidence,
+        requestId
+      });
+
+      return successResponse(journalReflection, requestId);
+    })();
+  }
+
+  private generateJournalPrompt(element: string, previousContent: string): string {
+    const prompts = {
+      fire: 'What action wants to emerge from this insight?',
+      water: 'How do these feelings want to flow forward?',
+      earth: 'What foundation are you building with these words?',
+      air: 'What new perspective is revealing itself?',
+      aether: 'What mystery is unfolding through you?'
+    };
+
+    return prompts[element as keyof typeof prompts] || prompts.aether;
+  }
+
   public async processAssessment(
     query: any,
   ): Promise<StandardAPIResponse<any>> {

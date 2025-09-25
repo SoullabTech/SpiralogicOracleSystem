@@ -558,9 +558,10 @@ export default function BetaMonitor() {
         ::-webkit-scrollbar-thumb:hover {
           background: rgba(148, 163, 184, 0.3);
         }
+      `}</style>
 
-        {/* Conversation Magic Tab */}
-        {activeTab === 'conversation' && (
+      {/* Conversation Magic Tab */}
+      {activeTab === 'conversation' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Conversation Flow Metrics */}
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">

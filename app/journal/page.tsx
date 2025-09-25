@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, ChevronLeft, Calendar, Sparkles, Moon, Sun, Cloud, Flower } from 'lucide-react';
+import { BookOpen, Plus, ChevronLeft, Calendar, Sparkles, Moon, Sun, Cloud, Flower, Brain } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { HoloflowerJournalViewer } from '@/components/journal/HoloflowerJournalViewer';
+import { InteractiveARIAJournal } from '@/components/journal/InteractiveARIAJournal';
 
 interface JournalEntry {
   id: string;
@@ -32,7 +33,7 @@ export default function JournalPage() {
   const [isWriting, setIsWriting] = useState(false);
   const [content, setContent] = useState('');
   const [selectedPrompt, setSelectedPrompt] = useState('');
-  const [viewMode, setViewMode] = useState<'list' | 'write' | 'holoflower'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'write' | 'holoflower' | 'aria'>('list');
   const router = useRouter();
 
   useEffect(() => {
@@ -144,6 +145,17 @@ export default function JournalPage() {
 
           <div className="flex gap-2">
             <button
+              onClick={() => setViewMode('aria')}
+              className={`flex items-center gap-2 px-3 py-2 border rounded-lg transition-all ${
+                viewMode === 'aria'
+                  ? 'bg-purple-500/30 border-purple-400/40 text-purple-300'
+                  : 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-400/20 text-purple-300'
+              }`}
+            >
+              <Brain className="w-4 h-4" />
+              <span className="hidden sm:inline">ARIA</span>
+            </button>
+            <button
               onClick={() => setViewMode(viewMode === 'holoflower' ? 'list' : 'holoflower')}
               className="flex items-center gap-2 px-3 py-2 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-400/20 text-purple-300 rounded-lg transition-all"
             >
@@ -164,7 +176,16 @@ export default function JournalPage() {
       {/* Main Content */}
       <main className="relative z-10 max-w-4xl mx-auto p-4 pb-24">
         <AnimatePresence mode="wait">
-          {viewMode === 'holoflower' ? (
+          {viewMode === 'aria' ? (
+            <motion.div
+              key="aria"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <InteractiveARIAJournal />
+            </motion.div>
+          ) : viewMode === 'holoflower' ? (
             <motion.div
               key="holoflower"
               initial={{ opacity: 0, y: 20 }}
