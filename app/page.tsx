@@ -29,8 +29,12 @@ export default function HomePage() {
         router.push('/beta-signup');
       }
     } else {
-      // Web flow: go to oracle conversation
-      router.push('/oracle-conversation');
+      // Web flow: redirect to Maya (same as PWA)
+      if (explorerId && explorerName) {
+        router.push('/maya');
+      } else {
+        router.push('/beta-signup');
+      }
     }
   }, [router]);
 
