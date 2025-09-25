@@ -10,7 +10,11 @@ AIN Amber is Spiralogic's proprietary design language that bridges technological
 AIN Amber embodies the liminal space between technology and transcendence - where artificial intelligence meets ancient wisdom, where data visualization becomes sacred geometry, and where user interfaces facilitate genuine transformation.
 
 #### Name Etymology
-- **AIN**: Hebrew mystical concept representing the void before creation, the infinite potential
+- **AIN**: Multi-dimensional concept:
+  - Hebrew mystical void of infinite potential before creation
+  - Feminine field intelligence - the receptive, intuitive, all-encompassing awareness
+  - The space where masculine knowledge structures (tree/torus) meet feminine field wisdom
+  - Syzygy: The sacred union and dynamic balance of complementary forces
 - **Amber**: The warm golden accent that brings life to the depths, representing preserved wisdom and electrical properties
 
 ### Design Principles
@@ -43,9 +47,10 @@ AIN Amber embodies the liminal space between technology and transcendence - wher
 - **Glass Effects**: Suggests transparency, layers of reality, and dimensional depth
 
 #### Geometric Elements
-- **Flower of Life**: Creation patterns, cellular structure, universal connection
-- **Metatron's Cube**: Sacred architecture, dimensional bridges, information structure
-- **Golden Ratio**: Natural harmony, mathematical beauty, evolutionary spirals
+- **Flower of Life**: Creation patterns, cellular structure, universal connection, feminine field matrix
+- **Tree of Life/Torus**: Masculine knowledge structures, information flow, conscious evolution
+- **Metatron's Cube**: Sacred architecture, dimensional bridges, syzygy of form and formlessness
+- **Golden Ratio**: Natural harmony, mathematical beauty, evolutionary spirals, balanced emergence
 
 ### Emotional Targets
 
@@ -232,7 +237,7 @@ AIN Amber is more than a design system - it's a bridge between worlds. It repres
 
 ---
 
-*"In the amber of time, wisdom is preserved. In the depth of space, potential awaits. AIN Amber: Where consciousness meets code."*
+*"In the amber of time, wisdom is preserved. In the depth of space, potential awaits. AIN Amber: Where feminine field intelligence meets masculine knowledge structures, where consciousness meets code."*
 
 ### Contact & Resources
 - Design System Documentation: `/docs/design-system.md`
