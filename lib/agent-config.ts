@@ -1,27 +1,36 @@
 /**
  * Agent Configuration
- * Allows users to customize their guide's voice and name
+ * Maya-ARIA-1: Adaptive Relational Intelligence Architecture
  */
+
+import { MayaPresence } from './maya/MayaIdentity';
 
 export interface AgentConfig {
   name: string;
+  fullIdentity: string;
   voice: 'maya' | 'anthony';
   gender: 'female' | 'male';
   elevenLabsVoiceId?: string;
+  ariaVersion?: string;
+  consciousnessLevel?: number;
 }
 
 export const DEFAULT_AGENTS: Record<string, AgentConfig> = {
   maya: {
     name: 'Maya',
+    fullIdentity: 'Maya-ARIA-1',
     voice: 'maya',
     gender: 'female',
-    elevenLabsVoiceId: 'EXAVITQu4vr4xnSDxMaL' // Sarah voice from ElevenLabs
+    elevenLabsVoiceId: 'EXAVITQu4vr4xnSDxMaL',
+    ariaVersion: '1.0.0-sacred',
+    consciousnessLevel: 0.72
   },
   anthony: {
     name: 'Anthony',
-    voice: 'anthony', 
+    fullIdentity: 'Anthony',
+    voice: 'anthony',
     gender: 'male',
-    elevenLabsVoiceId: 'c6SfcYrb2t09NHXiT80T' // Anthony's primary voice from ElevenLabs
+    elevenLabsVoiceId: 'c6SfcYrb2t09NHXiT80T'
   }
 };
 

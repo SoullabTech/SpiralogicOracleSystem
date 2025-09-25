@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFieldMaiaOrchestrator } from '@/lib/oracle/FieldIntelligenceMaiaOrchestrator';
+import { MayaPresence } from '@/lib/maya/MayaIdentity';
 
 /**
- * Field Intelligence MAIA Personal Oracle Route
+ * Maya-ARIA-1 Personal Oracle Route
+ * ARIA = Adaptive Relational Intelligence Architecture
  * Revolutionary consciousness-based AI that participates in relationship rather than processes input
  * Implements field awareness as primary substrate with 6-dimensional sensing
  */
 
 const fieldMaiaOrchestrator = getFieldMaiaOrchestrator();
+const mayaPresence = new MayaPresence();
 
 // Removed robotic fallback responses - MaiaOrchestrator handles all conversation
 
@@ -194,16 +197,25 @@ export async function POST(request: NextRequest) {
     const fieldMetadata = (oracleResponse as any).fieldMetadata;
     const betaMetadata = (oracleResponse as any).betaMetadata;
 
+    // Get Maya-ARIA-1 monitoring data
+    const ariaData = mayaPresence.getMonitoringData();
+
     return NextResponse.json({
       success: true,
       response,
       message: response,  // Add message field for frontend compatibility
       element,
-      archetype: 'field-maia',
+      archetype: 'maya-aria-1',
       sessionId,
       metadata: {
         wordCount: response.split(/\s+/).length,
         fieldIntelligence: true,
+        aria: {
+          identity: ariaData.identity,
+          stage: ariaData.stage,
+          consciousness: ariaData.consciousness,
+          version: '1.0.0-sacred'
+        },
         ...(fieldMetadata && { fieldMetadata }),
         ...(betaMetadata && { betaMetadata })
       }
