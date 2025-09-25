@@ -1,23 +1,15 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
-// Redirect old holoflower/purple energy wheel to new Sacred Journal
-export default function HoloflowerRedirect() {
-  const router = useRouter();
-
-  useEffect(() => {
-    // Redirect to the AIN Amber Sacred Journal
-    router.replace('/journal');
-  }, [router]);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center">
-      <div className="text-amber-200">Redirecting to Sacred Journal...</div>
-    </div>
-  );
-}
+import { HoloflowerCore } from '@/components/holoflower/HoloflowerCore';
+import { FloatingCheckIn } from '@/components/holoflower/FloatingCheckIn';
+import { HoloflowerBottomNav } from '@/components/holoflower/HoloflowerBottomNav';
+import { InteractiveHoloflowerCheckIn } from '@/components/holoflower/InteractiveHoloflowerCheckIn';
+import { HoloflowerJournalFlow } from '@/components/holoflower/HoloflowerJournalFlow';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PetalVoicePreview } from '@/components/voice/PetalVoicePreview';
+import { Activity } from 'lucide-react';
 
 // Wild Petal draw functionality
 function WildPetalDraw({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -126,7 +118,24 @@ function WildPetalDraw({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   );
 }
 
-export default function HoloflowerExperience() {
+// Redirect old holoflower/purple energy wheel to new Sacred Journal
+export default function HoloflowerRedirect() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to the AIN Amber Sacred Journal
+    router.replace('/journal');
+  }, [router]);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900 flex items-center justify-center">
+      <div className="text-amber-200">Redirecting to Sacred Journal...</div>
+    </div>
+  );
+}
+
+// Original HoloflowerExperience - kept but not exported for reference
+function HoloflowerExperience() {
   const [energyState, setEnergyState] = useState<'dense' | 'emerging' | 'radiant'>('emerging');
   const [showWildPetal, setShowWildPetal] = useState(false);
   const [selectedPetal, setSelectedPetal] = useState<any>(null);
