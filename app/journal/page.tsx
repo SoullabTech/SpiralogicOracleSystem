@@ -16,7 +16,7 @@ interface JournalEntry {
   holoflowerConfig?: string;
 }
 
-// Sacred journal prompts
+// Soul journal prompts
 const journalPrompts = [
   "What patterns are emerging in your inner landscape?",
   "How did today's oracle reading resonate with your current journey?",
@@ -38,7 +38,7 @@ export default function JournalPage() {
 
   useEffect(() => {
     // Load journal entries from localStorage
-    const storedEntries = localStorage.getItem('sacredJournal');
+    const storedEntries = localStorage.getItem('soulJournal');
     if (storedEntries) {
       setEntries(JSON.parse(storedEntries));
     }
@@ -61,7 +61,7 @@ export default function JournalPage() {
 
     const updatedEntries = [entry, ...entries];
     setEntries(updatedEntries);
-    localStorage.setItem('sacredJournal', JSON.stringify(updatedEntries));
+    localStorage.setItem('soulJournal', JSON.stringify(updatedEntries));
 
     // Try to save to backend
     try {
@@ -132,14 +132,14 @@ export default function JournalPage() {
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => router.push('/holoflower')}
+              onClick={() => router.push('/maya')}
               className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
               <ChevronLeft className="w-5 h-5 text-white/70" />
             </button>
             <div className="flex items-center gap-3">
               <BookOpen className="w-6 h-6 text-amber-400" />
-              <h1 className="text-xl font-light text-white">Sacred Journal</h1>
+              <h1 className="text-xl font-light text-white">Soul Journal</h1>
             </div>
           </div>
 
@@ -261,7 +261,7 @@ export default function JournalPage() {
                   className="text-center py-20"
                 >
                   <BookOpen className="w-16 h-16 text-amber-400/30 mx-auto mb-4" />
-                  <p className="text-white/50 mb-2">Your sacred journal awaits</p>
+                  <p className="text-white/50 mb-2">Your soul journal awaits</p>
                   <p className="text-white/30 text-sm">Begin capturing your inner journey</p>
                 </motion.div>
               ) : (
