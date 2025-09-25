@@ -9,19 +9,27 @@ export default function HomePage() {
   const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Check if user has been onboarded
-    const betaOnboarded = localStorage.getItem("betaOnboardingComplete") === "true";
-    const legacyOnboarded = localStorage.getItem("sacredMirrorOnboarded") === "true";
-
     // Detect if running as PWA (standalone mode)
     const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
                   window.navigator.standalone === true ||
                   document.referrer.includes('android-app://');
 
-    // If PWA, go to Maya interface; otherwise Oracle Conversation
+    // Check if user has beta credentials
+    const explorerId = localStorage.getItem('explorerId') || localStorage.getItem('betaUserId');
+    const explorerName = localStorage.getItem('explorerName');
+    const betaOnboarded = localStorage.getItem("betaOnboardingComplete") === "true";
+
     if (isPWA) {
-      router.push('/maya');
+      // PWA flow: signup first, then auto-drop to Maya
+      if (explorerId && explorerName) {
+        // Already signed up - go straight to Maya
+        router.push('/maya');
+      } else {
+        // Need to sign up first
+        router.push('/beta-signup');
+      }
     } else {
+      // Web flow: go to oracle conversation
       router.push('/oracle-conversation');
     }
   }, [router]);

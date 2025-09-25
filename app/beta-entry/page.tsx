@@ -24,6 +24,7 @@ export default function BetaEntry() {
     localStorage.setItem('explorerId', explorerId);
     localStorage.setItem('explorerName', name);
     localStorage.setItem('betaUserId', explorerId);
+    localStorage.setItem('betaOnboardingComplete', 'true');
 
     // Direct entry to Maya - no onboarding
     setTimeout(() => {
