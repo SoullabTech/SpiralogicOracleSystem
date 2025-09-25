@@ -136,9 +136,7 @@ export default function BetaMonitor() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const filteredUsers = selectedCohort === 'all'
-    ? users
-    : users.filter(u => u.cohort === selectedCohort);
+  const filteredUsers = users; // Cohort filtering not implemented yet
 
   return (
     <div className="min-h-screen bg-[#1a1f3a]">
