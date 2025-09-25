@@ -95,10 +95,10 @@ export default function BetaMonitor() {
 
   return (
     <div className="min-h-screen bg-[#1a1f3a]">
-      {/* PWA Safe Area */}
+      {/* PWA Safe Area - Midnight Amber Design System */}
       <div className="safe-top" />
 
-      {/* Subtle Sacred Geometry Background */}
+      {/* Spiralogic Geometry Background - Part of 'Midnight Amber' Design System */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.02]">
         <svg viewBox="0 0 1000 1000" className="w-full h-full">
           <circle cx="500" cy="500" r="400" fill="none" stroke="#F6AD55" strokeWidth="0.5" strokeDasharray="4 4" />

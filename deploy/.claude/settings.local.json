@@ -10,7 +10,11 @@
       "Bash(npm install)",
       "Bash(npm run build:*)",
       "Bash(find:*)",
-      "Read(//Volumes/T7 Shield/Projects/SpiralogicOracleSystem/**)"
+      "Read(//Volumes/T7 Shield/Projects/SpiralogicOracleSystem/**)",
+      "Read(//var/folders/4f/cd3c1bys0m1f_87221z0vjgh0000gn/T/TemporaryItems/NSIRD_screencaptureui_TU2slK/**)",
+      "Read(//Volumes/T7 Shield/Projects/**)",
+      "Bash(grep:*)",
+      "Read(//Users/andreanezat/Desktop/**)"
     ],
     "deny": [],
     "ask": []
