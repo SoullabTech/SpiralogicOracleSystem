@@ -23,36 +23,36 @@ export function HoloflowerBottomNav() {
       id: 'chat',
       label: 'Chat',
       icon: <MessageSquare className="w-5 h-5" />,
-      action: () => window.dispatchEvent(new CustomEvent('toggleChat')),
-      color: '#D4B896',
+      path: '/maya',
+      color: '#F6AD55', // AIN Amber
     },
     {
       id: 'voice',
       label: 'Voice',
       icon: <Mic className="w-5 h-5" />,
-      action: () => window.dispatchEvent(new CustomEvent('toggleVoice')),
-      color: '#68D391',
-    },
-    {
-      id: 'heart',
-      label: 'Heart',
-      icon: <Heart className="w-5 h-5" />,
-      action: () => window.dispatchEvent(new CustomEvent('toggleHeart')),
-      color: '#FF6B6B',
+      path: '/maya-voice',
+      color: '#D4AF37', // Sacred gold
     },
     {
       id: 'journal',
       label: 'Journal',
       icon: <BookOpen className="w-5 h-5" />,
       path: '/journal',
-      color: '#4A90E2',
+      color: '#D4B896', // Light amber
     },
     {
-      id: 'vision',
-      label: 'Vision',
+      id: 'about',
+      label: 'About',
+      icon: <Heart className="w-5 h-5" />,
+      path: '/about',
+      color: '#FFD700', // Gold
+    },
+    {
+      id: 'monitor',
+      label: 'Monitor',
       icon: <Eye className="w-5 h-5" />,
-      action: () => window.dispatchEvent(new CustomEvent('toggleVision')),
-      color: '#E5C9A6',
+      path: '/beta/monitor',
+      color: '#F6AD55', // Amber
     },
   ];
 
