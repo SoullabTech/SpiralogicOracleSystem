@@ -93,6 +93,27 @@
       "description": "Text conversation with Maya",
       "url": "/oracle-conversation?mode=chat",
       "icons": [{ "src": "/holoflower.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Beta Monitor",
+      "short_name": "Monitor",
+      "description": "Monitor beta users and protection systems",
+      "url": "/beta/monitor",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "User Activity",
+      "short_name": "Users",
+      "description": "Beta user activity dashboard",
+      "url": "/beta/monitor?tab=users",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Protection Monitor",
+      "short_name": "Protection",
+      "description": "Hallucination protection monitoring",
+      "url": "/beta/monitor?tab=protection",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ],
   "screenshots": [
