@@ -195,9 +195,9 @@ export default function HybridInput({
           shouldRestart = true;
           break;
         case 'aborted':
-          // User aborted - don't show error
+          // Aborted - restart to maintain continuous listening
           errorMessage = '';
-          shouldRestart = false;
+          shouldRestart = true;
           break;
       }
 

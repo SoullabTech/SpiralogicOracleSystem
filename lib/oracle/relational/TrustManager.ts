@@ -132,6 +132,14 @@ export class TrustManager {
   }
 
   /**
+   * Get trust score for a user
+   */
+  getTrustScore(userId: string): number {
+    const profile = this.getUserProfile(userId);
+    return profile.trustScore;
+  }
+
+  /**
    * Calculate trust-based presence multiplier
    * Trust always INCREASES presence, never decreases
    */

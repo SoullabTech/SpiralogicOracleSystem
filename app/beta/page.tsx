@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 export default function BetaLandingPage() {
   const router = useRouter();
 
-  // Redirect to the new beta-signup page
+  // Redirect to minimal entry - no heavy onboarding
   useEffect(() => {
-    router.push('/beta-signup');
+    router.push('/beta-entry');
   }, [router]);
 
   return (

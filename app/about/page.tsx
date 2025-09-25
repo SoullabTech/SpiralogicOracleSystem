@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Sparkles, Brain, Heart, Compass, ArrowLeft } from 'lucide-react';
+import SacredTestimonial from '../../components/testimonials/SacredTestimonial';
 
 export default function AboutPage() {
   return (
@@ -148,11 +149,14 @@ export default function AboutPage() {
             </div>
           </section>
 
+          {/* Sacred Testimonial */}
+          <SacredTestimonial />
+
           {/* Support Note */}
           <section className="bg-amber-900/20 rounded-xl p-6 border border-amber-600/30">
             <p className="text-amber-200 text-sm leading-relaxed">
-              <strong>A Note on Support:</strong> While our conversations may be therapeutic, this isn't formal therapy. 
-              If you're experiencing crisis or need clinical support, please reach out to appropriate resources (988 for crisis in US). 
+              <strong>A Note on Support:</strong> While our conversations may be therapeutic, this isn't formal therapy.
+              If you're experiencing crisis or need clinical support, please reach out to appropriate resources (988 for crisis in US).
               We're here to support your growth and exploration, helping you show up as your best self for all forms of support and connection in your life.
             </p>
           </section>

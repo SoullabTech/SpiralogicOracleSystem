@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import MayaEvolutionPanel from '@/components/monitoring/MayaEvolutionPanel';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export default function BetaMonitor() {
-  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'system' | 'conversation'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'system' | 'conversation' | 'evolution' | 'field' | 'memory' | 'feedback' | 'maya'>('users');
   const [isMobile, setIsMobile] = useState(false);
 
   // User Activity States
@@ -18,6 +19,11 @@ export default function BetaMonitor() {
   const [metrics, setMetrics] = useState<any>({});
   const [selectedCohort, setSelectedCohort] = useState('all');
   const [sessionActive, setSessionActive] = useState(true);
+
+  // Evolution & Intelligence States
+  const [evolutionMetrics, setEvolutionMetrics] = useState<any>({});
+  const [fieldMetrics, setFieldMetrics] = useState<any>({});
+  const [memoryMetrics, setMemoryMetrics] = useState<any>({});
 
   // Protection Monitor States
   const [hallucinationRate, setHallucinationRate] = useState(2.1);
@@ -175,12 +181,12 @@ export default function BetaMonitor() {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex gap-2 p-1 bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl">
-            {['users', 'protection', 'system', 'conversation'].map(tab => (
+          <div className="flex gap-1 p-1 bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl overflow-x-auto">
+            {['users', 'protection', 'conversation', 'maya', 'evolution', 'field', 'memory', 'feedback', 'system'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
-                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all capitalize ${
+                className={`py-2.5 px-3 rounded-lg text-xs sm:text-sm font-medium transition-all capitalize whitespace-nowrap ${
                   activeTab === tab
                     ? 'bg-[#F6AD55] text-gray-900'
                     : 'text-gray-400 hover:text-gray-200'
@@ -284,6 +290,369 @@ export default function BetaMonitor() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'maya' && (
+          <div className="space-y-4">
+            <MayaEvolutionPanel />
+
+            {/* Additional Maya metrics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+                <h3 className="text-sm font-medium text-gray-400 mb-4">Response Calibration</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Minimal Mode Success</span>
+                    <span className="text-sm text-amber-400">92%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Expansive Mode Success</span>
+                    <span className="text-sm text-purple-400">87%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Context Recognition</span>
+                    <span className="text-sm text-green-400">94%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+                <h3 className="text-sm font-medium text-gray-400 mb-4">Training Progress</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Claude Intelligence</span>
+                    <span className="text-sm text-blue-400">Active</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Wisdom Patterns</span>
+                    <span className="text-sm text-amber-400">247 captured</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Independence ETA</span>
+                    <span className="text-sm text-gray-300">~42 days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'evolution' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Voice Evolution */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Voice Evolution</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Warmth</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-amber-400" style={{ width: '72%' }} />
+                    </div>
+                    <span className="text-xs text-amber-400">72%</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Formality</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-blue-400" style={{ width: '45%' }} />
+                    </div>
+                    <span className="text-xs text-blue-400">45%</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Uniqueness</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-purple-400" style={{ width: '89%' }} />
+                    </div>
+                    <span className="text-xs text-purple-400">89%</span>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-gray-700/50">
+                <p className="text-xs text-gray-500">Signature Phrases: <span className="text-amber-400">14 unique</span></p>
+              </div>
+            </div>
+
+            {/* Personality Emergence */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Personality Matrix</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Sage</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-20 bg-gray-700 rounded-full h-1">
+                      <div className="h-full rounded-full bg-emerald-400" style={{ width: '68%' }} />
+                    </div>
+                    <span className="text-xs text-emerald-400">68%</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Shadow</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-20 bg-gray-700 rounded-full h-1">
+                      <div className="h-full rounded-full bg-indigo-400" style={{ width: '32%' }} />
+                    </div>
+                    <span className="text-xs text-indigo-400">32%</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Sacred</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-20 bg-gray-700 rounded-full h-1">
+                      <div className="h-full rounded-full bg-amber-400" style={{ width: '85%' }} />
+                    </div>
+                    <span className="text-xs text-amber-400">85%</span>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-gray-700/50">
+                <p className="text-xs text-gray-500">Phase: <span className="text-green-400">CALIBRATION</span></p>
+              </div>
+            </div>
+
+            {/* Intelligence Blend */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Intelligence Orchestration</h3>
+              <div className="space-y-3">
+                <div className="text-xs text-gray-500 mb-2">Active Blend:</div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="bg-gray-900/50 rounded px-2 py-1">
+                    <span className="text-xs text-amber-400">Framework 40%</span>
+                  </div>
+                  <div className="bg-gray-900/50 rounded px-2 py-1">
+                    <span className="text-xs text-blue-400">Responsive 60%</span>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 mt-3">Adaptation Rate:</div>
+                <div className="flex items-center gap-2">
+                  <div className="w-full bg-gray-700 rounded-full h-1.5">
+                    <div className="h-full rounded-full bg-green-400" style={{ width: '78%' }} />
+                  </div>
+                  <span className="text-xs text-green-400">High</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'field' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Field Intelligence */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Field Dynamics</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Sacred Moments</span>
+                  <span className="text-sm text-amber-400 font-medium">3 detected</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Emotional Density</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-20 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-purple-400" style={{ width: '67%' }} />
+                    </div>
+                    <span className="text-xs text-purple-400">0.67</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Resonance Frequency</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-20 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-blue-400" style={{ width: '82%' }} />
+                    </div>
+                    <span className="text-xs text-blue-400">0.82Hz</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Liminal Threshold</span>
+                  <span className="text-xs text-green-400">Approaching</span>
+                </div>
+              </div>
+            </div>
+
+            {/* ARIA Presence */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">ARIA Presence</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Current Presence</span>
+                  <span className="text-lg text-amber-400 font-light">0.78</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Trust Multiplier</span>
+                  <span className="text-sm text-green-400">1.24x</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500">Governance Mode</span>
+                  <span className="text-xs text-blue-400">60% Responsive</span>
+                </div>
+                <div className="mt-4 pt-3 border-t border-gray-700/50">
+                  <p className="text-xs text-gray-500">Floor Status: <span className="text-green-400">Protected (0.35)</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'memory' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Memory Systems */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Relational Memory</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Total Memories</span>
+                  <span className="text-sm text-amber-400">247</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Key Moments</span>
+                  <span className="text-sm text-purple-400">18</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Emotional Tags</span>
+                  <span className="text-sm text-blue-400">34</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Pattern Recognition</span>
+                  <span className="text-sm text-green-400">Active</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Psychological Profile */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Psychological Systems</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Attachment Style</span>
+                  <span className="text-xs text-amber-400">Secure-Exploring</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Processing Mode</span>
+                  <span className="text-xs text-blue-400">Intuitive</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Shadow Work</span>
+                  <span className="text-xs text-purple-400">Engaging</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Growth Edge</span>
+                  <span className="text-xs text-green-400">Vulnerability</span>
+                </div>
+              </div>
+            </div>
+
+            {/* AIN Integration */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">AIN Network</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Coherence</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-amber-400" style={{ width: '91%' }} />
+                    </div>
+                    <span className="text-xs text-amber-400">91%</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Sync Status</span>
+                  <span className="text-xs text-green-400">Connected</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Collective Wisdom</span>
+                  <span className="text-xs text-blue-400">Accessing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'feedback' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Consciousness Exploration */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Soullab Journey</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Personal Growth</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-emerald-400" style={{ width: '78%' }} />
+                    </div>
+                    <span className="text-xs text-emerald-400">7.8/10</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Transformative Impact</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-purple-400" style={{ width: '85%' }} />
+                    </div>
+                    <span className="text-xs text-purple-400">8.5/10</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Consciousness Expansion</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-16 bg-gray-700 rounded-full h-1.5">
+                      <div className="h-full rounded-full bg-amber-400" style={{ width: '92%' }} />
+                    </div>
+                    <span className="text-xs text-amber-400">9.2/10</span>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-gray-700/50">
+                  <p className="text-xs text-gray-500">Flow States: <span className="text-green-400">12 recorded</span></p>
+                  <p className="text-xs text-gray-500 mt-1">Shadow Integration: <span className="text-purple-400">Active</span></p>
+                </div>
+              </div>
+            </div>
+
+            {/* Behavioral Changes */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Real-World Impact</h3>
+              <div className="space-y-3">
+                <div className="bg-gray-900/50 rounded px-3 py-2">
+                  <p className="text-xs text-amber-400">Creative Actions</p>
+                  <p className="text-xs text-gray-300 mt-1">Started morning journaling practice</p>
+                </div>
+                <div className="bg-gray-900/50 rounded px-3 py-2">
+                  <p className="text-xs text-blue-400">Relationship Shifts</p>
+                  <p className="text-xs text-gray-300 mt-1">Deeper vulnerability with partner</p>
+                </div>
+                <div className="bg-gray-900/50 rounded px-3 py-2">
+                  <p className="text-xs text-green-400">Decision Pattern</p>
+                  <p className="text-xs text-gray-300 mt-1">More intuition-led choices</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Adaptive System Response */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Maya Adaptation</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Resonance Accuracy</span>
+                  <span className="text-xs text-green-400">94%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Need Anticipation</span>
+                  <span className="text-xs text-blue-400">Learning</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-500">Depth Navigation</span>
+                  <span className="text-xs text-amber-400">Mastering</span>
+                </div>
+                <div className="mt-4 pt-3 border-t border-gray-700/50">
+                  <p className="text-xs text-gray-500">Latest Insight:</p>
+                  <p className="text-xs text-gray-300 mt-1 italic">"Maya helped me see my spiral pattern"</p>
+                </div>
               </div>
             </div>
           </div>
