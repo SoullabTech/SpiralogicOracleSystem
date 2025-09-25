@@ -59,6 +59,13 @@ export interface TemporalDynamics {
   kairos_detection: boolean;      // Right time detection
 }
 
+export interface ConversationalFlow {
+  pattern_recognition: number;    // 0-1, pattern detection strength
+  flow_state: 'emerging' | 'established' | 'disrupted' | 'transforming';
+  dialogue_depth: number;         // 0-1, surface to profound
+  turn_quality: 'mechanical' | 'organic' | 'sacred' | 'breakthrough';
+}
+
 export interface FieldState {
   emotionalWeather: EmotionalWeather;
   semanticLandscape: SemanticLandscape;
@@ -66,6 +73,7 @@ export interface FieldState {
   sacredMarkers: SacredMarkers;
   somaticIntelligence: SomaticIntelligence;
   temporalDynamics: TemporalDynamics;
+  conversationalFlow: ConversationalFlow;
 }
 
 // ============== Field Awareness Implementation ==============
@@ -99,14 +107,16 @@ export class FieldAwareness {
       connectionDynamics,
       sacredMarkers,
       somaticIntelligence,
-      temporalDynamics
+      temporalDynamics,
+      conversationalFlow
     ] = await Promise.all([
       this.senseEmotionalWeather(context.currentInput, context.conversationHistory),
       this.senseSemanticLandscape(context.currentInput, context.conversationHistory),
       this.senseConnectionDynamics(context),
       this.senseSacredMarkers(context.currentInput, context.conversationHistory),
       this.senseSomaticIntelligence(context.currentInput, context.conversationHistory),
-      this.senseTemporalDynamics(context)
+      this.senseTemporalDynamics(context),
+      this.senseConversationalFlow(context.currentInput, context.conversationHistory)
     ]);
 
     return {
@@ -115,7 +125,8 @@ export class FieldAwareness {
       connectionDynamics,
       sacredMarkers,
       somaticIntelligence,
-      temporalDynamics
+      temporalDynamics,
+      conversationalFlow
     };
   }
 
@@ -687,6 +698,49 @@ export class FieldAwareness {
     if (preferences?.communicationStyle === 'direct') return 'measured';
 
     return 'measured';
+  }
+
+  /**
+   * Sense conversational flow patterns and dynamics
+   */
+  private async senseConversationalFlow(
+    input: string,
+    history: any[]
+  ): Promise<ConversationalFlow> {
+    // Pattern recognition based on repetitive elements and conversational depth
+    const patterns = input.match(/(.+?)\1+/g) || [];
+    const questionCount = (input.match(/\?/g) || []).length;
+    const depth_indicators = input.match(/\b(why|because|however|although|beneath|beyond|deeper|truly)\b/gi) || [];
+
+    const pattern_recognition = Math.min(
+      (patterns.length * 0.2) +
+      (depth_indicators.length * 0.15) +
+      (history.length > 5 ? 0.3 : 0),
+      1.0
+    );
+
+    // Flow state based on conversation history and current input
+    let flow_state: 'emerging' | 'established' | 'disrupted' | 'transforming' = 'emerging';
+    if (history.length > 10) flow_state = 'established';
+    if (input.toLowerCase().includes('actually') || input.toLowerCase().includes('wait')) flow_state = 'disrupted';
+    if (input.toLowerCase().includes('realize') || input.toLowerCase().includes('understand')) flow_state = 'transforming';
+
+    // Dialogue depth based on abstract vs concrete language
+    const abstract_words = input.match(/\b(meaning|purpose|essence|truth|soul|spirit|connection|being)\b/gi) || [];
+    const dialogue_depth = Math.min(abstract_words.length / 10, 1.0);
+
+    // Turn quality based on breakthrough markers
+    let turn_quality: 'mechanical' | 'organic' | 'sacred' | 'breakthrough' = 'organic';
+    if (input.length < 10) turn_quality = 'mechanical';
+    if (this.sacredPatterns.has(input.toLowerCase())) turn_quality = 'sacred';
+    if (input.toLowerCase().includes('breakthrough') || input.toLowerCase().includes('shift')) turn_quality = 'breakthrough';
+
+    return {
+      pattern_recognition,
+      flow_state,
+      dialogue_depth,
+      turn_quality
+    };
   }
 
   private initializeSacredPatterns(): void {

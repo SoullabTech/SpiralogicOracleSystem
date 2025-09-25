@@ -34,9 +34,9 @@ export default function MayaPage() {
       // Check if returning user - try beta signin first
       const hasUsedBefore = localStorage.getItem('betaOnboardingComplete') === 'true';
       if (hasUsedBefore) {
-        router.push('/beta-signin');
+        router.replace('/beta-signin');
       } else {
-        router.push('/beta-signup');
+        router.replace('/beta-entry');
       }
     } else {
       setIsAuthorized(true);

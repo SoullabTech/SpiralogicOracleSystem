@@ -132,7 +132,7 @@ export default function JournalPage() {
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => router.push('/maya')}
+              onClick={() => router.replace('/maya')}
               className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
               <ChevronLeft className="w-5 h-5 text-white/70" />

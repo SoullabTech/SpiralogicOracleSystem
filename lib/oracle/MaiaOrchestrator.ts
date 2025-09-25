@@ -158,7 +158,8 @@ export class MaiaOrchestrator {
     const bpdPattern = dbtOrchestrator.assessBPDPattern(input);
     if (bpdPattern) {
       console.log(`💡 DBT Pattern Detected: ${bpdPattern.pattern} (${bpdPattern.module})`);
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: bpdPattern.response,
         topics
@@ -170,7 +171,8 @@ export class MaiaOrchestrator {
     const dbtAssessment = dbtOrchestrator.assessDBTNeed(emotions, intensity, topics, {});
     if (dbtAssessment && (intensity > 0.7 || this.hasSafetyRisk(input))) {
       const dbtResponse = dbtOrchestrator.formatDBTResponse(dbtAssessment);
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: dbtResponse,
         topics
@@ -182,7 +184,8 @@ export class MaiaOrchestrator {
     // (These are real concerns that shouldn't be dismissed as grandiosity)
     const existentialDreadResponse = this.checkForExistentialDread(input);
     if (existentialDreadResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: existentialDreadResponse.message,
         topics: this.extractTopics(input)
@@ -193,7 +196,8 @@ export class MaiaOrchestrator {
     // PRIORITY 1.5: Check for Gen X bridge generation patterns
     const genXResponse = this.checkForGenX(input);
     if (genXResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: genXResponse.message,
         topics: this.extractTopics(input)
@@ -204,7 +208,8 @@ export class MaiaOrchestrator {
     // PRIORITY 2: Check for grandiosity patterns requiring boundaries
     const grandioseResponse = this.checkForGrandiosity(input);
     if (grandioseResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: grandioseResponse.message,
         topics: this.extractTopics(input)
@@ -215,7 +220,8 @@ export class MaiaOrchestrator {
     // PRIORITY 3: Check for autism/neurodivergent communication needs
     const autismResponse = this.checkForAutismCommunication(input);
     if (autismResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: autismResponse.message,
         topics: this.extractTopics(input)
@@ -226,7 +232,8 @@ export class MaiaOrchestrator {
     // PRIORITY 4: Check for breakthrough moments (HIGHEST EMOTIONAL PRIORITY)
     const breakthroughResponse = this.checkForBreakthrough(input);
     if (breakthroughResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: breakthroughResponse.message,
         topics: this.extractTopics(input)
@@ -237,7 +244,8 @@ export class MaiaOrchestrator {
     // PRIORITY 5: Check for paradox/integration moments
     const paradoxResponse = this.checkForParadox(input);
     if (paradoxResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: paradoxResponse.message,
         topics: this.extractTopics(input)
@@ -248,7 +256,8 @@ export class MaiaOrchestrator {
     // PRIORITY 6: Check for vulnerability beneath defenses
     const vulnerabilityResponse = this.checkForVulnerability(input);
     if (vulnerabilityResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: vulnerabilityResponse.message,
         topics: this.extractTopics(input)
@@ -259,7 +268,8 @@ export class MaiaOrchestrator {
     // PRIORITY 7: Check for neurodivergent validation needs
     const validationResponse = this.checkForValidation(input);
     if (validationResponse) {
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: validationResponse.message,
         topics: this.extractTopics(input)
@@ -271,7 +281,8 @@ export class MaiaOrchestrator {
     const fixedResponse = conversationFixes.generateResponse(input);
     if (fixedResponse && fixedResponse.response && !fixedResponse.response.includes('...')) {
       // Track this in history
-      this.conversationHistory.push({
+      const conversationHistory = this.getConversationHistory(userId);
+      conversationHistory.push({
         input,
         response: fixedResponse.response,
         topics: this.extractTopics(input)
@@ -316,7 +327,8 @@ export class MaiaOrchestrator {
     const response = this.createResponse(message, listeningResponse.silenceDuration);
 
     // Store conversation history for context retention
-    this.conversationHistory.push({
+    const conversationHistory = this.getConversationHistory(userId);
+    conversationHistory.push({
       input,
       response: response.message,
       topics
@@ -754,8 +766,9 @@ Respond like a real friend would:`;
 
     if (confusionPatterns.test(input)) {
       // Look at recent conversation history for context
-      if (this.conversationHistory.length > 0) {
-        const lastTurn = this.conversationHistory[this.conversationHistory.length - 1];
+      const conversationHistory = this.getConversationHistory('default');
+      if (conversationHistory.length > 0) {
+        const lastTurn = conversationHistory[conversationHistory.length - 1];
         const topics = lastTurn.topics;
 
         if (topics.length > 0) {
