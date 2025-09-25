@@ -77,6 +77,10 @@ export default function HybridInput({
     recognition.lang = 'en-US';
     recognition.maxAlternatives = 1;
 
+    // Prevent automatic stopping on silence
+    (recognition as any).grammars = undefined;
+    (recognition as any).serviceURI = undefined;
+
     // Add silence timer to prevent premature cutoff
     let silenceTimer: NodeJS.Timeout;
     let lastSpeechTime = Date.now();
@@ -115,17 +119,18 @@ export default function HybridInput({
         // This prevents cutting off mid-thought
         silenceTimer = setTimeout(() => {
           const fullTranscript = (transcript + ' ' + final).trim();
-          if (fullTranscript && Date.now() - lastSpeechTime > 2000 && !hasSentMessage) {
-            // Only send if there's been 2+ seconds of silence AND we haven't already sent
+          if (fullTranscript && Date.now() - lastSpeechTime > 1500 && !hasSentMessage) {
+            // Only send if there's been 1.5+ seconds of silence AND we haven't already sent
             hasSentMessage = true; // Set flag to prevent double-sending
             onSend(fullTranscript);
             setTranscript('');
             setInterimTranscript('');
-            // Stop listening after sending
-            setIsListening(false);
-            recognition.stop();
+            // Keep listening for continuous conversation
+            // Only stop if user manually toggles off
+            hasSentMessage = false; // Reset for next message
+            lastSpeechTime = Date.now();
           }
-        }, 2500); // Wait 2.5 seconds of silence before sending
+        }, 1800); // Wait 1.8 seconds of silence before sending (reduced from 2.5)
       }
       
       // Notify parent of transcript updates
@@ -136,45 +141,72 @@ export default function HybridInput({
 
     recognition.onerror = (event: any) => {
       console.error('❌ Recognition error:', event.error);
-      
+
       let errorMessage = 'Voice input error';
+      let shouldRestart = true;
+
       switch (event.error) {
         case 'no-speech':
-          errorMessage = 'No speech detected';
+          // Don't show error for no speech - just continue listening
+          errorMessage = '';
+          shouldRestart = true;
           break;
         case 'audio-capture':
           errorMessage = 'Microphone not available';
+          shouldRestart = false;
           break;
         case 'not-allowed':
           errorMessage = 'Microphone access denied';
+          shouldRestart = false;
           break;
         case 'network':
-          errorMessage = 'Network error';
+          errorMessage = 'Network error - retrying...';
+          shouldRestart = true;
+          break;
+        case 'aborted':
+          // User aborted - don't show error
+          errorMessage = '';
+          shouldRestart = false;
           break;
       }
-      
-      setError(errorMessage);
-      showToast(errorMessage, { type: 'error' });
-      setIsListening(false);
+
+      if (errorMessage) {
+        setError(errorMessage);
+        if (event.error !== 'network') {
+          showToast(errorMessage, { type: 'error' });
+        }
+      }
+
+      if (!shouldRestart || !isListening) {
+        setIsListening(false);
+      } else {
+        // Auto-restart on recoverable errors
+        setTimeout(() => {
+          if (isListening) {
+            try {
+              recognition.start();
+            } catch (e) {
+              console.log('Failed to restart after error');
+            }
+          }
+        }, 500);
+      }
     };
 
     recognition.onend = () => {
       // Clear silence timer on end
       clearTimeout(silenceTimer);
 
-      // Only mark as not listening if we're actually stopping
-      // This prevents the recognition from ending prematurely
-      if (!isListening) {
-        setIsListening(false);
-      } else {
-        // Restart recognition if it ended unexpectedly
-        try {
-          recognition.start();
-          return;
-        } catch (e) {
-          // If restart fails, then stop
-          setIsListening(false);
-        }
+      // Always try to restart if we're supposed to be listening
+      if (isListening) {
+        // Restart recognition to maintain continuous listening
+        setTimeout(() => {
+          try {
+            recognition.start();
+          } catch (e) {
+            console.log('Recognition restart failed, likely already started');
+          }
+        }, 100); // Small delay to prevent immediate restart errors
       }
 
       // Don't send transcript here - it's already handled in onresult
