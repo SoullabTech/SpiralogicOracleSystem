@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles } from 'lucide-react';
 import { Holoflower } from '@/components/ui/Holoflower';
+import { WISDOM_FACETS } from '@/lib/wisdom/WisdomFacets';
 
 interface ProfileData {
   name: string;
@@ -15,6 +16,7 @@ interface ProfileData {
   greetingStyle?: 'warm' | 'gentle' | 'direct' | 'playful';
   communicationPreference?: 'voice' | 'chat' | 'either';
   focusAreas?: string[];
+  wisdomFacets?: string[];
 }
 
 export default function ProfilePage() {
@@ -245,6 +247,56 @@ export default function ProfilePage() {
                     <span className="text-sm text-amber-200/60 group-hover:text-amber-200/80 transition-colors">
                       {area}
                     </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t border-amber-500/10 pt-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <label className="text-sm text-amber-200/70">Wisdom Lenses (optional)</label>
+              </div>
+              <p className="text-xs text-amber-200/40 mb-4">
+                Select the voices and perspectives that resonate with where you are right now.
+                These help Maia understand which mirrors might serve you best.
+              </p>
+              <div className="space-y-2 max-h-80 overflow-y-auto pr-2">
+                {[
+                  { id: 'maslow', emoji: '🏔️', label: 'Conditions & Capacity', desc: 'Building foundations, meeting needs' },
+                  { id: 'frankl', emoji: '✨', label: 'Meaning & Purpose', desc: 'What calls you forward, soul work' },
+                  { id: 'jung', emoji: '🌙', label: 'Psyche & Shadow', desc: 'Unconscious patterns, integration' },
+                  { id: 'nietzsche', emoji: '⚡', label: 'Will & Transformation', desc: 'Creative destruction, becoming' },
+                  { id: 'hesse', emoji: '🎭', label: 'Inner Pilgrimage', desc: 'Soul journey, spiritual quest' },
+                  { id: 'tolstoy', emoji: '🌾', label: 'Moral Conscience', desc: 'Living your values, integrity' },
+                  { id: 'brown', emoji: '💛', label: 'Courage & Vulnerability', desc: 'Shame work, authentic connection' },
+                  { id: 'somatic', emoji: '🌿', label: 'Body Wisdom', desc: 'Embodiment, somatic knowing' },
+                  { id: 'buddhist', emoji: '🧘', label: 'Mindfulness & Impermanence', desc: 'Letting go, present awareness' },
+                  { id: 'integral', emoji: '🌐', label: 'Integral Synthesis', desc: 'Multiple perspectives, wholeness' }
+                ].map(facet => (
+                  <label key={facet.id} className="flex items-start group cursor-pointer p-2 rounded-lg hover:bg-amber-500/5 transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={data.wisdomFacets?.includes(facet.id) || false}
+                      onChange={(e) => {
+                        const current = data.wisdomFacets || [];
+                        if (e.target.checked) {
+                          updateData('wisdomFacets', [...current, facet.id]);
+                        } else {
+                          updateData('wisdomFacets', current.filter(f => f !== facet.id));
+                        }
+                      }}
+                      className="mr-3 mt-1 rounded border-amber-500/30 bg-black/30 text-amber-500 focus:ring-amber-500/50"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{facet.emoji}</span>
+                        <span className="text-sm text-amber-200/70 group-hover:text-amber-200/90 transition-colors font-medium">
+                          {facet.label}
+                        </span>
+                      </div>
+                      <p className="text-xs text-amber-200/40 mt-0.5">{facet.desc}</p>
+                    </div>
                   </label>
                 ))}
               </div>

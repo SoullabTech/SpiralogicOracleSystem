@@ -14,6 +14,7 @@
     "prebuild": "npm run clean",
     "test:agents": "node test-dual-agents.js",
     "test": "jest --passWithNoTests --coverage --detectOpenHandles",
+    "test:hallucination": "tsx scripts/runHallucinationTests.ts",
     "start": "node dist/server.js",
     "dev": "nodemon",
     "seed:files": "tsx scripts/seed-sample-files.ts",

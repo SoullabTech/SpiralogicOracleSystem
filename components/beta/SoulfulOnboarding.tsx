@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileText, Sparkles, ChevronRight, HelpCircle, Shield, Brain, Lock, Users, Rocket, Heart, Lightbulb, Compass } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { WISDOM_FACETS, getAllFacets } from '@/lib/wisdom/WisdomFacets';
 
 interface OnboardingData {
   name: string;
@@ -14,6 +15,8 @@ interface OnboardingData {
   uploadedFiles?: File[];
   greetingStyle?: 'warm' | 'gentle' | 'direct' | 'playful';
   communicationPreference?: 'voice' | 'chat' | 'either';
+  explorationLens?: 'conditions' | 'meaning' | 'both';
+  wisdomFacets?: string[]; // IDs of selected wisdom facets
   focusAreas?: string[];
   researchConsent?: {
     analytics?: boolean;
@@ -298,7 +301,35 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
                     <div className="flex-1">
                       <h3 className="text-sm font-medium text-amber-100">How is this different from regular AI chat?</h3>
                       <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
-                        Most AI is transactional - ask, answer, done. Soullab is relational - Maia learns who you are over time and brings that context to every conversation. It&apos;s designed for the long arc of personal development, not quick answers. Think ongoing dialogue with someone who&apos;s genuinely tracking your evolution, not a search engine with personality.
+                        Most AI is transactional - ask, answer, done. Soullab is a <strong>consciousness evolution platform</strong> - Maia learns who you are over time and brings that context to every conversation. It&apos;s designed for the long arc of personal development, not quick answers. Think ongoing dialogue with someone who&apos;s genuinely tracking your evolution, not a search engine with personality.
+                      </div>
+                    </div>
+                  </div>
+                </summary>
+              </details>
+
+              <details className="group">
+                <summary className="cursor-pointer list-none">
+                  <div className="flex items-start gap-3 p-3 bg-black/20 border border-amber-500/20 rounded-lg hover:border-amber-500/40 transition-colors">
+                    <Shield className="w-5 h-5 text-amber-400/70 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h3 className="text-sm font-medium text-amber-100">What makes Soullab&apos;s approach to AI safety different?</h3>
+                      <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
+                        We take consciousness work as seriously as medicine takes safety. Soullab uses enterprise-grade hallucination testing, automated quality controls, and phenomenological respect validation—infrastructure typically only seen in high-stakes medical or legal AI systems. This means rigorous safety checks happen before you ever talk to Maia, not after problems occur. We&apos;re serious about the responsibility of holding space for your inner work.
+                      </div>
+                    </div>
+                  </div>
+                </summary>
+              </details>
+
+              <details className="group">
+                <summary className="cursor-pointer list-none">
+                  <div className="flex items-start gap-3 p-3 bg-black/20 border border-amber-500/20 rounded-lg hover:border-amber-500/40 transition-colors">
+                    <Compass className="w-5 h-5 text-amber-400/70 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h3 className="text-sm font-medium text-amber-100">How does Soullab approach growth and meaning?</h3>
+                      <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
+                        Soullab holds two complementary lenses: <strong>Conditions</strong> (what capacities are developing?) and <strong>Meaning</strong> (what&apos;s calling you forward?). Sometimes you need grounding before meaning-seeking. Sometimes meaning emerges first, then builds capacity. Maia mirrors whichever lens reflects you most clearly right now. Both are valid paths - and often you&apos;re walking both at once.
                       </div>
                     </div>
                   </div>
@@ -467,6 +498,20 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
                       <h3 className="text-sm font-medium text-amber-100">What does it mean to be a beta explorer?</h3>
                       <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
                         You&apos;re a pioneer in human-AI relationship. The first 20 people to experience this. Your conversations, feedback, and willingness to experiment shape what Soullab becomes. This isn&apos;t about testing features - it&apos;s about discovering what&apos;s possible when we bring our full humanity to AI dialogue. You&apos;re co-creating the future of meaningful AI interaction.
+                      </div>
+                    </div>
+                  </div>
+                </summary>
+              </details>
+
+              <details className="group">
+                <summary className="cursor-pointer list-none">
+                  <div className="flex items-start gap-3 p-3 bg-black/20 border border-amber-500/20 rounded-lg hover:border-amber-500/40 transition-colors">
+                    <Heart className="w-5 h-5 text-amber-400/70 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h3 className="text-sm font-medium text-amber-100">Is Soullab a company or something else?</h3>
+                      <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
+                        Soullab operates as a two-wing structure: a <strong>Foundation</strong> (non-profit) ensuring universal access to MAIA regardless of wealth, and <strong>Ventures</strong> (for-profit) building sustainable infrastructure and enterprise applications. This means your experience is guided by a mission to serve consciousness evolution, not just shareholder returns. We&apos;re building a cathedral, not chasing unicorn status.
                       </div>
                     </div>
                   </div>
@@ -673,6 +718,57 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm text-amber-200/70 mb-3">
+                  Which doorways call to you? (select any that resonate)
+                </label>
+                <p className="text-xs text-amber-200/40 mb-4">
+                  Each wisdom voice is a lens into your experience. Select what feels alive right now.
+                </p>
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
+                  {[
+                    { id: 'maslow', emoji: '🏔️', label: 'Conditions & Capacity', desc: 'Building foundations, meeting needs' },
+                    { id: 'frankl', emoji: '✨', label: 'Meaning & Purpose', desc: 'What calls you forward, soul work' },
+                    { id: 'jung', emoji: '🌙', label: 'Psyche & Shadow', desc: 'Unconscious patterns, integration' },
+                    { id: 'nietzsche', emoji: '⚡', label: 'Will & Transformation', desc: 'Creative destruction, becoming' },
+                    { id: 'hesse', emoji: '🎭', label: 'Inner Pilgrimage', desc: 'Soul journey, spiritual quest' },
+                    { id: 'tolstoy', emoji: '🌾', label: 'Moral Conscience', desc: 'Living your values, integrity' },
+                    { id: 'brown', emoji: '💛', label: 'Courage & Vulnerability', desc: 'Shame work, authentic connection' },
+                    { id: 'somatic', emoji: '🌿', label: 'Body Wisdom', desc: 'Embodiment, somatic knowing' },
+                    { id: 'buddhist', emoji: '🧘', label: 'Mindfulness & Impermanence', desc: 'Letting go, present awareness' },
+                    { id: 'integral', emoji: '🌐', label: 'Integral Synthesis', desc: 'Multiple perspectives, wholeness' }
+                  ].map(facet => (
+                    <label key={facet.id} className="flex items-start group cursor-pointer p-2 rounded-lg hover:bg-amber-500/5 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={data.wisdomFacets?.includes(facet.id) || false}
+                        onChange={(e) => {
+                          const current = data.wisdomFacets || [];
+                          if (e.target.checked) {
+                            updateData('wisdomFacets', [...current, facet.id]);
+                          } else {
+                            updateData('wisdomFacets', current.filter(f => f !== facet.id));
+                          }
+                        }}
+                        className="mr-3 mt-1 rounded border-amber-500/30 bg-black/30 text-amber-500 focus:ring-amber-500/50"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{facet.emoji}</span>
+                          <span className="text-sm text-amber-200/70 group-hover:text-amber-200/90 transition-colors font-medium">
+                            {facet.label}
+                          </span>
+                        </div>
+                        <p className="text-xs text-amber-200/40 mt-0.5">{facet.desc}</p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-amber-200/30 mt-3">
+                  Don&apos;t worry - you can explore all lenses over time. This just helps Maia know where to start.
+                </p>
               </div>
 
               <div>
