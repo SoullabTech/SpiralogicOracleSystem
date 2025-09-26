@@ -571,10 +571,11 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // Pause/resume listening when Maya is speaking to prevent feedback loop
   useEffect(() => {
-    console.log('🔄 Voice state check:', { isMayaSpeaking, isListening, isPausedForMaya, enabled });
+    // Reduced logging to prevent console spam
+    // console.log('🔄 Voice state check:', { isMayaSpeaking, isListening, isPausedForMaya, enabled });
 
     if (isMayaSpeaking && !isPausedForMaya) {
-      console.log('🔇 IMMEDIATELY Pausing voice recognition - Maya is speaking');
+      console.log('🔇 Pausing voice - Maya speaking');
       setIsPausedForMaya(true);
       setIsWaitingForInput(false);
       setTranscript('🔇 Paused while Maya speaks...');
