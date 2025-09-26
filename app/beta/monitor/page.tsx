@@ -7,7 +7,7 @@ import MayaEvolutionPanel from '@/components/monitoring/MayaEvolutionPanel';
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export default function BetaMonitor() {
-  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'system' | 'conversation' | 'evolution' | 'field' | 'memory' | 'feedback' | 'maya'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'protection' | 'system' | 'conversation' | 'evolution' | 'field' | 'memory' | 'feedback' | 'maya'>('feedback');
   const [isMobile, setIsMobile] = useState(false);
 
   // User Activity States
@@ -276,7 +276,7 @@ export default function BetaMonitor() {
 
           {/* Tab Navigation */}
           <div className="flex gap-1 p-1 bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl overflow-x-auto">
-            {['users', 'protection', 'conversation', 'maya', 'evolution', 'field', 'memory', 'feedback', 'system'].map(tab => (
+            {['feedback', 'users', 'protection', 'conversation', 'maya', 'evolution', 'field', 'memory', 'system'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
