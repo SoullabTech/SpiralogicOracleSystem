@@ -6,6 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 // Beta testers master list
 const BETA_TESTERS = [
   { name: 'Andrea Fagan', email: 'andreadfagan@gmail.com', passcode: 'SOULLAB-ANDREAFAGAN' },
@@ -38,7 +41,7 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
     // Query actual registered users from database

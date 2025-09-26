@@ -5,10 +5,12 @@
 
 import { createClient } from '@/lib/supabase';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 interface BetaMetrics {
   // Session metrics
@@ -205,6 +207,7 @@ export class BetaAnalytics {
     if (!metrics) return;
 
     try {
+      const supabase = getSupabaseClient();
       await supabase.from('beta_metrics').insert({
         session_id_hash: Buffer.from(sessionId).toString('base64').substring(0, 8),
         timestamp: new Date().toISOString(),
@@ -249,6 +252,7 @@ export class BetaAnalytics {
    * Get aggregated insights for dashboard
    */
   static async getInsights(): Promise<any> {
+    const supabase = getSupabaseClient();
     const { data } = await supabase
       .from('beta_metrics')
       .select('*')

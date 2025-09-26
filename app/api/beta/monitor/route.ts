@@ -6,6 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BetaAnalytics } from '@/utils/beta-analytics';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   try {
     // Get real insights from beta analytics
