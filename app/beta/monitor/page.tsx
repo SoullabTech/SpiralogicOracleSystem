@@ -46,6 +46,98 @@ export default function BetaMonitor() {
   const [healthLoading, setHealthLoading] = useState(true);
   const [lastHealthCheck, setLastHealthCheck] = useState<Date | null>(null);
 
+  // Real data loading states
+  const [usersLoading, setUsersLoading] = useState(true);
+  const [metricsLoading, setMetricsLoading] = useState(true);
+
+  // Fetch real beta users
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setUsersLoading(true);
+        const response = await fetch('/api/beta/users');
+        const { success, data } = await response.json();
+
+        if (success && data) {
+          setUsers(data.users);
+          setTotalUsers(data.summary.total);
+          setActiveUsers(data.summary.active);
+          setAvgEngagement(data.summary.avgEngagement);
+
+          // Generate recent activities from real users
+          const recentActivity = data.users
+            .filter((u: any) => u.lastActive)
+            .sort((a: any, b: any) => new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime())
+            .slice(0, 5)
+            .map((u: any) => ({
+              time: getTimeAgo(new Date(u.lastActive)),
+              user: u.name.split(' ')[0],
+              action: u.status === 'online' ? 'Session active' : 'Last seen',
+              type: 'session'
+            }));
+
+          setActivities(recentActivity.length > 0 ? recentActivity : [
+            { time: 'waiting', user: 'System', action: 'Ready for beta testers', type: 'system' }
+          ]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+        // Keep showing empty state
+      } finally {
+        setUsersLoading(false);
+      }
+    };
+
+    fetchUsers();
+    const interval = setInterval(fetchUsers, 30000); // Refresh every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  // Helper function for time ago
+  const getTimeAgo = (date: Date) => {
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    if (seconds < 60) return `${seconds}s`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h`;
+    return `${Math.floor(hours / 24)}d`;
+  };
+
+  // Fetch real beta metrics
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setMetricsLoading(true);
+        const response = await fetch('/api/beta/monitor');
+        const { success, data } = await response.json();
+
+        if (success && data && !data.isEmpty) {
+          setMetrics(data.metrics);
+
+          if (data.protectionMetrics) {
+            setHallucinationRate(data.protectionMetrics.hallucinationRate);
+            setVerificationRate(data.protectionMetrics.verificationRate);
+            setProtectionMetrics(prev => ({
+              ...prev,
+              avgFeelingSafe: data.protectionMetrics.avgFeelingSafe || 0,
+              avgFeelingSeen: data.protectionMetrics.avgFeelingSeen || 0,
+              thresholdFrequency: data.protectionMetrics.thresholdFrequency || 0
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch metrics:', error);
+      } finally {
+        setMetricsLoading(false);
+      }
+    };
+
+    fetchMetrics();
+    const interval = setInterval(fetchMetrics, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -53,49 +145,23 @@ export default function BetaMonitor() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    // Initialize mock data
-    const mockUsers = [
-      { id: 'user001', name: 'Alice C', status: 'online', sessions: 24, engagement: 0.85, trustScore: 0.78 },
-      { id: 'user002', name: 'Bob S', status: 'online', sessions: 12, engagement: 0.72, trustScore: 0.65 },
-      { id: 'user003', name: 'Carol J', status: 'idle', sessions: 18, engagement: 0.91, trustScore: 0.82 },
-      { id: 'user004', name: 'David K', status: 'offline', sessions: 8, engagement: 0.68, trustScore: 0.70 },
-      { id: 'user005', name: 'Eve W', status: 'offline', sessions: 31, engagement: 0.94, trustScore: 0.88 }
-    ];
+    // Initialize demo data for advanced features (not yet implemented)
+    // This data shows what these features will look like when built
 
-    setUsers(mockUsers);
-    setActiveUsers(mockUsers.filter(u => u.status === 'online').length);
-    setTotalUsers(mockUsers.length);
-    setAvgEngagement(Math.round(mockUsers.reduce((acc, u) => acc + u.engagement, 0) / mockUsers.length * 100));
-
-    setActivities([
-      { time: '2m', user: 'Alice', action: 'Session started', type: 'session' },
-      { time: '5m', user: 'Bob', action: 'Voice enabled', type: 'voice' },
-      { time: '8m', user: 'Carol', action: 'Conversation ended', type: 'end' },
-      { time: '12m', user: 'David', action: 'Feedback provided', type: 'feedback' },
-      { time: '15m', user: 'Eve', action: 'Session paused', type: 'pause' }
-    ]);
-
-    setMetrics({
-      avgSession: '23',
-      avgMessages: '18',
-      voiceUsage: '32',
-      completionRate: '87',
-      trustAvg: '0.77'
-    });
-
+    // Demo data for features not yet tracking real metrics
     setThreats([
-      { time: '1m', type: 'Low Confidence', action: 'Verified', severity: 'low' },
-      { time: '3m', type: 'Ambiguous', action: 'Enriched', severity: 'medium' },
-      { time: '5m', type: 'Contradiction', action: 'Resolved', severity: 'high' },
-      { time: '12m', type: 'Cold Start', action: 'Cached', severity: 'low' }
+      { time: 'demo', type: 'Feature Preview', action: 'Coming Soon', severity: 'low' }
     ]);
 
     setProtectionMetrics({
-      verifiedClaims: 1247,
-      blockedHallucinations: 26,
-      enrichments: 89,
-      cacheHits: 412,
-      avgResponseTime: '120ms'
+      verifiedClaims: 0,
+      blockedHallucinations: 0,
+      enrichments: 0,
+      cacheHits: 0,
+      avgResponseTime: '0ms',
+      avgFeelingSafe: 0,
+      avgFeelingSeen: 0,
+      thresholdFrequency: 0
     });
 
     setConversationMetrics({
@@ -228,46 +294,189 @@ export default function BetaMonitor() {
 
         {/* Tab Content */}
         {activeTab === 'users' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="space-y-4">
+            {/* Beta Testers Overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
+                <div className="text-2xl font-light text-gray-100">{totalUsers}</div>
+                <div className="text-xs text-gray-500 mt-1">Total Beta Testers</div>
+              </div>
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
+                <div className="text-2xl font-light text-green-400">
+                  {users.filter(u => u.registered).length}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">Registered</div>
+              </div>
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
+                <div className="text-2xl font-light text-amber-400">{activeUsers}</div>
+                <div className="text-xs text-gray-500 mt-1">Active Now</div>
+              </div>
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
+                <div className="text-2xl font-light text-gray-100">{avgEngagement}%</div>
+                <div className="text-xs text-gray-500 mt-1">Avg Engagement</div>
+              </div>
+            </div>
+
+            {/* User List */}
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
-              <h3 className="text-sm font-medium text-gray-400 mb-4">Active Sessions</h3>
-              <div className="space-y-3">
-                {users.map(user => (
-                  <div key={user.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${
-                        user.status === 'online' ? 'bg-green-400' :
-                        user.status === 'idle' ? 'bg-yellow-400' :
-                        'bg-gray-600'
-                      }`} />
-                      <div>
-                        <div className="text-sm text-gray-200">{user.name}</div>
-                        <div className="text-xs text-gray-500">{user.sessions} sessions</div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-medium text-gray-400">Beta Tester Status</h3>
+                <div className="text-xs text-gray-500">
+                  {usersLoading ? 'Loading...' : `${users.filter(u => u.registered).length}/${totalUsers} registered`}
+                </div>
+              </div>
+
+              {usersLoading ? (
+                <div className="text-center text-gray-400 py-8">Loading beta testers...</div>
+              ) : (
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {users.map(user => (
+                    <div
+                      key={user.id}
+                      className="flex items-center justify-between p-3 rounded-lg bg-gray-900/30 hover:bg-gray-900/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${
+                          user.status === 'online' ? 'bg-green-400' :
+                          user.status === 'idle' ? 'bg-yellow-400' :
+                          user.status === 'offline' ? 'bg-gray-600' :
+                          'bg-gray-800'
+                        }`} />
+                        <div>
+                          <div className="text-sm text-gray-200">{user.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {user.registered
+                              ? `${user.sessions} sessions • ${Math.round(user.engagement * 100)}% engaged`
+                              : 'Not registered yet'
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`text-xs px-2 py-1 rounded-full ${
+                          user.registered
+                            ? 'bg-green-500/20 text-green-400'
+                            : 'bg-gray-500/20 text-gray-500'
+                        }`}>
+                          {user.registered ? 'Active' : 'Pending'}
+                        </div>
+                        {user.lastActive && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            {getTimeAgo(new Date(user.lastActive))} ago
+                          </div>
+                        )}
                       </div>
                     </div>
+                  ))}
+                </div>
+              )}
+
+              {!usersLoading && users.filter(u => !u.registered).length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-700/50">
+                  <p className="text-xs text-gray-500">
+                    💡 {users.filter(u => !u.registered).length} testers haven't registered yet.
+                    Send invitation emails with passcodes to activate.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Recent Activity */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <h3 className="text-sm font-medium text-gray-400 mb-4">Recent Activity</h3>
+              <div className="space-y-3">
+                {activities.length > 0 ? activities.map((activity, idx) => (
+                  <div key={idx} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-500">{activity.time}</span>
+                      <span className="text-gray-300">{activity.user}</span>
+                      <span className="text-gray-500">{activity.action}</span>
+                    </div>
                   </div>
-                ))}
+                )) : (
+                  <div className="text-center text-gray-500 py-4">
+                    No activity yet - waiting for beta testers to register
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
 
         {activeTab === 'protection' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
-              <h3 className="text-sm font-medium text-gray-400 mb-4">Protection Status</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-xs text-gray-500">Verification Rate</span>
-                  <span className="text-sm text-green-400">{verificationRate}%</span>
+          <div className="space-y-4">
+            {/* Real Protection Metrics */}
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-amber-400 text-sm">🔬 Beta Testing Mode</span>
+              </div>
+              <p className="text-xs text-gray-300">
+                Protection metrics will be tracked from real user sessions. Values shown below are initial calibration data.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+                <h3 className="text-sm font-medium text-gray-400 mb-4">Protection Status</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Verification Rate</span>
+                    <span className="text-sm text-green-400">{verificationRate}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Hallucination Rate</span>
+                    <span className="text-sm text-amber-400">{hallucinationRate.toFixed(1)}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Field Coverage</span>
+                    <span className="text-sm text-amber-400">{fieldCoverage}%</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-xs text-gray-500">Cache Hit Rate</span>
-                  <span className="text-sm text-blue-400">{cacheHitRate}%</span>
+              </div>
+
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+                <h3 className="text-sm font-medium text-gray-400 mb-4">Safety Metrics</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Avg Feeling Safe</span>
+                    <span className="text-sm text-green-400">
+                      {metricsLoading ? '...' : protectionMetrics.avgFeelingSafe || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Avg Feeling Seen</span>
+                    <span className="text-sm text-blue-400">
+                      {metricsLoading ? '...' : protectionMetrics.avgFeelingSeen || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Threshold Alerts</span>
+                    <span className="text-sm text-amber-400">
+                      {metricsLoading ? '...' : protectionMetrics.thresholdFrequency || '0'}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-xs text-gray-500">Field Coverage</span>
-                  <span className="text-sm text-amber-400">{fieldCoverage}%</span>
+              </div>
+
+              <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+                <h3 className="text-sm font-medium text-gray-400 mb-4">System Performance</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Cache Hit Rate</span>
+                    <span className="text-sm text-blue-400">{cacheHitRate}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Avg Response Time</span>
+                    <span className="text-sm text-gray-300">
+                      {metricsLoading ? '...' : protectionMetrics.avgResponseTime || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-500">Enrichments</span>
+                    <span className="text-sm text-amber-400">
+                      {metricsLoading ? '...' : protectionMetrics.enrichments || '0'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -415,7 +624,18 @@ export default function BetaMonitor() {
         )}
 
         {activeTab === 'conversation' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="space-y-4">
+            {/* Demo Mode Banner */}
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-400 text-sm">🔮 Feature Preview</span>
+              </div>
+              <p className="text-xs text-gray-300">
+                These conversation metrics will be tracked from real voice sessions with Maya. The data shown is a preview of what you'll see.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Conversation Flow</h3>
               <div className="space-y-4">
@@ -453,11 +673,22 @@ export default function BetaMonitor() {
                 ))}
               </div>
             </div>
+            </div>
           </div>
         )}
 
         {activeTab === 'maya' && (
           <div className="space-y-4">
+            {/* Demo Mode Banner */}
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-400 text-sm">🔮 Feature Preview</span>
+              </div>
+              <p className="text-xs text-gray-300">
+                Maya's evolution metrics will be tracked as she learns from real conversations. This preview shows the types of insights you'll see.
+              </p>
+            </div>
+
             <MayaEvolutionPanel />
 
             {/* Additional Maya metrics */}
@@ -502,7 +733,18 @@ export default function BetaMonitor() {
         )}
 
         {activeTab === 'evolution' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="space-y-4">
+            {/* Demo Mode Banner */}
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-400 text-sm">🔮 Feature Preview</span>
+              </div>
+              <p className="text-xs text-gray-300">
+                Voice and personality evolution will be tracked as Maya develops her unique voice through real interactions.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Voice Evolution */}
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Voice Evolution</h3>
@@ -599,11 +841,23 @@ export default function BetaMonitor() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         )}
 
         {activeTab === 'field' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="space-y-4">
+            {/* Demo Mode Banner */}
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-400 text-sm">🔮 Feature Preview</span>
+              </div>
+              <p className="text-xs text-gray-300">
+                Field Intelligence metrics track the energetic dynamics of conversations, showing sacred moments and resonance patterns.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Field Intelligence */}
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Field Dynamics</h3>
@@ -658,11 +912,23 @@ export default function BetaMonitor() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         )}
 
         {activeTab === 'memory' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="space-y-4">
+            {/* Demo Mode Banner */}
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-400 text-sm">🔮 Feature Preview</span>
+              </div>
+              <p className="text-xs text-gray-300">
+                Memory systems will track relational patterns, psychological insights, and AIN network coherence from real sessions.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Memory Systems */}
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Relational Memory</h3>
@@ -732,11 +998,23 @@ export default function BetaMonitor() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         )}
 
         {activeTab === 'feedback' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="space-y-4">
+            {/* Demo Mode Banner */}
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-400 text-sm">🔮 Feature Preview</span>
+              </div>
+              <p className="text-xs text-gray-300">
+                Feedback metrics track the transformative impact of Soullab experiences, measuring growth, consciousness expansion, and real-world changes.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Consciousness Exploration */}
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
               <h3 className="text-sm font-medium text-gray-400 mb-4">Soullab Journey</h3>
@@ -815,6 +1093,7 @@ export default function BetaMonitor() {
                   <p className="text-xs text-gray-300 mt-1 italic">"Maya helped me see my spiral pattern"</p>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         )}
