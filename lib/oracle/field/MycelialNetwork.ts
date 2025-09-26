@@ -83,6 +83,38 @@ export class MycelialNetwork {
   }
 
   /**
+   * Access collective wisdom for a given input
+   * Returns wisdom insights based on resonant patterns
+   */
+  async accessCollectiveWisdom(
+    currentField: FieldState,
+    context: { content: string; userId: string }
+  ): Promise<{ wisdom: string; resonance: number; relevance: number }> {
+    console.log('🌐 Accessing collective wisdom from mycelial network');
+
+    const resonantPatterns = await this.findResonantPatterns(currentField);
+
+    if (resonantPatterns.length === 0) {
+      return {
+        wisdom: '',
+        resonance: 0,
+        relevance: 0
+      };
+    }
+
+    const topPattern = resonantPatterns[0];
+    const averageResonance = resonantPatterns.reduce((sum, p) => sum + p.resonance_quality, 0) / resonantPatterns.length;
+
+    const wisdom = `Collective patterns suggest ${topPattern.emergence_type} intervention with ${resonantPatterns.length} resonant precedents`;
+
+    return {
+      wisdom,
+      resonance: averageResonance,
+      relevance: 0.7
+    };
+  }
+
+  /**
    * Inform future sensing based on accumulated patterns
    * Returns influences but doesn't determine responses
    */
