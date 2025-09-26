@@ -57,6 +57,8 @@
     "dev:lab": "tsx scripts/testLivingLaboratory.ts",
     "test:beta-systems": "tsx scripts/beta-systems-test.ts",
     "beta:test": "tsx scripts/beta-systems-test.ts",
+    "beta:check": "tsx scripts/pre-beta-check.ts",
+    "beta:ready": "tsx scripts/pre-beta-check.ts",
     "beta:launch": "tsx scripts/beta-launcher.ts launch",
     "beta:prepare": "tsx scripts/beta-launcher.ts prepare",
     "beta:report": "tsx scripts/beta-launcher.ts report",
