@@ -41,6 +41,11 @@ export default function BetaMonitor() {
   const [interruptionData, setInterruptionData] = useState<any[]>([]);
   const [backChannelEvents, setBackChannelEvents] = useState<any[]>([]);
 
+  // System Health States
+  const [systemHealth, setSystemHealth] = useState<any>(null);
+  const [healthLoading, setHealthLoading] = useState(true);
+  const [lastHealthCheck, setLastHealthCheck] = useState<Date | null>(null);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -133,6 +138,29 @@ export default function BetaMonitor() {
     ]);
 
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Fetch system health data
+  useEffect(() => {
+    const fetchHealth = async () => {
+      try {
+        setHealthLoading(true);
+        const response = await fetch('/api/health/maia');
+        const data = await response.json();
+        setSystemHealth(data);
+        setLastHealthCheck(new Date());
+      } catch (error) {
+        console.error('Failed to fetch system health:', error);
+        setSystemHealth({ status: 'error', error: 'Failed to fetch health data' });
+      } finally {
+        setHealthLoading(false);
+      }
+    };
+
+    fetchHealth();
+    const interval = setInterval(fetchHealth, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -247,9 +275,142 @@ export default function BetaMonitor() {
         )}
 
         {activeTab === 'system' && (
-          <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
-            <h3 className="text-sm font-medium text-gray-400 mb-4">System Health</h3>
-            <div className="text-center text-gray-400">System metrics coming soon...</div>
+          <div className="space-y-4">
+            {/* Overall System Status */}
+            <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-5">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-sm font-medium text-gray-400">System Health Overview</h3>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                  {lastHealthCheck && (
+                    <span>Updated {Math.floor((new Date().getTime() - lastHealthCheck.getTime()) / 1000)}s ago</span>
+                  )}
+                </div>
+              </div>
+
+              {healthLoading && !systemHealth ? (
+                <div className="text-center text-gray-400 py-8">Loading system health...</div>
+              ) : systemHealth ? (
+                <div className="space-y-6">
+                  {/* Overall Status Card */}
+                  <div className={`rounded-lg p-4 border-2 ${
+                    systemHealth.status === 'healthy'
+                      ? 'bg-green-500/10 border-green-500/30'
+                      : systemHealth.status === 'degraded'
+                      ? 'bg-yellow-500/10 border-yellow-500/30'
+                      : 'bg-red-500/10 border-red-500/30'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-2xl font-light mb-1">
+                          <span className={
+                            systemHealth.status === 'healthy'
+                              ? 'text-green-400'
+                              : systemHealth.status === 'degraded'
+                              ? 'text-yellow-400'
+                              : 'text-red-400'
+                          }>
+                            {systemHealth.status === 'healthy' ? '✓ System Healthy' :
+                             systemHealth.status === 'degraded' ? '⚠ System Degraded' :
+                             '✗ System Down'}
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          Response Time: {systemHealth.totalLatency}ms
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-gray-500">Environment</div>
+                        <div className="text-sm text-gray-300">{systemHealth.environment}</div>
+                        <div className="text-xs text-gray-500 mt-1">v{systemHealth.version}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Component Status Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {systemHealth.components?.map((component: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className={`inline-block w-3 h-3 rounded-full ${
+                              component.status === 'healthy'
+                                ? 'bg-green-400'
+                                : component.status === 'degraded'
+                                ? 'bg-yellow-400'
+                                : 'bg-red-400'
+                            }`}></span>
+                            <span className="text-sm font-medium text-gray-200">
+                              {component.component}
+                            </span>
+                          </div>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            component.status === 'healthy'
+                              ? 'bg-green-500/20 text-green-400'
+                              : component.status === 'degraded'
+                              ? 'bg-yellow-500/20 text-yellow-400'
+                              : 'bg-red-500/20 text-red-400'
+                          }`}>
+                            {component.status}
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-400 mb-1">
+                          {component.message}
+                        </div>
+                        {component.latency !== undefined && (
+                          <div className="text-xs text-gray-500">
+                            Latency: {component.latency}ms
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Critical Systems Checklist */}
+                  <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+                    <h4 className="text-sm font-medium text-gray-400 mb-3">Beta Testing Requirements</h4>
+                    <div className="space-y-2">
+                      {systemHealth.components?.map((component: any) => {
+                        const isCritical = ['Oracle API', 'Voice System', 'Mycelial Network'].includes(component.component);
+                        const isHealthy = component.status === 'healthy';
+                        return isCritical ? (
+                          <div key={component.component} className="flex items-center justify-between text-xs">
+                            <span className="text-gray-300">{component.component}</span>
+                            <span className={isHealthy ? 'text-green-400' : 'text-red-400'}>
+                              {isHealthy ? '✓ Ready' : '✗ Not Ready'}
+                            </span>
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+
+                  {/* System Recommendations */}
+                  {systemHealth.status !== 'healthy' && (
+                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-amber-400 mb-2">⚠ Action Required</h4>
+                      <div className="text-xs text-gray-300 space-y-1">
+                        {systemHealth.components
+                          ?.filter((c: any) => c.status !== 'healthy')
+                          .map((c: any, idx: number) => (
+                            <div key={idx}>• {c.component}: {c.message}</div>
+                          ))}
+                      </div>
+                      <div className="mt-3 text-xs text-gray-400">
+                        Run <code className="bg-gray-700 px-1 py-0.5 rounded">npm run beta:ready</code> for detailed diagnostics
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center text-red-400 py-8">
+                  Failed to load system health
+                </div>
+              )}
+            </div>
           </div>
         )}
 
