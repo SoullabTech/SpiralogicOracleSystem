@@ -265,7 +265,7 @@ export default function BetaMonitor() {
               <div className="text-xs text-gray-500 mt-1">Active Users</div>
             </div>
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">
-              <div className="text-2xl sm:text-3xl font-light text-gray-100">{100 - hallucinationRate.toFixed(0)}%</div>
+              <div className="text-2xl sm:text-3xl font-light text-gray-100">{(100 - hallucinationRate).toFixed(0)}%</div>
               <div className="text-xs text-gray-500 mt-1">Accuracy</div>
             </div>
             <div className="bg-gray-800/30 backdrop-blur border border-gray-700/50 rounded-xl p-4">

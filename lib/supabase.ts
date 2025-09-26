@@ -1,6 +1,5 @@
-// Client-side Supabase client
+// Supabase client for both server and client use
 import { createClient } from '@supabase/supabase-js';
-import { useState, useEffect } from 'react';
 
 // Re-export createClient for compatibility
 export { createClient };
@@ -25,33 +24,5 @@ export const supabase = createClient(
 
 // Helper function for components that need createClientComponentClient
 export function createClientComponentClient() {
-  return supabase;
-}
-
-// Hook for getting current user
-export function useUser() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // Get initial user
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  return user;
-}
-
-// Hook for getting Supabase client
-export function useSupabaseClient() {
   return supabase;
 }
