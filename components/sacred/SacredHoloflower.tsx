@@ -161,7 +161,7 @@ export const SacredHoloflower: React.FC<SacredHoloflowerProps> = ({
       coherenceShift={coherenceShift}
       activeFacetIds={activeFacetId ? [activeFacetId] : []}
     >
-      <div 
+      <div
         ref={containerRef}
         className={`sacred-holoflower-container relative ${
           currentMotionState === 'listening' ? 'holoflower-listening' :
@@ -169,7 +169,12 @@ export const SacredHoloflower: React.FC<SacredHoloflowerProps> = ({
           currentMotionState === 'responding' ? 'holoflower-responding' :
           showBreakthrough ? 'breakthrough-moment' : ''
         }`}
-        style={{ width: size, height: size }}
+        style={{
+          width: size,
+          height: size,
+          background: 'transparent',
+          overflow: 'visible'
+        }}
       >
         {/* Removed large holoflower image - keeping only animations and central logo */}
 
@@ -178,7 +183,11 @@ export const SacredHoloflower: React.FC<SacredHoloflowerProps> = ({
         width={size}
         height={size}
         className="absolute inset-0 pointer-events-none"
-        style={{ zIndex: 10 }}
+        style={{
+          zIndex: 10,
+          background: 'transparent',
+          overflow: 'visible'
+        }}
       >
         <defs>
           {/* Glow filters for each element */}

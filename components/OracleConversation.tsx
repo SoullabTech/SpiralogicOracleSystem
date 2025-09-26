@@ -741,8 +741,10 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
              style={{
                width: holoflowerSize,
                height: holoflowerSize,
-               transform: 'translate(-20px, -30px)', /* Shift left and up */
-               pointerEvents: 'none'
+               transform: 'translate(-20px, -30px)',
+               pointerEvents: 'none',
+               background: 'transparent',
+               overflow: 'visible'
              }}>
           {/* Non-interactive Sacred Holoflower with animations */}
           <SacredHoloflower
