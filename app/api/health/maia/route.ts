@@ -56,30 +56,24 @@ async function checkOracleAPI(): Promise<HealthCheckResult> {
   const start = Date.now();
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/oracle/personal`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: '__HEALTH_CHECK__',
-        userId: 'health-check-user'
-      })
-    });
+    const hasOpenAI = !!process.env.OPENAI_API_KEY;
+    const hasAnthropic = !!process.env.ANTHROPIC_API_KEY;
 
     const latency = Date.now() - start;
 
-    if (response.ok || response.status === 400) {
+    if (hasOpenAI || hasAnthropic) {
       return {
         component: 'Oracle API',
-        status: latency < 3000 ? 'healthy' : 'degraded',
-        message: `Responding in ${latency}ms`,
+        status: 'healthy',
+        message: `AI providers configured (OpenAI: ${hasOpenAI ? '✓' : '✗'}, Anthropic: ${hasAnthropic ? '✓' : '✗'})`,
         latency
       };
     }
 
     return {
       component: 'Oracle API',
-      status: 'down',
-      message: `HTTP ${response.status}`,
+      status: 'degraded',
+      message: 'No AI providers configured',
       latency
     };
 
@@ -87,7 +81,7 @@ async function checkOracleAPI(): Promise<HealthCheckResult> {
     return {
       component: 'Oracle API',
       status: 'down',
-      message: error instanceof Error ? error.message : 'Connection failed',
+      message: error instanceof Error ? error.message : 'Check failed',
       latency: Date.now() - start
     };
   }

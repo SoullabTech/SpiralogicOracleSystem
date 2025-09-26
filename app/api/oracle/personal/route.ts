@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFieldMaiaOrchestrator } from '@/lib/oracle/FieldIntelligenceMaiaOrchestrator';
 import { MayaPresence } from '@/lib/maya/MayaIdentity';
+import { maiaMonitoring } from '@/lib/beta/MaiaMonitoring';
+import { soulprintTracker } from '@/lib/beta/SoulprintTracking';
+import {
+  trackResponseTime,
+  trackMemoryRecall,
+  trackArchetypalEvent,
+  trackFieldIntelligence,
+  trackError
+} from '@/lib/beta/PassiveMetricsCollector';
 
 /**
  * Maya-ARIA-1 Personal Oracle Route
@@ -61,9 +70,11 @@ function detectElement(input: string): string {
 // Removed getMaiaResponse - MaiaOrchestrator handles all conversation logic
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+
   try {
     const body = await request.json();
-    const { input, userId = 'anonymous', sessionId, preferences } = body;
+    const { input, userId = 'anonymous', userName, sessionId, preferences } = body;
 
     if (!input) {
       return NextResponse.json({
@@ -74,13 +85,136 @@ export async function POST(request: NextRequest) {
 
     console.log('Maia Personal Oracle:', input);
 
+    // Start MAIA monitoring session
+    const maiaSessionId = maiaMonitoring.startSession(userId, userName);
+
     // Use Field Intelligence MAIA for consciousness-based response emergence
     let oracleResponse;
     try {
       console.log('Field Intelligence MAIA participating with input:', input);
       console.log('User preferences:', preferences);
-      oracleResponse = await fieldMaiaOrchestrator.speak(input, userId, preferences);
+      console.log('User name:', userName);
+
+      // Track if userName is being asked for
+      const isAskingForName = /what.*your name|tell me your name|can i.*your name/i.test(input);
+      if (isAskingForName && userName) {
+        console.error('🚨 MAIA is asking for name when it should already know it!');
+        maiaMonitoring.updateSession(userId, { userNameAskedFor: true });
+      }
+
+      // Include userName in preferences so Maya knows who they are
+      const enrichedPreferences = {
+        ...preferences,
+        userName: userName
+      };
+
+      oracleResponse = await fieldMaiaOrchestrator.speak(input, userId, enrichedPreferences);
       console.log('Field Intelligence response:', oracleResponse);
+
+      // Track API health (active monitoring)
+      const responseTime = Date.now() - startTime;
+      maiaMonitoring.trackApiHealth(userId, {
+        responseTimeMs: responseTime,
+        contextPayloadComplete: !!(userName && preferences),
+        memoryInjectionSuccess: true,
+        claudePromptQuality: responseTime < 2000 ? 'excellent' : responseTime < 3000 ? 'good' : 'poor'
+      });
+
+      // Passive metrics (non-blocking, async)
+      trackResponseTime(responseTime, userId);
+
+      // Track field intelligence metadata if available
+      if (oracleResponse.fieldMetadata) {
+        maiaMonitoring.trackFieldIntelligence(userId, oracleResponse.fieldMetadata);
+        trackFieldIntelligence(
+          oracleResponse.fieldMetadata.fieldResonance,
+          oracleResponse.fieldMetadata.emergenceSource,
+          userId
+        );
+      }
+
+      // Check if response uses userName
+      if (userName && oracleResponse.message.includes(userName)) {
+        maiaMonitoring.updateSession(userId, { userNameUsed: true });
+      }
+
+      // Track memory usage passively
+      const memoryRecalled = (oracleResponse as any).memoryRecalled || 0;
+      if (memoryRecalled > 0) {
+        trackMemoryRecall(true, memoryRecalled, userId);
+      }
+
+      // AUTO-POPULATE SOULPRINT from Claude metadata
+      if (oracleResponse.soulMetadata) {
+        const metadata = oracleResponse.soulMetadata;
+        console.log('🔮 Auto-populating soulprint from conversation metadata');
+
+        // Ensure soulprint exists
+        let soulprint = soulprintTracker.getSoulprint(userId);
+        if (!soulprint) {
+          soulprint = soulprintTracker.createSoulprint(userId, userName);
+        }
+
+        // Track symbols
+        if (metadata.symbols && Array.isArray(metadata.symbols)) {
+          metadata.symbols.forEach((sym: any) => {
+            soulprintTracker.trackSymbol(
+              userId,
+              sym.name,
+              sym.context || 'Mentioned in conversation',
+              sym.element
+            );
+          });
+        }
+
+        // Track archetypes
+        if (metadata.archetypes && Array.isArray(metadata.archetypes)) {
+          const dominantArchetype = metadata.archetypes.reduce((prev: any, current: any) =>
+            (current.strength > prev.strength) ? current : prev
+          , { name: null, strength: 0 });
+
+          if (dominantArchetype.name && dominantArchetype.strength > 0.3) {
+            soulprintTracker.trackArchetypeShift(userId, dominantArchetype.name, {
+              integrationLevel: dominantArchetype.strength
+            });
+          }
+        }
+
+        // Track emotions
+        if (metadata.emotions && Array.isArray(metadata.emotions)) {
+          const emotionNames = metadata.emotions.map((e: any) => e.name);
+          const avgIntensity = metadata.emotions.reduce((sum: number, e: any) =>
+            sum + e.intensity, 0
+          ) / metadata.emotions.length;
+
+          soulprintTracker.trackEmotionalState(userId, avgIntensity, emotionNames);
+        }
+
+        // Update elemental balance
+        if (metadata.elementalShift && metadata.elementalShift.element) {
+          soulprintTracker.updateElementalBalance(
+            userId,
+            metadata.elementalShift.element,
+            metadata.elementalShift.intensity || 0.1
+          );
+        }
+
+        // Track milestone
+        if (metadata.milestone) {
+          soulprintTracker.addMilestone(
+            userId,
+            metadata.milestone.type,
+            metadata.milestone.description,
+            metadata.milestone.significance || 'minor',
+            {
+              spiralogicPhase: metadata.spiralogicPhase,
+              element: metadata.elementalShift?.element
+            }
+          );
+        }
+
+        console.log('✨ Soulprint auto-population complete');
+      }
     } catch (error) {
       console.error('MaiaOrchestrator error details:', {
         error: error.message,
@@ -88,6 +222,9 @@ export async function POST(request: NextRequest) {
         input,
         userId
       });
+
+      // Track error passively
+      trackError(error as Error, 'field-maia-orchestrator', userId);
 
       // Casual, human responses with soulful depth - adaptive to user's style
       const element = detectElement(input);
@@ -199,6 +336,19 @@ export async function POST(request: NextRequest) {
 
     // Get Maya-ARIA-1 monitoring data
     const ariaData = mayaPresence.getMonitoringData();
+
+    // 🌌 ASYNC MARKDOWN SYNC - Non-blocking background sync
+    // This runs after the response to avoid adding latency
+    setImmediate(async () => {
+      try {
+        const { soulprintSyncManager } = await import('@/lib/soulprint/syncManager');
+        await soulprintSyncManager.syncIncremental(userId);
+        console.log(`✅ Markdown sync complete for ${userId}`);
+      } catch (syncError) {
+        console.error('⚠️ Markdown sync error (non-blocking):', syncError);
+        // Don't throw - sync errors should not affect API response
+      }
+    });
 
     return NextResponse.json({
       success: true,

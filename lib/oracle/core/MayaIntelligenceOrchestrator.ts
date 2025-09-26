@@ -33,6 +33,7 @@ export interface OrchestrationResult {
   sources: IntelligenceSource[];
   surfacing: number;
   voice: VoiceModulation;
+  soulMetadata?: any; // Soul journey metadata from Claude
 }
 
 class MayaIntelligenceOrchestrator {
@@ -95,7 +96,8 @@ class MayaIntelligenceOrchestrator {
     input: string,
     fieldState: FieldState,
     sesameData?: any,
-    obsidianContext?: any
+    obsidianContext?: any,
+    userName?: string
   ): Promise<OrchestrationResult> {
     console.log('🎭 Orchestrating Maya intelligence response');
 
@@ -116,9 +118,23 @@ class MayaIntelligenceOrchestrator {
 
     // 1. Claude (if available)
     let claudeResponse = '';
+    let soulMetadata: any = null;
     if (this.claudeService && blend.claude > 0.1) {
       try {
-        claudeResponse = await this.claudeService.generateResponse(input, userId);
+        const result = await this.claudeService.generateResponseWithMetadata(input, userId, userName);
+        claudeResponse = result.response;
+        soulMetadata = result.soulMetadata;
+
+        if (soulMetadata) {
+          console.log('🔮 Soul metadata extracted:', {
+            symbols: soulMetadata.symbols?.length || 0,
+            archetypes: soulMetadata.archetypes?.length || 0,
+            emotions: soulMetadata.emotions?.length || 0,
+            element: soulMetadata.elementalShift?.element,
+            milestone: soulMetadata.milestone?.type
+          });
+        }
+
         sources.push({
           type: 'claude',
           content: claudeResponse,
@@ -195,7 +211,8 @@ class MayaIntelligenceOrchestrator {
       blend,
       sources,
       surfacing,
-      voice
+      voice,
+      soulMetadata
     };
   }
 

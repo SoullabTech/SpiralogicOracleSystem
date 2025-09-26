@@ -27,6 +27,7 @@ import { MycelialNetwork } from './field/MycelialNetwork';
 import { ClaudeService } from '../services/ClaudeService';
 import { mayaIntelligenceOrchestrator } from './core/MayaIntelligenceOrchestrator';
 import { mayaPresenceEngine } from './core/MayaPresenceEngine';
+import { symbolExtractor } from '../intelligence/SymbolExtractionEngine';
 
 // Constants for field intelligence - EMERGENCY OVERRIDE
 const SACRED_THRESHOLD = 0.8; // Threshold proximity for sacred response
@@ -42,6 +43,7 @@ export interface FieldMaiaResponse extends MaiaResponse {
     somaticState: string;
   };
   betaMetadata?: any;
+  soulMetadata?: any; // Soul journey metadata from Claude
 }
 
 type ConversationEntry = {
@@ -85,7 +87,7 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
       this.claudeService = new ClaudeService({
         apiKey,
         model: 'claude-3-haiku-20240307',
-        maxTokens: 300,
+        maxTokens: 600, // Increased for soul metadata output
         temperature: 0.9
       });
       // Share Claude service with intelligence orchestrator
@@ -181,7 +183,10 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
     // 7. STORE CONVERSATION: With field state for future sensing
     this.storeFieldConversation(userId, input, finalResponse, fieldState);
 
-    // 8. CREATE RESPONSE: With full field metadata
+    // 8. SYMBOL EXTRACTION: Auto-track symbolic, archetypal, and emotional patterns
+    this.extractSymbolicIntelligence(userId, input, finalResponse.content);
+
+    // 9. CREATE RESPONSE: With full field metadata
     return this.createFieldResponse(finalResponse, fieldState);
   }
 
@@ -200,6 +205,9 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
       return this.emergenceEngine.manifestSacredResponse(fieldState);
     }
 
+    // Extract userName from preferences if available
+    const userName = (fieldState.preferences as any)?.userName;
+
     // NEW: Use Intelligence Orchestrator for optimal source blending
     const orchestrationResult = await mayaIntelligenceOrchestrator.orchestrateResponse(
       userId,
@@ -212,7 +220,8 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
         temporalDynamics: fieldState.temporalDynamics
       },
       // Pass in obsidian context if available
-      undefined // TODO: Connect obsidian vault when available
+      undefined, // TODO: Connect obsidian vault when available
+      userName // Pass userName so Maya knows who they're talking to
     );
 
     console.log('🎭 Intelligence orchestration complete:', {
@@ -236,14 +245,15 @@ export class FieldIntelligenceMaiaOrchestrator extends MaiaFullyEducatedOrchestr
       trust: presenceResult.trust
     });
 
-    // Create emergence response with orchestrated content
+    // Create emergence response with orchestrated content (including soul metadata)
     const emergentResponse: EmergentResponse = {
       content: orchestrationResult.response,
       interventionType: this.determineInterventionType(fieldState),
       fieldResonance: fieldState.fieldResonance,
       emergenceSource: 'intelligence-orchestrator',
       element: fieldState.element || 'Field',
-      shouldTransformColor: fieldState.sacredMarkers.liminal_quality > 0.5
+      shouldTransformColor: fieldState.sacredMarkers.liminal_quality > 0.5,
+      soulMetadata: orchestrationResult.soulMetadata // Pass through soul metadata
     };
 
     // EMERGENCY: Force substantial responses
@@ -560,7 +570,8 @@ Current Field State:
         sacredThreshold: fieldState.sacredMarkers.threshold_proximity,
         temporalQuality: fieldState.temporalDynamics.kairos_detection,
         somaticState: fieldState.somaticIntelligence.nervous_system_state
-      } : undefined
+      } : undefined,
+      soulMetadata: response.soulMetadata // Include soul metadata from Claude
     };
 
     // Add beta metadata if user is in beta
@@ -574,6 +585,37 @@ Current Field State:
     }
 
     return fieldResponse;
+  }
+
+  /**
+   * Extract symbolic intelligence from conversation
+   * Tracks symbols, archetypes, emotions, and milestones automatically
+   */
+  private async extractSymbolicIntelligence(
+    userId: string,
+    userInput: string,
+    maiaResponse: string
+  ): Promise<void> {
+    try {
+      // Extract from user input
+      const userExtraction = await symbolExtractor.extract(userInput, userId);
+
+      // Extract from MAIA response
+      const maiaExtraction = await symbolExtractor.extract(maiaResponse, userId);
+
+      console.log('🔮 Symbolic extraction complete:', {
+        userSymbols: userExtraction.symbols.length,
+        userArchetypes: userExtraction.archetypes.length,
+        userEmotions: userExtraction.emotions.length,
+        maiaSymbols: maiaExtraction.symbols.length,
+        maiaArchetypes: maiaExtraction.archetypes.length,
+        maiaEmotions: maiaExtraction.emotions.length,
+        totalConfidence: ((userExtraction.confidence + maiaExtraction.confidence) / 2).toFixed(2)
+      });
+    } catch (error) {
+      // Silently fail - symbol extraction should never break conversations
+      console.error('Symbol extraction failed (non-critical):', error);
+    }
   }
 
   /**

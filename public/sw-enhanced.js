@@ -174,7 +174,7 @@ async function cacheFirst(request) {
 
   try {
     const response = await fetch(request);
-    if (response.ok) {
+    if (response.ok && request.method === 'GET') {
       cache.put(request, response.clone());
     }
     return response;
@@ -192,7 +192,7 @@ async function networkFirst(request) {
 
   try {
     const response = await fetch(request);
-    if (response.ok) {
+    if (response.ok && request.method === 'GET') {
       cache.put(request, response.clone());
     }
     return response;
@@ -213,7 +213,7 @@ async function staleWhileRevalidate(request) {
   const cached = await cache.match(request);
 
   const fetchPromise = fetch(request).then(response => {
-    if (response.ok) {
+    if (response.ok && request.method === 'GET') {
       cache.put(request, response.clone());
     }
     return response;
@@ -226,7 +226,7 @@ async function staleWhileRevalidate(request) {
 async function fetchAndCache(request, cache) {
   try {
     const response = await fetch(request);
-    if (response.ok) {
+    if (response.ok && request.method === 'GET') {
       cache.put(request, response.clone());
     }
   } catch (error) {

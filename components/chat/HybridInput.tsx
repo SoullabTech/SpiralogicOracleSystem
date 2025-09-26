@@ -81,11 +81,6 @@ export default function HybridInput({
     recognition.lang = 'en-US';
     recognition.maxAlternatives = 1;
 
-    // Prevent automatic stopping on silence
-    (recognition as any).grammars = undefined;
-    (recognition as any).serviceURI = undefined;
-
-    // Add silence timer to prevent premature cutoff
     // Initialize conversational magic engine
     if (!magicEngineRef.current) {
       magicEngineRef.current = new ConversationalMagicEngine();

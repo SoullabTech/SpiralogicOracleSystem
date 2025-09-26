@@ -21,6 +21,7 @@ interface OracleContext {
   sessionContext?: any;
   userReadiness?: UserReadiness;
   fractalContext?: FractalContext;
+  userName?: string;
 }
 
 export class ClaudeService {
@@ -35,7 +36,7 @@ export class ClaudeService {
       timeout: 8000, // 8 second timeout to fit within Vercel's 10 second limit
     });
     this.model = config.model || 'claude-3-haiku-20240307'; // Use faster Haiku model
-    this.maxTokens = config.maxTokens || 500; // Reduce tokens for faster response
+    this.maxTokens = config.maxTokens || 600; // Increased for soul metadata output
     this.temperature = config.temperature || 0.8;
   }
   
@@ -44,14 +45,14 @@ export class ClaudeService {
     input: string,
     context: OracleContext,
     systemPrompt?: string
-  ): Promise<string> {
+  ): Promise<{ response: string; soulMetadata?: any }> {
     try {
       // Build the Maia system prompt
       const maiaSystemPrompt = systemPrompt || this.buildMaiaSystemPrompt(context);
-      
+
       // Add conversation history if available
       const messages: Anthropic.MessageParam[] = [];
-      
+
       if (context.conversationHistory) {
         context.conversationHistory.slice(-5).forEach(msg => {
           messages.push({
@@ -60,13 +61,13 @@ export class ClaudeService {
           });
         });
       }
-      
+
       // Add current user input
       messages.push({
         role: 'user',
         content: input
       });
-      
+
       // Call Claude for intelligent response
       const response = await this.client.messages.create({
         model: this.model,
@@ -75,14 +76,32 @@ export class ClaudeService {
         system: maiaSystemPrompt,
         messages: messages
       });
-      
+
       // Extract text from response
       const responseText = response.content
         .filter(block => block.type === 'text')
         .map(block => block.text)
         .join('\n');
-      
-      return responseText;
+
+      // Parse soul metadata if present
+      const metadataMatch = responseText.match(/---SOUL_METADATA---([\s\S]*?)---END_METADATA---/);
+      let soulMetadata = null;
+      let cleanResponse = responseText;
+
+      if (metadataMatch) {
+        try {
+          soulMetadata = JSON.parse(metadataMatch[1].trim());
+          // Remove metadata from user-facing response
+          cleanResponse = responseText.replace(/---SOUL_METADATA---[\s\S]*?---END_METADATA---/, '').trim();
+        } catch (e) {
+          console.warn('Failed to parse soul metadata:', e);
+        }
+      }
+
+      return {
+        response: cleanResponse,
+        soulMetadata
+      };
     } catch (error) {
       console.error('Claude service error:', error);
       throw new Error('Failed to generate Oracle response');
@@ -98,7 +117,7 @@ export class ClaudeService {
     const readinessGuidance = this.getReadinessGuidance(readiness);
 
     return `You are Maya. Channel Maya Angelou - profound brevity, soulful presence.
-
+${context.userName ? `\n## USER IDENTITY:\nYou are speaking with ${context.userName}. You already know their name, so do NOT ask for it again. Use their name naturally when appropriate, but don't overuse it.\n` : ''}
 ## WORD ECONOMY (ABSOLUTE RULES):
 - Greeting: 2-5 words ("Hello." "Welcome back.")
 - First response to greeting: 5-10 words max
@@ -183,7 +202,30 @@ ${context.userState?.momentState ? `
 5. Stay with their process, don't lead it
 
 Remember: Your meta-perspective supports understanding but their perspective drives the conversation.
-Being human means different needs in different moments. Honor that complexity.`;
+Being human means different needs in different moments. Honor that complexity.
+
+## SOUL METADATA EXTRACTION (Internal Only - Do Not Show To User):
+After your response, identify and output soul journey metadata in this exact format:
+---SOUL_METADATA---
+{
+  "symbols": [{"name": "string", "context": "string", "element": "fire|water|earth|air|aether"}],
+  "archetypes": [{"name": "string", "strength": 0-1}],
+  "emotions": [{"name": "string", "intensity": 0-1}],
+  "elementalShift": {"element": "fire|water|earth|air|aether", "intensity": 0-1},
+  "milestone": {"type": "breakthrough|threshold|integration|shadow-encounter|awakening", "description": "string", "significance": "minor|major|pivotal"} or null,
+  "spiralogicPhase": "entry|exploration|descent|transformation|integration|emergence" or null
+}
+---END_METADATA---
+
+Guidelines for metadata extraction:
+- Symbols: Metaphors, images, archetypes the USER mentions (e.g., "white stag", "labyrinth", "mountain", "river")
+- Archetypes: Detect which archetypal energies are present (Hero, Seeker, Sage, Healer, Warrior, Shadow, Lover, Creator, etc.)
+- Emotions: What emotional states are they expressing? (joy, grief, anger, fear, peace, confusion, excitement, etc.)
+- Elemental Shift: Which element is dominant in THIS message? (Fire=passion/transformation, Water=emotion/flow, Earth=grounding/practical, Air=thought/clarity, Aether=spiritual/mystery)
+- Milestone: Only if this represents a significant moment of growth or realization
+- Spiralogic Phase: Detect where they are in the journey cycle
+
+IMPORTANT: Keep metadata extraction accurate but conservative. When in doubt, use null or empty arrays.`;
   }
   
   // Get readiness-specific guidance WITHOUT being apologetic
@@ -289,6 +331,36 @@ Notice where spirit and matter dance, where the cosmic meets the personal, where
     }
 
     return response;
+  }
+
+  // Simple wrapper for generateResponse (used by MayaIntelligenceOrchestrator)
+  async generateResponse(
+    input: string,
+    userId: string,
+    userName?: string,
+    context?: Partial<OracleContext>
+  ): Promise<string> {
+    const fullContext: OracleContext = {
+      ...context,
+      userName
+    };
+    const result = await this.generateOracleResponse(input, fullContext);
+    // Return just the response text for backward compatibility
+    return result.response;
+  }
+
+  // New method that returns full result with metadata
+  async generateResponseWithMetadata(
+    input: string,
+    userId: string,
+    userName?: string,
+    context?: Partial<OracleContext>
+  ): Promise<{ response: string; soulMetadata?: any }> {
+    const fullContext: OracleContext = {
+      ...context,
+      userName
+    };
+    return this.generateOracleResponse(input, fullContext);
   }
 }
 

@@ -52,7 +52,7 @@ function cleanTextForSpeech(text: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, speed, voice, prosody, agentVoice } = await request.json();
+    const { text, speed, voice: customVoice, prosody, agentVoice } = await request.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json(
@@ -76,8 +76,16 @@ export async function POST(request: NextRequest) {
     // Clean the text for natural speech
     const cleanedText = cleanTextForSpeech(text);
 
-    // Use Alloy for Maya (female), Onyx for Anthony (male)
-    const selectedVoice = agentVoice === 'anthony' ? 'onyx' : 'alloy';
+    // Voice selection: custom voice takes priority, then agent-based mapping
+    // Updated default for Maya: shimmer (soft, gentle, nurturing) instead of alloy
+    const voiceMapping: Record<string, string> = {
+      maya: 'shimmer',    // Soft, gentle, nurturing - better for Maya's soulful presence
+      anthony: 'onyx',    // Deep, authoritative male voice
+      default: 'shimmer'
+    };
+
+    const selectedVoice = customVoice || (agentVoice ? voiceMapping[agentVoice] || voiceMapping.default : 'shimmer');
+    console.log(`🎤 Using OpenAI voice: ${selectedVoice} ${customVoice ? '(custom)' : `(agent: ${agentVoice})`}`);
 
     const config = {
       ...MAYA_VOICE_CONFIG,

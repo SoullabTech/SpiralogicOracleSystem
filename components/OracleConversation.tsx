@@ -12,6 +12,9 @@ import { SimpleVoiceMic } from './ui/SimpleVoiceMic';
 import { OrganicVoiceMaia } from './ui/OrganicVoiceMaia';
 // import { VoiceActivatedMaia as SimplifiedOrganicVoice, VoiceActivatedMaiaRef } from './ui/VoiceActivatedMaiaFixed'; // File doesn't exist
 import { AgentCustomizer } from './oracle/AgentCustomizer';
+import { MaiaSettingsPanel } from './MaiaSettingsPanel';
+import { QuickSettingsButton } from './QuickSettingsButton';
+import { SoulprintMetricsWidget } from './SoulprintMetricsWidget';
 import { MotionState, CoherenceShift } from './motion/MotionOrchestrator';
 import { OracleResponse, ConversationContext } from '@/lib/oracle-response';
 import { mapResponseToMotion, enrichOracleResponse } from '@/lib/motion-mapper';
@@ -23,6 +26,7 @@ import { toast } from 'react-hot-toast';
 
 interface OracleConversationProps {
   userId?: string;
+  userName?: string;
   sessionId: string;
   initialCheckIns?: Record<string, number>;
   showAnalytics?: boolean;
@@ -60,6 +64,7 @@ const FormattedMessage: React.FC<{ text: string }> = ({ text }) => {
 
 export const OracleConversation: React.FC<OracleConversationProps> = ({
   userId,
+  userName,
   sessionId,
   initialCheckIns = {},
   showAnalytics = false,
@@ -152,15 +157,29 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [showCaptions, setShowCaptions] = useState(true); // Show text by default in voice mode
   const [showVoiceText, setShowVoiceText] = useState(true); // Toggle for showing text in voice mode
   const [showCustomizer, setShowCustomizer] = useState(false);
-  const [enableVoiceInChat, setEnableVoiceInChat] = useState(false); // Settings panel
+  const [enableVoiceInChat, setEnableVoiceInChat] = useState(false);
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+
+  // Keyboard shortcut for settings (Cmd/Ctrl + ,)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault();
+        setShowSettingsPanel(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Initialize voice when in voice mode
   useEffect(() => {
     if (!showChatInterface && voiceEnabled && !isMuted) {
       // Delay to ensure component is ready
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
         if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
-          voiceMicRef.current.startListening();
+          await voiceMicRef.current.startListening();
           console.log('🎤 Voice auto-started in voice mode');
         }
       }, 500);
@@ -307,9 +326,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       console.log('🔇 PREEMPTIVE MUTE: Microphone disabled before processing');
     }
 
-    // Prevent multiple processing
-    if (isProcessing) {
-      console.log('⚠️ Text message blocked - already processing');
+    // Prevent multiple processing - comprehensive guard
+    if (isProcessing || isResponding || isAudioPlaying) {
+      console.log('⚠️ Text message blocked - already processing/responding', {
+        isProcessing,
+        isResponding,
+        isAudioPlaying
+      });
       return;
     }
 
@@ -374,6 +397,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         body: JSON.stringify({
           input: cleanedText,
           userId: userId || 'anonymous',
+          userName: userName,
           sessionId,
           agentName: agentConfig.name,
           agentVoice: agentConfig.voice,
@@ -543,6 +567,19 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       return;
     }
 
+    // Prevent duplicate processing if already handling a message
+    if (isProcessing || isResponding) {
+      console.log('⚠️ Already processing, ignoring duplicate transcript');
+      return;
+    }
+
+    // Deduplicate: check if this is the same as the last message
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.role === 'user' && lastMessage.text === t) {
+      console.log('⚠️ Duplicate transcript detected, ignoring');
+      return;
+    }
+
     console.log('🎯 Voice transcript received:', t);
     console.log('📊 Current states:', {
       isProcessing,
@@ -564,7 +601,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       setIsProcessing(false);
       setIsResponding(false);
     }
-  }, [handleTextMessage, isProcessing, isResponding, isAudioPlaying]);
+  }, [handleTextMessage, isProcessing, isResponding, isAudioPlaying, messages]);
 
   // Clear all check-ins
   const clearCheckIns = useCallback(() => {
@@ -666,6 +703,11 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
   return (
     <div className="oracle-conversation min-h-screen bg-[#1a1f2e] overflow-hidden">
+      {/* MAIA Settings Panel */}
+      {showSettingsPanel && (
+        <MaiaSettingsPanel onClose={() => setShowSettingsPanel(false)} />
+      )}
+
       {/* Agent Customizer - Only show when settings clicked */}
       {showCustomizer && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
@@ -1051,7 +1093,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
             {/* Larger clickable area for holoflower voice activation */}
             <motion.button
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 console.log('🌸 Holoflower clicked!', {
@@ -1063,7 +1105,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   contemplationMode: voiceMicRef.current?.isContemplationMode
                 });
                 // Always enable audio first
-                enableAudio();
+                await enableAudio();
 
                 // In voice mode, handle contemplation and listening modes
                 if (!showChatInterface && voiceEnabled) {
@@ -1085,9 +1127,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     // Currently muted, so start listening
                     setIsMuted(false);
                     // Small delay to ensure component is ready
-                    setTimeout(() => {
+                    setTimeout(async () => {
                       if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
-                        voiceMicRef.current.startListening();
+                        await voiceMicRef.current.startListening();
                         console.log('🎤 Voice started via holoflower click');
                       }
                     }, 100);
@@ -1096,9 +1138,9 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                   // In chat mode, switch to voice mode and activate
                   setShowChatInterface(false);
                   setIsMuted(false);
-                  setTimeout(() => {
+                  setTimeout(async () => {
                     if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
-                      voiceMicRef.current.startListening();
+                      await voiceMicRef.current.startListening();
                       console.log('🎤 Voice started via mode switch from holoflower');
                     }
                   }, 200);
@@ -1268,9 +1310,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             {/* Mode switcher */}
             <div className="flex gap-2 bg-black/20 backdrop-blur-md rounded-full p-1">
               <button
-                onClick={() => {
+                onClick={async () => {
                   setShowChatInterface(false);
-                  enableAudio();
+                  await enableAudio();
+                  // Start voice after mode switch
+                  setTimeout(async () => {
+                    await voiceMicRef.current?.startListening();
+                  }, 300);
                 }}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   !showChatInterface
@@ -1490,14 +1536,14 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
         <div className="flex justify-center items-center gap-8 py-4 px-8 bg-black/60 backdrop-blur-lg rounded-full border border-[#D4B896]/20">
           {/* Voice Toggle - Activate mic when switching to voice mode */}
           <button
-            onClick={() => {
+            onClick={async () => {
               setShowChatInterface(false);
               setIsMuted(false); // Unmute FIRST
-              enableAudio();
+              await enableAudio();
               // Start listening when switching to voice mode
-              setTimeout(() => {
+              setTimeout(async () => {
                 if (voiceMicRef.current?.startListening && !isProcessing && !isResponding) {
-                  voiceMicRef.current.startListening();
+                  await voiceMicRef.current.startListening();
                   console.log('🎤 Voice started via mode switch');
                 }
               }, 300); // Slightly longer delay to ensure state updates
@@ -1654,17 +1700,18 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             </svg>
           </label>
 
-          {/* Settings - Opens voice selector */}
+          {/* Quick Settings - Opens comprehensive MAIA settings */}
           <button
-            onClick={() => setShowCustomizer(!showCustomizer)}
-            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300"
-            title="Settings & Voice Selection"
+            onClick={() => setShowSettingsPanel(!showSettingsPanel)}
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896] hover:bg-[#D4B896]/10 transition-all duration-300 group relative"
+            title="MAIA Settings - Voice, Memory, Personality"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
           </button>
 
           {/* Download/Share */}
@@ -1681,6 +1728,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Floating Quick Settings Button */}
+      <QuickSettingsButton />
+
+      {/* Soulprint Metrics Widget */}
+      {userId && <SoulprintMetricsWidget userId={userId} />}
     </div>
   );
 };

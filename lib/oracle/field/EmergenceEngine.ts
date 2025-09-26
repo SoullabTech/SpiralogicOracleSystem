@@ -14,6 +14,7 @@ export interface EmergentResponse {
   confidence: number;
   fieldResonance: number;
   emergenceSource: string;
+  soulMetadata?: any; // Soul journey metadata from Claude
 }
 
 export interface FieldIntervention {

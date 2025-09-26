@@ -86,6 +86,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const animationFrameRef = useRef<number>(0);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const accumulatedTranscriptRef = useRef<string>('');
+  const lastSentMessageRef = useRef<string>('');
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
@@ -183,12 +184,6 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
-    recognition.maxAlternatives = 5; // Enhanced accuracy with more alternatives
-
-    // Enhanced recognition settings if available
-    if ('grammars' in recognition) {
-      (recognition as any).grammars = null; // Free-form speech
-    }
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
@@ -305,8 +300,18 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
             // Only send if expression seems complete or we've been silent long enough
             if (finalMessage && finalMessage.length > 0 && (seemsComplete || !isActivelyExpressing)) {
+              // Prevent duplicate sends
+              if (finalMessage === lastSentMessageRef.current) {
+                console.log('⚠️ Duplicate message detected, skipping:', finalMessage);
+                accumulatedTranscriptRef.current = '';
+                setTranscript('');
+                setIsActivelyExpressing(false);
+                return;
+              }
+
               console.log('🚀 Sending to Maya:', finalMessage);
               onTranscript(finalMessage);
+              lastSentMessageRef.current = finalMessage;
               accumulatedTranscriptRef.current = '';
               setTranscript('');
               setIsActivelyExpressing(false);
@@ -324,8 +329,18 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
               silenceTimerRef.current = setTimeout(() => {
                 const extendedMessage = accumulatedTranscriptRef.current.trim();
                 if (extendedMessage) {
+                  // Prevent duplicate sends
+                  if (extendedMessage === lastSentMessageRef.current) {
+                    console.log('⚠️ Duplicate extended message detected, skipping');
+                    accumulatedTranscriptRef.current = '';
+                    setTranscript('');
+                    setIsActivelyExpressing(false);
+                    return;
+                  }
+
                   console.log('🚀 Sending extended expression:', extendedMessage);
                   onTranscript(extendedMessage);
+                  lastSentMessageRef.current = extendedMessage;
                   accumulatedTranscriptRef.current = '';
                   setTranscript('');
                   setIsActivelyExpressing(false);
@@ -407,13 +422,40 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // Expose methods via ref
   React.useImperativeHandle(ref, () => ({
-    startListening: () => {
-      if (recognitionRef.current && !isListening && !isPausedForMaya) {
+    startListening: async () => {
+      if (!isListening && !isPausedForMaya) {
+        console.log('🎤 startListening called externally');
+
+        // Initialize if needed
+        if (!recognitionRef.current) {
+          console.log('⚠️ Recognition not initialized, initializing now...');
+          const audioInit = await initializeAudioContext();
+          const speechInit = initializeSpeechRecognition();
+
+          if (!audioInit || !speechInit || !recognitionRef.current) {
+            console.error('❌ Failed to initialize voice recognition');
+            return;
+          }
+        }
+
+        // Prevent multiple simultaneous starts
+        if (isStartingRef.current) {
+          console.log('⚠️ Recognition already starting, skipping...');
+          return;
+        }
+
         try {
+          isStartingRef.current = true;
           recognitionRef.current.start();
           setIsListening(true);
+          console.log('✅ Voice recognition started successfully');
+
+          setTimeout(() => {
+            isStartingRef.current = false;
+          }, 1000);
         } catch (e) {
-          console.log('Could not start recognition:', e);
+          isStartingRef.current = false;
+          console.error('❌ Could not start recognition:', e);
         }
       }
     },
@@ -422,6 +464,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         try {
           recognitionRef.current.stop();
           setIsListening(false);
+          lastSentMessageRef.current = ''; // Reset deduplication on stop
         } catch (e) {
           // Already stopped
         }
@@ -429,6 +472,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
     },
     muteImmediately: () => {
       setIsPausedForMaya(true);
+      lastSentMessageRef.current = ''; // Reset deduplication on mute
       if (recognitionRef.current) {
         try {
           recognitionRef.current.stop();
@@ -459,7 +503,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
     isContemplationMode,
     conversationMode,
     // elementalMode // TEMPORARILY DISABLED
-  }), [isListening, isPausedForMaya, audioLevel, isContemplationMode, conversationMode]);
+  }), [isListening, isPausedForMaya, audioLevel, isContemplationMode, conversationMode, initializeAudioContext, initializeSpeechRecognition]);
 
   // Start/stop listening
   const toggleListening = useCallback(async () => {

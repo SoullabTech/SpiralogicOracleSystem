@@ -191,9 +191,6 @@ export const AdaptiveVoiceMicButton = forwardRef<any, AdaptiveVoiceMicButtonProp
       recognition.interimResults = true;
       recognition.lang = 'en-US';
       recognition.maxAlternatives = 1;
-
-      // Add these to prevent abort issues
-      recognition.grammars = undefined;
       recognition.interimResults = true;
 
       recognition.onstart = () => {

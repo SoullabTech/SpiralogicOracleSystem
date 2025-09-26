@@ -1,0 +1,17 @@
+# AIN Directory - Soulprint Markdown Files
+# Ignore all user data by default to protect privacy
+
+# Ignore all user directories
+Users/*/
+
+# Keep the directory structure
+!Users/.gitkeep
+!Users/_example/
+
+# Allow dashboard and dev files (no personal data)
+!Dashboards/
+!Dev/
+
+# Keep READMEs
+!README.md
+!**/README.md

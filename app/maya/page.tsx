@@ -10,6 +10,7 @@ import { OracleConversation } from '@/components/OracleConversation';
 export default function MayaPage() {
   const router = useRouter();
   const [userId, setUserId] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
 
   useEffect(() => {
     // Get user credentials from storage
@@ -36,9 +37,10 @@ export default function MayaPage() {
     // Mark as onboarded and auto-drop to Maia interface
     localStorage.setItem('betaOnboardingComplete', 'true');
     setUserId(explorerId);
+    setUserName(explorerName);
   }, [router]);
 
-  if (!userId) {
+  if (!userId || !userName) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-amber-400">Initializing Maia-ARIA-1...</div>
@@ -46,5 +48,5 @@ export default function MayaPage() {
     );
   }
 
-  return <OracleConversation sessionId={Date.now().toString()} userId={userId} voiceEnabled={true} />;
+  return <OracleConversation sessionId={Date.now().toString()} userId={userId} userName={userName} voiceEnabled={true} />;
 }
