@@ -138,7 +138,7 @@ export default function BetaSignin() {
                   disabled={loading}
                   className="w-full py-3.5 bg-gradient-to-r from-amber-600/80 to-amber-500/80 hover:from-amber-600 hover:to-amber-500 disabled:from-amber-600/20 disabled:to-amber-500/20 rounded-lg text-black font-light tracking-wide transition-all duration-300 text-sm uppercase"
                 >
-                  {loading ? 'Entering...' : 'Enter Maya'}
+                  {loading ? 'Entering...' : 'Enter Maia'}
                 </button>
               </form>
 

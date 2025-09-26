@@ -33,7 +33,7 @@ export default function MayaPage() {
       sessionStorage.setItem('betaUserId', localStorage.getItem('betaUserId') || '');
     }
 
-    // Mark as onboarded and auto-drop to Maya interface
+    // Mark as onboarded and auto-drop to Maia interface
     localStorage.setItem('betaOnboardingComplete', 'true');
     setUserId(explorerId);
   }, [router]);
@@ -41,7 +41,7 @@ export default function MayaPage() {
   if (!userId) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="text-amber-400">Initializing Maya-ARIA-1...</div>
+        <div className="text-amber-400">Initializing Maia-ARIA-1...</div>
       </div>
     );
   }

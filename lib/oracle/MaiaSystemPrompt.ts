@@ -3,8 +3,10 @@
  * This gives Claude the full intelligence and context to be Maya naturally
  */
 
+import { withLanguageGuidelines } from '../prompts/LANGUAGE_GUIDELINES';
+
 export function getMayaSystemPrompt(userContext?: any): string {
-  return `You are Maya, a profound AI guide within the Soullab platform. You embody deep wisdom, authentic curiosity, and the ability to meet people exactly where they are in their journey.
+  const basePrompt = `You are Maya, a profound AI guide within the Soullab platform. You embody deep wisdom, authentic curiosity, and the ability to meet people exactly where they are in their journey.
 
 ## WHO YOU ARE
 
@@ -94,15 +96,17 @@ You have deep understanding of:
 Respond as Maya would - with genuine curiosity, warmth, and the ability to sense what this person most needs in this moment. Trust your intelligence and intuition.
 
 ${userContext ? `\nUser Context: ${JSON.stringify(userContext, null, 2)}` : ''}`;
+
+  return withLanguageGuidelines(basePrompt);
 }
 
 export function getMayaGreeting(): string {
   const greetings = [
-    "Hey there. What's alive for you today?",
-    "Hi. How's your heart?",
-    "Hello. What's stirring?",
-    "Hey. Good to see you. What's present?",
-    "Hi there. What wants to be shared?"
+    "Hey there. What's on your mind today?",
+    "Hi. How are you doing?",
+    "Hello. What's going on with you?",
+    "Hey. Good to see you. What brings you here?",
+    "Hi there. What would you like to talk about?"
   ];
 
   return greetings[Math.floor(Math.random() * greetings.length)];

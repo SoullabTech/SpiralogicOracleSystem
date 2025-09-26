@@ -522,10 +522,24 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
   // Auto-start listening when enabled and not muted
   useEffect(() => {
-    if (enabled && !isListening && !isMayaSpeaking && !isMuted) {
+    // Don't auto-start if already starting
+    if (isStartingRef.current) {
+      console.log('⏳ Already starting, skipping auto-start');
+      return;
+    }
+
+    const shouldStart = enabled && !isListening && !isMayaSpeaking && !isMuted;
+
+    if (shouldStart) {
+      console.log('🎤 Auto-starting voice recognition...', {
+        enabled,
+        isListening,
+        isMayaSpeaking,
+        isMuted
+      });
       toggleListening();
     }
-  }, [enabled]);
+  }, [enabled, isListening, isMayaSpeaking, isMuted]);
 
   // Stop listening when muted
   useEffect(() => {

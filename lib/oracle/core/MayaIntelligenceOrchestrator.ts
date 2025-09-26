@@ -9,7 +9,7 @@ import { FieldState } from '../field/FieldAwareness';
 import { MycelialNetwork } from '../field/MycelialNetwork';
 import { PRESENCE_CONFIG } from '../config/presence.config';
 import { trustManager } from '../relational/TrustManager';
-import { archetypalMixer } from '../personality/ArchetypalMixer';
+import { archetypalMixer, VoiceModulation } from '../personality/ArchetypalMixer';
 import { intelligenceMixer } from './IntelligenceMixer';
 
 export interface IntelligenceSource {
@@ -32,7 +32,7 @@ export interface OrchestrationResult {
   blend: IntelligenceBlend;
   sources: IntelligenceSource[];
   surfacing: number;
-  voice: Record<string, number>;
+  voice: VoiceModulation;
 }
 
 class MayaIntelligenceOrchestrator {
@@ -185,11 +185,7 @@ class MayaIntelligenceOrchestrator {
     );
 
     // Get voice modulation
-    const voice = archetypalMixer.calculateBlend(fieldState, {
-      trustScore,
-      phase,
-      userId
-    });
+    const voice = archetypalMixer.modulateVoice(fieldState, userId, trustScore);
 
     // Emerge the final response
     const response = this.emergeResponse(sources, blend, surfacing, voice);
@@ -210,7 +206,7 @@ class MayaIntelligenceOrchestrator {
     sources: IntelligenceSource[],
     blend: IntelligenceBlend,
     surfacing: number,
-    voice: Record<string, number>
+    voice: VoiceModulation
   ): string {
     if (sources.length === 0) {
       return "I'm here with you. Tell me more about what's arising.";
@@ -282,7 +278,7 @@ class MayaIntelligenceOrchestrator {
     return response;
   }
 
-  private applyVoice(response: string, voice: Record<string, number>): string {
+  private applyVoice(response: string, voice: VoiceModulation): string {
     // Voice doesn't reduce content, it shapes expression
     // This is where archetypal mixing happens
     // For now, return as-is (archetypal shaping happens in mixer)

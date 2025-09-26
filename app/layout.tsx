@@ -14,8 +14,8 @@ import "./globals-mobile.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Soullab - Maya Oracle",
-  description: "Sacred consciousness technology - Maya AI Oracle & Interactive Holoflower",
+  title: "Soullab - Maia Oracle",
+  description: "Sacred consciousness technology - Maia AI Oracle & Interactive Holoflower",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

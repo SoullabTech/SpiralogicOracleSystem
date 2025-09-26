@@ -1,7 +1,7 @@
 {
-  "name": "ARIA Maya Dashboard - Spiralogic Oracle",
-  "short_name": "Maya",
-  "description": "Your evolving AI companion - Track Maya's unique emergence and sacred conversations",
+  "name": "ARIA Maia Dashboard - Spiralogic Oracle",
+  "short_name": "Maia",
+  "description": "Your evolving AI companion - Track Maia's unique emergence and sacred conversations",
   "start_url": "/?source=pwa",
   "display": "fullscreen",
   "orientation": "portrait",
@@ -60,9 +60,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Maya Chat",
-      "short_name": "Maya",
-      "description": "Talk with Maya AI",
+      "name": "Maia Chat",
+      "short_name": "Maia",
+      "description": "Talk with Maia AI",
       "url": "/maya",
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },

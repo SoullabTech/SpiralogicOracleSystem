@@ -13,7 +13,7 @@ interface VoiceState {
 
 export function useMaiaVoice() {
   const maiaVoiceRef = useRef<MaiaVoiceSystem | null>(null);
-  const [agentConfig] = useState(() => getAgentConfig());
+  const [agentConfig, setAgentConfig] = useState(() => getAgentConfig());
   const [voiceState, setVoiceState] = useState<VoiceState>({
     isPlaying: false,
     isPaused: false,
@@ -21,10 +21,22 @@ export function useMaiaVoice() {
     currentText: '',
     voiceType: 'webspeech'
   });
-  
+
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [isSupported, setIsSupported] = useState(false);
   const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    // Listen for agent config changes
+    const handleAgentChange = (event: CustomEvent) => {
+      setAgentConfig(event.detail);
+    };
+
+    window.addEventListener('agent-config-changed', handleAgentChange as EventListener);
+    return () => {
+      window.removeEventListener('agent-config-changed', handleAgentChange as EventListener);
+    };
+  }, []);
 
   useEffect(() => {
     // Initialize Maya Voice System
@@ -38,7 +50,7 @@ export function useMaiaVoice() {
 
       // Subscribe to voice state changes
       const unsubscribe = maiaVoiceRef.current.subscribe(setVoiceState);
-      
+
       // Check capabilities
       const capabilities = maiaVoiceRef.current.getCapabilities();
       setIsSupported(capabilities.webSpeech || capabilities.elevenLabs || capabilities.sesame);
@@ -50,7 +62,7 @@ export function useMaiaVoice() {
       setIsSupported(false);
       setIsReady(false);
     }
-  }, []);
+  }, [agentConfig]);
 
   const speak = useCallback(async (text: string, context?: any): Promise<void> => {
     if (!maiaVoiceRef.current || !isReady) return;

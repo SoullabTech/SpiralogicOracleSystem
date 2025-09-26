@@ -168,7 +168,9 @@ export class MaiaVoiceSystem {
 
   // OpenAI TTS with Alloy voice - PRIMARY METHOD
   private async speakWithOpenAI(text: string): Promise<void> {
-    console.log('🎯 Attempting OpenAI TTS with Alloy voice...');
+    const isAnthony = this.config.agentConfig?.voice === 'anthony';
+    const voiceName = isAnthony ? 'onyx' : 'alloy';
+    console.log(`🎯 Attempting OpenAI TTS with ${voiceName} voice for ${isAnthony ? 'Anthony' : 'Maya'}...`);
     this.updateState({ isLoading: true, currentText: text, voiceType: 'elevenlabs' }); // Keep as 'elevenlabs' for compatibility
 
     try {
@@ -177,7 +179,7 @@ export class MaiaVoiceSystem {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: this.enhanceTextForSpeech(text),
-          voice: 'alloy',     // Calm, composed, warm presence
+          agentVoice: this.config.agentConfig?.voice || 'maya',
           speed: 0.95,        // Slightly slower for natural conversational pace
           model: 'tts-1-hd'   // Higher quality for better clarity
         })

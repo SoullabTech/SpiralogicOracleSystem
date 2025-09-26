@@ -2,26 +2,34 @@ import { NextResponse } from 'next/server';
 
 // Beta invitation codes - sacred portals
 const VALID_INVITE_CODES = [
-  // Original sacred codes
-  'MAYA2025',
-  'SOULLAB',
-  'SACRED',
-  'ORACLE',
-  'REMEMBRANCE',
-  
-  // Element codes
-  'FIRE2025',
-  'WATER2025', 
-  'EARTH2025',
-  'AIR2025',
-  'AETHER2025',
-  
-  // Special access codes
-  'FOUNDER',
-  'BETA',
-  'WITNESS',
-  'GUARDIAN',
-  'SEEKER'
+  // Beta Tester Codes - Soullab-[Name] format
+  'SOULLAB-NATHAN',
+  'SOULLAB-JASON',
+  'SOULLAB-TRAVIS',
+  'SOULLAB-ANDREA',
+  'SOULLAB-JUSTIN',
+  'SOULLAB-SUSAN',
+  'SOULLAB-MEAGAN',
+  'SOULLAB-PATRICK',
+  'SOULLAB-AUGUSTEN',
+  'SOULLAB-SOPHIE',
+  'SOULLAB-TAMARA',
+  'SOULLAB-LORALEE',
+  'SOULLAB-ANDREAFAGAN',
+  'SOULLAB-CECE',
+  'SOULLAB-ZSUZSANNA',
+  'SOULLAB-LEONARD',
+  'SOULLAB-ANGELA',
+  'SOULLAB-KRISTEN',
+  'SOULLAB-CYNTHY',
+  'SOULLAB-DOUG',
+  'SOULLAB-RICK',
+  'SOULLAB-NINA',
+  'SOULLAB-JULIE',
+  'SOULLAB-KIMBERLY',
+
+  // Founder access
+  'SOULLAB'
 ];
 
 export async function POST(request: Request) {

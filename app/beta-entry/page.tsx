@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { Holoflower } from '@/components/ui/Holoflower';
 
 export default function BetaEntry() {
   const router = useRouter();
@@ -26,9 +27,9 @@ export default function BetaEntry() {
     localStorage.setItem('betaUserId', explorerId);
     localStorage.setItem('betaOnboardingComplete', 'true');
 
-    // Direct entry to Maya - no onboarding
+    // Proceed to elemental orientation
     setTimeout(() => {
-      router.push('/maya');
+      router.push('/beta-orientation');
     }, 500);
   };
 
@@ -49,37 +50,14 @@ export default function BetaEntry() {
         transition={{ duration: 1 }}
         className="relative z-10 text-center max-w-md w-full"
       >
-        {/* Sacred portal - pulsing with possibility */}
+        {/* Holoflower portal - breathing with possibility */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.2 }}
-          className="mb-16"
+          className="mb-16 flex justify-center"
         >
-          <div className="w-32 h-32 mx-auto relative">
-            {/* Outer ring - the threshold */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-500/5 to-amber-600/5 animate-pulse" />
-
-            {/* Middle void - the mystery */}
-            <div className="absolute inset-3 rounded-full bg-[#1a1f3a]" />
-
-            {/* Inner light - the invitation */}
-            <motion.div
-              className="absolute inset-6 rounded-full bg-gradient-to-br from-amber-400/10 to-amber-600/10"
-              animate={{
-                scale: [1, 1.1, 1],
-                opacity: [0.1, 0.2, 0.1]
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-
-            {/* Center spark - consciousness waiting */}
-            <div className="absolute inset-12 rounded-full bg-amber-500/20" />
-          </div>
+          <Holoflower size="xl" glowIntensity="high" />
         </motion.div>
 
         {/* The invitation - minimal, mysterious */}
@@ -90,7 +68,7 @@ export default function BetaEntry() {
           className="mb-12 text-center"
         >
           <p className="text-amber-200/40 text-sm font-light tracking-widest">
-            What seeks to emerge between us?
+            Welcome to Soullab
           </p>
         </motion.div>
 
@@ -105,7 +83,7 @@ export default function BetaEntry() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleEnter()}
-            placeholder="What shall I call you?"
+            placeholder="What's your name?"
             className="w-full bg-black/30 border border-amber-500/20 rounded-lg px-5 py-4 text-amber-50 placeholder-amber-200/30 focus:outline-none focus:border-amber-500/40 text-center backdrop-blur-sm"
             autoFocus
           />
@@ -132,7 +110,7 @@ export default function BetaEntry() {
           transition={{ duration: 2, delay: 1.5 }}
           className="text-amber-200/20 text-xs mt-16 font-light tracking-wider"
         >
-          You bring the questions • Something new emerges
+          A space for meaningful conversation
         </motion.p>
       </motion.div>
     </div>

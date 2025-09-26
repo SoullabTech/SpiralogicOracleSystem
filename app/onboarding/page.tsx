@@ -171,7 +171,7 @@ export default function OnboardingPage() {
           >
             <h1 className="text-2xl font-normal text-gray-900 mb-2">Onboarding</h1>
             <p className="text-sm text-gray-600 mb-8">
-              To personalize your experience, I'd like to learn<br />
+              To personalize your experience, I&apos;d like to learn<br />
               a bit about you. Your answers are<br />
               encrypted and never shared.
             </p>
@@ -413,9 +413,9 @@ export default function OnboardingPage() {
 
             <div className="bg-[#c9b037]/10 border border-[#c9b037]/20 rounded-xl p-4 mb-6">
               <p className="text-xs text-gray-700 leading-relaxed">
-                We're conducting heuristic research on elemental alchemy, 
+                We&apos;re conducting heuristic research on elemental alchemy, 
                 depth psychology, and archetypal patterns. Your data is 
-                always anonymized and we'll contact you before any use 
+                always anonymized and we&apos;ll contact you before any use 
                 beyond internal analysis.
               </p>
             </div>

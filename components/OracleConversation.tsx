@@ -151,7 +151,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   const [showChatInterface, setShowChatInterface] = useState(true); // Default to chat interface for better UX
   const [showCaptions, setShowCaptions] = useState(true); // Show text by default in voice mode
   const [showVoiceText, setShowVoiceText] = useState(true); // Toggle for showing text in voice mode
-  const [showCustomizer, setShowCustomizer] = useState(false); // Settings panel
+  const [showCustomizer, setShowCustomizer] = useState(false);
+  const [enableVoiceInChat, setEnableVoiceInChat] = useState(false); // Settings panel
 
   // Initialize voice when in voice mode
   useEffect(() => {
@@ -220,7 +221,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     if (maiaVoiceState?.isPlaying !== isResponding) {
       setIsResponding(maiaVoiceState?.isPlaying || false);
     }
-  }, [maiaVoiceState?.isPlaying, isAudioPlaying, isResponding]);
+  }, [maiaVoiceState?.isPlaying]);
 
   // Update motion state based on voice activity
   useEffect(() => {
@@ -438,7 +439,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       }
 
       // Play audio response with Maia's voice - ALWAYS in voice mode
-      const shouldSpeak = !showChatInterface || (showChatInterface && voiceEnabled && maiaReady);
+      const shouldSpeak = !showChatInterface || (showChatInterface && voiceEnabled && maiaReady && enableVoiceInChat);
 
       console.log('🎤 Voice response check:', {
         shouldSpeak,
@@ -763,6 +764,18 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 }}
               />
             </motion.div>
+
+            {/* Holoflower Image */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+              <img
+                src="/holoflower.svg"
+                alt="Holoflower"
+                className="w-32 h-32 object-contain"
+                style={{
+                  filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))',
+                }}
+              />
+            </div>
 
             {/* Sparkles emanating from center - ULTRA SLOW & EPHEMERAL */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -1337,6 +1350,25 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                 </motion.div>
               </div>
 
+              {/* Voice toggle for chat mode */}
+              <div className="fixed top-20 right-8 z-50">
+                <button
+                  onClick={() => setEnableVoiceInChat(!enableVoiceInChat)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                    enableVoiceInChat
+                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                      : 'bg-black/20 text-white/40 border border-white/10'
+                  } backdrop-blur-md hover:bg-opacity-30`}
+                  title={enableVoiceInChat ? 'Voice responses enabled' : 'Voice responses disabled'}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                  <span>{enableVoiceInChat ? 'Voice On' : 'Voice Off'}</span>
+                </button>
+              </div>
+
               {/* Expanded text input area - only in Chat mode */}
               {showChatInterface && (
               <div className="fixed inset-x-0 bottom-24 z-40">
@@ -1373,7 +1405,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
                     <div className="flex justify-between items-center">
                       {/* Processing indicator */}
                       <div className="text-xs text-gold-divine/50">
-                        {isProcessing ? 'Maya is reflecting...' : ''}
+                        {isProcessing ? 'Maia is reflecting...' : ''}
                       </div>
 
                       {/* Send button */}
@@ -1491,6 +1523,30 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
+
+          {/* Profile/User */}
+          <button
+            onClick={() => window.location.href = '/profile'}
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300"
+            title="Your Profile"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </button>
+
+          {/* Lab Notes */}
+          <button
+            onClick={() => window.location.href = '/lab-notes'}
+            className="p-3 rounded-full text-[#D4B896]/40 hover:text-[#D4B896]/60 transition-all duration-300"
+            title="Lab Notes"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </button>
 

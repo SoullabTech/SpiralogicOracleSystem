@@ -52,7 +52,7 @@ function cleanTextForSpeech(text: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, speed, voice, prosody } = await request.json();
+    const { text, speed, voice, prosody, agentVoice } = await request.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json(
@@ -76,11 +76,13 @@ export async function POST(request: NextRequest) {
     // Clean the text for natural speech
     const cleanedText = cleanTextForSpeech(text);
 
-    // ALWAYS use Alloy voice, allow speed adjustments only
+    // Use Alloy for Maya (female), Onyx for Anthony (male)
+    const selectedVoice = agentVoice === 'anthony' ? 'onyx' : 'alloy';
+
     const config = {
       ...MAYA_VOICE_CONFIG,
+      voice: selectedVoice,
       ...(speed && { speed })
-      // NEVER override voice - always use Alloy
     };
 
     // Apply prosody adjustments if provided

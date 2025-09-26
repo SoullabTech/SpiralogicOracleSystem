@@ -3,7 +3,8 @@
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertTriangle, RefreshCw } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
+import { Holoflower } from '@/components/ui/Holoflower'
 
 export default function Error({
   error,
@@ -20,10 +21,10 @@ export default function Error({
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-tesla-900/80 backdrop-blur-xl border-tesla-red/20">
         <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-tesla-red/20 rounded-full flex items-center justify-center mb-4">
-            <AlertTriangle className="w-6 h-6 text-tesla-red" />
+          <div className="mx-auto mb-4">
+            <Holoflower size="md" glowIntensity="low" />
           </div>
-          <CardTitle className="text-xl font-semibold">Something went wrong</CardTitle>
+          <CardTitle className="text-xl font-light text-amber-50">Something went wrong</CardTitle>
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <p className="text-sm text-muted-foreground">

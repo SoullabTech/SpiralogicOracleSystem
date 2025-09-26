@@ -1,25 +1,16 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Crown, Sparkles } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
+import { Holoflower } from '@/components/ui/Holoflower'
 
 export default function Loading() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="text-center">
-        <motion.div
-          animate={{
-            rotate: 360,
-            scale: [1, 1.1, 1]
-          }}
-          transition={{
-            rotate: { duration: 3, repeat: Infinity, ease: "linear" },
-            scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-          }}
-          className="w-20 h-20 bg-gold-divine/20 border-2 border-gold-divine rounded-full flex items-center justify-center mx-auto mb-6"
-        >
-          <Crown className="w-8 h-8 text-gold-divine" />
-        </motion.div>
+        <div className="mx-auto mb-6">
+          <Holoflower size="lg" glowIntensity="high" />
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -27,11 +18,11 @@ export default function Loading() {
           transition={{ delay: 0.2 }}
           className="space-y-2"
         >
-          <h2 className="text-xl font-semibold text-white">
-            Loading Sacred Technology
+          <h2 className="text-xl font-light text-amber-50">
+            Loading Soullab
           </h2>
-          <p className="text-sm text-neutral-silver">
-            Initializing consciousness interface...
+          <p className="text-sm text-amber-200/60">
+            Preparing your space...
           </p>
         </motion.div>
 
