@@ -82,4 +82,24 @@ export default function MayaVoiceInterface({
       
       recognition.onend = () => {
         // Auto-restart if still listening
-        if (isListening
+        if (isListening) {
+          try {
+            recognition.start();
+          } catch (e) {
+            console.error('Recognition restart failed:', e);
+          }
+        }
+      };
+
+      try {
+        recognition.start();
+      } catch (e) {
+        console.error('Recognition start failed:', e);
+      }
+    }
+  }, [isListening]);
+
+  return <div>Maya Voice Interface Placeholder</div>;
+}
+
+export default MayaVoiceInterface;

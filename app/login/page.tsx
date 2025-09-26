@@ -99,6 +99,9 @@ export default function LoginPage() {
   };
 
   const getBiometricIcon = () => {
+    if (typeof navigator === 'undefined') {
+      return { icon: '🔐', text: 'Biometric' };
+    }
     const ua = navigator.userAgent;
     if (/iPhone|iPad|iPod/.test(ua)) {
       return { icon: '👤', text: 'Face ID' };

@@ -71,7 +71,7 @@ export class MayaExperimentCompanion {
    * Get response for missed day
    */
   async getMissedDayResponse(
-    daysM missed: number,
+    daysMissed: number,
     experimentType: string
   ): Promise<CompanionResponse> {
     if (daysMissed === 1) {

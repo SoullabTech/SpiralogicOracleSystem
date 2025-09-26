@@ -288,7 +288,7 @@ const EvolutionTimelineView: React.FC = () => {
           session={12}
           type="signature"
           title="Signature Phrase"
-          description='"Let\'s explore this together"'
+          description={'\"Let\'s explore this together\"'}
         />
         <TimelineEvent
           session={18}

@@ -227,40 +227,40 @@ export class ControlGroupManager {
   }
 }
 
+interface EvaluatorProfile {
+  id: string;
+  name: string;
+  expertise: 'clinical' | 'ux' | 'general';
+  completedEvaluations: number;
+  averageRatingTime: number;
+  calibrationScore: number;
+}
+
+interface EvaluationTask {
+  conversationId: string;
+  exchanges: Array<{
+    user: string;
+    maya: string;
+  }>;
+  systemType: 'traditional' | 'fis' | 'unknown';
+  evaluatorId?: string;
+  ratings?: {
+    authenticity: number;
+    naturalness: number;
+    presence: number;
+    therapeutic: number;
+    wouldContinue: boolean;
+    breakthrough: boolean;
+    notes: string;
+  };
+}
+
 /**
  * Evaluation Team Interface
  */
 export class AuthenticityEvaluator {
   private evaluators: Map<string, EvaluatorProfile> = new Map();
   private evaluationQueue: EvaluationTask[] = [];
-
-  interface EvaluatorProfile {
-    id: string;
-    name: string;
-    expertise: 'clinical' | 'ux' | 'general';
-    completedEvaluations: number;
-    averageRatingTime: number;
-    calibrationScore: number;  // How consistent with other evaluators
-  }
-
-  interface EvaluationTask {
-    conversationId: string;
-    exchanges: Array<{
-      user: string;
-      maya: string;
-    }>;
-    systemType: 'traditional' | 'fis' | 'unknown';  // Blind evaluation
-    evaluatorId?: string;
-    ratings?: {
-      authenticity: number;      // 1-10
-      naturalness: number;       // 1-10
-      presence: number;          // 1-10
-      therapeutic: number;       // 1-10 (lower can be better)
-      wouldContinue: boolean;
-      breakthrough: boolean;
-      notes: string;
-    };
-  }
 
   /**
    * Queue conversation for evaluation
@@ -343,14 +343,18 @@ export class AuthenticityEvaluator {
     }
   }
 
-  private groupByConversation(tasks: EvaluationTask[]): any {
+  private groupByConversation(tasks: EvaluationTask[]): Record<string, EvaluationTask[]> {
     return tasks.reduce((acc, task) => {
       if (!acc[task.conversationId]) {
         acc[task.conversationId] = [];
       }
       acc[task.conversationId].push(task);
       return acc;
-    }, {});
+    }, {} as Record<string, EvaluationTask[]>);
+  }
+
+  private getSystemType(conversationId: string): 'traditional' | 'fis' | 'unknown' {
+    return 'unknown';
   }
 }
 

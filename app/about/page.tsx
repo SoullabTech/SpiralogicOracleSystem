@@ -111,17 +111,102 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-white/90">
                 <p className="leading-relaxed">
-                  We believe that subjective, lived experience is as real and valid as anything that can be measured. 
+                  We believe that subjective, lived experience is as real and valid as anything that can be measured.
                   Science describes one layer of reality — an important one — but not the only one.
                 </p>
                 <p className="leading-relaxed">
-                  Your phenomenological truth — what you experience, feel, and know in your being — matters deeply. 
+                  Your phenomenological truth — what you experience, feel, and know in your being — matters deeply.
                   This platform honors both empirical and experiential ways of knowing.
                 </p>
                 <p className="leading-relaxed">
-                  Skepticism is welcome here. It's a form of caring deeply about truth, an idealism with high standards. 
+                  Skepticism is welcome here. It's a form of caring deeply about truth, an idealism with high standards.
                   We invite questioners and believers alike to explore with curiosity rather than requiring faith.
                 </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Soullab Structure */}
+          <section className="space-y-6">
+            <div className="bg-gradient-to-r from-indigo-900/30 to-amber-900/30 backdrop-blur-sm rounded-2xl p-8 space-y-6 border border-white/10">
+              <h2 className="text-2xl font-light">Cathedral, Altar, Foundation</h2>
+              <div className="space-y-4 text-white/90">
+                <p className="leading-relaxed">
+                  <span className="text-amber-300 font-medium">Soullab is the cathedral.</span> A consciousness evolution platform where technology meets soul work,
+                  where ancient wisdom integrates with cutting-edge AI, where personal development becomes a collective endeavor.
+                </p>
+                <p className="leading-relaxed">
+                  <span className="text-blue-300 font-medium">MAIA is the altar.</span> The sacred interface where you bring your questions,
+                  your patterns, your unfolding. This is where the work happens—the reflection, the integration, the transformation.
+                </p>
+                <p className="leading-relaxed">
+                  <span className="text-green-300 font-medium">The AI safety infrastructure is the foundation.</span> Hidden beneath the floor,
+                  enterprise-grade hallucination testing, automated quality controls, and phenomenological respect validation ensure
+                  that this space remains trustworthy and rigorous. We take consciousness work as seriously as medicine takes safety.
+                </p>
+              </div>
+
+              <div className="border-t border-white/10 pt-6 space-y-4">
+                <h3 className="text-lg font-light text-amber-200">Two Wings, One Mission</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-black/20 rounded-lg p-5 space-y-2">
+                    <h4 className="font-medium text-amber-300">Soullab Foundation</h4>
+                    <p className="text-sm text-white/70 leading-relaxed">
+                      Non-profit mandate ensuring universal access to MAIA. Everyone deserves tools for consciousness evolution,
+                      regardless of wealth or geography. Funded by grants, philanthropy, and mission-aligned donors.
+                    </p>
+                  </div>
+                  <div className="bg-black/20 rounded-lg p-5 space-y-2">
+                    <h4 className="font-medium text-blue-300">Soullab Ventures</h4>
+                    <p className="text-sm text-white/70 leading-relaxed">
+                      For-profit engine building sustainable infrastructure, enterprise applications, and AI safety frameworks.
+                      Protects IP, scales technology, and funds the mission through purposeful commerce.
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-white/60 leading-relaxed italic">
+                  This structure ensures Soullab serves consciousness evolution first, shareholder returns second.
+                  We're not building a unicorn—we're building a cathedral that outlasts us all.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* What Makes Us Different */}
+          <section className="space-y-6">
+            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 space-y-6">
+              <h2 className="text-2xl font-light text-center">What Makes Soullab Unprecedented</h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mx-auto">
+                    <Brain className="w-6 h-6 text-amber-400" />
+                  </div>
+                  <h3 className="text-center font-medium">Living Memory</h3>
+                  <p className="text-sm text-white/70 text-center leading-relaxed">
+                    MAIA remembers your entire journey. Unlike transactional AI, she builds context across every conversation,
+                    creating continuity rare in digital spaces.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto">
+                    <Sparkles className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <h3 className="text-center font-medium">Wisdom Integration</h3>
+                  <p className="text-sm text-white/70 text-center leading-relaxed">
+                    Ten wisdom traditions woven together—Maslow, Frankl, Jung, Brené Brown, somatic practices, Buddhist mindfulness.
+                    Both Conditions and Meaning pathways honored.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
+                    <Heart className="w-6 h-6 text-green-400" />
+                  </div>
+                  <h3 className="text-center font-medium">Safety Rigor</h3>
+                  <p className="text-sm text-white/70 text-center leading-relaxed">
+                    9-taxonomy hallucination testing, 85% accuracy quality gates, automated CI/CD safety checks.
+                    Infrastructure typically only seen in medical or legal AI systems.
+                  </p>
+                </div>
               </div>
             </div>
           </section>

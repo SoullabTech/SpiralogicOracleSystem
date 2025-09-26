@@ -158,10 +158,10 @@ export class SacredSilenceManager {
         };
         
       case 'complete':
-        return { 
-          shouldRespond: true, 
+        return {
+          shouldRespond: true,
           responseType: 'verbal',
-          message: 'I'm here when you're ready.'
+          message: "I'm here when you're ready."
         };
         
       default:

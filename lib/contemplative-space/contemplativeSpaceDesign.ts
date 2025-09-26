@@ -302,7 +302,7 @@ export class SilenceInterpreter {
       case 'resting':
         return null; // Honor the rest
       case 'complete':
-        return 'I'm here when you're ready.';
+        return "I'm here when you're ready.";
       default:
         return null;
     }

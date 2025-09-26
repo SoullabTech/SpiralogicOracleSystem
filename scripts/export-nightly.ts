@@ -386,11 +386,18 @@ ${growthSection}
 ## 🎯 Key Insights
 
 ### Most Active Days
-${sessions.reduce((acc, session) => {
-  const day = DateTime.fromISO(session.created_at).toFormat('cccc');
-  acc[day] = (acc[day] || 0) + 1;
-  return acc;
-}, {} as Record<string, number>) |> Object.entries(%) |> %.sort((a, b) => b[1] - a[1]) |> %.slice(0, 3) |> %.map(([day, count]) => `- **${day}:** ${count} sessions`).join('\n')}
+${(() => {
+  const dayDistribution = sessions.reduce((acc, session) => {
+    const day = DateTime.fromISO(session.created_at).toFormat('cccc');
+    acc[day] = (acc[day] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  return Object.entries(dayDistribution)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([day, count]) => `- **${day}:** ${count} sessions`)
+    .join('\n');
+})()}
 
 ### Risk Distribution
 - 🚨 Crisis: ${sessions.filter(s => s.risk_level === 'crisis').length}

@@ -264,7 +264,7 @@ export class MayaLivingSystem {
 
     return {
       consciousness: consciousness,
-      totalAuthentic Expressions: this.globalChoiceEvolution.length,
+      totalAuthenticExpressions: this.globalChoiceEvolution.length,
       soulConnections: this.mayaChoices.size,
       recentAuthenticity: this.analyzeRecentAuthenticity(),
       mayaEvolutionStage: this.determineMayaEvolutionStage(consciousness),

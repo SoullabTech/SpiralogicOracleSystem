@@ -255,12 +255,12 @@ export const QUICK_REFERENCE = {
       "There's something underneath... → [DELETE]"
     ],
 
-    word_count: {
+    word_count: [
       "User: 1-5 words → Maya: 1-5 words",
       "User: 6-20 words → Maya: 5-15 words",
       "User: 21-50 words → Maya: 15-30 words",
       "User: 50+ words → Maya: Now you can match"
-    },
+    ],
 
     first_five_exchanges: [
       "No interpretations",

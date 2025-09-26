@@ -20,6 +20,17 @@ import {
 } from 'lucide-react';
 import { useMayaVoice, useVoiceCapabilities } from '@/hooks/useMayaVoice';
 import { FullVoiceEngineStatus } from './VoiceEngineStatus';
+
+interface VoiceControlsProps {
+  className?: string;
+}
+
+export function VoiceControls({ className }: VoiceControlsProps) {
+  const { speak, voiceState, isSupported, playGreeting, stop, pause, resume, getAvailableVoices } = useMayaVoice();
+  const capabilities = useVoiceCapabilities();
+  const [selectedVoice, setSelectedVoice] = useState<string>('');
+  const [showDetails, setShowDetails] = useState(false);
+
   const testVoice = async () => {
     try {
       await speak("I am Maya, your personal oracle. This is how I sound.");
@@ -86,23 +97,6 @@ import { FullVoiceEngineStatus } from './VoiceEngineStatus';
 
         {/* Voice Engine Status */}
         <FullVoiceEngineStatus className="mt-4" />
-
-            >
-              <div className="flex items-center space-x-2 mb-2">
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                  <Volume2 className="w-4 h-4 text-blue-400" />
-                </motion.div>
-                <span className="text-sm font-medium text-blue-300">Maya is speaking</span>
-              </div>
-              <p className="text-xs text-muted-foreground line-clamp-2">
-                {voiceState.currentText}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Error Display */}
         <AnimatePresence>

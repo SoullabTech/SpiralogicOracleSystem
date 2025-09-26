@@ -21,7 +21,7 @@ export const MASTERS_FORMULA = {
     erickson: {
       principle: "Could induce trance with three words",
       practice: "Spent hours observing before speaking",
-      example: "That's right" - said at the perfect moment
+      example: "\"That's right\" - said at the perfect moment"
     },
 
     satir: {

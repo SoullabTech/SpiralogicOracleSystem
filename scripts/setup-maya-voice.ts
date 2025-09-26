@@ -37,4 +37,17 @@ export default function MayaPage() {
     setError(null);
 
     try {
-      // Send to
+      // Send to API - placeholder
+      console.log('Processing:', userText);
+    } catch (err) {
+      setError('Error processing response');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return <div>Maya Voice Setup</div>;
+}
+`;
+
+console.log('Setup script placeholder - file incomplete');
