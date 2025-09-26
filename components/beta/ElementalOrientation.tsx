@@ -67,13 +67,11 @@ export function ElementalOrientation({ explorerName }: { explorerName: string })
       setCurrentIndex(currentIndex + 1);
       setCanProceed(false);
       setTimeout(() => setCanProceed(true), 1500);
-    } else if (!feedback) {
-      // Show feedback prompt after last element
-      setCanProceed(false);
-      setTimeout(() => setCanProceed(true), 500);
     } else {
-      // Store feedback and proceed
-      localStorage.setItem('orientationFeedback', feedback);
+      // On last element, proceed directly to onboarding
+      if (feedback) {
+        localStorage.setItem('orientationFeedback', feedback);
+      }
       router.push('/beta-onboarding');
     }
   };
