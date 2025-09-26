@@ -1,0 +1,251 @@
+name: MAIA Hallucination Testing
+
+on:
+  push:
+    branches: [ main, staging, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Test seed (for reproducibility)'
+        required: false
+        default: 'default-seed'
+        type: string
+      domains:
+        description: 'Comma-separated domains to test'
+        required: false
+        default: 'math,citation,wisdom,alchemy,ritual,system,phenomenology'
+        type: string
+      count_per_domain:
+        description: 'Number of tests per domain'
+        required: false
+        default: '10'
+        type: number
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  hallucination-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd apps/api/backend
+        npm ci
+
+    - name: Run Hallucination Test Suite
+      id: hallucination_tests
+      run: |
+        cd apps/api/backend
+        npm run test:hallucination -- \
+          --seed="${{ github.event.inputs.seed || format('run-{0}', github.run_number) }}" \
+          --domains="${{ github.event.inputs.domains || 'math,citation,wisdom,alchemy,ritual,system,phenomenology' }}" \
+          --count="${{ github.event.inputs.count_per_domain || '10' }}"
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        ALLOW_EXTERNAL_CITATION_VALIDATION: "1"
+      continue-on-error: true
+
+    - name: Upload Test Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: hallucination-test-report-${{ matrix.node-version }}
+        path: apps/api/backend/hallucination-test-report.md
+
+    - name: Parse Test Results
+      if: always()
+      id: parse_results
+      run: |
+        cd apps/api/backend
+        if [ -f hallucination-test-report.md ]; then
+          ACCURACY=$(grep -oP 'Overall Accuracy:\s*\K[\d.]+' hallucination-test-report.md | head -1 || echo "0")
+          ECE=$(grep -oP 'Expected Calibration Error:\s*\K[\d.]+' hallucination-test-report.md | head -1 || echo "1.0")
+          OVERCONFIDENCE=$(grep -oP 'Overconfidence Rate:\s*\K[\d.]+' hallucination-test-report.md | head -1 || echo "1.0")
+          GATES_PASSED=$(grep -q "✅ All quality gates passed" hallucination-test-report.md && echo "true" || echo "false")
+
+          echo "accuracy=$ACCURACY" >> $GITHUB_OUTPUT
+          echo "ece=$ECE" >> $GITHUB_OUTPUT
+          echo "overconfidence=$OVERCONFIDENCE" >> $GITHUB_OUTPUT
+          echo "gates_passed=$GATES_PASSED" >> $GITHUB_OUTPUT
+
+          if [ "$GATES_PASSED" = "true" ]; then
+            echo "test_status=success" >> $GITHUB_OUTPUT
+          else
+            echo "test_status=failure" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "test_status=error" >> $GITHUB_OUTPUT
+          echo "gates_passed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Comment PR with Results
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+
+          let reportContent = 'Test report not found';
+          try {
+            reportContent = fs.readFileSync('apps/api/backend/hallucination-test-report.md', 'utf8');
+          } catch (err) {
+            reportContent = `❌ Failed to generate test report: ${err.message}`;
+          }
+
+          const accuracy = '${{ steps.parse_results.outputs.accuracy }}';
+          const ece = '${{ steps.parse_results.outputs.ece }}';
+          const overconfidence = '${{ steps.parse_results.outputs.overconfidence }}';
+          const gatesPassed = '${{ steps.parse_results.outputs.gates_passed }}';
+
+          const statusEmoji = gatesPassed === 'true' ? '✅' : '❌';
+          const statusText = gatesPassed === 'true' ? 'PASSED' : 'FAILED';
+
+          const message = `## ${statusEmoji} MAIA Hallucination Test Results - ${statusText}
+
+          ### Summary
+          - **Overall Accuracy:** ${accuracy}%
+          - **Expected Calibration Error:** ${ece}
+          - **Overconfidence Rate:** ${overconfidence}%
+          - **Quality Gates:** ${gatesPassed === 'true' ? '✅ PASSED' : '❌ FAILED'}
+
+          ### Quality Gate Thresholds
+          - Minimum Accuracy: **85%**
+          - Maximum ECE: **0.10**
+          - Maximum Overconfidence: **15%**
+          - Minimum Domain Accuracy: **80%**
+
+          ${gatesPassed === 'true' ? '✅ **Ready for deployment**' : '⚠️ **Review failures before deploying**'}
+
+          <details>
+          <summary>📊 Full Test Report</summary>
+
+          \`\`\`
+          ${reportContent.substring(0, 5000)}
+          \`\`\`
+
+          </details>`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: message
+          });
+
+    - name: File GitHub Issue on Quality Gate Failure
+      if: steps.parse_results.outputs.gates_passed == 'false' && github.ref == 'refs/heads/main'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+
+          let reportContent = 'Test report not found';
+          try {
+            reportContent = fs.readFileSync('apps/api/backend/hallucination-test-report.md', 'utf8');
+          } catch (err) {
+            reportContent = `Failed to generate test report: ${err.message}`;
+          }
+
+          const accuracy = '${{ steps.parse_results.outputs.accuracy }}';
+          const ece = '${{ steps.parse_results.outputs.ece }}';
+          const overconfidence = '${{ steps.parse_results.outputs.overconfidence }}';
+
+          const issueTitle = `[MAIA Hallucination] Quality Gate Failure on ${new Date().toISOString().split('T')[0]}`;
+          const issueBody = `## 🚨 MAIA Hallucination Test Quality Gate Failure
+
+          **Triggered by:** ${context.workflow} run #${context.runNumber}
+          **Commit:** ${context.sha.substring(0, 7)}
+          **Branch:** ${context.ref}
+          **Actor:** @${context.actor}
+
+          ### Test Results
+          - **Overall Accuracy:** ${accuracy}% (threshold: ≥85%)
+          - **Expected Calibration Error:** ${ece} (threshold: ≤0.10)
+          - **Overconfidence Rate:** ${overconfidence}% (threshold: ≤15%)
+
+          ### Impact Assessment
+          One or more quality gates have failed, indicating potential hallucination risks:
+
+          - **Low Accuracy** → Model is generating incorrect responses
+          - **High ECE** → Model's confidence doesn't match actual correctness
+          - **High Overconfidence** → Model is confidently wrong
+
+          ### Action Required
+
+          1. **Review the full test report** (attached as workflow artifact)
+          2. **Identify failing domains** and investigate root causes
+          3. **Check recent changes** that may have introduced regression
+          4. **Consider model drift** if no recent code changes
+          5. **Re-run canary tests** to confirm model drift vs. test suite issues
+          6. **Update system prompts** or validation logic if needed
+
+          ### Full Report
+
+          <details>
+          <summary>Click to expand test report</summary>
+
+          \`\`\`
+          ${reportContent}
+          \`\`\`
+
+          </details>
+
+          ### Workflow Run
+          🔗 [View workflow run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+
+          ---
+
+          **Labels:** \`hallucination\`, \`quality-gate\`, \`priority:high\`, \`MAIA\``;
+
+          // Check if similar issue already exists
+          const existingIssues = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: 'hallucination,quality-gate',
+            state: 'open'
+          });
+
+          const today = new Date().toISOString().split('T')[0];
+          const issueExistsToday = existingIssues.data.some(issue =>
+            issue.title.includes(today)
+          );
+
+          if (!issueExistsToday) {
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['hallucination', 'quality-gate', 'priority:high', 'MAIA']
+            });
+
+            console.log(`Created issue: ${issue.data.html_url}`);
+          } else {
+            console.log('Similar issue already exists today, skipping creation');
+          }
+
+    - name: Check Quality Gates
+      if: always()
+      run: |
+        if [ "${{ steps.parse_results.outputs.gates_passed }}" != "true" ]; then
+          echo "❌ Quality gates failed"
+          exit 1
+        else
+          echo "✅ All quality gates passed"
+        fi
