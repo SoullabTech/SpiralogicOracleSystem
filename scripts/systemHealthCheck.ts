@@ -4,7 +4,7 @@
  * Tests all conversational intelligence components
  */
 
-import { MayaOrchestrator } from '../lib/oracle/MayaOrchestrator';
+import { MayaOrchestrator } from '../lib/backend/MayaOrchestrator';
 import { conversationChecklist } from '../lib/oracle/ConversationChecklist';
 import { conversationAnalyzer } from '../lib/oracle/ConversationAnalyzer';
 import { activeListening } from '../lib/oracle/ActiveListeningCore';
