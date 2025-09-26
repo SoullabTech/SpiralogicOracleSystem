@@ -37,6 +37,7 @@ export default function BetaSignup() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.2 }}
           className="mb-12 flex justify-center"
+          style={{ overflow: 'visible' }}
         >
           <Holoflower size="xl" glowIntensity="high" />
         </motion.div>

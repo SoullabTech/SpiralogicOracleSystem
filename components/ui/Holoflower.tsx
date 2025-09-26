@@ -35,7 +35,7 @@ export function Holoflower({
   const svgPath = variant === 'spectrum' ? '/elementalHoloflower.svg' : '/holoflower.svg';
 
   return (
-    <div className={`${sizes.container} relative flex items-center justify-center ${className}`} style={{ background: 'transparent', boxShadow: 'none', border: 'none', outline: 'none' }}>
+    <div className={`${sizes.container} relative flex items-center justify-center ${className}`} style={{ background: 'transparent', boxShadow: 'none', border: 'none', outline: 'none', overflow: 'visible', padding: '40px' }}>
       {/* Radiant glow */}
       {animate ? (
         <motion.div

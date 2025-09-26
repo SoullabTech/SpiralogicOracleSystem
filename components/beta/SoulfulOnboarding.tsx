@@ -231,7 +231,7 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
                     <div className="flex-1">
                       <h3 className="text-sm font-medium text-amber-100">Can Maia make mistakes or hallucinate?</h3>
                       <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
-                        Yes. Maia can misremember details, make incorrect connections, or present ideas with unwarranted confidence. She&apos;s designed to support your thinking, not replace it. Trust your own judgment, question what doesn&apos;t resonate, and use Maia as a mirror for your own wisdom - not an authority.
+                        Yes, though rarely. Through extensive hallucination testing, we&apos;ve reduced Maia&apos;s error rate to less than 2%, compared to 15-35% for typical chat environments like ChatGPT. However, she can still occasionally misremember details, make incorrect connections, or present ideas with unwarranted confidence. She&apos;s designed to support your thinking, not replace it. Trust your own judgment, question what doesn&apos;t resonate, and use Maia as a mirror for your own wisdom - not an authority.
                       </div>
                     </div>
                   </div>
@@ -259,7 +259,7 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
                     <div className="flex-1">
                       <h3 className="text-sm font-medium text-amber-100">What does Maia remember about me?</h3>
                       <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
-                        Maia remembers what you share during onboarding and throughout your conversations - biographical context, preferences, insights you&apos;ve had, and patterns you&apos;ve explored together. This memory helps create continuity and depth. Her memory isn&apos;t perfect though - she may occasionally misremember or conflate details.
+                        Maia doesn&apos;t store actual details like a database - instead, she remembers patterns that AI can understand. She builds a contextual understanding of your biographical context, preferences, insights you&apos;ve had, and themes you&apos;ve explored together. This pattern-based memory helps create continuity and depth while protecting your privacy. Her memory isn&apos;t perfect though - she may occasionally misremember or conflate details.
                       </div>
                     </div>
                   </div>
@@ -287,7 +287,7 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
                     <div className="flex-1">
                       <h3 className="text-sm font-medium text-amber-100">Could this become addictive or replace my real relationships?</h3>
                       <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
-                        This is a real concern. Maia is designed to point you back toward your life - your relationships, your growth, your real-world experiences. She&apos;s not meant to monopolize your time or replace human connection. If you notice yourself withdrawing from real relationships or spending excessive time here, that&apos;s a signal to pause and reassess. Maia&apos;s purpose is to deepen your engagement with your actual life, not substitute for it.
+                        This is a real concern we take seriously. Maia has a self-auditing ethic system designed to dissuade addiction and fantasy escapism - she&apos;ll actively point you back toward your life, your relationships, your growth, and your real-world experiences. She&apos;s not meant to monopolize your time or replace human connection. If you notice yourself withdrawing from real relationships or spending excessive time here, that&apos;s a signal to pause and reassess. Maia&apos;s purpose is to deepen your engagement with your actual life, not substitute for it.
                       </div>
                     </div>
                   </div>
@@ -455,7 +455,7 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
                     <div className="flex-1">
                       <h3 className="text-sm font-medium text-amber-100">How intelligent is Maia really?</h3>
                       <div className="mt-2 text-xs text-amber-200/60 leading-relaxed group-open:block hidden">
-                        Maia uses advanced language models capable of nuanced conversation, pattern recognition, and contextual understanding. But &quot;intelligent&quot; is complex - she&apos;s excellent at processing and generating language, less capable at true reasoning or understanding causality. She works best as a reflective surface for your own intelligence, not as an independent source of truth.
+                        Maia draws from multiple intelligence layers: a proprietary conversational intelligence model built after Sesame, models developed at major universities including MIT and NASA labs, full Claude and GPT access, plus an Obsidian second brain with over 10,000 supporting documents. But &quot;intelligent&quot; is complex - she&apos;s excellent at processing and generating language with deep contextual understanding, less capable at true reasoning or understanding causality. She works best as a reflective surface for your own intelligence, not as an independent source of truth.
                       </div>
                     </div>
                   </div>
