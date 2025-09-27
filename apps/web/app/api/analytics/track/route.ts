@@ -1,10 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const MAX_EVENTS = 100;
+const events: Array<{ timestamp: string; event: string; data: any }> = [];
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const timestamp = new Date().toISOString();
 
-    console.log('[PWA Analytics]', body);
+    const eventRecord = {
+      timestamp,
+      event: body.event || 'unknown',
+      data: body,
+    };
+
+    events.unshift(eventRecord);
+    if (events.length > MAX_EVENTS) {
+      events.pop();
+    }
+
+    console.log('[PWA Analytics]', eventRecord);
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
@@ -17,8 +32,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({
+    count: events.length,
+    events: events.slice(0, 50),
+  });
 }

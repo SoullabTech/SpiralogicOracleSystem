@@ -23,6 +23,7 @@ import { useMaiaVoice } from '@/hooks/useMaiaVoice';
 import { cleanMessage, cleanMessageForVoice, formatMessageForDisplay } from '@/lib/cleanMessage';
 import { getAgentConfig, AgentConfig } from '@/lib/agent-config';
 import { toast } from 'react-hot-toast';
+import { trackEvent } from '@/lib/analytics/track';
 
 interface OracleConversationProps {
   userId?: string;
@@ -134,6 +135,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
   // Client-side only check
   useEffect(() => {
     setIsMounted(true);
+    trackEvent.newSession(userId || 'anonymous', sessionId);
   }, []);
 
   // Auto-scroll to latest message
@@ -431,6 +433,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
       const responseData = await response.json();
       const apiTime = Date.now() - startTime;
       console.log(`⏱️ Text API response received in ${apiTime}ms`);
+      trackEvent.apiCall('/api/oracle/personal', apiTime, true);
 
       const oracleResponse = responseData.data || responseData;
       let responseText = oracleResponse.message || oracleResponse.content || oracleResponse.text || oracleResponse.response || 'Tell me your truth.';
@@ -475,6 +478,8 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
       if (shouldSpeak && maiaSpeak) {
         console.log('🔊 Maia speaking response in', showChatInterface ? 'Chat' : 'Voice', 'mode');
+        const ttsStartTime = Date.now();
+        trackEvent.ttsSpoken(userId || 'anonymous', responseText.length, 0);
         // Set speaking state for visual feedback
         setIsResponding(true);
         setIsAudioPlaying(true);
@@ -539,6 +544,7 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
 
     } catch (error) {
       console.error('Text chat API error:', error);
+      trackEvent.error(userId || 'anonymous', 'api_error', String(error));
 
       const errorMessage: ConversationMessage = {
         id: `msg-${Date.now()}-error`,
@@ -591,12 +597,18 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     });
     console.log('📞 Calling handleTextMessage...');
 
+    const voiceStartTime = Date.now();
+    trackEvent.voiceResult(userId || 'anonymous', t, 0);
+
     try {
       // Route all voice through text message handler for reliability
       await handleTextMessage(t);
+      const duration = Date.now() - voiceStartTime;
+      trackEvent.voiceResult(userId || 'anonymous', t, duration);
       console.log('✅ handleTextMessage completed');
     } catch (error) {
       console.error('❌ Error in handleTextMessage:', error);
+      trackEvent.error(userId || 'anonymous', 'voice_processing_error', String(error));
       // Reset states on error
       setIsProcessing(false);
       setIsResponding(false);
