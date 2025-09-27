@@ -62,19 +62,30 @@ export function SoulfulOnboarding({ initialName }: { initialName: string }) {
   };
 
   const completeOnboarding = async () => {
-    const explorerId = sessionStorage.getItem('explorerId') || `explorer_${Date.now()}`;
+    const explorerId = sessionStorage.getItem('explorerId') || sessionStorage.getItem('betaUserId') || `explorer_${Date.now()}`;
+    const explorerName = sessionStorage.getItem('explorerName') || localStorage.getItem('explorerName');
 
     localStorage.setItem('onboardingData', JSON.stringify(data));
     localStorage.setItem('betaOnboardingComplete', 'true');
 
     try {
-      await fetch('/api/beta/onboarding', {
+      const response = await fetch('/api/beta/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, explorerId })
+        body: JSON.stringify({ ...data, explorerId, explorerName })
       });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.userId) {
+          sessionStorage.setItem('betaUserId', result.userId);
+          sessionStorage.setItem('explorerId', result.userId);
+          localStorage.setItem('betaUserId', result.userId);
+          console.log('✅ User ID saved:', result.userId);
+        }
+      }
     } catch (error) {
-      console.log('Saved locally');
+      console.log('Saved locally only');
     }
 
     router.push('/maya');

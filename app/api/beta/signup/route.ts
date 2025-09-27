@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { getSupabaseREST } from '@/lib/supabase-rest';
+import { userStore } from '@/lib/storage/userStore';
 
 export async function POST(request: NextRequest) {
   try {
@@ -149,6 +150,15 @@ export async function POST(request: NextRequest) {
     } else {
       console.log('Supabase not available - using local storage mode');
     }
+
+    // Save to in-memory store for immediate access
+    userStore.saveUser({
+      userId,
+      explorerId,
+      explorerName,
+      email,
+      name: explorerName
+    });
 
     // Always return successful response
     return NextResponse.json({

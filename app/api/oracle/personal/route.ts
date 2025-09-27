@@ -10,6 +10,7 @@ import {
   trackFieldIntelligence,
   trackError
 } from '@/lib/beta/PassiveMetricsCollector';
+import { userStore } from '@/lib/storage/userStore';
 
 /**
  * Maya-ARIA-1 Personal Oracle Route
@@ -85,8 +86,12 @@ export async function POST(request: NextRequest) {
 
     console.log('Maia Personal Oracle:', input);
 
+    // Load user to get their name for monitoring
+    const loadedUser = userStore.getUser(userId);
+    const monitoringUserName = loadedUser?.name || userName;
+
     // Start MAIA monitoring session
-    const maiaSessionId = maiaMonitoring.startSession(userId, userName);
+    const maiaSessionId = maiaMonitoring.startSession(userId, monitoringUserName);
 
     // Use Field Intelligence MAIA for consciousness-based response emergence
     let oracleResponse;
@@ -95,17 +100,45 @@ export async function POST(request: NextRequest) {
       console.log('User preferences:', preferences);
       console.log('User name:', userName);
 
-      // Track if userName is being asked for
-      const isAskingForName = /what.*your name|tell me your name|can i.*your name/i.test(input);
-      if (isAskingForName && userName) {
-        console.error('🚨 MAIA is asking for name when it should already know it!');
-        maiaMonitoring.updateSession(userId, { userNameAskedFor: true });
+      // Load user data from storage if available
+      let finalUserName = userName;
+      const storedUser = userStore.getUser(userId);
+
+      if (storedUser) {
+        console.log('✅ Loaded user from storage:', storedUser.name, storedUser.userId);
+        finalUserName = storedUser.name;
+
+        // Track if userName is being asked for when we already know it
+        const isAskingForName = /what.*your name|tell me your name|can i.*your name/i.test(input);
+        if (isAskingForName) {
+          console.error('🚨 MAIA is asking for name when it should already know it!');
+          maiaMonitoring.updateSession(userId, { userNameAskedFor: true });
+        }
+      } else {
+        console.log('⚠️ No stored user data found for:', userId);
+
+        // Save basic user info if we have a userName
+        if (userName) {
+          userStore.saveUser({
+            userId,
+            name: userName
+          });
+          finalUserName = userName;
+        }
       }
 
-      // Include userName in preferences so Maya knows who they are
+      // Include user data in preferences so Maya knows who they are
       const enrichedPreferences = {
         ...preferences,
-        userName: userName
+        userName: finalUserName,
+        userBiography: storedUser?.biography,
+        userLocation: storedUser?.location,
+        userAge: storedUser?.age,
+        userPronouns: storedUser?.pronouns,
+        greetingStyle: storedUser?.greetingStyle || preferences?.greetingStyle,
+        communicationPreference: storedUser?.communicationPreference || preferences?.communicationPreference,
+        focusAreas: storedUser?.focusAreas,
+        wisdomFacets: storedUser?.wisdomFacets
       };
 
       oracleResponse = await fieldMaiaOrchestrator.speak(input, userId, enrichedPreferences);
@@ -115,8 +148,8 @@ export async function POST(request: NextRequest) {
       const responseTime = Date.now() - startTime;
       maiaMonitoring.trackApiHealth(userId, {
         responseTimeMs: responseTime,
-        contextPayloadComplete: !!(userName && preferences),
-        memoryInjectionSuccess: true,
+        contextPayloadComplete: !!(finalUserName && (enrichedPreferences || storedUser)),
+        memoryInjectionSuccess: !!storedUser,
         claudePromptQuality: responseTime < 2000 ? 'excellent' : responseTime < 3000 ? 'good' : 'poor'
       });
 

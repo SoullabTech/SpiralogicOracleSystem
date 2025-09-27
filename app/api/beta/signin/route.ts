@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { getSupabaseREST } from '@/lib/supabase-rest';
+import { userStore } from '@/lib/storage/userStore';
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,6 +9,22 @@ export async function POST(request: NextRequest) {
     const { email, explorerName } = body;
 
     console.log('Beta signin for:', explorerName);
+
+    const existingUser = userStore.getUserByExplorerName(explorerName);
+    if (existingUser) {
+      console.log('✅ Found user in memory:', existingUser.name);
+      return NextResponse.json({
+        success: true,
+        userId: existingUser.userId,
+        explorerId: existingUser.explorerId || existingUser.userId,
+        explorerName: existingUser.explorerName || explorerName,
+        mayaInstance: uuidv4(),
+        sessionId: uuidv4(),
+        sanctuary: 'established',
+        signupDate: existingUser.createdAt,
+        user: existingUser
+      });
+    }
 
     // Try to use Supabase REST API if available
     const supabase = await getSupabaseREST();
