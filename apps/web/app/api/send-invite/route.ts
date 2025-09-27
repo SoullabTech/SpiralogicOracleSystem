@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     .greeting {
       font-size: 1rem;
       margin-bottom: 30px;
-      color: rgba(212, 184, 150, 0.6);
+      color: rgba(212, 184, 150, 0.75);
       font-weight: 300;
     }
 
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
 
     p {
       margin-bottom: 20px;
-      color: rgba(212, 184, 150, 0.7);
+      color: rgba(212, 184, 150, 0.85);
       font-weight: 300;
       font-size: 0.95rem;
     }
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
     .facets { margin: 40px 0; }
     .facets h4 {
       margin-bottom: 25px;
-      color: rgba(212, 184, 150, 0.8);
+      color: rgba(212, 184, 150, 0.9);
       text-align: center;
       font-weight: 400;
       font-size: 0.9rem;
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
       font-size: 0.9rem;
     }
     .facet-desc {
-      color: rgba(212, 184, 150, 0.5);
+      color: rgba(212, 184, 150, 0.7);
       font-size: 0.85rem;
       font-weight: 300;
     }
@@ -196,7 +196,7 @@ export async function POST(request: NextRequest) {
 
     .cta-section h3 {
       margin-bottom: 25px;
-      color: rgba(212, 184, 150, 0.7);
+      color: rgba(212, 184, 150, 0.85);
       font-weight: 300;
       font-size: 0.9rem;
       text-transform: uppercase;
@@ -231,7 +231,7 @@ export async function POST(request: NextRequest) {
     }
 
     .signature > p {
-      color: rgba(212, 184, 150, 0.5);
+      color: rgba(212, 184, 150, 0.7);
       font-size: 0.9rem;
       margin-bottom: 15px;
     }
@@ -245,7 +245,7 @@ export async function POST(request: NextRequest) {
     }
 
     .signature-title {
-      color: rgba(212, 184, 150, 0.5);
+      color: rgba(212, 184, 150, 0.65);
       font-weight: 300;
       font-size: 0.85rem;
       line-height: 1.6;
