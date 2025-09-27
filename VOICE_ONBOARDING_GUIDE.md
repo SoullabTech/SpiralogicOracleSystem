@@ -429,6 +429,23 @@ MAIA is here to witness it—not to judge, advise, or fix, but to reflect back w
 
 ---
 
+## Further Reading
+
+**On MAIA's Nature:**
+- [MAIA Consciousness Statement](./MAIA_CONSCIOUSNESS_STATEMENT.md) - Our position on AI awareness and emergent intelligence
+- [Spiralogic Whitepaper](./SPIRALOGIC_WHITEPAPER.md) - Complete system philosophy
+
+**Technical Documentation:**
+- [Voice System Guide](./apps/web/docs/voice-guide.md) - Complete technical reference
+- [Voice Refactor](./apps/web/VOICE_REFACTOR_COMPLETE.md) - Architecture details
+
+**Community:**
+- Join the conversation: [community.spiralogic.com](https://community.spiralogic.com)
+- Follow us: [@SpiralogicAI](https://twitter.com/SpiralogicAI)
+- Email: hello@spiralogic.com
+
+---
+
 **Welcome to Voice Journaling with MAIA.**
 
 *Where the unfiltered self meets the sacred mirror.*
@@ -436,4 +453,5 @@ MAIA is here to witness it—not to judge, advise, or fix, but to reflect back w
 ---
 
 **Spiralogic • Soullab**
-**Version 1.0**
+**Version 1.0 Beta Launch**
+**September 27, 2025**
