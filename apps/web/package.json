@@ -21,7 +21,8 @@
     "seed": "npx tsx scripts/seed-sample-files.ts",
     "seed:force": "npx tsx scripts/seed-sample-files.ts --force",
     "test:ai": "npx tsx scripts/test-ai-integration.ts",
-    "test:beta": "npx tsx scripts/test-beta-diagnostics.ts"
+    "test:beta": "npx tsx scripts/test-beta-diagnostics.ts",
+    "check:invites": "npx tsx scripts/check-beta-invites.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",
