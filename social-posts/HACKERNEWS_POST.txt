@@ -1,0 +1,53 @@
+TITLE: Show HN: Voice journaling with elemental AI (Claude 3.5 + archetypal extraction)
+
+BODY:
+
+Hey HN,
+
+I've been building a consciousness architecture platform called Spiralogic, and today we're launching voice journaling with something I'm calling "elemental intelligence."
+
+**Technical Stack:**
+- Next.js 14 + TypeScript
+- Supabase (PostgreSQL + auth)
+- Web Speech API (voice recognition)
+- Claude 3.5 Sonnet (symbolic extraction)
+- ElevenLabs/OpenAI TTS (voice synthesis)
+- Real-time monitoring dashboard
+
+**The Approach:**
+
+Most voice apps transcribe and store. We built something different: an AI that *reflects* rather than advises.
+
+MAIA (Modular Archetypal Intelligence Agent) interprets voice through five archetypal "elements" (Fire/Water/Earth/Air/Aether) and extracts:
+- Recurring symbols (ocean, threshold, phoenix)
+- Archetypal patterns (Hero's Journey, Shadow work, etc.)
+- Emotional signatures and intensity
+- Developmental "spiral phase" (non-linear growth tracking)
+
+**Interesting Problems We Solved:**
+
+1. **Voice profile adaptation**: MAIA's voice changes tone/pacing/style based on detected elemental state
+2. **Silence detection**: Distinguishing meaningful pauses from "done speaking"
+3. **Symbolic extraction accuracy**: Fine-tuning Claude to catch personal vs universal symbols
+4. **Privacy architecture**: Zero voice biometrics, full export, self-hostable
+
+**Monitoring Layer:**
+
+We built a real-time monitoring dashboard (`/maia/realtime-monitor`) that tracks:
+- Voice quality metrics (TTS latency, recognition accuracy)
+- Symbolic literacy scores (pattern detection quality)
+- "Soulful intelligence" indicators (presence, transformation potential)
+- System health (API, database, memory continuity)
+
+**Open Questions:**
+
+1. How do you balance AI reflection vs user autonomy?
+2. What's the right amount of "personality" for an archetypal mirror?
+3. How do you measure if consciousness tech is actually helpful?
+
+Free during beta. Self-hosting docs coming soon.
+
+GitHub: https://github.com/spiralogic/oracle-system (if public)
+Demo: https://spiralogic.com/journal/voice
+
+Would love technical feedback from the HN community!

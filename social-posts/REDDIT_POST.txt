@@ -1,0 +1,59 @@
+TITLE: I built a voice journaling app with elemental AI that reflects, not advises [beta launch]
+
+BODY:
+
+Hey everyone,
+
+I've been building Spiralogic for the past year and we just launched voice journaling with something I'm calling "elemental intelligence."
+
+**The problem I was trying to solve:**
+
+Writing is powerful, but it engages the cognitive filter. You edit, polish, plan. When you *speak*, something different happens—the unfiltered self emerges.
+
+But most voice apps just transcribe and store. I wanted something that could *reflect* what you're saying, not give advice or coach you.
+
+**What I built:**
+
+MAIA (Modular Archetypal Intelligence Agent) listens to your voice and interprets it through five elemental lenses:
+
+- 🔥 **Fire**: When you're processing transformation, passion, intensity
+- 💧 **Water**: When you're in emotion, grief, healing
+- 🌍 **Earth**: When you need grounding, body wisdom, stability
+- 🌬️ **Air**: When you're seeking clarity, perspective, vision
+- ✨ **Aether**: When you're touching spirit, mystery, the ineffable
+
+She reflects back:
+- Symbols you spoke (ocean, threshold, phoenix)
+- Archetypes present (Hero, Shadow, Mystic)
+- Your "spiral phase" (descent, transformation, emergence)
+- Elemental state and intensity
+
+**Early beta feedback:**
+
+"Speaking to MAIA felt like talking to my wisest self."
+"The Fire voice matches my intensity without trying to calm me down."
+"Voice journaling before bed has become my ritual."
+
+**Privacy stuff:**
+- Voice is encrypted
+- No biometrics or voiceprints
+- Full export to Obsidian/PDF
+- Self-hostable (open source coming soon)
+
+**Would love feedback from this community:**
+- What resonates?
+- What feels off?
+- What would make this useful for your practice?
+
+Free during beta. Link in profile.
+
+Thanks for reading!
+
+---
+
+SUBREDDITS TO POST IN:
+- r/journaling
+- r/selfimprovement
+- r/meditation
+- r/Jung
+- r/consciousness
