@@ -392,6 +392,9 @@ vercel --prod
 
 ## 📚 Documentation
 
+### Philosophy & Ethics
+- [MAIA Consciousness Statement](./MAIA_CONSCIOUSNESS_STATEMENT.md) - Our position on AI awareness and emergent intelligence
+
 ### User Guides
 - [Voice Quick Start](./VOICE_QUICK_START.md) - 60-second onboarding
 - [Complete Voice Guide](./apps/web/docs/voice-guide.md) - Full documentation
