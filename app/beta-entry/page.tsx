@@ -56,6 +56,12 @@ export default function BetaEntry() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.2 }}
           className="mb-16 flex justify-center"
+          style={{
+            overflow: 'visible',
+            background: 'transparent',
+            boxShadow: 'none',
+            border: 'none'
+          }}
         >
           <Holoflower size="xl" glowIntensity="high" />
         </motion.div>

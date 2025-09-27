@@ -406,13 +406,13 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
             type: f.type,
             size: f.size
           })) : undefined,
-          context: {
+          preferences: {
             previousInteractions: messages.length,
-            inputType: 'text', // Mark as text input
+            inputType: 'text',
             hasAttachments: attachments && attachments.length > 0,
             userPreferences: {
               voice: {
-                enabled: false, // Disable voice for text responses
+                enabled: false,
                 autoSpeak: false,
                 agentConfig
               }

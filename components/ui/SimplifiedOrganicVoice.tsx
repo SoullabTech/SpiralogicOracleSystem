@@ -87,6 +87,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const accumulatedTranscriptRef = useRef<string>('');
   const lastSentMessageRef = useRef<string>('');
+  const lastSentTimeRef = useRef<number>(0);
 
   // No wake words needed - always listening when active
   const WAKE_WORDS: string[] = [];
@@ -300,8 +301,12 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
             // Only send if expression seems complete or we've been silent long enough
             if (finalMessage && finalMessage.length > 0 && (seemsComplete || !isActivelyExpressing)) {
-              // Prevent duplicate sends
-              if (finalMessage === lastSentMessageRef.current) {
+              // Prevent duplicate sends (but allow if 5+ seconds have passed)
+              const now = Date.now();
+              const timeSinceLastSent = now - lastSentTimeRef.current;
+              const isDuplicate = finalMessage === lastSentMessageRef.current && timeSinceLastSent < 5000;
+
+              if (isDuplicate) {
                 console.log('⚠️ Duplicate message detected, skipping:', finalMessage);
                 accumulatedTranscriptRef.current = '';
                 setTranscript('');
@@ -312,6 +317,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
               console.log('🚀 Sending to Maya:', finalMessage);
               onTranscript(finalMessage);
               lastSentMessageRef.current = finalMessage;
+              lastSentTimeRef.current = now;
               accumulatedTranscriptRef.current = '';
               setTranscript('');
               setIsActivelyExpressing(false);
@@ -329,8 +335,12 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
               silenceTimerRef.current = setTimeout(() => {
                 const extendedMessage = accumulatedTranscriptRef.current.trim();
                 if (extendedMessage) {
-                  // Prevent duplicate sends
-                  if (extendedMessage === lastSentMessageRef.current) {
+                  // Prevent duplicate sends (but allow if 5+ seconds have passed)
+                  const now = Date.now();
+                  const timeSinceLastSent = now - lastSentTimeRef.current;
+                  const isDuplicate = extendedMessage === lastSentMessageRef.current && timeSinceLastSent < 5000;
+
+                  if (isDuplicate) {
                     console.log('⚠️ Duplicate extended message detected, skipping');
                     accumulatedTranscriptRef.current = '';
                     setTranscript('');
@@ -341,6 +351,7 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
                   console.log('🚀 Sending extended expression:', extendedMessage);
                   onTranscript(extendedMessage);
                   lastSentMessageRef.current = extendedMessage;
+                  lastSentTimeRef.current = now;
                   accumulatedTranscriptRef.current = '';
                   setTranscript('');
                   setIsActivelyExpressing(false);
@@ -464,7 +475,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
         try {
           recognitionRef.current.stop();
           setIsListening(false);
-          lastSentMessageRef.current = ''; // Reset deduplication on stop
+          lastSentMessageRef.current = '';
+          lastSentTimeRef.current = 0;
         } catch (e) {
           // Already stopped
         }
@@ -472,7 +484,8 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
     },
     muteImmediately: () => {
       setIsPausedForMaya(true);
-      lastSentMessageRef.current = ''; // Reset deduplication on mute
+      lastSentMessageRef.current = '';
+      lastSentTimeRef.current = 0;
       if (recognitionRef.current) {
         try {
           recognitionRef.current.stop();
@@ -681,30 +694,31 @@ export const SimplifiedOrganicVoice = React.forwardRef<VoiceActivatedMaiaRef, Si
 
       // Resume recognition after a longer delay to ensure audio has fully stopped
       setTimeout(() => {
-        if (recognitionRef.current && !isMayaSpeaking && !isStartingRef.current) {
+        if (recognitionRef.current && !isMayaSpeaking && !isStartingRef.current && !isListening) {
           try {
             // Only start if we're enabled and not muted
             if (enabled && !isMuted) {
               isStartingRef.current = true;
               recognitionRef.current.start();
-              setIsListening(true); // Ensure listening state is set
+              setIsListening(true);
               console.log('✅ Voice recognition resumed after Maya finished');
               setTimeout(() => {
                 isStartingRef.current = false;
-              }, 500); // Reduced for faster recovery
-            }
-          } catch (e) {
-            isStartingRef.current = false;
-            console.log('Could not resume recognition:', e);
-            // Try starting fresh if resume fails
-            if (enabled && !isMuted) {
-              setTimeout(() => {
-                toggleListening();
               }, 500);
             }
+          } catch (e: any) {
+            isStartingRef.current = false;
+            console.log('Could not resume recognition:', e?.message || e);
+            // If already started, that's okay - just continue
+            if (e?.message?.includes('already started')) {
+              console.log('Recognition already active, continuing...');
+              setIsListening(true);
+            }
           }
+        } else if (isListening) {
+          console.log('Recognition already listening, skipping resume');
         }
-      }, 500); // Reduced to 500ms for faster response after Maya speaks
+      }, 500);
     }
   }, [isMayaSpeaking, isListening, enabled, isPausedForMaya, isMuted, toggleListening]);
 
