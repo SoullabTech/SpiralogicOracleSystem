@@ -12,9 +12,25 @@ export async function POST(req: NextRequest) {
     console.log('⚠️ Legacy /api/oracle/personal called')
     console.log('Body received:', JSON.stringify(body).substring(0, 100))
 
+    // Extract and validate message
+    const messageText = (body.input || body.message || body.content || '').trim()
+
+    if (!messageText || messageText.length === 0) {
+      console.error('❌ Empty message received')
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Message is required and cannot be empty',
+          response: "I'm here to listen. What would you like to share?",
+          message: "I'm here to listen. What would you like to share?"
+        },
+        { status: 400 }
+      )
+    }
+
     // Transform old field names to new ones
     const transformedBody = {
-      message: body.input || body.message || body.content || '',
+      message: messageText,
       userId: body.userId || 'legacy-user',
       enableVoice: body.enableVoice || false
     }

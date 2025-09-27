@@ -375,6 +375,12 @@ export const OracleConversation: React.FC<OracleConversationProps> = ({
     const startTime = Date.now();
     const cleanedText = cleanMessage(messageText);
 
+    // Validate message is not empty after cleaning
+    if (!cleanedText || cleanedText.trim().length === 0) {
+      console.warn('⚠️ Message is empty after cleaning, skipping');
+      return;
+    }
+
     // Add user message immediately
     const userMessage: ConversationMessage = {
       id: `msg-${Date.now()}`,
