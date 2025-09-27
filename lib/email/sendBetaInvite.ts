@@ -2,7 +2,9 @@ import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export interface BetaInvite {
   name: string;
@@ -33,6 +35,7 @@ export async function sendBetaInvite(invite: BetaInvite, template: string = 'bet
     const personalizedHtml = htmlTemplate.replace(/\{\{Name\}\}/g, invite.name);
     const personalizedText = textTemplate ? textTemplate.replace(/\{\{Name\}\}/g, invite.name) : '';
 
+    const resend = getResendClient();
     const result = await resend.emails.send({
       from: 'Kelly @ Soullab <onboarding@resend.dev>',
       to: invite.email,
