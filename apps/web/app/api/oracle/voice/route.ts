@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SesameVoiceService } from '../../../../../../lib/services/SesameVoiceService';
-import { PersonalOracleAgent } from '../../../../../../lib/agents/PersonalOracleAgent';
+import { SesameVoiceService } from '@/lib/services/SesameVoiceService';
+import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent';
+import { maiaRealtimeMonitor } from '@/lib/monitoring/MaiaRealtimeMonitor';
 
 const voiceService = new SesameVoiceService({
   apiUrl: process.env.SESAME_API_URL || 'http://localhost:8000',
@@ -14,6 +15,9 @@ const voiceService = new SesameVoiceService({
  * Oracle Voice API - Generate voice responses with character selection
  */
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  const sessionId = `voice_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
   try {
     const {
       text,
@@ -26,6 +30,8 @@ export async function POST(request: NextRequest) {
       userId,
       usePersonalizedModulation = false
     } = await request.json();
+
+    const requestUserId = userId || 'demo-user';
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
@@ -77,6 +83,18 @@ export async function POST(request: NextRequest) {
     });
 
     if (result.audioData) {
+      // 📊 Track successful voice generation
+      maiaRealtimeMonitor.trackVoiceInteraction({
+        sessionId,
+        userId: requestUserId,
+        timestamp: new Date(),
+        ttsLatencyMs: Date.now() - startTime,
+        audioGenerated: true,
+        audioQuality: result.duration && result.duration > 0 ? 'good' : 'poor',
+        voiceProfile: characterId,
+        element: element || 'aether'
+      });
+
       // Return audio as base64
       return NextResponse.json({
         success: true,
@@ -87,6 +105,18 @@ export async function POST(request: NextRequest) {
         metadata: result.metadata
       });
     } else {
+      // 📊 Track voice generation failure
+      maiaRealtimeMonitor.trackVoiceInteraction({
+        sessionId,
+        userId: requestUserId,
+        timestamp: new Date(),
+        ttsLatencyMs: Date.now() - startTime,
+        audioGenerated: false,
+        audioQuality: 'failed',
+        voiceProfile: characterId,
+        element: element || 'aether'
+      });
+
       return NextResponse.json({
         error: 'Failed to generate audio'
       }, { status: 500 });
@@ -94,6 +124,20 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Oracle Voice API error:', error);
+
+    // 📊 Track voice generation error
+    const requestUserId = userId || 'demo-user';
+    maiaRealtimeMonitor.trackVoiceInteraction({
+      sessionId,
+      userId: requestUserId,
+      timestamp: new Date(),
+      ttsLatencyMs: Date.now() - startTime,
+      audioGenerated: false,
+      audioQuality: 'failed',
+      voiceProfile: characterId || 'unknown',
+      element: 'aether'
+    });
+
     return NextResponse.json({
       error: 'Voice generation failed',
       details: error.message

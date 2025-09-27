@@ -19,7 +19,8 @@
     "start:all": "concurrently -n NEXT,EXPRESS \"npm start\" \"npm run start:middleware\"",
     "lint": "next lint",
     "seed": "npx tsx scripts/seed-sample-files.ts",
-    "seed:force": "npx tsx scripts/seed-sample-files.ts --force"
+    "seed:force": "npx tsx scripts/seed-sample-files.ts --force",
+    "test:ai": "npx tsx scripts/test-ai-integration.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",

@@ -1,8 +1,10 @@
 "use client";
 
 /**
- * React Hook for Maya Voice Integration
- * Provides easy access to Maya's voice capabilities in React components
+ * DEPRECATED: Use useMayaVoice from '@/hooks/useMayaVoice' instead
+ * This hook wraps the legacy MayaVoiceSystem and will be removed in a future version
+ *
+ * @deprecated Use useMayaVoice for new implementations
  */
 
 import { useState, useEffect, useCallback } from 'react';

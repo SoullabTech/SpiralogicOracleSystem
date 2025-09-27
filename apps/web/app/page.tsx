@@ -10,14 +10,28 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center justify-center px-4">
         <div className="max-w-6xl mx-auto text-center space-y-8">
 
+          {/* Diamond Model Visual */}
+          <div className="mb-12">
+            <div className="w-48 h-48 mx-auto relative">
+              {/* TODO: Add diamond-model.png when available */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-full blur-3xl" />
+              <div className="relative w-full h-full flex items-center justify-center">
+                <Sparkles className="w-24 h-24 text-gray-400 opacity-60" />
+              </div>
+            </div>
+          </div>
+
           {/* Main Title */}
           <div className="space-y-4">
             <h1 className="text-6xl md:text-7xl font-light tracking-wide">
               Welcome to
-              <span className="block text-gray-400 font-extralight">Sacred Mirror</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 font-extralight">MAIA</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
-              Your AI companion for dream work and introspection
+              Your consciousness companion for voice journaling and symbolic intelligence
+            </p>
+            <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
+              All facets of your life held as One — with many faces, processing and evolving into and out of life
             </p>
           </div>
 
@@ -48,31 +62,82 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Diamond Model Philosophy */}
+      <section className="relative py-24 px-4 border-t border-gray-800">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <h2 className="text-3xl font-light text-gray-200">The Diamond Model</h2>
+          <p className="text-lg text-gray-400 leading-relaxed">
+            Like a diamond, your self has many facets that refract the same light of consciousness.
+          </p>
+          <div className="grid grid-cols-5 gap-4 mt-12 max-w-3xl mx-auto">
+            <div className="text-center space-y-2">
+              <div className="w-16 h-16 mx-auto bg-red-500/10 rounded-full flex items-center justify-center">
+                <span className="text-2xl">🔥</span>
+              </div>
+              <p className="text-xs text-gray-500">Fire</p>
+              <p className="text-xs text-gray-600">Will</p>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="w-16 h-16 mx-auto bg-blue-500/10 rounded-full flex items-center justify-center">
+                <span className="text-2xl">💧</span>
+              </div>
+              <p className="text-xs text-gray-500">Water</p>
+              <p className="text-xs text-gray-600">Emotion</p>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="w-16 h-16 mx-auto bg-green-500/10 rounded-full flex items-center justify-center">
+                <span className="text-2xl">🌍</span>
+              </div>
+              <p className="text-xs text-gray-500">Earth</p>
+              <p className="text-xs text-gray-600">Body</p>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="w-16 h-16 mx-auto bg-cyan-500/10 rounded-full flex items-center justify-center">
+                <span className="text-2xl">💨</span>
+              </div>
+              <p className="text-xs text-gray-500">Air</p>
+              <p className="text-xs text-gray-600">Mind</p>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="w-16 h-16 mx-auto bg-purple-500/10 rounded-full flex items-center justify-center">
+                <span className="text-2xl">✨</span>
+              </div>
+              <p className="text-xs text-gray-500">Aether</p>
+              <p className="text-xs text-gray-600">Spirit</p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500 pt-8 max-w-2xl mx-auto">
+            MAIA doesn't fragment you into problems to solve. She holds all facets as One—
+            witnessing your complexity as wholeness, not chaos.
+          </p>
+        </div>
+      </section>
+
       {/* Features Section - Minimalist grid */}
       <section className="relative py-32 px-4 border-t border-gray-800">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="group space-y-4 p-8 border border-gray-800 rounded-lg hover:border-gray-600 hover:bg-gray-900/30 transition-all duration-300">
               <Brain className="w-12 h-12 text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity" />
-              <h3 className="text-xl font-light text-gray-200">AI-Powered Reflection</h3>
+              <h3 className="text-xl font-light text-gray-200">Symbolic Intelligence</h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Advanced AI designed for meaningful introspection
+                Claude 3.5 Sonnet extracts symbols, archetypes, and transformation patterns
               </p>
             </div>
 
             <div className="group space-y-4 p-8 border border-gray-800 rounded-lg hover:border-gray-600 hover:bg-gray-900/30 transition-all duration-300">
               <Heart className="w-12 h-12 text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity" />
-              <h3 className="text-xl font-light text-gray-200">Memory Garden</h3>
+              <h3 className="text-xl font-light text-gray-200">Voice Journaling</h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Your growth pattern, woven through your memories
+                Real-time voice-to-text with elemental presence and semantic memory
               </p>
             </div>
 
             <div className="group space-y-4 p-8 border border-gray-800 rounded-lg hover:border-gray-600 hover:bg-gray-900/30 transition-all duration-300">
               <Shield className="w-12 h-12 text-gray-400 opacity-80 group-hover:opacity-100 transition-opacity" />
-              <h3 className="text-xl font-light text-gray-200">Privacy First</h3>
+              <h3 className="text-xl font-light text-gray-200">Data Sovereignty</h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Your data protected with end-to-end encryption
+                Export to Obsidian, PDF, or replay—your consciousness data belongs to you
               </p>
             </div>
           </div>

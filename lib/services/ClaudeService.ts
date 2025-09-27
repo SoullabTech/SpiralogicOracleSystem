@@ -55,14 +55,17 @@ export class ClaudeService {
 
       if (context.conversationHistory) {
         context.conversationHistory.slice(-5).forEach(msg => {
-          messages.push({
-            role: msg.role === 'user' ? 'user' : 'assistant',
-            content: msg.content
-          });
+          // Only add messages with non-empty content
+          if (msg.content && msg.content.trim().length > 0) {
+            messages.push({
+              role: msg.role === 'user' ? 'user' : 'assistant',
+              content: msg.content
+            });
+          }
         });
       }
 
-      // Add current user input
+      // Add current user input (already validated to be non-empty)
       messages.push({
         role: 'user',
         content: input

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Golden background -->
+  <rect width="192" height="192" fill="#FFD700" rx="28.799999999999997"/>
+
+  <!-- Dark blue circle -->
+  <circle cx="96" cy="96" r="67.19999999999999" fill="#0A0D16" opacity="0.9"/>
+
+  <!-- Letter S -->
+  <text
+    x="96"
+    y="124.8"
+    font-family="Arial, sans-serif"
+    font-size="76.80000000000001"
+    font-weight="bold"
+    fill="#FFD700"
+    text-anchor="middle">S</text>
+</svg>

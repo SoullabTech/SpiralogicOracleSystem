@@ -1,4 +1,9 @@
-// Voice Service - Handles voice synthesis and audio processing
+/**
+ * DEPRECATED: This is a mock implementation for testing
+ * Use SesameVoiceService from '@/lib/services/SesameVoiceService' for production
+ *
+ * @deprecated Use SesameVoiceService instead
+ */
 export interface VoiceConfig {
   voiceId: string;
   stability?: number;

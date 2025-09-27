@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
-// Temporarily stub out backend imports that are excluded from build
-// import { memoryStore } from "@/backend/src/services/memory/MemoryStore";
-// Temporarily stub out backend imports that are excluded from build
-// import { llamaService } from "@/backend/src/services/memory/LlamaService";
-// @ts-ignore - pdf-parse doesn't have type definitions
-import pdfParse from "pdf-parse";
 
 
 // Stub memory store
@@ -176,6 +170,8 @@ export async function POST(request: NextRequest) {
 
     try {
       if (fileExtension === 'pdf') {
+        // Dynamic import to avoid build-time test code execution
+        const pdfParse = (await import('pdf-parse')).default;
         const pdfData = await pdfParse(buffer);
         textContent = pdfData.text;
       } else if (['txt', 'md'].includes(fileExtension || '')) {

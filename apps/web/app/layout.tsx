@@ -13,9 +13,26 @@ import IOSFixInitializer from "@/components/system/IOSFixInitializer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Spiralogic Oracle System - Integration-Centered Development",
+  title: "Soullab - Maya Voice Chat",
   description:
-    "Supporting authentic human development through elemental wisdom and community grounding.",
+    "Sacred Mirror - Maya Voice AI companion for consciousness exploration",
+  manifest: "/manifest.json",
+  themeColor: "#FFD700",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    viewportFit: "cover",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Soullab",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default function RootLayout({

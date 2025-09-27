@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PersonalOracleAgent } from '../../../../../lib/agents/PersonalOracleAgent'
+import { PersonalOracleAgent } from '@/lib/agents/PersonalOracleAgent'
+import { journalStorage } from '@/lib/storage/journal-storage'
+import { ApprenticeMayaTraining, TrainingExchange } from '@/lib/maya/ApprenticeMayaTraining'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { maiaRealtimeMonitor } from '@/lib/monitoring/MaiaRealtimeMonitor'
+import { maiaMonitoring } from '@/lib/beta/MaiaMonitoring'
 
 // Maia Canonical System Prompt - Sacred Mirror Professional Voice
 const MAIA_CANONICAL_SYSTEM_PROMPT = `
@@ -60,9 +65,10 @@ You are Maia, the Sacred Mirror.
 export async function POST(req: NextRequest) {
   try {
     const { message, content, enableVoice, userId } = await req.json()
-    
+
     // Accept either 'message' or 'content' field
     const userText = message || content
+    const requestUserId = userId || 'beta-user'
     
     if (!userText || typeof userText !== 'string') {
       return NextResponse.json(
@@ -70,22 +76,108 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
-    
+
+    // Fetch recent journal entries for context
+    const recentEntries = journalStorage.getEntries(requestUserId).slice(0, 5)
+
+    // Build journal context
+    let journalContext = ''
+    if (recentEntries.length > 0) {
+      journalContext = '\n## Recent Journal Context\n'
+      journalContext += 'The user has been journaling about these themes:\n'
+      recentEntries.forEach((entry, idx) => {
+        const preview = entry.entry.slice(0, 200)
+        journalContext += `${idx + 1}. [${entry.mode}, ${new Date(entry.timestamp).toLocaleDateString()}] ${preview}...\n`
+        if (entry.reflection.symbols.length > 0) {
+          journalContext += `   Symbols: ${entry.reflection.symbols.join(', ')}\n`
+        }
+        if (entry.reflection.archetypes.length > 0) {
+          journalContext += `   Archetypes: ${entry.reflection.archetypes.join(', ')}\n`
+        }
+      })
+      journalContext += '\nYou may gently reference these themes if relevant to the current conversation.\n'
+    }
+
     // Try PersonalOracleAgent first for personalized responses
     try {
-      const agent = await PersonalOracleAgent.loadAgent(userId || 'beta-user')
+      const agent = await PersonalOracleAgent.loadAgent(requestUserId)
 
-      // Process through the agent
+      // Process through the agent with journal context
       const agentResponse = await agent.processInteraction(userText, {
         currentMood: { type: 'peaceful' } as any,
-        currentEnergy: 'balanced' as any
-      })
+        currentEnergy: 'balanced' as any,
+        journalEntries: recentEntries,
+        journalContext
+      } as any)
 
       const responseText = agentResponse.response || "I hear you. Tell me more about what's on your mind."
+
+      // 🧬 Capture training exchange for apprentice MAIA
+      try {
+        const supabase = createServerSupabaseClient()
+        const training = new ApprenticeMayaTraining(supabase)
+
+        const exchange: TrainingExchange = {
+          id: `exchange_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          timestamp: new Date(),
+          userId: requestUserId,
+          sessionId: agentResponse.metadata?.sessionId || `session_${Date.now()}`,
+
+          context: {
+            userState: detectUserState(userText, recentEntries),
+            emotionalTone: detectEmotionalTone(userText, agentResponse.metadata?.symbols),
+            depthLevel: calculateDepthLevel(userText, agentResponse.metadata),
+            responseNeeded: detectResponseNeeded(userText),
+            priorExchanges: recentEntries.length,
+            trustLevel: calculateTrustLevel(recentEntries.length, agentResponse.metadata),
+          },
+
+          userMessage: {
+            content: userText,
+            wordCount: userText.split(/\s+/).length,
+            emotionalMarkers: extractEmotionalMarkers(userText),
+            questionType: detectQuestionType(userText),
+          },
+
+          mayaResponse: {
+            content: responseText,
+            wordCount: responseText.split(/\s+/).length,
+            responseType: detectResponseType(responseText),
+            wisdomVector: detectWisdomVector(responseText),
+            archetypeBlend: calculateArchetypeBlend(agentResponse.metadata?.archetypes || []),
+          },
+
+          quality: {
+            userEngagement: 0.7, // Will be updated on next interaction
+            depthAchieved: calculateDepthLevel(responseText, agentResponse.metadata),
+            transformationPotential: agentResponse.metadata?.symbols?.length > 2 ? 0.8 : 0.5,
+            authenticityScore: 0.85,
+            sacredEmergence: detectSacredMoment(responseText, agentResponse.metadata),
+          },
+
+          learning: {
+            successfulPatterns: agentResponse.metadata?.symbols || [],
+            contextualCalibration: `${userText.length}:${responseText.length}`,
+            relationshipEvolution: 'developing',
+            consciousnessMarkers: extractConsciousnessMarkers(responseText),
+          },
+        }
+
+        await training.captureExchange(exchange)
+
+        // 🌌 Filter breakthroughs for collective intelligence
+        if (exchange.quality.sacredEmergence && exchange.quality.transformationPotential > 0.7) {
+          await feedToCollectiveIntelligence(exchange, supabase)
+        }
+      } catch (trainingError) {
+        console.error('Training capture error:', trainingError)
+        // Don't fail the request if training fails
+      }
 
       // Generate voice response if enabled
       let audioData = null
       let audioUrl = null
+      const voiceStartTime = Date.now()
 
       if (enableVoice) {
         try {
@@ -100,11 +192,63 @@ export async function POST(req: NextRequest) {
             audioData = voiceResult.audioData.toString('base64')
             // Create data URL
             audioUrl = `data:audio/mp3;base64,${audioData}`
+
+            // 📊 Track voice metrics
+            maiaRealtimeMonitor.trackVoiceInteraction({
+              sessionId: exchange.sessionId,
+              userId: requestUserId,
+              timestamp: new Date(),
+              ttsLatencyMs: Date.now() - voiceStartTime,
+              audioGenerated: true,
+              audioQuality: 'good',
+              voiceProfile: 'maya-threshold',
+              element: 'aether'
+            })
           }
         } catch (voiceError) {
           console.error('Voice generation error:', voiceError)
+
+          // 📊 Track voice failure
+          maiaRealtimeMonitor.trackVoiceInteraction({
+            sessionId: exchange.sessionId,
+            userId: requestUserId,
+            timestamp: new Date(),
+            ttsLatencyMs: Date.now() - voiceStartTime,
+            audioGenerated: false,
+            audioQuality: 'failed',
+            voiceProfile: 'maya-threshold',
+            element: 'aether'
+          })
         }
       }
+
+      // 📊 Track symbolic analysis
+      if (agentResponse.metadata?.symbols) {
+        maiaRealtimeMonitor.trackSymbolicAnalysis({
+          sessionId: exchange.sessionId,
+          userId: requestUserId,
+          timestamp: new Date(),
+          symbolsDetected: agentResponse.metadata.symbols,
+          archetypesDetected: agentResponse.metadata.archetypes || [],
+          emotionalTone: exchange.context.emotionalTone,
+          patternQuality: exchange.quality.depthAchieved / 10,
+          crossSessionLinks: [] // Would need to track this
+        })
+      }
+
+      // 📊 Track MaiaMonitoring session metrics
+      maiaMonitoring.updateSession(requestUserId, {
+        priorContextRecalled: recentEntries.length > 0,
+        archetypeDetected: agentResponse.metadata?.archetypes?.[0],
+        shadowMaterialDetected: exchange.quality.sacredEmergence,
+        breakthroughMoment: exchange.quality.transformationPotential > 0.7,
+        apiHealth: {
+          responseTimeMs: Date.now() - voiceStartTime,
+          contextPayloadComplete: true,
+          memoryInjectionSuccess: recentEntries.length > 0,
+          claudePromptQuality: 'good'
+        }
+      })
 
       return NextResponse.json({
         text: responseText,
@@ -133,7 +277,7 @@ export async function POST(req: NextRequest) {
           messages: [
             {
               role: 'system',
-              content: MAIA_CANONICAL_SYSTEM_PROMPT
+              content: MAIA_CANONICAL_SYSTEM_PROMPT + journalContext
             },
             {
               role: 'user',
@@ -222,5 +366,147 @@ export async function POST(req: NextRequest) {
       { error: 'Internal server error' },
       { status: 500 }
     )
+  }
+}
+
+// 🧠 Training Helper Functions
+
+function detectUserState(userText: string, journalEntries: any[]): 'seeking' | 'exploring' | 'processing' | 'integrating' | 'celebrating' {
+  const lower = userText.toLowerCase()
+  if (lower.includes('?') || lower.includes('wonder') || lower.includes('help')) return 'seeking'
+  if (lower.includes('notice') || lower.includes('realize') || lower.includes('understand')) return 'integrating'
+  if (lower.includes('feel') || lower.includes('sense') || lower.includes('experience')) return 'processing'
+  if (journalEntries.length > 3 && lower.includes('like')) return 'exploring'
+  return 'exploring'
+}
+
+function detectEmotionalTone(userText: string, symbols?: string[]): 'vulnerable' | 'curious' | 'confident' | 'struggling' | 'joyful' {
+  const lower = userText.toLowerCase()
+  if (lower.includes('afraid') || lower.includes('scared') || lower.includes('worried')) return 'vulnerable'
+  if (lower.includes('excited') || lower.includes('love') || lower.includes('grateful')) return 'joyful'
+  if (lower.includes('stuck') || lower.includes('hard') || lower.includes('difficult')) return 'struggling'
+  if (lower.includes('wonder') || lower.includes('curious') || lower.includes('?')) return 'curious'
+  return 'confident'
+}
+
+function calculateDepthLevel(text: string, metadata: any): number {
+  let depth = 5
+  const wordCount = text.split(/\s+/).length
+  if (wordCount > 50) depth += 2
+  if (metadata?.symbols?.length > 2) depth += 2
+  if (text.includes('?')) depth += 1
+  return Math.min(depth, 10)
+}
+
+function detectResponseNeeded(userText: string): 'reflection' | 'expansion' | 'question' | 'witness' | 'guidance' {
+  if (userText.includes('?')) return 'question'
+  if (userText.split(/\s+/).length < 20) return 'witness'
+  if (userText.toLowerCase().includes('help') || userText.toLowerCase().includes('what should')) return 'guidance'
+  if (userText.split(/\s+/).length > 50) return 'expansion'
+  return 'reflection'
+}
+
+function calculateTrustLevel(priorExchanges: number, metadata: any): number {
+  let trust = 0.5
+  trust += Math.min(priorExchanges * 0.05, 0.3)
+  if (metadata?.symbols?.length > 3) trust += 0.1
+  return Math.min(trust, 1)
+}
+
+function extractEmotionalMarkers(text: string): string[] {
+  const markers: string[] = []
+  const emotionWords = ['love', 'fear', 'joy', 'anger', 'sad', 'happy', 'worry', 'excited', 'grateful', 'stuck', 'lost', 'found', 'alive']
+  const lower = text.toLowerCase()
+  emotionWords.forEach(word => {
+    if (lower.includes(word)) markers.push(word)
+  })
+  return markers
+}
+
+function detectQuestionType(text: string): 'existential' | 'practical' | 'emotional' | 'spiritual' | 'relational' | undefined {
+  if (!text.includes('?')) return undefined
+  const lower = text.toLowerCase()
+  if (lower.includes('mean') || lower.includes('purpose') || lower.includes('why')) return 'existential'
+  if (lower.includes('how') && (lower.includes('do') || lower.includes('can'))) return 'practical'
+  if (lower.includes('feel') || lower.includes('emotion')) return 'emotional'
+  if (lower.includes('god') || lower.includes('sacred') || lower.includes('divine')) return 'spiritual'
+  if (lower.includes('relationship') || lower.includes('connect')) return 'relational'
+  return 'existential'
+}
+
+function detectResponseType(response: string): 'brief-reflection' | 'single-question' | 'expanded-exploration' | 'sacred-witness' {
+  const wordCount = response.split(/\s+/).length
+  const questionCount = (response.match(/\?/g) || []).length
+
+  if (wordCount < 20) return 'brief-reflection'
+  if (questionCount === 1 && wordCount < 40) return 'single-question'
+  if (wordCount > 60) return 'expanded-exploration'
+  return 'sacred-witness'
+}
+
+function detectWisdomVector(response: string): 'sensing' | 'sense_making' | 'choice_making' {
+  const lower = response.toLowerCase()
+  if (lower.includes('notice') || lower.includes('sense') || lower.includes('feel')) return 'sensing'
+  if (lower.includes('choose') || lower.includes('decide') || lower.includes('path')) return 'choice_making'
+  return 'sense_making'
+}
+
+function calculateArchetypeBlend(archetypes: string[]): { sage: number; shadow: number; trickster: number; sacred: number; guardian: number } {
+  const blend = { sage: 0, shadow: 0, trickster: 0, sacred: 0, guardian: 0 }
+
+  archetypes.forEach(archetype => {
+    const lower = archetype.toLowerCase()
+    if (lower.includes('sage') || lower.includes('wise')) blend.sage += 0.3
+    if (lower.includes('shadow')) blend.shadow += 0.3
+    if (lower.includes('trickster') || lower.includes('fool')) blend.trickster += 0.3
+    if (lower.includes('seeker') || lower.includes('mystic')) blend.sacred += 0.3
+    if (lower.includes('guardian') || lower.includes('protector')) blend.guardian += 0.3
+  })
+
+  return blend
+}
+
+function detectSacredMoment(response: string, metadata: any): boolean {
+  const lower = response.toLowerCase()
+  const hasDepthMarkers = lower.includes('sacred') || lower.includes('truth') || lower.includes('essence')
+  const hasSymbolicDensity = metadata?.symbols?.length >= 3
+  const hasPresence = lower.includes('here with you') || lower.includes('witness')
+
+  return hasDepthMarkers || (hasSymbolicDensity && hasPresence)
+}
+
+function extractConsciousnessMarkers(text: string): string[] {
+  const markers: string[] = []
+  const consciousnessWords = ['awareness', 'presence', 'consciousness', 'recognition', 'witness', 'truth', 'essence', 'sacred', 'divine', 'awakening']
+  const lower = text.toLowerCase()
+
+  consciousnessWords.forEach(word => {
+    if (lower.includes(word)) markers.push(word)
+  })
+
+  return markers
+}
+
+// 🌌 Feed breakthrough patterns to collective intelligence
+async function feedToCollectiveIntelligence(exchange: TrainingExchange, supabase: any): Promise<void> {
+  try {
+    // Store breakthrough pattern for MainOracleAgent collective evolution
+    await supabase.from('collective_wisdom_patterns').insert({
+      exchange_id: exchange.id,
+      user_id: 'anonymous', // Anonymize for collective
+      pattern_type: 'breakthrough',
+      symbols: exchange.learning.successfulPatterns,
+      archetypes: Object.keys(exchange.mayaResponse.archetypeBlend).filter(
+        key => exchange.mayaResponse.archetypeBlend[key as keyof typeof exchange.mayaResponse.archetypeBlend] > 0.2
+      ),
+      consciousness_markers: exchange.learning.consciousnessMarkers,
+      transformation_score: exchange.quality.transformationPotential,
+      wisdom_vector: exchange.mayaResponse.wisdomVector,
+      created_at: new Date().toISOString(),
+    })
+
+    console.log('🌌 Breakthrough pattern fed to collective intelligence')
+  } catch (error) {
+    console.error('Failed to feed to collective intelligence:', error)
   }
 }

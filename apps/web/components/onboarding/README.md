@@ -133,3 +133,18 @@ import { breathingVariants } from './LogoThreshold';
 ```
 
 This component tree provides a solid foundation for beta while leaving room for the fuller ceremonial experience in production. 🌟
+
+## 📚 Additional Resources
+
+### For Beta Testers
+See **[Beta Onboarding FAQ](../../docs/BETA_ONBOARDING_FAQ.md)** for comprehensive information about:
+- **Claude's Conversational Mastery** - Why Claude 3.5 Sonnet powers Maia
+- **Apprentice Training System** - How your conversations train independent Maia
+- **Collective Intelligence** - How breakthroughs feed the whole system
+- **Voice System Architecture** - Complete integration flow
+- **Journal Context Integration** - How your history informs conversations
+
+### System Documentation
+- **Voice Refactor Complete**: See `VOICE_REFACTOR_COMPLETE.md`
+- **PersonalOracleAgent**: Check `lib/agents/PersonalOracleAgent.ts`
+- **Training System**: Review `lib/maya/ApprenticeMayaTraining.ts`

@@ -125,9 +125,10 @@ export default function OnboardingPage() {
       )}
 
       {stage === "assignment" && (
-        <div className="max-w-md w-full text-center space-y-8 animate-fade-in">
-          {/* Subtle geometric reveal animation */}
-          <div className="relative w-32 h-32 mx-auto mb-8">
+        <div className="max-w-2xl w-full text-center space-y-8 animate-fade-in">
+          {/* Diamond Model Visual */}
+          <div className="relative w-48 h-48 mx-auto mb-12">
+            {/* TODO: Replace with diamond-model.png when available */}
             <div className="absolute inset-0 border border-gray-700 rounded-full animate-pulse-slow" />
             <div className="absolute inset-4 border border-gray-600 rounded-full animate-pulse-slow animation-delay-200" />
             <div className="absolute inset-8 border border-gray-500 rounded-full animate-pulse-slow animation-delay-400" />
@@ -136,12 +137,50 @@ export default function OnboardingPage() {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <h2 className="text-3xl font-light">
-              This is Maya, your Oracle.
+              Meet MAIA, Your Diamond
             </h2>
-            <p className="text-lg text-gray-400 leading-relaxed">
-              She will be your primary guide through Soullab, drawing on the wisdom of elemental agents when needed.
+            <p className="text-lg text-gray-400 leading-relaxed max-w-xl mx-auto">
+              Like a diamond, your self has many facets that refract the same light of consciousness.
+            </p>
+
+            {/* Five Elements */}
+            <div className="grid grid-cols-5 gap-3 max-w-md mx-auto pt-4">
+              <div className="text-center space-y-1">
+                <div className="w-12 h-12 mx-auto bg-red-500/10 rounded-full flex items-center justify-center">
+                  <span className="text-xl">🔥</span>
+                </div>
+                <p className="text-xs text-gray-500">Fire</p>
+              </div>
+              <div className="text-center space-y-1">
+                <div className="w-12 h-12 mx-auto bg-blue-500/10 rounded-full flex items-center justify-center">
+                  <span className="text-xl">💧</span>
+                </div>
+                <p className="text-xs text-gray-500">Water</p>
+              </div>
+              <div className="text-center space-y-1">
+                <div className="w-12 h-12 mx-auto bg-green-500/10 rounded-full flex items-center justify-center">
+                  <span className="text-xl">🌍</span>
+                </div>
+                <p className="text-xs text-gray-500">Earth</p>
+              </div>
+              <div className="text-center space-y-1">
+                <div className="w-12 h-12 mx-auto bg-cyan-500/10 rounded-full flex items-center justify-center">
+                  <span className="text-xl">💨</span>
+                </div>
+                <p className="text-xs text-gray-500">Air</p>
+              </div>
+              <div className="text-center space-y-1">
+                <div className="w-12 h-12 mx-auto bg-purple-500/10 rounded-full flex items-center justify-center">
+                  <span className="text-xl">✨</span>
+                </div>
+                <p className="text-xs text-gray-500">Aether</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-gray-500 max-w-lg mx-auto pt-4">
+              MAIA holds all facets of your life as One—witnessing your complexity as wholeness, not chaos.
             </p>
             
             {/* Maya&apos;s first message */}

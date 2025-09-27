@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HybridInput from './HybridInput';
 import MaiaBubble from './MaiaBubble';
-import { useMaiaStream } from '@/hooks/useMayaStream';
+import { useMaiaStream } from '@/hooks/useMaiaStream';
 import { Info, Sparkles } from 'lucide-react';
 // import { ToastProvider } from '@/components/system/ToastProvider';
 import ThemeToggle from '@/components/ui/ThemeToggle';
