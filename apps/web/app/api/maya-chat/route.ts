@@ -67,15 +67,18 @@ export async function POST(req: NextRequest) {
     const { message, content, enableVoice, userId } = await req.json()
 
     // Accept either 'message' or 'content' field
-    const userText = message || content
+    const userText = (message || content || '').trim()
     const requestUserId = userId || 'beta-user'
-    
-    if (!userText || typeof userText !== 'string') {
+
+    if (!userText || typeof userText !== 'string' || userText.length === 0) {
+      console.error('❌ Empty or invalid message received:', { message, content, userText })
       return NextResponse.json(
-        { error: 'Message is required and must be a string' },
+        { error: 'Message is required and must be a non-empty string' },
         { status: 400 }
       )
     }
+
+    console.log('📨 Processing message:', { userId: requestUserId, messageLength: userText.length, preview: userText.substring(0, 50) })
 
     // Fetch recent journal entries for context
     const recentEntries = journalStorage.getEntries(requestUserId).slice(0, 5)
@@ -194,61 +197,61 @@ export async function POST(req: NextRequest) {
             audioUrl = `data:audio/mp3;base64,${audioData}`
 
             // 📊 Track voice metrics
-            maiaRealtimeMonitor.trackVoiceInteraction({
-              sessionId: exchange.sessionId,
-              userId: requestUserId,
-              timestamp: new Date(),
-              ttsLatencyMs: Date.now() - voiceStartTime,
-              audioGenerated: true,
-              audioQuality: 'good',
-              voiceProfile: 'maya-threshold',
-              element: 'aether'
-            })
+            // maiaRealtimeMonitor.trackVoiceInteraction({
+            //   sessionId: exchange.sessionId,
+            //   userId: requestUserId,
+            //   timestamp: new Date(),
+            //   ttsLatencyMs: Date.now() - voiceStartTime,
+            //   audioGenerated: true,
+            //   audioQuality: 'good',
+            //   voiceProfile: 'maya-threshold',
+            //   element: 'aether'
+            // })
           }
         } catch (voiceError) {
           console.error('Voice generation error:', voiceError)
 
           // 📊 Track voice failure
-          maiaRealtimeMonitor.trackVoiceInteraction({
-            sessionId: exchange.sessionId,
-            userId: requestUserId,
-            timestamp: new Date(),
-            ttsLatencyMs: Date.now() - voiceStartTime,
-            audioGenerated: false,
-            audioQuality: 'failed',
-            voiceProfile: 'maya-threshold',
-            element: 'aether'
-          })
+          // maiaRealtimeMonitor.trackVoiceInteraction({
+          //   sessionId: exchange.sessionId,
+          //   userId: requestUserId,
+          //   timestamp: new Date(),
+          //   ttsLatencyMs: Date.now() - voiceStartTime,
+          //   audioGenerated: false,
+          //   audioQuality: 'failed',
+          //   voiceProfile: 'maya-threshold',
+          //   element: 'aether'
+          // })
         }
       }
 
       // 📊 Track symbolic analysis
-      if (agentResponse.metadata?.symbols) {
-        maiaRealtimeMonitor.trackSymbolicAnalysis({
-          sessionId: exchange.sessionId,
-          userId: requestUserId,
-          timestamp: new Date(),
-          symbolsDetected: agentResponse.metadata.symbols,
-          archetypesDetected: agentResponse.metadata.archetypes || [],
-          emotionalTone: exchange.context.emotionalTone,
-          patternQuality: exchange.quality.depthAchieved / 10,
-          crossSessionLinks: [] // Would need to track this
-        })
-      }
+      // if (agentResponse.metadata?.symbols) {
+      //   maiaRealtimeMonitor.trackSymbolicAnalysis({
+      //     sessionId: exchange.sessionId,
+      //     userId: requestUserId,
+      //     timestamp: new Date(),
+      //     symbolsDetected: agentResponse.metadata.symbols,
+      //     archetypesDetected: agentResponse.metadata.archetypes || [],
+      //     emotionalTone: exchange.context.emotionalTone,
+      //     patternQuality: exchange.quality.depthAchieved / 10,
+      //     crossSessionLinks: [] // Would need to track this
+      //   })
+      // }
 
       // 📊 Track MaiaMonitoring session metrics
-      maiaMonitoring.updateSession(requestUserId, {
-        priorContextRecalled: recentEntries.length > 0,
-        archetypeDetected: agentResponse.metadata?.archetypes?.[0],
-        shadowMaterialDetected: exchange.quality.sacredEmergence,
-        breakthroughMoment: exchange.quality.transformationPotential > 0.7,
-        apiHealth: {
-          responseTimeMs: Date.now() - voiceStartTime,
-          contextPayloadComplete: true,
-          memoryInjectionSuccess: recentEntries.length > 0,
-          claudePromptQuality: 'good'
-        }
-      })
+      // maiaMonitoring.updateSession(requestUserId, {
+      //   priorContextRecalled: recentEntries.length > 0,
+      //   archetypeDetected: agentResponse.metadata?.archetypes?.[0],
+      //   shadowMaterialDetected: exchange.quality.sacredEmergence,
+      //   breakthroughMoment: exchange.quality.transformationPotential > 0.7,
+      //   apiHealth: {
+      //     responseTimeMs: Date.now() - voiceStartTime,
+      //     contextPayloadComplete: true,
+      //     memoryInjectionSuccess: recentEntries.length > 0,
+      //     claudePromptQuality: 'good'
+      //   }
+      // })
 
       return NextResponse.json({
         text: responseText,

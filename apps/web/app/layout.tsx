@@ -47,30 +47,30 @@ export default function RootLayout({
           <IOSFixInitializer />
           <ToastProvider>
             {/* Global Header with Theme Toggle */}
-            <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-neutral-900">
+            <header className="flex items-center justify-between px-6 py-4 border-b border-amber-900/20 dark:border-amber-500/20 bg-gradient-to-r from-slate-900 via-amber-900/10 to-slate-900">
               <Link href="/" className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-amber-600 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">S</span>
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                  <span className="text-white font-bold text-sm">✺</span>
                 </div>
-                <h1 className="text-lg font-semibold tracking-wide text-neutral-800 dark:text-neutral-200">
-                  Soullab
+                <h1 className="text-lg font-semibold tracking-wide text-amber-50 dark:text-amber-100">
+                  MAIA
                 </h1>
               </Link>
               
               <nav className="flex items-center gap-6">
-                <Link 
-                  href="/" 
-                  className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                <Link
+                  href="/"
+                  className="text-sm text-amber-200/70 hover:text-amber-100 transition-colors"
                 >
                   Mirror
                 </Link>
-                <Link 
-                  href="/dashboard" 
-                  className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                <Link
+                  href="/dashboard"
+                  className="text-sm text-amber-200/70 hover:text-amber-100 transition-colors"
                 >
                   Analytics
                 </Link>
-                <div className="w-px h-5 bg-gray-300 dark:bg-gray-600" />
+                <div className="w-px h-5 bg-amber-500/20" />
                 <ThemeToggle />
               </nav>
             </header>

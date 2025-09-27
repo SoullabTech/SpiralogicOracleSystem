@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Home, Search, Crown } from 'lucide-react'
 
@@ -20,25 +19,20 @@ export default function NotFound() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-2 justify-center">
-            <Button 
-              asChild
-              className="bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600"
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center h-10 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600 text-white transition-colors"
             >
-              <Link href="/">
-                <Home className="w-4 h-4 mr-2" />
-                Go Home
-              </Link>
-            </Button>
-            <Button 
-              asChild
-              variant="outline"
-              className="border-amber-500/20 hover:bg-amber-500/10"
+              <Home className="w-4 h-4 mr-2" />
+              Go Home
+            </Link>
+            <Link
+              href="/oracle"
+              className="inline-flex items-center justify-center h-10 px-4 py-2 rounded-md text-sm font-medium border border-amber-500/20 hover:bg-amber-500/10 transition-colors"
             >
-              <Link href="/oracle">
-                <Search className="w-4 h-4 mr-2" />
-                Oracle Chat
-              </Link>
-            </Button>
+              <Search className="w-4 h-4 mr-2" />
+              Oracle Chat
+            </Link>
           </div>
 
           <div className="mt-6 pt-4 border-t border-amber-500/20">

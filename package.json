@@ -21,6 +21,7 @@
     "test:pipeline": "jest tests/sacred-pipeline.test.ts --verbose",
     "test:persistence": "jest tests/supabase-persistence.test.ts --verbose",
     "test:ci": "npm run lint && npm run test:coverage",
+    "test:beta": "cd apps/web && npx tsx scripts/test-beta-diagnostics.ts",
     "type-check": "tsc --noEmit",
     "docs:fix": "node scripts/docs-fix.js",
     "vault:connect": "tsx scripts/start-obsidian-integration.ts",

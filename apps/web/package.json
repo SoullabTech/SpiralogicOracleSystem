@@ -20,7 +20,8 @@
     "lint": "next lint",
     "seed": "npx tsx scripts/seed-sample-files.ts",
     "seed:force": "npx tsx scripts/seed-sample-files.ts --force",
-    "test:ai": "npx tsx scripts/test-ai-integration.ts"
+    "test:ai": "npx tsx scripts/test-ai-integration.ts",
+    "test:beta": "npx tsx scripts/test-beta-diagnostics.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",

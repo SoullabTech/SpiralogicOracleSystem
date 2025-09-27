@@ -186,6 +186,13 @@ export class PersonalOracleAgent {
     }
   ): Promise<{ response: string; element?: string; metadata?: any; suggestions?: string[]; ritual?: any }> {
     try {
+      // Validate input
+      const trimmedInput = (input || '').trim();
+      if (!trimmedInput) {
+        console.error('❌ PersonalOracleAgent received empty input');
+        throw new Error('Input cannot be empty');
+      }
+
       const journalEntries = context?.journalEntries || [];
 
       // Extract symbolic patterns from journal history
@@ -211,30 +218,53 @@ export class PersonalOracleAgent {
         }
       }
 
-      // Call Claude Anthropic API for response generation
-      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'x-api-key': process.env.ANTHROPIC_API_KEY || '',
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-3-5-sonnet-20241022',
-          max_tokens: 300,
-          system: systemPrompt,
-          messages: [
-            {
-              role: 'user',
-              content: input,
-            },
-          ],
-          temperature: 0.75,
-        }),
-      });
+      // Call Claude Anthropic API with retry logic for 529 (overloaded)
+      let claudeResponse;
+      let lastError;
+      const maxRetries = 2;
 
-      if (!claudeResponse.ok) {
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        if (attempt > 0) {
+          const delay = Math.pow(2, attempt) * 1000;
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+
+        claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+            'anthropic-version': '2023-06-01',
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'claude-3-5-sonnet-20241022',
+            max_tokens: 300,
+            system: systemPrompt,
+            messages: [
+              {
+                role: 'user',
+                content: trimmedInput,
+              },
+            ],
+            temperature: 0.75,
+          }),
+        });
+
+        if (claudeResponse.ok) {
+          break;
+        }
+
+        if (claudeResponse.status === 529 && attempt < maxRetries) {
+          lastError = `Claude API overloaded (529), retrying... (attempt ${attempt + 1}/${maxRetries})`;
+          console.warn(lastError);
+          continue;
+        }
+
         throw new Error(`Claude API error: ${claudeResponse.status}`);
+      }
+
+      if (!claudeResponse || !claudeResponse.ok) {
+        throw new Error(lastError || `Claude API error after ${maxRetries} retries`);
       }
 
       const data = await claudeResponse.json();
