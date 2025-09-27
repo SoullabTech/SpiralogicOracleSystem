@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAIA Beta Team - Monday 09/29/25</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #D4B896;
+            background: #0a0e1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a1f3a 0%, #151929 100%);
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(212, 184, 150, 0.1);
+            border: 1px solid rgba(212, 184, 150, 0.15);
+        }
+
+        .header {
+            background: #1a1f3a;
+            padding: 50px 30px 40px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid rgba(212, 184, 150, 0.1);
+        }
+
+        /* Sacred geometry background */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background-image:
+                radial-gradient(circle at 50% 50%, transparent 40%, rgba(212, 184, 150, 0.1) 41%, transparent 42%),
+                radial-gradient(circle at 50% 50%, transparent 60%, rgba(212, 184, 150, 0.05) 61%, transparent 62%);
+            pointer-events: none;
+        }
+
+        .logo-spiral {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            background: radial-gradient(circle, rgba(212, 184, 150, 0.4) 0%, rgba(212, 184, 150, 0.1) 70%, transparent 100%);
+            border-radius: 50%;
+            position: relative;
+            animation: subtlePulse 4s ease-in-out infinite;
+        }
+
+        .logo-spiral::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            background: #D4B896;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(212, 184, 150, 0.5);
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        .brand-title {
+            font-size: 1.75rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            margin-bottom: 8px;
+            color: #D4B896;
+            text-transform: uppercase;
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #D4B896;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 40px 30px;
+            background: #1a1f3a;
+        }
+
+        .beta-badge {
+            display: inline-block;
+            background: rgba(212, 184, 150, 0.1);
+            color: #D4B896;
+            padding: 8px 20px;
+            border-radius: 0;
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            border: 1px solid rgba(212, 184, 150, 0.2);
+        }
+
+        .greeting {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #D4B896;
+            margin-bottom: 25px;
+        }
+
+        .body-text {
+            color: rgba(212, 184, 150, 0.8);
+            margin-bottom: 20px;
+            font-weight: 300;
+            font-size: 0.95rem;
+        }
+
+        .body-text strong {
+            color: #D4B896;
+            font-weight: 400;
+        }
+
+        .date-highlight {
+            background: rgba(212, 184, 150, 0.05);
+            color: #D4B896;
+            padding: 25px;
+            border-radius: 0;
+            text-align: center;
+            margin: 30px 0;
+            border: 1px solid rgba(212, 184, 150, 0.2);
+            position: relative;
+        }
+
+        .date-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 184, 150, 0.3), transparent);
+        }
+
+        .date-highlight .day {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .date-highlight .sublabel {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 35px 0;
+            padding: 30px 25px;
+            background: rgba(212, 184, 150, 0.03);
+            border-radius: 0;
+            border: 1px solid rgba(212, 184, 150, 0.15);
+        }
+
+        .cta-section h3 {
+            margin-bottom: 20px;
+            color: #D4B896;
+            font-weight: 300;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: rgba(212, 184, 150, 0.1);
+            color: #D4B896;
+            text-decoration: none;
+            padding: 14px 40px;
+            border-radius: 0;
+            font-weight: 400;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(212, 184, 150, 0.3);
+        }
+
+        .cta-button:hover {
+            background: rgba(212, 184, 150, 0.15);
+            border-color: rgba(212, 184, 150, 0.5);
+            box-shadow: 0 0 20px rgba(212, 184, 150, 0.2);
+        }
+
+        .next-step-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(212, 184, 150, 0.05);
+            border-radius: 0;
+            border-left: 2px solid rgba(212, 184, 150, 0.3);
+        }
+
+        .next-step-box p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: rgba(212, 184, 150, 0.8);
+            font-weight: 300;
+        }
+
+        .next-step-box strong {
+            color: #D4B896;
+            font-weight: 400;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .detail-item {
+            background: rgba(212, 184, 150, 0.03);
+            padding: 20px;
+            border-radius: 0;
+            border: 1px solid rgba(212, 184, 150, 0.1);
+        }
+
+        .detail-label {
+            font-weight: 400;
+            color: rgba(212, 184, 150, 0.6);
+            margin-bottom: 8px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .detail-value {
+            color: #D4B896;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .signature {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(212, 184, 150, 0.1);
+        }
+
+        .signature-name {
+            font-weight: 300;
+            font-size: 1rem;
+            color: #D4B896;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .signature-title {
+            color: rgba(212, 184, 150, 0.6);
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .footer {
+            background: #151929;
+            padding: 25px 20px;
+            text-align: center;
+            color: rgba(212, 184, 150, 0.5);
+            font-size: 0.75rem;
+            border-top: 1px solid rgba(212, 184, 150, 0.1);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        /* Divider line */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 184, 150, 0.2), transparent);
+            margin: 30px 0;
+        }
+
+        @media (max-width: 640px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 0;
+            }
+
+            .header, .content {
+                padding: 30px 20px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .brand-title {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+            }
+
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo-spiral"></div>
+            <h1 class="brand-title">Soullab</h1>
+            <p class="brand-subtitle">Consciousness Technology</p>
+        </div>
+
+        <div class="content">
+            <div class="beta-badge">Beta Team Invitation</div>
+
+            <h2 class="greeting">Hi {{Name}},</h2>
+
+            <p class="body-text">You're invited to join the <strong>MAIA Beta Team</strong> for our first live testing session.</p>
+
+            <p class="body-text">MAIA is our new <strong>Consciousness Explorer</strong> — an AI designed specifically for personal development and consciousness exploration. She remembers your journey, evolves with your insights, and offers a completely new way to explore awareness.</p>
+
+            <div class="date-highlight">
+                <div class="day">Monday, September 29th, 2025</div>
+                <div class="sublabel">Beta Launch Day</div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Time Needed</div>
+                    <div class="detail-value">15-20 minutes</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Format</div>
+                    <div class="detail-value">Voice or text chat</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Focus</div>
+                    <div class="detail-value">Real conversations, honest feedback</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Stage</div>
+                    <div class="detail-value">Beta — expect some rough edges</div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="cta-section">
+                <h3>Ready to explore?</h3>
+                <a href="https://soullab.life/beta-entry" class="cta-button">Join Beta Team</a>
+                <div class="next-step-box">
+                    <p><strong>📧 Next Step:</strong> If you join, watch for an email <strong>Monday morning</strong> with your personal access link and detailed directions.</p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="body-text">This is our first live test with real users. Your experience and feedback will directly shape how MAIA develops as a consciousness explorer.</p>
+
+            <p class="body-text"><strong>What makes MAIA different:</strong> She's not a productivity tool or chatbot. She's designed to hold space for consciousness exploration, remember your insights, and evolve alongside your personal development journey.</p>
+
+            <p class="body-text">If Monday works for you, just click above to join. If not, no worries at all.</p>
+
+            <div class="signature">
+                <div class="signature-name">Kelly</div>
+                <div class="signature-title">Founder, Soullab</div>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 0.85rem; color: rgba(212, 184, 150, 0.6); font-weight: 300;">Questions? Just reply to this email. Looking forward to your insights!</p>
+        </div>
+
+        <div class="footer">
+            <p>Soullab · Consciousness Technology</p>
+            <p>Private beta invitation for Monday 09/29/25</p>
+        </div>
+    </div>
+</body>
+</html>
